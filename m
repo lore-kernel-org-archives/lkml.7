@@ -2,161 +2,107 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78D7C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF99C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747D6218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g64FknjB"
+	by mail.kernel.org (Postfix) with ESMTP id 717B1218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392317AbfGWWLP (ORCPT
+        id S2392335AbfGWWLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:11:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38118 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731838AbfGWWLO (ORCPT
+        Tue, 23 Jul 2019 18:11:49 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:49837 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731838AbfGWWLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:11:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f5so11267133pgu.5;
-        Tue, 23 Jul 2019 15:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=krd47KBmbC2YCxG0oFNZuaclAvYF8DzUXwIztNKgp/I=;
-        b=g64FknjB1Ux/dP39uEmwhdySu6Hzb5NU/78D1KqGbM+NljHM/GC86eNd0z2mq0R6pN
-         Q/0LO/dO2Hm8SxcvPfuFxXdnEaBLGDhAt8WN+b7nZnfzchhoNMp0DN/jhKVpYUoW7zJQ
-         lRbHx7dk8yeerW+8ZOgQiMEJbo7uZ2z4thhHcWmD/XXIlJIXDDmUX/pGfi4qe74+2vda
-         ReKkc76sxMj7QrmPhK7ntX6lj69l84t4/j6fZnuCYqyNAXP3AV1X0ROEiVquv95akAIs
-         1jVGPRrODrNz3RAC1fjxa7X6KXdqXYd7/V43Gsly1TQEeEvfMW+w2OOWQWui62+IJD79
-         qXyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=krd47KBmbC2YCxG0oFNZuaclAvYF8DzUXwIztNKgp/I=;
-        b=kJCAWxYOKaFPVIVGUgl9VgHXpleY935FlA4XL2Vv3UvDzWdMptmifBQTuUwDri64Mb
-         F8Fe82JDnllOutH+3zdte2vXmWVx+DI7l9M4ILflF2hiisy4KRO7+/QojodZ6FRlenYl
-         5UL3//ncOeIO1mfDdsiusChDVGUeEF+tyVhnU0LRbt9Vhzj6JT8kXMdnF/vt9Pi06FN3
-         dPlbah4zEeXBazVii9FPIVjXq1hk+fBE5mrgR0ceBXU0hFyfCYUDj5K8GSiip7skowha
-         NHTfxpjPEZ4LBfffd1W40Yv8Ztrr8eyJAbtm+4TKKkwMTjutF0TutbQipwJz4c22oV6V
-         L32A==
-X-Gm-Message-State: APjAAAUjpsoZyV14Km2JCnx9Rk+nPMadk2KinlOceYZOemseRZjxuIAW
-        hzoW2bQjsiFLMAo4Hi9z22E2F8kz
-X-Google-Smtp-Source: APXvYqzpqmQoS42jlBkyd2u9JwIli71FfNCcHqIe3C7TEIeYvwgKH6Q2FwYVY7b7/wSD+FMDN1YaTA==
-X-Received: by 2002:a63:5c07:: with SMTP id q7mr26313193pgb.436.1563919873115;
-        Tue, 23 Jul 2019 15:11:13 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:200::3:46e3])
-        by smtp.gmail.com with ESMTPSA id 65sm47859813pgf.30.2019.07.23.15.11.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 15:11:12 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 15:11:10 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, kernel-team@android.com
-Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
- ftrace
-Message-ID: <20190723221108.gamojemj5lorol7k@ast-mbp>
-References: <20190710141548.132193-1-joel@joelfernandes.org>
- <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
- <20190716213050.GA161922@google.com>
- <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
- <20190716224150.GC172157@google.com>
- <20190716235500.GA199237@google.com>
- <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
- <20190717130119.GA138030@google.com>
- <CAADnVQJY_=yeY0C3k1ZKpRFu5oNbB4zhQf5tQnLr=Mi8i6cgeQ@mail.gmail.com>
- <20190718025143.GB153617@google.com>
+        Tue, 23 Jul 2019 18:11:49 -0400
+Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E2B522AA6CE;
+        Wed, 24 Jul 2019 08:11:43 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hq2zU-0003lk-Ea; Wed, 24 Jul 2019 08:10:36 +1000
+Date:   Wed, 24 Jul 2019 08:10:36 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] psi: annotate refault stalls from IO submission
+Message-ID: <20190723221036.GY7777@dread.disaster.area>
+References: <20190722201337.19180-1-hannes@cmpxchg.org>
+ <20190723000226.GV7777@dread.disaster.area>
+ <20190723190438.GA22541@cmpxchg.org>
+ <2d80cfdb-f5e0-54f1-29a3-a05dee5b94eb@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190718025143.GB153617@google.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <2d80cfdb-f5e0-54f1-29a3-a05dee5b94eb@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
+        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
+        a=7-415B0cAAAA:8 a=RvhrQjGMwq6Bl1CCUxgA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:51:43PM -0400, Joel Fernandes wrote:
-> Hi Alexei,
-> 
-> On Wed, Jul 17, 2019 at 02:40:42PM -0700, Alexei Starovoitov wrote:
-> > On Wed, Jul 17, 2019 at 6:01 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+On Tue, Jul 23, 2019 at 01:34:50PM -0600, Jens Axboe wrote:
+> On 7/23/19 1:04 PM, Johannes Weiner wrote:
+> > CCing Jens for bio layer stuff
 > > 
-> > I trimmed cc. some emails were bouncing.
-> 
-> Ok, thanks.
-> 
-> > > > I think allowing one tracepoint and disallowing another is pointless
-> > > > from security point of view. Tracing bpf program can do bpf_probe_read
-> > > > of anything.
-> > >
-> > > I think the assumption here is the user controls the program instructions at
-> > > runtime, but that's not the case. The BPF program we are loading is not
-> > > dynamically generated, it is built at build time and it is loaded from a
-> > > secure verified partition, so even though it can do bpf_probe_read, it is
-> > > still not something that the user can change.
+> > On Tue, Jul 23, 2019 at 10:02:26AM +1000, Dave Chinner wrote:
+> >> Even better: If this memstall and "refault" check is needed to
+> >> account for bio submission blocking, then page cache iteration is
+> >> the wrong place to be doing this check. It should be done entirely
+> >> in the bio code when adding pages to the bio because we'll only ever
+> >> be doing page cache read IO on page cache misses. i.e. this isn't
+> >> dependent on adding a new page to the LRU or not - if we add a new
+> >> page then we are going to be doing IO and so this does not require
+> >> magic pixie dust at the page cache iteration level
 > > 
-> > so you're saying that by having a set of signed bpf programs which
-> > instructions are known to be non-malicious and allowed set of tracepoints
-> > to attach via selinux whitelist, such setup will be safe?
-> > Have you considered how mix and match will behave?
+> > That could work. I had it at the page cache level because that's
+> > logically where the refault occurs. But PG_workingset encodes
+> > everything we need from the page cache layer and is available where
+> > the actual stall occurs, so we should be able to push it down.
+> > 
+> >> e.g. bio_add_page_memstall() can do the working set check and then
+> >> set a flag on the bio to say it contains a memstall page. Then on
+> >> submission of the bio the memstall condition can be cleared.
+> > 
+> > A separate bio_add_page_memstall() would have all the problems you
+> > pointed out with the original patch: it's magic, people will get it
+> > wrong, and it'll be hard to verify and notice regressions.
+> > 
+> > How about just doing it in __bio_add_page()? PG_workingset is not
+> > overloaded - when we see it set, we can generally and unconditionally
+> > flag the bio as containing userspace workingset pages.
+> > 
+> > At submission time, in conjunction with the IO direction, we can
+> > clearly tell whether we are reloading userspace workingset data,
+> > i.e. stalling on memory.
+> > 
+> > This?
 > 
-> Do you mean the effect of mixing tracepoints and programs? I have not
-> considered this. I am Ok with further enforcing of this (only certain
-> tracepoints can be attached to certain programs) if needed. What do
-> you think? We could have a new bpf(2) syscall attribute specify which
-> tracepoint is expected, or similar.
-> 
-> I wanted to walk you through our 2 usecases we are working on:
+> Not vehemently opposed to it, even if it sucks having to test page flags
+> in the hot path.
 
-thanks for sharing the use case details. Appreciate it.
+That's kinda why I suggested the bio_add_page_memstall() variant for
+the page cache read IO paths where this check would be required.
 
-> 1. timeinstate: By hooking 2 programs onto sched_switch and cpu_frequency
-> tracepoints, we are able to collect CPU power per-UID (specific app). Connor
-> O'Brien is working on that.
-> 
-> 2. inode to file path mapping: By hooking onto VFS tracepoints we are adding to
-> the android kernels, we can collect data when the kernel resolves a file path
-> to a inode/device number. A BPF map stores the inode/dev number (key) and the
-> path (value). We have usecases where we need a high speed lookup of this
-> without having to scan all the files in the filesystem.
+Not fussed either way, this is much cleaner and easier to maintain
+IMO....
 
-Can you share the link to vfs tracepoints you're adding?
-Sounds like you're not going to attempt to upstream them knowing
-Al's stance towards them?
-May be there is a way we can do the feature you need, but w/o tracepoints?
-
-> For the first usecase, the BPF program will be loaded and attached to the
-> scheduler and cpufreq tracepoints at boot time and will stay attached
-> forever.  This is why I was saying having a daemon to stay alive all the time
-> is pointless. However, if since you are completely against using tracefs
-> which it sounds like, then we can do a daemon that is always alive.
-
-As I said earlier this use case can be solved by pinning raw_tp object
-into bpffs. Such patches are welcomed.
-
-> For the second usecase, the program attach is needed on-demand unlike the
-> first usecase, and then after the usecase completes, it is detached to avoid
-> overhead.
-> 
-> For the second usecase, privacy is important and we want the data to not be
-> available to any process. So we want to make sure only selected processes can
-> attach to that tracepoint. This is the reason why I was doing working on
-> these patches which use the tracefs as well, since we get that level of
-> control.
-
-It's hard to recommend anything w/o seeing the actual tracepoints you're adding
-to vfs and type of data bpf program extracts from there.
-Sounds like it's some sort of cache of inode->file name ?
-If so, why is it privacy related?
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
