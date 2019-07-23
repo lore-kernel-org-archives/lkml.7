@@ -2,186 +2,244 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67EAC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEFCC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740852081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:23:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="f3PAgNQ3";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="JT49G9CE"
+	by mail.kernel.org (Postfix) with ESMTP id 87E4A2184E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389329AbfGWLXG (ORCPT
+        id S2389259AbfGWLZU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:23:06 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:57114 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728103AbfGWLXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:23:05 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1E752C0138;
-        Tue, 23 Jul 2019 11:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563880985; bh=9UW9/84TwIUIVuYiPPzMsdPqkNq+dXf/epk2GQkAG3w=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=f3PAgNQ3t9TP3mHbYgDKoR92GyXyZgYU0wzuPnuRSIxC0vW+ikcdC3jIDutzjtKAU
-         SR+E52HMDBCpYpLWg5zRkHfo5fJPfh45Qe96Njmjg9aEa39eOrFYWVIZjlqe4JPnF2
-         SbX4jWty9hznpSZB5DVQBE5bWjabiV4WQVsxBbO0+1degZ8CqZahAmGvg5DKjOs7aB
-         4AP4gH5/0QYn4w/veQqCZ88GImThj08ODNNhgnxGecp7fNIKft+jFg95Q1sVqTs5Ol
-         SfIbjpYEY5+uBO9/OgikBaAxw7JGzKk/72GOd6cQj2KlLEoWQdZU8ka3u9gh1ermhg
-         yrL+jsNOEOYjQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id BA33CA0067;
-        Tue, 23 Jul 2019 11:22:44 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 23 Jul 2019 04:22:42 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 23 Jul 2019 04:22:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f/ORiRDwIKqDq9eU+FFbL7KCqkD+3IhrrbY75YIhJbyGtXd4L1aZM6YVW2U+Bt0AIBxIvACyQ1A/ykc3hQxffg+/EO7CcGnu39SBjdyEvSux+edamNMdYjiAb4qfMq8iZm4R7xCdXN6SfaC3nU5YVIa1SBNGQ+ddiuOAEH3DdRjQ0bBkA/FIYUhSRuR99rXrZxVmpadHEuaD7QGSX/JsRjUzk2Zd8HQwX8t2BYNZE1RPphIefTuwOsoEiMMXB0fItDNrx3o2A/5j/tStpowpLH3mcIt8XxmCLHQXJftlHJKKaDKpvTPq/WMuByCL0D1qgLJai69FS6eAoFbkKu9ncQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9UW9/84TwIUIVuYiPPzMsdPqkNq+dXf/epk2GQkAG3w=;
- b=AcoJiAayhA8O1FMqTdpYGtsilDg2DrgCUsNhKJYOH0AY4i3mZNabYGBmLwTaG1JFrcF6qPc71dJDqEcvSZy24dMbPPyYdWhO1iaDxglz7+aRECKaGo5KRyUqZS/apiixSdm3tifzIU71ramOSOhycGyaRwGAxuy4/g/P4AvYs+NlvP9ddrm+PagSPNF1qvtZzNNmI+84n9c77iWyw+9CRmddnINL6cn0XDw0KPDM68oNwEvwzkOyEn1Ad+bRzvc4pgt3/ddUuLXtVnn8GWkFKSWJU0fgqYNP4nYdfnQHlfORKhUnVWdYRPaQOzHakUGuTxSsS7oz+YZJnhbd5VSV2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9UW9/84TwIUIVuYiPPzMsdPqkNq+dXf/epk2GQkAG3w=;
- b=JT49G9CEs8/9JNctF3dgafxaL2tyIGehczr/YsoKAsPBJPObvDAtndEkVOMv+zzLgqM+V3kJQTCSCP/fNY6f1uLh20qZswcbvd2cnaxuy/6QxQG/d+DtDvsegyEWRMFnclQojl1Cg9lCnQRnssohZwFzwOhhV8JBw/LqWqGI5kg=
-Received: from BYAPR12MB3269.namprd12.prod.outlook.com (20.179.93.146) by
- BYAPR12MB3109.namprd12.prod.outlook.com (20.178.54.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Tue, 23 Jul 2019 11:22:40 +0000
-Received: from BYAPR12MB3269.namprd12.prod.outlook.com
- ([fe80::f5b8:ac6e:ea68:cb1c]) by BYAPR12MB3269.namprd12.prod.outlook.com
- ([fe80::f5b8:ac6e:ea68:cb1c%4]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
- 11:22:40 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Lars Persson <lists@bofh.nu>,
-        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Index: AQHVMYtq2Zx4WVoG/U2kL8GCK0bP/abPQEOAgADTx+CABnZ9AIAADuYAgAAFQOCAAAnIAIAABLTAgAFMy7CAAB4gAIAAAO7wgAAG6gCAAA6iEA==
-Date:   Tue, 23 Jul 2019 11:22:40 +0000
-Message-ID: <BYAPR12MB32698DC13D8D531F3FDBAC5CD3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722101830.GA24948@apalos>
- <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
- <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
- <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
- <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
-In-Reply-To: <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
+        Tue, 23 Jul 2019 07:25:20 -0400
+Received: from mga18.intel.com ([134.134.136.126]:47394 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728103AbfGWLZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 07:25:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 04:25:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,298,1559545200"; 
+   d="scan'208";a="180707271"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2019 04:25:17 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 23 Jul 2019 04:25:17 -0700
+Received: from hasmsx107.ger.corp.intel.com (10.184.198.27) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 23 Jul 2019 04:25:16 -0700
+Received: from hasmsx108.ger.corp.intel.com ([169.254.9.15]) by
+ hasmsx107.ger.corp.intel.com ([169.254.2.129]) with mapi id 14.03.0439.000;
+ Tue, 23 Jul 2019 14:25:14 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Usyskin, Alexander" <alexander.usyskin@intel.com>,
+        "C, Ramalingam" <ramalingam.c@intel.com>
+Subject: RE: [PATCH] mei: Abort writes if incomplete after 1s
+Thread-Topic: [PATCH] mei: Abort writes if incomplete after 1s
+Thread-Index: AQHVQUh97s4wEpB2nUu0/eS1AyxTHqbYD5sg
+Date:   Tue, 23 Jul 2019 11:25:14 +0000
+Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B9DC7C082@hasmsx108.ger.corp.intel.com>
+References: <20190723111913.20475-1-chris@chris-wilson.co.uk>
+In-Reply-To: <20190723111913.20475-1-chris@chris-wilson.co.uk>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 97803c52-c8ef-413e-7052-08d70f6012be
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR12MB3109;
-x-ms-traffictypediagnostic: BYAPR12MB3109:
-x-microsoft-antispam-prvs: <BYAPR12MB31094C000AF17BA791461961D3C70@BYAPR12MB3109.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0107098B6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(136003)(346002)(396003)(366004)(189003)(199004)(186003)(478600001)(6246003)(26005)(53936002)(25786009)(5660300002)(2906002)(52536014)(76176011)(7696005)(66946007)(4326008)(8936002)(76116006)(66446008)(64756008)(66556008)(66476007)(102836004)(6506007)(53546011)(81156014)(81166006)(8676002)(68736007)(99286004)(33656002)(71190400001)(110136005)(54906003)(486006)(71200400001)(14454004)(7736002)(256004)(7416002)(74316002)(305945005)(14444005)(316002)(6116002)(476003)(229853002)(11346002)(446003)(86362001)(3846002)(9686003)(66066001)(55016002)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3109;H:BYAPR12MB3269.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0RF8Opg4NJJmZSpkFh0ZlWKfiBK92ACBS3W4JjXXRmdgdrWN+3g7aWU0FC3GrAHV3IolS0pgne/vN16Jl902n7+TNyWv42YIiYhKLGIjR8MpguzvRc68i8uWQNdNxOQBndzrPNg2Tz64NQ/WcGdDExuRxVCeFYZwFxMNoZ/PLsINXyaqIZdcy6hqCVXT8icXcp8fgt/NragkB9CSUv9Als8Psi/IwnET/npzVkKwREKiPHu0QA7q0YOiRxGq0zchB0vJ1KoCWU92KiVyJxgrqm7wzYPB9TiSwyr6GfG51V7/Nhylb4W28hDL1+0cQ4xc+XYFzd9U8E2XiZ6pcz608fpn5PiMXsbcPcJLxij0yoWhd5cUCyIvPvrUX/NAU+QQnxGtD+l0+pccAMbkEqsATHl1gsTiIN84FntjFgVGrY4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzUzMmRkZmItNmY4MC00YTY1LWI2ZmEtODI1NjhkNWQwNDRiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoidDNIZE8wdmN2NHBlc2ZkTUtBbFFIQXZFUlphUkN5VWg4ME1MM2FVeFFsc1U5XC8yOUlNcEpmakxjRm9LXC9ZT1lmIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.184.70.11]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97803c52-c8ef-413e-7052-08d70f6012be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 11:22:40.1032
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3109
-X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4NCkRhdGU6IEp1bC8yMy8y
-MDE5LCAxMToyOToyOCAoVVRDKzAwOjAwKQ0KDQo+IE9uIDIzLzA3LzIwMTkgMTE6MDcsIEpvc2Ug
-QWJyZXUgd3JvdGU6DQo+ID4gRnJvbTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+
-DQo+ID4gRGF0ZTogSnVsLzIzLzIwMTksIDExOjAxOjI0IChVVEMrMDA6MDApDQo+ID4gDQo+ID4+
-IFRoaXMgYXBwZWFycyB0byBiZSBhIHdpbm5lciBhbmQgYnkgZGlzYWJsaW5nIHRoZSBTTU1VIGZv
-ciB0aGUgZXRoZXJuZXQNCj4gPj4gY29udHJvbGxlciBhbmQgcmV2ZXJ0aW5nIGNvbW1pdCA5NTRh
-MDNiZTAzM2M3Y2VmODBkZGMyMzJlN2NiZGIxN2RmNzM1NjYzDQo+ID4+IHRoaXMgd29ya2VkISBT
-byB5ZXMgYXBwZWFycyB0byBiZSByZWxhdGVkIHRvIHRoZSBTTU1VIGJlaW5nIGVuYWJsZWQuIFdl
-DQo+ID4+IGhhZCB0byBlbmFibGUgdGhlIFNNTVUgZm9yIGV0aGVybmV0IHJlY2VudGx5IGR1ZSB0
-byBjb21taXQNCj4gPj4gOTU0YTAzYmUwMzNjN2NlZjgwZGRjMjMyZTdjYmRiMTdkZjczNTY2My4N
-Cj4gPiANCj4gPiBGaW5hbGx5IDopDQo+ID4gDQo+ID4gSG93ZXZlciwgZnJvbSAiZ2l0IHNob3cg
-OTU0YTAzYmUwMzNjN2NlZjgwZGRjMjMyZTdjYmRiMTdkZjczNTY2MyI6DQo+ID4gDQo+ID4gKyAg
-ICAgICAgIFRoZXJlIGFyZSBmZXcgcmVhc29ucyB0byBhbGxvdyB1bm1hdGNoZWQgc3RyZWFtIGJ5
-cGFzcywgYW5kDQo+ID4gKyAgICAgICAgIGV2ZW4gZmV3ZXIgZ29vZCBvbmVzLiAgSWYgc2F5aW5n
-IFlFUyBoZXJlIGJyZWFrcyB5b3VyIGJvYXJkDQo+ID4gKyAgICAgICAgIHlvdSBzaG91bGQgd29y
-ayBvbiBmaXhpbmcgeW91ciBib2FyZC4NCj4gPiANCj4gPiBTbywgaG93IGNhbiB3ZSBmaXggdGhp
-cyA/IElzIHlvdXIgZXRoZXJuZXQgRFQgbm9kZSBtYXJrZWQgYXMNCj4gPiAiZG1hLWNvaGVyZW50
-OyIgPw0KPiANCj4gVGhlIGZpcnN0IHRoaW5nIHRvIHRyeSB3b3VsZCBiZSBib290aW5nIHRoZSBm
-YWlsaW5nIHNldHVwIHdpdGggDQo+ICJpb21tdS5wYXNzdGhyb3VnaD0xIiAob3IgdXNpbmcgQ09O
-RklHX0lPTU1VX0RFRkFVTFRfUEFTU1RIUk9VR0gpIC0gaWYgDQo+IHRoYXQgbWFrZXMgdGhpbmdz
-IHNlZW0gT0ssIHRoZW4gdGhlIHByb2JsZW0gaXMgbGlrZWx5IHJlbGF0ZWQgdG8gYWRkcmVzcyAN
-Cj4gdHJhbnNsYXRpb247IGlmIG5vdCwgdGhlbiBpdCdzIHByb2JhYmx5IHRpbWUgdG8gc3RhcnQg
-bG9va2luZyBhdCBuYXN0aWVzIA0KPiBsaWtlIGNvaGVyZW5jeSBhbmQgb3JkZXJpbmcsIGFsdGhv
-dWdoIGluIHByaW5jaXBsZSBJIHdvdWxkbid0IGV4cGVjdCB0aGUgDQo+IFNNTVUgdG8gaGF2ZSB0
-b28gbXVjaCBpbXBhY3QgdGhlcmUuDQo+IA0KPiBEbyB5b3Uga25vdyBpZiB0aGUgU01NVSBpbnRl
-cnJ1cHRzIGFyZSB3b3JraW5nIGNvcnJlY3RseT8gSWYgbm90LCBpdCdzIA0KPiBwb3NzaWJsZSB0
-aGF0IGFuIGluY29ycmVjdCBhZGRyZXNzIG9yIG1hcHBpbmcgZGlyZWN0aW9uIGNvdWxkIGxlYWQg
-dG8gDQo+IHRoZSBETUEgdHJhbnNhY3Rpb24ganVzdCBiZWluZyBzaWxlbnRseSB0ZXJtaW5hdGVk
-IHdpdGhvdXQgYW55IGZhdWx0IA0KPiBpbmRpY2F0aW9uLCB3aGljaCBnZW5lcmFsbHkgcHJlc2Vu
-dHMgYXMgaW5leHBsaWNhYmxlIHdlaXJkbmVzcyAoSSd2ZSANCj4gY2VydGFpbmx5IHNlZW4gdGhh
-dCBvbiBhbm90aGVyIHBsYXRmb3JtIHdpdGggdGhlIG1peCBvZiBhbiB1bnN1cHBvcnRlZCANCj4g
-aW50ZXJydXB0IGNvbnRyb2xsZXIgYW5kIGFuICdpbXBlcmZlY3QnIGV0aGVybmV0IGRyaXZlciku
-DQo+IA0KPiBKdXN0IHRvIGNvbmZpcm0sIGhhcyB0aGUgb3JpZ2luYWwgcGF0Y2ggYmVlbiB0ZXN0
-ZWQgd2l0aCANCj4gQ09ORklHX0RNQV9BUElfREVCVUcgdG8gcnVsZSBvdXQgYW55IGhpZ2gtbGV2
-ZWwgbWlzaGFwcz8NCg0KWWVzIGJ1dCBib3RoIG15IHNldHVwcyBkb24ndCBoYXZlIGFueSBJT01N
-VTogT25lIGlzIHg4NiArIFNXSU9UTEIgYW5kIA0KYW5vdGhlciBpcyBqdXN0IGNvaGVyZW50IHJl
-Z2FyZGluZyBDUFUuDQoNCi0tLQ0KVGhhbmtzLA0KSm9zZSBNaWd1ZWwgQWJyZXUNCg==
+> 
+> During i915 unload, it appears that it may get stuck waiting on a workqueue
+> being hogged by mei:
+
+Thanks for the bug report, but this is not a proper fix, we will try to work it out.
+Thanks
+Tomas
+
+> 
+> <7> [212.666912] i915 0000:00:02.0: [drm:drm_client_release] drm_fb_helper
+> <3> [308.544943] INFO: task i915_module_loa:2612 blocked for more than 61
+> seconds.
+> <3> [308.545047]       Tainted: G     U  W         5.3.0-rc1-CI-CI_DRM_6537+ #1
+> <3> [308.545085] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
+> this message.
+> <6> [308.545128] i915_module_loa D13256  2612    960 0x00004004
+> <4> [308.545137] Call Trace:
+> <4> [308.545150]  ? __schedule+0x326/0x890 <4> [308.545159]  ?
+> wait_for_common+0x116/0x1f0 <4> [308.545164]  schedule+0x2b/0xb0 <4>
+> [308.545169]  schedule_timeout+0x219/0x3c0 <4> [308.545176]  ?
+> wait_for_common+0x132/0x1f0 <4> [308.545183]  ?
+> _raw_spin_unlock_irq+0x24/0x30 <4> [308.545189]  ?
+> wait_for_common+0x116/0x1f0 <4> [308.545193]
+> wait_for_common+0x13a/0x1f0 <4> [308.545200]  ? wake_up_q+0x80/0x80
+> <4> [308.545209]  flush_workqueue+0x19d/0x540 <4> [308.545334]  ?
+> intel_modeset_driver_remove+0xb3/0x140 [i915] <4> [308.545407]
+> intel_modeset_driver_remove+0xb3/0x140 [i915] <4> [308.545464]
+> i915_driver_remove+0xae/0x110 [i915] <4> [308.545522]
+> i915_pci_remove+0x19/0x30 [i915] <4> [308.545529]
+> pci_device_remove+0x36/0xb0
+> 
+> <6> [308.565422] Showing busy workqueues and worker pools:
+> <6> [308.565425] workqueue events: flags=0x0
+> <6> [308.565572]   pwq 2: cpus=1 node=0 flags=0x0 nice=0 active=2/256
+> <6> [308.565635]     in-flight: 441:mei_cl_bus_rescan_work [mei]
+> <6> [308.565641]     pending: dbs_work_handler
+> <6> [308.565686] pool 2: cpus=1 node=0 flags=0x0 nice=0 hung=0s workers=5
+> idle: 2248 21 17 169
+> 
+> <6> [308.553788] Workqueue: events mei_cl_bus_rescan_work [mei] <4>
+> [308.553792] Call Trace:
+> <4> [308.553799]  ? __schedule+0x326/0x890 <4> [308.553808]
+> schedule+0x2b/0xb0 <4> [308.553815]  mei_cl_write+0x430/0x5a0 [mei] <4>
+> [308.553820]  ? __kmalloc+0x2b6/0x330 <4> [308.553824]  ?
+> wait_woken+0xa0/0xa0 <4> [308.553835]  __mei_cl_send+0x1f4/0x240 [mei]
+> <4> [308.553848]  mei_mkhi_fix+0x91/0x280 [mei] <4> [308.553859]
+> mei_cl_bus_dev_fixup+0xba/0x100 [mei] <4> [308.553868]  ?
+> device_add+0x156/0x670 <4> [308.553889]  ?
+> mei_cl_bus_rescan_work+0x1bc/0x350 [mei] <4> [308.553896]
+> mei_cl_bus_rescan_work+0x1bc/0x350 [mei] <4> [308.553905]
+> process_one_work+0x245/0x5f0 <4> [308.553915]  worker_thread+0x37/0x380
+> <4> [308.553921]  ? process_one_work+0x5f0/0x5f0 <4> [308.553924]
+> kthread+0x119/0x130 <4> [308.553928]  ? kthread_park+0xa0/0xa0 <4>
+> [308.553934]  ret_from_fork+0x3a/0x50
+> 
+> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Alexander Usyskin <alexander.usyskin@intel.com>
+> Cc: Tomas Winkler <tomas.winkler@intel.com>
+> ---
+>  drivers/misc/mei/bus.c    |  9 +++++++--
+>  drivers/misc/mei/client.c |  5 +++--
+>  drivers/misc/mei/main.c   | 18 ++++++++++++++----
+>  3 files changed, 24 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c index
+> 985bd4fd3328..5b2db77d48db 100644
+> --- a/drivers/misc/mei/bus.c
+> +++ b/drivers/misc/mei/bus.c
+> @@ -66,9 +66,10 @@ ssize_t __mei_cl_send(struct mei_cl *cl, u8 *buf, size_t
+> length,
+> 
+>  	while (cl->tx_cb_queued >= bus->tx_queue_limit) {
+>  		mutex_unlock(&bus->device_lock);
+> -		rets = wait_event_interruptible(cl->tx_wait,
+> +		rets = wait_event_interruptible_timeout(cl->tx_wait,
+>  				cl->writing_state == MEI_WRITE_COMPLETE
+> ||
+> -				(!mei_cl_is_connected(cl)));
+> +				!mei_cl_is_connected(cl),
+> +				HZ);
+>  		mutex_lock(&bus->device_lock);
+>  		if (rets) {
+>  			if (signal_pending(current))
+> @@ -79,6 +80,10 @@ ssize_t __mei_cl_send(struct mei_cl *cl, u8 *buf, size_t
+> length,
+>  			rets = -ENODEV;
+>  			goto out;
+>  		}
+> +		if (cl->writing_state != MEI_WRITE_COMPLETE) {
+> +			rets = -EFAULT;
+> +			goto out;
+> +		}
+>  	}
+> 
+>  	cb = mei_cl_alloc_cb(cl, length, MEI_FOP_WRITE, NULL); diff --git
+> a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c index
+> 1e3edbbacb1e..e7acc8aa9b15 100644
+> --- a/drivers/misc/mei/client.c
+> +++ b/drivers/misc/mei/client.c
+> @@ -1767,9 +1767,10 @@ ssize_t mei_cl_write(struct mei_cl *cl, struct
+> mei_cl_cb *cb)
+>  	if (blocking && cl->writing_state != MEI_WRITE_COMPLETE) {
+> 
+>  		mutex_unlock(&dev->device_lock);
+> -		rets = wait_event_interruptible(cl->tx_wait,
+> +		rets = wait_event_interruptible_timeout(cl->tx_wait,
+>  				cl->writing_state == MEI_WRITE_COMPLETE
+> ||
+> -				(!mei_cl_is_connected(cl)));
+> +				!mei_cl_is_connected(cl),
+> +				HZ);
+>  		mutex_lock(&dev->device_lock);
+>  		/* wait_event_interruptible returns -ERESTARTSYS */
+>  		if (rets) {
+> diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c index
+> f894d1f8a53e..0eb7bfd89a90 100644
+> --- a/drivers/misc/mei/main.c
+> +++ b/drivers/misc/mei/main.c
+> @@ -294,9 +294,10 @@ static ssize_t mei_write(struct file *file, const char
+> __user *ubuf,
+>  			goto out;
+>  		}
+>  		mutex_unlock(&dev->device_lock);
+> -		rets = wait_event_interruptible(cl->tx_wait,
+> +		rets = wait_event_interruptible_timeout(cl->tx_wait,
+>  				cl->writing_state == MEI_WRITE_COMPLETE
+> ||
+> -				(!mei_cl_is_connected(cl)));
+> +				!mei_cl_is_connected(cl),
+> +				HZ);
+>  		mutex_lock(&dev->device_lock);
+>  		if (rets) {
+>  			if (signal_pending(current))
+> @@ -307,6 +308,10 @@ static ssize_t mei_write(struct file *file, const char
+> __user *ubuf,
+>  			rets = -ENODEV;
+>  			goto out;
+>  		}
+> +		if (cl->writing_state != MEI_WRITE_COMPLETE) {
+> +			rets = -EFAULT;
+> +			goto out;
+> +		}
+>  	}
+> 
+>  	cb = mei_cl_alloc_cb(cl, length, MEI_FOP_WRITE, file); @@ -658,9
+> +663,10 @@ static int mei_fsync(struct file *fp, loff_t start, loff_t end, int
+> datasync)
+> 
+>  	while (mei_cl_is_write_queued(cl)) {
+>  		mutex_unlock(&dev->device_lock);
+> -		rets = wait_event_interruptible(cl->tx_wait,
+> +		rets = wait_event_interruptible_timeout(cl->tx_wait,
+>  				cl->writing_state == MEI_WRITE_COMPLETE
+> ||
+> -				!mei_cl_is_connected(cl));
+> +				!mei_cl_is_connected(cl),
+> +				HZ);
+>  		mutex_lock(&dev->device_lock);
+>  		if (rets) {
+>  			if (signal_pending(current))
+> @@ -671,6 +677,10 @@ static int mei_fsync(struct file *fp, loff_t start, loff_t
+> end, int datasync)
+>  			rets = -ENODEV;
+>  			goto out;
+>  		}
+> +		if (cl->writing_state != MEI_WRITE_COMPLETE) {
+> +			rets = -EFAULT;
+> +			goto out;
+> +		}
+>  	}
+>  	rets = 0;
+>  out:
+> --
+> 2.22.0
+
