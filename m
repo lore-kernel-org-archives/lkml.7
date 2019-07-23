@@ -2,178 +2,137 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E6BC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F4FC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58851218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:19:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vT3IX5Bx"
+	by mail.kernel.org (Postfix) with ESMTP id 3EC89218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390138AbfGWNTD (ORCPT
+        id S2390152AbfGWNTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:19:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35594 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729452AbfGWNTC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:19:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s1so13120424pgr.2;
-        Tue, 23 Jul 2019 06:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G0OHvpn9KxSxV5y/U5974HpDcDjPL8m07jP42qrzX7s=;
-        b=vT3IX5BxhDK7e8acYOQ7tJUxVtlXCvmEeBshliOAivdZk7f9yZGB0fidUZCIX8gUER
-         8GSy1A75VK/4auwecgqnMFpG2pHAOC3CpSbaLxSx9MWY++OIlytbceahXO/7DFOBxvOh
-         drXyreaSGoGEdCqXL33QvAax+wWLd6bLQUbRmo+1ashiW9Y+JtMkClPMFaXwAjjIcwMF
-         /0jg0f1aMu69LOYaA5zo5TYuR0/WGeLJKxlFvpp8xeRMM6QCmKcWQwNBdffUFb2ahB3/
-         C+4K91WkrN1PsGscb+o+TYePm3GCxzfqsY/VHwzU7Xn+efUQzScg4v9Fwv+BHO2zDy9p
-         SqyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G0OHvpn9KxSxV5y/U5974HpDcDjPL8m07jP42qrzX7s=;
-        b=iImQK4XmWNC1JCEtwYI4wPIcu2zqsgFDmzCBIfLEr8E7G5jOW3hCRUCJOo+/PQJC6s
-         JluKhXT139YPsw8BUAsORrrvaWpaFDUWv5X1ie9nKJ1V5rhTjbeS9kyNa00TzbOGpbWS
-         SfbnmjfPB4mf+n40nWnempkQ59w3RvnfLyWx7FWZUMBzmXL+/jHAj2yPGP6iT1rUE02S
-         A3fVccmPSAVMN+5nrYhTw8ozA27HwCkXS6/ACjQrFNi74GPNJRUF1t9eHFjVfJwWsuau
-         WnEbfVxmTIEsaS42q5PfnLgXo8IFTCUQzk1VUB1jAJNK1gnGUIYN/oI3IskHRV8SrqX4
-         y8pQ==
-X-Gm-Message-State: APjAAAUh30PejT9rgTaE6tM20PVJCc8eJIm3CJdifgwTAEtgPYFH8qUN
-        4VBFT3Ph+vMHW9L2RJ/K8qOueRJ9PFI=
-X-Google-Smtp-Source: APXvYqydVkKXYIvl3zIGtatRAC5rPNrHs6jF8eRo3QRGADF945D/q5cKpi6g3ca93ucR67KvVhyamw==
-X-Received: by 2002:a17:90a:bf08:: with SMTP id c8mr82204836pjs.75.1563887941739;
-        Tue, 23 Jul 2019 06:19:01 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id v185sm49660280pfb.14.2019.07.23.06.18.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 06:19:01 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] net: atheros: Use dev_get_drvdata
-Date:   Tue, 23 Jul 2019 21:18:56 +0800
-Message-Id: <20190723131856.31932-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 09:19:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33513 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729452AbfGWNTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:19:34 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EC6C981F19;
+        Tue, 23 Jul 2019 13:19:33 +0000 (UTC)
+Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F409660BEC;
+        Tue, 23 Jul 2019 13:19:28 +0000 (UTC)
+Subject: Re: [PATCH 5/6] vhost: mark dirty pages during map uninit
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190723075718.6275-1-jasowang@redhat.com>
+ <20190723075718.6275-6-jasowang@redhat.com>
+ <20190723041702-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a670cd0d-581d-1aba-41bd-c643c19f9604@redhat.com>
+Date:   Tue, 23 Jul 2019 21:19:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190723041702-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 23 Jul 2019 13:19:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/net/ethernet/atheros/alx/main.c         | 6 ++----
- drivers/net/ethernet/atheros/atl1c/atl1c_main.c | 8 +++-----
- drivers/net/ethernet/atheros/atlx/atl1.c        | 8 +++-----
- 3 files changed, 8 insertions(+), 14 deletions(-)
+On 2019/7/23 下午5:17, Michael S. Tsirkin wrote:
+> On Tue, Jul 23, 2019 at 03:57:17AM -0400, Jason Wang wrote:
+>> We don't mark dirty pages if the map was teared down outside MMU
+>> notifier. This will lead untracked dirty pages. Fixing by marking
+>> dirty pages during map uninit.
+>>
+>> Reported-by: Michael S. Tsirkin<mst@redhat.com>
+>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>> ---
+>>   drivers/vhost/vhost.c | 22 ++++++++++++++++------
+>>   1 file changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>> index 89c9f08b5146..5b8821d00fe4 100644
+>> --- a/drivers/vhost/vhost.c
+>> +++ b/drivers/vhost/vhost.c
+>> @@ -306,6 +306,18 @@ static void vhost_map_unprefetch(struct vhost_map *map)
+>>   	kfree(map);
+>>   }
+>>   
+>> +static void vhost_set_map_dirty(struct vhost_virtqueue *vq,
+>> +				struct vhost_map *map, int index)
+>> +{
+>> +	struct vhost_uaddr *uaddr = &vq->uaddrs[index];
+>> +	int i;
+>> +
+>> +	if (uaddr->write) {
+>> +		for (i = 0; i < map->npages; i++)
+>> +			set_page_dirty(map->pages[i]);
+>> +	}
+>> +}
+>> +
+>>   static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+>>   {
+>>   	struct vhost_map *map[VHOST_NUM_ADDRS];
+>> @@ -315,8 +327,10 @@ static void vhost_uninit_vq_maps(struct vhost_virtqueue *vq)
+>>   	for (i = 0; i < VHOST_NUM_ADDRS; i++) {
+>>   		map[i] = rcu_dereference_protected(vq->maps[i],
+>>   				  lockdep_is_held(&vq->mmu_lock));
+>> -		if (map[i])
+>> +		if (map[i]) {
+>> +			vhost_set_map_dirty(vq, map[i], i);
+>>   			rcu_assign_pointer(vq->maps[i], NULL);
+>> +		}
+>>   	}
+>>   	spin_unlock(&vq->mmu_lock);
+>>   
+>> @@ -354,7 +368,6 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>>   {
+>>   	struct vhost_uaddr *uaddr = &vq->uaddrs[index];
+>>   	struct vhost_map *map;
+>> -	int i;
+>>   
+>>   	if (!vhost_map_range_overlap(uaddr, start, end))
+>>   		return;
+>> @@ -365,10 +378,7 @@ static void vhost_invalidate_vq_start(struct vhost_virtqueue *vq,
+>>   	map = rcu_dereference_protected(vq->maps[index],
+>>   					lockdep_is_held(&vq->mmu_lock));
+>>   	if (map) {
+>> -		if (uaddr->write) {
+>> -			for (i = 0; i < map->npages; i++)
+>> -				set_page_dirty(map->pages[i]);
+>> -		}
+>> +		vhost_set_map_dirty(vq, map, index);
+>>   		rcu_assign_pointer(vq->maps[index], NULL);
+>>   	}
+>>   	spin_unlock(&vq->mmu_lock);
+> OK and the reason it's safe is because the invalidate counter
+> got incremented so we know page will not get mapped again.
+>
+> But we*do*  need to wait for page not to be mapped.
+> And if that means waiting for VQ processing to finish,
+> then I worry that is a very log time.
+>
 
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index e3538ba7d0e7..af41a41c27f0 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1879,8 +1879,7 @@ static void alx_remove(struct pci_dev *pdev)
- #ifdef CONFIG_PM_SLEEP
- static int alx_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct alx_priv *alx = pci_get_drvdata(pdev);
-+	struct alx_priv *alx = dev_get_drvdata(dev);
- 
- 	if (!netif_running(alx->dev))
- 		return 0;
-@@ -1891,8 +1890,7 @@ static int alx_suspend(struct device *dev)
- 
- static int alx_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct alx_priv *alx = pci_get_drvdata(pdev);
-+	struct alx_priv *alx = dev_get_drvdata(dev);
- 	struct alx_hw *hw = &alx->hw;
- 	int err;
- 
-diff --git a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-index be7f9cebb675..2fd6bf6cb8f7 100644
---- a/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-+++ b/drivers/net/ethernet/atheros/atl1c/atl1c_main.c
-@@ -2422,8 +2422,7 @@ static int atl1c_close(struct net_device *netdev)
- 
- static int atl1c_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct atl1c_adapter *adapter = netdev_priv(netdev);
- 	struct atl1c_hw *hw = &adapter->hw;
- 	u32 wufc = adapter->wol;
-@@ -2437,7 +2436,7 @@ static int atl1c_suspend(struct device *dev)
- 
- 	if (wufc)
- 		if (atl1c_phy_to_ps_link(hw) != 0)
--			dev_dbg(&pdev->dev, "phy power saving failed");
-+			dev_dbg(dev, "phy power saving failed");
- 
- 	atl1c_power_saving(hw, wufc);
- 
-@@ -2447,8 +2446,7 @@ static int atl1c_suspend(struct device *dev)
- #ifdef CONFIG_PM_SLEEP
- static int atl1c_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct atl1c_adapter *adapter = netdev_priv(netdev);
- 
- 	AT_WRITE_REG(&adapter->hw, REG_WOL_CTRL, 0);
-diff --git a/drivers/net/ethernet/atheros/atlx/atl1.c b/drivers/net/ethernet/atheros/atlx/atl1.c
-index b5c6dc914720..8b9df5f8795b 100644
---- a/drivers/net/ethernet/atheros/atlx/atl1.c
-+++ b/drivers/net/ethernet/atheros/atlx/atl1.c
-@@ -2754,8 +2754,7 @@ static int atl1_close(struct net_device *netdev)
- #ifdef CONFIG_PM_SLEEP
- static int atl1_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct atl1_adapter *adapter = netdev_priv(netdev);
- 	struct atl1_hw *hw = &adapter->hw;
- 	u32 ctrl = 0;
-@@ -2780,7 +2779,7 @@ static int atl1_suspend(struct device *dev)
- 		val = atl1_get_speed_and_duplex(hw, &speed, &duplex);
- 		if (val) {
- 			if (netif_msg_ifdown(adapter))
--				dev_printk(KERN_DEBUG, &pdev->dev,
-+				dev_printk(KERN_DEBUG, dev,
- 					"error getting speed/duplex\n");
- 			goto disable_wol;
- 		}
-@@ -2837,8 +2836,7 @@ static int atl1_suspend(struct device *dev)
- 
- static int atl1_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct atl1_adapter *adapter = netdev_priv(netdev);
- 
- 	iowrite32(0, adapter->hw.hw_addr + REG_WOL_CTRL);
--- 
-2.20.1
+I'm not sure I get you here. If we don't have such map, we will fall 
+back to normal uaccess helper. And in the memory accessor, the rcu 
+critical section is pretty small.
+
+Thanks
+
+
 
