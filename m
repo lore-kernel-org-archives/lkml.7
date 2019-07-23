@@ -2,200 +2,265 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA49C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43653C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8532221738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12238218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F6O53VjE"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Tv4nwW9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390688AbfGWOmu (ORCPT
+        id S2390696AbfGWOnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:42:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33593 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388172AbfGWOmt (ORCPT
+        Tue, 23 Jul 2019 10:43:23 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46561 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388172AbfGWOnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:42:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c14so20644694plo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:42:49 -0700 (PDT)
+        Tue, 23 Jul 2019 10:43:22 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so20674629plz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:43:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=MivtH/AFd/UEBQTX1L8TkdX1tWBHqaY6Yrp0reG3yuY=;
-        b=F6O53VjEkHgJGSFWE/TyGmcDrTX0Wb2ZnWmoEgoElaJLQk0ljUEFxCdRC8tslzbYSO
-         OfVlVRNf1LgjAQ48ihB/FvdgfcuibxsMHLeZl2DqLHBiRRH/BmXEPvdXmeNHyorYgwQo
-         EvgECRgKQF92fVGNnSgLG06OLJ3lZh/arI5+8=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CXJioUohNIJ0NhODmyNgtJL+ymWSK/aS70/EguesA7s=;
+        b=Tv4nwW9qgJhM1gi/kpZBvJdAFTNRF7o+uiQbdbJA+CEkh0nwv//1WqBl78VW2pztXN
+         6XH3F1oxedjEAfMghwEzZjJalzPyL21+Q3og8Z7lcMpWDls0IhHhwkgjSmZD2Nu0h0gQ
+         7qNXpRxPi4soMPYIewpFbmfSmFU3zNV61f93I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=MivtH/AFd/UEBQTX1L8TkdX1tWBHqaY6Yrp0reG3yuY=;
-        b=s1zX5Fn68d1PeOT7+P0GXh1DYlhAsD66tUSY6gpxnbVHJGPEvU8249BKydzDR7QS0L
-         2H/O60fikZq96wdh1H4Mghk1s3+DR3hlKjbCbTBVGhPXSXfEh3LZPhgbkqumfM+sfC1s
-         7CCRvap2SEvel+9oUu64O3YUfxmzsLJXCTL4TikHLwwngZoufVv3Z1DAv465wX3KybWD
-         uNuPd/su3Uqcwaa78+e3lKzncHtcnwyBZm4Ey4WkgOKUgANkxnliIAMMb7ibLLW0ShSY
-         thSxfKdLhnTVj8a4mzQPhxZFBivtILniMcXIKab/OC4Dgc4YkE2t8fgj21L0zdeHxiMI
-         RFbw==
-X-Gm-Message-State: APjAAAXYo02UDaFbbfcw+nr6UplM6Lbl8KX1ErajURHkzwRmp9dwostv
-        9vnAuDmzuBukFNTQsebwSdsiqvDB7kw=
-X-Google-Smtp-Source: APXvYqwtTx+QcAkXyfMl6NVacF5zqtkUSMrP0EzvRLV+pzVxCuifqK7xZtp+fixLQIdo1o6i/27a2A==
-X-Received: by 2002:a17:902:8a8a:: with SMTP id p10mr82515691plo.88.1563892968559;
-        Tue, 23 Jul 2019 07:42:48 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a6sm40156512pfa.162.2019.07.23.07.42.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CXJioUohNIJ0NhODmyNgtJL+ymWSK/aS70/EguesA7s=;
+        b=spQfrx4Ra79mr4TVsxakgqimBovJKKFbz97+uKE7ZVjvPNF8vTDNp7/O8COIbCMiUp
+         oG9D4gHpNNaqcvQiaYU94x2vvlRG7yZZqVA9uW+Im88mSxWLfvviIP7+fKiJmomwZery
+         7g1t8x6KoR9oYest223+qg0XW045SBN8ryXwzBzwaoSJhKcb2cf44tFIMZ3detz/1lx6
+         +u5zVThVzXXv3oPJQ0SsakWNSorPb/3AKJaA4VJ5A4bFdOnTjFzZqSobO2JU//yC9icm
+         7vgbreKj7GbkCWyIJjAWD9GIVi8OOeXJlbv1j6kXJmu6DHd97AnClcsX1T9kWOcid5px
+         bIUQ==
+X-Gm-Message-State: APjAAAWg1psMT0Fk4OzVsUJ65A2fKj9OJDBSfJsD47x48MTrggR9gZHF
+        qMrgHPMK0R8sic1kYN1FP0k=
+X-Google-Smtp-Source: APXvYqxq0XgaN2rBscmyFhGxyiLm9xRaeQ7cSnaC3QUCLqtyr5vXEKfMewiKHzKVKUeilH0kxvA+mw==
+X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr23521616plp.126.1563893001022;
+        Tue, 23 Jul 2019 07:43:21 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 2sm74645858pgm.39.2019.07.23.07.43.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 07:42:47 -0700 (PDT)
-Message-ID: <5d371ce7.1c69fb81.9650.8239@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 23 Jul 2019 07:43:20 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 10:43:18 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, vdavydov.dev@gmail.com,
+        Brendan Gregg <bgregg@netflix.com>, kernel-team@android.com,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, carmenjackson@google.com,
+        Christian Hansen <chansen3@cisco.com>,
+        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
+        David Howells <dhowells@redhat.com>, fmayer@google.com,
+        joaodias@google.com, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@google.com,
+        minchan@kernel.org, namhyung@google.com, sspatil@google.com,
+        surenb@google.com, Thomas Gleixner <tglx@linutronix.de>,
+        timmurray@google.com, tkjos@google.com,
+        Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
+Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
+ using virtual indexing
+Message-ID: <20190723144318.GF104199@google.com>
+References: <20190722213205.140845-1-joel@joelfernandes.org>
+ <20190722150639.27641c63b003dd04e187fd96@linux-foundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1563568344-1274-2-git-send-email-daidavid1@codeaurora.org>
-References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org> <1563568344-1274-2-git-send-email-daidavid1@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Update Qualcomm SDM845 DT bindings
-To:     David Dai <daidavid1@codeaurora.org>, bjorn.andersson@linaro.org,
-        georgi.djakov@linaro.org, robh+dt@kernel.org
-Cc:     David Dai <daidavid1@codeaurora.org>, evgreen@google.com,
-        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 23 Jul 2019 07:42:46 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722150639.27641c63b003dd04e187fd96@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting David Dai (2019-07-19 13:32:23)
-> Redefine the Network-on-Chip devices to more accurately describe
-> the interconnect topology on Qualcomm's SDM845 platform. Each
-> interconnect device can communicate with different instances of the
-> RPMh hardware which are described as RSCs(Resource State Coordinators).
->=20
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> ---
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-vote=
-r.txt b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.txt
-> new file mode 100644
-> index 0000000..2cf7da2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.txt
-> @@ -0,0 +1,32 @@
-> +Qualcomm BCM-Voter interconnect driver binding
-> +-----------------------------------------------------------
-> +
-> +The Bus Clock Manager (BCM) is a dedicated hardware accelerator
-> +that manages shared system resources by aggregating requests
-> +from multiple Resource State Coordinators (RSC). Interconnect
-> +providers are able to vote for aggregated thresholds values from
-> +consumers by communicating through their respective RSCs.
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +                       "qcom,sdm845-bcm-voter",
-> +
-> +Examples:
-> +
-> +apps_rsc: rsc@179c0000 {
+On Mon, Jul 22, 2019 at 03:06:39PM -0700, Andrew Morton wrote:
+> On Mon, 22 Jul 2019 17:32:04 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> 
+> > The page_idle tracking feature currently requires looking up the pagemap
+> > for a process followed by interacting with /sys/kernel/mm/page_idle.
+> > This is quite cumbersome and can be error-prone too. If between
+> > accessing the per-PID pagemap and the global page_idle bitmap, if
+> > something changes with the page then the information is not accurate.
+> 
+> Well, it's never going to be "accurate" - something could change one
+> nanosecond after userspace has read the data...
+> 
+> Presumably with this approach the data will be "more" accurate.  How
+> big a problem has this inaccuracy proven to be in real-world usage?
 
-But there isn't a reg property.
+Has proven to be quite a thorn. But the security issue is the main problem..
 
-> +       label =3D "apps_rsc";
+> > More over looking up PFN from pagemap in Android devices is not
+> > supported by unprivileged process and requires SYS_ADMIN and gives 0 for
+> > the PFN.
 
-Is label required?
+..as mentioned here.
 
-> +       compatible =3D "qcom,rpmh-rsc";
-> +
-> +       apps_bcm_voter: bcm_voter {
-> +               compatible =3D "qcom,sdm845-bcm-voter";
-> +       };
-> +}
-> +
-> +disp_rsc: rsc@179d0000 {
-> +       label =3D "disp_rsc";
-> +       compatible =3D "qcom,rpmh-rsc";
-> +
-> +       disp_bcm_voter: bcm_voter {
-> +               compatible =3D "qcom,sdm845-bcm-voter";
-> +       };
-> +}
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.t=
-xt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
-> index 5c4f1d9..27f9ed9 100644
-> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
-> @@ -4,21 +4,43 @@ Qualcomm SDM845 Network-On-Chip interconnect driver bin=
-ding
->  SDM845 interconnect providers support system bandwidth requirements thro=
-ugh
->  RPMh hardware accelerators known as Bus Clock Manager (BCM). The provide=
-r is
->  able to communicate with the BCM through the Resource State Coordinator =
-(RSC)
-> -associated with each execution environment. Provider nodes must reside w=
-ithin
-> -an RPMh device node pertaining to their RSC and each provider maps to a =
-single
-> -RPMh resource.
-> +associated with each execution environment. Provider nodes must point to=
- at
-> +least one RPMh device child node pertaining to their RSC and each provid=
-er
-> +can map to multiple RPMh resources.
-> =20
->  Required properties :
->  - compatible : shall contain only one of the following:
-> -                       "qcom,sdm845-rsc-hlos"
-> +                       "qcom,sdm845-aggre1_noc",
-> +                       "qcom,sdm845-aggre2_noc",
-> +                       "qcom,sdm845-config_noc",
-> +                       "qcom,sdm845-dc_noc",
-> +                       "qcom,sdm845-gladiator_noc",
-> +                       "qcom,sdm845-mem_noc",
-> +                       "qcom,sdm845-mmss_noc",
-> +                       "qcom,sdm845-system_noc",
->  - #interconnect-cells : should contain 1
-> +- reg : shall contain base register location and length
-> +- qcom,bcm-voter : shall contain phandles to bcm voters
-> =20
->  Examples:
-> =20
-> -apps_rsc: rsc {
-> -       rsc_hlos: interconnect {
-> -               compatible =3D "qcom,sdm845-rsc-hlos";
-> -               #interconnect-cells =3D <1>;
-> -       };
-> +aggre1_noc: interconnect@16e0000 {
-> +       compatible =3D "qcom,sdm845-aggre1_noc";
-> +       reg =3D <0x16e0000 0xd080>;
-> +       interconnect-cells =3D <1>;
-> +       qcom,bcm-voter =3D <&apps_bcm_voter>;
->  };
-> =20
-> +mmss_noc: interconnect@1740000 {
-> +       compatible =3D "qcom,sdm845-mmss_noc";
-> +       reg =3D <0x1740000 0x1c1000>;
-> +       interconnect-cells =3D <1>;
-> +       qcom,bcm-voter =3D <&apps_bcm_voter>, <&disp_bcm_voter>;
-> +};
-> +
-> +mem_noc: interconnect@1380000 {
-> +       compatible =3D "qcom,sdm845-mem_noc";
-> +       reg =3D <0 0x1380000 0 0x27200>;
-> +       #interconnect-cells =3D <1>;
-> +       qcom,bcm-voter =3D <&apps_bcm_voter>, <&disp_bcm_voter>;
-> +};
+I should have emphasized on the security issue more, will do so in the next
+revision.
 
-How does a consumer target a particular RSC? For example, how can
-display decide to use the disp_bcm_voter node from mem_noc here? Maybe
-you can add that consumer to the example?
+> > This patch adds support to directly interact with page_idle tracking at
+> > the PID level by introducing a /proc/<pid>/page_idle file. This
+> > eliminates the need for userspace to calculate the mapping of the page.
+> > It follows the exact same semantics as the global
+> > /sys/kernel/mm/page_idle, however it is easier to use for some usecases
+> > where looking up PFN is not needed and also does not require SYS_ADMIN.
+> > It ended up simplifying userspace code, solving the security issue
+> > mentioned and works quite well. SELinux does not need to be turned off
+> > since no pagemap look up is needed.
+> > 
+> > In Android, we are using this for the heap profiler (heapprofd) which
+> > profiles and pin points code paths which allocates and leaves memory
+> > idle for long periods of time.
+> > 
+> > Documentation material:
+> > The idle page tracking API for virtual address indexing using virtual page
+> > frame numbers (VFN) is located at /proc/<pid>/page_idle. It is a bitmap
+> > that follows the same semantics as /sys/kernel/mm/page_idle/bitmap
+> > except that it uses virtual instead of physical frame numbers.
+> > 
+> > This idle page tracking API can be simpler to use than physical address
+> > indexing, since the pagemap for a process does not need to be looked up
+> > to mark or read a page's idle bit. It is also more accurate than
+> > physical address indexing since in physical address indexing, address
+> > space changes can occur between reading the pagemap and reading the
+> > bitmap. In virtual address indexing, the process's mmap_sem is held for
+> > the duration of the access.
+> > 
+> > ...
+> >
+> > --- a/mm/page_idle.c
+> > +++ b/mm/page_idle.c
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/mmu_notifier.h>
+> >  #include <linux/page_ext.h>
+> >  #include <linux/page_idle.h>
+> > +#include <linux/sched/mm.h>
+> >  
+> >  #define BITMAP_CHUNK_SIZE	sizeof(u64)
+> >  #define BITMAP_CHUNK_BITS	(BITMAP_CHUNK_SIZE * BITS_PER_BYTE)
+> > @@ -28,15 +29,12 @@
+> >   *
+> >   * This function tries to get a user memory page by pfn as described above.
+> >   */
+> 
+> Above comment needs updating or moving?
+> 
+> > -static struct page *page_idle_get_page(unsigned long pfn)
+> > +static struct page *page_idle_get_page(struct page *page_in)
+> >  {
+> >  	struct page *page;
+> >  	pg_data_t *pgdat;
+> >  
+> > -	if (!pfn_valid(pfn))
+> > -		return NULL;
+> > -
+> > -	page = pfn_to_page(pfn);
+> > +	page = page_in;
+> >  	if (!page || !PageLRU(page) ||
+> >  	    !get_page_unless_zero(page))
+> >  		return NULL;
+> >
+> > ...
+> >
+> > +static int page_idle_get_frames(loff_t pos, size_t count, struct mm_struct *mm,
+> > +				unsigned long *start, unsigned long *end)
+> > +{
+> > +	unsigned long max_frame;
+> > +
+> > +	/* If an mm is not given, assume we want physical frames */
+> > +	max_frame = mm ? (mm->task_size >> PAGE_SHIFT) : max_pfn;
+> > +
+> > +	if (pos % BITMAP_CHUNK_SIZE || count % BITMAP_CHUNK_SIZE)
+> > +		return -EINVAL;
+> > +
+> > +	*start = pos * BITS_PER_BYTE;
+> > +	if (*start >= max_frame)
+> > +		return -ENXIO;
+> 
+> Is said to mean "The system tried to use the device represented by a
+> file you specified, and it couldnt find the device.  This can mean that
+> the device file was installed incorrectly, or that the physical device
+> is missing or not correctly attached to the computer."
+> 
+> This doesn't seem appropriate in this usage and is hence possibly
+> misleading.  Someone whose application fails with ENXIO will be
+> scratching their heads.
+
+This actually keeps it consistent with the current code. I refactored that
+code a bit and I'm reusing parts of it to keep lines of code less. See
+page_idle_bitmap_write where it returns -ENXIO in current upstream.
+
+However note that I am actually returning 0 if page_idle_bitmap_write()
+returns -ENXIO:
+
++	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
++	if (ret == -ENXIO)
++		return 0;  /* Reads beyond max_pfn do nothing */
+
+The reason I do it this way is, I am using page_idle_get_frames() in the old
+code and the new code, a bit confusing I know! But it is the cleanest way I
+could find to keep this code common.
+
+> > +	*end = *start + count * BITS_PER_BYTE;
+> > +	if (*end > max_frame)
+> > +		*end = max_frame;
+> > +	return 0;
+> > +}
+> > +
+> >
+> > ...
+> >
+> > +static void add_page_idle_list(struct page *page,
+> > +			       unsigned long addr, struct mm_walk *walk)
+> > +{
+> > +	struct page *page_get;
+> > +	struct page_node *pn;
+> > +	int bit;
+> > +	unsigned long frames;
+> > +	struct page_idle_proc_priv *priv = walk->private;
+> > +	u64 *chunk = (u64 *)priv->buffer;
+> > +
+> > +	if (priv->write) {
+> > +		/* Find whether this page was asked to be marked */
+> > +		frames = (addr - priv->start_addr) >> PAGE_SHIFT;
+> > +		bit = frames % BITMAP_CHUNK_BITS;
+> > +		chunk = &chunk[frames / BITMAP_CHUNK_BITS];
+> > +		if (((*chunk >> bit) & 1) == 0)
+> > +			return;
+> > +	}
+> > +
+> > +	page_get = page_idle_get_page(page);
+> > +	if (!page_get)
+> > +		return;
+> > +
+> > +	pn = kmalloc(sizeof(*pn), GFP_ATOMIC);
+> 
+> I'm not liking this GFP_ATOMIC.  If I'm reading the code correctly,
+> userspace can ask for an arbitrarily large number of GFP_ATOMIC
+> allocations by doing a large read.  This can potentially exhaust page
+> reserves which things like networking Rx interrupts need and can make
+> this whole feature less reliable.
+
+Ok, I will look into this more and possibly do the allocation another way.
+spinlocks are held hence I use GFP_ATOMIC..
+
+thanks,
+
+ - Joel
 
