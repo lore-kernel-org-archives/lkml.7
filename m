@@ -2,139 +2,138 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E113CC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D748C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96DC2238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="j2KDdcap"
+	by mail.kernel.org (Postfix) with ESMTP id 3A7C6223A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732654AbfGWFIV (ORCPT
+        id S1732674AbfGWFIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:08:21 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39191 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732478AbfGWFIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:08:21 -0400
-Received: by mail-vs1-f66.google.com with SMTP id u3so27958575vsh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 22:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tDS4gSwn4vjiBJe81KYYzL7InQAaE1qq2PXrKhXqlTs=;
-        b=j2KDdcapzsm80aR134jUbGPOcIEjhGx/YtVlRLot6jVeXKbFVo2V6o2h1GGw8NGfQC
-         3A1QdC8IzxVAJqs2Ts+V5VbaKUmNDsxpnBgVGkb6yp792JEqQVZAk+Fiv6MVkaZUjCcd
-         MC/MWFWlp/PPKJs+hDTiDJdPKiIoE7/Avv5FZkpIhdH76Crk73OHLTGYm6G98STksvLL
-         DI1NuHdqP7pAPYkerHyXPKBDJzx5JxUdCtGyvDjjOuY5kbYc+uvmaP0/B9ea4m3cuD5j
-         XrPiAJRhJaLwmcM61oSGQoScFRtCqfLLOGa39hVcbEBed86bhpG1Ds/Lx+Ojewk/MIhm
-         C/Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tDS4gSwn4vjiBJe81KYYzL7InQAaE1qq2PXrKhXqlTs=;
-        b=jtASwO/aCjnke6iYLIkAkqZLxLgvBzUNwlLCMzjvvdBGI2p/IOA3b7VjW2sA3Mu+fS
-         jbxfzB70f/uaWGKZgeUOh2chZXcsplCQ3FIHeteQ/6pnZro9ESBI273lj+OA2Zpqptj/
-         myxy1nbd0sim4gcylGZqlaFgiIlhB4QyrvtLpEbv5BKdXiWnsscGFiUXklu4tmmnJG+3
-         zJErgnJamaU3ZpRUTW8+HK907v4Z8q1MODIxHwX8lTItTWZaxYr2tfPRzEA7bdLlzLED
-         aygHAnbvm5RRRv8Y3YYB8OUPaDPjduidM19RBo1Y8udduom4I18S3b0JjUqxZ9jqmOiu
-         yd3w==
-X-Gm-Message-State: APjAAAXJKv4UvMbI+SnWYMt7sOtOpRrwqjmkXmvmcGDymryQcvPRgZJL
-        JjX/+ohIsJLTPJQUwIuyrhF0nzWf/f3QJT9i81Q=
-X-Google-Smtp-Source: APXvYqxSMp8D+aU6wN4mzW36IwWXd8EVY96kOzI5ofuaEVtfyj5O46xSTrH7ZpBTy4a/02bd6633pdIqQcvPZfcuqxs=
-X-Received: by 2002:a67:2e0e:: with SMTP id u14mr46945969vsu.182.1563858500194;
- Mon, 22 Jul 2019 22:08:20 -0700 (PDT)
+        Tue, 23 Jul 2019 01:08:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26832 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbfGWFIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:08:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 22:08:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
+   d="scan'208";a="196991815"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 22:08:43 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc:     huang ying <huang.ying.caritas@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>
+Subject: Re: kernel BUG at mm/swap_state.c:170!
+References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
+        <CAC=cRTMz5S636Wfqdn3UGbzwzJ+v_M46_juSfoouRLS1H62orQ@mail.gmail.com>
+        <CABXGCsOo-4CJicvTQm4jF4iDSqM8ic+0+HEEqP+632KfCntU+w@mail.gmail.com>
+        <878ssqbj56.fsf@yhuang-dev.intel.com>
+        <CABXGCsOhimxC17j=jApoty-o1roRhKYoe+oiqDZ3c1s2r3QxFw@mail.gmail.com>
+Date:   Tue, 23 Jul 2019 13:08:42 +0800
+In-Reply-To: <CABXGCsOhimxC17j=jApoty-o1roRhKYoe+oiqDZ3c1s2r3QxFw@mail.gmail.com>
+        (Mikhail Gavrilov's message of "Mon, 22 Jul 2019 12:56:18 +0500")
+Message-ID: <87zhl59w2t.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20190722123422.4571-1-vkoul@kernel.org> <20190722123422.4571-6-vkoul@kernel.org>
-In-Reply-To: <20190722123422.4571-6-vkoul@kernel.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 23 Jul 2019 10:38:09 +0530
-Message-ID: <CAHLCerPC0thO9gsaDAxc+XaexinrzG6JGJ8BhB4bFFuQ-P9Jxg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from
- unit name
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 6:06 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Unit name is supposed to be a number, using a macro with hex value is
+Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com> writes:
 
-/s/name/address?
+> On Mon, 22 Jul 2019 at 12:53, Huang, Ying <ying.huang@intel.com> wrote:
+>>
+>> Yes.  This is quite complex.  Is the transparent huge page enabled in
+>> your system?  You can check the output of
+>>
+>> $ cat /sys/kernel/mm/transparent_hugepage/enabled
+>
+> always [madvise] never
+>
+>> And, whether is the swap device you use a SSD or NVMe disk (not HDD)?
+>
+> NVMe INTEL Optane 905P SSDPE21D480GAM3
 
-> not recommended, so add the value in unit name.
->
-> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name should not have leading "0x"
-> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name should not have leading "0x"
-> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name should not have leading "0x"
-> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name should not have leading "0x"
-> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name should not have leading "0x"
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> index 1ebbd568dfd7..9b27b8346ba1 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> @@ -963,27 +963,27 @@ ap_ts_i2c: &i2c14 {
->  };
->
->  &pm8998_adc {
-> -       adc-chan@ADC5_AMUX_THM1_100K_PU {
-> +       adc-chan@4d {
->                 reg = <ADC5_AMUX_THM1_100K_PU>;
+Thanks!  I have found another (easier way) to reproduce the panic.
+Could you try the below patch on top of v5.2-rc2?  It can fix the panic
+for me.
 
-I'm a little conflicted about this change. If we're replacing the
-address with actual values, perhaps we should do that same for the reg
-property to keep them in sync? Admittedly though, it is a bit easier
-to read the macro name and figure out its meaning.
+Best Regards,
+Huang, Ying
 
->                 label = "sdm_temp";
->         };
->
-> -       adc-chan@ADC5_AMUX_THM2_100K_PU {
-> +       adc-chan@4e {
->                 reg = <ADC5_AMUX_THM2_100K_PU>;
->                 label = "quiet_temp";
->         };
->
-> -       adc-chan@ADC5_AMUX_THM3_100K_PU {
-> +       adc-chan@4f {
->                 reg = <ADC5_AMUX_THM3_100K_PU>;
->                 label = "lte_temp_1";
->         };
->
-> -       adc-chan@ADC5_AMUX_THM4_100K_PU {
-> +       adc-chan@50 {
->                 reg = <ADC5_AMUX_THM4_100K_PU>;
->                 label = "lte_temp_2";
->         };
->
-> -       adc-chan@ADC5_AMUX_THM5_100K_PU {
-> +       adc-chan@51 {
->                 reg = <ADC5_AMUX_THM5_100K_PU>;
->                 label = "charger_temp";
->         };
-> --
-> 2.20.1
->
+-----------------------------------8<----------------------------------
+From 5e519c2de54b9fd4b32b7a59e47ce7f94beb8845 Mon Sep 17 00:00:00 2001
+From: Huang Ying <ying.huang@intel.com>
+Date: Tue, 23 Jul 2019 08:49:57 +0800
+Subject: [PATCH] dbg xa head
+
+---
+ mm/huge_memory.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 9f8bce9a6b32..c6ca1c7157ed 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2482,6 +2482,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 	struct page *head = compound_head(page);
+ 	pg_data_t *pgdat = page_pgdat(head);
+ 	struct lruvec *lruvec;
++	struct address_space *swap_cache = NULL;
++	unsigned long offset;
+ 	int i;
+ 
+ 	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+@@ -2489,6 +2491,14 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 	/* complete memcg works before add pages to LRU */
+ 	mem_cgroup_split_huge_fixup(head);
+ 
++	if (PageAnon(head) && PageSwapCache(head)) {
++		swp_entry_t entry = { .val = page_private(head) };
++
++		offset = swp_offset(entry);
++		swap_cache = swap_address_space(entry);
++		xa_lock(&swap_cache->i_pages);
++	}
++
+ 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
+ 		__split_huge_page_tail(head, i, lruvec, list);
+ 		/* Some pages can be beyond i_size: drop them from page cache */
+@@ -2501,6 +2511,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 		} else if (!PageAnon(page)) {
+ 			__xa_store(&head->mapping->i_pages, head[i].index,
+ 					head + i, 0);
++		} else if (swap_cache) {
++			__xa_store(&swap_cache->i_pages, offset + i,
++				   head + i, 0);
+ 		}
+ 	}
+ 
+@@ -2508,9 +2521,10 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 	/* See comment in __split_huge_page_tail() */
+ 	if (PageAnon(head)) {
+ 		/* Additional pin to swap cache */
+-		if (PageSwapCache(head))
++		if (PageSwapCache(head)) {
+ 			page_ref_add(head, 2);
+-		else
++			xa_unlock(&swap_cache->i_pages);
++		} else
+ 			page_ref_inc(head);
+ 	} else {
+ 		/* Additional pin to page cache */
+-- 
+2.20.1
+
