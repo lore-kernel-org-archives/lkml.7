@@ -2,212 +2,106 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B31C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0800DC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5619421911
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C79206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388129AbfGWHCt (ORCPT
+        id S2388140AbfGWHEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:02:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48574 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbfGWHCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:02:48 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 98D30E3EF60CA17B3872;
-        Tue, 23 Jul 2019 15:01:38 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Jul
- 2019 15:01:33 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
- in image
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Chao Yu <chao@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190424094850.118323-1-yuchao0@huawei.com>
- <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
- <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
- <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
- <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
- <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
- <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
- <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <00726135-f210-7791-a372-ef9cb1ae209f@huawei.com>
-Date:   Tue, 23 Jul 2019 15:01:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 23 Jul 2019 03:04:44 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39073 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfGWHEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:04:44 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5C99A60007;
+        Tue, 23 Jul 2019 07:04:41 +0000 (UTC)
+Date:   Tue, 23 Jul 2019 09:04:40 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Sean Young <sean@mess.org>
+Cc:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v5 04/13] media: rc: sunxi: Add RXSTA bits definition
+Message-ID: <20190723070440.nfmhbrfykumxayjj@flea>
+References: <20190607231100.5894-1-peron.clem@gmail.com>
+ <20190607231100.5894-5-peron.clem@gmail.com>
+ <20190610095243.7xwp4xhauds22qzw@flea>
+ <CAJiuCcfyjGTBbsjZQYj2p3KD6O-WaXhFe5NZrnKQwJYACmatUw@mail.gmail.com>
+ <20190715121244.2vrsw6qa4fgp72fn@gofer.mess.org>
+ <20190723062557.hnbi6hgrg4ecawkn@gofer.mess.org>
 MIME-Version: 1.0
-In-Reply-To: <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nvr4fk2rzmmuioc2"
+Content-Disposition: inline
+In-Reply-To: <20190723062557.hnbi6hgrg4ecawkn@gofer.mess.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/23 9:35, Jaegeuk Kim wrote:
-> On 07/16, Chao Yu wrote:
->> Hi Jaegeuk,
->>
->> On 2019/5/9 9:15, Chao Yu wrote:
->>> On 2019/5/5 10:51, Chao Yu wrote:
->>>> On 2019/5/1 11:22, Jaegeuk Kim wrote:
->>>>> On 04/29, Chao Yu wrote:
->>>>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
->>>>>>> On 04/24, Chao Yu wrote:
->>>>>>>> This patch fixes to do sanity with enabled features in image, if
->>>>>>>> there are features kernel can not recognize, just fail the mount.
->>>>>>>
->>>>>>> We need to figure out per-feature-based rejection, since some of them can
->>>>>>> be set without layout change.
->>
->> What about adding one field in superblock for compatible features in future?
->>
->> sb.feature(F2FS_FEATURE_LAST, max] stores uncompatible features
->> sb.compatible_feature stores compatible features
->>
->> If we follow above rule when adding one feature, then, we can fail the mount if
->> sb.feature(F2FS_FEATURE_LAST, max] is valid.
-> 
-> How about adding required_features flag in sb to check part of features only?
 
-You mean all incompatible features can be add into sb.required_features later
-like this?
+--nvr4fk2rzmmuioc2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-__le32 required_features;	/* incompatible feature to old kernel */
+Hi Sean,
 
-And we can check required_features with supported features in current kernel?
+On Tue, Jul 23, 2019 at 07:25:57AM +0100, Sean Young wrote:
+> On Mon, Jul 15, 2019 at 01:12:45PM +0100, Sean Young wrote:
+> > On Sun, Jul 14, 2019 at 04:32:22PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Hi Sean,
+> > >
+> > > You acked the whole v3 series but this patch has been introduced in v5
+> > > could you ack this one too?
+> >
+> > Acked-by: Sean Young <sean@mess.org>
+>
+> So who's tree should this series go through? It seems mostly device tree.
+> Alternatively I'm happy to try it get merged via the media tree.
 
-if (le32_to_cpu(raw_super->required_features) &
-	(~NOW_SUPPORTED_FEATURES_IN_CURRENT_KERNEL)) {
-	print msg & ret error;
-}
+Ideally the media bits should go through the media tree, the DT bits
+will go through arm-soc
 
-Thanks,
+So you can apply the patches 1-4, 7 and 10, I'll apply the rest.
 
-> 
->>
->> Thanks,
->>
->>>>>>
->>>>>> So any suggestion on how to implement this?
->>>>>
->>>>> Which features do we need to disallow? When we introduce new features, they
->>>>
->>>> I guess it should be the new features.
->>>>
->>>>> didn't hurt the previous flow by checking f2fs_sb_has_###().
->>>>
->>>> Yes, but new features may use new disk layout, if old kernel handled it with old
->>>> disk layout, there must be problematic.
->>>>
->>>> e.g. format image with -O extra_attr, and mount it with kernel who don't
->>>> recognize new inode layout.
->>>
->>> Jaegeuk,
->>>
->>> Any thoughts?
->>>
->>> Thanks,
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>>>
->>>>>> Maybe:
->>>>>>
->>>>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
->>>>>> 	check 4.14+ features
->>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
->>>>>> 	check 4.9+ features
->>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
->>>>>> 	check 4.4+ features
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>>>>>> ---
->>>>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
->>>>>>>>  fs/f2fs/super.c |  9 +++++++++
->>>>>>>>  2 files changed, 22 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>>>>> index f5ffc09705eb..15b640967e12 100644
->>>>>>>> --- a/fs/f2fs/f2fs.h
->>>>>>>> +++ b/fs/f2fs/f2fs.h
->>>>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
->>>>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
->>>>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
->>>>>>>>  
->>>>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
->>>>>>>> +				F2FS_FEATURE_BLKZONED |			\
->>>>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
->>>>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
->>>>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
->>>>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
->>>>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
->>>>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
->>>>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
->>>>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
->>>>>>>> +				F2FS_FEATURE_VERITY |			\
->>>>>>>> +				F2FS_FEATURE_SB_CHKSUM)
->>>>>>>> +
->>>>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
->>>>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
->>>>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
->>>>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->>>>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
->>>>>>>> --- a/fs/f2fs/super.c
->>>>>>>> +++ b/fs/f2fs/super.c
->>>>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
->>>>>>>>  		return 1;
->>>>>>>>  	}
->>>>>>>>  
->>>>>>>> +	/* check whether kernel supports all features */
->>>>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
->>>>>>>> +		f2fs_msg(sb, KERN_INFO,
->>>>>>>> +			"Unsupported feature:%u: supported:%u",
->>>>>>>> +			le32_to_cpu(raw_super->feature),
->>>>>>>> +			F2FS_ALL_FEATURES);
->>>>>>>> +		return 1;
->>>>>>>> +	}
->>>>>>>> +
->>>>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
->>>>>>>>  	if (sanity_check_area_boundary(sbi, bh))
->>>>>>>>  		return 1;
->>>>>>>> -- 
->>>>>>>> 2.18.0.rc1
->>>>> .
->>>>>
->>>>
->>>>
->>>> _______________________________________________
->>>> Linux-f2fs-devel mailing list
->>>> Linux-f2fs-devel@lists.sourceforge.net
->>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>>> .
->>>>
->>>
->>>
->>> _______________________________________________
->>> Linux-f2fs-devel mailing list
->>> Linux-f2fs-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>> .
->>>
-> .
-> 
+Does that work for you?
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nvr4fk2rzmmuioc2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTaxiAAKCRDj7w1vZxhR
+xesNAQD8WCEMwvXtgYh+h+LCOvkCUrn06ytKH73piKWm8MCJTAEA6k/hf/kMW9uJ
+9ayaEnz1ePXdNkfsVhxSLNJVpUKTHwI=
+=ZogC
+-----END PGP SIGNATURE-----
+
+--nvr4fk2rzmmuioc2--
