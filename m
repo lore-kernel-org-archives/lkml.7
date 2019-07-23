@@ -2,110 +2,185 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A642C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644FFC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AE62239F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:57:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m/AmoBeO"
+	by mail.kernel.org (Postfix) with ESMTP id 469342239F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388146AbfGWQ5I (ORCPT
+        id S2390938AbfGWQ6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:57:08 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43392 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730940AbfGWQ5H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:57:07 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w17so42572736qto.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 09:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bctZIRJmF0Tt66epBoIW8Nv3zbBghWNg0cSJA3lvz58=;
-        b=m/AmoBeOCFr0QaZjltESdsZE4fOROqUL06GHXh0L+7fh+af27xkAW20v/yQphJ2PRI
-         6VjowW5mw+hZQYU1tset+mrRNA/vq5KMxhiR3MJetGBuySXEu80cNuztkUafdZ1Fr5uI
-         Ow1mCKVOl7XYDOObd5P0WXvNLA6IvVjUBX8vw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bctZIRJmF0Tt66epBoIW8Nv3zbBghWNg0cSJA3lvz58=;
-        b=JIezuTgbHmgmmZDdPiHQhLWB599o0lySt3+4Mw/jiZRYapr1+AOqLCSCdn/xN8z0LE
-         CtOglGbir6BHPvnWlK2rHxuPNKQ1y1NNI2CXyKzBrOGUyazI7lcRGZSTDl3yKDCxTP+D
-         N1K7WtlzpP6gzSfhIb/4NiQ8fwsm6QzhbRMZvyQdB3/HjZKMOmklNtfPBhY7zUsR2D8c
-         +5LkQEp7THpsv8L/FB5+To48F5PDu3LV1s0gQQqg7Ira49V+PSY8ta6/0TZ1YLlVVROF
-         apW8hb9WYFPLiXoMfetTx65a7GhF7Qgqp6aOVy7l2IDNQGKTjYdEJM3fOJXLpHOS5fHq
-         NrkQ==
-X-Gm-Message-State: APjAAAVcRDep81STVW8R66aJQtdP3LQNI68AT2Kvtux3ghvCCY6qaBjw
-        dPTaio81jtga4f+HedN3a7r8kqAld5yhnFayx/cfnw==
-X-Google-Smtp-Source: APXvYqx7dnBZ7AYtOXCbCEB1ql70DdqBWrp5Cp3QwgfTdYFMK1cTaFd7Gg8L91xqsBe3NjLBTDRcue8FC5XAS9tIjrM=
-X-Received: by 2002:aed:3742:: with SMTP id i60mr53528186qtb.376.1563901026650;
- Tue, 23 Jul 2019 09:57:06 -0700 (PDT)
+        Tue, 23 Jul 2019 12:58:42 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:50436 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730940AbfGWQ6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:58:41 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hpy7M-0003T7-TD; Tue, 23 Jul 2019 10:58:26 -0600
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
+ <20190722230859.5436-15-logang@deltatee.com>
+ <d5e20223-04b9-dcb4-7c96-57d84eb010ae@amd.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <a6282247-b7a4-3eb9-4f87-4e73a0047f28@deltatee.com>
+Date:   Tue, 23 Jul 2019 10:58:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190722182451.GB24412@kroah.com> <20190722223337.36199-1-ravisadineni@chromium.org>
- <CAJZ5v0ikknRGPg0fhPRB2oLxtC0kD=8DX=6Z9MgtAYTO+YZ3ng@mail.gmail.com>
-In-Reply-To: <CAJZ5v0ikknRGPg0fhPRB2oLxtC0kD=8DX=6Z9MgtAYTO+YZ3ng@mail.gmail.com>
-From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Date:   Tue, 23 Jul 2019 09:56:55 -0700
-Message-ID: <CAEZbON5aC+iYzg58YH59rvfvcUYkjwQyjA9wAJstFEQvUei_-A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] power: Refactor device level sysfs.
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Todd Broch <tbroch@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d5e20223-04b9-dcb4-7c96-57d84eb010ae@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, hch@lst.de, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Christian.Koenig@amd.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 14/14] PCI/P2PDMA: Introduce pci_p2pdma_[un]map_resource()
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-https://patchwork.kernel.org/patch/11045069/ seems to create a virtual
-device under wakeup class with the same name as the actual device. I
-don't see a way to reliably map these virtual devices to the actual
-device sysfs node. For example if we have to know if a particular
-input device has triggered a wake event, we have to look for a virtual
-device under /sys/class/wakeup with the same name. I am afraid that
-depending just on the name might be too risky as there can be multiple
-devices under different buses with the same name.  Am I missing
-something?
 
-Thanks,
-Ravi
+On 2019-07-23 10:28 a.m., Koenig, Christian wrote:
+> Am 23.07.19 um 01:08 schrieb Logan Gunthorpe:
+>> pci_p2pdma_[un]map_resource() can be used to map a resource given
+>> it's physical address and the backing pci_dev. The functions will call
+>> dma_[un]map_resource() when appropriate.
+>>
+>> This is for demonstration purposes only as there are no users of this
+>> function at this time. Thus, this patch should not be merged at
+>> this time.
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> 
+> Not sure if pci_p2pdma_phys_to_bus actually needs to be exported. But 
+> apart from that looks fine to me.
 
-On Tue, Jul 23, 2019 at 12:44 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Jul 23, 2019 at 12:33 AM Ravi Chandra Sadineni
-> <ravisadineni@chromium.org> wrote:
-> >
-> > wakeup_abort_count and wakeup_count attributes print the
-> > same (wakeup_count) variable. Thus this patchset removes the
-> > duplicate wakeup_abort_count sysfs attribute. This patchset also
-> > exposes event_count as a sysfs attribute.
-> >
-> > Ravi Chandra Sadineni (2):
-> >   power: sysfs: Remove wakeup_abort_count attribute.
-> >   power:sysfs: Expose device wakeup_event_count.
->
-> I don't think you need this at all, because
-> https://patchwork.kernel.org/patch/11045069/ is exposing what you need
-> already.
->
-> Thanks!
+Yes, oops, it certainly shouldn't be exported if it's static. I'll fix that.
+
+> Reviewed-by: Christian König <christian.koenig@amd.com>
+> 
+> Christian.
+> 
+>> ---
+>>   drivers/pci/p2pdma.c | 85 ++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 85 insertions(+)
+>>
+>> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+>> index baf476039396..20c834cfd2d3 100644
+>> --- a/drivers/pci/p2pdma.c
+>> +++ b/drivers/pci/p2pdma.c
+>> @@ -874,6 +874,91 @@ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
+>>   
+>> +static pci_bus_addr_t pci_p2pdma_phys_to_bus(struct pci_dev *dev,
+>> +		phys_addr_t start, size_t size)
+>> +{
+>> +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>> +	phys_addr_t end = start + size;
+>> +	struct resource_entry *window;
+>> +
+>> +	resource_list_for_each_entry(window, &bridge->windows) {
+>> +		if (window->res->start <= start && window->res->end >= end)
+>> +			return start - window->offset;
+>> +	}
+>> +
+>> +	return DMA_MAPPING_ERROR;
+>> +}
+>> +EXPORT_SYMBOL_GPL(pci_p2pdma_phys_to_bus);
+>> +
+>> +/**
+>> + * pci_p2pdma_map_resource - map a PCI peer-to-peer physical address for DMA
+>> + * @provider: pci device that provides the memory backed by phys_addr
+>> + * @dma_dev: device doing the DMA request
+>> + * @phys_addr: physical address of the memory to map
+>> + * @size: size of the memory to map
+>> + * @dir: DMA direction
+>> + * @attrs: dma attributes passed to dma_map_resource() (if called)
+>> + *
+>> + * Maps a BAR physical address for programming a DMA engine.
+>> + *
+>> + * Returns the dma_addr_t to map or DMA_MAPPING_ERROR on failure
+>> + */
+>> +dma_addr_t pci_p2pdma_map_resource(struct pci_dev *provider,
+>> +		struct device *dma_dev, phys_addr_t phys_addr, size_t size,
+>> +		enum dma_data_direction dir, unsigned long attrs)
+>> +{
+>> +	struct pci_dev *client;
+>> +	int dist;
+>> +
+>> +	client = find_parent_pci_dev(dma_dev);
+>> +	if (!client)
+>> +		return DMA_MAPPING_ERROR;
+>> +
+>> +	dist = upstream_bridge_distance(provider, client, NULL);
+>> +	if (dist & P2PDMA_NOT_SUPPORTED)
+>> +		return DMA_MAPPING_ERROR;
+>> +
+>> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
+>> +		return dma_map_resource(dma_dev, phys_addr, size, dir, attrs);
+>> +	else
+>> +		return pci_p2pdma_phys_to_bus(provider, phys_addr, size);
+>> +}
+>> +EXPORT_SYMBOL_GPL(pci_p2pdma_map_resource);
+>> +
+>> +/**
+>> + * pci_p2pdma_unmap_resource - unmap a resource mapped with
+>> + *		pci_p2pdma_map_resource()
+>> + * @provider: pci device that provides the memory backed by phys_addr
+>> + * @dma_dev: device doing the DMA request
+>> + * @addr: dma address returned by pci_p2pdma_unmap_resource()
+>> + * @size: size of the memory to map
+>> + * @dir: DMA direction
+>> + * @attrs: dma attributes passed to dma_unmap_resource() (if called)
+>> + *
+>> + * Maps a BAR physical address for programming a DMA engine.
+>> + *
+>> + * Returns the dma_addr_t to map or DMA_MAPPING_ERROR on failure
+>> + */
+>> +void pci_p2pdma_unmap_resource(struct pci_dev *provider,
+>> +		struct device *dma_dev, dma_addr_t addr, size_t size,
+>> +		enum dma_data_direction dir, unsigned long attrs)
+>> +{
+>> +	struct pci_dev *client;
+>> +	int dist;
+>> +
+>> +	client = find_parent_pci_dev(dma_dev);
+>> +	if (!client)
+>> +		return;
+>> +
+>> +	dist = upstream_bridge_distance(provider, client, NULL);
+>> +	if (dist & P2PDMA_NOT_SUPPORTED)
+>> +		return;
+>> +
+>> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
+>> +		dma_unmap_resource(dma_dev, addr, size, dir, attrs);
+>> +}
+>> +EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_resource);
+>> +
+>>   /**
+>>    * pci_p2pdma_enable_store - parse a configfs/sysfs attribute store
+>>    *		to enable p2pdma
+> 
