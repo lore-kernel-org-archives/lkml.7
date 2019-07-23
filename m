@@ -2,115 +2,143 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E92C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35C4C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BF3229EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943A6229EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:39:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jvibVR/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392151AbfGWVjV (ORCPT
+        id S2403964AbfGWVjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:39:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27130 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731575AbfGWVjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:39:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 14:39:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
-   d="scan'208";a="193208522"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2019 14:39:20 -0700
-Received: from fmsmsx122.amr.corp.intel.com (10.18.125.37) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 23 Jul 2019 14:39:20 -0700
-Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
- fmsmsx122.amr.corp.intel.com (10.18.125.37) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 23 Jul 2019 14:39:20 -0700
-Received: from crsmsx101.amr.corp.intel.com ([169.254.1.124]) by
- CRSMSX103.amr.corp.intel.com ([169.254.4.76]) with mapi id 14.03.0439.000;
- Tue, 23 Jul 2019 15:39:18 -0600
-From:   "Weiny, Ira" <ira.weiny@intel.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>,
-        Matthew Wilcox <willy@infradead.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Tue, 23 Jul 2019 17:39:40 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:11845 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbfGWVjk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 17:39:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d377e960000>; Tue, 23 Jul 2019 14:39:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 14:39:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 23 Jul 2019 14:39:37 -0700
+Received: from [10.26.11.185] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
+ 2019 21:39:32 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Lars Persson <lists@bofh.nu>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: RE: [PATCH v2 1/3] mm: document zone device struct page field usage
-Thread-Topic: [PATCH v2 1/3] mm: document zone device struct page field usage
-Thread-Index: AQHVPmhqrWtcBDDhM0SqFmlAUI6ZYabVowsAgABn2YCAANhwgIACPs6A//+fIVA=
-Date:   Tue, 23 Jul 2019 21:39:17 +0000
-Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E79E2E610@CRSMSX101.amr.corp.intel.com>
-References: <20190719192955.30462-1-rcampbell@nvidia.com>
- <20190719192955.30462-2-rcampbell@nvidia.com>
- <20190721160204.GB363@bombadil.infradead.org>
- <20190722051345.GB6157@iweiny-DESK2.sc.intel.com>
- <20190722110825.GD363@bombadil.infradead.org>
- <80dbf7fc-5c13-f43f-7b87-8273126562e9@nvidia.com>
-In-Reply-To: <80dbf7fc-5c13-f43f-7b87-8273126562e9@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTYwNWJiNTUtMWZkZC00OGYyLThhNTktMGQ0MTJiNGFiMzJlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiU0Irc3ZON2x4MWJQNUFZY1ZCcEh2SUxaRndzcFZBSnBkSHp0TGVyVWtQcllVXC9BUHU4dHBVdWFRU2ZTUlY0NG0ifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [172.18.205.10]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+ <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190722101830.GA24948@apalos>
+ <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
+ <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
+ <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
+ <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
+ <8756d681-e167-fe4a-c6f0-47ae2dcbb100@nvidia.com>
+ <3255edfa-4465-204b-4751-8d40c8fb1382@arm.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <ae11deb4-abec-f0f9-312d-b11d72bc74cd@nvidia.com>
+Date:   Tue, 23 Jul 2019 22:39:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <3255edfa-4465-204b-4751-8d40c8fb1382@arm.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563917975; bh=3lTWQ4Ol+M8dbc5nZy7wEdkUC8P1FuGjPhA49g8j8zk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jvibVR/sKGrwa2X/qvAjnZwSbm2bNfciQjLdTf4vyefptsIWI8zsUowixYZ6tB9Nw
+         Zlr9Yf1gr0DQJXt+6R6C0hyozvsu2WvdsxMKBhuXhnbwSb0R3ax3RQpxhKCKQ5vhzl
+         VuhHWs8kZ5kB3D9acg6XfuQfHc/HPqve+4e6kkrdXG2dieduHRwBah8yWM1QwmG0XN
+         k17/J7Fa3caqZkgKym+i/gpuFwuw3F9bG7+7prK7J7P10qK3bv2yWLHppIQPmJCOxs
+         csTZdSV19F6ZS7wjvM86WuqApUCoHIJIhufWWHBg/gd9OMXU0zwVvSKBmC/J/f4jTi
+         w8VKyH/YrF9Zw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gT24gNy8yMi8xOSA0OjA4IEFNLCBNYXR0aGV3IFdpbGNveCB3cm90ZToNCj4gPiBPbiBT
-dW4sIEp1bCAyMSwgMjAxOSBhdCAxMDoxMzo0NVBNIC0wNzAwLCBJcmEgV2Vpbnkgd3JvdGU6DQo+
-ID4+IE9uIFN1biwgSnVsIDIxLCAyMDE5IGF0IDA5OjAyOjA0QU0gLTA3MDAsIE1hdHRoZXcgV2ls
-Y294IHdyb3RlOg0KPiA+Pj4gT24gRnJpLCBKdWwgMTksIDIwMTkgYXQgMTI6Mjk6NTNQTSAtMDcw
-MCwgUmFscGggQ2FtcGJlbGwgd3JvdGU6DQo+ID4+Pj4gU3RydWN0IHBhZ2UgZm9yIFpPTkVfREVW
-SUNFIHByaXZhdGUgcGFnZXMgdXNlcyB0aGUgcGFnZS0+bWFwcGluZw0KPiA+Pj4+IGFuZCBhbmQg
-cGFnZS0+aW5kZXggZmllbGRzIHdoaWxlIHRoZSBzb3VyY2UgYW5vbnltb3VzIHBhZ2VzIGFyZQ0K
-PiA+Pj4+IG1pZ3JhdGVkIHRvIGRldmljZSBwcml2YXRlIG1lbW9yeS4gVGhpcyBpcyBzbyBybWFw
-X3dhbGsoKSBjYW4gZmluZA0KPiA+Pj4+IHRoZSBwYWdlIHdoZW4gbWlncmF0aW5nIHRoZSBaT05F
-X0RFVklDRSBwcml2YXRlIHBhZ2UgYmFjayB0byBzeXN0ZW0NCj4gbWVtb3J5Lg0KPiA+Pj4+IFpP
-TkVfREVWSUNFIHBtZW0gYmFja2VkIGZzZGF4IHBhZ2VzIGFsc28gdXNlIHRoZSBwYWdlLT5tYXBw
-aW5nDQo+IGFuZA0KPiA+Pj4+IHBhZ2UtPmluZGV4IGZpZWxkcyB3aGVuIGZpbGVzIGFyZSBtYXBw
-ZWQgaW50byBhIHByb2Nlc3MgYWRkcmVzcyBzcGFjZS4NCj4gPj4+Pg0KPiA+Pj4+IFJlc3RydWN0
-dXJlIHN0cnVjdCBwYWdlIGFuZCBhZGQgY29tbWVudHMgdG8gbWFrZSB0aGlzIG1vcmUgY2xlYXIu
-DQo+ID4+Pg0KPiA+Pj4gTkFLLiAgSSBqdXN0IGdvdCByaWQgb2YgdGhpcyBraW5kIG9mIGZvb2xp
-c2huZXNzIGZyb20gc3RydWN0IHBhZ2UsDQo+ID4+PiBhbmQgeW91J3JlIG1ha2luZyBpdCBoYXJk
-ZXIgdG8gdW5kZXJzdGFuZCwgbm90IGVhc2llci4gIFRoZSBjb21tZW50cw0KPiA+Pj4gY291bGQg
-YmUgaW1wcm92ZWQsIGJ1dCBkb24ndCBsYXkgaXQgb3V0IGxpa2UgdGhpcyBhZ2Fpbi4NCj4gPj4N
-Cj4gPj4gV2FzIFYxIG9mIFJhbHBocyBwYXRjaCBvaz8gIEl0IHNlZW1lZCBvayB0byBtZS4NCj4g
-Pg0KPiA+IFllcywgdjEgd2FzIGZpbmUuICBUaGlzIHNlZW1zIGxpa2UgYSByZWdyZXNzaW9uLg0K
-PiA+DQo+IA0KPiBUaGlzIGlzIGFib3V0IHdoYXQgcGVvcGxlIGZpbmQgImVhc2llc3QgdG8gdW5k
-ZXJzdGFuZCIgYW5kIHNvIEknbSBub3QNCj4gc3VycHJpc2VkIHRoYXQgb3BpbmlvbnMgZGlmZmVy
-Lg0KPiBXaGF0IGlmIEkgcG9zdCBhIHYzIGJhc2VkIG9uIHYxIGJ1dCByZW1vdmUgdGhlIF96ZF9w
-YWRfKiB2YXJpYWJsZXMgdGhhdA0KPiBDaHJpc3RvcGggZm91bmQgbWlzbGVhZGluZyBhbmQgYWRk
-IHNvbWUgbW9yZSBjb21tZW50cyBhYm91dCBob3cgdGhlDQo+IGRpZmZlcmVudCBaT05FX0RFVklD
-RSB0eXBlcyB1c2UgdGhlIDMgcmVtYWluaW5nIHdvcmRzIChiYXNpY2FsbHkgdGhlDQo+IGNvbW1l
-bnQgZnJvbSB2Mik/DQoNCkknbSBvayB3aXRoIHRoYXQuLi4NCg0KSXJhDQoNCg==
+
+On 23/07/2019 14:19, Robin Murphy wrote:
+
+...
+
+>>> Do you know if the SMMU interrupts are working correctly? If not, it's
+>>> possible that an incorrect address or mapping direction could lead to
+>>> the DMA transaction just being silently terminated without any fault
+>>> indication, which generally presents as inexplicable weirdness (I've
+>>> certainly seen that on another platform with the mix of an unsupported
+>>> interrupt controller and an 'imperfect' ethernet driver).
+>>
+>> If I simply remove the iommu node for the ethernet controller, then I
+>> see lots of ...
+>>
+>> [=C2=A0=C2=A0=C2=A0 6.296121] arm-smmu 12000000.iommu: Unexpected global=
+ fault, this
+>> could be serious
+>> [=C2=A0=C2=A0=C2=A0 6.296125] arm-smmu 12000000.iommu:=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GFSR 0x00000002,
+>> GFSYNR0 0x00000000, GFSYNR1 0x00000014, GFSYNR2 0x00000000
+>>
+>> So I assume that this is triggering the SMMU interrupt correctly.
+>=20
+> According to tegra186.dtsi it appears you're using the MMU-500 combined
+> interrupt, so if global faults are being delivered then context faults
+> *should* also, but I'd be inclined to try a quick hack of the relevant
+> stmmac_desc_ops::set_addr callback to write some bogus unmapped address
+> just to make sure arm_smmu_context_fault() then screams as expected, and
+> we're not missing anything else.
+
+I hacked the driver and forced the address to zero for a test and
+in doing so I see ...
+
+[   10.440072] arm-smmu 12000000.iommu: Unhandled context fault: fsr=3D0x40=
+2, iova=3D0x00000000, fsynr=3D0x1c0011, cbfrsynra=3D0x14, cb=3D0
+
+So looks like the interrupts are working AFAICT.
+
+Cheers
+Jon
+
+--=20
+nvpublic
