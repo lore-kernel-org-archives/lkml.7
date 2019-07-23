@@ -2,230 +2,181 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600F8C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAFCC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9E6227B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98162227B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfGWJTp (ORCPT
+        id S1732161AbfGWJTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:19:45 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57436 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfGWJTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:19:44 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CD23620034E;
-        Tue, 23 Jul 2019 11:19:41 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 97256200307;
-        Tue, 23 Jul 2019 11:19:38 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 92891402FC;
-        Tue, 23 Jul 2019 17:19:34 +0800 (SGT)
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-Subject: [RESEND PATCH v6] dmaengine: fsl-edma: add i.mx7ulp edma2 version support
-Date:   Tue, 23 Jul 2019 16:57:42 +0800
-Message-Id: <1563872262-18376-1-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 23 Jul 2019 05:19:51 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:34405 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfGWJTu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:19:50 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 5B183200B6;
+        Tue, 23 Jul 2019 11:19:46 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 11:19:45 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Derek Basehore <dbasehore@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        intel-gfx@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-mediatek@lists.infradead.org, Sean Paul <sean@poorly.run>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 2/4] drm/panel: set display info in panel attach
+Message-ID: <20190723091945.GD787@ravnborg.org>
+References: <20190710021659.177950-1-dbasehore@chromium.org>
+ <20190710021659.177950-3-dbasehore@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710021659.177950-3-dbasehore@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cm27Pg_UAAAA:8
+        a=e5mUnYsNAAAA:8 a=JKKMseLQFeVpvqDGF_IA:9 a=V_j96s7zFc6XEDQv:21
+        a=BZ3M7_42R0vJoBCe:21 a=CjuIK1q_8ugA:10 a=xmb-EsYY8bH0VWELuYED:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add edma2 for i.mx7ulp by version v3, since v2 has already
-been used by mcf-edma.
-The big changes based on v1 are belows:
-1. only one dmamux.
-2. another clock dma_clk except dmamux clk.
-3. 16 independent interrupts instead of only one interrupt for
-all channels.
+Hi Derek.
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
-Change from v5(https://lkml.org/lkml/2019/6/25/444):
-Fix below build issue, replace platform_irq_count() instead
-of of_irq_count():
-https://lkml.org/lkml/2019/7/8/5
+On Tue, Jul 09, 2019 at 07:16:57PM -0700, Derek Basehore wrote:
+> Devicetree systems can set panel orientation via a panel binding, but
+> there's no way, as is, to propagate this setting to the connector,
+> where the property need to be added.
+> To address this, this patch sets orientation, as well as other fixed
+> values for the panel, in the drm_panel_attach function. These values
+> are stored from probe in the drm_panel struct.
 
- drivers/dma/fsl-edma-common.c | 18 +++++++++++-
- drivers/dma/fsl-edma-common.h |  4 +++
- drivers/dma/fsl-edma.c        | 66 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 87 insertions(+), 1 deletion(-)
+This approch seems to conflict with work done by Laurent where the
+ownership/creation of the connector will be moved to the display controller.
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 26952f5..26c7e0f 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
- 	iowrite8(val8, addr + off);
- }
- 
-+void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-+		     u32 off, u32 slot, bool enable)
-+{
-+	u32 val;
-+
-+	if (enable)
-+		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
-+	else
-+		val = EDMAMUX_CHCFG_DIS;
-+
-+	iowrite32(val, addr + off * 4);
-+}
-+
- void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 			unsigned int slot, bool enable)
- {
-@@ -108,7 +121,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
--	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
-+	if (fsl_chan->edma->drvdata->version == v3)
-+		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
-+	else
-+		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
- EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
- 
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 4e17556..5eaa290 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -125,6 +125,7 @@ struct fsl_edma_chan {
- 	dma_addr_t			dma_dev_addr;
- 	u32				dma_dev_size;
- 	enum dma_data_direction		dma_dir;
-+	char				chan_name[16];
- };
- 
- struct fsl_edma_desc {
-@@ -139,11 +140,13 @@ struct fsl_edma_desc {
- enum edma_version {
- 	v1, /* 32ch, Vybrid, mpc57x, etc */
- 	v2, /* 64ch Coldfire */
-+	v3, /* 32ch, i.mx7ulp */
- };
- 
- struct fsl_edma_drvdata {
- 	enum edma_version	version;
- 	u32			dmamuxs;
-+	bool			has_dmaclk;
- 	int			(*setup_irq)(struct platform_device *pdev,
- 					     struct fsl_edma_engine *fsl_edma);
- };
-@@ -153,6 +156,7 @@ struct fsl_edma_engine {
- 	void __iomem		*membase;
- 	void __iomem		*muxbase[DMAMUX_NR];
- 	struct clk		*muxclk[DMAMUX_NR];
-+	struct clk		*dmaclk;
- 	struct mutex		fsl_edma_mutex;
- 	const struct fsl_edma_drvdata *drvdata;
- 	u32			n_chans;
-diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-index fcbad6a..54cbdfd 100644
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -162,6 +162,50 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
- 	return 0;
- }
- 
-+static int
-+fsl_edma2_irq_init(struct platform_device *pdev,
-+		   struct fsl_edma_engine *fsl_edma)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int i, ret, irq;
-+	int count;
-+
-+	count = platform_irq_count(pdev);
-+	dev_dbg(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
-+	if (count <= 2) {
-+		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
-+		return -EINVAL;
-+	}
-+	/*
-+	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
-+	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
-+	 * For now, just simply request irq without IRQF_SHARED flag, since 16
-+	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
-+	 */
-+	for (i = 0; i < count; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0)
-+			return -ENXIO;
-+
-+		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
-+
-+		/* The last IRQ is for eDMA err */
-+		if (i == count - 1)
-+			ret = devm_request_irq(&pdev->dev, irq,
-+						fsl_edma_err_handler,
-+						0, "eDMA2-ERR", fsl_edma);
-+		else
-+			ret = devm_request_irq(&pdev->dev, irq,
-+						fsl_edma_tx_handler, 0,
-+						fsl_edma->chans[i].chan_name,
-+						fsl_edma);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static void fsl_edma_irq_exit(
- 		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
- {
-@@ -187,8 +231,16 @@ static struct fsl_edma_drvdata vf610_data = {
- 	.setup_irq = fsl_edma_irq_init,
- };
- 
-+static struct fsl_edma_drvdata imx7ulp_data = {
-+	.version = v3,
-+	.dmamuxs = 1,
-+	.has_dmaclk = true,
-+	.setup_irq = fsl_edma2_irq_init,
-+};
-+
- static const struct of_device_id fsl_edma_dt_ids[] = {
- 	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
-+	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
-@@ -236,6 +288,20 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 	fsl_edma_setup_regs(fsl_edma);
- 	regs = &fsl_edma->regs;
- 
-+	if (drvdata->has_dmaclk) {
-+		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
-+		if (IS_ERR(fsl_edma->dmaclk)) {
-+			dev_err(&pdev->dev, "Missing DMA block clock.\n");
-+			return PTR_ERR(fsl_edma->dmaclk);
-+		}
-+
-+		ret = clk_prepare_enable(fsl_edma->dmaclk);
-+		if (ret) {
-+			dev_err(&pdev->dev, "DMA clk block failed.\n");
-+			return ret;
-+		}
-+	}
-+
- 	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
- 		char clkname[32];
- 
--- 
-2.7.4
+If I understand it correct then there should not be a 1:1 relation
+between a panel and a connector anymore.
 
+We should not try to work in two different directions with this.
+Laurent, can you comment on this?
+
+If we move forard with this patch, then all fields in drm_panel needs
+kernel-doc - preferably inline.
+
+	Sam
+
+> 
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_panel.c | 28 ++++++++++++++++++++++++++++
+>  include/drm/drm_panel.h     | 14 ++++++++++++++
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> index 169bab54d52d..ca01095470a9 100644
+> --- a/drivers/gpu/drm/drm_panel.c
+> +++ b/drivers/gpu/drm/drm_panel.c
+> @@ -104,11 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
+>   */
+>  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
+>  {
+> +	struct drm_display_info *info;
+> +
+>  	if (panel->connector)
+>  		return -EBUSY;
+>  
+>  	panel->connector = connector;
+>  	panel->drm = connector->dev;
+> +	info = &connector->display_info;
+> +	info->width_mm = panel->width_mm;
+> +	info->height_mm = panel->height_mm;
+> +	info->bpc = panel->bpc;
+> +	info->panel_orientation = panel->orientation;
+> +	info->bus_flags = panel->bus_flags;
+> +	if (panel->bus_formats)
+> +		drm_display_info_set_bus_formats(&connector->display_info,
+> +						 panel->bus_formats,
+> +						 panel->num_bus_formats);
+>  
+>  	return 0;
+>  }
+> @@ -128,6 +140,22 @@ EXPORT_SYMBOL(drm_panel_attach);
+>   */
+>  int drm_panel_detach(struct drm_panel *panel)
+>  {
+> +	struct drm_display_info *info;
+> +
+> +	if (!panel->connector)
+> +		goto out;
+> +
+> +	info = &panel->connector->display_info;
+> +	info->width_mm = 0;
+> +	info->height_mm = 0;
+> +	info->bpc = 0;
+> +	info->panel_orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
+> +	info->bus_flags = 0;
+> +	kfree(info->bus_formats);
+> +	info->bus_formats = NULL;
+> +	info->num_bus_formats = 0;
+> +
+> +out:
+>  	panel->connector = NULL;
+>  	panel->drm = NULL;
+>  
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index fc7da55f41d9..a6a881b987dd 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -39,6 +39,8 @@ enum drm_panel_orientation;
+>   * struct drm_panel_funcs - perform operations on a given panel
+>   * @disable: disable panel (turn off back light, etc.)
+>   * @unprepare: turn off panel
+> + * @detach: detach panel->connector (clear internal state, etc.)
+> + * @attach: attach panel->connector (update internal state, etc.)
+>   * @prepare: turn on panel and perform set up
+>   * @enable: enable panel (turn on back light, etc.)
+>   * @get_modes: add modes to the connector that the panel is attached to and
+> @@ -95,6 +97,18 @@ struct drm_panel {
+>  
+>  	const struct drm_panel_funcs *funcs;
+>  
+> +	/*
+> +	 * panel information to be set in the connector when the panel is
+> +	 * attached.
+> +	 */
+> +	unsigned int width_mm;
+> +	unsigned int height_mm;
+> +	unsigned int bpc;
+> +	int orientation;
+> +	const u32 *bus_formats;
+> +	unsigned int num_bus_formats;
+> +	u32 bus_flags;
+> +
+>  	struct list_head list;
+>  };
+>  
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
