@@ -2,118 +2,106 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4E5C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B29C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E19206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E54206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVi/DRqB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhRz0o07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731462AbfGWKAL (ORCPT
+        id S1732575AbfGWKA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:00:11 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44981 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfGWKAL (ORCPT
+        Tue, 23 Jul 2019 06:00:27 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40102 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727467AbfGWKA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:00:11 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so80419213iob.11;
-        Tue, 23 Jul 2019 03:00:10 -0700 (PDT)
+        Tue, 23 Jul 2019 06:00:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so19179947pgj.7;
+        Tue, 23 Jul 2019 03:00:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yRd2vWX6PjNWErbTd9Y15sIa044i0uHH/q4p9H5/fi4=;
-        b=vVi/DRqBsj29Ez902sLsvEs2zFpgpQvo802HHGufSwSOhqoxLyq1sy2+99AYGHj5To
-         ZwxTxrlbjFnQl5q95LxS3wuFF87TS7tWgj4328oi60PGyWH7l6CEwnO+xjnEQGvZCSzi
-         AS/p+P39qQOjA11t0zEBTK0KV7Tppgk0KcEXqD7lth+pcxdJfN9iaeLPPfQlsE5Cxkzg
-         J1VikUYHWX0CpMcq0ICV6oEsZX+i4HPs73bWuouf8zBUfYcMknfT0vseEeY49cUEUKLG
-         MqOF3tp/CHFR9ynhqHW1sUIXgrtVSk3UtBGIlvqko1xMTEv9RKX+b5higQFio4m3g8pN
-         viSA==
+        h=from:to:cc:subject:date:message-id;
+        bh=5OAJErAik0xYRiczuYg/dRLWg9Npudu/HIsd564SyVk=;
+        b=dhRz0o072/BEcOUJhWA52ddEU/HGgqq6LhasWoT8YOHZvsSAKW337oGxSi0e93Owmv
+         6gfiwJMkzuSfycOhKDP4LWw9AhI8zzemt+PzF79gQzp56Sg/Tgm7ISHSaeGb4WskrkUi
+         xaTvVKQRFv7b+kYCFZvV/kPT+Wy7tSPKys6ePiwR9iLwLt1hpZbT3IRLqkIiBCW+OmX4
+         sXqqE9VSlc9lgZw4se9BbU0eJT3ptv6hDXYK7eSRFjogawuIMDoYud8ZcBWHSFmIhjsq
+         G0WpoR6K0MDB6d22cK3/kN0vix1CS7MmYZcKmd289zUZa601dz29++rdaoheisl04ilp
+         f04A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yRd2vWX6PjNWErbTd9Y15sIa044i0uHH/q4p9H5/fi4=;
-        b=uQSv9uLNgQT3ZkZ1V63bAAhqfil6awlsDTKUlAp1hyByfcBxnz0hlRNEOQBmFuSTGn
-         PykFs6KOdx8ldRJa+cyiVxOO+eHQ0Ggim9JzffppgwDvO2t2YKO9igRjUO+VdUWim5pY
-         rEqIZXabJlGHqIpJ3CTON+Fvmb1AcpfotJJu98mCFwBSPL50WM+QG5BkGYtZZ204VSc8
-         VCp4O4hYJx4vn5WQV/l+Q8b/wa1rXbXijpuSD51Jp3yE9YTibASEqAFQ2FkAYx9xyq+m
-         YD+j45DxT+ywb691jZ21zWUHY+kQTu+tC9CPkuhhNr8TYoyUCH4iPp3HmAw3iJCS4ePr
-         L1Rw==
-X-Gm-Message-State: APjAAAXDJeNA25fyAX9s/QFdczF2dbKSJSAHj+/7zPG7UOVFCU/MmJNh
-        Q+eJu91P8srcZL0VzSTfnqsKU2Lce/erVUgKMvUOn2y/
-X-Google-Smtp-Source: APXvYqxo+LtxYWcgl7DtLOVxiPXWXG5erEpaefSWnG39Fn6WBuhde+K7k6eQZmIqngE1X15d8GmTFvvGD1F7iT5Kf1g=
-X-Received: by 2002:a5e:d817:: with SMTP id l23mr58776iok.282.1563876010293;
- Tue, 23 Jul 2019 03:00:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190719143222.16058-1-lhenriques@suse.com> <ab5ccaa05994e2eef05bdb54510e6b017db2d807.camel@kernel.org>
-In-Reply-To: <ab5ccaa05994e2eef05bdb54510e6b017db2d807.camel@kernel.org>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 23 Jul 2019 12:02:57 +0200
-Message-ID: <CAOi1vP86qVeMV9hJPCP7sHfimMv08j-znSGyhcYdd1TC_Gn19A@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Sleeping functions in invalid context bug fixes
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5OAJErAik0xYRiczuYg/dRLWg9Npudu/HIsd564SyVk=;
+        b=oSDmCr33i52B/Ydy3j/17BwEiimMvJgl6H/73MtmNsdE8x9efm8LI2IJJWTb91uhbl
+         iT3FdVXhBfK0c4DYhxoXlFz+EtwwoMU0rJKpb31njqAJaKJeTpbaHjW9uSBVtKael+32
+         3rspw5wuXF6Ae0RsPvYSNsybhuXaigThfe7nSQ0oEP9+R6UM8kKBq7f6um2vU6R827IT
+         Fx/+dgvotnPvlECWzc3CacnA/vGMoBeRcTZbDvbEJeM6a1w9Du8/qcOhLfpJZsOXJXCj
+         doBnUxYfp+GJcs1XJhgBAYVqOKU3b8h63CKkvh/WvWzQkQhrbdU7GWxDVnm3VeaCwHMO
+         QhXg==
+X-Gm-Message-State: APjAAAXLxXIYf/ldvDtO5WsoAhuZdpOnutO9qccU09e3yK2u7hPKODbj
+        KOEAZw0+cU2K0HnpSd0p0UE=
+X-Google-Smtp-Source: APXvYqwNWVAJYmjCW8kEPfETxNjyljUixVn9J0Y+PXozl+eLiUNPjvrPnnaCEuVfF1e4zAq/uJX/Mw==
+X-Received: by 2002:a17:90a:ca11:: with SMTP id x17mr82284773pjt.107.1563876026282;
+        Tue, 23 Jul 2019 03:00:26 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id y12sm50328188pfn.187.2019.07.23.03.00.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 03:00:25 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     casey@schaufler-ca.com, jmorris@namei.org, serge@hallyn.com
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
+Date:   Tue, 23 Jul 2019 18:00:15 +0800
+Message-Id: <20190723100015.5400-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 5:20 PM Jeff Layton <jlayton@kernel.org> wrote:
->
-> On Fri, 2019-07-19 at 15:32 +0100, Luis Henriques wrote:
-> > Hi,
-> >
-> > I'm sending three "sleeping function called from invalid context" bug
-> > fixes that I had on my TODO for a while.  All of them are ceph_buffer_put
-> > related, and all the fixes follow the same pattern: delay the operation
-> > until the ci->i_ceph_lock is released.
-> >
-> > The first patch simply allows ceph_buffer_put to receive a NULL buffer so
-> > that the NULL check doesn't need to be performed in all the other patches.
-> > IOW, it's not really required, just convenient.
-> >
-> > (Note: maybe these patches should all be tagged for stable.)
-> >
-> > Luis Henriques (4):
-> >   libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
-> >   ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
-> >   ceph: fix buffer free while holding i_ceph_lock in
-> >     __ceph_build_xattrs_blob()
-> >   ceph: fix buffer free while holding i_ceph_lock in fill_inode()
-> >
-> >  fs/ceph/caps.c              |  5 ++++-
-> >  fs/ceph/inode.c             |  7 ++++---
-> >  fs/ceph/snap.c              |  4 +++-
-> >  fs/ceph/super.h             |  2 +-
-> >  fs/ceph/xattr.c             | 19 ++++++++++++++-----
-> >  include/linux/ceph/buffer.h |  3 ++-
-> >  6 files changed, 28 insertions(+), 12 deletions(-)
->
-> This all looks good to me. I'll plan to merge these into the testing
-> branch soon, and tag them for stable.
->
-> PS: On a related note (and more of a question for Ilya)...
->
-> I'm wondering if we get any benefit from having our own ceph_kvmalloc
-> routine. Why are we not better off using the stock kvmalloc routine
-> instead? Forcing a vmalloc just because we've gone above 32k allocation
-> doesn't seem like the right thing to do.
+In smack_socket_sock_rcv_skb(), there is an if statement 
+on line 3920 to check whether skb is NULL:
+    if (skb && skb->secmark != 0)
 
-I don't remember off the top of my head and can't check right now.
-Could be that kvmalloc() didn't exist back then.  I'll add that to my
-TODO list.
+This check indicates skb can be NULL in some cases.
 
-Thanks,
+But on lines 3931 and 3932, skb is used:
+    ad.a.u.net->netif = skb->skb_iif;
+    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
 
-                Ilya
+Thus, possible null-pointer dereferences may occur when skb is NULL.
+
+To fix these possible bugs, an if statement is added to check skb.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ security/smack/smack_lsm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 4c5e5a438f8b..5c9fc8ba6e57 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -3925,6 +3925,8 @@ static int smack_socket_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
+ 			skp = smack_ipv6host_label(&sadd);
+ 		if (skp == NULL)
+ 			skp = smack_net_ambient;
++		if (skb == NULL)
++			break;
+ #ifdef CONFIG_AUDIT
+ 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
+ 		ad.a.u.net->family = family;
+-- 
+2.17.0
+
