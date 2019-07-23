@@ -2,110 +2,98 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DF9C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0321C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B46122ADF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B471F22BE9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1pXgPiA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gDIDNVTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388286AbfGWHUx (ORCPT
+        id S2388301AbfGWHVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:20:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42538 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388231AbfGWHUw (ORCPT
+        Tue, 23 Jul 2019 03:21:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38982 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388288AbfGWHU7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:20:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so20271222plb.9;
-        Tue, 23 Jul 2019 00:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4QWiA/u7FUkm/LP2+FlraH63gXlLRpOie6WBL+YDZks=;
-        b=c1pXgPiAsMw1pk8bFK3PwA0hqGMc/sMpkQtw/FfggkERlGIWgPpZNFo/K4CSzw6hd6
-         +zz+DO4Bq011chyUgykYBW/IkBssKoYBjfFVYC1kredHk5WX1FmXs4DosE7MK1cerlGI
-         wTU/dMy0KoS0rzhw4w/nFiiJwC7JNEC327bqEGrJQZrAfrJ39cs+2rQfU8ylPvzRK+QM
-         4afzpXrveZ3d9936OCfAJ7mRhYxKy9xZ5/Hp7WkO3w2hErwZqOUlEFaB14Lpv38NYXfO
-         ZmQrd3mvX4gDwemKPKlxatRA0adWdrPQj/WycIIHZ+lLp6QJM0e6dVYom7AHafUlUbqD
-         oG4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4QWiA/u7FUkm/LP2+FlraH63gXlLRpOie6WBL+YDZks=;
-        b=NU0DVI8X+fBCb6xmvj3tVT4YzjmjBL7DbUIBw5AJl1iqajJPvF2kPu+eHVU0XdJ+r6
-         izZYNLLSg4iaZyGRhLMZokIZnUY1FwCNOHyBcgWa4JQjE7Fu86yEsUjee7dKNLGIqE1A
-         cPM3ipIBV1DG5RTQL0t241dfKC5oteVkOYYqcppweKR1plRbhN3jt86DoxY4qGRUBkQV
-         emd+wh76ZHTXVYuvUqfq+bwZPtoiiTq1a3qXFv9mxaHBgLBgciLesVw7VtG+0cAzPii1
-         mDlAZ63jHeCoKkSNf8iSZS33jQwVYqJK4mo2Niv3cKOdQLQ2wCmE5/NS5M74OCo+ttqw
-         kiXw==
-X-Gm-Message-State: APjAAAWmJUzj2TS/MO57pOlAtmhXDE2gPcMQ5m6bXQjhfd/AMzc+oA09
-        ciFajWIuSk8xeZCyOJEuP9eRmIezMNo=
-X-Google-Smtp-Source: APXvYqwTihw8jhNsCmpI+cCen8+lZlsATFxXbsy6cUIM8VdRumBC1BtQZh3JMcofrWyj/ptB6zC+fQ==
-X-Received: by 2002:a17:902:a9ca:: with SMTP id b10mr5633876plr.69.1563866451938;
-        Tue, 23 Jul 2019 00:20:51 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id v18sm34217115pgl.87.2019.07.23.00.20.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 00:20:51 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] crypto: atmel-sha204a: Use device-managed registration API
-Date:   Tue, 23 Jul 2019 15:19:36 +0800
-Message-Id: <20190723071934.12528-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 03:20:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+D4Rc6xmuAUh55cR2qKohR/b4eK3aBjck3vn77Ev0BE=; b=gDIDNVTLTWObmmhFzbCZkwz4N
+        O2H/Rco1Agz/j8KmUh8igu1o0otY+dnnMdx6feAz5yqRkAgAof78pzYrjVK5nJk7kOwGLWsoYC5Wu
+        Pf2trWWQfH6DiVea0ekcX4jWgtoBYGD3IfwLG9RIgpHwThxEBmuiJ130Z/zQBy3fADENbqX7bXzZH
+        14GsJWlkJrABhTL7S8IssCFwPfHe07PZGjBr4Niaqs0pywuhLG5zLsdroS2xk88pUDb3pVOk/7IF+
+        AulDtAJ5MW+pRephr6QdWcMYIkYbvtu4dzVV7b8m0l2VAnJlREjUyhGOqeqrGhn+knf90v/sHwA+h
+        7pD4//AXg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpp6L-00008X-Kn; Tue, 23 Jul 2019 07:20:45 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2C18C20A291EC; Tue, 23 Jul 2019 09:20:43 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 09:20:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-kbuild@vger.kernel.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net
+Subject: Re: [PATCH 2/5] x86_64, -march=native: POPCNT support
+Message-ID: <20190723072043.GU3402@hirez.programming.kicks-ass.net>
+References: <20190722202723.13408-1-adobriyan@gmail.com>
+ <20190722202723.13408-2-adobriyan@gmail.com>
+ <20190722211210.GN6698@worktop.programming.kicks-ass.net>
+ <20190722211539.GA29979@avx2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722211539.GA29979@avx2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_hwrng_register to get rid of manual
-unregistration.
+On Tue, Jul 23, 2019 at 12:15:39AM +0300, Alexey Dobriyan wrote:
+> On Mon, Jul 22, 2019 at 11:12:10PM +0200, Peter Zijlstra wrote:
+> > On Mon, Jul 22, 2019 at 11:27:20PM +0300, Alexey Dobriyan wrote:
+> > > Detect POPCNT instruction support and inline hweigth*() functions
+> > > if it is supported by CPU.
+> > > 
+> > > Detect POPCNT at boot time and conditionally refuse to boot.
+> > > 
+> > > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> > > ---
+> > >  arch/x86/include/asm/arch_hweight.h           | 24 +++++++++++++++++++
+> > >  arch/x86/include/asm/segment.h                |  1 +
+> > >  arch/x86/kernel/verify_cpu.S                  |  8 +++++++
+> > >  arch/x86/lib/Makefile                         |  5 +++-
+> > >  .../drm/i915/display/intel_display_power.c    |  2 +-
+> > >  drivers/misc/sgi-gru/grumain.c                |  2 +-
+> > >  fs/btrfs/tree-checker.c                       |  4 ++--
+> > >  include/linux/bitops.h                        |  2 ++
+> > >  lib/Makefile                                  |  2 ++
+> > >  scripts/kconfig/cpuid.c                       |  7 ++++++
+> > >  scripts/march-native.sh                       |  2 ++
+> > >  11 files changed, 54 insertions(+), 5 deletions(-)
+> > 
+> > *WHY* ?
+> > 
+> > AFAICT this just adds lines and complexity and wins aboslutely nothing.
+> 
+> If CPU is know to have POPCNT, it doesn't make sense to go through RDI.
+> Additionally some CPUs (still?) have fake dependency on the destination,
+> so "popcnt rax, rdi" is suboptimal.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/crypto/atmel-sha204a.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/crypto/atmel-sha204a.c b/drivers/crypto/atmel-sha204a.c
-index ea0d2068ea4f..c96c14e7dab1 100644
---- a/drivers/crypto/atmel-sha204a.c
-+++ b/drivers/crypto/atmel-sha204a.c
-@@ -109,7 +109,7 @@ static int atmel_sha204a_probe(struct i2c_client *client,
- 	i2c_priv->hwrng.read = atmel_sha204a_rng_read;
- 	i2c_priv->hwrng.quality = 1024;
- 
--	ret = hwrng_register(&i2c_priv->hwrng);
-+	ret = devm_hwrng_register(&client->dev, &i2c_priv->hwrng);
- 	if (ret)
- 		dev_warn(&client->dev, "failed to register RNG (%d)\n", ret);
- 
-@@ -127,7 +127,6 @@ static int atmel_sha204a_remove(struct i2c_client *client)
- 
- 	if (i2c_priv->hwrng.priv)
- 		kfree((void *)i2c_priv->hwrng.priv);
--	hwrng_unregister(&i2c_priv->hwrng);
- 
- 	return 0;
- }
--- 
-2.20.1
+You completely forgot to mention any of that in your Changelog, also I
+doubt you can find code where this makes a measurable difference. IOW, I
+still doubt it makes any kind of sense.
 
