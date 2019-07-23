@@ -2,70 +2,102 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBE7C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C0FC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C977A22387
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4613122387
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563921605;
-	bh=3URHmg5S84zST8FLhBpSgxIgYtv4jOr9FrNf0IW2YzU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=XpAu4qGvB5uiZfWU4gkKTSfqsJjyEa81JyDA2Fa3dYGVFa2tNG2bkZhhkPflY2DCN
-	 E7XwyefiYrW4vhcrKeb1Y1BOwiSEtYkMkmrODWwTC3A3Pd5VJBcieDg5LWUwC0PEz6
-	 +jpqiRyEYajf5g1qkTkeuSrt39x8klQ5u+O+NsRo=
+	s=default; t=1563921881;
+	bh=eb5pFLi8qVCKf5i7+hXjSdGPXpHUn493Vce1SCjaetE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SPlT9KbIZBQrfyM31HKes6rz+lhjYKC1/kA+m+eBZXeSLAZJNY9aQTmtfaiiQE7ih
+	 crLRBiFED3uOEpm0lEWqGG4FALISK3YdhExTqGJL03ifGIMM353cPUENDrU9R/4DRU
+	 mkN2BkKKPLpMSRsi3ZQaJ+nn9t4KuO+d0+YEMT6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389439AbfGWWkE (ORCPT
+        id S2389502AbfGWWok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:40:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731091AbfGWWkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:40:04 -0400
-Subject: Re: [GIT PULL] parisc architecture fixes for kernel v5.3-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563921603;
-        bh=3URHmg5S84zST8FLhBpSgxIgYtv4jOr9FrNf0IW2YzU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=A6Qb31RpSX+LOFlp0py9dMBXcq4Q3vx3jQwl1yDtVMgrfVoEVxwdAF6CEl9XJGwy9
-         5c0EsZUdH/esihacrZi2Ir6Y7zJzEMHlBaBO1GHPYXiaxm/7GesdxtQGh6wm4FO3lf
-         9Xq/HURCFU2LBvzNhgjirlPdolON1gJQM6YXM3Us=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190723214344.GA30785@ls3530>
-References: <20190723214344.GA30785@ls3530>
-X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190723214344.GA30785@ls3530>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
- parisc-5.3-3
-X-PR-Tracked-Commit-Id: 69245c97560b40f88c609b078f4b51c5be81d88b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ad5e427e0f6b702e52c11d1f7b2b7be3bac7de82
-Message-Id: <156392160346.5279.2897687973383997307.pr-tracker-bot@kernel.org>
-Date:   Tue, 23 Jul 2019 22:40:03 +0000
-To:     Helge Deller <deller@gmx.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
+        Tue, 23 Jul 2019 18:44:40 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40982 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729328AbfGWWok (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 18:44:40 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m9so21072520pls.8;
+        Tue, 23 Jul 2019 15:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4y1txJPMDw45nI3k4swrjOtBVNsEnY/B83k42eCghwU=;
+        b=ayaeacXt13mio966+juaFXXczu3VBG1Rqen8FWx+n6jXBQZqZG1lbGDSZD0nxOhhCI
+         bBk1aEM3rtKuKZJJPJCjCkJFRV/Wp0P7FjxQGhmOneFd5q+MlCIxEtF7gyOJ1kbVar9J
+         X5L+u4AxAcUiWY1TP4XBMl3P7VQdXWTD4PrN4lEysoAIqE+9yfG+c/L51ltiJFmbNHA1
+         CK7y1Dlx+kPIGOhW2Td3kuEoCcmTdkstji8dP/tlUw/7RrcGcfEj2oUYGwbnn+FO0iYo
+         ub99Dh+LURMxFPRkFBUcqufndeVEJ5UD6JcJHLvDM0okPnIQ3M8FTCxg0mE/vjgfRLZB
+         f3bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=4y1txJPMDw45nI3k4swrjOtBVNsEnY/B83k42eCghwU=;
+        b=WhM6VvLoN/09pCnH3c35u3BrswhMi+S4vI1ayepiG/bynkhbfezdIdrxJdaVrNOQwy
+         ha1hO1u8NhOXxBTLlxZ7jaSisWcG0QWuudMXplDsatQ4l8Eu2ZgxKOerakg0G9Lv0BUH
+         nXMlbK+Tv363sigCYaNUSkbUf0NYW53mqARlYexKiDLkSkA6+J9bNA+IqtePD4q2BL8Y
+         q6lfnqxjWhrS3qd5Bejh3zKKPSiG7rU1faq8V1BuG/HB+dpsb42jR/avsAKx9L4sh/8R
+         ubVbYUJuDbKt3Ryf73NukQ/hZuZITydbFx95cRJ3aOwV6skKC2vx9UPsQi5jv7CoGP0R
+         FmbA==
+X-Gm-Message-State: APjAAAW7ttS9vhDAHG2gThT3zBetU/3EfCQJuBp2N6o8JEUdDku4JOxJ
+        4++BtBzM0NfATyoAUO67SmQ=
+X-Google-Smtp-Source: APXvYqw2dEz7VNf5QtqzHB5ZQjzYooVHy/A9WTMvsO+whpmVq3VWNo4YgY9HOf3AhWY4PekXmUyF6A==
+X-Received: by 2002:a17:902:2926:: with SMTP id g35mr82408185plb.269.1563921879327;
+        Tue, 23 Jul 2019 15:44:39 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:2287])
+        by smtp.gmail.com with ESMTPSA id o95sm38232391pjb.4.2019.07.23.15.44.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 15:44:38 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 15:44:36 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] cgroup: Replace a seq_printf() call by seq_puts() in
+ cgroup_print_ss_mask()
+Message-ID: <20190723224436.GG696309@devbig004.ftw2.facebook.com>
+References: <d465ca81-a870-b88c-0ea2-5e8bfbefb79d@web.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d465ca81-a870-b88c-0ea2-5e8bfbefb79d@web.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 23 Jul 2019 23:43:44 +0200:
+On Tue, Jul 02, 2019 at 07:33:08PM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 2 Jul 2019 19:26:59 +0200
+> 
+> A string which did not contain a data format specification should be put
+> into a sequence. Thus use the corresponding function “seq_puts”.
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.3-3
+Applied to cgroup/for-5.4.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ad5e427e0f6b702e52c11d1f7b2b7be3bac7de82
-
-Thank you!
+Thanks.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+tejun
