@@ -2,135 +2,95 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C93C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27FCC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCC5218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD9F22324
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tS5W2IfR"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EW0D7T3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfGWAmd (ORCPT
+        id S1730490AbfGWAto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:42:33 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45721 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfGWAmc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:42:32 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x21so3803099otq.12;
-        Mon, 22 Jul 2019 17:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+4vwd05Ashr+MqpzyT1dsjrUNcGE/G6qFLXOudh/Hcw=;
-        b=tS5W2IfRrrGrMZexz8n/YQ6mx8QKZ1mJHQy0cQlM9aKQ9z1yWW/4W8baHJAAbLmZY2
-         IqTmGccIg1lgn87FA7/PUxbrVBbltdxf+PrbNrxBXmf/WwIf3f5UMmcQ3VUQcnlAP57n
-         S5dGfN0VTkgVXe2AnuZ6kGUVp42XO2AyEHDSbnvkRIu1VuyLe8y2vHVQwktobGQNJOj7
-         +adae8DrjX3BXdEf4USncr0e4QrUKeUOh3GmeYVhuxFofjc9H9YmmUHPI0eJ9U6OJuWS
-         8BEjU9tyrZUHiBuQnG08eFXGJgr2I9Azonm3KMVpDItO7+u7Ibo2kMb4cvWhyeswN0Hx
-         a3AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+4vwd05Ashr+MqpzyT1dsjrUNcGE/G6qFLXOudh/Hcw=;
-        b=CLK4MpRsbCiaiLiQCMGJnFwnNEl9ZlhIDsvWMtf06DTBVadbKT5+PoPTfuf2XSOMTs
-         9qZP6l/wuoVmciI2xNInCUNljsrb4TNKg7Sgix6256MkCpw1gaAdwf0kIqw0cYPp138I
-         BOWEVzsz+WP5JkG/j9DOq3yOCZqL/rVgz0qsjohsxGx5XyGU3gIMNuPXB8LJOaCgbDV4
-         lfY5tCxDfj0lqbPTdI/lOIU9fC/VO5AoopGDvMKGXVn94n7VbAvZ4mrYdju6Cu+SUVBZ
-         xIS3P79zekNpuGzz2876d0i7EnkNPBih6250H4aJk8x2B/xKPxxbV3N952z8eNh8fPTD
-         XdoQ==
-X-Gm-Message-State: APjAAAUas150W8+xBBvarma3WeMvqFP/Ok1I6AIbrP7+hQiTU9PU1GZ6
-        Ud3nWnrWY+/TKAjYFCNk0/a3cKRNCSMGqBoiTdrmb1wX
-X-Google-Smtp-Source: APXvYqwWu6I5XECni0tNYIHokCOv9ywgFgatg/ZnPNaFsVRspnZ75JjEnxmzZVdOBp3MC5oJeEaqrTr7Gq2jqhkQKyc=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr40100956oto.118.1563842551951;
- Mon, 22 Jul 2019 17:42:31 -0700 (PDT)
+        Mon, 22 Jul 2019 20:49:44 -0400
+Received: from ozlabs.org ([203.11.71.1]:32883 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728264AbfGWAto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 20:49:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45t0HS63rMz9s3Z;
+        Tue, 23 Jul 2019 10:49:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563842981;
+        bh=jBu0G6LyfdLlQ4QDdrcU7I+Un+OaoeNp8y0aT+nDIuc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EW0D7T3i9Jefogo6s3HH7TtQsS6HV/Gj2/9IY35QrYgsE/O6TQkEAKF5GFA08XWBC
+         WLx/D/Tl3OvSS4uJF+4powZVWfgozGVTzXOsb1PNtvAVH2DsbqxqLYWK91u5hhEJQ6
+         Bon2CD+CWfKnuMhnuM5fQ5o+SQqUbkwcwf5LZFyp4gZJZRCJOs7zc/P5Uxn+zcP3Ot
+         HnGd8VCrVmjBIVNPWx2LFf/U/SfQWBvUwM9MxV4SXnRscQuYZw9MQbSiJ++GXshTmQ
+         WaXXJGjnw3L/rXkPMWqoJKWNH2hpa5LTLLD+1JtfY4bMK+nJOfEJSabZhZKpnSnwaR
+         LtSywj7P4D3MA==
+Date:   Tue, 23 Jul 2019 10:49:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Maciej =?UTF-8?B?xbtlbmN6eWtvd3NraQ==?= <zenczykowski@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Linux NetDev <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the net-next tree
+Message-ID: <20190723104940.0adf5524@canb.auug.org.au>
+In-Reply-To: <CANP3RGcqGrPnt9eOiAKRbxWVuBkRHRQdWPnANKwrYvtVnTqaSQ@mail.gmail.com>
+References: <20190723073518.59fa66e0@canb.auug.org.au>
+        <CANP3RGcqGrPnt9eOiAKRbxWVuBkRHRQdWPnANKwrYvtVnTqaSQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1563796594-25317-1-git-send-email-pbonzini@redhat.com>
-In-Reply-To: <1563796594-25317-1-git-send-email-pbonzini@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 23 Jul 2019 08:42:27 +0800
-Message-ID: <CANRm+CyPGO=_OYCFbj00iR0Be7Pv0MCqSzgg5=-YwGiMgUV2wg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "kvm: x86: Use task structs fpu field for user"
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 at 20:49, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> This reverts commit 240c35a3783ab9b3a0afaba0dde7291295680a6b
-> ("kvm: x86: Use task structs fpu field for user", 2018-11-06).
-> The commit is broken and causes QEMU's FPU state to be destroyed
-> when KVM_RUN is preempted.
->
-> Fixes: 240c35a3783a ("kvm: x86: Use task structs fpu field for user")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 7 ++++---
->  arch/x86/kvm/x86.c              | 4 ++--
->  2 files changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 0cc5b611a113..b2f1ffb937af 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -607,15 +607,16 @@ struct kvm_vcpu_arch {
->
->         /*
->          * QEMU userspace and the guest each have their own FPU state.
-> -        * In vcpu_run, we switch between the user, maintained in the
-> -        * task_struct struct, and guest FPU contexts. While running a VCPU,
-> -        * the VCPU thread will have the guest FPU context.
-> +        * In vcpu_run, we switch between the user and guest FPU contexts.
-> +        * While running a VCPU, the VCPU thread will have the guest FPU
-> +        * context.
->          *
->          * Note that while the PKRU state lives inside the fpu registers,
->          * it is switched out separately at VMENTER and VMEXIT time. The
->          * "guest_fpu" state here contains the guest FPU context, with the
->          * host PRKU bits.
->          */
-> +       struct fpu user_fpu;
->         struct fpu *guest_fpu;
->
->         u64 xcr0;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 58305cf81182..cf2afdf8facf 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8270,7 +8270,7 @@ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
->  {
->         fpregs_lock();
->
-> -       copy_fpregs_to_fpstate(&current->thread.fpu);
-> +       copy_fpregs_to_fpstate(&vcpu->arch.user_fpu);
->         /* PKRU is separately restored in kvm_x86_ops->run.  */
->         __copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
->                                 ~XFEATURE_MASK_PKRU);
-> @@ -8287,7 +8287,7 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
->         fpregs_lock();
->
->         copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
-> -       copy_kernel_to_fpregs(&current->thread.fpu.state);
-> +       copy_kernel_to_fpregs(&vcpu->arch.user_fpu.state);
->
->         fpregs_mark_activate();
->         fpregs_unlock();
+--Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Looks good to me.
+Hi Maciej,
 
-Regards,
-Wanpeng Li
+On Tue, 23 Jul 2019 09:46:29 +0900 Maciej =C5=BBenczykowski <zenczykowski@g=
+mail.com> wrote:
+>
+> I'm afraid I'm currently travelling and due to an unplanned and f'ed up
+> office move I've lost (access to?) my dev workstation so I can't respin
+> this.  Might be too late either way?
+
+Yeah, Dave doesn't rebase his trees, so just take this as a lesson for
+next time. :-)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02WaQACgkQAVBC80lX
+0GxIbgf/frRFMoWj8sD3HB2d4J8J+lqC1BgzDcqAgvm9mazSlYtq6bG70LCEFJ0Q
+KRnpYclsvCnWb0AmsWWrgso9ZSW2CiMC6Hh/NHy43M7KSNpoMw/xUfTza0qr06og
+wBB3aJnTJPqMpTrZngLwCtVyYwWwoVtlPtuOR9lHAPjBkiw3LsVo9CJP5ERGeWQc
+ifpS2qNSOxJY19RiB2rNlVAOrOvIdG+qfuDS7x8iw9tcFnoiGCza+hlo0leXJWBI
+G1KwVf62s12JNHtV/F8Ve6OL3xXKVuZRH0hKomGGtwERWp+xeorzwVAWxLRupp5B
+7VPouMYStir2gp9jtb9H1J1mZozNCQ==
+=A0ss
+-----END PGP SIGNATURE-----
+
+--Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9--
