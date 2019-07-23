@@ -2,126 +2,172 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C0AC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDD5C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1781421955
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E81221955
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="p0541Pby";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="jBPndC30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbfGWAeB (ORCPT
+        id S1731505AbfGWAe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:34:01 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:44119 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726770AbfGWAeB (ORCPT
+        Mon, 22 Jul 2019 20:34:26 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:42162 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726770AbfGWAeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:34:01 -0400
-X-IronPort-AV: E=Sophos;i="5.64,297,1559512800"; 
-   d="scan'208";a="392907466"
-Received: from c-73-22-29-55.hsd1.il.comcast.net (HELO hadrien) ([73.22.29.55])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 02:33:57 +0200
-Date:   Mon, 22 Jul 2019 19:33:55 -0500 (CDT)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:142:1-10: WARNING: Use
- devm_platform_ioremap_resource for ecc -> base
-Message-ID: <alpine.DEB.2.21.1907221929450.3471@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 22 Jul 2019 20:34:25 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6N0ElE2016652;
+        Mon, 22 Jul 2019 17:33:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=4Tszt1wueN+u4x7Vd41pROxqw2h3Ubjgu5PvqSIcAb0=;
+ b=p0541Pby89M8yVdZREy2dpsoG8mN9vm8Eyx/OkKuiRkCGexEultPSsVU7Y3tyxFWW4RP
+ hao8LX7YhKp/OlKaZGc0ZnW12wM5HVYW7XksgVNUdOngLD2cSRe4NEBH1t3ai6ZGf/Rh
+ NM/KQE1w68DoRPMN0KHUWPckKTXK0K2OwkY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2twg6a9sdv-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 22 Jul 2019 17:33:49 -0700
+Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 22 Jul 2019 17:33:41 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 22 Jul 2019 17:33:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UfGB9EurNZJIBvWAlTkxLF6gzvo3DaokbqnBbTTqq75noVQPpcG+YPsNvxOjy5AHcffLeLGPdKEmtOqYp2smWAc1f4NboaYFfPV3MgHP0wDmzFQBa5jNf49nP5N9fMO+PUbP+Ih6LwfEjAuNZJ2nJPSIC92PxdK/Lbk4cGHfppKz0HtY59QWQfFsaMY3rbTAXmz6gHMBPbKM5lzfCV+W8ZzyOQitj/Csu1fPO4KXWjLXzyTlnbayPcADx5RImqFdJ90sLCCWNPytkA2+zrHJvoMtYqIGnf1DvxXT2IMxhKTD82BpX7U8lPsKxzPC2ibz8BnRcLR8keIZXtP6yIZjNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Tszt1wueN+u4x7Vd41pROxqw2h3Ubjgu5PvqSIcAb0=;
+ b=iaS5ZOzL+Ns4MQMpqVOXmEyVOjtjFo+WLH4gSUvGH2p2rYET4woR/aHQIw4y2SojF5bwHYSMSRshQCCLYWp8EkyLPeijwZOCTOqkia6Kvmm9QeCYWv75gXpm50d2PJfhsg8O5kreyUxPomlqAFvnPh/HXjo6laznFl8JGu9mKyPRO96TzjiutX32PaclPapZSIal0Q/zx8f+kOMyAzTGP2kcIza7fbFBs66d7+e4PSohEMaWiY2ij8LpoyWBmheMFUU4Ul+FtjwDC1ipu8dN06oym5lqRUdpqnVcHBJs+K5IGnVS1+6J3tVOt4yUwGmUXpA8wUdOk5qSKg9JoAxQ3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
+ header.d=fb.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Tszt1wueN+u4x7Vd41pROxqw2h3Ubjgu5PvqSIcAb0=;
+ b=jBPndC30afjdvhMHi37Ls9Kt3U+mMzS5qRHa/M2AJ17iyP2vJW+YRRY6ZKJ7wO6O14DVXQuju/1UE6qZRcyMqQ/cqWV48HaGHPeV5RyEItYI3OEZAX78JwZ6o0N+1sgbtZSppUHx+eRSxdh69VGoFdg+RrHbVm2mU9Jy6gPQw3g=
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
+ CY4PR15MB1447.namprd15.prod.outlook.com (10.172.155.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Tue, 23 Jul 2019 00:33:40 +0000
+Received: from CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::fce3:df83:1cbf:e65e]) by CY4PR15MB1269.namprd15.prod.outlook.com
+ ([fe80::fce3:df83:1cbf:e65e%12]) with mapi id 15.20.2094.013; Tue, 23 Jul
+ 2019 00:33:40 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Andrew Jeffery <andrew@aj.id.au>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>
+CC:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: Re: [PATCH 1/2] ARM: dts: aspeed: tiogapass: Add VR devices
+Thread-Topic: [PATCH 1/2] ARM: dts: aspeed: tiogapass: Add VR devices
+Thread-Index: AQHVQMVnpxBga6eEj0K8KvUFIYW0cKbXVMQA//+Q44A=
+Date:   Tue, 23 Jul 2019 00:33:40 +0000
+Message-ID: <69DFAF50-E181-4C7A-910A-C45E6E151F8E@fb.com>
+References: <20190722192451.1947348-1-vijaykhemka@fb.com>
+ <802c5419-08ec-4a0e-8a50-ad4a1bbf7f3a@www.fastmail.com>
+In-Reply-To: <802c5419-08ec-4a0e-8a50-ad4a1bbf7f3a@www.fastmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:200::3:693e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d2ea710e-27c5-4f8d-9bf6-08d70f0568b5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1447;
+x-ms-traffictypediagnostic: CY4PR15MB1447:
+x-microsoft-antispam-prvs: <CY4PR15MB14472FE1516475D228CEC036DDC70@CY4PR15MB1447.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1091;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39860400002)(136003)(376002)(366004)(189003)(199004)(476003)(2201001)(6486002)(316002)(110136005)(81166006)(6506007)(5660300002)(186003)(46003)(86362001)(7736002)(81156014)(2906002)(54906003)(446003)(11346002)(8936002)(25786009)(71190400001)(2616005)(71200400001)(36756003)(8676002)(256004)(6436002)(14454004)(99286004)(305945005)(229853002)(102836004)(53936002)(2501003)(66556008)(6116002)(486006)(66946007)(6512007)(66446008)(66476007)(478600001)(7416002)(33656002)(64756008)(76116006)(76176011)(4326008)(6246003)(68736007)(91956017)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1447;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: enj2984x9Rqw3JFvh3qO+/iVdfR7XIwqUS0AywnFi0oFIm7Wqqs+wNGXn21C1PDAVmNLrShwXjM7yKn2uuglI7fu2lDEdOQaxyzKvWgRGmEG5dwL3hnpxPD/JLCcuGeZP03pU7cSJfdaNds08Wd4fZJyoNj/FVIUBl9lKlcEBMVDdLBfeGuyOSKTGhd0N1F2I0F8iVNtTa2yO89XOsuJ9c4mHdRRZn1Lj8/7QZK4g8lrDmCE4jyx3Ym8U++tXd0nbLphBDfmASTo/DvquutmLaWEDLzJWHG0R/eKJuuVJiVEOxZACTzcplhuK9xzHXMEXFN8+zYC0gvG0Mrdjy466EilfQYWU/7hsI0FMzwP7YHSWndAQNzMnxoAYhqF0IhDlDfky0kE5ZI6gLcu2cf1EmVrA3uLhMJEQZ8+UsiOGA8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <515ADAC7575AC24CABAC6D61534CEFDB@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2ea710e-27c5-4f8d-9bf6-08d70f0568b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 00:33:40.1030
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vijaykhemka@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1447
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-22_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907230000
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-The calls to platform_get_resource and devm_ioremap_resource can be
-merged.
-
-julia
-
----------- Forwarded message ----------
-Date: Tue, 23 Jul 2019 06:07:33 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:142:1-10: WARNING: Use
-    devm_platform_ioremap_resource for ecc -> base
-
-CC: kbuild-all@01.org
-CC: linux-kernel@vger.kernel.org
-TO: Miquel Raynal <miquel.raynal@bootlin.com>
-
-tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7b5cf701ea9c395c792e2a7e3b7caf4c68b87721
-commit: 72c5af00272339af6bbed6fe7275cd731f57be2d mtd: rawnand: Clarify Kconfig entry MTD_NAND
-date:   3 months ago
-:::::: branch date: 6 hours ago
-:::::: commit date: 3 months ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
->> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:142:1-10: WARNING: Use devm_platform_ioremap_resource for ecc -> base
-
-git remote add linus https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
-git remote update linus
-git checkout 72c5af00272339af6bbed6fe7275cd731f57be2d
-vim +142 drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
-
-15de8c6efd0effe Paul Cercueil 2019-03-19  126
-15de8c6efd0effe Paul Cercueil 2019-03-19  127  int ingenic_ecc_probe(struct platform_device *pdev)
-15de8c6efd0effe Paul Cercueil 2019-03-19  128  {
-15de8c6efd0effe Paul Cercueil 2019-03-19  129  	struct device *dev = &pdev->dev;
-15de8c6efd0effe Paul Cercueil 2019-03-19  130  	struct ingenic_ecc *ecc;
-15de8c6efd0effe Paul Cercueil 2019-03-19  131  	struct resource *res;
-15de8c6efd0effe Paul Cercueil 2019-03-19  132
-15de8c6efd0effe Paul Cercueil 2019-03-19  133  	ecc = devm_kzalloc(dev, sizeof(*ecc), GFP_KERNEL);
-15de8c6efd0effe Paul Cercueil 2019-03-19  134  	if (!ecc)
-15de8c6efd0effe Paul Cercueil 2019-03-19  135  		return -ENOMEM;
-15de8c6efd0effe Paul Cercueil 2019-03-19  136
-15de8c6efd0effe Paul Cercueil 2019-03-19  137  	ecc->ops = device_get_match_data(dev);
-15de8c6efd0effe Paul Cercueil 2019-03-19  138  	if (!ecc->ops)
-15de8c6efd0effe Paul Cercueil 2019-03-19  139  		return -EINVAL;
-15de8c6efd0effe Paul Cercueil 2019-03-19  140
-15de8c6efd0effe Paul Cercueil 2019-03-19  141  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-15de8c6efd0effe Paul Cercueil 2019-03-19 @142  	ecc->base = devm_ioremap_resource(dev, res);
-15de8c6efd0effe Paul Cercueil 2019-03-19  143  	if (IS_ERR(ecc->base))
-15de8c6efd0effe Paul Cercueil 2019-03-19  144  		return PTR_ERR(ecc->base);
-15de8c6efd0effe Paul Cercueil 2019-03-19  145
-15de8c6efd0effe Paul Cercueil 2019-03-19  146  	ecc->ops->disable(ecc);
-15de8c6efd0effe Paul Cercueil 2019-03-19  147
-15de8c6efd0effe Paul Cercueil 2019-03-19  148  	ecc->clk = devm_clk_get(dev, NULL);
-15de8c6efd0effe Paul Cercueil 2019-03-19  149  	if (IS_ERR(ecc->clk)) {
-15de8c6efd0effe Paul Cercueil 2019-03-19  150  		dev_err(dev, "failed to get clock: %ld\n", PTR_ERR(ecc->clk));
-15de8c6efd0effe Paul Cercueil 2019-03-19  151  		return PTR_ERR(ecc->clk);
-15de8c6efd0effe Paul Cercueil 2019-03-19  152  	}
-15de8c6efd0effe Paul Cercueil 2019-03-19  153
-15de8c6efd0effe Paul Cercueil 2019-03-19  154  	mutex_init(&ecc->lock);
-15de8c6efd0effe Paul Cercueil 2019-03-19  155
-15de8c6efd0effe Paul Cercueil 2019-03-19  156  	ecc->dev = dev;
-15de8c6efd0effe Paul Cercueil 2019-03-19  157  	platform_set_drvdata(pdev, ecc);
-15de8c6efd0effe Paul Cercueil 2019-03-19  158
-15de8c6efd0effe Paul Cercueil 2019-03-19  159  	return 0;
-15de8c6efd0effe Paul Cercueil 2019-03-19  160  }
-15de8c6efd0effe Paul Cercueil 2019-03-19  161  EXPORT_SYMBOL(ingenic_ecc_probe);
-15de8c6efd0effe Paul Cercueil 2019-03-19  162
-15de8c6efd0effe Paul Cercueil 2019-03-19  163  MODULE_LICENSE("GPL v2");
-
-:::::: The code at line 142 was first introduced by commit
-:::::: 15de8c6efd0effef3a5226bd5ab7f101c9f4948f mtd: rawnand: ingenic: Separate top-level and SoC specific code
-
-:::::: TO: Paul Cercueil <paul@crapouillou.net>
-:::::: CC: Miquel Raynal <miquel.raynal@bootlin.com>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+DQoNCu+7v09uIDcvMjIvMTksIDU6MTIgUE0sICJBbmRyZXcgSmVmZmVyeSIgPGFuZHJld0Bhai5p
+ZC5hdT4gd3JvdGU6DQoNCiAgICBIaSBWaWpheSwNCiAgICANCiAgICBBIGZldyBuaXRwaWNrcy4N
+CiAgICANCiAgICBPbiBUdWUsIDIzIEp1bCAyMDE5LCBhdCAwNToxMCwgVmlqYXkgS2hlbWthIHdy
+b3RlOg0KICAgID4gQWRkZXMNCiAgICANCiAgICBUeXBvOiBBZGRzDQpBY2sNCiAgICANCiAgICA+
+IFZvbHRhZ2UNCiAgICANCiAgICBVbm5lY2Vzc2FyeSBjYXBpdGFsaXNhdGlvbi4NCkFjaw0KICAg
+IA0KICAgID4gcmVndWxhdG9ycyBJbmZpbmVvbiBweGUxNjEwIGRldmljZXMgdG8gRmFjZWJvb2sN
+CiAgICA+IHRpb2dhcGFzcyBwbGF0Zm9ybS4NCiAgICA+IA0KICAgID4gU2lnbmVkLW9mZi1ieTog
+VmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQogICAgPiAtLS0NCiAgICA+ICAuLi4v
+ZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cyAgICAgfCAzNiArKysrKysrKysr
+KysrKysrKysrDQogICAgPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykNCiAgICA+
+IA0KICAgID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJv
+b2stdGlvZ2FwYXNzLmR0cyANCiAgICA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1m
+YWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgPiBpbmRleCBjNDUyMWVkYTc4N2MuLmI3NzgzODMz
+YTU4YyAxMDA2NDQNCiAgICA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFj
+ZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAgID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVk
+LWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgPiBAQCAtMTQ0LDYgKzE0NCw0MiBAQA0K
+ICAgID4gICZpMmM1IHsNCiAgICA+ICAJc3RhdHVzID0gIm9rYXkiOw0KICAgID4gIAkvLyBDUFUg
+Vm9sdGFnZSByZWd1bGF0b3JzDQogICAgPiArCXZyQDQ4IHsNCiAgICANCiAgICBUaGUgcmVjb21t
+ZW5kZWQgZ2VuZXJpYyBuYW1lIGlzICdyZWd1bGF0b3InLCBzbyBlLmcuIHJlZ3VsYXRvckA0OA0K
+QWNrOiBTdWJtaXR0ZWQgdjIgZm9yIHRoaXMgcGF0Y2guDQogICAgDQogICAgPiArCQljb21wYXRp
+YmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NDg+Ow0KICAgID4g
+Kwl9Ow0KICAgID4gKwl2ckA0YSB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4
+ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NGE+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2ckA1
+MCB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJ
+cmVnID0gPDB4NTA+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2ckA1MiB7DQogICAgPiArCQljb21w
+YXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NTI+Ow0KICAg
+ID4gKwl9Ow0KICAgID4gKwl2ckA1OCB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9u
+LHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NTg+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2
+ckA1YSB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4g
+KwkJcmVnID0gPDB4NWE+Ow0KICAgID4gKwl9Ow0KICAgID4gKwl2ckA2OCB7DQogICAgPiArCQlj
+b21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4Njg+Ow0K
+ICAgID4gKwl9Ow0KICAgID4gKwl2ckA3MCB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmlu
+ZW9uLHB4ZTE2MTAiOw0KICAgID4gKwkJcmVnID0gPDB4NzA+Ow0KICAgID4gKwl9Ow0KICAgID4g
+Kwl2ckA3MiB7DQogICAgPiArCQljb21wYXRpYmxlID0gImluZmluZW9uLHB4ZTE2MTAiOw0KICAg
+ID4gKwkJcmVnID0gPDB4NzI+Ow0KICAgID4gKwl9Ow0KICAgID4gIH07DQogICAgPiAgDQogICAg
+PiAgJmkyYzYgew0KICAgID4gLS0gDQogICAgPiAyLjE3LjENCiAgICA+IA0KICAgID4NCiAgICAN
+Cg0K
