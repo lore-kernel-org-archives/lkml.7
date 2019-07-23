@@ -2,195 +2,108 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89C7C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36690C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA7421849
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C10222543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:15:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1YENDNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390489AbfGWOPc (ORCPT
+        id S2390505AbfGWOPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:15:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:55520 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbfGWOPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:15:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B61828;
-        Tue, 23 Jul 2019 07:15:31 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA2173F71F;
-        Tue, 23 Jul 2019 07:15:29 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 15:15:24 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LAKML <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 4/6] ARM: psci: cpuidle: Introduce PSCI CPUidle driver
-Message-ID: <20190723141524.GA22025@e121166-lin.cambridge.arm.com>
-References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
- <20190722153745.32446-5-lorenzo.pieralisi@arm.com>
- <CAPDyKFppc32r=3w3g5nmHWDR5qR1vxsYjQ1b_GQoc_Gk=ni24A@mail.gmail.com>
+        Tue, 23 Jul 2019 10:15:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38297 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfGWOPj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:15:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f5so10683844pgu.5;
+        Tue, 23 Jul 2019 07:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t8/tYNsVxDLiBnfPm14iuWNmhM56kmPj2n/HRk6yks8=;
+        b=N1YENDNLsN8BAjvWh4jHBgqIidbRRnVoIi6SYOXw+vTl2GHO2Ocurbufia/6kbMdlP
+         xhKzKjfaAUuslQdmPNX+0QwHiFzyggi3HQuAwzL0eNUcKj8tIJpjNs3CcNorPsp8uLOX
+         MpBJsmTFo7gTDEmZA5Pt/1FFG4KAelDUyTxtl5RTdOt0jEoRgosuNx8TlpGU+6Pvpw9q
+         YWGX16b7eMyOHOTdvsHZ2bS8yOvsTwUhe1EQhEYUvGPBFL7q/8dz6Hp+rKSFYDR3ObPT
+         ouvLHqXEgInfSVwt3abO9YgrWR/db0rpjlKhvICNbYt6exk5r3UrAWdipm5l38s0bYl7
+         ANVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t8/tYNsVxDLiBnfPm14iuWNmhM56kmPj2n/HRk6yks8=;
+        b=MQgYHAucwWuDfeAAFIEN3Msl0T0DmUBNgt2ma1x57Sri0nZ/fRwzVKBMYhJjI0GrL7
+         qHzc4ZbWkqku1AGagQtClH8ikKgq2e5r9FCrWCsXbnceBueyZa1G2JhO8bpfBCPKkfgh
+         CYjxBWGCNnGVl9L7WZ86+h8oWiGd/Iy3r0lXQ56cxVFgeZ3+5j02uBJbWwDBcH7bKHuN
+         ib9s0BnQwaY+9BKZ2c12VY9el1GwaALf3mFpKBzrMSDm6T72AQvDoT9/kCqiuj6ZWzTZ
+         6TAXGPtNRt8BHHdNpdtehFqaP5juhXdpYz5vZnsaTGMxV+B8NXyGPU23f11dXcZOAni2
+         TBbQ==
+X-Gm-Message-State: APjAAAW5Z3R+wEfaX04Coce7EqwUP26HpaFzVTfZqYHG693CwgBqxcGo
+        HXami/VKOxwiBHBVUwD6iug=
+X-Google-Smtp-Source: APXvYqyjee5FJxFzNGCVsaawUAzdmeQOTwBPSjj0kU5hpEjsEX3E5SwZSYWIU/L2KabkoYR+fyfJbw==
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr76552521pgj.4.1563891338414;
+        Tue, 23 Jul 2019 07:15:38 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id bg3sm39370448pjb.9.2019.07.23.07.15.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 07:15:37 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] fm10k: Use dev_get_drvdata
+Date:   Tue, 23 Jul 2019 22:15:33 +0800
+Message-Id: <20190723141533.5803-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFppc32r=3w3g5nmHWDR5qR1vxsYjQ1b_GQoc_Gk=ni24A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 01:46:56PM +0200, Ulf Hansson wrote:
-> [...]
-> 
-> > +++ b/drivers/cpuidle/cpuidle-psci.c
-> > @@ -0,0 +1,150 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * PSCI CPU idle driver.
-> > + *
-> > + * Copyright (C) 2019 ARM Ltd.
-> > + * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "CPUidle PSCI: " fmt
-> > +
-> > +#include <linux/cpuidle.h>
-> > +#include <linux/cpumask.h>
-> > +#include <linux/cpu_pm.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/psci.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#include <asm/cpuidle.h>
-> 
-> This should go away, right?
+Instead of using to_pci_dev + pci_get_drvdata,
+use dev_get_drvdata to make code simpler.
 
-We need to pull in cpu_do_idle() so it will have to stay there.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/net/ethernet/intel/fm10k/fm10k_pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > +#include "dt_idle_states.h"
-> > +
-> > +static int psci_enter_idle_state(struct cpuidle_device *dev,
-> > +                               struct cpuidle_driver *drv, int idx)
-> > +{
-> > +       return CPU_PM_CPU_IDLE_ENTER(psci_cpu_suspend_enter, idx);
-> > +}
-> > +
-> > +static struct cpuidle_driver psci_idle_driver __initdata = {
-> > +       .name = "psci_idle",
-> > +       .owner = THIS_MODULE,
-> > +       /*
-> > +        * PSCI idle states relies on architectural WFI to
-> > +        * be represented as state index 0.
-> > +        */
-> > +       .states[0] = {
-> > +               .enter                  = psci_enter_idle_state,
-> > +               .exit_latency           = 1,
-> > +               .target_residency       = 1,
-> > +               .power_usage            = UINT_MAX,
-> > +               .name                   = "WFI",
-> > +               .desc                   = "ARM WFI",
-> > +       }
-> > +};
-> > +
-> > +static const struct of_device_id psci_idle_state_match[] __initconst = {
-> > +       { .compatible = "arm,idle-state",
-> > +         .data = psci_enter_idle_state },
-> > +       { },
-> > +};
-> > +
-> > +static int __init psci_idle_init_cpu(int cpu)
-> > +{
-> > +       struct cpuidle_driver *drv;
-> > +       struct device_node *cpu_node;
-> > +       const char *enable_method;
-> > +       int ret = 0;
-> > +
-> > +       drv = kmemdup(&psci_idle_driver, sizeof(*drv), GFP_KERNEL);
-> > +       if (!drv)
-> > +               return -ENOMEM;
-> > +
-> > +       drv->cpumask = (struct cpumask *)cpumask_of(cpu);
-> > +
-> > +       cpu_node = of_get_cpu_node(cpu, NULL);
-> > +       if (!cpu_node)
-> > +               return -ENODEV;
-> 
-> You should free drv in case of error here (goto out_kfree_drv; etc).
-> 
-> > +
-> > +       /*
-> > +        * Check whether the enable-method for the cpu is PSCI, fail
-> > +        * if it is not.
-> > +        */
-> > +       enable_method = of_get_property(cpu_node, "enable-method", NULL);
-> > +       if (!enable_method || (strcmp(enable_method, "psci")))
-> > +               ret = -ENODEV;
-> > +
-> > +       of_node_put(cpu_node);
-> > +       if (ret)
-> > +               return ret;
-> 
-> You should free drv in case of error here (goto out_kfree_drv;).
+diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_pci.c b/drivers/net/ethernet/intel/fm10k/fm10k_pci.c
+index e49fb51d3613..7bfc8a5b6f55 100644
+--- a/drivers/net/ethernet/intel/fm10k/fm10k_pci.c
++++ b/drivers/net/ethernet/intel/fm10k/fm10k_pci.c
+@@ -2352,7 +2352,7 @@ static int fm10k_handle_resume(struct fm10k_intfc *interface)
+  **/
+ static int __maybe_unused fm10k_resume(struct device *dev)
+ {
+-	struct fm10k_intfc *interface = pci_get_drvdata(to_pci_dev(dev));
++	struct fm10k_intfc *interface = dev_get_drvdata(dev);
+ 	struct net_device *netdev = interface->netdev;
+ 	struct fm10k_hw *hw = &interface->hw;
+ 	int err;
+@@ -2379,7 +2379,7 @@ static int __maybe_unused fm10k_resume(struct device *dev)
+  **/
+ static int __maybe_unused fm10k_suspend(struct device *dev)
+ {
+-	struct fm10k_intfc *interface = pci_get_drvdata(to_pci_dev(dev));
++	struct fm10k_intfc *interface = dev_get_drvdata(dev);
+ 	struct net_device *netdev = interface->netdev;
+ 
+ 	netif_device_detach(netdev);
+-- 
+2.20.1
 
-True on both cases, I missed that, thanks.
-
-Lorenzo
-
-> > +
-> > +       /*
-> > +        * Initialize idle states data, starting at index 1, since
-> > +        * by default idle state 0 is the quiescent state reached
-> > +        * by the cpu by executing the wfi instruction.
-> > +        *
-> > +        * If no DT idle states are detected (ret == 0) let the driver
-> > +        * initialization fail accordingly since there is no reason to
-> > +        * initialize the idle driver if only wfi is supported, the
-> > +        * default archictectural back-end already executes wfi
-> > +        * on idle entry.
-> > +        */
-> > +       ret = dt_init_idle_driver(drv, psci_idle_state_match, 1);
-> > +       if (ret <= 0) {
-> > +               ret = ret ? : -ENODEV;
-> > +               goto out_kfree_drv;
-> > +       }
-> > +
-> > +       /*
-> > +        * Initialize PSCI idle states.
-> > +        */
-> > +       ret = psci_cpu_init_idle(cpu);
-> > +       if (ret) {
-> > +               pr_err("CPU %d failed to PSCI idle\n", cpu);
-> > +               goto out_kfree_drv;
-> > +       }
-> > +
-> > +       ret = cpuidle_register(drv, NULL);
-> > +       if (ret)
-> > +               goto out_kfree_drv;
-> > +
-> > +       return 0;
-> > +
-> > +out_kfree_drv:
-> > +       kfree(drv);
-> > +       return ret;
-> > +}
-> > +
-> 
-> [...]
-> 
-> Kind regards
-> Uffe
