@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063FDC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901CEC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE9D21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EECB2081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563878715;
-	bh=iG6ZBlPNvSWkCi0n58oSplUm743b7Vvqofg9rl8iikw=;
+	s=default; t=1563878719;
+	bh=qaS9SmWH34ny5qaNljMBmvTm/kJ2jWyoFQPuXCTeewo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S129CCiFgy2e7d6zGrPSKsNR1rB6YDACmy2OZPVfdm/Ja6kzHG3kJ028lbICriJ1r
-	 2QODZMWTvSgE4lXca0dbh6dIWa+TVYSpSMjP/XPkuhwhFKo9yHJMdFyElMFCTzH/1/
-	 aeRqp0lv/swwtCZIikHGnD+7GrhE40vliXg1zX1Q=
+	b=r9cDJNCFbchypMOr/BXNmVYw7zdTT5zwl2EVe4ILSPWJ94S3YJfzBRKIoFa7KFSxw
+	 hJV8IMeAylzor5wNbBc/zZ0lm7zA9Rr+jnxQRXe1S84DTZmQbug55tZfW606PxG331
+	 wfW6t+JPgi3wP+7hVz+Aikze596HE+Px7Jd50/Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389230AbfGWKpO (ORCPT
+        id S2389241AbfGWKpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:45:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:52590 "EHLO foss.arm.com"
+        Tue, 23 Jul 2019 06:45:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:52616 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733066AbfGWKoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:44:55 -0400
+        id S2389182AbfGWKo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:44:58 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C0F515BF;
-        Tue, 23 Jul 2019 03:44:55 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 546BE1509;
+        Tue, 23 Jul 2019 03:44:57 -0700 (PDT)
 Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.197.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 32B3E3F71A;
-        Tue, 23 Jul 2019 03:44:54 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C7D23F71A;
+        Tue, 23 Jul 2019 03:44:56 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 7/9] irqchip/gic-v3: Dynamically allocate PPI partition descriptors
-Date:   Tue, 23 Jul 2019 11:44:35 +0100
-Message-Id: <20190723104437.154403-8-maz@kernel.org>
+Subject: [PATCH 9/9] irqchip/gic-v3: Add EPPI range support
+Date:   Tue, 23 Jul 2019 11:44:37 +0100
+Message-Id: <20190723104437.154403-10-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190723104437.154403-1-maz@kernel.org>
 References: <20190723104437.154403-1-maz@kernel.org>
@@ -52,67 +52,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Again, PPIs are becoming a variable set. Let's hack the PPI partition
-code to make the top-level array dynamically allocated.
+Expand the pre-existing PPI support to be able to deal with the
+Extended PPI range (EPPI). This includes obtaining the number of PPIs
+from each individual redistributor, and compute the minimum set
+(just in case someone builds something really clever...).
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v3.c       | 42 +++++++++++++++++++++++++-----
+ include/linux/irqchip/arm-gic-v3.h | 12 +++++++++
+ 2 files changed, 47 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index ec0f885fa373..b85acab4a6a1 100644
+index b85acab4a6a1..c91e4c759c95 100644
 --- a/drivers/irqchip/irq-gic-v3.c
 +++ b/drivers/irqchip/irq-gic-v3.c
-@@ -52,7 +52,7 @@ struct gic_chip_data {
- 	u64			flags;
- 	bool			has_rss;
- 	unsigned int		ppi_nr;
--	struct partition_desc	*ppi_descs[16];
-+	struct partition_desc	**ppi_descs;
- };
+@@ -104,6 +104,7 @@ static DEFINE_PER_CPU(bool, has_rss);
+ enum gic_intid_range {
+ 	PPI_RANGE,
+ 	SPI_RANGE,
++	EPPI_RANGE,
+ 	ESPI_RANGE,
+ 	LPI_RANGE,
+ 	__INVALID_RANGE__
+@@ -116,6 +117,8 @@ static enum gic_intid_range __get_intid_range(irq_hw_number_t hwirq)
+ 		return PPI_RANGE;
+ 	case 32 ... 1019:
+ 		return SPI_RANGE;
++	case EPPI_BASE_INTID ... 1119:
++		return EPPI_RANGE;
+ 	case ESPI_BASE_INTID ... 8191:
+ 		return ESPI_RANGE;
+ 	case 8192 ... GENMASK(23, 0):
+@@ -137,13 +140,15 @@ static inline unsigned int gic_irq(struct irq_data *d)
  
- static struct gic_chip_data gic_data __read_mostly;
-@@ -1350,7 +1350,8 @@ static int gic_irq_domain_select(struct irq_domain *d,
- 	 * then we need to match the partition domain.
- 	 */
- 	if (fwspec->param_count >= 4 &&
--	    fwspec->param[0] == 1 && fwspec->param[3] != 0)
-+	    fwspec->param[0] == 1 && fwspec->param[3] != 0 &&
-+	    gic_data.ppi_descs)
- 		return d == partition_get_domain(gic_data.ppi_descs[fwspec->param[1]]);
+ static inline int gic_irq_in_rdist(struct irq_data *d)
+ {
+-	return get_intid_range(d) == PPI_RANGE;
++	enum gic_intid_range range = get_intid_range(d);
++	return range == PPI_RANGE || range == EPPI_RANGE;
+ }
  
- 	return d == gic_data.domain;
-@@ -1371,6 +1372,9 @@ static int partition_domain_translate(struct irq_domain *d,
- 	struct device_node *np;
- 	int ret;
+ static inline void __iomem *gic_dist_base(struct irq_data *d)
+ {
+ 	switch (get_intid_range(d)) {
+ 	case PPI_RANGE:
++	case EPPI_RANGE:
+ 		/* SGI+PPI -> SGI_base for this CPU */
+ 		return gic_data_rdist_sgi_base();
  
-+	if (!gic_data.ppi_descs)
-+		return -ENOMEM;
-+
- 	np = of_find_node_by_phandle(fwspec->param[3]);
- 	if (WARN_ON(!np))
+@@ -242,6 +247,14 @@ static u32 convert_offset_index(struct irq_data *d, u32 offset, u32 *index)
+ 	case SPI_RANGE:
+ 		*index = d->hwirq;
+ 		return offset;
++	case EPPI_RANGE:
++		/*
++		 * Contrary to the ESPI range, the EPPI range is contiguous
++		 * to the PPI range in the registers, so let's adjust the
++		 * displacement accordingly. Consistency is overrated.
++		 */
++		*index = d->hwirq - EPPI_BASE_INTID + 32;
++		return offset;
+ 	case ESPI_RANGE:
+ 		*index = d->hwirq - ESPI_BASE_INTID;
+ 		switch (offset) {
+@@ -414,6 +427,8 @@ static u32 gic_get_ppi_index(struct irq_data *d)
+ 	switch (get_intid_range(d)) {
+ 	case PPI_RANGE:
+ 		return d->hwirq - 16;
++	case EPPI_RANGE:
++		return d->hwirq - EPPI_BASE_INTID + 16;
+ 	default:
+ 		unreachable();
+ 	}
+@@ -507,6 +522,7 @@ static void gic_eoimode1_eoi_irq(struct irq_data *d)
+ 
+ static int gic_set_type(struct irq_data *d, unsigned int type)
+ {
++	enum gic_intid_range range;
+ 	unsigned int irq = gic_irq(d);
+ 	void (*rwp_wait)(void);
+ 	void __iomem *base;
+@@ -517,9 +533,11 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+ 	if (irq < 16)
  		return -EINVAL;
-@@ -1527,6 +1531,10 @@ static void __init gic_populate_ppi_partitions(struct device_node *gic_node)
- 	if (!parts_node)
- 		return;
  
-+	gic_data.ppi_descs = kcalloc(gic_data.ppi_nr, sizeof(*gic_data.ppi_descs), GFP_KERNEL);
-+	if (!gic_data.ppi_descs)
-+		return;
++	range = get_intid_range(d);
 +
- 	nr_parts = of_get_child_count(parts_node);
+ 	/* SPIs have restrictions on the supported types */
+-	if (irq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
+-			 type != IRQ_TYPE_EDGE_RISING)
++	if ((range == SPI_RANGE || range == ESPI_RANGE) &&
++	    type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
+ 		return -EINVAL;
  
- 	if (!nr_parts)
-@@ -1578,7 +1586,7 @@ static void __init gic_populate_ppi_partitions(struct device_node *gic_node)
- 		part_idx++;
+ 	if (gic_irq_in_rdist(d)) {
+@@ -533,9 +551,9 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+ 	offset = convert_offset_index(d, GICD_ICFGR, &index);
+ 
+ 	ret = gic_configure_irq(index, type, base + offset, rwp_wait);
+-	if (ret && irq < 32) {
++	if (ret && (range == PPI_RANGE || range == EPPI_RANGE)) {
+ 		/* Misconfigured PPIs are usually not fatal */
+-		pr_warn("GIC: PPI%d is secure or misconfigured\n", irq - 16);
++		pr_warn("GIC: PPI INTID%d is secure or misconfigured\n", irq);
+ 		ret = 0;
  	}
  
--	for (i = 0; i < 16; i++) {
-+	for (i = 0; i < gic_data.ppi_nr; i++) {
- 		unsigned int irq;
- 		struct partition_desc *desc;
- 		struct irq_fwspec ppi_fwspec = {
+@@ -833,7 +851,7 @@ static int __gic_update_rdist_properties(struct redist_region *region,
+ 	u64 typer = gic_read_typer(ptr + GICR_TYPER);
+ 	gic_data.rdists.has_vlpis &= !!(typer & GICR_TYPER_VLPIS);
+ 	gic_data.rdists.has_direct_lpi &= !!(typer & GICR_TYPER_DirectLPIS);
+-	gic_data.ppi_nr = 16;
++	gic_data.ppi_nr = min(GICR_TYPER_NR_PPIS(typer), gic_data.ppi_nr);
+ 
+ 	return 1;
+ }
+@@ -1218,6 +1236,7 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+ 
+ 	switch (__get_intid_range(hw)) {
+ 	case PPI_RANGE:
++	case EPPI_RANGE:
+ 		irq_set_percpu_devid(irq);
+ 		irq_domain_set_info(d, irq, hw, chip, d->host_data,
+ 				    handle_percpu_devid_irq, NULL, NULL);
+@@ -1262,15 +1281,24 @@ static int gic_irq_domain_translate(struct irq_domain *d,
+ 			*hwirq = fwspec->param[1] + 32;
+ 			break;
+ 		case 1:			/* PPI */
+-		case GIC_IRQ_TYPE_PARTITION:
+ 			*hwirq = fwspec->param[1] + 16;
+ 			break;
+ 		case 2:			/* ESPI */
+ 			*hwirq = fwspec->param[1] + ESPI_BASE_INTID;
+ 			break;
++		case 3:			/* EPPI */
++			*hwirq = fwspec->param[1] + EPPI_BASE_INTID;
++			break;
+ 		case GIC_IRQ_TYPE_LPI:	/* LPI */
+ 			*hwirq = fwspec->param[1];
+ 			break;
++		case GIC_IRQ_TYPE_PARTITION:
++			*hwirq = fwspec->param[1];
++			if (fwspec->param[1] >= 16)
++				*hwirq += EPPI_BASE_INTID - 16;
++			else
++				*hwirq += 16;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index c523bf1faa55..9ec3349dee04 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -124,6 +124,18 @@
+ 
+ #define GICR_TYPER_CPU_NUMBER(r)	(((r) >> 8) & 0xffff)
+ 
++#define EPPI_BASE_INTID			1056
++
++#define GICR_TYPER_NR_PPIS(r)						\
++	({								\
++		unsigned int __ppinum = ((r) >> 27) & 0x1f;		\
++		unsigned int __nr_ppis = 16;				\
++		if (__ppinum == 1 || __ppinum == 2)			\
++			__nr_ppis +=  __ppinum * 32;			\
++									\
++		__nr_ppis;						\
++	 })
++
+ #define GICR_WAKER_ProcessorSleep	(1U << 1)
+ #define GICR_WAKER_ChildrenAsleep	(1U << 2)
+ 
 -- 
 2.20.1
 
