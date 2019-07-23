@@ -2,136 +2,219 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F6C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D1AC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B6A2251B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563877667;
-	bh=SbvKRaKGPuTBUDhfKD2LGqcIetgWe+zsZ7pUAADHYBw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uV0bjaaHZrgrFZNg3Coj1VzkxYtba4iUSgZC1MU2EzDPs+IQTIj45GNdZkRNgse4Y
-	 pHimiIT/A0ILWdBUN483BP3sC5mvL9QEsOzonpDb11vZestuwgpgVxaR72KJPtTC4y
-	 bS7ZhD2qHQjApp6t23v1RkatruzG+MgCUOcpJz48=
+	by mail.kernel.org (Postfix) with ESMTP id D8D842251A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387878AbfGWK1p (ORCPT
+        id S2388013AbfGWK17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:27:45 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39327 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731327AbfGWK1p (ORCPT
+        Tue, 23 Jul 2019 06:27:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33919 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387790AbfGWK17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:27:45 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r21so37454709otq.6;
-        Tue, 23 Jul 2019 03:27:44 -0700 (PDT)
+        Tue, 23 Jul 2019 06:27:59 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k10so41415522qtq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:27:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ajM+r2IdQ5rZtdFxjvMvXdnx3KB/ur/wGMtOzOPKc3A=;
-        b=oTwcSa/Sq+jmf1Q1GUK+n17NQeQo+4tD1dCkHHljZuxVErqVR/a0hP6RySZAFhzOP2
-         3RO6JT+qEGgAudlfpf9s08LEDrj7vvanJ4ej7GYktw9zmhYNIN/oykCIxuDLwdbPZyCk
-         fyIcZ5p3nHe8yuhl5gdZ43cG6HqClExly5py2lo6jSBJ8fLxsMjFGObjOlIG20pq9ATx
-         YChIRPMAH5lhF+jBxPekQWOreXmkH7XLrJY0q9KNInirUUGgfCC+HVAPibXFPdy9x8vJ
-         e1TmasSv3uYYywPeVzpgXFbxMbkyPR1UUKcuxKBtfOdF7tGbej+9GYM30tzLzUldKnLw
-         yqKw==
-X-Gm-Message-State: APjAAAVnVg/5DjcIqNFa0mu3qzpJbCJRWLYMPWW0NG8H9TLR9PK6hjsA
-        Uk1bdqQZ7Obhgq0VpmtUbG3HYvpr7/thSf7Hq+U=
-X-Google-Smtp-Source: APXvYqyRVvENaHdkxd3zgc6Gq0sdtakc+B0KKzT2csgrP84kMpJoBRiwQsWbqWCRDKE+CZYjkVIkPmOMjti7CiZ83SE=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr56703354otq.262.1563877663855;
- Tue, 23 Jul 2019 03:27:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BenoyznfTyLcx1/8jObFzEFhYgrS+1A5bA/DCD6z1+I=;
+        b=oLefrZ6bgd/DCU2yZIIDNlQkyuxJXWIHG8LpDPWikbc/pe8B5lL4dGOoZz0D/9CsFG
+         OKHCY9o7Ti6KMFSvYkv1EeWCCpxgRxXCcIBNcsNVwAM6LPyZffbxM71fe9RIGGSBXq+M
+         w5ZtwTo0GmwsOyCj563HExB2/NhL7AlT4opay0UGLvouCbC3qO/AQSI3j6/4b3uV0zNU
+         L7OpCQGTPddUS2cI4hRgYLsb2g946Hftc4qMsBeGcRURYbZbLwgFv6bc0AB2mVAbk5sS
+         fuihfMoj8ctsNwR+PWcN3VEX2xvzMwhR26YNXDipKGaiczBB5l3twjie4hSQQmenYZIQ
+         UOag==
+X-Gm-Message-State: APjAAAVGPuoTbjt2809/9g5WBKqRgk8reXTjWDuNGDaV4xOfgKzxvNc4
+        WseSS0gFU92e45PJD8BL3vVHLQ==
+X-Google-Smtp-Source: APXvYqwZ6OYsefBRjfzyywhyIbfQiowEEJG908kuZZQl/RMZTRF+2Kzuq3TqlfZM8y5m7uQqXQ3hzQ==
+X-Received: by 2002:a0c:ae6d:: with SMTP id z42mr53764098qvc.8.1563877678094;
+        Tue, 23 Jul 2019 03:27:58 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id l5sm19178166qte.9.2019.07.23.03.27.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 03:27:57 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 06:27:48 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190723062221-mutt-send-email-mst@kernel.org>
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+ <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
+ <20190722035657-mutt-send-email-mst@kernel.org>
+ <cfcd330d-5f4a-835a-69f7-c342d5d0d52d@redhat.com>
+ <20190723010156-mutt-send-email-mst@kernel.org>
+ <124be1a2-1c53-8e65-0f06-ee2294710822@redhat.com>
+ <20190723032800-mutt-send-email-mst@kernel.org>
+ <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
 MIME-Version: 1.0
-References: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
- <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
- <001201d54125$a6a82350$f3f869f0$@net> <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
-In-Reply-To: <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 23 Jul 2019 12:27:32 +0200
-Message-ID: <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Doug Smythies <dsmythies@telus.net>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:15 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 23-07-19, 00:10, Doug Smythies wrote:
-> > On 2019.07.21 23:52 Viresh Kumar wrote:
-> >
-> > > To avoid reducing the frequency of a CPU prematurely, we skip reducing
-> > > the frequency if the CPU had been busy recently.
-> > >
-> > > This should not be done when the limits of the policy are changed, for
-> > > example due to thermal throttling. We should always get the frequency
-> > > within limits as soon as possible.
-> > >
-> > > Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-> > > Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
-> > > Reported-by: Doug Smythies <doug.smythies@gmail.com>
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > ---
-> > > @Doug: Please try this patch, it must fix the issue you reported.
-> >
-> > It fixes the driver = acpi-cpufreq ; governor = schedutil test case
-> > It does not fix the driver = intel_cpufreq ; governor = schedutil test case
-> >
-> > I have checked my results twice, but will check again in the day or two.
->
-> The patch you tried to revert wasn't doing any driver specific stuff
-> but only schedutil. If that revert fixes your issue with both the
-> drivers, then this patch should do it as well.
->
-> I am clueless now on what can go wrong with intel_cpufreq driver with
-> schedutil now.
->
-> Though there is one difference between intel_cpufreq and acpi_cpufreq,
-> intel_cpufreq has fast_switch_possible=true and so it uses slightly
-> different path in schedutil. I tried to look from that perspective as
-> well but couldn't find anything wrong.
+On Tue, Jul 23, 2019 at 04:42:19PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/23 下午3:56, Michael S. Tsirkin wrote:
+> > On Tue, Jul 23, 2019 at 01:48:52PM +0800, Jason Wang wrote:
+> > > On 2019/7/23 下午1:02, Michael S. Tsirkin wrote:
+> > > > On Tue, Jul 23, 2019 at 11:55:28AM +0800, Jason Wang wrote:
+> > > > > On 2019/7/22 下午4:02, Michael S. Tsirkin wrote:
+> > > > > > On Mon, Jul 22, 2019 at 01:21:59PM +0800, Jason Wang wrote:
+> > > > > > > On 2019/7/21 下午6:02, Michael S. Tsirkin wrote:
+> > > > > > > > On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
+> > > > > > > > > syzbot has bisected this bug to:
+> > > > > > > > > 
+> > > > > > > > > commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> > > > > > > > > Author: Jason Wang <jasowang@redhat.com>
+> > > > > > > > > Date:   Fri May 24 08:12:18 2019 +0000
+> > > > > > > > > 
+> > > > > > > > >         vhost: access vq metadata through kernel virtual address
+> > > > > > > > > 
+> > > > > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
+> > > > > > > > > start commit:   6d21a41b Add linux-next specific files for 20190718
+> > > > > > > > > git tree:       linux-next
+> > > > > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
+> > > > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
+> > > > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+> > > > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
+> > > > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
+> > > > > > > > > 
+> > > > > > > > > Reported-by: syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
+> > > > > > > > > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
+> > > > > > > > > address")
+> > > > > > > > > 
+> > > > > > > > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > > > > > > > OK I poked at this for a bit, I see several things that
+> > > > > > > > we need to fix, though I'm not yet sure it's the reason for
+> > > > > > > > the failures:
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
+> > > > > > > >        That's just a bad hack,
+> > > > > > > This is used to avoid holding lock when checking whether the addresses are
+> > > > > > > overlapped. Otherwise we need to take spinlock for each invalidation request
+> > > > > > > even if it was the va range that is not interested for us. This will be very
+> > > > > > > slow e.g during guest boot.
+> > > > > > KVM seems to do exactly that.
+> > > > > > I tried and guest does not seem to boot any slower.
+> > > > > > Do you observe any slowdown?
+> > > > > Yes I do.
+> > > > > 
+> > > > > 
+> > > > > > Now I took a hard look at the uaddr hackery it really makes
+> > > > > > me nervious. So I think for this release we want something
+> > > > > > safe, and optimizations on top. As an alternative revert the
+> > > > > > optimization and try again for next merge window.
+> > > > > Will post a series of fixes, let me know if you're ok with that.
+> > > > > 
+> > > > > Thanks
+> > > > I'd prefer you to take a hard look at the patch I posted
+> > > > which makes code cleaner,
+> > > 
+> > > I did. But it looks to me a series that is only about 60 lines of code can
+> > > fix all the issues we found without reverting the uaddr optimization.
+> > Another thing I like about the patch I posted is that
+> > it removes 60 lines of code, instead of adding more :)
+> > Mostly because of unifying everything into
+> > a single cleanup function and using kfree_rcu.
+> 
+> 
+> Yes.
+> 
+> 
+> > 
+> > So how about this: do exactly what you propose but as a 2 patch series:
+> > start with the slow safe patch, and add then return uaddr optimizations
+> > on top. We can then more easily reason about whether they are safe.
+> 
+> 
+> If you stick, I can do this.
 
-acpi-cpufreq should use fast switching on the Doug's system too.
+Given I realized my patch is buggy in that
+it does not wait for outstanding maps, I don't
+insist.
 
-> If you still find intel_cpufreq to be broken, even with this patch,
-> please set fast_switch_possible=false instead of true in
-> __intel_pstate_cpu_init() and try tests again. That shall make it very
-> much similar to acpi-cpufreq driver.
+> 
+> > Basically you are saying this:
+> > 	- notifiers are only needed to invalidate maps
+> > 	- we make sure any uaddr change invalidates maps anyway
+> > 	- thus it's ok not to have notifiers since we do
+> > 	  not have maps
+> > 
+> > All this looks ok but the question is why do we
+> > bother unregistering them. And the answer seems to
+> > be that this is so we can start with a balanced
+> > counter: otherwise we can be between _start and
+> > _end calls.
+> 
+> 
+> Yes, since there could be multiple co-current invalidation requests. We need
+> count them to make sure we don't pin wrong pages.
+> 
+> 
+> > 
+> > I also wonder about ordering. kvm has this:
+> >         /*
+> >           * Used to check for invalidations in progress, of the pfn that is
+> >           * returned by pfn_to_pfn_prot below.
+> >           */
+> >          mmu_seq = kvm->mmu_notifier_seq;
+> >          /*
+> >           * Ensure the read of mmu_notifier_seq isn't reordered with PTE reads in
+> >           * gfn_to_pfn_prot() (which calls get_user_pages()), so that we don't
+> >           * risk the page we get a reference to getting unmapped before we have a
+> >           * chance to grab the mmu_lock without mmu_notifier_retry() noticing.
+> >           *
+> >           * This smp_rmb() pairs with the effective smp_wmb() of the combination
+> >           * of the pte_unmap_unlock() after the PTE is zapped, and the
+> >           * spin_lock() in kvm_mmu_notifier_invalidate_<page|range_end>() before
+> >           * mmu_notifier_seq is incremented.
+> >           */
+> >          smp_rmb();
+> > 
+> > does this apply to us? Can't we use a seqlock instead so we do
+> > not need to worry?
+> 
+> 
+> I'm not familiar with kvm MMU internals, but we do everything under of
+> mmu_lock.
+> 
+> Thanks
 
-I wonder if this helps.  Even so, we want fast switching to be used by
-intel_cpufreq.
+I don't think this helps at all.
 
-Anyway, it looks like the change reverted by the Doug's patch
-introduced a race condition that had not been present before.  Namely,
-need_freq_update is cleared in get_next_freq() when it is set _or_
-when the new freq is different from the cached one, so in the latter
-case if it happens to be set by sugov_limits() after evaluating
-sugov_should_update_freq() (which returned 'true' for timing reasons),
-that update will be lost now. [Previously the update would not be
-lost, because the clearing of need_freq_update depended only on its
-current value.] Where it matters is that in the "need_freq_update set"
-case, the "premature frequency reduction avoidance" should not be
-applied (as you noticed and hence the $subject patch).
+There's no lock between checking the invalidate counter and
+get user pages fast within vhost_map_prefetch. So it's possible
+that get user pages fast reads PTEs speculatively before
+invalidate is read.
 
-However, even with the $subject patch, need_freq_update may still be
-set by sugov_limits() after the check added by it and then cleared by
-get_next_freq(), so it doesn't really eliminate the problem.
-
-IMO eliminating would require invalidating next_freq this way or
-another when need_freq_update is set in sugov_should_update_freq(),
-which was done before commit ecd2884291261e3fddbc7651ee11a20d596bb514.
+-- 
+MST
