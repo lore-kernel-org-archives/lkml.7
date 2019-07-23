@@ -2,90 +2,104 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB6CC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318EBC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 330022084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1BB218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391603AbfGWSxQ convert rfc822-to-8bit (ORCPT
+        id S2391606AbfGWSyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:53:16 -0400
-Received: from mga06.intel.com ([134.134.136.31]:41103 "EHLO mga06.intel.com"
+        Tue, 23 Jul 2019 14:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbfGWSxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:53:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 11:53:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
-   d="scan'208";a="180829860"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2019 11:53:14 -0700
-Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 23 Jul 2019 11:53:14 -0700
-Received: from orsmsx103.amr.corp.intel.com ([169.254.5.29]) by
- ORSMSX112.amr.corp.intel.com ([169.254.3.253]) with mapi id 14.03.0439.000;
- Tue, 23 Jul 2019 11:53:14 -0700
-From:   "Yang, Fei" <fei.yang@intel.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated
- properly
-Thread-Topic: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated
- properly
-Thread-Index: AQHVPgQR482iA1i8Sk2wptVdWd1tF6bYj1lg
-Date:   Tue, 23 Jul 2019 18:53:13 +0000
-Message-ID: <02E7334B1630744CBDC55DA8586225837F8E94AC@ORSMSX103.amr.corp.intel.com>
-References: <1563497183-7114-1-git-send-email-fei.yang@intel.com>
- <87k1cescnc.fsf@linux.intel.com>
-In-Reply-To: <87k1cescnc.fsf@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMGZlNTUxYTctMDE1Ni00MjQyLWFjOTEtY2M5ZjBiYzU3YzVhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiREhrRWRSYjdoaUpJc0h2QzhsMnF5WjljUFNCMkRSbWxlZzhrS2FCOE56bEMwU2FiNTFBZ1NmN2tScEFzZDQrdiJ9
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726621AbfGWSyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 14:54:36 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F5542084D;
+        Tue, 23 Jul 2019 18:54:34 +0000 (UTC)
+Date:   Tue, 23 Jul 2019 14:54:32 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Juri Lelli <juri.lelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        John Kacur <jkacur@redhat.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Wagner <wagi@monom.org>, tom.zanussi@linux.intel.com
+Subject: Re: [PATCH RT 01/16] kthread: add a global worker thread.
+Message-ID: <20190723145432.585bbe36@gandalf.local.home>
+In-Reply-To: <20190722083009.GE25636@localhost.localdomain>
+References: <20190719214931.700049248@goodmis.org>
+        <20190719214956.170195069@goodmis.org>
+        <20190722083009.GE25636@localhost.localdomain>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c 
->> index 173f532..88eed49 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -2394,7 +2394,7 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
->>  	if (event->status & DEPEVT_STATUS_SHORT && !chain)
->>  		return 1;
->>  
->> -	if (event->status & DEPEVT_STATUS_IOC)
->> +	if (event->status & DEPEVT_STATUS_IOC && !chain)
->>  		return 1;
->
-> This will break the situation when we have more SGs than available TRBs. In that case we set IOC before the last so we have time to update transfer to append more TRBs.
-What's your opinion on https://patchwork.kernel.org/patch/10640137/? Checking condition "(event->status & DEPEVT_STATUS_IOC) && (trb->ctrl & DWC3_TRB_CTRL_IOC)"
-won't cause problem handling TRB shortage cases, right?
+On Mon, 22 Jul 2019 10:30:09 +0200
+Juri Lelli <juri.lelli@gmail.com> wrote:
 
-> Please, send me tracepoints
-I sent you the tracepoints last Friday, any new findings?
+> Hi,
+> 
+> On 19/07/19 17:49, Steven Rostedt wrote:
+> > 4.19.59-rt24-rc1 stable review patch.
+> > If anyone has any objections, please let me know.
+> > 
+> > ------------------
+> > 
+> > From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > 
+> > [ Upstream commit 0532e87d9d44795221aa921ba7024bde689cc894 ]
+> > 
+> > Add kthread_schedule_work() which uses a global kthread for all its
+> > jobs.
+> > Split the cgroup include to avoid recussive includes from interrupt.h.
+> > Fixup everything that fails to build (and did not include all header).
+> > 
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---  
+> 
+> I believe this one needs also the following, otherwise the attached
+> config won't compile.
+
+Thanks, I folded this in, and will be releasing this version shortly.
+
+-- Steve
+
+> 
+> Best,
+> 
+> Juri
+> 
+> ---
+> diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
+> index 6d766a19f2bb..0473efda4c65 100644
+> --- a/include/linux/blk-cgroup.h
+> +++ b/include/linux/blk-cgroup.h
+> @@ -14,7 +14,7 @@
+>   *                   Nauman Rafique <nauman@google.com>
+>   */
+> 
+> -#include <linux/cgroup.h>
+> +#include <linux/kthread-cgroup.h>
+>  #include <linux/percpu_counter.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/radix-tree.h>
 
