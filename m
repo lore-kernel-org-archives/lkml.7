@@ -2,237 +2,367 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6CFC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB4BC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C361D21897
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A2221897
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:58:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="GphKr1rt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Aqa1RZvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfGWX55 (ORCPT
+        id S1727420AbfGWX6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:57:57 -0400
-Received: from mail-eopbgr150089.outbound.protection.outlook.com ([40.107.15.89]:2425
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726593AbfGWX55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:57:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fz+GTKquN1B0r1UsoyOgaNoEgVUiJ/oIQxPWssFSa3d/+/aYHrXBgxfbE7vB6wpQvXw+RwtkhB0nqVRuW5rpYN0fCMxh+NkwQ7bnDkyz/7NrtvazUuio6qWEkX38mCb2VYu0nUK7SOp4OIB2FbBkvb2OsOPFl7NZ6FSOvUgNzDlvXiPyZOLosOS2R5rIab044U6suzHfzOCASa0bBGijw5/889IBCuAsFaEbj12IwMnYu1P/t/T5ZMjq6PGri2RT0Ms4ljD5YBElB1d69aQ1EmD/b2rUxKSojxajjwuCmmPi94i5kMOD5k6ExLTxQFfSQ0j56lqmu0MGE3E9SDczdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dfbE91tPg3qoZ5tvCt0S1fLEh+x8NOe8dVKXjYHbtos=;
- b=hK+OOqnQcA5HRngpSQj2d5YkDw66txWr8Gc7rVzbRAszPtvH+J/JnGU0DDIsel/O/9ip9JiauX8UGKHQmtt1vFFmgxzuRo2c8r4LHhcsLcsYI6Np9cGoMFY5Zj3hUem4rP2nGs3Dz8JfuGfJ4djI4Z24+9eKO+oLPTPDn79bteDbGbQDnJdHzbAUzadp3t0APF1liI2URW0NfrAwukWgaQE3ZL8gzWPpPHKa29EkCighF2Hlh7mXK4ZraJI55MfWTe0JAIW5P4hFh0gRKp9NqnkZO0cUIVyvD5a1kaJPFDybqjFO5VNzqOTUywEVeB47lKteze2ZEaor7FGT1YF+UQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dfbE91tPg3qoZ5tvCt0S1fLEh+x8NOe8dVKXjYHbtos=;
- b=GphKr1rtJJEDecXAWp1/nIcT1rRkqGDiTrBWMzLOX2TEHNtMpTfAq4PBaT+pYd4AwE2ne/+MgyL4cOG/zyXvpbKDKFJ4L7wTVfB++S7S4prVjz+5rMqL48C/jrAr9K7JJdBLU9TxAu9K6LpXZq2B05C1rLks/AvrNBzlPLqL/30=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5037.eurprd05.prod.outlook.com (20.177.52.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Tue, 23 Jul 2019 23:57:52 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
- 23:57:52 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/2] mm/hmm: a few more C style and comment clean ups
-Thread-Topic: [PATCH 1/2] mm/hmm: a few more C style and comment clean ups
-Thread-Index: AQHVQa6ccTnGbJ4iyUKRepNq/WEUcqbY4X2A
-Date:   Tue, 23 Jul 2019 23:57:52 +0000
-Message-ID: <20190723235747.GP15331@mellanox.com>
-References: <20190723233016.26403-1-rcampbell@nvidia.com>
- <20190723233016.26403-2-rcampbell@nvidia.com>
-In-Reply-To: <20190723233016.26403-2-rcampbell@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR02CA0048.namprd02.prod.outlook.com
- (2603:10b6:207:3d::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2d870704-40c9-48e3-545d-08d70fc992a8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5037;
-x-ms-traffictypediagnostic: VI1PR05MB5037:
-x-microsoft-antispam-prvs: <VI1PR05MB50374C489F4CF0EB5003882ECFC70@VI1PR05MB5037.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0107098B6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(189003)(199004)(7736002)(486006)(14454004)(305945005)(8936002)(81156014)(2616005)(14444005)(256004)(229853002)(1076003)(8676002)(71190400001)(36756003)(66066001)(5660300002)(71200400001)(6486002)(386003)(6916009)(316002)(446003)(11346002)(86362001)(54906003)(478600001)(99286004)(3846002)(68736007)(66946007)(66446008)(76176011)(64756008)(476003)(52116002)(6512007)(186003)(66476007)(66556008)(6436002)(53936002)(6116002)(102836004)(25786009)(53546011)(26005)(4326008)(6506007)(33656002)(2906002)(6246003)(81166006)(334744003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5037;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YsYw+TXrljd5KVznr5GNkrWU0koHjVRt9/Hg7Dq39UbN9i08nNtB4qlVNo5BNV2Bi6PST7LmG3GWRF3dMwZWG7SYj7JZqbFoG7TSfF5IVWM/1TGCmxTLL8RJM/3WOfCOosDRB4jycVYsNwvz+ucdl17NI+fS/SPOdgX5aiJ26PT6WsWRoF44wHlmfTD0zHMwteU1xssHMhXGqR3tvJmf3eYG86OzE6RIQBo6ma/NQarvxhQ+YtqO69xHV6/qE6edjCoNRUkj8wzAFRxbkSVl4aS+IItdEbSHHrgAUV1JS4D0XBFT5KCfZWVeoNhUYi7CUdg7gd0DOWFBYcJLYrk62/FFSeRPTjPOWZGMXJzOtEa+O+g5Jnil50fuu8sTzXdp6up+hya5n4eCq7zWhClGJsRuGPeR2wD9zKK06dYLH1g=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <0ADC3FCB7798D64EAEAEF7472C17BC21@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jul 2019 19:58:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43180 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbfGWX6C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 19:58:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j11so21700492otp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 16:58:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ojCoPrlATf3jyfxABbaqdPma7g9bAlp8rgQ8HqtNzy0=;
+        b=Aqa1RZvN9BV92jFCzEOyelGd0l7LfG5wpilH7+W9t4IFFW1LJp0snpdw1GI7e2gCCq
+         glbkiW91LMRkyVDCEUWq/tmhj6M6D0AShhJfhOXZ7XTeH3gTdK/vk9KEPwQ540tSlpTP
+         Ore2RHyZuBdWQIfY0LA+pV0xyn2cpZ/hwR7yp/6ToqpqD1iBj/RHJ/vKXAMWq2SIScY/
+         2p4j+KqZTk5w7/ZR1lsBKBefR9W/VBYsKMx5kNkZfUf5zQhAKEaIQoiwkBojnS6W7Gqg
+         NyMpi/zt8ayfds1NFRwZ5wOvt1wPlJigGB5oGRXt/2HXEtuTAF6hbzktADOjgDqSl2o1
+         GlFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ojCoPrlATf3jyfxABbaqdPma7g9bAlp8rgQ8HqtNzy0=;
+        b=tOES3n0WvkxTu/Ibon44/3q92qNU6ApInV/iUsfq82QtfDLannViHX5j8uGO8865iD
+         L1V0fwGIGkJU/2OAmcNyl3mZWqgQkE1VfR2rLLQ9CqAvOaJoVrrbUjZF03MXdz3QSswQ
+         8RhCqBJR+S80kCkhQDJbvBQSCjQ4pAFB9txnPIormw2i++tQClrORMppvc1JHNvm0xgt
+         z0j7v3hWnp8yM2JlDBmShXzSZKlQ1EXacK6XDNuOB1tBwMP/IVPD+lRacNxXPA8v2vYE
+         i26XVzSVy3IjkJGxsWPUbbjdS6ZDFQ0SmAawim/Qldptrcaa9K7JFEGwf3KLz3+Y8LVm
+         9KBg==
+X-Gm-Message-State: APjAAAVb0JuAhHVpK9wzrNmhXp59tpLMDqyWOakjQxwTO0sJ2g82/Jyt
+        +PdFmfuVY4a6avk9E5/doKKMrtAwalbAjjN9kj/utQ==
+X-Google-Smtp-Source: APXvYqyMS6BPjhxt+BnQPVvkmpSKbO4ZhkTRQrjuqFC94KtPH2uVaDDQ5YeeK6cFMsENrw2oc4JRquXtVz09+BbNruE=
+X-Received: by 2002:a9d:6201:: with SMTP id g1mr59656462otj.195.1563926280319;
+ Tue, 23 Jul 2019 16:58:00 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d870704-40c9-48e3-545d-08d70fc992a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 23:57:52.2021
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5037
+References: <20190720061647.234852-1-saravanak@google.com> <20190720061647.234852-4-saravanak@google.com>
+ <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com>
+ <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com> <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 23 Jul 2019 16:57:24 -0700
+Message-ID: <CAGETcx_qDnwa4O7ytvxac6d3krptquCKXMvCFoH9c1p=WY0TkQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/7] of/platform: Add functional dependency link from
+ DT bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 04:30:15PM -0700, Ralph Campbell wrote:
-> -	if (pmd_huge(pmd) && (range->vma->vm_flags & VM_HUGETLB))
-> +	if (pmd_huge(pmd) && is_vm_hugetlb_page(vma))
->  		return hmm_pfns_bad(start, end, walk);
+On Tue, Jul 23, 2019 at 3:18 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Jul 23, 2019 at 2:49 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Tue, Jul 23, 2019 at 11:06 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Sat, Jul 20, 2019 at 12:17 AM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > Add device-links after the devices are created (but before they are
+> > > > probed) by looking at common DT bindings like clocks and
+> > > > interconnects.
+> > >
+> > > The structure now looks a lot better to me. A few minor things below.
+> >
+> > Thanks.
+> >
+> > > >
+> > > > Automatically adding device-links for functional dependencies at the
+> > > > framework level provides the following benefits:
+> > > >
+> > > > - Optimizes device probe order and avoids the useless work of
+> > > >   attempting probes of devices that will not probe successfully
+> > > >   (because their suppliers aren't present or haven't probed yet).
+> > > >
+> > > >   For example, in a commonly available mobile SoC, registering just
+> > > >   one consumer device's driver at an initcall level earlier than the
+> > > >   supplier device's driver causes 11 failed probe attempts before the
+> > > >   consumer device probes successfully. This was with a kernel with all
+> > > >   the drivers statically compiled in. This problem gets a lot worse if
+> > > >   all the drivers are loaded as modules without direct symbol
+> > > >   dependencies.
+> > > >
+> > > > - Supplier devices like clock providers, interconnect providers, etc
+> > > >   need to keep the resources they provide active and at a particular
+> > > >   state(s) during boot up even if their current set of consumers don't
+> > > >   request the resource to be active. This is because the rest of the
+> > > >   consumers might not have probed yet and turning off the resource
+> > > >   before all the consumers have probed could lead to a hang or
+> > > >   undesired user experience.
+> > > >
+> > > >   Some frameworks (Eg: regulator) handle this today by turning off
+> > > >   "unused" resources at late_initcall_sync and hoping all the devices
+> > > >   have probed by then. This is not a valid assumption for systems with
+> > > >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> > > >   this due to the lack of a clear signal for when they can turn off
+> > > >   resources. This leads to downstream hacks to handle cases like this
+> > > >   that can easily be solved in the upstream kernel.
+> > > >
+> > > >   By linking devices before they are probed, we give suppliers a clear
+> > > >   count of the number of dependent consumers. Once all of the
+> > > >   consumers are active, the suppliers can turn off the unused
+> > > >   resources without making assumptions about the number of consumers.
+> > > >
+> > > > By default we just add device-links to track "driver presence" (probe
+> > > > succeeded) of the supplier device. If any other functionality provided
+> > > > by device-links are needed, it is left to the consumer/supplier
+> > > > devices to change the link when they probe.
+> > > >
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > >  .../admin-guide/kernel-parameters.txt         |   5 +
+> > > >  drivers/of/platform.c                         | 158 ++++++++++++++++++
+> > > >  2 files changed, 163 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > > index 138f6664b2e2..109b4310844f 100644
+> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > > @@ -3141,6 +3141,11 @@
+> > > >                         This can be set from sysctl after boot.
+> > > >                         See Documentation/sysctl/vm.txt for details.
+> > > >
+> > > > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
+> > > > +                       for optimizing probe order and making sure resources
+> > > > +                       aren't turned off before the consumer devices have
+> > > > +                       probed.
+> > > > +
+> > > >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
+> > > >                         See Documentation/debugging-via-ohci1394.txt for more
+> > > >                         info.
+> > > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > > index 04ad312fd85b..88a2086e26fa 100644
+> > > > --- a/drivers/of/platform.c
+> > > > +++ b/drivers/of/platform.c
+> > > > @@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> > > >
+> > > > +bool of_link_is_valid(struct device_node *con, struct device_node *sup)
+> > > > +{
+> > > > +       of_node_get(sup);
+> > > > +       /*
+> > > > +        * Don't allow linking a device node as a consumer of one of its
+> > > > +        * descendant nodes. By definition, a child node can't be a functional
+> > > > +        * dependency for the parent node.
+> > > > +        */
+> > > > +       while (sup) {
+> > > > +               if (sup == con) {
+> > > > +                       of_node_put(sup);
+> > > > +                       return false;
+> > > > +               }
+> > > > +               sup = of_get_next_parent(sup);
+> > > > +       }
+> > > > +       return true;
+> > > > +}
+> > > > +
+> > > > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
+> > > > +{
+> > > > +       struct platform_device *sup_dev;
+> > > > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> > > > +       int ret = 0;
+> > > > +
+> > > > +       /*
+> > > > +        * Since we are trying to create device links, we need to find
+> > > > +        * the actual device node that owns this supplier phandle.
+> > > > +        * Often times it's the same node, but sometimes it can be one
+> > > > +        * of the parents. So walk up the parent till you find a
+> > > > +        * device.
+> > > > +        */
+> > > > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> > > > +               sup_np = of_get_next_parent(sup_np);
+> > > > +       if (!sup_np)
+> > > > +               return 0;
+> > > > +
+> > > > +       if (!of_link_is_valid(dev->of_node, sup_np)) {
+> > > > +               of_node_put(sup_np);
+> > > > +               return 0;
+> > > > +       }
+> > > > +       sup_dev = of_find_device_by_node(sup_np);
+> > > > +       of_node_put(sup_np);
+> > > > +       if (!sup_dev)
+> > > > +               return -ENODEV;
+> > > > +       if (!device_link_add(dev, &sup_dev->dev, dl_flags))
+> > > > +               ret = -ENODEV;
+> > > > +       put_device(&sup_dev->dev);
+> > > > +       return ret;
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_prop_cells(struct device_node *np,
+> > > > +                                           const char *prop, int i,
+> > >
+> > > I like 'i' for for loops, but less so for function params. Perhaps
+> > > 'index' instead like of_parse_phandle_with_args.
+> >
+> > Sounds good.
+> >
+> > >
+> > > > +                                           const char *binding,
+> > > > +                                           const char *cell)
+> > > > +{
+> > > > +       struct of_phandle_args sup_args;
+> > > > +
+> > > > +       if (!i && strcmp(prop, binding))
+> > >
+> > > Why the '!i' test?
+> >
+> > To avoid a string comparison for every index. It's kinda wasteful once
+> > the first index passes.
+>
+> That's not very obvious and pretty fragile though this is a static
+> function. Perhaps we should split to match() and parse() functions.
 
-This one is not a minor cleanup.. I think it should be done on its
-own commit, and more comletely, maybe based on the below..
+Yeah, I did think about doing this. That's why I made it a struct for
+supplier_bindings instead of just an array of function pointers. But
+having a parse function just for a strcmp() was creating a lot of code
+noise. So went ahead and did it this way. We can keep it this way and
+if we later see the need for a separate parse function, it should be
+easy to do so (because it's already a struct for each binding).
 
-If vma is always the same as the the first vma, then your hunk above
-here is much better than introducing a hugetlb flag as I did below..
+> At
+> least put a comment here as to what we're doing.
 
-Although I don't understand why we have this test when it does seem to
-support huge pages, and the commit log suggests hugetlbfs was
-deliberately supported. So a comment (or deletion) sure would be nice.
+Done.
 
-So maybe sequence this into your series?
+> >
+> > > > +               return NULL;
+> > > > +
+> > > > +       if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
+> > > > +               return NULL;
+> > > > +
+> > > > +       return sup_args.np;
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_clocks(struct device_node *np,
+> > > > +                                       const char *prop, int i)
+> > > > +{
+> > > > +       return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_interconnects(struct device_node *np,
+> > > > +                                              const char *prop, int i)
+> > > > +{
+> > > > +       return parse_prop_cells(np, prop, i, "interconnects",
+> > > > +                               "#interconnect-cells");
+> > > > +}
+> > > > +
+> > > > +static int strcmp_suffix(const char *str, const char *suffix)
+> > > > +{
+> > > > +       unsigned int len, suffix_len;
+> > > > +
+> > > > +       len = strlen(str);
+> > > > +       suffix_len = strlen(suffix);
+> > > > +       if (len <= suffix_len)
+> > > > +               return -1;
+> > > > +       return strcmp(str + len - suffix_len, suffix);
+> > > > +}
+> > > > +
+> > > > +static struct device_node *parse_regulators(struct device_node *np,
+> > > > +                                           const char *prop, int i)
+> > > > +{
+> > > > +       if (i || strcmp_suffix(prop, "-supply"))
+> > > > +               return NULL;
+> > > > +
+> > > > +       return of_parse_phandle(np, prop, 0);
+> > > > +}
+> > > > +
+> > > > +/**
+> > > > + * struct supplier_bindings - Information for parsing supplier DT binding
+> > > > + *
+> > > > + * @parse_prop:                If the function cannot parse the property, return NULL.
+> > > > + *                     Otherwise, return the phandle listed in the property
+> > > > + *                     that corresponds to index i.
+> > > > + */
+> > > > +struct supplier_bindings {
+> > > > +       struct device_node *(*parse_prop)(struct device_node *np,
+> > > > +                                         const char *name, int i);
+> > > > +};
+> > > > +
+> > > > +struct supplier_bindings bindings[] = {
+> > >
+> > > static const
+> >
+> > Will do.
+> >
+> > >
+> > > > +       { .parse_prop = parse_clocks, },
+> > > > +       { .parse_prop = parse_interconnects, },
+> > > > +       { .parse_prop = parse_regulators, },
+> > > > +       { },
+> > > > +};
+> > > > +
+> > > > +static bool of_link_property(struct device *dev, struct device_node *con_np,
+> > > > +                            const char *prop)
+> > > > +{
+> > > > +       struct device_node *phandle;
+> > > > +       struct supplier_bindings *s = bindings;
+> > > > +       unsigned int i = 0;
+> > > > +       bool done = true;
+> > > > +
+> > > > +       while (!i && s->parse_prop) {
+> > >
+> > > Using 'i' is a little odd. Perhaps a 'matched' bool would be easier to read.
+> >
+> > That's how I wrote it first (locally) and then redid it this way
+> > because the bool felt very superfluous. I don't think this is that
+> > hard to understand.
+>
+> Alright...
 
-Jason
+I like the name "matched" over "found" that I had used locally. So, I
+actually went ahead and did this.
 
-From 6ea7cd2565b5b660d22a659b71b62614e66bc345 Mon Sep 17 00:00:00 2001
-From: Jason Gunthorpe <jgg@mellanox.com>
-Date: Tue, 23 Jul 2019 12:28:32 -0300
-Subject: [PATCH] mm/hmm: remove hmm_range vma
+-Saravana
 
-This value is only read inside hmm_vma_walk_pmd() and all the callers,
-through walk_page_range(), always set the value. The proper place for
-per-walk data is in hmm_vma_walk, and since the only usage is a vm_flags
-test just precompute and store that.
-
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/gpu/drm/nouveau/nouveau_svm.c |  7 +++----
- include/linux/hmm.h                   |  1 -
- mm/hmm.c                              | 11 ++++++-----
- 3 files changed, 9 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index a9c5c58d425b3d..4f4bec40b887a6 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -495,12 +495,12 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct=
- hmm_range *range)
- 				 range->start, range->end,
- 				 PAGE_SHIFT);
- 	if (ret) {
--		up_read(&range->vma->vm_mm->mmap_sem);
-+		up_read(&range->hmm->mm->mmap_sem);
- 		return (int)ret;
- 	}
-=20
- 	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
--		up_read(&range->vma->vm_mm->mmap_sem);
-+		up_read(&range->hmm->mm->mmap_sem);
- 		return -EBUSY;
- 	}
-=20
-@@ -508,7 +508,7 @@ nouveau_range_fault(struct hmm_mirror *mirror, struct h=
-mm_range *range)
- 	if (ret <=3D 0) {
- 		if (ret =3D=3D 0)
- 			ret =3D -EBUSY;
--		up_read(&range->vma->vm_mm->mmap_sem);
-+		up_read(&range->hmm->mm->mmap_sem);
- 		hmm_range_unregister(range);
- 		return ret;
- 	}
-@@ -681,7 +681,6 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 			 args.i.p.addr + args.i.p.size, fn - fi);
-=20
- 		/* Have HMM fault pages within the fault window to the GPU. */
--		range.vma =3D vma;
- 		range.start =3D args.i.p.addr;
- 		range.end =3D args.i.p.addr + args.i.p.size;
- 		range.pfns =3D args.phys;
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 9f32586684c9c3..d4b89f655817cd 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -164,7 +164,6 @@ enum hmm_pfn_value_e {
-  */
- struct hmm_range {
- 	struct hmm		*hmm;
--	struct vm_area_struct	*vma;
- 	struct list_head	list;
- 	unsigned long		start;
- 	unsigned long		end;
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 16b6731a34db79..3d8cdfb67a6ab8 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -285,8 +285,9 @@ struct hmm_vma_walk {
- 	struct hmm_range	*range;
- 	struct dev_pagemap	*pgmap;
- 	unsigned long		last;
--	bool			fault;
--	bool			block;
-+	bool			fault : 1;
-+	bool			block : 1;
-+	bool			hugetlb : 1;
- };
-=20
- static int hmm_vma_do_fault(struct mm_walk *walk, unsigned long addr,
-@@ -635,7 +636,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
- 	if (pmd_none(pmd))
- 		return hmm_vma_walk_hole(start, end, walk);
-=20
--	if (pmd_huge(pmd) && (range->vma->vm_flags & VM_HUGETLB))
-+	if (pmd_huge(pmd) && hmm_vma_walk->hugetlb)
- 		return hmm_pfns_bad(start, end, walk);
-=20
- 	if (thp_migration_supported() && is_pmd_migration_entry(pmd)) {
-@@ -994,7 +995,7 @@ long hmm_range_snapshot(struct hmm_range *range)
- 			return -EPERM;
- 		}
-=20
--		range->vma =3D vma;
-+		hmm_vma_walk.hugetlb =3D vma->vm_flags & VM_HUGETLB;
- 		hmm_vma_walk.pgmap =3D NULL;
- 		hmm_vma_walk.last =3D start;
- 		hmm_vma_walk.fault =3D false;
-@@ -1090,7 +1091,7 @@ long hmm_range_fault(struct hmm_range *range, bool bl=
-ock)
- 			return -EPERM;
- 		}
-=20
--		range->vma =3D vma;
-+		hmm_vma_walk.hugetlb =3D vma->vm_flags & VM_HUGETLB;
- 		hmm_vma_walk.pgmap =3D NULL;
- 		hmm_vma_walk.last =3D start;
- 		hmm_vma_walk.fault =3D true;
---=20
-2.22.0
-
+> > > > +               while ((phandle = s->parse_prop(con_np, prop, i))) {
+> > > > +                       i++;
+> > > > +                       if (of_link_to_phandle(dev, phandle))
+> > > > +                               done = false;
+> > >
+> > > Just return here. No point in continuing as 'done' is never set back to true.
+> >
+> > Actually, there is a point for this. Say Device-C depends on suppliers
+> > Device-S1 and Device-S2 and they are listed in DT in that order.
+> >
+> > Say, S1 gets populated after late_initcall_sync but S2 is probes way
+> > before that. If I don't continue past a "failed linking" to S1 and
+> > also link up to S2, then S2 will get a sync_state() callback before C
+> > is probed. So I have to go through all possible suppliers and as many
+> > as possible.
+> >
+> > Let me add a comment about this somewhere in the code (probably the
+> > header that defines the add_links() ops).
+>
+> Okay, makes sense.
+>
+> Rob
