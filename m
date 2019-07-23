@@ -2,100 +2,75 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDF4C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59393C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9B321BF6
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:50:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FWn4FdN8"
+	by mail.kernel.org (Postfix) with ESMTP id 2883222512
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563868258;
+	bh=e+rfHbmA114ieNPtGenJSrIxHywXJvrFDJHEzofAoxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Uh2vSsOrgwiBWPebNBlJeomtBEUuFPNmT0tdGToK/uXq3HZXGPjKF7E9HjLYZdUqY
+	 MT6RgEHzitc7UgwKM8z2ptLL2HqE3rE3+XQe5pHdoQf0j0PmgjRrlFH5C9J7s4Wi2q
+	 jSwMiviEMCpc/fcFUrHKVoSPkHrtQ3YgvCPjM4XY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388513AbfGWHuS (ORCPT
+        id S2388564AbfGWHu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:50:18 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:26611 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfGWHuS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:50:18 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x6N7nlBd002370;
-        Tue, 23 Jul 2019 16:49:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x6N7nlBd002370
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563868187;
-        bh=/ZG3CdOtI33rMeokPxToXGxnzYvk2W+J+Ed/VTmXJgQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FWn4FdN8vgdvI+ITeXpzuYYA2oYpl78IRJ4p0xGrmx5Qs/sTQMfkrBwK+g1OjC2Sf
-         HRxEAngWoNxEVkDDIsxSvSZC4g0017ceC3kVfjUmLKrAhsr5s1+OWPFfWoPZt8tGcD
-         T7D+AQL0izjln7ltNs4GOyGKZv0z9aCpUemW6A6a0WjkvWXoW2eyzG5ibb+cTRJasv
-         IQEv7j0VZEQCCfIWSFp41UkXu4PbMsDKgENy/+OM4Ciyta9aGddYVz0fweXDjQg1iZ
-         unvnnhaSqRNLDISOPcKjSpsE/z6kLklewyyvPO/CqLsAbWJv4q1g0IBRxFaUJVQvUP
-         Dl/sjG7prNuAQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
-Date:   Tue, 23 Jul 2019 16:49:43 +0900
-Message-Id: <20190723074943.17093-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 23 Jul 2019 03:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727170AbfGWHu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:50:56 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC7AA21BF6;
+        Tue, 23 Jul 2019 07:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563868255;
+        bh=e+rfHbmA114ieNPtGenJSrIxHywXJvrFDJHEzofAoxU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AX4LRyECbHjthQZF2SidTeakLLjEHNYQXP5KfxlgtUjJUJUIPsqSynsKl2W6SKHDP
+         x5VsY3Jg8iJfAthV2EBLRWtPsw6DctewlCsozGMvjr+hMJQuaeFfiB9PLUkbbU1EzM
+         mThb+Ms1uQEld/fZ0wBumCzlOW8Phk9lEN+Vfrik=
+Date:   Tue, 23 Jul 2019 15:50:25 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     s.hauer@pengutronix.de, =kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        shengjiu.wang@nxp.com, paul.olaru@nxp.com
+Subject: Re: [PATCH v2 0/3] Add power domain range for MU13 side b /
+ IRQSTR_DSP
+Message-ID: <20190723075024.GL15632@dragon>
+References: <20190718102519.31855-1-daniel.baluta@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190718102519.31855-1-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__builtin_constant_p(nr) is used everywhere now. It does not make
-much sense to define IS_IMMEDIATE() as its alias.
+On Thu, Jul 18, 2019 at 01:25:16PM +0300, Daniel Baluta wrote:
+> This patch adds power domain range for MU13 side b and irqsteer in
+> preparation for adding support for DSP <-> AP IPC communication.
+> 
+> Changes since v1:
+> 	- fixed typo in patch 1/3 commit message
+> 	- enhance commit message for patch 2/3 as per Aisheng's comments
+> 	- only add PD range for mu 13 side B
+> 	
+> Daniel Baluta (3):
+>   firmware: imx: scu-pd: Rename mu PD range to mu_a
+>   firmware: imx: scu-pd: Add mu13 b side PD range
+>   firmware: imx: scu-pd: Add IRQSTR_DSP PD range
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/sh/include/asm/bitops-op32.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/arch/sh/include/asm/bitops-op32.h b/arch/sh/include/asm/bitops-op32.h
-index 466880362ad1..cfe5465acce7 100644
---- a/arch/sh/include/asm/bitops-op32.h
-+++ b/arch/sh/include/asm/bitops-op32.h
-@@ -16,11 +16,9 @@
- #define BYTE_OFFSET(nr)		((nr) % BITS_PER_BYTE)
- #endif
- 
--#define IS_IMMEDIATE(nr)	(__builtin_constant_p(nr))
--
- static inline void __set_bit(int nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		__asm__ __volatile__ (
- 			"bset.b %1, @(%O2,%0)		! __set_bit\n\t"
- 			: "+r" (addr)
-@@ -37,7 +35,7 @@ static inline void __set_bit(int nr, volatile unsigned long *addr)
- 
- static inline void __clear_bit(int nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		__asm__ __volatile__ (
- 			"bclr.b %1, @(%O2,%0)		! __clear_bit\n\t"
- 			: "+r" (addr)
-@@ -64,7 +62,7 @@ static inline void __clear_bit(int nr, volatile unsigned long *addr)
-  */
- static inline void __change_bit(int nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		__asm__ __volatile__ (
- 			"bxor.b %1, @(%O2,%0)		! __change_bit\n\t"
- 			: "+r" (addr)
--- 
-2.17.1
-
+Applied all, thanks.
