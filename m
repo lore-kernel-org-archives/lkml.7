@@ -2,129 +2,133 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE56FC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E815C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79BE5216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36285216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEawseaK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HR+P+4Nk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfGWXRU (ORCPT
+        id S1726650AbfGWXUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:17:20 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42566 "EHLO
+        Tue, 23 Jul 2019 19:20:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35090 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfGWXRU (ORCPT
+        with ESMTP id S1726438AbfGWXUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:17:20 -0400
-Received: by mail-io1-f68.google.com with SMTP id e20so55162477iob.9;
-        Tue, 23 Jul 2019 16:17:20 -0700 (PDT)
+        Tue, 23 Jul 2019 19:20:42 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so85588406ioo.2;
+        Tue, 23 Jul 2019 16:20:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EREJRt7jj49C0rCcr5qS3pbZo7kgePF2Gv4OWisb4Ck=;
-        b=hEawseaKHXb8tX1P7iXvi+EekI5fvqzo9CjFSlo+KONp03bCmEzukex+gesX7PBkX+
-         DtaSmMdIjbxj93e6Rr8OSwFHOSH6xByvnphjQSNP5G9SHdFgky+0pCPymTa8Xx83JuaS
-         XjcpcjqUpabkua+14OxhBg12CugEP0Cn4gS65nnyJ/4GGuZtTKHGGrp3ZzfvlRH84084
-         eiB31zYb/uhxLg6lWJgyPTQyR5o+PtgEbD1HHJ6ZKb1JCGfa2ZYBFg2lfV4VYR4s2kCs
-         FF0OmK8hOU9oyrzmM5Y5zngF+sVBdtyJ79KKQOwxC1rA/PcqcEk/2bhxAKyyjv+s3nUI
-         vgAQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m3Q8+/v4CM0L4GwsZxs2WcaoeWxYZYbtWw39haCd4u4=;
+        b=HR+P+4NkI6L7xuD6IE3T1KWAmh6kZwbsXgyOklLsxPmo6ukom2a/0fQXytbFNr/D8Y
+         lqDWzURxoTxIBYaITAU3s2JrgP8s2H0TxjUGCtnXhTaz5B0F1mPDpCyPdYj7wGRJe3H6
+         27g/1DKaisc3vBoa03E10uywQjzC165RHakPdpik58AMl3WL50Q04qmaiUUJHRiotKWp
+         PkNKBSjAD70BKAX07FpKLGsv2x3YZ8K0A1FdeuYs4vb2B9s5lbJdX0+OrwHbDJ7iJthF
+         ZYsbjPbnVljeFJcKDRvOdN00/9abfdn1vFASucIyavUanKm7UfmC6hamnHITNYT2Pgbo
+         69YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EREJRt7jj49C0rCcr5qS3pbZo7kgePF2Gv4OWisb4Ck=;
-        b=qrarTHdfk05MF5OumVkxX1CCe77RD4qELZ1wayz/1HdxLQO2+L6K6MlqcnoVCeLzHN
-         nG7YKeE8tPtFi1qvxELXM2SshSKW2d4+xlsiuHmQvXh1f+Cwd499W0+4vmaZVMFZX+FO
-         lzxwh4qZ8ZW67UfiAaHljdTKwmtl8fSkRl6stE/6WMQHOSp6d80d2+q3xOYK9jXoJPoN
-         dFYiDflxQGZbkCmURWYNp/v3Xao2+izvtqaw4lbulyr9sZbXOFIRHaj7MdL579lByfGr
-         6oMyXEPyXSKnPYd1dppyAHCzH0rkdsIbEgfZtx+WIeGVATK37R6rK12PYjzV3lU9U6vh
-         WStQ==
-X-Gm-Message-State: APjAAAVSCaRaI4UpvOAsd4QQQ+LkVJynbLHxCZ0pP8bmf/k1ksIoCxgK
-        UDi6gZYffvl99qgq4p+H0iU=
-X-Google-Smtp-Source: APXvYqyuCGs6UKeGsAre7PLltaWi/oMLM4yfYi/ennnGMQwTepvb8u+x6KbwnWAD7OKXXwNG/xUwpg==
-X-Received: by 2002:a6b:da01:: with SMTP id x1mr48189572iob.216.1563923839654;
-        Tue, 23 Jul 2019 16:17:19 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id y5sm46436289ioc.86.2019.07.23.16.17.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 16:17:18 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 17:17:17 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     bjorn@helgaas.com
-Cc:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
-        quan@os.amperecomputing.com, David Miller <davem@davemloft.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] drivers: net: xgene: Remove acpi_has_method() calls
-Message-ID: <20190723231717.GA16776@JATN>
-References: <20190722030401.69563-1-skunberg.kelsey@gmail.com>
- <20190723185811.8548-1-skunberg.kelsey@gmail.com>
- <CABhMZUVAcJwJpN8BKZTTU7jUW6881KdBtoYs_3kSn+tDtOVqNw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m3Q8+/v4CM0L4GwsZxs2WcaoeWxYZYbtWw39haCd4u4=;
+        b=jAwI7VnPN/Z4q5e/CFTfGZTIEHOJebcPVlBbvZv8YfC3FeiX/IU2VZfd7kVxXjH2ab
+         OM9xoCnlnz9/5FdtkMr82wZvVTU20/Y7nEZvuIKfXuGkhO/j1vlX2xpYoC/ha4dYlTig
+         +n1D1DX1RFhJplpYHBHhCMmSlGPwR53+Cf9jYfeJZahxTr15OATltpCJViGFXk+9/GZ9
+         kLx4mUWBsrmPaarA+ytj80VNHxv9Ztv089NPPSrBhRy1qS1eHBpKjjqXV2iBhIDgxbSk
+         WTbOku/d5820CpNZxfGUkrlCABcBONjSSH+YRCYnXwMRhRjS04Aqvx/w7mNGJJS7cz87
+         DZpQ==
+X-Gm-Message-State: APjAAAVb2HR9Ux7FR6FAiRrj8ExjQ27o9F8SlVD5Rmu49nNoTE/JSUdt
+        sQQJIrZDdDcTScNxlywvtaMjvQUEbsdRUtBoF0XPKg==
+X-Google-Smtp-Source: APXvYqx+aFEZ60goSLlOoXFdJx5XHU9KXkvx2zZrHm2ejE2YNuYySG/3ZoSv5C9NRtEed2Swx18zzZXwGdFFDjtnMAE=
+X-Received: by 2002:a5e:9506:: with SMTP id r6mr8685534ioj.219.1563924041597;
+ Tue, 23 Jul 2019 16:20:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABhMZUVAcJwJpN8BKZTTU7jUW6881KdBtoYs_3kSn+tDtOVqNw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190715134655.4076-1-sashal@kernel.org> <20190715134655.4076-39-sashal@kernel.org>
+In-Reply-To: <20190715134655.4076-39-sashal@kernel.org>
+From:   ronnie sahlberg <ronniesahlberg@gmail.com>
+Date:   Wed, 24 Jul 2019 09:20:29 +1000
+Message-ID: <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session
+ to call send_sig instead of force_sig
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        Steve French <smfrench@gmail.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 05:56:04PM -0500, Bjorn Helgaas wrote:
-> On Tue, Jul 23, 2019 at 1:59 PM Kelsey Skunberg
-> <skunberg.kelsey@gmail.com> wrote:
-> >
-> > acpi_evaluate_object will already return an error if the needed method
-> > does not exist. Remove unnecessary acpi_has_method() calls and check the
-> > returned acpi_status for failure instead.
-> 
-> > diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-> > index 6453fc2ebb1f..5d637b46b2bf 100644
-> > --- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-> > +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-> > @@ -437,6 +437,7 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
-> >  static int xgene_enet_reset(struct xgene_enet_pdata *p)
-> >  {
-> >         struct device *dev = &p->pdev->dev;
-> > +       acpi_status status;
-> >
-> >         if (!xgene_ring_mgr_init(p))
-> >                 return -ENODEV;
-> > @@ -460,14 +461,13 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
-> >                 }
-> >         } else {
-> >  #ifdef CONFIG_ACPI
-> > -               if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_RST"))
-> > -                       acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
-> > -                                            "_RST", NULL, NULL);
-> > -               else if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_INI"))
-> > +               status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
-> > +                                             "_RST", NULL, NULL);
-> > +               if (ACPI_FAILURE(status)) {
-> >                         acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
-> >                                              "_INI", NULL, NULL);
-> > +               }
-> >  #endif
-> > -       }
-> 
-> Oops, I don't think you intended to remove that brace.
-> 
-> If you haven't found it already, CONFIG_COMPILE_TEST is useful for
-> building things that wouldn't normally be buildable on your arch.
+On Tue, Jul 16, 2019 at 1:15 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: "Eric W. Biederman" <ebiederm@xmission.com>
+>
+> [ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
+>
+> The locking in force_sig_info is not prepared to deal with a task that
+> exits or execs (as sighand may change).  The is not a locking problem
+> in force_sig as force_sig is only built to handle synchronous
+> exceptions.
+>
+> Further the function force_sig_info changes the signal state if the
+> signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+> delivery of the signal.  The signal SIGKILL can not be ignored and can
+> not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+> delivered.
+>
+> So using force_sig rather than send_sig for SIGKILL is confusing
+> and pointless.
+>
+> Because it won't impact the sending of the signal and and because
+> using force_sig is wrong, replace force_sig with send_sig.
 
-Thank you very much for catching that. I did not know about
-CONFIG_COMPILE_TEST yet and that will be very useful. It's clear why my
-build test wasn't coming up with the same errors now. I know for future
-patches now and will certainly get this one fixed.
-Thank you again.
+I think this patch broke the cifs module.
+The issue is that the use count is now not updated properly and thus
+it is no longer possible to
+rmmod the module.
 
--Kelsey
+
+>
+> Cc: Namjae Jeon <namjae.jeon@samsung.com>
+> Cc: Jeff Layton <jlayton@primarydata.com>
+> Cc: Steve French <smfrench@gmail.com>
+> Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
+> Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/cifs/connect.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> index 8dd6637a3cbb..714a359c7c8d 100644
+> --- a/fs/cifs/connect.c
+> +++ b/fs/cifs/connect.c
+> @@ -2631,7 +2631,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
+>
+>         task = xchg(&server->tsk, NULL);
+>         if (task)
+> -               force_sig(SIGKILL, task);
+> +               send_sig(SIGKILL, task, 1);
+>  }
+>
+>  static struct TCP_Server_Info *
+> --
+> 2.20.1
+>
