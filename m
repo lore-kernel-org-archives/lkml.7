@@ -6,38 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC57C76199
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFDAC7619A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E79B2238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6126B2238C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbfGWFKR (ORCPT
+        id S1732956AbfGWFKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:10:17 -0400
+        Tue, 23 Jul 2019 01:10:21 -0400
 Received: from mga05.intel.com ([192.55.52.43]:1868 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727735AbfGWFKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:10:15 -0400
+        id S1727735AbfGWFKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:10:20 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 22:10:15 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 22:10:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
-   d="scan'208";a="196992391"
+   d="scan'208";a="196992413"
 Received: from hao-dev.bj.intel.com ([10.238.157.65])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 22:10:13 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 22:10:17 -0700
 From:   Wu Hao <hao.wu@intel.com>
 To:     gregkh@linuxfoundation.org, mdf@kernel.org,
         linux-fpga@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         linux-doc@vger.kernel.org, atull@kernel.org,
-        Wu Hao <hao.wu@intel.com>, Luwei Kang <luwei.kang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: [PATCH v3 10/12] fpga: dfl: fme: add capability sysfs interfaces
-Date:   Tue, 23 Jul 2019 12:51:33 +0800
-Message-Id: <1563857495-26692-11-git-send-email-hao.wu@intel.com>
+        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH v3 12/12] Documentation: fpga: dfl: add descriptions for virtualization and new interfaces.
+Date:   Tue, 23 Jul 2019 12:51:35 +0800
+Message-Id: <1563857495-26692-13-git-send-email-hao.wu@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
 References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
@@ -46,117 +45,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds 3 read-only sysfs interfaces for FPGA Management Engine
-(FME) block for capabilities including cache_size, fabric_version and
-socket_id.
+This patch adds virtualization support description for DFL based
+FPGA devices (based on PCIe SRIOV), and introductions to new
+interfaces added by new dfl private feature drivers.
 
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+[mdf@kernel.org: Fixed up to make it work with new reStructuredText docs]
 Signed-off-by: Xu Yilun <yilun.xu@intel.com>
 Signed-off-by: Wu Hao <hao.wu@intel.com>
 Acked-by: Alan Tull <atull@kernel.org>
 Signed-off-by: Moritz Fischer <mdf@kernel.org>
 ---
-v2: rebased.
-v3: update kernel version and date in sysfs doc
----
- Documentation/ABI/testing/sysfs-platform-dfl-fme | 23 ++++++++++++
- drivers/fpga/dfl-fme-main.c                      | 48 ++++++++++++++++++++++++
- 2 files changed, 71 insertions(+)
+ Documentation/fpga/dfl.rst | 105 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-index 8fa4feb..269e807 100644
---- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-+++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-@@ -21,3 +21,26 @@ Contact:	Wu Hao <hao.wu@intel.com>
- Description:	Read-only. It returns Bitstream (static FPGA region) meta
- 		data, which includes the synthesis date, seed and other
- 		information of this static FPGA region.
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/cache_size
-+Date:		July 2019
-+KernelVersion:  5.4
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. It returns cache size of this FPGA device.
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/fabric_version
-+Date:		July 2019
-+KernelVersion:  5.4
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. It returns fabric version of this FPGA device.
-+		Userspace applications need this information to select
-+		best data channels per different fabric design.
-+
-+What:		/sys/bus/platform/devices/dfl-fme.0/socket_id
-+Date:		July 2019
-+KernelVersion:  5.4
-+Contact:	Wu Hao <hao.wu@intel.com>
-+Description:	Read-only. It returns socket_id to indicate which socket
-+		this FPGA belongs to, only valid for integrated solution.
-+		User only needs this information, in case standard numa node
-+		can't provide correct information.
-diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-index e333f19..c8703c4 100644
---- a/drivers/fpga/dfl-fme-main.c
-+++ b/drivers/fpga/dfl-fme-main.c
-@@ -73,10 +73,58 @@ static ssize_t bitstream_metadata_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(bitstream_metadata);
+diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+index 2f125ab..6fa483f 100644
+--- a/Documentation/fpga/dfl.rst
++++ b/Documentation/fpga/dfl.rst
+@@ -87,6 +87,8 @@ The following functions are exposed through ioctls:
+ - Get driver API version (DFL_FPGA_GET_API_VERSION)
+ - Check for extensions (DFL_FPGA_CHECK_EXTENSION)
+ - Program bitstream (DFL_FPGA_FME_PORT_PR)
++- Assign port to PF (DFL_FPGA_FME_PORT_ASSIGN)
++- Release port from PF (DFL_FPGA_FME_PORT_RELEASE)
  
-+static ssize_t cache_size_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	void __iomem *base;
-+	u64 v;
+ More functions are exposed through sysfs
+ (/sys/class/fpga_region/regionX/dfl-fme.n/):
+@@ -102,6 +104,10 @@ More functions are exposed through sysfs
+      one FPGA device may have more than one port, this sysfs interface indicates
+      how many ports the FPGA device has.
+ 
++ Global error reporting management (errors/)
++     error reporting sysfs interfaces allow user to read errors detected by the
++     hardware, and clear the logged errors.
 +
-+	base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_HEADER);
+ 
+ FIU - PORT
+ ==========
+@@ -143,6 +149,10 @@ More functions are exposed through sysfs:
+  Read Accelerator GUID (afu_id)
+      afu_id indicates which PR bitstream is programmed to this AFU.
+ 
++ Error reporting (errors/)
++     error reporting sysfs interfaces allow user to read port/afu errors
++     detected by the hardware, and clear the logged errors.
 +
-+	v = readq(base + FME_HDR_CAP);
+ 
+ DFL Framework Overview
+ ======================
+@@ -218,6 +228,101 @@ the compat_id exposed by the target FPGA region. This check is usually done by
+ userspace before calling the reconfiguration IOCTL.
+ 
+ 
++FPGA virtualization - PCIe SRIOV
++================================
++This section describes the virtualization support on DFL based FPGA device to
++enable accessing an accelerator from applications running in a virtual machine
++(VM). This section only describes the PCIe based FPGA device with SRIOV support.
 +
-+	return sprintf(buf, "%u\n",
-+		       (unsigned int)FIELD_GET(FME_CAP_CACHE_SIZE, v));
-+}
-+static DEVICE_ATTR_RO(cache_size);
++Features supported by the particular FPGA device are exposed through Device
++Feature Lists, as illustrated below:
 +
-+static ssize_t fabric_version_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	void __iomem *base;
-+	u64 v;
++::
 +
-+	base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_HEADER);
++    +-------------------------------+  +-------------+
++    |              PF               |  |     VF      |
++    +-------------------------------+  +-------------+
++        ^            ^         ^              ^
++        |            |         |              |
++  +-----|------------|---------|--------------|-------+
++  |     |            |         |              |       |
++  |  +-----+     +-------+ +-------+      +-------+   |
++  |  | FME |     | Port0 | | Port1 |      | Port2 |   |
++  |  +-----+     +-------+ +-------+      +-------+   |
++  |                  ^         ^              ^       |
++  |                  |         |              |       |
++  |              +-------+ +------+       +-------+   |
++  |              |  AFU  | |  AFU |       |  AFU  |   |
++  |              +-------+ +------+       +-------+   |
++  |                                                   |
++  |            DFL based FPGA PCIe Device             |
++  +---------------------------------------------------+
 +
-+	v = readq(base + FME_HDR_CAP);
++FME is always accessed through the physical function (PF).
 +
-+	return sprintf(buf, "%u\n",
-+		       (unsigned int)FIELD_GET(FME_CAP_FABRIC_VERID, v));
-+}
-+static DEVICE_ATTR_RO(fabric_version);
++Ports (and related AFUs) are accessed via PF by default, but could be exposed
++through virtual function (VF) devices via PCIe SRIOV. Each VF only contains
++1 Port and 1 AFU for isolation. Users could assign individual VFs (accelerators)
++created via PCIe SRIOV interface, to virtual machines.
 +
-+static ssize_t socket_id_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	void __iomem *base;
-+	u64 v;
++The driver organization in virtualization case is illustrated below:
++::
 +
-+	base = dfl_get_feature_ioaddr_by_id(dev, FME_FEATURE_ID_HEADER);
++    +-------++------++------+             |
++    | FME   || FME  || FME  |             |
++    | FPGA  || FPGA || FPGA |             |
++    |Manager||Bridge||Region|             |
++    +-------++------++------+             |
++    +-----------------------+  +--------+ |             +--------+
++    |          FME          |  |  AFU   | |             |  AFU   |
++    |         Module        |  | Module | |             | Module |
++    +-----------------------+  +--------+ |             +--------+
++          +-----------------------+       |       +-----------------------+
++          | FPGA Container Device |       |       | FPGA Container Device |
++          |  (FPGA Base Region)   |       |       |  (FPGA Base Region)   |
++          +-----------------------+       |       +-----------------------+
++            +------------------+          |         +------------------+
++            | FPGA PCIE Module |          | Virtual | FPGA PCIE Module |
++            +------------------+   Host   | Machine +------------------+
++   -------------------------------------- | ------------------------------
++             +---------------+            |          +---------------+
++             | PCI PF Device |            |          | PCI VF Device |
++             +---------------+            |          +---------------+
 +
-+	v = readq(base + FME_HDR_CAP);
++FPGA PCIe device driver is always loaded first once a FPGA PCIe PF or VF device
++is detected. It:
 +
-+	return sprintf(buf, "%u\n",
-+		       (unsigned int)FIELD_GET(FME_CAP_SOCKET_ID, v));
-+}
-+static DEVICE_ATTR_RO(socket_id);
++* Finishes enumeration on both FPGA PCIe PF and VF device using common
++  interfaces from DFL framework.
++* Supports SRIOV.
 +
- static struct attribute *fme_hdr_attrs[] = {
- 	&dev_attr_ports_num.attr,
- 	&dev_attr_bitstream_id.attr,
- 	&dev_attr_bitstream_metadata.attr,
-+	&dev_attr_cache_size.attr,
-+	&dev_attr_fabric_version.attr,
-+	&dev_attr_socket_id.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(fme_hdr);
++The FME device driver plays a management role in this driver architecture, it
++provides ioctls to release Port from PF and assign Port to PF. After release
++a port from PF, then it's safe to expose this port through a VF via PCIe SRIOV
++sysfs interface.
++
++To enable accessing an accelerator from applications running in a VM, the
++respective AFU's port needs to be assigned to a VF using the following steps:
++
++#. The PF owns all AFU ports by default. Any port that needs to be
++   reassigned to a VF must first be released through the
++   DFL_FPGA_FME_PORT_RELEASE ioctl on the FME device.
++
++#. Once N ports are released from PF, then user can use command below
++   to enable SRIOV and VFs. Each VF owns only one Port with AFU.
++
++   ::
++
++      echo N > $PCI_DEVICE_PATH/sriov_numvfs
++
++#. Pass through the VFs to VMs
++
++#. The AFU under VF is accessible from applications in VM (using the
++   same driver inside the VF).
++
++Note that an FME can't be assigned to a VF, thus PR and other management
++functions are only available via the PF.
++
+ Device enumeration
+ ==================
+ This section introduces how applications enumerate the fpga device from
 -- 
 1.8.3.1
 
