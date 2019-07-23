@@ -2,224 +2,114 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0AFC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3EAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99B822512
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0556D22513
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="bYqDWz3t"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TjhbK4O4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732213AbfGWKZv (ORCPT
+        id S1733305AbfGWK0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:25:51 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50549 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbfGWKZv (ORCPT
+        Tue, 23 Jul 2019 06:26:36 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:39818 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730141AbfGWK0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:25:51 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so37987538wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PHxhFQt1zapvaqaSkTVoRirg4u/DymzfJXL7JSj+Zko=;
-        b=bYqDWz3t5xdPBZs2HwRWiBqi33++e0IuplenCOUJpSWJOc4YewI34ueEeSTu3/zigI
-         oYIHNFKqgTs3tZNw1W7x7ZxeONPx3/S+gA6/yDf0wHkyBqeP8FIuzpdLk2dp2Z6+a+aE
-         q+uHOvD1oYBcujn+fx+wsP7ip9EPptpEK0wyjJ2urD+idJ8dV3rGIT/bUquZhdaNKCxV
-         8uK6dQFElfnlqTNbCdrufsFFXBHlIAIpdHBA+fgHUnxKdzFJwf6H1bJX1ebUrQRRAQMS
-         PPBs6FNeCHRLRVR9niOFuEXjYyxGp6hQCMoHwaYVxqDN8P63QZcWDF0Zg0PQ15ohgi5U
-         oU0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PHxhFQt1zapvaqaSkTVoRirg4u/DymzfJXL7JSj+Zko=;
-        b=IBWYVrozDg3BLjNMIIPzoFetztGZHb+Ub6u5OUcD6jqbZUdN2zjGNjfdIdsRThgXoG
-         yU0YTPIOMbyTe0smH7JIN2rcS1Yfdzv1qB+6fA/Mo39weuAvfJ5Hfo5I6d5jeATOg023
-         DgOD31//fjvEDyiw2GiTLgD5eyg9Smcb06Xuxh36x5H3TV+K4s4EOPxHm8NnwD9urFXS
-         ztI8E3ecrNqc+KT0b5NpLzYCtowYVMl7g3oXBGpGfcYzlN6VnC/4xTrOJO+hk5FEfBSA
-         lVfSHpSz86u+aSMXMOvxJbKGovkr5CkLI9Ob6KNeVx8VNjUBS45R2iNXHqku9I8t/GOy
-         mGoA==
-X-Gm-Message-State: APjAAAWGwFla2lWp00/IN5Iz1/QRzxfJFop7D/Tm9U9ZmQ4HIIxrREOz
-        hNQQQuXOVUxOTxpW+HmuesQ=
-X-Google-Smtp-Source: APXvYqziErWJLj+mI3+RvUrbyqbn4AZW6CeNE0C9JKmFr1inzFDRdyWk37UoS/nz5tIydGWd/VWHJg==
-X-Received: by 2002:a1c:be05:: with SMTP id o5mr69535390wmf.52.1563877548220;
-        Tue, 23 Jul 2019 03:25:48 -0700 (PDT)
-Received: from brauner.io ([213.220.153.21])
-        by smtp.gmail.com with ESMTPSA id s188sm33669288wmf.40.2019.07.23.03.25.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 03:25:47 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 12:25:46 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [GIT PULL] pidfd fixes
-Message-ID: <20190723102545.3sotcok2tqjjntea@brauner.io>
-References: <20190722142238.16129-1-christian@brauner.io>
- <CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com>
- <20190723101249.GA8994@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190723101249.GA8994@redhat.com>
-User-Agent: NeoMutt/20180716
+        Tue, 23 Jul 2019 06:26:33 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 334DAC018D;
+        Tue, 23 Jul 2019 10:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1563877593; bh=9EQdLFPCKtMvNPp2+VskSltaXSuqOCA6tYIGyuKj/eY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TjhbK4O4Y4vQSRWm8bRpyvrgR9/6eL6pp3pX0mtSUq6kLI18Dld5+p9Y5IBD0iet8
+         CgKSh/4hQnHCFB03fma5I3yiK3LN7wmD1ENVN1FNir/5SgNXmvoYZk4CMHxWnQ2hw2
+         S8ZCojfMPAMvo5RXJ4Wnh0EdO+MrvdFi2wO2BLe0sk+tBUAmdC9R2c7jOY/JVLaiuo
+         43jbbdSmqbBPd9t5RJbLnZx94sKRX/4HTXy78Z7AjlyuNFUXtgT5bJcbFs53t8Qy+b
+         aCsmGL8gwngaAoABIqZDceGAgM5UzrNSKDwNnlYdrfRAwwfF6lT4dTvZomzUN5NaIu
+         /0PIdLNCzQJBw==
+Received: from de02arcdev1.internal.synopsys.com (de02arcdev1.internal.synopsys.com [10.225.22.192])
+        by mailhost.synopsys.com (Postfix) with ESMTP id F2776A005E;
+        Tue, 23 Jul 2019 10:26:30 +0000 (UTC)
+From:   Mischa Jonker <Mischa.Jonker@synopsys.com>
+To:     Vineet.Gupta1@synopsys.com, Alexey.Brodkin@synopsys.com,
+        kstewart@linuxfoundation.org, tglx@linutronix.de,
+        robh+dt@kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Mischa Jonker <Mischa.Jonker@synopsys.com>
+Subject: [PATCH 2/2] dt-bindings: IDU-intc: Add support for edge-triggered interrupts
+Date:   Tue, 23 Jul 2019 12:26:06 +0200
+Message-Id: <20190723102606.309089-2-mischa.jonker@synopsys.com>
+X-Mailer: git-send-email 2.8.3
+In-Reply-To: <20190723102606.309089-1-mischa.jonker@synopsys.com>
+References: <20190723102606.309089-1-mischa.jonker@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 12:12:49PM +0200, Oleg Nesterov wrote:
-> On 07/22, Linus Torvalds wrote:
-> >
-> > So if we set EXIT_ZOMBIE early, then I think we should change the
-> > EXIT_DEAD case too. IOW, do something like this on top:
-> > 
-> >   --- a/kernel/exit.c
-> >   +++ b/kernel/exit.c
-> >   @@ -734,9 +734,10 @@ static void exit_notify(struct task_struct
-> > *tsk, int group_dead)
-> >                 autoreap = true;
-> >         }
-> > 
-> >   -     tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
-> >   -     if (tsk->exit_state == EXIT_DEAD)
-> >   +     if (autoreap) {
-> >   +             tsk->exit_state = EXIT_DEAD;
-> >                 list_add(&tsk->ptrace_entry, &dead);
-> >   +     }
-> 
-> Yes, this needs cleanups. Actually I was going to suggest another change
-> below, this way do_notify_pidfd() is only called when it is really needed.
-> But then I decided a trivial one-liner makes more sense for the start.
+This updates the documentation for supporting  a optional extra interrupt
+cell to specify edge vs level triggered.
 
-Yeah, that was my thinking exactly.
+Signed-off-by: Mischa Jonker <mischa.jonker@synopsys.com>
+---
+ .../interrupt-controller/snps,archs-idu-intc.txt   | 30 ++++++++++++++--------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-> 
-> I'll try to think. Perhaps we should also change do_notify_parent() to set
-> p->exit_state, at least if autoreap. Then the early exit_state = EXIT_ZOMBIE
-> won't look so confusing and we can do more (minor) cleanups.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+index 09fc02b..a5c1db9 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+@@ -1,20 +1,30 @@
+ * ARC-HS Interrupt Distribution Unit
+ 
+-  This optional 2nd level interrupt controller can be used in SMP configurations for
+-  dynamic IRQ routing, load balancing of common/external IRQs towards core intc.
++  This optional 2nd level interrupt controller can be used in SMP configurations
++  for dynamic IRQ routing, load balancing of common/external IRQs towards core
++  intc.
+ 
+ Properties:
+ 
+ - compatible: "snps,archs-idu-intc"
+ - interrupt-controller: This is an interrupt controller.
+-- #interrupt-cells: Must be <1>.
+-
+-  Value of the cell specifies the "common" IRQ from peripheral to IDU. Number N
+-  of the particular interrupt line of IDU corresponds to the line N+24 of the
+-  core interrupt controller.
+-
+-  intc accessed via the special ARC AUX register interface, hence "reg" property
+-  is not specified.
++- #interrupt-cells: Must be <1> or <2>.
++
++  Value of the first cell specifies the "common" IRQ from peripheral to IDU.
++  Number N of the particular interrupt line of IDU corresponds to the line N+24
++  of the core interrupt controller.
++
++  The (optional) second cell specifies any of the following flags:
++    - bits[3:0] trigger type and level flags
++        1 = low-to-high edge triggered
++        2 = NOT SUPPORTED (high-to-low edge triggered)
++        4 = active high level-sensitive <<< DEFAULT
++        8 = NOT SUPPORTED (active low level-sensitive)
++  When no second cell is specified, the interrupt is assumed to be level
++  sensitive.
++
++  The interrupt controller is accessed via the special ARC AUX register
++  interface, hence "reg" property is not specified.
+ 
+ Example:
+ 	core_intc: core-interrupt-controller {
+-- 
+2.8.3
 
-You mind sending that as a proper patch?
-I also have a few more cleanups for other parts I intend to send later
-this week. I'd pick this one up too.
-
-> 
-> Oleg.
-> 
-> --- x/kernel/exit.c
-> +++ x/kernel/exit.c
-> @@ -182,6 +182,13 @@ static void delayed_put_task_struct(struct rcu_head *rhp)
->  	put_task_struct(tsk);
->  }
->  
-> +static void do_notify_pidfd(struct task_struct *task)
-> +{
-> +	struct pid *pid;
-> +
-> +	pid = task_pid(task);
-> +	wake_up_all(&pid->wait_pidfd);
-> +}
->  
->  void release_task(struct task_struct *p)
->  {
-> @@ -218,6 +225,8 @@ void release_task(struct task_struct *p)
->  		zap_leader = do_notify_parent(leader, leader->exit_signal);
->  		if (zap_leader)
->  			leader->exit_state = EXIT_DEAD;
-> +
-> +		do_notify_pidfd(leader);
->  	}
->  
->  	write_unlock_irq(&tasklist_lock);
-> @@ -710,7 +719,7 @@ static void forget_original_parent(struct task_struct *father,
->   */
->  static void exit_notify(struct task_struct *tsk, int group_dead)
->  {
-> -	bool autoreap;
-> +	bool autoreap, xxx;
-
-In case you don't mind the length of it how about:
-
-bool autoreap, leading_empty_thread_group;
-
-It's not the prettiest names but having rather descriptive var names in
-these codepaths seems like a good idea to me.
-It also reads very naturally further below:
-
-if (leading_empty_thread_group || unlikely(tsk->ptrace)) {
- 	int sig = leading_empty_thread_group && !ptrace_reparented(tsk)
- 		? tsk->exit_signal : SIGCHLD;
-
->  	struct task_struct *p, *n;
->  	LIST_HEAD(dead);
->  
-> @@ -720,23 +729,22 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
->  	if (group_dead)
->  		kill_orphaned_pgrp(tsk->group_leader, NULL);
->  
-> -	if (unlikely(tsk->ptrace)) {
-> -		int sig = thread_group_leader(tsk) &&
-> -				thread_group_empty(tsk) &&
-> -				!ptrace_reparented(tsk) ?
-> -			tsk->exit_signal : SIGCHLD;
-> +	autoreap = true;
-> +	xxx = thread_group_leader(tsk) && thread_group_empty(tsk);
-> +
-> +	if (xxx || unlikely(tsk->ptrace)) {
-> +		int sig = xxx && !ptrace_reparented(tsk)
-> +			? tsk->exit_signal : SIGCHLD;
->  		autoreap = do_notify_parent(tsk, sig);
-> -	} else if (thread_group_leader(tsk)) {
-> -		autoreap = thread_group_empty(tsk) &&
-> -			do_notify_parent(tsk, tsk->exit_signal);
-> -	} else {
-> -		autoreap = true;
->  	}
->  
->  	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
->  	if (tsk->exit_state == EXIT_DEAD)
->  		list_add(&tsk->ptrace_entry, &dead);
->  
-> +	if (xxx)
-> +		do_notify_pidfd(tsk);
-> +
->  	/* mt-exec, de_thread() is waiting for group leader */
->  	if (unlikely(tsk->signal->notify_count < 0))
->  		wake_up_process(tsk->signal->group_exit_task);
-> --- x/kernel/signal.c
-> +++ x/kernel/signal.c
-> @@ -1881,14 +1881,6 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
->  	return ret;
->  }
->  
-> -static void do_notify_pidfd(struct task_struct *task)
-> -{
-> -	struct pid *pid;
-> -
-> -	pid = task_pid(task);
-> -	wake_up_all(&pid->wait_pidfd);
-> -}
-> -
->  /*
->   * Let a parent know about the death of a child.
->   * For a stopped/continued status change, use do_notify_parent_cldstop instead.
-> @@ -1912,9 +1904,6 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
->  	BUG_ON(!tsk->ptrace &&
->  	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
->  
-> -	/* Wake up all pidfd waiters */
-> -	do_notify_pidfd(tsk);
-> -
->  	if (sig != SIGCHLD) {
->  		/*
->  		 * This is only possible if parent == real_parent.
-> 
