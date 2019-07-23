@@ -2,142 +2,378 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2EDC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671F8C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA62218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA2B218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DILV6jJL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ts+Jr7Y8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389217AbfGWUq5 (ORCPT
+        id S2391850AbfGWUtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:46:57 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60644 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731769AbfGWUq4 (ORCPT
+        Tue, 23 Jul 2019 16:49:08 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33368 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730760AbfGWUtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:46:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563914814; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eHCZ20CpjI6Z66bdYx7K2SWFrol5Ee4ySm5RZTiYqis=;
-        b=DILV6jJLyq/jptU0x6tkbW8Phqrnv3eh7dPeDEUtI7Id+APgHIM6PRzugl36z5U10ozOOa
-        lbwuW+cLX+cbXOiMMchaJiiTf2D1xAYHa5JTQ5GJKZFfynEgyppqDjUPqryxHM9+GxyfLC
-        R99iHbvt69sm+robuLb2ETjmtkongL8=
-Date:   Tue, 23 Jul 2019 16:46:40 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 3/6] pwm: jz4740: Apply configuration atomically
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1563914800.1918.0@crapouillou.net>
-In-Reply-To: <20190722193456.h4hfte5cczucermd@pengutronix.de>
-References: <20190607154410.10633-1-paul@crapouillou.net>
-        <20190607154410.10633-4-paul@crapouillou.net>
-        <20190722193456.h4hfte5cczucermd@pengutronix.de>
+        Tue, 23 Jul 2019 16:49:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q20so45450484otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8f2Ta9iQpdbzDFNjSTEAOZef+ZrvFOzQiYTB6S5m3GA=;
+        b=ts+Jr7Y8jDBQpkgB7PVhyjG8HMB5P1jNdQbQ5m14yln7eF4vSvx8qnghXBKqRXeUub
+         40jxFaJZANUtyVGq0W7FRqbs4IOyCRXqSpjRnXXgdcCTiIl763G6/nDaWoomU1oCuqqZ
+         4hyB1+zl+Kv4cLRdc9QP9xZi6dFmdZLAdkBwZ9kzki9TQFpyTJ/MwHdBkaMRtPUXaDfE
+         XgJSWSgu6weEHhegxKjhrXjVsuuKZ5AFqr9PdUSOuvI18zdhaMkZfBz96YGdTaORTd/k
+         /741lyO5a46cmB/PI2d6eAEd3muk+AhHG5JW9tZkb9L3KP2LAr+SipM8OwCVlqGHP7Qv
+         ysuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8f2Ta9iQpdbzDFNjSTEAOZef+ZrvFOzQiYTB6S5m3GA=;
+        b=a9Vhlj+7vBp8S+olccAOg0pZYO7HKB8LmKjsU6mYuARwu2uY++L4LZRasOoK4/h+ax
+         GJSkTQuXtI59H7QRrRl0itRuqr2EZRgJ2ZAue/IfdxyK9JaGmasMFFFVP5zq24nikFTq
+         nvbldYQOxQHhbF2ZnPNu8tY5qYmxl1xpmxbRt4IymTdUsRnxvYiNPwAN777SGKggwPlA
+         Q/z2GUp+roSYaSKpHnL8lUnItpYyYIJLHHqRmnIf647KBTwHr58dwI27t+CrwM2bJ2Qa
+         F85wRyceFF/GfdDx5hOIy7C5kaCRCOvj3fBCKRjZ7Ku06n7R5r648Lxo4ZI0lKEf+LDh
+         T97Q==
+X-Gm-Message-State: APjAAAUe9WfWvstLKFJknSMLbdS5TueMbPOK4YZV9NWY4jgllPYQy5vi
+        ZFW8uFJoACiS7oNoOPNFfUGl0mMSa2vsbeUW3DzavA==
+X-Google-Smtp-Source: APXvYqyPzdvDqTZ+cfvvR+VInQlk3TLGF3D5fbLh9/+vZ1vwHox96XSgIbOgZU/x0UBf23zOZaqAsnRTWlapePbUNHQ=
+X-Received: by 2002:a9d:6d06:: with SMTP id o6mr7149188otp.225.1563914946426;
+ Tue, 23 Jul 2019 13:49:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190720061647.234852-1-saravanak@google.com> <20190720061647.234852-4-saravanak@google.com>
+ <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com>
+In-Reply-To: <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 23 Jul 2019 13:48:30 -0700
+Message-ID: <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/7] of/platform: Add functional dependency link from
+ DT bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+On Tue, Jul 23, 2019 at 11:06 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Sat, Jul 20, 2019 at 12:17 AM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > Add device-links after the devices are created (but before they are
+> > probed) by looking at common DT bindings like clocks and
+> > interconnects.
+>
+> The structure now looks a lot better to me. A few minor things below.
 
+Thanks.
 
+> >
+> > Automatically adding device-links for functional dependencies at the
+> > framework level provides the following benefits:
+> >
+> > - Optimizes device probe order and avoids the useless work of
+> >   attempting probes of devices that will not probe successfully
+> >   (because their suppliers aren't present or haven't probed yet).
+> >
+> >   For example, in a commonly available mobile SoC, registering just
+> >   one consumer device's driver at an initcall level earlier than the
+> >   supplier device's driver causes 11 failed probe attempts before the
+> >   consumer device probes successfully. This was with a kernel with all
+> >   the drivers statically compiled in. This problem gets a lot worse if
+> >   all the drivers are loaded as modules without direct symbol
+> >   dependencies.
+> >
+> > - Supplier devices like clock providers, interconnect providers, etc
+> >   need to keep the resources they provide active and at a particular
+> >   state(s) during boot up even if their current set of consumers don't
+> >   request the resource to be active. This is because the rest of the
+> >   consumers might not have probed yet and turning off the resource
+> >   before all the consumers have probed could lead to a hang or
+> >   undesired user experience.
+> >
+> >   Some frameworks (Eg: regulator) handle this today by turning off
+> >   "unused" resources at late_initcall_sync and hoping all the devices
+> >   have probed by then. This is not a valid assumption for systems with
+> >   loadable modules. Other frameworks (Eg: clock) just don't handle
+> >   this due to the lack of a clear signal for when they can turn off
+> >   resources. This leads to downstream hacks to handle cases like this
+> >   that can easily be solved in the upstream kernel.
+> >
+> >   By linking devices before they are probed, we give suppliers a clear
+> >   count of the number of dependent consumers. Once all of the
+> >   consumers are active, the suppliers can turn off the unused
+> >   resources without making assumptions about the number of consumers.
+> >
+> > By default we just add device-links to track "driver presence" (probe
+> > succeeded) of the supplier device. If any other functionality provided
+> > by device-links are needed, it is left to the consumer/supplier
+> > devices to change the link when they probe.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  .../admin-guide/kernel-parameters.txt         |   5 +
+> >  drivers/of/platform.c                         | 158 ++++++++++++++++++
+> >  2 files changed, 163 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index 138f6664b2e2..109b4310844f 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -3141,6 +3141,11 @@
+> >                         This can be set from sysctl after boot.
+> >                         See Documentation/sysctl/vm.txt for details.
+> >
+> > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
+> > +                       for optimizing probe order and making sure resources
+> > +                       aren't turned off before the consumer devices have
+> > +                       probed.
+> > +
+> >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
+> >                         See Documentation/debugging-via-ohci1394.txt for more
+> >                         info.
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index 04ad312fd85b..88a2086e26fa 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> >
+> > +bool of_link_is_valid(struct device_node *con, struct device_node *sup)
+> > +{
+> > +       of_node_get(sup);
+> > +       /*
+> > +        * Don't allow linking a device node as a consumer of one of its
+> > +        * descendant nodes. By definition, a child node can't be a functional
+> > +        * dependency for the parent node.
+> > +        */
+> > +       while (sup) {
+> > +               if (sup == con) {
+> > +                       of_node_put(sup);
+> > +                       return false;
+> > +               }
+> > +               sup = of_get_next_parent(sup);
+> > +       }
+> > +       return true;
+> > +}
+> > +
+> > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
+> > +{
+> > +       struct platform_device *sup_dev;
+> > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
+> > +       int ret = 0;
+> > +
+> > +       /*
+> > +        * Since we are trying to create device links, we need to find
+> > +        * the actual device node that owns this supplier phandle.
+> > +        * Often times it's the same node, but sometimes it can be one
+> > +        * of the parents. So walk up the parent till you find a
+> > +        * device.
+> > +        */
+> > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> > +               sup_np = of_get_next_parent(sup_np);
+> > +       if (!sup_np)
+> > +               return 0;
+> > +
+> > +       if (!of_link_is_valid(dev->of_node, sup_np)) {
+> > +               of_node_put(sup_np);
+> > +               return 0;
+> > +       }
+> > +       sup_dev = of_find_device_by_node(sup_np);
+> > +       of_node_put(sup_np);
+> > +       if (!sup_dev)
+> > +               return -ENODEV;
+> > +       if (!device_link_add(dev, &sup_dev->dev, dl_flags))
+> > +               ret = -ENODEV;
+> > +       put_device(&sup_dev->dev);
+> > +       return ret;
+> > +}
+> > +
+> > +static struct device_node *parse_prop_cells(struct device_node *np,
+> > +                                           const char *prop, int i,
+>
+> I like 'i' for for loops, but less so for function params. Perhaps
+> 'index' instead like of_parse_phandle_with_args.
 
-Le lun. 22 juil. 2019 =E0 15:34, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello Paul,
->=20
-> On Fri, Jun 07, 2019 at 05:44:07PM +0200, Paul Cercueil wrote:
->>  -static int jz4740_pwm_config(struct pwm_chip *chip, struct=20
->> pwm_device *pwm,
->>  -			     int duty_ns, int period_ns)
->>  +static int jz4740_pwm_apply(struct pwm_chip *chip, struct=20
->> pwm_device *pwm,
->>  +			    struct pwm_state *state)
->>   {
->>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>   	unsigned long long tmp;
->>   	unsigned long period, duty;
->>   	unsigned int prescaler =3D 0;
->>   	uint16_t ctrl;
->>  -	bool is_enabled;
->>=20
->>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
->>  +	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) *=20
->> state->period;
->>   	do_div(tmp, 1000000000);
->>   	period =3D tmp;
->>=20
->>  @@ -96,16 +95,14 @@ static int jz4740_pwm_config(struct pwm_chip=20
->> *chip, struct pwm_device *pwm,
->>   	if (prescaler =3D=3D 6)
->>   		return -EINVAL;
->>=20
->>  -	tmp =3D (unsigned long long)period * duty_ns;
->>  -	do_div(tmp, period_ns);
->>  +	tmp =3D (unsigned long long)period * state->duty_cycle;
->>  +	do_div(tmp, state->period);
->>   	duty =3D period - tmp;
->>=20
->>   	if (duty >=3D period)
->>   		duty =3D period - 1;
->>=20
->>  -	is_enabled =3D jz4740_timer_is_enabled(pwm->hwpwm);
->>  -	if (is_enabled)
->>  -		jz4740_pwm_disable(chip, pwm);
->>  +	jz4740_pwm_disable(chip, pwm);
->=20
-> I assume this stops the PWM. Does this complete the currently running
-> period? How does the PWM behave then? (Does it still drive the output?
-> If so, on which level?)
+Sounds good.
 
-Some PWM channels work in one mode "TCU1" and others work in "TCU2". The
-mode in which channels work depends on the version of the SoC.
+>
+> > +                                           const char *binding,
+> > +                                           const char *cell)
+> > +{
+> > +       struct of_phandle_args sup_args;
+> > +
+> > +       if (!i && strcmp(prop, binding))
+>
+> Why the '!i' test?
 
-When stopped, the pins of TCU1 channels will be driven to the inactive
-level (which depends on the polarity). It is unknown whether or not the
-currently running period is completed. We set a bit to configure for
-"abrupt shutdown", so I expect that it's not, but somebody would need
-to hook up a logic analyzer to see what's the exact behaviour with
-and without that bit.
+To avoid a string comparison for every index. It's kinda wasteful once
+the first index passes.
 
-TCU2 channels on the other hand will stop in the middle of a period,
-leaving the pin hanging at whatever level it was before the stop.
-That's the rationale behind the trick in commit 6580fd173070 ("pwm:
-jz4740: Force TCU2 channels to return to their init level").
+> > +               return NULL;
+> > +
+> > +       if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
+> > +               return NULL;
+> > +
+> > +       return sup_args.np;
+> > +}
+> > +
+> > +static struct device_node *parse_clocks(struct device_node *np,
+> > +                                       const char *prop, int i)
+> > +{
+> > +       return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
+> > +}
+> > +
+> > +static struct device_node *parse_interconnects(struct device_node *np,
+> > +                                              const char *prop, int i)
+> > +{
+> > +       return parse_prop_cells(np, prop, i, "interconnects",
+> > +                               "#interconnect-cells");
+> > +}
+> > +
+> > +static int strcmp_suffix(const char *str, const char *suffix)
+> > +{
+> > +       unsigned int len, suffix_len;
+> > +
+> > +       len = strlen(str);
+> > +       suffix_len = strlen(suffix);
+> > +       if (len <= suffix_len)
+> > +               return -1;
+> > +       return strcmp(str + len - suffix_len, suffix);
+> > +}
+> > +
+> > +static struct device_node *parse_regulators(struct device_node *np,
+> > +                                           const char *prop, int i)
+> > +{
+> > +       if (i || strcmp_suffix(prop, "-supply"))
+> > +               return NULL;
+> > +
+> > +       return of_parse_phandle(np, prop, 0);
+> > +}
+> > +
+> > +/**
+> > + * struct supplier_bindings - Information for parsing supplier DT binding
+> > + *
+> > + * @parse_prop:                If the function cannot parse the property, return NULL.
+> > + *                     Otherwise, return the phandle listed in the property
+> > + *                     that corresponds to index i.
+> > + */
+> > +struct supplier_bindings {
+> > +       struct device_node *(*parse_prop)(struct device_node *np,
+> > +                                         const char *name, int i);
+> > +};
+> > +
+> > +struct supplier_bindings bindings[] = {
+>
+> static const
 
-Regards,
--Paul
+Will do.
 
+>
+> > +       { .parse_prop = parse_clocks, },
+> > +       { .parse_prop = parse_interconnects, },
+> > +       { .parse_prop = parse_regulators, },
+> > +       { },
+> > +};
+> > +
+> > +static bool of_link_property(struct device *dev, struct device_node *con_np,
+> > +                            const char *prop)
+> > +{
+> > +       struct device_node *phandle;
+> > +       struct supplier_bindings *s = bindings;
+> > +       unsigned int i = 0;
+> > +       bool done = true;
+> > +
+> > +       while (!i && s->parse_prop) {
+>
+> Using 'i' is a little odd. Perhaps a 'matched' bool would be easier to read.
 
->>=20
->>   	jz4740_timer_set_count(pwm->hwpwm, 0);
->>   	jz4740_timer_set_duty(pwm->hwpwm, duty);
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
+That's how I wrote it first (locally) and then redid it this way
+because the bool felt very superfluous. I don't think this is that
+hard to understand.
 
-=
+> > +               while ((phandle = s->parse_prop(con_np, prop, i))) {
+> > +                       i++;
+> > +                       if (of_link_to_phandle(dev, phandle))
+> > +                               done = false;
+>
+> Just return here. No point in continuing as 'done' is never set back to true.
 
+Actually, there is a point for this. Say Device-C depends on suppliers
+Device-S1 and Device-S2 and they are listed in DT in that order.
+
+Say, S1 gets populated after late_initcall_sync but S2 is probes way
+before that. If I don't continue past a "failed linking" to S1 and
+also link up to S2, then S2 will get a sync_state() callback before C
+is probed. So I have to go through all possible suppliers and as many
+as possible.
+
+Let me add a comment about this somewhere in the code (probably the
+header that defines the add_links() ops).
+
+-Saravana
+
+> > +               }
+> > +               s++;
+> > +       }
+> > +       return done ? 0 : -ENODEV;
+> > +}
+> > +
+> > +static bool of_devlink;
+> > +core_param(of_devlink, of_devlink, bool, 0);
+> > +
+> > +static int of_link_to_suppliers(struct device *dev)
+> > +{
+> > +       struct property *p;
+> > +       bool done = true;
+> > +
+> > +       if (!of_devlink)
+> > +               return 0;
+> > +       if (unlikely(!dev->of_node))
+> > +               return 0;
+> > +
+> > +       for_each_property_of_node(dev->of_node, p)
+> > +               if (of_link_property(dev, dev->of_node, p->name))
+> > +                       done = false;
+> > +
+> > +       return done ? 0 : -ENODEV;
+> > +}
+> > +
+> >  #ifndef CONFIG_PPC
+> >  static const struct of_device_id reserved_mem_matches[] = {
+> >         { .compatible = "qcom,rmtfs-mem" },
+> > @@ -524,6 +681,7 @@ static int __init of_platform_default_populate_init(void)
+> >         if (!of_have_populated_dt())
+> >                 return -ENODEV;
+> >
+> > +       platform_bus_type.add_links = of_link_to_suppliers;
+> >         /*
+> >          * Handle certain compatibles explicitly, since we don't want to create
+> >          * platform_devices for every node in /reserved-memory with a
+> > --
+> > 2.22.0.657.g960e92d24f-goog
+> >
