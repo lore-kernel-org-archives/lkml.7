@@ -2,103 +2,106 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42037C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30926C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1643E22353
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A4922353
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uz/uKTs2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgQR+qcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390205AbfGWNZt (ORCPT
+        id S2390210AbfGWN04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:25:49 -0400
-Received: from mail-io1-f49.google.com ([209.85.166.49]:39979 "EHLO
-        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730591AbfGWNZt (ORCPT
+        Tue, 23 Jul 2019 09:26:56 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39090 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730591AbfGWN04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:25:49 -0400
-Received: by mail-io1-f49.google.com with SMTP id h6so81721249iom.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:25:48 -0700 (PDT)
+        Tue, 23 Jul 2019 09:26:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id f17so15159163pfn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Po41j8PRY5LtQpBYzCHkpShqYoyBrgFgJu9cuq/d5B0=;
-        b=uz/uKTs2ERrgrSdCSbcq1vIdME1ilXv4sLV+RcUNFOUViFYVgHtIjXpBYHZ0/qlSdn
-         U3S5keAlaT27s3v6EKwsB0RRPnqXoPv2b7M5uL0uYaNAT2bSoJF8j4U3qzZTwa8i0Q3Z
-         Gkgsfk/BLHTEEF1nfzfAK551ND5mKfnrZ2cZXrv3hgSLTK1yTHxv3WEsqjfrJfHcTPkG
-         kNW5OI3MaEX90MO861qrzd4tejRH5+t3k0QsU2azCzVfrX6wASxZh8ISVjNurgHcOW9K
-         +nA946p8cYEDSz2Jnxxx4uSi88TGhLPH/KdXjcuhkq5zN4xV8ZK+80PktwEXEO4T2Dx5
-         Kc0g==
+        h=from:to:cc:subject:date:message-id;
+        bh=Hgu5qjFhmazmMbubW4moD18H6id0kW8fsRyGvNDOd1g=;
+        b=GgQR+qccw6P9XFNdlnoBLTB0RMc7OC4KTTPYp6WUMNZHeaIDaEZrhSnPMQgizoqiYp
+         W3rOMjh23ll7qpXuP8n51Jpou4jE9RzZxKABOr0FhIyTs3ZNe7EhvaEohaA2wz/D6lrA
+         RFh8YVNcpDv1WmeeYuF1arv3j+dEqvrfmWDwTlZz2MFtwUHfrrKSezOXTqUAvAKyq2NK
+         77PT0+x8eH/ci9wxLYZUCjjvinTatlXEZo/F2zU5YLk0Y4D9xEbVr2iwbmiUHofNUDm5
+         ZG+EjLOIF/bhFe9zJobQBdk0zfuOZLQUGiZDCiBbL7GX7xLQ/SAHdljSEddsZQgwNlcY
+         lVtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Po41j8PRY5LtQpBYzCHkpShqYoyBrgFgJu9cuq/d5B0=;
-        b=J08pGgHIJKykgoK8hyn028C5ZIA4HGXJC2ozAjOvQTYqRcCwwgGLyBN3yPMy2iuX+1
-         v1fwbReDQXAxzQZsr1wd35hsMK79nSD4uzkOeVscs3aUSKsvmvbbYFut3O1I9ODyFCDZ
-         OHJtu3HFPqICN4Plg6rZSvYQxCCC+g11iiMEw6vBMRQDd/jo7LemRiAMW0G3T/ij58nV
-         ahcRtO1CrxV3fXFFVjMebB6t/F+WKW5xSGe6EKu/Dkf9/ay1KtKxwXsIin9OfQh46GMi
-         R4tCJKbiOMQmijgAdzakKdi9CPdWufbOv2cQKu9idZlDX1gATuki7eJtL5aCV4Gwh9ui
-         1iCA==
-X-Gm-Message-State: APjAAAU2qOe5HScTyLHE3wqUj30rJSgWs1vXUILXEpYKJFsxbX9txmRA
-        Xn+z93m20hLvwUgfQC6XeJVKW+GFuVslZTexYMU=
-X-Google-Smtp-Source: APXvYqxMgqlz6GvdHFLT/7t94Kp592lxEsH0vlXisuylQVBxY4i30FAvi+JHiXla/iKk7hhau03ycLNl4yS62MysUyo=
-X-Received: by 2002:a6b:e30a:: with SMTP id u10mr50063707ioc.39.1563888348352;
- Tue, 23 Jul 2019 06:25:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <2c912379f96f502080bfcc79884cdc35@fau.de> <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
- <2835dfa18922905ffabafb11fca7e1d2@fau.de> <CAKXUXMwfd133rv0bMert-BBftaqxxr_93dUHpaUjEwE8RE_wwA@mail.gmail.com>
- <8016ee9b5ee38fae0c782420ca449f863270cca9.camel@perches.com>
-In-Reply-To: <8016ee9b5ee38fae0c782420ca449f863270cca9.camel@perches.com>
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date:   Tue, 23 Jul 2019 15:25:37 +0200
-Message-ID: <CAKXUXMym7Sd28gVxVXj60XS+aoqM4DAtEp2aA7BUUu06YQYufg@mail.gmail.com>
-Subject: Re: get_maintainers.pl subsystem output
-To:     Joe Perches <joe@perches.com>
-Cc:     "Duda, Sebastian" <sebastian.duda@fau.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Wolfgang Mauerer <wolfgang.mauerer@oth-regensburg.de>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Hgu5qjFhmazmMbubW4moD18H6id0kW8fsRyGvNDOd1g=;
+        b=BJgmhqc3qTjvoqA/Huzl0TCsFLblz3Zb/GH8BeGoBTM3PuPgPUm7jceq6lSpvTxuIj
+         mykZKCGDoZlnnXEU/Erzskh8fVg0DbJnKBxEJHVtIvU9uOLMHGXX2q220L9za53CkfGW
+         iS/+UcY+fAEntwHltb1JGsSLtSLACgilldXb41Y6vXFJdesHU8XrDiYTZ94tQxElx33e
+         aV2e0rJHVJavUOrx1mIyccv1lyqQqh6R7+WBfG19K3T0Guk+bbnTI7HYyvnxhPNWbLJ8
+         9zxnVdBJmJOLgKMIJbcNns2Js4W4M1HUd4vi64u8IiUHjMo0XEJi+oqgNBpQdVxbCDRe
+         IwsA==
+X-Gm-Message-State: APjAAAUzfx/azpUUT95wyv11+oNHO3dRFpJmpPMlH6ifyGAkc9CP03aG
+        B5C1UQcE/z3YhzM5HxXWGhZ7me21
+X-Google-Smtp-Source: APXvYqyfQJcNueBeNincKJFFxcRwtRZ4eSa/GTKG9w0PhEehBLJv3Eqd1giDOGwYUQ/hbKMfj+hUFw==
+X-Received: by 2002:a63:3d8f:: with SMTP id k137mr77400277pga.337.1563888415706;
+        Tue, 23 Jul 2019 06:26:55 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id o14sm88152136pfh.153.2019.07.23.06.26.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 06:26:55 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] x86: Fix possible null-pointer dereferences in untrack_pfn()
+Date:   Tue, 23 Jul 2019 21:26:48 +0800
+Message-Id: <20190723132648.25853-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+In untrack_pfn(), there is an if statement on line 1058 to check whether
+vma is NULL:
+    if (vma && !(vma->vm_flags & VM_PAT))
 
-On Tue, Jul 23, 2019 at 1:18 PM Joe Perches <joe@perches.com> wrote:
->
-> On Tue, 2019-07-23 at 10:42 +0200, Lukas Bulwahn wrote:
-[...]
-> > Joe, would you support and would you accept if we extend
-> > get_maintainer.pl to provide output of the status in such a way that
-> > the status output can be clearly mapped to the subsystem?
->
-> Not really, no.  I don't see much value in your
-> request to others.  It seems you are doing some
-> academic work rather than actually using it for
-> sending patches.
->
+When vma is NULL, vma is used on line 1064:
+    if (follow_phys(vma, vma->vm_start, 0, &prot, &paddr))
+and line 1069:
+    size = vma->vm_end - vma->vm_start;
 
-Thank you for that indication. It is good to know that our use case is
-too special to be covered in the existing tool and serves no one else
-besides our research work.
+Thus, possible null-pointer dereferences may occur.
 
-> You are of course welcome to extexd the script
-> in whatever manner you need for your own use,
-> but even here, I don't believe you need to do
-> anything to the script but change how you use it.
->
+To fix these possible bugs, vma is checked on line 1063.
 
-Okay, I now understood your suggestion how to use it. Sebastian and I
-will investigate and discuss this further off-list.
+These bugs are found by a static analysis tool STCheck written by us.
 
-Lukas
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ arch/x86/mm/pat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/pat.c b/arch/x86/mm/pat.c
+index d9fbd4f69920..717456e7745e 100644
+--- a/arch/x86/mm/pat.c
++++ b/arch/x86/mm/pat.c
+@@ -1060,7 +1060,7 @@ void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
+ 
+ 	/* free the chunk starting from pfn or the whole chunk */
+ 	paddr = (resource_size_t)pfn << PAGE_SHIFT;
+-	if (!paddr && !size) {
++	if (vma && !paddr && !size) {
+ 		if (follow_phys(vma, vma->vm_start, 0, &prot, &paddr)) {
+ 			WARN_ON_ONCE(1);
+ 			return;
+-- 
+2.17.0
+
