@@ -2,71 +2,72 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DC4C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5403C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5478227B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="roktKFKg"
+	by mail.kernel.org (Postfix) with ESMTP id C15DF227BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390364AbfGWNkq (ORCPT
+        id S1732500AbfGWNlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:40:46 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:59312 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390251AbfGWNkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:40:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=WT3oDovkoe1bfd1iWcc8ualJNMhBVWi0I2gGsRsRw5Y=; b=roktKFKgOalv46lwcSCeBJOVe0
-        7nL/GlBlNk6uA5Nnp85pRtUg1HozlzNczDECrhxg+a+zgapXw3U6EbzY7ieDqCs2PMXLShiJ1AdDy
-        eBT9rWtMjv/5dSy5jZuRTbWxYTYc+B/LiOqVe6tmw7azDaN6OsK8hN6G42AXRxNZZzbQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hpv1x-0001ER-T9; Tue, 23 Jul 2019 15:40:37 +0200
-Date:   Tue, 23 Jul 2019 15:40:37 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dsa: mv88e6xxx: avoid some redundant vtu
- load/purge operations
-Message-ID: <20190723134037.GA2381@lunn.ch>
-References: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
+        Tue, 23 Jul 2019 09:41:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53119 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfGWNlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:41:25 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hpv2f-0007vi-0P; Tue, 23 Jul 2019 13:41:21 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Leo Liu <leo.liu@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amdgpu: remove redundant assignment to pointer 'ring'
+Date:   Tue, 23 Jul 2019 14:41:20 +0100
+Message-Id: <20190723134120.28441-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:37:26PM +0000, Rasmus Villemoes wrote:
-> We have an ERPS (Ethernet Ring Protection Switching) setup involving
-> mv88e6250 switches which we're in the process of switching to a BSP
-> based on the mainline driver. Breaking any link in the ring works as
-> expected, with the ring reconfiguring itself quickly and traffic
-> continuing with almost no noticable drops. However, when plugging back
-> the cable, we see 5+ second stalls.
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi Rasmus
+The pointer 'ring' is being assigned a value that is never
+read, hence the assignment is redundant and can be removed.
 
-I would prefer Vivien reviews this patch. But he is away at the
-moment. Are you O.K. to wait a few days?
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-	Andrew
+diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+index 93b3500e522b..a2a8ca942f34 100644
+--- a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+@@ -1331,7 +1331,6 @@ static int vcn_v1_0_pause_dpg_mode(struct amdgpu_device *adev,
+ 				WREG32_SOC15(UVD, 0, mmUVD_JRBC_RB_CNTL,
+ 							UVD_JRBC_RB_CNTL__RB_RPTR_WR_EN_MASK);
+ 
+-				ring = &adev->vcn.inst->ring_dec;
+ 				WREG32_SOC15(UVD, 0, mmUVD_RBC_RB_WPTR,
+ 						   RREG32_SOC15(UVD, 0, mmUVD_SCRATCH2) & 0x7FFFFFFF);
+ 				SOC15_WAIT_ON_RREG(UVD, 0, mmUVD_POWER_STATUS,
+-- 
+2.20.1
+
