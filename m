@@ -2,130 +2,124 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3457CC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B50EC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6B121842
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC310218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="usbj8W35"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w2FX51Bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388477AbfGWHjI (ORCPT
+        id S2388469AbfGWHnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:39:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34630 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732967AbfGWHjI (ORCPT
+        Tue, 23 Jul 2019 03:43:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40364 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732983AbfGWHnM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:39:08 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so79841109iot.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:39:07 -0700 (PDT)
+        Tue, 23 Jul 2019 03:43:12 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m8so6477308lji.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tM6ZfP29yHIXHkq5iTMeXQ4AjIL/XiZWUkv0a/I2jO4=;
-        b=usbj8W35wjkWL0ZjAlNlOpJnA68U6AiUa2rQqc18HYqg/292MErMPXrVu08j64WLeQ
-         0w/jTSSPy0WoIa1kquvmlS805CgCn/VEtUT7IrJmyzU18EllsyifJC7GjO7DcfmHvBvR
-         1lyf1QQErv083xXVI6aqrUjw1695bMtzgRStNHuET/KnHMiXJnskh/TmNxT6IawrQ+EA
-         TvKJRpwMnvXZIcBT5iMCnNwriaUgwmZ36nWR+ZeyE3vz2HWijcT5QBjh0ZbBFjG2YQqK
-         UQW35jMAn/z+QawL1iqDcnfIDVcdW9nW1bK0w8F4SG8Eq6M2KAJD+fHb+ywbhzEI/nMR
-         8nYw==
+        bh=npbXQAsUfiZBLcbkpCR3x+7qby8hxGom1+tEjhLtF84=;
+        b=w2FX51BoqEBTS87kh8KgQ128Lnm4K7aScbKp7p7KG0RZvuFmQ5ZeRyaNckPGbvdFfd
+         8orXXAGJ+J4pQFnxBaEEcLCgF22+U7W9tc/Se+sTjW+wVQ+cOPmne1a6xgAVBwrxyiNh
+         TyzT6LtLmqQi2itKyV/WpgOyRuHQxcy1se2WY8AB/7q/Rf5go+whVPWnNJF7t+VWEMBd
+         pmuUhr5pgIWRD+HapcglpyXMp8CBvQlzcP+LVXe8O4I1jpUnUpCl39BNcbsU3tOVat/t
+         SQFR3NgezXOd3vPtIE3FCFrwJ8jp7bjOIR2zd0+zta18H2ppvKmMQYo682YAvS+adqMp
+         YIVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tM6ZfP29yHIXHkq5iTMeXQ4AjIL/XiZWUkv0a/I2jO4=;
-        b=CHyN/ITv0jbrfXQUAn28ldSMOzcV2RtmtT8qSdbDqiyLc80/wTJXcTK/r0x2aYGbAq
-         L8VMbtsMHfOANSrPUl7wbYnxAPd+CDMUaEm+TtXvQ4Pp49sT+sFR+eSMpgeSRXXJ6jVd
-         L3C23DwWhdjjOreNskE0SGPZgmF8rbwUUocqJ/nKfci7xHgiA2XW4fnd8Ykqs1VD5n3N
-         ue+0mrltDwIjTV+zbFQGEeHOT+WgYPoHNnwnPXfGD3UiU90dCxR42ND7FkUPcsaGZkLZ
-         Ms3buIKELJgaKzpK5N++SofEaak7A1rXDKca8zBezknKK46mkUCWakWHkAJofG3LM3Bl
-         rNrw==
-X-Gm-Message-State: APjAAAVQGs63AJIXCmuzQYKSKvKvsPHtoVWHAqW9P2qYr+WAasnfdS7z
-        bl4a992o3ZdWSkRVWharenDv5uqCaH7gxEnVQJ316g==
-X-Google-Smtp-Source: APXvYqxknPLPiOAbuB7jqVAi6mu/Fl77yhGj6yGal1fmI4tdBfWn6NaR9DX5QN1Ija5E6QkqejVNYiWatG5/H9GGpW4=
-X-Received: by 2002:a5e:de0d:: with SMTP id e13mr45601420iok.144.1563867546989;
- Tue, 23 Jul 2019 00:39:06 -0700 (PDT)
+        bh=npbXQAsUfiZBLcbkpCR3x+7qby8hxGom1+tEjhLtF84=;
+        b=UWnZyQideCb6Wbk8VaOkauHCFrLt8y8Dup8Bg106E52iInb0TqQ+9OTVDXsZaGFXS3
+         32Qyj5ESFrUxQnd1Lum8kGzi4GxJH5b/uCW+m+djIoe1FqgWJCg+MYzendtnPJdoI9C+
+         3ChuytDClTzsoTb0pG8Ba6HDbWUPRARBy4m7CkZlscQXDCE4jpcGlSnnPNM9dUWHI/23
+         gHm+0eRq60RXDdJXtc24hnNR+Gief/LLXq0uV9UdpwF5ov/1s0frZ6YnmBGVzlr4eVOc
+         O8f2Zow2UQe1s4NoTkPUwBkwczy/aGQrbMXm9Cq4zj3g5L6JujxSJH4UYwi1Aoux1MHG
+         xK1w==
+X-Gm-Message-State: APjAAAU9gVpAJUaTBiM41M1m5zMV5YcZrmKiDgxzuArFmGMe3UjBqYDR
+        bTN+Jl/fmAHG9iGqdPUC+SLwxaywWe4ZHYkgjLT76g==
+X-Google-Smtp-Source: APXvYqztHvJTCupc2FazH78NnbhNbFFXwlBZr0o8C796oaMUffxQHCWl5TXPmgAEdCLgwY6Sn/kLyvB5/v3zH9bxp3k=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr17161946ljm.180.1563867790559;
+ Tue, 23 Jul 2019 00:43:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000001a51c4058ddcb1b6@google.com>
-In-Reply-To: <0000000000001a51c4058ddcb1b6@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 23 Jul 2019 09:38:56 +0200
-Message-ID: <CACT4Y+ZGwKP+f4esJdx60AywO9b3Y5Bxb4zLtH6EEkaHpP6Zag@mail.gmail.com>
-Subject: Re: kernel panic: stack is corrupted in pointer
-To:     syzbot <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        bpf <bpf@vger.kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, alexander.deucher@amd.com,
-        amd-gfx@lists.freedesktop.org, Alexei Starovoitov <ast@kernel.org>,
-        christian.koenig@amd.com, Daniel Borkmann <daniel@iogearbox.net>,
-        david1.zhou@amd.com, DRI <dri-devel@lists.freedesktop.org>,
-        leo.liu@amd.com, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <cover.1550768574.git.hns@goldelico.com> <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+In-Reply-To: <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Jul 2019 09:42:59 +0200
+Message-ID: <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Song Qiang <songqiang1304521@gmail.com>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        Martin Kelly <mkelly@xevo.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Brian Masney <masneyb@onstation.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gregor Boirie <gregor.boirie@parrot.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Samu Onkalo <samu.onkalo@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 10:58 AM syzbot
-<syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    1438cde7 Add linux-next specific files for 20190716
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13988058600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-> dashboard link: https://syzkaller.appspot.com/bug?extid=79f5f028005a77ecb6bb
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111fc8afa00000
+Hi H. Nikolaus,
 
-From the repro it looks like the same bpf stack overflow bug. +John
-We need to dup them onto some canonical report for this bug, or this
-becomes unmanageable.
+On Thu, Feb 21, 2019 at 6:03 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 
-#syz dup: kernel panic: corrupted stack end in dput
+> From: Linus Walleij <linus.walleij@linaro.org>
 
-> The bug was bisected to:
+It is fair for you to change authorship to yourself at this point.
+Just keeping my Signed-off-by is sufficient.
+
+> The mounting matrix for sensors was introduced in
+> commit dfc57732ad38 ("iio:core: mounting matrix support")
 >
-> commit 96a5d8d4915f3e241ebb48d5decdd110ab9c7dcf
-> Author: Leo Liu <leo.liu@amd.com>
-> Date:   Fri Jul 13 15:26:28 2018 +0000
+> However the device tree bindings are very terse and since this is
+> a widely applicable property, we need a proper binding for it
+> that the other bindings can reference. This will also be useful
+> for other operating systems and sensor engineering at large.
 >
->      drm/amdgpu: Make sure IB tests flushed after IP resume
+> I think all 3D sensors should support it, the current situation
+> is probably that the mounting information is confined in magic
+> userspace components rather than using the mounting matrix, which
+> is not good for portability and reuse.
 >
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a46200600000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=16a46200600000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12a46200600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com
-> Fixes: 96a5d8d4915f ("drm/amdgpu: Make sure IB tests flushed after IP
-> resume")
->
-> Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
-> pointer+0x702/0x750 lib/vsprintf.c:2187
-> Shutting down cpus with NMI
-> Kernel Offset: disabled
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Gregor Boirie <gregor.boirie@parrot.com>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Samu Onkalo <samu.onkalo@intel.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+Did this patch fall off somewhere? I think it's really neat, even in this
+form it is great help for developers. If you want I can try picking up the
+comments and resend it.
+
+Linus Walleij
