@@ -2,101 +2,121 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C285C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC39C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74BCB2239F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:18:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TWoi52D8"
+	by mail.kernel.org (Postfix) with ESMTP id B2C57223A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563902317;
+	bh=QnFj2rasM2dCIQNQiNQLp7e0iNhSvvZMFkaoGxxLlEc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Wb1gjOdqYHGIqT95G8/zPXVEWuSF7niuFV69xZHTgZ6NiFT9tcvVpuVA/F8HzW06T
+	 ujjkDX5iZEOdq6nmYwgsQbh3YLO9N7RhqOs1vhHviDqY/KQfEwNfSzcuiQSw8xcxkQ
+	 y7uqKq8EQBxcDjRfTW1COwGZzGwemUkJfxva2DO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391027AbfGWRST (ORCPT
+        id S2391042AbfGWRSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 13:18:19 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:32839 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391013AbfGWRST (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 13:18:19 -0400
-Received: by mail-vs1-f67.google.com with SMTP id m8so29416136vsj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 10:18:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0B8rPPy+2ZXzBZ5P/6QN4Hb9TBfPCAUoHiabvJr5FcE=;
-        b=TWoi52D8rfeqTBQSa1fcx6QWG63Ntk0exIFf5AUJVd3WTblBruQ+cylK1+Aq6U2g8I
-         I7t4fdrtcdj5SN1bDc0/Kg0coJ86BhXzItFv8/tlfnAujkwPIO9ZZ2RjaZb7NUSbooI7
-         3ltnRcDS0Wf4Dq2qNc6ARyJizVl0RXPIagQpi/49DQJufEQ7sgs3+URXsAHw1IKoV2Cz
-         CStWHQDRV/RAeZ7idchpS6ZNJrNUZDt/3Eyjdita5OUUpQHlDwi9JI3k2/on6Wfa/hYW
-         cRWNKC09OYoVLpdxT0M9vuFRG9rF1fqOAV+dU5wZlNcsyZrhEpXaXS46fiW0mqgmA7oc
-         81tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0B8rPPy+2ZXzBZ5P/6QN4Hb9TBfPCAUoHiabvJr5FcE=;
-        b=n0P/HaXUH/w/ZJD35Jt7cRyQU5+vI5naJKobBW3XYL4pFrIiBNk2Te61VCqC4WJgXY
-         DujSCg1t3sgF4W402T9HoQItuxmOppq/yILDjafok8fENFH86XQtqBYuXnQfKDZLUEcU
-         m8JHGJHnquCrXHPZhglZQ73UhHnMJ4A8paNUW1WZM1HQM1KfHspE1u8L+MN+ek4f9vHG
-         urbQBb0mDiaE9cWIx0I0Ob8U+mgbft4G1R62XVJPYQN/PkRMGEMA8V2YNjaick5C3Rvf
-         97dae+w6in0h1jJJt7HDzo1RViA33/hJu3u71s5hEg3xbUn+ACHzJPzfoH0hzqoUmm+Z
-         JQcA==
-X-Gm-Message-State: APjAAAVols0Mq+UZJs3mAvR5dR6l+585AXYLxhrD2ud1YTMUTMbg/N8B
-        kFRvsMqpLdo6cjcsRYURXr3BHQ==
-X-Google-Smtp-Source: APXvYqxuzXgliI3GFFRnGNkj/EgjQA5jk124NBKZFVu7wii1lUqI5vsy37of5hMl2W7MgMsFdFJF7A==
-X-Received: by 2002:a67:1e44:: with SMTP id e65mr50704721vse.45.1563902298689;
-        Tue, 23 Jul 2019 10:18:18 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id s67sm15723604vkb.30.2019.07.23.10.18.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 10:18:18 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hpyQb-0002Yx-CQ; Tue, 23 Jul 2019 14:18:17 -0300
-Date:   Tue, 23 Jul 2019 14:18:17 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>
-Subject: Re: [PATCH 1/6] mm: always return EBUSY for invalid ranges in
- hmm_range_{fault,snapshot}
-Message-ID: <20190723171817.GE15357@ziepe.ca>
-References: <20190722094426.18563-1-hch@lst.de>
- <20190722094426.18563-2-hch@lst.de>
- <CAFqt6zY8zWAmc-VTrZ1KxQPBCdbTxmZy_tq2-OkUi3TVrfp7Og@mail.gmail.com>
- <20190723145441.GI15331@mellanox.com>
- <20190723161907.GB1655@lst.de>
+        Tue, 23 Jul 2019 13:18:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391013AbfGWRSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 13:18:34 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A453223A0;
+        Tue, 23 Jul 2019 17:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563902313;
+        bh=QnFj2rasM2dCIQNQiNQLp7e0iNhSvvZMFkaoGxxLlEc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=cKkq2An05+62bg+ybkgXpL4kusDP4L5L1e2y2eAmq9YoZHMiOO5grZtrjD/0+DC6L
+         jVR+Wvj7zuwy96WLD6OeH8cwv6jxe/3BB/x+WE4aHG9xCwvxYo3hoSbwwYFOBH2B+8
+         HQrIgrp2gievTljwIg2sXtbhTbuWKIsX38MYX3gk=
+Message-ID: <c657b0d65acd5e8bc9d5d726d68e2ad1fff38b51.camel@kernel.org>
+Subject: Re: [RFC PATCH] ceph: fix directories inode i_blkbits initialization
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 23 Jul 2019 13:18:31 -0400
+In-Reply-To: <20190723155020.17338-1-lhenriques@suse.com>
+References: <20190723155020.17338-1-lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723161907.GB1655@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 06:19:07PM +0200, Christoph Hellwig wrote:
-> On Tue, Jul 23, 2019 at 02:54:45PM +0000, Jason Gunthorpe wrote:
-> > I think without the commit message I wouldn't have been able to
-> > understand that, so Christoph, could you also add the comment below
-> > please?
+On Tue, 2019-07-23 at 16:50 +0100, Luis Henriques wrote:
+> When filling an inode with info from the MDS, i_blkbits is being
+> initialized using fl_stripe_unit, which contains the stripe unit in
+> bytes.  Unfortunately, this doesn't make sense for directories as they
+> have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
+> to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
 > 
-> I don't think this belongs into this patch.  I can add it as a separate
-> patch under your name and with your signoff if you are ok with that.
+>   UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
+>   shift exponent 255 is too large for 32-bit type 'int'
+> 
+> Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
+> is zero.
+> 
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/inode.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> Hi Jeff,
+> 
+> To be honest, I'm not sure CEPH_BLOCK_SHIFT is the right value to use
+> here, but for sure the one currently being used isn't correct if the
+> inode is a directory.  Using stripe units seems to be a bug that has
+> been there since the beginning, but it definitely became bigger problem
+> after commit 69448867abcb ("fs: shave 8 bytes off of struct inode").
+> 
+> This fix could also be moved into the 'switch' statement later in that
+> function, in the S_IFDIR case, similar to commit 5ba72e607cdb ("ceph:
+> set special inode's blocksize to page size").  Let me know which version
+> you would prefer.
+> 
 
-Yep, thanks
+What happens with (e.g.) named pipes or symlinks? Do those inodes also
+get this bogus value? Assuming that they do, I'd probably prefer this
+patch since it'd fix things for all inode types, not just directories.
 
-Jason
+> Cheers,
+> --
+> Luis
+> 
+> diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+> index 791f84a13bb8..0e6d6db848b7 100644
+> --- a/fs/ceph/inode.c
+> +++ b/fs/ceph/inode.c
+> @@ -800,7 +800,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+>  
+>  	/* update inode */
+>  	inode->i_rdev = le32_to_cpu(info->rdev);
+> -	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
+> +	/* directories have fl_stripe_unit set to zero */
+> +	if (le32_to_cpu(info->layout.fl_stripe_unit))
+> +		inode->i_blkbits =
+> +			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
+> +	else
+> +		inode->i_blkbits = CEPH_BLOCK_SHIFT;
+>  
+>  	__ceph_update_quota(ci, iinfo->max_bytes, iinfo->max_files);
+>  
+
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
