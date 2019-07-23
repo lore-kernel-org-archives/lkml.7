@@ -2,123 +2,108 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9313EC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED380C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBE922543
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56A9223BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWKLpCtr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3TzkdI0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387887AbfGWPmP (ORCPT
+        id S1731061AbfGWPok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:42:15 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42737 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfGWPmO (ORCPT
+        Tue, 23 Jul 2019 11:44:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45514 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfGWPok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:42:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so19332569pff.9;
-        Tue, 23 Jul 2019 08:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vz8JNCA4OobQyySEBzgksJpFgS03gb8qvM7PnvvkojA=;
-        b=MWKLpCtrmhGhopCnWcb2JpEpHsIvTkM+31gp8BTwUJSVNVWEggfWga2+LGywZMi/7a
-         GJCPj3k7SQxDgPQo+apcVVyyee5Zct1zjwaJEo+hrJEhhlzg434Yd79ETL7Mv3fqVB6M
-         bK5xB7lhlJRO9vEAyg8776avsXut1T+sLycDRaa9OWzAgR9A3RX+bV7Etbm+GbDCjBRE
-         9TP7KDR8z5K3NL35lTKfd2cxmWfgvGBnSY1c8msy3waaMWSkrt1OxtLp7DmI7U6V7qK3
-         i6pxVyuuqgBgcfeQ5a+V8+vtWYLgRmdRj9LLMQ4N98VgOVkrybdmRJE9hJCnrE2dv+pj
-         km5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vz8JNCA4OobQyySEBzgksJpFgS03gb8qvM7PnvvkojA=;
-        b=g1x6Wc2JU6irS1f9qQ2su1qKDgocCEWYBvrq8Fn558Ukp6FHl3YDOb2cTJ+WwPjy/4
-         YIWWgBbRXY8RotNc9h8tvoFKGgPi8/6nMq+5/r1ar4r67iXSBDCEQIDwbodRRB42qPkU
-         BYA3vwRlOgsEcs5L2MYM+n0BqeHtjlh22oum07q6u1q2HLlwXTfT9UiYUkYsL4X6nv/I
-         PPAvG0QMEM+3malhlW50z0dHLKX9FBn4iXkAr3kSyUExh3wt7H/H17o+0hMA7DhsINmF
-         6U8OL+z6UacAXkzQgm/4gl9xi7Ky6JyYRq7pwhiwZ8Td8ETm47UIyGSc5G4bGY09EOyP
-         vaUA==
-X-Gm-Message-State: APjAAAWy1sT0D3DxYUzK/VidjEHTCbGTyi6Giodf5TUFbnINKAZEZf/U
-        +A4DXeLpveKGvW1l9JZmV3g=
-X-Google-Smtp-Source: APXvYqzJoTAj4AaG8hABwwP3tl4mArRcqJY66B39tdgtYyTx/gTdpPsz9grGHnuwbZr3YRX8ca+zRw==
-X-Received: by 2002:aa7:9359:: with SMTP id 25mr6258135pfn.261.1563896534332;
-        Tue, 23 Jul 2019 08:42:14 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m4sm54198863pgs.71.2019.07.23.08.42.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 08:42:13 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 08:42:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>
-Subject: Re: Linux 5.3-rc1
-Message-ID: <20190723154212.GC6198@roeck-us.net>
-References: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
- <20190722222126.GA27291@roeck-us.net>
- <20190723054841.GA17148@lst.de>
- <20190723145805.GA5809@roeck-us.net>
- <1563894861.3609.6.camel@HansenPartnership.com>
+        Tue, 23 Jul 2019 11:44:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CBzbQAQ88+Tnqc6Sizg4AVsPyC78/8SBIlQyCkD9ikw=; b=3TzkdI0V+g60KZCDuKD6fvpjqT
+        KQePii2fLsTVPTKF2Cr/GIzxZ6VOkY4CdgJiV3LdPT2wpRsmVY1Isvxygd5sEujjoa/4bT0MZZhUc
+        Vgl7MiuFLf1sB4jh+PsR9NUC/Ll883Lc/Bz6LPvq1yoK40gS8TzDmcqTP772WjijWXphO1EFRnjwI
+        bh4boXzjhJZwO7inrkpziM90KoO4XdxCRioXnfjCjIaE+c5hRaJeOtyxdPuRZyHLKApF38+O6b8VK
+        U+6pen1d5jLqCrQqrqTEDvMcqTfcoRS0yVJJ+a7QLL4lH+H5iNzMLTngk7aoahScob/XKkF0Q9UES
+        IuskWmoA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpwxz-0000wm-3m; Tue, 23 Jul 2019 15:44:39 +0000
+Subject: Re: [PATCH] selftests: kmod: Fix typo in kmod.sh
+To:     Masanari Iida <standby24x7@gmail.com>,
+        linux-kernel@vger.kernel.org, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+References: <20190723102252.19931-1-standby24x7@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e803bc0d-d5f3-5821-181e-930e5099254a@infradead.org>
+Date:   Tue, 23 Jul 2019 08:44:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563894861.3609.6.camel@HansenPartnership.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190723102252.19931-1-standby24x7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 08:14:21AM -0700, James Bottomley wrote:
-> On Tue, 2019-07-23 at 07:58 -0700, Guenter Roeck wrote:
-> > On Tue, Jul 23, 2019 at 07:48:41AM +0200, Christoph Hellwig wrote:
-> > > The fix was sent last morning my time:
-> > > 
-> > > https://marc.info/?l=linux-scsi&m=156378725427719&w=2
-> > 
-> > Here is the updated bisect for the ppc scsi problem.
-> > 
-> > Guenter
-> > 
-> > ---
-> > # bad: [f65420df914a85e33b2c8b1cab310858b2abb7c0] Merge tag 'scsi-
-> > fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-> > # good: [168c79971b4a7be7011e73bf488b740a8e1135c8] Merge tag 'kbuild-
-> > v5.3-2' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
-> > git bisect start 'f65420df914a' '168c79971b4a'
-> > # good: [106d45f350c7cac876844dc685845cba4ffdb70b] scsi: zfcp: fix
-> > request object use-after-free in send path causing wrong traces
-> > git bisect good 106d45f350c7cac876844dc685845cba4ffdb70b
-> > # bad: [bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1] scsi: core: take
-> > the DMA max mapping size into account
-> > git bisect bad bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1
-> > # good: [0cdc58580b37a160fac4b884266b8b7cb096f539] scsi: sd_zbc: Fix
-> > compilation warning
-> > git bisect good 0cdc58580b37a160fac4b884266b8b7cb096f539
-> > # bad: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi: core: add a
-> > host / host template field for the virt boundary
-> > git bisect bad 7ad388d8e4c703980b7018b938cdeec58832d78d
-> > # good: [f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc] scsi: core: Fix
-> > race on creating sense cache
-> > git bisect good f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc
-> > # first bad commit: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi:
-> > core: add a host / host template field for the virt boundary
+On 7/23/19 3:22 AM, Masanari Iida wrote:
+> This patch fixes some spelling typos in kmod.sh
 > 
-> And reverting that commit fixes your problem?
-> 
-I didn't have time to try yet; I am still on my way to work.
-I'll get back later with more info. Give me a couple of hours.
+> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 
-Guenter
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  tools/testing/selftests/kmod/kmod.sh | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+> index 0a76314b4414..8b944cf042f6 100755
+> --- a/tools/testing/selftests/kmod/kmod.sh
+> +++ b/tools/testing/selftests/kmod/kmod.sh
+> @@ -28,7 +28,7 @@
+>  # override by exporting to your environment prior running this script.
+>  # For instance this script assumes you do not have xfs loaded upon boot.
+>  # If this is false, export DEFAULT_KMOD_FS="ext4" prior to running this
+> -# script if the filesyste module you don't have loaded upon bootup
+> +# script if the filesystem module you don't have loaded upon bootup
+>  # is ext4 instead. Refer to allow_user_defaults() for a list of user
+>  # override variables possible.
+>  #
+> @@ -263,7 +263,7 @@ config_get_test_result()
+>  config_reset()
+>  {
+>  	if ! echo -n "1" >"$DIR"/reset; then
+> -		echo "$0: reset shuld have worked" >&2
+> +		echo "$0: reset should have worked" >&2
+>  		exit 1
+>  	fi
+>  }
+> @@ -488,7 +488,7 @@ usage()
+>  	echo Example uses:
+>  	echo
+>  	echo "${TEST_NAME}.sh		-- executes all tests"
+> -	echo "${TEST_NAME}.sh -t 0008	-- Executes test ID 0008 number of times is recomended"
+> +	echo "${TEST_NAME}.sh -t 0008	-- Executes test ID 0008 number of times is recommended"
+>  	echo "${TEST_NAME}.sh -w 0008	-- Watch test ID 0008 run until an error occurs"
+>  	echo "${TEST_NAME}.sh -s 0008	-- Run test ID 0008 once"
+>  	echo "${TEST_NAME}.sh -c 0008 3	-- Run test ID 0008 three times"
+> 
+
+
+-- 
+~Randy
