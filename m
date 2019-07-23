@@ -2,68 +2,72 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7049C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A40C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0306218A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE68C2184E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQXvudmh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jj93UquX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387701AbfGWLt6 (ORCPT
+        id S2387737AbfGWLuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:49:58 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40597 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbfGWLt6 (ORCPT
+        Tue, 23 Jul 2019 07:50:21 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35110 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387711AbfGWLuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:49:58 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so19319566pgj.7;
-        Tue, 23 Jul 2019 04:49:57 -0700 (PDT)
+        Tue, 23 Jul 2019 07:50:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u14so19044124pfn.2;
+        Tue, 23 Jul 2019 04:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DGvbd2q6eGtnWqAZsNzO8Yn4NZ3NS3NJ9Bz/BH58Y+c=;
-        b=YQXvudmhXOHyhL2x/1WiQQqxEMf+Cr9awQOk0uSKa0PW3zkpfkEvG+ukhVkjCv7u6S
-         PG15yQbkRc97wV1/bJwd8xfn9s5dGb25jWrX8Qci3QVQJkWE1T0UtR/HWKk6JHzkt18z
-         gDbmxDaPCSuqzAhpT67rYjNetdTR0QL4itRE1Dx8iSW+GL5i89gIEzaqdjH0XQY38aFB
-         w2cEmQyQSHOo20dyVuoVNO7UDs3LfHFs/eshwn7a3Hrtj14KyblIVMlf9kcFAMNxRdLc
-         We+Pm1wokR3Md1bg7Gk2IZJ2Pe7jkhdfhhY5WUssXvc43deigQ1zcszBT9SXbg779A3g
-         QTJQ==
+        bh=WUQa7K6zscCV3fr5I8Gtd2v9SYWgICuDAxYQisb0dZw=;
+        b=jj93UquXb5PC9RCWOpnZQ/vTnyfgNEfJYu7JO9l/0Re5ge5QDe5ObpOQy36pX3xsTx
+         Ubc2pBGepvs1fGVuqGvRNkXZoUKKjPfXnuR8ihuSEsOI4nKO+6GRfgIzzsZz4Wj9h/OA
+         TldCtGryyIkUvBkFtx5wg3TMZgUVKtmX7VKZHHOqW9BIFbGDcMeJL2umzopaE3wcbts7
+         kbNLsJ1ue79+TmwBQy9Xs9U1s7MnnZkyZ2j1sZcwWkjeoFDeSTU/B1qX/fIOq1IODsvR
+         5hzflMXNvThvRLjnM5vFHWlrW4Y6KoIqQlQ8TKoVTGKdHqxScqfNJ5hsqOmmvUkufVDE
+         iGHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DGvbd2q6eGtnWqAZsNzO8Yn4NZ3NS3NJ9Bz/BH58Y+c=;
-        b=lkKMAf571eEa8rdXFzZto2q/9+PJGgVoyZtNom5FhbACt/QNK8/2Z8UpSrU1i1GzOo
-         6kUaRwbUn4fffZHTUu5NJYfvoQQWBTeTjDCmaqN7WE4rpli8oCbEAulgf/LidzPplHJ/
-         25+lHT9NuphPwh62JaaSH2OKsw68dJErEMEpUanr9lm7my2XH82BYr3CzcA6sLOhG3VW
-         frjg9Ay0CMiFfz8O/vWhRUtojCzaXvyI4qo086eLdk8xvEShby/cr3KlJpRHobCdZnnv
-         BXlYNe59NPkm6+CwDIhYhBytDbxX7hewaqFGapVdUTTmNhNLvuhVSupkTALfpug3doXW
-         lbYw==
-X-Gm-Message-State: APjAAAXc0C/oAIZIQ2aqed+N5vgJ6TRtTpdUotv3STTjeHRhXFv70180
-        f0xv5KZtjdG6AaCiIH8PpIU=
-X-Google-Smtp-Source: APXvYqz+ywXLdq7r79WSZpl2EnS/xxpoiuDtZ47hComJ7Gc+pjlazHcIOeIvSdu2h1TWB6LLmdsoBg==
-X-Received: by 2002:a17:90a:26e4:: with SMTP id m91mr82196367pje.93.1563882597619;
-        Tue, 23 Jul 2019 04:49:57 -0700 (PDT)
+        bh=WUQa7K6zscCV3fr5I8Gtd2v9SYWgICuDAxYQisb0dZw=;
+        b=VreNtxHabzk4DMt09XTveMzUvJ8lmiBv71eV0zmyuafKWDvCdUEYQMv41zyMgtqCcK
+         MuqIafcj8nsE2/tx8ezqNpJhHSGUQCQigrrRA66NfZT0sDUTRzSr3KhucIxE3v62nycy
+         /iejK4t/TCSUe1gFberASFwOKbi9Cm8zyz0FyP3NgTBU++z3YitgcsaTdrLvRM2in+Yy
+         eabeN2MlMu/S9vTK8tN7HNwBV87n3FkBssx4feJXznzQC5KDiPKPqo7KqjdnkppB2xks
+         27HBbQf7ixru21UUmSNbtNFrMS8E+HJOzzw2iPuY0uxuSC1z5ajeD3j9ApSKXNHh3l4e
+         Ydnw==
+X-Gm-Message-State: APjAAAXi54oPrmkfin9t2f9dh6673lky9ABrq7R6yw61aGWJpXLqYHFx
+        L6GP1QQmiBSdnDyjiQKlBLw=
+X-Google-Smtp-Source: APXvYqzFozLyb5L5JjaqcJ4btOrVdBr7IfvYM65VEM7EB8e9SiaXohXKc1JUUgF27e3D0W/J8CqbIg==
+X-Received: by 2002:a63:101b:: with SMTP id f27mr73351394pgl.291.1563882620325;
+        Tue, 23 Jul 2019 04:50:20 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id s5sm16985795pfm.97.2019.07.23.04.49.55
+        by smtp.gmail.com with ESMTPSA id r75sm58941857pfc.18.2019.07.23.04.50.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 04:49:57 -0700 (PDT)
+        Tue, 23 Jul 2019 04:50:19 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Yong Zhi <yong.zhi@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Akihiro Tsukada <tskd08@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] ide: Use dev_get_drvdata where possible
-Date:   Tue, 23 Jul 2019 19:49:52 +0800
-Message-Id: <20190723114952.18483-1-hslester96@gmail.com>
+Subject: [PATCH] media: pci: Use dev_get_drvdata where possible
+Date:   Tue, 23 Jul 2019 19:50:14 +0800
+Message-Id: <20190723115014.18537-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,38 +82,73 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/ide/siimage.c   | 3 +--
- drivers/ide/via82cxxx.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/media/pci/intel/ipu3/ipu3-cio2.c | 3 +--
+ drivers/media/pci/pt1/pt1.c              | 6 ++----
+ drivers/media/pci/pt3/pt3.c              | 6 ++----
+ 3 files changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/ide/siimage.c b/drivers/ide/siimage.c
-index 57eea5a9047f..c4b20f350b84 100644
---- a/drivers/ide/siimage.c
-+++ b/drivers/ide/siimage.c
-@@ -648,8 +648,7 @@ static void sil_quirkproc(ide_drive_t *drive)
+diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2.c b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+index c1d133e17e4b..50a34bcd4d14 100644
+--- a/drivers/media/pci/intel/ipu3/ipu3-cio2.c
++++ b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+@@ -2000,8 +2000,7 @@ static int __maybe_unused cio2_suspend(struct device *dev)
  
- static void init_iops_siimage(ide_hwif_t *hwif)
+ static int __maybe_unused cio2_resume(struct device *dev)
  {
--	struct pci_dev *dev = to_pci_dev(hwif->dev);
--	struct ide_host *host = pci_get_drvdata(dev);
-+	struct ide_host *host = dev_get_drvdata(hwif->dev);
+-	struct pci_dev *pci_dev = to_pci_dev(dev);
+-	struct cio2_device *cio2 = pci_get_drvdata(pci_dev);
++	struct cio2_device *cio2 = dev_get_drvdata(dev);
+ 	int r = 0;
+ 	struct cio2_queue *q = cio2->cur_queue;
  
- 	hwif->hwif_data = NULL;
+diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c
+index e51c80bc4646..72b191cfeb54 100644
+--- a/drivers/media/pci/pt1/pt1.c
++++ b/drivers/media/pci/pt1/pt1.c
+@@ -1217,8 +1217,7 @@ static void pt1_i2c_init(struct pt1 *pt1)
  
-diff --git a/drivers/ide/via82cxxx.c b/drivers/ide/via82cxxx.c
-index 977cb00398b0..63a3aca506fc 100644
---- a/drivers/ide/via82cxxx.c
-+++ b/drivers/ide/via82cxxx.c
-@@ -175,8 +175,7 @@ static void via_set_speed(ide_hwif_t *hwif, u8 dn, struct ide_timing *timing)
- static void via_set_drive(ide_hwif_t *hwif, ide_drive_t *drive)
+ static int pt1_suspend(struct device *dev)
  {
- 	ide_drive_t *peer = ide_get_pair_dev(drive);
--	struct pci_dev *dev = to_pci_dev(hwif->dev);
--	struct ide_host *host = pci_get_drvdata(dev);
-+	struct ide_host *host = dev_get_drvdata(hwif->dev);
- 	struct via82cxxx_dev *vdev = host->host_priv;
- 	struct ide_timing t, p;
- 	unsigned int T, UT;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt1 *pt1 = pci_get_drvdata(pdev);
++	struct pt1 *pt1 = dev_get_drvdata(dev);
+ 
+ 	pt1_init_streams(pt1);
+ 	pt1_disable_ram(pt1);
+@@ -1230,8 +1229,7 @@ static int pt1_suspend(struct device *dev)
+ 
+ static int pt1_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt1 *pt1 = pci_get_drvdata(pdev);
++	struct pt1 *pt1 = dev_get_drvdata(dev);
+ 	int ret;
+ 	int i;
+ 
+diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c
+index 7a7afae4c84c..c0bc86793355 100644
+--- a/drivers/media/pci/pt3/pt3.c
++++ b/drivers/media/pci/pt3/pt3.c
+@@ -626,8 +626,7 @@ static void pt3_cleanup_adapter(struct pt3_board *pt3, int index)
+ 
+ static int pt3_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt3_board *pt3 = pci_get_drvdata(pdev);
++	struct pt3_board *pt3 = dev_get_drvdata(dev);
+ 	int i;
+ 	struct pt3_adapter *adap;
+ 
+@@ -646,8 +645,7 @@ static int pt3_suspend(struct device *dev)
+ 
+ static int pt3_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt3_board *pt3 = pci_get_drvdata(pdev);
++	struct pt3_board *pt3 = dev_get_drvdata(dev);
+ 	int i, ret;
+ 	struct pt3_adapter *adap;
+ 
 -- 
 2.20.1
 
