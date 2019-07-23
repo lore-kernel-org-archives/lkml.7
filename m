@@ -2,83 +2,132 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B4EC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C59C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71073227B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9150223BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Q9GCmTyr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732309AbfGWJUj (ORCPT
+        id S1732193AbfGWJZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:20:39 -0400
-Received: from shell.v3.sk ([90.176.6.54]:54559 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfGWJUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:20:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 17B0057D75;
-        Tue, 23 Jul 2019 11:20:36 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id OmvVlQ5fC1eN; Tue, 23 Jul 2019 11:20:33 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 1CF9857D77;
-        Tue, 23 Jul 2019 11:20:33 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id W48og1H3lQRH; Tue, 23 Jul 2019 11:20:32 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 35A7F57D75;
-        Tue, 23 Jul 2019 11:20:32 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] Platform: OLPC: add SPI MODULE_DEVICE_TABLE
-Date:   Tue, 23 Jul 2019 11:20:22 +0200
-Message-Id: <20190723092022.1758072-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
+        Tue, 23 Jul 2019 05:25:50 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:29958 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbfGWJZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:25:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1563873949; x=1595409949;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=VDsDOEHhvQQsv24n5KRVR3T7vqAzJLQlWdXaSZiqvVw=;
+  b=Q9GCmTyr3qea5Kejc1IKtOVvMJZs1a15vj/pnQE8ShCP5nEMUWf21bci
+   zhGNnMpwONNNalYF1+Zcd9e7UbwDc5eQsAFWgqFzhLBGZFiimQcPBolkb
+   5/X67/4kIw2W0ScjL5Ub64owvhn42d1s3fU3hglaXcFU1fvPtvU9eN7H4
+   o=;
+X-IronPort-AV: E=Sophos;i="5.64,298,1559520000"; 
+   d="scan'208";a="775793900"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 23 Jul 2019 09:25:46 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id DEE1AA2397;
+        Tue, 23 Jul 2019 09:25:45 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 23 Jul 2019 09:25:45 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.160.245) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 23 Jul 2019 09:25:40 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v3 0/8] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date:   Tue, 23 Jul 2019 12:25:25 +0300
+Message-ID: <20190723092529.11310-1-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.245]
+X-ClientProxiedBy: EX13D24UWB004.ant.amazon.com (10.43.161.4) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SPI bus creates a device with the modalias of "xo1.75-ec". This
-fixes XO-1.75 EC driver autoloading
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 
-Fixes: 0c3d931b3ab9 ("Platform: OLPC: Add XO-1.75 EC driver")
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/platform/olpc/olpc-xo175-ec.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Regarding the 2nd DWC patch (PCI flags support), do you think this should
+be done in the context of a host-bridge driver at all (as opposed to PCI
+system-wide code)?
 
-diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olp=
-c/olpc-xo175-ec.c
-index aee8975bea90d..8ec9092af0bed 100644
---- a/drivers/platform/olpc/olpc-xo175-ec.c
-+++ b/drivers/platform/olpc/olpc-xo175-ec.c
-@@ -749,6 +749,12 @@ static const struct of_device_id olpc_xo175_ec_of_ma=
-tch[] =3D {
- };
- MODULE_DEVICE_TABLE(of, olpc_xo175_ec_of_match);
-=20
-+static const struct spi_device_id olpc_xo175_ec_id_table[] =3D {
-+	{ "xo1.75-ec", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, olpc_xo175_ec_id_table);
-+
- static struct spi_driver olpc_xo175_ec_spi_driver =3D {
- 	.driver =3D {
- 		.name	=3D "olpc-xo175-ec",
---=20
-2.21.0
+Changes since v2:
+- Added al_pcie_controller_readl/writel() wrappers
+- Reorganized local vars in several functions according to reverse
+  tree structure
+- Removed unnecessary check of ret value
+- Changed return type of al_pcie_config_prepare() from int to void
+- Removed check if link is up from probe() [done internally in
+  dw_pcie_rd/wr_conf()]
+
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Swtiched to %pR for printing resources
+
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (7):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: al: Add support for DW based driver type
+  PCI: dw: Add validation that PCIe core is set to correct mode
+  PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  45 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 367 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  31 +-
+ drivers/pci/quirks.c                          |  34 ++
+ drivers/pci/vpd.c                             |  16 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 513 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
+-- 
+2.17.1
 
