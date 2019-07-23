@@ -2,128 +2,116 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4B8C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097AFC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54ABC223A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99BA22543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731993AbfGWPcy (ORCPT
+        id S1732987AbfGWPc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:32:54 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.208]:43681 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726276AbfGWPcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:32:54 -0400
-Received: from [67.219.251.53] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-c.us-west-2.aws.symcld.net id B9/6F-15262-3A8273D5; Tue, 23 Jul 2019 15:32:51 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRWlGSWpSXmKPExsXi5LtOQHexhnm
-  sQeMeJYuHV/0tVk3dyWKx6fE1VouuXyuZLS7vmsNm8Xf7JhaLF1vELdqOHWN14PDYOesuu8em
-  VZ1sHneu7WHz2Lyk3mPjux1MHv1/DTw+b5ILYI9izcxLyq9IYM24cK6RpeAUb8WOPb9ZGxinc
-  ncxcnEICaxmlPj7ZS5rFyMnkLOGUeLOVSO4xI/eGewgCTYBE4krM3YydzFycIgIyEuceOINEm
-  YWeMIo0bfaHsQWFgiUuL3+Blg5i4CqxOFXV5lAbF4BT4nu2w1gcQkBOYmb5zqZIeKCEidnPmG
-  BmCMhcfDFC2aIG9Qk2uZMAFslAbTqb2/ZBEa+WUg6ZiHpWMDItIrRIqkoMz2jJDcxM0fX0MBA
-  19DQSNfQ2FzXyMRQL7FKN1mvtFi3PLW4RNdIL7G8WK+4Mjc5J0UvL7VkEyMw2FMKOj/uYGya9
-  UbvEKMkB5OSKO+rT2axQnxJ+SmVGYnFGfFFpTmpxYcYZTg4lCR4u9TNY4UEi1LTUyvSMnOAkQ
-  eTluDgURLh3aYGlOYtLkjMLc5Mh0idYlSUEuctAUkIgCQySvPg2mDRfolRVkqYl5GBgUGIpyC
-  1KDezBFX+FaM4B6OSMC87yHaezLwSuOmvgBYzAS3eq2IGsrgkESEl1cDkWu9pl+T6/sTnbdc+
-  LA1M/rvuIacX1x9D4S/5t89pB35qNnSyusD72MtkUuLFtle5grv/zAjKWPWoOjhnjTDTh0eSy
-  5jNrhyM1/9WzRripGzSVdhv7K1tN3Wz1p0fui+07q+c1sfife1okGDz3OQXB/xWF+Yw7V/79E
-  10Dd+RVO+sbnEr1+u73+q5/dX6r1EaY2ZeZqmi6Rp/PJthpaTMjZMOwV/uTNpw6VX7luv/PJN
-  Zzy158fLPTik247B/RfMFln9kPWj2oiYt/9yl8pX+7f1+xRXaf9aVyHE379YTS3rlPW1x3orF
-  T6/ddE6/5LR0Qfy+lX3Hr0t1JpWV/H7wLU3sRNVfU9+UzfWr57xWYinOSDTUYi4qTgQAQxHm9
-  HEDAAA=
-X-Env-Sender: Jose.DiazdeGrenu@digi.com
-X-Msg-Ref: server-33.tower-365.messagelabs.com!1563895970!28760!1
-X-Originating-IP: [66.77.174.16]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.9; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 13652 invoked from network); 23 Jul 2019 15:32:51 -0000
-Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
-  by server-33.tower-365.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 23 Jul 2019 15:32:51 -0000
-Received: from MTK-SMS-XCH02.digi.com (10.10.8.196) by MCL-VMS-XCH01.digi.com
- (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul 2019
- 10:32:50 -0500
-Received: from DOR-SMS-XCH01.digi.com (10.49.8.99) by MTK-SMS-XCH02.digi.com
- (10.10.8.196) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul
- 2019 10:32:49 -0500
-Received: from localhost.localdomain (10.101.2.92) by dor-sms-xch01.digi.com
- (10.49.8.99) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul 2019
- 17:32:47 +0200
-From:   Jose Diaz de Grenu <Jose.DiazdeGrenu@digi.com>
-To:     <Jose.DiazdeGrenu@digi.com>
-CC:     <srinivas.kandagatla@linaro.org>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] nvmem: imx-ocotp: allow reads with arbitrary size and offset
-Date:   Tue, 23 Jul 2019 17:32:41 +0200
-Message-ID: <1563895963-19526-1-git-send-email-Jose.DiazdeGrenu@digi.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 23 Jul 2019 11:32:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2636 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731869AbfGWPc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:32:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 08:32:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
+   d="scan'208";a="180772567"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2019 08:32:52 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hpwmY-0004Hw-9w; Tue, 23 Jul 2019 18:32:50 +0300
+Date:   Tue, 23 Jul 2019 18:32:50 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sh@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 2/7] backlight: gpio: simplify the platform data
+ handling
+Message-ID: <20190723153250.GK9224@smile.fi.intel.com>
+References: <20190722150302.29526-1-brgl@bgdev.pl>
+ <20190722150302.29526-3-brgl@bgdev.pl>
+ <20190722160603.GY9224@smile.fi.intel.com>
+ <CAMRc=Mfuvh6byfPhPdB51dy_YbAS5scJQT3n3pL_5VZLCjB3Hw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.101.2.92]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mfuvh6byfPhPdB51dy_YbAS5scJQT3n3pL_5VZLCjB3Hw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the imx-ocotp driver does only allow reading complete OTP words
-correcty aligned.
+On Tue, Jul 23, 2019 at 08:28:00AM +0200, Bartosz Golaszewski wrote:
+> pon., 22 lip 2019 o 18:06 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> napisał(a):
+> >
+> > On Mon, Jul 22, 2019 at 05:02:57PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > Now that the last user of platform data (sh ecovec24) defines a proper
+> > > GPIO lookup and sets the 'default-on' device property, we can drop the
+> > > platform_data-specific GPIO handling and unify a big chunk of code.
+> > >
+> > > The only field used from the platform data is now the fbdev pointer.
+> >
+> > > -static int gpio_backlight_probe_dt(struct platform_device *pdev,
+> > > -                                struct gpio_backlight *gbl)
+> > > -{
+> > > -     struct device *dev = &pdev->dev;
+> > > -     enum gpiod_flags flags;
+> > > -     int ret;
+> > > -
+> > > -     gbl->def_value = device_property_read_bool(dev, "default-on");
+> > > -     flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+> > > -
+> > > -     gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
+> > > -     if (IS_ERR(gbl->gpiod)) {
+> > > -             ret = PTR_ERR(gbl->gpiod);
+> > > -
+> > > -             if (ret != -EPROBE_DEFER) {
+> > > -                     dev_err(dev,
+> > > -                             "Error: The gpios parameter is missing or invalid.\n");
+> > > -             }
+> > > -             return ret;
+> > > -     }
+> > > -
+> > > -     return 0;
+> > > -}
+> >
+> > Why not leave this function (perhaps with different name)?
+> 
+> Why would we do that if the entire probe() function is now less than
+> 50 lines long? Also: it gets inlined by the compiler anyway. It
+> doesn't make sense IMO.
 
-Usually OTP memory is limited, so the fields are stored using as few bits as
-possible. This means that a given value rarely uses 32 bits and happens to be
-aligned.
+I'm not against this, perhaps, dropping and moving can be split to two changes.
 
-Even though the NVMEM API offers a way to define offset and size of each cell
-(at bit level) this is not currently usable iwth the imx-ocotp driver, which
-forces consumers to read complete words and then hardcode the necessary
-shifting and masking in the driver code. 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-As an example take the nvmem consumer imx_thermal.c, which reads nvmem cells
-as uint32_t words:
-
-	ret = nvmem_cell_read_u32(&pdev->dev, "calib", &val);
-	if (ret)
-		return ret;
-
-	ret = imx_init_calib(pdev, val);
-	if (ret)
-		return ret;
-
-	ret = nvmem_cell_read_u32(&pdev->dev, "temp_grade", &val);
-	if (ret)
-		return ret;
-	imx_init_temp_grade(pdev, val);
-	
-but needs to later adjust the values in code:
-
-	// Inside imx_init_calib()
-	data->c1 = (ocotp_ana1 >> 9) & 0x1ff;
-
-	// Inside imx_init_temp_grade()
-	switch ((ocotp_mem0 >> 6) & 0x3) {
-	
-This patch adjusts the driver so that reads can be requested using any size
-and offset. Then, for example the nvmem cell "calib" could use the 'bits'
-property to specify size and offset in bits, removing the need to mask and
-shift in the driver code.
-
-This is specially useful when several drivers use the same nvmem cell and when
-the specific size and offset of a OTP value depends on a hardware version.
-
-Jose Diaz de Grenu (2):
-  nvmem: imx-ocotp: use constant for write restriction
-  nvmem: imx-ocotp: allow reads with arbitrary size and offset
-
- drivers/nvmem/imx-ocotp.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
 
