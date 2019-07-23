@@ -2,129 +2,118 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A57C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC8C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F135229ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A39218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:25:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGJNkRZs"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HTBAoz1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392062AbfGWVYy (ORCPT
+        id S2389273AbfGWVZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:24:54 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38066 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392047AbfGWVYw (ORCPT
+        Tue, 23 Jul 2019 17:25:50 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:11035 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbfGWVZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:24:52 -0400
-Received: by mail-io1-f68.google.com with SMTP id j6so9846925ioa.5;
-        Tue, 23 Jul 2019 14:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M6w3AQT/kAXXnbql10OE6lR9hDAhCRnli8EPorWLJVk=;
-        b=QGJNkRZsxv5Zuf3BgPCZSqKQFZGj+62TufloKtPG2MZHXVGH1Gd0Lp6K2ETJIbCSjh
-         9H8asFqfqbKMBBxMrqWl9WTuBXgxsHM7Hvujxd7Mwzg0TCSP+fQqr1kIT1Sb984JAHC3
-         KFRtHdL8Nomx/M8Jrwx69IAiJJZKW1vawnwm6x6dcOqS/ZUdTMSZsXPw0d+5Z9j5hIlq
-         rVAmZv0JRn+cBmfh4L4vnMcFIHHYgRJg/C2jixIYFE5ZqVpGxI5UgWCGqmddrraX8EbC
-         V9YLC2jwBhDTpcvB8SfLT3PTMul+gIi/+9fKTr0YhWbOURJVhIsrLU0TaeW1+B7rgdxl
-         DK5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M6w3AQT/kAXXnbql10OE6lR9hDAhCRnli8EPorWLJVk=;
-        b=EWNNeV6YVAEmg8BNKePf1PykK2lt2ygssAsyVM1CRm/pZLnhRIb9EJHxWmtFcIS2g8
-         3RGw7KVr7s9HsbbsZb4iN8QAJr9xHFqltGF9Xg+ATDaMJmpGDK8KNLUzVsBtoLqsAGhF
-         KEQtRpqM4wadRzvYM47zsGc7sLPlbc9arE0oJmx7k1tMXlCnkyez/iDe49ckKo5OPdDW
-         R2VdXAEAxcUuwKVdRbtgelxeYNnYZdLUFzRavPJuhboDCEY74n7A7VH33bvHKOZfFCJF
-         4nXXR8Q/Kk+zJlK55sPq7nFG7Dc42ki4RNBIbjq+dQu40ZSCbQ/vOcZa9dLXGTWsfcwS
-         X4iw==
-X-Gm-Message-State: APjAAAU8L+l9FnHeDq4BUQmzfFYwoIistK6xf6bDHSA9RpRHUe6pLy+q
-        9FuH718zwYvYCz7FqO/0PTKjPCaMqZmmSm+BWSE=
-X-Google-Smtp-Source: APXvYqxKr4HupaYHi34Ne4j7ZwGE2Zn3T5z4Jpb3W+1WmUklRBx1IuSc0txOT2Cv/XB1evJIt72QfM/euePyWkorYTY=
-X-Received: by 2002:a05:6638:cf:: with SMTP id w15mr3101134jao.136.1563917090945;
- Tue, 23 Jul 2019 14:24:50 -0700 (PDT)
+        Tue, 23 Jul 2019 17:25:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d377b5a0000>; Tue, 23 Jul 2019 14:25:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 14:25:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 14:25:49 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
+ 2019 21:25:44 +0000
+Subject: Re: [PATCH v2 1/3] mm: document zone device struct page field usage
+To:     Matthew Wilcox <willy@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20190719192955.30462-1-rcampbell@nvidia.com>
+ <20190719192955.30462-2-rcampbell@nvidia.com>
+ <20190721160204.GB363@bombadil.infradead.org>
+ <20190722051345.GB6157@iweiny-DESK2.sc.intel.com>
+ <20190722110825.GD363@bombadil.infradead.org>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <80dbf7fc-5c13-f43f-7b87-8273126562e9@nvidia.com>
+Date:   Tue, 23 Jul 2019 14:25:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <156388617236.3608.2194886130557491278.stgit@buzz> <20190723130729.522976a1f075d748fc946ff6@linux-foundation.org>
-In-Reply-To: <20190723130729.522976a1f075d748fc946ff6@linux-foundation.org>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Wed, 24 Jul 2019 00:24:41 +0300
-Message-ID: <CALYGNiMw_9MKxfCxq9QsXi3PbwQMwKmLufQqUnhYdt8C+sR2rA@mail.gmail.com>
-Subject: Re: [PATCH] mm/backing-dev: show state of all bdi_writeback in debugfs
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Cgroups <cgroups@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190722110825.GD363@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563917146; bh=ScttwGqLrhEb0twi6RY7tFc+yqiFYp5H9qvTzCFtqzA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=HTBAoz1a35vMm9dEfCZ9ucGpRtfWn50k5XdHWQVnukyE3m4YsOS4KQVKIsztIfDG9
+         Jr0YpCMG6BmNA6okSTPpFptOsHIM0sypKIueyTnOAfpztK5966N2vMbYPQmDP4B/Y7
+         nM8KL1CHebF5U+sP0Ndew6xc0qN4osk2ZJYTr2Ag/Igr6KRGSfW5rniAruh3Y2bbV5
+         0UxiCI+wk73K5fjrq9UsYu+brV/O+JnzOO6nCO2lRcCAyYpfjvNrXVVWHOjhoNc0jA
+         tgK7zRpvNHjr24v+oVtRKra2bSx28Xtg/4UpRVPaLqu+X/p0Tjb0chqcVlzoG6WqNC
+         GYZ89VE/Dp4sA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:07 PM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Tue, 23 Jul 2019 15:49:32 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
->
-> > Currently /sys/kernel/debug/bdi/$maj:$min/stats shows only root bdi wb.
-> > With CONFIG_CGROUP_WRITEBACK=y there is one for each memory cgroup.
-> >
-> > This patch shows here state of each bdi_writeback in form:
-> >
-> > <global state>
-> >
-> > Id: 1
-> > Cgroup: /
-> > <root wb state>
-> >
-> > Id: xxx
-> > Cgroup: /path
-> > <cgroup wb state>
-> >
-> > Id: yyy
-> > Cgroup: /path2
-> > <cgroup wb state>
->
-> Why is this considered useful?  What are the use cases.  ie, why should
-> we add this to Linux?
->
-> > mm/backing-dev.c |  106 +++++++++++++++++++++++++++++++++++++++++++++++-------
-> > 1 file changed, 93 insertions(+), 13 deletions(-)
->
-> No documentation because it's debugfs, right?
->
-> I'm struggling to understand why this is a good thing :(.  If it's
-> there and people use it then we should document it for them.  If it's
-> there and people don't use it then we should delete the code.
->
 
-Well. Cgroup writeback has huge internal state:
-bdi_writeback for each pair (bdi, memory cgroup ) which refers to some
-blkio cgroup.
-Each of them has writeback rate estimation, bunch of counters for
-pages and flows and so on.
-All this rich state almost completely hidden and gives no clue when
-something goes wrong.
-Debugging such dynamic structure with gdb is a pain.
+On 7/22/19 4:08 AM, Matthew Wilcox wrote:
+> On Sun, Jul 21, 2019 at 10:13:45PM -0700, Ira Weiny wrote:
+>> On Sun, Jul 21, 2019 at 09:02:04AM -0700, Matthew Wilcox wrote:
+>>> On Fri, Jul 19, 2019 at 12:29:53PM -0700, Ralph Campbell wrote:
+>>>> Struct page for ZONE_DEVICE private pages uses the page->mapping and
+>>>> and page->index fields while the source anonymous pages are migrated to
+>>>> device private memory. This is so rmap_walk() can find the page when
+>>>> migrating the ZONE_DEVICE private page back to system memory.
+>>>> ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
+>>>> page->index fields when files are mapped into a process address space.
+>>>>
+>>>> Restructure struct page and add comments to make this more clear.
+>>>
+>>> NAK.  I just got rid of this kind of foolishness from struct page,
+>>> and you're making it harder to understand, not easier.  The comments
+>>> could be improved, but don't lay it out like this again.
+>>
+>> Was V1 of Ralphs patch ok?  It seemed ok to me.
+> 
+> Yes, v1 was fine.  This seems like a regression.
+> 
 
-Also all these features are artificially tied with cgroup2 interface
-so almost nobody use them right now.
-
-This patch extends legacy debug manhole to expose bit of actual state.
-Alternative is exactly removing this debugfs file.
-
-I'm using this debugfs interface for croups and find it very useful:
-https://lore.kernel.org/patchwork/patch/973846/
-but writeback has another dimension so needs own interface.
+This is about what people find "easiest to understand" and so
+I'm not surprised that opinions differ.
+What if I post a v3 based on v1 but remove the _zd_pad_* variables
+that Christoph found misleading and add some more comments
+about how the different ZONE_DEVICE types use the 3 remaining
+words (basically the comment from v2)?
