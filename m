@@ -2,101 +2,106 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4D0C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92150C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F0721734
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRi655oh"
+	by mail.kernel.org (Postfix) with ESMTP id 534D2218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563887466;
+	bh=EUnG4jt6qj9IEhIUGSsFA5jgfcLfwSZzLWroSLmv6OQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wShwIMD6vO08B9QgMX0b4IdmDdD2OaXdnIZV4Wl10kaOG3miRSxxIf4qOWU2l1dMP
+	 U6yUzYSFXbnbjzQl3QMZlM2Tip/78SQNtZ7eVM6a/TsvH3QjBX3WZE0VI86EEGMalx
+	 dXkDnG79gxe329+v4fDnZjUxT6S9Bq/fjYQVS9x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390086AbfGWNIV (ORCPT
+        id S2390095AbfGWNLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:08:21 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41915 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbfGWNIV (ORCPT
+        Tue, 23 Jul 2019 09:11:04 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33257 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbfGWNLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:08:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so20511788pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:08:20 -0700 (PDT)
+        Tue, 23 Jul 2019 09:11:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f20so10186720pgj.0;
+        Tue, 23 Jul 2019 06:11:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mMJGMBwbdv3BuUIrB2fh3trkXMpns9zS+fKqqtIDYso=;
-        b=hRi655ohdlnFYbeJACxTYv4WXDTzYM6muo+fQ0W+9swzRbEC7whe7L3x9g32g/hhgs
-         FOFAtZGhZ7Br9Gn+HA0jF78wSvG99IiJ3YuANkCoB7L5DbI91alE1V0JI4ZkQJfFBq5Y
-         k/k2hEvsSaom9j+dXabOqm14XrLUCDPWGkPhDV0fLeuQzdi/Aa2cPG4m+i5XDM9Z3RES
-         zgaGcscpo3/b589RlE8M5NazmIvL0BTxFYRKmU+8NZaT/IMzpVeQXj8F+/kksyCZ3dEj
-         qyQwY1ixuMDC0Y97X2wxJ0nxggbFTKck4L2WG9UqymiYN/KL91OpdcwcBP0tOH2FIer9
-         rUAg==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KoRrGXS1xcEHJmR9YK4+5JQrZ37H5yKayrFqWfL3n4M=;
+        b=KD1ifaEV5p7WnRGC0HNJ+qVWuOXp5bFQDD3BHmiCOTrRHyJxCD1acj+NzS633mjANf
+         qj3MMUwF3gw7MrilS8jAjZDuC1lJ0rupY9Z0lpp6AAi5ICwhVg3HpbMqIcbN61z+6b3M
+         X0OSdx1umYaZLuzU5u1s8eFwEDV3W2DyznyRzNHTXOrY8eE/a+WgnDVgvAG85VKCFfp2
+         TnaiRBneUcCsPFMM0Urvndy67GeHp58bOexgDUyWZQ21UogE8gRNPq45LjaV+HD8rylK
+         9TU3/iAboTNbadUuAGZts7QADaQQse2f2jAdTDOFpmyBDF9OuVDyl5m8VdSzZmXl6nQg
+         0izQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mMJGMBwbdv3BuUIrB2fh3trkXMpns9zS+fKqqtIDYso=;
-        b=mBtTxYjqOeljMbBbWeDE2jvUgL+A4WrhNewa6nB5AzktI15/XbvKQ1uDbXRq/PCBIV
-         jnB2w3HH/4UiHFvqkkrdEczlmIP4ymq16xXf1YfyqXOYPC8BcVRTo18SFWTG1Hp14LDe
-         ceEYz7hK6cU43+dfYHqKvA6grpAQWYF5/VyptsygcP3as8w3kkhjJuSalu/N7Tv62Ydv
-         5PBCdf+zjzZ5VIeyjoBL6JmEc0reWJFhdR7H1yK0VWGBsADq6gWIxLjjiCtPN9tEndwd
-         /DPCZ/Q470A05zHJnFyjIRXMWWGuhJ71ktRR5IGhA0e6DNECk3GyNkPcH9gVf9VTDUcG
-         G1Pw==
-X-Gm-Message-State: APjAAAUXCJPlRryPg4QgPDjL06HwP8ZQFvuh1Ya+eQrwesw8IA4/hslg
-        rj3UvE6k/p4DogOUZ0w2NKI=
-X-Google-Smtp-Source: APXvYqwmCu4VygQO+Rx9bAtrtscNWk4NIlhSZPtvsVz1VJIBxtoVYfY0lrSZLTcdwQEQ3YSz/ESs3w==
-X-Received: by 2002:a17:902:28c9:: with SMTP id f67mr41262500plb.19.1563887300481;
-        Tue, 23 Jul 2019 06:08:20 -0700 (PDT)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id r2sm58250026pfl.67.2019.07.23.06.08.19
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KoRrGXS1xcEHJmR9YK4+5JQrZ37H5yKayrFqWfL3n4M=;
+        b=sfUxfAP/v91gTzvwawYrSaSkdmns1A1UAgpf/MFdldOKXDKUoeBX2cYR4LIAstdDky
+         vp2+UcxT2QGZ5DVPwMS8FrTlXe0bipimL21Orr0yJQA/zBp4kRgUi7N8gMEn5ocIcbRz
+         PgD3i/jqs2g+iFp8BaKekmsBkaGXqUQCO6b4Bizpbps0K3X/eSflI3N+LYY2JksyJfGk
+         ZXqeVGJzzoJkpcpOqpnhUJNN32attrvmQAYfhpUdTq+O4i+OyYN01mTurPesZ+tq02TT
+         sbvFHEPtb4B5nvEwUkJD8qkwwsBUWvfdqN2PxZIoPp+OO9RbNhI0xhmBVtSk3gvUy5yC
+         NWoA==
+X-Gm-Message-State: APjAAAWkt1+7OkY7/pFI50rpxIlC6qoynxbR2lHUEF6H+V+UaPx7hwPv
+        JVS6P0R3KlcdvHJbqx39F3Y=
+X-Google-Smtp-Source: APXvYqwzb6pLfqRU9ygzvK1kQJaAjVjQM+ULK7S5gnddMHI0dWUkHB4n6nwrMEs098be0obvSEydLg==
+X-Received: by 2002:a62:3445:: with SMTP id b66mr5757105pfa.246.1563887463426;
+        Tue, 23 Jul 2019 06:11:03 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:2287])
+        by smtp.gmail.com with ESMTPSA id r75sm59223117pfc.18.2019.07.23.06.11.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 06:08:19 -0700 (PDT)
-From:   Weitao Hou <houweitaoo@gmail.com>
-To:     akpm@linux-foundation.org, osalvador@suse.de, mhocko@suse.com,
-        david@redhat.com, pasha.tatashin@soleen.com,
-        dan.j.williams@intel.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Weitao Hou <houweitaoo@gmail.com>
-Subject: [PATCH] mm/hotplug: remove unneeded return for void function
-Date:   Tue, 23 Jul 2019 21:08:14 +0800
-Message-Id: <20190723130814.21826-1-houweitaoo@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 23 Jul 2019 06:11:02 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 06:11:00 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>, mingo@redhat.com,
+        rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
+        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
+        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v9 2/8] sched/core: Streamlining calls to task_rq_unlock()
+Message-ID: <20190723131100.GE696309@devbig004.ftw2.facebook.com>
+References: <20190719140000.31694-1-juri.lelli@redhat.com>
+ <20190719140000.31694-3-juri.lelli@redhat.com>
+ <50f00347-ffb3-285c-5a7d-3a9c5f813950@arm.com>
+ <20190722083214.GF25636@localhost.localdomain>
+ <20190723103131.GB3402@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723103131.GB3402@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-return is unneeded in void function
+On Tue, Jul 23, 2019 at 12:31:31PM +0200, Peter Zijlstra wrote:
+> On Mon, Jul 22, 2019 at 10:32:14AM +0200, Juri Lelli wrote:
+> 
+> > Thanks for reporting. The set is based on cgroup/for-next (as of last
+> > week), though. I can of course rebase on tip/sched/core or mainline if
+> > needed.
+> 
+> TJ; I would like to take these patches through the scheduler tree if you
+> don't mind. Afaict there's no real conflict vs cgroup/for-next (I
+> applied the patches and then did a pull of cgroup/for-next which
+> finished without complaints).
 
-Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
----
- mm/memory_hotplug.c | 2 --
- 1 file changed, 2 deletions(-)
+Yeah, for sure, please go ahead.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 2a9bbddb0e55..c73f09913165 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -132,7 +132,6 @@ static void release_memory_resource(struct resource *res)
- 		return;
- 	release_resource(res);
- 	kfree(res);
--	return;
- }
- 
- #ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
-@@ -979,7 +978,6 @@ static void rollback_node_hotadd(int nid)
- 	arch_refresh_nodedata(nid, NULL);
- 	free_percpu(pgdat->per_cpu_nodestats);
- 	arch_free_nodedata(pgdat);
--	return;
- }
- 
- 
+Thanks.
+
 -- 
-2.18.0
-
+tejun
