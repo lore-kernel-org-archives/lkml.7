@@ -2,99 +2,104 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFE3C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10537C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09932238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E637229F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GybFe+jt"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NF7JwupG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfGWXnH (ORCPT
+        id S1727318AbfGWXy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:43:07 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41143 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbfGWXnG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:43:06 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so9844184pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 16:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ULjvNu8XqxCLyK7lX3vJgWCh6vPqYwiwOi/5y16BH3Y=;
-        b=GybFe+jttEiHAN54hWf3fGA7UFjS+U2eNj3SotzkCQljsnOD9pSo4HeEXHRUjzwYq0
-         dqioBctjZKd0XfyyrX85hkdUUbv9K4F6HB4+KvmNyTDd2z5YRZMgWRLWwyLuxWhvyT5U
-         hu3dagm6zvIxm7JavoPfQC18+BL65C3Lr7aXs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ULjvNu8XqxCLyK7lX3vJgWCh6vPqYwiwOi/5y16BH3Y=;
-        b=L9riMK0Is8LFtx689ez2ZpNxsuz1FzBVE/hZNKKKd8etM3r8PNyCgkn0HU541PF4IF
-         4raXY46adepefZX+mxU64zY0ru/ESICqHnqvYtiEJC+GVyNtagMOojVms7nzF6l5+Bqq
-         Dpb6F9an0MtLrlGINe1Zer7MQP/81vvf4P8mGRPKBBYzyIJqqzcDLbGAiPjn5YBzwB0l
-         IaDi+jVUjyZrnL+2yJjHQOUa18S0ZwVlpnmzJbBKKBY2/zs36AzO0VAswhLCXeUv4+q8
-         cCPkUovW9amLYAr8tIublObe1Y6hG+NFhVcafsLcDX26pyuZRJd0OTBXJAjA8YgbehNt
-         JzWA==
-X-Gm-Message-State: APjAAAUJ6WGevldrYaM7DYPmnlqLHKKQp79BbzHaoWj9ekSD3MR5pqbi
-        1jyBYvAyqWop/lyJFshpxxg6rA==
-X-Google-Smtp-Source: APXvYqwZE+Dl+uWmNXDDPfO5/dJvqFZBEB0U4nE6GUAd3Xda+N6LHB28/0TS6z+8nRqqXobjOHp+xg==
-X-Received: by 2002:a62:7552:: with SMTP id q79mr8304730pfc.71.1563925386175;
-        Tue, 23 Jul 2019 16:43:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j12sm34825460pff.4.2019.07.23.16.43.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 16:43:05 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 16:43:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
- on i386
-Message-ID: <201907231636.AD3ED717D@keescook>
-References: <20190719170343.GA13680@linux.intel.com>
- <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net>
- <201907221012.41504DCD@keescook>
- <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
- <201907221135.2C2D262D8@keescook>
- <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
- <201907221620.F31B9A082@keescook>
- <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
- <201907231437.DB20BEBD3@keescook>
- <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de>
+        Tue, 23 Jul 2019 19:54:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:44993 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726862AbfGWXy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 19:54:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45tb1B6S9qz9s4Y;
+        Wed, 24 Jul 2019 09:54:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563926063;
+        bh=+csTStzc+VV971RYhHdoELYkDFqttJbo99tUPeo/F/Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NF7JwupG+Aag1RqwRki/eF3C2T5UnK/6FHhCaGrUGtWnZSe2nXchcDAd9v6F8oTT7
+         jwCQML4u2Ah5FKDUrgtNLqeH7WO0IeR0JeTHIjBaxVFaR8MeBtVNh02nCsrS1W/e1l
+         WiJhhVa4dCJ3fISGymVeiBxfigvDSjf7aihaEoAzazl5KmMZfl5DqAAJxYJogFC8r6
+         7hU6Bdnv2fTA10yUka+rbiJdCIP124EEvj+kHroz6/70jGoa4BOp1pf6RcoZvPB6uX
+         ksvIo/CzFnVDzfdhmjX0vHn8b8TRBI1Zp4kVYK+OVL/eUXPpsmTEDapmU99BLEVt2w
+         +glges1yr4WSw==
+Date:   Wed, 24 Jul 2019 09:54:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: linux-next: build warning after merge of the input-current tree
+Message-ID: <20190724095416.65450cbf@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de>
+Content-Type: multipart/signed; boundary="Sig_/zjgGk0rKApNMSn1H/+qeB+x";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:59:03AM +0200, Thomas Gleixner wrote:
-> And as we have sys_clock_gettime64() exposed for 32bit anyway you need to
-> deal with that in seccomp independently of the VDSO. It does not make sense
-> to treat sys_clock_gettime() differently than sys_clock_gettime64(). They
-> both expose the same information, but the latter is y2038 safe.
+--Sig_/zjgGk0rKApNMSn1H/+qeB+x
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Okay, so combining Andy's ideas on aliasing and "more seccomp flags",
-we could declare that clock_gettime64() is not filterable on 32-bit at
-all without the magic SECCOMP_IGNORE_ALIASES flag or something. Then we
-would alias clock_gettime64 to clock_gettime _before_ the first evaluation
-(unless SECCOMP_IGNORE_ALIASES is set)?
+Hi all,
 
-(When was clock_gettime64() introduced? Is it too long ago to do this
-"you can't filter it without a special flag" change?)
+After merging the input-current tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
--- 
-Kees Cook
+drivers/input/mouse/elantech.c: In function 'elantech_use_host_notify':
+drivers/input/mouse/elantech.c:1843:6: warning: this statement may fall thr=
+ough [-Wimplicit-fallthrough=3D]
+   if (dmi_get_bios_year() >=3D 2018)
+      ^
+drivers/input/mouse/elantech.c:1845:2: note: here
+  default:
+  ^~~~~~~
+
+Introduced by commit
+
+  883a2a80f79c ("Input: elantech - enable SMBus on new (2018+) systems")
+
+I get these warnings because I am building with -Wimplicit-fallthrough
+in attempt to catch new additions early.  The gcc warning can be turned
+off by adding a /* fall through */ comment at the point the fall through
+happens (assuming that the fall through is intentional).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zjgGk0rKApNMSn1H/+qeB+x
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl03nigACgkQAVBC80lX
+0GwE2wf+KmEV2A67BPTaTWBlqw6hD77u527SLVloOa+ERNp53/HUCBcDPL4lplJx
+OZXeMX23GNqVHu0zGKrgyd5Y0IqJUzTQU+Bdz1OooLNqsLP+kmcwmUSfJlsRVhx4
+DBBD2HOSmqz3W/MsMrZsgZce7/XgOcu3EUIf64kbp/YN9UpfYQozp625Q5pUhnYK
+dIBkxGySCKHEUsTUoxpkpUHXSMzSmLBb2IkMPOvA4ekZJQZFFSAMcU3CEeF1AKI3
+NQmrPiJJ3DCIlqszBHABF9C6zcDXfn2jNw0CTVNzQoQde/L0/K/sikmYtUKqHGHB
+550LsYNcabjMknxtPNYIfU1G1Bn7mQ==
+=Yhj+
+-----END PGP SIGNATURE-----
+
+--Sig_/zjgGk0rKApNMSn1H/+qeB+x--
