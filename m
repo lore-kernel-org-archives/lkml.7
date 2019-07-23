@@ -2,116 +2,134 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA63FC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592F1C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBC4223BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563870347;
-	bh=w3B1ItU9af+2ThyYfj4Etfner4HloKJVaabGxBGnsmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e2FsvzfpR2vBiJmbH9miaNSUCmkVNFSjRebKdr2Isxw9Zm5/MjwFQtAbVL2hVOhNp
-	 rW159iylq4rz5NA1TliiL9+BTLneohRzDemNYw0pbGus/ecpTcalNZ5IEK/9x8cFRY
-	 44nkXYDgwwprBtfD5gZDsw3vq2SPzPfsEzkqXq+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2247B21BF6
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:26:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oEdGfOJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733244AbfGWIZq (ORCPT
+        id S1733270AbfGWI0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:25:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46686 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 04:26:18 -0400
+Received: from mout.web.de ([212.227.15.4]:34979 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbfGWIZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:25:46 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE6A421BF6;
-        Tue, 23 Jul 2019 08:25:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563870345;
-        bh=w3B1ItU9af+2ThyYfj4Etfner4HloKJVaabGxBGnsmY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p2s4gp6NpnNdE5rAbKTw9d+dy87bdiUMkX4lNqd+x30p3dZSTe0Vl8l1V1OuNVgPM
-         3U0rO05l9Bwc5XZSH9mlo/4JVtine1tevzdsA1d5mH+EbIaLVFGGO7AC07K1eZTX1S
-         RC35YUpUs76VokNk1DobN/Lx2Z/61BDjwftw8bJ0=
-Date:   Tue, 23 Jul 2019 16:25:10 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     andradanciu1997 <andradanciu1997@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        Michal.Vokac@ysoft.com, ping.bai@nxp.com,
-        u.kleine-koenig@pengutronix.de, leoyang.li@nxp.com,
-        aisheng.dong@nxp.com, l.stach@pengutronix.de,
-        pankaj.bansal@nxp.com, angus@akkea.ca, pramod.kumar_1@nxp.com,
-        bhaskar.upadhaya@nxp.com, vabhav.sharma@nxp.com,
-        richard.hu@technexion.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 0/2] Add basic support for pico-pi-imx8m
-Message-ID: <20190723082509.GS15632@dragon>
-References: <20190722102730.15763-1-andradanciu1997@gmail.com>
+        id S1729099AbfGWI0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 04:26:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1563870368;
+        bh=u5H8y3WVDUnYfFIi/whUZ27m3ZihCo1fQyDUenzoXdY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=oEdGfOJnP7wvnZWF3lGzuh7to7nDU0IzBAnOIm6A1xpF1J3ebi6WZMaIt99ASxMB+
+         zRQdZcZnAkCHK0AfTRduzH40qFeuBjaRtjaUCpg/cAXzzD2WAZE6b3O2xAyduROHkw
+         AsHkCA3uRSVybwGH61v9nZ1MYGgw7BoUDobnOg/M=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.83.115]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M09z2-1ihXAq0nfQ-00uMsU; Tue, 23
+ Jul 2019 10:26:08 +0200
+Subject: Re: ss: Checking efficient analysis for network connections
+To:     David Miller <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        netdev@vger.kernel.org
+Cc:     Josh Hunt <johunt@akamai.com>, linux-kernel@vger.kernel.org
+References: <1556674718-5081-1-git-send-email-johunt@akamai.com>
+ <3d1c67c8-7dfe-905b-4548-dae23592edc5@web.de>
+ <20190601.164838.1496580524715275443.davem@davemloft.net>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a9c38b54-c3f8-9e2c-e526-e15c692d1f7c@web.de>
+Date:   Tue, 23 Jul 2019 10:25:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722102730.15763-1-andradanciu1997@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190601.164838.1496580524715275443.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0UeO+q79FBikwwCAvrqth81qIYVmI9m9TsYzYqV9ApCuN9Cmhnj
+ dw2ji5LM3DYoui36ooveisdjFcsejEWT9QwZisRAZv7Ule0rvll5FJmUqJaNAu++1+9XUup
+ 9NdkQDC8YZtzSMB9VtrHmLs0RpUVIDpMLTPJPgc/eVOlkVgGeKn5PZtl9AnHat160MjyiRg
+ 7ymXV0BsdmPSpxE02Sdag==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8VihV7TzLXA=:Ey6P61f8CbpBn2mjLcG77P
+ dJKmDtY47u4ra9M3dbooCc8tUYvBu3meAPtR/eIDBwjbwknS0cq+kVdEVHwNue7tZVQqVqqmk
+ J4LmGnzXRuGyQMAXOkJlJvAX2qFfNvuK395wXdF87ETkked5UllOY949lBYcEUOBEfNS4r69J
+ lPVfVgbTLdqnU7xDwueFgtZLTVeTdBftS6dEJAkao5d86fNa8wRjMt0T5OGJ95wSJ/VE+nHkc
+ JuLcZ4h8uVDvDXlGTU9yW/rApo0tuWNQJpaQIJoMDJbMSazfAxXzE20gIxpASaC2nMKCKWS71
+ WV7bpWDitZeVPWm8gx/5ZQYtyRX7yxttztVkPRU0O/z6LeW+YqYiiOy0rIj1LWM3Bww7oGoTh
+ qguRxIFughFfpknF66EZAZG/8y0eJtjEkrwId5+mZZEu39JCWns2neGQzdmz0b+6erEOOv4MO
+ LcPGOi5t1Z6bV2xy8ND70mwT2e8oGGmiYJRwmszyypAnZUBBBaLPI60L9hXziApwakJeXyzt1
+ x1JW5HTP8uLviwqimnIeCWlI6PX1SKZRgv5/9imMBOsKGQRVXwnK4pKDrE08KZ1C9rsP7Ygsh
+ JZEx4VMF5FIHmP3VHxds+3D1vvsBxBC3Z72zFsS8Q/3/2MWulQ83qdT8gIw9VuWF80PX6Nbp2
+ F7i6J5mn7n6TGagXMWCZXvKCdGdmO7nPUnbu7CynrT9aAgNhSD1/QQZy8AGVWrKVwL8dxNo9g
+ +SEItm8J2XvEdxzWL3fQuLzKnznNZRn2NhC/DqRLZs/h9o+qp0rm9PmIX991QDECceqUJW/Nl
+ uIoI56h2EqOtwsZ4lrrjzbG4Uv72qpgM738KwZhX1r9YCWNS+Ey/EhG/w3+UyTSBaDsDMrT66
+ /Fwj/Ep1goPVe/JdJsvsIhjXJPZCpBFNfCyKp6QNjP83DMWubHpvZgVOdqOxySYH1RpthHlt7
+ 6IAX0DHE2/nx+E/Bddf7JlJDBxhKVigeve9oJkRDqV7GvdunwAgwf7EouPwGU7d2VEzoPQU9t
+ nj3m1RuK89jaufE494BchYS7TSbHfAXbfjoh93jERWrU3hzrw2s9tLCAxGvO5V+0RluGCbFuQ
+ D82ohpfklBP6GFzQNq3gIMevqQYnsHs2v+e
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 01:27:28PM +0300, andradanciu1997 wrote:
-> Add support for TechNexion PICO-PI-IMX8M based on patches from Richard Hu
-> Datasheet is at: https://s3.us-east-2.amazonaws.com/technexion/datasheets/picopiimx8m.pdf
-> 
-> Changes since v5:
->  - removed comment /* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
->  - added "Reviewed-by" tags
-> 
-> Changes since v4:
->  - removed #address-cells and  #size-cells from regulators node
-> 
-> Changes since v3:
->  - renamed pico-pi-8m.dts to imx8mq-pico-pi.dts
->  - moved iomuxc node as the last one
->  - removed pinctrl-assert-gpios property from fec1 node
->  - removed at803x,led-act-blind-workaround, at803x,eee-disabled
->    properties from mdio node
->  - added pinctrl-names = "default" to i2c1 node
->  - changed bd71837 pmic support properties according to
->    Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
->  - removed A53_0 node
-> 
-> Changes since v2:
->  - changed PICO-PI-8M bord compatible from wand,imx8mq-pico-pi to
->    technexion,pico-pi-imx8m
->  - removed bootargs property
->  - removed regulators node and put fixed regulator directly under root node
->  - changed node name from usb_otg_vbus to regulator-usb-otg-vbus
->  - removed pinctrl-names property from iomuxc node
->  - removed wand-pi-8m container node
->  - sorted pinctrl nodes alphabetically
->  - removed tusb320_irqgrp, tusb320_irqgrp nodes because there is no upstream
->    driver
->  - changed properties' order in usb_dwc3_1 node
-> 
-> Changes since v1:
->  - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
->  - removed pinctrl_csi1, pinctrl_wifi_ctrl
->  - used generic name for pmic
->  - removed gpo node
->  - delete regulator-virtuals node
->  - remove always-on property from buck1-8 and ldo3-7
->  - remove pmic-buck-uses-i2c-dvs property for buck1-4
-> 
-> Andra Danciu (1):
->   dt-bindings: arm: fsl: Add the pico-pi-imx8m board
-> 
-> Richard Hu (1):
->   arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
+> This whole discussion has zero to do with what text format 'ss' outputs.
 
-Applied both, thanks.
+Do any more software developers care for the clarification of
+additional data formats for the usage of specific information by tools
+around socket statistics (from the directory =E2=80=9C/proc/net=E2=80=9D a=
+nd related ones)?
+
+Would you like to achieve any improvements in this area?
+
+Regards,
+Markus
