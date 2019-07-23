@@ -2,119 +2,86 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD9BC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E207C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87B4218B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:34:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFvJt7jM"
+	by mail.kernel.org (Postfix) with ESMTP id 6D7932229A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563903319;
+	bh=c7WbfEZO8l0xJnHGIJhz9LLf49HfIgCTSXIEG4NqnSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pUOBMKR6lci7Ih3A6Kgy672LnwCBGk4otF9pdlzwW8wYbE3AfbGFNTrv0zBDfHnBR
+	 CZd6Nke7CV1Z66lJVJ5VFhugmL8mX/XkVgLsnjwYvnCtvcF71C/g7q9wBOtV1qCnhY
+	 xFdBT5n6UmLlrZAq4/RvNz76TtGpDCoa6reGp40A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391116AbfGWReE (ORCPT
+        id S2391123AbfGWRfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 13:34:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33519 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388408AbfGWReD (ORCPT
+        Tue, 23 Jul 2019 13:35:18 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36145 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfGWRfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 13:34:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c14so20820917plo.0;
-        Tue, 23 Jul 2019 10:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=RvkJCESD/CzjFS1KF/Km/SwmbhukObYIhQgynXRi43Y=;
-        b=OFvJt7jM5i+5flNvPymUu2grjKYxQLI+Ue38nlnfmT9uKM8LzKoZup+x5xVh8Ey7UD
-         q4ahJ/wr4tHijZz4awmUMuRAI1dQAJqxZhO+QMNqOjvFYhB6Y/4GlaKhyLKD35H7dUol
-         Uy4K+/6bxiHcxghZedGjlpNTFbwvMv4+ixJoosTU8yDa1hrUb4Q/Wgjqi3amLPgFGYOK
-         Bkry6Ytx9Yxy4/m97IDI+bHOgbYy/7FP9ybFRfjZUiqPe/XEt21rtN3j+mLK3wjIuvMX
-         tbRWOocUuR+pURAJdMxExJnJPV8WahdQxZMty1g7oYioNc1Vy638hbvkedO6GInDMVT3
-         95Og==
+        Tue, 23 Jul 2019 13:35:18 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g67so35126243wme.1;
+        Tue, 23 Jul 2019 10:35:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=RvkJCESD/CzjFS1KF/Km/SwmbhukObYIhQgynXRi43Y=;
-        b=IYvMahxzsAAnGCK+CLhSIWlE3CC624wLYk9ACTOeRBBObvS9NpQCynsA9iNI5qW4+/
-         1s4FERBVR1OTLqR7mH9vluC1hL3mx3W7lneKLXjXNKQyK/iNeVxt7kxWrQKJQVqk0lgI
-         S84kGH0YzY2VVugpByzX6a+dM+zs4R/uIr7/VxNMl87cKf6gEdPPwPMVEnv5ug8Df5tg
-         ukFMFdTQFjV7LxPVrwGS++KdqwvStIVdckgCFZu5ke0dRWrKDV7zDub6W+d2Y0oQarNp
-         COfy81dbznyV2e2sJTIA9tDzlBdrl7JfSDEWgu4HoF7017BvylZ3w4c+OD36k4dRBHnU
-         EwfQ==
-X-Gm-Message-State: APjAAAV8DUJ1vwwUmCDeNRArpLM061TionOt2JX1e1JrJvmbFP6JRHLG
-        ctm2IDvhOz4eCDvCX9tFiZQ=
-X-Google-Smtp-Source: APXvYqwGQLiTfDI9SBHWYaZ9CwHrfVyV37jq8D6e5I6AkYOX2lZLeDWIDHgJf7h1Rvimw3Dng5QcJA==
-X-Received: by 2002:a17:902:848b:: with SMTP id c11mr81172081plo.217.1563903242938;
-        Tue, 23 Jul 2019 10:34:02 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id c69sm54574734pje.6.2019.07.23.10.33.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 10:34:02 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 10:33:51 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     syzbot <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     airlied@linux.ie, alexander.deucher@amd.com,
-        amd-gfx@lists.freedesktop.org, ast@kernel.org, bpf@vger.kernel.org,
-        christian.koenig@amd.com, daniel@iogearbox.net,
-        david1.zhou@amd.com, dri-devel@lists.freedesktop.org,
-        dvyukov@google.com, john.fastabend@gmail.com, leo.liu@amd.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Message-ID: <5d3744ff777cc_436d2adb6bf105c41c@john-XPS-13-9370.notmuch>
-In-Reply-To: <0000000000002cec2e058e5c7e63@google.com>
-References: <5d37433a832d_3aba2ae4f6ec05bc3a@john-XPS-13-9370.notmuch>
- <0000000000002cec2e058e5c7e63@google.com>
-Subject: Re: Re: kernel panic: stack is corrupted in pointer
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KMzb3lQV6/HQhyFJeMHm9RDfYopFx3+fyKqozQwxa7c=;
+        b=FXkf+ad5WEsPsVuNEd/akwpuJKav1wHTStpjJYvBSXd8YPr+ZoULeKQARb8R5APOL+
+         xAAdyN4nCWgcubQe7ZGgRVJODuiyX4wLtiHAixtjaUKZjVz8SRbuvx8z3ZlFxndAYSGc
+         ZiGkHVHZC1w+JXLSPjCbAWn9TNzSJwqKmF+FMHb+7r+cLD8ENT2hv7bCejGwyv7HH4Me
+         RxUN5cRkqqALd2O//S2T8AHs6PG2R/ThWFuW6YS6gA2Y2EVRLhDtpnDls94gx3A47l9O
+         nDuewgQ5G4wwmeTYq9pIwgpilN1JclU8dXHobvx/21vTb9TaOdgmLMKEkZ6HbL0kv4ec
+         Sp8A==
+X-Gm-Message-State: APjAAAW/VuE5awNVPco24LeBip5jcZn+hhFwCRFulgtSrZcA6tAm0pul
+        2ZkyIUBjzZF9/SleEhB5fLyqY1LC
+X-Google-Smtp-Source: APXvYqwNRzEAQq/pFaRBFGVCDCI0KRPQ7Kg+0eycJPNDnuZpclNN2Fxt/Sfrz/Iq2t20plmQXSrtTQ==
+X-Received: by 2002:a05:600c:212:: with SMTP id 18mr20452940wmi.88.1563903315440;
+        Tue, 23 Jul 2019 10:35:15 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.239])
+        by smtp.googlemail.com with ESMTPSA id c11sm75919141wrq.45.2019.07.23.10.35.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 10:35:14 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 19:35:12 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/14] mfd: max14577: convert to i2c_new_dummy_device
+Message-ID: <20190723173512.GA6317@kozik-lap>
+References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com>
+ <20190722172623.4166-7-wsa+renesas@sang-engineering.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190722172623.4166-7-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot wrote:
-> > Dmitry Vyukov wrote:
-> >> On Wed, Jul 17, 2019 at 10:58 AM syzbot
-> >> <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com> wrote:
-> >> >
-> >> > Hello,
-> >> >
-> >> > syzbot found the following crash on:
-> >> >
-> >> > HEAD commit:    1438cde7 Add linux-next specific files for 20190716
-> >> > git tree:       linux-next
-> >> > console output:  
-> >> https://syzkaller.appspot.com/x/log.txt?x=13988058600000
-> >> > kernel config:   
-> >> https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-> >> > dashboard link:  
-> >> https://syzkaller.appspot.com/bug?extid=79f5f028005a77ecb6bb
-> >> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >> > syz repro:       
-> >> https://syzkaller.appspot.com/x/repro.syz?x=111fc8afa00000
+On Mon, Jul 22, 2019 at 07:26:13PM +0200, Wolfram Sang wrote:
+> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
+> ERRPTR which we use in error handling.
 > 
-> >>  From the repro it looks like the same bpf stack overflow bug. +John
-> >> We need to dup them onto some canonical report for this bug, or this
-> >> becomes unmanageable.
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
 > 
-> > Fixes in bpf tree should fix this. Hopefully, we will squash this once  
-> > fixes
-> > percolate up.
-> 
-> > #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
-> 
-> ">" does not look like a valid git branch or commit.
-> 
+> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
 
-try again,
+I do not have the HW for testing anymore but looks good:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git master
+Best regards,
+Krzysztof
+
