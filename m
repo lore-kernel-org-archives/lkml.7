@@ -2,71 +2,62 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E2C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E14C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF422238E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDF32238E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:43:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733036AbfGWGle (ORCPT
+        id S2388058AbfGWGnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 02:41:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39301 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727845AbfGWGld (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 02:41:33 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hpoUH-0005X3-Oa; Tue, 23 Jul 2019 08:41:25 +0200
-Date:   Tue, 23 Jul 2019 08:41:24 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Mike Lothian <mike@fireburn.co.uk>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
-In-Reply-To: <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907230837400.1659@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
- <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com> <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de> <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
- <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 23 Jul 2019 02:43:46 -0400
+Received: from muru.com ([72.249.23.125]:55566 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727845AbfGWGnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 02:43:45 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C9F0C808C;
+        Tue, 23 Jul 2019 06:44:10 +0000 (UTC)
+Date:   Mon, 22 Jul 2019 23:43:42 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Eyal Reizer <eyalreizer@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: nl80211 wlcore regression in next
+Message-ID: <20190723064342.GQ5447@atomide.com>
+References: <20190625073837.GG5447@atomide.com>
+ <2570f4087d6e3356df34635a0380ec8ce06c9159.camel@sipsolutions.net>
+ <20190625080019.GH5447@atomide.com>
+ <7f74087fef1e554e0aeb82a6cec4113727487928.camel@sipsolutions.net>
+ <20190722130213.GN5447@atomide.com>
+ <262fc08905febd29f9abd0870dbe674fcc5bfb3e.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <262fc08905febd29f9abd0870dbe674fcc5bfb3e.camel@sipsolutions.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019, Masahiro Yamada wrote:
-> Right.
-> I was able to build with ld.gold
+* Johannes Berg <johannes@sipsolutions.net> [190723 05:08]:
+> Hi,
 > 
-> So, we can use gold, depending on the kernel configuration.
+> > Looks like this one crept back as the fix is missing from v5.3-rc1.
+> > 
+> > Forgot to include in the pull request?
+> 
+> More like forgot to send the pull request, my bad. I eventually realized
+> a couple of days ago and it'll be coming upstream soon. Sorry about
+> that.
 
-That's exactly the problem. It breaks with random kernel configurations
-which is not acceptable except for people who know what they are doing.
+OK thanks,
 
-I'm tired of dealing with half baken fixes and 'regression' reports. Either
-there is an effort to fix the issues with gold like the clang people fix
-their issues or it needs to be disabled. We have a clear statement that
-gold developers have other priorities.
-
-Thanks,
-
-	tglx
+Tony
