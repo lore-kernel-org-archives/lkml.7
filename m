@@ -2,73 +2,135 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F818C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2C2C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595E321E6B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D29A21BF6
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:31:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="firBOTyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbfGWBbJ (ORCPT
+        id S2387801AbfGWBbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:31:09 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52638 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbfGWBbI (ORCPT
+        Mon, 22 Jul 2019 21:31:36 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:22454 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbfGWBbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:31:08 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EF0E115305EB4;
-        Mon, 22 Jul 2019 18:31:07 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 18:31:07 -0700 (PDT)
-Message-Id: <20190722.183107.298639131733640783.davem@davemloft.net>
-To:     arnd@arndb.de
-Cc:     dhowells@redhat.com, keescook@chromium.org,
-        linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH net-next] rxrpc: shut up -Wframe-larger-than= warnings
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190722145828.1156135-1-arnd@arndb.de>
-References: <20190722145828.1156135-1-arnd@arndb.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 22 Jul 2019 18:31:08 -0700 (PDT)
+        Mon, 22 Jul 2019 21:31:35 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6N1VGIT023670;
+        Tue, 23 Jul 2019 10:31:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6N1VGIT023670
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563845477;
+        bh=4FI5v7yChWDKy40TghmAxFQlb9RspR/YzR92MYe74dA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=firBOTyJ0pdoQGtFGnzZ6q4adxXd87IsePKVeEFn8ghWsWvxlrraAyE+U/2RTvo3F
+         D+HW8iJwj3RNY/UNdo88jhZ3HAvp9Y6Evsvr2fDBcqMSvcEf9kVq/aMAx3rIfMa1JT
+         grXHpOEFtx7LRjfEnNeP9cmaMux6A3Qdao8LAzt3oNuOxJJtNGKdlzqETe276gPEbA
+         AQcVdpU3wlhNdpZaEeOrgvPd+hOEFF+eKImq6kmDQpxxqN+EWIVTws9gRSRNEjDgR8
+         PBtR8RrxiLO9EQhbZp1XDR4KY83bWcSg0h4b+oOFXmS+SJWeSkN7FqKGbGVeWAJKrr
+         Duz71cJFbRrBA==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id h28so27713083vsl.12;
+        Mon, 22 Jul 2019 18:31:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAWoSpgoZzRc6+KSGirlpg8/hhDmDsIAPOmO/nvMUCkl49pVxV6Q
+        DhGETZqAB7sC2H25KEC/T4rE1gLUzpvP24dCYD4=
+X-Google-Smtp-Source: APXvYqz7MjjaBBE2iAX4oDJ6Ko66XfysBBN8YWUa9IqFK09d14YsOVeWpMdByphk9B/+3vRqmd9GfoRG1icX7+vEmKY=
+X-Received: by 2002:a67:fc45:: with SMTP id p5mr45866193vsq.179.1563845475801;
+ Mon, 22 Jul 2019 18:31:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
+ <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+ <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
+ <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de> <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
+In-Reply-To: <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 23 Jul 2019 10:30:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
+Message-ID: <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
+To:     Mike Lothian <mike@fireburn.co.uk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 22 Jul 2019 16:58:12 +0200
+On Sat, Jul 20, 2019 at 6:12 PM Mike Lothian <mike@fireburn.co.uk> wrote:
+>
+> On Wed, 17 Jul 2019 at 08:57, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Wed, 17 Jul 2019, Masahiro Yamada wrote:
+> > > On Wed, Jul 17, 2019 at 4:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > > So instead of dealing with attempts to duct tape gold support without
+> > > > understanding the root cause and without support from the gold folks, fail
+> > > > the build when gold is detected.
+> > > >
+> > >
+> > > The code looks OK in the build system point of view.
+> > >
+> > > Please let me confirm this, just in case:
+> > > For now, we give up all architectures, not only x86, right?
+> >
+> > Well, that's the logical consequence of a statement which says: don't use
+> > gold for the kernel.
+> >
+> > > I have not not heard much from other arch maintainers.
+> >
+> > Cc'ed linux-arch for that matter.
+> >
+> > Thanks,
+> >
+> >         tglx
+>
+> Hi
+>
+> I've done a bit more digging, I had a second machine that was building
+> Linus's tree just fine with ld.gold
+>
+> I tried forcing ld.bfd on the problem machine and got this:
+>
+> ld.bfd: arch/x86/boot/compressed/head_64.o: warning: relocation in
+> read-only section `.head.text'
+> ld.bfd: warning: creating a DT_TEXTREL in object
+>
+> I had a look at the differences in the kernel configs and noticed this:
+>
+> CONFIG_RANDOMIZE_BASE=y
+> CONFIG_X86_NEED_RELOCS=y
+> CONFIG_PHYSICAL_ALIGN=0x1000000
+> CONFIG_DYNAMIC_MEMORY_LAYOUT=y
+> CONFIG_RANDOMIZE_MEMORY=y
+> CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING=0x0
+>
+> Unsetting CONFIG_RANDOMIZE_BASE=y gets things working for me with ld.gold again
 
-> rxkad sometimes triggers a warning about oversized stack frames
-> when building with clang for a 32-bit architecture:
-> 
-> net/rxrpc/rxkad.c:243:12: error: stack frame size of 1088 bytes in function 'rxkad_secure_packet' [-Werror,-Wframe-larger-than=]
-> net/rxrpc/rxkad.c:501:12: error: stack frame size of 1088 bytes in function 'rxkad_verify_packet' [-Werror,-Wframe-larger-than=]
-> 
-> The problem is the combination of SYNC_SKCIPHER_REQUEST_ON_STACK()
-> in rxkad_verify_packet()/rxkad_secure_packet() with the relatively
-> large scatterlist in rxkad_verify_packet_1()/rxkad_secure_packet_encrypt().
-> 
-> The warning does not show up when using gcc, which does not inline
-> the functions as aggressively, but the problem is still the same.
-> 
-> Marking the inner functions as 'noinline_for_stack' makes clang
-> behave the same way as gcc and avoids the warning.
-> This may not be ideal as it leaves the underlying problem
-> unchanged. If we want to actually reduce the stack usage here,
-> the skcipher_request and scatterlist objects need to be moved
-> off the stack.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-David H., I assume you will take this into your tree.
+Right.
+I was able to build with ld.gold
+
+So, we can use gold, depending on the kernel configuration.
+
+
+> In light of this - can we drop this patch?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
