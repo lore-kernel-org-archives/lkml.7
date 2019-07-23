@@ -2,96 +2,120 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D37C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B29C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D30C21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D8621841
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zxlu3jmx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCHVNknd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391550AbfGWSoL (ORCPT
+        id S2391558AbfGWSpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:44:11 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36122 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731007AbfGWSoK (ORCPT
+        Tue, 23 Jul 2019 14:45:21 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46884 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728243AbfGWSpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:44:10 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l21so19850012pgm.3;
-        Tue, 23 Jul 2019 11:44:10 -0700 (PDT)
+        Tue, 23 Jul 2019 14:45:20 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z1so44229528wru.13;
+        Tue, 23 Jul 2019 11:45:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=l9EaeUD1EfcP9AM3vJoniX4CCo7K4dxxFRLzu0GHOrU=;
-        b=Zxlu3jmxs13GUbDTkNap3i3qoStYhkYZf7U+liKMi8gUVWJjM8iVC3bvvQ3kAp+Z+k
-         2Sm1QuSxi7HlSgVXqHpokA2gfnj9+U4Ddgr33lGYdD/l0tU3Qi+UGnwxKWcWfUESiu21
-         sUI6i5dL/V3Dq3LeXgExblTqRbw9u7R2dM6HGY5HPacn6Tl4wr1B2ci9LahiJfEv58zA
-         TMSb45C9Fm3t4WteOpWzy6LEYoNQZF725a8PgsBP3HmNahf1qUo3gn1BgSphtC9x3wn0
-         f3c5oc5Tw1gMFZxlI6GAILHgpwtrFqt9gZ5/tzeo+vpYRGGlGm2lXK8qkRLdh2UFcuHu
-         lpGg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5uJhkLXJdGxLJxdwTXXjbtfErmAZdUMl9oepnhVnpJU=;
+        b=KCHVNkndiWJSE0kTr3cYX3OnwDHz9/b3q+v6QwNjzUH61qyGRuSe4P2eo3ZE4NwOrf
+         xfqW2OzYPUKqMNRHbt26vA7ZMjGAJMF92jul6OW7k//Mdxxc3utIM/pjDCYohTfRPrdd
+         1XPzRDlmA7tEd0sNJavA0Ffo5bNDFi8tv8KI8Xl1iDTt/ukbtRQZLX5Nh6+3b+bIxtV+
+         J+9T8sABvI8OXdd/nC3eYbB0h21KU4JPf2Tb5+qzT2rG0lfeDLXYtParESonPFKsHc98
+         Lnun+5anztR5gJaS1lQRGUTgP8y6V3SCqfYdFtDdAjAQa1Vv4LkCoU6VqPVn31WlV+Jq
+         5kUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=l9EaeUD1EfcP9AM3vJoniX4CCo7K4dxxFRLzu0GHOrU=;
-        b=uU8bZ61rPVnxkwPJBjbG7yFG+TXOrcZWWDzdStfOZanFRzIjJTVLcdAPpJe8WBr+sM
-         e8/NcfDHRXmMyp3d39qmsI3zNVrlOsCdC5uklJwxlCzkh0H8+4dyEE4vDXNiApN5KFQw
-         hX4SvmaYuDcgm91lvVaUhUhZMCIoCwVeF/9k1GQdW1AwVERrHHlyM1ufSdl4a6TKY0QD
-         mxjdVmif+wRUBA1juMehqSodTlKE3k/jKJL1ELgD/6cwaVPE62PaNVkzeMGGiKE7BZsD
-         3u0ncemi0cmtcxW4itLLA82EZgh2u09l9nZsmICQVqe7hoofY8JDizeTJV0Gd6MhxXp9
-         jcAQ==
-X-Gm-Message-State: APjAAAVJjIzApzTY35RPi1mUHefZFRGNwZUxVahwRoVweBZFZW/fS9E9
-        kl/ZNkbUgUwJ2knTfzDWyG5By3hjLVc=
-X-Google-Smtp-Source: APXvYqwJa3j/o2XLe1UaxJif7QRqQrhRsy7eCeK6wiIXqp5NzQp36EeLuZ8ufe4P3fZPIK/jd7Ihsw==
-X-Received: by 2002:a17:90a:5887:: with SMTP id j7mr82726493pji.136.1563907449726;
-        Tue, 23 Jul 2019 11:44:09 -0700 (PDT)
-Received: from localhost ([123.213.206.190])
-        by smtp.gmail.com with ESMTPSA id g11sm41007308pgu.11.2019.07.23.11.44.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 11:44:09 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 03:44:06 +0900
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
-        Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>,
-        Klaus Birkelund Jensen <birkelund@gmail.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Miwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH V2] lightnvm: introduce pr_fmt for the previx nvm
-Message-ID: <20190723184406.GA28357@minwoo-desktop>
-References: <20190723184243.4347-1-minwoo.im.dev@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5uJhkLXJdGxLJxdwTXXjbtfErmAZdUMl9oepnhVnpJU=;
+        b=b/ZvO1VOcFzcmMMge+Fx5WC29xnlfMUnmRzq7gHwn5+yOeFMmc45m4A9isiTWXJLJx
+         65pURbzme1fdvN/XxZ9eUh82SrVzQKkwNQG4sBA9e3f2shgSY3Du0BEGaGHUAeYTxRCN
+         LzYmdg/9kdh7TIpDu7FuwVKU53W1VKmVpohDOV0WsI83sxRbn1tuj3jVX25ZfZFH64Bs
+         o76UrP8UeLDbkX3mPcFzglD6+V6BT8t1GWZnEhK3ThrsWdtJ2wY6jtHxkiSxrpRv8Eu7
+         0EeKEBkBMvpbd6GpfQblOPe9d5skYUwJalk2BvXWw8yHFHZ5d+7IOVxA5klgW0YYDGA2
+         RKuw==
+X-Gm-Message-State: APjAAAVqGoiVzZzol4mt4PSKRM/MMdPdDTLAerWp7blAvpugYDRwHkqq
+        lWZP8+MxcwqPmaReR3Lcz4ebHuUKgOBQ8ylzgdw=
+X-Google-Smtp-Source: APXvYqyHjjqtHDgklRtxzyV71CQoAnoB9+E/YFBvxbOAhcaWr0Ba2y8dm7WcuR5DTH12Yf9Afxc8MjOei6MHmqudqBk=
+X-Received: by 2002:adf:f94a:: with SMTP id q10mr59242784wrr.341.1563907518245;
+ Tue, 23 Jul 2019 11:45:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190723184243.4347-1-minwoo.im.dev@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190723134120.28441-1-colin.king@canonical.com>
+In-Reply-To: <20190723134120.28441-1-colin.king@canonical.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 23 Jul 2019 14:45:07 -0400
+Message-ID: <CADnq5_PE1rDzqd13MPWJmeK_BUS0EthH=WcZ0wruTy55yarnpw@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amdgpu: remove redundant assignment to pointer 'ring'
+To:     Colin King <colin.king@canonical.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Leo Liu <leo.liu@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-07-24 03:42:43, Minwoo Im wrote:
-> all the pr_() family can have this prefix by pr_fmt.
-> 
-> Changes to V1:
->   - Squashed multiple lines to make it short (Chaitanya)
-> 
-> Cc: Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-> Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-> Reviewed-by: Javier González <javier@javigon.com>
+On Tue, Jul 23, 2019 at 9:41 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The pointer 'ring' is being assigned a value that is never
+> read, hence the assignment is redundant and can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+> index 93b3500e522b..a2a8ca942f34 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
+> @@ -1331,7 +1331,6 @@ static int vcn_v1_0_pause_dpg_mode(struct amdgpu_device *adev,
+>                                 WREG32_SOC15(UVD, 0, mmUVD_JRBC_RB_CNTL,
+>                                                         UVD_JRBC_RB_CNTL__RB_RPTR_WR_EN_MASK);
+>
+> -                               ring = &adev->vcn.inst->ring_dec;
+>                                 WREG32_SOC15(UVD, 0, mmUVD_RBC_RB_WPTR,
+>                                                    RREG32_SOC15(UVD, 0, mmUVD_SCRATCH2) & 0x7FFFFFFF);
+>                                 SOC15_WAIT_ON_RREG(UVD, 0, mmUVD_POWER_STATUS,
 
-Please ignore this one, sent a new one with V3.
+While we don't use ring here, I think the assignment is useful to
+delineate that we are no longer working with the jpeg ring, but rather
+the decode ring.  The mmUVD_RBC_RB_WPTR register is part of the decode
+ring, not jpeg.  We would normally use the ring->wptr like we do for
+the other rings, but in this particular case, the value happens to be
+shadowed to a scratch register due to the way the dynamic power gating
+works on that ring.
 
-Sorry for the noise.
+Alex
+
+> --
+> 2.20.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
