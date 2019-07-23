@@ -2,120 +2,99 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F088DC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E57CC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48C82239F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ke3RPY0n"
+	by mail.kernel.org (Postfix) with ESMTP id 02596227B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563904361;
+	bh=nmc8uaRDy6gzgZmALXLogPzoQsDDnnuylDBBg1jtn1c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=yaBHlpZkiKqzcukkwEl7rlZfnb+v6NWHx9eXvjUeaobvc3/J4lcakWzglRQm++Ike
+	 PC0Tkr35P5LA+wa9wCr52qLEpaaWm8Gi/+Q1daZMWJowYLihK0504cwD4Cuvqkyx6c
+	 EzXKlMK8I+N0is2ESW1M3aoaO0Sj2hX0F/Gd1oLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391203AbfGWRsy (ORCPT
+        id S2391216AbfGWRwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 13:48:54 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46869 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732899AbfGWRsy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 13:48:54 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z1so44078403wru.13;
-        Tue, 23 Jul 2019 10:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lw64+rRIlfN9llW/JDiD/kh+iAbtqzU9FtUm2AviLUY=;
-        b=Ke3RPY0nRkGmJqorFON4W7UvAFnkA1mTmK8gK+LxqpYaD0WyDD4gpEOy9WsiKfyMAF
-         ckDHJKdnFRzE9HTqkBBdOaYhlR5E/tb2JQV5L+QmIyzLEeetcUt041iAxRTcIXJSssDL
-         xFcEbyhOSfvP6/WUTcANQZ2cxsbzehXZpQnWoAK5tWbQ5+zgaoAXS2v1UG0SPhDIsv2E
-         +sCFF9b2EcSE/6YySPLIpwiCJYhxkvkMNdD5uCxyTokdTkPN6kjFKvkoM3dpGNBCMAr9
-         88nNP/eTPYMxt28eJph8/yqDKWHTZUuZowGAwm0op/JW6H8FBGEAFbFPC0Hl7SD9Q5vv
-         0aug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lw64+rRIlfN9llW/JDiD/kh+iAbtqzU9FtUm2AviLUY=;
-        b=i0FWOtBMREEDc+9OlgTM4G2FO2IYhOLmP1RswPeEohD4To0NbUnc5RVFmAOQYeJQMT
-         NDg6LAi8qmkMvglXtHi7bpdI3dWhGpydV1jZ1QywbgSZ4K4QUsvRjNKSQA70kgB1h9SY
-         75x3pHwc+zNA3pg/ntnVjSgSGGcqpUK9u/Yb6dzX8EbLdxWRO0RSzYcS5nxn2xD45uZB
-         G21PprFI4UtwYVSCWD4bYoYvGpFO/aV/lJX63f+HPBWGIPn0x8kc49AQhkoBw4KXxmyZ
-         q78xsLxGTnSD6EHq5Ggt0hprX7RIumvNh3RpXOao5GsAW0f2GX5BZWVAVWrZpA2FrbaB
-         nrsg==
-X-Gm-Message-State: APjAAAVxmxzdvZfnmC4TfHzvnrobP8Vwz9bbYgjcu62/udKfYbQC6UzJ
-        VK6MuIreW9y62CGztEwcd4o=
-X-Google-Smtp-Source: APXvYqxdFMbhlyWIB3rurr1U5IoeuLXQYUOJJbXjUXp92CDnV3P5Zl4OeajfZDbeHqLTFBexZfqAgQ==
-X-Received: by 2002:a5d:4284:: with SMTP id k4mr79701010wrq.194.1563904131910;
-        Tue, 23 Jul 2019 10:48:51 -0700 (PDT)
-Received: from [192.168.8.14] (nat-113.starnet.cz. [178.255.168.113])
-        by smtp.gmail.com with ESMTPSA id r123sm39419602wme.7.2019.07.23.10.48.50
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 10:48:50 -0700 (PDT)
-From:   Evgeny Kolesnikov <evgenyz@gmail.com>
-Subject: Re: [PATCH 0/5] Add support for WD MyCloud EX2 Ultra (+ versatile
- UART-based restart/poweroff drivers)
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>, linux-pm@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-References: <cover.1563822216.git.evgenyz@gmail.com>
- <20190723015631.GI8972@lunn.ch>
-Message-ID: <c2ffe662-6975-351b-87b8-af760984ef4d@gmail.com>
-Date:   Tue, 23 Jul 2019 19:48:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 13:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391206AbfGWRwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 13:52:39 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E752229A;
+        Tue, 23 Jul 2019 17:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563904358;
+        bh=nmc8uaRDy6gzgZmALXLogPzoQsDDnnuylDBBg1jtn1c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=rduY142VQa1IsnoNlMdQo6TGmPN6qSG3GZUkSwSTd6A59arYA0evBnpSt3fmDAemz
+         CkugF3lhK7nLyByuBN8u6yAmLgwlLNa501KqRSNFgeI5W55M+Tw7sOQqUQ4mptCv23
+         hbqbBoA5xQYu9iVktqkbMIy0z5Q0SabAWFEhYJvw=
+Message-ID: <3622a5fe9f13ddfd15b262dbeda700a26c395c2a.camel@kernel.org>
+Subject: Re: [PATCH] mm: check for sleepable context in kvfree
+From:   Jeff Layton <jlayton@kernel.org>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, lhenriques@suse.com, cmaiolino@redhat.com,
+        Christoph Hellwig <hch@lst.de>
+Date:   Tue, 23 Jul 2019 13:52:36 -0400
+In-Reply-To: <20190723131212.445-1-jlayton@kernel.org>
+References: <20190723131212.445-1-jlayton@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20190723015631.GI8972@lunn.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 03:56, Andrew Lunn wrote:
-> On Mon, Jul 22, 2019 at 09:53:00PM +0200, Evgeny Kolesnikov wrote:
->>
->> The difference between uart-poweroff and qnap-poweroff is small, but important:
->> uart-poweroff is able to send to an MCU a command of arbitrary length, and the command
->> itself is defined in a DTS file for a specific device/board, thus making this driver
->> applicable to wider range of devices.
+On Tue, 2019-07-23 at 09:12 -0400, Jeff Layton wrote:
+> A lot of callers of kvfree only go down the vfree path under very rare
+> circumstances, and so may never end up hitting the might_sleep_if in it.
+> Ensure that when kvfree is called, that it is operating in a context
+> where it is allowed to sleep.
 > 
-> There is a lot of replicated code here, and in the original
-> qnap-poweroff.c driver. Please consolidate it by extending the current
-> driver. It should be easy to add a new compatible string, and turn
-> power_off_cfg.cmd into an array.
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Luis Henriques <lhenriques@suse.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  mm/util.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Hi, Andrew.
+FWIW, I started looking at this after Luis sent me some ceph patches
+that fixed a few of these problems. I have not done extensive testing
+with this patch, so maybe consider this an RFC for now.
 
-I've considered extending qnap driver, but I have some doubts about this 
-approach.
+HCH points out that xfs uses kvfree as a generic "free this no matter
+what it is" sort of wrapper and expects the callers to work out whether
+they might be freeing a vmalloc'ed address. If that sort of usage turns
+out to be prevalent, then we may need another approach to clean this up.
 
-First of all there is only a poweroff counterpart. As there is no
-qnap-restart driver, what should I do with uart-restart? Is it OK to 
-have xxx-restart-poweroff driver (never saw anything like that)?
+> diff --git a/mm/util.c b/mm/util.c
+> index e6351a80f248..81ec2a003c86 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -482,6 +482,8 @@ EXPORT_SYMBOL(kvmalloc_node);
+>   */
+>  void kvfree(const void *addr)
+>  {
+> +	might_sleep_if(!in_interrupt());
+> +
+>  	if (is_vmalloc_addr(addr))
+>  		vfree(addr);
+>  	else
 
-While I can add cmd as a parameter to qnap driver (having it converted
-into an array) it should be optional as original qnap relies on two 
-hardcoded values for its devices. And having a non-qnap device with this 
-driver in DT without defined cmd would not make any sense. It feels 
-kinda ugly.
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-Wouldn't it be more fitting to have these two generic drivers and then 
-retire old qnap driver while moving everything that uses it to the new one?
-
-Thanks for the review.
-
-EK.
