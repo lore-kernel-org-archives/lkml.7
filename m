@@ -6,56 +6,55 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B476C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC188C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC662239F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC732184E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390872AbfGWQcr (ORCPT
+        id S2390877AbfGWQeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:32:47 -0400
-Received: from verein.lst.de ([213.95.11.211]:43200 "EHLO verein.lst.de"
+        Tue, 23 Jul 2019 12:34:36 -0400
+Received: from verein.lst.de ([213.95.11.211]:43210 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731167AbfGWQcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:32:47 -0400
+        id S1728505AbfGWQef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:34:35 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1084268B02; Tue, 23 Jul 2019 18:32:45 +0200 (CEST)
-Date:   Tue, 23 Jul 2019 18:32:44 +0200
+        id 7270068B02; Tue, 23 Jul 2019 18:34:33 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 18:34:33 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: hmm_range_fault related fixes and legacy API removal v2
-Message-ID: <20190723163244.GE1655@lst.de>
-References: <20190722094426.18563-1-hch@lst.de> <20190723152737.GO15331@mellanox.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>, mbrugger@suse.com,
+        hch@lst.de, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [RFC] ARM: bcm2835: register dmabounce on devices hooked to
+ main interconnect
+Message-ID: <20190723163433.GA2234@lst.de>
+References: <20190723161934.4590-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190723152737.GO15331@mellanox.com>
+In-Reply-To: <20190723161934.4590-1-nsaenzjulienne@suse.de>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 03:27:41PM +0000, Jason Gunthorpe wrote:
-> Ignoring the STAGING issue I've tried to use the same guideline as for
-> -stable for -rc .. 
-> 
-> So this is a real problem, we definitely hit the locking bugs if we
-> retry/etc under stress, so I would be OK to send it to Linus for
-> early-rc.
-> 
-> However, it doesn't look like the 1st patch is fixing a current bug
-> though, the only callers uses blocking = true, so just the middle
-> three are -rc?
+> +static int bcm2835_needs_bounce(struct device *dev, dma_addr_t dma_addr, size_t size)
 
-nonblocking isn't used anywher, but it is a major, major API bug.
-Your call, but if it was my tree I'd probably send it to Linus.
+Too long line..
+
+> +void __init bcm2835_init_early(void)
+> +{
+> +	if(of_machine_is_compatible("brcm,bcm2711"))
+
+Odd formatting.
+
+Otherwise this looks good to me.
