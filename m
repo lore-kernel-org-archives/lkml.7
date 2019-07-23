@@ -2,152 +2,115 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E198C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F682C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40ABB22387
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563850790;
-	bh=PJiN02ZaWspoUTjLls5lAtxfgWphvYqbJjQlh5XlcHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=feZJt/OUeDkgwtda8YbIBV+7EV4l3p0Vo5Sn6pkNdojDk8cmB9G0MlCxrxACMRNKY
-	 JFe9O7LCsAuGG+iBAyjDD5l5Ukd5gZ9w7e0EElF9AMPlFraLFzgfVCd8OSeZtwjj/m
-	 jK8ziaSuqkFHW/1pvwwWBCzc3AmR1JfwTQ3riyW4=
+	by mail.kernel.org (Postfix) with ESMTP id ED67F21911
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:03:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uEMAOsdu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbfGWC7t (ORCPT
+        id S1732241AbfGWDDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 22:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbfGWC7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 22:59:48 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 404C320840;
-        Tue, 23 Jul 2019 02:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563850787;
-        bh=PJiN02ZaWspoUTjLls5lAtxfgWphvYqbJjQlh5XlcHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ekX8CnU6zapYYvnuUZQglOYWEjDnb0Z33UZj+V8z3FqIpiedzymGLNV7yOQA5gBCS
-         82jTTq18J7YH9gEscNYcBWx3ZZk1Gsq4X/6rNI/DFCQyKAn1pVjj0QCPkNNsy5ILrW
-         EPRaVfMdj2cCzVq1Nt8OV9yxTC9f9iKoA+etvGw0=
-Date:   Tue, 23 Jul 2019 10:59:17 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com, p.zabel@pengutronix.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        viresh.kumar@linaro.org, daniel.baluta@nxp.com, ping.bai@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V4 1/2] dt-bindings: reset: imx7: Add support for i.MX8MM
-Message-ID: <20190723025916.GL3738@dragon>
-References: <20190705085406.22483-1-Anson.Huang@nxp.com>
+        Mon, 22 Jul 2019 23:03:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38251 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729393AbfGWDDK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 23:03:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y15so18345605pfn.5;
+        Mon, 22 Jul 2019 20:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r2PIc45fLOPPxRnw58ZdCNVPeGStUV8A+U5733nMGk0=;
+        b=uEMAOsduwZ/lk+xiUkc3bCfdyXhIJJhmJt+0y3daxVnxtBiubasUHEjtlO7T7hSDtO
+         x1QvM9sHxkB+PZlR2lsHwshX8jGuBHYux7hyzW3pyve9demlOHVlHdE7aiyEtTFdeu/N
+         Gk3r5lMMAMqIWEN010UVnmQ4NrnfTPANJiopuOo876oG9AYbcxW7w8nmhfFAM2zFm4ZX
+         /sl+dJx8+6PDo1rBbEnlcgGwhEUUmyluz9JUHyOPnMSOxB1HcvgRxP2NA+uTGyU+10GA
+         /gMVaTc+ia6m2wGT7fSxLCnUJQi00lnSd005fdDcs4qK2Lhgqfgt+T43qcSQI3DulTZQ
+         2Q6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r2PIc45fLOPPxRnw58ZdCNVPeGStUV8A+U5733nMGk0=;
+        b=tG/iqxzrlP5dqZl0K7sj48ZW2CjlZ4pjtS68spxraAKPJIWgXiW9e+O0/LsAp7wxok
+         K3AtfUEtriGhxJzwKwgygmlOhffJnlg6G5wNB8yaGvIa/7d8fl+yXDLBZY1WI/kTb+Lh
+         FtcZ6V5BDz1bk0Q6XA4OxB/BtW2Y25Ozwr2KSDeFFH3CeMmH2ncWVNJrw3AI0UToHfor
+         +ieIS70wgD0xgRgx3twW4lA2/8w4jdgUU/WbBZb13Aaa33WoA9+T5W18ubR39u3eXcKX
+         Mvz+YjHFRPyVjHS5fIGHEe4CuUasUSWFFiDniaRyHsTjI/josTEWQ6Z7oeqsLq6pgApD
+         PIjQ==
+X-Gm-Message-State: APjAAAXNkiJzt530WoEBsXBXyvM4iF8RyD9rkQoY8GbxR4K4ZxrzMrP9
+        jLFhsEJoy1+8rBr/wq6FS2U=
+X-Google-Smtp-Source: APXvYqyIXC6ryEvwJINJQcXlKpL1beZ7lNtBfcqpTzWXWu5PdtQ9EmcTCFhYw06abQMnDOQN2jrazg==
+X-Received: by 2002:a17:90a:2768:: with SMTP id o95mr79841919pje.37.1563850989964;
+        Mon, 22 Jul 2019 20:03:09 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id e189sm11920930pgc.15.2019.07.22.20.03.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 20:03:09 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Peter Chen <Peter.Chen@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] usb: chipidea: msm: Use device-managed registration API
+Date:   Tue, 23 Jul 2019 11:02:07 +0800
+Message-Id: <20190723030206.2919-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190705085406.22483-1-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 04:54:05PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> i.MX8MM can reuse i.MX8MQ's reset driver, update the compatible
-> property and related info to support i.MX8MM.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Use devm_reset_controller_register to get rid
+of manual unregistration.
 
-Hi Philipp,
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/usb/chipidea/ci_hdrc_msm.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Let me know if you want me to pick this up.
+diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipidea/ci_hdrc_msm.c
+index bb4645a8ca46..067542e84aea 100644
+--- a/drivers/usb/chipidea/ci_hdrc_msm.c
++++ b/drivers/usb/chipidea/ci_hdrc_msm.c
+@@ -216,7 +216,7 @@ static int ci_hdrc_msm_probe(struct platform_device *pdev)
+ 	ci->rcdev.ops = &ci_hdrc_msm_reset_ops;
+ 	ci->rcdev.of_node = pdev->dev.of_node;
+ 	ci->rcdev.nr_resets = 2;
+-	ret = reset_controller_register(&ci->rcdev);
++	ret = devm_reset_controller_register(&pdev->dev, &ci->rcdev);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -272,7 +272,6 @@ static int ci_hdrc_msm_probe(struct platform_device *pdev)
+ err_iface:
+ 	clk_disable_unprepare(ci->core_clk);
+ err_fs:
+-	reset_controller_unregister(&ci->rcdev);
+ 	return ret;
+ }
+ 
+@@ -284,7 +283,6 @@ static int ci_hdrc_msm_remove(struct platform_device *pdev)
+ 	ci_hdrc_remove_device(ci->ci);
+ 	clk_disable_unprepare(ci->iface_clk);
+ 	clk_disable_unprepare(ci->core_clk);
+-	reset_controller_unregister(&ci->rcdev);
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
 
-Shawn
-
-> ---
-> Changes since V3:
-> 	- Add comments to those reset indices to indicate which are NOT supported on i.MX8MM.
-> ---
->  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  6 +++--
->  include/dt-bindings/reset/imx8mq-reset.h           | 28 +++++++++++-----------
->  2 files changed, 18 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> index 13e0951..c2489e4 100644
-> --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> @@ -8,6 +8,7 @@ Required properties:
->  - compatible:
->  	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
->  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
-> +	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
->  - reg: should be register base and length as documented in the
->    datasheet
->  - interrupts: Should contain SRC interrupt
-> @@ -46,5 +47,6 @@ Example:
->  
->  
->  For list of all valid reset indices see
-> -<dt-bindings/reset/imx7-reset.h> for i.MX7 and
-> -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
-> +<dt-bindings/reset/imx7-reset.h> for i.MX7,
-> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
-> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM
-> diff --git a/include/dt-bindings/reset/imx8mq-reset.h b/include/dt-bindings/reset/imx8mq-reset.h
-> index 57c5924..f17ef2a 100644
-> --- a/include/dt-bindings/reset/imx8mq-reset.h
-> +++ b/include/dt-bindings/reset/imx8mq-reset.h
-> @@ -38,26 +38,26 @@
->  #define IMX8MQ_RESET_PCIEPHY_PERST		27
->  #define IMX8MQ_RESET_PCIE_CTRL_APPS_EN		28
->  #define IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF	29
-> -#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30
-> +#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30	/* i.MX8MM does NOT support */
->  #define IMX8MQ_RESET_DISP_RESET			31
->  #define IMX8MQ_RESET_GPU_RESET			32
->  #define IMX8MQ_RESET_VPU_RESET			33
-> -#define IMX8MQ_RESET_PCIEPHY2			34
-> -#define IMX8MQ_RESET_PCIEPHY2_PERST		35
-> -#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36
-> -#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37
-> -#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38
-> -#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39
-> -#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40
-> -#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41
-> -#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42
-> -#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43
-> +#define IMX8MQ_RESET_PCIEPHY2			34	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_PCIEPHY2_PERST		35	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43	/* i.MX8MM does NOT support */
->  #define IMX8MQ_RESET_DDRC1_PRST			44
->  #define IMX8MQ_RESET_DDRC1_CORE_RESET		45
->  #define IMX8MQ_RESET_DDRC1_PHY_RESET		46
-> -#define IMX8MQ_RESET_DDRC2_PRST			47
-> -#define IMX8MQ_RESET_DDRC2_CORE_RESET		48
-> -#define IMX8MQ_RESET_DDRC2_PHY_RESET		49
-> +#define IMX8MQ_RESET_DDRC2_PRST			47	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_DDRC2_CORE_RESET		48	/* i.MX8MM does NOT support */
-> +#define IMX8MQ_RESET_DDRC2_PHY_RESET		49	/* i.MX8MM does NOT support */
->  
->  #define IMX8MQ_RESET_NUM			50
->  
-> -- 
-> 2.7.4
-> 
