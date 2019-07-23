@@ -2,119 +2,136 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63681C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B54C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299EF2238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563851465;
-	bh=6ZLp1Ao516Xi5yX/o+F/v5VGsTLVx5pvjjiDbR7GZBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qcx8gem+xyTiAM8gu3LtXkpFgSiRjkjJbujmI22xhdFbuSe/Sk1rfiJjT9+sZAw4U
-	 NFkoVuEi2zeaGiULK5NhhBi4kwIBon8nak1PGWPDxhPk9J33+IVI6qS+etHyPCnUWX
-	 5LmgzKVc6dsmIyD79gE0VOgFKuezm0La0GU+UzL8=
+	by mail.kernel.org (Postfix) with ESMTP id B5ADA2083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x4Y4Khhm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbfGWDLE (ORCPT
+        id S1730113AbfGWDNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 23:11:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfGWDLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 23:11:03 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D2722389;
-        Tue, 23 Jul 2019 03:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563851462;
-        bh=6ZLp1Ao516Xi5yX/o+F/v5VGsTLVx5pvjjiDbR7GZBA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OGGGiT8QOdJg9RdG+oxoEjE9bnK/WKrcOfeFVh30P0G3lR2DsILVJcTdfHpIvfNxZ
-         i8/62lrK76t5JWOCEJyhHkozXiWpz5qiSnpS8YPdUB+YTIHfBUISWk/jb7qc6TYnnY
-         BVpLmSBrnY6iapm0KGnxex/PixMNeiNz9U1stR1M=
-Date:   Tue, 23 Jul 2019 11:10:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stefan Riedmueller <s.riedmueller@phytec.de>
-Cc:     s.hauer@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, martyn.welch@collabora.com,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 02/10] ARM: dts: imx6ul: segin: Add boot media to dts
- filename
-Message-ID: <20190723031032.GM3738@dragon>
-References: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
- <1562656767-273566-3-git-send-email-s.riedmueller@phytec.de>
+        Mon, 22 Jul 2019 23:13:10 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41797 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfGWDNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 23:13:10 -0400
+Received: by mail-ot1-f68.google.com with SMTP id o101so42539721ota.8
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 20:13:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qRk0XCUOOeLhkURXIsrcmBZYRHclzXxoMPAdT26EhIw=;
+        b=x4Y4KhhmBcGhMNRZHlH8uiKQqB7vPuwd9a3vzI/zUfipkeumIIxotuiLo/omBUZo1V
+         I4yEENG2NJUeqgWbP1S7e+ALHfprLJHn0HSpbkd3gTfSAJAhc7mDQvXrKA9zm1A2m786
+         /cvOT/9UgYlY1auQIn+F0rRuWUy1Qdqd5ONcxYNl502flymtImq5ZwDi9EUAlsslM6FR
+         +L5kCSnrHL8qYuXoSb8ERiW3n5QlIqnThtyaAS1MAm7K+zC/omTtboVBCT/izDVm35/7
+         6cdpMss5uZ4caCUgvGkE+eHNrp1Kki6vY7MNrEXIPrHCfePxLgKg+ccP5BOClq03YZiN
+         odIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qRk0XCUOOeLhkURXIsrcmBZYRHclzXxoMPAdT26EhIw=;
+        b=C0t1Gll1v5u67v4Z35auFPcU+ie5ObpTVgFm2N2/VoEqqI51G0oXPwea49wqIPQ2MB
+         4JVCA9mjj1OcG7t8j/bfD2tKJVWtoA8GqYWxmlvm9kidZmC7zXgZKccJOmysUNbd87vX
+         K1U7P37IGHR1agOs0qwiwzE8Zz0XsxPAKtq+eccbWZcKmTjqrXjMSgKQkBctwtw9Fx4/
+         ZJRq7syVbCZA6sgQby1NGSYomnxX+mc90MiBgbriv1i0UFi6QuMnY7ObPaSr5dxAMyWJ
+         IpuSY5BiPugyWxG1/bhIG/AhKEqMpcoEwjuQt2xpAxhwHlrZ1P+iMIrjFraWhcj6HBZH
+         UHjA==
+X-Gm-Message-State: APjAAAU+TAzCeFbpKRkoEao+jzKBbXTV+sXGJogY1A1kJIpsvrVjfOXi
+        IbGM3TpY6Te8FKQA+cRaSSYXuxo+8/efL4VO+oSALQ==
+X-Google-Smtp-Source: APXvYqy1vfQdOXDImruQOKc6WqzDViO9H0BO7gpFE3uIOrbEzPmKXH6lGJp5FeQx/o3OtwHJ/PUcvdKi5AteHgD6TkQ=
+X-Received: by 2002:a9d:590d:: with SMTP id t13mr38048922oth.281.1563851589136;
+ Mon, 22 Jul 2019 20:13:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562656767-273566-3-git-send-email-s.riedmueller@phytec.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <cover.1563782844.git.baolin.wang@linaro.org> <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
+ <20190722141940.GA26528@ming.t460p>
+In-Reply-To: <20190722141940.GA26528@ming.t460p>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 23 Jul 2019 11:12:57 +0800
+Message-ID: <CAMz4ku+R8OdAQ2S91Xe=V-nZL1Nu5g=_xpHqQCzNF6JeBHY3rw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/7] blk-mq: Export blk_mq_hctx_has_pending() function
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 09:19:19AM +0200, Stefan Riedmueller wrote:
-> There is now a PHYTEC phyCORE-i.MX 6UL with eMMC instead of NAND flash
-> available. The dts filename needs to reflect that to differentiate both.
-> 
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> ---
->  arch/arm/boot/dts/Makefile                                           | 2 +-
->  ...l-phytec-segin-ff-rdk.dts => imx6ul-phytec-segin-ff-rdk-nand.dts} | 5 +++--
->  2 files changed, 4 insertions(+), 3 deletions(-)
->  rename arch/arm/boot/dts/{imx6ul-phytec-segin-ff-rdk.dts => imx6ul-phytec-segin-ff-rdk-nand.dts} (85%)
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index e1924b06f3cb..668b57c8cc57 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -573,7 +573,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
->  	imx6ul-opos6uldev.dtb \
->  	imx6ul-pico-hobbit.dtb \
->  	imx6ul-pico-pi.dtb \
-> -	imx6ul-phytec-segin-ff-rdk.dtb \
-> +	imx6ul-phytec-segin-ff-rdk-nand.dtb \
->  	imx6ul-tx6ul-0010.dtb \
->  	imx6ul-tx6ul-0011.dtb \
->  	imx6ul-tx6ul-mainboard.dtb \
-> diff --git a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk.dts b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-> similarity index 85%
-> rename from arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk.dts
-> rename to arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-> index 1e59183a2f7c..dc06029c5701 100644
-> --- a/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk.dts
-> +++ b/arch/arm/boot/dts/imx6ul-phytec-segin-ff-rdk-nand.dts
-> @@ -10,8 +10,9 @@
->  #include "imx6ul-phytec-segin-peb-eval-01.dtsi"
->  
->  / {
-> -	model = "PHYTEC phyBOARD-Segin i.MX6 UltraLite Full Featured";
-> -	compatible = "phytec,imx6ul-pbacd10", "phytec,imx6ul-pcl063", "fsl,imx6ul";
-> +	model = "PHYTEC phyBOARD-Segin i.MX6 UltraLite Full Featured with NAND";
-> +	compatible = "phytec,imx6ul-pbacd10-nand", "phytec,imx6ul-pbacd10",
+Hi Ming,
 
-The board compatibles need to be documented.
+On Mon, 22 Jul 2019 at 22:19, Ming Lei <ming.lei@redhat.com> wrote:
+>
+> On Mon, Jul 22, 2019 at 09:09:36PM +0800, Baolin Wang wrote:
+> > Some SD/MMC host controllers can support packed command or packed request,
+> > that means we can package several requests to host controller at one time
+> > to improve performence. And this patch set will introduce MMC packed function
+> > to support this feature by following patches.
+> >
+> > To support MMC packed function, the MMC layer need to know if there are
+> > requests are pending now in hardware queue to help to combine requests
+> > as much as possible. If we know there are requests pending in hardware
+> > queue, then we should not package requests to host controller immediately,
+> > instead we should collect more requests into MMC packed queue to be packed
+> > to host controller with packed condition.
+> >
+> > Thus export this function for MMC packed function.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  block/blk-mq.c         |    3 ++-
+> >  include/linux/blk-mq.h |    1 +
+> >  2 files changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/block/blk-mq.c b/block/blk-mq.c
+> > index b038ec6..5bd4ef9 100644
+> > --- a/block/blk-mq.c
+> > +++ b/block/blk-mq.c
+> > @@ -63,12 +63,13 @@ static int blk_mq_poll_stats_bkt(const struct request *rq)
+> >   * Check if any of the ctx, dispatch list or elevator
+> >   * have pending work in this hardware queue.
+> >   */
+> > -static bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
+> > +bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
+> >  {
+> >       return !list_empty_careful(&hctx->dispatch) ||
+> >               sbitmap_any_bit_set(&hctx->ctx_map) ||
+> >                       blk_mq_sched_has_work(hctx);
+> >  }
+> > +EXPORT_SYMBOL_GPL(blk_mq_hctx_has_pending);
+>
+> Just wondering why you don't use the 'last' field of 'struct blk_mq_queue_data',
+> which is passed to .queue_rq(), and supposed for implementing batch submission.
 
-Shawn
+The 'last' field of 'struct blk_mq_queue_data' does not indicate the
+last request in the hardware queue, since we want to collect more
+requests from block layer as much as possible to be packed later.
 
-> +		     "phytec,imx6ul-pcl063", "fsl,imx6ul";
->  };
->  
->  &adc1 {
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+And from blk_mq_do_dispatch_sched()--->blk_mq_dispatch_rq_list()--->
+queue_rq(), I always get 'bd.last = true', which is not useful to
+combine requests for MMC packed queue. Maybe I missed anything?
+
+Thanks for your comments.
+
+-- 
+Baolin Wang
+Best Regards
