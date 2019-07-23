@@ -2,198 +2,235 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C18C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692EAC7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E5921903
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF1721901
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:49:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="SxAiEfbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389984AbfGWMsk (ORCPT
+        id S2389877AbfGWMth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:48:40 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:34129 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389720AbfGWMsI (ORCPT
+        Tue, 23 Jul 2019 08:49:37 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:46850 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726186AbfGWMth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:48:08 -0400
-Received: by mail-io1-f69.google.com with SMTP id u84so47187997iod.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:48:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=PPTlSfVf47u6ouVSdoOPjxM9QHmmrq+36NqQqM5yMq0=;
-        b=oWuT4L3nB6xNuHAJ8HF5rC8OIaFf4dCxYZzvFWr+PYTAWmVwQatM2aSQMMzpovg1PF
-         A4LQmZSm4hFsGKfbImqsTWePyp95d0JH2wr3693nBhLZkbbcGnKcpnvBsz3FgdXHyCXU
-         tSmm7JBiKiOPBFnYIoGOCa8P22RWZxf0KWvTUjyuHdE7x2yI6Q+9gvRGaONNeX7rzIiu
-         ZB5Bv9S/iH8AlSYLA1zAwbAR06cg1X92KaDio3jY8t5/RZt/46e71sEJZzdAkdo9HOj8
-         RPvxa3EvSFwUXBv/5aCUnBKs6A21NPBHvR0JTMQ6pdkLi75DQ+lIGVWGEXNhtjXHuNQx
-         Mm+A==
-X-Gm-Message-State: APjAAAVZLnTNaThg+ayNLBzgLuwu0+w5n0EMwil7xcvK2q7CCu0MXvC+
-        Lne3BDx+JCs922tVugYRRTBfJx0NVpwEc+xXFwTbt2ci5FCD
-X-Google-Smtp-Source: APXvYqzJrrVV8vtr6nkWlSgee5VRWcFw8foAgy5usx6TAt8XjkPNeni/VVmGIGjiZSXc8z0K1XRqF9Ar1NOTELsG18X5xQ8HFxKt
+        Tue, 23 Jul 2019 08:49:37 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 1C2922E14BD;
+        Tue, 23 Jul 2019 15:49:33 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id fmQPnrek3M-nWNePTP1;
+        Tue, 23 Jul 2019 15:49:33 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1563886173; bh=zurua77u+0xi6TbhWif5eKYYbACOpA6ckuYdIyXtbcw=;
+        h=Message-ID:Date:To:From:Subject;
+        b=SxAiEfbMTe6g9rgjKAYpYyEw55A0/Cpf/8g/VkVC2mITNAE9pvdqSLU2VYWVp8Lkl
+         0Pbz4BSHklhJhaDSvJbL/2kwJxymf9bSMWsd/Qj9XGAs1qI+mLpTe+FsKgU2gWpDM7
+         PWIgws5dlKgyWtMCh/8WPswvwbcAOiLtGgIAc8wg=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38b3:1cdf:ad1a:1fe1])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id TrvRdaTa6V-nW6KTqe5;
+        Tue, 23 Jul 2019 15:49:32 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] mm/backing-dev: show state of all bdi_writeback in debugfs
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Tue, 23 Jul 2019 15:49:32 +0300
+Message-ID: <156388617236.3608.2194886130557491278.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8252:: with SMTP id n18mr2456697ioo.230.1563886087780;
- Tue, 23 Jul 2019 05:48:07 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 05:48:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bb4247058e589a20@google.com>
-Subject: KASAN: use-after-free Read in usbhid_power
-From:   syzbot <syzbot+ef5de9c4f99c4edb4e49@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Currently /sys/kernel/debug/bdi/$maj:$min/stats shows only root bdi wb.
+With CONFIG_CGROUP_WRITEBACK=y there is one for each memory cgroup.
 
-syzbot found the following crash on:
+This patch shows here state of each bdi_writeback in form:
 
-HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b13e78600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=ef5de9c4f99c4edb4e49
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15482210600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1139b07c600000
+<global state>
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ef5de9c4f99c4edb4e49@syzkaller.appspotmail.com
+Id: 1
+Cgroup: /
+<root wb state>
 
-==================================================================
-BUG: KASAN: use-after-free in usbhid_power+0xca/0xe0  
-/drivers/hid/usbhid/hid-core.c:1234
-Read of size 8 at addr ffff8881ce8a4008 by task syz-executor373/1763
+Id: xxx
+Cgroup: /path
+<cgroup wb state>
 
-CPU: 0 PID: 1763 Comm: syz-executor373 Not tainted 5.2.0-rc6+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack /lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e /lib/dump_stack.c:113
-  print_address_description+0x67/0x231 /mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 /mm/kasan/report.c:317
-  kasan_report+0xe/0x20 /mm/kasan/common.c:614
-  usbhid_power+0xca/0xe0 /drivers/hid/usbhid/hid-core.c:1234
-  hid_hw_power /./include/linux/hid.h:1038 [inline]
-  hidraw_open+0x20d/0x740 /drivers/hid/hidraw.c:282
-  chrdev_open+0x219/0x5c0 /fs/char_dev.c:413
-  do_dentry_open+0x497/0x1040 /fs/open.c:778
-  do_last /fs/namei.c:3416 [inline]
-  path_openat+0x1430/0x3ff0 /fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 /fs/namei.c:3563
-  do_sys_open+0x3c0/0x580 /fs/open.c:1070
-  do_syscall_64+0xb7/0x560 /arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x401ad0
-Code: 01 f0 ff ff 0f 83 c0 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-44 00 00 83 3d fd 5b 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 94 0b 00 00 c3 48 83 ec 08 e8 fa 00 00 00
-RSP: 002b:00007ffff378ac48 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000401ad0
-RDX: 0000000000000000 RSI: 0000000000000800 RDI: 00007ffff378ac50
-RBP: 6666666666666667 R08: 000000000000000f R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402af0
-R13: 0000000000402b80 R14: 0000000000000000 R15: 0000000000000000
+Id: yyy
+Cgroup: /path2
+<cgroup wb state>
 
-Allocated by task 21:
-  save_stack+0x1b/0x80 /mm/kasan/common.c:71
-  set_track /mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc /mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 /mm/kasan/common.c:462
-  slab_post_alloc_hook /mm/slab.h:437 [inline]
-  slab_alloc_node /mm/slub.c:2748 [inline]
-  __kmalloc_node_track_caller+0xee/0x370 /mm/slub.c:4363
-  __kmalloc_reserve.isra.0+0x39/0xe0 /net/core/skbuff.c:138
-  __alloc_skb+0xef/0x5a0 /net/core/skbuff.c:206
-  alloc_skb /./include/linux/skbuff.h:1054 [inline]
-  alloc_uevent_skb+0x7b/0x210 /lib/kobject_uevent.c:289
-  uevent_net_broadcast_untagged /lib/kobject_uevent.c:325 [inline]
-  kobject_uevent_net_broadcast /lib/kobject_uevent.c:408 [inline]
-  kobject_uevent_env+0x8ee/0x1150 /lib/kobject_uevent.c:592
-  device_add+0xade/0x16f0 /drivers/base/core.c:2110
-  usb_set_configuration+0xdf6/0x1670 /drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 /drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 /drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 /drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 /drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 /drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 /drivers/base/bus.c:454
-  __device_attach+0x217/0x360 /drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 /drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 /drivers/base/core.c:2111
-  usb_new_device.cold+0x6a4/0xe61 /drivers/usb/core/hub.c:2536
-  hub_port_connect /drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change /drivers/usb/core/hub.c:5213 [inline]
-  port_event /drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1abd/0x3550 /drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 /kernel/workqueue.c:2269
-  process_scheduled_works /kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 /kernel/workqueue.c:2417
-  kthread+0x30b/0x410 /kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
+...
 
-Freed by task 243:
-  save_stack+0x1b/0x80 /mm/kasan/common.c:71
-  set_track /mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x130/0x180 /mm/kasan/common.c:451
-  slab_free_hook /mm/slub.c:1421 [inline]
-  slab_free_freelist_hook /mm/slub.c:1448 [inline]
-  slab_free /mm/slub.c:2994 [inline]
-  kfree+0xd7/0x280 /mm/slub.c:3949
-  skb_free_head+0x8b/0xa0 /net/core/skbuff.c:588
-  skb_release_data+0x41f/0x7c0 /net/core/skbuff.c:608
-  skb_release_all+0x46/0x60 /net/core/skbuff.c:662
-  __kfree_skb /net/core/skbuff.c:676 [inline]
-  consume_skb /net/core/skbuff.c:736 [inline]
-  consume_skb+0xc0/0x2f0 /net/core/skbuff.c:730
-  skb_free_datagram+0x16/0xf0 /net/core/datagram.c:328
-  netlink_recvmsg+0x65e/0xea0 /net/netlink/af_netlink.c:2001
-  sock_recvmsg_nosec /net/socket.c:877 [inline]
-  sock_recvmsg /net/socket.c:894 [inline]
-  sock_recvmsg+0xca/0x110 /net/socket.c:890
-  ___sys_recvmsg+0x271/0x5a0 /net/socket.c:2448
-  __sys_recvmsg+0xe9/0x1b0 /net/socket.c:2497
-  do_syscall_64+0xb7/0x560 /arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881ce8a4000
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 8 bytes inside of
-  1024-byte region [ffff8881ce8a4000, ffff8881ce8a4400)
-The buggy address belongs to the page:
-page:ffffea00073a2900 refcount:1 mapcount:0 mapping:ffff8881dac02a00  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000200 ffff8881dac02a00
-raw: 0000000000000000 00000000800e000e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881ce8a3f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8881ce8a3f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881ce8a4000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                       ^
-  ffff8881ce8a4080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881ce8a4100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ mm/backing-dev.c |  106 +++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 93 insertions(+), 13 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index e8e89158adec..3e752c4bafaf 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -45,7 +45,7 @@ static void bdi_debug_init(void)
+ static int bdi_debug_stats_show(struct seq_file *m, void *v)
+ {
+ 	struct backing_dev_info *bdi = m->private;
+-	struct bdi_writeback *wb = &bdi->wb;
++	struct bdi_writeback *wb = v;
+ 	unsigned long background_thresh;
+ 	unsigned long dirty_thresh;
+ 	unsigned long wb_thresh;
+@@ -65,43 +65,123 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
+ 			nr_dirty_time++;
+ 	spin_unlock(&wb->list_lock);
+ 
+-	global_dirty_limits(&background_thresh, &dirty_thresh);
+-	wb_thresh = wb_calc_thresh(wb, dirty_thresh);
+-
+ #define K(x) ((x) << (PAGE_SHIFT - 10))
++
++	/* global state */
++	if (wb == &bdi->wb) {
++		global_dirty_limits(&background_thresh, &dirty_thresh);
++		wb_thresh = wb_calc_thresh(wb, dirty_thresh);
++		seq_printf(m,
++			   "BdiDirtyThresh:     %10lu kB\n"
++			   "DirtyThresh:        %10lu kB\n"
++			   "BackgroundThresh:   %10lu kB\n"
++			   "bdi_list:           %10u\n",
++			   K(wb_thresh),
++			   K(dirty_thresh),
++			   K(background_thresh),
++			   !list_empty(&bdi->bdi_list));
++	}
++
++	/* cgroup header */
++#ifdef CONFIG_CGROUP_WRITEBACK
++	if (bdi->capabilities & BDI_CAP_CGROUP_WRITEBACK) {
++		size_t buflen, len;
++		char *buf;
++
++		seq_printf(m, "\nId: %d\nCgroup: ", wb->memcg_css->id);
++		buflen = seq_get_buf(m, &buf);
++		if (buf) {
++			len = cgroup_path(wb->memcg_css->cgroup, buf, buflen);
++			seq_commit(m, len <= buflen ? len : -1);
++			seq_putc(m, '\n');
++		}
++	}
++#endif /* CONFIG_CGROUP_WRITEBACK */
++
+ 	seq_printf(m,
+ 		   "BdiWriteback:       %10lu kB\n"
+ 		   "BdiReclaimable:     %10lu kB\n"
+-		   "BdiDirtyThresh:     %10lu kB\n"
+-		   "DirtyThresh:        %10lu kB\n"
+-		   "BackgroundThresh:   %10lu kB\n"
+ 		   "BdiDirtied:         %10lu kB\n"
+ 		   "BdiWritten:         %10lu kB\n"
+ 		   "BdiWriteBandwidth:  %10lu kBps\n"
++		   "BdiAvgWriteBwidth:  %10lu kBps\n"
+ 		   "b_dirty:            %10lu\n"
+ 		   "b_io:               %10lu\n"
+ 		   "b_more_io:          %10lu\n"
+ 		   "b_dirty_time:       %10lu\n"
+-		   "bdi_list:           %10u\n"
+ 		   "state:              %10lx\n",
+ 		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
+ 		   (unsigned long) K(wb_stat(wb, WB_RECLAIMABLE)),
+-		   K(wb_thresh),
+-		   K(dirty_thresh),
+-		   K(background_thresh),
+ 		   (unsigned long) K(wb_stat(wb, WB_DIRTIED)),
+ 		   (unsigned long) K(wb_stat(wb, WB_WRITTEN)),
+ 		   (unsigned long) K(wb->write_bandwidth),
++		   (unsigned long) K(wb->avg_write_bandwidth),
+ 		   nr_dirty,
+ 		   nr_io,
+ 		   nr_more_io,
+ 		   nr_dirty_time,
+-		   !list_empty(&bdi->bdi_list), bdi->wb.state);
++		   wb->state);
+ #undef K
+ 
+ 	return 0;
+ }
+-DEFINE_SHOW_ATTRIBUTE(bdi_debug_stats);
++
++static void *bdi_debug_stats_start(struct seq_file *m, loff_t *ppos)
++{
++	struct backing_dev_info *bdi = m->private;
++	struct bdi_writeback *wb;
++	loff_t pos = *ppos;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
++		if (pos-- == 0)
++			return wb;
++	return NULL;
++}
++
++static void *bdi_debug_stats_next(struct seq_file *m, void *v, loff_t *ppos)
++{
++	struct backing_dev_info *bdi = m->private;
++	struct bdi_writeback *wb = v;
++
++	list_for_each_entry_continue_rcu(wb, &bdi->wb_list, bdi_node) {
++		++*ppos;
++		return wb;
++	}
++	return NULL;
++}
++
++static void bdi_debug_stats_stop(struct seq_file *m, void *v)
++{
++	rcu_read_unlock();
++}
++
++static const struct seq_operations bdi_debug_stats_seq_ops = {
++	.start	= bdi_debug_stats_start,
++	.next	= bdi_debug_stats_next,
++	.stop	= bdi_debug_stats_stop,
++	.show	= bdi_debug_stats_show,
++};
++
++static int bdi_debug_stats_open(struct inode *inode, struct file *file)
++{
++	struct seq_file *m;
++	int ret;
++
++	ret = seq_open(file, &bdi_debug_stats_seq_ops);
++	if (!ret) {
++		m = file->private_data;
++		m->private = inode->i_private;
++	}
++	return ret;
++}
++
++static const struct file_operations bdi_debug_stats_fops = {
++	.open		= bdi_debug_stats_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= seq_release,
++};
+ 
+ static void bdi_debug_register(struct backing_dev_info *bdi, const char *name)
+ {
+
