@@ -2,242 +2,106 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E93C3C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B70C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2958229ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8D1218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qg5NJFPj"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Mw172/vX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392098AbfGWV3N (ORCPT
+        id S2392066AbfGWVam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:29:13 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35017 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392088AbfGWV3N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:29:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u14so19788915pfn.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OWdCNqJGYsKwQKw/7IBES5RNvU+nb+rFc9xiJalsj58=;
-        b=Qg5NJFPjWQQQ2q5x01/eq25u5SEH83Pxvo14WqJDSZd3cGt5CAEPj53pgdBFERmjbd
-         QviotmsjvSxjsQozER/H3dov5IvBAENwvmcGPXW0Oc+HScbpnSPoNKgqTWTHexIhsgaR
-         opcvX8pwKVc0cLLKWN3/SxUdoyk80n7xEAb4o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OWdCNqJGYsKwQKw/7IBES5RNvU+nb+rFc9xiJalsj58=;
-        b=ueg7X1pQ50+dyccJypusvWpQ7EJ80d1Ht6aJKaNPbIBQWCWb+oF27CLe4wvqRd5T37
-         clGpy4fT+ZeXvbuTYmG2Ii5KPxlk+XJfEM3JOE8OUFRyij0cVj3H8IhDqN/UknQ/G8O+
-         9rCDJc7UIhZotwspVDkZ/8lF+Cyw6VybqbbTNa8w92UVpyD9sV0lXjHdhCBpnzGlp3ki
-         WhUAQ2nLyWSARNh6iFqPUAp/zuy8FAN7Gk/gssVAORvJWL+WYTu8owt7dvEXX5Obqz4B
-         nf0mWcf49c3z2OJiNKa32cte7lIGs+wjuMLaYN6nF7XWOyF138MvbR9dRpuh9DHhVznW
-         0NlA==
-X-Gm-Message-State: APjAAAWuqDLM2ZcfWFLRW5ZV88GtFRU20Aph+OaLilgy631b0BZ0pg2G
-        adCdZmtltvaEf0SJ5/jV9sBHbA==
-X-Google-Smtp-Source: APXvYqwf4iVZp03BX78Fy5ezKUKc0oj+TStEy17ep291SxD/1qwlFzQBSjPCZnLJ97UypCJiwTSxBQ==
-X-Received: by 2002:aa7:956d:: with SMTP id x13mr7863044pfq.132.1563917352419;
-        Tue, 23 Jul 2019 14:29:12 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k6sm53223018pfi.12.2019.07.23.14.29.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 14:29:11 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 14:29:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stephen Kitt <steve@sk2.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
-Message-ID: <201907231428.51E52AD6A@keescook>
-References: <cover.1563841972.git.joe@perches.com>
- <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
- <20190722213527.18deeaf07ae036cce57035ea@linux-foundation.org>
- <24bcbaee40a4174cb5d9fa876f88b2a1869a4870.camel@perches.com>
+        Tue, 23 Jul 2019 17:30:42 -0400
+Received: from mout.gmx.net ([212.227.17.21]:39241 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731616AbfGWVam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 17:30:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1563917421;
+        bh=ToULRC4irrsdH84boQnpkm5KiZJ47FZlgR9fRYxOddQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Mw172/vXJLuMiXnhcNcxkFLc+1aKNWEZ8PiRunLmcf3dhaVRLy3tt6tEfy4Hy2XqC
+         PyJ35c47qRSvmmSrJacGYW026ubBeNnkC3r0iI352l8MRe5TksbAyXXfEfq2ZaSc1L
+         AXwOe3IbD6QKY7TOSbx6Apv6B+fCU/iCs06Tt8DM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [172.17.9.180] ([87.191.208.243]) by mail.gmx.com (mrgmx101
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0LtVLE-1iWxrd16mq-010plk; Tue, 23
+ Jul 2019 23:30:21 +0200
+Subject: Re: Build regressions/improvements in v5.3-rc1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     linux-um@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>
+References: <20190723080441.19110-1-geert@linux-m68k.org>
+ <CAMuHMdVuVqXnW8SEnpcbvh8agYvPh775rv9tmV9kGUa6Q2wcwA@mail.gmail.com>
+From:   Helge Deller <deller@gmx.de>
+Message-ID: <738c1891-6ef3-8cd1-d25e-b9a36255e3e7@gmx.de>
+Date:   Tue, 23 Jul 2019 23:30:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24bcbaee40a4174cb5d9fa876f88b2a1869a4870.camel@perches.com>
+In-Reply-To: <CAMuHMdVuVqXnW8SEnpcbvh8agYvPh775rv9tmV9kGUa6Q2wcwA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:T+b1tb8faTODi5y7+U6ZeYg349SPA/Fh6VMkO4Lv68DcHiqWs38
+ yMSq6plB/gXOGf08wjD9XUjitvj8jKdC/8/JaMSNHP9vDAOO7Co7tl7rnvZFkj9FzwyC3he
+ Osdq0XH55YVvzrSSpZfz5GyKiXcltMbOZz4gbER+z1VPvO52/fBz44TmPn60QnwkG/uiNZp
+ Qd7uZwcF8lw5s0lW1uARg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SryDnYPWR3k=:YfaURXV31fWbWOLAGMHGGV
+ Dmnik+n3qAhqkld+yRDUq/ad82uys9dQKsblccpGM1v+nWFWNXHRGjJnWpTHthVgl5MjKareW
+ S8+A4ILBwxCub+9qb285MgdDuTPxS7dGZzzs1i1PXNIU4ej6gydgwM3z7ULTsFyJRl8wF1WoB
+ Ciz5DIEkIBiRgLcXVj6nyJH3dJGRtqSPguFrXaPSrV/pmj04wTImaGupFmt+NfX1jhjZjXIcr
+ DMhTnVxONS3fiOhWtR/1DjnBOcBw26ctyW1tDbpN2jcDeuXM9VjIYVRCYv75waepvsgzx6z+6
+ Y+w+9q+vzUpjB64NgLoPSebj8q0PWxcv5LCm5+4zx+WmEhLPdPZBeZ3593O31bsHpcyWwRKlm
+ zM8DeFk6vuhWjzB7chszUwcyxFIzn/PowsWGt7KTEenxppLvGxPwYXGj4xyFsBQoN3YhLxyIn
+ 3VE0LcZj3lyD8jeXPQ1tQI2xy+8m1GNDoLpvwW310SEdE2L7UmtfHZ1C9mspC4HKXI4f5MuLX
+ wLPTjfr/7eWbl51HcUY2Tozd1IZXhusmqwm+BOXN2AancGej6DJ9BFL+DQfuOaZBlhgugp4An
+ UPf8cUynTng/Rs2/LqzKmQmFYtRBSwc37YTxiJO3cIayyLWJDbGidsCRXBjke2Yn2rQpG1vht
+ huUmUsiUoIhg6pB0qZEQ6xIf/PdZc0yPvuesx1caABIUUpM3BECtj42ujta5WGmAhrZbK45az
+ s0J9qGk2Pf2ZLZyzOGkrgEKjuYspigu8gz2zY93ySXrp/r3sKgUEhrYtc9ZmYkmwz1K2Z8I0m
+ e+IcH6RAD5eBsI/TPmjBiBJnnIEpQ/D9j7EjFzCPIFvRKsU6q1kMfeD+1KecjIzSJo4APWbVM
+ y2pUQKKW0TSl0QYD02OZ+XNA8gvg+sq9vXPt5e5ZEnthuujlO0Eeaj2TRtYqKx5yaWUkyjkuP
+ G26mwOYKDQHdZnvffvqtvcy+HW7DI5GEwBhXj0VE5yPPHcWfD9FUXXe3KfDV/StdlSwan7SVK
+ 1ZVRDKGDPYLYW7zOY4L6y0bPCt3UEF7Naw7mqyC7SZzElpiiuBTVJ0jUZNIrfQr6ybEOJqPYZ
+ RapDmKg7odABSY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 09:42:51PM -0700, Joe Perches wrote:
-> On Mon, 2019-07-22 at 21:35 -0700, Andrew Morton wrote:
-> > On Mon, 22 Jul 2019 17:38:15 -0700 Joe Perches <joe@perches.com> wrote:
-> > 
-> > > Several uses of strlcpy and strscpy have had defects because the
-> > > last argument of each function is misused or typoed.
-> > > 
-> > > Add macro mechanisms to avoid this defect.
-> > > 
-> > > stracpy (copy a string to a string array) must have a string
-> > > array as the first argument (to) and uses sizeof(to) as the
-> > > size.
-> > > 
-> > > These mechanisms verify that the to argument is an array of
-> > > char or other compatible types like u8 or unsigned char.
-> > > 
-> > > A BUILD_BUG is emitted when the type of to is not compatible.
-> > > 
-> > 
-> > It would be nice to include some conversions.  To demonstrate the need,
-> > to test the code, etc.
-> 
-> How about all the kernel/ ?
-> ---
->  kernel/acct.c                  | 2 +-
->  kernel/cgroup/cgroup-v1.c      | 3 +--
->  kernel/debug/gdbstub.c         | 4 ++--
->  kernel/debug/kdb/kdb_support.c | 2 +-
->  kernel/events/core.c           | 4 ++--
->  kernel/module.c                | 2 +-
->  kernel/printk/printk.c         | 2 +-
->  kernel/time/clocksource.c      | 2 +-
->  8 files changed, 10 insertions(+), 11 deletions(-)
+On 23.07.19 17:39, Geert Uytterhoeven wrote:
+> On Tue, Jul 23, 2019 at 5:22 PM Geert Uytterhoeven <geert@linux-m68k.org=
+> wrote:
+>> Below is the list of build error/warning regressions/improvements in
+>> v5.3-rc1[1] compared to v5.2[2].
+>
+>> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/5f9e832c13707=
+5045d15cd6899ab0505cfb2ca4b/ (241 out of 242 configs)
+>> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0ecfebd2b5240=
+4ae0c54a878c872bb93363ada36/ (all 242 configs)
+>>
+>>
+>> *** ERRORS ***
+>> ...
+>>    + /kisskb/src/include/linux/kprobes.h: error: implicit declaration o=
+f function 'kprobe_fault_handler'; did you mean 'kprobe_page_fault'? [-Wer=
+ror=3Dimplicit-function-declaration]:  =3D> 477:9
+>
+> parisc-allmodconfig
 
-I think that's a good start. I still think we could just give Linus a
-Coccinelle script too, for the next merge window...
+I've a patch queued up for the next pull request (in the parisc git tree) =
+to fix this:
 
--Kees
+https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/co=
+mmit/?h=3Dfor-next&id=3Df5e03d3a04978d2866f82cb11cc7a6b808c8ce07
 
-> 
-> diff --git a/kernel/acct.c b/kernel/acct.c
-> index 81f9831a7859..5ad29248b654 100644
-> --- a/kernel/acct.c
-> +++ b/kernel/acct.c
-> @@ -425,7 +425,7 @@ static void fill_ac(acct_t *ac)
->  	memset(ac, 0, sizeof(acct_t));
->  
->  	ac->ac_version = ACCT_VERSION | ACCT_BYTEORDER;
-> -	strlcpy(ac->ac_comm, current->comm, sizeof(ac->ac_comm));
-> +	stracpy(ac->ac_comm, current->comm);
->  
->  	/* calculate run_time in nsec*/
->  	run_time = ktime_get_ns();
-> diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-> index 88006be40ea3..dd4f041e4179 100644
-> --- a/kernel/cgroup/cgroup-v1.c
-> +++ b/kernel/cgroup/cgroup-v1.c
-> @@ -571,8 +571,7 @@ static ssize_t cgroup_release_agent_write(struct kernfs_open_file *of,
->  	if (!cgrp)
->  		return -ENODEV;
->  	spin_lock(&release_agent_path_lock);
-> -	strlcpy(cgrp->root->release_agent_path, strstrip(buf),
-> -		sizeof(cgrp->root->release_agent_path));
-> +	stracpy(cgrp->root->release_agent_path, strstrip(buf));
->  	spin_unlock(&release_agent_path_lock);
->  	cgroup_kn_unlock(of->kn);
->  	return nbytes;
-> diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
-> index 4b280fc7dd67..a263f27f51ad 100644
-> --- a/kernel/debug/gdbstub.c
-> +++ b/kernel/debug/gdbstub.c
-> @@ -1095,10 +1095,10 @@ int gdbstub_state(struct kgdb_state *ks, char *cmd)
->  		return error;
->  	case 's':
->  	case 'c':
-> -		strscpy(remcom_in_buffer, cmd, sizeof(remcom_in_buffer));
-> +		stracpy(remcom_in_buffer, cmd);
->  		return 0;
->  	case '$':
-> -		strscpy(remcom_in_buffer, cmd, sizeof(remcom_in_buffer));
-> +		stracpy(remcom_in_buffer, cmd);
->  		gdbstub_use_prev_in_buf = strlen(remcom_in_buffer);
->  		gdbstub_prev_in_buf_pos = 0;
->  		return 0;
-> diff --git a/kernel/debug/kdb/kdb_support.c b/kernel/debug/kdb/kdb_support.c
-> index b8e6306e7e13..b49b6c3976c7 100644
-> --- a/kernel/debug/kdb/kdb_support.c
-> +++ b/kernel/debug/kdb/kdb_support.c
-> @@ -192,7 +192,7 @@ int kallsyms_symbol_complete(char *prefix_name, int max_len)
->  
->  	while ((name = kdb_walk_kallsyms(&pos))) {
->  		if (strncmp(name, prefix_name, prefix_len) == 0) {
-> -			strscpy(ks_namebuf, name, sizeof(ks_namebuf));
-> +			stracpy(ks_namebuf, name);
->  			/* Work out the longest name that matches the prefix */
->  			if (++number == 1) {
->  				prev_len = min_t(int, max_len-1,
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 026a14541a38..25bd8c777270 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7049,7 +7049,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
->  	unsigned int size;
->  
->  	memset(comm, 0, sizeof(comm));
-> -	strlcpy(comm, comm_event->task->comm, sizeof(comm));
-> +	stracpy(comm, comm_event->task->comm);
->  	size = ALIGN(strlen(comm)+1, sizeof(u64));
->  
->  	comm_event->comm = comm;
-> @@ -7394,7 +7394,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
->  	}
->  
->  cpy_name:
-> -	strlcpy(tmp, name, sizeof(tmp));
-> +	stracpy(tmp, name);
->  	name = tmp;
->  got_name:
->  	/*
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 5933395af9a0..39384b0c90b8 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -1021,7 +1021,7 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
->  	async_synchronize_full();
->  
->  	/* Store the name of the last unloaded module for diagnostic purposes */
-> -	strlcpy(last_unloaded_module, mod->name, sizeof(last_unloaded_module));
-> +	stracpy(last_unloaded_module, mod->name);
->  
->  	free_module(mod);
->  	return 0;
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 424abf802f02..029633052be4 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2127,7 +2127,7 @@ static int __add_preferred_console(char *name, int idx, char *options,
->  		return -E2BIG;
->  	if (!brl_options)
->  		preferred_console = i;
-> -	strlcpy(c->name, name, sizeof(c->name));
-> +	stracpy(c->name, name);
->  	c->options = options;
->  	braille_set_options(c, brl_options);
->  
-> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> index fff5f64981c6..f0c833d89ace 100644
-> --- a/kernel/time/clocksource.c
-> +++ b/kernel/time/clocksource.c
-> @@ -1203,7 +1203,7 @@ static int __init boot_override_clocksource(char* str)
->  {
->  	mutex_lock(&clocksource_mutex);
->  	if (str)
-> -		strlcpy(override_name, str, sizeof(override_name));
-> +		stracpy(override_name, str);
->  	mutex_unlock(&clocksource_mutex);
->  	return 1;
->  }
-> 
-> 
-
--- 
-Kees Cook
+Helge
