@@ -2,118 +2,170 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDD9C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95407C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5425520449
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="M0CVenrM"
+	by mail.kernel.org (Postfix) with ESMTP id 72C4E20449
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733139AbfGWIQ4 (ORCPT
+        id S1733151AbfGWIRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:16:56 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:59694 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730753AbfGWIQz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:16:55 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 94D392E1485;
-        Tue, 23 Jul 2019 11:16:52 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id zrWDbtFrST-GqNCGMan;
-        Tue, 23 Jul 2019 11:16:52 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1563869812; bh=OCdChmHdfM6D9uf2VkQAqf8PnxrZ5zOIH6aLjOH+qUU=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=M0CVenrM9AC4JpNV2SXPm4QsXi07w0FwQKWvlGVbaH2JKs/RvqeojUHoTdlkMrkb6
-         8CFoIYQtsn4RsPg8zd58p/Jtt/lPbqhJ2HhpLnLHI+NTKbR3m6d3bthLrDf6ZFMmun
-         vcG5SDSMKJo7nRP3Se9wk2sTAFGcYTucOwL1nvjM=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38b3:1cdf:ad1a:1fe1])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 7w6wmPdkO2-GpAejdNM;
-        Tue, 23 Jul 2019 11:16:52 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 1/2] mm/filemap: don't initiate writeback if mapping has
- no dirty pages
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>
-References: <156378816804.1087.8607636317907921438.stgit@buzz>
- <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <bdc6c53d-a7bb-dcc4-20ba-6c7fa5c57dbd@yandex-team.ru>
-Date:   Tue, 23 Jul 2019 11:16:51 +0300
+        Tue, 23 Jul 2019 04:17:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:50648 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727892AbfGWIRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 04:17:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF7CD344;
+        Tue, 23 Jul 2019 01:17:13 -0700 (PDT)
+Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F2393F71F;
+        Tue, 23 Jul 2019 01:17:12 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: arm/arm64: Introduce kvm_pmu_vcpu_init() to setup
+ PMU counter idx
+To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Cc:     marc.zyngier@arm.com, james.morse@arm.com, suzuki.poulose@arm.com,
+        julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org,
+        wanghaibin.wang@huawei.com, andrew.murray@arm.com
+References: <1563437710-30756-1-git-send-email-yuzenghui@huawei.com>
+From:   Julien Thierry <julien.thierry@arm.com>
+Message-ID: <f3f6f9a9-9735-e253-7b5b-3ccf97619a16@arm.com>
+Date:   Tue, 23 Jul 2019 09:17:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+In-Reply-To: <1563437710-30756-1-git-send-email-yuzenghui@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Zenghui,
 
-
-On 23.07.2019 3:52, Andrew Morton wrote:
+On 18/07/2019 09:15, Zenghui Yu wrote:
+> We use "pmc->idx" and the "chained" bitmap to determine if the pmc is
+> chained, in kvm_pmu_pmc_is_chained().  But idx might be uninitialized
+> (and random) when we doing this decision, through a KVM_ARM_VCPU_INIT
+> ioctl -> kvm_pmu_vcpu_reset(). And the test_bit() against this random
+> idx will potentially hit a KASAN BUG [1].
 > 
-> (cc linux-fsdevel and Jan)
+> In general, idx is the static property of a PMU counter that is not
+> expected to be modified across resets, as suggested by Julien.  It
+> looks more reasonable if we can setup the PMU counter idx for a vcpu
+> in its creation time. Introduce a new function - kvm_pmu_vcpu_init()
+> for this basic setup. Oh, and the KASAN BUG will get fixed this way.
 > 
-> On Mon, 22 Jul 2019 12:36:08 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+> [1] https://www.spinics.net/lists/kvm-arm/msg36700.html
 > 
->> Functions like filemap_write_and_wait_range() should do nothing if inode
->> has no dirty pages or pages currently under writeback. But they anyway
->> construct struct writeback_control and this does some atomic operations
->> if CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
->> updates state of writeback ownership, on slow path might be more work.
->> Current this path is safely avoided only when inode mapping has no pages.
->>
->> For example generic_file_read_iter() calls filemap_write_and_wait_range()
->> at each O_DIRECT read - pretty hot path.
->>
->> This patch skips starting new writeback if mapping has no dirty tags set.
->> If writeback is already in progress filemap_write_and_wait_range() will
->> wait for it.
->>
->> ...
->>
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -408,7 +408,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
->>   		.range_end = end,
->>   	};
->>   
->> -	if (!mapping_cap_writeback_dirty(mapping))
->> +	if (!mapping_cap_writeback_dirty(mapping) ||
->> +	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
->>   		return 0;
->>   
->>   	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
+> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
+> Suggested-by: Andrew Murray <andrew.murray@arm.com>
+> Suggested-by: Julien Thierry <julien.thierry@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
 > 
-> How does this play with tagged_writepages?  We assume that no tagging
-> has been performed by any __filemap_fdatawrite_range() caller?
->
+> Changes since v1:
+>  - Introduce kvm_pmu_vcpu_init() in vcpu's creation time, move the
+>    assignment of pmc->idx into it.
+>  - Thus change the subject. The old one is "KVM: arm/arm64: Assign
+>    pmc->idx before kvm_pmu_stop_counter()".
+> 
+> Julien, I haven't collected your Acked-by into this version. If you're
+> still happy with the change, please Ack again. Thanks!
+> 
 
-Checking also PAGECACHE_TAG_TOWRITE is cheap but seems redundant.
+Thanks for making the change. This looks good to me:
 
-To-write tags are supposed to be a subset of dirty tags:
-to-write is set only when dirty is set and cleared after starting writeback.
+Acked-by: Julien Thierry <julien.thierry@arm.com>
 
-Special case set_page_writeback_keepwrite() which does not clear to-write
-should be for dirty page thus dirty tag is not going to be cleared either.
-Ext4 calls it after redirty_page_for_writepage()
-XFS even without clear_page_dirty_for_io()
+Thanks,
 
-Anyway to-write tag without dirty tag or at clear page is confusing.
+Julien
+
+>  include/kvm/arm_pmu.h |  2 ++
+>  virt/kvm/arm/arm.c    |  2 ++
+>  virt/kvm/arm/pmu.c    | 18 +++++++++++++++---
+>  3 files changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
+> index 16c769a..6db0304 100644
+> --- a/include/kvm/arm_pmu.h
+> +++ b/include/kvm/arm_pmu.h
+> @@ -34,6 +34,7 @@ struct kvm_pmu {
+>  u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu, u64 select_idx);
+>  void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu, u64 select_idx, u64 val);
+>  u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu);
+> +void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu);
+>  void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu);
+>  void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu);
+>  void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val);
+> @@ -71,6 +72,7 @@ static inline u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu)
+>  {
+>  	return 0;
+>  }
+> +static inline void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu) {}
+>  static inline void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu) {}
+>  static inline void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu) {}
+>  static inline void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val) {}
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index f645c0f..c704fa6 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -340,6 +340,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+>  	/* Set up the timer */
+>  	kvm_timer_vcpu_init(vcpu);
+>  
+> +	kvm_pmu_vcpu_init(vcpu);
+> +
+>  	kvm_arm_reset_debug_ptr(vcpu);
+>  
+>  	return kvm_vgic_vcpu_init(vcpu);
+> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
+> index 3dd8238..362a018 100644
+> --- a/virt/kvm/arm/pmu.c
+> +++ b/virt/kvm/arm/pmu.c
+> @@ -215,6 +215,20 @@ static void kvm_pmu_stop_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc)
+>  }
+>  
+>  /**
+> + * kvm_pmu_vcpu_init - assign pmu counter idx for cpu
+> + * @vcpu: The vcpu pointer
+> + *
+> + */
+> +void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu)
+> +{
+> +	int i;
+> +	struct kvm_pmu *pmu = &vcpu->arch.pmu;
+> +
+> +	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
+> +		pmu->pmc[i].idx = i;
+> +}
+> +
+> +/**
+>   * kvm_pmu_vcpu_reset - reset pmu state for cpu
+>   * @vcpu: The vcpu pointer
+>   *
+> @@ -224,10 +238,8 @@ void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu)
+>  	int i;
+>  	struct kvm_pmu *pmu = &vcpu->arch.pmu;
+>  
+> -	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++) {
+> +	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
+>  		kvm_pmu_stop_counter(vcpu, &pmu->pmc[i]);
+> -		pmu->pmc[i].idx = i;
+> -	}
+>  
+>  	bitmap_zero(vcpu->arch.pmu.chained, ARMV8_PMU_MAX_COUNTER_PAIRS);
+>  }
+> 
+
+-- 
+Julien Thierry
