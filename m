@@ -2,278 +2,148 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A465C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8A3C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2899022389
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2161C2229A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fo+PsHO+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X1YvonD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbfGWFg1 (ORCPT
+        id S1731030AbfGWFkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:36:27 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39639 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfGWFg0 (ORCPT
+        Tue, 23 Jul 2019 01:40:15 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40868 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729349AbfGWFkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:36:26 -0400
-Received: by mail-io1-f66.google.com with SMTP id f4so79239571ioh.6;
-        Mon, 22 Jul 2019 22:36:25 -0700 (PDT)
+        Tue, 23 Jul 2019 01:40:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so18820890pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 22:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bRU0cjTa08e/p52b5y5nL1d1323iBABGlPTDO+DIpBA=;
-        b=Fo+PsHO+KeG2xguakssGRc9y0fjr346kbBonhdR0hVOwFanbliNTu3z57vxrCFdv7U
-         js2idgS+JYPYcmmzv3iOfGpENdtQsosuzOIHYhf0LkYzE8f4J1RxA3dYlvCWwIlt4KrF
-         4Wle9otalLel1zwVctP7Q2MUsMnRihsrwPut6L+wxiksAA8yr6odEwjspo8Du9r0mJA5
-         Glsqy/ALsKnGHTTq0LU3zyCKUc+BTRnoh7Gfh7NtEA6mhkv9ZCJPzUIX26x6xemN6O28
-         D+uS0/OzSd7pKtp5syda3uv09ciKhDPoE4Jpbx9U48FaQP8XlOVRJqqCIW3hVKe7src1
-         +sqQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5nt2VugXjt5XrF3/XOR/oWFILicVPJkaeDN7wxmTV7U=;
+        b=X1YvonD3R6khALL7BjDbSfmeGb+oxFB0Yn8oSaY7vanh6Hs83Ohqkwv+euiD632z1e
+         WUi+KeGNsw5+gmHJ2bO3XJtc3mZljXxy/qpui12TO4jz7CXB1bJ5mp+gpodlkI/nWOGZ
+         rvBzo8LIOFkvjxQPflC17XaQI+Nac3FzfcryjNzEMEa/lBJaIfFQlHbopWUR9bxrQYVe
+         yyZbHJZ9JDSg1IJiGqx08/WiG2+5rN1fnAMpz9u+jrvGJ7hI0uaQVmqsi/vLyEGS+/bI
+         7oTzNegr32gKDR7QbPUd95mr8UIc1mbTEL0WjBsM42uJSRveXhwWwQbwSO4QRy/U0YVd
+         1o+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=bRU0cjTa08e/p52b5y5nL1d1323iBABGlPTDO+DIpBA=;
-        b=cbX1JU46ZHvo7KBcwVJR4TZyRouL7GoeMsOSxw0GEsZUxX98BbUgHUdBjemuNVR0sm
-         OIO/0BHVG0UaamJoUNU2mZIug+nxsoTtsMFazqibScJAfbmS1DNVDcLlSTcwG1/+M+eI
-         2RcjFhvNJZonMn5QArhPHtS6JLkgXsohTK9bSyQGSAlWQxUzKH5a+gZ22ftN2QZLO+5a
-         UCR9+R9JfIF/uzV6nAEx/yI2l1mvg+K6696LyQEdFPsRKp0CzDFTqn1JNAc/jMzHFM9P
-         5+hFJX3WnAtYuORS4+F79xqkxdJawlrcUhtHlT4eKehdsu040bMg9KNwx5k1RveLBgVl
-         U86w==
-X-Gm-Message-State: APjAAAXBRzxFDNiXTl7JCBh3+JRkt5vZtHrysHl8WKAqg2v3/DbSNK5a
-        3jsYcSzob0pwugUkqJQDlXszGFiJ4i7LAw==
-X-Google-Smtp-Source: APXvYqxFkJlJ3+KNQOIj+07cH8QWvYl/FT+kn4CDCosOb9uy1SYTIHF/ObIqKy6C/2OjP7zV7VUJcA==
-X-Received: by 2002:a02:7121:: with SMTP id n33mr75368393jac.19.1563860185255;
-        Mon, 22 Jul 2019 22:36:25 -0700 (PDT)
-Received: from sultan-box.localdomain (ip-174-149-195-86.englco.spcsdns.net. [174.149.195.86])
-        by smtp.gmail.com with ESMTPSA id l2sm29874615ioh.20.2019.07.22.22.36.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5nt2VugXjt5XrF3/XOR/oWFILicVPJkaeDN7wxmTV7U=;
+        b=s2l9LbE5etKbTZiBaARQqKVZNNS+WmIgFu8ioBK5Z9CKhfD5a9iz+DMUxwHYXYmAJ3
+         lZNqIJpcVG/ZGbvzamGrpHcgSHVXEKLfWmKoYMkwWznP4Coe92RJDDwQ0RHL4QLQoRMp
+         E5709D2GZgMD00zjABMfXXMdu0sQ5y+O0b2lG1Fw1z3BRpLj1DLJXMSrszrugz4fLV+q
+         MdO7uozGbZJrUMTUljta7sMvwTYuL/YQxIPjc7DDIVRiouEHMD8F0qNMW9vWnoEUy1eE
+         bTmjBZBzgiTG6RvIpIs+GM4q6SAw0iqBl/p2fWITGZL2DjT2JYfD+pUl3QvaB387rNbc
+         f7vA==
+X-Gm-Message-State: APjAAAXsLanMM+kLeyzb+2WYLJufl5uUtaXwhUVxaTRsmylTcHiUGMp2
+        a4iqYDKLuX1YeJxMxaZvT0G36g==
+X-Google-Smtp-Source: APXvYqwjjiGZqVdQpH4aZpzAsDjcY/hTViotRsKielUAYMaE/4MmwKXQ8bmTu5CBoKt30B6QXiYCJg==
+X-Received: by 2002:a63:c03:: with SMTP id b3mr10469564pgl.23.1563860413423;
+        Mon, 22 Jul 2019 22:40:13 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a15sm46535560pfg.102.2019.07.22.22.40.12
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 22:36:24 -0700 (PDT)
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-X-Google-Original-From: Sultan Alsawaf
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mbcache: Speed up cache entry creation
-Date:   Mon, 22 Jul 2019 23:35:49 -0600
-Message-Id: <20190723053549.14465-1-sultan@kerneltoast.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 22 Jul 2019 22:40:12 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 22:41:36 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from
+ unit name
+Message-ID: <20190723054136.GK7234@tuxbook-pro>
+References: <20190722123422.4571-1-vkoul@kernel.org>
+ <20190722123422.4571-6-vkoul@kernel.org>
+ <CAHLCerPC0thO9gsaDAxc+XaexinrzG6JGJ8BhB4bFFuQ-P9Jxg@mail.gmail.com>
+ <20190723051426.GZ12733@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723051426.GZ12733@vkoul-mobl.Dlink>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sultan Alsawaf <sultan@kerneltoast.com>
+On Mon 22 Jul 22:14 PDT 2019, Vinod Koul wrote:
 
-In order to prevent redundant entry creation by racing against itself,
-mb_cache_entry_create scans through a hash-list of all current entries
-in order to see if another allocation for the requested new entry has
-been made. Furthermore, it allocates memory for a new entry before
-scanning through this hash-list, which results in that allocated memory
-being discarded when the requested new entry is already present.
+> On 23-07-19, 10:38, Amit Kucheria wrote:
+> > On Mon, Jul 22, 2019 at 6:06 PM Vinod Koul <vkoul@kernel.org> wrote:
+> > >
+> > > Unit name is supposed to be a number, using a macro with hex value is
+> > 
+> > /s/name/address?
+> 
+> Right, will fix.
+> 
+> > > not recommended, so add the value in unit name.
+> > >
+> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name should not have leading "0x"
+> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name should not have leading "0x"
+> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name should not have leading "0x"
+> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name should not have leading "0x"
+> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name should not have leading "0x"
+> > >
+> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 +++++-----
+> > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> > > index 1ebbd568dfd7..9b27b8346ba1 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> > > @@ -963,27 +963,27 @@ ap_ts_i2c: &i2c14 {
+> > >  };
+> > >
+> > >  &pm8998_adc {
+> > > -       adc-chan@ADC5_AMUX_THM1_100K_PU {
+> > > +       adc-chan@4d {
+> > >                 reg = <ADC5_AMUX_THM1_100K_PU>;
 
-Speed up cache entry creation by keeping a small linked list of
-requested new entries in progress, and scanning through that first
-instead of the large hash-list. And don't allocate memory for a new
-entry until it's known that the allocated memory will be used.
+When I read this define I instantly know which channel we're referring
+to. The 4d above is simply there for syntactical purposes and needs only
+to be cared about if the reg is ever changed.
 
-Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
----
- fs/mbcache.c | 82 ++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 57 insertions(+), 25 deletions(-)
+So I like this form.
 
-diff --git a/fs/mbcache.c b/fs/mbcache.c
-index 97c54d3a2227..289f3664061e 100644
---- a/fs/mbcache.c
-+++ b/fs/mbcache.c
-@@ -25,9 +25,14 @@
-  * size hash table is used for fast key lookups.
-  */
- 
-+struct mb_bucket {
-+	struct hlist_bl_head hash;
-+	struct list_head req_list;
-+};
-+
- struct mb_cache {
- 	/* Hash table of entries */
--	struct hlist_bl_head	*c_hash;
-+	struct mb_bucket	*c_bucket;
- 	/* log2 of hash table size */
- 	int			c_bucket_bits;
- 	/* Maximum entries in cache to avoid degrading hash too much */
-@@ -42,15 +47,21 @@ struct mb_cache {
- 	struct work_struct	c_shrink_work;
- };
- 
-+struct mb_cache_req {
-+	struct list_head lnode;
-+	u32 key;
-+	u64 value;
-+};
-+
- static struct kmem_cache *mb_entry_cache;
- 
- static unsigned long mb_cache_shrink(struct mb_cache *cache,
- 				     unsigned long nr_to_scan);
- 
--static inline struct hlist_bl_head *mb_cache_entry_head(struct mb_cache *cache,
--							u32 key)
-+static inline struct mb_bucket *mb_cache_entry_bucket(struct mb_cache *cache,
-+						      u32 key)
- {
--	return &cache->c_hash[hash_32(key, cache->c_bucket_bits)];
-+	return &cache->c_bucket[hash_32(key, cache->c_bucket_bits)];
- }
- 
- /*
-@@ -77,6 +88,8 @@ int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
- 	struct mb_cache_entry *entry, *dup;
- 	struct hlist_bl_node *dup_node;
- 	struct hlist_bl_head *head;
-+	struct mb_cache_req *tmp_req, req;
-+	struct mb_bucket *bucket;
- 
- 	/* Schedule background reclaim if there are too many entries */
- 	if (cache->c_entry_count >= cache->c_max_entries)
-@@ -85,9 +98,33 @@ int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
- 	if (cache->c_entry_count >= 2*cache->c_max_entries)
- 		mb_cache_shrink(cache, SYNC_SHRINK_BATCH);
- 
-+	bucket = mb_cache_entry_bucket(cache, key);
-+	head = &bucket->hash;
-+	hlist_bl_lock(head);
-+	list_for_each_entry(tmp_req, &bucket->req_list, lnode) {
-+		if (tmp_req->key == key && tmp_req->value == value) {
-+			hlist_bl_unlock(head);
-+			return -EBUSY;
-+		}
-+	}
-+	hlist_bl_for_each_entry(dup, dup_node, head, e_hash_list) {
-+		if (dup->e_key == key && dup->e_value == value) {
-+			hlist_bl_unlock(head);
-+			return -EBUSY;
-+		}
-+	}
-+	req.key = key;
-+	req.value = value;
-+	list_add(&req.lnode, &bucket->req_list);
-+	hlist_bl_unlock(head);
-+
- 	entry = kmem_cache_alloc(mb_entry_cache, mask);
--	if (!entry)
-+	if (!entry) {
-+		hlist_bl_lock(head);
-+		list_del(&req.lnode);
-+		hlist_bl_unlock(head);
- 		return -ENOMEM;
-+	}
- 
- 	INIT_LIST_HEAD(&entry->e_list);
- 	/* One ref for hash, one ref returned */
-@@ -96,15 +133,9 @@ int mb_cache_entry_create(struct mb_cache *cache, gfp_t mask, u32 key,
- 	entry->e_value = value;
- 	entry->e_reusable = reusable;
- 	entry->e_referenced = 0;
--	head = mb_cache_entry_head(cache, key);
-+
- 	hlist_bl_lock(head);
--	hlist_bl_for_each_entry(dup, dup_node, head, e_hash_list) {
--		if (dup->e_key == key && dup->e_value == value) {
--			hlist_bl_unlock(head);
--			kmem_cache_free(mb_entry_cache, entry);
--			return -EBUSY;
--		}
--	}
-+	list_del(&req.lnode);
- 	hlist_bl_add_head(&entry->e_hash_list, head);
- 	hlist_bl_unlock(head);
- 
-@@ -133,7 +164,7 @@ static struct mb_cache_entry *__entry_find(struct mb_cache *cache,
- 	struct hlist_bl_node *node;
- 	struct hlist_bl_head *head;
- 
--	head = mb_cache_entry_head(cache, key);
-+	head = &mb_cache_entry_bucket(cache, key)->hash;
- 	hlist_bl_lock(head);
- 	if (entry && !hlist_bl_unhashed(&entry->e_hash_list))
- 		node = entry->e_hash_list.next;
-@@ -202,7 +233,7 @@ struct mb_cache_entry *mb_cache_entry_get(struct mb_cache *cache, u32 key,
- 	struct hlist_bl_head *head;
- 	struct mb_cache_entry *entry;
- 
--	head = mb_cache_entry_head(cache, key);
-+	head = &mb_cache_entry_bucket(cache, key)->hash;
- 	hlist_bl_lock(head);
- 	hlist_bl_for_each_entry(entry, node, head, e_hash_list) {
- 		if (entry->e_key == key && entry->e_value == value) {
-@@ -230,7 +261,7 @@ void mb_cache_entry_delete(struct mb_cache *cache, u32 key, u64 value)
- 	struct hlist_bl_head *head;
- 	struct mb_cache_entry *entry;
- 
--	head = mb_cache_entry_head(cache, key);
-+	head = &mb_cache_entry_bucket(cache, key)->hash;
- 	hlist_bl_lock(head);
- 	hlist_bl_for_each_entry(entry, node, head, e_hash_list) {
- 		if (entry->e_key == key && entry->e_value == value) {
-@@ -300,7 +331,7 @@ static unsigned long mb_cache_shrink(struct mb_cache *cache,
- 		 * from under us.
- 		 */
- 		spin_unlock(&cache->c_list_lock);
--		head = mb_cache_entry_head(cache, entry->e_key);
-+		head = &mb_cache_entry_bucket(cache, entry->e_key)->hash;
- 		hlist_bl_lock(head);
- 		if (!hlist_bl_unhashed(&entry->e_hash_list)) {
- 			hlist_bl_del_init(&entry->e_hash_list);
-@@ -354,21 +385,22 @@ struct mb_cache *mb_cache_create(int bucket_bits)
- 	cache->c_max_entries = bucket_count << 4;
- 	INIT_LIST_HEAD(&cache->c_list);
- 	spin_lock_init(&cache->c_list_lock);
--	cache->c_hash = kmalloc_array(bucket_count,
--				      sizeof(struct hlist_bl_head),
--				      GFP_KERNEL);
--	if (!cache->c_hash) {
-+	cache->c_bucket = kmalloc_array(bucket_count, sizeof(*cache->c_bucket),
-+					GFP_KERNEL);
-+	if (!cache->c_bucket) {
- 		kfree(cache);
- 		goto err_out;
- 	}
--	for (i = 0; i < bucket_count; i++)
--		INIT_HLIST_BL_HEAD(&cache->c_hash[i]);
-+	for (i = 0; i < bucket_count; i++) {
-+		INIT_HLIST_BL_HEAD(&cache->c_bucket[i].hash);
-+		INIT_LIST_HEAD(&cache->c_bucket[i].req_list);
-+	}
- 
- 	cache->c_shrink.count_objects = mb_cache_count;
- 	cache->c_shrink.scan_objects = mb_cache_scan;
- 	cache->c_shrink.seeks = DEFAULT_SEEKS;
- 	if (register_shrinker(&cache->c_shrink)) {
--		kfree(cache->c_hash);
-+		kfree(cache->c_bucket);
- 		kfree(cache);
- 		goto err_out;
- 	}
-@@ -409,7 +441,7 @@ void mb_cache_destroy(struct mb_cache *cache)
- 		WARN_ON(atomic_read(&entry->e_refcnt) != 1);
- 		mb_cache_entry_put(cache, entry);
- 	}
--	kfree(cache->c_hash);
-+	kfree(cache->c_bucket);
- 	kfree(cache);
- }
- EXPORT_SYMBOL(mb_cache_destroy);
--- 
-2.22.0
+> > 
+> > I'm a little conflicted about this change. If we're replacing the
+> > address with actual values, perhaps we should do that same for the reg
+> > property to keep them in sync? Admittedly though, it is a bit easier
+> > to read the macro name and figure out its meaning.
+> 
+> Well this was how Bjorn suggested, am okay if we do in any
+> other way. This fixes warning but keeps it bit readable too
+> 
+> Other way would be to make defines decimal values instead of hex
+> 
 
+While the ePAPRR states that the unit address must match the first reg,
+dtc enforces that the unit address string matches "%x" of the reg.
+
+Regards,
+Bjorn
+
+> Any better suggestions :)
+> 
+> -- 
+> ~Vinod
