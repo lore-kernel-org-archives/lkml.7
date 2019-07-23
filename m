@@ -2,106 +2,221 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18C1C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8B5C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963B8218B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B/1NfqRk"
+	by mail.kernel.org (Postfix) with ESMTP id 83E69218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388333AbfGWOuH (ORCPT
+        id S2390687AbfGWOuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:50:07 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38422 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732532AbfGWOuH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:50:07 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y15so19272166pfn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:50:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=qFGyu2e0qPfrwHi7OXbbKa0ySxd874e1ZB3q+1beBgk=;
-        b=B/1NfqRknQzOA9lNUKMjw8bei1USgk+jf8C7LimjmeeuY/nXbOwY9qKGdqr1xB0Ep1
-         fF+uGyD6SZT5kkwDHqgcI+JJucEKJ2eELk1VJumWUxl26Nnj5D2cJF8WjuYyVe4s8NF3
-         VlozWZllNLHU0k5+JPfpJ+vslVBC70FPXvsr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=qFGyu2e0qPfrwHi7OXbbKa0ySxd874e1ZB3q+1beBgk=;
-        b=r2MfK8TK0nIkNt1qfVtLZABvmvtTesBGRd+hxwwha5syxBP2s6+yrLSeEka2+k4WT5
-         zb5nSrQ8jRDHxEIEIJQ5W5HhGT7oDfl9nLhPlfOYSqT2mgs2NWPwWSmlk0+qeZiOTWbf
-         SRd0CQrhCSWSHfy/25XqWJ+nvb4mJ3X8qsmhOn0p0p9OAFl5ogw8u/O78tai3qqWAk8t
-         +gsQoU6Z7zfZhY6aCwILDKXhTI02rDAuYXkaydgXyLCdq0In1DanQZ2nv4XTrpN8B7N/
-         y/LH5UEqiMrmCoelrL42QqndaUp6SD5nAzg64wixwXX99DV1yv32Q9LjvwQHqun4PgQ4
-         9bvg==
-X-Gm-Message-State: APjAAAUj21xD5fixHUpCqTW/mrMxhaYXs+esrrjicibpSMeEieuGLMMC
-        4LuTnRbZhwzm/P3uvK0kbOoqgA==
-X-Google-Smtp-Source: APXvYqzh3JlVXvMXshU7/BGzt6pys4NOV2ew9Hhpy6X+ywpiQ45vC0nwZXvmBT2O3iv2LcxoEYem+A==
-X-Received: by 2002:a63:eb56:: with SMTP id b22mr77607662pgk.355.1563893406340;
-        Tue, 23 Jul 2019 07:50:06 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w2sm36341678pgc.32.2019.07.23.07.50.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 07:50:05 -0700 (PDT)
-Message-ID: <5d371e9d.1c69fb81.8d9f4.1ac0@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 23 Jul 2019 10:50:16 -0400
+Received: from muru.com ([72.249.23.125]:55714 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388341AbfGWOuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:50:16 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 89D5C808C;
+        Tue, 23 Jul 2019 14:50:39 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lingren <tony@atomide.com>
+Subject: [PATCH] USB: serial: option: Add Motorola modem UARTs
+Date:   Tue, 23 Jul 2019 07:49:56 -0700
+Message-Id: <20190723144956.55753-1-tony@atomide.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190722123422.4571-2-vkoul@kernel.org>
-References: <20190722123422.4571-1-vkoul@kernel.org> <20190722123422.4571-2-vkoul@kernel.org>
-Subject: Re: [PATCH 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 23 Jul 2019 07:50:05 -0700
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-07-22 05:34:18)
-> We get a warning about missing unit name for soc node, so add it.
->=20
-> arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address=
-_vs_reg): /soc: node has a reg or ranges property, but no unit name
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+On Motorola Mapphone devices such as Droid 4 there are five USB ports
+that do not use the same layout as Gobi 1K/2K/etc devices listed in
+qcserial.c. So we should use qcaux.c or option.c as noted by
+Dan Williams <dan.j.williams@intel.com>.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+As the Motorola USB serial ports have an interrupt endpoint as shown
+with lsusb -v, we should use option.c instead of qcaux.c as pointed out
+by Johan Hovold <johan@kernel.org>.
 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/q=
-com/sdm845.dtsi
-> index 601cfb078bd5..e81f4a6d08ce 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -620,7 +620,7 @@
->                 method =3D "smc";
->         };
-> =20
-> -       soc: soc {
-> +       soc: soc@0 {
+The ff/ff/ff interfaces seem to always be UARTs on Motorola devices.
+For the other interfaces, class 0x0a (CDC Data) should not in general
+be added as they are typically part of a multi-interface function as
+noted earlier by Bjørn Mork <bjorn@mork.no>.
 
-This is kinda sad, but ok. Maybe you can apply this fix to at least all
-the qcom boards then.
+However, looking at the Motorola mapphone kernel code, the mdm6600 0x0a
+class is only used for flashing the modem firmware, and there are no
+other interfaces. So I've added that too with more details below as it
+works just fine.
 
->                 #address-cells =3D <2>;
->                 #size-cells =3D <2>;
->                 ranges =3D <0 0 0 0 0x10 0>;
+The ttyUSB ports on Droid 4 are:
+
+ttyUSB0 DIAG, CQDM-capable
+ttyUSB1 MUX or NMEA, no response
+ttyUSB2 MUX or NMEA, no response
+ttyUSB3 TCMD
+ttyUSB4 AT-capable
+
+The ttyUSB0 is detected as QCDM capable by ModemManager. I think
+it's only used for debugging with ModemManager --debug for sending
+custom AT commands though. ModemManager already can manage data
+connection using the USB QMI ports that are already handled by the
+qmi_wwan.c driver.
+
+To enable the MUX or NMEA ports, it seems that something needs to be
+done additionally to enable them, maybe via the DIAG or TCMD port.
+It might be just a NVRAM setting somewhere, but I have no idea what
+NVRAM settings may need changing for that.
+
+The TCMD port seems to be a Motorola custom protocol for testing
+the modem and to configure it's NVRAM and seems to work just fine
+based on a quick test with a minimal tcmdrw tool I wrote.
+
+The voice modem AT-capable port seems to provide only partial
+support, and no PM support compared to the TS 27.010 based UART
+wired directly to the modem.
+
+The UARTs added with this change are the same product IDs as the
+Motorola Mapphone Android Linux kernel mdm6600_id_table. I don't
+have any mdm9600 based devices, so I have only tested these on
+mdm6600 based droid 4.
+
+Then for the class 0x0a (CDC Data) mode, the Motorola Mapphone Android
+Linux kernel driver moto_flashqsc.c just seems to change the
+port->bulk_out_size to 8K from the default. And is only used for
+flashing the modem firmware it seems.
+
+I've verified that flashing the modem with signed firmware works just
+fine with the option driver after manually toggling the GPIO pins, so
+I've added droid 4 modem flashing mode to the option driver. I've not
+added the other devices listed in moto_flashqsc.c in case they really
+need different port->bulk_out_size. Those can be added as they get
+tested to work for flashing the modem.
+
+After this patch the output of /sys/kernel/debug/usb/devices has
+the following for normal 22b8:2a70 mode including the related qmi_wwan
+interfaces:
+
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12   MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=22b8 ProdID=2a70 Rev= 0.00
+S:  Manufacturer=Motorola, Incorporated
+S:  Product=Flash MZ600
+C:* #Ifs= 9 Cfg#= 1 Atr=e0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=83(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=84(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=85(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
+E:  Ad=87(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 6 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
+E:  Ad=89(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
+E:  Ad=8a(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=07(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 7 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
+E:  Ad=8b(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
+E:  Ad=8c(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=08(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 8 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
+E:  Ad=8d(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
+E:  Ad=8e(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=09(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+
+In 22b8:900e "qc_dload" mode the device shows up as:
+
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12   MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=22b8 ProdID=900e Rev= 0.00
+S:  Manufacturer=Motorola, Incorporated
+S:  Product=Flash MZ600
+C:* #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+
+And in 22b8:4281 "ram_downloader" mode the device shows up as:
+
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12   MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=22b8 ProdID=4281 Rev= 0.00
+S:  Manufacturer=Motorola, Incorporated
+S:  Product=Flash MZ600
+C:* #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=fc Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+
+Cc: Bjørn Mork <bjorn@mork.no>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Marcel Partap <mpartap@gmx.net>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Michael Scott <hashcode0f@gmail.com>
+Cc: NeKit <nekit1000@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lingren <tony@atomide.com>
+---
+ drivers/usb/serial/option.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -83,6 +83,12 @@ static void option_instat_callback(struct urb *urb);
+ #define HUAWEI_PRODUCT_K4605			0x14C6
+ #define HUAWEI_PRODUCT_E173S6			0x1C07
+ 
++#define MOTOROLA_VENDOR_ID			0x22b8
++#define MOTOROLA_PRODUCT_MDM6600		0x2a70
++#define MOTOROLA_PRODUCT_MDM9600		0x2e0a
++#define MOTOROLA_PRODUCT_MDM_RAM_DL		0x4281
++#define MOTOROLA_PRODUCT_MDM_QC_DL		0x900e
++
+ #define QUANTA_VENDOR_ID			0x0408
+ #define QUANTA_PRODUCT_Q101			0xEA02
+ #define QUANTA_PRODUCT_Q111			0xEA03
+@@ -968,6 +974,10 @@ static const struct usb_device_id option_ids[] = {
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7B) },
+ 	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7C) },
+ 
++	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MDM6600, 0xff, 0xff, 0xff) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MDM9600, 0xff, 0xff, 0xff) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MDM_RAM_DL, 0x0a, 0x00, 0xfc) },
++	{ USB_DEVICE_AND_INTERFACE_INFO(MOTOROLA_VENDOR_ID, MOTOROLA_PRODUCT_MDM_QC_DL, 0xff, 0xff, 0xff) },
+ 
+ 	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V640) },
+ 	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V620) },
+-- 
+2.21.0
