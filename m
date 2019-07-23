@@ -2,87 +2,128 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F266DC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4B8C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CAA22543
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:32:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563895954;
-	bh=8JOyeEC1zTRyIsqC/PXugWUjwr/APz7sEZnATu2YyJs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1sJnw8MjAcQ6twxpZOx5mbkInu3QwZvQAPdeneR+FWNv8Y61jqZCdnKJfuzmw06Xh
-	 qRqYlrhUZKnssXikR5+Hs9nrDO1cPEEFxtZNvW04/0TSqMorpUyzvj9pLXDhbOeg6S
-	 grio0GprpNK7SUZ+PHZeJJ0PoIOiOKKNMxaaI9kA=
+	by mail.kernel.org (Postfix) with ESMTP id 54ABC223A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbfGWPce (ORCPT
+        id S1731993AbfGWPcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:32:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbfGWPcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:32:33 -0400
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30EC9227B7;
-        Tue, 23 Jul 2019 15:32:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563895952;
-        bh=8JOyeEC1zTRyIsqC/PXugWUjwr/APz7sEZnATu2YyJs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sP3APy8eG7NLNOJcAtjsat+n0U+A76FGD91WwUGrbOXE0DyWCcMbzHxuOD0x1oVJW
-         av3EmEpwzod0evwuCQ8DrqENnAYDiHSCpuX9H9pbX6yfwORvSyPgn5MzpfhNhJHdF3
-         4DXkrdG50Caz25rF0/F7d4WzuOhz6hJ5YqOC2Z/g=
-Received: by mail-lf1-f54.google.com with SMTP id 62so24790659lfa.8;
-        Tue, 23 Jul 2019 08:32:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAVp1p1IB+JebWyBCzu2YwGgLl3wTLicg1hHixY6EjfJ/O62lAgZ
-        6gBir5KCihZFG7h36gv8FH+zPFNK8yRbcTNze0s=
-X-Google-Smtp-Source: APXvYqzOqlEdW228CqT7EvzrEoHFXs6Y3HU32V4M67K48CS0QmPYAt/PYW9cZBGXd1rWIk3F5U1PvLTxOdi0akEiPYo=
-X-Received: by 2002:a19:48c5:: with SMTP id v188mr34818692lfa.69.1563895950429;
- Tue, 23 Jul 2019 08:32:30 -0700 (PDT)
+        Tue, 23 Jul 2019 11:32:54 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.208]:43681 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726276AbfGWPcy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:32:54 -0400
+Received: from [67.219.251.53] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-c.us-west-2.aws.symcld.net id B9/6F-15262-3A8273D5; Tue, 23 Jul 2019 15:32:51 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRWlGSWpSXmKPExsXi5LtOQHexhnm
+  sQeMeJYuHV/0tVk3dyWKx6fE1VouuXyuZLS7vmsNm8Xf7JhaLF1vELdqOHWN14PDYOesuu8em
+  VZ1sHneu7WHz2Lyk3mPjux1MHv1/DTw+b5ILYI9izcxLyq9IYM24cK6RpeAUb8WOPb9ZGxinc
+  ncxcnEICaxmlPj7ZS5rFyMnkLOGUeLOVSO4xI/eGewgCTYBE4krM3YydzFycIgIyEuceOINEm
+  YWeMIo0bfaHsQWFgiUuL3+Blg5i4CqxOFXV5lAbF4BT4nu2w1gcQkBOYmb5zqZIeKCEidnPmG
+  BmCMhcfDFC2aIG9Qk2uZMAFslAbTqb2/ZBEa+WUg6ZiHpWMDItIrRIqkoMz2jJDcxM0fX0MBA
+  19DQSNfQ2FzXyMRQL7FKN1mvtFi3PLW4RNdIL7G8WK+4Mjc5J0UvL7VkEyMw2FMKOj/uYGya9
+  UbvEKMkB5OSKO+rT2axQnxJ+SmVGYnFGfFFpTmpxYcYZTg4lCR4u9TNY4UEi1LTUyvSMnOAkQ
+  eTluDgURLh3aYGlOYtLkjMLc5Mh0idYlSUEuctAUkIgCQySvPg2mDRfolRVkqYl5GBgUGIpyC
+  1KDezBFX+FaM4B6OSMC87yHaezLwSuOmvgBYzAS3eq2IGsrgkESEl1cDkWu9pl+T6/sTnbdc+
+  LA1M/rvuIacX1x9D4S/5t89pB35qNnSyusD72MtkUuLFtle5grv/zAjKWPWoOjhnjTDTh0eSy
+  5jNrhyM1/9WzRripGzSVdhv7K1tN3Wz1p0fui+07q+c1sfife1okGDz3OQXB/xWF+Yw7V/79E
+  10Dd+RVO+sbnEr1+u73+q5/dX6r1EaY2ZeZqmi6Rp/PJthpaTMjZMOwV/uTNpw6VX7luv/PJN
+  Zzy158fLPTik247B/RfMFln9kPWj2oiYt/9yl8pX+7f1+xRXaf9aVyHE379YTS3rlPW1x3orF
+  T6/ddE6/5LR0Qfy+lX3Hr0t1JpWV/H7wLU3sRNVfU9+UzfWr57xWYinOSDTUYi4qTgQAQxHm9
+  HEDAAA=
+X-Env-Sender: Jose.DiazdeGrenu@digi.com
+X-Msg-Ref: server-33.tower-365.messagelabs.com!1563895970!28760!1
+X-Originating-IP: [66.77.174.16]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.43.9; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 13652 invoked from network); 23 Jul 2019 15:32:51 -0000
+Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
+  by server-33.tower-365.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 23 Jul 2019 15:32:51 -0000
+Received: from MTK-SMS-XCH02.digi.com (10.10.8.196) by MCL-VMS-XCH01.digi.com
+ (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul 2019
+ 10:32:50 -0500
+Received: from DOR-SMS-XCH01.digi.com (10.49.8.99) by MTK-SMS-XCH02.digi.com
+ (10.10.8.196) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul
+ 2019 10:32:49 -0500
+Received: from localhost.localdomain (10.101.2.92) by dor-sms-xch01.digi.com
+ (10.49.8.99) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul 2019
+ 17:32:47 +0200
+From:   Jose Diaz de Grenu <Jose.DiazdeGrenu@digi.com>
+To:     <Jose.DiazdeGrenu@digi.com>
+CC:     <srinivas.kandagatla@linaro.org>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
+        <festevam@gmail.com>, <linux-imx@nxp.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] nvmem: imx-ocotp: allow reads with arbitrary size and offset
+Date:   Tue, 23 Jul 2019 17:32:41 +0200
+Message-ID: <1563895963-19526-1-git-send-email-Jose.DiazdeGrenu@digi.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190722172618.4061-1-wsa+renesas@sang-engineering.com> <20190722172618.4061-5-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190722172618.4061-5-wsa+renesas@sang-engineering.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 23 Jul 2019 17:32:19 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPctuy6j34gZ53xdUqVUwcVLWtm1pxUGSbUXQBoTkEKRUA@mail.gmail.com>
-Message-ID: <CAJKOXPctuy6j34gZ53xdUqVUwcVLWtm1pxUGSbUXQBoTkEKRUA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] rtc: s5m: convert to i2c_new_dummy_device
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Sangbeom Kim <sbkim73@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.101.2.92]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 at 19:26, Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
-> ERRPTR which we use in error handling.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->
-> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
->
->  drivers/rtc/rtc-s5m.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Currently the imx-ocotp driver does only allow reading complete OTP words
+correcty aligned.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+Usually OTP memory is limited, so the fields are stored using as few bits as
+possible. This means that a given value rarely uses 32 bits and happens to be
+aligned.
 
-Best regards,
-Krzysztof
+Even though the NVMEM API offers a way to define offset and size of each cell
+(at bit level) this is not currently usable iwth the imx-ocotp driver, which
+forces consumers to read complete words and then hardcode the necessary
+shifting and masking in the driver code. 
+
+As an example take the nvmem consumer imx_thermal.c, which reads nvmem cells
+as uint32_t words:
+
+	ret = nvmem_cell_read_u32(&pdev->dev, "calib", &val);
+	if (ret)
+		return ret;
+
+	ret = imx_init_calib(pdev, val);
+	if (ret)
+		return ret;
+
+	ret = nvmem_cell_read_u32(&pdev->dev, "temp_grade", &val);
+	if (ret)
+		return ret;
+	imx_init_temp_grade(pdev, val);
+	
+but needs to later adjust the values in code:
+
+	// Inside imx_init_calib()
+	data->c1 = (ocotp_ana1 >> 9) & 0x1ff;
+
+	// Inside imx_init_temp_grade()
+	switch ((ocotp_mem0 >> 6) & 0x3) {
+	
+This patch adjusts the driver so that reads can be requested using any size
+and offset. Then, for example the nvmem cell "calib" could use the 'bits'
+property to specify size and offset in bits, removing the need to mask and
+shift in the driver code.
+
+This is specially useful when several drivers use the same nvmem cell and when
+the specific size and offset of a OTP value depends on a hardware version.
+
+Jose Diaz de Grenu (2):
+  nvmem: imx-ocotp: use constant for write restriction
+  nvmem: imx-ocotp: allow reads with arbitrary size and offset
+
+ drivers/nvmem/imx-ocotp.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
+
