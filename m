@@ -2,235 +2,110 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692EAC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C5AC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF1721901
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA9D21901
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="SxAiEfbM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSyIOGxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389877AbfGWMth (ORCPT
+        id S2389990AbfGWMuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:49:37 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:46850 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726186AbfGWMth (ORCPT
+        Tue, 23 Jul 2019 08:50:01 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40944 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfGWMuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:49:37 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 1C2922E14BD;
-        Tue, 23 Jul 2019 15:49:33 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id fmQPnrek3M-nWNePTP1;
-        Tue, 23 Jul 2019 15:49:33 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1563886173; bh=zurua77u+0xi6TbhWif5eKYYbACOpA6ckuYdIyXtbcw=;
-        h=Message-ID:Date:To:From:Subject;
-        b=SxAiEfbMTe6g9rgjKAYpYyEw55A0/Cpf/8g/VkVC2mITNAE9pvdqSLU2VYWVp8Lkl
-         0Pbz4BSHklhJhaDSvJbL/2kwJxymf9bSMWsd/Qj9XGAs1qI+mLpTe+FsKgU2gWpDM7
-         PWIgws5dlKgyWtMCh/8WPswvwbcAOiLtGgIAc8wg=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38b3:1cdf:ad1a:1fe1])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id TrvRdaTa6V-nW6KTqe5;
-        Tue, 23 Jul 2019 15:49:32 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH] mm/backing-dev: show state of all bdi_writeback in debugfs
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Tue, 23 Jul 2019 15:49:32 +0300
-Message-ID: <156388617236.3608.2194886130557491278.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Jul 2019 08:50:01 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so19094392pfp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:50:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ScN8WzRMKv9ujMKagsG6pPThL/4YrWzQ0Mh2lGU8I9Q=;
+        b=TSyIOGxIgaDKwv/VxCj9bFdSyEYkKmwRWtQYccafT2FZwvSVPVcwGy9p6YB3jYyvfE
+         IeYF5PtZPvSwA/3F6zkI8ozhCAqW8aWMETFoQu8cRdcCNYvdZCXrki5P2bKeogpqBf1U
+         WMbprsYbetR4G+JcREVUCLaDKpwNV683KXqQjMVypckUH0XsUeWzZmjF92kDBtefSYzV
+         pqwB917WJ7+yZsTh8QnRa9ZYQCRByw9Z3GBy9V58gi2Rk3qUvUosmftkhYzYmXk5taoN
+         Dn4Cu3sHOB1KHX5a6R+ensmxSRb8PpYckJXntTO3mH+0JCiq2XsT7/my9jVxTIJo1f6L
+         FXlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ScN8WzRMKv9ujMKagsG6pPThL/4YrWzQ0Mh2lGU8I9Q=;
+        b=QeCedJmevMijKN7VOJxIxsn9vZ3gIZQyfTwt3tn7XWR5247dAllUjYUgPnLJTSk1HK
+         igzqmZCGJEL0F6CCDFKJ2sp8quncbDcZDcAPa+qYcb1qJDiBpq3fOJWVy961NqQUzJuh
+         hW/4DLBsCctpGUZR4osp+usGtW0uxFFszbi6QzuWmKSuOv/6lFjo4wbE0eIbtN6n5Vuw
+         LqcHf+YyY94g8Xf4bn85FZ05fKkTwFKKCgnvd7P/5YRn/vc4gUFz/bZ1GfWCzG7hMQw1
+         64MkTU4Do4mfp0FaINuVzKP5PjYUyTyzcw6YAAnCCQUiei061R6hZSUdUBKJzNb56IAd
+         E90g==
+X-Gm-Message-State: APjAAAV6J9xkitD7u8H9wGvh73GNLB7KYM4zhjAiS1xtYxHh5pdqt5iZ
+        mIw0oO92r6jV5S8VA4u26Cs=
+X-Google-Smtp-Source: APXvYqxF0qCyIETGsOEUtisC5gjWspQwU9DqLrwTq+1COsi6j95zH/CKSyJl1TUBThdLpBE6qoH3GA==
+X-Received: by 2002:a62:4e58:: with SMTP id c85mr5635177pfb.176.1563886200947;
+        Tue, 23 Jul 2019 05:50:00 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id e17sm33750479pgm.21.2019.07.23.05.49.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 05:50:00 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     paul@paul-moore.com, eparis@redhat.com
+Cc:     linux-audit@redhat.com, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] kernel: auditfilter: Fix a possible null-pointer dereference in audit_watch_path()
+Date:   Tue, 23 Jul 2019 20:49:51 +0800
+Message-Id: <20190723124951.25713-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently /sys/kernel/debug/bdi/$maj:$min/stats shows only root bdi wb.
-With CONFIG_CGROUP_WRITEBACK=y there is one for each memory cgroup.
+In audit_find_rule(), there is an if statement on line 894 to check
+whether entry->rule.watch is NULL:
+    else if (entry->rule.watch)
 
-This patch shows here state of each bdi_writeback in form:
+If entry->rule.watch is NULL, audit_compare_rule on 910 is called:
+    audit_compare_rule(&entry->rule, &e->rule))
 
-<global state>
+In audit_compare_rule(), a->watch is used on line 720:
+    if (strcmp(audit_watch_path(a->watch), ...)
 
-Id: 1
-Cgroup: /
-<root wb state>
+In this case, a->watch is NULL, and audit_watch_path() will use:
+    watch->path
 
-Id: xxx
-Cgroup: /path
-<cgroup wb state>
+Thus, a possible null-pointer dereference may occur in this case.
 
-Id: yyy
-Cgroup: /path2
-<cgroup wb state>
+To fix this possible bug, an if statement is added in
+audit_compare_rule() to check a->watch before using a->watch.
 
-...
+This bug is found by a static analysis tool STCheck written by us.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
- mm/backing-dev.c |  106 +++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 93 insertions(+), 13 deletions(-)
+ kernel/auditfilter.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index e8e89158adec..3e752c4bafaf 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -45,7 +45,7 @@ static void bdi_debug_init(void)
- static int bdi_debug_stats_show(struct seq_file *m, void *v)
- {
- 	struct backing_dev_info *bdi = m->private;
--	struct bdi_writeback *wb = &bdi->wb;
-+	struct bdi_writeback *wb = v;
- 	unsigned long background_thresh;
- 	unsigned long dirty_thresh;
- 	unsigned long wb_thresh;
-@@ -65,43 +65,123 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
- 			nr_dirty_time++;
- 	spin_unlock(&wb->list_lock);
- 
--	global_dirty_limits(&background_thresh, &dirty_thresh);
--	wb_thresh = wb_calc_thresh(wb, dirty_thresh);
--
- #define K(x) ((x) << (PAGE_SHIFT - 10))
-+
-+	/* global state */
-+	if (wb == &bdi->wb) {
-+		global_dirty_limits(&background_thresh, &dirty_thresh);
-+		wb_thresh = wb_calc_thresh(wb, dirty_thresh);
-+		seq_printf(m,
-+			   "BdiDirtyThresh:     %10lu kB\n"
-+			   "DirtyThresh:        %10lu kB\n"
-+			   "BackgroundThresh:   %10lu kB\n"
-+			   "bdi_list:           %10u\n",
-+			   K(wb_thresh),
-+			   K(dirty_thresh),
-+			   K(background_thresh),
-+			   !list_empty(&bdi->bdi_list));
-+	}
-+
-+	/* cgroup header */
-+#ifdef CONFIG_CGROUP_WRITEBACK
-+	if (bdi->capabilities & BDI_CAP_CGROUP_WRITEBACK) {
-+		size_t buflen, len;
-+		char *buf;
-+
-+		seq_printf(m, "\nId: %d\nCgroup: ", wb->memcg_css->id);
-+		buflen = seq_get_buf(m, &buf);
-+		if (buf) {
-+			len = cgroup_path(wb->memcg_css->cgroup, buf, buflen);
-+			seq_commit(m, len <= buflen ? len : -1);
-+			seq_putc(m, '\n');
-+		}
-+	}
-+#endif /* CONFIG_CGROUP_WRITEBACK */
-+
- 	seq_printf(m,
- 		   "BdiWriteback:       %10lu kB\n"
- 		   "BdiReclaimable:     %10lu kB\n"
--		   "BdiDirtyThresh:     %10lu kB\n"
--		   "DirtyThresh:        %10lu kB\n"
--		   "BackgroundThresh:   %10lu kB\n"
- 		   "BdiDirtied:         %10lu kB\n"
- 		   "BdiWritten:         %10lu kB\n"
- 		   "BdiWriteBandwidth:  %10lu kBps\n"
-+		   "BdiAvgWriteBwidth:  %10lu kBps\n"
- 		   "b_dirty:            %10lu\n"
- 		   "b_io:               %10lu\n"
- 		   "b_more_io:          %10lu\n"
- 		   "b_dirty_time:       %10lu\n"
--		   "bdi_list:           %10u\n"
- 		   "state:              %10lx\n",
- 		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
- 		   (unsigned long) K(wb_stat(wb, WB_RECLAIMABLE)),
--		   K(wb_thresh),
--		   K(dirty_thresh),
--		   K(background_thresh),
- 		   (unsigned long) K(wb_stat(wb, WB_DIRTIED)),
- 		   (unsigned long) K(wb_stat(wb, WB_WRITTEN)),
- 		   (unsigned long) K(wb->write_bandwidth),
-+		   (unsigned long) K(wb->avg_write_bandwidth),
- 		   nr_dirty,
- 		   nr_io,
- 		   nr_more_io,
- 		   nr_dirty_time,
--		   !list_empty(&bdi->bdi_list), bdi->wb.state);
-+		   wb->state);
- #undef K
- 
- 	return 0;
- }
--DEFINE_SHOW_ATTRIBUTE(bdi_debug_stats);
-+
-+static void *bdi_debug_stats_start(struct seq_file *m, loff_t *ppos)
-+{
-+	struct backing_dev_info *bdi = m->private;
-+	struct bdi_writeback *wb;
-+	loff_t pos = *ppos;
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
-+		if (pos-- == 0)
-+			return wb;
-+	return NULL;
-+}
-+
-+static void *bdi_debug_stats_next(struct seq_file *m, void *v, loff_t *ppos)
-+{
-+	struct backing_dev_info *bdi = m->private;
-+	struct bdi_writeback *wb = v;
-+
-+	list_for_each_entry_continue_rcu(wb, &bdi->wb_list, bdi_node) {
-+		++*ppos;
-+		return wb;
-+	}
-+	return NULL;
-+}
-+
-+static void bdi_debug_stats_stop(struct seq_file *m, void *v)
-+{
-+	rcu_read_unlock();
-+}
-+
-+static const struct seq_operations bdi_debug_stats_seq_ops = {
-+	.start	= bdi_debug_stats_start,
-+	.next	= bdi_debug_stats_next,
-+	.stop	= bdi_debug_stats_stop,
-+	.show	= bdi_debug_stats_show,
-+};
-+
-+static int bdi_debug_stats_open(struct inode *inode, struct file *file)
-+{
-+	struct seq_file *m;
-+	int ret;
-+
-+	ret = seq_open(file, &bdi_debug_stats_seq_ops);
-+	if (!ret) {
-+		m = file->private_data;
-+		m->private = inode->i_private;
-+	}
-+	return ret;
-+}
-+
-+static const struct file_operations bdi_debug_stats_fops = {
-+	.open		= bdi_debug_stats_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= seq_release,
-+};
- 
- static void bdi_debug_register(struct backing_dev_info *bdi, const char *name)
- {
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index b0126e9c0743..b0ad17b14609 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -717,6 +717,8 @@ static int audit_compare_rule(struct audit_krule *a, struct audit_krule *b)
+ 				return 1;
+ 			break;
+ 		case AUDIT_WATCH:
++			if (!a->watch)
++				break;
+ 			if (strcmp(audit_watch_path(a->watch),
+ 				   audit_watch_path(b->watch)))
+ 				return 1;
+-- 
+2.17.0
 
