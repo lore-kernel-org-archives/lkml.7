@@ -2,154 +2,276 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7F6C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CA4C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC31122543
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE45A218B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:33:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="aXjyL4G7";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="tiA5n/WX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733052AbfGWPdG (ORCPT
+        id S1733210AbfGWPdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:33:06 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.5]:33338 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729570AbfGWPc6 (ORCPT
+        Tue, 23 Jul 2019 11:33:19 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:39354 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729570AbfGWPdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:32:58 -0400
-Received: from [67.219.250.101] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-a.us-west-2.aws.symcld.net id 9B/55-14470-8A8273D5; Tue, 23 Jul 2019 15:32:56 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRWlGSWpSXmKPExsXi5LtOQHeFhnm
-  swasnOhYPr/pbrJq6k8Vi0+NrrBZdv1YyW1zeNYfN4u/2TSwWL7aIW7QdO8bqwOGxc9Zddo9N
-  qzrZPO5c28PmsXlJvcfGdzuYPPr/Gnh83iQXwB7FmpmXlF+RwJrxeuI05oJ1QhXLbv9ga2D8y
-  tfFyMkhJLCaUWLTnswuRi4gew2jxJf3exghHKDE29kv2UCq2ARMJK7M2MncxcjBISIgL3HiiT
-  dImFngCaNE32p7EFtYIFBi6uP9TCAlLAKqEvvvRoKEeQU8Jf6famYEsSUE5CRunusEm8Ip4CW
-  x4VwJxAmeEjc+nmSDKBeUODnzCQvEdAmJgy9eMEPUqEm0zZkA1ioBdMDf3rIJjAKzkHTMQtKx
-  gJFpFaN5UlFmekZJbmJmjq6hgYGuoaGRrqGxga6lqV5ilW6iXmmxbnlqcYmukV5iebFecWVuc
-  k6KXl5qySZGYFykFDTF72A8O+uN3iFGSQ4mJVHeV5/MYoX4kvJTKjMSizPii0pzUosPMcpwcC
-  hJ8Hapm8cKCRalpqdWpGXmAGMUJi3BwaMkwrtNDSjNW1yQmFucmQ6ROsWoKCXOWwKSEABJZJT
-  mwbXB0sIlRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSsK87CDbeTLzSuCmvwJazAS0eK+KGcji
-  kkSElFQDU9+S9aELds1s/lIeJLgnzG5Kl2v008mxxXvfuebIRnw9+8rPY/OZz4senFLM28rEN
-  Wnt9xbbL4civCz5Vrblbppp/u/W1qL0c7K/qu6mTqj6e2lSl9nl8K8Mzx7d/uzBrzot0sH6ju
-  Q/h4oH3NxGM6QNmzd0nb2nvebG/ukJonPkRE127DC/uf+q++Tpk9T6Js2smjYn5t7HgzWan79
-  UTVcJvfO1vmz2o+TzyWqRHGaHGQ/VxpzoPjBDSEh18rEt9hZ/9D2eTeoR7JNfLdojERWnGH6m
-  Q72bVXT/t8yrUbP7XZU7D0pJ7XOrjBCuCD5WX9B1bg7H3/tsC21zDL4cf77+3aEn5ls2lvxPO
-  l054YkSS3FGoqEWc1FxIgBkC3GWhgMAAA==
-X-Env-Sender: Jose.DiazdeGrenu@digi.com
-X-Msg-Ref: server-30.tower-325.messagelabs.com!1563895975!30184!1
-X-Originating-IP: [66.77.174.16]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.9; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 21640 invoked from network); 23 Jul 2019 15:32:56 -0000
-Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
-  by server-30.tower-325.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 23 Jul 2019 15:32:56 -0000
-Received: from MTK-SMS-XCH04.digi.com (10.10.8.198) by MCL-VMS-XCH01.digi.com
- (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul 2019
- 10:32:55 -0500
-Received: from DOR-SMS-XCH01.digi.com (10.49.8.99) by MTK-SMS-XCH04.digi.com
- (10.10.8.198) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul
- 2019 10:32:54 -0500
-Received: from localhost.localdomain (10.101.2.92) by dor-sms-xch01.digi.com
- (10.49.8.99) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 23 Jul 2019
- 17:32:52 +0200
-From:   Jose Diaz de Grenu <Jose.DiazdeGrenu@digi.com>
-To:     <Jose.DiazdeGrenu@digi.com>
-CC:     <srinivas.kandagatla@linaro.org>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] nvmem: imx-ocotp: allow reads with arbitrary size and offset
-Date:   Tue, 23 Jul 2019 17:32:43 +0200
-Message-ID: <1563895963-19526-3-git-send-email-Jose.DiazdeGrenu@digi.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563895963-19526-1-git-send-email-Jose.DiazdeGrenu@digi.com>
-References: <1563895963-19526-1-git-send-email-Jose.DiazdeGrenu@digi.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.101.2.92]
+        Tue, 23 Jul 2019 11:33:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 1374E8EE147;
+        Tue, 23 Jul 2019 08:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563895998;
+        bh=BpRjUmHUdu3Q29+u0OMpk0BVieyFeETGZPNlSkyqEbs=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=aXjyL4G7qx6akPE2ezoFMcUhcLIbwAqsbIoSGPouqR8p5XWDHeufpRHkwXCC52Pqk
+         3BWRy4yfFLd8x5VIUh3I1WQFds/6VTlBsElgltd+/hwpfnsXC47CMj51b7dPqIKn0D
+         YO06aHJlYWUPYoGOz6jWQLi1pIm02Nk5ThR/KRoM=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XU24is8yc8ax; Tue, 23 Jul 2019 08:33:17 -0700 (PDT)
+Received: from jarvis.lan (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 57EC08EE0EF;
+        Tue, 23 Jul 2019 08:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1563895997;
+        bh=BpRjUmHUdu3Q29+u0OMpk0BVieyFeETGZPNlSkyqEbs=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=tiA5n/WXq14sDr5bvg0AJ8VNLZHVQjdl0ftb4IZtyszcxOJ1c1XqexFpZ8FMZPJut
+         nRbCpmon/Of4Lo3kva2e8/gfle9471a8UMZWOJzUL6aaqk5yK9CT4p/Bjl/u7B/glL
+         OMKusvw5KpThDnFRC0lVo6b+Sleep5JmL9kMKW8A=
+Message-ID: <1563895995.3609.10.camel@HansenPartnership.com>
+Subject: Re: Linux 5.3-rc1
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Steffen Maier <maier@linux.ibm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-scsi <linux-scsi@vger.kernel.org>
+Date:   Tue, 23 Jul 2019 08:33:15 -0700
+In-Reply-To: <1e05670d-9e28-1b1d-249d-743c736e6d63@linux.ibm.com>
+References: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
+         <20190722222126.GA27291@roeck-us.net>
+         <1563839144.2504.5.camel@HansenPartnership.com>
+         <4dc6ef77-afce-1c6d-add3-8df76332e672@roeck-us.net>
+         <1563859682.2504.17.camel@HansenPartnership.com>
+         <1e05670d-9e28-1b1d-249d-743c736e6d63@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the driver only allows to read 32 aligned 32-bit chunks. This
-is inconvenient when defining nvmem-cells, as they are rarely a multiple
-of 32 bits in size, and that makes the nvmem-consumer hardcode offsets and
-masks to extract the real value.
+On Tue, 2019-07-23 at 16:25 +0200, Steffen Maier wrote:
+> On 7/23/19 7:28 AM, James Bottomley wrote:
+> > On Mon, 2019-07-22 at 19:42 -0700, Guenter Roeck wrote:
+> > > On 7/22/19 4:45 PM, James Bottomley wrote:
+> > > > [linux-scsi added to cc]
+> > > > On Mon, 2019-07-22 at 15:21 -0700, Guenter Roeck wrote:
+> > > > > On Sun, Jul 21, 2019 at 02:33:38PM -0700, Linus Torvalds
+> > > > > wrote:
+> > > > > 
+> > > > > [ ... ]
+> > > > > > 
+> > > > > > Go test,
+> > > > > > 
+> > > > > 
+> > > > > Things looked pretty good until a few days ago.
+> > > > > Unfortunately,
+> > > > > the last few days brought in a couple of issues.
+> > > > > 
+> > > > > riscv:virt:defconfig:scsi[virtio]
+> > > > > riscv:virt:defconfig:scsi[virtio-pci]
+> > > > > 
+> > > > > Boot tests crash with no useful backtrace. Bisect points to
+> > > > > merge ac60602a6d8f ("Merge tag 'dma-mapping-5.3-1'"). Log is
+> > > > > at
+> > > > > https://kerneltests.org/builders/qemu-riscv64-master/builds/2
+> > > > > 38/s
+> > > > > teps
+> > > > > /qemubuildcommand_1/logs/stdio
+> > > > > 
+> > > > > ppc:mpc8544ds:mpc85xx_defconfig:sata-sii3112
+> > > > > ppc64:pseries:pseries_defconfig:sata-sii3112
+> > > > > ppc64:pseries:pseries_defconfig:little:sata-sii3112
+> > > > > ppc64:ppce500:corenet64_smp_defconfig:e5500:sata-sii3112
+> > > > > 
+> > > > > ata1: lost interrupt (Status 0x50)
+> > > > > ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x6
+> > > > > frozen
+> > > > > ata1.00: failed command: READ DMA
+> > > > > 
+> > > > > and many similar errors. Boot ultimately times out. Bisect
+> > > > > points
+> > > > > to
+> > > > > merge
+> > > > > f65420df914a ("Merge tag 'scsi-fixes'").
+> > > > > 
+> > > > > Logs:
+> > > > > https://kerneltests.org/builders/qemu-ppc64-master/builds/121
+> > > > > 2/st
+> > > > > eps/
+> > > > > qemubuildcommand/logs/stdio
+> > > > > https://kerneltests.org/builders/qemu-ppc-master/builds/1255/
+> > > > > step
+> > > > > s/qe
+> > > > > mubuildcommand/logs/stdio
+> > > > > 
+> > > > > Guenter
+> > > > > 
+> > > > > ---
+> > > > > riscv bisect log
+> > > > > 
+> > > > > # bad: [5f9e832c137075045d15cd6899ab0505cfb2ca4b] Linus 5.3-
+> > > > > rc1
+> > > > > # good: [bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1] scsi:
+> > > > > core:
+> > > > > take
+> > > > > the DMA max mapping size into account
+> > > > > # first bad commit:
+> > > > > [ac60602a6d8f6830dee89f4b87ee005f62eb7171]
+> > > > > Merge
+> > > > > tag 'dma-mapping-5.3-1' of
+> > > > > git://git.infradead.org/users/hch/dma-
+> > > > > mapping
+> > > > When a bisect lands on a merge commit it usually indicates bad
+> > > > interaction between two trees.  The way to find it is to do a
+> > > > bisect,
+> > > > but merge up to the other side of the scsi-fixes pull before
+> > > > running
+> > > > tests so the interaction is exposed in the bisect.
+> > > > 
+> > > 
+> > > Can you provide instructions for dummies ?
+> > 
+> > do a man git-bisect and then follow the 'Automatically bisect with
+> > temporary modifications' example.  You substitute
+> > 168c79971b4a7be7011e73bf488b740a8e1135c8 for hot-fix
+> > 
+> > > > However my money is on:
+> > > > 
+> > > > 
+> > > > commit bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1
+> > > > Author: Christoph Hellwig <hch@lst.de>
+> > > > Date:   Mon Jun 17 14:19:54 2019 +0200
+> > > > 
+> > > >       scsi: core: take the DMA max mapping size into account
+> > > >    
+> > > > Now that I look at the code again:
+> > > > 
+> > > > 
+> > > > +       shost->max_sectors = min_t(unsigned int, shost-
+> > > > > max_sectors,
+> > > > 
+> > > > +                       dma_max_mapping_size(dev) <<
+> > > > SECTOR_SHIFT);
+> > > > 
+> > > > That shift looks to be the wrong way around (should be >>).  I
+> > > > bet
+> > > > something is giving a very large number which becomes zero on
+> > > > left
+> > > > shift, meaning max_sectors gets set to zero.
+> > > > 
+> > > 
+> > > That does indeed look bad, but changing it doesn't make a
+> > > difference.
+> > 
+> > Odd, all the other changes are driver specific (and not in ATA)
+> > apart
+> > from this one:
+> > 
+> > commit 7ad388d8e4c703980b7018b938cdeec58832d78d
+> > Author: Christoph Hellwig <hch@lst.de>
+> > Date:   Mon Jun 17 14:19:53 2019 +0200
+> > 
+> >      scsi: core: add a host / host template field for the virt
+> > boundary
+> > 
+> > 
+> > I suppose it could be because the virt_boundary_mask isn't set, but
+> > that should just set zero, which is what block usually does.
+> 
+> I found max_segment_size unexpectedly to be UINT_MAX with zfcp today
+> in our CI. 
+> My investigations are still very early, but I thought, I share a few
+> thoughts 
+> as I'm way too unfamiliar with the DMA business and thus hope for
+> help.
+> 
+> Above commit introduced an unconditional call to
+> blk_queue_virt_boundary(q, 
+> shost->virt_boundary_mask), _after_ blk_queue_max_segment_size(q, 
+> shost->max_segment_size).
+> 
+> Looking at the source, dma_set_max_seg_size() seems to
+> unconditionally 
+> overwrite max_segment_size:
+> 
+> > /**
+> >  * blk_queue_virt_boundary - set boundary rules for bio merging
+> >  * @q:  the request queue for the device
+> >  * @mask:  the memory boundary mask
+> >  **/
+> > void blk_queue_virt_boundary(struct request_queue *q, unsigned long
+> > mask)
+> > {
+> > 	q->limits.virt_boundary_mask = mask;
+> > 
+> > 	/*
+> > 	 * Devices that require a virtual boundary do not support
+> > scatter/gather
+> > 	 * I/O natively, but instead require a descriptor list entry
+> > for each
+> > 	 * page (which might not be idential to the Linux
+> > PAGE_SIZE).  Because
+> > 	 * of that they are not limited by our notion of "segment
+> > size".
+> > 	 */
+> > 	q->limits.max_segment_size = UINT_MAX;
+> > }
+> > EXPORT_SYMBOL(blk_queue_virt_boundary);
+> 
+> Wild guess: Do we need to make the call to blk_queue_virt_boundary()
+> conditional?
+> 
+> Cf. https://www.spinics.net/lists/linux-scsi/msg131077.html ("[PATCH
+> v2] iser: 
+> explicitly set shost max_segment_size if non virtual boundary
+> devices")
+> 
 
-Remove the limitation but keep reading in 32-bit chunks from the hardware
-to ensure there is no change in the behaviour.
+Yes, I think so.  Can someone try this, or something like it.
 
-Signed-off-by: Jose Diaz de Grenu <Jose.DiazdeGrenu@digi.com>
+Thanks,
+
+James
+
 ---
- drivers/nvmem/imx-ocotp.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index dc86d863563a..9590eeab85d8 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -121,16 +121,8 @@ static int imx_ocotp_read(void *context, unsigned int offset,
- 			  void *val, size_t bytes)
- {
- 	struct ocotp_priv *priv = context;
--	unsigned int count;
--	u32 *buf = val;
-+	u8 *buf = val;
- 	int i, ret;
--	u32 index;
--
--	index = offset >> 2;
--	count = bytes >> 2;
--
--	if (count > (priv->params->nregs - index))
--		count = priv->params->nregs - index;
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 9381171c2fc0..4715671a1537 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1793,7 +1793,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+ 	dma_set_seg_boundary(dev, shost->dma_boundary);
  
- 	mutex_lock(&ocotp_mutex);
+ 	blk_queue_max_segment_size(q, shost->max_segment_size);
+-	blk_queue_virt_boundary(q, shost->virt_boundary_mask);
++	if (shost->virt_boundary_mask)
++		blk_queue_virt_boundary(q, shost->virt_boundary_mask);
+ 	dma_set_max_seg_size(dev, queue_max_segment_size(q));
  
-@@ -147,9 +139,9 @@ static int imx_ocotp_read(void *context, unsigned int offset,
- 		goto read_end;
- 	}
- 
--	for (i = index; i < (index + count); i++) {
--		*buf++ = readl(priv->base + IMX_OCOTP_OFFSET_B0W0 +
--			       i * IMX_OCOTP_OFFSET_PER_WORD);
-+	for (i = offset; i < (bytes + offset); i++) {
-+		u32 word_val = readl(priv->base + IMX_OCOTP_OFFSET_B0W0 +
-+				     (i >> 2) * IMX_OCOTP_OFFSET_PER_WORD);
- 
- 		/* 47.3.1.2
- 		 * For "read locked" registers 0xBADABADA will be returned and
-@@ -157,9 +149,14 @@ static int imx_ocotp_read(void *context, unsigned int offset,
- 		 * software before any new write, read or reload access can be
- 		 * issued
- 		 */
--		if (*(buf - 1) == IMX_OCOTP_READ_LOCKED_VAL)
-+		if (word_val == IMX_OCOTP_READ_LOCKED_VAL)
- 			imx_ocotp_clr_err_if_set(priv->base);
-+
-+		word_val >>= (i % 4) * 8;
-+
-+		*buf++ = (u8) (word_val & 0xFF);
- 	}
-+
- 	ret = 0;
- 
- read_end:
-@@ -415,8 +412,8 @@ static int imx_ocotp_write(void *context, unsigned int offset, void *val,
- static struct nvmem_config imx_ocotp_nvmem_config = {
- 	.name = "imx-ocotp",
- 	.read_only = false,
--	.word_size = 4,
--	.stride = 4,
-+	.word_size = 1,
-+	.stride = 1,
- 	.reg_read = imx_ocotp_read,
- 	.reg_write = imx_ocotp_write,
- };
+ 	/*
