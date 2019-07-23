@@ -2,155 +2,157 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231B9C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F313C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E22DA218A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:17:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F/IgDoO0"
+	by mail.kernel.org (Postfix) with ESMTP id 2222621842
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390569AbfGWOR2 (ORCPT
+        id S2388059AbfGWOTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:17:28 -0400
-Received: from mail-eopbgr10048.outbound.protection.outlook.com ([40.107.1.48]:8100
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732972AbfGWOR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:17:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gm5QVtQ90s8ZTmx2OqsiI8Us4NiroSb9v3/SOJPiTaE1mDoRI0PFB5Kimr0msYnObSicFYenLKEon5RfP4BsQxOfKrRCXFd9jawPTP5JjWtmjOlRIzigxH/YRvuXxStJ41SOG40q/Aj507vav0RwPcvjDCXJCqJWjwKSKEaX1367st93WPzMWeanIEnpF586ICch4NLd02Fbnbzjow6vQfzmmSFKKdIuzU5lb85nBjdIpkQgvSekVzylaCPXuwBSFabBN644BiDUdUJyyayW30OEB51zGgVK4z02gpa4/pME9PTPWojWa7Q1Xtj81iUgyjMamJ0qaeAIGkwmZdWvdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8hhXx5l9cykJ6eoTSz8YsUulV3YXes2hZ9BH4G99wYw=;
- b=e/SD48xjOUESNZgXoVgV3XebMX56urNywEkMC4ZEZLtTpxJQsF7T+Gc7OayJdbOtRn5N5MdzCA3BTy03UdVlV1GK3CzXWScp/NSrcfm1xfnN2FyxCGY+hbbGNtOZAhkHUT+wWS9b19jlAQgSiTQIcuSleEOarWnsxjmyzmEPEgdKzOMjv0z0DXTr6ZfYJSVNn7ntppCPUHsyc84G601GZsm7wZEqD2TlljJ/Kq1zmQl0B/ww85jvoaFoRcWg70BTNFBI29R2j/8a0s6KgJFEmZtui5xsE4On+u/I2oMYJrDQkH87MzuZ1vYYj5M61IYjmohMuknDHzt44URcMLS8vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8hhXx5l9cykJ6eoTSz8YsUulV3YXes2hZ9BH4G99wYw=;
- b=F/IgDoO01LgTT1N8bNIDl6PUHuR1sdmyoj6kO5nuiAYKLy0f0Ez44qGF1wXur2SzWQ86siR9SJ4zBhmSC7K5+LQkmZXe2bktmjNYWNOYcsXzv/1mTFePUC6FWi9nT/nDSq0eifWG3IVA6fja6cE7Of5yf/BX5SbhH4ebOfhYppg=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3760.eurprd04.prod.outlook.com (52.134.15.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.14; Tue, 23 Jul 2019 14:17:23 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Tue, 23 Jul 2019
- 14:17:23 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 02/14] crypto: caam - simplfy clock initialization
-Thread-Topic: [PATCH v6 02/14] crypto: caam - simplfy clock initialization
-Thread-Index: AQHVPLPWYTLdMdHH1EGtW/zbNRZFgA==
-Date:   Tue, 23 Jul 2019 14:17:23 +0000
-Message-ID: <VI1PR0402MB3485E4DDB5E3BDCBC2AAAFE398C70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
- <20190717152458.22337-3-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f02b2314-1c7d-4a36-3561-08d70f787b68
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3760;
-x-ms-traffictypediagnostic: VI1PR0402MB3760:
-x-microsoft-antispam-prvs: <VI1PR0402MB37608C70DE08E2AF3CF42E4498C70@VI1PR0402MB3760.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0107098B6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(14444005)(256004)(66066001)(305945005)(86362001)(7736002)(102836004)(476003)(6436002)(74316002)(99286004)(44832011)(486006)(316002)(6506007)(53546011)(8676002)(110136005)(54906003)(14454004)(478600001)(71190400001)(186003)(71200400001)(81156014)(81166006)(26005)(7696005)(2501003)(76176011)(25786009)(55016002)(76116006)(52536014)(91956017)(6246003)(2906002)(66946007)(446003)(229853002)(8936002)(5660300002)(33656002)(53936002)(66446008)(6116002)(3846002)(66476007)(68736007)(4326008)(66556008)(9686003)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3760;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0kJ+nsZ3uH2ZGJ/so2W0Nd0ouO0wJtokfXn0hVO8Y1qNRVx8/O6yaYX1XGXd7zvlfKXhP2QiC8FQVZ2gupd4AYiKueIvZJWsb95WDvQhUla+T7f7lNcVTqSC7N38zLIlStIbIfnly3ldHOqEVbko+NAiig4vPm6cgbjl0QwuBAcyY8NgRRgkhiqe1Qz8ArCtpMaHO3AXXefH2KqGywB0+wM9tGPFkM/zFXGXxAAkOR60uWR/F6kxbMKHHmyal4SniJRwH1srAMKyNuclcY2RDkkeFjGkNnocaZlcnd2QhCP5L/DY6M+ZkwSsZMND+VYl1oVVwr4TpBV4jLzS2QyFV0S036BkfMoW+qdGRDtRH9zp5W6u/tZ3E8pIBtwvjC9CoASYjeP+wNYCz7uwL9mpv6Dc5+y5X3mOincR2BGBgQI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jul 2019 10:19:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:55576 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729961AbfGWOTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:19:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B26328;
+        Tue, 23 Jul 2019 07:19:09 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 252A33F71F;
+        Tue, 23 Jul 2019 07:19:08 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 15:19:05 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>, Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/6] ARM: psci: cpuidle: PSCI CPUidle rework
+Message-ID: <20190723141905.GB22025@e121166-lin.cambridge.arm.com>
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+ <CAPDyKFqAMhx_8T5FF7MujYc7HuNVAfCYx4j1UEfesuCc-TE-rw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f02b2314-1c7d-4a36-3561-08d70f787b68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 14:17:23.5534
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3760
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqAMhx_8T5FF7MujYc7HuNVAfCYx4j1UEfesuCc-TE-rw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/17/2019 6:25 PM, Andrey Smirnov wrote:=0A=
-> Simplify clock initialization code by converting it to use clk-bulk,=0A=
-> devres and soc_device_match() match table. No functional change=0A=
-> intended.=0A=
-> =0A=
-Thanks.=0A=
-Two nitpicks below.=0A=
-=0A=
-> +static int init_clocks(struct device *dev,=0A=
-> +		       struct caam_drv_private *ctrlpriv,=0A=
-> +		       const struct caam_imx_data *data)=0A=
-> +{=0A=
-> +	int ret;=0A=
-> +=0A=
-> +	ctrlpriv->num_clks =3D data->num_clks;=0A=
-> +	ctrlpriv->clks =3D devm_kmemdup(dev, data->clks,=0A=
-> +				      data->num_clks * sizeof(data->clks[0]),=0A=
-> +				      GFP_KERNEL);=0A=
-> +	if (!ctrlpriv->clks)=0A=
-> +		return -ENOMEM;=0A=
-> +=0A=
-> +	ret =3D devm_clk_bulk_get(dev, ctrlpriv->num_clks, ctrlpriv->clks);=0A=
-> +	if (ret) {=0A=
-> +		dev_err(dev,=0A=
-> +			"Failed to request all necessary clocks\n");=0A=
-> +		return ret;=0A=
-> +	}=0A=
-> +=0A=
-> +	ret =3D clk_bulk_prepare_enable(ctrlpriv->num_clks, ctrlpriv->clks);=0A=
-> +	if (ret) {=0A=
-> +		dev_err(dev,=0A=
-> +			"Failed to prepare/enable all necessary clocks\n");=0A=
-> +		return ret;=0A=
-> +	}=0A=
-> +=0A=
-> +	ret =3D devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);=0A=
-> +	if (ret)=0A=
-> +		return ret;=0A=
-> +=0A=
-> +	return 0;=0A=
-Or directly:=0A=
-	return devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);=0A=
-=0A=
-> +	imx_soc_match =3D soc_device_match(caam_imx_soc_table);=0A=
-> +	if (imx_soc_match) {=0A=
-> +		if (!imx_soc_match->data) {=0A=
-> +			dev_err(dev, "No clock data provided for i.MX SoC");=0A=
-> +			return -EINVAL;=0A=
-[...]=0A=
-> +		ret =3D init_clocks(dev, ctrlpriv, imx_soc_match->data);=0A=
-ctrlpriv can be retrieved using dev_get_drvdata(dev), thus there's no need=
-=0A=
-to pass it as parameter.=0A=
-=0A=
-Horia=0A=
+On Tue, Jul 23, 2019 at 01:49:15PM +0200, Ulf Hansson wrote:
+> On Mon, 22 Jul 2019 at 17:37, Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > Current PSCI CPUidle driver is built on top of the generic ARM
+> > CPUidle infrastructure that relies on the architectural back-end
+> > idle operations to initialize and enter idle states.
+> >
+> > On ARM64 systems, PSCI is the only interface the kernel ever uses
+> > to enter idle states, so, having to rely on a generic ARM CPUidle
+> > driver when there is and there will always be only one method
+> > for entering idle states proved to be overkill, more so given
+> > that on ARM 32-bit systems (that can also enable the generic
+> > ARM CPUidle driver) only one additional idle back-end was
+> > ever added:
+> >
+> > drivers/soc/qcom/spm.c
+> >
+> > and it can be easily converted to a full-fledged CPUidle driver
+> > without requiring the generic ARM CPUidle framework.
+> >
+> > Furthermore, the generic ARM CPUidle infrastructure forces the
+> > PSCI firmware layer to keep CPUidle specific information in it,
+> > which does not really fit its purpose that should be kernel
+> > control/data structure agnostic.
+> >
+> > Lastly, the interface between the generic ARM CPUidle driver and
+> > the arch back-end requires an idle state index to be passed to
+> > suspend operations, with idle states back-end internals (such
+> > as idle state parameters) hidden in architectural back-ends and
+> > not available to the generic ARM CPUidle driver.
+> >
+> > To improve the above mentioned shortcomings, implement a stand
+> > alone PSCI CPUidle driver; this improves the current kernel
+> > code from several perspective:
+> >
+> > - Move CPUidle internal knowledge into CPUidle driver out of
+> >   the PSCI firmware interface
+> > - Give the PSCI CPUidle driver control over power state parameters,
+> >   in particular in preparation for PSCI OSI support
+> > - Remove generic CPUidle operations infrastructure from the kernel
+> >
+> > This patchset does not go as far as removing the generic ARM CPUidle
+> > infrastructure in order to collect feedback on the new approach
+> > before completing the removal from the kernel, the generic and PSCI
+> > CPUidle driver are left to co-exist.
+> 
+> I like the approach and I think this series definitely moves things in
+> the right direction.
+> 
+> Of course, some additional cleanups/re-works on top are needed to show
+> its full benefit, but step by step we reach that point.
+
+I pushed code out as we agreed.
+
+git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/linux.git
+
+branch: cpuidle/psci-driver
+
+I will version the code as I update the patches, I will leave
+them on the list for this week before sending a v2.
+
+> > Tested on Juno platform with both DT and ACPI boot firmwares.
+> >
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Cc: Sudeep Holla <sudeep.holla@arm.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> >
+> > Lorenzo Pieralisi (6):
+> >   ARM: cpuidle: Remove useless header include
+> >   ARM: cpuidle: Remove overzealous error logging
+> >   drivers: firmware: psci: Decouple checker from generic ARM CPUidle
+> >   ARM: psci: cpuidle: Introduce PSCI CPUidle driver
+> >   ARM: psci: cpuidle: Enable PSCI CPUidle driver
+> >   PSCI: cpuidle: Refactor CPU suspend power_state parameter handling
+> >
+> >  MAINTAINERS                          |   8 +
+> >  arch/arm/configs/imx_v6_v7_defconfig |   1 +
+> >  arch/arm64/configs/defconfig         |   1 +
+> >  arch/arm64/kernel/cpuidle.c          |  50 +++++-
+> >  arch/arm64/kernel/psci.c             |   4 -
+> >  drivers/cpuidle/Kconfig.arm          |   7 +
+> >  drivers/cpuidle/Makefile             |   1 +
+> >  drivers/cpuidle/cpuidle-arm.c        |  13 +-
+> >  drivers/cpuidle/cpuidle-psci.c       | 235 +++++++++++++++++++++++++++
+> >  drivers/firmware/psci/psci.c         | 167 +------------------
+> >  drivers/firmware/psci/psci_checker.c |  16 +-
+> >  include/linux/cpuidle.h              |  17 +-
+> >  include/linux/psci.h                 |   4 +-
+> >  13 files changed, 338 insertions(+), 186 deletions(-)
+> >  create mode 100644 drivers/cpuidle/cpuidle-psci.c
+> >
+> > --
+> > 2.21.0
+> >
+> 
+> For the series, besides the minor comments I had on patch 4, feel free to add:
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Thanks !
+Lorenzo
