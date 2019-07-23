@@ -2,68 +2,69 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29236C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E10C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1DF21903
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21A321903
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioqX3pf2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZGc6b++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbfGWMqO (ORCPT
+        id S2389753AbfGWMqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:46:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39301 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727724AbfGWMqO (ORCPT
+        Tue, 23 Jul 2019 08:46:33 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34476 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727724AbfGWMqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:46:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b7so20611569pls.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:46:14 -0700 (PDT)
+        Tue, 23 Jul 2019 08:46:33 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so20598449plt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=AqD68kCeUjLnMnjMcDvk6An8PGKZbr6I3VjMH7CQavU=;
-        b=ioqX3pf2AXx4+ruf7u0grl5/sg5w01GEnvz5hinkDg93S923RNmBKgqlFYtXXDbB0i
-         uShMa1QoNj2Rl0KlhwyK5XFKu6fvKFmwl5fS0XaeNV4nQZItdxtC9GsPtab/yDZ0U5sE
-         bKaD1L0QdfUxUJMOrGkMIfgCGKR7dhfV/LBk61jEs6lFP+5NVd+6slpb5yuyf0Zu/JZl
-         r5og3oTOYf+T53l2JFTtXtgYeBN4giGTqKasFBQmX+/FwwQm2+2SQkOstqF8Db0eWx7V
-         IjwRFlHQu8TgY6oKO+lvCP57Re3pX/zCPFp1jOhVZyFSwfc4Ilq5lsZz6Yyyf56ZBWx1
-         6xhQ==
+        bh=KQTE/ixRUrNiBtj/aCpsC+f5UpJn3iQqRlhswTO8qG0=;
+        b=RZGc6b++3eT519FJQCYX0Qiv89Cz3sJEGeYm1DTXyPOgKYWbnjOyLO2NbiTqowj+vz
+         6T4+VwCOCOU8IzCc16KkHaAizNB3t8mNaTBNRcUI72Q3gxQvB1U5sSGGc+/nNYADfSnR
+         DZPV4bJCsxKQDqO+d+ksBbWMz9LdgxrkMGDEhTRdvzGA5eIdYupgOLj5ENsKfjbCTLB2
+         N4PH4wn7FyLmygPFa7gYSTMZ9dGoszoVmYHgAiC+8LRBneMj8FZRbM86GQuERQnSZ+L2
+         SWYNlZN5gW5+JXk7jU8XhWiGiIuyv9H4QwC9I4+vEyUpGMDO9ESpUK6zHI4PGdVkJqkf
+         P2jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=AqD68kCeUjLnMnjMcDvk6An8PGKZbr6I3VjMH7CQavU=;
-        b=i/MD1AER0TZw9b/9KK+W1YCjk0N2GerZIsqGtRsDYQMDy1OSsEQfdCsMIiD5iIw8Ek
-         Ki1K0dAc9ldXKX8f3V/EoC+56F8LgfbwW5gHXu1xg0diZZm/IbICCs0vuvQ+mrjQCkSk
-         4Dio+6acAq92OuMkWpSuScX1pq0eSm/XjcK951JgfKTVhRj/Evf739hT4TOpNxB/PlaE
-         5pfWyENsmInDD6F711tAkaft32Y1Gi7+Ci5rnQdkPC5tqH16xWRNrGb2c8HF8iijZ8gV
-         EExkQDOIXc0OsCGC8jPi7U4MBaeukfLEeyyU8P/mdeiFnIH9Owx+nW07cbTuzKvYFsHz
-         VqOg==
-X-Gm-Message-State: APjAAAV677LRWjc3okSoCswyPZjtchrDJCd4V9hYAV1wZ08qCv7ElNa4
-        AmrTKCrCYibAC5JwpQ7MW5Q=
-X-Google-Smtp-Source: APXvYqyYoaqOvvayMf1QJzwsCxHgUGQSldq4g+XATVpQhRkgrl987jQ3qFZvjwCYRGvAQjXJNzCpdQ==
-X-Received: by 2002:a17:902:bd06:: with SMTP id p6mr82641670pls.189.1563885973897;
-        Tue, 23 Jul 2019 05:46:13 -0700 (PDT)
+        bh=KQTE/ixRUrNiBtj/aCpsC+f5UpJn3iQqRlhswTO8qG0=;
+        b=c68E7dkikFPJKzk1F+mWLApaQWlLrboxfY11X5VdzT5UcYuFw4Mmq0T3Y3WSx3Bmmi
+         qTq6yGORqqYszK0xrqwV4VNeoXvDKwliQ1B68QkCJU4gXW492dsK9xKqBcpT5wtqOQU2
+         JLy86mz5la2x/Lww7pll9UprnNfaC3oJdlZZIa3X6GcCDqSkLlj4M3e6HvIDbfjNoJjC
+         mjK5e6SWO83PK5e8w3K2u/oJ5eJKXNdz8n81vZQhO7vsrnsReftAKoOBe8MCpvpNrZV8
+         r6kLUEM/NXB3jqUoeAQKUeDyYE7bLtGHCPDqCLBB0qHb+TrcfgsMjYLE/yRbboLYPrW4
+         lOsA==
+X-Gm-Message-State: APjAAAV7xn3scKWWA7Qd1WaamxQ1Rw6w3M338T50qZlWqS1Z95+yj7s2
+        TYcrLI97GnK80WEM+tvJFO4=
+X-Google-Smtp-Source: APXvYqy3OJk9lLMqnzn7EXeNsHulNCCOU0xxWAXhmI09ll8Rb/2t18RMfQ9zJIa/iytybS/wwAcjxg==
+X-Received: by 2002:a17:902:aa41:: with SMTP id c1mr79846178plr.201.1563885992294;
+        Tue, 23 Jul 2019 05:46:32 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id l26sm31702686pgb.90.2019.07.23.05.46.11
+        by smtp.gmail.com with ESMTPSA id c69sm53818955pje.6.2019.07.23.05.46.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 05:46:13 -0700 (PDT)
+        Tue, 23 Jul 2019 05:46:31 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+Cc:     Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] habanalabs: Use dev_get_drvdata
-Date:   Tue, 23 Jul 2019 20:46:08 +0800
-Message-Id: <20190723124608.24617-1-hslester96@gmail.com>
+Subject: [PATCH v2] mei: Use dev_get_drvdata where possible
+Date:   Tue, 23 Jul 2019 20:46:27 +0800
+Message-Id: <20190723124627.24671-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,33 +82,148 @@ Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Changes in v2:
   - Split v1 into different subsystems
 
- drivers/misc/habanalabs/habanalabs_drv.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/misc/mei/pci-me.c  | 19 ++++++++-----------
+ drivers/misc/mei/pci-txe.c | 19 ++++++++-----------
+ 2 files changed, 16 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index 6f6dbe93f1df..678f61646ca9 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -295,8 +295,7 @@ void destroy_hdev(struct hl_device *hdev)
- 
- static int hl_pmops_suspend(struct device *dev)
+diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+index 7a2b3545a7f9..6c7d54ab9bc5 100644
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -378,12 +378,11 @@ static int mei_me_pci_resume(struct device *device)
+ #ifdef CONFIG_PM
+ static int mei_me_pm_runtime_idle(struct device *device)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct hl_device *hdev = pci_get_drvdata(pdev);
-+	struct hl_device *hdev = dev_get_drvdata(dev);
+-	struct pci_dev *pdev = to_pci_dev(device);
+ 	struct mei_device *dev;
  
- 	pr_debug("Going to suspend PCI device\n");
+-	dev_dbg(&pdev->dev, "rpm: me: runtime_idle\n");
++	dev_dbg(device, "rpm: me: runtime_idle\n");
  
-@@ -310,8 +309,7 @@ static int hl_pmops_suspend(struct device *dev)
+-	dev = pci_get_drvdata(pdev);
++	dev = dev_get_drvdata(device);
+ 	if (!dev)
+ 		return -ENODEV;
+ 	if (mei_write_is_idle(dev))
+@@ -394,13 +393,12 @@ static int mei_me_pm_runtime_idle(struct device *device)
  
- static int hl_pmops_resume(struct device *dev)
+ static int mei_me_pm_runtime_suspend(struct device *device)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct hl_device *hdev = pci_get_drvdata(pdev);
-+	struct hl_device *hdev = dev_get_drvdata(dev);
+-	struct pci_dev *pdev = to_pci_dev(device);
+ 	struct mei_device *dev;
+ 	int ret;
  
- 	pr_debug("Going to resume PCI device\n");
+-	dev_dbg(&pdev->dev, "rpm: me: runtime suspend\n");
++	dev_dbg(device, "rpm: me: runtime suspend\n");
  
+-	dev = pci_get_drvdata(pdev);
++	dev = dev_get_drvdata(device);
+ 	if (!dev)
+ 		return -ENODEV;
+ 
+@@ -413,7 +411,7 @@ static int mei_me_pm_runtime_suspend(struct device *device)
+ 
+ 	mutex_unlock(&dev->device_lock);
+ 
+-	dev_dbg(&pdev->dev, "rpm: me: runtime suspend ret=%d\n", ret);
++	dev_dbg(device, "rpm: me: runtime suspend ret=%d\n", ret);
+ 
+ 	if (ret && ret != -EAGAIN)
+ 		schedule_work(&dev->reset_work);
+@@ -423,13 +421,12 @@ static int mei_me_pm_runtime_suspend(struct device *device)
+ 
+ static int mei_me_pm_runtime_resume(struct device *device)
+ {
+-	struct pci_dev *pdev = to_pci_dev(device);
+ 	struct mei_device *dev;
+ 	int ret;
+ 
+-	dev_dbg(&pdev->dev, "rpm: me: runtime resume\n");
++	dev_dbg(device, "rpm: me: runtime resume\n");
+ 
+-	dev = pci_get_drvdata(pdev);
++	dev = dev_get_drvdata(device);
+ 	if (!dev)
+ 		return -ENODEV;
+ 
+@@ -439,7 +436,7 @@ static int mei_me_pm_runtime_resume(struct device *device)
+ 
+ 	mutex_unlock(&dev->device_lock);
+ 
+-	dev_dbg(&pdev->dev, "rpm: me: runtime resume ret = %d\n", ret);
++	dev_dbg(device, "rpm: me: runtime resume ret = %d\n", ret);
+ 
+ 	if (ret)
+ 		schedule_work(&dev->reset_work);
+diff --git a/drivers/misc/mei/pci-txe.c b/drivers/misc/mei/pci-txe.c
+index 2e37fc2e0fa8..f1c16a587495 100644
+--- a/drivers/misc/mei/pci-txe.c
++++ b/drivers/misc/mei/pci-txe.c
+@@ -276,12 +276,11 @@ static int mei_txe_pci_resume(struct device *device)
+ #ifdef CONFIG_PM
+ static int mei_txe_pm_runtime_idle(struct device *device)
+ {
+-	struct pci_dev *pdev = to_pci_dev(device);
+ 	struct mei_device *dev;
+ 
+-	dev_dbg(&pdev->dev, "rpm: txe: runtime_idle\n");
++	dev_dbg(device, "rpm: txe: runtime_idle\n");
+ 
+-	dev = pci_get_drvdata(pdev);
++	dev = dev_get_drvdata(device);
+ 	if (!dev)
+ 		return -ENODEV;
+ 	if (mei_write_is_idle(dev))
+@@ -291,13 +290,12 @@ static int mei_txe_pm_runtime_idle(struct device *device)
+ }
+ static int mei_txe_pm_runtime_suspend(struct device *device)
+ {
+-	struct pci_dev *pdev = to_pci_dev(device);
+ 	struct mei_device *dev;
+ 	int ret;
+ 
+-	dev_dbg(&pdev->dev, "rpm: txe: runtime suspend\n");
++	dev_dbg(device, "rpm: txe: runtime suspend\n");
+ 
+-	dev = pci_get_drvdata(pdev);
++	dev = dev_get_drvdata(device);
+ 	if (!dev)
+ 		return -ENODEV;
+ 
+@@ -310,7 +308,7 @@ static int mei_txe_pm_runtime_suspend(struct device *device)
+ 
+ 	/* keep irq on we are staying in D0 */
+ 
+-	dev_dbg(&pdev->dev, "rpm: txe: runtime suspend ret=%d\n", ret);
++	dev_dbg(device, "rpm: txe: runtime suspend ret=%d\n", ret);
+ 
+ 	mutex_unlock(&dev->device_lock);
+ 
+@@ -322,13 +320,12 @@ static int mei_txe_pm_runtime_suspend(struct device *device)
+ 
+ static int mei_txe_pm_runtime_resume(struct device *device)
+ {
+-	struct pci_dev *pdev = to_pci_dev(device);
+ 	struct mei_device *dev;
+ 	int ret;
+ 
+-	dev_dbg(&pdev->dev, "rpm: txe: runtime resume\n");
++	dev_dbg(device, "rpm: txe: runtime resume\n");
+ 
+-	dev = pci_get_drvdata(pdev);
++	dev = dev_get_drvdata(device);
+ 	if (!dev)
+ 		return -ENODEV;
+ 
+@@ -340,7 +337,7 @@ static int mei_txe_pm_runtime_resume(struct device *device)
+ 
+ 	mutex_unlock(&dev->device_lock);
+ 
+-	dev_dbg(&pdev->dev, "rpm: txe: runtime resume ret = %d\n", ret);
++	dev_dbg(device, "rpm: txe: runtime resume ret = %d\n", ret);
+ 
+ 	if (ret)
+ 		schedule_work(&dev->reset_work);
 -- 
 2.20.1
 
