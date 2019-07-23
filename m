@@ -2,115 +2,208 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C27C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C2DC7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10DE21873
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414262239E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nke0MrUX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/mAhl7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbfGWJt6 (ORCPT
+        id S1731782AbfGWJxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:49:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44351 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfGWJt6 (ORCPT
+        Tue, 23 Jul 2019 05:53:22 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36930 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731601AbfGWJxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:49:58 -0400
-Received: by mail-ot1-f66.google.com with SMTP id b7so4940769otl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 02:49:57 -0700 (PDT)
+        Tue, 23 Jul 2019 05:53:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so18876487pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 02:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sh8Gc/dDBQF/6zDo3pKFTalGj99cpIcGxIJ53WfTdj0=;
-        b=nke0MrUX3OvwZpA1bB9noPZ3vMbhXdQw+Cz3LO/mmo/787/8QWtACjGrTkwx8pggC0
-         x0MzMTWbECWPn/YZ1n4y+tzbUdlwpZFUXDBGX2Nqlcd8APDfD/jilQGorn3ax9AtXNlv
-         ex6ECuI1kIPDkry1PxIyIIWG4V3buANHA6NGp41bQaq1sT5vHdzq+6rsB4qQH5wkpowi
-         dQhYNRDEiJQvkD7dvdr/F1wHeXIFbdB0R4ybMnh/D2som7n+C5pN2wEdn4AvlgDlmnmI
-         IvD082Y3295uyUC5JuH8yCaFpVWpHnhuljaRwWGGUoj75LBwhqRbiqk5fliVQaCSXk1Q
-         sY3g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wxAKjAu/+mN6d743LHf4H6YA8TBDV51KnDFYD4mHasM=;
+        b=o/mAhl7jh1UIZHp1XTLOmf3rfByQ1xD3Uzxkpc/M/JopfB901CPWQKBe0Eif7Ibl+W
+         TLo/TSAvyNmlD+2bwXzz/FiKdYyaz2YgosyePDVHRZ7aPQMkNSS/1zJU5ED+BbYKdUCU
+         B3pE25F2SL5G2xVWxK9yK3zmrBHWHF0MsT/aKZqcsrPF7uL8GJ1DjyOgtyyu+qZMdSYE
+         TpzVMyHgjy0GiKYnikFceulv1Hpp0q7m0SaMEnZdFjFMh1NlcRIGDmpreUwbvPqSSNHp
+         Nxj8DIHlMFCS3nPMid727eHmsjVuBlGH11Pj4N7VVaNzr0Q1Mp3gUviOgfJMxX2DSvRQ
+         XWKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sh8Gc/dDBQF/6zDo3pKFTalGj99cpIcGxIJ53WfTdj0=;
-        b=gYOFLqm+6X4/LfUrKoCWK1AZPPz2aAMqRmB+xudYf6XmppM6KO3JTZLeCo0IMEggMg
-         uRZdHDR0icS77UnAkDlPCDhWBNx599aYmixBoD6tfsaqm6+hwjchIsKIdMkZu56iYJof
-         VWrbxQ/yQ3vIxfIkMo1zCJTq1RN3nMC4MkvLV8zF7k3R7nhBx+TUWToQhLhiiiPM41u5
-         FSXE895mfYvTkKdYc+zvedQRBxGnwbD6FjM/Fvzp2ytw3/xbemNGRLZzHq6SPupW4OPL
-         5v1iy5fd3Q607HT+kNGAITMVuPCoi46W+yT8rX2+UxM7XL3j4sZb+7nIIqXBFjOYzRLo
-         JWBQ==
-X-Gm-Message-State: APjAAAUg9RlbuHfaMN6wZr1BSwewU3z7oP+c/tEnmXJQR30LyOmU4s+t
-        vCiFXOUSsWIh/ktaXrXl5MLDqFSu5PMP/uPkQzXCMQ==
-X-Google-Smtp-Source: APXvYqxoGqbzcMIgzth28GEyHqRvFwSXNNCEIipw0pQipVSlS7MWKe0DATd4V4qHqhQUT8PK/ZL2FxatleMtVIqj/5M=
-X-Received: by 2002:a9d:7352:: with SMTP id l18mr51709290otk.292.1563875397393;
- Tue, 23 Jul 2019 02:49:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wxAKjAu/+mN6d743LHf4H6YA8TBDV51KnDFYD4mHasM=;
+        b=b0TvIpkvBGp5iJoD8nG72M8shRnFJxT8ftHCyVsUpmLgsXgniNViLLyG5a+JNrJ0FG
+         web1UdaRGGPRQLEH2awFgjmzzQ5VmxsywwDYzC1zXm7qIXrcu0SyD+GnJEUbXLyRZAA5
+         kF71fbW6Y75C3jYGRLI/oYe4L11TtAgtsIcK4bffyQzGq1bLNGZ0TVZgL3N6WKMH5dDi
+         BzCUi5cIg3vbsAVQuIxxJ6M6p4FT3/LmYG5lL0vxFH2F+b7tm1fcR+ds7lhHekucHmXG
+         KTaHO/q2CcPexICKhBoewn0SoqQyizo0y3+NnWfgOqY2xCheRY6Hby2IU9xYLJHhWJav
+         JRsg==
+X-Gm-Message-State: APjAAAXPeUg7t0WAhTRfcelwIxscpfynsP2IWw3mXem6I6TvNcWKk0rI
+        XwKnZ+Xi1BG8tP6Ar9aC4eUc2A==
+X-Google-Smtp-Source: APXvYqxv5Cqk6GS06ASEcJWpNdpfMCongDlWJndKSh3rpy8p/fDB+DMskYKMH8NIIq6ysBxa43fabw==
+X-Received: by 2002:a17:90a:ab01:: with SMTP id m1mr78299466pjq.69.1563875600379;
+        Tue, 23 Jul 2019 02:53:20 -0700 (PDT)
+Received: from localhost ([122.172.28.117])
+        by smtp.gmail.com with ESMTPSA id r61sm55682863pjb.7.2019.07.23.02.53.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 02:53:18 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 15:23:16 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] OPP: Add function to look up required OPP's for a
+ given OPP
+Message-ID: <20190723095316.t5ltprixxd5veuj7@vireshk-i7>
+References: <20190717222340.137578-1-saravanak@google.com>
+ <20190717222340.137578-3-saravanak@google.com>
 MIME-Version: 1.0
-References: <20190723083923.21392-1-hslester96@gmail.com>
-In-Reply-To: <20190723083923.21392-1-hslester96@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 23 Jul 2019 11:49:46 +0200
-Message-ID: <CAMpxmJXkg8wiLOj9rQs+aNx+_oqb_tUWeELmrWQd7GXi-qAueA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: pch: Use dev_get_drvdata
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717222340.137578-3-saravanak@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 lip 2019 o 10:39 Chuhong Yuan <hslester96@gmail.com> napisa=C5=82(a=
-):
->
-> Instead of using to_pci_dev + pci_get_drvdata,
-> use dev_get_drvdata to make code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+On 17-07-19, 15:23, Saravana Kannan wrote:
+> Add a function that allows looking up required OPPs given a source OPP
+> table, destination OPP table and the source OPP.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 > ---
-> Changes in v2:
->   - Change the subject line to gpio: pch: ...
->
->  drivers/gpio/gpio-pch.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-> index 1d99293096f2..3f3d9a94b709 100644
-> --- a/drivers/gpio/gpio-pch.c
-> +++ b/drivers/gpio/gpio-pch.c
-> @@ -409,8 +409,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
->
->  static int __maybe_unused pch_gpio_suspend(struct device *dev)
->  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pch_gpio *chip =3D pci_get_drvdata(pdev);
-> +       struct pch_gpio *chip =3D dev_get_drvdata(dev);
->         unsigned long flags;
->
->         spin_lock_irqsave(&chip->spinlock, flags);
-> @@ -422,8 +421,7 @@ static int __maybe_unused pch_gpio_suspend(struct dev=
-ice *dev)
->
->  static int __maybe_unused pch_gpio_resume(struct device *dev)
->  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pch_gpio *chip =3D pci_get_drvdata(pdev);
-> +       struct pch_gpio *chip =3D dev_get_drvdata(dev);
->         unsigned long flags;
->
->         spin_lock_irqsave(&chip->spinlock, flags);
-> --
-> 2.20.1
->
+>  drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h | 11 +++++++++
+>  2 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 438fcd134d93..72c055a3f6b7 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -1883,6 +1883,60 @@ void dev_pm_opp_detach_genpd(struct opp_table *opp_table)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_detach_genpd);
+>  
+> +/**
+> + * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
+> + * @src_table: OPP table which has dst_table as one of its required OPP table.
+> + * @dst_table: Required OPP table of the src_table.
+> + * @pstate: OPP of the src_table.
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+You should use @ before parameters in the comments as well ? Just like
+you did that below.
+
+> + *
+> + * This function returns the OPP (present in @dst_table) pointed out by the
+> + * "required-opps" property of the OPP (present in @src_table).
+> + *
+> + * The callers are required to call dev_pm_opp_put() for the returned OPP after
+> + * use.
+> + *
+> + * Return: destination table OPP on success, otherwise NULL on errors.
+> + */
+> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
+
+Please name it dev_pm_opp_xlate_required_opp().
+
+> +					struct opp_table *dst_table,
+> +					struct dev_pm_opp *src_opp)
+> +{
+> +	struct dev_pm_opp *opp, *dest_opp = NULL;
+> +	int i;
+> +
+> +	if (!src_table || !dst_table || !src_opp)
+> +		return NULL;
+> +
+> +	for (i = 0; i < src_table->required_opp_count; i++) {
+> +		if (src_table->required_opp_tables[i]->np == dst_table->np)
+
+Why can't we just compare the table pointers instead ? Yeah, I know
+that's how I wrote that in the other xlate function, but I am confused
+now :)
+
+> +			break;
+> +	}
+> +
+> +	if (unlikely(i == src_table->required_opp_count)) {
+> +		pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
+> +		       __func__, src_table, dst_table);
+> +		return NULL;
+> +	}
+> +
+> +	mutex_lock(&src_table->lock);
+> +
+> +	list_for_each_entry(opp, &src_table->opp_list, node) {
+> +		if (opp == src_opp) {
+> +			dest_opp = opp->required_opps[i];
+> +			dev_pm_opp_get(dest_opp);
+> +			goto unlock;
+> +		}
+> +	}
+> +
+> +	pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src_table,
+> +	       dst_table);
+> +
+> +unlock:
+> +	mutex_unlock(&src_table->lock);
+> +
+> +	return dest_opp;
+> +}
+> +
+>  /**
+>   * dev_pm_opp_xlate_performance_state() - Find required OPP's pstate for src_table.
+>   * @src_table: OPP table which has dst_table as one of its required OPP table.
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index af5021f27cb7..36f52b9cf24a 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -131,6 +131,9 @@ void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
+>  struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names);
+>  void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+>  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
+> +					struct opp_table *dst_table,
+> +					struct dev_pm_opp *src_opp);
+>  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
+>  int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+>  int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+> @@ -304,6 +307,14 @@ static inline int dev_pm_opp_xlate_performance_state(struct opp_table *src_table
+>  	return -ENOTSUPP;
+>  }
+>  
+> +static inline struct dev_pm_opp *dev_pm_opp_xlate_opp(
+> +						struct opp_table *src_table,
+> +						struct opp_table *dst_table,
+> +						struct dev_pm_opp *src_opp)
+> +{
+> +	return NULL;
+> +}
+> +
+
+Keep the order of declaring routines same, so this goes before the
+other xlate routine.
+
+>  static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+>  {
+>  	return -ENOTSUPP;
+> -- 
+> 2.22.0.510.g264f2c817a-goog
+
+-- 
+viresh
