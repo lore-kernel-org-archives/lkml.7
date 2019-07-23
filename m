@@ -2,53 +2,51 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ADBC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4035BC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506FF223BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F76F223D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387425AbfGWIak (ORCPT
+        id S2387443AbfGWIeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:30:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27278 "EHLO
+        Tue, 23 Jul 2019 04:34:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28742 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729876AbfGWIaj (ORCPT
+        by vger.kernel.org with ESMTP id S1726070AbfGWIeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:30:39 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6N8RPW5083789
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:30:38 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2twue07p3y-1
+        Tue, 23 Jul 2019 04:34:23 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6N8X7nE034131
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:34:18 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2twuteers9-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:30:37 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:34:14 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 23 Jul 2019 09:30:36 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 23 Jul 2019 09:34:01 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Jul 2019 09:30:31 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6N8UU0F33292752
+        Tue, 23 Jul 2019 09:33:58 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6N8XveP43909290
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jul 2019 08:30:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6D34A4057;
-        Tue, 23 Jul 2019 08:30:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE3A7A4040;
-        Tue, 23 Jul 2019 08:30:29 +0000 (GMT)
+        Tue, 23 Jul 2019 08:33:57 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01C1352051;
+        Tue, 23 Jul 2019 08:33:57 +0000 (GMT)
 Received: from rapoport-lnx (unknown [9.148.8.168])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 23 Jul 2019 08:30:29 +0000 (GMT)
-Date:   Tue, 23 Jul 2019 11:30:27 +0300
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 47CAC5205F;
+        Tue, 23 Jul 2019 08:33:56 +0000 (GMT)
+Date:   Tue, 23 Jul 2019 11:33:54 +0300
 From:   Mike Rapoport <rppt@linux.ibm.com>
 To:     Hanjun Guo <guohanjun@huawei.com>
 Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
@@ -57,209 +55,117 @@ Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Jia He <hejianet@gmail.com>, Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 1/2] mm: page_alloc: introduce
- memblock_next_valid_pfn() (again) for arm64
+Subject: Re: [PATCH v12 2/2] mm: page_alloc: reduce unnecessary binary search
+ in memblock_next_valid_pfn
 References: <1563861073-47071-1-git-send-email-guohanjun@huawei.com>
- <1563861073-47071-2-git-send-email-guohanjun@huawei.com>
+ <1563861073-47071-3-git-send-email-guohanjun@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1563861073-47071-2-git-send-email-guohanjun@huawei.com>
+In-Reply-To: <1563861073-47071-3-git-send-email-guohanjun@huawei.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 X-TM-AS-GCONF: 00
-x-cbid: 19072308-0008-0000-0000-000002FFFE8D
+x-cbid: 19072308-0012-0000-0000-000003356235
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072308-0009-0000-0000-0000226D8A71
-Message-Id: <20190723083027.GB4896@rapoport-lnx>
+x-cbparentid: 19072308-0013-0000-0000-0000216EF17F
+Message-Id: <20190723083353.GC4896@rapoport-lnx>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907230078
+ mlxlogscore=989 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907230079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 01:51:12PM +0800, Hanjun Guo wrote:
+On Tue, Jul 23, 2019 at 01:51:13PM +0800, Hanjun Guo wrote:
 > From: Jia He <hejianet@gmail.com>
 > 
-> Commit b92df1de5d28 ("mm: page_alloc: skip over regions of invalid pfns
-> where possible") optimized the loop in memmap_init_zone(). But it causes
-> possible panic on x86 due to specific memory mapping on x86_64 which will
-> skip valid pfns as well, so Daniel Vacek reverted it later.
+> After skipping some invalid pfns in memmap_init_zone(), there is still
+> some room for improvement.
 > 
-> But as suggested by Daniel Vacek, it is fine to using memblock to skip
-> gaps and finding next valid frame with CONFIG_HAVE_ARCH_PFN_VALID.
+> E.g. if pfn and pfn+1 are in the same memblock region, we can simply pfn++
+> instead of doing the binary search in memblock_next_valid_pfn.
 > 
-> Daniel said:
-> "On arm and arm64, memblock is used by default. But generic version of
-> pfn_valid() is based on mem sections and memblock_next_valid_pfn() does
-> not always return the next valid one but skips more resulting in some
-> valid frames to be skipped (as if they were invalid). And that's why
-> kernel was eventually crashing on some !arm machines."
+> Furthermore, if the pfn is in a gap of two memory region, skip to next
+> region directly to speedup the binary search.
 
-I think that the crash on x86 was not related to CONFIG_HAVE_ARCH_PFN_VALID
-but rather to the x86 way to setup memblock.  Some of the x86 reserved
-memory areas were never added to memblock.memory, which makes memblock's
-view of the physical memory incomplete and that's why
-memblock_next_valid_pfn() could skip valid PFNs on x86.
-
-> Introduce a new config option CONFIG_HAVE_MEMBLOCK_PFN_VALID and only
-> selected for arm64, using the new config option to guard the
-> memblock_next_valid_pfn().
- 
-As far as I can tell, the memblock_next_valid_pfn() should work on most
-architectures and not only on ARM. For sure there is should be no
-dependency between CONFIG_HAVE_ARCH_PFN_VALID and memblock_next_valid_pfn().
-
-I believe that the configuration option to guard memblock_next_valid_pfn()
-should be opt-out and that only x86 will require it.
-
-> This was tested on a HiSilicon Kunpeng920 based ARM64 server, the speedup
-> is pretty impressive for bootmem_init() at boot:
-> 
-> with 384G memory,
-> before: 13310ms
-> after:  1415ms
-> 
-> with 1T memory,
-> before: 20s
-> after:  2s
-> 
-> Suggested-by: Daniel Vacek <neelx@redhat.com>
+How much speed up do you see with this improvements relatively to simple
+binary search in memblock_next_valid_pfn()?
+  
 > Signed-off-by: Jia He <hejianet@gmail.com>
 > Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
 > ---
->  arch/arm64/Kconfig     |  1 +
->  include/linux/mmzone.h |  9 +++++++++
->  mm/Kconfig             |  3 +++
->  mm/memblock.c          | 31 +++++++++++++++++++++++++++++++
->  mm/page_alloc.c        |  4 +++-
->  5 files changed, 47 insertions(+), 1 deletion(-)
+>  mm/memblock.c | 37 +++++++++++++++++++++++++++++++------
+>  1 file changed, 31 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 697ea0510729..058eb26579be 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -893,6 +893,7 @@ config ARCH_FLATMEM_ENABLE
->  
->  config HAVE_ARCH_PFN_VALID
->  	def_bool y
-> +	select HAVE_MEMBLOCK_PFN_VALID
->
->  config HW_PERF_EVENTS
->  	def_bool y
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 70394cabaf4e..24cb6bdb1759 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -1325,6 +1325,10 @@ static inline int pfn_present(unsigned long pfn)
->  #endif
->  
->  #define early_pfn_valid(pfn)	pfn_valid(pfn)
-> +#ifdef CONFIG_HAVE_MEMBLOCK_PFN_VALID
-> +extern unsigned long memblock_next_valid_pfn(unsigned long pfn);
-> +#define next_valid_pfn(pfn)	memblock_next_valid_pfn(pfn)
-
-Please make it 'static inline' and move out of '#ifdef CONFIG_SPARSEMEM'
-
-> +#endif
->  void sparse_init(void);
->  #else
->  #define sparse_init()	do {} while (0)
-> @@ -1347,6 +1351,11 @@ struct mminit_pfnnid_cache {
->  #define early_pfn_valid(pfn)	(1)
->  #endif
->  
-> +/* fallback to default definitions */
-> +#ifndef next_valid_pfn
-> +#define next_valid_pfn(pfn)	(pfn + 1)
-
-static inline as well.
-
-> +#endif
-> +
->  void memory_present(int nid, unsigned long start, unsigned long end);
->  
->  /*
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index f0c76ba47695..c578374b6413 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -132,6 +132,9 @@ config HAVE_MEMBLOCK_NODE_MAP
->  config HAVE_MEMBLOCK_PHYS_MAP
->  	bool
->  
-> +config HAVE_MEMBLOCK_PFN_VALID
-> +	bool
-> +
->  config HAVE_GENERIC_GUP
->  	bool
->  
 > diff --git a/mm/memblock.c b/mm/memblock.c
-> index 7d4f61ae666a..d57ba51bb9cd 100644
+> index d57ba51bb9cd..95d5916716a0 100644
 > --- a/mm/memblock.c
 > +++ b/mm/memblock.c
-> @@ -1251,6 +1251,37 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
->  	return 0;
->  }
->  #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
+> @@ -1256,28 +1256,53 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
+>  unsigned long __init_memblock memblock_next_valid_pfn(unsigned long pfn)
+>  {
+>  	struct memblock_type *type = &memblock.memory;
+> +	struct memblock_region *regions = type->regions;
+>  	unsigned int right = type->cnt;
+>  	unsigned int mid, left = 0;
+> +	unsigned long start_pfn, end_pfn, next_start_pfn;
+>  	phys_addr_t addr = PFN_PHYS(++pfn);
+> +	static int early_region_idx __initdata_memblock = -1;
+>  
+> +	/* fast path, return pfn+1 if next pfn is in the same region */
+> +	if (early_region_idx != -1) {
+> +		start_pfn = PFN_DOWN(regions[early_region_idx].base);
+> +		end_pfn = PFN_DOWN(regions[early_region_idx].base +
+> +				regions[early_region_idx].size);
 > +
-> +#ifdef CONFIG_HAVE_MEMBLOCK_PFN_VALID
-> +unsigned long __init_memblock memblock_next_valid_pfn(unsigned long pfn)
-> +{
-> +	struct memblock_type *type = &memblock.memory;
-> +	unsigned int right = type->cnt;
-> +	unsigned int mid, left = 0;
-> +	phys_addr_t addr = PFN_PHYS(++pfn);
-> +
-> +	do {
-> +		mid = (right + left) / 2;
-> +
-> +		if (addr < type->regions[mid].base)
-> +			right = mid;
-> +		else if (addr >= (type->regions[mid].base +
-> +				  type->regions[mid].size))
-> +			left = mid + 1;
-> +		else {
-> +			/* addr is within the region, so pfn is valid */
+> +		if (pfn >= start_pfn && pfn < end_pfn)
 > +			return pfn;
-> +		}
-> +	} while (left < right);
 > +
-
-We have memblock_search() for this.
-
-> +	if (right == type->cnt)
-> +		return -1UL;
-> +	else
-> +		return PHYS_PFN(type->regions[right].base);
-> +}
-> +EXPORT_SYMBOL(memblock_next_valid_pfn);
-> +#endif /* CONFIG_HAVE_MEMBLOCK_PFN_VALID */
+> +		/* try slow path */
+> +		if (++early_region_idx == type->cnt)
+> +			goto slow_path;
 > +
->  #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
->  /**
->   * __next_mem_pfn_range_in_zone - iterator for for_each_*_range_in_zone()
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d66bc8abe0af..70933c40380a 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5811,8 +5811,10 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->  		 * function.  They do not exist on hotplugged memory.
->  		 */
->  		if (context == MEMMAP_EARLY) {
-> -			if (!early_pfn_valid(pfn))
-> +			if (!early_pfn_valid(pfn)) {
-> +				pfn = next_valid_pfn(pfn) - 1;
->  				continue;
-> +			}
->  			if (!early_pfn_in_nid(pfn, nid))
->  				continue;
->  			if (overlap_memmap_init(zone, &pfn))
+> +		next_start_pfn = PFN_DOWN(regions[early_region_idx].base);
+> +
+> +		if (pfn >= end_pfn && pfn <= next_start_pfn)
+> +			return next_start_pfn;
+> +	}
+> +
+> +slow_path:
+> +	/* slow path, do the binary searching */
+>  	do {
+>  		mid = (right + left) / 2;
+>  
+> -		if (addr < type->regions[mid].base)
+> +		if (addr < regions[mid].base)
+>  			right = mid;
+> -		else if (addr >= (type->regions[mid].base +
+> -				  type->regions[mid].size))
+> +		else if (addr >= (regions[mid].base + regions[mid].size))
+>  			left = mid + 1;
+>  		else {
+> -			/* addr is within the region, so pfn is valid */
+> +			early_region_idx = mid;
+>  			return pfn;
+>  		}
+>  	} while (left < right);
+>  
+>  	if (right == type->cnt)
+>  		return -1UL;
+> -	else
+> -		return PHYS_PFN(type->regions[right].base);
+> +
+> +	early_region_idx = right;
+> +
+> +	return PHYS_PFN(regions[early_region_idx].base);
+>  }
+>  EXPORT_SYMBOL(memblock_next_valid_pfn);
+>  #endif /* CONFIG_HAVE_MEMBLOCK_PFN_VALID */
 > -- 
 > 2.19.1
 > 
