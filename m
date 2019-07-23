@@ -2,99 +2,94 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A170FC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26CDC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB262253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15062253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:43:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FbF9DqpO"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Or+FMFk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392172AbfGWVmd (ORCPT
+        id S2392174AbfGWVnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:42:33 -0400
-Received: from ozlabs.org ([203.11.71.1]:53763 "EHLO ozlabs.org"
+        Tue, 23 Jul 2019 17:43:55 -0400
+Received: from mout.gmx.net ([212.227.15.15]:42447 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731707AbfGWVmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:42:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45tX5156jzz9s3l;
-        Wed, 24 Jul 2019 07:42:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563918150;
-        bh=lm7xmoLkDfwu2hVAaeTt/n/ESlb3raTFQiF/+8lCoU0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FbF9DqpODFSiDUoCKmbfB+xKXAuwknHWWhi9g14BRR9WMTpAhV0tdDsJg5kJ9VyQO
-         F1gUQV6xp0ihTPTlhRYpzSkFrrNYrZqEtYFkJ/sheAilh1KqNRNw2HO5Hd+2Tv4aos
-         c3/xcIenoyH9UGxIRJYUOZSN/zwFx6HzJBp/hJ6HzEduPn8fPdBW/vmDMRmedTUIWK
-         G7rer1hGlhpb1BltahRB5/7lo45UgNVSad5KUOVDe5uT74G0EccpUNJ98YLK3nogtY
-         LVyhos5PdA/lX9Znf+dJkDbJD16MtqfD7W1FJi95Ey0VJHtRdx8HEsPYoWgTNAyoLS
-         bUOxndO/XiDZw==
-Date:   Wed, 24 Jul 2019 07:42:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: linux-next: Fixes tag needs some work in the s390-fixes tree
-Message-ID: <20190724074227.63abe116@canb.auug.org.au>
+        id S1729131AbfGWVnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 17:43:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1563918227;
+        bh=n5+c+t7fbAX/WpckUnxzmiF3JNswIKT2Lwt/imiaxOE=;
+        h=X-UI-Sender-Class:Date:From:To:Subject;
+        b=Or+FMFk9q3sDs/od5FEs7Vmo+YbbXJrEdgyhKY0sYXa1nTLb6APRHC8hd/r0JqpZ1
+         T7c/YahBD4DpGChjrxSEqcssDb3NgdAGvI3tqKPx3UjZL3cnFoqfAvz76MwLHzjUFu
+         mqFzHjcFDWkrwY62Iu7+dml8DXom3Wm2o3TC5YJ0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530 ([87.191.208.243]) by mail.gmx.com (mrgmx002
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lhwgc-1iBZYH0kKY-00n9et; Tue, 23
+ Jul 2019 23:43:47 +0200
+Date:   Tue, 23 Jul 2019 23:43:44 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Subject: [GIT PULL] parisc architecture fixes for kernel v5.3-rc2
+Message-ID: <20190723214344.GA30785@ls3530>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zatS8ihIl.B42ap/.cz0Fmj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Provags-ID: V03:K1:yKWTeekTt8mW3vPn+NuzxqgNNJFcy3Dg94bZfx0tECdORfQ5/ha
+ NBE2wKgzfMHMaVTjWk4vBJPeZsFq9bSUbOFcBhK2AfQpVmjc2MnEkB7BBPngk9kdK2jbPhL
+ h2X+xT9pRXoENd+uQuCdBeyg6CP9g9tsqpQ5TTTlY/2q9C/ztQTRankl7sgCCdACK9yjSkO
+ ksDzhuOG3Dfs81PHJ0PwA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iD2Nj8GGyXM=:zUt2E4ns5OvNVhZjzq0hd+
+ /yBJDGyL9HeQ2J6KqvvqUOFmNF1SqMU/3jMnMUZI8AoZUaBY0Jw9iZYRBe5ktz5lY4s5NNWRe
+ Ve2wt9Bg0bGDIqHxyTvrGdOe+1P9fpT/TgH7jZQI2jeIspZo9NmGhrT8imP7MGk/ssIE366Op
+ 9JMUFSnapkocv0axho8fic+R5jXP7Nm0SgVognrbUXvqYFhK/VJY0JTMatk1zVJ5DOWHk4uYz
+ P5rivqfSm8xUhaHSma4uTnG7dCmGmCB6iw0nJFMSwS52LtaAQkcXaDg0PbYeS04nfsY0kWke0
+ p2UbAu70fZ+8XYd91BYNbsT7XFOrdD30wWw0trCRfvEejdpsX87Exwvixfz6ecqO/ieR/Y/zL
+ ZqLcPgwnmMNuN2EDr2ZBYRaIi3SmLyGyxQk/VhRcMGarTqy3eONkmSDvI14XEdobcmNimhjrF
+ VpO5FyAAIN9f0J5sCFqJVuq+0g4r4X/+FRg/06SSocabLZA2zJYdgyGodOXV0JnqgxaVcolRp
+ 4cSWcXCD3V8eIDqeN7caXWWMiC2+R3JkDPgeTpkTDiSa1iwjUJolYSFNXwkb+wJRh8Ipao3zX
+ wHi01eugy1+jRN65bFxSfswgdoy1qsckphVKnZybGeNh0NQaQjDlqUN1ztvDWUMV+W1JWaMiW
+ WbflL2+IvImd8FdJkrd2jEBlU6LIv/tC8Ue9CnQhPsDZuBKWGzogOZbjCYoQcc9UWTKBOVMdg
+ 1dxQ/+eOhPLf6WyXUpsDsS8QX7/Ag4C3rpdUt8fGnjcbFV5BEnDWQZ+7efzglL/fywtFtK6iT
+ Hedo+FbX/CTIbkZzMZBZw/7fm/FUTro/LC9Luq4C7QTrYP4CkfX7AKVqvsIIZxMIrcnXeLzmT
+ hSPGhLoce3FWXi+7eR2y0s9UUxhzPrviCbLWZjVFuj8XgxHsGk2XhSKNjhwi7QyZjmQZV/bCd
+ q6OtDXZAuqNU5qjaoxTRLdEczRxYRHfNH2wq3sXrmCyFzF4GuvcR4E+WJbHJYOEjZgmy2mxJD
+ 6WaCx9iFWWq+pxSxH0bz0p4jSAx902Ce1wQp5qT/ozkhWDuq1650OmJINsM/OheumA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zatS8ihIl.B42ap/.cz0Fmj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-Hi all,
+please pull two patches for the parisc architecture for kernel 5.3-rc2 from:
 
-In commit
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.3-3
 
-  8b515be512a2 ("vfio-ccw: Fix memory leak and don't call cp_free in cp_ini=
-t")
+Changes:
+- Fix build issues when kprobes are enabled
+- Speed up ITLB/DTLB cache flushes when running on machines with combined TLBs
 
-Fixes tag
+Thanks,
+Helge
 
-  Fixes: 812271b910 ("s390/cio: Squash cp_free() and cp_unpin_free()")
+----------------------------------------------------------------
+Helge Deller (1):
+      parisc: Flush ITLB in flush_tlb_all_local() only on split TLB machines
 
-has these problem(s):
+Sven Schnelle (1):
+      parisc: add kprobe_fault_handler()
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/zatS8ihIl.B42ap/.cz0Fmj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl03f0MACgkQAVBC80lX
-0GzCzAf/dpK6XzP2k0Hpekq1mvhHboS5unctqnB5e9t+rgXu6zxIvaxeph3exUiu
-Yoiq20pmkkIl4VrckfDlcCLhekWFols0/zC3+DyZfzk3gV7uZMV4xM54Q6+XZpmF
-T+bx8oxOjX1x7acFW60iOEp6nycTlp3AnBUkFjXmV3FpNSPxgebDj7JjNHJ21zuy
-YbA90x9d4sEjTcYFL5ZhObtI/smIFF2plSlGmVpIIflg7VbJ1XfbuEi6tM+sPhlK
-ePZI31O9YeJK0z4g1icFAt0KMdWad9SVVsFqpm8KzOaZDzECCMdIfSIvwBUTvPoK
-VekJY73Ep9yygPMKWy2buS4KD8sn4g==
-=QymM
------END PGP SIGNATURE-----
-
---Sig_/zatS8ihIl.B42ap/.cz0Fmj--
+ arch/parisc/include/asm/kprobes.h | 4 ++++
+ arch/parisc/kernel/pacache.S      | 3 ++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
