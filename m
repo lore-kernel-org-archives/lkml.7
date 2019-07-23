@@ -2,270 +2,118 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202F5C7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E76DC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E425B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563886657;
-	bh=TMSDDx9Z/GSdPitY6ceLNs7s7cRFBy+l/pkYELtO0Dk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ufN+WWKM1+rxjX+F9yAxjoqctk1EE1G0MSv4CdLX8ME9p7DTriNmJehbVqbrTBvSN
-	 x4Kmgs2YZrlOxMIOYkrfhdlMcfZMI2h34X9MlXh64OfvmVq1FV3BiD0j7LUL7nugYN
-	 KCyEIkeB9uS0nsWJVeAm1CiQ1FMJLUYxl/qABYGM=
+	by mail.kernel.org (Postfix) with ESMTP id 5138121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:00:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qpdlQrXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389925AbfGWM5f (ORCPT
+        id S2390025AbfGWNAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731866AbfGWM5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:57:34 -0400
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2F662083B;
-        Tue, 23 Jul 2019 12:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563886653;
-        bh=TMSDDx9Z/GSdPitY6ceLNs7s7cRFBy+l/pkYELtO0Dk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DKLoxHCqRHDipbmnoY2nRgzxONsysMFPN0ZdQ3KNRDaGcZWNsF3pg20tAoQ8HT6/L
-         ZOZTN86pSnAkywZE6LqLHWPrWkIErogV1yKCsUyBWhsb+WAzyhW5tgaCr/F9eUog0Z
-         FDB8TJuv+O3AA98mnukUz1bmRJUMRGGwuBPEHfVk=
-Received: by mail-lj1-f172.google.com with SMTP id x25so40993712ljh.2;
-        Tue, 23 Jul 2019 05:57:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAXSqY1L9VKb1uQwawjf9yrSpIlBqv+9qfPGSFJGjwGyZ7qh++H+
-        XvtdhpDjRM3ZWBMzJr6PX1qS7vGi8Qm7DmQ6Vss=
-X-Google-Smtp-Source: APXvYqxZbUcruX6ZsU/YgUIkq3ncBFOh0wpIxm6lIMgsCAfJHgDAbsUgOqMQEnKfShKIm3gxMC0r+s8XIXgbYXAbMpU=
-X-Received: by 2002:a2e:6e0c:: with SMTP id j12mr39279334ljc.123.1563886651024;
- Tue, 23 Jul 2019 05:57:31 -0700 (PDT)
+        Tue, 23 Jul 2019 09:00:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51742 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390003AbfGWNA3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:00:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6ND0Fm1009552;
+        Tue, 23 Jul 2019 08:00:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563886815;
+        bh=v2FDDSUbtY7+5lQxj8CvY2KwoTuATkdmytGBYizH/w8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qpdlQrXMzdmnxTxhAKPn3SppE/9DFnfOXvdFo39d2gDDC9a9QwynknJhG0kIpGg2e
+         wdE3oFSIhVYZWsvBP2Bjf8IFhJiGCzCtSzqXYhsEZbMF0kcuTynsTHvFShQ9TzVsgu
+         yVFWHc/zesbn5qIcteIfXDYnXkRnSUZ4/dbQ+fb0=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6ND0FFT123355
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jul 2019 08:00:15 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Jul 2019 08:00:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Jul 2019 08:00:15 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6ND0AM9021383;
+        Tue, 23 Jul 2019 08:00:13 -0500
+Subject: Re: [PATCH 3/9] dt-bindings: interrupt-controller: arm, gic-v3:
+ Describe ESPI range support
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723104437.154403-1-maz@kernel.org>
+ <20190723104437.154403-4-maz@kernel.org>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <04e80def-c8e3-a403-036e-2a64db935ed4@ti.com>
+Date:   Tue, 23 Jul 2019 18:29:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CGME20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3@eucas1p1.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com> <20190718143044.25066-2-s.nawrocki@samsung.com>
-In-Reply-To: <20190718143044.25066-2-s.nawrocki@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 23 Jul 2019 14:57:19 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com>
-Message-ID: <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] soc: samsung: Add exynos chipid driver support
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
-        kgene@kernel.org, pankaj.dubey@samsung.com,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190723104437.154403-4-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019 at 16:31, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> From: Pankaj Dubey <pankaj.dubey@samsung.com>
->
-> Exynos SoCs have Chipid, for identification of product IDs and SoC
-> revisions. This patch intends to provide initialization code for all
-> these functionalities, at the same time it provides some sysfs entries
-> for accessing these information to user-space.
->
-> This driver uses existing binding for exynos-chipid.
->
-> Changes by Bartlomiej:
-> - fixed return values on errors
-> - removed bogus kfree_const()
-> - added missing Exynos4210 EVT0 id
-> - converted code to use EXYNOS_MASK define
-> - fixed np use after of_node_put()
-> - fixed too early use of dev_info()
-> - made driver fail for unknown SoC-s
-> - added SPDX tag
-> - updated Copyrights
->
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> [m.szyprowski: for suggestion and code snippet of product_id_to_soc_id]
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> [s.nawrocki: updated copyright date]
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
+
+On 23/07/19 4:14 PM, Marc Zyngier wrote:
+> GICv3.1 introduces support for new interrupt ranges, one of them being
+> the Extended SPI range (ESPI). The DT binding is extended to deal with
+> it as a new interrupt class.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 > ---
->  drivers/soc/samsung/Kconfig         |   5 ++
->  drivers/soc/samsung/Makefile        |   2 +
->  drivers/soc/samsung/exynos-chipid.c | 111 ++++++++++++++++++++++++++++
->  3 files changed, 118 insertions(+)
->  create mode 100644 drivers/soc/samsung/exynos-chipid.c
->
-> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
-> index 2186285fda92..2905f5262197 100644
-> --- a/drivers/soc/samsung/Kconfig
-> +++ b/drivers/soc/samsung/Kconfig
-> @@ -7,6 +7,11 @@ menuconfig SOC_SAMSUNG
->
->  if SOC_SAMSUNG
->
-> +config EXYNOS_CHIPID
-> +       bool "Exynos Chipid controller driver" if COMPILE_TEST
-> +       depends on ARCH_EXYNOS || COMPILE_TEST
-> +       select SOC_BUS
-> +
->  config EXYNOS_PMU
->         bool "Exynos PMU controller driver" if COMPILE_TEST
->         depends on ARCH_EXYNOS || ((ARM || ARM64) && COMPILE_TEST)
-> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
-> index 29f294baac6e..3b6a8797416c 100644
-> --- a/drivers/soc/samsung/Makefile
-> +++ b/drivers/soc/samsung/Makefile
-> @@ -1,4 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-$(CONFIG_EXYNOS_CHIPID)    += exynos-chipid.o
->  obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o
->
->  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)   += exynos3250-pmu.o exynos4-pmu.o \
-> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> new file mode 100644
-> index 000000000000..78b123ee60c0
-> --- /dev/null
-> +++ b/drivers/soc/samsung/exynos-chipid.c
-> @@ -0,0 +1,111 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019 Samsung Electronics Co., Ltd.
-> + *           http://www.samsung.com/
-> + *
-> + * EXYNOS - CHIP ID support
-> + * Author: Pankaj Dubey <pankaj.dubey@samsung.com>
-> + * Author: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
+>  .../devicetree/bindings/interrupt-controller/arm,gic-v3.yaml | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+> index c34df35a25fc..98a3ecda8e07 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+> @@ -44,11 +44,12 @@ properties:
+>        be at least 4.
+>  
+>        The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
+> -      interrupts. Other values are reserved for future use.
+> +      interrupts, 2 for interrupts in the Extended SPI range. Other values
+> +      are reserved for future use.
 
-Any changes here from my previous comments?
+Any reason why hardware did not consider extending SPIs from 1020:2043? This way
+only EPPI would have been introduced. Just a thought.
 
-I have also one more new thought later.
+Either ways, just to be consistent with hardware numbering can ESPI range be 3
+and EPPI range be 2?
 
-> +#include <linux/slab.h>
-> +#include <linux/sys_soc.h>
-> +
-> +#define EXYNOS_SUBREV_MASK     (0xF << 4)
-> +#define EXYNOS_MAINREV_MASK    (0xF << 0)
-> +#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
-> +#define EXYNOS_MASK            0xFFFFF000
-> +
-> +static const struct exynos_soc_id {
-> +       const char *name;
-> +       unsigned int id;
-> +} soc_ids[] = {
-> +       { "EXYNOS3250", 0xE3472000 },
-> +       { "EXYNOS4210", 0x43200000 },   /* EVT0 revision */
-> +       { "EXYNOS4210", 0x43210000 },
-> +       { "EXYNOS4212", 0x43220000 },
-> +       { "EXYNOS4412", 0xE4412000 },
-> +       { "EXYNOS5250", 0x43520000 },
-> +       { "EXYNOS5260", 0xE5260000 },
-> +       { "EXYNOS5410", 0xE5410000 },
-> +       { "EXYNOS5420", 0xE5420000 },
-> +       { "EXYNOS5440", 0xE5440000 },
-> +       { "EXYNOS5800", 0xE5422000 },
-> +       { "EXYNOS7420", 0xE7420000 },
-> +       { "EXYNOS5433", 0xE5433000 },
-> +};
-> +
-> +static const char * __init product_id_to_soc_id(unsigned int product_id)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(soc_ids); i++)
-> +               if ((product_id & EXYNOS_MASK) == soc_ids[i].id)
-> +                       return soc_ids[i].name;
-> +       return NULL;
-> +}
-> +
-> +int __init exynos_chipid_early_init(void)
-> +{
-> +       struct soc_device_attribute *soc_dev_attr;
-> +       void __iomem *exynos_chipid_base;
-> +       struct soc_device *soc_dev;
-> +       struct device_node *root;
-> +       struct device_node *np;
-> +       u32 product_id;
-> +       u32 revision;
-> +
-> +       /* look up for chipid node */
-> +       np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
-> +       if (!np)
-> +               return -ENODEV;
-> +
-> +       exynos_chipid_base = of_iomap(np, 0);
-> +       of_node_put(np);
-> +
-> +       if (!exynos_chipid_base) {
-> +               pr_err("Failed to map SoC chipid\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       product_id = readl_relaxed(exynos_chipid_base);
-> +       revision = product_id & EXYNOS_REV_MASK;
-> +       iounmap(exynos_chipid_base);
-> +
-> +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> +       if (!soc_dev_attr)
-> +               return -ENOMEM;
-> +
-> +       soc_dev_attr->family = "Samsung Exynos";
-> +
-> +       root = of_find_node_by_path("/");
-> +       of_property_read_string(root, "model", &soc_dev_attr->machine);
-> +       of_node_put(root);
-> +
-> +       soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%x", revision);
-> +       soc_dev_attr->soc_id = product_id_to_soc_id(product_id);
-> +       if (!soc_dev_attr->soc_id) {
-> +               pr_err("Unknown SoC\n");
+Thanks and regards,
+Lokesh
 
-In case of running old kernel on unknown SoC (new revision of existing
-one or older design not longer supported like 4415), the device will
-not bind. This was added by Bartlomiej. Why? I imagine that soc driver
-could be still matched and just report "Unknown". I am not sure if
-this changes anything, though.
-
-Best regards,
-Krzysztof
-
-
-> +               return -ENODEV;
-> +       }
-> +
-> +       /* please note that the actual registration will be deferred */
-> +       soc_dev = soc_device_register(soc_dev_attr);
-> +       if (IS_ERR(soc_dev)) {
-> +               kfree(soc_dev_attr->revision);
-> +               kfree(soc_dev_attr);
-> +               return PTR_ERR(soc_dev);
-> +       }
-> +
-> +       /* it is too early to use dev_info() here (soc_dev is NULL) */
-> +       pr_info("soc soc0: Exynos: CPU[%s] PRO_ID[0x%x] REV[0x%x] Detected\n",
-> +               soc_dev_attr->soc_id, product_id, revision);
-> +
-> +       return 0;
-> +}
-> +early_initcall(exynos_chipid_early_init);
-> --
-> 2.17.1
->
+>  
+>        The 2nd cell contains the interrupt number for the interrupt type.
+>        SPI interrupts are in the range [0-987]. PPI interrupts are in the
+> -      range [0-15].
+> +      range [0-15]. Extented SPI interrupts are in the range [0-1023].
+>  
+>        The 3rd cell is the flags, encoded as follows:
+>        bits[3:0] trigger type and level flags.
+> 
