@@ -2,200 +2,163 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F7C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798C9C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C19A229ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563917271;
-	bh=4NFI9TiqwpBApw1YifG8x0kCYiixU8JIJEyFKOdPLcQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vsoVc2z99kMsC1KNW5zuo6uZVynv9SPpJOanVxycxzUNY0SmPMB74kDkRg7sV1rpN
-	 3wNbVamoatvkTCt7Gy4AnJ595XcK2BoZSq/fEpHsmSquWLtNLN2fWOkt3pDOiiZ0iV
-	 lYSVwdReJ19G+jWWWnPMDDzr32ONTMydE/aZOy1w=
+	by mail.kernel.org (Postfix) with ESMTP id 409A4218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SDygoRUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389290AbfGWV1u (ORCPT
+        id S2392049AbfGWV2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731025AbfGWV1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:27:50 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A0C218D4;
-        Tue, 23 Jul 2019 21:27:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563917268;
-        bh=4NFI9TiqwpBApw1YifG8x0kCYiixU8JIJEyFKOdPLcQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cuq1pcdwr9pbVEUEBoIRwZ38v4IisgkBLnREJQcN38TdMiXEFBo00LcICXxvFlbe3
-         Dt7zDQaWjfXMhOamjTjl6XYgbYloo2bqfT9O0l50ukL7dUEz4a7acvxfp6ojjCKPLo
-         yXRJTiTAx/cTgE8a5quXEwNhewx9TXWXsWvbLUak=
-Date:   Tue, 23 Jul 2019 14:27:47 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     davem@davemloft.net, arnd@arndb.de, dhowells@redhat.com,
-        jakub@redhat.com, ndesaulniers@google.com, morbo@google.com,
-        jyknight@google.com, natechancellor@gmail.com,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm-generic: fix -Wtype-limits compiler warnings
-Message-Id: <20190723142747.8efd9ab06518470ec8067306@linux-foundation.org>
-In-Reply-To: <1563914986-26502-1-git-send-email-cai@lca.pw>
-References: <1563914986-26502-1-git-send-email-cai@lca.pw>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Jul 2019 17:28:18 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37082 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731025AbfGWV2R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 17:28:17 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so19770368pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KE15xa18tTRocyVLkAyTsFK/CogeXePSTfih4gTWWqE=;
+        b=SDygoRUsTxW6TTuRaBj1iYCmOY2pEXsrRSkgpjtWINcS2KHYINYnEh3sSHGXM/Z9Z0
+         0UyPSL9FtaaX+eeg83GXipQUkmsgtEgfQewcrGVaqRRdVJdawtWqHD6+XrBoSfVPlUOT
+         VyahDnFtfgqFF5DeeFH4Q+q4WnnGIpZ9zjvdM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KE15xa18tTRocyVLkAyTsFK/CogeXePSTfih4gTWWqE=;
+        b=BFqJLBP5mIvlXfI7YnbvSJey0tNviDFQKPTlj/4UCzqSMs+4HbctAz5PNVvijCenC8
+         /nnLSmWFmwKdc7uu29B+/kawAc9RNgDFL/z7myzhjf5ViC+sSAwC5Hn30st8fbXOwVrD
+         AGX7j0VwuYzGTPM2Up/c0HV16lJjWZhhLr1nZNgRbckBAVgtH8nbG2joHVdhKSBrwAq+
+         MIoA/1E+4N1B4/fwjcirEjL+1w4h7fSazmckXM5+N2170qqxyPwIHHWMAQgn9YcTUlxk
+         wE/Kjfo1kUSlPLoeWFeCzUwXSvJVhsHNR/5WnpKdu25ZaSLhl1q5T+/W2dot5nk2RAbA
+         AxuA==
+X-Gm-Message-State: APjAAAVRxFnMWbTbgJ0YfIzYoQ8V+lfGuvlLNIlKeGKA8Qjhd144INHb
+        fHX4GT5f6iZQIvjl4zlVKSEpvQ==
+X-Google-Smtp-Source: APXvYqz47GoGURJ0taiC0XhIJxWtE1YOy/l5OZWV402tGZ0JRjtYHPc39Jdba1gAyo/qTxfnfJeItA==
+X-Received: by 2002:a17:90a:1a45:: with SMTP id 5mr85961043pjl.43.1563917297050;
+        Tue, 23 Jul 2019 14:28:17 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v10sm44579780pfe.163.2019.07.23.14.28.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 14:28:16 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 14:28:15 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Stephen Kitt <steve@sk2.org>,
+        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
+        kernel-hardening@lists.openwall.com,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 2/2] kernel-doc: core-api: Include string.h into core-api
+Message-ID: <201907231428.6154FA6E04@keescook>
+References: <cover.1563841972.git.joe@perches.com>
+ <224a6ebf39955f4107c0c376d66155d970e46733.1563841972.git.joe@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <224a6ebf39955f4107c0c376d66155d970e46733.1563841972.git.joe@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 16:49:46 -0400 Qian Cai <cai@lca.pw> wrote:
+On Mon, Jul 22, 2019 at 05:38:16PM -0700, Joe Perches wrote:
+> core-api should show all the various string functions including the
+> newly added stracpy and stracpy_pad.
+> 
+> Miscellanea:
+> 
+> o Update the Returns: value for strscpy
+> o fix a defect with %NUL)
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-> The commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
-> compilation warning because "rx_frag_size" is an "ushort" while
-> PAGE_SHIFT here is 16. The commit changed the get_order() to be a
-> multi-line macro where compilers insist to check all statements in the
-> macro even when __builtin_constant_p(rx_frag_size) will return false as
-> "rx_frag_size" is a module parameter.
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  Documentation/core-api/kernel-api.rst |  3 +++
+>  include/linux/string.h                |  5 +++--
+>  lib/string.c                          | 10 ++++++----
+>  3 files changed, 12 insertions(+), 6 deletions(-)
 > 
-> In file included from ./arch/powerpc/include/asm/page_64.h:107,
->                  from ./arch/powerpc/include/asm/page.h:242,
->                  from ./arch/powerpc/include/asm/mmu.h:132,
->                  from ./arch/powerpc/include/asm/lppaca.h:47,
->                  from ./arch/powerpc/include/asm/paca.h:17,
->                  from ./arch/powerpc/include/asm/current.h:13,
->                  from ./include/linux/thread_info.h:21,
->                  from ./arch/powerpc/include/asm/processor.h:39,
->                  from ./include/linux/prefetch.h:15,
->                  from drivers/net/ethernet/emulex/benet/be_main.c:14:
-> drivers/net/ethernet/emulex/benet/be_main.c: In function
-> 'be_rx_cqs_create':
-> ./include/asm-generic/getorder.h:54:9: warning: comparison is always
-> true due to limited range of data type [-Wtype-limits]
->    (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
->          ^
-> drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
-> of macro 'get_order'
->   adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
->                                  ^~~~~~~~~
-> 
-> Fix it by moving almost all of this multi-line macro into a proper
-> function __get_order(), and leave get_order() as a single-line macro in
-> order to avoid compilation errors.
-> 
-> ...
->
-> --- a/include/asm-generic/getorder.h
-> +++ b/include/asm-generic/getorder.h
-> @@ -15,6 +15,16 @@ int __get_order(unsigned long size)
->  {
->  	int order;
+> diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
+> index 08af5caf036d..f77de49b1d51 100644
+> --- a/Documentation/core-api/kernel-api.rst
+> +++ b/Documentation/core-api/kernel-api.rst
+> @@ -42,6 +42,9 @@ String Manipulation
+>  .. kernel-doc:: lib/string.c
+>     :export:
 >  
-> +	if (__builtin_constant_p(size)) {
-> +		if (!size)
-> +			return BITS_PER_LONG - PAGE_SHIFT;
+> +.. kernel-doc:: include/linux/string.h
+> +   :internal:
 > +
-> +		if (size < (1UL << PAGE_SHIFT))
-> +			return 0;
-> +
-> +		return ilog2((size) - 1) - PAGE_SHIFT + 1;
-> +	}
-> +
->  	size--;
->  	size >>= PAGE_SHIFT;
->  #if BITS_PER_LONG == 32
-> @@ -49,11 +59,6 @@ int __get_order(unsigned long size)
+>  .. kernel-doc:: mm/util.c
+>     :functions: kstrdup kstrdup_const kstrndup kmemdup kmemdup_nul memdup_user
+>                 vmemdup_user strndup_user memdup_user_nul
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index f80b0973f0e5..329188fffc11 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -515,8 +515,9 @@ static inline void memcpy_and_pad(void *dest, size_t dest_len,
+>   * But this can lead to bugs due to typos, or if prefix is a pointer
+>   * and not a constant. Instead use str_has_prefix().
+>   *
+> - * Returns: 0 if @str does not start with @prefix
+> -         strlen(@prefix) if @str does start with @prefix
+> + * Returns:
+> + * * strlen(@prefix) if @str starts with @prefix
+> + * * 0 if @str does not start with @prefix
 >   */
->  #define get_order(n)						\
->  (								\
-> -	__builtin_constant_p(n) ? (				\
-> -		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
-> -		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
-> -		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
-> -	) :							\
->  	__get_order(n)						\
->  )
+>  static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
+>  {
+> diff --git a/lib/string.c b/lib/string.c
+> index 461fb620f85f..53582b6dce2a 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -173,8 +173,9 @@ EXPORT_SYMBOL(strlcpy);
+>   * doesn't unnecessarily force the tail of the destination buffer to be
+>   * zeroed.  If zeroing is desired please use strscpy_pad().
+>   *
+> - * Return: The number of characters copied (not including the trailing
+> - *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
+> + * Returns:
+> + * * The number of characters copied (not including the trailing %NUL)
+> + * * -E2BIG if count is 0.
+>   */
+>  ssize_t strscpy(char *dest, const char *src, size_t count)
+>  {
+> @@ -253,8 +254,9 @@ EXPORT_SYMBOL(strscpy);
+>   * For full explanation of why you may want to consider using the
+>   * 'strscpy' functions please see the function docstring for strscpy().
+>   *
+> - * Return: The number of characters copied (not including the trailing
+> - *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
+> + * Returns:
+> + * * The number of characters copied (not including the trailing %NUL)
+> + * * -E2BIG if count is 0.
+>   */
+>  ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+>  {
+> -- 
+> 2.15.0
+> 
 
-So we can remove __get_order() altogether now?
-
---- a/include/asm-generic/getorder.h~asm-generic-fix-wtype-limits-compiler-warnings-fix
-+++ a/include/asm-generic/getorder.h
-@@ -7,11 +7,29 @@
- #include <linux/compiler.h>
- #include <linux/log2.h>
- 
--/*
-- * Runtime evaluation of get_order()
-+/**
-+ * get_order - Determine the allocation order of a memory size
-+ * @size: The size for which to get the order
-+ *
-+ * Determine the allocation order of a particular sized block of memory.  This
-+ * is on a logarithmic scale, where:
-+ *
-+ *	0 -> 2^0 * PAGE_SIZE and below
-+ *	1 -> 2^1 * PAGE_SIZE to 2^0 * PAGE_SIZE + 1
-+ *	2 -> 2^2 * PAGE_SIZE to 2^1 * PAGE_SIZE + 1
-+ *	3 -> 2^3 * PAGE_SIZE to 2^2 * PAGE_SIZE + 1
-+ *	4 -> 2^4 * PAGE_SIZE to 2^3 * PAGE_SIZE + 1
-+ *	...
-+ *
-+ * The order returned is used to find the smallest allocation granule required
-+ * to hold an object of the specified size.
-+ *
-+ * The result is undefined if the size is 0.
-+ *
-+ * This function may be used to initialise variables with compile time
-+ * evaluations of constants.
-  */
--static inline __attribute_const__
--int __get_order(unsigned long size)
-+static inline __attribute_const__ int get_order(unsigned long size)
- {
- 	int order;
- 
-@@ -35,33 +53,6 @@ int __get_order(unsigned long size)
- 	return order;
- }
- 
--/**
-- * get_order - Determine the allocation order of a memory size
-- * @size: The size for which to get the order
-- *
-- * Determine the allocation order of a particular sized block of memory.  This
-- * is on a logarithmic scale, where:
-- *
-- *	0 -> 2^0 * PAGE_SIZE and below
-- *	1 -> 2^1 * PAGE_SIZE to 2^0 * PAGE_SIZE + 1
-- *	2 -> 2^2 * PAGE_SIZE to 2^1 * PAGE_SIZE + 1
-- *	3 -> 2^3 * PAGE_SIZE to 2^2 * PAGE_SIZE + 1
-- *	4 -> 2^4 * PAGE_SIZE to 2^3 * PAGE_SIZE + 1
-- *	...
-- *
-- * The order returned is used to find the smallest allocation granule required
-- * to hold an object of the specified size.
-- *
-- * The result is undefined if the size is 0.
-- *
-- * This function may be used to initialise variables with compile time
-- * evaluations of constants.
-- */
--#define get_order(n)						\
--(								\
--	__get_order(n)						\
--)
--
- #endif	/* __ASSEMBLY__ */
- 
- #endif	/* __ASM_GENERIC_GETORDER_H */
-_
-
+-- 
+Kees Cook
