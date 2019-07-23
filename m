@@ -2,150 +2,149 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1852CC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1373C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF1A218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9436F218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VgLgZhkE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387571AbfGWADj (ORCPT
+        id S2387581AbfGWAFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:03:39 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55849 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727643AbfGWADj (ORCPT
+        Mon, 22 Jul 2019 20:05:00 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33711 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727172AbfGWAFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:03:39 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 4C6C843B788;
-        Tue, 23 Jul 2019 10:03:33 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hpiGA-0001mL-5I; Tue, 23 Jul 2019 10:02:26 +1000
-Date:   Tue, 23 Jul 2019 10:02:26 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] psi: annotate refault stalls from IO submission
-Message-ID: <20190723000226.GV7777@dread.disaster.area>
-References: <20190722201337.19180-1-hannes@cmpxchg.org>
+        Mon, 22 Jul 2019 20:05:00 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so19783139plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 17:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=uoHZGPhy7AaMBBkhIfbi+3coowHMdF6umFxF94wcksg=;
+        b=VgLgZhkEw8c6bGaz8lCXFux+cen+0GeTncyzKcaz4eOQUkOCuYdm1vzo16ayzWEfFH
+         SHHI1FmMYtbVCh78rrfbsteiwlxOg1o6N1Z3aRpjghlOjBWowZ38LG6oUU0g+HI0YBZv
+         sAbfVWkDIvYzhymezHOXRGayAwrp6CO/wsc6o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=uoHZGPhy7AaMBBkhIfbi+3coowHMdF6umFxF94wcksg=;
+        b=YuckWst9jxHASHeCX/AndkgnuZAiY1SViCPKtbVXa7DpzF+d2Cf2BRfHZZ4X5ERWZl
+         +t/IV+xxsL/31VSSM/OSnObQiMme87Gdrve4yF+BPu9wTjqzrc7RjhT3+Yk5pEPo0zG8
+         lAYrouVldlc5Av7LZ5nD1iysiu5ImbnAFcuNphhWfatJrllu5Z99DieAqu26uOCsqH7o
+         wqKARktYfYbg5yptoF2UzkNgjSHi395weOaDnXx44xN7JjjWxFGEBVYa9iNcTSXkrVnr
+         WDN+9wI9JxS6/sZhJth7q6tvPLb54wTnaJ0t9xfQskcoaKY3PGUrCwY2HPKlbORqgJbM
+         2Xig==
+X-Gm-Message-State: APjAAAX6oJthuTPzhNC/X5S+aNQJxliloAZzp47+ZjhRkuwctsFBBKsP
+        nggReeTQTUOhGQhmbNeXUGALcA==
+X-Google-Smtp-Source: APXvYqz9Y79Y2hjotjF63w3SFn2Q50huZigbPYsa8KikfgPCyQ+KkptwTSbwCGdTjHMkSd86GOlu5w==
+X-Received: by 2002:a17:902:1101:: with SMTP id d1mr33344225pla.212.1563840299152;
+        Mon, 22 Jul 2019 17:04:59 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k64sm21699923pge.65.2019.07.22.17.04.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 17:04:58 -0700 (PDT)
+Message-ID: <5d364f2a.1c69fb81.e3ed.7bfd@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722201337.19180-1-hannes@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=0o9FgrsRnhwA:10
-        a=ufHFDILaAAAA:8 a=7-415B0cAAAA:8 a=o-jcnmsilH93K4pHmdQA:9
-        a=EdKfoW5OtvoDdtON:21 a=SJvZlBx9A85TV0R8:21 a=CjuIK1q_8ugA:10
-        a=ZmIg1sZ3JBWsdXgziEIF:22 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190722232719.GT30636@minitux>
+References: <23774.56553.445601.436491@mariner.uk.xensource.com> <20190517210923.202131-3-swboyd@chromium.org> <20190722232719.GT30636@minitux>
+Subject: Re: [PATCH 2/3] firmware: qcom_scm: Cleanup code in qcom_scm_assign_mem()
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Ian Jackson <ian.jackson@citrix.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 22 Jul 2019 17:04:57 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:13:37PM -0400, Johannes Weiner wrote:
-> psi tracks the time tasks wait for refaulting pages to become
-> uptodate, but it does not track the time spent submitting the IO. The
-> submission part can be significant if backing storage is contended or
-> when cgroup throttling (io.latency) is in effect - a lot of time is
-> spent in submit_bio(). In that case, we underreport memory pressure.
-> 
-> Annotate the submit_bio() paths (or the indirection through readpage)
-> for refaults and swapin to get proper psi coverage of delays there.
-> 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  fs/btrfs/extent_io.c | 14 ++++++++++++--
->  fs/ext4/readpage.c   |  9 +++++++++
->  fs/f2fs/data.c       |  8 ++++++++
->  fs/mpage.c           |  9 +++++++++
->  mm/filemap.c         | 20 ++++++++++++++++++++
->  mm/page_io.c         | 11 ++++++++---
->  mm/readahead.c       | 24 +++++++++++++++++++++++-
->  7 files changed, 89 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 1eb671c16ff1..2d2b3239965a 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -13,6 +13,7 @@
->  #include <linux/pagevec.h>
->  #include <linux/prefetch.h>
->  #include <linux/cleancache.h>
-> +#include <linux/psi.h>
->  #include "extent_io.h"
->  #include "extent_map.h"
->  #include "ctree.h"
-> @@ -4267,6 +4268,9 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
->  	struct extent_io_tree *tree = &BTRFS_I(mapping->host)->io_tree;
->  	int nr = 0;
->  	u64 prev_em_start = (u64)-1;
-> +	int ret = 0;
-> +	bool refault = false;
-> +	unsigned long pflags;
->  
->  	while (!list_empty(pages)) {
->  		u64 contig_end = 0;
-> @@ -4281,6 +4285,10 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
->  				put_page(page);
->  				break;
->  			}
-> +			if (PageWorkingset(page) && !refault) {
-> +				psi_memstall_enter(&pflags);
-> +				refault = true;
-> +			}
->  
->  			pagepool[nr++] = page;
->  			contig_end = page_offset(page) + PAGE_SIZE - 1;
-> @@ -4301,8 +4309,10 @@ int extent_readpages(struct address_space *mapping, struct list_head *pages,
->  		free_extent_map(em_cached);
->  
->  	if (bio)
-> -		return submit_one_bio(bio, 0, bio_flags);
-> -	return 0;
-> +		ret = submit_one_bio(bio, 0, bio_flags);
-> +	if (refault)
-> +		psi_memstall_leave(&pflags);
-> +	return ret;
+Quoting Bjorn Andersson (2019-07-22 16:27:19)
+> On Fri 17 May 14:09 PDT 2019, Stephen Boyd wrote:
+>=20
+> > There are some questionable coding styles in this function. It looks
+> > quite odd to deref a pointer with array indexing that only uses the
+> > first element. Also, destroying an input/output variable halfway through
+> > the function and then overwriting it on success is not clear. It's
+> > better to use a local variable and the kernel macros to step through
+> > each bit set in a bitmask and clearly show where outputs are set.
+> >=20
+> > Cc: Ian Jackson <ian.jackson@citrix.com>
+> > Cc: Julien Grall <julien.grall@arm.com>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  drivers/firmware/qcom_scm.c | 34 ++++++++++++++++------------------
+> >  include/linux/qcom_scm.h    |  9 +++++----
+> >  2 files changed, 21 insertions(+), 22 deletions(-)
+> >=20
+> > diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> > index 0c63495cf269..153f13f72bac 100644
+> > --- a/drivers/firmware/qcom_scm.c
+> > +++ b/drivers/firmware/qcom_scm.c
+> > @@ -443,7 +443,8 @@ EXPORT_SYMBOL(qcom_scm_set_remote_state);
+> >   */
+> >  int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+> >                       unsigned int *srcvm,
+> > -                     struct qcom_scm_vmperm *newvm, int dest_cnt)
+> > +                     const struct qcom_scm_vmperm *newvm,
+> > +                     unsigned int dest_cnt)
+> >  {
+> >       struct qcom_scm_current_perm_info *destvm;
+> >       struct qcom_scm_mem_map_info *mem_to_map;
+> > @@ -458,11 +459,10 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, siz=
+e_t mem_sz,
+> >       int next_vm;
+> >       __le32 *src;
+> >       void *ptr;
+> > -     int ret;
+> > -     int len;
+> > -     int i;
+> > +     int ret, i, b;
+> > +     unsigned long srcvm_bits =3D *srcvm;
+> > =20
+> > -     src_sz =3D hweight_long(*srcvm) * sizeof(*src);
+> > +     src_sz =3D hweight_long(srcvm_bits) * sizeof(*src);
+> >       mem_to_map_sz =3D sizeof(*mem_to_map);
+> >       dest_sz =3D dest_cnt * sizeof(*destvm);
+> >       ptr_sz =3D ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+> > @@ -475,28 +475,26 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, siz=
+e_t mem_sz,
+> > =20
+> >       /* Fill source vmid detail */
+> >       src =3D ptr;
+> > -     len =3D hweight_long(*srcvm);
+> > -     for (i =3D 0; i < len; i++) {
+> > -             src[i] =3D cpu_to_le32(ffs(*srcvm) - 1);
+> > -             *srcvm ^=3D 1 << (ffs(*srcvm) - 1);
+> > -     }
+> > +     i =3D 0;
+> > +     for_each_set_bit(b, &srcvm_bits, sizeof(srcvm_bits))
+>=20
+> The modem is sad that you only pass 8 here. Changed it to BITS_PER_LONG
+> to include the modem's permission bit and applied all three patches.
+>=20
 
-This all seems extremely fragile to me. Sprinkling magic,
-undocumented pixie dust through the IO paths to account for
-something nobody can actually determine is working correctly is a
-bad idea.  People are going to break this without knowing it, nobody
-is going to notice because there are no regression tests for it,
-and this will all end up in frustration for users because it
-constantly gets broken and doesn't work reliably.
+Ah of course. Thanks.
 
-e.g. If this is needed around all calls to ->readpage(), then please
-write a readpage wrapper function and convert all the callers to use
-that wrapper.
+BTW, srcvm is an unsigned int, but then we do a bunch of unsigned long
+operations on them. Maybe the whole API should be changed to be more
+explicit about the size of the type, i.e. u64?
 
-Even better: If this memstall and "refault" check is needed to
-account for bio submission blocking, then page cache iteration is
-the wrong place to be doing this check. It should be done entirely
-in the bio code when adding pages to the bio because we'll only ever
-be doing page cache read IO on page cache misses. i.e. this isn't
-dependent on adding a new page to the LRU or not - if we add a new
-page then we are going to be doing IO and so this does not require
-magic pixie dust at the page cache iteration level
-
-e.g. bio_add_page_memstall() can do the working set check and then
-set a flag on the bio to say it contains a memstall page. Then on
-submission of the bio the memstall condition can be cleared.
-
-Cheers,
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
