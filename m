@@ -2,114 +2,200 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E76CC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA49C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6DF21901
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563892797;
-	bh=mMeY3/OtxMWpa39E7wXBfaYBm1JiBj12l2UKOs1pdWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V1ePk4WFJkLFiTj/+1Borx/2LupEtQPyjWaaZkQmyN40LSQz9d+UvT3WBs/FPwgo+
-	 T/lO/ZvEn9OoIdUTB7P1C0k5W9VmjxzN/n81k4V4autPCSMpeW89LADuDGuOfw0S3i
-	 z5iLjBdk+SZTKjHgEeFPyuG2Yy1Al+BbjHHK0gGM=
+	by mail.kernel.org (Postfix) with ESMTP id 8532221738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:42:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F6O53VjE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390683AbfGWOj4 (ORCPT
+        id S2390688AbfGWOmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:39:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55920 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbfGWOjz (ORCPT
+        Tue, 23 Jul 2019 10:42:50 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33593 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388172AbfGWOmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:39:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3kwHf4dclNlMO326pKn0fOIoYBdYFcKGvDxeiHwT1Qg=; b=W+hzEGqsxK4WKooZJNtUpklx6
-        FsNDdQXDP8iUrin6WzO2OIhaaUxNOZLl616HN1NigAfst5yrzVAe46qBoj4Dx93r7aLghZi8O69EA
-        x0cPRYRiTNe7HsOeXUWq8ieyYvnID48DYbt0kFIuZQoTltqlRPywX/7rIup42dxsIfJwg=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hpvxJ-0003vk-HF; Tue, 23 Jul 2019 14:39:53 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id CBC242742B59; Tue, 23 Jul 2019 15:39:52 +0100 (BST)
-Date:   Tue, 23 Jul 2019 15:39:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH] regulator: act8865: support regulator-pull-down property
-Message-ID: <20190723143952.GG5365@sirena.org.uk>
-References: <d02d7285ef26f59ce43a3097e342eea081b98444.1563819128.git.mirq-linux@rere.qmqm.pl>
- <20190723105432.GB5365@sirena.org.uk>
- <20190723120938.GC14036@qmqm.qmqm.pl>
+        Tue, 23 Jul 2019 10:42:49 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so20644694plo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=MivtH/AFd/UEBQTX1L8TkdX1tWBHqaY6Yrp0reG3yuY=;
+        b=F6O53VjEkHgJGSFWE/TyGmcDrTX0Wb2ZnWmoEgoElaJLQk0ljUEFxCdRC8tslzbYSO
+         OfVlVRNf1LgjAQ48ihB/FvdgfcuibxsMHLeZl2DqLHBiRRH/BmXEPvdXmeNHyorYgwQo
+         EvgECRgKQF92fVGNnSgLG06OLJ3lZh/arI5+8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=MivtH/AFd/UEBQTX1L8TkdX1tWBHqaY6Yrp0reG3yuY=;
+        b=s1zX5Fn68d1PeOT7+P0GXh1DYlhAsD66tUSY6gpxnbVHJGPEvU8249BKydzDR7QS0L
+         2H/O60fikZq96wdh1H4Mghk1s3+DR3hlKjbCbTBVGhPXSXfEh3LZPhgbkqumfM+sfC1s
+         7CCRvap2SEvel+9oUu64O3YUfxmzsLJXCTL4TikHLwwngZoufVv3Z1DAv465wX3KybWD
+         uNuPd/su3Uqcwaa78+e3lKzncHtcnwyBZm4Ey4WkgOKUgANkxnliIAMMb7ibLLW0ShSY
+         thSxfKdLhnTVj8a4mzQPhxZFBivtILniMcXIKab/OC4Dgc4YkE2t8fgj21L0zdeHxiMI
+         RFbw==
+X-Gm-Message-State: APjAAAXYo02UDaFbbfcw+nr6UplM6Lbl8KX1ErajURHkzwRmp9dwostv
+        9vnAuDmzuBukFNTQsebwSdsiqvDB7kw=
+X-Google-Smtp-Source: APXvYqwtTx+QcAkXyfMl6NVacF5zqtkUSMrP0EzvRLV+pzVxCuifqK7xZtp+fixLQIdo1o6i/27a2A==
+X-Received: by 2002:a17:902:8a8a:: with SMTP id p10mr82515691plo.88.1563892968559;
+        Tue, 23 Jul 2019 07:42:48 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a6sm40156512pfa.162.2019.07.23.07.42.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 07:42:47 -0700 (PDT)
+Message-ID: <5d371ce7.1c69fb81.9650.8239@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="L+ofChggJdETEG3Y"
-Content-Disposition: inline
-In-Reply-To: <20190723120938.GC14036@qmqm.qmqm.pl>
-X-Cookie: Avoid contact with eyes.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1563568344-1274-2-git-send-email-daidavid1@codeaurora.org>
+References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org> <1563568344-1274-2-git-send-email-daidavid1@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Update Qualcomm SDM845 DT bindings
+To:     David Dai <daidavid1@codeaurora.org>, bjorn.andersson@linaro.org,
+        georgi.djakov@linaro.org, robh+dt@kernel.org
+Cc:     David Dai <daidavid1@codeaurora.org>, evgreen@google.com,
+        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 23 Jul 2019 07:42:46 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting David Dai (2019-07-19 13:32:23)
+> Redefine the Network-on-Chip devices to more accurately describe
+> the interconnect topology on Qualcomm's SDM845 platform. Each
+> interconnect device can communicate with different instances of the
+> RPMh hardware which are described as RSCs(Resource State Coordinators).
+>=20
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> ---
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-vote=
+r.txt b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.txt
+> new file mode 100644
+> index 0000000..2cf7da2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.txt
+> @@ -0,0 +1,32 @@
+> +Qualcomm BCM-Voter interconnect driver binding
+> +-----------------------------------------------------------
+> +
+> +The Bus Clock Manager (BCM) is a dedicated hardware accelerator
+> +that manages shared system resources by aggregating requests
+> +from multiple Resource State Coordinators (RSC). Interconnect
+> +providers are able to vote for aggregated thresholds values from
+> +consumers by communicating through their respective RSCs.
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +                       "qcom,sdm845-bcm-voter",
+> +
+> +Examples:
+> +
+> +apps_rsc: rsc@179c0000 {
 
---L+ofChggJdETEG3Y
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But there isn't a reg property.
 
-On Tue, Jul 23, 2019 at 02:09:38PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
-> On Tue, Jul 23, 2019 at 11:54:32AM +0100, Mark Brown wrote:
-> > On Mon, Jul 22, 2019 at 08:13:29PM +0200, Micha=C5=82 Miros=C5=82aw wro=
-te:
-> > > AC8865 has internal 1.5k pull-down resistor that can be enabled when =
-LDO
-> > > is shut down.
+> +       label =3D "apps_rsc";
 
-> > This changelog...
+Is label required?
 
-> > >  static const struct regulator_ops act8865_ldo_ops =3D {
-> > > +	.list_voltage		=3D regulator_list_voltage_linear_range,
-> > > +	.map_voltage		=3D regulator_map_voltage_linear_range,
-> > > +	.get_voltage_sel	=3D regulator_get_voltage_sel_regmap,
-> > > +	.set_voltage_sel	=3D regulator_set_voltage_sel_regmap,
+> +       compatible =3D "qcom,rpmh-rsc";
+> +
+> +       apps_bcm_voter: bcm_voter {
+> +               compatible =3D "qcom,sdm845-bcm-voter";
+> +       };
+> +}
+> +
+> +disp_rsc: rsc@179d0000 {
+> +       label =3D "disp_rsc";
+> +       compatible =3D "qcom,rpmh-rsc";
+> +
+> +       disp_bcm_voter: bcm_voter {
+> +               compatible =3D "qcom,sdm845-bcm-voter";
+> +       };
+> +}
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.t=
+xt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+> index 5c4f1d9..27f9ed9 100644
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+> @@ -4,21 +4,43 @@ Qualcomm SDM845 Network-On-Chip interconnect driver bin=
+ding
+>  SDM845 interconnect providers support system bandwidth requirements thro=
+ugh
+>  RPMh hardware accelerators known as Bus Clock Manager (BCM). The provide=
+r is
+>  able to communicate with the BCM through the Resource State Coordinator =
+(RSC)
+> -associated with each execution environment. Provider nodes must reside w=
+ithin
+> -an RPMh device node pertaining to their RSC and each provider maps to a =
+single
+> -RPMh resource.
+> +associated with each execution environment. Provider nodes must point to=
+ at
+> +least one RPMh device child node pertaining to their RSC and each provid=
+er
+> +can map to multiple RPMh resources.
+> =20
+>  Required properties :
+>  - compatible : shall contain only one of the following:
+> -                       "qcom,sdm845-rsc-hlos"
+> +                       "qcom,sdm845-aggre1_noc",
+> +                       "qcom,sdm845-aggre2_noc",
+> +                       "qcom,sdm845-config_noc",
+> +                       "qcom,sdm845-dc_noc",
+> +                       "qcom,sdm845-gladiator_noc",
+> +                       "qcom,sdm845-mem_noc",
+> +                       "qcom,sdm845-mmss_noc",
+> +                       "qcom,sdm845-system_noc",
+>  - #interconnect-cells : should contain 1
+> +- reg : shall contain base register location and length
+> +- qcom,bcm-voter : shall contain phandles to bcm voters
+> =20
+>  Examples:
+> =20
+> -apps_rsc: rsc {
+> -       rsc_hlos: interconnect {
+> -               compatible =3D "qcom,sdm845-rsc-hlos";
+> -               #interconnect-cells =3D <1>;
+> -       };
+> +aggre1_noc: interconnect@16e0000 {
+> +       compatible =3D "qcom,sdm845-aggre1_noc";
+> +       reg =3D <0x16e0000 0xd080>;
+> +       interconnect-cells =3D <1>;
+> +       qcom,bcm-voter =3D <&apps_bcm_voter>;
+>  };
+> =20
+> +mmss_noc: interconnect@1740000 {
+> +       compatible =3D "qcom,sdm845-mmss_noc";
+> +       reg =3D <0x1740000 0x1c1000>;
+> +       interconnect-cells =3D <1>;
+> +       qcom,bcm-voter =3D <&apps_bcm_voter>, <&disp_bcm_voter>;
+> +};
+> +
+> +mem_noc: interconnect@1380000 {
+> +       compatible =3D "qcom,sdm845-mem_noc";
+> +       reg =3D <0 0x1380000 0 0x27200>;
+> +       #interconnect-cells =3D <1>;
+> +       qcom,bcm-voter =3D <&apps_bcm_voter>, <&disp_bcm_voter>;
+> +};
 
-> > ...doesn't obviously match this code change which looks to be
-> > implementing voltage setting (as well as the pull down stuff but still).
+How does a consumer target a particular RSC? For example, how can
+display decide to use the disp_bcm_voter node from mem_noc here? Maybe
+you can add that consumer to the example?
 
-> It's just an diff-artifact of changing act8865_ldo_ops meaning. It's
-> now a copy of act8865_ops with .set_pull_down added. Previous
-> act8865_ldo_ops is act8865_fixed_ldo_ops now.
-
-If there's that big a refactoring it probably warrants a separate patch,
-and it definitely should be called out in the changelog.  Like I say the
-changbelog does not describe the change at all well.
-
---L+ofChggJdETEG3Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl03HDgACgkQJNaLcl1U
-h9DXWgf+McinK+M4V+1QaBFtsXFUXStLZ53MAvnbruJJP+pXpNr05ZHhFEfrSiwY
-wiQPc/lKK0eOPpAp5azy0sRS6cvzdrD0tHWG1rsfE94WlH2rA73rZZ7jCAb4A0nL
-m38lc/J+3RNe/8CPU/wcDMUh7plJUJ6JafrOrOhQIi979NJpAvjps6nfaXsTmMow
-6Znn6XpSVS8TMRh12ZwBYoX4lJpmejEn2/RvP/j7dNovLBMebYk5EAoaueFNGjwt
-nSvG6gywLZa/7upxUOzwSvJPDuKm4ciLlRoXvjz+gQubsVlPJDXKeMr5JOtL1d//
-mOvualWBLUuX8jwDZvL/QLyzrLuF2Q==
-=QgBn
------END PGP SIGNATURE-----
-
---L+ofChggJdETEG3Y--
