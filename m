@@ -2,276 +2,184 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101B5C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68DAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80D82238E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F5D223A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQWi23dc"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pPAsus1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389686AbfGWMT5 (ORCPT
+        id S2389373AbfGWMU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:19:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46941 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387839AbfGWMT5 (ORCPT
+        Tue, 23 Jul 2019 08:20:27 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57672 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389688AbfGWMUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:19:57 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k189so313025pgk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=00zWsVCiRcL8XnZGBOUu0LnqcxXNZjHUwxVDcj34sCg=;
-        b=FQWi23dcGYXrzYwsr1qGSwvJL8/OM1OmCeE4nGg5qzDIBQ5yg1Yl9yio4klE/suSHi
-         jWNBMq/J4ZAukhp3E+VgyKKJNSuBPIzQZZSg+S5Fq8fMYrVLWHRt3m7gqjUkkhPvgJNU
-         4mrjbU5inbGrckAP9HA84C+VOBfyfYc4Ij4jEwnKriIUOAYqzMC+mqLlqlSiMYt++vGu
-         Q/PIjHbjKssBUwsXJRz2eaytXt43D7xdeD3d7CHgAek90nDl021gxdVjesg32EGsekk6
-         3ZF/jAibtUGvICN2trH/VOfcX0yy7+3Ll8r39kUD1XiNvoArkylQPpLjd7VriR+LPwJ5
-         snXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=00zWsVCiRcL8XnZGBOUu0LnqcxXNZjHUwxVDcj34sCg=;
-        b=ZX3NDQ9O/wOVPcYzMWWMU+B9uYW/58bQ0Q0osS0uR5+K0grBEPH4pn+UGX90H77unx
-         24k2n6jkbwz94c0YKOWywyM+p8V/H1sDAEWb2rVUwLSaLXJeu+yNJwlJ5jS1NcGFGZPx
-         DlvRe8eAEEw8h+YXSGEuR1c5M+/sohLo9q2mm0T5TOj73NQ07yRyNW8Nlt7Ome5DWLeS
-         1rx6XpRJBK9NF0uQAIJJYuOxafGe77WtEESFHJ4nlVeQ8aMifQJ/w/Am4e4EbEkpVX5F
-         u78AaMGyWEg1y222HqIYPvTf/pxTjU3NAt8ASh4+ZoiWlGwIjJNuHn22My6G+ALHyggW
-         WG2Q==
-X-Gm-Message-State: APjAAAVEgAzQ1Szt3YSu/iQTgwxD1zQVjazjD3AX3OPnF/0RfBx6LcmD
-        OqXUgHG/RIQIr4UArBZlb1o=
-X-Google-Smtp-Source: APXvYqwRrh/U6FpHgKTpVmzvR2Ck2d24UzNYtDt/vox2Ks0SkRYzKPkJ7xUwCtZ5/BAty+rNptAfxw==
-X-Received: by 2002:a17:90a:258b:: with SMTP id k11mr78670049pje.110.1563884396485;
-        Tue, 23 Jul 2019 05:19:56 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id l26sm31602002pgb.90.2019.07.23.05.19.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 05:19:55 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] misc: Use dev_get_drvdata where possible
-Date:   Tue, 23 Jul 2019 20:19:49 +0800
-Message-Id: <20190723121949.22021-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 08:20:25 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190723122023euoutp029b592b9f7a0389ff830083a04ec27510~0CJkAq4Ok3163531635euoutp02s
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 12:20:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190723122023euoutp029b592b9f7a0389ff830083a04ec27510~0CJkAq4Ok3163531635euoutp02s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563884423;
+        bh=E/h0xeZuDlNNpc19sQ9I4e8CfCTnOd78afTD5lcFh3M=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=pPAsus1DBleQ6S8y5rermerrTyuGuh8KA86IlfNttrx3SsT70dFDlokUXrKMAmhTz
+         6s1kMTKHhe0xWel0esD7M8F1H+E3n7q1mFSJtGKrEq8l9ZVQPBmSFZd1rQCgZQxtx8
+         PRdxuz1Qz4jKXKJSzJMu/7pvTWBn4LdOVAllPjNA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190723122023eucas1p14e0b1f612566a63f236384b167998f5d~0CJjR-aG73225832258eucas1p1M;
+        Tue, 23 Jul 2019 12:20:23 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id FF.4B.04298.68BF63D5; Tue, 23
+        Jul 2019 13:20:22 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5~0CJinGERD2753327533eucas1p2K;
+        Tue, 23 Jul 2019 12:20:22 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190723122022eusmtrp1e012e5e4af5b700844603da16e8bca7f~0CJicZZZb2487524875eusmtrp1g;
+        Tue, 23 Jul 2019 12:20:22 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-75-5d36fb866a77
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 17.D8.04140.68BF63D5; Tue, 23
+        Jul 2019 13:20:22 +0100 (BST)
+Received: from AMDC3555.DIGITAL.local (unknown [106.120.51.67]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190723122021eusmtip2f9a8f6ab49accc2bea0b902873bf9f4f~0CJhzpRHb1612616126eusmtip2H;
+        Tue, 23 Jul 2019 12:20:21 +0000 (GMT)
+From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, m.szyprowski@samsung.com
+Subject: [RFC PATCH 00/11] Simple QoS for exynos-bus driver using
+ interconnect
+Date:   Tue, 23 Jul 2019 14:20:05 +0200
+Message-Id: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAKsWRmVeSWpSXmKPExsWy7djPc7ptv81iDX5+1rM4dGwru8XGGetZ
+        La5/ec5qMf/IOVaLK1/fs1lM37uJzWLS/QksFufPb2C32PT4GqvF5V1z2Cw+9x5htJhxfh+T
+        xdojd9ktbjeuYLOYMfklmwO/x6ZVnWwed67tYfO4332cyWPzknqPg+/2MHn0bVnF6PF5k1wA
+        exSXTUpqTmZZapG+XQJXRuOWpYwF/yUr+o//YGpg3CjaxcjJISFgIrH/y0LWLkYuDiGBFYwS
+        Gzc+ZYFwvjBKfDjayg7hfGaUOHjiBgtMS9fGHqiq5YwSJ98fZ4ZrefjgEBNIFZuAp0TPxB1g
+        g0UEjjBKTF7wHqyFWWAVkPN9GyNIlbBAgMSXQ81gHSwCqhI3HtwCs3kFHCUO/n8DtU9eYvWG
+        A8wQcUGJkzOfgMWZgeLNW2czQ9RcY5eY+yUEwnaROPzyOjuELSzx6vgWKFtG4vTkHqiZxRJP
+        d94Hu05CoIFRYtOyI1CDrCUOH78IlOAAWqApsX6XPkTYUeL4kjfsIGEJAT6JG28FIU7gk5i0
+        bTozRJhXoqNNCMLUkljwOxqiUUKiafU1qNkeErfPvQQ7RkggVuLq6juMExgVZiH5axaSv2Yh
+        nLCAkXkVo3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYDo7/e/4px2MXy8lHWIU4GBU4uHd
+        sMc0Vog1say4MvcQowQHs5IIb2CDWawQb0piZVVqUX58UWlOavEhRmkOFiVx3mqGB9FCAumJ
+        JanZqakFqUUwWSYOTqkGRp5b1xXn3Lnms+VgbuEj3xZpXpN+Nharrm0Ll9cFLD8VbrylTdGP
+        I/h5zfmixStMC7f8kjngOmfBssXpgQt2ZH9/JH9BZlXl7MeiEcH9P5kdM65s3OHW+uV7wLrC
+        NKbzs6SvHdc9Gc7Hk+KxgMf2sVHqPUb2kI4H/3c6pQdUi6zfmX9Cz2lKuBJLcUaioRZzUXEi
+        APXghPVjAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsVy+t/xe7ptv81iDc7cYLM4dGwru8XGGetZ
+        La5/ec5qMf/IOVaLK1/fs1lM37uJzWLS/QksFufPb2C32PT4GqvF5V1z2Cw+9x5htJhxfh+T
+        xdojd9ktbjeuYLOYMfklmwO/x6ZVnWwed67tYfO4332cyWPzknqPg+/2MHn0bVnF6PF5k1wA
+        e5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJeRuOW
+        pYwF/yUr+o//YGpg3CjaxcjJISFgItG1sYeli5GLQ0hgKaNE7/y1zBAJCYmP62+wQtjCEn+u
+        dbFBFH1ilFh3/D9YEZuAp0TPxB2sIAkRgVOMEluXnwOrYhbYxChx9/hEdpAqYQE/iS1HTrCA
+        2CwCqhI3HtxiArF5BRwlDv5/wwKxQl5i9YYDzBBxQYmTM58AxTmABqlLrJ8nBBJmBipp3jqb
+        eQIj/ywkVbMQqmYhqVrAyLyKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMO62Hfu5ZQdj17vg
+        Q4wCHIxKPLwb9pjGCrEmlhVX5h5ilOBgVhLhDWwwixXiTUmsrEotyo8vKs1JLT7EaAr0wkRm
+        KdHkfGBKyCuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwKhfrc22
+        QHBfS/r2adPnBlrvbf5myrtp0atZ16Jk3370eNdxXeDrs7R2rsO6P3rdNqnWFPg0JvFMKuO2
+        aQu5ofssqHTVr79CgnuvMK79b9Dm+PbUzP+H9/x4Gvxxacs3VYGjDX8OK5g8f2H7SuCj/HTH
+        hKh7e1YdPqt6wEC34co96+kF4c4XWJ8psRRnJBpqMRcVJwIAZRGfl9ECAAA=
+X-CMS-MailID: 20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5
+References: <CGME20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+The following patchset adds interconnect[1][2] framework support to the
+exynos-bus devfreq driver. Extending the devfreq driver with interconnect
+capabilities started as a response to the issue referenced in [3]. The
+patches can be subdivided into four logical groups:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+(a) Refactoring the existing devfreq driver in order to improve readability
+and accommodate for adding new code (patches 01--04/11).
+
+(b) Tweaking the interconnect framework to support the exynos-bus use case
+(patches 05--07/11). Exporting of_icc_get_from_provider() allows us to
+avoid hardcoding every single graph edge in the DT or driver source, and
+relaxing the requirement contained in that function removes the need to
+provide dummy node IDs in the DT. Adjusting the logic in
+apply_constraints() (drivers/interconnect/core.c) accounts for the fact
+that every bus is a separate entity and therefore a separate interconnect
+provider, albeit constituting a part of a larger hierarchy.
+
+(c) Implementing interconnect providers in the exynos-bus devfreq driver
+and adding required DT properties for one selected platform, namely
+Exynos4412 (patches 08--09/11). Due to the fact that this aims to be a
+generic driver for various Exynos SoCs, node IDs are generated dynamically
+rather than hardcoded. This has been determined to be a simpler approach,
+but depends on changes described in (b).
+
+(d) Implementing a sample interconnect consumer for exynos-mixer targeted
+at the issue referenced in [3], again with DT info only for Exynos4412
+(patches 10--11/11).
+
+Integration of devfreq and interconnect functionalities comes down to one
+extra line in the devfreq target() callback, which selects either the
+frequency calculated by the devfreq governor, or the one requested with the
+interconnect API, whichever is higher. All new code works equally well when
+CONFIG_INTERCONNECT is 'n' (as in exynos_defconfig) in which case all
+interconnect API functions are no-ops.
+
 ---
- drivers/misc/cardreader/alcor_pci.c      |  6 ++----
- drivers/misc/habanalabs/habanalabs_drv.c |  6 ++----
- drivers/misc/mei/pci-me.c                | 19 ++++++++-----------
- drivers/misc/mei/pci-txe.c               | 19 ++++++++-----------
- 4 files changed, 20 insertions(+), 30 deletions(-)
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
 
-diff --git a/drivers/misc/cardreader/alcor_pci.c b/drivers/misc/cardreader/alcor_pci.c
-index bcb10fa4bc3a..259fe1dfec03 100644
---- a/drivers/misc/cardreader/alcor_pci.c
-+++ b/drivers/misc/cardreader/alcor_pci.c
-@@ -334,8 +334,7 @@ static void alcor_pci_remove(struct pci_dev *pdev)
- #ifdef CONFIG_PM_SLEEP
- static int alcor_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct alcor_pci_priv *priv = pci_get_drvdata(pdev);
-+	struct alcor_pci_priv *priv = dev_get_drvdata(dev);
- 
- 	alcor_pci_aspm_ctrl(priv, 1);
- 	return 0;
-@@ -344,8 +343,7 @@ static int alcor_suspend(struct device *dev)
- static int alcor_resume(struct device *dev)
- {
- 
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct alcor_pci_priv *priv = pci_get_drvdata(pdev);
-+	struct alcor_pci_priv *priv = dev_get_drvdata(dev);
- 
- 	alcor_pci_aspm_ctrl(priv, 0);
- 	return 0;
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index 6f6dbe93f1df..678f61646ca9 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -295,8 +295,7 @@ void destroy_hdev(struct hl_device *hdev)
- 
- static int hl_pmops_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct hl_device *hdev = pci_get_drvdata(pdev);
-+	struct hl_device *hdev = dev_get_drvdata(dev);
- 
- 	pr_debug("Going to suspend PCI device\n");
- 
-@@ -310,8 +309,7 @@ static int hl_pmops_suspend(struct device *dev)
- 
- static int hl_pmops_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct hl_device *hdev = pci_get_drvdata(pdev);
-+	struct hl_device *hdev = dev_get_drvdata(dev);
- 
- 	pr_debug("Going to resume PCI device\n");
- 
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index 7a2b3545a7f9..6c7d54ab9bc5 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -378,12 +378,11 @@ static int mei_me_pci_resume(struct device *device)
- #ifdef CONFIG_PM
- static int mei_me_pm_runtime_idle(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
- 	struct mei_device *dev;
- 
--	dev_dbg(&pdev->dev, "rpm: me: runtime_idle\n");
-+	dev_dbg(device, "rpm: me: runtime_idle\n");
- 
--	dev = pci_get_drvdata(pdev);
-+	dev = dev_get_drvdata(device);
- 	if (!dev)
- 		return -ENODEV;
- 	if (mei_write_is_idle(dev))
-@@ -394,13 +393,12 @@ static int mei_me_pm_runtime_idle(struct device *device)
- 
- static int mei_me_pm_runtime_suspend(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
- 	struct mei_device *dev;
- 	int ret;
- 
--	dev_dbg(&pdev->dev, "rpm: me: runtime suspend\n");
-+	dev_dbg(device, "rpm: me: runtime suspend\n");
- 
--	dev = pci_get_drvdata(pdev);
-+	dev = dev_get_drvdata(device);
- 	if (!dev)
- 		return -ENODEV;
- 
-@@ -413,7 +411,7 @@ static int mei_me_pm_runtime_suspend(struct device *device)
- 
- 	mutex_unlock(&dev->device_lock);
- 
--	dev_dbg(&pdev->dev, "rpm: me: runtime suspend ret=%d\n", ret);
-+	dev_dbg(device, "rpm: me: runtime suspend ret=%d\n", ret);
- 
- 	if (ret && ret != -EAGAIN)
- 		schedule_work(&dev->reset_work);
-@@ -423,13 +421,12 @@ static int mei_me_pm_runtime_suspend(struct device *device)
- 
- static int mei_me_pm_runtime_resume(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
- 	struct mei_device *dev;
- 	int ret;
- 
--	dev_dbg(&pdev->dev, "rpm: me: runtime resume\n");
-+	dev_dbg(device, "rpm: me: runtime resume\n");
- 
--	dev = pci_get_drvdata(pdev);
-+	dev = dev_get_drvdata(device);
- 	if (!dev)
- 		return -ENODEV;
- 
-@@ -439,7 +436,7 @@ static int mei_me_pm_runtime_resume(struct device *device)
- 
- 	mutex_unlock(&dev->device_lock);
- 
--	dev_dbg(&pdev->dev, "rpm: me: runtime resume ret = %d\n", ret);
-+	dev_dbg(device, "rpm: me: runtime resume ret = %d\n", ret);
- 
- 	if (ret)
- 		schedule_work(&dev->reset_work);
-diff --git a/drivers/misc/mei/pci-txe.c b/drivers/misc/mei/pci-txe.c
-index 2e37fc2e0fa8..f1c16a587495 100644
---- a/drivers/misc/mei/pci-txe.c
-+++ b/drivers/misc/mei/pci-txe.c
-@@ -276,12 +276,11 @@ static int mei_txe_pci_resume(struct device *device)
- #ifdef CONFIG_PM
- static int mei_txe_pm_runtime_idle(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
- 	struct mei_device *dev;
- 
--	dev_dbg(&pdev->dev, "rpm: txe: runtime_idle\n");
-+	dev_dbg(device, "rpm: txe: runtime_idle\n");
- 
--	dev = pci_get_drvdata(pdev);
-+	dev = dev_get_drvdata(device);
- 	if (!dev)
- 		return -ENODEV;
- 	if (mei_write_is_idle(dev))
-@@ -291,13 +290,12 @@ static int mei_txe_pm_runtime_idle(struct device *device)
- }
- static int mei_txe_pm_runtime_suspend(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
- 	struct mei_device *dev;
- 	int ret;
- 
--	dev_dbg(&pdev->dev, "rpm: txe: runtime suspend\n");
-+	dev_dbg(device, "rpm: txe: runtime suspend\n");
- 
--	dev = pci_get_drvdata(pdev);
-+	dev = dev_get_drvdata(device);
- 	if (!dev)
- 		return -ENODEV;
- 
-@@ -310,7 +308,7 @@ static int mei_txe_pm_runtime_suspend(struct device *device)
- 
- 	/* keep irq on we are staying in D0 */
- 
--	dev_dbg(&pdev->dev, "rpm: txe: runtime suspend ret=%d\n", ret);
-+	dev_dbg(device, "rpm: txe: runtime suspend ret=%d\n", ret);
- 
- 	mutex_unlock(&dev->device_lock);
- 
-@@ -322,13 +320,12 @@ static int mei_txe_pm_runtime_suspend(struct device *device)
- 
- static int mei_txe_pm_runtime_resume(struct device *device)
- {
--	struct pci_dev *pdev = to_pci_dev(device);
- 	struct mei_device *dev;
- 	int ret;
- 
--	dev_dbg(&pdev->dev, "rpm: txe: runtime resume\n");
-+	dev_dbg(device, "rpm: txe: runtime resume\n");
- 
--	dev = pci_get_drvdata(pdev);
-+	dev = dev_get_drvdata(device);
- 	if (!dev)
- 		return -ENODEV;
- 
-@@ -340,7 +337,7 @@ static int mei_txe_pm_runtime_resume(struct device *device)
- 
- 	mutex_unlock(&dev->device_lock);
- 
--	dev_dbg(&pdev->dev, "rpm: txe: runtime resume ret = %d\n", ret);
-+	dev_dbg(device, "rpm: txe: runtime resume ret = %d\n", ret);
- 
- 	if (ret)
- 		schedule_work(&dev->reset_work);
+---
+References:
+[1] Documentation/interconnect/interconnect.rst
+[2] Documentation/devicetree/bindings/interconnect/interconnect.txt
+[3] https://patchwork.kernel.org/patch/10861757
+
+Artur Świgoń (10):
+  devfreq: exynos-bus: Extract exynos_bus_profile_init()
+  devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
+  devfreq: exynos-bus: Change goto-based logic to if-else logic
+  devfreq: exynos-bus: Clean up code
+  icc: Export of_icc_get_from_provider()
+  icc: Relax requirement in of_icc_get_from_provider()
+  icc: Relax condition in apply_constraints()
+  arm: dts: exynos: Add parents and #interconnect-cells to Exynos4412
+  devfreq: exynos-bus: Add interconnect functionality to exynos-bus
+  arm: dts: exynos: Add interconnects to Exynos4412 mixer
+
+Marek Szyprowski (1):
+  drm: exynos: mixer: Add interconnect support
+
+ .../boot/dts/exynos4412-odroid-common.dtsi    |   1 +
+ arch/arm/boot/dts/exynos4412.dtsi             |  10 +
+ drivers/devfreq/exynos-bus.c                  | 296 ++++++++++++++----
+ drivers/gpu/drm/exynos/exynos_mixer.c         |  68 +++-
+ drivers/interconnect/core.c                   |  12 +-
+ include/linux/interconnect-provider.h         |   6 +
+ 6 files changed, 314 insertions(+), 79 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
