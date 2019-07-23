@@ -2,71 +2,139 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94D2C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4166AC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3ABD2083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC682083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:41:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEgbUlOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391168AbfGWRkZ (ORCPT
+        id S2391182AbfGWRlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 13:40:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:57719 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388606AbfGWRkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 13:40:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 10:40:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
-   d="scan'208";a="163566590"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 23 Jul 2019 10:40:22 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 1A32681; Tue, 23 Jul 2019 20:40:21 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] extcon: arizona: Switch to use device_property_count_u32()
-Date:   Tue, 23 Jul 2019 20:40:21 +0300
-Message-Id: <20190723174021.66718-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 13:41:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40764 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388606AbfGWRlJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 13:41:09 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so44716295eds.7;
+        Tue, 23 Jul 2019 10:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nogcB6tU7ggTUc1+z4/fMorc4784ohsjEsA0VkxE4cQ=;
+        b=WEgbUlOwKq7FDIuwTpjXkL4hd+FxqB9iuHFupSLPSi3UKeNHLWZaKkOW15zx5J2/ZZ
+         iq8eueW8GsDMgV/SbuUXl849uTeoFKSwBk97/PL1K/GdP6IyScS7KKhmTtjPG885+diA
+         cRUhcWbQIOTDvi+ETBdb+Wqw2Qr4IRYtifiZNbdb+omqbkcvelRLhYOPCx/6rm/PP0pV
+         P+9LzpxJAoz7157KwdoGgBOShLoYyKMiSjWxLv9D/XFnc9iFg6nX+umbM8UXpX5no5ET
+         JVjO2MbiOlIMGOzoTAoU0AVnUrhsIVWYyNovjrnEKyh1nIO5ieSGxSZldsbMVW1fftUE
+         9PQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nogcB6tU7ggTUc1+z4/fMorc4784ohsjEsA0VkxE4cQ=;
+        b=IwR3qlBJPprY3q29mkRRTZa1pqGj9zY7GtmtDQVcnCb250KrpBUG/L7JdMjC7nHHXf
+         TYbTEcQig75FC0Sh893G0NJhU3eaOsfKhLh39aOoM9WMrEwqDz7VXuDKkVxiVbQEbJ3P
+         DNseHx4PYjrPmSB4C4HL3G4fKx2jkyzwTgYlSTtGWOo+UcNDXUCaD7+xRfv4zWgSjR2o
+         fCbeKMdcHVTFlNSZAKx3pQo6YaTr3oQhJZ/sYhfa+cgG/wZs+pEBJ8ye0J1Cj0X+T0cl
+         edJVlKVTPhKpHfZcMJV4M7JN/Gaoni7ZmUDqOioojsZbTVfPU7f/sHHpM/GvvXN3mijx
+         VYyQ==
+X-Gm-Message-State: APjAAAUoRQSM0xpi0wsAeM24C7Rl0yYf7XXmBbEydEuV+qcgcwMv4Zj3
+        lLANn8Cyiz7KOVfVXwfhyS5FXJsSIIfCBsJCO+Y=
+X-Google-Smtp-Source: APXvYqzemPNRUI4Dv8rCDS7Y3Atwe1foT+6Dyv7m4pV5WgS2/fMuH1KImSCRDazCl+5WCpEBG93Sr1jOHq4wKAJmBc8=
+X-Received: by 2002:a17:906:f85:: with SMTP id q5mr60032126ejj.192.1563903667438;
+ Tue, 23 Jul 2019 10:41:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190702202631.32148-2-robdclark@gmail.com> <20190710182844.25032-1-robdclark@gmail.com>
+ <20190722142833.GB12009@8bytes.org> <CAF6AEGvJc2RK3GkpcXiVKsuTX81D3oahnu=qWJ9LFst1eT3tMg@mail.gmail.com>
+ <20190722154803.GG12009@8bytes.org> <CAF6AEGvWf3ZOrbyyWjORuOVEPOcPr+JSEO78aYjhL-GVhDZnTg@mail.gmail.com>
+ <20190723153822.gm4ossn43nvqbyak@willie-the-truck>
+In-Reply-To: <20190723153822.gm4ossn43nvqbyak@willie-the-truck>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 23 Jul 2019 10:40:55 -0700
+Message-ID: <CAF6AEGtL6gqtbmtksf7zCSGrFOEj0ynq-2nwvizLLiS0FTwHpg@mail.gmail.com>
+Subject: Re: [PATCH v2] iommu: add support for drivers that manage iommu explicitly
+To:     Will Deacon <will@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Joe Perches <joe@perches.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use use device_property_count_u32() directly, that makes code neater.
+On Tue, Jul 23, 2019 at 8:38 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Mon, Jul 22, 2019 at 09:23:48AM -0700, Rob Clark wrote:
+> > On Mon, Jul 22, 2019 at 8:48 AM Joerg Roedel <joro@8bytes.org> wrote:
+> > >
+> > > On Mon, Jul 22, 2019 at 08:41:34AM -0700, Rob Clark wrote:
+> > > > It is set by the driver:
+> > > >
+> > > > https://patchwork.freedesktop.org/patch/315291/
+> > > >
+> > > > (This doesn't really belong in devicetree, since it isn't a
+> > > > description of the hardware, so the driver is really the only place to
+> > > > set this.. which is fine because it is about a detail of how the
+> > > > driver works.)
+> > >
+> > > It is more a detail about how the firmware works. IIUC the problem is
+> > > that the firmware initializes the context mappings for the GPU and the
+> > > OS doesn't know anything about that and just overwrites them, causing
+> > > the firmware GPU driver to fail badly.
+> > >
+> > > So I think it is the task of the firmware to tell the OS not to touch
+> > > the devices mappings until the OS device driver takes over. On x86 there
+> > > is something similar with the RMRR/unity-map tables from the firmware.
+> > >
+> >
+> > Bjorn had a patchset[1] to inherit the config from firmware/bootloader
+> > when arm-smmu is probed which handles that part of the problem.  My
+> > patch is intended to be used on top of his patchset.  This seems to me
+> > like the best solution, if we don't have control over the firmware.
+>
+> Hmm, but the feedback from Robin on the thread you cite was that this should
+> be generalised to look more like RMRR, so there seems to be a clear message
+> here.
+>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/extcon/extcon-arizona.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Perhaps it is a lack of creativity, or lack of familiarity w/ iommu vs
+virtualization, but I'm not quite seeing how RMRR would help.. in
+particular when dealing with both DT and ACPI cases.  So I kinda
+prefer, when possible, if arm-smmu can figure out what is going on by
+looking at the hw state at boot (since that approach would work
+equally well for DT and ACPI).
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index 7e9f4c9ee87d..e970134c95fa 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1253,7 +1253,7 @@ static int arizona_extcon_get_micd_configs(struct device *dev,
- 	int i, j;
- 	u32 *vals;
- 
--	nconfs = device_property_read_u32_array(arizona->dev, prop, NULL, 0);
-+	nconfs = device_property_count_u32(arizona->dev, prop);
- 	if (nconfs <= 0)
- 		return 0;
- 
--- 
-2.20.1
+I *think* (but need to confirm if Bjorn hasn't already) that the
+memory for the pagetables that firmware/bootloader sets up is already
+removed from the memory map efi passes to kernel, so we don't need to
+worry about kernel stomping in-use pagetables.
 
+BR,
+-R
