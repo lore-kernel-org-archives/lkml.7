@@ -2,100 +2,90 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794DFC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81025C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533DF2238B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3992238B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IELyJyyy"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="enwqPukv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732071AbfGWCOD (ORCPT
+        id S1728676AbfGWCQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 22:14:03 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38801 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbfGWCOB (ORCPT
+        Mon, 22 Jul 2019 22:16:36 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:41235 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfGWCQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 22:14:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id az7so19933298plb.5;
-        Mon, 22 Jul 2019 19:14:00 -0700 (PDT)
+        Mon, 22 Jul 2019 22:16:36 -0400
+Received: by mail-qk1-f193.google.com with SMTP id v22so30011192qkj.8;
+        Mon, 22 Jul 2019 19:16:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bcJiCvbMXNOA/uN8ruxT781zjh9D6EPOuwlY9SZ0FHs=;
-        b=IELyJyyym8TNmLoys+GUIZL8k3PcKiok4b+5IqeJ8Y25pV0llokCEjDZz8mGyrfJWr
-         CHXZSc0HFJahfZu2W4OF+zGScl7nyYpuDc0mAhDg5Q8AAbTODW86wxpkeQ8uKT950+fi
-         YoILo3U+D5L4tGecuRmsqZQeWuJzh7BMhdg6j+Z0ZXgtFA2PTvHkBsUDB7naHTaEl9GE
-         flBHr8axRUDC6wtYgzlnWZrdHnYWwJ2ISyo22JRIp/GMGDxGxl3yAI9HRrqKGgca5Vf4
-         IxEG0LUYyQaefZtRoU6BqKphhDMuSbKiqnRvW3rr0yRfi7tjlCR9Odc7gaLYDWC26Erv
-         BhMg==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7GgnchVxa85kofAIjboqJCKA6VShjGUyfwivNl63GJ8=;
+        b=enwqPukvvi2Os0t54GJuz6TCm4CbxxKrSuAL/QdPmtJdzjuFCj+I3xLRmS9ubxIVnU
+         BmX3XK1IKQ5Bp0Kt/rsUlcMLdEBkkWjkLRdZWwI1i4MFfM4/gIPrgaFA4uZFUnjSXwTo
+         BJKEsm19zmW8OfM4acCvQ/4de/DyLISE1/szE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bcJiCvbMXNOA/uN8ruxT781zjh9D6EPOuwlY9SZ0FHs=;
-        b=B1TXYA+I6PmlVHIC8nftqh2Nb/Hz/l5VmhkH5/VQI4FE/3hCEawDHYvCsxeUrhkCLH
-         tgaMmlJ2rH1gfEavg8IE+Q/frjlx4NUzSQGirYnv2kkFnHRuavKZGJmQhwfQCa8NIB39
-         RDFYd0tgs9vtB9m0TQAz7l7sEktAyPDn1zuEGK3Wjkq/fHMyRf9+fnBl7UDO7VQ2hU4K
-         AWKtUceNx7Lzrzf4GXvJpJ7R7UHyeOhhQcbrUV0Mzwz61mGmiwuI9K/SWq6R17uweFPy
-         3Stbgo3rtkdP3KcRADLpSnjmXcj5lii5m9DT1kmfVqHY5ZSsxuZiXaTI7QR5KXBPQSHH
-         CB0w==
-X-Gm-Message-State: APjAAAWjbm/5w3xIbCPE3t0DMqArrrXLKkJxXB4Mrm3S8syOomVwkC/3
-        xse+z4chI6oMROqcVa+jeYN76C4QLJ8=
-X-Google-Smtp-Source: APXvYqwJlApLg8k9xUxoYw0CE/f4MdedKH2O4nqfxcLPO80QsXqJI7H8K5qQm2kHNNu+5G5eP+9BCg==
-X-Received: by 2002:a17:902:4683:: with SMTP id p3mr72153269pld.31.1563848039881;
-        Mon, 22 Jul 2019 19:13:59 -0700 (PDT)
-Received: from continental.prv.suse.net ([191.248.110.143])
-        by smtp.gmail.com with ESMTPSA id v126sm7999257pgb.23.2019.07.22.19.13.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 19:13:59 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        axboe@kernel.dk, hare@suse.com
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>
-Subject: [PATCH 2/2] include: elevator.h: Remove started_request from elevator_mq_ops
-Date:   Mon, 22 Jul 2019 23:14:39 -0300
-Message-Id: <20190723021439.8419-3-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190723021439.8419-1-marcos.souza.org@gmail.com>
-References: <20190723021439.8419-1-marcos.souza.org@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7GgnchVxa85kofAIjboqJCKA6VShjGUyfwivNl63GJ8=;
+        b=aWP401S5NUvUAJWQoVWOXvRIGPvrERGQVvQrWxKAy2SQzliBOJblbrEfgGyLXpWOIh
+         L5iHptgwC2Ldi9TGRtubb0GAQJ/94hSs9rRGp6vUYDiUa1/QKPKjMDgDbCjPYTbgOYLZ
+         /MFp6seg7sZ//zhlVDahoFqZ+lEmTGrVZQAOaO/ZbW1od1H/UTa6ITMxYs2ftG9TswQH
+         d6JLYWFyvyOBk/ECkhfcMQPC1AjHvof+sGZRuZHNAR0J3JuEISkjjQXUom0uQn+mlYYt
+         eF88QenYofTZGHWyQ9yZrG298inGschoYWA0mjUW0GR1Ca8+8dIt6skWaZgu0qliTq7+
+         ToOA==
+X-Gm-Message-State: APjAAAU2ftNR4ta/H/m6Qcko+UwMb310vHVFXUQOidtCfG0/j/VxFDDS
+        w9ckG2mAQLMoSBKyPwaQWeeSq67/p4iVRTsmqUU=
+X-Google-Smtp-Source: APXvYqxU3suR2c+fS3yT0aq2lqnTUt++7MYnhK9oL6tGmvBmBmm6edtD6GqRPtAqNuBdgfYwI2gPuRDH4KkZOah0kFs=
+X-Received: by 2002:a05:620a:16d6:: with SMTP id a22mr49006146qkn.414.1563848195224;
+ Mon, 22 Jul 2019 19:16:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190723003216.2910042-1-vijaykhemka@fb.com> <a0a8162e-c21b-4b3d-b096-1676c5cc9758@www.fastmail.com>
+In-Reply-To: <a0a8162e-c21b-4b3d-b096-1676c5cc9758@www.fastmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 23 Jul 2019 02:16:23 +0000
+Message-ID: <CACPK8XddLM934ArbA13GEN6m9KpgOkQattE5p8qBpv-yL4mJ9Q@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: tiogapass: Add VR devices
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Vijay Khemka <vijaykhemka@fb.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is not implemented by any available IO scheduler, so
-remove it.
+On Tue, 23 Jul 2019 at 00:40, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Tue, 23 Jul 2019, at 10:04, Vijay Khemka wrote:
+> > Adds voltage regulators Infineon pxe1610 devices to Facebook
+> > tiogapass platform.
+> >
+> > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+>
+> Acked-by: Andrew Jeffery <andrew@aj.id.au>
 
-Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
----
- include/linux/elevator.h | 1 -
- 1 file changed, 1 deletion(-)
+Thanks, applied to aspeed's dt-for-5.4.
 
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index 17cd0078377c..1dd014c9c87b 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -45,7 +45,6 @@ struct elevator_mq_ops {
- 	struct request *(*dispatch_request)(struct blk_mq_hw_ctx *);
- 	bool (*has_work)(struct blk_mq_hw_ctx *);
- 	void (*completed_request)(struct request *, u64);
--	void (*started_request)(struct request *);
- 	void (*requeue_request)(struct request *);
- 	struct request *(*former_request)(struct request_queue *, struct request *);
- 	struct request *(*next_request)(struct request_queue *, struct request *);
--- 
-2.22.0
+Cheers,
 
+Joel
