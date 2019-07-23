@@ -1,116 +1,236 @@
-Return-Path: <SRS0=CEgE=VT=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1595EC7618F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BB5C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7542218BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Jul 2019 23:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BwwNgGUL"
+	by mail.kernel.org (Postfix) with ESMTP id 75A56218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbfGVX73 (ORCPT
+        id S2387568AbfGWAAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 19:59:29 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41657 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730693AbfGVX73 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 19:59:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x15so8081285pgg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 16:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yKJpc6b5YDtH8HQ6uiATAFLuSozdZCVilkIngvbXM5A=;
-        b=BwwNgGULwWCLx8dsVMfholYHHZtahSRNI4WRi8GeRE1cTEnEj7+QLHRFtS1OwD7OfL
-         PBhCf2HLH/xHTCrVy2tXcVrzcxjy/X/9XS3xE3DB5oNwZDSgYT1w2T1voSeXQoCgP+lE
-         YAbbno9nOKjFkhoG+ymLqQNzmX7kqXLBCtzVc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yKJpc6b5YDtH8HQ6uiATAFLuSozdZCVilkIngvbXM5A=;
-        b=QfkzpF8je1blF3Z6Q+2goVUXeJw+37wN8HIp8eqUVUl5DWNYW7NAEUBO6bqN8tDvz1
-         AZ++EQQy+LqPTF4OjdDDrSEpOmSIRHXhCEWSPz+nz6kGYRd5kk+kqv4Xwcko8380YlTq
-         ekxN7TiXBDi7MgPv50Iqr41S6/Rh117YG50x9JJW5CFftrpgpeVhMfbjVG9oM25Czkk3
-         f/tiVxeWSOoTmTKtzHO2VJTwksEUpqDHjrEh9J3U5xtHH7Dzop1z5ZpDwL662C5bDjhN
-         VCgBicnzjDixpV8vL4/3eeJTPqwhRy5g7AoBBvQvq0MttswUuE+Gb1vunqdj1aYt+jEt
-         sQ6Q==
-X-Gm-Message-State: APjAAAVsX1C34FO6c+eFWpwlZ0qlBuujTIRIk04ytflZbPbxOcM+hCTH
-        fSkimR+Zwfd9AKtN5QrdOEMejg==
-X-Google-Smtp-Source: APXvYqylBuVwl7XZwxbVNxqA1DcLvAlMOG8gWbqhX7r0RR7aDWH3sQ/kfj0iiNgQmQOUzrSpDH2+kA==
-X-Received: by 2002:a63:4e60:: with SMTP id o32mr75155489pgl.68.1563839968519;
-        Mon, 22 Jul 2019 16:59:28 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id f88sm40294971pjg.5.2019.07.22.16.59.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 16:59:27 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 16:59:26 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 0/4] backlight: Expose brightness curve type through
- sysfs
-Message-ID: <20190722235926.GA250418@google.com>
-References: <20190709190007.91260-1-mka@chromium.org>
+        Mon, 22 Jul 2019 20:00:11 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50651 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730693AbfGWAAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 20:00:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 17:00:09 -0700
+X-IronPort-AV: E=Sophos;i="5.64,296,1559545200"; 
+   d="scan'208";a="160027458"
+Received: from rdvivi-losangeles.jf.intel.com (HELO intel.com) ([10.7.196.65])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 17:00:09 -0700
+Date:   Mon, 22 Jul 2019 17:00:44 -0700
+From:   Rodrigo Vivi <rodrigo.vivi@intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [Intel-gfx] [PATCH] drm/i915: Mark expected switch fall-throughs
+Message-ID: <20190723000044.GA29820@intel.com>
+References: <20190722181244.GA2085@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190709190007.91260-1-mka@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190722181244.GA2085@embeddedor>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 09, 2019 at 12:00:03PM -0700, Matthias Kaehlcke wrote:
-> Backlight brightness curves can have different shapes. The two main
-> types are linear and non-linear curves. The human eye doesn't
-> perceive linearly increasing/decreasing brightness as linear (see
-> also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of LED
-> linearly to human eye"), hence many backlights use non-linear (often
-> logarithmic) brightness curves. The type of curve is currently opaque
-> to userspace, so userspace often relies on more or less reliable
-> heuristics (like the number of brightness levels) to decide whether
-> to treat a backlight device as linear or non-linear.
-> 
-> Export the type of the brightness curve via a new sysfs attribute.
-> 
-> Matthias Kaehlcke (4):
->   MAINTAINERS: Add entry for stable backlight sysfs ABI documentation
->   backlight: Expose brightness curve type through sysfs
->   backlight: pwm_bl: Set scale type for CIE 1931 curves
->   backlight: pwm_bl: Set scale type for brightness curves specified in
->     the DT
-> 
->  .../ABI/testing/sysfs-class-backlight         | 26 ++++++++++++++
->  MAINTAINERS                                   |  2 ++
->  drivers/video/backlight/backlight.c           | 19 ++++++++++
->  drivers/video/backlight/pwm_bl.c              | 35 ++++++++++++++++++-
->  include/linux/backlight.h                     |  8 +++++
->  5 files changed, 89 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-backlight
+Hi Gustavo,
 
-ping, any comments on v3?
+could you please rebase on top of drm-tip and resend it please?
 
-Thanks
+Thanks,
+Rodrigo.
 
-Matthias
+On Mon, Jul 22, 2019 at 01:12:44PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warnings:
+> 
+> drivers/gpu/drm/i915/gem/i915_gem_mman.c: In function ‘i915_gem_fault’:
+> drivers/gpu/drm/i915/gem/i915_gem_mman.c:342:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (!i915_terminally_wedged(i915))
+>       ^
+> drivers/gpu/drm/i915/gem/i915_gem_mman.c:345:2: note: here
+>   case -EAGAIN:
+>   ^~~~
+> 
+> drivers/gpu/drm/i915/gem/i915_gem_pages.c: In function ‘i915_gem_object_map’:
+> ./include/linux/compiler.h:78:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>  # define unlikely(x) __builtin_expect(!!(x), 0)
+>                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/asm-generic/bug.h:136:2: note: in expansion of macro ‘unlikely’
+>   unlikely(__ret_warn_on);     \
+>   ^~~~~~~~
+> drivers/gpu/drm/i915/i915_utils.h:49:25: note: in expansion of macro ‘WARN’
+>  #define MISSING_CASE(x) WARN(1, "Missing case (%s == %ld)\n", \
+>                          ^~~~
+> drivers/gpu/drm/i915/gem/i915_gem_pages.c:270:3: note: in expansion of macro ‘MISSING_CASE’
+>    MISSING_CASE(type);
+>    ^~~~~~~~~~~~
+> drivers/gpu/drm/i915/gem/i915_gem_pages.c:272:2: note: here
+>   case I915_MAP_WB:
+>   ^~~~
+> 
+> drivers/gpu/drm/i915/i915_gpu_error.c: In function ‘error_record_engine_registers’:
+> ./include/linux/compiler.h:78:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>  # define unlikely(x) __builtin_expect(!!(x), 0)
+>                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/asm-generic/bug.h:136:2: note: in expansion of macro ‘unlikely’
+>   unlikely(__ret_warn_on);     \
+>   ^~~~~~~~
+> drivers/gpu/drm/i915/i915_utils.h:49:25: note: in expansion of macro ‘WARN’
+>  #define MISSING_CASE(x) WARN(1, "Missing case (%s == %ld)\n", \
+>                          ^~~~
+> drivers/gpu/drm/i915/i915_gpu_error.c:1196:5: note: in expansion of macro ‘MISSING_CASE’
+>      MISSING_CASE(engine->id);
+>      ^~~~~~~~~~~~
+> drivers/gpu/drm/i915/i915_gpu_error.c:1197:4: note: here
+>     case RCS0:
+>     ^~~~
+> 
+> drivers/gpu/drm/i915/display/intel_dp.c: In function ‘intel_dp_get_fia_supported_lane_count’:
+> ./include/linux/compiler.h:78:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>  # define unlikely(x) __builtin_expect(!!(x), 0)
+>                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> ./include/asm-generic/bug.h:136:2: note: in expansion of macro ‘unlikely’
+>   unlikely(__ret_warn_on);     \
+>   ^~~~~~~~
+> drivers/gpu/drm/i915/i915_utils.h:49:25: note: in expansion of macro ‘WARN’
+>  #define MISSING_CASE(x) WARN(1, "Missing case (%s == %ld)\n", \
+>                          ^~~~
+> drivers/gpu/drm/i915/display/intel_dp.c:233:3: note: in expansion of macro ‘MISSING_CASE’
+>    MISSING_CASE(lane_info);
+>    ^~~~~~~~~~~~
+> drivers/gpu/drm/i915/display/intel_dp.c:234:2: note: here
+>   case 1:
+>   ^~~~
+> 
+> drivers/gpu/drm/i915/display/intel_display.c: In function ‘check_digital_port_conflicts’:
+>   CC [M]  drivers/gpu/drm/nouveau/nvkm/engine/disp/cursgv100.o
+> drivers/gpu/drm/i915/display/intel_display.c:12043:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (WARN_ON(!HAS_DDI(to_i915(dev))))
+>        ^
+> drivers/gpu/drm/i915/display/intel_display.c:12046:3: note: here
+>    case INTEL_OUTPUT_DP:
+>    ^~~~
+> 
+> Also, notice that the Makefile is modified in order to stop
+> ignoring fall-through warnings. The -Wimplicit-fallthrough
+> option will be enabled globally in v5.3.
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/gpu/drm/i915/Makefile                | 1 -
+>  drivers/gpu/drm/i915/display/intel_display.c | 2 +-
+>  drivers/gpu/drm/i915/display/intel_dp.c      | 1 +
+>  drivers/gpu/drm/i915/gem/i915_gem_mman.c     | 2 +-
+>  drivers/gpu/drm/i915/gem/i915_gem_pages.c    | 2 +-
+>  drivers/gpu/drm/i915/i915_gpu_error.c        | 1 +
+>  6 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
+> index 91355c2ea8a5..8cace65f50ce 100644
+> --- a/drivers/gpu/drm/i915/Makefile
+> +++ b/drivers/gpu/drm/i915/Makefile
+> @@ -16,7 +16,6 @@ subdir-ccflags-y := -Wall -Wextra
+>  subdir-ccflags-y += $(call cc-disable-warning, unused-parameter)
+>  subdir-ccflags-y += $(call cc-disable-warning, type-limits)
+>  subdir-ccflags-y += $(call cc-disable-warning, missing-field-initializers)
+> -subdir-ccflags-y += $(call cc-disable-warning, implicit-fallthrough)
+>  subdir-ccflags-y += $(call cc-disable-warning, unused-but-set-variable)
+>  # clang warnings
+>  subdir-ccflags-y += $(call cc-disable-warning, sign-compare)
+> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+> index 8592a7d422de..30b97ded6fdd 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> @@ -12042,7 +12042,7 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
+>  		case INTEL_OUTPUT_DDI:
+>  			if (WARN_ON(!HAS_DDI(to_i915(dev))))
+>  				break;
+> -			/* else: fall through */
+> +			/* else, fall through */
+>  		case INTEL_OUTPUT_DP:
+>  		case INTEL_OUTPUT_HDMI:
+>  		case INTEL_OUTPUT_EDP:
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index 4336df46fe78..d0fc34826771 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -231,6 +231,7 @@ static int intel_dp_get_fia_supported_lane_count(struct intel_dp *intel_dp)
+>  	switch (lane_info) {
+>  	default:
+>  		MISSING_CASE(lane_info);
+> +		/* fall through */
+>  	case 1:
+>  	case 2:
+>  	case 4:
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_mman.c b/drivers/gpu/drm/i915/gem/i915_gem_mman.c
+> index 391621ee3cbb..39a661927d8e 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_mman.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_mman.c
+> @@ -341,7 +341,7 @@ vm_fault_t i915_gem_fault(struct vm_fault *vmf)
+>  		 */
+>  		if (!i915_terminally_wedged(i915))
+>  			return VM_FAULT_SIGBUS;
+> -		/* else: fall through */
+> +		/* else, fall through */
+>  	case -EAGAIN:
+>  		/*
+>  		 * EAGAIN means the gpu is hung and we'll wait for the error
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> index b36ad269f4ea..65eb430cedba 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+> @@ -268,7 +268,7 @@ static void *i915_gem_object_map(const struct drm_i915_gem_object *obj,
+>  	switch (type) {
+>  	default:
+>  		MISSING_CASE(type);
+> -		/* fallthrough to use PAGE_KERNEL anyway */
+> +		/* fallthrough - to use PAGE_KERNEL anyway */
+>  	case I915_MAP_WB:
+>  		pgprot = PAGE_KERNEL;
+>  		break;
+> diff --git a/drivers/gpu/drm/i915/i915_gpu_error.c b/drivers/gpu/drm/i915/i915_gpu_error.c
+> index b7e9fddef270..41a511d5267f 100644
+> --- a/drivers/gpu/drm/i915/i915_gpu_error.c
+> +++ b/drivers/gpu/drm/i915/i915_gpu_error.c
+> @@ -1194,6 +1194,7 @@ static void error_record_engine_registers(struct i915_gpu_state *error,
+>  			switch (engine->id) {
+>  			default:
+>  				MISSING_CASE(engine->id);
+> +				/* fall through */
+>  			case RCS0:
+>  				mmio = RENDER_HWS_PGA_GEN7;
+>  				break;
+> -- 
+> 2.22.0
+> 
+> _______________________________________________
+> Intel-gfx mailing list
+> Intel-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
