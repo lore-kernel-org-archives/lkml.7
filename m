@@ -8,65 +8,64 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47012C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7CCC7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 194BA21901
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA36223A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9grusXg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hOKunxsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389252AbfGWLKi (ORCPT
+        id S2389267AbfGWLKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:10:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37041 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389218AbfGWLKi (ORCPT
+        Tue, 23 Jul 2019 07:10:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41984 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731838AbfGWLKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:10:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 19so18977847pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:10:37 -0700 (PDT)
+        Tue, 23 Jul 2019 07:10:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so19256688pgb.9;
+        Tue, 23 Jul 2019 04:10:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TdC2f6TJF86FgwDX6KIDWxr/KpmV360i5Yrw3iyE1iw=;
-        b=q9grusXg7FRhKMtX21/0dcOkdQVBD1QHBhVPY5S/qj/KaUYNuBibLBKhoW+IIIiL1U
-         OSMGVNtBBUIc9Er+gmv9bpB3jOhTSOgpJLdOuVEto1b3OqnjBOXbmrkpsLgPTn3K7Bq6
-         94ct5pEJZ3o5xlHoXkv2dj838nPe1HBXkI73wObalKvZg8IBkatpdC2blOk8M0Guldw5
-         cXUrBQBgcq3BjSv46S3m6FFcWcUCzH7ClDC9YaVTYw7i/YlzIaRCp+HWZC2GYEc85pX4
-         Y5XgjMpDuNKPUX/eGnWcf3sDiUCC1AF7CXfD4oMmUeapfvrDrvUEF5r1pValTcdBfn47
-         NnfA==
+        bh=C7BHhulFR1p2fpuSJS5AyFuCRwwQBw3M6w71QuYYn7o=;
+        b=hOKunxsAnGgZZc00D/DgYI5m/ZVwEOaQgfvXavvbKxPZt4U68doqSgstSlMYIl+XfI
+         dJOJY0G/IyT8hM8U7clxbH65gY8cqVh3C4c3E6ymRfpLF+GcuJbTpBkwuzy4CPGuAqK/
+         CetIec+lh33EILsznyJvZGc8l93XTM1N/sajXDZebOgJCH4RiwV7hWvnxQH/DEk4rkJY
+         GCA4AOBFnqeDnWSIOQa6AtW+Ck26tBSUxMaGKzpFastIkBG165E7hmy361YUViNR9Tl0
+         pMDYaN/XYhvDAbYKX53LP4poE8F0O7FjWi2qBnceiNzTtm5sBs6ou4ga2mHYTTcCQ+rn
+         Rs3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TdC2f6TJF86FgwDX6KIDWxr/KpmV360i5Yrw3iyE1iw=;
-        b=E9aRIaPDLTI9+ZDewHSZhsH+mj6Rmvq3MUnGmTMwUWnHlsqXJ3jckO74qqQkFw579t
-         f/zTK3ZRHijXl/OmRaebIgfMZvVNC9cIcw4V1eBF2C5OVm8COcdzTee9m6czIPKstNhA
-         yvs0GvjdFbP4Nb9nJyFubImi6QB/Fx3Uw2pzocLFyQBXCrjAUfJDBfIaPcxNwPAPUyQ9
-         cpsGAh6vUBf9lA1F//oKe7mgRhXUA4tcfq57fB2JmPd43VrFM55yxEhxdK848l1w00Lw
-         IwgppCUPfNsacIipWDSPNWr37OwuPwCy48siRdQholzWEF5ny4D1pwyB+WML0/YX16G4
-         r4/Q==
-X-Gm-Message-State: APjAAAXIU87tO5n0Vli5mSxVgk4WVhaejdJGn3AeqVERdtJe0wQCcee/
-        K343DN6CRaiAxOCkargqkiLfRek0C1Y=
-X-Google-Smtp-Source: APXvYqzFg8sL7ip6zspQWhRnUUbOYrrvGUS2Kinjim/SlCx29Bxi6970md1j/cfuqehMPa3Bnay/8A==
-X-Received: by 2002:a17:90a:8591:: with SMTP id m17mr83143286pjn.100.1563880237482;
-        Tue, 23 Jul 2019 04:10:37 -0700 (PDT)
+        bh=C7BHhulFR1p2fpuSJS5AyFuCRwwQBw3M6w71QuYYn7o=;
+        b=k1yKTaBzp65NJoCajedB4FVimmGDUJGl70uq/HllmyLK9ycb425xpk8LPIouTqlqtK
+         orXFHYVohrPkzt9z1Ki1XwcukCLId89e825WV2o0g/32Nuq/ndAoR/iw6t2XZ5ej0bKd
+         YvDKmbbLISO6DOt+QlJbXUQO4hChGrzMGVdoa0OnEUUV0xAqYiWxw6QSi+vGk87MhEWE
+         g1WQd++PQ6K4LjIny7z/8nzL2r79MeHJMXPJvEz1RuzZNfxjL3MgxdBkLVJ8C1hOjE+w
+         b1O06CEacLEpsDRNAWJDqSkniBuM7mfRjCq/rCyVvbidAp3sIKcwFHDpYS+GpuO/DuaA
+         3AKQ==
+X-Gm-Message-State: APjAAAU8NidzISg7vSYSvSxAWCVygTxmpUun2oaALCnrPXVK6o+oN2XL
+        k+NtErpr8n6ydV+NCkuRegs=
+X-Google-Smtp-Source: APXvYqx+1gTSH7WvKWtA4QtKsOjbm/zVH3YNrMgh0tTmFkg18NX61FQPz7fxfKD4bSt10xrNyI8wfA==
+X-Received: by 2002:a62:e710:: with SMTP id s16mr5403082pfh.183.1563880254560;
+        Tue, 23 Jul 2019 04:10:54 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id g4sm54517887pfo.93.2019.07.23.04.10.34
+        by smtp.gmail.com with ESMTPSA id y11sm46675248pfb.119.2019.07.23.04.10.52
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 04:10:36 -0700 (PDT)
+        Tue, 23 Jul 2019 04:10:54 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drm/vmwgfx: Use dev_get_drvdata
-Date:   Tue, 23 Jul 2019 19:10:31 +0800
-Message-Id: <20190723111031.11012-1-hslester96@gmail.com>
+Subject: [PATCH] HID: intel-ish-hid: Use dev_get_drvdata where possible
+Date:   Tue, 23 Jul 2019 19:10:49 +0800
+Message-Id: <20190723111049.11067-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,31 +80,21 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-index 9506190a0300..8f5f5980c9d8 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -1448,8 +1448,7 @@ static int vmw_pm_resume(struct device *kdev)
- 
- static int vmw_pm_freeze(struct device *kdev)
+diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+index aa80b4d3b740..7047c14516c9 100644
+--- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
++++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
+@@ -204,8 +204,7 @@ static struct device __maybe_unused *ish_resume_device;
+  */
+ static void __maybe_unused ish_resume_handler(struct work_struct *work)
  {
--	struct pci_dev *pdev = to_pci_dev(kdev);
--	struct drm_device *dev = pci_get_drvdata(pdev);
-+	struct drm_device *dev = dev_get_drvdata(kdev);
- 	struct vmw_private *dev_priv = vmw_priv(dev);
- 	int ret;
- 
-@@ -1497,8 +1496,7 @@ static int vmw_pm_freeze(struct device *kdev)
- 
- static int vmw_pm_restore(struct device *kdev)
- {
--	struct pci_dev *pdev = to_pci_dev(kdev);
--	struct drm_device *dev = pci_get_drvdata(pdev);
-+	struct drm_device *dev = dev_get_drvdata(kdev);
- 	struct vmw_private *dev_priv = vmw_priv(dev);
+-	struct pci_dev *pdev = to_pci_dev(ish_resume_device);
+-	struct ishtp_device *dev = pci_get_drvdata(pdev);
++	struct ishtp_device *dev = dev_get_drvdata(ish_resume_device);
+ 	uint32_t fwsts;
  	int ret;
  
 -- 
