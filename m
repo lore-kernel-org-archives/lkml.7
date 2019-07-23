@@ -2,255 +2,164 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D11C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B70C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527DB2199C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538532199C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rz2HmPfZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GK/SXbvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387632AbfGWAOF (ORCPT
+        id S2387677AbfGWAVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:14:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50945 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfGWAOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:14:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45szVJ64tXz9s3Z;
-        Tue, 23 Jul 2019 10:14:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563840841;
-        bh=vxPSh/IsBG0RLSVqqoMz7eABCbPSkHkd4zA2cI05eSw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Rz2HmPfZaLg6QJji/HcqKPA6qPmi26+eSEmQcXBvCFITJasflOZuZCmXl4Q+kGSF1
-         7wkFBh+epYu6rj8mJadoU2kGTdKiWO2f3tmgtsSKEpyiQcP4Gim9bAjF9Q8PrnPojG
-         K71s+STv6GFp/Btn5XWVezDws4Hrgyzk00q1KRRpnBWyA/cJXRTjW4sh8eaYZo3PoW
-         /5EQzPRU7mDbjk5nL4kLcfDZgn0Cd4D9akKUYBBtYvitU2nkAXcfGvPS0CxKmiPrIO
-         bfGf8TL7I5P2ezx4G4BuvuYuVFB4RxnM0HKaUNFq7okxGVrVOYOcjsjwdHb2LPDo1F
-         2OVEDzxDXkb6w==
-Date:   Tue, 23 Jul 2019 10:13:41 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Subject: linux-next: build failure after merge of the v4l-dvb tree
-Message-ID: <20190723101341.751596b2@canb.auug.org.au>
+        Mon, 22 Jul 2019 20:21:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39692 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731995AbfGWAVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 20:21:33 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so18446876pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 17:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=P2jEpwGpnd2dP73asPYYWzs20ZqCHZiPzV1J2BDG/FM=;
+        b=GK/SXbvV1Wr4pf7vNg3Pxg2AZOAZ2PQr0KDAiEQohcxjlEhg05Y19+//vNZ4xM6+7z
+         jubrtTlH/DLGGDJHi9lqywuS9zv8WwTAV+0JLL/wkH1ZQJuBNYQ8099vIYZN1q2lHybo
+         n8nJcMtxlQuyn+jP3BC2/Y31PmkTFIMJQlW8+roC/guCjBRhc2F+r/PQKv762R0xxTyp
+         z6khMVNYg0QMSnumu6aqcf6tQCbUy/HqcA+aKQGJRIZN3yw6TEL2QEvjvyxU+xXAPaPM
+         D+kmGuwTFeWket9xNOP1+F3knKSiWW4GnDJQR8X9NgnhMdVHDFcpa17XpKOPmxPsI3IU
+         vN7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P2jEpwGpnd2dP73asPYYWzs20ZqCHZiPzV1J2BDG/FM=;
+        b=ZxySt3PiJCizYUlDAGLEfEC+oa19IkTn6NCJ66i72tKfNdPvKg72nbUlDH60wF8YAO
+         tMQJJcd5nugmOiY2EYztVBz5+B7W5o6ApPjmYIzQnD4vvNHZeoq0lJdZcJgrMsOyMLHf
+         goZKg765MGTSNl2O8+KKjuNMnF8KLKBxGvd7/xY6IyUprX1u35jZiH9OT+Jsik06jA3a
+         ME36vtqKadl1UBDV3iC+QnzgG09CCRpHJGl7gHF3oLb1gAiZk+m5Z3PXksBw7NNWoOaa
+         OrUHz8/jvIgMS5F48kd0ZXpCCNyPJItWbRHOWJqYMBc3rbuBJvs58443mGL650KzTELV
+         XXAQ==
+X-Gm-Message-State: APjAAAWZhQ4PBekPE41Nxi23qcekLtVbrNEqpdeZgy73XafCWOvLHwqo
+        QTZXc/orfutdmlRK82GxG8zHIQ==
+X-Google-Smtp-Source: APXvYqz69KfsjPqZi5pU8mg3mc+WpiAvmeiznQoHXLdW/4Mc18ndLJOVa/fhWg2UAYXvlSiPScoojQ==
+X-Received: by 2002:a65:690e:: with SMTP id s14mr60618843pgq.47.1563841292767;
+        Mon, 22 Jul 2019 17:21:32 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x128sm71062102pfd.17.2019.07.22.17.21.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 17:21:32 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 17:21:30 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Ian Jackson <ian.jackson@citrix.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Subject: Re: [PATCH 2/3] firmware: qcom_scm: Cleanup code in
+ qcom_scm_assign_mem()
+Message-ID: <20190723002130.GU30636@minitux>
+References: <23774.56553.445601.436491@mariner.uk.xensource.com>
+ <20190517210923.202131-3-swboyd@chromium.org>
+ <20190722232719.GT30636@minitux>
+ <5d364f2a.1c69fb81.e3ed.7bfd@mx.google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/b+3piXOgcVYq24xfgHN+cdY";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d364f2a.1c69fb81.e3ed.7bfd@mx.google.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/b+3piXOgcVYq24xfgHN+cdY
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon 22 Jul 17:04 PDT 2019, Stephen Boyd wrote:
 
-Hi all,
+> Quoting Bjorn Andersson (2019-07-22 16:27:19)
+> > On Fri 17 May 14:09 PDT 2019, Stephen Boyd wrote:
+> > 
+> > > There are some questionable coding styles in this function. It looks
+> > > quite odd to deref a pointer with array indexing that only uses the
+> > > first element. Also, destroying an input/output variable halfway through
+> > > the function and then overwriting it on success is not clear. It's
+> > > better to use a local variable and the kernel macros to step through
+> > > each bit set in a bitmask and clearly show where outputs are set.
+> > > 
+> > > Cc: Ian Jackson <ian.jackson@citrix.com>
+> > > Cc: Julien Grall <julien.grall@arm.com>
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Cc: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > ---
+> > >  drivers/firmware/qcom_scm.c | 34 ++++++++++++++++------------------
+> > >  include/linux/qcom_scm.h    |  9 +++++----
+> > >  2 files changed, 21 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> > > index 0c63495cf269..153f13f72bac 100644
+> > > --- a/drivers/firmware/qcom_scm.c
+> > > +++ b/drivers/firmware/qcom_scm.c
+> > > @@ -443,7 +443,8 @@ EXPORT_SYMBOL(qcom_scm_set_remote_state);
+> > >   */
+> > >  int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+> > >                       unsigned int *srcvm,
+> > > -                     struct qcom_scm_vmperm *newvm, int dest_cnt)
+> > > +                     const struct qcom_scm_vmperm *newvm,
+> > > +                     unsigned int dest_cnt)
+> > >  {
+> > >       struct qcom_scm_current_perm_info *destvm;
+> > >       struct qcom_scm_mem_map_info *mem_to_map;
+> > > @@ -458,11 +459,10 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+> > >       int next_vm;
+> > >       __le32 *src;
+> > >       void *ptr;
+> > > -     int ret;
+> > > -     int len;
+> > > -     int i;
+> > > +     int ret, i, b;
+> > > +     unsigned long srcvm_bits = *srcvm;
+> > >  
+> > > -     src_sz = hweight_long(*srcvm) * sizeof(*src);
+> > > +     src_sz = hweight_long(srcvm_bits) * sizeof(*src);
+> > >       mem_to_map_sz = sizeof(*mem_to_map);
+> > >       dest_sz = dest_cnt * sizeof(*destvm);
+> > >       ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+> > > @@ -475,28 +475,26 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+> > >  
+> > >       /* Fill source vmid detail */
+> > >       src = ptr;
+> > > -     len = hweight_long(*srcvm);
+> > > -     for (i = 0; i < len; i++) {
+> > > -             src[i] = cpu_to_le32(ffs(*srcvm) - 1);
+> > > -             *srcvm ^= 1 << (ffs(*srcvm) - 1);
+> > > -     }
+> > > +     i = 0;
+> > > +     for_each_set_bit(b, &srcvm_bits, sizeof(srcvm_bits))
+> > 
+> > The modem is sad that you only pass 8 here. Changed it to BITS_PER_LONG
+> > to include the modem's permission bit and applied all three patches.
+> > 
+> 
+> Ah of course. Thanks.
+> 
+> BTW, srcvm is an unsigned int, but then we do a bunch of unsigned long
+> operations on them. Maybe the whole API should be changed to be more
+> explicit about the size of the type, i.e. u64?
+> 
 
-After merging the v4l-dvb tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+It's a bitmap of vmids currently with access to the region and the space
+has expanded since I looked at this list time, so the now highest
+defined id in the downstream kernel is 42.
 
-In file included from <command-line>:
-include/media/vp8-ctrls.h:25:2: error: unknown type name '__s8'
-  __s8 quant_update[4];
-  ^~~~
-include/media/vp8-ctrls.h:26:2: error: unknown type name '__s8'
-  __s8 lf_update[4];
-  ^~~~
-include/media/vp8-ctrls.h:27:2: error: unknown type name '__u8'
-  __u8 segment_probs[3];
-  ^~~~
-include/media/vp8-ctrls.h:28:2: error: unknown type name '__u8'
-  __u8 padding;
-  ^~~~
-include/media/vp8-ctrls.h:29:2: error: unknown type name '__u32'
-  __u32 flags;
-  ^~~~~
-include/media/vp8-ctrls.h:36:2: error: unknown type name '__s8'
-  __s8 ref_frm_delta[4];
-  ^~~~
-include/media/vp8-ctrls.h:37:2: error: unknown type name '__s8'
-  __s8 mb_mode_delta[4];
-  ^~~~
-include/media/vp8-ctrls.h:38:2: error: unknown type name '__u8'
-  __u8 sharpness_level;
-  ^~~~
-include/media/vp8-ctrls.h:39:2: error: unknown type name '__u8'
-  __u8 level;
-  ^~~~
-include/media/vp8-ctrls.h:40:2: error: unknown type name '__u16'
-  __u16 padding;
-  ^~~~~
-include/media/vp8-ctrls.h:41:2: error: unknown type name '__u32'
-  __u32 flags;
-  ^~~~~
-include/media/vp8-ctrls.h:45:2: error: unknown type name '__u8'
-  __u8 y_ac_qi;
-  ^~~~
-include/media/vp8-ctrls.h:46:2: error: unknown type name '__s8'
-  __s8 y_dc_delta;
-  ^~~~
-include/media/vp8-ctrls.h:47:2: error: unknown type name '__s8'
-  __s8 y2_dc_delta;
-  ^~~~
-include/media/vp8-ctrls.h:48:2: error: unknown type name '__s8'
-  __s8 y2_ac_delta;
-  ^~~~
-include/media/vp8-ctrls.h:49:2: error: unknown type name '__s8'
-  __s8 uv_dc_delta;
-  ^~~~
-include/media/vp8-ctrls.h:50:2: error: unknown type name '__s8'
-  __s8 uv_ac_delta;
-  ^~~~
-include/media/vp8-ctrls.h:51:2: error: unknown type name '__u16'
-  __u16 padding;
-  ^~~~~
-include/media/vp8-ctrls.h:55:2: error: unknown type name '__u8'
-  __u8 coeff_probs[4][8][3][11];
-  ^~~~
-include/media/vp8-ctrls.h:56:2: error: unknown type name '__u8'
-  __u8 y_mode_probs[4];
-  ^~~~
-include/media/vp8-ctrls.h:57:2: error: unknown type name '__u8'
-  __u8 uv_mode_probs[3];
-  ^~~~
-include/media/vp8-ctrls.h:58:2: error: unknown type name '__u8'
-  __u8 mv_probs[2][19];
-  ^~~~
-include/media/vp8-ctrls.h:59:2: error: unknown type name '__u8'
-  __u8 padding[3];
-  ^~~~
-include/media/vp8-ctrls.h:63:2: error: unknown type name '__u8'
-  __u8 range;
-  ^~~~
-include/media/vp8-ctrls.h:64:2: error: unknown type name '__u8'
-  __u8 value;
-  ^~~~
-include/media/vp8-ctrls.h:65:2: error: unknown type name '__u8'
-  __u8 bit_count;
-  ^~~~
-include/media/vp8-ctrls.h:66:2: error: unknown type name '__u8'
-  __u8 padding;
-  ^~~~
-include/media/vp8-ctrls.h:86:2: error: unknown type name '__u16'
-  __u16 width;
-  ^~~~~
-include/media/vp8-ctrls.h:87:2: error: unknown type name '__u16'
-  __u16 height;
-  ^~~~~
-include/media/vp8-ctrls.h:89:2: error: unknown type name '__u8'
-  __u8 horizontal_scale;
-  ^~~~
-include/media/vp8-ctrls.h:90:2: error: unknown type name '__u8'
-  __u8 vertical_scale;
-  ^~~~
-include/media/vp8-ctrls.h:92:2: error: unknown type name '__u8'
-  __u8 version;
-  ^~~~
-include/media/vp8-ctrls.h:93:2: error: unknown type name '__u8'
-  __u8 prob_skip_false;
-  ^~~~
-include/media/vp8-ctrls.h:94:2: error: unknown type name '__u8'
-  __u8 prob_intra;
-  ^~~~
-include/media/vp8-ctrls.h:95:2: error: unknown type name '__u8'
-  __u8 prob_last;
-  ^~~~
-include/media/vp8-ctrls.h:96:2: error: unknown type name '__u8'
-  __u8 prob_gf;
-  ^~~~
-include/media/vp8-ctrls.h:97:2: error: unknown type name '__u8'
-  __u8 num_dct_parts;
-  ^~~~
-include/media/vp8-ctrls.h:99:2: error: unknown type name '__u32'
-  __u32 first_part_size;
-  ^~~~~
-include/media/vp8-ctrls.h:100:2: error: unknown type name '__u32'
-  __u32 first_part_header_bits;
-  ^~~~~
-include/media/vp8-ctrls.h:101:2: error: unknown type name '__u32'
-  __u32 dct_part_sizes[8];
-  ^~~~~
-include/media/vp8-ctrls.h:103:2: error: unknown type name '__u64'
-  __u64 last_frame_ts;
-  ^~~~~
-include/media/vp8-ctrls.h:104:2: error: unknown type name '__u64'
-  __u64 golden_frame_ts;
-  ^~~~~
-include/media/vp8-ctrls.h:105:2: error: unknown type name '__u64'
-  __u64 alt_frame_ts;
-  ^~~~~
-include/media/vp8-ctrls.h:107:2: error: unknown type name '__u64'
-  __u64 flags;
-  ^~~~~
+So it sounds very reasonable to expand this to a u64.
 
-Caused by commit
-
-  a57d6acaf352 ("media: uapi: Add VP8 stateless decoder API")
-
-I have added the following fix patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 23 Jul 2019 10:07:40 +1000
-Subject: [PATCH] media: uapi: new file needs types.h
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/media/vp8-ctrls.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/media/vp8-ctrls.h b/include/media/vp8-ctrls.h
-index 6cc2eeea4c90..53cba826e482 100644
---- a/include/media/vp8-ctrls.h
-+++ b/include/media/vp8-ctrls.h
-@@ -11,6 +11,8 @@
- #ifndef _VP8_CTRLS_H_
- #define _VP8_CTRLS_H_
-=20
-+#include <linux/types.h>
-+
- #define V4L2_PIX_FMT_VP8_FRAME v4l2_fourcc('V', 'P', '8', 'F')
-=20
- #define V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER (V4L2_CID_MPEG_BASE + 2000)
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/b+3piXOgcVYq24xfgHN+cdY
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02UTUACgkQAVBC80lX
-0GyKSAf/Y11rsVPac4eRmBDk874SiM/KGcfQUr0pEd+2vC3Dl5/SxK/4lJhGuvah
-T73n6tuY3icTmz2xkgW7j/Dk8jEsOzb+4lxKyWflMBCk0zKsCfWfk7+19U+CRlRS
-MrKMp8hNXo3DwQWBOt6dJXRmuMRr2DwFk5/ePSMTUZKerWvLSjRIgWQrY7b3jPWi
-OL0u8s+DeQTY1QqxmlWFdfNzT27LPdzrFdajpMKhgdKXkJiIRsJwlAcECA41sVwL
-xkaFDgqpjHG8BjmTEYut9n/ZOdFM8rGNXUox0BOccRY5WcXkZhySiYFiFvemjkT/
-u26sviFVkpG5+DaPdihkFDbRfaF+8w==
-=tFqD
------END PGP SIGNATURE-----
-
---Sig_/b+3piXOgcVYq24xfgHN+cdY--
+Regards,
+Bjorn
