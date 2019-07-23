@@ -2,182 +2,145 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB41C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3925AC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBE8218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09000229F3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DVedO5PJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391889AbfGWUtz convert rfc822-to-8bit (ORCPT
+        id S2391898AbfGWUuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:49:55 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40768 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730760AbfGWUty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:49:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 13:49:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
-   d="scan'208";a="174659991"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga006.jf.intel.com with ESMTP; 23 Jul 2019 13:49:53 -0700
-Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 23 Jul 2019 13:49:53 -0700
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.211]) by
- ORSMSX126.amr.corp.intel.com ([169.254.4.77]) with mapi id 14.03.0439.000;
- Tue, 23 Jul 2019 13:49:53 -0700
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     Qian Cai <cai@lca.pw>, Nick Desaulniers <ndesaulniers@google.com>
-CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "jkim@freebsd.org" <jkim@freebsd.org>, Len Brown <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Topic: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Index: AQHVPFEYIycQ0k5IUUyXy4NqYzTqpqbP0wgAgAAvDoCACLPGAA==
-Date:   Tue, 23 Jul 2019 20:49:52 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B9661869@ORSMSX110.amr.corp.intel.com>
-References: <20190717033807.1207-1-cai@lca.pw>
- <CAKwvOdmPX2DsUawcA0SzaFacjz==ACcfD8yDsbaS4eP4Es=Wzw@mail.gmail.com>
- <73A4565B-837B-4E13-8B72-63F69BF408E7@lca.pw>
-In-Reply-To: <73A4565B-837B-4E13-8B72-63F69BF408E7@lca.pw>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWEwZGI5NTgtYTE0NC00ZWFjLWJjMDYtYjIyYWY5MmFhOTQ1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiY2pvUjE2Mm1qbUl2ejllMmdwQVwvejNWcEJib1RyQ2JUb2Q3R2dnRk14VXo0QVhuUUMrdjJmZUtiSjhJM2dTVTIifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Tue, 23 Jul 2019 16:50:23 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39075 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732877AbfGWUuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:50:22 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w190so32126914qkc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=CmnfNtgiMAfp2Il+YyakJvBaajWojL1MC+DBGGpZ1g4=;
+        b=DVedO5PJpKlFqbEBexij3Upmidl5volPSXQLTD9vV5mbxSTvz/BRl7lHvCFJ8+E8z1
+         C9fxnNKFiuZwFWeOEiczxjJtuHGyulMOwUbUcgL3iQBY/C6IL4C6/jHTaTl6xflT4VSH
+         NzKbWmlvVp4qn5Znx8rDhF8H3niaNCuFeIYNyDYJmi2m/N0vp23/SuL0cmht7/C/oqaX
+         wFcG4ADt0Q/ZgVCoDGHY4yE1RHh/jUSKCYx1aM/VeHF5uK6TsT0n1hNRVHL40HGhbkXV
+         I8+IRY9fKorWggN2FebwoNCsrBdlGM6KhvDY7kDuxClBGqT9qmTknRAEOxT2O8v0+Ftc
+         KT2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CmnfNtgiMAfp2Il+YyakJvBaajWojL1MC+DBGGpZ1g4=;
+        b=GphOIX9xkt1zwifnuLjPzfYa3PdAhQBdCoOuPX/lYcjWQvQZgLGIJznVfeMJsFDPho
+         /1DjbHnt4zObJWs59hRZTiHMLlS0JDO4kh/pRLWTaue6AmxL9HxsyxudDzzjUCMXdemK
+         f0wPO6uiJfWG4syYbug6d/fTZ39k34eH7Xv1C+hjZ3MOd+0epgqmCNkuISVdoxRAf2zW
+         B1IyzR9KciQAAG3091mT9xHLPN1NgkWjSVsJcOI97pRr5rK1LmbvsFH1YTwGofC3tMKw
+         Y+hCJcZ78vUwDu9lTgtVWTA4zbuNpHLbvlVyOD+CsVwVMcUk/civbcBn5sfyAPjvUkgk
+         Qf5w==
+X-Gm-Message-State: APjAAAWDUdYSFsW+MYaQWsOA4KP5Y+2d9Yf5Wq+2WIPkftXiolPTrL1M
+        hAqFSZmzXPRMezEXVbfjTzKK9w==
+X-Google-Smtp-Source: APXvYqwTX1VldzlCMOHNg9PynG6cKPHKOvzIfOE8DTljIeC32sLsWx125SW6cUSaV4Qfvk/8wFYlew==
+X-Received: by 2002:a37:4714:: with SMTP id u20mr51193790qka.162.1563915021913;
+        Tue, 23 Jul 2019 13:50:21 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id m10sm19335819qka.43.2019.07.23.13.50.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 13:50:21 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     davem@davemloft.net, arnd@arndb.de, dhowells@redhat.com,
+        jakub@redhat.com, ndesaulniers@google.com, morbo@google.com,
+        jyknight@google.com, natechancellor@gmail.com,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] asm-generic: fix -Wtype-limits compiler warnings
+Date:   Tue, 23 Jul 2019 16:49:46 -0400
+Message-Id: <1563914986-26502-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+compilation warning because "rx_frag_size" is an "ushort" while
+PAGE_SHIFT here is 16. The commit changed the get_order() to be a
+multi-line macro where compilers insist to check all statements in the
+macro even when __builtin_constant_p(rx_frag_size) will return false as
+"rx_frag_size" is a module parameter.
 
+In file included from ./arch/powerpc/include/asm/page_64.h:107,
+                 from ./arch/powerpc/include/asm/page.h:242,
+                 from ./arch/powerpc/include/asm/mmu.h:132,
+                 from ./arch/powerpc/include/asm/lppaca.h:47,
+                 from ./arch/powerpc/include/asm/paca.h:17,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./arch/powerpc/include/asm/processor.h:39,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
+drivers/net/ethernet/emulex/benet/be_main.c: In function
+'be_rx_cqs_create':
+./include/asm-generic/getorder.h:54:9: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
+   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+         ^
+drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+of macro 'get_order'
+  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+                                 ^~~~~~~~~
 
------Original Message-----
-From: Qian Cai [mailto:cai@lca.pw] 
-Sent: Wednesday, July 17, 2019 5:50 PM
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Wysocki, Rafael J <rafael.j.wysocki@intel.com>; Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; jkim@freebsd.org; Len Brown <lenb@kernel.org>; linux-acpi@vger.kernel.org; devel@acpica.org; clang-built-linux <clang-built-linux@googlegroups.com>; LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
+Fix it by moving almost all of this multi-line macro into a proper
+function __get_order(), and leave get_order() as a single-line macro in
+order to avoid compilation errors.
 
+Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/asm-generic/getorder.h | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-
-> On Jul 17, 2019, at 6:01 PM, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> 
-> On Tue, Jul 16, 2019 at 8:38 PM Qian Cai <cai@lca.pw> wrote:
->> 
->> Clang generate quite a few of those warnings.
->> 
->> drivers/acpi/scan.c:759:28: warning: arithmetic on a null pointer 
->> treated as a cast from integer to pointer is a GNU extension 
->> [-Wnull-pointer-arithmetic]
->>                status = acpi_get_handle(ACPI_ROOT_OBJECT,
->> obj->string.pointer,
->>                                         ^~~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:458:56: note: expanded from macro 
->> 'ACPI_ROOT_OBJECT'
->> #define ACPI_ROOT_OBJECT                ((acpi_handle) ACPI_TO_POINTER
->> (ACPI_MAX_PTR))
->>                                                        
->> ^~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:509:41: note: expanded from macro 
->> 'ACPI_TO_POINTER'
->> #define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0,
->> (acpi_size) (i))
->>                                         
->> ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:503:84: note: expanded from macro 
->> 'ACPI_ADD_PTR'
->> #define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t,
->> (ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
->>                                         ^~~~~~~~~~~~~~~~~
->> ./include/acpi/actypes.h:501:66: note: expanded from macro 
->> 'ACPI_CAST_PTR'
->> #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
->>                                                                  ^ 
->> This is because pointer arithmetic on a pointer not pointing to an 
->> array is an undefined behavior. Fix it by doing an integer arithmetic 
->> instead.
-> 
-> Hi Qian, thanks for the patch.  How do I reproduce this issue, 
-> precisely?  I just tried:
-> $ make CC=clang -j71 drivers/acpi/scan.o on linux-next today and don't 
-> observe the warning.  My clang is ToT built sometime this week.  It 
-> looks like drivers/acpi/scan.o when CONFIG_ACPI=y, which is set in the 
-> defconfig.  Is there another set of configs to enable to observe the 
-> warning?
-
-# make W=1 -j 256
-
-With the config,
-
-https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config 
-
-> 
-> Also, the fix is curious.  Arithmetic on pointers to different 
-> "objects" (with one element passed the end) may lead to provence 
-> issues due to undefined behavior, but I would have expected some cases 
-> to uintptr_t, then arithmetic on that type, as the solution (which is 
-> what I suspect ACPI_CAST_PTR is doing).
-> 
-> Further, you seem to have modified ACPI_ADD_PTR but not ACPI_SUB_PTR; 
-> I would have expected both to be afflicted together or not at all 
-> based on their existing implementations.
-
-Yes, I thought about that, but ACPI_SUB_PTR does not seem used anywhere, so I thought maybe just start a new discussion to remove it all together later.
-
-ACPI_SUB_PTR is used in the iasl data table compiler.
-
-
-> 
->> 
->> Signed-off-by: Qian Cai <cai@lca.pw>
->> ---
->> include/acpi/actypes.h | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h index 
->> ad6892a24015..25b4a32da177 100644
->> --- a/include/acpi/actypes.h
->> +++ b/include/acpi/actypes.h
->> @@ -500,13 +500,13 @@ typedef u64 acpi_integer;
->> 
->> #define ACPI_CAST_PTR(t, p)             ((t *) (acpi_uintptr_t) (p))
->> #define ACPI_CAST_INDIRECT_PTR(t, p)    ((t **) (acpi_uintptr_t) (p))
->> -#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, (ACPI_CAST_PTR (u8, (a)) + (acpi_size)(b)))
->> +#define ACPI_ADD_PTR(t, a, b)           ACPI_CAST_PTR (t, (a) + (acpi_size)(b))
-
-We have some questions concerning this change. If (a) is not cast to a u8, the addition will be in whatever units are appropriate for (a) i.e., the type of (a). However, we want ACPI_ADD_PTR (And ACPI_SUB_PTR) to simply perform a byte addition or subtraction - thus the cast to u8. I believe that is the original thinking behind the macros.
-
->> #define ACPI_SUB_PTR(t, a, b)           ACPI_CAST_PTR (t, (ACPI_CAST_PTR (u8, (a)) - (acpi_size)(b)))
->> #define ACPI_PTR_DIFF(a, b)             ((acpi_size) (ACPI_CAST_PTR (u8, (a)) - ACPI_CAST_PTR (u8, (b))))
->> 
->> /* Pointer/Integer type conversions */
->> 
->> -#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, (void *) 0, (acpi_size) (i))
->> +#define ACPI_TO_POINTER(i)              ACPI_ADD_PTR (void, 0, (acpi_size) (i))
-> 
-> IIUC, these are adding `i` to NULL (or (void*)0)? X + 0 == X ?
-> --
-> Thanks,
-> ~Nick Desaulniers
+diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
+index c64bea7a52be..c6a6d3cd7007 100644
+--- a/include/asm-generic/getorder.h
++++ b/include/asm-generic/getorder.h
+@@ -15,6 +15,16 @@ int __get_order(unsigned long size)
+ {
+ 	int order;
+ 
++	if (__builtin_constant_p(size)) {
++		if (!size)
++			return BITS_PER_LONG - PAGE_SHIFT;
++
++		if (size < (1UL << PAGE_SHIFT))
++			return 0;
++
++		return ilog2((size) - 1) - PAGE_SHIFT + 1;
++	}
++
+ 	size--;
+ 	size >>= PAGE_SHIFT;
+ #if BITS_PER_LONG == 32
+@@ -49,11 +59,6 @@ int __get_order(unsigned long size)
+  */
+ #define get_order(n)						\
+ (								\
+-	__builtin_constant_p(n) ? (				\
+-		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
+-		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
+-		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
+-	) :							\
+ 	__get_order(n)						\
+ )
+ 
+-- 
+1.8.3.1
 
