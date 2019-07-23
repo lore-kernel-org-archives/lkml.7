@@ -2,142 +2,163 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA7C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88696C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8DB22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D0F2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iuLvEGih"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O9CkEp5x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391932AbfGWUyQ (ORCPT
+        id S2391938AbfGWVBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:54:16 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39176 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388867AbfGWUyQ (ORCPT
+        Tue, 23 Jul 2019 17:01:52 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53874 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731830AbfGWVBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:54:16 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so20002032pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:54:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DKCUv/Cx+CQnHVa5KxeusznvKIlpXN7+WLMqjunL/oE=;
-        b=iuLvEGihchhFbxRFRaHaMyHH86x4jCGBJtZAgUQPydbKo2RL8PhAFhIiztBHniu0qF
-         KVPSVYAByf3547zKlV4OnDwBYPsjvB6Iy4b7gVWwvl8OsBeazuZIYwRlFt04fTVj6ZJ0
-         Xa/nT6RyvMPmJZ6K7lZL3mpAacf8w6Tqgg2o3AGhAYWvKKElOcSke0gJ+s6tS8dPSEP8
-         4XtBgp1W4Mj9A/AbbNr1DqWblFi68ORF8Wb33yYwS0Z+ftszlW4r/CaI29OIB4ekmKvu
-         9dYiZIJEqjVaDZupuh+I4M/+2brSkx0AXsWcnD5zT5PBGy6xAFlHYmnvKd+TL9whGVLF
-         W1GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DKCUv/Cx+CQnHVa5KxeusznvKIlpXN7+WLMqjunL/oE=;
-        b=E9lfvlVGR2tJ5ZaEpYl4Sxn9+F4PQgPU+vdlyEFcen3yET4glErUj0ERa+ge+kCC4q
-         PXSP+E9eW9gwhNLvIGAz93sf+gNuP1v0OxXSp2LConSaAoe33pBRUNr/5Z2TcJ98H+4o
-         1STnP5Kubzqhb6FCGujw9wpT2+An9sJah9far1F0G8Ers7rr35XDBmtDnrJ7GEdwqKdr
-         bXOX+jXul3MfjhWlsqkBmBD9S3xiqGifyH+d+9MNWtfbWhjJI9jPr5c8b/udFeCTDs8i
-         X6n29Sdf83NDtqLMdMfPN9WSChcEAeccVNQQkGKupdCXykx9ycDwiqZ3UP3UBZDyPQ/6
-         4SVA==
-X-Gm-Message-State: APjAAAX9a6priU/V5QVtr/MqOtSBGZejuvX0rRJS1Yk2WZPSvex0XFOE
-        GluiPyXyLn/J8UdtcqMV+XYaz2JXtSMC1G84C4/gBA==
-X-Google-Smtp-Source: APXvYqwxNKsPwdXUi1DRq4IcjAwd9Xm749JVTLGAUTmK1WK84E4NuTkw34QIiAt2a6OQ85mMCcw9GLIdEH7StB/ArdU=
-X-Received: by 2002:a65:5687:: with SMTP id v7mr79613610pgs.263.1563915254944;
- Tue, 23 Jul 2019 13:54:14 -0700 (PDT)
+        Tue, 23 Jul 2019 17:01:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NL1hJ8098993;
+        Tue, 23 Jul 2019 16:01:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563915703;
+        bh=u6SXikvGbSFU77KnFGFUWfACbpOyuISOALYakteXBb0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O9CkEp5xCTYBUGASZzWVRrFKX6mskxwPOfQCOpkxx68DZlr3/1acoGJa82ue+d9dB
+         con4HqbuGQpT43hLr52sObTQFTt8sZXgyJJMz5dZFzRpGnX6Eo4i7At8vk2v/KB6Dr
+         zyCZejU/CIXstHxFU7TLFe7scnrhUV1MHBMbhpNE=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NL1hPL046625
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jul 2019 16:01:43 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Jul 2019 16:01:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Jul 2019 16:01:42 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NL1gEL050568;
+        Tue, 23 Jul 2019 16:01:42 -0500
+Subject: Re: [PATCH 5/8] ARM: dts: Drop bogus ahclkr clocks for dra7 mcasp 3
+ to 8
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-6-tony@atomide.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <2c750847-700e-c835-ee53-a656b363c36c@ti.com>
+Date:   Tue, 23 Jul 2019 16:01:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190719113638.4189771-1-arnd@arndb.de> <20190723105046.GD3402@hirez.programming.kicks-ass.net>
- <CAK8P3a3_sRmHVsEh=+83zR_Q3+Bh9fd+-iiCxt4PU4gkx0HZ7Q@mail.gmail.com> <20190723202159.GA79273@archlinux-threadripper>
-In-Reply-To: <20190723202159.GA79273@archlinux-threadripper>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 23 Jul 2019 13:54:03 -0700
-Message-ID: <CAKwvOdnbDFkDhCz3VMM_A8D7VZQH5FubJpS0OTHBJJdS-WKPww@mail.gmail.com>
-Subject: Re: [PATCH] [v2] waitqueue: shut up clang -Wuninitialized warnings
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190723112811.44381-6-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 1:22 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Tue, Jul 23, 2019 at 01:03:05PM +0200, Arnd Bergmann wrote:
-> > On Tue, Jul 23, 2019 at 12:50 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > On Fri, Jul 19, 2019 at 01:36:00PM +0200, Arnd Bergmann wrote:
-> > > > --- a/include/linux/wait.h
-> > > > +++ b/include/linux/wait.h
-> > > > @@ -70,8 +70,17 @@ extern void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *n
-> > > >  #ifdef CONFIG_LOCKDEP
-> > > >  # define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
-> > > >       ({ init_waitqueue_head(&name); name; })
-> > > > -# define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
-> > > > +# if defined(__clang__) && __clang_major__ <= 9
-> > > > +/* work around https://bugs.llvm.org/show_bug.cgi?id=42604 */
-> > > > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name)                                      \
-> > > > +     _Pragma("clang diagnostic push")                                        \
-> > > > +     _Pragma("clang diagnostic ignored \"-Wuninitialized\"")                 \
-> > > > +     struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)      \
-> > > > +     _Pragma("clang diagnostic pop")
-> > > > +# else
-> > > > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
-> > > >       struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
-> > > > +# endif
-> > >
-> > > While this is indeed much better than before; do we really want to do
-> > > this? That is, since clang-9 release will not need this, we're basically
-> > > doing the above for pre-release compilers only.
-> >
-> > Kernelci currently builds arch/arm and arch/arm64 kernels with clang-8,
-> > and probably won't change to clang-9 until after that is released,
-> > presumably in September.
-> >
-> > Anyone doing x86 builds would use a clang-9 snapshot today
-> > because of the asm-goto support, but so far the fix has not
-> > been merged there either. I think the chances of it getting
-> > fixed before the release are fairly good, but I don't know how
-> > long it will actually take.
-> >
-> >        Arnd
->
-> Furthermore, while x86 will only be supported by clang-9 and up, there
-> are other architectures/configurations that work with earlier versions
-> that will never see that fix. There are a few people that still use
-> clang-7 for example.
->
-> In an ideal world, everyone should be using the latest version of clang
-> because of all of the fixes and improvements that are going into that
-> latest version but the same can be said of any piece of software. I am
-> not sure that it is fair to force someone to upgrade when it works for
-> them. Not everyone runs Ubuntu/Debian to get access to apt.llvm.org
-> builds or wants to add random repositories to their list or wants to
-> build clang from source.
->
-> I suppose it comes down to policy: if we don't want to support versions
-> of LLVM before 9.x then we should just break the build when it is
-> detected but Nick has spoken out against that and I think that he has a
-> fair point.
->
-> https://lore.kernel.org/lkml/CAKwvOdnzrMOCo4RRsfcR=K5ELWU8obgMqtOGZnx_avLrArjpRQ@mail.gmail.com/
+Hi Tony,
 
-Note that pre-clang-9 can be used for LTS x86_64; I don't think
-CONFIG_JUMP_LABEL was made mandatory for x86 until 4.20 release, IIRC.
-There's only a small window of non LTS kernels and only for x86 where
-clang-9+ is really necessary.
+On 7/23/19 6:28 AM, Tony Lindgren wrote:
+> The ahclkr clkctrl clock bit 28 only exists for mcasp 1 and 2 on dra7.
+> Otherwise we get the following warning on beagle-x15:
+> 
+> ti-sysc 48468000.target-module: could not add child clock ahclkr: -19
+> 
+> Fixes: 5241ccbf2819 ("ARM: dts: Add missing ranges for dra7 mcasp l3 ports")
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  arch/arm/boot/dts/dra7-l4.dtsi | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+> --- a/arch/arm/boot/dts/dra7-l4.dtsi
+> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
+> @@ -2818,9 +2818,8 @@
+>  					<SYSC_IDLE_SMART>;
+>  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
+>  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 0>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 28>;
+> -			clock-names = "fck", "ahclkx", "ahclkr";
+> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>;
+> +			clock-names = "fck", "ahclkx";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x0 0x68000 0x2000>,
+> @@ -2854,9 +2853,8 @@
+>  					<SYSC_IDLE_SMART>;
+>  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
+>  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 0>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 24>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 28>;
+> -			clock-names = "fck", "ahclkx", "ahclkr";
+> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 24>;
+> +			clock-names = "fck", "ahclkx";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x0 0x6c000 0x2000>,
+> @@ -2890,9 +2888,8 @@
+>  					<SYSC_IDLE_SMART>;
+>  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
+>  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 0>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 24>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 28>;
+> -			clock-names = "fck", "ahclkx", "ahclkr";
+> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 24>;
+> +			clock-names = "fck", "ahclkx";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x0 0x70000 0x2000>,
+> @@ -2926,9 +2923,8 @@
+>  					<SYSC_IDLE_SMART>;
+>  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
+>  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 0>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 24>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 28>;
+> -			clock-names = "fck", "ahclkx", "ahclkr";
+> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 24>;
+> +			clock-names = "fck", "ahclkx";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x0 0x74000 0x2000>,
+> @@ -2962,9 +2958,8 @@
+>  					<SYSC_IDLE_SMART>;
+>  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
+>  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>,
+> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 28>;
+> -			clock-names = "fck", "ahclkx", "ahclkr";
+> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
+> +			clock-names = "fck", "ahclkx";
 
-Thanks,
-~Nick Desaulniers
+The equivalent change to MCASP8 is missing.
+
+regards
+Suman
+
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0x0 0x78000 0x2000>,
+> 
+
