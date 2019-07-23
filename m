@@ -2,123 +2,125 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF03C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8673CC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70522238B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PE4Zoq08"
+	by mail.kernel.org (Postfix) with ESMTP id 699212238B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbfGWCVI (ORCPT
+        id S1731356AbfGWCV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 22:21:08 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45078 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbfGWCVI (ORCPT
+        Mon, 22 Jul 2019 22:21:26 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:59495 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726930AbfGWCVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 22:21:08 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o13so18565203pgp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 19:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BnCBC+zUlqDIIAOvfSKLBUp5eSfkGPiVUglDWmp/gR8=;
-        b=PE4Zoq08LGucIhGqujRu/QuMdngn1fAHXLyBPyBVeoeIL4QaDln7Ag7evhB/1vWITd
-         Iz12quvXzcyb3F9x+U/2kD6J6lvzx45cJRvDOQN7WHsyVubQCP7ZmT0w4LahjIviE90q
-         +LhBeVkYuO1tct6jD364mH4L3/nxbWossI1aMQ2I6CU+bIe4H29fqE/AOWIM/4moyv1r
-         lUQ+HBkTyS/CeRFtkgjmjXa+6djuHjWQl7nXHpBFaAvpCnA/GQuTok5Zgh8PPO9TFTPg
-         z1R8+qqgg2s+rxFI/xaRAcRDzP623lGRAOHfZewEhKDwKB9SdOUHHD+vUrrIJDWZYx0a
-         A5+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BnCBC+zUlqDIIAOvfSKLBUp5eSfkGPiVUglDWmp/gR8=;
-        b=g9yTCtVwaRDGgMxmAMe4pev+Wdcy8M54WNXcuxL6s+ol388aD5x6rK699w/Hm/Mej8
-         dn7TnvGEb2mrYCanxFz0Audn4SEepEpxk6j/J27ZhdSTKalSVP8JaNVZAztgyGo+SFJq
-         bNLmqMdmO3xkFvJN/a6mZynzMXN5gJXqwZFnfN5o7us/+eLV0mJhGEDYeW2/w73FJagu
-         1l4+pDawtELVYNh0jDVt4tN9NHqA7fDq0WduwHj4uShwMQZGIZMASEaMFkOwI1vmCu+a
-         oKD3yVp6iSAlXDECM7eqrZq0tTCBJWDtSQ4+320wej0hXVk857ANRfOuumO7Lau5Lux7
-         lGxw==
-X-Gm-Message-State: APjAAAWAAP7CAQv96e97GYIN+mODq0rvXzCcnXXezMzCz8wucdEacugW
-        UTNKwiS5Y43CoMFFQDVJNXkrGQ==
-X-Google-Smtp-Source: APXvYqxL2jAvzgpf0MMdvr4SEuFbkxGKEEoNZbidbXR7lRbw9PpJt9A0P4ipBQJ+Wf4gE23lgoCWYw==
-X-Received: by 2002:a62:e801:: with SMTP id c1mr3287708pfi.41.1563848467126;
-        Mon, 22 Jul 2019 19:21:07 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id p2sm55113862pfb.118.2019.07.22.19.21.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 19:21:06 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 07:51:04 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
+        Mon, 22 Jul 2019 22:21:25 -0400
+X-UUID: 791c5dbc0a0e46ca99e8e8dbb509d716-20190723
+X-UUID: 791c5dbc0a0e46ca99e8e8dbb509d716-20190723
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1532202587; Tue, 23 Jul 2019 10:21:08 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 23 Jul 2019 10:21:05 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 23 Jul 2019 10:21:05 +0800
+Message-ID: <1563848465.31451.4.camel@mtkswgap22>
+Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
+ ARMv8 SoCs
+From:   Neal Liu <neal.liu@mediatek.com>
 To:     Rob Herring <robh@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        sibis@codeaurora.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, kernel-team@android.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] dt-bindings: interconnect: Add
- interconnect-opp-table property
-Message-ID: <20190723022104.m3zx4w7i6ki5cmgd@vireshk-i7>
-References: <20190703011020.151615-1-saravanak@google.com>
- <20190703011020.151615-6-saravanak@google.com>
- <20190722233927.GA1353@bogus>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 23 Jul 2019 10:21:05 +0800
+In-Reply-To: <20190722171320.GA9806@bogus>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
+         <20190722171320.GA9806@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722233927.GA1353@bogus>
-User-Agent: NeoMutt/20180716-391-311a52
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-07-19, 17:39, Rob Herring wrote:
-> On Tue, Jul 02, 2019 at 06:10:19PM -0700, Saravana Kannan wrote:
-> > Add support for listing bandwidth OPP tables for each interconnect path
-> > listed using the interconnects property.
+Dear Rob,
+	You can check my driver for detail:
+	http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
+
+	This driver is registered as hardware random number generator, and
+combines with rng-core.
+	We want to add one rng hw based on the dts. Is this proper or do you
+have other suggestion to meet this requirement?
+
+	Thanks
+
+
+On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
+> On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
+> > Document the binding used by the MediaTek ARMv8 SoCs random
+> > number generator with TrustZone enabled.
 > > 
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
 > > ---
-> >  .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
+> >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
 > > 
-> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > index 6f5d23a605b7..fc5b75b76a2c 100644
-> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > @@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
-> >  			 * dma-mem: Path from the device to the main memory of
-> >  			            the system
-> >  
-> > +interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
-> > +			that specify the OPPs for the interconnect paths listed
-> > +			in the interconnects property. This property can only
-> > +			point to OPP tables that belong to the device and are
-> > +			listed in the device's operating-points-v2 property.
+> > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > new file mode 100644
+> > index 0000000..c04ce15
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > @@ -0,0 +1,10 @@
+> > +MediaTek random number generator with TrustZone enabled
 > > +
+> > +Required properties:
+> > +- compatible : Should be "mediatek,mtk-sec-rng"
 > 
-> IMO, there's no need for this property. Which OPP is which should be 
-> defined already as part of the device's binding. That's enough for the 
-> driver to know which OPP applies to the interconnect.
+> What's the interface to access this? 
+> 
+> A node with a 'compatible' and nothing else is a sign of something that 
+> a parent device should instantiate and doesn't need to be in DT. IOW, 
+> what do complete bindings for firmware functions look like?
+> 
+> > +
+> > +Example:
+> > +
+> > +hwrng: hwrng {
+> > +	compatible = "mediatek,mtk-sec-rng";
+> > +}
+> > -- 
+> > 1.7.9.5
+> > 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
 
-And if there is confusion we can actually use the compatible property
-to have another string which highlights that it is an interconnect OPP
-?
 
--- 
-viresh
