@@ -6,405 +6,179 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBB5C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081DFC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738CD21926
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D8C21926
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392441AbfGWWTV (ORCPT
+        id S2392468AbfGWWT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:19:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:60718 "EHLO foss.arm.com"
+        Tue, 23 Jul 2019 18:19:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:60816 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392422AbfGWWTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:19:18 -0400
+        id S2392453AbfGWWTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 18:19:24 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 786B415A2;
-        Tue, 23 Jul 2019 15:19:16 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1579168F;
+        Tue, 23 Jul 2019 15:19:23 -0700 (PDT)
 Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 757883F694;
-        Tue, 23 Jul 2019 15:19:14 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5CB553F694;
+        Tue, 23 Jul 2019 15:19:22 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Doug Ledford <dledford@redhat.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-usb@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joe Perches <joe@perches.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v3 3/7] drivers: Introduce device lookup variants by fwnode
-Date:   Tue, 23 Jul 2019 23:18:34 +0100
-Message-Id: <20190723221838.12024-4-suzuki.poulose@arm.com>
+        Eric Anholt <eric@anholt.net>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Inki Dae <inki.dae@samsung.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>
+Subject: [PATCH v3 7/7] platform: Add platform_find_device_by_driver() helper
+Date:   Tue, 23 Jul 2019 23:18:38 +0100
+Message-Id: <20190723221838.12024-8-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190723221838.12024-1-suzuki.poulose@arm.com>
 References: <20190723221838.12024-1-suzuki.poulose@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to match the firmware node handle of a device and provide
-wrappers for {bus/class/driver}_find_device() APIs to avoid proliferation
-of duplicate custom match functions.
+Provide a helper to lookup platform devices by matching device
+driver in order to avoid drivers trying to use platform bus
+internals.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Doug Ledford <dledford@redhat.com>
+Cc: Eric Anholt <eric@anholt.net>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-usb@vger.kernel.org
+Cc: "Heiko Stübner" <heiko@sntech.de>
+Cc: Inki Dae <inki.dae@samsung.com>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Sandy Huang <hjc@rock-chips.com>
+Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/base/core.c                           |  6 +++
- drivers/base/devcon.c                         |  8 +---
- .../hwtracing/coresight/coresight-platform.c  | 11 +-----
- drivers/hwtracing/coresight/coresight-priv.h  |  2 -
- drivers/hwtracing/coresight/coresight.c       |  4 +-
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c    |  8 +---
- drivers/iommu/arm-smmu-v3.c                   |  9 +----
- drivers/iommu/arm-smmu.c                      |  9 +----
- .../ethernet/hisilicon/hns/hns_dsaf_misc.c    |  8 +---
- drivers/usb/roles/class.c                     |  8 +---
- drivers/usb/typec/class.c                     |  8 +---
- include/linux/device.h                        | 39 +++++++++++++++++++
- 12 files changed, 57 insertions(+), 63 deletions(-)
+ drivers/base/platform.c                     | 14 ++++++++++++++
+ drivers/gpu/drm/exynos/exynos_drm_drv.c     |  9 +++------
+ drivers/gpu/drm/mcde/mcde_drv.c             |  3 +--
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c |  3 +--
+ drivers/gpu/drm/vc4/vc4_drv.c               |  3 +--
+ include/linux/platform_device.h             |  3 +++
+ 6 files changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index fb83647d685a..e8f81a667545 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3368,3 +3368,9 @@ int device_match_of_node(struct device *dev, const void *np)
- 	return dev->of_node == np;
- }
- EXPORT_SYMBOL_GPL(device_match_of_node);
-+
-+int device_match_fwnode(struct device *dev, const void *fwnode)
-+{
-+	return dev_fwnode(dev) == fwnode;
-+}
-+EXPORT_SYMBOL_GPL(device_match_fwnode);
-diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
-index 09f28479b243..1d488dc5dd0c 100644
---- a/drivers/base/devcon.c
-+++ b/drivers/base/devcon.c
-@@ -133,19 +133,13 @@ static struct bus_type *generic_match_buses[] = {
- 	NULL,
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 506a0175a5a7..a174ce5ea17c 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1197,6 +1197,20 @@ struct bus_type platform_bus_type = {
  };
- 
--static int device_fwnode_match(struct device *dev, const void *fwnode)
--{
--	return dev_fwnode(dev) == fwnode;
--}
--
- static void *device_connection_fwnode_match(struct device_connection *con)
- {
- 	struct bus_type *bus;
- 	struct device *dev;
- 
- 	for (bus = generic_match_buses[0]; bus; bus++) {
--		dev = bus_find_device(bus, NULL, (void *)con->fwnode,
--				      device_fwnode_match);
-+		dev = bus_find_device_by_fwnode(bus, con->fwnode);
- 		if (dev && !strncmp(dev_name(dev), con->id, strlen(con->id)))
- 			return dev;
- 
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index dad7d96c5943..3c5bee429105 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -37,11 +37,6 @@ static int coresight_alloc_conns(struct device *dev,
- 	return 0;
- }
- 
--int coresight_device_fwnode_match(struct device *dev, const void *fwnode)
--{
--	return dev_fwnode(dev) == fwnode;
--}
--
- static struct device *
- coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
- {
-@@ -51,8 +46,7 @@ coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
- 	 * If we have a non-configurable replicator, it will be found on the
- 	 * platform bus.
- 	 */
--	dev = bus_find_device(&platform_bus_type, NULL,
--			      fwnode, coresight_device_fwnode_match);
-+	dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
- 	if (dev)
- 		return dev;
- 
-@@ -60,8 +54,7 @@ coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
- 	 * We have a configurable component - circle through the AMBA bus
- 	 * looking for the device that matches the endpoint node.
- 	 */
--	return bus_find_device(&amba_bustype, NULL,
--			       fwnode, coresight_device_fwnode_match);
-+	return bus_find_device_by_fwnode(&amba_bustype, fwnode);
- }
- 
- #ifdef CONFIG_OF
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 7d401790dd7e..61d7f9ff054d 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -202,6 +202,4 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
- 
- void coresight_release_platform_data(struct coresight_platform_data *pdata);
- 
--int coresight_device_fwnode_match(struct device *dev, const void *fwnode);
--
- #endif
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 55db77f6410b..6453c67a4d01 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -1046,9 +1046,7 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
- 		struct coresight_connection *conn = &csdev->pdata->conns[i];
- 		struct device *dev = NULL;
- 
--		dev = bus_find_device(&coresight_bustype, NULL,
--				      (void *)conn->child_fwnode,
--				      coresight_device_fwnode_match);
-+		dev = bus_find_device_by_fwnode(&coresight_bustype, conn->child_fwnode);
- 		if (dev) {
- 			conn->child_dev = to_coresight_device(dev);
- 			/* and put reference from 'bus_find_device()' */
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-index 81e6dedb1e02..fa05e943038a 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-@@ -4499,19 +4499,13 @@ static const struct acpi_device_id hns_roce_acpi_match[] = {
- };
- MODULE_DEVICE_TABLE(acpi, hns_roce_acpi_match);
- 
--static int hns_roce_node_match(struct device *dev, const void *fwnode)
--{
--	return dev->fwnode == fwnode;
--}
--
- static struct
- platform_device *hns_roce_find_pdev(struct fwnode_handle *fwnode)
- {
- 	struct device *dev;
- 
- 	/* get the 'device' corresponding to the matching 'fwnode' */
--	dev = bus_find_device(&platform_bus_type, NULL,
--			      fwnode, hns_roce_node_match);
-+	dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
- 	/* get the platform device */
- 	return dev ? to_platform_device(dev) : NULL;
- }
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index a9a9fabd3968..6f0e13fa5e1a 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2034,16 +2034,11 @@ arm_smmu_iova_to_phys(struct iommu_domain *domain, dma_addr_t iova)
- 
- static struct platform_driver arm_smmu_driver;
- 
--static int arm_smmu_match_node(struct device *dev, const void *data)
--{
--	return dev->fwnode == data;
--}
--
- static
- struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
- {
--	struct device *dev = driver_find_device(&arm_smmu_driver.driver, NULL,
--						fwnode, arm_smmu_match_node);
-+	struct device *dev = driver_find_device_by_fwnode(&arm_smmu_driver.driver,
-+							  fwnode);
- 	put_device(dev);
- 	return dev ? dev_get_drvdata(dev) : NULL;
- }
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 64977c131ee6..aa06498f291d 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1426,16 +1426,11 @@ static bool arm_smmu_capable(enum iommu_cap cap)
- 	}
- }
- 
--static int arm_smmu_match_node(struct device *dev, const void *data)
--{
--	return dev->fwnode == data;
--}
--
- static
- struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
- {
--	struct device *dev = driver_find_device(&arm_smmu_driver.driver, NULL,
--						fwnode, arm_smmu_match_node);
-+	struct device *dev = driver_find_device_by_fwnode(&arm_smmu_driver.driver,
-+							  fwnode);
- 	put_device(dev);
- 	return dev ? dev_get_drvdata(dev) : NULL;
- }
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-index bb6586d0e5af..ed3829ae4ef1 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-@@ -754,17 +754,11 @@ struct dsaf_misc_op *hns_misc_op_get(struct dsaf_device *dsaf_dev)
- 	return (void *)misc_op;
- }
- 
--static int hns_dsaf_dev_match(struct device *dev, const void *fwnode)
--{
--	return dev->fwnode == fwnode;
--}
--
- struct
- platform_device *hns_dsaf_find_platform_device(struct fwnode_handle *fwnode)
- {
- 	struct device *dev;
- 
--	dev = bus_find_device(&platform_bus_type, NULL,
--			      fwnode, hns_dsaf_dev_match);
-+	dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
- 	return dev ? to_platform_device(dev) : NULL;
- }
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index c8efe60e2465..0526efbc4922 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -85,11 +85,6 @@ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_get_role);
- 
--static int switch_fwnode_match(struct device *dev, const void *fwnode)
--{
--	return dev_fwnode(dev) == fwnode;
--}
--
- static void *usb_role_switch_match(struct device_connection *con, int ep,
- 				   void *data)
- {
-@@ -99,8 +94,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
- 		if (con->id && !fwnode_property_present(con->fwnode, con->id))
- 			return NULL;
- 
--		dev = class_find_device(role_class, NULL, con->fwnode,
--					switch_fwnode_match);
-+		dev = class_find_device_by_fwnode(role_class, con->fwnode);
- 	} else {
- 		dev = class_find_device_by_name(role_class, con->endpoint[ep]);
- 	}
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 9b0d15b487e5..94a3eda62add 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -205,11 +205,6 @@ static void typec_altmode_put_partner(struct altmode *altmode)
- 	put_device(&adev->dev);
- }
- 
--static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
--{
--	return dev_fwnode(dev) == fwnode;
--}
--
- static void *typec_port_match(struct device_connection *con, int ep, void *data)
- {
- 	struct device *dev;
-@@ -219,8 +214,7 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
- 	 * we need to return ERR_PTR(-PROBE_DEFER) when there is no device.
- 	 */
- 	if (con->fwnode)
--		return class_find_device(typec_class, NULL, con->fwnode,
--					 typec_port_fwnode_match);
-+		return class_find_device_by_fwnode(typec_class, con->fwnode);
- 
- 	dev = class_find_device_by_name(typec_class, con->endpoint[ep]);
- 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 29d8d7ad41e6..7133fc1c285d 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -166,6 +166,7 @@ void subsys_dev_iter_exit(struct subsys_dev_iter *iter);
- 
- int device_match_name(struct device *dev, const void *name);
- int device_match_of_node(struct device *dev, const void *np);
-+int device_match_fwnode(struct device *dev, const void *fwnode);
- 
- int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
- 		     int (*fn)(struct device *dev, void *data));
-@@ -198,6 +199,18 @@ bus_find_device_by_of_node(struct bus_type *bus, const struct device_node *np)
- 	return bus_find_device(bus, NULL, np, device_match_of_node);
- }
+ EXPORT_SYMBOL_GPL(platform_bus_type);
  
 +/**
-+ * bus_find_device_by_fwnode : device iterator for locating a particular device
-+ * matching the fwnode.
-+ * @bus: bus type
-+ * @fwnode: fwnode of the device to match.
++ * platform_find_device_by_driver - Find a platform device with a given
++ * driver.
++ * @start: The device to start the search from.
++ * @drv: The device driver to look for.
 + */
-+static inline struct device *
-+bus_find_device_by_fwnode(struct bus_type *bus, const struct fwnode_handle *fwnode)
++struct device *platform_find_device_by_driver(struct device *start,
++					      const struct device_driver *drv)
 +{
-+	return bus_find_device(bus, NULL, fwnode, device_match_fwnode);
++	return bus_find_device(&platform_bus_type, start, drv,
++			       (void *)platform_match);
 +}
++EXPORT_SYMBOL_GPL(platform_find_device_by_driver);
 +
- struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
- 					struct device *hint);
- int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
-@@ -391,6 +404,19 @@ driver_find_device_by_of_node(struct device_driver *drv,
- 	return driver_find_device(drv, NULL, np, device_match_of_node);
- }
+ int __init platform_bus_init(void)
+ {
+ 	int error;
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+index 58baf49d9926..badab94be2d6 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+@@ -242,9 +242,7 @@ static struct component_match *exynos_drm_match_add(struct device *dev)
+ 		if (!info->driver || !(info->flags & DRM_COMPONENT_DRIVER))
+ 			continue;
  
-+/**
-+ * driver_find_device_by_fwnode- device iterator for locating a particular device
-+ * by fwnode pointer.
-+ * @driver: the driver we're iterating
-+ * @fwnode: fwnode pointer to match.
-+ */
-+static inline struct device *
-+driver_find_device_by_fwnode(struct device_driver *drv,
-+			     const struct fwnode_handle *fwnode)
-+{
-+	return driver_find_device(drv, NULL, fwnode, device_match_fwnode);
-+}
-+
- void driver_deferred_probe_add(struct device *dev);
- int driver_deferred_probe_check_state(struct device *dev);
- int driver_deferred_probe_check_state_continue(struct device *dev);
-@@ -544,6 +570,19 @@ class_find_device_by_of_node(struct class *class, const struct device_node *np)
- 	return class_find_device(class, NULL, np, device_match_of_node);
- }
+-		while ((d = bus_find_device(&platform_bus_type, p,
+-					    &info->driver->driver,
+-					    (void *)platform_bus_type.match))) {
++		while ((d = platform_find_device_by_driver(p, &info->driver->driver))) {
+ 			put_device(p);
  
-+/**
-+ * class_find_device_by_fwnode : device iterator for locating a particular device
-+ * matching the fwnode.
-+ * @class: class type
-+ * @fwnode: fwnode of the device to match.
-+ */
-+static inline struct device *
-+class_find_device_by_fwnode(struct class *class,
-+			    const struct fwnode_handle *fwnode)
-+{
-+	return class_find_device(class, NULL, fwnode, device_match_fwnode);
-+}
-+
- struct class_attribute {
- 	struct attribute attr;
- 	ssize_t (*show)(struct class *class, struct class_attribute *attr,
+ 			if (!(info->flags & DRM_FIMC_DEVICE) ||
+@@ -412,9 +410,8 @@ static void exynos_drm_unregister_devices(void)
+ 		if (!info->driver || !(info->flags & DRM_VIRTUAL_DEVICE))
+ 			continue;
+ 
+-		while ((dev = bus_find_device(&platform_bus_type, NULL,
+-					    &info->driver->driver,
+-					    (void *)platform_bus_type.match))) {
++		while ((dev = platform_find_device_by_driver(NULL,
++						&info->driver->driver))) {
+ 			put_device(dev);
+ 			platform_device_unregister(to_platform_device(dev));
+ 		}
+diff --git a/drivers/gpu/drm/mcde/mcde_drv.c b/drivers/gpu/drm/mcde/mcde_drv.c
+index baf63fb6850a..c07abf9e201c 100644
+--- a/drivers/gpu/drm/mcde/mcde_drv.c
++++ b/drivers/gpu/drm/mcde/mcde_drv.c
+@@ -477,8 +477,7 @@ static int mcde_probe(struct platform_device *pdev)
+ 		struct device_driver *drv = &mcde_component_drivers[i]->driver;
+ 		struct device *p = NULL, *d;
+ 
+-		while ((d = bus_find_device(&platform_bus_type, p, drv,
+-					    (void *)platform_bus_type.match))) {
++		while ((d = platform_find_device_by_driver(p, drv))) {
+ 			put_device(p);
+ 			component_match_add(dev, &match, mcde_compare_dev, d);
+ 			p = d;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+index 53d2c5bd61dc..38dc26376961 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -330,8 +330,7 @@ static struct component_match *rockchip_drm_match_add(struct device *dev)
+ 		struct device *p = NULL, *d;
+ 
+ 		do {
+-			d = bus_find_device(&platform_bus_type, p, &drv->driver,
+-					    (void *)platform_bus_type.match);
++			d = platform_find_device_by_driver(p, &drv->driver);
+ 			put_device(p);
+ 			p = d;
+ 
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+index bf11930e40e1..1551c8253bec 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.c
++++ b/drivers/gpu/drm/vc4/vc4_drv.c
+@@ -237,8 +237,7 @@ static void vc4_match_add_drivers(struct device *dev,
+ 		struct device_driver *drv = &drivers[i]->driver;
+ 		struct device *p = NULL, *d;
+ 
+-		while ((d = bus_find_device(&platform_bus_type, p, drv,
+-					    (void *)platform_bus_type.match))) {
++		while ((d = platform_find_device_by_driver(p, drv))) {
+ 			put_device(p);
+ 			component_match_add(dev, match, compare_dev, d);
+ 			p = d;
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index 9bc36b589827..37e15a935a42 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -51,6 +51,9 @@ extern struct device platform_bus;
+ extern void arch_setup_pdev_archdata(struct platform_device *);
+ extern struct resource *platform_get_resource(struct platform_device *,
+ 					      unsigned int, unsigned int);
++extern struct device *
++platform_find_device_by_driver(struct device *start,
++			       const struct device_driver *drv);
+ extern void __iomem *
+ devm_platform_ioremap_resource(struct platform_device *pdev,
+ 			       unsigned int index);
 -- 
 2.21.0
 
