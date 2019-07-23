@@ -2,146 +2,144 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B388C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A6C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208F72238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55072238E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:14:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PjeA4UGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387400AbfGWFKn (ORCPT
+        id S1726981AbfGWFOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:10:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1868 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732829AbfGWFKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:10:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 22:10:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
-   d="scan'208";a="196992368"
-Received: from hao-dev.bj.intel.com ([10.238.157.65])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 22:10:07 -0700
-From:   Wu Hao <hao.wu@intel.com>
-To:     gregkh@linuxfoundation.org, mdf@kernel.org,
-        linux-fpga@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org,
-        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-Subject: [PATCH v3 07/12] fpga: dfl: afu: export __port_enable/disable function.
-Date:   Tue, 23 Jul 2019 12:51:30 +0800
-Message-Id: <1563857495-26692-8-git-send-email-hao.wu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
-References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
+        Tue, 23 Jul 2019 01:14:51 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34757 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbfGWFOv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:14:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so18503659pfo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 22:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=g82NP5kE6vDBcz0wRx3HQUPY+qpp2eV2hYfp3Uv8Vuo=;
+        b=PjeA4UGXWrX7eWxBKCqRGmYrPvlnc4Bc0zcv0AXulqxA13EAD5I6W1Ktegac4R8rd6
+         nqTUr59Y1cBaq2k5PsjAGgvvnd8+z2GDbhDRnvz0yhIpwiR10yY3ZczBOANft1O02EI3
+         YyMt9iV7PaFFWCcnbU3kl+A9jkJk3y6kjqTFTswd0Y0P3Rr5yCHC+VtY99tR+fmQfkQ8
+         QYz5Dqpan8whgAnXJmUkWJTHKQs2U6j2zK9U7z+zl1Q/ZklGFxcRNLmsRkSQ8XWpbRS+
+         psQHHJC3x4F8OqHl+YpZv32+3kFNTljWvL6+wz8F5UkLYDWdsj7FYp0gzepeFDhRxpuI
+         qADg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=g82NP5kE6vDBcz0wRx3HQUPY+qpp2eV2hYfp3Uv8Vuo=;
+        b=MlwQo7io4IwnyICxpGwiTT1EIhP75Bz9e8NVl4+gQB4BsWyQ+3vuxDorwqX9j+3dvM
+         FHqiB5a0YDcV//ZQ9VPNWXgcgAydG50b8Mzu2mSMdAsEx2U2MNbsVt71eZZnnFwDHiFt
+         avSl3FXyae/RIAuDAdgfRhqeF8ksz4pucjZNNTTSP3XtkDn8Wdnu8lPjuPRM8XrW1rpE
+         yRMG0qZj6VjJshbG0uaxdOaBHeRf5aH/DprssV2WgBjKXsdCchHxPwjJwXrJ/0y5jAtH
+         Qc5rsfVxYsy4y9PYGceEDFF76zkg7FjDgyHToybnMi7ouWzdjb2kOM5zLIgQ+fE3TJss
+         gY4g==
+X-Gm-Message-State: APjAAAVSNjyIhR/Sj2CR7k6AH2XqCNYWYhHm4khuYvKPoIHmf7qjEwLA
+        SXcfbbzQATdQ/H10pji1v5ybTA==
+X-Google-Smtp-Source: APXvYqzkV5mF55GBnujgmB5DhZBig4ykpvvwizIq6zr0p86mQc67qRs9Si4/HU58xo1Fk2BC6VTxTw==
+X-Received: by 2002:a62:834d:: with SMTP id h74mr4077651pfe.254.1563858890244;
+        Mon, 22 Jul 2019 22:14:50 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a3sm33729999pfc.70.2019.07.22.22.14.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 22:14:49 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Rob Clark <robclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: [RFC] clk: Remove cached cores in parent map during unregister
+Date:   Mon, 22 Jul 2019 22:14:46 -0700
+Message-Id: <20190723051446.20013-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As these two functions are used by other private features. e.g.
-in error reporting private feature, it requires to check port status
-and reset port for error clearing.
+As clocks are registered their parents are resolved and the parent_map
+is updated to cache the clk_core objects of each existing parent.
+But in the event of a clock being unregistered this cache will carry
+dangling pointers if not invalidated, so do this for all children of the
+clock being unregistered.
 
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Acked-by: Moritz Fischer <mdf@kernel.org>
-Acked-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-v2: rebased.
----
- drivers/fpga/dfl-afu-main.c | 25 ++++++++++++++-----------
- drivers/fpga/dfl-afu.h      |  3 +++
- 2 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index fbd9553..22d294b 100644
---- a/drivers/fpga/dfl-afu-main.c
-+++ b/drivers/fpga/dfl-afu-main.c
-@@ -22,14 +22,16 @@
- #include "dfl-afu.h"
+This resolves the issue seen where the DSI PLL (and it's provided clocks) is
+being registered and unregistered multiple times due to probe deferral.
+
+Marking it RFC because I don't fully understand the life of the clock yet.
+
+ drivers/clk/clk.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index c0990703ce54..8cd1ad977c50 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2423,11 +2423,14 @@ bool clk_has_parent(struct clk *clk, struct clk *parent)
+ EXPORT_SYMBOL_GPL(clk_has_parent);
  
- /**
-- * port_enable - enable a port
-+ * __port_enable - enable a port
-  * @pdev: port platform device.
-  *
-  * Enable Port by clear the port soft reset bit, which is set by default.
-  * The AFU is unable to respond to any MMIO access while in reset.
-- * port_enable function should only be used after port_disable function.
-+ * __port_enable function should only be used after __port_disable function.
-+ *
-+ * The caller needs to hold lock for protection.
-  */
--static void port_enable(struct platform_device *pdev)
-+void __port_enable(struct platform_device *pdev)
+ static int clk_core_set_parent_nolock(struct clk_core *core,
+-				      struct clk_core *parent)
++				      struct clk_core *parent,
++				      bool invalidate_parent)
  {
- 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	void __iomem *base;
-@@ -52,13 +54,14 @@ static void port_enable(struct platform_device *pdev)
- #define RST_POLL_TIMEOUT 1000 /* us */
++	struct clk_core *old_parent = core->parent;
+ 	int ret = 0;
+ 	int p_index = 0;
+ 	unsigned long p_rate = 0;
++	int i;
  
- /**
-- * port_disable - disable a port
-+ * __port_disable - disable a port
-  * @pdev: port platform device.
-  *
-- * Disable Port by setting the port soft reset bit, it puts the port into
-- * reset.
-+ * Disable Port by setting the port soft reset bit, it puts the port into reset.
-+ *
-+ * The caller needs to hold lock for protection.
-  */
--static int port_disable(struct platform_device *pdev)
-+int __port_disable(struct platform_device *pdev)
- {
- 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	void __iomem *base;
-@@ -104,9 +107,9 @@ static int __port_reset(struct platform_device *pdev)
- {
- 	int ret;
+ 	lockdep_assert_held(&prepare_lock);
  
--	ret = port_disable(pdev);
-+	ret = __port_disable(pdev);
- 	if (!ret)
--		port_enable(pdev);
-+		__port_enable(pdev);
+@@ -2481,6 +2484,14 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
+ 		__clk_recalc_accuracies(core);
+ 	}
  
- 	return ret;
- }
-@@ -806,9 +809,9 @@ static int port_enable_set(struct platform_device *pdev, bool enable)
- 
- 	mutex_lock(&pdata->lock);
- 	if (enable)
--		port_enable(pdev);
-+		__port_enable(pdev);
- 	else
--		ret = port_disable(pdev);
-+		ret = __port_disable(pdev);
- 	mutex_unlock(&pdata->lock);
- 
- 	return ret;
-diff --git a/drivers/fpga/dfl-afu.h b/drivers/fpga/dfl-afu.h
-index 0c7630a..35e60c5 100644
---- a/drivers/fpga/dfl-afu.h
-+++ b/drivers/fpga/dfl-afu.h
-@@ -79,6 +79,9 @@ struct dfl_afu {
- 	struct dfl_feature_platform_data *pdata;
- };
- 
-+void __port_enable(struct platform_device *pdev);
-+int __port_disable(struct platform_device *pdev);
++	/* invalidate the parent cache */
++	if (!parent && invalidate_parent) {
++		for (i = 0; i < core->num_parents; i++) {
++			if (core->parents[i].core == old_parent)
++				core->parents[i].core = NULL;
++		}
++	}
 +
- void afu_mmio_region_init(struct dfl_feature_platform_data *pdata);
- int afu_mmio_region_add(struct dfl_feature_platform_data *pdata,
- 			u32 region_index, u64 region_size, u64 phys, u32 flags);
+ runtime_put:
+ 	clk_pm_runtime_put(core);
+ 
+@@ -2517,7 +2528,8 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
+ 		clk_core_rate_unprotect(clk->core);
+ 
+ 	ret = clk_core_set_parent_nolock(clk->core,
+-					 parent ? parent->core : NULL);
++					 parent ? parent->core : NULL,
++					 false);
+ 
+ 	if (clk->exclusive_count)
+ 		clk_core_rate_protect(clk->core);
+@@ -3772,7 +3784,7 @@ void clk_unregister(struct clk *clk)
+ 		/* Reparent all children to the orphan list. */
+ 		hlist_for_each_entry_safe(child, t, &clk->core->children,
+ 					  child_node)
+-			clk_core_set_parent_nolock(child, NULL);
++			clk_core_set_parent_nolock(child, NULL, true);
+ 	}
+ 
+ 	hlist_del_init(&clk->core->child_node);
 -- 
-1.8.3.1
+2.18.0
 
