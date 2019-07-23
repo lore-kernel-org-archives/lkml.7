@@ -2,121 +2,171 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006D2C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C46C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7672251B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:28:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPi3Dkd8"
+	by mail.kernel.org (Postfix) with ESMTP id 0DEFE2251B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390218AbfGWN23 (ORCPT
+        id S2390228AbfGWNaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:28:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43178 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731095AbfGWN23 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:28:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f25so19430511pgv.10;
-        Tue, 23 Jul 2019 06:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=chWP9LaVBb836yc/U3pqKBmIvWdwOkmxAAs2bRxtFvw=;
-        b=EPi3Dkd8v/VtsrHLzX7ap6XGP0FBARnBudXPyGak7HIGeeP0DQgP6QZo/or50iOxWk
-         09AytT6G0LogTTAUQbor/BUlMSMnqGu61cebV9+w6PdxzSFzlK+tp3YM0kzYX3g1e1jb
-         hEm/pPKQSC37mc2D1XXRyiLL0bOtsRym7zdxgypStpQDNns7vODvU00shptG9Ice8fO+
-         dden0FhCoJmuUx7zPLkQsf9uZWCEs7V51R3V51gLc13ATPBtoQ7gS1u9Aia52jX0VjeI
-         KXBMe7urT0Y4/phuJaqXKlQBiD5bdnVxdg/NMRnEe3h8QsXx/UUXLrEmC6jhNta8TZjX
-         064Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=chWP9LaVBb836yc/U3pqKBmIvWdwOkmxAAs2bRxtFvw=;
-        b=BXIo8oaNtJTrkwVnONpR/H8yF+8dUi9bXTXUO6HIFBS7IP8HvNfAXLOmHZx68TS0qu
-         KxK0zYXzOLfBb+dWoeF87/1aBeUPLKNnEPx5CwQV+Vwg/KvVz7xYdtZkj+rk2gS13cCH
-         Sewp7G3KN9bkCgPDlSOqrFy3ZZDDVl72U3AAamHPcMxnDRjUSS0hnpkcfJBewavvNBRj
-         ZigkqpUk4yZfEVulx7EthOUWyO/27FLLlTjXyfvqjo6AtHwWSGho44uPasYWyqSEOVAU
-         ipS3tUXdg9FNXA7/dB9lIuLU+4pfS4WhA429u155sMBzqu64ovvxYC3CL0N8ACF9aw6P
-         zWhQ==
-X-Gm-Message-State: APjAAAVRXMJQ942+wmLQrT1xsIuCPoMGHOVoPLxVmF8jkx6ni8hRdzRh
-        Ju9xRAGQtoOGwOIgaTfKJ98=
-X-Google-Smtp-Source: APXvYqz3X/UAUv4paE8QYBDSGI/zMotmoIMk0BoKtNIzOWIkcDGtI1s1U3iatxn6YH3ZETfaRIRBow==
-X-Received: by 2002:a63:c84d:: with SMTP id l13mr71688713pgi.154.1563888508740;
-        Tue, 23 Jul 2019 06:28:28 -0700 (PDT)
-Received: from localhost ([123.213.206.190])
-        by smtp.gmail.com with ESMTPSA id h1sm53656426pfo.152.2019.07.23.06.28.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 06:28:27 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 22:28:25 +0900
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH] firmware: qcom_scm: fix error for incompatible pointer
-Message-ID: <20190723132825.GA7148@minwoo-desktop>
-References: <20190719134303.7617-1-minwoo.im.dev@gmail.com>
- <7ea51e42-ab8a-e4e2-1833-651e2dabca3c@free.fr>
- <20190722093059.GA29538@lst.de>
- <20190722151234.GJ7234@tuxbook-pro>
+        Tue, 23 Jul 2019 09:30:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45008 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727924AbfGWNaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:30:05 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BBE8881F10;
+        Tue, 23 Jul 2019 13:30:04 +0000 (UTC)
+Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 521E019C58;
+        Tue, 23 Jul 2019 13:29:59 +0000 (UTC)
+Subject: Re: [PATCH 2/6] vhost: validate MMU notifier registration
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190723075718.6275-1-jasowang@redhat.com>
+ <20190723075718.6275-3-jasowang@redhat.com>
+ <20190723042428-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <682a0a87-4fb5-1b85-fe8d-736115f6ab2b@redhat.com>
+Date:   Tue, 23 Jul 2019 21:30:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190722151234.GJ7234@tuxbook-pro>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190723042428-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 23 Jul 2019 13:30:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > We just can cast phys_addr_t to dma_addr_t here.
-> > > 
-> > > IME, casting is rarely a proper solution.
-> > 
-> > *nod*
-> > 
-> > ptr_phys probably should be a dma_addr_t.  Unless this driver is so
-> > magic that it really wants a physical and not a dma address, in which
-> > case it needs to use alloc_pages instead of dma_alloc_coherent
-> > and then call page_to_phys on the returned page, and a very big comment
-> > explaining why it is so special.
-> 
-> The scm call takes physical addresses (which happens to be 1:1 with DMA
-> addresses for this driver).
-> 
-> This allocation started off (downstream) as a simple kmalloc(), but
-> while the scm call is being executed an access from Linux will cause a
-> security violation (that's not handled gracefully). The properties of
-> dma_alloc is closer, so that's where the code is today.
-> 
-> Optimally this should be something like alloc_pages() and some mechanism
-> for unmapping the pages during the call. But no one has come up with a
-> suitable patch for that.
-> 
-> 
-> But there's a patch from Stephen for this already (not doing a
-> typecast).  Apparently I missed merging this, so I'll do that.
-> 
-> https://lore.kernel.org/linux-arm-msm/20190517210923.202131-2-swboyd@chromium.org/
 
-Bjron,
+On 2019/7/23 下午5:17, Michael S. Tsirkin wrote:
+> On Tue, Jul 23, 2019 at 03:57:14AM -0400, Jason Wang wrote:
+>> The return value of mmu_notifier_register() is not checked in
+>> vhost_vring_set_num_addr(). This will cause an out of sync between mm
+>> and MMU notifier thus a double free. To solve this, introduce a
+>> boolean flag to track whether MMU notifier is registered and only do
+>> unregistering when it was true.
+>>
+>> Reported-and-tested-by:
+>> syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
+>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> Right. This fixes the bug.
+> But it's not great that simple things like
+> setting vq address put pressure on memory allocator.
+> Also, if we get a single during processing
+> notifier register will fail, disabling optimization permanently.
 
-I appreciate for checking this.  And also thanks all you guys for the
-comments here!
 
-Thanks,
+Yes, but do we really care about this case. E.g we even fail for -ENOMEM 
+for set owner.
+
+
+>
+> In fact, see below:
+>
+>
+>> ---
+>>   drivers/vhost/vhost.c | 19 +++++++++++++++----
+>>   drivers/vhost/vhost.h |  1 +
+>>   2 files changed, 16 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>> index 34c0d970bcbc..058191d5efad 100644
+>> --- a/drivers/vhost/vhost.c
+>> +++ b/drivers/vhost/vhost.c
+>> @@ -630,6 +630,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+>>   	dev->iov_limit = iov_limit;
+>>   	dev->weight = weight;
+>>   	dev->byte_weight = byte_weight;
+>> +	dev->has_notifier = false;
+>>   	init_llist_head(&dev->work_list);
+>>   	init_waitqueue_head(&dev->wait);
+>>   	INIT_LIST_HEAD(&dev->read_list);
+>> @@ -731,6 +732,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+>>   	if (err)
+>>   		goto err_mmu_notifier;
+>>   #endif
+>> +	dev->has_notifier = true;
+>>   
+>>   	return 0;
+>>   
+> I just noticed that set owner now fails if we get a signal.
+> Userspace could retry in theory but it does not:
+> this is userspace abi breakage since it used to only
+> fail on invalid input.
+
+
+Well, at least kthread_create() and vhost_dev_alloc_iovecs() will 
+allocate memory.
+
+Thanks
+
+
+>
+>> @@ -960,7 +962,11 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+>>   	}
+>>   	if (dev->mm) {
+>>   #if VHOST_ARCH_CAN_ACCEL_UACCESS
+>> -		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
+>> +		if (dev->has_notifier) {
+>> +			mmu_notifier_unregister(&dev->mmu_notifier,
+>> +						dev->mm);
+>> +			dev->has_notifier = false;
+>> +		}
+>>   #endif
+>>   		mmput(dev->mm);
+>>   	}
+>> @@ -2065,8 +2071,10 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+>>   	/* Unregister MMU notifer to allow invalidation callback
+>>   	 * can access vq->uaddrs[] without holding a lock.
+>>   	 */
+>> -	if (d->mm)
+>> +	if (d->has_notifier) {
+>>   		mmu_notifier_unregister(&d->mmu_notifier, d->mm);
+>> +		d->has_notifier = false;
+>> +	}
+>>   
+>>   	vhost_uninit_vq_maps(vq);
+>>   #endif
+>> @@ -2086,8 +2094,11 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+>>   	if (r == 0)
+>>   		vhost_setup_vq_uaddr(vq);
+>>   
+>> -	if (d->mm)
+>> -		mmu_notifier_register(&d->mmu_notifier, d->mm);
+>> +	if (d->mm) {
+>> +		r = mmu_notifier_register(&d->mmu_notifier, d->mm);
+>> +		if (!r)
+>> +			d->has_notifier = true;
+>> +	}
+>>   #endif
+>>   
+>>   	mutex_unlock(&vq->mutex);
+>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+>> index 819296332913..a62f56a4cf72 100644
+>> --- a/drivers/vhost/vhost.h
+>> +++ b/drivers/vhost/vhost.h
+>> @@ -214,6 +214,7 @@ struct vhost_dev {
+>>   	int iov_limit;
+>>   	int weight;
+>>   	int byte_weight;
+>> +	bool has_notifier;
+>>   };
+>>   
+>>   bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
+>> -- 
+>> 2.18.1
