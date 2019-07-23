@@ -2,202 +2,117 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85511C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F233EC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E43218B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD8E218B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388292AbfGWOsH (ORCPT
+        id S2388312AbfGWOty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:48:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:45992 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732532AbfGWOsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:48:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id e20so47138586ioe.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=KJuDD1pYeLyTEIdlDB5Ulq2vfShQZKEuG0FhGDuKNWU=;
-        b=aywmLXLQ3gNvQLKVVRz7YCCVNAAcsESC6u3hwqgzxVCw0LOUTqTpPNYw3KocyKvjxL
-         YK91WvtrmAvjyXTo57j3GoDrYKBjYAymFfAAmGB6OuYvpOSt6qCFp48YXIIMmp50QnAj
-         h2SZyNJ/1rJa7PWoX7OKTBcP9OkYpYLYhtCOATj6ZM7OQsVYonfqiWQ08HML0+zuWCw3
-         x2FehIBHrTZBga9IejuslkSvNzKanPKUuEDDF3s52ncUqY5ABJ7F9hlkRYO0ScpuzHk9
-         993KqJeH6VZhTG8YCBRxpCiTG1EYMDLoBuDDxDC4OUxkxvNGQJrQR7UtNDBl08+wSJRJ
-         3PvA==
-X-Gm-Message-State: APjAAAVJmaI59+g3eOTYhb2wzThi6Ihh6g/phP3KzvwhkCg/W+HAVsxj
-        r4eBD1BDnNQltyZ1y996ze+ehvfSBx2i/1GFRXH3vOnG7K9+
-X-Google-Smtp-Source: APXvYqztMehPCbgahXctUk91afSxsuTCZY9NPOZdyZji9mO1RktsvFtPy75cinCvWTzOCWcHQ+CI0DwcqVxdh+i3fvDtHkQR5bIX
+        Tue, 23 Jul 2019 10:49:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:55912 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732608AbfGWOty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:49:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 988FA28;
+        Tue, 23 Jul 2019 07:49:53 -0700 (PDT)
+Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94EA43F71F;
+        Tue, 23 Jul 2019 07:49:52 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] arm64: Enable access to pmu registers by
+ user-space
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com
+References: <20190705085541.9356-1-raphael.gault@arm.com>
+From:   Raphael Gault <raphael.gault@arm.com>
+Message-ID: <647555e3-9855-815a-2e13-48b3c3977320@arm.com>
+Date:   Tue, 23 Jul 2019 15:49:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9d42:: with SMTP id k2mr22261703iok.45.1563893285759;
- Tue, 23 Jul 2019 07:48:05 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 07:48:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c3c7b6058e5a47af@google.com>
-Subject: usb-fuzzer boot error: general protection fault in dma_direct_max_mapping_size
-From:   syzbot <syzbot+4efacf59126f1ae87000@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190705085541.9356-1-raphael.gault@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+Any further comments on this patchset ?
 
-HEAD commit:    1154c0b0 wip
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1197774c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b228fb19779df17d
-dashboard link: https://syzkaller.appspot.com/bug?extid=4efacf59126f1ae87000
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Cheers,
 
-Unfortunately, I don't have any reproducer for this crash yet.
+On 7/5/19 9:55 AM, Raphael Gault wrote:
+> The perf user-space tool relies on the PMU to monitor events. It offers an
+> abstraction layer over the hardware counters since the underlying
+> implementation is cpu-dependent. We want to allow userspace tools to have
+> access to the registers storing the hardware counters' values directly.
+> This targets specifically self-monitoring tasks in order to reduce the
+> overhead by directly accessing the registers without having to go
+> through the kernel.
+> In order to do this we need to setup the pmu so that it exposes its registers
+> to userspace access.
+> 
+> The first patch add a test to the perf tool so that we can test that the
+> access to the registers works correctly from userspace.
+> 
+> The second patch add a capability in the arm64 cpufeatures framework in
+> order to detect when we are running on a heterogeneous system.
+> 
+> The third patch focuses on the armv8 pmuv3 PMU support and makes sure that
+> the access to the pmu registers is enable and that the userspace have
+> access to the relevent information in order to use them.
+> 
+> The fourth patch put in place callbacks to enable access to the hardware
+> counters from userspace when a compatible event is opened using the perf
+> API.
+> 
+> The fifth patch adds a short documentation about PMU counters direct
+> access from userspace.
+> 
+> **Changes since v1**
+> 
+> * Rebased on linux-next/master
+> * Do not include RSEQs materials (test and utilities) since we want to
+>    enable direct access to counters only on homogeneous systems.
+> * Do not include the hook defitinions for the same reason as above.
+> * Add a cpu feature/capability to detect heterogeneous systems.
+> 
+> Raphael Gault (5):
+>    perf: arm64: Add test to check userspace access to hardware counters.
+>    arm64: cpufeature: Add feature to detect heterogeneous systems
+>    arm64: pmu: Add function implementation to update event index in
+>      userpage.
+>    arm64: perf: Enable pmu counter direct access for perf event on armv8
+>    Documentation: arm64: Document PMU counters access from userspace
+> 
+>   .../arm64/pmu_counter_user_access.txt         |  42 +++
+>   arch/arm64/include/asm/cpucaps.h              |   3 +-
+>   arch/arm64/include/asm/mmu.h                  |   6 +
+>   arch/arm64/include/asm/mmu_context.h          |   2 +
+>   arch/arm64/include/asm/perf_event.h           |  14 +
+>   arch/arm64/kernel/cpufeature.c                |  20 ++
+>   arch/arm64/kernel/perf_event.c                |  23 ++
+>   drivers/perf/arm_pmu.c                        |  38 +++
+>   include/linux/perf/arm_pmu.h                  |   2 +
+>   tools/perf/arch/arm64/include/arch-tests.h    |   6 +
+>   tools/perf/arch/arm64/tests/Build             |   1 +
+>   tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
+>   tools/perf/arch/arm64/tests/user-events.c     | 255 ++++++++++++++++++
+>   13 files changed, 415 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
+>   create mode 100644 tools/perf/arch/arm64/tests/user-events.c
+> 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4efacf59126f1ae87000@syzkaller.appspotmail.com
-
-RPC: Registered udp transport module.
-RPC: Registered tcp transport module.
-RPC: Registered tcp NFSv4.1 backchannel transport module.
-pci 0000:00:00.0: Limiting direct PCI/PCI transfers
-PCI: CLS 0 bytes, default 64
-PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-software IO TLB: mapped [mem 0xbbffd000-0xbfffd000] (64MB)
-RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl  
-timer
-clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212735223b2,  
-max_idle_ns: 440795277976 ns
-clocksource: Switched to clocksource tsc
-check: Scanning for low memory corruption every 60 seconds
-Initialise system trusted keyrings
-workingset: timestamp_bits=40 max_order=21 bucket_order=0
-NFS: Registering the id_resolver key type
-Key type id_resolver registered
-Key type id_legacy registered
-9p: Installing v9fs 9p2000 file system support
-Key type asymmetric registered
-Asymmetric key parser 'x509' registered
-Block layer SCSI generic (bsg) driver version 0.4 loaded (major 247)
-io scheduler mq-deadline registered
-io scheduler kyber registered
-usbcore: registered new interface driver udlfb
-usbcore: registered new interface driver smscufx
-input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
-ACPI: Power Button [PWRF]
-input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
-ACPI: Sleep Button [SLPF]
-PCI Interrupt Link [LNKC] enabled at IRQ 11
-virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
-PCI Interrupt Link [LNKD] enabled at IRQ 10
-virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
-Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
-00:05: ttyS2 at I/O 0x3e8 (irq = 6, base_baud = 115200) is a 16550A
-00:06: ttyS3 at I/O 0x2e8 (irq = 7, base_baud = 115200) is a 16550A
-Non-volatile memory driver v1.3
-Linux agpgart interface v0.103
-usbcore: registered new interface driver udl
-loop: module loaded
-usbcore: registered new interface driver rtsx_usb
-usbcore: registered new interface driver viperboard
-usbcore: registered new interface driver dln2
-usbcore: registered new interface driver pn533_usb
-usbcore: registered new interface driver port100
-usbcore: registered new interface driver nfcmrvl
-scsi host0: Virtio SCSI HBA
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc1+ #16
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:dma_addressing_limited /./include/linux/dma-mapping.h:692 [inline]
-RIP: 0010:dma_direct_max_mapping_size+0x73/0x19a /kernel/dma/direct.c:408
-Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 1e 01 00 00 48 8b 9d 38 03  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f  
-85 06 01 00 00 48 8d bd 48 03 00 00 48 8b 1b 48 b8
-RSP: 0000:ffff8881da18f628 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff812d716c
-RDX: 0000000000000000 RSI: ffffffff812d7189 RDI: ffff8881d7428378
-RBP: ffff8881d7428040 R08: ffff8881da180000 R09: ffffed103ade30cb
-R10: ffffed103ade30ca R11: ffff8881d6f18657 R12: ffff8881d7428040
-R13: ffff8881d769e8b0 R14: 0000000000000200 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000006a21000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  dma_max_mapping_size+0xb5/0xf0 /kernel/dma/mapping.c:375
-  __scsi_init_queue+0x17e/0x510 /drivers/scsi/scsi_lib.c:1787
-  scsi_mq_alloc_queue+0xcb/0x170 /drivers/scsi/scsi_lib.c:1833
-  scsi_alloc_sdev+0x82e/0xc50 /drivers/scsi/scsi_scan.c:269
-  scsi_probe_and_add_lun+0x1ee5/0x2cd0 /drivers/scsi/scsi_scan.c:1078
-  __scsi_scan_target+0x273/0xc30 /drivers/scsi/scsi_scan.c:1562
-  scsi_scan_channel.part.0+0x126/0x1a0 /drivers/scsi/scsi_scan.c:1650
-  scsi_scan_channel /drivers/scsi/scsi_scan.c:1677 [inline]
-  scsi_scan_host_selected+0x2bb/0x3f0 /drivers/scsi/scsi_scan.c:1679
-  do_scsi_scan_host /drivers/scsi/scsi_scan.c:1817 [inline]
-  do_scsi_scan_host+0x1e8/0x260 /drivers/scsi/scsi_scan.c:1807
-  scsi_scan_host /drivers/scsi/scsi_scan.c:1847 [inline]
-  scsi_scan_host+0x37c/0x440 /drivers/scsi/scsi_scan.c:1835
-  virtscsi_probe+0x9b7/0xbb5 /drivers/scsi/virtio_scsi.c:847
-  virtio_dev_probe+0x463/0x710 /drivers/virtio/virtio.c:248
-  really_probe+0x281/0x650 /drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 /drivers/base/dd.c:709
-  device_driver_attach+0x108/0x140 /drivers/base/dd.c:983
-  __driver_attach+0xda/0x240 /drivers/base/dd.c:1060
-  bus_for_each_dev+0x14b/0x1d0 /drivers/base/bus.c:304
-  bus_add_driver+0x44e/0x5a0 /drivers/base/bus.c:645
-  driver_register+0x1c4/0x320 /drivers/base/driver.c:170
-  __write_once_size /./include/linux/compiler.h:226 [inline]
-  INIT_LIST_HEAD /./include/linux/list.h:28 [inline]
-  init+0xa1/0x115 /drivers/char/virtio_console.c:2251
-  do_one_initcall+0xf0/0x614 /init/main.c:939
-  do_initcall_level /init/main.c:1007 [inline]
-  do_initcalls /init/main.c:1015 [inline]
-  do_basic_setup /init/main.c:1032 [inline]
-  kernel_init_freeable+0x4a9/0x596 /init/main.c:1192
-  kernel_init+0xd/0x1bf /init/main.c:1110
-  ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 73ab592d53bc046f ]---
-RIP: 0010:dma_addressing_limited /./include/linux/dma-mapping.h:692 [inline]
-RIP: 0010:dma_direct_max_mapping_size+0x73/0x19a /kernel/dma/direct.c:408
-Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 1e 01 00 00 48 8b 9d 38 03  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f  
-85 06 01 00 00 48 8d bd 48 03 00 00 48 8b 1b 48 b8
-RSP: 0000:ffff8881da18f628 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff812d716c
-RDX: 0000000000000000 RSI: ffffffff812d7189 RDI: ffff8881d7428378
-RBP: ffff8881d7428040 R08: ffff8881da180000 R09: ffffed103ade30cb
-R10: ffffed103ade30ca R11: ffff8881d6f18657 R12: ffff8881d7428040
-R13: ffff8881d769e8b0 R14: 0000000000000200 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000006a21000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Raphael Gault
