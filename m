@@ -2,188 +2,132 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A68C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B2C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B538121848
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB8F218EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qlaXao0H"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UiUhSzPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390604AbfGWOaQ (ORCPT
+        id S1732517AbfGWOdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:30:16 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3107 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729666AbfGWOaM (ORCPT
+        Tue, 23 Jul 2019 10:33:33 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52042 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728318AbfGWOdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:30:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3719f00001>; Tue, 23 Jul 2019 07:30:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 07:30:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 07:30:10 -0700
-Received: from [10.25.74.243] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 14:28:51 +0000
-Subject: RE: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "digetx@gmail.com" <digetx@gmail.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Krishna Thota <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20190710062212.1745-1-vidyas@nvidia.com>
- <20190710062212.1745-13-vidyas@nvidia.com>
- <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
- <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
- <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
- <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
- <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
- <20190716190013.GB4470@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <9ecdeefe-ed22-47bc-50dc-139dd05029b4@nvidia.com>
-Date:   Tue, 23 Jul 2019 19:58:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 10:33:32 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190723143330euoutp0264be6f13c0bae5072bf7d83d7de9bfda~0D9xzaOEO1069310693euoutp02Q
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:33:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190723143330euoutp0264be6f13c0bae5072bf7d83d7de9bfda~0D9xzaOEO1069310693euoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563892410;
+        bh=3dI4WSCN1Syoio6H4JGJkxvn3KNeiKfNxDeEQLSlaYU=;
+        h=From:Subject:To:Cc:Date:References:From;
+        b=UiUhSzPc5CZRddVea4ybmGKb4JwVOOvz0Mt83DAxjdekSa7lxt1nJDsmiqIKVqUIB
+         a5OuIK63D8rvPOHEs8X7EvI9gCf+HExIzliDCO5jz2VKCHDdoDMxXnX9TP966IsNgk
+         TcxTBhqH7Chy5Y3kvulrLKyNQHMyrVAdb0aJIddU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190723143329eucas1p117643dc9e4f58b19fc3fd45658457b65~0D9xcUAJL2227822278eucas1p1d;
+        Tue, 23 Jul 2019 14:33:29 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 8F.18.04325.9BA173D5; Tue, 23
+        Jul 2019 15:33:29 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190723143329eucas1p211688de2902dbac72998fda9e694083d~0D9wxcVoa0227002270eucas1p2P;
+        Tue, 23 Jul 2019 14:33:29 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190723143328eusmtrp1d686ad3f98ed2c4ffbc8cd8ff46ef3cd~0D9wm7S621424814248eusmtrp1z;
+        Tue, 23 Jul 2019 14:33:28 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-f4-5d371ab91671
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C2.4B.04140.8BA173D5; Tue, 23
+        Jul 2019 15:33:28 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190723143328eusmtip2bca043c67d7707bbc87be382fc4714f6~0D9wYHACG0251202512eusmtip2B;
+        Tue, 23 Jul 2019 14:33:28 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH] MAINTAINERS: handle fbdev changes through drm-misc tree
+To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Message-ID: <d449f697-ed25-8a3f-16d5-b981f1a52217@samsung.com>
+Date:   Tue, 23 Jul 2019 16:33:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190716190013.GB4470@google.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563892208; bh=y3iFx42LYhbEL+dlk0IO97VXY77VlAHy2wWmhXVOoNw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qlaXao0Hm4EbazMDNs0zsUCfqJhGXMIJzOnKIlOtQgFO+h939gPrIQNWVV6uU7u7G
-         TnYT3vSEXX3oS39rSU8UKYISRNsiObI9sLbr1o4PI5hSqizdo8+/Y9aPqxgl9Dt2U4
-         92PlAEamCxZjc65BYwmr+QYHIF7d2U/JBtRWW4qZyzDI144Ge2WKXjUKSyJ2j1U2Iy
-         BSjY7aKXpVvjy6rW+J/FvKj06w5t0e0vlfnTqK/A52Tn+zY+ISSC1ZdkpGQHVYjC2O
-         tjejFEjGn7SR9pwt1PHlSufRokL/jeepQqjlU8gu2uZnyUvSwLIN4fdMAyh6eZpavJ
-         ROk5kO4F8UDHg==
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj227nsOJwcj4YvK7oMChK8lKGjbGT0Y/0r0Ahj5NSDim7ajvNS
+        EKMfTVaEusochgrm3LxmNm+oOdFZgiUaRJAXMlHT0ua84KWcR8l/z/t8z/N+z/PxURhTQEio
+        VE0Wq9Wo0qWkCLf3r38MbpNEKsNqlySyislvmGzU/ZuUDTxZJGQj7aXkJVzRuVKOK8YfOQUK
+        V9PRa1icKCqJTU/NZrWh8nhRyrv5eizTKsydbPog0KMa0oi8KaDPgd1mEBqRiGLoagRDHba9
+        YRlB67QBeVQM7UIwtpW471j/7CZ4kQVB8/YG4ocFBD0uF+5RkfR5KDTYdt3+tAL6ZheFHhxA
+        x0N18YtdHqODYG1iZjeHmJZD3c+BHZ6icPok9M1Ee+hD9E0Y728keIkfvC+ZwnlrIHydKhPw
+        +Bi0LJRingxAr5Lw/UcX6dkD9BXYfCDlQ/vDnLNZyOMjMGh6jPP6egRb+TN75hYEFtP23sNc
+        gF7nMOFZhNGnoaE9lKejwb24RvD7feHLgh+fwReK7MUYT4sh/yHDq09BY1UjuX+tsc2K8VgB
+        RssYWYBOmA80Mx9oZj7QzPw/QznCbSiQ1XHqZJYL17A5IZxKzek0ySGJGeomtPNPBred7lbU
+        tZngQDSFpD7iXEGkkiFU2Vye2oGAwqQB4uv6CCUjTlLl3WW1Gbe1unSWc6DDFC4NFN/zmrjF
+        0MmqLDaNZTNZ7f6pgPKW6JHV0JOHjE/dr33e6JiY8O7pv8o/DaGZNypedSrQ8rPL5YxluBWT
+        bywl5hTVREW12+djRQUjb+ueX53YCpfH39ms1MekCI/fD0G93aaVUZjrEwgjimdLNB2/gi/S
+        3FCOQ3L2ZVbluFcVfKpNWy3srdKHrZvKrHFkLBWZUEJIcS5FdSYI03Kqf8WIJhsjAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42I5/e/4Pd0dUuaxBg9uGVgsfHiX2eLK1/ds
+        Fif6PrBaXN41h82BxWPvtwUsHve7jzN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
+        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJdx4M065oKV7BUPN51iamBczdbFyMkhIWAi8fPq
+        V9YuRi4OIYGljBJPT95l6WLkAErISBxfXwZRIyzx51oXG0TNa0aJ/RtmM4Mk2ASsJCa2r2IE
+        sYUFPCSOvvzADmKLCCRIPH09H2wBs4CWxI8HL8BsXgE7ibWvTzCCzGcRUJU4+sIRJCwqECFx
+        5v0KFogSQYmTM5+wQLSqS/yZd4kZwhaXuPVkPhOELS+x/e0c5gmMArOQtMxC0jILScssJC0L
+        GFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbDtmM/t+xg7HoXfIhRgINRiYe3gsk8Vog1
+        say4MvcQowQHs5IIb2CDWawQb0piZVVqUX58UWlOavEhRlOgfyYyS4km5wNjNa8k3tDU0NzC
+        0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+OuFfGf769+2HZRo0G5p23x3qTf
+        N02DVDVOGy9Pv7lZ/KLsEQn3cNeX26YVv9nhpvtLpOrplodZwrmhU78ybi58d2yJ8WLTF/9n
+        aTovdra/HPy1w4eZRftI6o/Wd3su+qa/s5tQyz3JpXVX5Yo112Kvnuis/PZBVNfx2w5Xu+mx
+        D4z2LGhaHKCkxFKckWioxVxUnAgAtVDmyZ0CAAA=
+X-CMS-MailID: 20190723143329eucas1p211688de2902dbac72998fda9e694083d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190723143329eucas1p211688de2902dbac72998fda9e694083d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190723143329eucas1p211688de2902dbac72998fda9e694083d
+References: <CGME20190723143329eucas1p211688de2902dbac72998fda9e694083d@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+fbdev patches will now go to upstream through drm-misc tree (IOW
+starting with v5.4 merge window fbdev changes will be included in
+DRM pull request) for improved maintainership and better integration
+testing. Update MAINTAINERS file accordingly.
 
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+ MAINTAINERS |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> -----Original Message-----
-> From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.org>
-> On Behalf Of Bjorn Helgaas
-> Sent: Wednesday, July 17, 2019 12:30 AM
-> To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Vidya Sagar <vidyas@nvidia.com>; robh+dt@kernel.org;
-> mark.rutland@arm.com; thierry.reding@gmail.com; Jonathan Hunter
-> <jonathanh@nvidia.com>; kishon@ti.com; catalin.marinas@arm.com;
-> will.deacon@arm.com; jingoohan1@gmail.com;
-> gustavo.pimentel@synopsys.com; digetx@gmail.com; Mikko Perttunen
-> <mperttunen@nvidia.com>; linux-pci@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-tegra@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Krishna Thota
-> <kthota@nvidia.com>; Manikanta Maddireddy <mmaddireddy@nvidia.com>;
-> sagar.tv@gmail.com
-> Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
-> 
-> On Tue, Jul 16, 2019 at 12:22:25PM +0100, Lorenzo Pieralisi wrote:
-> > On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
-> 
-> > > > > > So if the link is not up we still go ahead and make probe
-> > > > > > succeed. What for ?
-> > > > > We may need root port to be available to support hot-plugging of
-> > > > > endpoint devices, so, we don't fail the probe.
-> > > >
-> > > > We need it or we don't. If you do support hotplugging of endpoint
-> > > > devices point me at the code, otherwise link up failure means
-> > > > failure to probe.
-> > > Currently hotplugging of endpoint is not supported, but it is one of
-> > > the use cases that we may add support for in future.
-> >
-> > You should elaborate on this, I do not understand what you mean,
-> > either the root port(s) supports hotplug or it does not.
-> >
-> > > But, why should we fail probe if link up doesn't happen? As such,
-> > > nothing went wrong in terms of root port initialization right?  I
-> > > checked other DWC based implementations and following are not
-> > > failing the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c,
-> > > pcie-histb.c, pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c,
-> > > pci-imx6.c, pci-keystone.c, pci-layerscape.c
-> > >
-> > > Although following do fail the probe if link is not up.
-> > > pcie-qcom.c, pcie-uniphier.c, pci-meson.c
-> > >
-> > > So, to me, it looks more like a choice we can make whether to fail
-> > > the probe or not and in this case we are choosing not to fail.
-> >
-> > I disagree. I had an offline chat with Bjorn and whether link-up
-> > should fail the probe or not depends on whether the root port(s) is
-> > hotplug capable or not and this in turn relies on the root port "Slot
-> > implemented" bit in the PCI Express capabilities register.
-> 
-> There might be a little more we can talk about in this regard.  I did bring up the
-> "Slot implemented" bit, but after thinking about it more, I don't really think the
-> host bridge driver should be looking at that.
-> That's a PCIe concept, and it's really *downstream* from the host bridge itself.
-> The host bridge is logically a device on the CPU bus, not the PCI bus.
-> 
-> I'm starting to think that the host bridge driver probe should be disconnected
-> from question of whether the root port links are up.
-> 
-> Logically, the host bridge driver connects the CPU bus to a PCI root bus, so it
-> converts CPU-side accesses to PCI config, memory, or I/O port transactions.
-> Given that, the PCI core can enumerate devices on the root bus and downstream
-> buses.
-> 
-> Devices on the root bus typically include Root Ports, but might also include
-> endpoints, Root Complex Integrated Endpoints, Root Complex Event Collectors,
-> etc.  I think in principle, we would want the host bridge probe to succeed so we
-> can use these devices even if none of the Root Ports have a link.
-> 
-> If a Root Port is present, I think users will expect to see it in the "lspci" output,
-> even if its downstream link is not up.  That will enable things like manually
-> poking the Root Port via "setpci" for debug.  And if it has a connector, the
-> generic pciehp should be able to handle hot-add events without any special help
-> from the host bridge driver.
-> 
-> On ACPI systems there is no concept of the host bridge driver probe failing
-> because of lack of link on a Root Port.  If a Root Port doesn't have an
-> operational link, we still keep the pci_root.c driver, and we'll enumerate the
-> Root Port itself.  So I tend to think DT systems should behave the same way, i.e.,
-> the driver probe should succeed unless it fails to allocate resources or something
-> similar.  I think this is analogous to a NIC or USB adapter driver, where the probe
-> succeeds even if there's no network cable or USB device attached.
-> 
-> Bjorn
-Thanks Bjorn for your valuable inputs. I hope we are good here to not power down host
-even if there are no endpoints detected.
-
-- Vidya Sagar
+Index: b/MAINTAINERS
+===================================================================
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6389,7 +6389,7 @@ FRAMEBUFFER LAYER
+ M:	Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+ L:	dri-devel@lists.freedesktop.org
+ L:	linux-fbdev@vger.kernel.org
+-T:	git git://github.com/bzolnier/linux.git
++T:	git git://anongit.freedesktop.org/drm/drm-misc
+ Q:	http://patchwork.kernel.org/project/linux-fbdev/list/
+ S:	Maintained
+ F:	Documentation/fb/
