@@ -2,98 +2,134 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C54C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5022C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02C921955
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="HBiM+Ghp"
+	by mail.kernel.org (Postfix) with ESMTP id B75F621955
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbfGWAZc (ORCPT
+        id S1732007AbfGWAZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:25:32 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46851 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727627AbfGWAZb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:25:31 -0400
-Received: by mail-lf1-f66.google.com with SMTP id z15so23704930lfh.13
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 17:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QchpEl6IYcDn2365/1cAgrUj/Kod3MFaa9kS/y4zsIA=;
-        b=HBiM+Ghpfpp+iZBoxIUNJ2J3yJMGSnr6utpnv/T21+Byj6Hjh9iQP076Qh6GBNe/Y6
-         AbYzxrADIvG98AFdE5/ChLpaKuHryldzAwsrWdesvixGNgk7emHBIfc7yEd+HQI+VfMF
-         eX5jgnwshMil2Hu09h2+tDX7EqIuuo8Gc47w77IB3DBAN+9Prv7TQY4khMVNqriv9st5
-         ciPXLg+rSbU/q0tOf+/5GdsWhsoGa59FLmabXL5A+QBpwiQIcYMmv4brLhD7xn+kc5mB
-         TBNeJOfKL2vQ79QOMG5Ygm+dWolASdkNOOiNiDZd8+n+QNECI0D5sqpTvnnCU7QnhwGA
-         loQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QchpEl6IYcDn2365/1cAgrUj/Kod3MFaa9kS/y4zsIA=;
-        b=CmKxKbi3wBlps2iGfZMKFFLAaTkcGBiMYQ08KSx9FOnHaBVVu3ry6+L41dZ1X/gzVy
-         B6fk001QpIrTlFMNleUmpDjFBGYyoo8i6FfjM3Dh2cEANq7h22qXwY/6wO8rflUwiDvd
-         vf0ZcH+fi+eiv08e7fAyAN36Utd6Lpd+RxdE6UuzT8DEb/oM8aYjUzrUWcwKvrX/Nh5a
-         yvonv1Myx3fYPiish1PHQ/7fWQWAGYCVY8zfALO09AMEtmRUEOBJLzY0bz8/I/SHqzuf
-         fUSPZVOLKlPwYZdTWpQ4OcTY1Fw7E5NBmE5ZTUECJHEuF/sY8mQfcSxkv5nZ3Ic2NsDZ
-         o9Gw==
-X-Gm-Message-State: APjAAAUs2AVz4gS50PeWKkYip/TyU9vmEat04J75kFuRGo2z7MxQht0j
-        FWz9SwH+yztXYTO+c70pRqURpzEqRG0QgdO/BqSs
-X-Google-Smtp-Source: APXvYqx8Y9O6JQiw0vn8cUbd+Kt7Bu2W5CGQbSsI0sL8oQGMsom1pYEvtO1whbQwpCJnO24ajc3HZ8ouCLA0cxbQ82A=
-X-Received: by 2002:a19:4349:: with SMTP id m9mr32869303lfj.64.1563841529750;
- Mon, 22 Jul 2019 17:25:29 -0700 (PDT)
+        Mon, 22 Jul 2019 20:25:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52276 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727627AbfGWAZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 20:25:37 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 17:25:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
+   d="scan'208";a="180568074"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 22 Jul 2019 17:25:34 -0700
+Date:   Mon, 22 Jul 2019 17:25:34 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH 3/3] net/xdp: convert put_page() to put_user_page*()
+Message-ID: <20190723002534.GA10284@iweiny-DESK2.sc.intel.com>
+References: <20190722223415.13269-1-jhubbard@nvidia.com>
+ <20190722223415.13269-4-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20190722113151.1584-1-nitin.r.gote@intel.com> <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
-In-Reply-To: <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 22 Jul 2019 20:25:18 -0400
-Message-ID: <CAHC9VhSQLkRSby3-9PGZZrLMGB4Fe8ZZjupHRm0nVxco85A1fQ@mail.gmail.com>
-Subject: Re: [PATCH] selinux: convert struct sidtab count to refcount_t
-To:     Ondrej Mosnacek <omosnace@redhat.com>,
-        NitinGote <nitin.r.gote@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel-hardening@lists.openwall.com,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190722223415.13269-4-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 9:18 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> On Mon, Jul 22, 2019 at 1:35 PM NitinGote <nitin.r.gote@intel.com> wrote:
-> > refcount_t type and corresponding API should be
-> > used instead of atomic_t when the variable is used as
-> > a reference counter. This allows to avoid accidental
-> > refcounter overflows that might lead to use-after-free
-> > situations.
-> >
-> > Signed-off-by: NitinGote <nitin.r.gote@intel.com>
->
-> Nack.
->
-> The 'count' variable is not used as a reference counter here. It
-> tracks the number of entries in sidtab, which is a very specific
-> lookup table that can only grow (the count never decreases). I only
-> made it atomic because the variable is read outside of the sidtab's
-> spin lock and thus the reads and writes to it need to be guaranteed to
-> be atomic. The counter is only updated under the spin lock, so
-> insertions do not race with each other.
+On Mon, Jul 22, 2019 at 03:34:15PM -0700, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+> 
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> Cc: Björn Töpel <bjorn.topel@intel.com>
+> Cc: Magnus Karlsson <magnus.karlsson@intel.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  net/xdp/xdp_umem.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+> index 83de74ca729a..0325a17915de 100644
+> --- a/net/xdp/xdp_umem.c
+> +++ b/net/xdp/xdp_umem.c
+> @@ -166,14 +166,7 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
+>  
+>  static void xdp_umem_unpin_pages(struct xdp_umem *umem)
+>  {
+> -	unsigned int i;
+> -
+> -	for (i = 0; i < umem->npgs; i++) {
+> -		struct page *page = umem->pgs[i];
+> -
+> -		set_page_dirty_lock(page);
+> -		put_page(page);
+> -	}
+> +	put_user_pages_dirty_lock(umem->pgs, umem->npgs);
 
-Agreed, this should be changed to use refcount_t.
+What is the difference between this and
 
--- 
-paul moore
-www.paul-moore.com
+__put_user_pages(umem->pgs, umem->npgs, PUP_FLAGS_DIRTY_LOCK);
+
+?
+
+I'm a bit concerned with adding another form of the same interface.  We should
+either have 1 call with flags (enum in this case) or multiple calls.  Given the
+previous discussion lets move in the direction of having the enum but don't
+introduce another caller of the "old" interface.
+
+So I think on this patch NAK from me.
+
+I also don't like having a __* call in the exported interface but there is a
+__get_user_pages_fast() call so I guess there is precedent.  :-/
+
+Ira
+
+>  
+>  	kfree(umem->pgs);
+>  	umem->pgs = NULL;
+> -- 
+> 2.22.0
+> 
