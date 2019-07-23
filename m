@@ -2,105 +2,123 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DBDC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818B3C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAB420665
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F18D20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iKGNUOra"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="NdFuRavX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733291AbfGWPSo (ORCPT
+        id S2388432AbfGWPSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:18:44 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:46546 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728591AbfGWPSl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:18:41 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CCD4BC016E;
-        Tue, 23 Jul 2019 15:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563895121; bh=V99jsKPj9ZINSDZP4sTZylKQQLnXIujiCEwzh1g9t8Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKGNUOrasZCMC9+kZKjpUHHUXke+tPvQieQ55MLYiS6aKqZFB41Q+Tnpgf14UWVqw
-         9dU7hF0ahnTkY9HtXJrnGZE7WN4fJI20YL8ljYXompnus8RDds9x21X/fV32oGnFw+
-         oSH8cTt7Evbv/A5nWjxh48VO+9bOufsYEwWOiADqBtWT/VWzT3IZbN4fUGENWVdeI9
-         xUI3NyB6pKW2NEvhkVo7ia2VF+ES4hKdODspgQ+ctV4iijTmmZtPBEdbGprii2YUXf
-         MURuiMTR+T1PDvCYdLJNuSsSnyLqWEMuA+giYKIpBkAsgdfJSJP2xzD6xw7tmqyT9j
-         NUn7RhH2+UofQ==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 9B42FA0057;
-        Tue, 23 Jul 2019 15:18:39 +0000 (UTC)
-From:   Luis Oliveira <Luis.Oliveira@synopsys.com>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Joao.Pinto@synopsys.com,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [RESEND V2 2/2] reset: Add DesignWare IP support to simple reset
-Date:   Tue, 23 Jul 2019 17:17:28 +0200
-Message-Id: <1563895048-30038-3-git-send-email-luis.oliveira@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563895048-30038-1-git-send-email-luis.oliveira@synopsys.com>
-References: <1563895048-30038-1-git-send-email-luis.oliveira@synopsys.com>
+        Tue, 23 Jul 2019 11:18:53 -0400
+Received: from mail-eopbgr00065.outbound.protection.outlook.com ([40.107.0.65]:1664
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728591AbfGWPSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:18:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=njLfxdbQ2bOWUoWIcgWED+xXVmIsiOTGy/HCHyFkA251i7DHSEhUfA2ds4SWommNXw281OdOd2GNF7kE7d4Hb4MUxSdiTz7GkXqPgrEgP4ikpSZH5vZABd+bcvmPQSMQm/syDu+s4UuTGBZj3ZiRdGcqPsw+ZHLNLtExaaq3TINRVB2EjhkKCWQtOYijQ1C7pavGE6fV319dcHjHT74S0sDB0Uuhce2Z5/3gZDDPV/MHvif6U2gcmZ+Jft8/IaRW73V1toCUT/dPvabawsztPC6oGXX2AVt9J8bGiu89kyy2gJ0InCzfuQfQ2dMfYTgF6L74X03PvuGK3iA65NAbQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VENW3byoNhHMP2GFW56MvPx/nwt1jcNE3YR8qDxw4pE=;
+ b=iRBQjI+bnm//M7Db3xWoKphCFaI2iMKQ9T4IxppJ9ADWRX0JdYf9OL/+vW4fUW3BYCCMAAgRfRJCaZYAbDUfvqIDFAQjzwulWND0WxsbE3LFmtPUkQ0jr3q+9dBBFp8ae+RSdOxR0zfber9jwFtfGIHFgptms8ExZSUXEICcl8BkqQxXrYiKorpuG7YnOZQ18TU1LknFGMdCzCkkl4I7AzOrNyc562jFwMEbfiJG+wx6EDEe5dU2OJDsD8w5yt7NywNJRsrab3tOwHJumq8p+m2c+5OZLZ3rSvCIqqFF8qfhFoGbDYQVjmtV9SBT0tEveN/CYAoZp603dwHZ1NWDBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VENW3byoNhHMP2GFW56MvPx/nwt1jcNE3YR8qDxw4pE=;
+ b=NdFuRavXZS+NSMUta79Yf1lm+1J5GYaQfYxQhM6CMZ8i4/BuKiI6AgsmR7b+UDqUy3+iZqvm/QZI8k0Edhw2YxnyqYhbaJDQjRPfGv8s98MRAJAOzT6vNhEyNaxYyPTQEXhhnzAXFpjXjNLMerbcJbk+MXkjExA8F6PjU34pn28=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.14; Tue, 23 Jul 2019 15:18:49 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
+ 15:18:49 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/6] nouveau: return -EBUSY when
+ hmm_range_wait_until_valid fails
+Thread-Topic: [PATCH 5/6] nouveau: return -EBUSY when
+ hmm_range_wait_until_valid fails
+Thread-Index: AQHVQHIWAA6a741P4kaCXdSsPfFvyKbYUvMA
+Date:   Tue, 23 Jul 2019 15:18:49 +0000
+Message-ID: <20190723151846.GM15331@mellanox.com>
+References: <20190722094426.18563-1-hch@lst.de>
+ <20190722094426.18563-6-hch@lst.de>
+In-Reply-To: <20190722094426.18563-6-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR05CA0021.namprd05.prod.outlook.com
+ (2603:10b6:208:c0::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b7040cd6-682a-46d5-76cb-08d70f811049
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB3279;
+x-ms-traffictypediagnostic: VI1PR05MB3279:
+x-microsoft-antispam-prvs: <VI1PR05MB32791EF833AB7C7297170B8DCFC70@VI1PR05MB3279.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1227;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(189003)(199004)(8936002)(5660300002)(11346002)(81166006)(476003)(316002)(66066001)(33656002)(478600001)(305945005)(76176011)(54906003)(68736007)(36756003)(8676002)(7736002)(81156014)(99286004)(102836004)(2616005)(86362001)(6506007)(25786009)(386003)(26005)(186003)(446003)(6436002)(52116002)(6486002)(229853002)(4744005)(6116002)(3846002)(486006)(1076003)(6512007)(2906002)(256004)(66446008)(53936002)(6246003)(71200400001)(14444005)(14454004)(4326008)(64756008)(66556008)(66476007)(66946007)(6916009)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3279;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JfBmTD9q6uXParqZi+aVhS4o2+5jjCiKGeNSTX0ZzoIN8go6hy07el3TzKvxXAAq5IWqVmhvzfbU9UzShK21v7oz+13LE4JsjzS6cb18mvPRPszxDaJ4Jpd7JGjBXEO6hNKaYUckO/UEuO9igiDshJ/1HZsqlY3lid6/OK9m6yO41JCHPzFcRxdDVgJMJ78AgaU3t1QzOd8A+j5o/JOsYoufNDbpIYENk1EXCumD1eODiwLFEshdiK4vjIitiinLJrOHDjaXGUx/3rCofhnSuM8dHgjqYyzePXd7Nmh/iXZyHl5UlBMkfQsp7NzZX1XeLJM5guKW5b0DMWSsmFbhwAocVk1PQylWnAFmBpn95rx3Yl1peZCJEWKyH25RcSm6aGrQ1Yxh7eDiM4gvYaA/b3aTNCZywZnQCL+T4vdRnjU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <AABBB57195659D4A90E8BFD5BD00F6C6@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7040cd6-682a-46d5-76cb-08d70f811049
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 15:18:49.5611
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3279
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+On Mon, Jul 22, 2019 at 11:44:25AM +0200, Christoph Hellwig wrote:
+> -EAGAIN has a magic meaning for non-blocking faults, so don't overload
+> it.  Given that the caller doesn't check for specific error codes this
+> change is purely cosmetic.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_svm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-The reset-simple driver can be now used on DesignWare IPs by
-default by selecting the following compatible strings:
- - snps,dw-high-reset for active high resets inputs
- - snps,dw-low-reset for active low resets inputs
+Agree
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
----
-Changelog
--no changes
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
- drivers/reset/Kconfig        | 2 +-
- drivers/reset/reset-simple.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 2c8c23d..2ee69f2 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -117,7 +117,7 @@ config RESET_QCOM_PDC
- 
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
-+	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARC
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 77fbba3..79e73be 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -129,6 +129,9 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "aspeed,ast2400-lpc-reset" },
- 	{ .compatible = "aspeed,ast2500-lpc-reset" },
-+	{ .compatible = "snps,dw-high-reset" },
-+	{ .compatible = "snps,dw-low-reset",
-+		.data = &reset_simple_active_low },
- 	{ /* sentinel */ },
- };
- 
--- 
-2.7.4
-
+Jason
