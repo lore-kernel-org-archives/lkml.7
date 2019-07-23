@@ -2,133 +2,127 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69993C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E79C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449832253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13EDF2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732469AbfGWUdd (ORCPT
+        id S1733244AbfGWUeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:33:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49138 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729564AbfGWUdd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:33:33 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NKIMSQ059165;
-        Tue, 23 Jul 2019 16:33:31 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tx8se1b1n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jul 2019 16:33:31 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6NKFLTQ015329;
-        Tue, 23 Jul 2019 20:33:30 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01wdc.us.ibm.com with ESMTP id 2tx61ms59f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jul 2019 20:33:30 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NKXUsL48562614
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jul 2019 20:33:30 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3ECFA112066;
-        Tue, 23 Jul 2019 20:33:30 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24490112062;
-        Tue, 23 Jul 2019 20:33:29 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.207.175])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jul 2019 20:33:28 +0000 (GMT)
-Message-ID: <ae19f8ddc770135572323dd431d0efbe3e419582.camel@linux.ibm.com>
-Subject: Question about vmsplice + SPLICE_F_GIFT
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
-Date:   Tue, 23 Jul 2019 17:33:24 -0300
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ZgaTWFQtsP42ufrT2Umv"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 23 Jul 2019 16:34:17 -0400
+Received: from mga07.intel.com ([134.134.136.100]:63973 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729564AbfGWUeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:34:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 13:34:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
+   d="scan'208";a="253344182"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 23 Jul 2019 13:34:13 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DE45E81; Tue, 23 Jul 2019 23:34:12 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chun-Yi Lee <jlee@suse.com>
+Subject: [PATCH v1] platform/x86: acer-wmi: Switch to acpi_dev_get_first_match_dev()
+Date:   Tue, 23 Jul 2019 23:34:11 +0300
+Message-Id: <20190723203411.71448-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907230207
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The acpi_dev_get_first_match_dev() helper will find and return
+an ACPI device pointer of the first registered device in the system
+by its HID.
 
---=-ZgaTWFQtsP42ufrT2Umv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Use it instead of open coded variant.
 
-Hello everybody,
+Cc: Chun-Yi Lee <jlee@suse.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+- Chun-Yi, please, test it if possible
+ drivers/platform/x86/acer-wmi.c | 49 +++++----------------------------
+ 1 file changed, 7 insertions(+), 42 deletions(-)
 
-I am not sure if this is the right place to be asking this. If is not,
-I apologize for the inconvenience. Also, please tell me where is a
-better way to as these questions.
-
-I am trying to create a basic C code to test vmsplice + SPLICE_F_GIFT
-for moving memory pages between two processes without copying.
-
-I have followed the man pages and several recipes across the web, but I
-could not reproduce it yet.
-
-Basically, I am doing:
-Sending process:
-- malloc + memcpy for generating pages to transfer
-- vmsplice with SPLICE_F_GIFT sending over named pipe (in a loop)
-Receiving process:
-- Create mmaped file to receive the pages
-- splice with SPLICE_F_MOVE receiving from named pipe (in a loop)
-
-I have seen the SPLICE_F_MOVE being used on steal ops from the
-'pipebuffer', but I couldn't find a way to call it from splice.
-
-Questions:=20
-It does what I think it does? (reassign memory pages from a process to
-another)
-If so, does page gifting still works?
-If so, is there a basic recipe to test it's workings?
-
-Thank you for reading,
-
-Leonardo Br=C3=A1s=20
-
---=-ZgaTWFQtsP42ufrT2Umv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl03bxQACgkQlQYWtz9S
-ttSMpQ//fs8clOXz8ga616r2sL5Pc57j0D347HrmLVymwaxMMifG/qo4aX9b3n42
-8ORpK4ZS1EQ+V5b4BE2oRNdn6I3rvJgPMPmnh+38KZJBXqdj+adKPpUmAexFPNat
-AXqOMkgZGblE16QF0bsCe+HmNwN12Kz3hTB3ua5Bweot6VWqR22ZV93WPm0siYms
-ny1cA4O/EDNz0ktjx5pDXgCu5MrtuRwZ7vqtu/qMLajLm1ZXzTRVOkvKcFYPT4Eh
-tncXvj/3SZfJyAl+veuwbZ5o3DLAtGRWa20WBfs56FN97kMmbWR7eFjuYsTKfy53
-5XkHdf6zE+EkIc2qaz9fwQ61Kd8al/T7qFrL8d/9TQ5mJ0Yfv2s+w+ulj8YCuVpu
-PeFKz7kVSVNXvCHnX/p3LGd1zKbh7WJqNE6tKh0BgTyAwROI90KC6VVGCBryhXg5
-LAPLufVsoHxHMXpEm74wwPwR/vQnoGfL95kbVwJqU2V7ccqA4vgX8IFk8TZBO420
-IpcChcAkznXNI2ZpJMphs7siTJX5JAEKuxVmQBzBq+ceqvpe/ZKJ+bPbdjVLZAkl
-hGRqv4kGPUAh2uSFJfaMB3nyhRyTqcMaROg56C8e7S0gtE7PPdgRnr6v1NR6KS+K
-FPfx7X6tNRYodJSW+xnIsWH8rZ0cadTMPoL8GsVhFkZK9Cx4+XY=
-=PCPk
------END PGP SIGNATURE-----
-
---=-ZgaTWFQtsP42ufrT2Umv--
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 62b54e137231..60c18f21588d 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1881,52 +1881,17 @@ static int __init acer_wmi_enable_rf_button(void)
+ 	return status;
+ }
+ 
+-#define ACER_WMID_ACCEL_HID	"BST0001"
+-
+-static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
+-						void *ctx, void **retval)
+-{
+-	struct acpi_device *dev;
+-
+-	if (!strcmp(ctx, "SENR")) {
+-		if (acpi_bus_get_device(ah, &dev))
+-			return AE_OK;
+-		if (strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
+-			return AE_OK;
+-	} else
+-		return AE_OK;
+-
+-	*(acpi_handle *)retval = ah;
+-
+-	return AE_CTRL_TERMINATE;
+-}
+-
+-static int __init acer_wmi_get_handle(const char *name, const char *prop,
+-					acpi_handle *ah)
+-{
+-	acpi_status status;
+-	acpi_handle handle;
+-
+-	BUG_ON(!name || !ah);
+-
+-	handle = NULL;
+-	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
+-					(void *)name, &handle);
+-	if (ACPI_SUCCESS(status) && handle) {
+-		*ah = handle;
+-		return 0;
+-	} else {
+-		return -ENODEV;
+-	}
+-}
+-
+ static int __init acer_wmi_accel_setup(void)
+ {
++	struct acpi_device *adev;
+ 	int err;
+ 
+-	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
+-	if (err)
+-		return err;
++	adev = acpi_dev_get_first_match_dev("BST0001", NULL, -1);
++	if (!adev)
++		return -ENODEV;
++
++	gsensor_handle = acpi_device_handle(adev);
++	acpi_dev_put(adev);
+ 
+ 	interface->capability |= ACER_CAP_ACCEL;
+ 
+-- 
+2.20.1
 
