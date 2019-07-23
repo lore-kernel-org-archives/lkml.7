@@ -2,101 +2,187 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F90C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD97C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D6820644
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563921386;
-	bh=S+OBtAljJE6cIolYurUB5uyTZhGfXmhmh+XdeLh/sNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bxbaqrSUthCH1dH7yoH/4F27ahN0Sih+0jW5Wtv/dPcQrrLGh6LC+m4m465iPyOHb
-	 eMi0bSYONQ+ErRG58uZ0FXQaUNV0ol/BfaL9F0mJrb/6I6nYw1xEh2KMM1V4yLpLN2
-	 gYVt7W7WmsxCDsW2wloSgi7fo9g14AYLSpG2Bpqc=
+	by mail.kernel.org (Postfix) with ESMTP id 98FD9227BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389416AbfGWWgZ (ORCPT
+        id S2387619AbfGWWju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:36:25 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45533 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727172AbfGWWgZ (ORCPT
+        Tue, 23 Jul 2019 18:39:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26384 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729061AbfGWWjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:36:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so19838439pfq.12;
-        Tue, 23 Jul 2019 15:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zNouKbF6UyPadfEdFSK5fRF7G6CWHnxRN1FzAl+dNYs=;
-        b=SdQIiqD4fkEQwr9X83RCA6yuwNBY1uChpKnXh3cAh+UZV7T/q90T66/ebWnSWzMdU1
-         4ZhW4dn/MufMU2L+7JiJDj0tARsd7/JfDcK7Kqqk3vaKGtlGIJNFTFOKuIVEJ0tJg6HV
-         nJBlNrJlbG4z+e88LPyvn8BrL/xxUJQuiugCiM1POSvapwm84nYrkEXh/Mp5F/0QCKHD
-         T4d7iSWVbnhNQvkYjTIxXZMgF9DK7sKqcgjD1ReNDbfobnDjlowVaYpWEDPDMZN2xhW7
-         pis75BozdMnhMsLgEScEd3kHzIXXtW8zbGK+ErLn5nFgdmWdRJBTzk0v8ZxIrsyj4e4i
-         052A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zNouKbF6UyPadfEdFSK5fRF7G6CWHnxRN1FzAl+dNYs=;
-        b=lHezlGNQMLc06neDrlGeTu2C9jbKyLlRxOt/jlocy7Ycj217XlmUrHARZX9aeXleEW
-         1kGxfVrJ7+jlTgCBw8NBQgXy0lWSseNAAnrIXIw6l512r2/0oHMOntQRWcYjKt6wfL7l
-         FiSR8oMGA9qWzePUJovI8kK9fzoIS7jrBTETtXvhewGWg85ACeBb6Hl5S2EyWmiPfi+Z
-         6oqdKwmCOyNWa90AtbeWArqpQ+PObcT0v2e7gu50LriO0I/VwqbvBXSDcuMK+qXwwrDN
-         Vw6rVfu9kzVjR1K1qr/FM91leZgIPflK24v8Uk+a8uSNwgMJJamfya41YjTriPBW4uiB
-         SnTA==
-X-Gm-Message-State: APjAAAX+/XJDj4/9ssO2+FBrD/azA2l/bo2ooefm6EC1z6RC4394YTFP
-        ziDYOIDV2k/saph/qSLV3LU=
-X-Google-Smtp-Source: APXvYqziGHn+6jGrdziu5cLb9QnyDXXK2JmIkImwr7M2iRolvR/fyo5r25/cJX4zAbOa2Ux1/H46Dw==
-X-Received: by 2002:a62:5883:: with SMTP id m125mr7941308pfb.248.1563921384228;
-        Tue, 23 Jul 2019 15:36:24 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:2287])
-        by smtp.gmail.com with ESMTPSA id w132sm45870833pfd.78.2019.07.23.15.36.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 15:36:23 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 15:36:21 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Konstantin Khlebnikov <koct9i@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Cgroups <cgroups@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH] mm/backing-dev: show state of all bdi_writeback in
- debugfs
-Message-ID: <20190723223621.GF696309@devbig004.ftw2.facebook.com>
-References: <156388617236.3608.2194886130557491278.stgit@buzz>
- <20190723130729.522976a1f075d748fc946ff6@linux-foundation.org>
- <CALYGNiMw_9MKxfCxq9QsXi3PbwQMwKmLufQqUnhYdt8C+sR2rA@mail.gmail.com>
+        Tue, 23 Jul 2019 18:39:49 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NMatwK145528
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 18:39:48 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx92v4pmr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 18:39:48 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 23 Jul 2019 23:39:47 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Jul 2019 23:39:41 +0100
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NMdemE46465390
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 22:39:40 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D62C7805F;
+        Tue, 23 Jul 2019 22:39:40 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3DDBF7805C;
+        Tue, 23 Jul 2019 22:39:32 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.148.251])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue, 23 Jul 2019 22:39:31 +0000 (GMT)
+References: <20190628021934.4260-1-bauerman@linux.ibm.com> <20190628021934.4260-2-bauerman@linux.ibm.com> <20190701144752.GC25484@linux-8ccs> <87lfxel2q6.fsf@morokweng.localdomain> <20190704125427.31146026@laptop-ibm> <874l41ocf5.fsf@morokweng.localdomain> <20190705150000.372345b0@laptop-ibm>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Philipp Rudo <prudo@linux.ibm.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        "James Morris" <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "David Howells" <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
+In-reply-to: <20190705150000.372345b0@laptop-ibm>
+Date:   Tue, 23 Jul 2019 19:39:27 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALYGNiMw_9MKxfCxq9QsXi3PbwQMwKmLufQqUnhYdt8C+sR2rA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19072322-0016-0000-0000-000009D393BA
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011484; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01236487; UDB=6.00651706; IPR=6.01017844;
+ MB=3.00027860; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-23 22:39:46
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072322-0017-0000-0000-0000442346CA
+Message-Id: <8736iw9y00.fsf@morokweng.localdomain>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907230230
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:24:41AM +0300, Konstantin Khlebnikov wrote:
-> Debugging such dynamic structure with gdb is a pain.
 
-Use drgn.  It's a lot better than hard coding these debug features
-into the kernel.
+Hello Philipp,
 
-  https://github.com/osandov/drgn
 
-Thanks.
+Philipp Rudo <prudo@linux.ibm.com> writes:
+
+> Hi Thiago,
+>
+> On Thu, 04 Jul 2019 15:57:34 -0300
+> Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
+>
+>> Hello Philipp,
+>> 
+>> Philipp Rudo <prudo@linux.ibm.com> writes:
+>> 
+>> > Hi Thiago,
+>> >
+>> >
+>> > On Thu, 04 Jul 2019 03:42:57 -0300
+>> > Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
+>> >  
+>> >> Jessica Yu <jeyu@kernel.org> writes:
+>> >>   
+>> >> > +++ Thiago Jung Bauermann [27/06/19 23:19 -0300]:    
+>> >> >>IMA will use the module_signature format for append signatures, so export
+>> >> >>the relevant definitions and factor out the code which verifies that the
+>> >> >>appended signature trailer is valid.
+>> >> >>
+>> >> >>Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
+>> >> >>and be able to use mod_check_sig() without having to depend on either
+>> >> >>CONFIG_MODULE_SIG or CONFIG_MODULES.
+>> >> >>
+>> >> >>Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>> >> >>Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+>> >> >>Cc: Jessica Yu <jeyu@kernel.org>
+>> >> >>---
+>> >> >> include/linux/module.h           |  3 --
+>> >> >> include/linux/module_signature.h | 44 +++++++++++++++++++++++++
+>> >> >> init/Kconfig                     |  6 +++-
+>> >> >> kernel/Makefile                  |  1 +
+>> >> >> kernel/module.c                  |  1 +
+>> >> >> kernel/module_signature.c        | 46 ++++++++++++++++++++++++++
+>> >> >> kernel/module_signing.c          | 56 +++++---------------------------
+>> >> >> scripts/Makefile                 |  2 +-
+>> >> >> 8 files changed, 106 insertions(+), 53 deletions(-)
+>> >> >>
+>> >> >>diff --git a/include/linux/module.h b/include/linux/module.h
+>> >> >>index 188998d3dca9..aa56f531cf1e 100644
+>> >> >>--- a/include/linux/module.h
+>> >> >>+++ b/include/linux/module.h
+>> >> >>@@ -25,9 +25,6 @@
+>> >> >> #include <linux/percpu.h>
+>> >> >> #include <asm/module.h>
+>> >> >>
+>> >> >>-/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
+>> >> >>-#define MODULE_SIG_STRING "~Module signature appended~\n"
+>> >> >>-    
+>> >> >
+>> >> > Hi Thiago, apologies for the delay.    
+>> >> 
+>> >> Hello Jessica, thanks for reviewing the patch!
+>> >>   
+>> >> > It looks like arch/s390/kernel/machine_kexec_file.c also relies on
+>> >> > MODULE_SIG_STRING being defined, so module_signature.h will need to be
+>> >> > included there too, otherwise we'll run into a compilation error.    
+>> >> 
+>> >> Indeed. Thanks for spotting that. The patch below fixes it. It's
+>> >> identical to the previous version except for the changes in 
+>> >> arch/s390/kernel/machine_kexec_file.c and their description in the
+>> >> commit message. I'm also copying some s390 people in this email.  
+>> >
+>> > to me the s390 part looks good but for one minor nit.  
+>> 
+>> Thanks for the prompt review!
+>> 
+>> > In arch/s390/Kconfig KEXEC_VERIFY_SIG currently depends on
+>> > SYSTEM_DATA_VERIFICATION. I'd prefer when you update this to the new
+>> > MODULE_SIG_FORMAT. It shouldn't make any difference right now, as we don't
+>> > use mod_check_sig in our code path. But it could cause problems in the future,
+>> > when more code might be shared.  
+>> 
+>> Makes sense. Here is the updated patch with the Kconfig change.
+>> 
+>
+> The patch looks good now.
+
+Thanks! Can I add your Reviewed-by?
 
 -- 
-tejun
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
