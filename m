@@ -2,137 +2,139 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2767C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B1DC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A959223BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WpYunE6Q"
+	by mail.kernel.org (Postfix) with ESMTP id 77A00223BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbfGWJ1q (ORCPT
+        id S1730310AbfGWJ2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:27:46 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:31440 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbfGWJ1q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:27:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1563874065; x=1595410065;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=r3UejI0fEyx4nycQ3vf7JrpqMGHRZyoys9vsmeuSdCk=;
-  b=WpYunE6QvhuTBTT0kkM5lBnZ+I0Xcbplq16FNSNp3Cg+2wMmCyRyV7I4
-   JPqjjkOFzS+H4LZu5mbcGU9p85vScXytLx0h6e+Z4rZohlzHNFF21lVZI
-   +upfWVJLzI2iyKs3dcWLiPrVjHnMdFT9Kc7PnBQrW7aYlwZBDDT2Qe7LJ
-   M=;
-X-IronPort-AV: E=Sophos;i="5.64,298,1559520000"; 
-   d="scan'208";a="687150634"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 23 Jul 2019 09:27:43 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id BE1F9A2490;
-        Tue, 23 Jul 2019 09:27:42 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 23 Jul 2019 09:27:42 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.161.85) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 23 Jul 2019 09:27:37 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
-        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v3 8/8] PCI: dw: Add support for PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date:   Tue, 23 Jul 2019 12:27:11 +0300
-Message-ID: <20190723092711.11786-4-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190723092529.11310-1-jonnyc@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
+        Tue, 23 Jul 2019 05:28:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41860 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbfGWJ2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:28:13 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 718A4308421A;
+        Tue, 23 Jul 2019 09:28:12 +0000 (UTC)
+Received: from ovpn-117-106.ams2.redhat.com (ovpn-117-106.ams2.redhat.com [10.36.117.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B1F15D9C5;
+        Tue, 23 Jul 2019 09:28:09 +0000 (UTC)
+Message-ID: <d797ed8522bd37f2f01002b26a06ee146ebe2b90.camel@redhat.com>
+Subject: Re: [PATCH net-next v2 3/3] netlink: add validation of NLA_F_NESTED
+ flag
+From:   Thomas Haller <thaller@redhat.com>
+To:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org
+Date:   Tue, 23 Jul 2019 11:28:03 +0200
+In-Reply-To: <20190723090908.GA2204@unicorn.suse.cz>
+References: <cover.1556806084.git.mkubecek@suse.cz>
+         <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
+         <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
+         <20190723090908.GA2204@unicorn.suse.cz>
+Organization: Red Hat
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-uB+G14xSU2RvYRVTrtZV"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.85]
-X-ClientProxiedBy: EX13D27UWB003.ant.amazon.com (10.43.161.195) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 23 Jul 2019 09:28:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This basically aligns the usage of PCI_PROBE_ONLY and
-PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-pci_host_common_probe().
 
-Now it will be possible to control via the devicetree whether to just
-probe the PCI bus (in cases where FW already configured it) or to fully
-configure it.
+--=-uB+G14xSU2RvYRVTrtZV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+On Tue, 2019-07-23 at 11:09 +0200, Michal Kubecek wrote:
+> On Tue, Jul 23, 2019 at 10:57:54AM +0200, Thomas Haller wrote:
+> > Does this flag and strict validation really provide any value?
+> > Commonly a netlink message is a plain TLV blob, and the meaning
+> > depends entirely on the policy.
+> >=20
+> > What I mean is that for example
+> >=20
+> >   NLA_PUT_U32 (msg, ATTR_IFINDEX, (uint32_t) ifindex)
+> >   NLA_PUT_STRING (msg, ATTR_IFNAME, "net")
+> >=20
+> > results in a 4 bytes payload that does not encode whether the data
+> > is
+> > a number or a string.
+> >=20
+> > Why is it valuable in this case to encode additional type
+> > information
+> > inside the message, when it's commonly not done and also not
+> > necessary?
+>=20
+> One big advantage of having nested attributes explicitly marked is
+> that
+> it allows parsers not aware of the semantics to recognize nested
+> attributes and parse their inner structure.
+>=20
+> This is very important e.g. for debugging purposes as without the
+> flag,
+> wireshark can only recurse into nested attributes if it understands
+> the
+> protocol and knows they are nested, otherwise it displays them only
+> as
+> an opaque blob (which is what happens for most netlink based
+> protocols).
+> Another example is mnl_nlmsg_fprintf() function from libmnl which is
+> also a valuable debugging aid but without NLA_F_NESTED flags it
+> cannot
+> show message structure properly.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d2ca748e4c85..0a294d8aa21a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (!bridge)
- 		return -ENOMEM;
- 
-+	of_pci_check_probe_only();
-+
- 	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
- 					&bridge->windows, &pp->io_base);
- 	if (ret)
-@@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 	pp->root_bus_nr = pp->busn->start;
- 
-+	/* Do not reassign bus nums if probe only */
-+	if (!pci_has_flag(PCI_PROBE_ONLY))
-+		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-+
- 	bridge->dev.parent = dev;
- 	bridge->sysdata = pp;
- 	bridge->busnr = pp->root_bus_nr;
-@@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pp->ops->scan_bus)
- 		pp->ops->scan_bus(pp);
- 
--	pci_bus_size_bridges(pp->root_bus);
--	pci_bus_assign_resources(pp->root_bus);
-+	/*
-+	 * We insert PCI resources into the iomem_resource and
-+	 * ioport_resource trees in either pci_bus_claim_resources()
-+	 * or pci_bus_assign_resources().
-+	 */
-+	if (pci_has_flag(PCI_PROBE_ONLY)) {
-+		pci_bus_claim_resources(pp->root_bus);
-+	} else {
-+		pci_bus_size_bridges(pp->root_bus);
-+		pci_bus_assign_resources(pp->root_bus);
- 
--	list_for_each_entry(child, &pp->root_bus->children, node)
--		pcie_bus_configure_settings(child);
-+		list_for_each_entry(child, &pp->root_bus->children, node)
-+			pcie_bus_configure_settings(child);
-+	}
- 
- 	pci_bus_add_devices(pp->root_bus);
- 	return 0;
--- 
-2.17.1
+Hi,
+
+I don't question the use of the flag. I question whether it's necessary
+for kernel to strictly require the sending side to aid debuggability.
+
+"e.g. for debugging purposes" makes it sound like it would be important
+for something else. I wonder what else.
+
+
+Anyway. What you elaborate makes sense!! Thanks
+
+
+My main point was to raise awareness that this is a problem for libnl3.
+
+
+best,
+Thomas
+
+--=-uB+G14xSU2RvYRVTrtZV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEESep8Zw4IUOdBlRT2KcI2bk38VygFAl020yMACgkQKcI2bk38
+Vygegg//bjBYvpsSC7cGBhu9f7Eysloqq9pL8gVujgicZwpVU/vtK3MlieaUEoYU
+Dm04WNKYXh7cIiD6k0BBvKnyG9wB3xEUr90PvvFn7Q5hUqLipO4boZ4fvNy5R9qA
+bfteE9nfcwuz65XxIHgjZGnKoR8Xf3N4F9SuLNJIs0hyJLBeEyjjrcHDw0vwnvDF
+z838zDyY9QnOlNYrpFKjeanRv+Wk3sdvKAfuXEcs8v/JV+wj6N7K+WM04Tx1x1XW
+pC+Pw4JTj3mqO3wRWzyDJKkVQcwf1MJlhJEpHRXNQlINJ0OUNacretzySMA7Q1uG
+6sChzfMK9mt3KjjyN17qZYlAz4PxqXarl9Q+j6nix5zRDsXy6xsjTigAZIH0j9zN
+DPh9Q8htI4Re1m6GXhwaNthpHJgjyMRhWVJ5FJRRtnUHsMRUBREiDmSsoAEZe7ac
+BXVffSYtfaT78NaIubqUT3D5Ab0pJPNPqjf15779nI/UAyCByXZFnCo3fJYnC1JC
+6Yv7hlJY9KneSSmbJ/Iz0D0VMJQi9FhoboMLCvAD0yJO0MS6X8q9ozWRSFeIsNJ8
+CeO9/JKIORS7cyQb8s6DnkUrGIW121lxCmzzHWViZXBQ+VXe2jc2gWzKK0NY8N0F
+EegOD736E/ZkOlEQBBR7QJ63tkc97q1xAg14hRL2rQWH2FH3z5I=
+=poN7
+-----END PGP SIGNATURE-----
+
+--=-uB+G14xSU2RvYRVTrtZV--
 
