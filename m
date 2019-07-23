@@ -2,133 +2,115 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E815C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAE9C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36285216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29BD229EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HR+P+4Nk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/azuwYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfGWXUn (ORCPT
+        id S1726720AbfGWXYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:20:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35090 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfGWXUm (ORCPT
+        Tue, 23 Jul 2019 19:24:18 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34031 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfGWXYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:20:42 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so85588406ioo.2;
-        Tue, 23 Jul 2019 16:20:41 -0700 (PDT)
+        Tue, 23 Jul 2019 19:24:17 -0400
+Received: by mail-io1-f67.google.com with SMTP id k8so85604789iot.1;
+        Tue, 23 Jul 2019 16:24:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m3Q8+/v4CM0L4GwsZxs2WcaoeWxYZYbtWw39haCd4u4=;
-        b=HR+P+4NkI6L7xuD6IE3T1KWAmh6kZwbsXgyOklLsxPmo6ukom2a/0fQXytbFNr/D8Y
-         lqDWzURxoTxIBYaITAU3s2JrgP8s2H0TxjUGCtnXhTaz5B0F1mPDpCyPdYj7wGRJe3H6
-         27g/1DKaisc3vBoa03E10uywQjzC165RHakPdpik58AMl3WL50Q04qmaiUUJHRiotKWp
-         PkNKBSjAD70BKAX07FpKLGsv2x3YZ8K0A1FdeuYs4vb2B9s5lbJdX0+OrwHbDJ7iJthF
-         ZYsbjPbnVljeFJcKDRvOdN00/9abfdn1vFASucIyavUanKm7UfmC6hamnHITNYT2Pgbo
-         69YQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OKl/UO0N722owerZ7uvxTX5GkSBg77fwKXsdJcJ89jw=;
+        b=W/azuwYc5RF0CLl2tNylYs96mx//cO/dqpDHVSi7Tx5ZOsQpKCKderAm4PQFHc0Wlo
+         CA5ArjI4C7GISOF1gvZGapcPsBoiGrJOBC+Hhg+kEbHGOkqJwf7WmqohdzXTMSFD4asg
+         F6J9p+jkhfqSQTcRZWUIaMENq/j+pKJ+jSImB11LK7FMkGbjQP6eKY96aTkBo+aRrj0G
+         E+KI0xJHmHtf5Y32Fi5SvSZzpRUKwPLlGaZgi1exYiopX5P0DSZGynbyT1+s+bHOq+3Y
+         ZlSyTX7uG1STgviFa2wV6W6P2JmZpuODDmKO/5Mv5vrX6vSqd/fzi+zmaeVL1AYKEOHC
+         AhRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m3Q8+/v4CM0L4GwsZxs2WcaoeWxYZYbtWw39haCd4u4=;
-        b=jAwI7VnPN/Z4q5e/CFTfGZTIEHOJebcPVlBbvZv8YfC3FeiX/IU2VZfd7kVxXjH2ab
-         OM9xoCnlnz9/5FdtkMr82wZvVTU20/Y7nEZvuIKfXuGkhO/j1vlX2xpYoC/ha4dYlTig
-         +n1D1DX1RFhJplpYHBHhCMmSlGPwR53+Cf9jYfeJZahxTr15OATltpCJViGFXk+9/GZ9
-         kLx4mUWBsrmPaarA+ytj80VNHxv9Ztv089NPPSrBhRy1qS1eHBpKjjqXV2iBhIDgxbSk
-         WTbOku/d5820CpNZxfGUkrlCABcBONjSSH+YRCYnXwMRhRjS04Aqvx/w7mNGJJS7cz87
-         DZpQ==
-X-Gm-Message-State: APjAAAVb2HR9Ux7FR6FAiRrj8ExjQ27o9F8SlVD5Rmu49nNoTE/JSUdt
-        sQQJIrZDdDcTScNxlywvtaMjvQUEbsdRUtBoF0XPKg==
-X-Google-Smtp-Source: APXvYqx+aFEZ60goSLlOoXFdJx5XHU9KXkvx2zZrHm2ejE2YNuYySG/3ZoSv5C9NRtEed2Swx18zzZXwGdFFDjtnMAE=
-X-Received: by 2002:a5e:9506:: with SMTP id r6mr8685534ioj.219.1563924041597;
- Tue, 23 Jul 2019 16:20:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OKl/UO0N722owerZ7uvxTX5GkSBg77fwKXsdJcJ89jw=;
+        b=g4CWHeznJBgIRZIaiiD/7YGe/1ClqlUuh9UrElpvoCyk7HhORCHsmcYHoLDlEZdo8A
+         YKWJueS9bX8Ro3IQUQdKUhLEScSkPrUtEy4C69A1YZb3Frz38PG8c31rehfIBRrwDfy3
+         nwuRmfFXOtS1Pe9RxvDNCZsVA4npylp7QXdOa7EJvcilCxV4RUAu/Dh9kijrFpk4MTTw
+         N8RVClfisOZNm637gPIMxqSN5+gajpp155xVmc7ywDkj5iHQ5FI2aXdOYLR7rt5/elmH
+         i6bpGvWiJdsrrSQrpikPNQTZZZXdReiGeImJSW9xmruDtAt5GEDdrItgDoWG4wQhPeiJ
+         /37g==
+X-Gm-Message-State: APjAAAXAJ812OQeQLHBaT+7OwC9j4wXDFM42jX7rULmAVqfqShxyWC3b
+        YDLH/+qHs+BpAmKZ5U5rnrg=
+X-Google-Smtp-Source: APXvYqzEGthFomN6apTXtcZGPfFB3acwEY2rLrsGnZT81G/G8D+Oq6T6j0D+KB0q5WG7jl1jc5K5rQ==
+X-Received: by 2002:a02:5ec9:: with SMTP id h192mr79609871jab.25.1563924257148;
+        Tue, 23 Jul 2019 16:24:17 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id s10sm106218264iod.46.2019.07.23.16.24.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 16:24:16 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 17:24:14 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 00/11] PCI: Move symbols to drivers/pci/pci.h
+Message-ID: <20190723232414.GB16776@JATN>
+References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
+ <20190723230701.GA47047@google.com>
 MIME-Version: 1.0
-References: <20190715134655.4076-1-sashal@kernel.org> <20190715134655.4076-39-sashal@kernel.org>
-In-Reply-To: <20190715134655.4076-39-sashal@kernel.org>
-From:   ronnie sahlberg <ronniesahlberg@gmail.com>
-Date:   Wed, 24 Jul 2019 09:20:29 +1000
-Message-ID: <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session
- to call send_sig instead of force_sig
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        Steve French <smfrench@gmail.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723230701.GA47047@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 16, 2019 at 1:15 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: "Eric W. Biederman" <ebiederm@xmission.com>
->
-> [ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
->
-> The locking in force_sig_info is not prepared to deal with a task that
-> exits or execs (as sighand may change).  The is not a locking problem
-> in force_sig as force_sig is only built to handle synchronous
-> exceptions.
->
-> Further the function force_sig_info changes the signal state if the
-> signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-> delivery of the signal.  The signal SIGKILL can not be ignored and can
-> not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-> delivered.
->
-> So using force_sig rather than send_sig for SIGKILL is confusing
-> and pointless.
->
-> Because it won't impact the sending of the signal and and because
-> using force_sig is wrong, replace force_sig with send_sig.
+On Tue, Jul 23, 2019 at 06:07:01PM -0500, Bjorn Helgaas wrote:
+> On Thu, Jul 11, 2019 at 04:23:30PM -0600, Kelsey Skunberg wrote:
+> > Move symbols defined in include/linux/pci.h that are only used in
+> > drivers/pci/ to drivers/pci/pci.h.
+> > 
+> > Symbols only used in drivers/pci/ do not need to be visible to the rest of
+> > the kernel.
+> > 
+> > Kelsey Skunberg (11):
+> >   PCI: Move #define PCI_PM_* lines to drivers/pci/pci.h
+> >   PCI: Move PME declarations to drivers/pci/pci.h
+> >   PCI: Move *_host_bridge_device() declarations to drivers/pci.pci.h
+> >   PCI: Move PCI Virtual Channel declarations to drivers/pci/pci.h
+> >   PCI: Move pci_hotplug_*_size declarations to drivers/pci/pci.h
+> >   PCI: Move pci_bus_* declarations to drivers/pci/pci.h
+> >   PCI: Move pcie_update_link_speed() to drivers/pci/pci.h
+> >   PCI: Move pci_ats_init() to drivers/pci/pci.h
+> >   PCI: Move ECRC declarations to drivers/pci/pci.h
+> >   PCI: Move PTM declaration to drivers/pci/pci.h
+> >   PCI: Move pci_*_node() declarations to drivers/pci/pci.h
+> > 
+> >  drivers/pci/pci.h   | 48 ++++++++++++++++++++++++++++++++++++++++++---
+> >  include/linux/pci.h | 47 --------------------------------------------
+> >  2 files changed, 45 insertions(+), 50 deletions(-)
+> 
+> Hi Kelsey,
+> 
+> I didn't get these applied before v5.3-rc1, so now they don't apply
+> cleanly.  Would you mind refreshing them and posting a v2 that does
+> apply to my "master" branch (v5.3-rc1)?
+> 
+> Bjorn
 
-I think this patch broke the cifs module.
-The issue is that the use count is now not updated properly and thus
-it is no longer possible to
-rmmod the module.
+Hi Bjorn,
 
+I can absolutely do that. I'll have v2 sent out soon.
 
->
-> Cc: Namjae Jeon <namjae.jeon@samsung.com>
-> Cc: Jeff Layton <jlayton@primarydata.com>
-> Cc: Steve French <smfrench@gmail.com>
-> Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
-> Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/cifs/connect.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index 8dd6637a3cbb..714a359c7c8d 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -2631,7 +2631,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
->
->         task = xchg(&server->tsk, NULL);
->         if (task)
-> -               force_sig(SIGKILL, task);
-> +               send_sig(SIGKILL, task, 1);
->  }
->
->  static struct TCP_Server_Info *
-> --
-> 2.20.1
->
+-Kelsey
