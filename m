@@ -2,202 +2,169 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DCFC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E8FC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0315A21E70
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563845750;
-	bh=FPkhYZRerqlQyPmcW02dE8STqYcZI7MQzFDIeGLxF5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NcEpwMSDmBkT+d13w67m0HoVBKAfYAkbQrAcTbfMWRCSTnWNpzvCfEXEPmghrT580
-	 6YgacHios97HvPPZo8+2q+ckIPyB56FBx2PpK+6b0m1K1V042WTV1CuMUfblgZquEt
-	 Kgb7ctzdTgU0PzaR6DXplfIhYRI7zG5ujXvQY2O4=
+	by mail.kernel.org (Postfix) with ESMTP id A0A5A21BF6
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:36:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKvHGdEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387791AbfGWBfs (ORCPT
+        id S2387804AbfGWBgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726590AbfGWBfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:35:48 -0400
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25B0A21BF6;
-        Tue, 23 Jul 2019 01:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563845747;
-        bh=FPkhYZRerqlQyPmcW02dE8STqYcZI7MQzFDIeGLxF5E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NLgWqwWaHXADqJBkd8U7l6lbJJeIbxkQ4KjdPlEL8JBdTq9x4yzh4Zd+2mQwbgsUI
-         +s6VOnjnGW75bkxav6MNivZK3GmtBTjuEXrGLNoGmSJdID1+sgYpqO/sFn/SEQpFOq
-         mXyPC7ZXH6emOEQ/bO0hTzDRqwFqZx16ehJP6gFc=
-Date:   Mon, 22 Jul 2019 18:35:46 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
- in image
-Message-ID: <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190424094850.118323-1-yuchao0@huawei.com>
- <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
- <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
- <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
- <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
- <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
- <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
+        Mon, 22 Jul 2019 21:36:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42695 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfGWBgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 21:36:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x1so26305004wrr.9
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 18:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MqJBKEyiTQLza/dKE/jBWzlzCo+YWJoWOovBmgVapuA=;
+        b=dKvHGdEr/VfICzXaqDVkUjCyPqL42LEd2tw44nKHE5oZIX4bG1VTRfscVEjEfCfeX1
+         2oaWNpEi9hT6DEUtk9ziN3TUTtO+70wGG6ZNrdnBG6YVMk+NowMsBMct7W41G1klIUCx
+         0rkdiMIf+/pEbnUFYjgOOS9DJ8V30/6BPwjWCANgs6yQGLvPRiCqusIxW6yiHZFqLp8L
+         u+A0NjAfdI9Lhal9nQlnNY7ouf7PGfVmRy//nk6i9QL3sJ3HH9bfQq4TBCuGU8ODe6RP
+         cg0ZR5LUbN4fChPkxs8VdzF9B1Gci/v7ifunvAJAEnjKOhJu7t84cNnhL1ljBfVwAQfl
+         WFQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MqJBKEyiTQLza/dKE/jBWzlzCo+YWJoWOovBmgVapuA=;
+        b=nsDLdVUknBoAMNjejST2DUsYrZl9mD01CUG68DiJX9JJIHOLqQlTpA/Td7jvfM3Q5y
+         jUUMlr5PS1MiUNCSTzdN86u+uqzicFfp3AH234L0tAppfYlVs5r5JiQd9obvSmwU92mO
+         c75JAqoReRt6iZDxwCEmacFE9RtG7yY9+piwmWZcel5fql+VqWBGCI4NN5pnb245UCLw
+         pKj3t65SeSdi5euRw63d7flx6Hm88mqAxBtAoVF3vk+fLR6N+w3mNA245ZQxZlv9LPCY
+         EBqoIxFA7ydjxG2Dq1SN7ba0x2ydGwFP5rxGlnxLsEw9eqnOhjNGmJ/wtiMZJ1dvyc0p
+         gEZw==
+X-Gm-Message-State: APjAAAWbm9kZI1tVUya/cYMLjUUfri7WueWkMDs34MZlh/6nnO4DZHCa
+        C6mhwbybpcoj5SEAlggciZevCrexSmrSm1/SQFtPZr48l/o=
+X-Google-Smtp-Source: APXvYqwDKsuNKOsJeto6cfq6QAtW2vLxbHNgQxCwn3shaAfCYUMZkgnlnRzOcqynsuiPPyN2uiKKAjw7xBYS6HbOyvs=
+X-Received: by 2002:adf:f088:: with SMTP id n8mr33442310wro.58.1563845812804;
+ Mon, 22 Jul 2019 18:36:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+References: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
+In-Reply-To: <b1f9bdf0294b8d87d292de3c7462c8e99551b02d.camel@kernel.crashing.org>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Tue, 23 Jul 2019 09:36:40 +0800
+Message-ID: <CACVXFVPbrXaAQe2C+13dNQSSL7f7gZ4QZ=W9vMpmmhJnxQMjew@mail.gmail.com>
+Subject: Re: [PATCH v3] nvme-pci: Support shared tags across queues for Apple
+ 2018 controllers
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Pawlowski <paul@mrarm.io>, Jens Axboe <axboe@fb.com>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/16, Chao Yu wrote:
-> Hi Jaegeuk,
-> 
-> On 2019/5/9 9:15, Chao Yu wrote:
-> > On 2019/5/5 10:51, Chao Yu wrote:
-> >> On 2019/5/1 11:22, Jaegeuk Kim wrote:
-> >>> On 04/29, Chao Yu wrote:
-> >>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
-> >>>>> On 04/24, Chao Yu wrote:
-> >>>>>> This patch fixes to do sanity with enabled features in image, if
-> >>>>>> there are features kernel can not recognize, just fail the mount.
-> >>>>>
-> >>>>> We need to figure out per-feature-based rejection, since some of them can
-> >>>>> be set without layout change.
-> 
-> What about adding one field in superblock for compatible features in future?
-> 
-> sb.feature(F2FS_FEATURE_LAST, max] stores uncompatible features
-> sb.compatible_feature stores compatible features
-> 
-> If we follow above rule when adding one feature, then, we can fail the mount if
-> sb.feature(F2FS_FEATURE_LAST, max] is valid.
+On Fri, Jul 19, 2019 at 1:31 PM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> From 8dcba2ef5b1466b023b88b4eca463b30de78d9eb Mon Sep 17 00:00:00 2001
+> From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Date: Fri, 19 Jul 2019 15:03:06 +1000
+> Subject:
+>
+> Another issue with the Apple T2 based 2018 controllers seem to be
+> that they blow up (and shut the machine down) if there's a tag
+> collision between the IO queue and the Admin queue.
+>
+> My suspicion is that they use our tags for their internal tracking
+> and don't mix them with the queue id. They also seem to not like
+> when tags go beyond the IO queue depth, ie 128 tags.
+>
+> This adds a quirk that marks tags 0..31 of the IO queue reserved
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> ---
+>
+> Thanks Damien, reserved tags work and make this a lot simpler !
+>
+>  drivers/nvme/host/nvme.h |  5 +++++
+>  drivers/nvme/host/pci.c  | 19 ++++++++++++++++++-
+>  2 files changed, 23 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+> index ced0e0a7e039..8732da6df555 100644
+> --- a/drivers/nvme/host/nvme.h
+> +++ b/drivers/nvme/host/nvme.h
+> @@ -102,6 +102,11 @@ enum nvme_quirks {
+>          * Use non-standard 128 bytes SQEs.
+>          */
+>         NVME_QUIRK_128_BYTES_SQES               = (1 << 11),
+> +
+> +       /*
+> +        * Prevent tag overlap between queues
+> +        */
+> +       NVME_QUIRK_SHARED_TAGS                  = (1 << 12),
+>  };
+>
+>  /*
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 7088971d4c42..fc74395a028b 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -2106,6 +2106,14 @@ static int nvme_setup_io_queues(struct nvme_dev *dev)
+>         unsigned long size;
+>
+>         nr_io_queues = max_io_queues();
+> +
+> +       /*
+> +        * If tags are shared with admin queue (Apple bug), then
+> +        * make sure we only use one IO queue.
+> +        */
+> +       if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS)
+> +               nr_io_queues = 1;
+> +
+>         result = nvme_set_queue_count(&dev->ctrl, &nr_io_queues);
+>         if (result < 0)
+>                 return result;
+> @@ -2278,6 +2286,14 @@ static int nvme_dev_add(struct nvme_dev *dev)
+>                 dev->tagset.flags = BLK_MQ_F_SHOULD_MERGE;
+>                 dev->tagset.driver_data = dev;
+>
+> +               /*
+> +                * Some Apple controllers requires tags to be unique
+> +                * across admin and IO queue, so reserve the first 32
+> +                * tags of the IO queue.
+> +                */
+> +               if (dev->ctrl.quirks & NVME_QUIRK_SHARED_TAGS)
+> +                       dev->tagset.reserved_tags = NVME_AQ_DEPTH;
+> +
+>                 ret = blk_mq_alloc_tag_set(&dev->tagset);
+>                 if (ret) {
+>                         dev_warn(dev->ctrl.device,
+> @@ -3057,7 +3073,8 @@ static const struct pci_device_id nvme_id_table[] = {
+>         { PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
+>         { PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2005),
+>                 .driver_data = NVME_QUIRK_SINGLE_VECTOR |
+> -                               NVME_QUIRK_128_BYTES_SQES },
+> +                               NVME_QUIRK_128_BYTES_SQES |
+> +                               NVME_QUIRK_SHARED_TAGS },
+>         { 0, }
+>  };
+>  MODULE_DEVICE_TABLE(pci, nvme_id_table);
 
-How about adding required_features flag in sb to check part of features only?
+Looks fine for me:
 
-> 
-> Thanks,
-> 
-> >>>>
-> >>>> So any suggestion on how to implement this?
-> >>>
-> >>> Which features do we need to disallow? When we introduce new features, they
-> >>
-> >> I guess it should be the new features.
-> >>
-> >>> didn't hurt the previous flow by checking f2fs_sb_has_###().
-> >>
-> >> Yes, but new features may use new disk layout, if old kernel handled it with old
-> >> disk layout, there must be problematic.
-> >>
-> >> e.g. format image with -O extra_attr, and mount it with kernel who don't
-> >> recognize new inode layout.
-> > 
-> > Jaegeuk,
-> > 
-> > Any thoughts?
-> > 
-> > Thanks,
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>>>
-> >>>> Maybe:
-> >>>>
-> >>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
-> >>>> 	check 4.14+ features
-> >>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
-> >>>> 	check 4.9+ features
-> >>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
-> >>>> 	check 4.4+ features
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>>>
-> >>>>>>
-> >>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>>>> ---
-> >>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
-> >>>>>>  fs/f2fs/super.c |  9 +++++++++
-> >>>>>>  2 files changed, 22 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>>> index f5ffc09705eb..15b640967e12 100644
-> >>>>>> --- a/fs/f2fs/f2fs.h
-> >>>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
-> >>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
-> >>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
-> >>>>>>  
-> >>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
-> >>>>>> +				F2FS_FEATURE_BLKZONED |			\
-> >>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
-> >>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
-> >>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
-> >>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
-> >>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
-> >>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
-> >>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
-> >>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
-> >>>>>> +				F2FS_FEATURE_VERITY |			\
-> >>>>>> +				F2FS_FEATURE_SB_CHKSUM)
-> >>>>>> +
-> >>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
-> >>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
-> >>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
-> >>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> >>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
-> >>>>>> --- a/fs/f2fs/super.c
-> >>>>>> +++ b/fs/f2fs/super.c
-> >>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
-> >>>>>>  		return 1;
-> >>>>>>  	}
-> >>>>>>  
-> >>>>>> +	/* check whether kernel supports all features */
-> >>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
-> >>>>>> +		f2fs_msg(sb, KERN_INFO,
-> >>>>>> +			"Unsupported feature:%u: supported:%u",
-> >>>>>> +			le32_to_cpu(raw_super->feature),
-> >>>>>> +			F2FS_ALL_FEATURES);
-> >>>>>> +		return 1;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
-> >>>>>>  	if (sanity_check_area_boundary(sbi, bh))
-> >>>>>>  		return 1;
-> >>>>>> -- 
-> >>>>>> 2.18.0.rc1
-> >>> .
-> >>>
-> >>
-> >>
-> >> _______________________________________________
-> >> Linux-f2fs-devel mailing list
-> >> Linux-f2fs-devel@lists.sourceforge.net
-> >> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> >> .
-> >>
-> > 
-> > 
-> > _______________________________________________
-> > Linux-f2fs-devel mailing list
-> > Linux-f2fs-devel@lists.sourceforge.net
-> > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> > .
-> > 
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Thanks,
+Ming Lei
