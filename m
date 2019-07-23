@@ -2,171 +2,210 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C46C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75187C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEFE2251B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1D522353
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="hOJdM8Gt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390228AbfGWNaF (ORCPT
+        id S2390243AbfGWNaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:30:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45008 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbfGWNaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:30:05 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BBE8881F10;
-        Tue, 23 Jul 2019 13:30:04 +0000 (UTC)
-Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 521E019C58;
-        Tue, 23 Jul 2019 13:29:59 +0000 (UTC)
-Subject: Re: [PATCH 2/6] vhost: validate MMU notifier registration
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190723075718.6275-1-jasowang@redhat.com>
- <20190723075718.6275-3-jasowang@redhat.com>
- <20190723042428-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <682a0a87-4fb5-1b85-fe8d-736115f6ab2b@redhat.com>
-Date:   Tue, 23 Jul 2019 21:30:02 +0800
+        Tue, 23 Jul 2019 09:30:35 -0400
+Received: from sonic302-20.consmr.mail.ir2.yahoo.com ([87.248.110.83]:38597
+        "EHLO sonic302-20.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390231AbfGWNad (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:30:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563888627; bh=c4EtERWmOlLnToAQZFFQ0tgD2PCoHHVP3KPET20i2Rc=; h=Subject:To:References:From:Cc:Date:In-Reply-To:From:Subject; b=hOJdM8Gt6pVCW6YyQ4XNXehelrl4JV9ErwYmtuxtnPNLyirHGF5FIg+8u7bp/3smfRPf0K2JXSfR3pQbMzzIzRzTW2sL80QGy3UPQOKTgxFtRcHaIoBey3zgH5d71CCHRi+mIWYiblGE0DCqQVLvdQq3LCDHY93VQ67jiZvuyKotHSxQv/lYoqJCG+zHqgl0hMQJkc3QVfrGAurWMF4pOPAogiYikej6rNV1KwvOFFmyXR6XLyl/3pNGPMMkegjjU0EFMCV657rZMgO1g4szXJTivxt+mPopzZ3S9xygr3dtBfNYg5p/V7sx7Kx6MmN7ih0m4zH/CrkwA09aHKn/vQ==
+X-YMail-OSG: VoRN6A4VM1l4MgAqDai7A20BNgPpLNGiGMptXZ7gTvP5UI0rOPzpRWwlssVYXrV
+ b2E9kl3T.Wep2Eta6JYh71obWB5nE_4KkNvxKwBYubwNj4qjqO3N0c_hjVcXuUmO.X3eRDMXlHan
+ Jw.EBIKmd2apV8D9AeKyU2.vJ01GnaXNGTinjm5bXnwVwy8bwbNq7Lex6fEACpIMtr.dr9qwiw85
+ AHsRu5PbYo.kV280ouRr0Cl2QbdJkNJAMAXhcd_Od0Ni5YOCMgLKuZRcFKN2W6Yr2BP4YFBiU5Z5
+ K81E29DdBVU2oYN1pmyRHKkb_yPZfY4g_lJHOiKBEHA7b2_bCsTcsD1LcOOo9h495WONkuK8U6hh
+ eXFhX_fZEcKJbPAWiGy2eejGfgAuGqXiQi0eG7FsXcSaHEa62haLXZXljFwbT.iz26WmW6.kysxp
+ CzzT2DvIvEHT97cNsz5JpvB90wjzL68rAzFuximpb4SbxOSGylB_cMGY9r.Sexz8YeWTK3yF4Wjy
+ ayyWk4zcBkqMlGIvdAbkopbDjwYBlf.UPb7jxF477PR598s4IoMIl.ZDw3MxPM717lpjK2EK7TjD
+ dp85PXh5Io0twhxdXxLRXLaoM3jSqLuaHsg7XmrhZlD6aDeY7I2DXkvXJfRre6.ci_.rCENk7jmK
+ er5H47j3qzn3xCY01rW8IeuXTpPlr8Jy8Ut7D2kNBVUPOPUJN.RLvDONW8iDxbYymQFMY_cS0fJ2
+ jGOStknuyGmgUD5mxxZFPyNf.3tNXpYGOUsy7yNOQBWcqqT5Eqgf0gXcBClWL5TJ7nXsG9mXStz4
+ SAfLWLcxGbdbvMaLk2oAFYGH5LqygXQNgipBJpaK0NVXMT7bf8hPkMJZPsx5Z499AwPqZQyR07J2
+ Bmw3hEEuTC6s9lWwaQsAmUJMj9zDak6btygzElH64_KOYHbJy2QdIcxKPQ2YQ.fP6a.Llx56wYJ8
+ ccgYJ7auCAxfuoF6tBokKZBReZn49XZ8trDUAekir3LmKEFuz7QnkTEA6JvQQHW31y0t4.5C9SSz
+ HmYM5kRIBKhuPmnnbKj7LKzimeUIQZeRTFj.7Yvis6BNMrl4PuUJIpbPcJl1lRjUKorm0ZlrX2O6
+ pherF28Haf5FWhVQo6Lmt_qs6S4RLYJDZYiOSs6OYLP6Lt788lwG9UBc8fIO1VC.MaHyos4iIeKB
+ zzgYB_t4KlbsOTz2q3BpQ84Pqtde6eV6iJ4Yk4mkly0e.aNinRnDY
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ir2.yahoo.com with HTTP; Tue, 23 Jul 2019 13:30:27 +0000
+Received: by smtp426.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 2f2ae19cf287ab3910bb19c095c0ecd7;
+          Tue, 23 Jul 2019 13:30:22 +0000 (UTC)
+Subject: Re: [PATCH v3 23/24] erofs: introduce cached decompression
+To:     dsterba@suse.cz
+References: <20190722025043.166344-1-gaoxiang25@huawei.com>
+ <20190722025043.166344-24-gaoxiang25@huawei.com>
+ <20190722101818.GN20977@twin.jikos.cz>
+ <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
+ <20190723123104.GB2868@twin.jikos.cz>
+From:   Gao Xiang <hsiangkao@aol.com>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Message-ID: <b623d1bc-7cb5-e466-10e1-bb3bfefcae10@aol.com>
+Date:   Tue, 23 Jul 2019 21:30:09 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190723042428-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190723123104.GB2868@twin.jikos.cz>
+Content-Type: text/plain; charset=gbk
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 23 Jul 2019 13:30:04 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/7/23 下午5:17, Michael S. Tsirkin wrote:
-> On Tue, Jul 23, 2019 at 03:57:14AM -0400, Jason Wang wrote:
->> The return value of mmu_notifier_register() is not checked in
->> vhost_vring_set_num_addr(). This will cause an out of sync between mm
->> and MMU notifier thus a double free. To solve this, introduce a
->> boolean flag to track whether MMU notifier is registered and only do
->> unregistering when it was true.
+
+On 2019/7/23 ????8:31, David Sterba wrote:
+> On Mon, Jul 22, 2019 at 06:58:59PM +0800, Gao Xiang wrote:
+>> On 2019/7/22 ????6:18, David Sterba wrote:
+>>> On Mon, Jul 22, 2019 at 10:50:42AM +0800, Gao Xiang wrote:
+>>>> +choice
+>>>> +	prompt "EROFS Data Decompression mode"
+>>>> +	depends on EROFS_FS_ZIP
+>>>> +	default EROFS_FS_ZIP_CACHE_READAROUND
+>>>> +	help
+>>>> +	  EROFS supports three options for decompression.
+>>>> +	  "In-place I/O Only" consumes the minimum memory
+>>>> +	  with lowest random read.
+>>>> +
+>>>> +	  "Cached Decompression for readaround" consumes
+>>>> +	  the maximum memory with highest random read.
+>>>> +
+>>>> +	  If unsure, select "Cached Decompression for readaround"
+>>>> +
+>>>> +config EROFS_FS_ZIP_CACHE_DISABLED
+>>>> +	bool "In-place I/O Only"
+>>>> +	help
+>>>> +	  Read compressed data into page cache and do in-place
+>>>> +	  I/O decompression directly.
+>>>> +
+>>>> +config EROFS_FS_ZIP_CACHE_READAHEAD
+>>>> +	bool "Cached Decompression for readahead"
+>>>> +	help
+>>>> +	  For each request, it caches the last compressed page
+>>>> +	  for further reading.
+>>>> +	  It still does in-place I/O for the rest compressed pages.
+>>>> +
+>>>> +config EROFS_FS_ZIP_CACHE_READAROUND
+>>>> +	bool "Cached Decompression for readaround"
+>>>> +	help
+>>>> +	  For each request, it caches the both end compressed pages
+>>>> +	  for further reading.
+>>>> +	  It still does in-place I/O for the rest compressed pages.
+>>>> +
+>>>> +	  Recommended for performance priority.
+>>>
+>>> The number of individual Kconfig options is quite high, are you sure you
+>>> need them to be split like that?
 >>
->> Reported-and-tested-by:
->> syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
->> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> Right. This fixes the bug.
-> But it's not great that simple things like
-> setting vq address put pressure on memory allocator.
-> Also, if we get a single during processing
-> notifier register will fail, disabling optimization permanently.
+>> You mean the above? these are 3 cache strategies, which impact the
+>> runtime memory consumption and performance. I tend to leave the above
+>> as it-is...
+> 
+> No, I mean all Kconfig options, they're scattered over several patches,
+> best seen in the checked out branch. The cache strategies are actually
+> just one config option (choice).
 
+I will change the cache strategy at runtime as Ted suggested.
+The cost is actually that erofs will always need a managed_cache inode
+even though users just use in-place IO for their products.
 
-Yes, but do we really care about this case. E.g we even fail for -ENOMEM 
-for set owner.
+However, I notice that using separated Kconfig will make test harder,
+so that it leads to more bugs, that is what I really care about.
 
+Therefore I think making it at runtime is OK for me.
 
->
-> In fact, see below:
->
->
->> ---
->>   drivers/vhost/vhost.c | 19 +++++++++++++++----
->>   drivers/vhost/vhost.h |  1 +
->>   2 files changed, 16 insertions(+), 4 deletions(-)
+> 
+>> I'm not sure vm_map_ram() is always better than vmap() for all
+>> platforms (it has noticeable performance impact). However that
+>> seems true for my test machines (x86-64, arm64).
 >>
->> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->> index 34c0d970bcbc..058191d5efad 100644
->> --- a/drivers/vhost/vhost.c
->> +++ b/drivers/vhost/vhost.c
->> @@ -630,6 +630,7 @@ void vhost_dev_init(struct vhost_dev *dev,
->>   	dev->iov_limit = iov_limit;
->>   	dev->weight = weight;
->>   	dev->byte_weight = byte_weight;
->> +	dev->has_notifier = false;
->>   	init_llist_head(&dev->work_list);
->>   	init_waitqueue_head(&dev->wait);
->>   	INIT_LIST_HEAD(&dev->read_list);
->> @@ -731,6 +732,7 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
->>   	if (err)
->>   		goto err_mmu_notifier;
->>   #endif
->> +	dev->has_notifier = true;
->>   
->>   	return 0;
->>   
-> I just noticed that set owner now fails if we get a signal.
-> Userspace could retry in theory but it does not:
-> this is userspace abi breakage since it used to only
-> fail on invalid input.
+>> If vm_map_ram() is always the optimal choice compared with vmap(),
+>> I will remove vmap() entirely, that is OK. But I am not sure for
+>> every platforms though.
+> 
+> You can select the implementation by platform, I don't know what are the
+> criteria like cpu type etc, but I expect it's something that can be
+> determined at module load time. Eventually a module parameter can be the
+> the way to set it.
 
+OK, module parameter makes sense for me, and the overhead may be
+unnoticeable. I think it is fine to me.
 
-Well, at least kthread_create() and vhost_dev_alloc_iovecs() will 
-allocate memory.
+> 
+>>> And so on. I'd suggest to go through all the options and reconsider them
+>>> to be built-in, or runtime settings. Debugging features like the fault
+>>> injections could be useful on non-debugging builds too, so a separate
+>>> option is fine, otherwise grouping other debugging options under the
+>>> main EROFS_FS_DEBUG would look more logical.
+>>
+>> The remaining one is EROFS_FS_CLUSTER_PAGE_LIMIT. It impacts the total
+>> size of z_erofs_pcluster structure. It's a hard limit, and should be
+>> configured as small as possible. I can remove it right now since multi-block
+>> compression is not available now. However, it will be added again after
+>> multi-block compression is supported.
+>>
+>> So, How about leave it right now and use the default value?
+> 
+> From the Kconfig and build-time settings perspective I think it's
+> misplaced. This affects testing, you'd have to rebuild and reinstall the
+> module to test any change, while it's "just" a number that can be either
+> module parameter, sysfs knob, mount option or special ioctl.
+> 
+> But I may be wrong, EROFS is a special purpose filesystem, so the
+> fine-grained build options might make sense (eg. due to smaller code).
+> The question should be how does each option affect typical production
+> build targets. Fewer is IMHO better.
+I have to admit, EROFS still has some special stuffs now (since we still
+have some TODO), However, I don't think EROFS cannot be effectively used
+for many productive uses right now.
 
-Thanks
+Considering that using linux-staging stuff is dangerous / unsuitable for
+most of companies, out of staging is better...
 
+And we still have to improve it to be more generic by time like what other fses do
+(IMO, writing a generic compression fs is not hard, many fses are there.
+I need to think more carefully in case of some performance loss which is out of
+too straight-forward generic code)...
 
->
->> @@ -960,7 +962,11 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
->>   	}
->>   	if (dev->mm) {
->>   #if VHOST_ARCH_CAN_ACCEL_UACCESS
->> -		mmu_notifier_unregister(&dev->mmu_notifier, dev->mm);
->> +		if (dev->has_notifier) {
->> +			mmu_notifier_unregister(&dev->mmu_notifier,
->> +						dev->mm);
->> +			dev->has_notifier = false;
->> +		}
->>   #endif
->>   		mmput(dev->mm);
->>   	}
->> @@ -2065,8 +2071,10 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
->>   	/* Unregister MMU notifer to allow invalidation callback
->>   	 * can access vq->uaddrs[] without holding a lock.
->>   	 */
->> -	if (d->mm)
->> +	if (d->has_notifier) {
->>   		mmu_notifier_unregister(&d->mmu_notifier, d->mm);
->> +		d->has_notifier = false;
->> +	}
->>   
->>   	vhost_uninit_vq_maps(vq);
->>   #endif
->> @@ -2086,8 +2094,11 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
->>   	if (r == 0)
->>   		vhost_setup_vq_uaddr(vq);
->>   
->> -	if (d->mm)
->> -		mmu_notifier_register(&d->mmu_notifier, d->mm);
->> +	if (d->mm) {
->> +		r = mmu_notifier_register(&d->mmu_notifier, d->mm);
->> +		if (!r)
->> +			d->has_notifier = true;
->> +	}
->>   #endif
->>   
->>   	mutex_unlock(&vq->mutex);
->> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
->> index 819296332913..a62f56a4cf72 100644
->> --- a/drivers/vhost/vhost.h
->> +++ b/drivers/vhost/vhost.h
->> @@ -214,6 +214,7 @@ struct vhost_dev {
->>   	int iov_limit;
->>   	int weight;
->>   	int byte_weight;
->> +	bool has_notifier;
->>   };
->>   
->>   bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
->> -- 
->> 2.18.1
+To be more specific, as for EROFS_FS_CLUSTER_PAGE_LIMIT...
+
+In the long term, I can introduce "struct biovec_slab"-like to erofs as
+in block/bio.c to support variable-sized z_erofs_pcluster.
+
+In the short term, I think EROFS_FS_CLUSTER_PAGE_LIMIT can be better set to
+the default value. It is a hard uplimit of the structure z_erofs_pcluster,
+which will greatly impact the memory consumption...
+
+Even if EROFS_FS_CLUSTER_PAGE_LIMIT is removed in the later Linux version
+by introducing biovec_slab-like stuff, I think it will have little influence
+to users? so I think that is a minor thing? Or I misunderstand something?
+
+Thanks,
+Gao Xiang
