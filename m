@@ -2,114 +2,104 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B908C7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E698C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0FF223D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:34:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="C8EaRj9d"
+	by mail.kernel.org (Postfix) with ESMTP id 1E7592239E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbfGWIek (ORCPT
+        id S2387516AbfGWIiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:34:40 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33582 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbfGWIek (ORCPT
+        Tue, 23 Jul 2019 04:38:54 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:43510 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbfGWIiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:34:40 -0400
-Received: by mail-oi1-f195.google.com with SMTP id u15so31729576oiv.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 01:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2Hh2BDdxorbNR5zjiFLHeW0WcNUHrtRdBmZjV1bKD+A=;
-        b=C8EaRj9dizNUQ30NV1vxEnvoyAtMoMieHRuWAMgEq33P8Rdt6e2gzLQqMAgHG9Ffa2
-         4s44+JpxPoMF3U2PuGmYAQCFGFVNTMAJ52xkS0SM78s7J4gLGp6oQIIZj11qeOlH9/Q0
-         dnqgniXDFf1w3iqnM89GSv87EKmvNTDQ2EACRub+SHySCFt6WQ0doqB1e+1JXqUU4B8x
-         OTeYOM98OBEU53HbYwuH2Y+V2R1PuMQBCCBMGZneEItuTwJjUfwLVR0hOA2ndopu1jTe
-         isqBZ+ltTJi7Nn+/wtqt7p12iocoplRWCqFy/F0yI1joVHX1o17YUOIhN91HQFHNHvnC
-         Cu/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2Hh2BDdxorbNR5zjiFLHeW0WcNUHrtRdBmZjV1bKD+A=;
-        b=LvCPfHEXoRO0BlIxek1wqlYpkCSXRXDqgHf6ixm93YYCNGs+i6xwdl7ckWXooS6qLU
-         irNiuNMheiIGgd/JKHMPO+LKZNaGmC6DmgtsiLzfE3DQ3AXmyYeJpzUb8MsDx3NwlCyt
-         jRVndAXSgSBcGNcoD5pNJeBRCiRCiBbvHXtl/Zmi6hoGjAahre0gI21gM9h88Z/uKVHq
-         vb2GRYJEjYUDHYKnMzlJi4oUaCAc+DZ4uikzcMRO9jhRShKXhVNdWcKJ7Z0BKqyMdSGS
-         DkRn+3psiMgQMULVlnNIhYcQfJutAhJnUF6xuNzO5uDSLvLijS8FZYxr/Xco4beZcaEb
-         Obcg==
-X-Gm-Message-State: APjAAAVJdkvQjJVQYQUld2RXQck1b7+7H+PCSz6EFniCWDjnRJHgX3kL
-        ll3MjLiyv0bvP1iHGqsKvax1WCbNWsbfjayA9JxwrA==
-X-Google-Smtp-Source: APXvYqxPprxyQgUcu70VVe/gOmJvo832yuXPevAMsW/OCjoAGEfXxz1uiB03FDomjcjBM0MHTn5JSzFhEXjcqjJEnjw=
-X-Received: by 2002:a05:6808:f:: with SMTP id u15mr37441232oic.21.1563870879302;
- Tue, 23 Jul 2019 01:34:39 -0700 (PDT)
+        Tue, 23 Jul 2019 04:38:54 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id BF6A080480;
+        Tue, 23 Jul 2019 10:38:48 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 10:38:47 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>, linux-fbdev@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/4] video: of: display_timing: Adjust err printing of
+ of_get_display_timing()
+Message-ID: <20190723083847.GA32268@ravnborg.org>
+References: <20190722182439.44844-1-dianders@chromium.org>
 MIME-Version: 1.0
-References: <20190723082933.21134-1-hslester96@gmail.com>
-In-Reply-To: <20190723082933.21134-1-hslester96@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 23 Jul 2019 10:34:28 +0200
-Message-ID: <CAMpxmJUCPCyC-n9V+o5veMTm-yui8H2vdn1ceqZN=VG+yosLOw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Use dev_get_drvdata
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722182439.44844-1-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
+        a=7gkXJVJtAAAA:8 a=j5P04vaaSkZOzqOPo0QA:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 23 lip 2019 o 10:29 Chuhong Yuan <hslester96@gmail.com> napisa=C5=82(a=
-):
->
-> Instead of using to_pci_dev + pci_get_drvdata,
-> use dev_get_drvdata to make code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/gpio/gpio-pch.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-> index 1d99293096f2..3f3d9a94b709 100644
-> --- a/drivers/gpio/gpio-pch.c
-> +++ b/drivers/gpio/gpio-pch.c
-> @@ -409,8 +409,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
->
->  static int __maybe_unused pch_gpio_suspend(struct device *dev)
->  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pch_gpio *chip =3D pci_get_drvdata(pdev);
-> +       struct pch_gpio *chip =3D dev_get_drvdata(dev);
->         unsigned long flags;
->
->         spin_lock_irqsave(&chip->spinlock, flags);
-> @@ -422,8 +421,7 @@ static int __maybe_unused pch_gpio_suspend(struct dev=
-ice *dev)
->
->  static int __maybe_unused pch_gpio_resume(struct device *dev)
->  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pch_gpio *chip =3D pci_get_drvdata(pdev);
-> +       struct pch_gpio *chip =3D dev_get_drvdata(dev);
->         unsigned long flags;
->
->         spin_lock_irqsave(&chip->spinlock, flags);
-> --
-> 2.20.1
->
+Hi Dough.
 
-The subject line should start with gpio: pch: ...
+On Mon, Jul 22, 2019 at 11:24:35AM -0700, Douglas Anderson wrote:
+> As reported by Sam Ravnborg [1], after commit b8a2948fa2b3
+> ("drm/panel: simple: Add ability to override typical timing") we now
+> see a pointless error message printed on every boot for many systems.
+> Let's fix that by adjusting who is responsible for printing error
+> messages when of_get_display_timing() is used.
+> 
+> Most certainly we can bikeshed the topic about whether this is the
+> right fix or we should instead add logic to panel_simple_probe() to
+> avoid calling of_get_display_timing() in the case where there is no
+> "panel-timing" sub-node.  If there is consensus that I should move the
+> fix to panel_simple_probe() I'm happy to spin this series.  In that
+> case we probably should _remove_ the extra prints that were already
+> present in the other two callers of of_get_display_timing().
+> 
+> While at it, fix a missing of_node_put() found by code inspection.
+> 
+> NOTE: amba-clcd and panel-lvds were only compile-tested.
+> 
+> [1] https://lkml.kernel.org/r/20190721093815.GA4375@ravnborg.org
+> 
+> 
+> Douglas Anderson (4):
+>   video: of: display_timing: Add of_node_put() in
+>     of_get_display_timing()
+>   video: of: display_timing: Don't yell if no timing node is present
+>   drm: panel-lvds: Spout an error if of_get_display_timing() gives an
+>     error
+>   video: amba-clcd: Spout an error if of_get_display_timing() gives an
+>     error
 
-Bart
+Series looks good - thanks.
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+
+You could consider silencing display_timing as the last patch, but thats
+a very small detail.
+
+How do we apply these fixes - to drm-misc-next? Bartlomiej?
+
+No need to go in via drm-misc-fixes as the offending commit is only in
+drm-misc-next.
+
+	Sam
