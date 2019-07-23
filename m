@@ -6,132 +6,97 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A27C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C285C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17702239F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BCB2239F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KClY5whB"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TWoi52D8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391010AbfGWRRe (ORCPT
+        id S2391027AbfGWRST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 13:17:34 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44091 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732757AbfGWRRe (ORCPT
+        Tue, 23 Jul 2019 13:18:19 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:32839 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391013AbfGWRST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 13:17:34 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v129so29331141vsb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 10:17:33 -0700 (PDT)
+        Tue, 23 Jul 2019 13:18:19 -0400
+Received: by mail-vs1-f67.google.com with SMTP id m8so29416136vsj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 10:18:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QqrUJzkPpAaDRvvKsmPrqxCm6oyy05uDqHmCovyhL70=;
-        b=KClY5whBhZJkA8IHSLzSHzX+WVj0t87uGT0lzsUub/COP4/3SMvz4Iet5QPzraFXgF
-         3H5sIXzzJFzGpd9sIfkxKMU0QO4M2bcDm0G+Tf39YMzAJvr0jbNxuRcY7ooqKTXsAWgH
-         /tofHFhod7aDMEbGJKL6+i0RWw2prFK/Z4DJ6IZYxw+ZrvIyV2lPSgSvI1ubA+ize+sf
-         ljiHEYoC3nR0bUaWqY/zvkbdhaQFxXvwycHLfBlxo6jBsBWETWn9TDMISL99sGP0pZng
-         cvD04P8wscxYGTWuyLPSEz5GL4VPipUGVTAGOpCofseTd/SoqMw3MQ4eC8DD0yCVjXMt
-         0xNg==
+        bh=0B8rPPy+2ZXzBZ5P/6QN4Hb9TBfPCAUoHiabvJr5FcE=;
+        b=TWoi52D8rfeqTBQSa1fcx6QWG63Ntk0exIFf5AUJVd3WTblBruQ+cylK1+Aq6U2g8I
+         I7t4fdrtcdj5SN1bDc0/Kg0coJ86BhXzItFv8/tlfnAujkwPIO9ZZ2RjaZb7NUSbooI7
+         3ltnRcDS0Wf4Dq2qNc6ARyJizVl0RXPIagQpi/49DQJufEQ7sgs3+URXsAHw1IKoV2Cz
+         CStWHQDRV/RAeZ7idchpS6ZNJrNUZDt/3Eyjdita5OUUpQHlDwi9JI3k2/on6Wfa/hYW
+         cRWNKC09OYoVLpdxT0M9vuFRG9rF1fqOAV+dU5wZlNcsyZrhEpXaXS46fiW0mqgmA7oc
+         81tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QqrUJzkPpAaDRvvKsmPrqxCm6oyy05uDqHmCovyhL70=;
-        b=WmPPmeiTWxlGEhXbQ6x/rpDlhc31npuY1SCOSN+kJ7NeweoyRLHmvO384oiYWhKtwc
-         ptwMTsKy89fmAJg1fxXt49bE2xhxUvIzT+ElkJGHKU4Jjik/MINo74xhVzplz4KGxlt1
-         TEcMW82rUCAFSsZPWomnPCweUp5WcO/A+zxqaRorU8wWm+PclPq3NbYOTVf36tGNg939
-         +4gVESPaDZOjF7sO5BlC0vLwW2F1b+QMSC4sRYvAhDHFpfqcIXyTqlPNORBIYSv80oxs
-         qCBb5bions0TfdmjPZL/BITj4jZ4hmDHv0h+cj1PFlTz02jB4UrImBOB5eiFaWxe6bhs
-         lxHA==
-X-Gm-Message-State: APjAAAU8qG+vawHGnB3qIGQx2RpJvXFKFsguyu2MhhqKAfxhoXpb43CK
-        zQfB79Pf52lT9v6gFicvR+zqA+bNze+rOA==
-X-Google-Smtp-Source: APXvYqy/BnQGomP9bfEv9fcbGXC5naUZNkETCjo5R1Jblm92pT8i/VM8xtUGyS2NeeXimmoMCnZGHQ==
-X-Received: by 2002:a67:db89:: with SMTP id f9mr45182090vsk.150.1563902253192;
-        Tue, 23 Jul 2019 10:17:33 -0700 (PDT)
+        bh=0B8rPPy+2ZXzBZ5P/6QN4Hb9TBfPCAUoHiabvJr5FcE=;
+        b=n0P/HaXUH/w/ZJD35Jt7cRyQU5+vI5naJKobBW3XYL4pFrIiBNk2Te61VCqC4WJgXY
+         DujSCg1t3sgF4W402T9HoQItuxmOppq/yILDjafok8fENFH86XQtqBYuXnQfKDZLUEcU
+         m8JHGJHnquCrXHPZhglZQ73UhHnMJ4A8paNUW1WZM1HQM1KfHspE1u8L+MN+ek4f9vHG
+         urbQBb0mDiaE9cWIx0I0Ob8U+mgbft4G1R62XVJPYQN/PkRMGEMA8V2YNjaick5C3Rvf
+         97dae+w6in0h1jJJt7HDzo1RViA33/hJu3u71s5hEg3xbUn+ACHzJPzfoH0hzqoUmm+Z
+         JQcA==
+X-Gm-Message-State: APjAAAVols0Mq+UZJs3mAvR5dR6l+585AXYLxhrD2ud1YTMUTMbg/N8B
+        kFRvsMqpLdo6cjcsRYURXr3BHQ==
+X-Google-Smtp-Source: APXvYqxuzXgliI3GFFRnGNkj/EgjQA5jk124NBKZFVu7wii1lUqI5vsy37of5hMl2W7MgMsFdFJF7A==
+X-Received: by 2002:a67:1e44:: with SMTP id e65mr50704721vse.45.1563902298689;
+        Tue, 23 Jul 2019 10:18:18 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id i12sm9556385vsr.17.2019.07.23.10.17.32
+        by smtp.gmail.com with ESMTPSA id s67sm15723604vkb.30.2019.07.23.10.18.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 10:17:32 -0700 (PDT)
+        Tue, 23 Jul 2019 10:18:18 -0700 (PDT)
 Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
         (envelope-from <jgg@ziepe.ca>)
-        id 1hpyPr-0002YL-Ko; Tue, 23 Jul 2019 14:17:31 -0300
-Date:   Tue, 23 Jul 2019 14:17:31 -0300
+        id 1hpyQb-0002Yx-CQ; Tue, 23 Jul 2019 14:18:17 -0300
+Date:   Tue, 23 Jul 2019 14:18:17 -0300
 From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
         Ben Skeggs <bskeggs@redhat.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Linux-MM <linux-mm@kvack.org>,
         "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] nouveau: unlock mmap_sem on all errors from
- nouveau_range_fault
-Message-ID: <20190723171731.GD15357@ziepe.ca>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>
+Subject: Re: [PATCH 1/6] mm: always return EBUSY for invalid ranges in
+ hmm_range_{fault,snapshot}
+Message-ID: <20190723171817.GE15357@ziepe.ca>
 References: <20190722094426.18563-1-hch@lst.de>
- <20190722094426.18563-5-hch@lst.de>
- <20190723151824.GL15331@mellanox.com>
- <20190723163048.GD1655@lst.de>
+ <20190722094426.18563-2-hch@lst.de>
+ <CAFqt6zY8zWAmc-VTrZ1KxQPBCdbTxmZy_tq2-OkUi3TVrfp7Og@mail.gmail.com>
+ <20190723145441.GI15331@mellanox.com>
+ <20190723161907.GB1655@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190723163048.GD1655@lst.de>
+In-Reply-To: <20190723161907.GB1655@lst.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 06:30:48PM +0200, Christoph Hellwig wrote:
-> On Tue, Jul 23, 2019 at 03:18:28PM +0000, Jason Gunthorpe wrote:
-> > Hum..
-> > 
-> > The caller does this:
-> > 
-> > again:
-> > 		ret = nouveau_range_fault(&svmm->mirror, &range);
-> > 		if (ret == 0) {
-> > 			mutex_lock(&svmm->mutex);
-> > 			if (!nouveau_range_done(&range)) {
-> > 				mutex_unlock(&svmm->mutex);
-> > 				goto again;
-> > 
-> > And we can't call nouveau_range_fault() -> hmm_range_fault() without
-> > holding the mmap_sem, so we can't allow nouveau_range_fault to unlock
-> > it.
+On Tue, Jul 23, 2019 at 06:19:07PM +0200, Christoph Hellwig wrote:
+> On Tue, Jul 23, 2019 at 02:54:45PM +0000, Jason Gunthorpe wrote:
+> > I think without the commit message I wouldn't have been able to
+> > understand that, so Christoph, could you also add the comment below
+> > please?
 > 
-> Goto again can only happen if nouveau_range_fault was successful,
-> in which case we did not drop mmap_sem.
+> I don't think this belongs into this patch.  I can add it as a separate
+> patch under your name and with your signoff if you are ok with that.
 
-Oh, right we switch from success = number of pages to success =0..
-
-However the reason this looks so weird to me is that the locking
-pattern isn't being followed, any result of hmm_range_fault should be
-ignored until we enter the svmm->mutex and check if there was a
-colliding invalidation.
-
-So the 'goto again' *should* be possible even if range_fault failed.
-
-But that is not for this patch..
-
-> >  	ret = hmm_range_fault(range, true);
-> >  	if (ret <= 0) {
-> >  		if (ret == 0)
-> >  			ret = -EBUSY;
-> > -		up_read(&range->vma->vm_mm->mmap_sem);
-> >  		hmm_range_unregister(range);
-> 
-> This would hold mmap_sem over hmm_range_unregister, which can lead
-> to deadlock if we call exit_mmap and then acquire mmap_sem again.
-
-That reminds me, this code is also leaking hmm_range_unregister() in
-the success path, right?
-
-I think the right way to structure this is to move the goto again and
-related into the nouveau_range_fault() so the whole retry algorithm is
-sensibly self contained.
+Yep, thanks
 
 Jason
