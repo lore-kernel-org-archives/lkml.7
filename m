@@ -2,137 +2,140 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0CCC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEC8C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C491120823
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348D220823
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JkbWvc/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbfGWQTk (ORCPT
+        id S2388047AbfGWQTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:19:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54940 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728180AbfGWQTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:19:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B21ADAF19;
-        Tue, 23 Jul 2019 16:19:38 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     mbrugger@suse.com, hch@lst.de,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: [RFC] ARM: bcm2835: register dmabounce on devices hooked to main interconnect
-Date:   Tue, 23 Jul 2019 18:19:33 +0200
-Message-Id: <20190723161934.4590-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.22.0
+        Tue, 23 Jul 2019 12:19:55 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42481 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730922AbfGWQTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:19:55 -0400
+Received: by mail-io1-f66.google.com with SMTP id e20so52717451iob.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 09:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KUWPAynNUOSPRo6XFgibVfZiG/NBm56uoCBvbOY3YfY=;
+        b=JkbWvc/L1jVe2xvK16FWiec+u9Wkn8bLEHQ2Otwk2wo1fNf36vdNCarOj/+5+9ysB7
+         hGoVJ50RzrPUQhM8qtVkV4bG9/Nd4DxPKWQ/IbhdfoxeWYoLpk5L4af4Tbtwj9ohVnmD
+         DsRzgjjoRFG7pAJsFp53eVnfm889mNyAtvzp4TdAmo79hACuf0DY1h1YvaJZs4fp1GBn
+         K55GH9Y5p1iFw+h2gyNS3Q/8MPrzQV9yW8qdTsQKhg7hxLcsFJPdfd+4vtu/xUQIUFyG
+         4QnSyRhM4W2erjcNAhgZyLlpCANYFNdeyB1869FdH2o+ByDy8DxuOdC2ypiXseqMvsaH
+         D0Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KUWPAynNUOSPRo6XFgibVfZiG/NBm56uoCBvbOY3YfY=;
+        b=erRK3id6SK360hdAS/Hp5U1JLHglTgmvDYJ9AKNB8R65PrejY1smVs7BFdEDPOvtZa
+         /codR01Q4SSXe7DNQUW9EhVNv3tQT87YOkgCDyxIveFf3709kdK9VwJfE8qIWA7D3jVp
+         VFk5SccsdNUVeQcDktvQQPgR0r1N4VwnQOJO/uc32mYQBise9hDPfYMLuMj+qkoZsncj
+         vHx4wXYMIRJdAegJ44t4uuiA1fVgoeeZ9ox7YffAGD5zR5GEYhhbx0os2PUP8NHbLfFV
+         xq1MSd1DN0U0IC1/7cP2OZB0ZHXInZWfKznutthEIi3AT9bQgrvHgGG4R3LMa0eaiNQM
+         uNNA==
+X-Gm-Message-State: APjAAAUYWYwJBuJOYQx7cCZADc4/bgheAGNqRoSbltf6lN1xZ2hzAuBE
+        SyRN0kdA9nPo9Pe2ak+3V+wuHXdqtBRr2+rWDdkWBg==
+X-Google-Smtp-Source: APXvYqztMLs7k36jGVQTGcnvuK+zFovr4er0TeB/3FrZTzVj2pa0EprwgjDyKnzaW+HqFtXQxcESSC8IEb5DWxlnLvQ=
+X-Received: by 2002:a5e:de0d:: with SMTP id e13mr47762250iok.144.1563898793984;
+ Tue, 23 Jul 2019 09:19:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000ad1dfe058e5b89ab@google.com>
+In-Reply-To: <000000000000ad1dfe058e5b89ab@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 23 Jul 2019 18:19:42 +0200
+Message-ID: <CACT4Y+a7eGJpsrenA-0RbWmwktDj5+XV4xaTeU+fiL5KXNbrqg@mail.gmail.com>
+Subject: Re: memory leak in rds_send_probe
+To:     syzbot <syzbot+5134cdf021c4ed5aaa5f@syzkaller.appspotmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        rds-devel@oss.oracle.com
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NOTE: This patch builds upon Stefan's series providing basic support for
-RPi4[1]. I'm mostly interested in verifying if this is the correct approach
-to the issue stated below. If so I assume this will be added to Stefan's
-v2 series.
+On Tue, Jul 23, 2019 at 6:18 PM syzbot
+<syzbot+5134cdf021c4ed5aaa5f@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14be98c8600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5134cdf021c4ed5aaa5f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145df0c8600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170001f4600000
 
-The new Raspberry Pi 4 happens to have weird DMA constraints. Even
-though it might contain up to 4 GB of ram, most devices can only access
-the first lower GB of memory.
++net/rds/message.c maintainers
 
-This breaks the overall assumption DMA API makes whereas 32-bit DMA
-masks are always supported[2], and potentially breaks DMA addressing for
-all streaming DMA users. This has already been observed with
-'sdhci-iproc' but might as well happen elsewhere. Note that contiguous
-allocations are safe as 'dma_zone_size' is set accordingly.
-
-To get around that limitation we register arm's dmabounce dma-ops on all
-devices hooked to the SoC's main interconnect.
-
-[1] https://www.spinics.net/lists/arm-kernel/msg742120.html
-[2] https://www.spinics.net/lists/arm-kernel/msg742736.html
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- arch/arm/mach-bcm/Kconfig         |  1 +
- arch/arm/mach-bcm/board_bcm2835.c | 29 +++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
-
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 5e5f1fabc3d4..588326f7e269 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -168,6 +168,7 @@ config ARCH_BCM2835
- 	select PINCTRL
- 	select PINCTRL_BCM2835
- 	select MFD_CORE
-+	select DMABOUNCE if ARCH_MULTI_V7
- 	help
- 	  This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
- 	  This SoC is used in the Raspberry Pi and Roku 2 devices.
-diff --git a/arch/arm/mach-bcm/board_bcm2835.c b/arch/arm/mach-bcm/board_bcm2835.c
-index c09cf25596af..7aff29f77ca7 100644
---- a/arch/arm/mach-bcm/board_bcm2835.c
-+++ b/arch/arm/mach-bcm/board_bcm2835.c
-@@ -3,6 +3,8 @@
-  * Copyright (C) 2010 Broadcom
-  */
- 
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/init.h>
- #include <linux/irqchip.h>
- #include <linux/of_address.h>
-@@ -24,8 +26,35 @@ static const char * const bcm2835_compat[] = {
- 	NULL
- };
- 
-+static int bcm2835_needs_bounce(struct device *dev, dma_addr_t dma_addr, size_t size)
-+{
-+	/*
-+	 * The accepted dma addresses are [0xc0000000, 0xffffffff] which map to
-+	 * ram's [0x00000000, 0x3fffffff].
-+	 */
-+	return dma_addr < 3ULL * SZ_1G;
-+}
-+
-+static int bcm2835_platform_notify(struct device *dev)
-+{
-+	if (dev->parent && !strcmp("soc", dev_name(dev->parent))) {
-+		dev->dma_mask = &dev->coherent_dma_mask;
-+		dev->coherent_dma_mask = DMA_BIT_MASK(30);
-+		dmabounce_register_dev(dev, 2048, 4096, bcm2835_needs_bounce);
-+	}
-+
-+	return 0;
-+}
-+
-+void __init bcm2835_init_early(void)
-+{
-+	if(of_machine_is_compatible("brcm,bcm2711"))
-+		platform_notify = bcm2835_platform_notify;
-+}
-+
- DT_MACHINE_START(BCM2835, "BCM2835")
- 	.dma_zone_size	= SZ_1G,
- 	.dt_compat = bcm2835_compat,
- 	.smp = smp_ops(bcm2836_smp_ops),
-+	.init_early = bcm2835_init_early,
- MACHINE_END
--- 
-2.22.0
-
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+5134cdf021c4ed5aaa5f@syzkaller.appspotmail.com
+>
+> BUG: memory leak
+> unreferenced object 0xffff8881234e9c00 (size 512):
+>    comm "kworker/u4:2", pid 286, jiffies 4294948041 (age 7.750s)
+>    hex dump (first 32 bytes):
+>      01 00 00 00 00 00 00 00 08 9c 4e 23 81 88 ff ff  ..........N#....
+>      08 9c 4e 23 81 88 ff ff 18 9c 4e 23 81 88 ff ff  ..N#......N#....
+>    backtrace:
+>      [<0000000032e378fa>] kmemleak_alloc_recursive
+> /./include/linux/kmemleak.h:43 [inline]
+>      [<0000000032e378fa>] slab_post_alloc_hook /mm/slab.h:522 [inline]
+>      [<0000000032e378fa>] slab_alloc /mm/slab.c:3319 [inline]
+>      [<0000000032e378fa>] __do_kmalloc /mm/slab.c:3653 [inline]
+>      [<0000000032e378fa>] __kmalloc+0x16d/0x2d0 /mm/slab.c:3664
+>      [<0000000015bc9536>] kmalloc /./include/linux/slab.h:557 [inline]
+>      [<0000000015bc9536>] kzalloc /./include/linux/slab.h:748 [inline]
+>      [<0000000015bc9536>] rds_message_alloc+0x3e/0xc0 /net/rds/message.c:291
+>      [<00000000a806d18d>] rds_send_probe.constprop.0+0x42/0x2f0
+> /net/rds/send.c:1419
+>      [<00000000794a00cc>] rds_send_pong+0x1e/0x23 /net/rds/send.c:1482
+>      [<00000000b2a248d0>] rds_recv_incoming+0x27e/0x460 /net/rds/recv.c:343
+>      [<00000000ea1503db>] rds_loop_xmit+0x86/0x100 /net/rds/loop.c:96
+>      [<00000000a9857f5a>] rds_send_xmit+0x524/0x9a0 /net/rds/send.c:355
+>      [<00000000557b0101>] rds_send_worker+0x3c/0xd0 /net/rds/threads.c:200
+>      [<000000004ba94868>] process_one_work+0x23f/0x490
+> /kernel/workqueue.c:2269
+>      [<00000000e793f811>] worker_thread+0x195/0x580 /kernel/workqueue.c:2415
+>      [<000000003ee8c1a1>] kthread+0x13e/0x160 /kernel/kthread.c:255
+>      [<000000004cd53c81>] ret_from_fork+0x1f/0x30
+> /arch/x86/entry/entry_64.S:352
+>
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000ad1dfe058e5b89ab%40google.com.
