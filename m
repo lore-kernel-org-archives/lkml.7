@@ -5,75 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06AFC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8592EC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C278E2239D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B3F216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK8+hOmr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5msMR78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388016AbfGWDPT (ORCPT
+        id S1730185AbfGWDRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 23:15:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41336 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbfGWDOO (ORCPT
+        Mon, 22 Jul 2019 23:17:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35201 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfGWDRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 23:14:14 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 62so23337946lfa.8;
-        Mon, 22 Jul 2019 20:14:12 -0700 (PDT)
+        Mon, 22 Jul 2019 23:17:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so39615478ljh.2;
+        Mon, 22 Jul 2019 20:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Y0shjWZR4s9zJHqVWwZPltTGcrU0R1di6AYm7h2L5QM=;
-        b=IK8+hOmrekUVNwu6q2xfJu1ibr0cCWiBD7aS+Adx2uSE86z9FjhECnm2NJjTz8UPeZ
-         w5eybo8X87grbnd9KvCMDynBFTOSm3EPs3QAsnIu3vFa6PUgVhElQF1CVtvQDtC1kknc
-         GNRArRMrkgjYDwT8rcItCxqDQoeahpnSO4um/MM2DK8dBPLPzO3KGsiLZvz9SMcG+OIx
-         pgX/Rq4oHLjfd2tLmBjDjh6J/YOCLdo2X9qw2/8iJa7ZEyUNS/QyQ3YXolajxLbqJbRh
-         h+tYFun7uq4rrImFfzdAFKAUffnfGNT20+EYXYwuvUKvm02RtMaMkDWSTdGVmK96ghxG
-         i5fg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cAkKhHB6EBChFmLksq6UEkXVUCBYSKkZlbesT/ME1I8=;
+        b=b5msMR78OxyCa/3M7ZaXsCcYk5jcj/G7bpgK622q7NhnZXeKi5+ajSLKidg+3ZEA5Z
+         /4SzlMIvk84kqVajL2v9571sMpcsJRGREDoNFyhEU+9xiPvJxk5pW5kj/dyfZh58S7lB
+         WnHIhiZYMzSVdfvi40fuOR8ECnGBIt12R01kltcFjkNHiplLp0F6XsPk3dAQ5dzsDgXc
+         EmNEA0cAUGblzK7hjZAVrdocHl8h18r5poTtXmFOaArRr3c0sntB8KPCyKu3R6c8+Nv4
+         kv1d7gHuwh40OKpIfiTrhHiE6Lxxl65TDNkFOajw7x/gG0E2gp05XTzA2ncaKoNoPF4d
+         XRSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y0shjWZR4s9zJHqVWwZPltTGcrU0R1di6AYm7h2L5QM=;
-        b=n683YDB1Q+MGM8AwdIzH+0gD1xMhrhg4ySi4TeXmdQpMuaC8ri/IgNgmFtVSsyRWmJ
-         7qvEwMkNbQ4iAgzMYuhmOW982CROhOuDefTMBuzaofHJT78glOZUYbQ2C/qabOxuYoh7
-         Gon902DEifEJVaAAuuogXlHn6N9O1dD8Yn47/IW4gd3TYlpFn1UP5cdzxLNABKm/9aeS
-         RP0l1NPgcOfDlzH+Bz+P+1O81qXP3miE/B+TupNee8bM0hzc76JXa2IEUkvXoeS3aZnv
-         jseJHjcjqygvYCI4CjBobkNaVQGu5Qz1Oe/JoAOSBAOdVernI70b+7xAUYCoC/JrFcvu
-         p6dQ==
-X-Gm-Message-State: APjAAAVx3N/e5J735pgP9qm499TJNEi3p66oVfFR9bUmQp+mVyAX4LOn
-        LXEMXin7xJo86hlo9KSQvdM=
-X-Google-Smtp-Source: APXvYqyO3A1AhNxHDUIvGCUtGbUjiO/Rekb6rV16FkcnGV+oJckWRc53c85NHiy/Z8VoSQwAGyZMKg==
-X-Received: by 2002:a19:ed0c:: with SMTP id y12mr32728583lfy.191.1563851652013;
-        Mon, 22 Jul 2019 20:14:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cAkKhHB6EBChFmLksq6UEkXVUCBYSKkZlbesT/ME1I8=;
+        b=GWbOXCudjpAWXrAYDLzu8g3xxz/voc0HgZkL5McS9eNU8yPY2SMAlTgS9JBtfLkOV3
+         PH7D65OhHI/IIlx3OvfrlPcTGJM7EdH/tfBtl7kO/cq0DZ/XdGWL4KtkYa3INZDBRFBs
+         BrRCPkM05tPMKZQx9vI8UgxAiZ1S70lvHg9akpG0F2YNpHg+kog8G8XAMwGskraxCUB4
+         Qm7BpJEuSRvikZQvW4oX0h5YDPd3xK8M9RqDZlrfPcWI1wMxGoKLxavm3A3I1mIvUiUO
+         DQFYPv7xjolacTTOx+R86koRz6PMZW6JS0/SqPRootCElneb5pq4V/Dnp7IRZLYq60kl
+         7ULA==
+X-Gm-Message-State: APjAAAW0A67h/MeNvKxyer/znLH3wvhNHGMpKOzTYVlbzWhlMqFCQvxg
+        7wqpnak5OALXVYb+BGEcSEI=
+X-Google-Smtp-Source: APXvYqxjIjH9ikeMus7wio8OMDL7Z8nL/2yyaocDNjC7JlhcvdD6eLHo1WOei6ytPpAgp1fh5HTRjg==
+X-Received: by 2002:a2e:3c1a:: with SMTP id j26mr38374465lja.230.1563851854307;
+        Mon, 22 Jul 2019 20:17:34 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.gmail.com with ESMTPSA id u18sm6217184lfe.65.2019.07.22.20.14.11
+        by smtp.gmail.com with ESMTPSA id t23sm7750300ljd.98.2019.07.22.20.17.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 20:14:11 -0700 (PDT)
+        Mon, 22 Jul 2019 20:17:33 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Joseph Lo <josephl@nvidia.com>,
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 05/15] memory: tegra20-emc: Pre-configure debug register
-Date:   Tue, 23 Jul 2019 06:12:37 +0300
-Message-Id: <20190723031247.31932-6-digetx@gmail.com>
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v5] dmaengine: tegra-apb: Support per-burst residue granularity
+Date:   Tue, 23 Jul 2019 06:17:08 +0300
+Message-Id: <20190723031708.308-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190723031247.31932-1-digetx@gmail.com>
-References: <20190723031247.31932-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,65 +76,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver expects certain debug features to be disabled in order to
-work properly. Let's disable them explicitly for consistency and to not
-rely on a boot state.
+Tegra's APB DMA engine updates words counter after each transferred burst
+of data, hence it can report transfer's residual with more fidelity which
+may be required in cases like audio playback. In particular this fixes
+audio stuttering during playback in a chromium web browser. The patch is
+based on the original work that was made by Ben Dooks and a patch from
+downstream kernel. It was tested on Tegra20 and Tegra30 devices.
 
-Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c | 75 +++++++++++++++++++++++++++++++----
+ 1 file changed, 68 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 1ce351dd5461..85c24f285fd4 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -22,6 +22,7 @@
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 79e9593815f1..3a45079d11ec 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+ 	bool				last_sg;
+ 	struct list_head		node;
+ 	struct tegra_dma_desc		*dma_desc;
++	unsigned int			words_xferred;
+ };
  
- #define EMC_INTSTATUS				0x000
- #define EMC_INTMASK				0x004
-+#define EMC_DBG					0x008
- #define EMC_TIMING_CONTROL			0x028
- #define EMC_RC					0x02c
- #define EMC_RFC					0x030
-@@ -80,6 +81,12 @@
- #define EMC_REFRESH_OVERFLOW_INT		BIT(3)
- #define EMC_CLKCHANGE_COMPLETE_INT		BIT(4)
+ /*
+@@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+ 	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+ 				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+ 	nsg_req->configured = true;
++	nsg_req->words_xferred = 0;
  
-+#define EMC_DBG_READ_MUX_ASSEMBLY		BIT(0)
-+#define EMC_DBG_WRITE_MUX_ACTIVE		BIT(1)
-+#define EMC_DBG_FORCE_UPDATE			BIT(2)
-+#define EMC_DBG_READ_DQM_CTRL			BIT(9)
-+#define EMC_DBG_CFG_PRIORITY			BIT(24)
+ 	tegra_dma_resume(tdc);
+ }
+@@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+ 					typeof(*sg_req), node);
+ 	tegra_dma_start(tdc, sg_req);
+ 	sg_req->configured = true;
++	sg_req->words_xferred = 0;
+ 	tdc->busy = true;
+ }
+ 
+@@ -638,6 +641,8 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+ 		list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
+ 	dma_desc->cb_count++;
+ 
++	sgreq->words_xferred = 0;
 +
- static const u16 emc_timing_registers[] = {
- 	EMC_RC,
- 	EMC_RFC,
-@@ -396,7 +403,7 @@ tegra_emc_find_node_by_ram_code(struct device *dev)
- static int emc_setup_hw(struct tegra_emc *emc)
- {
- 	u32 intmask = EMC_REFRESH_OVERFLOW_INT | EMC_CLKCHANGE_COMPLETE_INT;
--	u32 emc_cfg;
-+	u32 emc_cfg, emc_dbg;
- 
- 	emc_cfg = readl_relaxed(emc->regs + EMC_CFG_2);
- 
-@@ -419,6 +426,14 @@ static int emc_setup_hw(struct tegra_emc *emc)
- 	writel_relaxed(intmask, emc->regs + EMC_INTMASK);
- 	writel_relaxed(intmask, emc->regs + EMC_INTSTATUS);
- 
-+	/* ensure that unwanted debug features are disabled */
-+	emc_dbg = readl_relaxed(emc->regs + EMC_DBG);
-+	emc_dbg |= EMC_DBG_CFG_PRIORITY;
-+	emc_dbg &= ~EMC_DBG_READ_MUX_ASSEMBLY;
-+	emc_dbg &= ~EMC_DBG_WRITE_MUX_ACTIVE;
-+	emc_dbg &= ~EMC_DBG_FORCE_UPDATE;
-+	writel_relaxed(emc_dbg, emc->regs + EMC_DBG);
-+
+ 	/* If not last req then put at end of pending list */
+ 	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
+ 		list_move_tail(&sgreq->node, &tdc->pending_sg_req);
+@@ -797,6 +802,65 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
  	return 0;
  }
  
++static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
++					       struct tegra_dma_sg_req *sg_req)
++{
++	unsigned long status, wcount = 0;
++
++	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
++		return 0;
++
++	if (tdc->tdma->chip_data->support_separate_wcount_reg)
++		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
++
++	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
++
++	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
++		wcount = status;
++
++	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
++		return sg_req->req_len;
++
++	wcount = get_current_xferred_count(tdc, sg_req, wcount);
++
++	if (!wcount) {
++		/*
++		 * If wcount wasn't ever polled for this SG before, then
++		 * simply assume that transfer hasn't started yet.
++		 *
++		 * Otherwise it's the end of the transfer.
++		 *
++		 * The alternative would be to poll the status register
++		 * until EOC bit is set or wcount goes UP. That's so
++		 * because EOC bit is getting set only after the last
++		 * burst's completion and counter is less than the actual
++		 * transfer size by 4 bytes. The counter value wraps around
++		 * in a cyclic mode before EOC is set(!), so we can't easily
++		 * distinguish start of transfer from its end.
++		 */
++		if (sg_req->words_xferred)
++			wcount = sg_req->req_len - 4;
++
++	} else if (wcount < sg_req->words_xferred) {
++		/*
++		 * This case will never happen for a non-cyclic transfer.
++		 *
++		 * For a cyclic transfer, although it is possible for the
++		 * next transfer to have already started (resetting the word
++		 * count), this case should still not happen because we should
++		 * have detected that the EOC bit is set and hence the transfer
++		 * was completed.
++		 */
++		WARN_ON_ONCE(1);
++
++		wcount = sg_req->req_len - 4;
++	} else {
++		sg_req->words_xferred = wcount;
++	}
++
++	return wcount;
++}
++
+ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 	dma_cookie_t cookie, struct dma_tx_state *txstate)
+ {
+@@ -806,6 +870,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 	enum dma_status ret;
+ 	unsigned long flags;
+ 	unsigned int residual;
++	unsigned int bytes = 0;
+ 
+ 	ret = dma_cookie_status(dc, cookie, txstate);
+ 	if (ret == DMA_COMPLETE)
+@@ -825,6 +890,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 	list_for_each_entry(sg_req, &tdc->pending_sg_req, node) {
+ 		dma_desc = sg_req->dma_desc;
+ 		if (dma_desc->txd.cookie == cookie) {
++			bytes = tegra_dma_sg_bytes_xferred(tdc, sg_req);
+ 			ret = dma_desc->dma_status;
+ 			goto found;
+ 		}
+@@ -836,7 +902,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ found:
+ 	if (dma_desc && txstate) {
+ 		residual = dma_desc->bytes_requested -
+-			   (dma_desc->bytes_transferred %
++			   ((dma_desc->bytes_transferred + bytes) %
+ 			    dma_desc->bytes_requested);
+ 		dma_set_residue(txstate, residual);
+ 	}
+@@ -1441,12 +1507,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+ 		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+ 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+-	/*
+-	 * XXX The hardware appears to support
+-	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
+-	 * only used by this driver during tegra_dma_terminate_all()
+-	 */
+-	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
++	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 	tdma->dma_dev.device_config = tegra_dma_slave_config;
+ 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
+ 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
 -- 
 2.22.0
 
