@@ -2,180 +2,118 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF484C7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4E5C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8B0205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E19206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:00:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vVi/DRqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbfGWJ5y (ORCPT
+        id S1731462AbfGWKAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:57:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:52008 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731566AbfGWJ5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:57:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D39B8337;
-        Tue, 23 Jul 2019 02:57:52 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 639E93F71A;
-        Tue, 23 Jul 2019 02:57:50 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 10:57:48 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v9 19/21] mm: Add generic ptdump
-Message-ID: <20190723095747.GB8085@lakrids.cambridge.arm.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-20-steven.price@arm.com>
+        Tue, 23 Jul 2019 06:00:11 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44981 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfGWKAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:00:11 -0400
+Received: by mail-io1-f66.google.com with SMTP id s7so80419213iob.11;
+        Tue, 23 Jul 2019 03:00:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yRd2vWX6PjNWErbTd9Y15sIa044i0uHH/q4p9H5/fi4=;
+        b=vVi/DRqBsj29Ez902sLsvEs2zFpgpQvo802HHGufSwSOhqoxLyq1sy2+99AYGHj5To
+         ZwxTxrlbjFnQl5q95LxS3wuFF87TS7tWgj4328oi60PGyWH7l6CEwnO+xjnEQGvZCSzi
+         AS/p+P39qQOjA11t0zEBTK0KV7Tppgk0KcEXqD7lth+pcxdJfN9iaeLPPfQlsE5Cxkzg
+         J1VikUYHWX0CpMcq0ICV6oEsZX+i4HPs73bWuouf8zBUfYcMknfT0vseEeY49cUEUKLG
+         MqOF3tp/CHFR9ynhqHW1sUIXgrtVSk3UtBGIlvqko1xMTEv9RKX+b5higQFio4m3g8pN
+         viSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yRd2vWX6PjNWErbTd9Y15sIa044i0uHH/q4p9H5/fi4=;
+        b=uQSv9uLNgQT3ZkZ1V63bAAhqfil6awlsDTKUlAp1hyByfcBxnz0hlRNEOQBmFuSTGn
+         PykFs6KOdx8ldRJa+cyiVxOO+eHQ0Ggim9JzffppgwDvO2t2YKO9igRjUO+VdUWim5pY
+         rEqIZXabJlGHqIpJ3CTON+Fvmb1AcpfotJJu98mCFwBSPL50WM+QG5BkGYtZZ204VSc8
+         VCp4O4hYJx4vn5WQV/l+Q8b/wa1rXbXijpuSD51Jp3yE9YTibASEqAFQ2FkAYx9xyq+m
+         YD+j45DxT+ywb691jZ21zWUHY+kQTu+tC9CPkuhhNr8TYoyUCH4iPp3HmAw3iJCS4ePr
+         L1Rw==
+X-Gm-Message-State: APjAAAXDJeNA25fyAX9s/QFdczF2dbKSJSAHj+/7zPG7UOVFCU/MmJNh
+        Q+eJu91P8srcZL0VzSTfnqsKU2Lce/erVUgKMvUOn2y/
+X-Google-Smtp-Source: APXvYqxo+LtxYWcgl7DtLOVxiPXWXG5erEpaefSWnG39Fn6WBuhde+K7k6eQZmIqngE1X15d8GmTFvvGD1F7iT5Kf1g=
+X-Received: by 2002:a5e:d817:: with SMTP id l23mr58776iok.282.1563876010293;
+ Tue, 23 Jul 2019 03:00:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722154210.42799-20-steven.price@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20190719143222.16058-1-lhenriques@suse.com> <ab5ccaa05994e2eef05bdb54510e6b017db2d807.camel@kernel.org>
+In-Reply-To: <ab5ccaa05994e2eef05bdb54510e6b017db2d807.camel@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 23 Jul 2019 12:02:57 +0200
+Message-ID: <CAOi1vP86qVeMV9hJPCP7sHfimMv08j-znSGyhcYdd1TC_Gn19A@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Sleeping functions in invalid context bug fixes
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:42:08PM +0100, Steven Price wrote:
-> Add a generic version of page table dumping that architectures can
-> opt-in to
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
+On Fri, Jul 19, 2019 at 5:20 PM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Fri, 2019-07-19 at 15:32 +0100, Luis Henriques wrote:
+> > Hi,
+> >
+> > I'm sending three "sleeping function called from invalid context" bug
+> > fixes that I had on my TODO for a while.  All of them are ceph_buffer_put
+> > related, and all the fixes follow the same pattern: delay the operation
+> > until the ci->i_ceph_lock is released.
+> >
+> > The first patch simply allows ceph_buffer_put to receive a NULL buffer so
+> > that the NULL check doesn't need to be performed in all the other patches.
+> > IOW, it's not really required, just convenient.
+> >
+> > (Note: maybe these patches should all be tagged for stable.)
+> >
+> > Luis Henriques (4):
+> >   libceph: allow ceph_buffer_put() to receive a NULL ceph_buffer
+> >   ceph: fix buffer free while holding i_ceph_lock in __ceph_setxattr()
+> >   ceph: fix buffer free while holding i_ceph_lock in
+> >     __ceph_build_xattrs_blob()
+> >   ceph: fix buffer free while holding i_ceph_lock in fill_inode()
+> >
+> >  fs/ceph/caps.c              |  5 ++++-
+> >  fs/ceph/inode.c             |  7 ++++---
+> >  fs/ceph/snap.c              |  4 +++-
+> >  fs/ceph/super.h             |  2 +-
+> >  fs/ceph/xattr.c             | 19 ++++++++++++++-----
+> >  include/linux/ceph/buffer.h |  3 ++-
+> >  6 files changed, 28 insertions(+), 12 deletions(-)
+>
+> This all looks good to me. I'll plan to merge these into the testing
+> branch soon, and tag them for stable.
+>
+> PS: On a related note (and more of a question for Ilya)...
+>
+> I'm wondering if we get any benefit from having our own ceph_kvmalloc
+> routine. Why are we not better off using the stock kvmalloc routine
+> instead? Forcing a vmalloc just because we've gone above 32k allocation
+> doesn't seem like the right thing to do.
 
-[...]
-
-> +#ifdef CONFIG_KASAN
-> +/*
-> + * This is an optimization for KASAN=y case. Since all kasan page tables
-> + * eventually point to the kasan_early_shadow_page we could call note_page()
-> + * right away without walking through lower level page tables. This saves
-> + * us dozens of seconds (minutes for 5-level config) while checking for
-> + * W+X mapping or reading kernel_page_tables debugfs file.
-> + */
-> +static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
-> +				    unsigned long addr)
-> +{
-> +	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
-> +#ifdef CONFIG_X86
-> +	    (pgtable_l5_enabled() &&
-> +			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
-> +#endif
-> +	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
-> +		st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
-> +		return true;
-> +	}
-> +	return false;
-
-Having you tried this with CONFIG_DEBUG_VIRTUAL?
-
-The kasan_early_shadow_pmd is a kernel object rather than a linear map
-object, so you should use __pa_symbol for that.
-
-It's a bit horrid to have to test multiple levels in one function; can't
-we check the relevant level inline in each of the test_p?d funcs?
-
-They're optional anyway, so they only need to be defined for
-CONFIG_KASAN.
+I don't remember off the top of my head and can't check right now.
+Could be that kvmalloc() didn't exist back then.  I'll add that to my
+TODO list.
 
 Thanks,
-Mark.
 
-> +}
-> +#else
-> +static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
-> +				    unsigned long addr)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
-> +static int ptdump_test_p4d(unsigned long addr, unsigned long next,
-> +			   p4d_t *p4d, struct mm_walk *walk)
-> +{
-> +	struct ptdump_state *st = walk->private;
-> +
-> +	if (kasan_page_table(st, p4d, addr))
-> +		return 1;
-> +	return 0;
-> +}
-> +static int ptdump_test_pud(unsigned long addr, unsigned long next,
-> +			   pud_t *pud, struct mm_walk *walk)
-> +{
-> +	struct ptdump_state *st = walk->private;
-> +
-> +	if (kasan_page_table(st, pud, addr))
-> +		return 1;
-> +	return 0;
-> +}
-> +
-> +static int ptdump_test_pmd(unsigned long addr, unsigned long next,
-> +			   pmd_t *pmd, struct mm_walk *walk)
-> +{
-> +	struct ptdump_state *st = walk->private;
-> +
-> +	if (kasan_page_table(st, pmd, addr))
-> +		return 1;
-> +	return 0;
-> +}
-> +
-> +static int ptdump_hole(unsigned long addr, unsigned long next,
-> +		       struct mm_walk *walk)
-> +{
-> +	struct ptdump_state *st = walk->private;
-> +
-> +	st->note_page(st, addr, -1, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm)
-> +{
-> +	struct mm_walk walk = {
-> +		.mm		= mm,
-> +		.pgd_entry	= ptdump_pgd_entry,
-> +		.p4d_entry	= ptdump_p4d_entry,
-> +		.pud_entry	= ptdump_pud_entry,
-> +		.pmd_entry	= ptdump_pmd_entry,
-> +		.pte_entry	= ptdump_pte_entry,
-> +		.test_p4d	= ptdump_test_p4d,
-> +		.test_pud	= ptdump_test_pud,
-> +		.test_pmd	= ptdump_test_pmd,
-> +		.pte_hole	= ptdump_hole,
-> +		.private	= st
-> +	};
-> +	const struct ptdump_range *range = st->range;
-> +
-> +	down_read(&mm->mmap_sem);
-> +	while (range->start != range->end) {
-> +		walk_page_range(range->start, range->end, &walk);
-> +		range++;
-> +	}
-> +	up_read(&mm->mmap_sem);
-> +
-> +	/* Flush out the last page */
-> +	st->note_page(st, 0, 0, 0);
-> +}
-> -- 
-> 2.20.1
-> 
+                Ilya
