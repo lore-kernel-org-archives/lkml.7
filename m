@@ -2,163 +2,181 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64686C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFC5C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECB02229A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592642229A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E311kO1p"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i2oKgZIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfGWEJl (ORCPT
+        id S1727924AbfGWEK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 00:09:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38962 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfGWEJk (ORCPT
+        Tue, 23 Jul 2019 00:10:56 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45692 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfGWEKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 00:09:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id u25so26778883wmc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 21:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+AEy0A1U3bDIt426sx3FptCy+IyQIvQzzikjslkeuhc=;
-        b=E311kO1pCEwMLgLW8p32jUkqQOjQ9ZoxegskYz6+JpTLlAudw1HLUYbCumdlFFhvlN
-         kknZAMeF/KHxiSf9QsA6fQbR+l+hHeS1KJrxuFayMjWeUjRw/vRMm1JeHS+yFatZIVtD
-         iBjLtMlVQU2dN2EOMpK58+tFiAC2ZYilQAZ70uh+1pz3Ryqb91hawquXEbV//jqi+a8v
-         PetHF5ohrQ4BFuL1d4cQtT3tqa0gkhsy6nSts16PwfrMnLXOBgp+f87TyuCUbmR9CLsB
-         8vUkxyOvq5Wjxf8LYsqRq78Lbadeg2mgJu1/x+x87LVeyafSxluHqsAfIBCFQm3FL0P0
-         uyKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+AEy0A1U3bDIt426sx3FptCy+IyQIvQzzikjslkeuhc=;
-        b=TgDftPAFT25MQQHcjN0C34phwnbbgrSO/8yrhFyOAQa479sgCAzroQCpX1jt4Mslce
-         WtJxyPEW4LHQ9QxpjHR3tH+YBPaR5rJFT12IpYjCP4t2vnn72dl/1/8/qNtYhudvwCd8
-         9h+7kkC02rYDyQOhYHHoHLdE8jRL2yZ7UO0SVBqQ0ZHPWK1CVPUGMQ9byNCodPB61Qa0
-         dLi003yUr09x6gpIl/w42EC3ODdIr1qo/bcr6iingimwFMQABxi4pMK/gBlA50eHUx32
-         pixA9vRj/8kE3XbNkZUF2GNyndWDv5c/9yjyarQUOGqob4XvVrO96WEcrPr4RSmb/RNG
-         u2Dg==
-X-Gm-Message-State: APjAAAUrqo0d6qA8f5bOPmaAjLMWXRFty7CnemUf5QVX37+fkA0/Ji8/
-        kVNKRgpRJtDbsPR3KMSDPstH1p1PAqfj8WhxktCOng==
-X-Google-Smtp-Source: APXvYqwuDiAxsLbuVgRtZCmC5Njj4s+XxHj+VdwIPWtFY080q1KB1qHh/tqWkr0COKq0eaQWs5bNyFofmnAAy93Bavo=
-X-Received: by 2002:a1c:dc07:: with SMTP id t7mr69039790wmg.164.1563854978031;
- Mon, 22 Jul 2019 21:09:38 -0700 (PDT)
+        Tue, 23 Jul 2019 00:10:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6N4AcQZ084842;
+        Mon, 22 Jul 2019 23:10:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563855038;
+        bh=XVQwkygam6XUYEnTe8AJ648CRlJe+ilV+FEAKjn2rNk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=i2oKgZIxxAGqvixuh0zwlHSsthhL4f5ATxJn75fKFU5poGsHBBOBlUB4Uf5XnzPKg
+         382ORi84YpgwMEpXRvUfkXu2QTZys2UrfnGJKw66QTRz4ABgTo1daN4PNEVVfwVcod
+         ehmrKWZ9j3qflQyzW+Z65JrzTX25le7sfZqMxyOg=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6N4Ac2U090509
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Jul 2019 23:10:38 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 22
+ Jul 2019 23:10:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 22 Jul 2019 23:10:37 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6N4AYpB052900;
+        Mon, 22 Jul 2019 23:10:35 -0500
+Subject: Re: [RESEND PATCH 01/10] dt-bindings: crypto: k3: Add sa2ul bindings
+ documentation
+To:     Rob Herring <robh@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <t-kristo@ti.com>,
+        <linux-crypto@vger.kernel.org>, <nm@ti.com>
+References: <20190628042745.28455-1-j-keerthy@ti.com>
+ <20190628042745.28455-2-j-keerthy@ti.com> <20190722182945.GA24685@bogus>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <b8712fe4-4590-fdda-8a24-bf0f135ad567@ti.com>
+Date:   Tue, 23 Jul 2019 09:41:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-3-john.stultz@linaro.org> <20190718100654.GA19666@infradead.org>
-In-Reply-To: <20190718100654.GA19666@infradead.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 22 Jul 2019 21:09:25 -0700
-Message-ID: <CALAqxLX1s4mbitE-_1s1vFPJrbrCKqpyhYoFW0V6hMEqE=eKVw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] dma-buf: heaps: Add heap helpers
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Rob Clark <robdclark@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190722182945.GA24685@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 3:06 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> > +void INIT_HEAP_HELPER_BUFFER(struct heap_helper_buffer *buffer,
-> > +                          void (*free)(struct heap_helper_buffer *))
->
-> Please use a lower case naming following the naming scheme for the
-> rest of the file.
 
-Yes! Apologies as this was a hold-over from when the initialization
-function was an inline function in the style of
-INIT_WORK/INIT_LIST_HEAD. No longer appropriate that its a function.
-I'll change it.
 
-> > +static void *dma_heap_map_kernel(struct heap_helper_buffer *buffer)
-> > +{
-> > +     void *vaddr;
-> > +
-> > +     vaddr = vmap(buffer->pages, buffer->pagecount, VM_MAP, PAGE_KERNEL);
-> > +     if (!vaddr)
-> > +             return ERR_PTR(-ENOMEM);
-> > +
-> > +     return vaddr;
-> > +}
->
-> Unless I'm misreading the patches this is used for the same pages that
-> also might be dma mapped.  In this case you need to use
-> flush_kernel_vmap_range and invalidate_kernel_vmap_range in the right
-> places to ensure coherency between the vmap and device view.  Please
-> also document the buffer ownership, as this really can get complicated.
+On 22/07/19 11:59 PM, Rob Herring wrote:
+> On Fri, Jun 28, 2019 at 09:57:36AM +0530, Keerthy wrote:
+>> The series adds Crypto hardware accelerator support for SA2UL.
+>> SA2UL stands for security accelerator ultra lite.
+>>
+>> The Security Accelerator (SA2_UL) subsystem provides hardware
+>> cryptographic acceleration for the following use cases:
+>> • Encryption and authentication for secure boot
+>> • Encryption and authentication of content in applications
+>>    requiring DRM (digital rights management) and
+>>    content/asset protection
+>> The device includes one instantiation of SA2_UL named SA2_UL0
+>>
+>> SA2UL needs on tx channel and a pair of rx dma channels.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   .../devicetree/bindings/crypto/sa2ul.txt      | 47 +++++++++++++++++++
+>>   1 file changed, 47 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/crypto/sa2ul.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/crypto/sa2ul.txt b/Documentation/devicetree/bindings/crypto/sa2ul.txt
+>> new file mode 100644
+>> index 000000000000..81cc039673b4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/crypto/sa2ul.txt
+>> @@ -0,0 +1,47 @@
+>> +K3 SoC SA2UL crypto module
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : Should be:
+>> +  - "ti,sa2ul-crypto"
+> 
+> Needs to be SoC specific.
 
-Forgive me I wasn't familiar with those calls, but this seems like it
-would apply to all dma-buf exporters if so, and I don't see any
-similar flush_kernel_vmap_range calls there (both functions are
-seemingly only used by xfs, md and bio).
+okay
 
-We do have the dma_heap_dma_buf_begin_cpu_access()/dma_heap_dma_buf_end_cpu_access()
-hooks (see more on these below) which sync the buffers for each
-attachment (via dma_sync_sg_for_cpu/device), and are used around cpu
-access to the buffers. Are you suggesting the
-flush_kernel_vmap_range() call be added to those hooks or is the
-dma_sync_sg_for_* calls sufficient there?
+> 
+>> +- reg : Offset and length of the register set for the module
+>> +
+>> +- dmas: DMA specifiers for tx and rx dma. sa2ul needs one tx channel
+>> +	and 2 rx channels. First rx channel for < 256 bytes and
+>> +	the other one for >=256 bytes. See the DMA client binding,
+>> +        Documentation/devicetree/bindings/dma/dma.txt
+>> +- dma-names: DMA request names has to have one tx and 2 rx names
+>> +	corresponding to dmas abive.
+>> +- ti,psil-config* - UDMA PSIL native Peripheral using packet mode.
+>> +	SA2UL must have EPIB(Extended protocal information block)
+>> +	and PSDATA(protocol specific data) properties.
+> 
+> If ti,needs-epib is required, then why do you need to specify it in DT?
+> In any case, this all seems like channel config info that should be part
+> of the #dma-cells.
 
-> > +static vm_fault_t dma_heap_vm_fault(struct vm_fault *vmf)
-> > +{
-> > +     struct vm_area_struct *vma = vmf->vma;
-> > +     struct heap_helper_buffer *buffer = vma->vm_private_data;
-> > +
-> > +     vmf->page = buffer->pages[vmf->pgoff];
-> > +     get_page(vmf->page);
-> > +
-> > +     return 0;
-> > +}
->
-> Is there any exlusion between mmap / vmap and the device accessing
-> the data?  Without that you are going to run into a lot of coherency
-> problems.
+ti,needs-epib is the udma client(Here sa2ul) conveying the udma layer.
+Not every udma client needs epib.
 
-This has actually been a concern of mine recently, but at the higher
-dma-buf core level.  Conceptually, there is the
-dma_buf_map_attachment() and dma_buf_unmap_attachment() calls drivers
-use to map the buffer to an attached device, and there are the
-dma_buf_begin_cpu_access() and dma_buf_end_cpu_access() calls which
-are to be done when touching the cpu mapped pages.  These look like
-serializing functions, but actually don't seem to have any enforcement
-mechanism to exclude parallel access.
+Peter,
 
-To me it seems like adding the exclusion between those operations
-should be done at the dmabuf core level, and would actually be helpful
-for optimizing some of the cache maintenance rules w/ dmabuf.  Does
-this sound like something closer to what your suggesting, or am I
-misunderstanding your point?
+Any thoughts on the above?
 
-Again, I really appreciate the review and feedback!
+- Keerthy
 
-Thanks so much!
--john
+> 
+> Also, don't use vendor prefixes on node names.
+
+Okay
+
+> 
+>> +
+>> +Example AM654 SA2UL:
+>> +crypto: crypto@4E00000 {
+>> +	compatible = "ti,sa2ul-crypto";
+>> +	reg = <0x0 0x4E00000 0x0 0x1200>;
+>> +	ti,psil-base = <0x4000>;
+>> +
+>> +	dmas = <&main_udmap &crypto 0 UDMA_DIR_TX>,
+>> +		<&main_udmap &crypto 0 UDMA_DIR_RX>,
+>> +		<&main_udmap &crypto 1 UDMA_DIR_RX>;
+>> +	dma-names = "tx", "rx1", "rx2";
+>> +
+>> +	ti,psil-config0 {
+>> +		linux,udma-mode = <UDMA_PKT_MODE>;
+>> +		ti,needs-epib;
+>> +		ti,psd-size = <64>;
+>> +	};
+>> +
+>> +	ti,psil-config1 {
+>> +		linux,udma-mode = <UDMA_PKT_MODE>;
+>> +		ti,needs-epib;
+>> +		ti,psd-size = <64>;
+>> +	};
+>> +
+>> +	ti,psil-config2 {
+>> +		linux,udma-mode = <UDMA_PKT_MODE>;
+>> +		ti,needs-epib;
+>> +		ti,psd-size = <64>;
+>> +	};
+>> +};
+>> -- 
+>> 2.17.1
+>>
