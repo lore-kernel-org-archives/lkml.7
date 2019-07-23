@@ -2,117 +2,106 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F233EC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18C1C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD8E218B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963B8218B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:50:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B/1NfqRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388312AbfGWOty (ORCPT
+        id S2388333AbfGWOuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:49:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:55912 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732608AbfGWOty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:49:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 988FA28;
-        Tue, 23 Jul 2019 07:49:53 -0700 (PDT)
-Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94EA43F71F;
-        Tue, 23 Jul 2019 07:49:52 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] arm64: Enable access to pmu registers by
- user-space
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com
-References: <20190705085541.9356-1-raphael.gault@arm.com>
-From:   Raphael Gault <raphael.gault@arm.com>
-Message-ID: <647555e3-9855-815a-2e13-48b3c3977320@arm.com>
-Date:   Tue, 23 Jul 2019 15:49:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Jul 2019 10:50:07 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38422 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732532AbfGWOuH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:50:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so19272166pfn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:50:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=qFGyu2e0qPfrwHi7OXbbKa0ySxd874e1ZB3q+1beBgk=;
+        b=B/1NfqRknQzOA9lNUKMjw8bei1USgk+jf8C7LimjmeeuY/nXbOwY9qKGdqr1xB0Ep1
+         fF+uGyD6SZT5kkwDHqgcI+JJucEKJ2eELk1VJumWUxl26Nnj5D2cJF8WjuYyVe4s8NF3
+         VlozWZllNLHU0k5+JPfpJ+vslVBC70FPXvsr8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=qFGyu2e0qPfrwHi7OXbbKa0ySxd874e1ZB3q+1beBgk=;
+        b=r2MfK8TK0nIkNt1qfVtLZABvmvtTesBGRd+hxwwha5syxBP2s6+yrLSeEka2+k4WT5
+         zb5nSrQ8jRDHxEIEIJQ5W5HhGT7oDfl9nLhPlfOYSqT2mgs2NWPwWSmlk0+qeZiOTWbf
+         SRd0CQrhCSWSHfy/25XqWJ+nvb4mJ3X8qsmhOn0p0p9OAFl5ogw8u/O78tai3qqWAk8t
+         +gsQoU6Z7zfZhY6aCwILDKXhTI02rDAuYXkaydgXyLCdq0In1DanQZ2nv4XTrpN8B7N/
+         y/LH5UEqiMrmCoelrL42QqndaUp6SD5nAzg64wixwXX99DV1yv32Q9LjvwQHqun4PgQ4
+         9bvg==
+X-Gm-Message-State: APjAAAUj21xD5fixHUpCqTW/mrMxhaYXs+esrrjicibpSMeEieuGLMMC
+        4LuTnRbZhwzm/P3uvK0kbOoqgA==
+X-Google-Smtp-Source: APXvYqzh3JlVXvMXshU7/BGzt6pys4NOV2ew9Hhpy6X+ywpiQ45vC0nwZXvmBT2O3iv2LcxoEYem+A==
+X-Received: by 2002:a63:eb56:: with SMTP id b22mr77607662pgk.355.1563893406340;
+        Tue, 23 Jul 2019 07:50:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id w2sm36341678pgc.32.2019.07.23.07.50.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 07:50:05 -0700 (PDT)
+Message-ID: <5d371e9d.1c69fb81.8d9f4.1ac0@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190705085541.9356-1-raphael.gault@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190722123422.4571-2-vkoul@kernel.org>
+References: <20190722123422.4571-1-vkoul@kernel.org> <20190722123422.4571-2-vkoul@kernel.org>
+Subject: Re: [PATCH 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
+To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 23 Jul 2019 07:50:05 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Quoting Vinod Koul (2019-07-22 05:34:18)
+> We get a warning about missing unit name for soc node, so add it.
+>=20
+> arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address=
+_vs_reg): /soc: node has a reg or ranges property, but no unit name
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-Any further comments on this patchset ?
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Cheers,
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/q=
+com/sdm845.dtsi
+> index 601cfb078bd5..e81f4a6d08ce 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -620,7 +620,7 @@
+>                 method =3D "smc";
+>         };
+> =20
+> -       soc: soc {
+> +       soc: soc@0 {
 
-On 7/5/19 9:55 AM, Raphael Gault wrote:
-> The perf user-space tool relies on the PMU to monitor events. It offers an
-> abstraction layer over the hardware counters since the underlying
-> implementation is cpu-dependent. We want to allow userspace tools to have
-> access to the registers storing the hardware counters' values directly.
-> This targets specifically self-monitoring tasks in order to reduce the
-> overhead by directly accessing the registers without having to go
-> through the kernel.
-> In order to do this we need to setup the pmu so that it exposes its registers
-> to userspace access.
-> 
-> The first patch add a test to the perf tool so that we can test that the
-> access to the registers works correctly from userspace.
-> 
-> The second patch add a capability in the arm64 cpufeatures framework in
-> order to detect when we are running on a heterogeneous system.
-> 
-> The third patch focuses on the armv8 pmuv3 PMU support and makes sure that
-> the access to the pmu registers is enable and that the userspace have
-> access to the relevent information in order to use them.
-> 
-> The fourth patch put in place callbacks to enable access to the hardware
-> counters from userspace when a compatible event is opened using the perf
-> API.
-> 
-> The fifth patch adds a short documentation about PMU counters direct
-> access from userspace.
-> 
-> **Changes since v1**
-> 
-> * Rebased on linux-next/master
-> * Do not include RSEQs materials (test and utilities) since we want to
->    enable direct access to counters only on homogeneous systems.
-> * Do not include the hook defitinions for the same reason as above.
-> * Add a cpu feature/capability to detect heterogeneous systems.
-> 
-> Raphael Gault (5):
->    perf: arm64: Add test to check userspace access to hardware counters.
->    arm64: cpufeature: Add feature to detect heterogeneous systems
->    arm64: pmu: Add function implementation to update event index in
->      userpage.
->    arm64: perf: Enable pmu counter direct access for perf event on armv8
->    Documentation: arm64: Document PMU counters access from userspace
-> 
->   .../arm64/pmu_counter_user_access.txt         |  42 +++
->   arch/arm64/include/asm/cpucaps.h              |   3 +-
->   arch/arm64/include/asm/mmu.h                  |   6 +
->   arch/arm64/include/asm/mmu_context.h          |   2 +
->   arch/arm64/include/asm/perf_event.h           |  14 +
->   arch/arm64/kernel/cpufeature.c                |  20 ++
->   arch/arm64/kernel/perf_event.c                |  23 ++
->   drivers/perf/arm_pmu.c                        |  38 +++
->   include/linux/perf/arm_pmu.h                  |   2 +
->   tools/perf/arch/arm64/include/arch-tests.h    |   6 +
->   tools/perf/arch/arm64/tests/Build             |   1 +
->   tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
->   tools/perf/arch/arm64/tests/user-events.c     | 255 ++++++++++++++++++
->   13 files changed, 415 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
->   create mode 100644 tools/perf/arch/arm64/tests/user-events.c
-> 
+This is kinda sad, but ok. Maybe you can apply this fix to at least all
+the qcom boards then.
 
--- 
-Raphael Gault
+>                 #address-cells =3D <2>;
+>                 #size-cells =3D <2>;
+>                 ranges =3D <0 0 0 0 0x10 0>;
