@@ -2,106 +2,172 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6C1C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D8CC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECBF20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA32121842
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wqrcayfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbfGWLmy (ORCPT
+        id S1731226AbfGWLo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:42:54 -0400
-Received: from outbound-smtp35.blacknight.com ([46.22.139.218]:45974 "EHLO
-        outbound-smtp35.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726575AbfGWLmx (ORCPT
+        Tue, 23 Jul 2019 07:44:28 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:28963 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbfGWLo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:42:53 -0400
-Received: from mail.blacknight.com (unknown [81.17.255.152])
-        by outbound-smtp35.blacknight.com (Postfix) with ESMTPS id 1FBC2E69
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 12:42:51 +0100 (IST)
-Received: (qmail 12414 invoked from network); 23 Jul 2019 11:42:50 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.36])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 23 Jul 2019 11:42:50 -0000
-Date:   Tue, 23 Jul 2019 12:42:48 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Matt Fleming <matt@codeblueprint.co.uk>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3] sched/topology: Improve load balancing on AMD EPYC
-Message-ID: <20190723114248.GJ24383@techsingularity.net>
-References: <20190723104830.26623-1-matt@codeblueprint.co.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20190723104830.26623-1-matt@codeblueprint.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 23 Jul 2019 07:44:28 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x6NBhmf0024789;
+        Tue, 23 Jul 2019 20:43:50 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x6NBhmf0024789
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563882231;
+        bh=u6S/fgiuE+3dTn82HkRiRqcnW+Gorb07kShUnm4uj7Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wqrcayfxFNlDjAC9RpZEL2PesO7h9y4nrwAe2czjUnSuiZ2zeu6Q8D1HrMinDwoUB
+         lGDwc0fiZicMX83K79xv4/L+NM+S3ZVjiRxnqJtddqqv00941jhO0h7uggos3hdX04
+         wBYl2LC+JytfzxmJoSfK8lfkK10l9UYTV5lz86DAP24AgS3X7LwvibFqpwAhzmjVxm
+         n0fwzRviw/a7RSkHTlCJj098Y9sy5WL4+93PEHwER86qeGULD+rQNYQfBjIuhibU1T
+         qDKk4fMTDp2fQa0cteHMDEUIyqJdcytDMgWj/rnY3PsEgn25IGLUOCB0X22hukOrWv
+         4kv6O/EJm61bA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] crypto: add header include guards
+Date:   Tue, 23 Jul 2019 20:43:43 +0900
+Message-Id: <20190723114344.18622-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:48:30AM +0100, Matt Fleming wrote:
-> SD_BALANCE_{FORK,EXEC} and SD_WAKE_AFFINE are stripped in sd_init()
-> for any sched domains with a NUMA distance greater than 2 hops
-> (RECLAIM_DISTANCE). The idea being that it's expensive to balance
-> across domains that far apart.
-> 
-> However, as is rather unfortunately explained in
-> 
->   commit 32e45ff43eaf ("mm: increase RECLAIM_DISTANCE to 30")
-> 
-> the value for RECLAIM_DISTANCE is based on node distance tables from
-> 2011-era hardware.
-> 
-> Current AMD EPYC machines have the following NUMA node distances:
-> 
-> node distances:
-> node   0   1   2   3   4   5   6   7
->   0:  10  16  16  16  32  32  32  32
->   1:  16  10  16  16  32  32  32  32
->   2:  16  16  10  16  32  32  32  32
->   3:  16  16  16  10  32  32  32  32
->   4:  32  32  32  32  10  16  16  16
->   5:  32  32  32  32  16  10  16  16
->   6:  32  32  32  32  16  16  10  16
->   7:  32  32  32  32  16  16  16  10
-> 
-> where 2 hops is 32.
-> 
-> The result is that the scheduler fails to load balance properly across
-> NUMA nodes on different sockets -- 2 hops apart.
-> 
-> For example, pinning 16 busy threads to NUMA nodes 0 (CPUs 0-7) and 4
-> (CPUs 32-39) like so,
-> 
->   $ numactl -C 0-7,32-39 ./spinner 16
-> 
-> causes all threads to fork and remain on node 0 until the active
-> balancer kicks in after a few seconds and forcibly moves some threads
-> to node 4.
-> 
-> Override node_reclaim_distance for AMD Zen.
-> 
-> Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-> Cc: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-> Cc: Borislav Petkov <bp@alien8.de>
+Add header include guards in case they are included multiple times.
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-The only caveat I can think of is that a future generation of Zen might
-take a different magic number than 32 as their remote distance. If or
-when this happens, it'll need additional smarts but lacking a crystal
-ball, we can cross that bridge when we come to it.
+Changes in v2: None
 
+ include/crypto/sha1_base.h      | 5 +++++
+ include/crypto/sha256_base.h    | 5 +++++
+ include/crypto/sha512_base.h    | 5 +++++
+ include/crypto/sm3_base.h       | 5 +++++
+ include/uapi/linux/cryptouser.h | 5 +++++
+ 5 files changed, 25 insertions(+)
+
+diff --git a/include/crypto/sha1_base.h b/include/crypto/sha1_base.h
+index 63c14f2dc7bd..20fd1f7468af 100644
+--- a/include/crypto/sha1_base.h
++++ b/include/crypto/sha1_base.h
+@@ -5,6 +5,9 @@
+  * Copyright (C) 2015 Linaro Ltd <ard.biesheuvel@linaro.org>
+  */
+ 
++#ifndef _CRYPTO_SHA1_BASE_H
++#define _CRYPTO_SHA1_BASE_H
++
+ #include <crypto/internal/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/crypto.h>
+@@ -101,3 +104,5 @@ static inline int sha1_base_finish(struct shash_desc *desc, u8 *out)
+ 	*sctx = (struct sha1_state){};
+ 	return 0;
+ }
++
++#endif /* _CRYPTO_SHA1_BASE_H */
+diff --git a/include/crypto/sha256_base.h b/include/crypto/sha256_base.h
+index 59159bc944f5..b50a035a2bc7 100644
+--- a/include/crypto/sha256_base.h
++++ b/include/crypto/sha256_base.h
+@@ -5,6 +5,9 @@
+  * Copyright (C) 2015 Linaro Ltd <ard.biesheuvel@linaro.org>
+  */
+ 
++#ifndef _CRYPTO_SHA256_BASE_H
++#define _CRYPTO_SHA256_BASE_H
++
+ #include <crypto/internal/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/crypto.h>
+@@ -123,3 +126,5 @@ static inline int sha256_base_finish(struct shash_desc *desc, u8 *out)
+ 	*sctx = (struct sha256_state){};
+ 	return 0;
+ }
++
++#endif /* _CRYPTO_SHA256_BASE_H */
+diff --git a/include/crypto/sha512_base.h b/include/crypto/sha512_base.h
+index 099be8027f3f..fb19c77494dc 100644
+--- a/include/crypto/sha512_base.h
++++ b/include/crypto/sha512_base.h
+@@ -5,6 +5,9 @@
+  * Copyright (C) 2015 Linaro Ltd <ard.biesheuvel@linaro.org>
+  */
+ 
++#ifndef _CRYPTO_SHA512_BASE_H
++#define _CRYPTO_SHA512_BASE_H
++
+ #include <crypto/internal/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/crypto.h>
+@@ -126,3 +129,5 @@ static inline int sha512_base_finish(struct shash_desc *desc, u8 *out)
+ 	*sctx = (struct sha512_state){};
+ 	return 0;
+ }
++
++#endif /* _CRYPTO_SHA512_BASE_H */
+diff --git a/include/crypto/sm3_base.h b/include/crypto/sm3_base.h
+index 31891b0dc7e3..1cbf9aa1fe52 100644
+--- a/include/crypto/sm3_base.h
++++ b/include/crypto/sm3_base.h
+@@ -6,6 +6,9 @@
+  * Written by Gilad Ben-Yossef <gilad@benyossef.com>
+  */
+ 
++#ifndef _CRYPTO_SM3_BASE_H
++#define _CRYPTO_SM3_BASE_H
++
+ #include <crypto/internal/hash.h>
+ #include <crypto/sm3.h>
+ #include <linux/crypto.h>
+@@ -104,3 +107,5 @@ static inline int sm3_base_finish(struct shash_desc *desc, u8 *out)
+ 	*sctx = (struct sm3_state){};
+ 	return 0;
+ }
++
++#endif /* _CRYPTO_SM3_BASE_H */
+diff --git a/include/uapi/linux/cryptouser.h b/include/uapi/linux/cryptouser.h
+index 4dc1603919ce..5730c67f0617 100644
+--- a/include/uapi/linux/cryptouser.h
++++ b/include/uapi/linux/cryptouser.h
+@@ -19,6 +19,9 @@
+  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
+  */
+ 
++#ifndef _UAPI_LINUX_CRYPTOUSER_H
++#define _UAPI_LINUX_CRYPTOUSER_H
++
+ #include <linux/types.h>
+ 
+ /* Netlink configuration messages.  */
+@@ -198,3 +201,5 @@ struct crypto_report_acomp {
+ 
+ #define CRYPTO_REPORT_MAXSIZE (sizeof(struct crypto_user_alg) + \
+ 			       sizeof(struct crypto_report_blkcipher))
++
++#endif /* _UAPI_LINUX_CRYPTOUSER_H */
 -- 
-Mel Gorman
-SUSE Labs
+2.17.1
+
