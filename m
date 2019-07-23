@@ -2,102 +2,76 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942E7C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A746C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6432821911
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563865606;
-	bh=8DNTNA69E09kfKyYJ0fGnoLZ0kjaSElOrnnWQY719Dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZlHWLI4Vl9H8g9uOZh+aFA61fAyjwuixa5Me+1KIyc6lfRElCSGSxv+pE3oA2Rsrf
-	 rU4vTPj/ksar2vY5IX8vKxLx+n6ax7atTtsnJxzHYIjEw9cQ3V81KdUj/3hU6K8CQJ
-	 WCXY2QiABeT3H3uVde6e1Wii7c6VEyhticSM6oqU=
+	by mail.kernel.org (Postfix) with ESMTP id DE26A21911
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="nZgUga+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388199AbfGWHGp (ORCPT
+        id S2388218AbfGWHG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:06:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59780 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbfGWHGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:06:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 77322AE91;
-        Tue, 23 Jul 2019 07:06:43 +0000 (UTC)
-Date:   Tue, 23 Jul 2019 09:06:42 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     KarimAllah Ahmed <karahmed@amazon.de>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>, Qian Cai <cai@lca.pw>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH] mm: sparse: Skip no-map regions in memblocks_present
-Message-ID: <20190723070642.GC4552@dhcp22.suse.cz>
-References: <1562921491-23899-1-git-send-email-karahmed@amazon.de>
+        Tue, 23 Jul 2019 03:06:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40953 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfGWHG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:06:57 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a15so40905641qtn.7;
+        Tue, 23 Jul 2019 00:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GcUNOoc2v5PTLCl4JCvdlXkVaBUqo/As5xzKXvt1t28=;
+        b=nZgUga+xdY6jCBsaRAYXpJtpWzFaSwcNoELz9qOpXT8hmo7gBdsgpSngqnxCfBKYZM
+         P4g1aOPWmbAX+Nc5Bj2fjFRnUt6rZJr8TjyqIb+xhXTtUatb01nagZGUADN8Oaph7PqD
+         kQZOf9hL00RQiPfKeDSw14UqYPcucRmoRa93JQ1Omh10BvUhW+wkeyeGjcEAMdOS1BKx
+         shToQF3CQ2VjInO6zdQP6BeZro3p/+Jpjc5gGQp/0zkhmobWIg5jOrNcvrMYkGBMrtr/
+         zsn7O1u50ANw42ntEnkIF1s7uIq1PGh55oCM9fWdkc+o2UDhdkaushoRBNJtbJiPwPfa
+         Txrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GcUNOoc2v5PTLCl4JCvdlXkVaBUqo/As5xzKXvt1t28=;
+        b=HQapfhyUrBmbISyzGV+dg0SYse674wZspAtr2eG+uPDkKdnZmoFcCtJYMGxA+oNiOW
+         9hTQT6D/XlO1sAIWx23Ey65zbjj9qcEApj/nHm3udfweeua5U8Jh87ItGWuM/fvDpoGZ
+         8yVOhK3dqtg7tJMsO6WHSNGXVAJk6YDYtRmqdOSMRS3PSLS/R9boJY/xZgUoScygK4iw
+         sm9o7LocHpy0g+ZHizW63o9PKyL/KsRvJ1QH6tUNbK7oEZrHS4tXH59pLzvBDGIq+2hB
+         dW2dMeTlL6CF7OIbKP6T8GP8uN2v2TuhISeSfUH5OcUvK/mlOGlJ3fr4WY0F1F6Rp4I2
+         O5Pg==
+X-Gm-Message-State: APjAAAXygZvUkQI1WlhrummIasx1rm2DlfDKY8v/3TvSrlnGMO9J92SS
+        P7TE+SLIt/lK1gprIi8FUzHl2NwORozn+yzHRdYfa8Or
+X-Google-Smtp-Source: APXvYqwxSty+MvD3lHiYpDhtBuXFnrUGzTStnfnsjIG65bGrsjR80dVtKo79EfT8W52iUcDLgzvh8TVH483ZMx7ACyU=
+X-Received: by 2002:ad4:5661:: with SMTP id bm1mr53662121qvb.119.1563865616201;
+ Tue, 23 Jul 2019 00:06:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562921491-23899-1-git-send-email-karahmed@amazon.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190704090205.19400-1-fe@dev.tdt.de> <20190704090205.19400-4-fe@dev.tdt.de>
+ <cca95ba1-6ac0-a2eb-9ae6-914a8783c1ad@metux.net>
+In-Reply-To: <cca95ba1-6ac0-a2eb-9ae6-914a8783c1ad@metux.net>
+From:   Florian Eckert <eckert.florian@googlemail.com>
+Date:   Tue, 23 Jul 2019 09:06:45 +0200
+Message-ID: <CALPCC5wH_uAGYaHeM_d_yxxUZEd3f-MfhT7jdZSt9ythd08S9w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] platform//x86/pcengines-apuv2: update gpio button definition
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Florian Eckert <fe@dev.tdt.de>, info@metux.net,
+        dvhart@infradead.org, andy@infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 12-07-19 10:51:31, KarimAllah Ahmed wrote:
-> Do not mark regions that are marked with nomap to be present, otherwise
-> these memblock cause unnecessarily allocation of metadata.
+> I'd like to ack only the keycode change, but not the deprecated .gpio
+> field. I'll post a separate patch for the keycode change only.
 
-This begs for much more information. How come nomap regions are in
-usable memblocks? What if memblock allocator used that memory?
-In other words, shouldn't nomap (an unusable memory iirc) be in reserved
-memblocks or removed altogethher?
-
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: KarimAllah Ahmed <karahmed@amazon.de>
-> ---
->  mm/sparse.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index fd13166..33810b6 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -256,6 +256,10 @@ void __init memblocks_present(void)
->  	struct memblock_region *reg;
->  
->  	for_each_memblock(memory, reg) {
-> +
-> +		if (memblock_is_nomap(reg))
-> +			continue;
-> +
->  		memory_present(memblock_get_region_node(reg),
->  			       memblock_region_memory_base_pfn(reg),
->  			       memblock_region_memory_end_pfn(reg));
-> -- 
-> 2.7.4
-
--- 
-Michal Hocko
-SUSE Labs
+I am fine if we only change the keycode.
+Do I have to send a v2 patch set?
