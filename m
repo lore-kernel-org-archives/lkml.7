@@ -4,124 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8916EC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69831C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7C121734
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9C4218B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g21nJ5dP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d/g9/XWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387763AbfGWPfM (ORCPT
+        id S2387823AbfGWPfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:35:12 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:50882 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387672AbfGWPfK (ORCPT
+        Tue, 23 Jul 2019 11:35:41 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42034 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731767AbfGWPfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:35:10 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190723153508euoutp017555c068d76c73a91184e098c8eb07f0~0EzmCnY9F1160911609euoutp01p
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 15:35:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190723153508euoutp017555c068d76c73a91184e098c8eb07f0~0EzmCnY9F1160911609euoutp01p
+        Tue, 23 Jul 2019 11:35:41 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190723153540euoutp02d6804ebc5e27b56bcf38329d5a48fe0a~0E0Dm_08r0992109921euoutp029
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 15:35:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190723153540euoutp02d6804ebc5e27b56bcf38329d5a48fe0a~0E0Dm_08r0992109921euoutp029
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563896108;
-        bh=3524MG5ykI7x6NMGcwx0EKgHUZ9KtyeSNKu7ggZci18=;
+        s=mail20170921; t=1563896140;
+        bh=FW1i9XkqsJ/xfT8yfZ1NJRFGhGEAIPPrdEJR1YIhNcg=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=g21nJ5dPzOpMuc3DMpwdNuHOSFeWhYHFmFbDgbvVZODf1/pXFXK/GfufzUVJvC78/
-         FbB8QcDPHC/D5nw+yopTMRHL6mHYZ4i/L7nssvWb7B/cRfsuoj/Q24LEjLJDsGSu8W
-         TmFcKmZsDT2CkWBGMfnLfvfkM3nHj8QJ0aSSn2hM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190723153507eucas1p1d113b6a5d1fbfbe7740887de7f218a6f~0EzlEUweA1181411814eucas1p1E;
-        Tue, 23 Jul 2019 15:35:07 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 64.84.04298.A29273D5; Tue, 23
-        Jul 2019 16:35:06 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        b=d/g9/XWIPZs5EvTRF8o0FbNYx4PZIV/9wWm9CIL9exS8GrZWOdQxicO7J1G9H0JiQ
+         ga6cg3qTIZrL9ghqguS3z/1E/8d6b8FvEWNp8cS3fmVKwZ6+5jiAMNrRjT8j07L+mj
+         ovzglDojxFe+W6XxZNpFM8z/U2bDsaJr41fdXXv8=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190723153539eucas1p227bf47a237bc2a3ccfac575894a8256f~0E0DSBQEU0206502065eucas1p2m;
+        Tue, 23 Jul 2019 15:35:39 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 47.BE.04325.B49273D5; Tue, 23
+        Jul 2019 16:35:39 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190723153506eucas1p2f9344c53f8b25fb9d89a1f0ee5dddae0~0EzkYliZO0645406454eucas1p20;
-        Tue, 23 Jul 2019 15:35:06 +0000 (GMT)
+        20190723153538eucas1p21d154d9af7375b2fbf49f8c1e83279b1~0E0CkZ2pq2267122671eucas1p2c;
+        Tue, 23 Jul 2019 15:35:38 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190723153506eusmtrp2994761be7e7e6d9a011678c88f89e277~0EzkKhiqr0483104831eusmtrp2Q;
-        Tue, 23 Jul 2019 15:35:06 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-77-5d37292a17cc
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190723153538eusmtrp1e5cf49713ceaa10cef1e9e38565bb8d9~0E0CWZSkr2233722337eusmtrp1b;
+        Tue, 23 Jul 2019 15:35:38 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-a7-5d37294b4103
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A3.B1.04140.A29273D5; Tue, 23
-        Jul 2019 16:35:06 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 80.C1.04140.A49273D5; Tue, 23
+        Jul 2019 16:35:38 +0100 (BST)
 Received: from [106.120.51.71] (unknown [106.120.51.71]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190723153505eusmtip1bfa1c18450b588d77194751d9bb262dd~0EzjowehC1210512105eusmtip1U;
-        Tue, 23 Jul 2019 15:35:05 +0000 (GMT)
-Subject: Re: [PATCH] fbmem: remove redundant assignment to err
-To:     Colin King <colin.king@canonical.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+        20190723153538eusmtip1153a7a1dab9c21e1d540d4b80b245193~0E0CArRqo0775207752eusmtip1T;
+        Tue, 23 Jul 2019 15:35:38 +0000 (GMT)
+Subject: Re: [PATCH] au1200fb: don't use DMA_ATTR_NON_CONSISTENT
+To:     Manuel Lauss <manuel.lauss@gmail.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Linux-MIPS <linux-mips@vger.kernel.org>,
+        linux-fbdev <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <72586381-9cf1-a401-b9bd-5705ebbaf937@samsung.com>
-Date:   Tue, 23 Jul 2019 17:35:04 +0200
+Message-ID: <3fb07ff6-fd89-a42a-607a-1bce6a300805@samsung.com>
+Date:   Tue, 23 Jul 2019 17:35:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190624223724.13629-1-colin.king@canonical.com>
+In-Reply-To: <CAOLZvyF0NsB6_e0=Vat48Mq1r-Qy45z509jAgQczG7RoaOqjBA@mail.gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHKsWRmVeSWpSXmKPExsWy7djPc7pamuaxBh+3W1v8Xt3LZrHw4V1m
-        iytf37NZbL0lbXGi7wOrxeVdc9gc2DxmNfSyeez9toDF4373cSaPz5vkAliiuGxSUnMyy1KL
-        9O0SuDKuLb/OVPCQuWLFb50GxnbmLkZODgkBE4ntz3eydjFycQgJrGCU+HiilRHC+cIo0f9m
-        BRNIlZDAZ0aJR18EYTpmLDzLDlG0nFHi6fvbUB1vGSU2fDrGAlIlLGAn8ev4DCCbg0NEQFPi
-        /LkikBpmgdWMEqs+TwOrYROwkpjYvooRxOYFqj/0ej47iM0ioCox8d85sLioQITE/WMbWCFq
-        BCVOznwC1ssJVP/15GQwm1lAXOLWk/lMELa8xPa3c6B+W8QucfWpI4TtItHyaA4ThC0s8er4
-        FnYIW0bi/06QXi4gex2jxN+OF8wQznZGieWT/7FBVFlLHD5+kRXkG2agb9bv0ocIO0oceQ4y
-        iAPI5pO48VYQ4gY+iUnbpjNDhHklOtqEIKrVJDYs28AGs7Zr50rmCYxKs5B8NgvJN7OQfDML
-        Ye8CRpZVjOKppcW56anFhnmp5XrFibnFpXnpesn5uZsYganm9L/jn3Ywfr2UdIhRgINRiYe3
-        gsk8Vog1say4MvcQowQHs5IIb2CDWawQb0piZVVqUX58UWlOavEhRmkOFiVx3mqGB9FCAumJ
-        JanZqakFqUUwWSYOTqkGxiVLbi/bdDXzfvvUQLcUcYMVLpUrE0Nn/N27tzJG4K72zE0tk9cV
-        LuGr6C7PcLF49/WTbUVas+X1CJf2K/HnBS7nhzguPCN1/v5nqxcbjFTun7v35uDplSu1Kl+E
-        ZSuarF/vH1KWah4j/OWGTdu53a4TC4s31h5bePuIULTUZM6vn112WmRwtSmxFGckGmoxFxUn
-        AgBK1RwOMQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsVy+t/xu7pamuaxBq9OCFj8Xt3LZrHw4V1m
-        iytf37NZbL0lbXGi7wOrxeVdc9gc2DxmNfSyeez9toDF4373cSaPz5vkAlii9GyK8ktLUhUy
-        8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DKuLb/OVPCQuWLFb50G
-        xnbmLkZODgkBE4kZC8+yg9hCAksZJU79zepi5ACKy0gcX18GUSIs8edaF1sXIxdQyWtGiXkf
-        vzOCJIQF7CR+HZ/BAlIvIqApcf5cEUgNs8BqRolP8/ewQDRMZJR4NWUVK0gDm4CVxMT2VWDN
-        vEDNh17PB1vMIqAqMfHfObC4qECExJn3K1ggagQlTs58AmZzAtV/PTkZzGYWUJf4M+8SM4Qt
-        LnHryXwmCFteYvvbOcwTGIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dL
-        zs/dxAiMrW3Hfm7Zwdj1LvgQowAHoxIPbwWTeawQa2JZcWXuIUYJDmYlEd7ABrNYId6UxMqq
-        1KL8+KLSnNTiQ4ymQM9NZJYSTc4Hxn1eSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU
-        1ILUIpg+Jg5OqQbGpr6Vsz5PrBCVnTzRrypBVF97YtViZuZqzbhDDZG17oGvfl5RXsQs/fzA
-        4qPqEq+VBNQ3XK6QyVF+tPWsyMH95noJt07JmeTUWcZp+5z03md9pGVbbOLKe7fvnF3gkSe2
-        q9nAquDpPSaewKutnd4tZlWGU/a921l3cFXhrmMzlpyaNtNEzC5WiaU4I9FQi7moOBEALFwa
-        O8MCAAA=
-X-CMS-MailID: 20190723153506eucas1p2f9344c53f8b25fb9d89a1f0ee5dddae0
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOKsWRmVeSWpSXmKPExsWy7djP87remuaxBk92y1isXH2UyeJE3wdW
+        i8u75rBZdG7aymhx7csjdgdWj52z7rJ77L7ZwObxeZNcAHMUl01Kak5mWWqRvl0CV8a+htUs
+        BRM5KjacncHcwHicrYuRk0NCwETixbc9QDYXh5DACkaJNzM6WSCcL4wS59ZPYIJwPjNKvL0+
+        hQWm5dKHC1Aty4ESD7rZIZy3jBJ/37axdjFycAgLOEic3VAN0iAi4Cnx/u9tVhCbWaBWYub3
+        /2A2m4CVxMT2VYwgNq+AnUTro1PMIDaLgKrErFPbwe4TFYiQuH9sAytEjaDEyZlPwI7gFAiU
+        uH2pjwliprjErSfzoWx5ie1v5zCD3CMh0M8usfrlMVaIq10kJh3/CvWBsMSr41vYIWwZidOT
+        e1ggGtYBPdDxAqp7O6PE8sn/oMFkLXH4+EWwz5gFNCXW79KHCDtKHPp0ECwsIcAnceOtIMQR
+        fBKTtk1nhgjzSnS0CUFUq0lsWLaBDWZt186VzBMYlWYheW0WkndmIXlnFsLeBYwsqxjFU0uL
+        c9NTi43zUsv1ihNzi0vz0vWS83M3MQKTy+l/x7/uYNz3J+kQowAHoxIPbwWTeawQa2JZcWXu
+        IUYJDmYlEd7ABrNYId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJM
+        HJxSDYzcurbNVafaJN7r/nXyfv2f4S03a/LEP73CuxflXZdwMcqMaPk2LeqmdJ6owW5tR3aF
+        ZdKf9h6UM3hmbDIpsvWl3bur/XwP44O72vt6rnewn5i3tjLgnsM57oqXuzR2nrG6ZX6owDSb
+        S8Tuh/2VHVOFxGMffpjsWMNs7NDc+kesLefChQrmQCWW4oxEQy3mouJEAHHA640qAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsVy+t/xu7pemuaxBhvfqFqsXH2UyeJE3wdW
+        i8u75rBZdG7aymhx7csjdgdWj52z7rJ77L7ZwObxeZNcAHOUnk1RfmlJqkJGfnGJrVK0oYWR
+        nqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsa+htUsBRM5KjacncHcwHicrYuRk0NC
+        wETi0ocLYLaQwFJGifczC7sYOYDiMhLH15dBlAhL/LnWBVTCBVTymlHi3p1PbCA1wgIOEmc3
+        VIPUiAh4Srz/e5sVxGYWqJdY0nMBqv4Uo8Se7XvB5rMJWElMbF/FCGLzCthJtD46xQxiswio
+        Ssw6tR2sRlQgQuLM+xUsEDWCEidnPgGzOQUCJW5f6mOCWKAu8WfeJWYIW1zi1pP5UHF5ie1v
+        5zBPYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwkrYd+7ll
+        B2PXu+BDjAIcjEo8vBVM5rFCrIllxZW5hxglOJiVRHgDG8xihXhTEiurUovy44tKc1KLDzGa
+        Aj03kVlKNDkfGOV5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoY
+        p/1o+/z/y4JECbdpyU695RcWcCVfuc9tdti+asYKzeW6n1k1mA8nuUtuORE8PVKrlHGDvvTs
+        9Glv1xq+7q/bweVytGvjjFnh+tu//NO4uMX33sUn03Ps/VNZfD5sXD65Ze7smwKXN03u28XA
+        Z7C11Mj62tar5tN0zQVP2xz7frHJ6V5IqZo1mxJLcUaioRZzUXEiAOleaIa6AgAA
+X-CMS-MailID: 20190723153538eucas1p21d154d9af7375b2fbf49f8c1e83279b1
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190624223730epcas2p4d2b1ad1200c11a472ba327ee39ede08b
+X-RootMTR: 20190626071727epcas1p137bdd191d49ab127eb92458848a06efb
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190624223730epcas2p4d2b1ad1200c11a472ba327ee39ede08b
-References: <CGME20190624223730epcas2p4d2b1ad1200c11a472ba327ee39ede08b@epcas2p4.samsung.com>
-        <20190624223724.13629-1-colin.king@canonical.com>
+X-CMS-RootMailID: 20190626071727epcas1p137bdd191d49ab127eb92458848a06efb
+References: <20190625121321.10197-1-hch@lst.de>
+        <CGME20190626071727epcas1p137bdd191d49ab127eb92458848a06efb@epcas1p1.samsung.com>
+        <CAOLZvyF0NsB6_e0=Vat48Mq1r-Qy45z509jAgQczG7RoaOqjBA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 6/25/19 12:37 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 6/26/19 9:16 AM, Manuel Lauss wrote:
+> On Tue, Jun 25, 2019 at 2:13 PM Christoph Hellwig <hch@lst.de> wrote:
+>>
+>> au1200fb allocates DMA memory using DMA_ATTR_NON_CONSISTENT, but never
+>> calls dma_cache_sync to synchronize the memory between the CPU and the
+>> device.  If it was use on a not cache coherent bus that would be fatal,
+>> but as far as I can tell from the naming and the mips platform
+>> implementation it always is used in cache coherent systems.  Remove
+>> the DMA_ATTR_NON_CONSISTENT flag, which is a no-op in that case.
 > 
-> Variable err is initialized to a value that is never read and it
-> is re-assigned later.  The initialization is redundant and can
-> be removed.
+> Very early au1200 chips, on which this driver apparently was developed on,
+> had issues with cache coherency, but this was fixed in a later step,
+> none of the 3 steppings I have access to exhibit any problems
+> with this patch applied.
 > 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Acked-By: Manuel Lauss <manuel.lauss@gmail.com>
 
 Patch queued for v5.4, thanks.
 
