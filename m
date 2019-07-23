@@ -2,120 +2,131 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF3BC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B66C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E07223A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C5221903
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SvzV/uma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389720AbfGWMo7 (ORCPT
+        id S2389386AbfGWMo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:44:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47924 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731264AbfGWMo5 (ORCPT
+        Tue, 23 Jul 2019 08:44:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48406 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732327AbfGWMo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jul 2019 08:44:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 0B2192610F4
-Subject: Re: [PATCH v4 14/23] drm/tilcdc: Provide ddc symlink in connector
- sysfs directory
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Shawn Guo <shawnguo@kernel.org>, kernel@collabora.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, Sean Paul <sean@poorly.run>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        amd-gfx@lists.freedesktop.org,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        freedreno@lists.freedesktop.org,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-References: <cover.1562843413.git.andrzej.p@collabora.com>
- <d1d415022c598fb7acd033f0f322dd67250adaa9.1562843413.git.andrzej.p@collabora.com>
- <20190723090532.GA787@ravnborg.org>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <3ad60be5-49cf-4017-4b74-53a2d6272deb@collabora.com>
-Date:   Tue, 23 Jul 2019 14:44:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=N9UdQqnOB55OuWBdAU8EUbiei4UyxqO1Nv88zjqQ7ak=; b=SvzV/umark6ZER0sswvLH8v85M
+        GNXtQ40xP8Ohm61V1o833snKpYrEn+CdmqNnTw9S+FSywW95mQNJUhTBnMmJH6TFf+MZi9CmDawdU
+        Uz7MfYP2QOsadFsPZJ0N54m7ObC625hd2wIlTq9l3Ps2aDEgQ2ycCBhebxkTvQcF0K66J8yg1MV0N
+        cZVeXLpsbt9kqJjKi1smAi0wtrwYSmEnpNdl4P/jZXxU+9Tnp9Mqsz5QBoCvI9qqwUKSy1rfhNUWr
+        s90Ek663/+R1xo3Z+KRs/SyPTvmD2jffFsaJD0ZvaozwJXgtQjahXzNyVEdtFpfroAQHFzSJtDRh2
+        YWHe+k8A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpu9w-0005Pw-Cs; Tue, 23 Jul 2019 12:44:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 89F9F201A942B; Tue, 23 Jul 2019 14:44:46 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 14:44:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     mingo@redhat.com, tj@kernel.org, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        bristot@redhat.com, lizefan@huawei.com, longman@redhat.com,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v2] sched/core: Fix cpu controller for !RT_GROUP_SCHED
+Message-ID: <20190723124446.GE3402@hirez.programming.kicks-ass.net>
+References: <20190719063455.27328-1-juri.lelli@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190723090532.GA787@ravnborg.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190719063455.27328-1-juri.lelli@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-W dniu 23.07.2019 oÂ 11:05, Sam Ravnborg pisze:
-> Hi Andrzej
+On Fri, Jul 19, 2019 at 08:34:55AM +0200, Juri Lelli wrote:
+> On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
+> move RT tasks between cgroups to which cpu controller has been attached;
+> but it is oddly possible to first move tasks around and then make them
+> RT (setschedule to FIFO/RR).
 > 
-> On Thu, Jul 11, 2019 at 01:26:41PM +0200, Andrzej Pietrasiewicz wrote:
->> Use the ddc pointer provided by the generic connector.
->>
->> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
->> ---
->>   drivers/gpu/drm/tilcdc/tilcdc_tfp410.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
->> index 62d014c20988..c373edb95666 100644
->> --- a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
->> +++ b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
->> @@ -219,6 +219,7 @@ static struct drm_connector *tfp410_connector_create(struct drm_device *dev,
->>   	tfp410_connector->mod = mod;
->>   
->>   	connector = &tfp410_connector->base;
->> +	connector->ddc = mod->i2c;
->>   
->>   	drm_connector_init(dev, connector, &tfp410_connector_funcs,
->>   			DRM_MODE_CONNECTOR_DVID);
+> E.g.:
 > 
-> When reading this code, it looks strange that we set connector->ddc
-> *before* the call to init the connector.
-> One could risk that drm_connector_init() used memset(..) to clear all
-> fields or so, and it would break this order.
+>   # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
+>   # chrt -fp 10 $$
+>   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+>   bash: echo: write error: Invalid argument
+>   # chrt -op 0 $$
+>   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+>   # chrt -fp 10 $$
+>   # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
+>   2345
+>   2598
+>   # chrt -p 2345
+>   pid 2345's current scheduling policy: SCHED_FIFO
+>   pid 2345's current scheduling priority: 10
+> 
+> Also, as Michal noted, it is currently not possible to enable cpu
+> controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
+> are any kernel RT threads in root cgroup, they can't be migrated to the
+> newly created cpu controller's root in cgroup_update_dfl_csses()).
+> 
+> Existing code comes with a comment saying the "we don't support RT-tasks
+> being in separate groups". Such comment is however stale and belongs to
+> pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
+> !RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
+> are not performed at all in these cases.
+> 
+> Make moving RT tasks between cpu controller groups viable by removing
+> special case check for RT (and DEADLINE) tasks.
 
-I verified the code of drm_connector_init() and cannot find any memset()
-invocations there. What is your actual concern?
+I have very vague memories of there being a matching test in
+sched_setscheduler(), but clearly that's no longer there.
 
-Andrzej
+Thanks!
+
+> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+> Reviewed-by: Michal Koutný <mkoutny@suse.com>
+> Acked-by: Tejun Heo <tj@kernel.org>
+> ---
+> v1 -> v2: added comment about unified hierachy in changelog (Michal)
+>           collected acks/reviews
+> ---
+>  kernel/sched/core.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index fa43ce3962e7..be041dc7d313 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6934,10 +6934,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
+>  #ifdef CONFIG_RT_GROUP_SCHED
+>  		if (!sched_rt_can_attach(css_tg(css), task))
+>  			return -EINVAL;
+> -#else
+> -		/* We don't support RT-tasks being in separate groups */
+> -		if (task->sched_class != &fair_sched_class)
+> -			return -EINVAL;
+>  #endif
+>  		/*
+>  		 * Serialize against wake_up_new_task() such that if its
+> -- 
+> 2.17.2
+> 
