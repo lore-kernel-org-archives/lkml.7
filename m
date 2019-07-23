@@ -2,127 +2,185 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CB8C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA99C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE87F2238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7562257F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="G++Hwup0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RY++HW4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388256AbfGWHKJ (ORCPT
+        id S2388267AbfGWHPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:10:09 -0400
-Received: from cmta19.telus.net ([209.171.16.92]:33133 "EHLO cmta19.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732685AbfGWHKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:10:09 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id povzhPPxQeRl4pow0hmKDw; Tue, 23 Jul 2019 01:10:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1563865806; bh=XH+cz0n2jFZrvdwK8js+vpCkuU9iaoulaMkw/K2zsms=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=G++Hwup0R1EK/XPjtggH/7xZv8yDgRDpKUb95GLBiwrkBrDvAEZeD1njy7Mmd5wG7
-         EpKPCzpaaQfcvyLKLX188WLHDfgAFRke/aU0Y6NKC7DvCyaozReFoNnodA8/7Qks9q
-         UxPwk2m+pVWDoO+RQjs1b5NvpZiy809PURrvIYwbba2iBziAt1hwZOeKXNlolVT4bV
-         kwxx30AteLw5o/C7L5lUGkWlezabsV4UZoA2NwLMQHvnEw4iFzaPRUbE3p5PxEgrMN
-         HK1l+Z2yLvLRUISRNmHra0y5pX6A4nn0VgFqDCjC73QYs1cV/l2tciqo4yIU/5qmfg
-         BmxRR8sZBoaJw==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=KqozJleN c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8
- a=X7X60EFgtTFmTPkmaoQA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=cvBusfyB2V15izCimMoJ:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Rafael Wysocki'" <rjw@rjwysocki.net>,
-        "'Ingo Molnar'" <mingo@redhat.com>,
-        "'Peter Zijlstra'" <peterz@infradead.org>
-Cc:     <linux-pm@vger.kernel.org>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        <joel@joelfernandes.org>, "'v4 . 18+'" <stable@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1563431200-3042-1-git-send-email-dsmythies@telus.net> <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
-In-Reply-To: <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
-Subject: RE: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
-Date:   Tue, 23 Jul 2019 00:10:01 -0700
-Message-ID: <001201d54125$a6a82350$f3f869f0$@net>
+        Tue, 23 Jul 2019 03:15:23 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32782 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfGWHPX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:15:23 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q20so42971552otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=l8ikddQeaKpRv73RcpRnjhbVGDZiHul3jH+N9vzFDo0=;
+        b=RY++HW4S6YvluB3ykZ83EnXbkxdRn0XGH/M6sHwl0pXMKHpPhZYXssPidQ+Mk6BwUU
+         hWb+4ljjVQo6lbPZf/R0uVj+O6yVvuDNPJp/A6YWXTlNvtMRSNByXd6TWJJQYjKyH0sg
+         P6arGJ5bHvMAO/bBtzVTYc3ypt0tF6QA91Qbbjd5Uhwc7n5TRl9ynpygqiv9Aeue2vmO
+         Y/pOGxpZfT8bedkrbPBizevmTfZTBlUUYGB3xJWMcC8W5oLes/32Zl6ZZn+pj8len4Bc
+         qp4E7r38ihani7d4VzCZWoephD1iHCzBQ03daY7c/EksFK9d6GApKWW61k+Ljpw4yu/9
+         BnkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=l8ikddQeaKpRv73RcpRnjhbVGDZiHul3jH+N9vzFDo0=;
+        b=g+xmnSv/eCIAakLzBA+otHVk9uQs28Ms17V9N8KpXEDiw0BZTV/kPnXOCAhe6DAnG8
+         6xLg5nak44upJ+bB6qOQX0oJrF3El2dYhan43flKS98BklLxANmV5s1up3h8xEBUxXkQ
+         OF3dfhF2pK1APNoEiqMMqcMZRzTo5lypYVF5tVfum11YItIcuRNwLHVQWH6JP3GUUAkT
+         bTEow/Bppr5BjI0VzO9/Ar5V6OmpFl7RJp/sK5/nLEXwG4tghw4dqyDKUXmwv23fJlg+
+         kjSOrqt5YGjKVhEc8efQutGYHO5txDgQushPSbfzL0D7yiBOZZu9DQo+hazLVSJBUP8I
+         PRzg==
+X-Gm-Message-State: APjAAAXKyDI5c0dU0uudbYFUtt9Xl/VklKirC18W7FmOoE/keswDxfny
+        xH7umJTqB4xfu8Oyiw4950ydycLgf4LCfuOLZdYOQQ==
+X-Google-Smtp-Source: APXvYqyp8TgTe2khLJdrQYV8bgnp91uAA8cka2Kr5b2hVsvEQfFjYhJXGxWzPoz1jz7B+clUCkkZOlaqP3pKxWeAyIY=
+X-Received: by 2002:a05:6830:13c2:: with SMTP id e2mr55602193otq.123.1563866121892;
+ Tue, 23 Jul 2019 00:15:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdVAWfe+bwrPM5WESwOhTvNG8+jZwgAylY+w
-X-CMAE-Envelope: MS4wfIlZvk504tenK5OfDjLaKFLSYbpLAFtMePH9EnvmmFwRbTgJQDEN1WZ6akOpYspZyktenwTEGsQg2/SR9897cVSYAddD9ki03lKRcPwC7C1NLVSjsovm
- mK3e/gC5KpzcmPsBNzjG6X34+TI051No1xRzPSUAskKB6v97KObyvM1XiXxX+u3RENtiItk2M6RCVjLAJlyUIS1o9wwKPMCKzNjxG4sFaDkw+e0WIgjaU90X
- MR4p8AKCXJRAMlnryoJVSO1bnPEl13Zlk2wun46bb6zRtdInsj/d8FiCYGiWj2X9Gb4RIbe3Ci75bIaI6s0dljUHS/EAFNNsHpqfap5QBjauHxBPjP0XVQrU
- hrkjhl+f5ecMEVe17c2Q9jn9fuVJTyU/NF7bc5AlEOvzIuT+LszyyCOW/3m8VWqULVflx1tdOtu5Rd1fdbaGzG3QczCybw==
+Received: by 2002:a9d:7541:0:0:0:0:0 with HTTP; Tue, 23 Jul 2019 00:15:21
+ -0700 (PDT)
+In-Reply-To: <20190723033103.GA13829@ming.t460p>
+References: <cover.1563782844.git.baolin.wang@linaro.org> <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
+ <20190722141940.GA26528@ming.t460p> <CAMz4ku+R8OdAQ2S91Xe=V-nZL1Nu5g=_xpHqQCzNF6JeBHY3rw@mail.gmail.com>
+ <20190723033103.GA13829@ming.t460p>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 23 Jul 2019 15:15:21 +0800
+Message-ID: <CAMz4ku+4z6LiREAWc0KN06=yxUjqoH6GM33S9qeGHOg2aAwyLQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/7] blk-mq: Export blk_mq_hctx_has_pending() function
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.07.21 23:52 Viresh Kumar wrote:
-
-> To avoid reducing the frequency of a CPU prematurely, we skip reducing
-> the frequency if the CPU had been busy recently.
-> 
-> This should not be done when the limits of the policy are changed, for
-> example due to thermal throttling. We should always get the frequency
-> within limits as soon as possible.
+On 23/07/2019, Ming Lei <ming.lei@redhat.com> wrote:
+> On Tue, Jul 23, 2019 at 11:12:57AM +0800, Baolin Wang wrote:
+>> Hi Ming,
+>>
+>> On Mon, 22 Jul 2019 at 22:19, Ming Lei <ming.lei@redhat.com> wrote:
+>> >
+>> > On Mon, Jul 22, 2019 at 09:09:36PM +0800, Baolin Wang wrote:
+>> > > Some SD/MMC host controllers can support packed command or packed
+>> > > request,
+>> > > that means we can package several requests to host controller at one
+>> > > time
+>> > > to improve performence. And this patch set will introduce MMC packed
+>> > > function
+>> > > to support this feature by following patches.
+>> > >
+>> > > To support MMC packed function, the MMC layer need to know if there
+>> > > are
+>> > > requests are pending now in hardware queue to help to combine
+>> > > requests
+>> > > as much as possible. If we know there are requests pending in
+>> > > hardware
+>> > > queue, then we should not package requests to host controller
+>> > > immediately,
+>> > > instead we should collect more requests into MMC packed queue to be
+>> > > packed
+>> > > to host controller with packed condition.
+>> > >
+>> > > Thus export this function for MMC packed function.
+>> > >
+>> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> > > ---
+>> > >  block/blk-mq.c         |    3 ++-
+>> > >  include/linux/blk-mq.h |    1 +
+>> > >  2 files changed, 3 insertions(+), 1 deletion(-)
+>> > >
+>> > > diff --git a/block/blk-mq.c b/block/blk-mq.c
+>> > > index b038ec6..5bd4ef9 100644
+>> > > --- a/block/blk-mq.c
+>> > > +++ b/block/blk-mq.c
+>> > > @@ -63,12 +63,13 @@ static int blk_mq_poll_stats_bkt(const struct
+>> > > request *rq)
+>> > >   * Check if any of the ctx, dispatch list or elevator
+>> > >   * have pending work in this hardware queue.
+>> > >   */
+>> > > -static bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
+>> > > +bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
+>> > >  {
+>> > >       return !list_empty_careful(&hctx->dispatch) ||
+>> > >               sbitmap_any_bit_set(&hctx->ctx_map) ||
+>> > >                       blk_mq_sched_has_work(hctx);
+>> > >  }
+>> > > +EXPORT_SYMBOL_GPL(blk_mq_hctx_has_pending);
+>> >
+>> > Just wondering why you don't use the 'last' field of 'struct
+>> > blk_mq_queue_data',
+>> > which is passed to .queue_rq(), and supposed for implementing batch
+>> > submission.
+>>
+>> The 'last' field of 'struct blk_mq_queue_data' does not indicate the
+>> last request in the hardware queue, since we want to collect more
+>> requests from block layer as much as possible to be packed later.
+>>
+>> And from blk_mq_do_dispatch_sched()--->blk_mq_dispatch_rq_list()--->
+>> queue_rq(), I always get 'bd.last = true', which is not useful to
+>> combine requests for MMC packed queue. Maybe I missed anything?
 >
-> Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-> Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
-> Reported-by: Doug Smythies <doug.smythies@gmail.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> @Doug: Please try this patch, it must fix the issue you reported.
-
-It fixes the driver = acpi-cpufreq ; governor = schedutil test case
-It does not fix the driver = intel_cpufreq ; governor = schedutil test case
-
-I have checked my results twice, but will check again in the day or two.
-
-... Doug
-
+> That is one flaw of current implementation, and we may improve it,
+> so other drivers(virtio-io, ...) can benefit from it too.
 >
-> kernel/sched/cpufreq_schedutil.c | 6 ++++--
-> 1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 636ca6f88c8e..b53c4f02b0f1 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -447,7 +447,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
->  	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
-> 	unsigned long util, max;
->  	unsigned int next_f;
-> -	bool busy;
-> +	bool busy = false;
-> 
-> 	sugov_iowait_boost(sg_cpu, time, flags);
-> 	sg_cpu->last_update = time;
-> @@ -457,7 +457,9 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
-> 	if (!sugov_should_update_freq(sg_policy, time))
->		return;
-> 
-> -	busy = sugov_cpu_is_busy(sg_cpu);
-> +	/* Limits may have changed, don't skip frequency update */
-> +	if (!sg_policy->need_freq_update)
-> +		busy = sugov_cpu_is_busy(sg_cpu);
-> 
-> 	util = sugov_get_util(sg_cpu);
->  	max = sg_cpu->max;
-> -- 
-> 2.21.0.rc0.269.g1a574e7a288b
 
+OK. I am not sure can I add a new flag to indicate if there are
+requests are pending in the hardware queue? That will help MMC driver
+to combine more requests.
 
+Or do you have any other good suggestion? Thanks.
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 5bd4ef9..cb240f4 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1257,6 +1257,8 @@ bool blk_mq_dispatch_rq_list(struct
+request_queue *q, struct list_head *list,
+                        bd.last = !blk_mq_get_driver_tag(nxt);
+                }
+
++               bd.rq_pending = blk_mq_hctx_has_pending(hctx);
++
+                ret = q->mq_ops->queue_rq(hctx, &bd);
+                if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
+                        /*
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 15a2b7b..9b06fe0 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -118,6 +118,7 @@ struct blk_mq_tag_set {
+ struct blk_mq_queue_data {
+        struct request *rq;
+        bool last;
++       bool rq_pending;
+ };
+
+-- 
+Baolin Wang
+Best Regards
