@@ -2,290 +2,197 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446DCC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DB3C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A55F21911
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9654721911
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhH0Wq6j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wd/XVqFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbfGWDEC (ORCPT
+        id S1732365AbfGWDFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 23:04:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36028 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729393AbfGWDEC (ORCPT
+        Mon, 22 Jul 2019 23:05:38 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38009 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfGWDFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 23:04:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so39571715ljj.3;
-        Mon, 22 Jul 2019 20:03:58 -0700 (PDT)
+        Mon, 22 Jul 2019 23:05:37 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v186so31196012oie.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 20:05:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8xbcKJy29W9G+6XFE1SC4ZEJ7ZY2qDVosxzEJUyDA3k=;
-        b=dhH0Wq6jctTT0KZfsJddhvq1G1G44ETwwJwZUYIanj2xXEYbrAAAGzOiQx9XRTPg19
-         KK5/aOPuox9Mpc82+wFVtl6vPFiNA3RFMK3twfyHscqP5p+QELoM3nISicyqTupMupYR
-         yioRDPw9zIwc1t5MfHFB0RRavezCI+n3iimYR+Z1MqhGH+GcTKGtX0GwfyToWKkLJTRi
-         ZjGD+Vk5t9T6dlK67Q6wGlFHQfn7hPn6ebs4XJj99aohtFryRVjGrcvBb8noeDYpw+WI
-         Lze88rtPHrVo8yLWzVG4k5eQerAGVBOQBriuC78hGx+/pzKEIkCezt0/kMUrqsWTHs3g
-         05lg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6z23ihiLa0fqOtrIntj5/XpQ6+8uIAMB4pCR65GZk7I=;
+        b=wd/XVqFBZQ9/Qq6IEXQdUYgKeLYB1zy4zG7Q9ijPL8LcKG1qSoZawPTzbjWzZOp3vd
+         AEIzUKaWCaNTImgCXWT94Hl5gVQZsbXQSx2yJWeg9zoTgo0kadqM2VxvrgemS7ghOjV6
+         IywrSncmS0WlVy6eRLWSXQuCeTd6935TrECAGBnTgmSU8CLjdR+hYTbINNg/jWtfQiT8
+         cdKY6UEFHJHpM/X5vpgxvWZp2hixaLmIZcZTOSXIaXTyLeOOB6PPbZVWWzN+C5DgmVM/
+         /gA+7OzRqzT7rkLSSrTdmF36koiWTIYLg/cftPJutMtkZRrn0vqxmSliyshgK5EvQH6Y
+         hcgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8xbcKJy29W9G+6XFE1SC4ZEJ7ZY2qDVosxzEJUyDA3k=;
-        b=I131ca3UuYhE7ok2mTJM2RNKd5S85UqMp4e1Yd0/32Etwk7nKnozomql6lg8thO/07
-         5th4pvQ3UZWip0j14nE9M08mBV8iWMbgIuJE96QSxJzDCInje85pyYTy2nkIKL7esR8V
-         ItaFIRdDN+8T0x3sWLqopJiKONUsf+cwEsRDQlsd8nW7H+SmfwRkA8jRt7GobiqUia4i
-         tROz3RKkDSIt8Q+nNNK9dUQ4xJmGlV05D+TEc6YtXqJLsx6vDzIFtD5Jcfqu4JYuvYdY
-         wkw7J/2HvGX1Vw6P135Hw5TVBk86HusSOEjk8lkskcu6CDZY2iU/XDSwa4EfneJCSZ+3
-         6IOQ==
-X-Gm-Message-State: APjAAAXsgdwktaJA8GyNh+2wUqprlGoSk7gfPf8d66S5jWoZILv7hF2x
-        o5pMH1hWbTH+Y58D55Ul+t3u4vQx
-X-Google-Smtp-Source: APXvYqyeyyE61yAzRlbwRkjixJ+MzgQknlzT+x38lMna/B3NIntesYyRiOe7y8U6JuyVtOoznHY7MA==
-X-Received: by 2002:a2e:534a:: with SMTP id t10mr967702ljd.109.1563851037966;
-        Mon, 22 Jul 2019 20:03:57 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id m10sm6182450lfd.32.2019.07.22.20.03.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 20:03:56 -0700 (PDT)
-Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
- tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
- <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
- <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
- <b575ca93-9f34-b07a-1234-ef1ea2a6ddee@gmail.com>
- <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <70ad28cb-c268-cbbe-36f5-39df26617d8e@gmail.com>
-Date:   Tue, 23 Jul 2019 06:03:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6z23ihiLa0fqOtrIntj5/XpQ6+8uIAMB4pCR65GZk7I=;
+        b=N6C2Xo1J/fc1x8gYfRJPL/9Uh+Tb24uxOdNgb9RQ6gIxCjp5kk1FebUWCEP7SgYw3u
+         KkXPa11kdcs+/VzXyRpGRwGQOz3q4PN0hlYpvmG3AUiuvn8AGQfWpyniNsv1i7KMqN5K
+         UEfs+rq1IRzcu2aPM3CRs2uHJYutemrf/7QAmmW8d+ar2IXd9/q5O/oHtgqE4h5gzclK
+         qFmB95yQLO9dqI7y4cGZ0WpSdeDpSxYqtLBZbpvWc5RpX19QOFR9flTCi9Y8h8kd+eYT
+         crwAfsoX3TJseJ1AGRdjJH6YGI+nBNj+GgUOPjfwWwLN3w1YvrX2e0g4brk7qeKva2Tj
+         Oxsg==
+X-Gm-Message-State: APjAAAXjYraLJguq4Ap9p348Os5rEi+V6Mn0cr6zvyigM2w0qBxRvvYQ
+        L4ySJsUjytFskQL0YjB2MYDIiQM8+Z5qeg0mQ9dgbQ==
+X-Google-Smtp-Source: APXvYqww+xoxfeT7kmslr9nl3L4GnIvOsf2Lq/6zAIyCWWt3SskCzSv1T5QEEwhUaVJJB+EI3ZjeZO/fmuL++WUhSlw=
+X-Received: by 2002:aca:4c16:: with SMTP id z22mr617585oia.57.1563851136490;
+ Mon, 22 Jul 2019 20:05:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <89c3ef495c367d58ca3abe99a1f82c48f8c08705.1563274904.git.baolin.wang@linaro.org>
+ <CAPDyKFq1y6xVfA=b1ybWvA1+e9h9aSteHAHjBbXvXGVJx95FQA@mail.gmail.com>
+In-Reply-To: <CAPDyKFq1y6xVfA=b1ybWvA1+e9h9aSteHAHjBbXvXGVJx95FQA@mail.gmail.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 23 Jul 2019 11:05:23 +0800
+Message-ID: <CAMz4kuKraOb_o0LFWnqkS7m0Xd3QGrw1P+md0YBNbbbp1967OA@mail.gmail.com>
+Subject: Re: [PATCH v4] mmc: host: sdhci-sprd: Fix the incorrect soft reset
+ operation when runtime resuming
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.07.2019 4:52, Sowjanya Komatineni пишет:
-> 
-> On 7/22/19 6:41 PM, Dmitry Osipenko wrote:
->> 23.07.2019 4:08, Dmitry Osipenko пишет:
->>> 23.07.2019 3:58, Dmitry Osipenko пишет:
->>>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
->>>>> This patch implements PMC wakeup sequence for Tegra210 and defines
->>>>> common used RTC alarm wake event.
->>>>>
->>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>> ---
->>>>>  drivers/soc/tegra/pmc.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>  1 file changed, 111 insertions(+)
->>>>>
->>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>> index 91c84d0e66ae..c556f38874e1 100644
->>>>> --- a/drivers/soc/tegra/pmc.c
->>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>> @@ -57,6 +57,12 @@
->>>>>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
->>>>>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
->>>>>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
->>>>> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
->>> Please follow the TRM's bits naming.
->>>
->>> PMC_CNTRL_LATCHWAKE_EN
->>>
->>>>> +#define PMC_WAKE_MASK			0x0c
->>>>> +#define PMC_WAKE_LEVEL			0x10
->>>>> +#define PMC_WAKE_STATUS			0x14
->>>>> +#define PMC_SW_WAKE_STATUS		0x18
->>>>>  
->>>>>  #define DPD_SAMPLE			0x020
->>>>>  #define  DPD_SAMPLE_ENABLE		BIT(0)
->>>>> @@ -87,6 +93,11 @@
->>>>>  
->>>>>  #define PMC_SCRATCH41			0x140
->>>>>  
->>>>> +#define PMC_WAKE2_MASK			0x160
->>>>> +#define PMC_WAKE2_LEVEL			0x164
->>>>> +#define PMC_WAKE2_STATUS		0x168
->>>>> +#define PMC_SW_WAKE2_STATUS		0x16c
->>>>> +
->>>>>  #define PMC_SENSOR_CTRL			0x1b0
->>>>>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->>>>>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
->>>>> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
->>>>>  	.alloc = tegra_pmc_irq_alloc,
->>>>>  };
->>>>>  
->>>>> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->>>>> +{
->>>>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->>>>> +	unsigned int offset, bit;
->>>>> +	u32 value;
->>>>> +
->>>>> +	if (data->hwirq == ULONG_MAX)
->>>>> +		return 0;
->>>>> +
->>>>> +	offset = data->hwirq / 32;
->>>>> +	bit = data->hwirq % 32;
->>>>> +
->>>>> +	/*
->>>>> +	 * Latch wakeups to SW_WAKE_STATUS register to capture events
->>>>> +	 * that would not make it into wakeup event register during LP0 exit.
->>>>> +	 */
->>>>> +	value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
->>>>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>> +	udelay(120);
->>>> Why it takes so much time to latch the values? Shouldn't some status-bit
->>>> be polled for the completion of latching?
->>>>
->>>> Is this register-write really getting buffered in the PMC?
->>>>
->>>>> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
->>>>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>> +	udelay(120);
->>>> 120 usecs to remove latching, really?
->>>>
->>>>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
->>>>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
->>>>> +
->>>>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
->>>>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
->>>>> +
->>>>> +	/* enable PMC wake */
->>>>> +	if (data->hwirq >= 32)
->>>>> +		offset = PMC_WAKE2_MASK;
->>>>> +	else
->>>>> +		offset = PMC_WAKE_MASK;
->>>>> +
->>>>> +	value = tegra_pmc_readl(pmc, offset);
->>>>> +
->>>>> +	if (on)
->>>>> +		value |= 1 << bit;
->>>>> +	else
->>>>> +		value &= ~(1 << bit);
->>>>> +
->>>>> +	tegra_pmc_writel(pmc, value, offset);
->>>> Why the latching is done *before* writing into the WAKE registers? What
->>>> it is latching then?
->>> I'm looking at the TRM doc and it says that latching should be done
->>> *after* writing to the WAKE_MASK / LEVEL registers.
->>>
->>> Secondly it says that it's enough to do:
->>>
->>> value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>> value |= PMC_CNTRL_LATCH_WAKEUPS;
->>> tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>
->>> in order to latch. There is no need for the delay and to remove the
->>> "LATCHWAKE_EN" bit, it should be a oneshot action.
->> Although, no. TRM says "stops latching on transition from 1
->> to 0 (sequence - set to 1,set to 0)", so it's not a oneshot action.
->>
->> Have you tested this code at all? I'm wondering how it happens to work
->> without a proper latching.
-> Yes, ofcourse its tested and this sequence to do transition is
-> recommendation from Tegra designer.
-> Will check if TRM doesn't have update properly or will re-confirm
-> internally on delay time...
-> 
-> On any of the wake event PMC wakeup happens and WAKE_STATUS register
-> will have bits set for all events that triggered wake.
-> After wakeup PMC doesn't update SW_WAKE_STATUS register as per PMC design.
-> SW latch register added in design helps to provide a way to capture
-> those events that happen right during wakeup time and didnt make it to
-> SW_WAKE_STATUS register.
-> So before next suspend entry, latching all prior wake events into SW
-> WAKE_STATUS and then clearing them.
+Hi Ulf,
 
-I'm now wondering whether the latching cold be turned ON permanently
-during of the PMC's probe, for simplicity.
+On Mon, 22 Jul 2019 at 19:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 17 Jul 2019 at 04:29, Baolin Wang <baolin.wang@linaro.org> wrote:
+> >
+> > In sdhci_runtime_resume_host() function, we will always do software reset
+> > for all, which will cause Spreadtrum host controller work abnormally after
+> > resuming.
+>
+> What does "software reset for all" means?
 
-> LATCHWAKE_EN - When set, enables latching and stops latching on
-> transition from 1 to 0
-> There is recommendation of min 120uSec for this transition to stop
-> latching. Will double-check why 120uSec
+The SD host controller specification defines 3 types software reset:
+software reset for data line, software reset for command line and
+software reset for all.
+Software reset for all means this reset affects the entire Host
+controller except for the card detection circuit.
 
-Yes, please check.
+>
+> >
+> > Thus for Spreadtrum platform that will not power down the SD/eMMC card during
+> > runtime suspend, we should not do software reset for all.
+>
+> Normally, sdhci hosts that enters runtime suspend doesn't power off
+> the card (there are some exceptions like PCI variants).
 
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>>  static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->>>>>  {
->>>>>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->>>>> @@ -1954,6 +2014,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->>>>>  	return 0;
->>>>>  }
->>>>>  
->>>>> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
->>>>> +{
->>>>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->>>>> +	unsigned int offset, bit;
->>>>> +	u32 value;
->>>>> +
->>>>> +	if (data->hwirq == ULONG_MAX)
->>>>> +		return 0;
->>>>> +
->>>>> +	offset = data->hwirq / 32;
->>>>> +	bit = data->hwirq % 32;
->>>>> +
->>>>> +	if (data->hwirq >= 32)
->>>>> +		offset = PMC_WAKE2_LEVEL;
->>>>> +	else
->>>>> +		offset = PMC_WAKE_LEVEL;
->>>>> +
->>>>> +	value = tegra_pmc_readl(pmc, offset);
->>>>> +
->>>>> +	switch (type) {
->>>>> +	case IRQ_TYPE_EDGE_RISING:
->>>>> +	case IRQ_TYPE_LEVEL_HIGH:
->>>>> +		value |= 1 << bit;
->>>>> +		break;
->>>>> +
->>>>> +	case IRQ_TYPE_EDGE_FALLING:
->>>>> +	case IRQ_TYPE_LEVEL_LOW:
->>>>> +		value &= ~(1 << bit);
->>>>> +		break;
->>>>> +
->>>>> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
->>>>> +		value ^= 1 << bit;
->>>>> +		break;
->>>>> +
->>>>> +	default:
->>>>> +		return -EINVAL;
->>>>> +	}
->>>>> +
->>>>> +	tegra_pmc_writel(pmc, value, offset);
->>>> Shouldn't the WAKE_LEVEL be latched as well?
-> WAKE_LEVELs dont need any latch as they are the levels SW sets for wake
-> trigger and they are not status
+Yes, same as our controller.
 
-Okay.
+>
+> So, what's so special here and how does the reset come into play? I
+> don't see sdhci doing a reset in sdhci_runtime_suspend|resume_host()
+> and nor doesn the callback from the sdhci-sprd.c variant doing it.
 
-[snip]
+In sdhci_runtime_resume_host(), it will issue sdhci_init(host, 0) to
+issue software reset for all.
+
+>
+> > To fix this
+> > issue, adding a specific reset operation that adds one condition to validate
+> > the power mode to decide if we can do software reset for all or just reset
+> > command and data lines.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> > Changess from v3:
+> >  - Use ios.power_mode to validate if the card is power down or not.
+> >
+> > Changes from v2:
+> >  - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
+> >
+> > Changes from v1:
+> >  - Add a specific reset operation instead of changing the core to avoid
+> >  affecting other hardware.
+> > ---
+> >  drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
+> >  1 file changed, 18 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> > index 603a5d9..94f9726 100644
+> > --- a/drivers/mmc/host/sdhci-sprd.c
+> > +++ b/drivers/mmc/host/sdhci-sprd.c
+> > @@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+> >         return 1 << 31;
+> >  }
+> >
+> > +static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
+> > +{
+> > +       struct mmc_host *mmc = host->mmc;
+> > +
+> > +       /*
+> > +        * When try to reset controller after runtime suspend, we should not
+> > +        * reset for all if the SD/eMMC card is not power down, just reset
+> > +        * command and data lines instead. Otherwise will meet some strange
+> > +        * behaviors for Spreadtrum host controller.
+> > +        */
+> > +       if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
+> > +           mmc->ios.power_mode == MMC_POWER_ON)
+> > +               mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
+>
+> Can sdhci_sprd_reset() be called when the host is runtime suspended?
+
+When host tries to runtime resume in sdhci_runtime_resume_host(), it
+will call reset operation to do software reset.
+
+> That sounds like a bug to me, no?
+
+Since our controller will meet some strange behaviors if we do
+software reset for all in sdhci_runtime_resume_host(), and try to
+avoid changing the core logic of sdhci_runtime_resume_host() used by
+other hardware controllers, thus I introduced a specific reset ops and
+added some condition to make sure we just do software reset command
+and data lines from runtime suspend state.
+
+>
+> > +
+> > +       sdhci_reset(host, mask);
+> > +}
+> > +
+> >  static struct sdhci_ops sdhci_sprd_ops = {
+> >         .read_l = sdhci_sprd_readl,
+> >         .write_l = sdhci_sprd_writel,
+> > @@ -381,7 +398,7 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+> >         .get_max_clock = sdhci_sprd_get_max_clock,
+> >         .get_min_clock = sdhci_sprd_get_min_clock,
+> >         .set_bus_width = sdhci_set_bus_width,
+> > -       .reset = sdhci_reset,
+> > +       .reset = sdhci_sprd_reset,
+> >         .set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
+> >         .hw_reset = sdhci_sprd_hw_reset,
+> >         .get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
+> > --
+> > 1.7.9.5
+> >
+>
+> Kind regards
+> Uffe
+
+
+
+-- 
+Baolin Wang
+Best Regards
