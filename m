@@ -2,108 +2,132 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B70BC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D331DC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34C32184E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563899709;
-	bh=+qWhcg6cGcPt9JTmOfRR3oQ1lQdVFnaokFDUOzuiZ+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yRWVxMlxMLafeID2EtAz6NPaAVXECZz99yZRjd2LzT866Yqd0khZczaxKLxKBzsxi
-	 0VCkG8aX9jex+HfjDXGoGaAsKxEQHgCh2gatENgr/RpX4XiUoeTagDHKXoVXb02/1z
-	 Ngt7MNEACC0+F7AZBb6FkM5+hYHnTTtXFZF7gY+U=
+	by mail.kernel.org (Postfix) with ESMTP id 658E92239E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="L3WysIDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390884AbfGWQfH (ORCPT
+        id S2390889AbfGWQhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:35:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51694 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728505AbfGWQfH (ORCPT
+        Tue, 23 Jul 2019 12:37:20 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:37396 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728505AbfGWQhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:35:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+qWhcg6cGcPt9JTmOfRR3oQ1lQdVFnaokFDUOzuiZ+s=; b=edn2N8z+zEfeWwyh5fLI+ISAA
-        LHPR9DSKwGUjE4NhoM2O0ZsKzaEKPCf6PCUuDBOZ/0wdNB29Oyu1X0sdFgZhxgNxKRNNThfXoIiWi
-        fgULF+L0BSOZj+DtMW79iDyILWfJTTAgKFR4vbjc2UdrNQlJ6bqZgjlUCBuM69+vaD5iw=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hpxkm-0004GG-1q; Tue, 23 Jul 2019 16:35:04 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3949F2742B59; Tue, 23 Jul 2019 17:35:03 +0100 (BST)
-Date:   Tue, 23 Jul 2019 17:35:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFT] regulator: lp87565: Fix probe failure for
- "ti,lp87565"
-Message-ID: <20190723163503.GL5365@sirena.org.uk>
-References: <20190711113517.26077-1-axel.lin@ingics.com>
- <20190723112647.GE5365@sirena.org.uk>
- <CAFRkauDSbmtGRnE0xvKOKxb=SWOA+03i60Wu-9KHYxh1qFuCEg@mail.gmail.com>
+        Tue, 23 Jul 2019 12:37:19 -0400
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x6NGbD00016301
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:37:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x6NGbD00016301
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563899834;
+        bh=JSFWAiztZP/N5BXKMO6gIHsKgS5zrSPfJfqhid6TItM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L3WysIDVNilUk+7BDmRZQTQzccQic31+bdiLhsO5Ezv/0p0IM6NKNOSHIjo8cST6/
+         htc69zA2+dLuXqb9ZzlxCMd6QwzM3Bq7GNhlegmtT+hmXpoFCmKS9rA1kjAZpDISuY
+         /iB+aaTnlZo46Y58v165t8+dF3Men7kTEWsTTAgkYTAHR8DyTk8Afy73ywgh0Q6jsr
+         WkmahUa1uYPqFWYXxTXR0u8AT8QxAdYuwnTLUN+dkbPpvPrQx7SvEPjIR+P4KIWvNt
+         GZMheetNuKYNZOVkHt7bjNbo8eeHBbx7ubFHWZhamgLGpolzVFTcMMF2ULKPMYinyv
+         1BO+J3FohDglg==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id b200so8759444vkf.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 09:37:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAVwTn8flScDOZG6c5QrDJylSzqqUWrgssiwGxd+j2AY0HNeIsFS
+        gzE0/v8gscE3N/SqFcC8HSqWD2ZzZQmzJ/MT4Eo=
+X-Google-Smtp-Source: APXvYqzUnVn4yGh99OfdRUkGaCtT70BglsZH2Wiari5nt/g+lE1EkJtm8JeU0YZP54Nn/Ybb2Ylws8X9Z3vnr5CYOaA=
+X-Received: by 2002:a1f:4107:: with SMTP id o7mr29435305vka.34.1563899832702;
+ Tue, 23 Jul 2019 09:37:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="umrsQkkrw7viUWFs"
-Content-Disposition: inline
-In-Reply-To: <CAFRkauDSbmtGRnE0xvKOKxb=SWOA+03i60Wu-9KHYxh1qFuCEg@mail.gmail.com>
-X-Cookie: Avoid contact with eyes.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190721085409.24499-1-k0ma@utam0k.jp> <CAK7LNARBjkYHkmv1michYYMd-2_70d+-Gvg1Kv4FyPeeBShvdw@mail.gmail.com>
+ <20190723162840.GA7110@gmail.com>
+In-Reply-To: <20190723162840.GA7110@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 24 Jul 2019 01:36:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQqUtUPSu=UmtZ-dqsjUgUO-f6U1tQa9VPmJ944poh6zA@mail.gmail.com>
+Message-ID: <CAK7LNAQqUtUPSu=UmtZ-dqsjUgUO-f6U1tQa9VPmJ944poh6zA@mail.gmail.com>
+Subject: Re: [PATCH] .gitignore: Add compilation database files
+To:     Toru Komatsu <k0ma@utam0k.jp>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 1:28 AM Toru Komatsu <k0ma@utam0k.jp> wrote:
+>
+> On 07/24, Masahiro Yamada wrote:
+> > Just a nit.
+> >
+> > The patch title is:
+> > .gitignore: Add compilation database "files"
+> >
+> > Maybe, should it be singular?
+> >
+> >
+> > On Sun, Jul 21, 2019 at 5:55 PM Toru Komatsu <k0ma@utam0k.jp> wrote:
+> > >
+> > > This file is used by clangd to use language server protocol.
+> > > It can be generated at each compile using scripts/gen_compile_commands.py.
+> > > Therefore it is different depending on the environment and should be
+> > > ignored.
+> > >
+> > > Signed-off-by: Toru Komatsu <k0ma@utam0k.jp>
+> > > ---
+> > >  .gitignore | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/.gitignore b/.gitignore
+> > > index 8f5422cba6e2..025d887f64f1 100644
+> > > --- a/.gitignore
+> > > +++ b/.gitignore
+> > > @@ -142,3 +142,6 @@ x509.genkey
+> > >
+> > >  # Kdevelop4
+> > >  *.kdev4
+> > > +
+> > > +# Clang's compilation database files
+> > > +/compile_commands.json
+> > > --
+> > > 2.17.1
+> > >
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+>
+> --
+>
+> Thanks for your review.
+>
+>  Sorry, this point which you pointed out is my mistake.
+>  It is should be "file".
+>
+>  I'm begginer because this patch is my first time,
+>  What should I do next?
 
---umrsQkkrw7viUWFs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 23, 2019 at 08:28:35PM +0800, Axel Lin wrote:
-> Mark Brown <broonie@kernel.org> =E6=96=BC 2019=E5=B9=B47=E6=9C=8823=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:26=E5=AF=AB=E9=81=93=EF=BC=9A
-> > On Thu, Jul 11, 2019 at 07:35:17PM +0800, Axel Lin wrote:
+This patch is trivial enough.
 
-> > > The "ti,lp87565" compatible string is still in of_lp87565_match_table,
-> > > but current code will return -EINVAL because lp87565->dev_type is unk=
-nown.
-> > > This was working in earlier kernel versions, so fix it.
+I will change "files" -> "file"
+(patch subject and code),
+then I will apply it.
 
-> > This doesn't seem to apply against current code, please check and
-> > resend.
+Thanks.
 
-> I re-generate the patch but the new patch is exactly the same as this one.
-> It can be applied to both Linus and linux-next trees.
-> Did I miss something?
 
-It's a fix so I was trying to apply it on my for-5.3 branch.
 
---umrsQkkrw7viUWFs
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl03NzYACgkQJNaLcl1U
-h9A6kgf+IJyaBXM/vls0JV29Ss2VbJ5zJhdHdvhCHs/aqqAxRbdWFxIJaTYfPeMa
-UB6fmoUdCbu3RILvkYEkp1ld/kkXRu0aZf+MOyVEXvIhWQMMMe/56+a4mJiHyjaW
-AaQDYVfaorb+wY0jBumVwU1eZZSKaE2lqdUEYCNFF/2O9nUSEOPlZWGXPSt9JpgO
-bmWoURiTp8Ff+Lg9DkUvbnuVr7j5Rvpcl3GgSgpkqnPA2H2gNFo9M1dJTOmI1/5Y
-+VsxM9uXpa9jRYB6nZ+5cJKA6fLhcN/UJRDCbSz5+dlV4PXXNxb8JgzMNbljcgoc
-LUIbQpe6AmHYfFNxqlytdiLlgcY7LA==
-=K5m9
------END PGP SIGNATURE-----
-
---umrsQkkrw7viUWFs--
+-- 
+Best Regards
+Masahiro Yamada
