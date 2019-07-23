@@ -2,64 +2,180 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6ABC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90E5C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B030F21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F91620821
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:52:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zYaV2dx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391570AbfGWSvO (ORCPT
+        id S2391579AbfGWSwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:51:14 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35094 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbfGWSvN (ORCPT
+        Tue, 23 Jul 2019 14:52:03 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42030 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfGWSwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:51:13 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8B47C153B91FF;
-        Tue, 23 Jul 2019 11:51:12 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 11:51:12 -0700 (PDT)
-Message-Id: <20190723.115112.1824255524103179323.davem@davemloft.net>
-To:     jonathanh@nvidia.com
-Cc:     robin.murphy@arm.com, Jose.Abreu@synopsys.com, lists@bofh.nu,
-        ilias.apalodimas@linaro.org, Joao.Pinto@synopsys.com,
-        alexandre.torgue@st.com, maxime.ripard@bootlin.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, wens@csie.org,
-        mcoquelin.stm32@gmail.com, linux-tegra@vger.kernel.org,
-        peppe.cavallaro@st.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <8756d681-e167-fe4a-c6f0-47ae2dcbb100@nvidia.com>
-References: <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-        <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
-        <8756d681-e167-fe4a-c6f0-47ae2dcbb100@nvidia.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jul 2019 11:51:13 -0700 (PDT)
+        Tue, 23 Jul 2019 14:52:02 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x1so29286124wrr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 11:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fyhJlYS/nmZVWKWvi27Hp7abC+DbsGqwswaGohdPOpA=;
+        b=zYaV2dx0GCGELJRDEgnEx66kKYH6fLEWGmcTfHxHp8NiO832NO1LV81qL8RIhK9Tsj
+         hAmNwACbpLQr/SARJZqkrV5Brs/mkIBkJ66SR8RQrdD3P8Rb74m8ALaG3ZvugP6HISMV
+         lVG8R8vkB1aqiPQy4ff57S+GbKMrdWCYRLA27pDhg2fyAUHppqyPmvyBX3EoRwzX4vea
+         nDktXIkOmtngTtXxPpPG4fWhlq3hNuDtaCSJjzwI/wh92oa9M7XzcbntymOu0moJLN7+
+         2UZTvjHbBH9fBJ04/M14wCNpciOtmbW2JiwZp1oPyB78/W1tEXGQG6PB73YGjqJBft9T
+         TwNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fyhJlYS/nmZVWKWvi27Hp7abC+DbsGqwswaGohdPOpA=;
+        b=K6hr38H+VVlttoLOEROFevn5K3CJIZxa27/au4sVaZUcE/4mmKDBF7z2RkI3VT+r1i
+         3JGI9emyys+OsRQBAVzJWzHDP3yTAL6zk9t4Z197G+Z1DdLcg6LBfm8IBvaj+LBOdyAz
+         D20JPzie0Vqw7ghhk/T0qSVIkr3UQ1oi3rP97+uH8Jc4qqyfpe7rtJMO1lMXo8nauIhp
+         mUvfuRnydhxOqLD04AK3FY/+urYYnMvqAX6kV5v8R68mp5KEW3Rao5BMSix2fapq5Qu3
+         IDTe9lLwpZF5u6CNoqWNGznhFJIunGYhKNaAtOP3w//KPiSvrPDmDUqURapXm/gRiBjJ
+         ixcQ==
+X-Gm-Message-State: APjAAAUsEUB9fi/GRvUvN6tgdcDNSaJ2GVeb81xHeILyfyL2BtGE+wU1
+        ZOJsmlT7aut5OrOLRIkdHJSojh7TL5nqTsFoUbfv4w==
+X-Google-Smtp-Source: APXvYqzlIepC9KXFaJ7DC2ZH9C3Jxw5UZ5QWzvCKIs/BFU+5pWBvVgbB6otUiss1YIbgTou6fEMr3+zplpwjb1jwh8w=
+X-Received: by 2002:a05:6000:145:: with SMTP id r5mr3390652wrx.208.1563907919536;
+ Tue, 23 Jul 2019 11:51:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <1563497183-7114-1-git-send-email-fei.yang@intel.com> <CY4PR1201MB003708ADAD79BF4FD24D3445AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com>
+In-Reply-To: <CY4PR1201MB003708ADAD79BF4FD24D3445AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 23 Jul 2019 11:51:47 -0700
+Message-ID: <CALAqxLURCLHf3UJsMWKZUirDE9bWNYEhv-sKb01g7cTfCz5tOg@mail.gmail.com>
+Subject: Re: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated properly
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc:     "fei.yang@intel.com" <fei.yang@intel.com>,
+        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
+        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
-Date: Tue, 23 Jul 2019 13:09:00 +0100
+On Thu, Jul 18, 2019 at 6:12 PM Thinh Nguyen <Thinh.Nguyen@synopsys.com> wrote:
+> fei.yang@intel.com wrote:
+> > From: Fei Yang <fei.yang@intel.com>
+> >
+> > If scatter-gather operation is allowed, a large USB request is split into
+> > multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN bit
+> > except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
+> > Since only the last TRB has IOC set for the whole USB request, the
+> > dwc3_gadget_ep_reclaim_trb_sg() gets called only once after the last TRB
+> > completes and all the TRBs allocated for this request are supposed to be
+> > reclaimed. However that is not what the current code does.
+> >
+> > dwc3_gadget_ep_reclaim_trb_sg() is trying to reclaim all the TRBs in the
+> > following for-loop,
+> >       for_each_sg(sg, s, pending, i) {
+> >               trb = &dep->trb_pool[dep->trb_dequeue];
+> >
+> >                 if (trb->ctrl & DWC3_TRB_CTRL_HWO)
+> >                         break;
+> >
+> >                 req->sg = sg_next(s);
+> >                 req->num_pending_sgs--;
+> >
+> >                 ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+> >                                 trb, event, status, chain);
+> >                 if (ret)
+> >                         break;
+> >         }
+> > but since the interrupt comes only after the last TRB completes, the
+> > event->status has DEPEVT_STATUS_IOC bit set, so that the for-loop ends for
+> > the first TRB due to dwc3_gadget_ep_reclaim_completed_trb() returns 1.
+> >       if (event->status & DEPEVT_STATUS_IOC)
+> >               return 1;
+> >
+> > This patch addresses the issue by checking each TRB in function
+> > dwc3_gadget_ep_reclaim_trb_sg() and maing sure the chained ones are properly
+> > reclaimed. dwc3_gadget_ep_reclaim_completed_trb() will return 1 Only for the
+> > last TRB.
+> >
+> > Signed-off-by: Fei Yang <fei.yang@intel.com>
+> > Cc: stable <stable@vger.kernel.org>
+> > ---
+> > v2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_trb_sg()
+> >     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().
+> > v3: Checking DWC3_TRB_CTRL_CHN bit for each TRB instead, and making sure that
+> >     dwc3_gadget_ep_reclaim_completed_trb() returns 1 only for the last TRB.
+> > ---
+> >  drivers/usb/dwc3/gadget.c | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> > index 173f532..88eed49 100644
+> > --- a/drivers/usb/dwc3/gadget.c
+> > +++ b/drivers/usb/dwc3/gadget.c
+> > @@ -2394,7 +2394,7 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
+> >       if (event->status & DEPEVT_STATUS_SHORT && !chain)
+> >               return 1;
+> >
+> > -     if (event->status & DEPEVT_STATUS_IOC)
+> > +     if (event->status & DEPEVT_STATUS_IOC && !chain)
+> >               return 1;
+> >
+> >       return 0;
+> > @@ -2404,11 +2404,12 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
+> >               struct dwc3_request *req, const struct dwc3_event_depevt *event,
+> >               int status)
+> >  {
+> > -     struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
+> > +     struct dwc3_trb *trb;
+> >       struct scatterlist *sg = req->sg;
+> >       struct scatterlist *s;
+> >       unsigned int pending = req->num_pending_sgs;
+> >       unsigned int i;
+> > +     int chain = false;
+> >       int ret = 0;
+> >
+> >       for_each_sg(sg, s, pending, i) {
+> > @@ -2419,9 +2420,13 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
+> >
+> >               req->sg = sg_next(s);
+> >               req->num_pending_sgs--;
+> > +             if (trb->ctrl & DWC3_TRB_CTRL_CHN)
+> > +                     chain = true;
+> > +             else
+> > +                     chain = false;
+> >
+> >               ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+> > -                             trb, event, status, true);
+> > +                             trb, event, status, chain);
+> >               if (ret)
+> >                       break;
+> >       }
+>
+> There was already a fix a long time ago by Anurag. But it never made it
+> to the kernel mainline. You can check this out:
+> https://patchwork.kernel.org/patch/10640137/
 
-> Setting "iommu.passthrough=1" works for me. However, I am not sure where
-> to go from here, so any ideas you have would be great.
+So, back from a vacation last week, and just validated that both Fei's
+patch and a forward ported version of this patch Thinh pointed out
+both seem to resolve the usb stalls I've been seeing sinice 4.20 w/
+dwc3 hardware on both hikey960 and dragonboard 845c.
 
-Then definitely we are accessing outside of a valid IOMMU mapping due
-to the page pool support changes.
+Felipe: Does Anurag's patch above make more sense as a proper fix?
 
-Such a problem should be spotted with swiommu enabled with debugging.
+thanks
+-john
