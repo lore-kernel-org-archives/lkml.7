@@ -2,155 +2,135 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4A6C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C93C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B622218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCC5218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="DjNggeZh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V7D/POwf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tS5W2IfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfGWAkz (ORCPT
+        id S1731160AbfGWAmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:40:55 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37765 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728573AbfGWAkz (ORCPT
+        Mon, 22 Jul 2019 20:42:33 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45721 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfGWAmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:40:55 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E858321ADD;
-        Mon, 22 Jul 2019 20:40:53 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Mon, 22 Jul 2019 20:40:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=ea1eXoWpqlHrh4PNFoOkJoobCbGJqdR
-        95gve43bppWY=; b=DjNggeZhNCdlUyyXFp/MmWpcb5mpCX+fqULx2XOFp6E93B2
-        Ltob4RpUXyYQPuJ7JaThvGuSymQMqZlXhDuUSW6BdVJbWBEbFYNXOifRdowWfF0v
-        JEznR2696Gy3jLhH4DAVxmJZUnPjbCiSTu6c49Mc7q7mGlXPXh0iYsnG7A1JyZpB
-        nVLytB6ltwXLHnPO+HgjY7sdlD6n/Z9xS8vyIv2CHBFSQJUM72na7mckeAXdaBt1
-        hbmyMhJl5dcM5csC77iC4Pp1oSHq8hh89DqMTCPyMgeDmOXRKFl2j50mJbMpL8Dy
-        eR5wHd3AOr17y3RP8fqqklB35uoIekvXXphKJWA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ea1eXo
-        WpqlHrh4PNFoOkJoobCbGJqdR95gve43bppWY=; b=V7D/POwfWqx3e195N9nylY
-        bJGvoMjjjR5Nf1ouybjiuQMsoTNVdPtxsy7rC2rCUjsZdLxUiUYFCBcRigMu8vM1
-        K0gRp6acAUPCre71uUbdGTHAgmNs7w+gkFC53nQqN/1xreRfTmGL8pyYuDHWq3V5
-        poR9pOYPcDr5od64qCtYJT3FJrM9/L5S227Dbo/9aM8w+bcWR+o3A3evYjeMuvm1
-        z+EnIKQGgUTn8pOItTSHHXJ0SXPbVJlo6Q9JoPmD6xhiLGpEPQSqWdMzM5KJwi6W
-        JEMAJIOQgIkPfI54dTt3g+x/007BklffUU4cdfMNP2fvEK4rqITrWMYGVeTU8Tqw
-        ==
-X-ME-Sender: <xms:lFc2XeNDnMeJr4rp5MVqPG6mIg4Zs6FZXXLNv8X0jSM_irSPMfnpMg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrjeehgdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:lFc2XZEkqdx5hDVDbeupnTb98R46EHs38zSO0lGb2RK1vNNPa9fUSA>
-    <xmx:lFc2Xejz3xuRF1XqrEHhBUBIpP_4eTJYS8NHfR7KSJBjVKBohv109w>
-    <xmx:lFc2XdyuQHF1IV7_N0c5UtkPbJeJ3JjUMizDxbWC7vq97se4LVjSOA>
-    <xmx:lVc2Xa2wwkaO0XYuvZUn2EcOcqHUPuaRIaeFvHitgdI9V0FV297XMg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 4C3ADE074B; Mon, 22 Jul 2019 20:40:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
-Mime-Version: 1.0
-Message-Id: <a0a8162e-c21b-4b3d-b096-1676c5cc9758@www.fastmail.com>
-In-Reply-To: <20190723003216.2910042-1-vijaykhemka@fb.com>
-References: <20190723003216.2910042-1-vijaykhemka@fb.com>
-Date:   Tue, 23 Jul 2019 10:11:05 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Vijay Khemka" <vijaykhemka@fb.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        "Sai Dasari" <sdasari@fb.com>
-Subject: Re: [PATCH v2] ARM: dts: aspeed: tiogapass: Add VR devices
-Content-Type: text/plain
+        Mon, 22 Jul 2019 20:42:32 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x21so3803099otq.12;
+        Mon, 22 Jul 2019 17:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+4vwd05Ashr+MqpzyT1dsjrUNcGE/G6qFLXOudh/Hcw=;
+        b=tS5W2IfRrrGrMZexz8n/YQ6mx8QKZ1mJHQy0cQlM9aKQ9z1yWW/4W8baHJAAbLmZY2
+         IqTmGccIg1lgn87FA7/PUxbrVBbltdxf+PrbNrxBXmf/WwIf3f5UMmcQ3VUQcnlAP57n
+         S5dGfN0VTkgVXe2AnuZ6kGUVp42XO2AyEHDSbnvkRIu1VuyLe8y2vHVQwktobGQNJOj7
+         +adae8DrjX3BXdEf4USncr0e4QrUKeUOh3GmeYVhuxFofjc9H9YmmUHPI0eJ9U6OJuWS
+         8BEjU9tyrZUHiBuQnG08eFXGJgr2I9Azonm3KMVpDItO7+u7Ibo2kMb4cvWhyeswN0Hx
+         a3AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+4vwd05Ashr+MqpzyT1dsjrUNcGE/G6qFLXOudh/Hcw=;
+        b=CLK4MpRsbCiaiLiQCMGJnFwnNEl9ZlhIDsvWMtf06DTBVadbKT5+PoPTfuf2XSOMTs
+         9qZP6l/wuoVmciI2xNInCUNljsrb4TNKg7Sgix6256MkCpw1gaAdwf0kIqw0cYPp138I
+         BOWEVzsz+WP5JkG/j9DOq3yOCZqL/rVgz0qsjohsxGx5XyGU3gIMNuPXB8LJOaCgbDV4
+         lfY5tCxDfj0lqbPTdI/lOIU9fC/VO5AoopGDvMKGXVn94n7VbAvZ4mrYdju6Cu+SUVBZ
+         xIS3P79zekNpuGzz2876d0i7EnkNPBih6250H4aJk8x2B/xKPxxbV3N952z8eNh8fPTD
+         XdoQ==
+X-Gm-Message-State: APjAAAUas150W8+xBBvarma3WeMvqFP/Ok1I6AIbrP7+hQiTU9PU1GZ6
+        Ud3nWnrWY+/TKAjYFCNk0/a3cKRNCSMGqBoiTdrmb1wX
+X-Google-Smtp-Source: APXvYqwWu6I5XECni0tNYIHokCOv9ywgFgatg/ZnPNaFsVRspnZ75JjEnxmzZVdOBp3MC5oJeEaqrTr7Gq2jqhkQKyc=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr40100956oto.118.1563842551951;
+ Mon, 22 Jul 2019 17:42:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <1563796594-25317-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1563796594-25317-1-git-send-email-pbonzini@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 23 Jul 2019 08:42:27 +0800
+Message-ID: <CANRm+CyPGO=_OYCFbj00iR0Be7Pv0MCqSzgg5=-YwGiMgUV2wg@mail.gmail.com>
+Subject: Re: [PATCH] Revert "kvm: x86: Use task structs fpu field for user"
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        "# v3 . 10+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Tue, 23 Jul 2019, at 10:04, Vijay Khemka wrote:
-> Adds voltage regulators Infineon pxe1610 devices to Facebook
-> tiogapass platform.
-> 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
-
-> ---
-> In v2: Renamed vr to regulator and fixed some typo in commit message.
-> 
->  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> index c4521eda787c..e722e9aef907 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> @@ -144,6 +144,42 @@
->  &i2c5 {
->  	status = "okay";
->  	// CPU Voltage regulators
-> +	regulator@48 {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x48>;
-> +	};
-> +	regulator@4a {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x4a>;
-> +	};
-> +	regulator@50 {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x50>;
-> +	};
-> +	regulator@52 {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x52>;
-> +	};
-> +	regulator@58 {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x58>;
-> +	};
-> +	regulator@5a {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x5a>;
-> +	};
-> +	regulator@68 {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x68>;
-> +	};
-> +	regulator@70 {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x70>;
-> +	};
-> +	regulator@72 {
-> +		compatible = "infineon,pxe1610";
-> +		reg = <0x72>;
-> +	};
->  };
->  
->  &i2c6 {
-> -- 
-> 2.17.1
-> 
+On Mon, 22 Jul 2019 at 20:49, Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
+> This reverts commit 240c35a3783ab9b3a0afaba0dde7291295680a6b
+> ("kvm: x86: Use task structs fpu field for user", 2018-11-06).
+> The commit is broken and causes QEMU's FPU state to be destroyed
+> when KVM_RUN is preempted.
+>
+> Fixes: 240c35a3783a ("kvm: x86: Use task structs fpu field for user")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 7 ++++---
+>  arch/x86/kvm/x86.c              | 4 ++--
+>  2 files changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 0cc5b611a113..b2f1ffb937af 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -607,15 +607,16 @@ struct kvm_vcpu_arch {
+>
+>         /*
+>          * QEMU userspace and the guest each have their own FPU state.
+> -        * In vcpu_run, we switch between the user, maintained in the
+> -        * task_struct struct, and guest FPU contexts. While running a VCPU,
+> -        * the VCPU thread will have the guest FPU context.
+> +        * In vcpu_run, we switch between the user and guest FPU contexts.
+> +        * While running a VCPU, the VCPU thread will have the guest FPU
+> +        * context.
+>          *
+>          * Note that while the PKRU state lives inside the fpu registers,
+>          * it is switched out separately at VMENTER and VMEXIT time. The
+>          * "guest_fpu" state here contains the guest FPU context, with the
+>          * host PRKU bits.
+>          */
+> +       struct fpu user_fpu;
+>         struct fpu *guest_fpu;
+>
+>         u64 xcr0;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 58305cf81182..cf2afdf8facf 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8270,7 +8270,7 @@ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
+>  {
+>         fpregs_lock();
+>
+> -       copy_fpregs_to_fpstate(&current->thread.fpu);
+> +       copy_fpregs_to_fpstate(&vcpu->arch.user_fpu);
+>         /* PKRU is separately restored in kvm_x86_ops->run.  */
+>         __copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
+>                                 ~XFEATURE_MASK_PKRU);
+> @@ -8287,7 +8287,7 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+>         fpregs_lock();
+>
+>         copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
+> -       copy_kernel_to_fpregs(&current->thread.fpu.state);
+> +       copy_kernel_to_fpregs(&vcpu->arch.user_fpu.state);
+>
+>         fpregs_mark_activate();
+>         fpregs_unlock();
+
+Looks good to me.
+
+Regards,
+Wanpeng Li
