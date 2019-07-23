@@ -2,148 +2,229 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E90C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94301C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6D9218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="htnnr0+d"
+	by mail.kernel.org (Postfix) with ESMTP id 77AAE218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390784AbfGWPOe (ORCPT
+        id S2390801AbfGWPOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:14:34 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43988 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729004AbfGWPOb (ORCPT
+        Tue, 23 Jul 2019 11:14:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48994 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729004AbfGWPOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:14:31 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NFEFp5016166;
-        Tue, 23 Jul 2019 10:14:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563894855;
-        bh=R5v19pNEnEDaBQfuLB6eNOfYEHEZTYfqpkGujUAKksg=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=htnnr0+d/PbkcH83pzGMJlYuMy+5Sjqexfmk29m4oBugJhVVLlTRMyMN+AxgeWMs4
-         XFkEkk+oHCKUxrZSnpjthcFxwLO091Obx48UAAaFHiF6qmz1I57nUQ7ztYXPF2KXbX
-         SyCar1VGnynVEGV9jIfaIX39v3pEHtDczJjMz3RQ=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NFEFCG052141
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jul 2019 10:14:15 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Jul 2019 10:14:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Jul 2019 10:14:15 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NFEEA1094869;
-        Tue, 23 Jul 2019 10:14:14 -0500
-Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
- <a8e3f2d3-18c3-3bdb-1318-8964afc7e032@ti.com>
- <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
- <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
- <6fa79302-ad32-7f43-f9d5-af70aa789284@ti.com>
- <f236a88a-485c-9002-1e4a-9a5ad0e1c81f@ti.com>
-Message-ID: <437b6371-8488-a0ff-fa68-d1fb5a81bb8b@ti.com>
-Date:   Tue, 23 Jul 2019 10:14:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 23 Jul 2019 11:14:46 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id A43222861F8
+Message-ID: <13b14eb9475de71b408d1eed3c5e69fe089deeb0.camel@collabora.com>
+Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pawel Osciak <posciak@chromium.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date:   Tue, 23 Jul 2019 12:14:20 -0300
+In-Reply-To: <20190723101341.751596b2@canb.auug.org.au>
+References: <20190723101341.751596b2@canb.auug.org.au>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <f236a88a-485c-9002-1e4a-9a5ad0e1c81f@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Tue, 2019-07-23 at 10:13 +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the v4l-dvb tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> In file included from <command-line>:
+> include/media/vp8-ctrls.h:25:2: error: unknown type name '__s8'
+>   __s8 quant_update[4];
+>   ^~~~
+> include/media/vp8-ctrls.h:26:2: error: unknown type name '__s8'
+>   __s8 lf_update[4];
+>   ^~~~
+> include/media/vp8-ctrls.h:27:2: error: unknown type name '__u8'
+>   __u8 segment_probs[3];
+>   ^~~~
+> include/media/vp8-ctrls.h:28:2: error: unknown type name '__u8'
+>   __u8 padding;
+>   ^~~~
+> include/media/vp8-ctrls.h:29:2: error: unknown type name '__u32'
+>   __u32 flags;
+>   ^~~~~
+> include/media/vp8-ctrls.h:36:2: error: unknown type name '__s8'
+>   __s8 ref_frm_delta[4];
+>   ^~~~
+> include/media/vp8-ctrls.h:37:2: error: unknown type name '__s8'
+>   __s8 mb_mode_delta[4];
+>   ^~~~
+> include/media/vp8-ctrls.h:38:2: error: unknown type name '__u8'
+>   __u8 sharpness_level;
+>   ^~~~
+> include/media/vp8-ctrls.h:39:2: error: unknown type name '__u8'
+>   __u8 level;
+>   ^~~~
+> include/media/vp8-ctrls.h:40:2: error: unknown type name '__u16'
+>   __u16 padding;
+>   ^~~~~
+> include/media/vp8-ctrls.h:41:2: error: unknown type name '__u32'
+>   __u32 flags;
+>   ^~~~~
+> include/media/vp8-ctrls.h:45:2: error: unknown type name '__u8'
+>   __u8 y_ac_qi;
+>   ^~~~
+> include/media/vp8-ctrls.h:46:2: error: unknown type name '__s8'
+>   __s8 y_dc_delta;
+>   ^~~~
+> include/media/vp8-ctrls.h:47:2: error: unknown type name '__s8'
+>   __s8 y2_dc_delta;
+>   ^~~~
+> include/media/vp8-ctrls.h:48:2: error: unknown type name '__s8'
+>   __s8 y2_ac_delta;
+>   ^~~~
+> include/media/vp8-ctrls.h:49:2: error: unknown type name '__s8'
+>   __s8 uv_dc_delta;
+>   ^~~~
+> include/media/vp8-ctrls.h:50:2: error: unknown type name '__s8'
+>   __s8 uv_ac_delta;
+>   ^~~~
+> include/media/vp8-ctrls.h:51:2: error: unknown type name '__u16'
+>   __u16 padding;
+>   ^~~~~
+> include/media/vp8-ctrls.h:55:2: error: unknown type name '__u8'
+>   __u8 coeff_probs[4][8][3][11];
+>   ^~~~
+> include/media/vp8-ctrls.h:56:2: error: unknown type name '__u8'
+>   __u8 y_mode_probs[4];
+>   ^~~~
+> include/media/vp8-ctrls.h:57:2: error: unknown type name '__u8'
+>   __u8 uv_mode_probs[3];
+>   ^~~~
+> include/media/vp8-ctrls.h:58:2: error: unknown type name '__u8'
+>   __u8 mv_probs[2][19];
+>   ^~~~
+> include/media/vp8-ctrls.h:59:2: error: unknown type name '__u8'
+>   __u8 padding[3];
+>   ^~~~
+> include/media/vp8-ctrls.h:63:2: error: unknown type name '__u8'
+>   __u8 range;
+>   ^~~~
+> include/media/vp8-ctrls.h:64:2: error: unknown type name '__u8'
+>   __u8 value;
+>   ^~~~
+> include/media/vp8-ctrls.h:65:2: error: unknown type name '__u8'
+>   __u8 bit_count;
+>   ^~~~
+> include/media/vp8-ctrls.h:66:2: error: unknown type name '__u8'
+>   __u8 padding;
+>   ^~~~
+> include/media/vp8-ctrls.h:86:2: error: unknown type name '__u16'
+>   __u16 width;
+>   ^~~~~
+> include/media/vp8-ctrls.h:87:2: error: unknown type name '__u16'
+>   __u16 height;
+>   ^~~~~
+> include/media/vp8-ctrls.h:89:2: error: unknown type name '__u8'
+>   __u8 horizontal_scale;
+>   ^~~~
+> include/media/vp8-ctrls.h:90:2: error: unknown type name '__u8'
+>   __u8 vertical_scale;
+>   ^~~~
+> include/media/vp8-ctrls.h:92:2: error: unknown type name '__u8'
+>   __u8 version;
+>   ^~~~
+> include/media/vp8-ctrls.h:93:2: error: unknown type name '__u8'
+>   __u8 prob_skip_false;
+>   ^~~~
+> include/media/vp8-ctrls.h:94:2: error: unknown type name '__u8'
+>   __u8 prob_intra;
+>   ^~~~
+> include/media/vp8-ctrls.h:95:2: error: unknown type name '__u8'
+>   __u8 prob_last;
+>   ^~~~
+> include/media/vp8-ctrls.h:96:2: error: unknown type name '__u8'
+>   __u8 prob_gf;
+>   ^~~~
+> include/media/vp8-ctrls.h:97:2: error: unknown type name '__u8'
+>   __u8 num_dct_parts;
+>   ^~~~
+> include/media/vp8-ctrls.h:99:2: error: unknown type name '__u32'
+>   __u32 first_part_size;
+>   ^~~~~
+> include/media/vp8-ctrls.h:100:2: error: unknown type name '__u32'
+>   __u32 first_part_header_bits;
+>   ^~~~~
+> include/media/vp8-ctrls.h:101:2: error: unknown type name '__u32'
+>   __u32 dct_part_sizes[8];
+>   ^~~~~
+> include/media/vp8-ctrls.h:103:2: error: unknown type name '__u64'
+>   __u64 last_frame_ts;
+>   ^~~~~
+> include/media/vp8-ctrls.h:104:2: error: unknown type name '__u64'
+>   __u64 golden_frame_ts;
+>   ^~~~~
+> include/media/vp8-ctrls.h:105:2: error: unknown type name '__u64'
+>   __u64 alt_frame_ts;
+>   ^~~~~
+> include/media/vp8-ctrls.h:107:2: error: unknown type name '__u64'
+>   __u64 flags;
+>   ^~~~~
+> 
+> Caused by commit
+> 
+>   a57d6acaf352 ("media: uapi: Add VP8 stateless decoder API")
+> 
+> I have added the following fix patch for today.
+> 
 
-On 7/10/19 7:08 AM, Dan Murphy wrote:
-> Hello
->
-> On 6/17/19 10:09 AM, Dan Murphy wrote:
->> Marc
->>
->> On 6/10/19 11:35 AM, Dan Murphy wrote:
->>> Bump
->>>
->>> On 6/6/19 8:16 AM, Dan Murphy wrote:
->>>> Marc
->>>>
->>>> Bump
->>>>
->>>> On 5/31/19 6:51 AM, Dan Murphy wrote:
->>>>> Marc
->>>>>
->>>>> On 5/15/19 3:54 PM, Dan Murphy wrote:
->>>>>> Marc
->>>>>>
->>>>>> On 5/9/19 11:11 AM, Dan Murphy wrote:
->>>>>>> Create a m_can platform framework that peripheral
->>>>>>> devices can register to and use common code and register sets.
->>>>>>> The peripheral devices may provide read/write and configuration
->>>>>>> support of the IP.
->>>>>>>
->>>>>>> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
->>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>>>> ---
->>>>>>>
->>>>>>> v12 - Update the m_can_read/write functions to create a 
->>>>>>> backtrace if the callback
->>>>>>> pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
->>>>>>>
->>>>>> Is this able to be merged now?
->>>>>
->>>>> ping
->>
->> Wondering if there is anything else we need to do?
->>
->> The part has officially shipped and we had hoped to have driver 
->> support in Linux as part of the announcement.
->>
-> Is this being sent in a PR for 5.3?
->
-> Dan
->
-Adding Greg to this thread as I have no idea what is going on with 
-this.  This patch set has missed 2 merge windows and has
+Looks good, thanks for the fix. I wonder why this
+got triggered with VP8 only, and not with MPEG-2.
 
-been ready since May.  Our customers are requesting status but we can 
-only point to the mail thread
+Acked-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-Here is the reference of the pinging I have done without reply
-
-https://lore.kernel.org/patchwork/patch/1071894/
-
-Dan
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 23 Jul 2019 10:07:40 +1000
+> Subject: [PATCH] media: uapi: new file needs types.h
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  include/media/vp8-ctrls.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/media/vp8-ctrls.h b/include/media/vp8-ctrls.h
+> index 6cc2eeea4c90..53cba826e482 100644
+> --- a/include/media/vp8-ctrls.h
+> +++ b/include/media/vp8-ctrls.h
+> @@ -11,6 +11,8 @@
+>  #ifndef _VP8_CTRLS_H_
+>  #define _VP8_CTRLS_H_
+>  
+> +#include <linux/types.h>
+> +
+>  #define V4L2_PIX_FMT_VP8_FRAME v4l2_fourcc('V', 'P', '8', 'F')
+>  
+>  #define V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER (V4L2_CID_MPEG_BASE + 2000)
+> -- 
+> 2.20.1
+> 
 
 
->
->> Dan
->>
->>
->>>>>
->>>>>
->>>>>> Dan
->>>>>>
->>>>>> <snip>
