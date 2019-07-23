@@ -2,42 +2,75 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42CCC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311F9C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E462084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0500E21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="RQkalHNI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ftT7qx7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391625AbfGWSzt (ORCPT
+        id S2391649AbfGWS7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:55:49 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:44410 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbfGWSzt (ORCPT
+        Tue, 23 Jul 2019 14:59:04 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41188 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfGWS7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:55:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563908146; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=ypLs3dYooZeIamiMNC0VJyo390E7idy+nbIFjXbR1Ck=;
-        b=RQkalHNIF8rO3iFgGqEiJhEVAd716eKClphb6jG9aP7J0Ku7JK9EcA/KUsgnX8ocBZfLYM
-        rdJRJ8ZtvZvMuuvICaUc8c46Y8M8ZG00Xl5MdnspARkWNOd5qb90Y9tpWydu1VIg+mzTp/
-        XI828YgnE3rY4AQhSlwfNAeGfTT10cs=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] mfd/syscon: Add device_node_to_regmap()
-Date:   Tue, 23 Jul 2019 14:55:35 -0400
-Message-Id: <20190723185535.20631-1-paul@crapouillou.net>
+        Tue, 23 Jul 2019 14:59:04 -0400
+Received: by mail-io1-f68.google.com with SMTP id j5so79969355ioj.8;
+        Tue, 23 Jul 2019 11:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HYm7XH62ntJYWSyfWpsGscwHo2G/L6bw9DNE5penN0s=;
+        b=ftT7qx7TkK+td7mZlBzVadEHjECIKNd75Mlox2nmY/ezjb9Wm14b1upOVdmaN97z3H
+         zSovOBNtmpO3r05+Omiic1GBSzC+Jwj0eVuTIeP7xVU9XxZFkKfsLxYX3SBDffRx5xf0
+         vnNp0crGrR0U+vjFr1dQIlCJ9Q4MEuyizf4MKsmdtpwrnZKG1s8hJ/b+x0uvJiSa+BeZ
+         Z4rG+wMB1ntBpt75kqqXkMr3l0pYAqqM7wEuG+opPWV8Et2XZYj1k1Ispv8bx2Ewjb8m
+         zKLg6v7p/W+AzC6VlQ1p2m/TY8DgPoVu+a7rds38S2ldAGTpa/VxyxH/khigW791N+7k
+         yYQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HYm7XH62ntJYWSyfWpsGscwHo2G/L6bw9DNE5penN0s=;
+        b=oEutH7IuMrPaDJEcEBibCNsphD/HCJ6z8Ms/wCTKBLbCBI3sUbq/fp+l2uUz88OXz7
+         1Bg9jcGMSAnwfnmVnVN5phe/8eKMLf+FsecyNiNp17kODUyAewSelEhLvTPd1L4Q+qpp
+         aIawsTI9XvCzw8QdpdXA9tNYJ3RdwEd4ODbbAA36nQxKpWkRB0KQQpezlgZHmA5eDDsM
+         6EB8pfTKM/WRw3pL2RonWdIZGDbwOZ/UiP9LgW8UtrvVzQlxn5rLJU0zSUgfDirud3jW
+         82Kdtmvw2ysERxNmd3l5UM2k4vr8J3XqcyyRCKKA1pHUNQmlp2JJn34706E0JnSKoQdz
+         UdEg==
+X-Gm-Message-State: APjAAAXuL+ZiJFBHsM5lNk3047+vfF3J36sVGkrtZhyU2Jq9Uv5oGkAv
+        8w70j4ijiBEEMal49Q4sxP8=
+X-Google-Smtp-Source: APXvYqzs0EJ0e/stODDMjXwtN84leWJEvBvtgryU/N+jHEcY2jiKOr2+MShA8IMncnwe5r1ZIPEHPQ==
+X-Received: by 2002:a6b:b497:: with SMTP id d145mr49070420iof.17.1563908342941;
+        Tue, 23 Jul 2019 11:59:02 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id i3sm40636351ion.9.2019.07.23.11.59.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 11:59:01 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
+        quan@os.amperecomputing.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn@helgaas.com
+Cc:     skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skunberg.kelsey@gmail.com
+Subject: [PATCH v2] drivers: net: xgene: Remove acpi_has_method() calls
+Date:   Tue, 23 Jul 2019 12:58:11 -0600
+Message-Id: <20190723185811.8548-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190722030401.69563-1-skunberg.kelsey@gmail.com>
+References: <20190722030401.69563-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,83 +78,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device_node_to_regmap() is exactly like syscon_node_to_regmap(), but it
-does not check that the node is compatible with "syscon".
+acpi_evaluate_object will already return an error if the needed method
+does not exist. Remove unnecessary acpi_has_method() calls and check the
+returned acpi_status for failure instead.
 
-The rationale behind this, is that one device node with a standard
-compatible string "foo,bar" can be covered by multiple drivers sharing a
-regmap, or by a single driver doing all the job without a regmap, but
-these are implementation details which shouldn't reflect on the
-devicetree.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- drivers/mfd/syscon.c       | 14 ++++++++++----
- include/linux/mfd/syscon.h |  6 ++++++
- 2 files changed, 16 insertions(+), 4 deletions(-)
+Changes in v2:
+	- Fixed white space warnings and errors
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index b65e585fc8c6..3dcb56d4688d 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -51,9 +51,6 @@ static struct syscon *of_syscon_register(struct device_node *np)
- 	struct regmap_config syscon_config = syscon_regmap_config;
- 	struct resource res;
- 
--	if (!of_device_is_compatible(np, "syscon"))
--		return ERR_PTR(-EINVAL);
--
- 	syscon = kzalloc(sizeof(*syscon), GFP_KERNEL);
- 	if (!syscon)
- 		return ERR_PTR(-ENOMEM);
-@@ -150,7 +147,7 @@ static struct syscon *of_syscon_register(struct device_node *np)
- 	return ERR_PTR(ret);
- }
- 
--struct regmap *syscon_node_to_regmap(struct device_node *np)
-+struct regmap *device_node_to_regmap(struct device_node *np)
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    |  9 ++++-----
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 10 +++++-----
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c |  9 ++++-----
+ 3 files changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+index 61a465097cb8..79924efd4ab7 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+@@ -694,6 +694,7 @@ bool xgene_ring_mgr_init(struct xgene_enet_pdata *p)
+ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
  {
- 	struct syscon *entry, *syscon = NULL;
+ 	struct device *dev = &pdata->pdev->dev;
++	acpi_status status;
  
-@@ -172,6 +169,15 @@ struct regmap *syscon_node_to_regmap(struct device_node *np)
- 
- 	return syscon->regmap;
- }
-+EXPORT_SYMBOL_GPL(device_node_to_regmap);
-+
-+struct regmap *syscon_node_to_regmap(struct device_node *np)
-+{
-+	if (!of_device_is_compatible(np, "syscon"))
-+		return ERR_PTR(-EINVAL);
-+
-+	return device_node_to_regmap(np);
-+}
- EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
- 
- struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-index 8cfda0554381..112dc66262cc 100644
---- a/include/linux/mfd/syscon.h
-+++ b/include/linux/mfd/syscon.h
-@@ -17,12 +17,18 @@
- struct device_node;
- 
- #ifdef CONFIG_MFD_SYSCON
-+extern struct regmap *device_node_to_regmap(struct device_node *np);
- extern struct regmap *syscon_node_to_regmap(struct device_node *np);
- extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
- extern struct regmap *syscon_regmap_lookup_by_phandle(
- 					struct device_node *np,
- 					const char *property);
- #else
-+static inline struct regmap *device_node_to_regmap(struct device_node *np)
-+{
-+	return ERR_PTR(-ENOTSUPP);
-+}
-+
- static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
+ 	if (!xgene_ring_mgr_init(pdata))
+ 		return -ENODEV;
+@@ -712,11 +713,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ 		udelay(5);
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
+-			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
+-					 "_INI")) {
++		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
++					      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+ 					     "_INI", NULL, NULL);
+ 		}
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+index 6453fc2ebb1f..5d637b46b2bf 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+@@ -437,6 +437,7 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
+ static int xgene_enet_reset(struct xgene_enet_pdata *p)
  {
- 	return ERR_PTR(-ENOTSUPP);
+ 	struct device *dev = &p->pdev->dev;
++	acpi_status status;
+ 
+ 	if (!xgene_ring_mgr_init(p))
+ 		return -ENODEV;
+@@ -460,14 +461,13 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
+ 		}
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_RST"))
+-			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		else if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_INI"))
++		status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
++					      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
+ 					     "_INI", NULL, NULL);
++		}
+ #endif
+-	}
+ 
+ 	if (!p->port_id) {
+ 		xgene_enet_ecc_init(p);
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
+index 133eb91c542e..78584089d76d 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
+@@ -380,6 +380,7 @@ static void xgene_xgmac_tx_disable(struct xgene_enet_pdata *pdata)
+ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ {
+ 	struct device *dev = &pdata->pdev->dev;
++	acpi_status status;
+ 
+ 	if (!xgene_ring_mgr_init(pdata))
+ 		return -ENODEV;
+@@ -393,11 +394,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ 		udelay(5);
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
+-			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
+-					   "_INI")) {
++		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
++					      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+ 					     "_INI", NULL, NULL);
+ 		}
 -- 
-2.21.0.593.g511ec345e18
+2.20.1
 
