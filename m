@@ -2,160 +2,77 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F362C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F43C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E830721921
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD637218B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qhppD8ki"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="gD/APuRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389548AbfGWMJH (ORCPT
+        id S2387842AbfGWMJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:09:07 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:9986 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730000AbfGWMJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:09:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d36f8e80000>; Tue, 23 Jul 2019 05:09:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 05:09:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 23 Jul 2019 05:09:05 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 12:09:02 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Lars Persson <lists@bofh.nu>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722101830.GA24948@apalos>
- <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
- <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
- <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
- <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <8756d681-e167-fe4a-c6f0-47ae2dcbb100@nvidia.com>
-Date:   Tue, 23 Jul 2019 13:09:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 08:09:42 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:52714 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730000AbfGWMJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 08:09:42 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 45tHLX4VsczB2;
+        Tue, 23 Jul 2019 14:08:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1563883700; bh=q/yqkme0C5nm6xJG/9o9HPjCC0u8xeyhijug6sZ7k/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gD/APuRSZrrHK4hhyBmpFxgqfD5T0wnt6MQ0H+qmr+SCrP6+MxCYH6++gALgCFYPh
+         ppyIod4Cq1HzGiEGAH2UxgvxbCmJZQnNtnwWRmRRMMlYeIjH0btNBDfUrsPUqeRMgL
+         Mb9oCbuXVHaGScENi/ZyoJiPTXzlP+kFMwitF/a/ZUjglMopk+FixPCHQ9tcC0EGUF
+         8helInVP32KiWZk/Rage+Oktv/klcwMDsVCMkw4dn4Q7VTgVjuqqBGVaXmPj6J0czZ
+         uc9jS20L7VBgq+4zDrnaT5znUqqSfzDw1246Y9yngdJhOpaMh6ohIXvkYvue5+cnoP
+         0SCbHQuVkFHqw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.100.3 at mail
+Date:   Tue, 23 Jul 2019 14:09:38 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH] regulator: act8865: support regulator-pull-down property
+Message-ID: <20190723120938.GC14036@qmqm.qmqm.pl>
+References: <d02d7285ef26f59ce43a3097e342eea081b98444.1563819128.git.mirq-linux@rere.qmqm.pl>
+ <20190723105432.GB5365@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563883753; bh=f84H2x2d3kzkl+x8HBl8e8hw6iLx/iNKgVfEttHgXug=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qhppD8ki1mZPculS6VOwNH++SDP1WkDQO1EDG0FUpQ5i6XCwnqQLt+t+ApjZhRL7E
-         Wm/3vh3YOrX452bxtWTwckZsdioDIOxMCny/kdDsMV/IAp5ypzbflWKmS20Mn5kfHY
-         C+NL6+x9QmB+DXwppouCioD3RKH/0pKwrO2JoepqIsd4ThoG9QLm2GWLFCYa7m3xpl
-         NdlOMgS3ff0uIEBciueuMvRrxuRMseCyVNSgkf6LEHhai17NEGU8jmq63ofqNtpajG
-         PEWLK82s8nUYWsR7FCJ+wHfZ8DW/tjHnRyvUnsUzTZ756ORpLI4Zg/O3gfHU0ku7h7
-         VadBFPyDJh7yw==
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190723105432.GB5365@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 23, 2019 at 11:54:32AM +0100, Mark Brown wrote:
+> On Mon, Jul 22, 2019 at 08:13:29PM +0200, Micha³ Miros³aw wrote:
+> > AC8865 has internal 1.5k pull-down resistor that can be enabled when LDO
+> > is shut down.
+> 
+> This changelog...
+> 
+> >  static const struct regulator_ops act8865_ldo_ops = {
+> > +	.list_voltage		= regulator_list_voltage_linear_range,
+> > +	.map_voltage		= regulator_map_voltage_linear_range,
+> > +	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+> > +	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+> 
+> ...doesn't obviously match this code change which looks to be
+> implementing voltage setting (as well as the pull down stuff but still).
 
-On 23/07/2019 11:29, Robin Murphy wrote:
-> On 23/07/2019 11:07, Jose Abreu wrote:
->> From: Jon Hunter <jonathanh@nvidia.com>
->> Date: Jul/23/2019, 11:01:24 (UTC+00:00)
->>
->>> This appears to be a winner and by disabling the SMMU for the ethernet
->>> controller and reverting commit 954a03be033c7cef80ddc232e7cbdb17df73566=
-3
->>> this worked! So yes appears to be related to the SMMU being enabled. We
->>> had to enable the SMMU for ethernet recently due to commit
->>> 954a03be033c7cef80ddc232e7cbdb17df735663.
->>
->> Finally :)
->>
->> However, from "git show 954a03be033c7cef80ddc232e7cbdb17df735663":
->>
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 There are few reasons =
-to allow unmatched stream bypass, and
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 even fewer good ones.=
-=C2=A0 If saying YES here breaks your board
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 you should work on fix=
-ing your board.
->>
->> So, how can we fix this ? Is your ethernet DT node marked as
->> "dma-coherent;" ?
->=20
-> The first thing to try would be booting the failing setup with
-> "iommu.passthrough=3D1" (or using CONFIG_IOMMU_DEFAULT_PASSTHROUGH) - if
-> that makes things seem OK, then the problem is likely related to address
-> translation; if not, then it's probably time to start looking at nasties
-> like coherency and ordering, although in principle I wouldn't expect the
-> SMMU to have too much impact there.
+It's just an diff-artifact of changing act8865_ldo_ops meaning. It's
+now a copy of act8865_ops with .set_pull_down added. Previous
+act8865_ldo_ops is act8865_fixed_ldo_ops now.
 
-Setting "iommu.passthrough=3D1" works for me. However, I am not sure where
-to go from here, so any ideas you have would be great.
-
-> Do you know if the SMMU interrupts are working correctly? If not, it's
-> possible that an incorrect address or mapping direction could lead to
-> the DMA transaction just being silently terminated without any fault
-> indication, which generally presents as inexplicable weirdness (I've
-> certainly seen that on another platform with the mix of an unsupported
-> interrupt controller and an 'imperfect' ethernet driver).
-
-If I simply remove the iommu node for the ethernet controller, then I
-see lots of ...
-
-[    6.296121] arm-smmu 12000000.iommu: Unexpected global fault, this could=
- be serious
-[    6.296125] arm-smmu 12000000.iommu:         GFSR 0x00000002, GFSYNR0 0x=
-00000000, GFSYNR1 0x00000014, GFSYNR2 0x00000000
-
-So I assume that this is triggering the SMMU interrupt correctly.=20
-
-> Just to confirm, has the original patch been tested with
-> CONFIG_DMA_API_DEBUG to rule out any high-level mishaps?
-Yes one of the first things we tried but did not bare any fruit.
-
-Cheers
-Jon
-
---=20
-nvpublic
+Best Regards,
+Micha³ Miros³aw
