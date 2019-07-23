@@ -2,170 +2,78 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95407C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C528C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C4E20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC66520449
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfGWIRP (ORCPT
+        id S1733167AbfGWIRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:17:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:50648 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbfGWIRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:17:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF7CD344;
-        Tue, 23 Jul 2019 01:17:13 -0700 (PDT)
-Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F2393F71F;
-        Tue, 23 Jul 2019 01:17:12 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: arm/arm64: Introduce kvm_pmu_vcpu_init() to setup
- PMU counter idx
-To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Cc:     marc.zyngier@arm.com, james.morse@arm.com, suzuki.poulose@arm.com,
-        julien.thierry.kdev@gmail.com, linux-kernel@vger.kernel.org,
-        wanghaibin.wang@huawei.com, andrew.murray@arm.com
-References: <1563437710-30756-1-git-send-email-yuzenghui@huawei.com>
-From:   Julien Thierry <julien.thierry@arm.com>
-Message-ID: <f3f6f9a9-9735-e253-7b5b-3ccf97619a16@arm.com>
-Date:   Tue, 23 Jul 2019 09:17:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Jul 2019 04:17:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39643 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfGWIRh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 04:17:37 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hppzH-0007kO-06; Tue, 23 Jul 2019 10:17:31 +0200
+Date:   Tue, 23 Jul 2019 10:17:29 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+cc:     Mike Lothian <mike@fireburn.co.uk>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
+In-Reply-To: <alpine.DEB.2.21.1907230837400.1659@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907231013340.1659@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
+ <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com> <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de> <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com> <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
+ <alpine.DEB.2.21.1907230837400.1659@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <1563437710-30756-1-git-send-email-yuzenghui@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+On Tue, 23 Jul 2019, Thomas Gleixner wrote:
+> On Tue, 23 Jul 2019, Masahiro Yamada wrote:
+> > Right.
+> > I was able to build with ld.gold
+> > 
+> > So, we can use gold, depending on the kernel configuration.
+> 
+> That's exactly the problem. It breaks with random kernel configurations
+> which is not acceptable except for people who know what they are doing.
+> 
+> I'm tired of dealing with half baken fixes and 'regression' reports. Either
+> there is an effort to fix the issues with gold like the clang people fix
+> their issues or it needs to be disabled. We have a clear statement that
+> gold developers have other priorities.
 
-On 18/07/2019 09:15, Zenghui Yu wrote:
-> We use "pmc->idx" and the "chained" bitmap to determine if the pmc is
-> chained, in kvm_pmu_pmc_is_chained().  But idx might be uninitialized
-> (and random) when we doing this decision, through a KVM_ARM_VCPU_INIT
-> ioctl -> kvm_pmu_vcpu_reset(). And the test_bit() against this random
-> idx will potentially hit a KASAN BUG [1].
-> 
-> In general, idx is the static property of a PMU counter that is not
-> expected to be modified across resets, as suggested by Julien.  It
-> looks more reasonable if we can setup the PMU counter idx for a vcpu
-> in its creation time. Introduce a new function - kvm_pmu_vcpu_init()
-> for this basic setup. Oh, and the KASAN BUG will get fixed this way.
-> 
-> [1] https://www.spinics.net/lists/kvm-arm/msg36700.html
-> 
-> Fixes: 80f393a23be6 ("KVM: arm/arm64: Support chained PMU counters")
-> Suggested-by: Andrew Murray <andrew.murray@arm.com>
-> Suggested-by: Julien Thierry <julien.thierry@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
-> 
-> Changes since v1:
->  - Introduce kvm_pmu_vcpu_init() in vcpu's creation time, move the
->    assignment of pmc->idx into it.
->  - Thus change the subject. The old one is "KVM: arm/arm64: Assign
->    pmc->idx before kvm_pmu_stop_counter()".
-> 
-> Julien, I haven't collected your Acked-by into this version. If you're
-> still happy with the change, please Ack again. Thanks!
-> 
+That said, I'm perfectly happy to move this to x86 and leave it alone for
+other architectures, but it does not make sense to me.
 
-Thanks for making the change. This looks good to me:
-
-Acked-by: Julien Thierry <julien.thierry@arm.com>
+If the gold fans care enough, then we can add something like
+CONFIG_I_WANT_TO_USE_GOLD_AND_DEAL_WITH_THE_FALLOUT_MYSELF.
 
 Thanks,
 
-Julien
-
->  include/kvm/arm_pmu.h |  2 ++
->  virt/kvm/arm/arm.c    |  2 ++
->  virt/kvm/arm/pmu.c    | 18 +++++++++++++++---
->  3 files changed, 19 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-> index 16c769a..6db0304 100644
-> --- a/include/kvm/arm_pmu.h
-> +++ b/include/kvm/arm_pmu.h
-> @@ -34,6 +34,7 @@ struct kvm_pmu {
->  u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu, u64 select_idx);
->  void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu, u64 select_idx, u64 val);
->  u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu);
-> +void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu);
->  void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu);
->  void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu);
->  void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val);
-> @@ -71,6 +72,7 @@ static inline u64 kvm_pmu_valid_counter_mask(struct kvm_vcpu *vcpu)
->  {
->  	return 0;
->  }
-> +static inline void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu) {}
->  static inline void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu) {}
->  static inline void kvm_pmu_vcpu_destroy(struct kvm_vcpu *vcpu) {}
->  static inline void kvm_pmu_disable_counter_mask(struct kvm_vcpu *vcpu, u64 val) {}
-> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> index f645c0f..c704fa6 100644
-> --- a/virt/kvm/arm/arm.c
-> +++ b/virt/kvm/arm/arm.c
-> @@ -340,6 +340,8 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
->  	/* Set up the timer */
->  	kvm_timer_vcpu_init(vcpu);
->  
-> +	kvm_pmu_vcpu_init(vcpu);
-> +
->  	kvm_arm_reset_debug_ptr(vcpu);
->  
->  	return kvm_vgic_vcpu_init(vcpu);
-> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
-> index 3dd8238..362a018 100644
-> --- a/virt/kvm/arm/pmu.c
-> +++ b/virt/kvm/arm/pmu.c
-> @@ -215,6 +215,20 @@ static void kvm_pmu_stop_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc)
->  }
->  
->  /**
-> + * kvm_pmu_vcpu_init - assign pmu counter idx for cpu
-> + * @vcpu: The vcpu pointer
-> + *
-> + */
-> +void kvm_pmu_vcpu_init(struct kvm_vcpu *vcpu)
-> +{
-> +	int i;
-> +	struct kvm_pmu *pmu = &vcpu->arch.pmu;
-> +
-> +	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
-> +		pmu->pmc[i].idx = i;
-> +}
-> +
-> +/**
->   * kvm_pmu_vcpu_reset - reset pmu state for cpu
->   * @vcpu: The vcpu pointer
->   *
-> @@ -224,10 +238,8 @@ void kvm_pmu_vcpu_reset(struct kvm_vcpu *vcpu)
->  	int i;
->  	struct kvm_pmu *pmu = &vcpu->arch.pmu;
->  
-> -	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++) {
-> +	for (i = 0; i < ARMV8_PMU_MAX_COUNTERS; i++)
->  		kvm_pmu_stop_counter(vcpu, &pmu->pmc[i]);
-> -		pmu->pmc[i].idx = i;
-> -	}
->  
->  	bitmap_zero(vcpu->arch.pmu.chained, ARMV8_PMU_MAX_COUNTER_PAIRS);
->  }
-> 
-
--- 
-Julien Thierry
+	tglx
