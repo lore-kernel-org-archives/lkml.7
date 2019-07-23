@@ -8,68 +8,66 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81508C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64647C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEA9227B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373A3227BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTdR+4zS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GM2uf2W7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388767AbfGWJEm (ORCPT
+        id S2388773AbfGWJFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:04:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42216 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfGWJEl (ORCPT
+        Tue, 23 Jul 2019 05:05:12 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40908 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfGWJFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:04:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t132so19089188pgb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 02:04:41 -0700 (PDT)
+        Tue, 23 Jul 2019 05:05:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so19104761pgj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 02:05:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5MPf9RPeL/uxC5UjVT4jE3NmOb5yj3FuUkeED/rFltg=;
-        b=WTdR+4zSg2l9S1pE6t7RB0pIQF/RIKMKLRVj+cQQhJtxQ1dc3tgTJajHkR8H3x/oeT
-         UbiRnyrUG4uTRpaZ+PCPpCoUbQlHPizh91A62hlAu9Y/v2gPPzwR9Cl68YGbOxdpAdB2
-         /74R7z3VgVNteaZ/DXIqW6z9KTl6Jn92gQeRFbZKYSXgJLCa1l97aqupC3NkZvBh5HrE
-         QqYbQmHAvo3YdTcIrfiYhcG2xipINklOi6ngh+xodXTnJUr1chs3h3Yx7+8HMVd2OnEq
-         DTH60YLSud+5gvW7476A28VbTUnPdV8UuPAi5xftjtMS/r1U1e5+U+DfsePoBA/u+5y4
-         RK5g==
+        bh=q0Po2t8vMBWo5yX2pfDsLkHP1u5XK6Mx9PkT5fdjYG8=;
+        b=GM2uf2W7Igd9e55i5i0eZpV6eTP1FWB9O+BRMOE0iuMwen2uXvQUaOHmQLSn8Sqa1f
+         YZtRbIoKEIHQN0n8QZ1Q2gjDf2+82vkQkxZcYj7ZQJ3nW2llVA9dDQ/8U+5pS9tfhjq/
+         nI24gEItIF+najDQu2Z5a1Jm/O7JcBA10Q+6XCcgVuCawTajiDg5d1Yr5POBhgqWa/4l
+         5U7ngGWsjI2gaf5+czBFW8b+8Y0+kh8vRdJgNGWykRJNm42fbmx2tyxft1BG/xME6a1c
+         jiDfFyC9YTsz4jP9frqZa9fSwrZH+m4iCyi6OmmCANTA3/S0bceQlWhX8ZtO4afBKVj3
+         PGuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5MPf9RPeL/uxC5UjVT4jE3NmOb5yj3FuUkeED/rFltg=;
-        b=Epwx7AsMH0aZPAijV82AjmjRuZ5GLRAlH1szJyDERQQgdYbQmG7BRy9MXIL2n+rzpq
-         fxGbNttHP9AV3vSweqcvqIQaf+3lILP2jsYpGSjaIi/yXR1cX/3CXtpPdYSG562i7aQE
-         qXcmnFdQH6mcoV277zvOykj/vpq51WUxeocuCJM7B/G7arGPxw+VPispGumf3xDZKbB0
-         z1sXoABYCJQvSfpVDHK8jp+Eye1tiAPY0uzXgSyZ9UzogcWywDOpUGoaPooOJU9Qw6B7
-         QUdjZUWYQmoc3pfVB8tIFLGFTFf/yvcwrsY9eRvUkC5dgJ3SQYIDLIplxJFEG81CfzDU
-         EUmA==
-X-Gm-Message-State: APjAAAUz0cU4+7/xfE1y4Xxs8+b06qUXWwC4tZjN5tjXY7FtDM5Bxhcz
-        tUpr+2yo7nEcOirWoz1D2uY=
-X-Google-Smtp-Source: APXvYqz6OOtga1jDqVlvMDvoLUuC/Mk1Os5tfDXEr3aBcJR6B2AJwD7FkZYzlUkxOPanBqx9RrDDdQ==
-X-Received: by 2002:a17:90a:ba94:: with SMTP id t20mr31719094pjr.116.1563872680802;
-        Tue, 23 Jul 2019 02:04:40 -0700 (PDT)
+        bh=q0Po2t8vMBWo5yX2pfDsLkHP1u5XK6Mx9PkT5fdjYG8=;
+        b=WK5yfUg/+BZzVguVC/w7/+KR98lGmvDZASTeSKCxVrUrmutAhkjlRzjRbU8TYAyw7R
+         bd2sq2zjlCxn0SoWSDijHIPlWCODMQH5JZwVeJCitp3zcEndv0e3NnfgxRTwdNyryndm
+         Pfa9tstt+MORPD+bo4UGCoob1N0rtm5tM/9IHFQ20Yao8aBlLGh6Iovnt9wUceIJhPGT
+         /yMFS7scmNM768CjLpomWEC/lRw03YWM1rZPOegVGtNCbo0U7/s4rk2KlLL8uZB6V2bq
+         4IVPpUwDl/QPxdUbIUAR2I1rlw3wN89V+aFU1Km8jv6NiOcviWg5VvGY11Qw4Jf0vDCZ
+         hAIA==
+X-Gm-Message-State: APjAAAU3KZzPvcQZ4NgPT4jb6S0spoZLF/9dYMyzlYlLqfjzeKyDzWCs
+        dh90tYwt1wqFk6Yq2tpHH7U=
+X-Google-Smtp-Source: APXvYqzi1VipkVfIiCMuWUb3kwhiy44hGn3bRykz918gKVbkMtrrfz4oVJGquFgJUXOaZXK2Re9/YA==
+X-Received: by 2002:a17:90a:1b48:: with SMTP id q66mr77930931pjq.83.1563872711763;
+        Tue, 23 Jul 2019 02:05:11 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id h11sm42713175pfn.120.2019.07.23.02.04.36
+        by smtp.gmail.com with ESMTPSA id d23sm33574749pjv.18.2019.07.23.02.05.08
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 02:04:39 -0700 (PDT)
+        Tue, 23 Jul 2019 02:05:11 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         David Zhou <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drm/amd/display: Use dev_get_drvdata
-Date:   Tue, 23 Jul 2019 17:04:22 +0800
-Message-Id: <20190723090421.27532-1-hslester96@gmail.com>
+Subject: [PATCH] drm/amdgpu: Use dev_get_drvdata where possible
+Date:   Tue, 23 Jul 2019 17:04:50 +0800
+Message-Id: <20190723090449.27589-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -84,23 +82,83 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 27 +++++++++----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 4a29f72334d0..524e1e19017e 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2428,8 +2428,7 @@ static ssize_t s3_debug_store(struct device *device,
- {
- 	int ret;
- 	int s3_state;
--	struct pci_dev *pdev = to_pci_dev(device);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(device);
- 	struct amdgpu_device *adev = drm_dev->dev_private;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index f2e8b4238efd..df82091a29d3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -1097,16 +1097,14 @@ amdgpu_pci_shutdown(struct pci_dev *pdev)
  
- 	ret = kstrtoint(buf, 0, &s3_state);
+ static int amdgpu_pmops_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
+ 	return amdgpu_device_suspend(drm_dev, true, true);
+ }
+ 
+ static int amdgpu_pmops_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 
+ 	/* GPU comes up enabled by the bios on resume */
+ 	if (amdgpu_device_is_px(drm_dev)) {
+@@ -1120,33 +1118,29 @@ static int amdgpu_pmops_resume(struct device *dev)
+ 
+ static int amdgpu_pmops_freeze(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
++
+ 	return amdgpu_device_suspend(drm_dev, false, true);
+ }
+ 
+ static int amdgpu_pmops_thaw(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
++
+ 	return amdgpu_device_resume(drm_dev, false, true);
+ }
+ 
+ static int amdgpu_pmops_poweroff(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
++
+ 	return amdgpu_device_suspend(drm_dev, true, true);
+ }
+ 
+ static int amdgpu_pmops_restore(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
+ 	return amdgpu_device_resume(drm_dev, false, true);
+ }
+ 
+@@ -1205,8 +1199,7 @@ static int amdgpu_pmops_runtime_resume(struct device *dev)
+ 
+ static int amdgpu_pmops_runtime_idle(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 	struct drm_crtc *crtc;
+ 
+ 	if (!amdgpu_device_is_px(drm_dev)) {
 -- 
 2.20.1
 
