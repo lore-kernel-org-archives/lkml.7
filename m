@@ -2,265 +2,356 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43653C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF51C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12238218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467E421738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Tv4nwW9q"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fuQh1aiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390696AbfGWOnX (ORCPT
+        id S2390705AbfGWOpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:43:23 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46561 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388172AbfGWOnW (ORCPT
+        Tue, 23 Jul 2019 10:45:08 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18470 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388172AbfGWOpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:43:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so20674629plz.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CXJioUohNIJ0NhODmyNgtJL+ymWSK/aS70/EguesA7s=;
-        b=Tv4nwW9qgJhM1gi/kpZBvJdAFTNRF7o+uiQbdbJA+CEkh0nwv//1WqBl78VW2pztXN
-         6XH3F1oxedjEAfMghwEzZjJalzPyL21+Q3og8Z7lcMpWDls0IhHhwkgjSmZD2Nu0h0gQ
-         7qNXpRxPi4soMPYIewpFbmfSmFU3zNV61f93I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CXJioUohNIJ0NhODmyNgtJL+ymWSK/aS70/EguesA7s=;
-        b=spQfrx4Ra79mr4TVsxakgqimBovJKKFbz97+uKE7ZVjvPNF8vTDNp7/O8COIbCMiUp
-         oG9D4gHpNNaqcvQiaYU94x2vvlRG7yZZqVA9uW+Im88mSxWLfvviIP7+fKiJmomwZery
-         7g1t8x6KoR9oYest223+qg0XW045SBN8ryXwzBzwaoSJhKcb2cf44tFIMZ3detz/1lx6
-         +u5zVThVzXXv3oPJQ0SsakWNSorPb/3AKJaA4VJ5A4bFdOnTjFzZqSobO2JU//yC9icm
-         7vgbreKj7GbkCWyIJjAWD9GIVi8OOeXJlbv1j6kXJmu6DHd97AnClcsX1T9kWOcid5px
-         bIUQ==
-X-Gm-Message-State: APjAAAWg1psMT0Fk4OzVsUJ65A2fKj9OJDBSfJsD47x48MTrggR9gZHF
-        qMrgHPMK0R8sic1kYN1FP0k=
-X-Google-Smtp-Source: APXvYqxq0XgaN2rBscmyFhGxyiLm9xRaeQ7cSnaC3QUCLqtyr5vXEKfMewiKHzKVKUeilH0kxvA+mw==
-X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr23521616plp.126.1563893001022;
-        Tue, 23 Jul 2019 07:43:21 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 2sm74645858pgm.39.2019.07.23.07.43.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 07:43:20 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 10:43:18 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, vdavydov.dev@gmail.com,
-        Brendan Gregg <bgregg@netflix.com>, kernel-team@android.com,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, carmenjackson@google.com,
-        Christian Hansen <chansen3@cisco.com>,
-        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
-        David Howells <dhowells@redhat.com>, fmayer@google.com,
-        joaodias@google.com, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@google.com,
-        minchan@kernel.org, namhyung@google.com, sspatil@google.com,
-        surenb@google.com, Thomas Gleixner <tglx@linutronix.de>,
-        timmurray@google.com, tkjos@google.com,
-        Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
-Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
- using virtual indexing
-Message-ID: <20190723144318.GF104199@google.com>
-References: <20190722213205.140845-1-joel@joelfernandes.org>
- <20190722150639.27641c63b003dd04e187fd96@linux-foundation.org>
+        Tue, 23 Jul 2019 10:45:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d371d780002>; Tue, 23 Jul 2019 07:45:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 07:45:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 07:45:04 -0700
+Received: from [10.25.74.243] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
+ 2019 14:44:13 +0000
+Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-13-vidyas@nvidia.com>
+ <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
+ <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
+ <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
+ <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+ <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
+Date:   Tue, 23 Jul 2019 20:14:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722150639.27641c63b003dd04e187fd96@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563893112; bh=0Sj4goFfvfislN/p4BVaMZqfg5bqkhMrSs70BLM+oIQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fuQh1aiFpnniGL5zRWoD1xC+sMb/n94j8pogRM+bSVEbeay1pX0CcSSGdKLgsj2rE
+         hXuHQJoy42uhw65hK40MgpIrQus2yldHI6xxnXc0UAxd7jAshK7O0iCGN4YPZcWx+q
+         MG32dNYutC/VX50ebVmPyLy4iOB3lXyMe1107NDU0vgSM7vkTEsbXrFjs9sN5SVcVm
+         3x+Vjd2aOp8PlYzDg5pWfGU7J4umgKRZOfnbz9vQ4afP+Km33uLy0jy7U8u2v7dTuo
+         6UZS8k+FBQYcLCfZj5heqDlcqBi+WeKEd0S8ccSpAwVjT+JQGPUQLmHjJU5veHzldv
+         snvttOD0ua+RA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 03:06:39PM -0700, Andrew Morton wrote:
-> On Mon, 22 Jul 2019 17:32:04 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+On 7/16/2019 4:52 PM, Lorenzo Pieralisi wrote:
+> On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
 > 
-> > The page_idle tracking feature currently requires looking up the pagemap
-> > for a process followed by interacting with /sys/kernel/mm/page_idle.
-> > This is quite cumbersome and can be error-prone too. If between
-> > accessing the per-PID pagemap and the global page_idle bitmap, if
-> > something changes with the page then the information is not accurate.
+> [...]
 > 
-> Well, it's never going to be "accurate" - something could change one
-> nanosecond after userspace has read the data...
+>>>>>> +static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+>>>>>> +					  bool enable)
+>>>>>> +{
+>>>>>> +	struct mrq_uphy_response resp;
+>>>>>> +	struct tegra_bpmp_message msg;
+>>>>>> +	struct mrq_uphy_request req;
+>>>>>> +	int err;
+>>>>>> +
+>>>>>> +	if (pcie->cid == 5)
+>>>>>> +		return 0;
+>>>>>
+>>>>> What's wrong with cid == 5 ? Explain please.
+>>>> Controller with ID=5 doesn't need any programming to enable it which is
+>>>> done here through calling firmware API.
+>>>>
+>>>>>
+>>>>>> +	memset(&req, 0, sizeof(req));
+>>>>>> +	memset(&resp, 0, sizeof(resp));
+>>>>>> +
+>>>>>> +	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
+>>>>>> +	req.controller_state.pcie_controller = pcie->cid;
+>>>>>> +	req.controller_state.enable = enable;
+>>>>>> +
+>>>>>> +	memset(&msg, 0, sizeof(msg));
+>>>>>> +	msg.mrq = MRQ_UPHY;
+>>>>>> +	msg.tx.data = &req;
+>>>>>> +	msg.tx.size = sizeof(req);
+>>>>>> +	msg.rx.data = &resp;
+>>>>>> +	msg.rx.size = sizeof(resp);
+>>>>>> +
+>>>>>> +	if (irqs_disabled())
+>>>>>
+>>>>> Can you explain to me what this check is meant to achieve please ?
+>>>> Firmware interface provides different APIs to be called when there are
+>>>> no interrupts enabled in the system (noirq context) and otherwise
+>>>> hence checking that situation here and calling appropriate API.
+>>>
+>>> That's what I am questioning. Being called from {suspend/resume}_noirq()
+>>> callbacks (if that's the code path this check caters for) does not mean
+>>> irqs_disabled() == true.
+>> Agree.
+>> Actually, I got a hint of having this check from the following.
+>> Both tegra_bpmp_transfer_atomic() and tegra_bpmp_transfer() are indirectly
+>> called by APIs registered with .master_xfer() and .master_xfer_atomic() hooks of
+>> struct i2c_algorithm and the decision to call which one of these is made using the
+>> following check in i2c-core.h file.
+>> static inline bool i2c_in_atomic_xfer_mode(void)
+>> {
+>> 	return system_state > SYSTEM_RUNNING && irqs_disabled();
+>> }
+>> I think I should use this condition as is IIUC.
+>> Please let me know if there are any concerns with this.
 > 
-> Presumably with this approach the data will be "more" accurate.  How
-> big a problem has this inaccuracy proven to be in real-world usage?
-
-Has proven to be quite a thorn. But the security issue is the main problem..
-
-> > More over looking up PFN from pagemap in Android devices is not
-> > supported by unprivileged process and requires SYS_ADMIN and gives 0 for
-> > the PFN.
-
-..as mentioned here.
-
-I should have emphasized on the security issue more, will do so in the next
-revision.
-
-> > This patch adds support to directly interact with page_idle tracking at
-> > the PID level by introducing a /proc/<pid>/page_idle file. This
-> > eliminates the need for userspace to calculate the mapping of the page.
-> > It follows the exact same semantics as the global
-> > /sys/kernel/mm/page_idle, however it is easier to use for some usecases
-> > where looking up PFN is not needed and also does not require SYS_ADMIN.
-> > It ended up simplifying userspace code, solving the security issue
-> > mentioned and works quite well. SELinux does not need to be turned off
-> > since no pagemap look up is needed.
-> > 
-> > In Android, we are using this for the heap profiler (heapprofd) which
-> > profiles and pin points code paths which allocates and leaves memory
-> > idle for long periods of time.
-> > 
-> > Documentation material:
-> > The idle page tracking API for virtual address indexing using virtual page
-> > frame numbers (VFN) is located at /proc/<pid>/page_idle. It is a bitmap
-> > that follows the same semantics as /sys/kernel/mm/page_idle/bitmap
-> > except that it uses virtual instead of physical frame numbers.
-> > 
-> > This idle page tracking API can be simpler to use than physical address
-> > indexing, since the pagemap for a process does not need to be looked up
-> > to mark or read a page's idle bit. It is also more accurate than
-> > physical address indexing since in physical address indexing, address
-> > space changes can occur between reading the pagemap and reading the
-> > bitmap. In virtual address indexing, the process's mmap_sem is held for
-> > the duration of the access.
-> > 
-> > ...
-> >
-> > --- a/mm/page_idle.c
-> > +++ b/mm/page_idle.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/mmu_notifier.h>
-> >  #include <linux/page_ext.h>
-> >  #include <linux/page_idle.h>
-> > +#include <linux/sched/mm.h>
-> >  
-> >  #define BITMAP_CHUNK_SIZE	sizeof(u64)
-> >  #define BITMAP_CHUNK_BITS	(BITMAP_CHUNK_SIZE * BITS_PER_BYTE)
-> > @@ -28,15 +29,12 @@
-> >   *
-> >   * This function tries to get a user memory page by pfn as described above.
-> >   */
+> It is not a concern, it is just that I don't understand how this code
+> can be called with IRQs disabled, if you can give me an execution path I
+> am happy to leave the check there. On top of that, when called from
+> suspend NOIRQ context, it is likely to use the blocking API (because
+> IRQs aren't disabled at CPU level) behind which there is most certainly
+> an IRQ required to wake the thread up and if the IRQ in question was
+> disabled in the suspend NOIRQ phase this code is likely to deadlock.
 > 
-> Above comment needs updating or moving?
+> I want to make sure we can justify adding this check, I do not
+> want to add it because we think it can be needed when it may not
+> be needed at all (and it gets copy and pasted over and over again
+> in other drivers).
+I had a discussion internally about this and the prescribed usage of these APIs
+seem to be that
+use tegra_bpmp_transfer() in .probe() and other paths where interrupts are
+enabled as this API needs interrupts to be enabled for its working.
+Use tegra_bpmp_transfer_atomic() surrounded by local_irq_save()/local_irq_restore()
+in other paths where interrupt servicing is disabled.
+I'll go ahead and make next patch series with this if this looks fine to you.
+
 > 
-> > -static struct page *page_idle_get_page(unsigned long pfn)
-> > +static struct page *page_idle_get_page(struct page *page_in)
-> >  {
-> >  	struct page *page;
-> >  	pg_data_t *pgdat;
-> >  
-> > -	if (!pfn_valid(pfn))
-> > -		return NULL;
-> > -
-> > -	page = pfn_to_page(pfn);
-> > +	page = page_in;
-> >  	if (!page || !PageLRU(page) ||
-> >  	    !get_page_unless_zero(page))
-> >  		return NULL;
-> >
-> > ...
-> >
-> > +static int page_idle_get_frames(loff_t pos, size_t count, struct mm_struct *mm,
-> > +				unsigned long *start, unsigned long *end)
-> > +{
-> > +	unsigned long max_frame;
-> > +
-> > +	/* If an mm is not given, assume we want physical frames */
-> > +	max_frame = mm ? (mm->task_size >> PAGE_SHIFT) : max_pfn;
-> > +
-> > +	if (pos % BITMAP_CHUNK_SIZE || count % BITMAP_CHUNK_SIZE)
-> > +		return -EINVAL;
-> > +
-> > +	*start = pos * BITS_PER_BYTE;
-> > +	if (*start >= max_frame)
-> > +		return -ENXIO;
+>>> Actually, if tegra_bpmp_transfer() requires IRQs to be enabled you may
+>>> even end up in a situation where that blocking call does not wake up
+>>> because the IRQ in question was disabled in the NOIRQ suspend/resume
+>>> phase.
+>>>
+>>> [...]
+>>>
+>>>>>> +static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>>>>>> +{
+>>>>>> +	const struct tegra_pcie_soc *data;
+>>>>>> +	struct device *dev = &pdev->dev;
+>>>>>> +	struct resource *atu_dma_res;
+>>>>>> +	struct tegra_pcie_dw *pcie;
+>>>>>> +	struct resource *dbi_res;
+>>>>>> +	struct pcie_port *pp;
+>>>>>> +	struct dw_pcie *pci;
+>>>>>> +	struct phy **phys;
+>>>>>> +	char *name;
+>>>>>> +	int ret;
+>>>>>> +	u32 i;
+>>>>>> +
+>>>>>> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+>>>>>> +	if (!pcie)
+>>>>>> +		return -ENOMEM;
+>>>>>> +
+>>>>>> +	pci = &pcie->pci;
+>>>>>> +	pci->dev = &pdev->dev;
+>>>>>> +	pci->ops = &tegra_dw_pcie_ops;
+>>>>>> +	pp = &pci->pp;
+>>>>>> +	pcie->dev = &pdev->dev;
+>>>>>> +
+>>>>>> +	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
+>>>>>> +	if (!data)
+>>>>>> +		return -EINVAL;
+>>>>>> +	pcie->mode = (enum dw_pcie_device_mode)data->mode;
+>>>>>> +
+>>>>>> +	ret = tegra_pcie_dw_parse_dt(pcie);
+>>>>>> +	if (ret < 0) {
+>>>>>> +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
+>>>>>> +		return ret;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+>>>>>> +	if (IS_ERR(pcie->pex_ctl_supply)) {
+>>>>>> +		dev_err(dev, "Failed to get regulator: %ld\n",
+>>>>>> +			PTR_ERR(pcie->pex_ctl_supply));
+>>>>>> +		return PTR_ERR(pcie->pex_ctl_supply);
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	pcie->core_clk = devm_clk_get(dev, "core");
+>>>>>> +	if (IS_ERR(pcie->core_clk)) {
+>>>>>> +		dev_err(dev, "Failed to get core clock: %ld\n",
+>>>>>> +			PTR_ERR(pcie->core_clk));
+>>>>>> +		return PTR_ERR(pcie->core_clk);
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>>>>> +						      "appl");
+>>>>>> +	if (!pcie->appl_res) {
+>>>>>> +		dev_err(dev, "Failed to find \"appl\" region\n");
+>>>>>> +		return PTR_ERR(pcie->appl_res);
+>>>>>> +	}
+>>>>>> +	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
+>>>>>> +	if (IS_ERR(pcie->appl_base))
+>>>>>> +		return PTR_ERR(pcie->appl_base);
+>>>>>> +
+>>>>>> +	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
+>>>>>> +	if (IS_ERR(pcie->core_apb_rst)) {
+>>>>>> +		dev_err(dev, "Failed to get APB reset: %ld\n",
+>>>>>> +			PTR_ERR(pcie->core_apb_rst));
+>>>>>> +		return PTR_ERR(pcie->core_apb_rst);
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
+>>>>>> +	if (!phys)
+>>>>>> +		return PTR_ERR(phys);
+>>>>>> +
+>>>>>> +	for (i = 0; i < pcie->phy_count; i++) {
+>>>>>> +		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
+>>>>>> +		if (!name) {
+>>>>>> +			dev_err(dev, "Failed to create P2U string\n");
+>>>>>> +			return -ENOMEM;
+>>>>>> +		}
+>>>>>> +		phys[i] = devm_phy_get(dev, name);
+>>>>>> +		kfree(name);
+>>>>>> +		if (IS_ERR(phys[i])) {
+>>>>>> +			ret = PTR_ERR(phys[i]);
+>>>>>> +			dev_err(dev, "Failed to get PHY: %d\n", ret);
+>>>>>> +			return ret;
+>>>>>> +		}
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	pcie->phys = phys;
+>>>>>> +
+>>>>>> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+>>>>>> +	if (!dbi_res) {
+>>>>>> +		dev_err(dev, "Failed to find \"dbi\" region\n");
+>>>>>> +		return PTR_ERR(dbi_res);
+>>>>>> +	}
+>>>>>> +	pcie->dbi_res = dbi_res;
+>>>>>> +
+>>>>>> +	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
+>>>>>> +	if (IS_ERR(pci->dbi_base))
+>>>>>> +		return PTR_ERR(pci->dbi_base);
+>>>>>> +
+>>>>>> +	/* Tegra HW locates DBI2 at a fixed offset from DBI */
+>>>>>> +	pci->dbi_base2 = pci->dbi_base + 0x1000;
+>>>>>> +
+>>>>>> +	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>>>>> +						   "atu_dma");
+>>>>>> +	if (!atu_dma_res) {
+>>>>>> +		dev_err(dev, "Failed to find \"atu_dma\" region\n");
+>>>>>> +		return PTR_ERR(atu_dma_res);
+>>>>>> +	}
+>>>>>> +	pcie->atu_dma_res = atu_dma_res;
+>>>>>> +	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+>>>>>> +	if (IS_ERR(pci->atu_base))
+>>>>>> +		return PTR_ERR(pci->atu_base);
+>>>>>> +
+>>>>>> +	pcie->core_rst = devm_reset_control_get(dev, "core");
+>>>>>> +	if (IS_ERR(pcie->core_rst)) {
+>>>>>> +		dev_err(dev, "Failed to get core reset: %ld\n",
+>>>>>> +			PTR_ERR(pcie->core_rst));
+>>>>>> +		return PTR_ERR(pcie->core_rst);
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	pp->irq = platform_get_irq_byname(pdev, "intr");
+>>>>>> +	if (!pp->irq) {
+>>>>>> +		dev_err(dev, "Failed to get \"intr\" interrupt\n");
+>>>>>> +		return -ENODEV;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
+>>>>>> +			       IRQF_SHARED, "tegra-pcie-intr", pcie);
+>>>>>> +	if (ret) {
+>>>>>> +		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
+>>>>>> +		return ret;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	pcie->bpmp = tegra_bpmp_get(dev);
+>>>>>> +	if (IS_ERR(pcie->bpmp))
+>>>>>> +		return PTR_ERR(pcie->bpmp);
+>>>>>> +
+>>>>>> +	platform_set_drvdata(pdev, pcie);
+>>>>>> +
+>>>>>> +	if (pcie->mode == DW_PCIE_RC_TYPE) {
+>>>>>> +		ret = tegra_pcie_config_rp(pcie);
+>>>>>> +		if (ret && ret != -ENOMEDIUM)
+>>>>>> +			goto fail;
+>>>>>> +		else
+>>>>>> +			return 0;
+>>>>>
+>>>>> So if the link is not up we still go ahead and make probe
+>>>>> succeed. What for ?
+>>>> We may need root port to be available to support hot-plugging of
+>>>> endpoint devices, so, we don't fail the probe.
+>>>
+>>> We need it or we don't. If you do support hotplugging of endpoint
+>>> devices point me at the code, otherwise link up failure means
+>>> failure to probe.
+>> Currently hotplugging of endpoint is not supported, but it is one of
+>> the use cases that we may add support for in future.
 > 
-> Is said to mean "The system tried to use the device represented by a
-> file you specified, and it couldnt find the device.  This can mean that
-> the device file was installed incorrectly, or that the physical device
-> is missing or not correctly attached to the computer."
+> You should elaborate on this, I do not understand what you mean,
+> either the root port(s) supports hotplug or it does not.
 > 
-> This doesn't seem appropriate in this usage and is hence possibly
-> misleading.  Someone whose application fails with ENXIO will be
-> scratching their heads.
-
-This actually keeps it consistent with the current code. I refactored that
-code a bit and I'm reusing parts of it to keep lines of code less. See
-page_idle_bitmap_write where it returns -ENXIO in current upstream.
-
-However note that I am actually returning 0 if page_idle_bitmap_write()
-returns -ENXIO:
-
-+	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
-+	if (ret == -ENXIO)
-+		return 0;  /* Reads beyond max_pfn do nothing */
-
-The reason I do it this way is, I am using page_idle_get_frames() in the old
-code and the new code, a bit confusing I know! But it is the cleanest way I
-could find to keep this code common.
-
-> > +	*end = *start + count * BITS_PER_BYTE;
-> > +	if (*end > max_frame)
-> > +		*end = max_frame;
-> > +	return 0;
-> > +}
-> > +
-> >
-> > ...
-> >
-> > +static void add_page_idle_list(struct page *page,
-> > +			       unsigned long addr, struct mm_walk *walk)
-> > +{
-> > +	struct page *page_get;
-> > +	struct page_node *pn;
-> > +	int bit;
-> > +	unsigned long frames;
-> > +	struct page_idle_proc_priv *priv = walk->private;
-> > +	u64 *chunk = (u64 *)priv->buffer;
-> > +
-> > +	if (priv->write) {
-> > +		/* Find whether this page was asked to be marked */
-> > +		frames = (addr - priv->start_addr) >> PAGE_SHIFT;
-> > +		bit = frames % BITMAP_CHUNK_BITS;
-> > +		chunk = &chunk[frames / BITMAP_CHUNK_BITS];
-> > +		if (((*chunk >> bit) & 1) == 0)
-> > +			return;
-> > +	}
-> > +
-> > +	page_get = page_idle_get_page(page);
-> > +	if (!page_get)
-> > +		return;
-> > +
-> > +	pn = kmalloc(sizeof(*pn), GFP_ATOMIC);
+>> But, why should we fail probe if link up doesn't happen? As such,
+>> nothing went wrong in terms of root port initialization right?  I
+>> checked other DWC based implementations and following are not failing
+>> the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
+>> pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
+>> pci-keystone.c, pci-layerscape.c
+>>
+>> Although following do fail the probe if link is not up.  pcie-qcom.c,
+>> pcie-uniphier.c, pci-meson.c
+>>
+>> So, to me, it looks more like a choice we can make whether to fail the
+>> probe or not and in this case we are choosing not to fail.
 > 
-> I'm not liking this GFP_ATOMIC.  If I'm reading the code correctly,
-> userspace can ask for an arbitrarily large number of GFP_ATOMIC
-> allocations by doing a large read.  This can potentially exhaust page
-> reserves which things like networking Rx interrupts need and can make
-> this whole feature less reliable.
+> I disagree. I had an offline chat with Bjorn and whether link-up should
+> fail the probe or not depends on whether the root port(s) is hotplug
+> capable or not and this in turn relies on the root port "Slot
+> implemented" bit in the PCI Express capabilities register.
+> 
+> It is a choice but it should be based on evidence.
+> 
+> Lorenzo
+With Bjorn's latest comment on top of this, I think we are good not to fail
+the probe here.
 
-Ok, I will look into this more and possibly do the allocation another way.
-spinlocks are held hence I use GFP_ATOMIC..
-
-thanks,
-
- - Joel
+- Vidya Sagar
+> 
 
