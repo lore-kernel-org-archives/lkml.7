@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D361C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04419C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215B420823
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBDE20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389926AbfGWMsM (ORCPT
+        id S2389959AbfGWMsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:48:12 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38686 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389876AbfGWMsJ (ORCPT
+        Tue, 23 Jul 2019 08:48:24 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:38692 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389902AbfGWMsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:48:09 -0400
-Received: by mail-io1-f69.google.com with SMTP id h4so47186131iol.5
+        Tue, 23 Jul 2019 08:48:10 -0400
+Received: by mail-io1-f72.google.com with SMTP id h4so47186171iol.5
         for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:48:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=t+YWD8TtbpdqccHCrrP62enFfLxTdbJeCf2c+ry+YR4=;
-        b=Mh4Vv9JI7sEDSpqcsxxu8ddbxXZeJCDwSbV4iP/0X2yhaVZVrsHCuD/ZD+rPZOZEAz
-         LjKcdHtJgPPS4TO6Rodx76l5xft3IKnD9H7Lj1tVXr2fMOOzCNZXs35ChVi3tG9nJaAa
-         Pl7wIz5cNaNnZoAljpwDPtuZUEeG0c7XJnm/HslaZm5bupf821fvvQa/89Nh4q7n6v5I
-         kidAlisE87K6T9juMV1iDhT4ssOiMZApnx4NsstFp6qzFNuA0QJuKKc8UptiN2aCdHen
-         GQk2fJOTxtz4bjL/ymfbySyfA7Fh5mhgr8UhYU7zP6xnT1k0Hcr1Kzf6QTP/RyjUEA9a
-         FG/g==
-X-Gm-Message-State: APjAAAXbD/xlvJ9OAMD9Lqsr68Wa+uRxrB2c1E55RrLv0dbg2kB15LWE
-        zGKFqAEUjz4q1CG2RejNEcRGg9Sy0+j1U5mSnZWulWSV3Cke
-X-Google-Smtp-Source: APXvYqyJvgapzmep02x2R/yw6+ozhJuRJ8ynEeOBtTNPKbuYXM0yIdE5zzc69CYIQHIUAKHY/YxLcPWwRIFEhI3F+YRS2nPtyjFg
+        bh=kQbHTv12UWJ75r48zbBLw3Y6lUFzP91zXHFCNF2crgY=;
+        b=Fg8diEVZlg9UAKEwiI/xRFZP6JZBv67fpXcKRP64AeKHZ+NBLHnMJeEXOcLkAs1CSR
+         Hs8nD1scOORcwFuCYwzJdMl4vN/vj9tJ6KStezw9ipE4f1sOvYjg2Tl+EsnpcQWdbseW
+         VF/6eWml1Q/+eWgCl72R/5eQPMO2PDBvms6XTohWJpjcb2MF5RaG/e2Bdj4G7afZgBIQ
+         Vm/2XwNvYZtI55X2DGeUe/atonPiHnGxDusN4jLfuJzAmKXoYBQ58In/78+cjJ6/lQ59
+         VvNK33DOt1z8iDzRW0xTA60/R3+/CE4VSB2ATy42RWgU50zWsIhWUgjNMWylVk3Tnxi/
+         9Wbg==
+X-Gm-Message-State: APjAAAXM9j3taYNPUpAz/3HkH2aMGBkxq251GPB5oJQB/BHQ7cgbC5Zw
+        ZIAVOgjbJYCTKuidmC1UCeZxgB72oGdzmnMpymuHxlplt+So
+X-Google-Smtp-Source: APXvYqyHjYV9xpc7g0W38YsQCuopju9KIve1wsoLO+Nr624Nb4j2UPzeOYHu79ZXHFo0HDjVpFujRQ8Of9pknXJ4Am4c+Anp2r3A
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6f09:: with SMTP id k9mr7633031ioc.223.1563886088898;
- Tue, 23 Jul 2019 05:48:08 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 05:48:08 -0700
+X-Received: by 2002:a5d:9047:: with SMTP id v7mr3057021ioq.18.1563886089437;
+ Tue, 23 Jul 2019 05:48:09 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 05:48:09 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cc4fbc058e589a10@google.com>
-Subject: WARNING: ODEBUG bug in smsusb_term_device
-From:   syzbot <syzbot+25ddf1bb485cd9400ca4@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000d48965058e589a94@google.com>
+Subject: kernel BUG at drivers/usb/wusbcore/wusbhc.c:LINE!
+From:   syzbot <syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org, joe@perches.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        louis@kragniz.eu, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,57 +59,45 @@ syzbot found the following crash on:
 
 HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d4a74c600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1417be94600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-dashboard link: https://syzkaller.appspot.com/bug?extid=25ddf1bb485cd9400ca4
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd2bd7df88c606eea4ef
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13fc4d34600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13e7b678600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d5d25c600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c29358600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+25ddf1bb485cd9400ca4@syzkaller.appspotmail.com
+Reported-by: syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com
 
-smsusb:smsusb_init_device: smscore_start_device(...) failed
+usb 1-1: BUG? WUSB host has no security descriptors
+hwa-hc 1-1:0.66: Wireless USB HWA host controller
+hwa-hc 1-1:0.66: new USB bus registered, assigned bus number 11
+hwa-hc 1-1:0.66: Cannot set WUSB Cluster ID to 0xfe: -71
+hwa-hc 1-1:0.66: Wireless USB Cluster ID set to 0xfe
 ------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: work_struct hint:  
-do_submit_urb+0x0/0x60 /drivers/media/usb/siano/smsusb.c:155
-WARNING: CPU: 1 PID: 22 at lib/debugobjects.c:325  
-debug_print_object+0x160/0x250 /lib/debugobjects.c:325
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #15
+kernel BUG at drivers/usb/wusbcore/wusbhc.c:385!
+invalid opcode: 0000 [#1] SMP KASAN
+CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #15
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Workqueue: usb_hub_wq hub_event
+RIP: 0010:wusb_cluster_id_put+0x6b/0x80 /drivers/usb/wusbcore/wusbhc.c:385
+Code: 7b 9d ce fd 40 84 ed 74 23 e8 41 9c ce fd f0 48 0f b3 1d e8 d6 0e 06  
+5b 48 c7 c7 60 1b 06 87 5d e9 8a 3c e9 01 e8 25 9c ce fd <0f> 0b e8 1e 9c  
+ce fd 0f 0b eb d4 66 2e 0f 1f 84 00 00 00 00 00 41
+RSP: 0018:ffff8881d9eff0e8 EFLAGS: 00010293
+RAX: ffff8881d9e36000 RBX: 00000000ffffffff RCX: ffffffff836e3f37
+RDX: 0000000000000000 RSI: ffffffff836e3f8b RDI: 0000000000000001
+RBP: 00000000000000fe R08: ffff8881d9e36000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffb9
+R13: ffff8881d4a52600 R14: ffff8881d0b5d530 R15: 00000000000000fe
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007efcea69e000 CR3: 00000001d4f3a000 CR4: 00000000001406e0
 Call Trace:
-  __dump_stack /lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e /lib/dump_stack.c:113
-  panic+0x292/0x6c9 /kernel/panic.c:219
-  __warn.cold+0x20/0x4b /kernel/panic.c:576
-  report_bug+0x262/0x2a0 /lib/bug.c:186
-  fixup_bug /arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug /arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 /arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 /arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 /arch/x86/entry/entry_64.S:986
-RIP: 0010:debug_print_object+0x160/0x250 /lib/debugobjects.c:325
-Code: dd e0 16 ba 85 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
-8b 14 dd e0 16 ba 85 48 c7 c7 c0 0c ba 85 e8 db c7 33 ff <0f> 0b 83 05 03  
-6e 86 05 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffff8881d9f8efb8 EFLAGS: 00010082
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3f1de9
-RBP: 0000000000000001 R08: ffff8881d9f80000 R09: ffffed103b663ed7
-R10: ffffed103b663ed6 R11: ffff8881db31f6b7 R12: ffffffff86ac9ea0
-R13: ffffffff81187f60 R14: ffffffff88f0e3e8 R15: ffff8881cf581bc0
-  __debug_check_no_obj_freed /lib/debugobjects.c:785 [inline]
-  debug_check_no_obj_freed+0x2a3/0x42e /lib/debugobjects.c:817
-  slab_free_hook /mm/slub.c:1418 [inline]
-  slab_free_freelist_hook /mm/slub.c:1448 [inline]
-  slab_free /mm/slub.c:2994 [inline]
-  kfree+0x101/0x280 /mm/slub.c:3949
-  smsusb_term_device+0xc2/0x120 /drivers/media/usb/siano/smsusb.c:350
-  smsusb_init_device+0x987/0x9d5 /drivers/media/usb/siano/smsusb.c:487
-  smsusb_probe+0x986/0xa24 /drivers/media/usb/siano/smsusb.c:566
+  hwahc_op_start.cold+0x159/0x183 /drivers/usb/host/hwa-hc.c:162
+  usb_add_hcd.cold+0xaac/0x15a1 /drivers/usb/core/hcd.c:2887
+  hwahc_probe.cold+0xef/0x48b /drivers/usb/host/hwa-hc.c:810
   usb_probe_interface+0x305/0x7a0 /drivers/usb/core/driver.c:361
   really_probe+0x281/0x660 /drivers/base/dd.c:509
   driver_probe_device+0x104/0x210 /drivers/base/dd.c:670
@@ -136,8 +125,21 @@ R13: ffffffff81187f60 R14: ffffffff88f0e3e8 R15: ffff8881cf581bc0
   worker_thread+0x96/0xe20 /kernel/workqueue.c:2415
   kthread+0x30b/0x410 /kernel/kthread.c:255
   ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
-
-======================================================
+Modules linked in:
+---[ end trace 328f1b9a8fbb35b6 ]---
+RIP: 0010:wusb_cluster_id_put+0x6b/0x80 /drivers/usb/wusbcore/wusbhc.c:385
+Code: 7b 9d ce fd 40 84 ed 74 23 e8 41 9c ce fd f0 48 0f b3 1d e8 d6 0e 06  
+5b 48 c7 c7 60 1b 06 87 5d e9 8a 3c e9 01 e8 25 9c ce fd <0f> 0b e8 1e 9c  
+ce fd 0f 0b eb d4 66 2e 0f 1f 84 00 00 00 00 00 41
+RSP: 0018:ffff8881d9eff0e8 EFLAGS: 00010293
+RAX: ffff8881d9e36000 RBX: 00000000ffffffff RCX: ffffffff836e3f37
+RDX: 0000000000000000 RSI: ffffffff836e3f8b RDI: 0000000000000001
+RBP: 00000000000000fe R08: ffff8881d9e36000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffb9
+R13: ffff8881d4a52600 R14: ffff8881d0b5d530 R15: 00000000000000fe
+FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007efcea69e000 CR3: 00000001d4f3a000 CR4: 00000000001406e0
 
 
 ---
