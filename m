@@ -2,191 +2,113 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FABC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C2FC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04405218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDD72199C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VQRQuOZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387570AbfGWBDP (ORCPT
+        id S2387631AbfGWBDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:03:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:7612 "EHLO mga14.intel.com"
+        Mon, 22 Jul 2019 21:03:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:49319 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733149AbfGWBDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:03:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 18:03:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
-   d="scan'208";a="192902952"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Jul 2019 18:03:14 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rui.zhang@intel.com, edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset
-Date:   Mon, 22 Jul 2019 18:03:02 -0700
-Message-Id: <20190723010302.18048-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
+        id S1731828AbfGWBDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 21:03:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45t0bS1wKvz9s3Z;
+        Tue, 23 Jul 2019 11:03:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563843813;
+        bh=EgLzuuOlqciTbhsbAXpNasSCsMeGLSHIWQ28FtGs0I0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VQRQuOZWsUz9x7pT7riQeHCsTKnY4/Gxk+HepcfdxKw7AZj2N7lbFQLBUVRZema+X
+         urUkvYolS6kFFeiWaP6yHdUV34CcnxCpHVwVGe1037NC4zyiYwTbgI6ikw+E+drvwZ
+         R/Y+6PJeJImx1oghtkw9fWCuFuzXax7YFUs8kFQJ9nGiWisptq5Upd9SWD70680hj2
+         oNmeW5mO7BF9Rjqs8pQpdVl6RGgP7rQVNPAlvItuzvrOPI36l7GqQSk14JQxpstdKn
+         iO+H+en5kflYU9FvXechwyqanVyHIUWy2r26507iH3MYqXvVPz7vqWCIL8gmTWz+wW
+         093iKepYe2TmA==
+Date:   Tue, 23 Jul 2019 11:03:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Imre Deak <imre.deak@intel.com>
+Subject: linux-next: manual merge of the drm-intel tree with the
+ kspp-gustavo tree
+Message-ID: <20190723110331.1967d000@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/ys73Uxj2mKTiAI7sxPqI1zL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change exports an interface to read tcc offset and allow writing if
-the platform is not locked.
+--Sig_/ys73Uxj2mKTiAI7sxPqI1zL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Refer to Intel SDM for details on the MSR: MSR_TEMPERATURE_TARGET.
-Here TCC Activation Offset (R/W) bits allow temperature offset in degrees
-in relation to TjMAX.
+Hi all,
 
-This change will be useful for improving performance from user space for
-some platforms, if the current offset is not optimal.
+Today's linux-next merge of the drm-intel tree got a conflict in:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../processor_thermal_device.c                | 91 ++++++++++++++++++-
- 1 file changed, 87 insertions(+), 4 deletions(-)
+  drivers/gpu/drm/i915/display/intel_dp.c
 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-index 213ab3cc6b80..a35635129fed 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-@@ -137,6 +137,72 @@ static const struct attribute_group power_limit_attribute_group = {
- 	.name = "power_limits"
- };
- 
-+static ssize_t tcc_offset_degree_celsius_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	u64 val;
-+	int err;
-+
-+	err = rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
-+	if (err)
-+		return err;
-+
-+	val = (val >> 24) & 0xff;
-+	return sprintf(buf, "%d\n", (int)val);
-+}
-+
-+static int tcc_offset_update(int tcc)
-+{
-+	u64 val;
-+	int err;
-+
-+	if (!tcc)
-+		return -EINVAL;
-+
-+	err = rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
-+	if (err)
-+		return err;
-+
-+	val = ~GENMASK_ULL(31, 24);
-+	val = (tcc & 0xff) << 24;
-+
-+	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static int tcc_offset_save;
-+
-+static ssize_t tcc_offset_degree_celsius_store(struct device *dev,
-+				struct device_attribute *attr, const char *buf,
-+				size_t count)
-+{
-+	u64 val;
-+	int tcc, err;
-+
-+	err = rdmsrl_safe(MSR_PLATFORM_INFO, &val);
-+	if (err)
-+		return err;
-+
-+	if (!(val & BIT(30)))
-+		return -EACCES;
-+
-+	if (kstrtoint(buf, 0, &tcc))
-+		return -EINVAL;
-+
-+	err = tcc_offset_update(tcc);
-+	if (err)
-+		return err;
-+
-+	tcc_offset_save = tcc;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(tcc_offset_degree_celsius);
-+
- static int stored_tjmax; /* since it is fixed, we can have local storage */
- 
- static int get_tjmax(void)
-@@ -332,6 +398,7 @@ static void proc_thermal_remove(struct proc_thermal_device *proc_priv)
- 	acpi_remove_notify_handler(proc_priv->adev->handle,
- 				   ACPI_DEVICE_NOTIFY, proc_thermal_notify);
- 	int340x_thermal_zone_remove(proc_priv->int340x_zone);
-+	sysfs_remove_file(&proc_priv->dev->kobj, &dev_attr_tcc_offset_degree_celsius.attr);
- 	sysfs_remove_group(&proc_priv->dev->kobj,
- 			   &power_limit_attribute_group);
- }
-@@ -355,8 +422,15 @@ static int int3401_add(struct platform_device *pdev)
- 
- 	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PLATFORM_DEV\n");
- 
--	return sysfs_create_group(&pdev->dev.kobj,
--					 &power_limit_attribute_group);
-+	ret = sysfs_create_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
-+	if (ret)
-+		return ret;
-+
-+	ret = sysfs_create_group(&pdev->dev.kobj, &power_limit_attribute_group);
-+	if (ret)
-+		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
-+
-+	return ret;
- }
- 
- static int int3401_remove(struct platform_device *pdev)
-@@ -584,8 +658,15 @@ static int  proc_thermal_pci_probe(struct pci_dev *pdev,
- 
- 	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PCI\n");
- 
--	return sysfs_create_group(&pdev->dev.kobj,
--					 &power_limit_attribute_group);
-+	ret = sysfs_create_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
-+	if (ret)
-+		return ret;
-+
-+	ret = sysfs_create_group(&pdev->dev.kobj, &power_limit_attribute_group);
-+	if (ret)
-+		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
-+
-+	return ret;
- }
- 
- static void  proc_thermal_pci_remove(struct pci_dev *pdev)
-@@ -611,6 +692,8 @@ static int proc_thermal_resume(struct device *dev)
- 	proc_dev = dev_get_drvdata(dev);
- 	proc_thermal_read_ppcc(proc_dev);
- 
-+	tcc_offset_update(tcc_offset_save);
-+
- 	return 0;
- }
- #else
--- 
-2.17.2
+between commit:
 
+  b6ac32eac063 ("drm/i915: Mark expected switch fall-throughs")
+
+from the kspp-gustavo tree and commit:
+
+  bc85328ff431 ("drm/i915: Move the TypeC port handling code to a separate =
+file")
+  4f36afb26cbe ("drm/i915: Sanitize the TypeC FIA lane configuration decodi=
+ng")
+
+from the drm-intel tree.
+
+I fixed it up (bc85328ff431 moved the function updated by b6ac32eac063
+and 4f36afb26cbe added an equivalt fixup) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ys73Uxj2mKTiAI7sxPqI1zL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02XOMACgkQAVBC80lX
+0GwDbwgAlaf+xE1tNCPsgcl5HiOTZUxrqytDq4ycNhd8xFpJEaYjWRt9ldGASVMz
+UfcpujMglgxs74dUunYoPKpX1dRDvwStCnTsAhqmNFYsYvITqfCcFXeQow0a+FEq
+FTaY8ukiLVLud61SU2OtRuDhynlvaH1MGcWFy7VmWXq5I64aGKoLAK6TkrUnYBEP
+hmMG0nH6qXD5npB2HkGnSrFszOKMfU775mHEjTDXPLbYyb/IcKqFVXU8fil0t6YC
+mdbekGPEh8a97++FZRMqndFuxipjobnmIef3ncpGwRsEDin7bakacvn4HGAtQdd/
+pHErDey/00MZW90mXE4cjshBlsIdBw==
+=0Gt0
+-----END PGP SIGNATURE-----
+
+--Sig_/ys73Uxj2mKTiAI7sxPqI1zL--
