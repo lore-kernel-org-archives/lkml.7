@@ -2,111 +2,83 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F295C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42DAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AB9223BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C057223CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Or7q/736"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IDHd3Bll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733238AbfGWI3q (ORCPT
+        id S1733305AbfGWIaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:29:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41840 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729876AbfGWI3q (ORCPT
+        Tue, 23 Jul 2019 04:30:16 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39124 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729876AbfGWIaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:29:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so20233495pls.8;
-        Tue, 23 Jul 2019 01:29:45 -0700 (PDT)
+        Tue, 23 Jul 2019 04:30:16 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v85so28683979lfa.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 01:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P/IhrnANi+2O2v80X4s3O9Ae0AOuA4HxAuKTn1SEfO4=;
-        b=Or7q/736P9pmrzN0Z4uGLSF7JdsOo1NktSjHRB2KsG3UsdxMu/L2XlHIJemSmmVJ+W
-         7nfgtIOwQh38wllJvbdagP/c9rKPiqZwN7IZy+9+vFNKCB75SbDcWhg6golzgaki6og1
-         aSMI+NJ06RTVxBxoNw+hCkzQHbTfrihpkCwlKxbMatdwHmqHd8QjUvhavnBivYez7j/R
-         AhZ5MgrN8ic//q/Mi3HEs/QJWmTMGtIk9v5YMrLiiFU+D2PLFqHS2QKKwM4y03QC/v/o
-         0XD5tgNCIhO2kjXVnYn1JJDKlT9bCA1ZAFVIlYa5QgRY4m5XDN539LeWwS5XGUh5SRHS
-         UiVw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=syBlnIr3lotOltOc/vZkYQKICHGTlfmAJxr6rc/TPFI=;
+        b=IDHd3BlllDzmuMywX3W/Mwaxf9SUAC1ITQAYxVe3EdpVLn9P7ox/KvicZW0H2rn0VZ
+         XYMuUIDtUmUgSakwnZqRD1wQNi33jFkVfQ++7gqN+S1bYzcoiZEpYsIYDg+s8PtPW9+K
+         MSur3qtEyMptDyPfThqGYsTkPwZI82uma6RJmI3Z3uNyWTSnvQnDub5P482J9AI4exHZ
+         MibyDiZFASkBdczzlG82BC7XX9iF5uOdeBkbJ8eNZKBp1/DlcJfWf8owTiKuBkS9Gdhk
+         9wVcvG5Pfqbu1AVShyl1gXG5TMkTM9JLUFH0Wfp9eDgJ8oepkWepG/LEbP9vk/XxLltc
+         Gs+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P/IhrnANi+2O2v80X4s3O9Ae0AOuA4HxAuKTn1SEfO4=;
-        b=JfejHGcAvcj7HT7WBMLFv7pcVguyYRiVIJNG/jgy4VTJRbvkifdQrU3+pN24fqU6YH
-         eIl04z2mK+u0tfGNanql1KY0GlZXl1Tpx/jwu8Z/myeJCBaSHBJvx2zoNUjrF3EWkbk2
-         XOw1SeY8yDd68RmJZvzEo5Dd/5BV83xLPyZVzZgQs3RJk+4/pyE0t+JXuHUP5fLoZeck
-         Sj5dCwXmLPXJEkdG0GFiRqcsHMXSfyg4Igs7zYvA6wXioxZodpBRBKzTa8J03hPTkppa
-         6uAkaJa8HHXZ46YziBGIWD3rx1JhBbrrvgdKjPn3w2HRwra3xCi4LqkU/tqYOsMAYzfE
-         7zIA==
-X-Gm-Message-State: APjAAAXlRVMh8oLib8c0LQB2Yqw8tQTyEWX1CP6i3jP/nS2WFamT7xux
-        CZgA25tKMs+W7HOawlhOgzU=
-X-Google-Smtp-Source: APXvYqyv6dsz+elxIm8kD+P8AyzZBUjM/IBZoGn8CNknZYA0S4H9CyodEx6N6ghGKBNx5E/kFBP8sg==
-X-Received: by 2002:a17:902:24b:: with SMTP id 69mr76138487plc.250.1563870585552;
-        Tue, 23 Jul 2019 01:29:45 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id x22sm46780579pff.5.2019.07.23.01.29.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 01:29:45 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] gpio: Use dev_get_drvdata
-Date:   Tue, 23 Jul 2019 16:29:34 +0800
-Message-Id: <20190723082933.21134-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=syBlnIr3lotOltOc/vZkYQKICHGTlfmAJxr6rc/TPFI=;
+        b=Yd61V/mj0iFCZf6qc1FLaQU/OHMXFB82/rlrLwIWOpXA9QBmE8ihuFZAGdQL5XhM79
+         Z+tLg6AP2pQGoCq6qiI+b4wp2bUKbWnPg/anC5z6QyYV6qXNki821Yj2DnG/ZyxHg3SM
+         rHFw4CQYYhpgD60gZI9Vp7DzNR4tgRfCHo7DdzfOLaqa+2Y6ejEvYR2YtGR1zGw0KMuP
+         WQy18OZVU7rEB51fwZQBclWCLgsu8pJ/2EzMiIEZNQiWL/LTk7jjqTMKXCrg7UTCatXL
+         M7MKrQEJO3XEvaxsgNsaC5xrv6uA6wA/3LzrN1VgD0KuIc6ZXJNf4ZnAziW1oJTkbRHF
+         cUaw==
+X-Gm-Message-State: APjAAAWXpWHDzejkstwZ/UhiwZ2ngWQLdQxr6G1VlGJX8mVSseoA5hKH
+        739gmqzOo1X63RDoirLZybBUlp5Mma5uo2X5SOB47w==
+X-Google-Smtp-Source: APXvYqwWGxao/28Kz2zbNijiOv5Hz8uDmZYEJmaa8ZR+sLnSu5xitdAQqA8b5w1+jLpRJZce7gmX18s/KwwTbJI3EQI=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr35514625lfc.60.1563870614049;
+ Tue, 23 Jul 2019 01:30:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190722172623.4166-1-wsa+renesas@sang-engineering.com> <20190722172623.4166-4-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190722172623.4166-4-wsa+renesas@sang-engineering.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Jul 2019 10:30:02 +0200
+Message-ID: <CACRpkdb4CtiiYbSwHEcC4godbRBA3DmABCHpx5_OKUCfxgcUSg@mail.gmail.com>
+Subject: Re: [PATCH 03/14] mfd: ab3100-core: convert to i2c_new_dummy_device
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+On Mon, Jul 22, 2019 at 7:26 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/gpio/gpio-pch.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
+> ERRPTR which we use in error handling.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-index 1d99293096f2..3f3d9a94b709 100644
---- a/drivers/gpio/gpio-pch.c
-+++ b/drivers/gpio/gpio-pch.c
-@@ -409,8 +409,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
- 
- static int __maybe_unused pch_gpio_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pch_gpio *chip = pci_get_drvdata(pdev);
-+	struct pch_gpio *chip = dev_get_drvdata(dev);
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&chip->spinlock, flags);
-@@ -422,8 +421,7 @@ static int __maybe_unused pch_gpio_suspend(struct device *dev)
- 
- static int __maybe_unused pch_gpio_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pch_gpio *chip = pci_get_drvdata(pdev);
-+	struct pch_gpio *chip = dev_get_drvdata(dev);
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&chip->spinlock, flags);
--- 
-2.20.1
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
