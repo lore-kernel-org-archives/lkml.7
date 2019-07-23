@@ -2,228 +2,181 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC11C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9A8C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91F6205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563898471;
-	bh=WKwZmQ3mghR8Sji7G4J6WqmqQ+q6nVFcQGnt+GgZwvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jzx6EEy25aApMQ/dDpcYkBpxOR6ABTdxWgPOGQSuLekUM5ji6IWUNNtYkj9bk+aHd
-	 xiO4zS8N+6Yi+p0osYbwZJmpoNBpV1Fa51N2v+02HPuOgVPicgWEM0GQRxOqO1PGbC
-	 vsebrg5HOrHGAsvFhi1qquCOmEskIvxexu8RxXMU=
+	by mail.kernel.org (Postfix) with ESMTP id 3C6B9205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="YnYL2f0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfGWQOa (ORCPT
+        id S1730521AbfGWQQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:14:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728815AbfGWQOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:14:30 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 135EB205F4;
-        Tue, 23 Jul 2019 16:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563898468;
-        bh=WKwZmQ3mghR8Sji7G4J6WqmqQ+q6nVFcQGnt+GgZwvU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jTYc9vF/SaD70ecg/bejJKG1fN6J1OeY5yaNfPO71FbuWa88lal0xS64E36klAP26
-         ISyTcDGn9Ctdgxu/Lv0JjDfXO9rB0YjFT8MN15xLOzrDfdRjKwbf2rYmJOlslskzMD
-         8QTsspph90ZWEKE8zOoVqcZtbzgxxv95iwBY90W0=
-Date:   Tue, 23 Jul 2019 09:14:26 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+4efacf59126f1ae87000@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: usb-fuzzer boot error: general protection fault in
- dma_direct_max_mapping_size
-Message-ID: <20190723161425.GA23641@gmail.com>
-Mail-Followup-To: syzbot <syzbot+4efacf59126f1ae87000@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <000000000000c3c7b6058e5a47af@google.com>
+        Tue, 23 Jul 2019 12:16:23 -0400
+Received: from UCOL19PA34.eemsg.mail.mil ([214.24.24.194]:29763 "EHLO
+        UCOL19PA34.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbfGWQQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:16:22 -0400
+X-EEMSG-check-017: 612692|UCOL19PA34_ESA_OUT01.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.64,299,1559520000"; 
+   d="scan'208";a="612692"
+Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
+  by UCOL19PA34.eemsg.mail.mil with ESMTP; 23 Jul 2019 16:16:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1563898568; x=1595434568;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=VzouGgOn7bxXwD7qWHawlSBqaPeVOs5RApSCI+ZHzBI=;
+  b=YnYL2f0+4Z/nKFePQ+QUZEaS1/B9K1SpYEhEld2+XjmPJ3mhmFI0lZZu
+   p1+UF79ya38n7LY6RzqvTrHuU1Gt1bLPIGDdmC8US+no/YGYK42l+880F
+   t4gMCkOJ/osOaZJHuCXNpl2d5hjn9YaPISgJI57lbNpozNenhO9en7qY6
+   /Swe5v9+eUS9kJT+8Yz2bHjnS7l9Ip05fM1lZaYrA/olPlBAkX2cneESj
+   kvcOdwE/eInIJbGJA/DpYzkPUn/vWlElvcPLknx8Gw97qoFbNVJzQc8Lb
+   Drbx4rOIqp3OBEk3BXeQZpH7U/fpthszw1UcqRK9isnmGpRUQS/BDKCL+
+   A==;
+X-IronPort-AV: E=Sophos;i="5.64,299,1559520000"; 
+   d="scan'208";a="26002930"
+IronPort-PHdr: =?us-ascii?q?9a23=3A8rDe7RNExpsWrz4t0Dgl6mtUPXoX/o7sNwtQ0K?=
+ =?us-ascii?q?IMzox0K//7pcbcNUDSrc9gkEXOFd2Cra4d0ayJ4+uxCSQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagf79+Nhe7oAbeusQSgoZpN7o8xA?=
+ =?us-ascii?q?bOrnZUYepd2HlmJUiUnxby58ew+IBs/iFNsP8/9MBOTLv3cb0gQbNXEDopPW?=
+ =?us-ascii?q?Y15Nb2tRbYVguA+mEcUmQNnRVWBQXO8Qz3UY3wsiv+sep9xTWaMMjrRr06RT?=
+ =?us-ascii?q?iu86FmQwLzhSwZKzA27n3Yis1ojKJavh2hoQB/w5XJa42RLfZyY7/Rcc8fSW?=
+ =?us-ascii?q?dHUMlRTShBCZ6iYYUJAeQKIOJUo5D9qlYKqBezAxSnCuHyxT9SnnL4wLM00+?=
+ =?us-ascii?q?ohHw/F0gIvEd0Bv3bIo9v6L6oSTeK4wbPUwTnfYf5b2zHw45XIfBA7pvGMWK?=
+ =?us-ascii?q?p9fNbLxkk1EAPFiEibp43iPzOUy+sCrWyb5PdnWO21l2EnpAZxojmyycgykY?=
+ =?us-ascii?q?TJmoIUxUzE9SV+2oo1I8a4R1Rhbd6rF5tQqTiXOo1rSc0hW2FloDs2x7IJtJ?=
+ =?us-ascii?q?KhfCUG1Y4rywDQZvCZaYSE/xTuX/uLLzhinnJqYre/ig638Uin1+LzSNG50E?=
+ =?us-ascii?q?1PripZitnMsW0N1wDL5siHVPR9+kCh1C6T1w/J8OFEIF00lbHBJ549wr8/ip?=
+ =?us-ascii?q?oTsUPZEi/whEr2l7OZel8h+uip7+TrerTmppmCOI9okgzyL6sjl8OlDek4Lw?=
+ =?us-ascii?q?QCRXaX9Oui2LH54EH1WLBKgec3kqndvpDaP8MbpquhDgBPzokj5BG/Dza739?=
+ =?us-ascii?q?sGhnQHMFJEdw6Hj4juIV3OJuv4Au2lj1Sjlzdr2ejKPqf9DZXVMnjDjLDhcK?=
+ =?us-ascii?q?5n5E5ZyQoz19JS6pxVCrEFO//zVUrxu8bZDh89KQC73+HnCNBl3IMERW2PGr?=
+ =?us-ascii?q?OZML/VsVKQ/uIgOfSMZIsOtTblMfcl+vrugWY8mV8aeqmpx4UYZGqkEfRhJk?=
+ =?us-ascii?q?WTeWDsjcsZEWcWogo+S/TniEacXj5XZnayWb885z4gBYK4AofMWJqtjKaC3C?=
+ =?us-ascii?q?ilBJ1WYH5JClSWHXfvbYWEVO8GaDiOLc95jjwESb+hRpcl1RGvsg/61rVmIv?=
+ =?us-ascii?q?PP+iIGqZ3jycJ15+zPlRAy7DB0CsOd3HyQT2FwgGwFXCE23K9hrkxn0FuD0r?=
+ =?us-ascii?q?Z3g+ZeFdNN4/NFSAA6NYTTz+ZiEdD9RhrBfsuVSFahWtimBTAxTtQsw94Bek?=
+ =?us-ascii?q?p9Fc6igQ3d0Cq0HbAVk6eGBII78q3CxXj9PcV9xGjc1KknkVYmRtFDNWq8hq?=
+ =?us-ascii?q?5w7wLTHZLGk12Fl6a2cqQRxDPC9GeEzWuAok5YVApwUb7eUHAFeETZsNT56V?=
+ =?us-ascii?q?neT7O0FbsnNQ5Bw9aYKqRWct3pkUlGRPD7NdTceW2+h2SwCA2TxrORd4rlZX?=
+ =?us-ascii?q?8R0zncCUIciQAc4W6GNRQiBiemu2/eDjluFVX1Y0P28Ol+s2i2TkkuwAGPcU?=
+ =?us-ascii?q?Jh1qC5+hkPhfyTU/kTxK4LuD89qzVoG1awx9bWC9uGpwp8c6RQeNA970ld1W?=
+ =?us-ascii?q?LfqQN9OoetL75thlEAaQR7pUDu2AttCoVGj8cqqGkmzA1oKaKXgxt9cGax2J?=
+ =?us-ascii?q?HqcpLQLmXp4B2ubeaC01TfyonN+6Mn5/ExqlGltwasQBkM6XJihvBcyXyarr?=
+ =?us-ascii?q?rNDQYfVdqlW0048Bl2qpnGcyI94MXSznQqPq6q5GyRk+k1Dfcon07zN+xUN7?=
+ =?us-ascii?q?mJQUqrTpwX?=
+X-IPAS-Result: =?us-ascii?q?A2BqCgBGMjdd/wHyM5BmHQEBBQEHBQGBZ4FtKoE+ATIqh?=
+ =?us-ascii?q?B2SFlABAQEGgQktiWKRFwkBAQEBAQEBAQE0AQIBAYRAAoJOIzgTAQMBAQEEA?=
+ =?us-ascii?q?QEBAQUBAWyFKoI6KQGCZwECAyMEET8CEAsYAgIfBwICVwYNBgIBAYJfP4F3F?=
+ =?us-ascii?q?Kp8fzOFR4MxgUiBDCiLXxd4gQeBOIJrPodPglgEjkWGLJVyCYIblAYGG4Ith?=
+ =?us-ascii?q?yWEDIospxQhgVgrCAIYCCEPgyeBEoFnjikjAzCBBgEBjl4BAQ?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 23 Jul 2019 16:16:08 +0000
+Received: from moss-callisto.infosec.tycho.ncsc.mil (moss-callisto [192.168.25.136])
+        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x6NGG404027057;
+        Tue, 23 Jul 2019 12:16:04 -0400
+Subject: Re: [Non-DoD Source] Re: [RFC PATCH v2] fanotify, inotify, dnotify,
+ security: add security hook for fs notifications
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190718143042.11059-1-acgoide@tycho.nsa.gov>
+ <CAOQ4uxjCR76nbV_Lmoegaq6NqovWZD-XWEVS-X3e=BtDdjKkXQ@mail.gmail.com>
+From:   Aaron Goidel <acgoide@tycho.nsa.gov>
+Message-ID: <c74ad814-f188-37c6-9b3a-51178b538a2b@tycho.nsa.gov>
+Date:   Tue, 23 Jul 2019 12:16:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000c3c7b6058e5a47af@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOQ4uxjCR76nbV_Lmoegaq6NqovWZD-XWEVS-X3e=BtDdjKkXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 07:48:05AM -0700, syzbot wrote:
-> Hello,
+On 7/18/19 12:16 PM, Amir Goldstein wrote:
+> On Thu, Jul 18, 2019 at 5:31 PM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
+>>
+>> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+>> index a90bb19dcfa2..9e3137badb6b 100644
+>> --- a/fs/notify/fanotify/fanotify_user.c
+>> +++ b/fs/notify/fanotify/fanotify_user.c
+>> @@ -528,9 +528,10 @@ static const struct file_operations fanotify_fops = {
+>>   };
+>>
+>>   static int fanotify_find_path(int dfd, const char __user *filename,
+>> -                             struct path *path, unsigned int flags)
+>> +                             struct path *path, unsigned int flags, __u64 mask)
+>>   {
+>>          int ret;
+>> +       unsigned int mark_type;
+>>
+>>          pr_debug("%s: dfd=%d filename=%p flags=%x\n", __func__,
+>>                   dfd, filename, flags);
+>> @@ -567,8 +568,30 @@ static int fanotify_find_path(int dfd, const char __user *filename,
+>>
+>>          /* you can only watch an inode if you have read permissions on it */
+>>          ret = inode_permission(path->dentry->d_inode, MAY_READ);
+>> +       if (ret) {
+>> +               path_put(path);
+>> +               goto out;
+>> +       }
+>> +
+>> +       switch (flags & FANOTIFY_MARK_TYPE_BITS) {
+>> +       case FAN_MARK_MOUNT:
+>> +               mark_type = FSNOTIFY_OBJ_TYPE_VFSMOUNT;
+>> +               break;
+>> +       case FAN_MARK_FILESYSTEM:
+>> +               mark_type = FSNOTIFY_OBJ_TYPE_SB;
+>> +               break;
+>> +       case FAN_MARK_INODE:
+>> +               mark_type = FSNOTIFY_OBJ_TYPE_INODE;
+>> +               break;
+>> +       default:
+>> +               ret = -EINVAL;
+>> +               goto out;
+>> +       }
+>> +
+>> +       ret = security_inode_notify(path->dentry->d_inode, mask, mark_type);
 > 
-> syzbot found the following crash on:
+> If you prefer 3 hooks security_{inode,mount,sb}_notify()
+> please place them in fanotify_add_{inode,mount,sb}_mark().
 > 
-> HEAD commit:    1154c0b0 wip
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1197774c600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b228fb19779df17d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4efacf59126f1ae87000
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> If you prefer single hook with path argument, please pass path
+> down to fanotify_add_mark() and call security_path_notify() from there,
+> where you already have the object type argument.
 > 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+4efacf59126f1ae87000@syzkaller.appspotmail.com
-> 
-> RPC: Registered udp transport module.
-> RPC: Registered tcp transport module.
-> RPC: Registered tcp NFSv4.1 backchannel transport module.
-> pci 0000:00:00.0: Limiting direct PCI/PCI transfers
-> PCI: CLS 0 bytes, default 64
-> PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-> software IO TLB: mapped [mem 0xbbffd000-0xbfffd000] (64MB)
-> RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl
-> timer
-> clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212735223b2,
-> max_idle_ns: 440795277976 ns
-> clocksource: Switched to clocksource tsc
-> check: Scanning for low memory corruption every 60 seconds
-> Initialise system trusted keyrings
-> workingset: timestamp_bits=40 max_order=21 bucket_order=0
-> NFS: Registering the id_resolver key type
-> Key type id_resolver registered
-> Key type id_legacy registered
-> 9p: Installing v9fs 9p2000 file system support
-> Key type asymmetric registered
-> Asymmetric key parser 'x509' registered
-> Block layer SCSI generic (bsg) driver version 0.4 loaded (major 247)
-> io scheduler mq-deadline registered
-> io scheduler kyber registered
-> usbcore: registered new interface driver udlfb
-> usbcore: registered new interface driver smscufx
-> input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
-> ACPI: Power Button [PWRF]
-> input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
-> ACPI: Sleep Button [SLPF]
-> PCI Interrupt Link [LNKC] enabled at IRQ 11
-> virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
-> PCI Interrupt Link [LNKD] enabled at IRQ 10
-> virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
-> Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-> 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-> 00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
-> 00:05: ttyS2 at I/O 0x3e8 (irq = 6, base_baud = 115200) is a 16550A
-> 00:06: ttyS3 at I/O 0x2e8 (irq = 7, base_baud = 115200) is a 16550A
-> Non-volatile memory driver v1.3
-> Linux agpgart interface v0.103
-> usbcore: registered new interface driver udl
-> loop: module loaded
-> usbcore: registered new interface driver rtsx_usb
-> usbcore: registered new interface driver viperboard
-> usbcore: registered new interface driver dln2
-> usbcore: registered new interface driver pn533_usb
-> usbcore: registered new interface driver port100
-> usbcore: registered new interface driver nfcmrvl
-> scsi host0: Virtio SCSI HBA
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN
-> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc1+ #16
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:dma_addressing_limited /./include/linux/dma-mapping.h:692 [inline]
-> RIP: 0010:dma_direct_max_mapping_size+0x73/0x19a /kernel/dma/direct.c:408
-> Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 1e 01 00 00 48 8b 9d 38 03
-> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85
-> 06 01 00 00 48 8d bd 48 03 00 00 48 8b 1b 48 b8
-> RSP: 0000:ffff8881da18f628 EFLAGS: 00010246
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff812d716c
-> RDX: 0000000000000000 RSI: ffffffff812d7189 RDI: ffff8881d7428378
-> RBP: ffff8881d7428040 R08: ffff8881da180000 R09: ffffed103ade30cb
-> R10: ffffed103ade30ca R11: ffff8881d6f18657 R12: ffff8881d7428040
-> R13: ffff8881d769e8b0 R14: 0000000000000200 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 0000000006a21000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  dma_max_mapping_size+0xb5/0xf0 /kernel/dma/mapping.c:375
->  __scsi_init_queue+0x17e/0x510 /drivers/scsi/scsi_lib.c:1787
->  scsi_mq_alloc_queue+0xcb/0x170 /drivers/scsi/scsi_lib.c:1833
->  scsi_alloc_sdev+0x82e/0xc50 /drivers/scsi/scsi_scan.c:269
->  scsi_probe_and_add_lun+0x1ee5/0x2cd0 /drivers/scsi/scsi_scan.c:1078
->  __scsi_scan_target+0x273/0xc30 /drivers/scsi/scsi_scan.c:1562
->  scsi_scan_channel.part.0+0x126/0x1a0 /drivers/scsi/scsi_scan.c:1650
->  scsi_scan_channel /drivers/scsi/scsi_scan.c:1677 [inline]
->  scsi_scan_host_selected+0x2bb/0x3f0 /drivers/scsi/scsi_scan.c:1679
->  do_scsi_scan_host /drivers/scsi/scsi_scan.c:1817 [inline]
->  do_scsi_scan_host+0x1e8/0x260 /drivers/scsi/scsi_scan.c:1807
->  scsi_scan_host /drivers/scsi/scsi_scan.c:1847 [inline]
->  scsi_scan_host+0x37c/0x440 /drivers/scsi/scsi_scan.c:1835
->  virtscsi_probe+0x9b7/0xbb5 /drivers/scsi/virtio_scsi.c:847
->  virtio_dev_probe+0x463/0x710 /drivers/virtio/virtio.c:248
->  really_probe+0x281/0x650 /drivers/base/dd.c:548
->  driver_probe_device+0x101/0x1b0 /drivers/base/dd.c:709
->  device_driver_attach+0x108/0x140 /drivers/base/dd.c:983
->  __driver_attach+0xda/0x240 /drivers/base/dd.c:1060
->  bus_for_each_dev+0x14b/0x1d0 /drivers/base/bus.c:304
->  bus_add_driver+0x44e/0x5a0 /drivers/base/bus.c:645
->  driver_register+0x1c4/0x320 /drivers/base/driver.c:170
->  __write_once_size /./include/linux/compiler.h:226 [inline]
->  INIT_LIST_HEAD /./include/linux/list.h:28 [inline]
->  init+0xa1/0x115 /drivers/char/virtio_console.c:2251
->  do_one_initcall+0xf0/0x614 /init/main.c:939
->  do_initcall_level /init/main.c:1007 [inline]
->  do_initcalls /init/main.c:1015 [inline]
->  do_basic_setup /init/main.c:1032 [inline]
->  kernel_init_freeable+0x4a9/0x596 /init/main.c:1192
->  kernel_init+0xd/0x1bf /init/main.c:1110
->  ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> ---[ end trace 73ab592d53bc046f ]---
-> RIP: 0010:dma_addressing_limited /./include/linux/dma-mapping.h:692 [inline]
-> RIP: 0010:dma_direct_max_mapping_size+0x73/0x19a /kernel/dma/direct.c:408
-> Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 1e 01 00 00 48 8b 9d 38 03
-> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85
-> 06 01 00 00 48 8d bd 48 03 00 00 48 8b 1b 48 b8
-> RSP: 0000:ffff8881da18f628 EFLAGS: 00010246
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff812d716c
-> RDX: 0000000000000000 RSI: ffffffff812d7189 RDI: ffff8881d7428378
-> RBP: ffff8881d7428040 R08: ffff8881da180000 R09: ffffed103ade30cb
-> R10: ffffed103ade30ca R11: ffff8881d6f18657 R12: ffff8881d7428040
-> R13: ffff8881d769e8b0 R14: 0000000000000200 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 0000000006a21000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000c3c7b6058e5a47af%40google.com.
+I'm not clear on why you want me to move the hook call down to 
+fanotify_add_mark(). I'd prefer to keep it adjacent to the existing 
+inode_permission() call so that all the security checking occurs from 
+one place. Moving it down requires adding a path arg to that entire call 
+chain, even though it wouldn't otherwise be needed. And that raises the 
+question of whether to continue passing the mnt_sb, mnt, or inode 
+separately or just extract all those from the path inside of 
+fanotify_add_*_mark().
 
-Seems there is a fix for this queued in the SCSI tree.
+It also seems to destroy the parallelism with fanotify_remove_*_mark(). 
+I also don't see any real benefit in splitting into three separate 
+hooks, especially as some security modules will want the path or inode 
+even for the mount or superblock cases, since they may have no relevant 
+security information for vfsmounts or superblocks.
 
-#syz fix: scsi: core: fix the dma_max_mapping_size call
-
-Other threads:
-
-https://marc.info/?l=linux-scsi&m=156378725427719&w=2
-https://lkml.kernel.org/lkml/20190722163759.GA28686@codemonkey.org.uk/
-https://lkml.kernel.org/lkml/CACVXFVMWM3xg6EEyoyNjkLPv=8+wQKiHj6erMS_gGX25f-Ot4g@mail.gmail.com/
-
-- Eric
+-- 
+Aaron
