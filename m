@@ -2,126 +2,79 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B881C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60555C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D132238E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563861932;
-	bh=DgbyI3fsNYW2NYYxnm93aDxEc3rRn4OnVtKQUMh6HQs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1tVfcSmcArmhMnveoJ80ldcIDJur46i+SsCtpuCU+RgBTBq9E1b1IKzVb5YQUZoYd
-	 Ty2i/mlTEm6uis/nFx0uZ92OR0DDMt/CoxGfFCihyBO/L7iNHr+Cmg3YmqjLhsrVKd
-	 RYedO6Q4l56h/yV5VPMnM2sNSaK4BQn3YNKjPVbg=
+	by mail.kernel.org (Postfix) with ESMTP id 300DD22389
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbfGWGFa (ORCPT
+        id S2387996AbfGWGHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 02:05:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49662 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725788AbfGWGFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 02:05:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 817ADAF35;
-        Tue, 23 Jul 2019 06:05:27 +0000 (UTC)
-Date:   Tue, 23 Jul 2019 08:05:25 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, vdavydov.dev@gmail.com,
-        Brendan Gregg <bgregg@netflix.com>, kernel-team@android.com,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        carmenjackson@google.com, Christian Hansen <chansen3@cisco.com>,
-        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
-        David Howells <dhowells@redhat.com>, fmayer@google.com,
-        joaodias@google.com, joelaf@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>,
-        minchan@google.com, minchan@kernel.org, namhyung@google.com,
-        sspatil@google.com, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, timmurray@google.com,
-        tkjos@google.com, Vlastimil Babka <vbabka@suse.cz>, wvw@google.com,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
- using virtual indexing
-Message-ID: <20190723060525.GA4552@dhcp22.suse.cz>
-References: <20190722213205.140845-1-joel@joelfernandes.org>
+        Tue, 23 Jul 2019 02:07:51 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:34751 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729098AbfGWGHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 02:07:51 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TXc-Eyt_1563862068;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TXc-Eyt_1563862068)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 23 Jul 2019 14:07:48 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Wanpeng Li <wanpeng.li@hotmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 1/3] cputime: fix a account error of softirq
+Date:   Tue, 23 Jul 2019 14:01:40 +0800
+Message-Id: <20190723060142.145747-1-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722213205.140845-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc linux-api - please always do CC this list when introducing a user
- visible API]
+According the comments before this line:
+ * ksoftirqd time do not get accounted in cpu_softirq_time.
+And process in irqtime_account_irq()
+I guess the original attempt is to account ksoftirqd into
+system time instead of softirq time.
 
-On Mon 22-07-19 17:32:04, Joel Fernandes (Google) wrote:
-> The page_idle tracking feature currently requires looking up the pagemap
-> for a process followed by interacting with /sys/kernel/mm/page_idle.
-> This is quite cumbersome and can be error-prone too. If between
-> accessing the per-PID pagemap and the global page_idle bitmap, if
-> something changes with the page then the information is not accurate.
-> More over looking up PFN from pagemap in Android devices is not
-> supported by unprivileged process and requires SYS_ADMIN and gives 0 for
-> the PFN.
-> 
-> This patch adds support to directly interact with page_idle tracking at
-> the PID level by introducing a /proc/<pid>/page_idle file. This
-> eliminates the need for userspace to calculate the mapping of the page.
-> It follows the exact same semantics as the global
-> /sys/kernel/mm/page_idle, however it is easier to use for some usecases
-> where looking up PFN is not needed and also does not require SYS_ADMIN.
-> It ended up simplifying userspace code, solving the security issue
-> mentioned and works quite well. SELinux does not need to be turned off
-> since no pagemap look up is needed.
-> 
-> In Android, we are using this for the heap profiler (heapprofd) which
-> profiles and pin points code paths which allocates and leaves memory
-> idle for long periods of time.
-> 
-> Documentation material:
-> The idle page tracking API for virtual address indexing using virtual page
-> frame numbers (VFN) is located at /proc/<pid>/page_idle. It is a bitmap
-> that follows the same semantics as /sys/kernel/mm/page_idle/bitmap
-> except that it uses virtual instead of physical frame numbers.
-> 
-> This idle page tracking API can be simpler to use than physical address
-> indexing, since the pagemap for a process does not need to be looked up
-> to mark or read a page's idle bit. It is also more accurate than
-> physical address indexing since in physical address indexing, address
-> space changes can occur between reading the pagemap and reading the
-> bitmap. In virtual address indexing, the process's mmap_sem is held for
-> the duration of the access.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Wanpeng Li <wanpeng.li@hotmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/sched/cputime.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I didn't get to read the actual code but the overall idea makes sense to
-me. I can see this being useful for userspace memory management (along
-with remote MADV_PAGEOUT, MADV_COLD).
-
-Normally I would object that a cumbersome nature of the existing
-interface can be hidden in a userspace but I do agree that rowhammer has
-made this one close to unusable for anything but a privileged process.
-
-I do not think you can make any argument about accuracy because
-the information will never be accurate. Sure the race window is smaller
-in principle but you can hardly say anything about how much or whether
-at all.
-
-Thanks.
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 2305ce89a26c..d78aee140957 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -378,7 +378,7 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+ 		 * So, we have to handle it separately here.
+ 		 * Also, p->stime needs to be updated for ksoftirqd.
+ 		 */
+-		account_system_index_time(p, cputime, CPUTIME_SOFTIRQ);
++		account_system_index_time(p, cputime, CPUTIME_SYSTEM);
+ 	} else if (user_tick) {
+ 		account_user_time(p, cputime);
+ 	} else if (p == rq->idle) {
 -- 
-Michal Hocko
-SUSE Labs
+2.19.1.856.g8858448bb
+
