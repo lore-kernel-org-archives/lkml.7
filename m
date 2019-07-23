@@ -2,186 +2,225 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B151C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2C4C76195
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B3621BF6
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:43:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Qa3lZLE8"
+	by mail.kernel.org (Postfix) with ESMTP id E9C0D2229A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732590AbfGWEnF (ORCPT
+        id S1731977AbfGWFB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 00:43:05 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:7889 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730761AbfGWEnE (ORCPT
+        Tue, 23 Jul 2019 01:01:57 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35795 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfGWFB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 00:43:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d3690560000>; Mon, 22 Jul 2019 21:43:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jul 2019 21:43:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 21:43:02 -0700
-Received: from [10.2.164.38] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 04:43:01 +0000
-Subject: Re: [PATCH 3/3] net/xdp: convert put_page() to put_user_page*()
-To:     Ira Weiny <ira.weiny@intel.com>, <john.hubbard@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Yan Zheng <zyan@redhat.com>, <netdev@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-mm@kvack.org>,
-        <linux-rdma@vger.kernel.org>, <bpf@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190722223415.13269-1-jhubbard@nvidia.com>
- <20190722223415.13269-4-jhubbard@nvidia.com>
- <20190723002534.GA10284@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <a4e9b293-11f8-6b3c-cf4d-308e3b32df34@nvidia.com>
-Date:   Mon, 22 Jul 2019 21:41:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 01:01:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so37193136wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 22:01:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+GkhoIBN4zKH4Fj0ifhxLJj0Z5XtAt4wUMTn1vnNHYo=;
+        b=FOoD2pnwnkahDvAMejQ7tBEHlNO+VNnjVDf/rUJijEKGheXyVDWO3LnTmDScNaRH6z
+         TaeW+A05G22H1qrSoS9/RG3UlOZBo0AwBHAQCiCydPtI+rJj/tWluihAX2Tfn7c6u+RW
+         eFiNXz2H6Rr3p4cxPfsKQtbcPBNTgwSq9bAeGFhhqVx8FZxoUisd94pEd13XW8XStwCk
+         Ph2BuDWcapjtuxUdM2RqBoIPgQu8BndZVuLArHTaItPtmRnGHIsRjZ1lmORmjl1Kwqqu
+         PVrlaSSJfXyDVDWVRwGPhsTHbSs09yjhOBjljDStky1bkCw/WsQTsIh8ZpkgwdSC3Rn5
+         4yTw==
+X-Gm-Message-State: APjAAAWB2WJqwA47wLdT1GK9g6nfToS3encfoXXWwLZbvLf1Vmx6OPDU
+        9wOlG817NY3ffaCAxFS807yOKA==
+X-Google-Smtp-Source: APXvYqzMrWrj9NjXakyiVzcyJ6rRsEcFXFH6p99kaIf0uv2Ksm8d9SHaEyv3pZRViZQZ/4k36hbViQ==
+X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr23179912wmm.62.1563858114502;
+        Mon, 22 Jul 2019 22:01:54 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id r5sm44467914wmh.35.2019.07.22.22.01.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 22:01:53 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 01:01:49 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190723010019-mutt-send-email-mst@kernel.org>
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+ <20190721081447-mutt-send-email-mst@kernel.org>
+ <85dd00e2-37a6-72b7-5d5a-8bf46a3526cf@redhat.com>
+ <20190722040230-mutt-send-email-mst@kernel.org>
+ <4bd2ff78-6871-55f2-44dc-0982ffef3337@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190723002534.GA10284@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563856982; bh=6Lt/z2MUaW0HLuGN6nPZXpx+R7NECtbBk4FafHzD+OU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Qa3lZLE8Kf/RL8KhFgPo9Jkt7HFiKw1Is4rV87XoFGEKvWzwvIu+hxfTzr2uraY59
-         XErNMpPf1Qu2zCNLtYfVRqCa3/zsPozeqvDkM44qxxIpWE47R8YoLoPjAb9uunMk0+
-         2+b5UcPkOzZtt+IdgVMrvpTMyr/Pdu3kowZiYCl3u00yAyQSmsitBmCoJle4OhJXpe
-         bMuJ8grmilp9xNLC2hggYcxZ/uAvyWeQge9toK1cze9EOdK1UUkTm+VI05DdS87kNs
-         cGOrzWdia2G/F74bOT0v75OXAOE8VdSB9dSxGpUKwW6BkxObVy2erx/jSiG+ZKKb1I
-         5O4vdoqzeZX4g==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4bd2ff78-6871-55f2-44dc-0982ffef3337@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/22/19 5:25 PM, Ira Weiny wrote:
-> On Mon, Jul 22, 2019 at 03:34:15PM -0700, john.hubbard@gmail.com wrote:
->> From: John Hubbard <jhubbard@nvidia.com>
->>
->> For pages that were retained via get_user_pages*(), release those pages
->> via the new put_user_page*() routines, instead of via put_page() or
->> release_pages().
->>
->> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
->> ("mm: introduce put_user_page*(), placeholder versions").
->>
->> Cc: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
->> Cc: Magnus Karlsson <magnus.karlsson@intel.com>
->> Cc: David S. Miller <davem@davemloft.net>
->> Cc: netdev@vger.kernel.org
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->> ---
->>   net/xdp/xdp_umem.c | 9 +--------
->>   1 file changed, 1 insertion(+), 8 deletions(-)
->>
->> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
->> index 83de74ca729a..0325a17915de 100644
->> --- a/net/xdp/xdp_umem.c
->> +++ b/net/xdp/xdp_umem.c
->> @@ -166,14 +166,7 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
->>  =20
->>   static void xdp_umem_unpin_pages(struct xdp_umem *umem)
->>   {
->> -	unsigned int i;
->> -
->> -	for (i =3D 0; i < umem->npgs; i++) {
->> -		struct page *page =3D umem->pgs[i];
->> -
->> -		set_page_dirty_lock(page);
->> -		put_page(page);
->> -	}
->> +	put_user_pages_dirty_lock(umem->pgs, umem->npgs);
->=20
-> What is the difference between this and
->=20
-> __put_user_pages(umem->pgs, umem->npgs, PUP_FLAGS_DIRTY_LOCK);
->=20
-> ?
+On Tue, Jul 23, 2019 at 12:01:40PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/22 下午4:08, Michael S. Tsirkin wrote:
+> > On Mon, Jul 22, 2019 at 01:24:24PM +0800, Jason Wang wrote:
+> > > On 2019/7/21 下午8:18, Michael S. Tsirkin wrote:
+> > > > On Sun, Jul 21, 2019 at 06:02:52AM -0400, Michael S. Tsirkin wrote:
+> > > > > On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
+> > > > > > syzbot has bisected this bug to:
+> > > > > > 
+> > > > > > commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> > > > > > Author: Jason Wang<jasowang@redhat.com>
+> > > > > > Date:   Fri May 24 08:12:18 2019 +0000
+> > > > > > 
+> > > > > >       vhost: access vq metadata through kernel virtual address
+> > > > > > 
+> > > > > > bisection log:https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
+> > > > > > start commit:   6d21a41b Add linux-next specific files for 20190718
+> > > > > > git tree:       linux-next
+> > > > > > final crash:https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
+> > > > > > console output:https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
+> > > > > > kernel config:https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+> > > > > > dashboard link:https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
+> > > > > > syz repro:https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
+> > > > > > 
+> > > > > > Reported-by:syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
+> > > > > > Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
+> > > > > > address")
+> > > > > > 
+> > > > > > For information about bisection process see:https://goo.gl/tpsmEJ#bisection
+> > > > > OK I poked at this for a bit, I see several things that
+> > > > > we need to fix, though I'm not yet sure it's the reason for
+> > > > > the failures:
+> > > > > 
+> > > > > 
+> > > > > 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
+> > > > >      That's just a bad hack, in particular I don't think device
+> > > > >      mutex is taken and so poking at two VQs will corrupt
+> > > > >      memory.
+> > > > >      So what to do? How about a per vq notifier?
+> > > > >      Of course we also have synchronize_rcu
+> > > > >      in the notifier which is slow and is now going to be called twice.
+> > > > >      I think call_rcu would be more appropriate here.
+> > > > >      We then need rcu_barrier on module unload.
+> > > > >      OTOH if we make pages linear with map then we are good
+> > > > >      with kfree_rcu which is even nicer.
+> > > > > 
+> > > > > 2. Doesn't map leak after vhost_map_unprefetch?
+> > > > >      And why does it poke at contents of the map?
+> > > > >      No one should use it right?
+> > > > > 
+> > > > > 3. notifier unregister happens last in vhost_dev_cleanup,
+> > > > >      but register happens first. This looks wrong to me.
+> > > > > 
+> > > > > 4. OK so we use the invalidate count to try and detect that
+> > > > >      some invalidate is in progress.
+> > > > >      I am not 100% sure why do we care.
+> > > > >      Assuming we do, uaddr can change between start and end
+> > > > >      and then the counter can get negative, or generally
+> > > > >      out of sync.
+> > > > > 
+> > > > > So what to do about all this?
+> > > > > I am inclined to say let's just drop the uaddr optimization
+> > > > > for now. E.g. kvm invalidates unconditionally.
+> > > > > 3 should be fixed independently.
+> > > > Above implements this but is only build-tested.
+> > > > Jason, pls take a look. If you like the approach feel
+> > > > free to take it from here.
+> > > > 
+> > > > One thing the below does not have is any kind of rate-limiting.
+> > > > Given it's so easy to restart I'm thinking it makes sense
+> > > > to add a generic infrastructure for this.
+> > > > Can be a separate patch I guess.
+> > > 
+> > > I don't get why must use kfree_rcu() instead of synchronize_rcu() here.
+> > synchronize_rcu has very high latency on busy systems.
+> > It is not something that should be used on a syscall path.
+> > KVM had to switch to SRCU to keep it sane.
+> > Otherwise one guest can trivially slow down another one.
+> 
+> 
+> I think you mean the synchronize_rcu_expedited()? Rethink of the code, the
+> synchronize_rcu() in ioctl() could be removed, since it was serialized with
+> memory accessor.
 
-No difference.
 
->=20
-> I'm a bit concerned with adding another form of the same interface.  We s=
-hould
-> either have 1 call with flags (enum in this case) or multiple calls.  Giv=
-en the
-> previous discussion lets move in the direction of having the enum but don=
-'t
-> introduce another caller of the "old" interface.
+Really let's just use kfree_rcu. It's way cleaner: fire and forget.
 
-I disagree that this is a "problem". There is no maintenance pitfall here; =
-there
-are merely two ways to call the put_user_page*() API. Both are correct, and
-neither one will get you into trouble.
+> 
+> Btw, for kvm ioctl it still uses synchronize_rcu() in kvm_vcpu_ioctl(),
+> (just a little bit more hard to trigger):
 
-Not only that, but there is ample precedent for this approach in other
-kernel APIs.
 
->=20
-> So I think on this patch NAK from me.
->=20
-> I also don't like having a __* call in the exported interface but there i=
-s a
-> __get_user_pages_fast() call so I guess there is precedent.  :-/
->=20
+AFAIK these never run in response to guest events.
+So they can take very long and guests still won't crash.
 
-I thought about this carefully, and looked at other APIs. And I noticed tha=
-t
-things like __get_user_pages*() are how it's often done:
 
-* The leading underscores are often used for the more elaborate form of the
-call (as oppposed to decorating the core function name with "_flags", for
-example).
-
-* There are often calls in which you can either call the simpler form, or t=
-he
-form with flags and additional options, and yes, you'll get the same result=
-.
-
-Obviously, this stuff is all subject to a certain amount of opinion, but I
-think I'm on really solid ground as far as precedent goes. So I'm pushing
-back on the NAK... :)
-
-thanks,
---=20
-John Hubbard
-NVIDIA
-
+> 
+>     case KVM_RUN: {
+> ...
+>         if (unlikely(oldpid != task_pid(current))) {
+>             /* The thread running this VCPU changed. */
+>             struct pid *newpid;
+> 
+>             r = kvm_arch_vcpu_run_pid_change(vcpu);
+>             if (r)
+>                 break;
+> 
+>             newpid = get_task_pid(current, PIDTYPE_PID);
+>             rcu_assign_pointer(vcpu->pid, newpid);
+>             if (oldpid)
+>                 synchronize_rcu();
+>             put_pid(oldpid);
+>         }
+> ...
+>         break;
+> 
+> 
+> > 
+> > > > Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+> > > 
+> > > Let me try to figure out the root cause then decide whether or not to go for
+> > > this way.
+> > > 
+> > > Thanks
+> > The root cause of the crash is relevant, but we still need
+> > to fix issues 1-4.
+> > 
+> > More issues (my patch tries to fix them too):
+> > 
+> > 5. page not dirtied when mappings are torn down outside
+> >     of invalidate callback
+> 
+> 
+> Yes.
+> 
+> 
+> > 
+> > 6. potential cross-VM DOS by one guest keeping system busy
+> >     and increasing synchronize_rcu latency to the point where
+> >     another guest stars timing out and crashes
+> > 
+> > 
+> > 
+> 
+> This will be addressed after I remove the synchronize_rcu() from ioctl path.
+> 
+> Thanks
