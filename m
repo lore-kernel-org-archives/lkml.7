@@ -2,147 +2,76 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857D7C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17B8C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669E0223DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFEC223DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="guRZ1+tU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389079AbfGWKbP (ORCPT
+        id S2389090AbfGWKbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:31:15 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:45332 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730390AbfGWKbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:31:15 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 3219E20532;
-        Tue, 23 Jul 2019 12:31:13 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 14A61202A3;
-        Tue, 23 Jul 2019 12:31:13 +0200 (CEST)
-Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
- <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
- <20190612172501.GY4814@minitux>
- <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
- <5b252fe6-9435-2aad-d0db-f6170a07b5e9@free.fr>
-Message-ID: <f52774d3-d1ad-9cc4-af23-feb10d9f4b9f@free.fr>
-Date:   Tue, 23 Jul 2019 12:31:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 06:31:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54492 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbfGWKbw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:31:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MnT833q43OKgOeGMbkNl4vZ1Sr0chNDr5cIKxrka6/s=; b=guRZ1+tUYg9jhJ2PD2PsuUIT1
+        4QBkAklWJMBjR8UXnloAdUN4bhNaFSBjKNDfGAUGWOD5iKniBRB+YfV+0UkW3CDtuLIkLlSjLK/Ed
+        Z6vwQ1qxWmwY3EusrIZ5611r4vWuXwo+3a0omOSXASgptn1A6WiWz0+UPBCKEgE+K3SACKHbYjDzJ
+        LH7ooWwzv5hNYYxpsrYRd6bnroTm5z9n5eeMxrcOTAQvI7WNDS5OwNGQh03Ds/dpR6FBMVtf2sq6l
+        VVsL4ORpmJCl39/ulpHCNLeKHvDfXwygOLirPh0lzboT5Dju9JgC5S9bVnmLh76+mI0Y2LElUF1F/
+        SS9hLuRug==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hps4z-0003kp-Vw; Tue, 23 Jul 2019 10:31:34 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B3B16201A9429; Tue, 23 Jul 2019 12:31:31 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 12:31:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>, mingo@redhat.com,
+        rostedt@goodmis.org, tj@kernel.org, linux-kernel@vger.kernel.org,
+        luca.abeni@santannapisa.it, claudio@evidence.eu.com,
+        tommaso.cucinotta@santannapisa.it, bristot@redhat.com,
+        mathieu.poirier@linaro.org, lizefan@huawei.com, longman@redhat.com,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v9 2/8] sched/core: Streamlining calls to task_rq_unlock()
+Message-ID: <20190723103131.GB3402@hirez.programming.kicks-ass.net>
+References: <20190719140000.31694-1-juri.lelli@redhat.com>
+ <20190719140000.31694-3-juri.lelli@redhat.com>
+ <50f00347-ffb3-285c-5a7d-3a9c5f813950@arm.com>
+ <20190722083214.GF25636@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <5b252fe6-9435-2aad-d0db-f6170a07b5e9@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jul 23 12:31:13 2019 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722083214.GF25636@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/07/2019 17:50, Marc Gonzalez wrote:
+On Mon, Jul 22, 2019 at 10:32:14AM +0200, Juri Lelli wrote:
 
-> On 13/06/2019 11:10, Marc Gonzalez wrote:
-> 
->> Here are my observations for a 8998 board:
->>
->> 1) If I apply only the readl_poll_timeout() fix (not the mask_pcs_ready fixup)
->> qcom_pcie_probe() fails with a timeout in phy_init.
->> => this is in line with your regression analysis.
->>
->> 2) Your patch also fixes a long-standing bug in UFS init whereby sending
->> lots of information to the console during phy init would lead to an
->> incorrectly diagnosed time-out.
->>
->> Good stuff!
->>
->> Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> 
-> It looks like this patch fixed UFS, but broke PCIe and USB3 ^_^
-> 
-> qcom-qmp-phy 1c06000.phy: Registered Qcom-QMP phy
-> qcom-qmp-phy c010000.phy: Registered Qcom-QMP phy
-> qcom-qmp-phy 1da7000.phy: Registered Qcom-QMP phy
-> 
-> qcom-qmp-phy 1c06000.phy: BEFORE=000000a6 AFTER=000000a6
-> qcom-qmp-phy 1c06000.phy: phy initialization timed-out
-> phy phy-1c06000.phy.0: phy init failed --> -110
-> qcom-pcie: probe of 1c00000.pci failed with error -110
-> 
-> qcom-qmp-phy 1da7000.phy: BEFORE=00000040 AFTER=0000000d
-> 
-> qcom-qmp-phy c010000.phy: BEFORE=69696969 AFTER=b7b7b7b7
-> qcom-qmp-phy c010000.phy: phy initialization timed-out
-> phy phy-c010000.phy.1: phy init failed --> -110
-> dwc3 a800000.dwc3: failed to initialize core: -110
-> dwc3: probe of a800000.dwc3 failed with error -110
-> 
-> 
-> Downstream code for PCIe is:
-> 
-> static bool pcie_phy_is_ready(struct msm_pcie_dev_t *dev)
-> {
-> 	if (dev->phy_ver >= 0x20) {
-> 		if (readl_relaxed(dev->phy + PCIE_N_PCS_STATUS(dev->rc_idx, dev->common_phy)) &	BIT(6))
-> 			return false;
-> 		else
-> 			return true;
-> 	}
-> 
-> 	if (!(readl_relaxed(dev->phy + PCIE_COM_PCS_READY_STATUS) & 0x1))
-> 		return false;
-> 	else
-> 		return true;
-> }
-> 
-> AFAICT:
-> PCIe and USB3 QMP PHYs are ready when PHYSTATUS=BIT(6) goes to 0.
-> But UFS is ready when PCS_READY=BIT(0) goes to 1.
-> 
-> 
-> Can someone verify that USB3 is broken on 845 with 885bd765963b?
+> Thanks for reporting. The set is based on cgroup/for-next (as of last
+> week), though. I can of course rebase on tip/sched/core or mainline if
+> needed.
 
-Suggested fix:
+TJ; I would like to take these patches through the scheduler tree if you
+don't mind. Afaict there's no real conflict vs cgroup/for-next (I
+applied the patches and then did a pull of cgroup/for-next which
+finished without complaints).
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 34ff6434da8f..11c1b02f0206 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1447,6 +1447,11 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
- 	return 0;
- }
- 
-+static bool phy_is_ready(unsigned int val, unsigned int mask)
-+{
-+	return mask == PCS_READY ? val & mask : !(val & mask);
-+}
-+
- static int qcom_qmp_phy_enable(struct phy *phy)
- {
- 	struct qmp_phy *qphy = phy_get_drvdata(phy);
-@@ -1548,7 +1553,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- 	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
- 	mask = cfg->mask_pcs_ready;
- 
--	ret = readl_poll_timeout(status, val, val & mask, 10,
-+	ret = readl_poll_timeout(status, val, phy_is_ready(val, mask), 10,
- 				 PHY_INIT_COMPLETE_TIMEOUT);
- 	if (ret) {
- 		dev_err(qmp->dev, "phy initialization timed-out\n");
