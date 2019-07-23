@@ -2,182 +2,161 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F57C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2757DC7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52CAF20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F113220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Y/HU4gBu"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rKpO/nri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389345AbfGWL2B (ORCPT
+        id S2389351AbfGWL2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:28:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39626 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbfGWL2B (ORCPT
+        Tue, 23 Jul 2019 07:28:09 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:60391 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731276AbfGWL2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:28:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u17so19287618pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=M085sQxZRNbz0OBDy5dlhICQwU4DuRFnxzjIAf3um2Q=;
-        b=Y/HU4gBu9cfcIksRpnfWvBh3ybK9Bdyb0tmjGu2jg+zF1zDuRdlJGxKPMPadJiVqQS
-         9jIk1wVgo+/DmqjMa8XIFinj35cZdfffqzX94lAcwGZpjzd0kOUHhJ4OjM1RNhdkPzFA
-         3CUz89uvZhtOmr12Jxz1gVcaI1WmTk3pE4n40=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=M085sQxZRNbz0OBDy5dlhICQwU4DuRFnxzjIAf3um2Q=;
-        b=iMU5DntVR1Yc9PuSTK+hQIoO0synrA1zJDt9zmuWdV15X6ayEzUazLWXi2mHNSjB8x
-         mYeoIJfr3UwIJ+31Ex/y/v6GwW1zi2TKCoNOfOQetO0a1pcbtlY+09WcueW4tcmA/SfC
-         1P+Hi49nkUtL7/Q9ZyuH8YZLzX3M/7gUvicCz1psf+4M8d+FPFsAgAfkzOBBxNzjkpfq
-         LbZufPIXTaC0UMyYFPcWseV6u/j/jeKpmly9sj3XjhxErdQ7BAFIO2EJbbNdoTtwnpMv
-         d5381LfITLXcuXkZUXMguTSPlTaRkZIJGSyOj7/H1gPUGFAb17gdvs/IpoA5fh0XEZWM
-         acsg==
-X-Gm-Message-State: APjAAAX+BiY/OI12fjRszFzxfEmkT+WVKbegVgKRJNDrnSD3zeVwABJM
-        cxeMH7/4Pfh08qOAUBmQ0sOnZqxLfvNCwg+Wjn8X3w==
-X-Google-Smtp-Source: APXvYqzZDkTOgdXMUeFY02PsNikZPUtkh8JUhyh0C8GPkwyZQsAdDCcvXpyCzfTYtmLlC5j4vyeCjt4Ewfi4KJPcXuk=
-X-Received: by 2002:a63:b346:: with SMTP id x6mr76347800pgt.218.1563881280431;
- Tue, 23 Jul 2019 04:28:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20190714034415epcms2p25f9787cb71993a30f58524d2f355b543@epcms2p2>
- <20190714034415epcms2p25f9787cb71993a30f58524d2f355b543@epcms2p2> <860cc8cf-6419-c649-b2d9-19b82f6ebc99@suse.de>
-In-Reply-To: <860cc8cf-6419-c649-b2d9-19b82f6ebc99@suse.de>
-From:   Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Date:   Tue, 23 Jul 2019 16:57:49 +0530
-Message-ID: <CAK=zhgocY3Ute_6RiowaWsOROx3+Nzq6+WvkobmR_SB0Rt9_1g@mail.gmail.com>
-Subject: Re: [PATCH V2] mpt3sas: support target smid for [abort|query] task
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     minwoo.im@samsung.com,
-        "sathya.prakash@broadcom.com" <sathya.prakash@broadcom.com>,
-        "suganath-prabu.subramani@broadcom.com" 
-        <suganath-prabu.subramani@broadcom.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "MPT-FusionLinux.pdl@broadcom.com" <MPT-FusionLinux.pdl@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Euihyeok Kwon <eh81.kwon@samsung.com>,
-        Sarah Cho <sohyeon.jo@samsung.com>,
-        Sanggwan Lee <sanggwan.lee@samsung.com>,
-        Gyeongmin Nam <gm.nam@samsung.com>,
-        Sungjun Park <sj1228.park@samsung.com>,
-        "minwoo.im.dev@gmail.com" <minwoo.im.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jul 2019 07:28:08 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x6NBQnvI029674;
+        Tue, 23 Jul 2019 20:26:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6NBQnvI029674
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563881210;
+        bh=3lce18p30EVbzN2Od3dU003VSnCw95GOlTmNeM4rzHo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rKpO/nrixQwf62Bd1Ttes+I2TQ7C9/mZ/vBuffZejUq2aIT03WCwK3LKcv0nhrczR
+         8fLwiGhRBiGhVAaF9o3LMOD4AGw444YI4QqgD6pkxaL7j2BH/wvaHdGYMrA0plOlYd
+         8BXfF3QquJmo3HLKD3N3QSSvygbhs1H88JMLyjHQoBmCWTLdAO7ZiTy4YKDwzRZ/VR
+         72mtFtR0MfdlKa6kCR7ZeikXOyzuE5tQnBv0REUtvhhE8E4D1JKCzr3PVlpKQNkgBC
+         HwCqu+0LbACcasMn4LRT8BXeC/LsyBd4ZFhWgeJoFEmTlnnWOs1YAacQuAJDmKV4xb
+         aeh2cOpma/Geg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/build: remove unneeded uapi asm-generic wrappers
+Date:   Tue, 23 Jul 2019 20:26:45 +0900
+Message-Id: <20190723112646.14046-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 11:43 AM Hannes Reinecke <hare@suse.de> wrote:
->
-> On 7/14/19 5:44 AM, Minwoo Im wrote:
-> > We can request task management IOCTL command(MPI2_FUNCTION_SCSI_TASK_MG=
-MT)
-> > to /dev/mpt3ctl.  If the given task_type is either abort task or query
-> > task, it may need a field named "Initiator Port Transfer Tag to Manage"
-> > in the IU.
-> >
-> > Current code does not support to check target IPTT tag from the
-> > tm_request.  This patch introduces to check TaskMID given from the
-> > userspace as a target tag.  We have a rule of relationship between
-> > (struct request *req->tag) and smid in mpt3sas_base.c:
-> >
-> > 3318 u16
-> > 3319 mpt3sas_base_get_smid_scsiio(struct MPT3SAS_ADAPTER *ioc, u8 cb_id=
-x,
-> > 3320         struct scsi_cmnd *scmd)
-> > 3321 {
-> > 3322         struct scsiio_tracker *request =3D scsi_cmd_priv(scmd);
-> > 3323         unsigned int tag =3D scmd->request->tag;
-> > 3324         u16 smid;
-> > 3325
-> > 3326         smid =3D tag + 1;
-> >
-> > So if we want to abort a request tagged #X, then we can pass (X + 1) to
-> > this IOCTL handler.  Otherwise, user space just can pass 0 TaskMID to
-> > abort the first outstanding smid which is legacy behaviour.
-> >
-> > Cc: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-> > Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
-> > Cc: Sathya Prakash <sathya.prakash@broadcom.com>
-> > Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> > Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> > Cc: MPT-FusionLinux.pdl@broadcom.com
-> > Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
-> > ---
-> >  drivers/scsi/mpt3sas/mpt3sas_ctl.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/=
-mpt3sas_ctl.c
-> > index b2bb47c14d35..f6b8fd90610a 100644
-> > --- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-> > +++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-> > @@ -596,8 +596,16 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, str=
-uct mpt3_ioctl_command *karg,
-> >               if (priv_data->sas_target->handle !=3D handle)
-> >                       continue;
-> >               st =3D scsi_cmd_priv(scmd);
-> > -             tm_request->TaskMID =3D cpu_to_le16(st->smid);
-> > -             found =3D 1;
-> > +
-> > +             /*
-> > +              * If the given TaskMID from the user space is zero, then=
- the
-> > +              * first outstanding smid will be picked up.  Otherwise,
-> > +              * targeted smid will be the one.
-> > +              */
-> > +             if (!tm_request->TaskMID || tm_request->TaskMID =3D=3D st=
-->smid) {
-> > +                     tm_request->TaskMID =3D cpu_to_le16(st->smid);
-> > +                     found =3D 1;
-> > +             }
-> >       }
-> >
-> >       if (!found) {
-> >
-> I think this is fundamentally wrong.
-> ABORT_TASK is used to abort a single task, which of course has to be
-> known beforehand. If you don't know the task, what exactly do you hope
-> to achieve here? Aborting random I/O?
-> Or, even worse, aborting I/O the driver uses internally and corrupt the
-> internal workflow of the driver?
->
-> We should simply disallow any ABORT TASK from userspace if the TaskMID
-> is zero. And I would even argue to disabllow ABORT TASK from userspace
-> completely, as the smid is never relayed to userland, and as such the
-> user cannot know which task should be aborted.
+These are listed in include/uapi/asm-generic/Kbuild, so Kbuild will
+automatically generate them.
 
-Hannes,
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-This interface was added long time back in mpt2sas driver and I don't
-have exact reason of adding this interface at that time.
-But I know that this interface is still used by BRCM test team & few
-customers only for some functionality and regression testing.
+ arch/x86/include/uapi/asm/errno.h    | 1 -
+ arch/x86/include/uapi/asm/fcntl.h    | 1 -
+ arch/x86/include/uapi/asm/ioctl.h    | 1 -
+ arch/x86/include/uapi/asm/ioctls.h   | 1 -
+ arch/x86/include/uapi/asm/ipcbuf.h   | 1 -
+ arch/x86/include/uapi/asm/param.h    | 1 -
+ arch/x86/include/uapi/asm/resource.h | 1 -
+ arch/x86/include/uapi/asm/termbits.h | 1 -
+ arch/x86/include/uapi/asm/termios.h  | 1 -
+ arch/x86/include/uapi/asm/types.h    | 7 -------
+ 10 files changed, 16 deletions(-)
+ delete mode 100644 arch/x86/include/uapi/asm/errno.h
+ delete mode 100644 arch/x86/include/uapi/asm/fcntl.h
+ delete mode 100644 arch/x86/include/uapi/asm/ioctl.h
+ delete mode 100644 arch/x86/include/uapi/asm/ioctls.h
+ delete mode 100644 arch/x86/include/uapi/asm/ipcbuf.h
+ delete mode 100644 arch/x86/include/uapi/asm/param.h
+ delete mode 100644 arch/x86/include/uapi/asm/resource.h
+ delete mode 100644 arch/x86/include/uapi/asm/termbits.h
+ delete mode 100644 arch/x86/include/uapi/asm/termios.h
+ delete mode 100644 arch/x86/include/uapi/asm/types.h
 
-Thanks,
-Sreekanth
+diff --git a/arch/x86/include/uapi/asm/errno.h b/arch/x86/include/uapi/asm/errno.h
+deleted file mode 100644
+index 4c82b503d92f..000000000000
+--- a/arch/x86/include/uapi/asm/errno.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/errno.h>
+diff --git a/arch/x86/include/uapi/asm/fcntl.h b/arch/x86/include/uapi/asm/fcntl.h
+deleted file mode 100644
+index 46ab12db5739..000000000000
+--- a/arch/x86/include/uapi/asm/fcntl.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/fcntl.h>
+diff --git a/arch/x86/include/uapi/asm/ioctl.h b/arch/x86/include/uapi/asm/ioctl.h
+deleted file mode 100644
+index b279fe06dfe5..000000000000
+--- a/arch/x86/include/uapi/asm/ioctl.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/ioctl.h>
+diff --git a/arch/x86/include/uapi/asm/ioctls.h b/arch/x86/include/uapi/asm/ioctls.h
+deleted file mode 100644
+index ec34c760665e..000000000000
+--- a/arch/x86/include/uapi/asm/ioctls.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/ioctls.h>
+diff --git a/arch/x86/include/uapi/asm/ipcbuf.h b/arch/x86/include/uapi/asm/ipcbuf.h
+deleted file mode 100644
+index 84c7e51cb6d0..000000000000
+--- a/arch/x86/include/uapi/asm/ipcbuf.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/ipcbuf.h>
+diff --git a/arch/x86/include/uapi/asm/param.h b/arch/x86/include/uapi/asm/param.h
+deleted file mode 100644
+index 965d45427975..000000000000
+--- a/arch/x86/include/uapi/asm/param.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/param.h>
+diff --git a/arch/x86/include/uapi/asm/resource.h b/arch/x86/include/uapi/asm/resource.h
+deleted file mode 100644
+index 04bc4db8921b..000000000000
+--- a/arch/x86/include/uapi/asm/resource.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/resource.h>
+diff --git a/arch/x86/include/uapi/asm/termbits.h b/arch/x86/include/uapi/asm/termbits.h
+deleted file mode 100644
+index 3935b106de79..000000000000
+--- a/arch/x86/include/uapi/asm/termbits.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/termbits.h>
+diff --git a/arch/x86/include/uapi/asm/termios.h b/arch/x86/include/uapi/asm/termios.h
+deleted file mode 100644
+index 280d78a9d966..000000000000
+--- a/arch/x86/include/uapi/asm/termios.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/termios.h>
+diff --git a/arch/x86/include/uapi/asm/types.h b/arch/x86/include/uapi/asm/types.h
+deleted file mode 100644
+index 9d5c11a24279..000000000000
+--- a/arch/x86/include/uapi/asm/types.h
++++ /dev/null
+@@ -1,7 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+-#ifndef _ASM_X86_TYPES_H
+-#define _ASM_X86_TYPES_H
+-
+-#include <asm-generic/types.h>
+-
+-#endif /* _ASM_X86_TYPES_H */
+-- 
+2.17.1
 
->
-> Cheers,
->
-> Hannes
-> --
-> Dr. Hannes Reinecke                Teamlead Storage & Networking
-> hare@suse.de                                   +49 911 74053 688
-> SUSE LINUX GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg
-> GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-> HRB 21284 (AG N=C3=BCrnberg)
