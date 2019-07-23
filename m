@@ -2,378 +2,196 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671F8C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA87FC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA2B218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739BD218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ts+Jr7Y8"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="L6Gdv3bj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391850AbfGWUtI (ORCPT
+        id S2391870AbfGWUte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:49:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33368 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730760AbfGWUtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:49:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so45450484otl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8f2Ta9iQpdbzDFNjSTEAOZef+ZrvFOzQiYTB6S5m3GA=;
-        b=ts+Jr7Y8jDBQpkgB7PVhyjG8HMB5P1jNdQbQ5m14yln7eF4vSvx8qnghXBKqRXeUub
-         40jxFaJZANUtyVGq0W7FRqbs4IOyCRXqSpjRnXXgdcCTiIl763G6/nDaWoomU1oCuqqZ
-         4hyB1+zl+Kv4cLRdc9QP9xZi6dFmdZLAdkBwZ9kzki9TQFpyTJ/MwHdBkaMRtPUXaDfE
-         XgJSWSgu6weEHhegxKjhrXjVsuuKZ5AFqr9PdUSOuvI18zdhaMkZfBz96YGdTaORTd/k
-         /741lyO5a46cmB/PI2d6eAEd3muk+AhHG5JW9tZkb9L3KP2LAr+SipM8OwCVlqGHP7Qv
-         ysuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8f2Ta9iQpdbzDFNjSTEAOZef+ZrvFOzQiYTB6S5m3GA=;
-        b=a9Vhlj+7vBp8S+olccAOg0pZYO7HKB8LmKjsU6mYuARwu2uY++L4LZRasOoK4/h+ax
-         GJSkTQuXtI59H7QRrRl0itRuqr2EZRgJ2ZAue/IfdxyK9JaGmasMFFFVP5zq24nikFTq
-         nvbldYQOxQHhbF2ZnPNu8tY5qYmxl1xpmxbRt4IymTdUsRnxvYiNPwAN777SGKggwPlA
-         Q/z2GUp+roSYaSKpHnL8lUnItpYyYIJLHHqRmnIf647KBTwHr58dwI27t+CrwM2bJ2Qa
-         F85wRyceFF/GfdDx5hOIy7C5kaCRCOvj3fBCKRjZ7Ku06n7R5r648Lxo4ZI0lKEf+LDh
-         T97Q==
-X-Gm-Message-State: APjAAAUe9WfWvstLKFJknSMLbdS5TueMbPOK4YZV9NWY4jgllPYQy5vi
-        ZFW8uFJoACiS7oNoOPNFfUGl0mMSa2vsbeUW3DzavA==
-X-Google-Smtp-Source: APXvYqyPzdvDqTZ+cfvvR+VInQlk3TLGF3D5fbLh9/+vZ1vwHox96XSgIbOgZU/x0UBf23zOZaqAsnRTWlapePbUNHQ=
-X-Received: by 2002:a9d:6d06:: with SMTP id o6mr7149188otp.225.1563914946426;
- Tue, 23 Jul 2019 13:49:06 -0700 (PDT)
+        Tue, 23 Jul 2019 16:49:34 -0400
+Received: from mail-eopbgr30052.outbound.protection.outlook.com ([40.107.3.52]:43244
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730760AbfGWUtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:49:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OZL1SHSMtciq43Crw68Gvxfvf0hK69U0M958y+CzspChQW1FbdH0t/LlwAQYc6AWO9wEhLdO/r54GtGZqHJ8T1UCUPUVbGVzCsoJeiksKWnEnY2t+y+Z9aCaV4hm534nH7sJuIwM3Q6L1BbXLQzbA+N3rGzib1udzURQpjdlmEn2RilErUS2YIqFFGyojyY4lrpmkdRWfy2LpeNxLxoHmn/x8ztKaBeEpc5qXQ4kY4V9rH712/HrTKfU5cDpdAzY2IPzIbkTqCrVBBwS6tVK1Mldjc84LnSDjocrwfjazOqDzwLqdRfJAUQBIfPJutC+ievAsX15PFkS1IJ94fNr4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gO1wOfk8Z4IQl0xQQjnsNA2Mgeg6sF/+vSP1KcN+JPc=;
+ b=K1S3dz3FzrkLlK2XGdV6p9zxkKE8KvOEzJfMNZH5M51r46lGPsv7tiSKWP0h6gfA+dpcpeKW7DPndHN2YUOqba7rgJZ2xMYdOq0Lt6K1s7tu5k3hTIl/pJFMKrzPv03XzN2YprW/U1Ux4/YNnt9eeoQe9/rJ+wRnEBwzMwBLhBaLX2MixVr0fGjTrkC4PBuRc9+xFsezTQk4g/KJdXkx6aOLs6finz+LcTiCZxO9k2aRSXlZH0x3iVZYkvY5smqE2a1wKIeyfgJgi9wqzJhwadMFBmwXvjJWeEn4UnOdosxIj1IWShKl1FCmWQxaHDXWC9ik3C2n25J3DRIn80WcrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gO1wOfk8Z4IQl0xQQjnsNA2Mgeg6sF/+vSP1KcN+JPc=;
+ b=L6Gdv3bjbzeVzy5695IPoXaywBizMvaJJAx/56hMJxTLyq3VSYa29DNF/TGhQIFM7tZWwGRVOyIakfs9stMWU2odjKtlcPQy/G8SohHxt7adD0bqLkz65UnVqTIPXA1cQ9J+oUJyAZEDydWGJBmtD8sX7iqbOPXYAnkx5S1caPU=
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
+ DB6PR0501MB2517.eurprd05.prod.outlook.com (10.168.77.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.17; Tue, 23 Jul 2019 20:49:27 +0000
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::7148:ecd4:3a7f:f3f]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::7148:ecd4:3a7f:f3f%11]) with mapi id 15.20.2094.011; Tue, 23 Jul 2019
+ 20:49:27 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "claudiu.manoil@nxp.com" <claudiu.manoil@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "alexandru.marginean@nxp.com" <alexandru.marginean@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe MDIO
+ endpoint
+Thread-Topic: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe
+ MDIO endpoint
+Thread-Index: AQHVQWmdXX+sxQto9UCSZSuFYsFM0KbYrWaA
+Date:   Tue, 23 Jul 2019 20:49:27 +0000
+Message-ID: <2e3c565cacae6050656aeb7c0132736c60f9f4ee.camel@mellanox.com>
+References: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
+         <1563894955-545-2-git-send-email-claudiu.manoil@nxp.com>
+In-Reply-To: <1563894955-545-2-git-send-email-claudiu.manoil@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a3aae89-78d3-459c-b7f0-08d70faf40c2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2517;
+x-ms-traffictypediagnostic: DB6PR0501MB2517:
+x-microsoft-antispam-prvs: <DB6PR0501MB2517177F7BCB8D23709CC331BEC70@DB6PR0501MB2517.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(199004)(189003)(76176011)(2501003)(6436002)(478600001)(6486002)(25786009)(53936002)(91956017)(66066001)(76116006)(14454004)(6512007)(229853002)(86362001)(66556008)(66446008)(66946007)(5660300002)(66476007)(6246003)(54906003)(7736002)(81166006)(8936002)(36756003)(305945005)(8676002)(4326008)(64756008)(2906002)(81156014)(71190400001)(71200400001)(58126008)(26005)(6116002)(476003)(2616005)(14444005)(256004)(3846002)(68736007)(6506007)(99286004)(486006)(11346002)(446003)(186003)(110136005)(316002)(118296001)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2517;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /y8sT8PDmbl5oBN600Wwt3AdOS0+7shfz643TgniVMG9XOj4/3ABjEa1cjYNXT81M6s9kOd56xKIGRDbwAmI7MB7AYzjyWlDogbDQOGnvvI1AMivAcDTAdoo2lqlotsMfhRU4SzstKJE7+o3WNexSPGHSZfCSbj4eM4dzD8ct5uM4YrLjFjewrFi3ULGIxr87rYaESMrKeEfQ0gfekYJ6hWBTPYtITf7pfTEH38htuR6YZbAYTPKPhHKxvsxv3VUQZwSaCqMXRC1kIWdHPPGMEpR0n2MjzeJVgl4VaQYC3RUIgzWiYly25C2MzhTC9aLEOaq9g6kkJgP6ZoUTJpFXy5V/X0iRId8r7MeXfvQuMSCwlEm6dkkchGwfPT8j+V1npPRAzJJsPB5aPeD0sYo2NFyFdPQL0aOTgf8RUL6nn4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E131E465F5E195408AFDA8F176CF2B58@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190720061647.234852-1-saravanak@google.com> <20190720061647.234852-4-saravanak@google.com>
- <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com>
-In-Reply-To: <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 23 Jul 2019 13:48:30 -0700
-Message-ID: <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/7] of/platform: Add functional dependency link from
- DT bindings
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a3aae89-78d3-459c-b7f0-08d70faf40c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 20:49:27.4341
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2517
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:06 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Sat, Jul 20, 2019 at 12:17 AM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Add device-links after the devices are created (but before they are
-> > probed) by looking at common DT bindings like clocks and
-> > interconnects.
->
-> The structure now looks a lot better to me. A few minor things below.
-
-Thanks.
-
-> >
-> > Automatically adding device-links for functional dependencies at the
-> > framework level provides the following benefits:
-> >
-> > - Optimizes device probe order and avoids the useless work of
-> >   attempting probes of devices that will not probe successfully
-> >   (because their suppliers aren't present or haven't probed yet).
-> >
-> >   For example, in a commonly available mobile SoC, registering just
-> >   one consumer device's driver at an initcall level earlier than the
-> >   supplier device's driver causes 11 failed probe attempts before the
-> >   consumer device probes successfully. This was with a kernel with all
-> >   the drivers statically compiled in. This problem gets a lot worse if
-> >   all the drivers are loaded as modules without direct symbol
-> >   dependencies.
-> >
-> > - Supplier devices like clock providers, interconnect providers, etc
-> >   need to keep the resources they provide active and at a particular
-> >   state(s) during boot up even if their current set of consumers don't
-> >   request the resource to be active. This is because the rest of the
-> >   consumers might not have probed yet and turning off the resource
-> >   before all the consumers have probed could lead to a hang or
-> >   undesired user experience.
-> >
-> >   Some frameworks (Eg: regulator) handle this today by turning off
-> >   "unused" resources at late_initcall_sync and hoping all the devices
-> >   have probed by then. This is not a valid assumption for systems with
-> >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> >   this due to the lack of a clear signal for when they can turn off
-> >   resources. This leads to downstream hacks to handle cases like this
-> >   that can easily be solved in the upstream kernel.
-> >
-> >   By linking devices before they are probed, we give suppliers a clear
-> >   count of the number of dependent consumers. Once all of the
-> >   consumers are active, the suppliers can turn off the unused
-> >   resources without making assumptions about the number of consumers.
-> >
-> > By default we just add device-links to track "driver presence" (probe
-> > succeeded) of the supplier device. If any other functionality provided
-> > by device-links are needed, it is left to the consumer/supplier
-> > devices to change the link when they probe.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  .../admin-guide/kernel-parameters.txt         |   5 +
-> >  drivers/of/platform.c                         | 158 ++++++++++++++++++
-> >  2 files changed, 163 insertions(+)
-> >
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index 138f6664b2e2..109b4310844f 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -3141,6 +3141,11 @@
-> >                         This can be set from sysctl after boot.
-> >                         See Documentation/sysctl/vm.txt for details.
-> >
-> > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
-> > +                       for optimizing probe order and making sure resources
-> > +                       aren't turned off before the consumer devices have
-> > +                       probed.
-> > +
-> >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
-> >                         See Documentation/debugging-via-ohci1394.txt for more
-> >                         info.
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index 04ad312fd85b..88a2086e26fa 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
-> >
-> > +bool of_link_is_valid(struct device_node *con, struct device_node *sup)
-> > +{
-> > +       of_node_get(sup);
-> > +       /*
-> > +        * Don't allow linking a device node as a consumer of one of its
-> > +        * descendant nodes. By definition, a child node can't be a functional
-> > +        * dependency for the parent node.
-> > +        */
-> > +       while (sup) {
-> > +               if (sup == con) {
-> > +                       of_node_put(sup);
-> > +                       return false;
-> > +               }
-> > +               sup = of_get_next_parent(sup);
-> > +       }
-> > +       return true;
-> > +}
-> > +
-> > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
-> > +{
-> > +       struct platform_device *sup_dev;
-> > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> > +       int ret = 0;
-> > +
-> > +       /*
-> > +        * Since we are trying to create device links, we need to find
-> > +        * the actual device node that owns this supplier phandle.
-> > +        * Often times it's the same node, but sometimes it can be one
-> > +        * of the parents. So walk up the parent till you find a
-> > +        * device.
-> > +        */
-> > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-> > +               sup_np = of_get_next_parent(sup_np);
-> > +       if (!sup_np)
-> > +               return 0;
-> > +
-> > +       if (!of_link_is_valid(dev->of_node, sup_np)) {
-> > +               of_node_put(sup_np);
-> > +               return 0;
-> > +       }
-> > +       sup_dev = of_find_device_by_node(sup_np);
-> > +       of_node_put(sup_np);
-> > +       if (!sup_dev)
-> > +               return -ENODEV;
-> > +       if (!device_link_add(dev, &sup_dev->dev, dl_flags))
-> > +               ret = -ENODEV;
-> > +       put_device(&sup_dev->dev);
-> > +       return ret;
-> > +}
-> > +
-> > +static struct device_node *parse_prop_cells(struct device_node *np,
-> > +                                           const char *prop, int i,
->
-> I like 'i' for for loops, but less so for function params. Perhaps
-> 'index' instead like of_parse_phandle_with_args.
-
-Sounds good.
-
->
-> > +                                           const char *binding,
-> > +                                           const char *cell)
-> > +{
-> > +       struct of_phandle_args sup_args;
-> > +
-> > +       if (!i && strcmp(prop, binding))
->
-> Why the '!i' test?
-
-To avoid a string comparison for every index. It's kinda wasteful once
-the first index passes.
-
-> > +               return NULL;
-> > +
-> > +       if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
-> > +               return NULL;
-> > +
-> > +       return sup_args.np;
-> > +}
-> > +
-> > +static struct device_node *parse_clocks(struct device_node *np,
-> > +                                       const char *prop, int i)
-> > +{
-> > +       return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
-> > +}
-> > +
-> > +static struct device_node *parse_interconnects(struct device_node *np,
-> > +                                              const char *prop, int i)
-> > +{
-> > +       return parse_prop_cells(np, prop, i, "interconnects",
-> > +                               "#interconnect-cells");
-> > +}
-> > +
-> > +static int strcmp_suffix(const char *str, const char *suffix)
-> > +{
-> > +       unsigned int len, suffix_len;
-> > +
-> > +       len = strlen(str);
-> > +       suffix_len = strlen(suffix);
-> > +       if (len <= suffix_len)
-> > +               return -1;
-> > +       return strcmp(str + len - suffix_len, suffix);
-> > +}
-> > +
-> > +static struct device_node *parse_regulators(struct device_node *np,
-> > +                                           const char *prop, int i)
-> > +{
-> > +       if (i || strcmp_suffix(prop, "-supply"))
-> > +               return NULL;
-> > +
-> > +       return of_parse_phandle(np, prop, 0);
-> > +}
-> > +
-> > +/**
-> > + * struct supplier_bindings - Information for parsing supplier DT binding
-> > + *
-> > + * @parse_prop:                If the function cannot parse the property, return NULL.
-> > + *                     Otherwise, return the phandle listed in the property
-> > + *                     that corresponds to index i.
-> > + */
-> > +struct supplier_bindings {
-> > +       struct device_node *(*parse_prop)(struct device_node *np,
-> > +                                         const char *name, int i);
-> > +};
-> > +
-> > +struct supplier_bindings bindings[] = {
->
-> static const
-
-Will do.
-
->
-> > +       { .parse_prop = parse_clocks, },
-> > +       { .parse_prop = parse_interconnects, },
-> > +       { .parse_prop = parse_regulators, },
-> > +       { },
-> > +};
-> > +
-> > +static bool of_link_property(struct device *dev, struct device_node *con_np,
-> > +                            const char *prop)
-> > +{
-> > +       struct device_node *phandle;
-> > +       struct supplier_bindings *s = bindings;
-> > +       unsigned int i = 0;
-> > +       bool done = true;
-> > +
-> > +       while (!i && s->parse_prop) {
->
-> Using 'i' is a little odd. Perhaps a 'matched' bool would be easier to read.
-
-That's how I wrote it first (locally) and then redid it this way
-because the bool felt very superfluous. I don't think this is that
-hard to understand.
-
-> > +               while ((phandle = s->parse_prop(con_np, prop, i))) {
-> > +                       i++;
-> > +                       if (of_link_to_phandle(dev, phandle))
-> > +                               done = false;
->
-> Just return here. No point in continuing as 'done' is never set back to true.
-
-Actually, there is a point for this. Say Device-C depends on suppliers
-Device-S1 and Device-S2 and they are listed in DT in that order.
-
-Say, S1 gets populated after late_initcall_sync but S2 is probes way
-before that. If I don't continue past a "failed linking" to S1 and
-also link up to S2, then S2 will get a sync_state() callback before C
-is probed. So I have to go through all possible suppliers and as many
-as possible.
-
-Let me add a comment about this somewhere in the code (probably the
-header that defines the add_links() ops).
-
--Saravana
-
-> > +               }
-> > +               s++;
-> > +       }
-> > +       return done ? 0 : -ENODEV;
-> > +}
-> > +
-> > +static bool of_devlink;
-> > +core_param(of_devlink, of_devlink, bool, 0);
-> > +
-> > +static int of_link_to_suppliers(struct device *dev)
-> > +{
-> > +       struct property *p;
-> > +       bool done = true;
-> > +
-> > +       if (!of_devlink)
-> > +               return 0;
-> > +       if (unlikely(!dev->of_node))
-> > +               return 0;
-> > +
-> > +       for_each_property_of_node(dev->of_node, p)
-> > +               if (of_link_property(dev, dev->of_node, p->name))
-> > +                       done = false;
-> > +
-> > +       return done ? 0 : -ENODEV;
-> > +}
-> > +
-> >  #ifndef CONFIG_PPC
-> >  static const struct of_device_id reserved_mem_matches[] = {
-> >         { .compatible = "qcom,rmtfs-mem" },
-> > @@ -524,6 +681,7 @@ static int __init of_platform_default_populate_init(void)
-> >         if (!of_have_populated_dt())
-> >                 return -ENODEV;
-> >
-> > +       platform_bus_type.add_links = of_link_to_suppliers;
-> >         /*
-> >          * Handle certain compatibles explicitly, since we don't want to create
-> >          * platform_devices for every node in /reserved-memory with a
-> > --
-> > 2.22.0.657.g960e92d24f-goog
-> >
+T24gVHVlLCAyMDE5LTA3LTIzIGF0IDE4OjE1ICswMzAwLCBDbGF1ZGl1IE1hbm9pbCB3cm90ZToN
+Cj4gRU5FVEMgcG9ydHMgY2FuIG1hbmFnZSB0aGUgTURJTyBidXMgdmlhIGxvY2FsIHJlZ2lzdGVy
+DQo+IGludGVyZmFjZS4gIEhvd2V2ZXIgdGhlcmUncyBhbHNvIGEgY2VudHJhbGl6ZWQgd2F5DQo+
+IHRvIG1hbmFnZSB0aGUgTURJTyBidXMsIHZpYSB0aGUgTURJTyBQQ0llIGVuZHBvaW50DQo+IGRl
+dmljZSBpbnRlZ3JhdGVkIGJ5IHRoZSBzYW1lIHJvb3QgY29tcGxleCB0aGF0IGFsc28NCj4gaW50
+ZWdyYXRlcyB0aGUgRU5FVEMgcG9ydHMgKGV0aCBjb250cm9sbGVycykuDQo+IA0KPiBEZXBlbmRp
+bmcgb24gYm9hcmQgZGVzaWduIGFuZCB1c2UgY2FzZSwgY2VudHJhbGl6ZWQNCj4gYWNjZXNzIHRv
+IE1ESU8gbWF5IGJlIGJldHRlciB0aGFuIHVzaW5nIGxvY2FsIEVORVRDDQo+IHBvcnQgcmVnaXN0
+ZXJzLiAgRm9yIGluc3RhbmNlLCBvbiB0aGUgTFMxMDI4QSBRRFMgYm9hcmQNCj4gd2hlcmUgTURJ
+TyBtdXhpbmcgaXMgcmVxdWllcmVkLiAgQWxzbywgdGhlIExTMTAyOEEgb24tY2hpcA0KPiBzd2l0
+Y2ggZG9lc24ndCBoYXZlIGEgbG9jYWwgTURJTyByZWdpc3RlciBpbnRlcmZhY2UuDQo+IA0KPiBU
+aGUgY3VycmVudCBwYXRjaCByZWdpc3RlcnMgdGhlIGFib3ZlIFBDSWUgZW5wb2ludCBhcyBhDQo+
+IHNlcGFyYXRlIE1ESU8gYnVzIGFuZCBwcm92aWRlcyBhIGRyaXZlciBmb3IgaXQgYnkgcmUtdXNp
+bmcNCj4gdGhlIGNvZGUgdXNlZCBmb3IgbG9jYWwgTURJTyBhY2Nlc3MuICBJdCBhbHNvIGFsbG93
+cyB0aGUNCj4gRU5FVEMgcG9ydCBQSFlzIHRvIGJlIG1hbmFnZWQgYnkgdGhpcyBkcml2ZXIgaWYg
+dGhlIGxvY2FsDQo+ICJtZGlvIiBub2RlIGlzIG1pc3NpbmcgZnJvbSB0aGUgRU5FVEMgcG9ydCBu
+b2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBNYW5vaWwgPGNsYXVkaXUubWFub2ls
+QG54cC5jb20+DQo+IC0tLQ0KPiAgLi4uL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5l
+dGNfbWRpby5jIHwgOTANCj4gKysrKysrKysrKysrKysrKysrKw0KPiAgLi4uL25ldC9ldGhlcm5l
+dC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYyAgIHwgIDUgKy0NCj4gIDIgZmlsZXMgY2hhbmdl
+ZCwgOTQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19tZGlvLmMNCj4gYi9kcml2
+ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfbWRpby5jDQo+IGluZGV4IDc3
+YjljZDEwYmEyYi4uZWZhOGEyOWY0NjNkIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhl
+cm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfbWRpby5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0
+aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19tZGlvLmMNCj4gQEAgLTE5NywzICsxOTcsOTMg
+QEAgdm9pZCBlbmV0Y19tZGlvX3JlbW92ZShzdHJ1Y3QgZW5ldGNfcGYgKnBmKQ0KPiAgCQltZGlv
+YnVzX2ZyZWUocGYtPm1kaW8pOw0KPiAgCX0NCj4gIH0NCj4gKw0KPiArI2RlZmluZSBFTkVUQ19N
+RElPX0RFVl9JRAkweGVlMDENCj4gKyNkZWZpbmUgRU5FVENfTURJT19ERVZfTkFNRQkiRlNMIFBD
+SWUgSUUgQ2VudHJhbCBNRElPIg0KPiArI2RlZmluZSBFTkVUQ19NRElPX0JVU19OQU1FCUVORVRD
+X01ESU9fREVWX05BTUUgIiBCdXMiDQo+ICsjZGVmaW5lIEVORVRDX01ESU9fRFJWX05BTUUJRU5F
+VENfTURJT19ERVZfTkFNRSAiIGRyaXZlciINCj4gKyNkZWZpbmUgRU5FVENfTURJT19EUlZfSUQJ
+ImZzbF9lbmV0Y19tZGlvIg0KPiArDQo+ICtzdGF0aWMgaW50IGVuZXRjX3BjaV9tZGlvX3Byb2Jl
+KHN0cnVjdCBwY2lfZGV2ICpwZGV2LA0KPiArCQkJCWNvbnN0IHN0cnVjdCBwY2lfZGV2aWNlX2lk
+ICplbnQpDQo+ICt7DQo+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gKwlz
+dHJ1Y3QgbWlpX2J1cyAqYnVzOw0KPiArCWludCBlcnI7DQo+ICsNCj4gKwlidXMgPSBtZGlvYnVz
+X2FsbG9jX3NpemUoc2l6ZW9mKHUzMiAqKSk7DQo+ICsJaWYgKCFidXMpDQo+ICsJCXJldHVybiAt
+RU5PTUVNOw0KPiArDQo+ICsJYnVzLT5uYW1lID0gRU5FVENfTURJT19CVVNfTkFNRTsNCj4gKwli
+dXMtPnJlYWQgPSBlbmV0Y19tZGlvX3JlYWQ7DQo+ICsJYnVzLT53cml0ZSA9IGVuZXRjX21kaW9f
+d3JpdGU7DQo+ICsJYnVzLT5wYXJlbnQgPSBkZXY7DQo+ICsJc25wcmludGYoYnVzLT5pZCwgTUlJ
+X0JVU19JRF9TSVpFLCAiJXMiLCBkZXZfbmFtZShkZXYpKTsNCj4gKw0KPiArCXBjaWVfZmxyKHBk
+ZXYpOw0KPiArCWVyciA9IHBjaV9lbmFibGVfZGV2aWNlX21lbShwZGV2KTsNCj4gKwlpZiAoZXJy
+KSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiZGV2aWNlIGVuYWJsZSBmYWlsZWRcbiIpOw0KDQptZGlv
+YnVzX2ZyZWUoYnVzKSBpcyBtaXNzaW5nIGhlcmUgYW5kIGluIGV2ZXJ5IGVycm9yIHBhdGguDQoN
+Cj4gKwkJcmV0dXJuIGVycjsNCj4gKwl9DQo+ICsNCj4gKwllcnIgPSBwY2lfcmVxdWVzdF9tZW1f
+cmVnaW9ucyhwZGV2LCBFTkVUQ19NRElPX0RSVl9JRCk7DQo+ICsJaWYgKGVycikgew0KPiArCQlk
+ZXZfZXJyKGRldiwgInBjaV9yZXF1ZXN0X3JlZ2lvbnMgZmFpbGVkXG4iKTsNCj4gKwkJZ290byBl
+cnJfcGNpX21lbV9yZWc7DQo+ICsJfQ0KPiArDQo+ICsJYnVzLT5wcml2ID0gcGNpX2lvbWFwX3Jh
+bmdlKHBkZXYsIDAsIEVORVRDX01ESU9fUkVHX09GRlNFVCwgMCk7DQo+ICsJaWYgKCFidXMtPnBy
+aXYpIHsNCj4gKwkJZXJyID0gLUVOWElPOw0KPiArCQlkZXZfZXJyKGRldiwgImlvcmVtYXAgZmFp
+bGVkXG4iKTsNCj4gKwkJZ290byBlcnJfaW9yZW1hcDsNCj4gKwl9DQo+ICsNCj4gKwllcnIgPSBv
+Zl9tZGlvYnVzX3JlZ2lzdGVyKGJ1cywgZGV2LT5vZl9ub2RlKTsNCj4gKwlpZiAoZXJyKQ0KPiAr
+CQlnb3RvIGVycl9tZGlvYnVzX3JlZzsNCj4gKw0KPiArCXBjaV9zZXRfZHJ2ZGF0YShwZGV2LCBi
+dXMpOw0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICsNCj4gK2Vycl9tZGlvYnVzX3JlZzoNCj4gKwlp
+b3VubWFwKGJ1cy0+cHJpdik7DQo+ICtlcnJfaW9yZW1hcDoNCj4gKwlwY2lfcmVsZWFzZV9tZW1f
+cmVnaW9ucyhwZGV2KTsNCj4gK2Vycl9wY2lfbWVtX3JlZzoNCj4gKwlwY2lfZGlzYWJsZV9kZXZp
+Y2UocGRldik7DQo+ICsNCj4gKwlyZXR1cm4gZXJyOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgdm9p
+ZCBlbmV0Y19wY2lfbWRpb19yZW1vdmUoc3RydWN0IHBjaV9kZXYgKnBkZXYpDQo+ICt7DQo+ICsJ
+c3RydWN0IG1paV9idXMgKmJ1cyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gKw0KPiArCW1k
+aW9idXNfdW5yZWdpc3RlcihidXMpOw0KPiArCWlvdW5tYXAoYnVzLT5wcml2KTsNCj4gKwltZGlv
+YnVzX2ZyZWUoYnVzKTsNCj4gKw0KDQp0aGlzIHNob3VsZCBjb21lIGxhc3QgdG8gYmUgc3ltbWV0
+cmljYWwgd2l0aCBwcm9iZSBmbG93Lg0KDQo+ICsJcGNpX3JlbGVhc2VfbWVtX3JlZ2lvbnMocGRl
+dik7DQo+ICsJcGNpX2Rpc2FibGVfZGV2aWNlKHBkZXYpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMg
+Y29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgZW5ldGNfcGNpX21kaW9faWRfdGFibGVbXSA9IHsN
+Cj4gKwl7IFBDSV9ERVZJQ0UoUENJX1ZFTkRPUl9JRF9GUkVFU0NBTEUsIEVORVRDX01ESU9fREVW
+X0lEKSB9LA0KPiArCXsgMCwgfSAvKiBFbmQgb2YgdGFibGUuICovDQo+ICt9Ow0KPiArTU9EVUxF
+X0RFVklDRV9UQUJMRShwY2ksIGVuZXRjX21kaW9faWRfdGFibGUpOw0KPiArDQo+ICtzdGF0aWMg
+c3RydWN0IHBjaV9kcml2ZXIgZW5ldGNfcGNpX21kaW9fZHJpdmVyID0gew0KPiArCS5uYW1lID0g
+RU5FVENfTURJT19EUlZfSUQsDQo+ICsJLmlkX3RhYmxlID0gZW5ldGNfcGNpX21kaW9faWRfdGFi
+bGUsDQo+ICsJLnByb2JlID0gZW5ldGNfcGNpX21kaW9fcHJvYmUsDQo+ICsJLnJlbW92ZSA9IGVu
+ZXRjX3BjaV9tZGlvX3JlbW92ZSwNCj4gK307DQo+ICttb2R1bGVfcGNpX2RyaXZlcihlbmV0Y19w
+Y2lfbWRpb19kcml2ZXIpOw0KPiArDQo+ICtNT0RVTEVfREVTQ1JJUFRJT04oRU5FVENfTURJT19E
+UlZfTkFNRSk7DQo+ICtNT0RVTEVfTElDRU5TRSgiRHVhbCBCU0QvR1BMIik7DQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYw0KPiBi
+L2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19wZi5jDQo+IGluZGV4
+IDI1OGIzY2IzOGE2Zi4uN2Q2NTEzZmY4NTA3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYw0KPiArKysgYi9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYw0KPiBAQCAtNzUwLDYgKzc1MCw3IEBA
+IHN0YXRpYyBpbnQgZW5ldGNfb2ZfZ2V0X3BoeShzdHJ1Y3QNCj4gZW5ldGNfbmRldl9wcml2ICpw
+cml2KQ0KPiAgew0KPiAgCXN0cnVjdCBlbmV0Y19wZiAqcGYgPSBlbmV0Y19zaV9wcml2KHByaXYt
+PnNpKTsNCj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcHJpdi0+ZGV2LT5vZl9ub2RlOw0K
+PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbWRpb19ucDsNCj4gIAlpbnQgZXJyOw0KPiAgDQo+ICAJ
+aWYgKCFucCkgew0KPiBAQCAtNzczLDcgKzc3NCw5IEBAIHN0YXRpYyBpbnQgZW5ldGNfb2ZfZ2V0
+X3BoeShzdHJ1Y3QNCj4gZW5ldGNfbmRldl9wcml2ICpwcml2KQ0KPiAgCQlwcml2LT5waHlfbm9k
+ZSA9IG9mX25vZGVfZ2V0KG5wKTsNCj4gIAl9DQo+ICANCj4gLQlpZiAoIW9mX3BoeV9pc19maXhl
+ZF9saW5rKG5wKSkgew0KPiArCW1kaW9fbnAgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShucCwgIm1k
+aW8iKTsNCj4gKwlpZiAobWRpb19ucCkgew0KPiArCQlvZl9ub2RlX3B1dChtZGlvX25wKTsNCj4g
+IAkJZXJyID0gZW5ldGNfbWRpb19wcm9iZShwZik7DQo+ICAJCWlmIChlcnIpIHsNCj4gIAkJCW9m
+X25vZGVfcHV0KHByaXYtPnBoeV9ub2RlKTsNCg==
