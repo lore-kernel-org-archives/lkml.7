@@ -2,131 +2,95 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9725CC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A73C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C0A21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7957B21738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dynamicaims-com.20150623.gappssmtp.com header.i=@dynamicaims-com.20150623.gappssmtp.com header.b="elzyr1bI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390436AbfGWNvz (ORCPT
+        id S1732629AbfGWNwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:51:55 -0400
-Received: from smtprelay0018.hostedemail.com ([216.40.44.18]:37583 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390417AbfGWNvs (ORCPT
+        Tue, 23 Jul 2019 09:52:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35918 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfGWNwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:51:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 0132783777ED;
-        Tue, 23 Jul 2019 13:51:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: page82_83b617262f530
-X-Filterd-Recvd-Size: 3984
-Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 23 Jul 2019 13:51:44 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH V2 2/2] kernel-doc: core-api: Include string.h into core-api
-Date:   Tue, 23 Jul 2019 06:51:37 -0700
-Message-Id: <29f998b4c1a9d69fbeae70500ba0daa4b340c546.1563889130.git.joe@perches.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <cover.1563889130.git.joe@perches.com>
-References: <cover.1563889130.git.joe@perches.com>
+        Tue, 23 Jul 2019 09:52:53 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l21so19475400pgm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:52:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dynamicaims-com.20150623.gappssmtp.com; s=20150623;
+        h=to:subject:from:message-id:disposition-notification-to:date
+         :user-agent:mime-version:content-transfer-encoding:content-language;
+        bh=9N8Qc+rRBbnfa+Ir61SRMq5lDQDDnvbN1u/t4PPmBYw=;
+        b=elzyr1bIHEPrDvEWT2HkjNVXlDHSuea3NkIIKK8bj3o+bnzr5N4dvt18+BPlWVsFTx
+         WmRGv3CDw7keFPvI5qtVGpC9JZ7iNAb0eH9lkdriodMertnbIjQkImmBcTKckoPoXTeO
+         q0h4PoOSqBsrH+eIDkZ+5TkC1PrjJMK1c218hukHWsPmdoGfpAgHUuR30Bw2cVj0U5Y+
+         NCbBHLbTgf/PhmUyaEs0HYJcgiezcj+QLkgd+4FS43F7arpgaYod+n8R/NjcuWjUI8Q0
+         G+/pg3sL/rZ3Qdm7DLfxLFfhA8r0xDHR+cE3/A7dZLLtTQhgbBbUf4DkLQ9UGwfLeq2L
+         OsCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:subject:from:message-id
+         :disposition-notification-to:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=9N8Qc+rRBbnfa+Ir61SRMq5lDQDDnvbN1u/t4PPmBYw=;
+        b=MoefXTK4kaL065MqrS8311baEdWyLqcX/mZjl3Tf/llJcu1PCW8wNk1E2tFPicqIGr
+         VHusfptlBzSXqXHamnciBc5aHx1v0AJYQQ7iubtTSX1pb4nusQsYCb9Q3mWx42ATZFmr
+         0mkO3bu2WckNg9h3eVG4X3lyZLIADqIUVtkyF3qr5lqOlUQ9aO0xj1MV4u0NIcMq5dsa
+         MC7oZ65EkPH0CNno5UlLZGY49cJqMdp2Wkpl3QGClTgVPPn9fPVXLzQJ9p0ptrs8CEln
+         hsWBeY+Ga9Fo0Qx4sacREMnozj+OVX7y1uEG4kRqlfD1A83fLKeEznl+EGJmo1CGxHsI
+         RCiA==
+X-Gm-Message-State: APjAAAVARwZOG0rCHhcRsDM/zU5AqV7lEovIAUde1HXKsS7fruOB508/
+        OwtjVuKGBQOP4gEYu/v+L2UWcMlI
+X-Google-Smtp-Source: APXvYqzfdCh9eF8jDRCCTT3rnn3O1p36O9O5DcQII/shAgEUDq0raKLoJWdkG/vnDHQLKUtgSmZxOg==
+X-Received: by 2002:a62:1515:: with SMTP id 21mr6093852pfv.100.1563889972168;
+        Tue, 23 Jul 2019 06:52:52 -0700 (PDT)
+Received: from [192.168.0.13] ([122.182.204.68])
+        by smtp.gmail.com with ESMTPSA id b37sm71023544pjc.15.2019.07.23.06.52.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 06:52:51 -0700 (PDT)
+To:     linux-kernel@vger.kernel.org
+Subject: Wine Enthusiasts
+From:   Denna Ross <dennar@dynamicaims.com>
+Message-ID: <1d92f8f5-af64-4a6c-a423-7d71941cd96d@dynamicaims.com>
+Date:   Tue, 23 Jul 2019 08:44:36 -0400
+User-Agent: Mozilla/5.0 (Windows NT 6.3; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Antivirus: Avast (VPS 190723-0, 07/23/2019), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-core-api should show all the various string functions including the
-newly added stracpy and stracpy_pad.
 
-Miscellanea:
+Hello,
 
-o Update the Returns: value for strscpy
-o fix a defect with %NUL)
+Would you be interested in acquiring an email list of "Wine Enthusiasts" from USA?
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
+We also have data for Golfers, Alcohol Enthusiasts, Beer Enthusiasts, Chocolate Enthusiasts, Foodies, Travelers, Gift Buyers, Spa and Resort Visitors, Sports Enthusiasts, Android Users and many more..
 
-V2: Correct return of -E2BIG descriptions
+Each record in the list contains Contact Name (First, Middle and Last Name), Mailing Address, List type and Opt-in email address.
 
- Documentation/core-api/kernel-api.rst |  3 +++
- include/linux/string.h                |  5 +++--
- lib/string.c                          | 10 ++++++----
- 3 files changed, 12 insertions(+), 6 deletions(-)
+All the contacts are opt-in verified, 100% permission based and can be used for unlimited multi-channel marketing.
 
-diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
-index 08af5caf036d..f77de49b1d51 100644
---- a/Documentation/core-api/kernel-api.rst
-+++ b/Documentation/core-api/kernel-api.rst
-@@ -42,6 +42,9 @@ String Manipulation
- .. kernel-doc:: lib/string.c
-    :export:
- 
-+.. kernel-doc:: include/linux/string.h
-+   :internal:
-+
- .. kernel-doc:: mm/util.c
-    :functions: kstrdup kstrdup_const kstrndup kmemdup kmemdup_nul memdup_user
-                vmemdup_user strndup_user memdup_user_nul
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 7572cd78cf9f..3cf684db4bc6 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -519,8 +519,9 @@ static inline void memcpy_and_pad(void *dest, size_t dest_len,
-  * But this can lead to bugs due to typos, or if prefix is a pointer
-  * and not a constant. Instead use str_has_prefix().
-  *
-- * Returns: 0 if @str does not start with @prefix
--         strlen(@prefix) if @str does start with @prefix
-+ * Returns:
-+ * * strlen(@prefix) if @str starts with @prefix
-+ * * 0 if @str does not start with @prefix
-  */
- static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
- {
-diff --git a/lib/string.c b/lib/string.c
-index 461fb620f85f..f7bc10da4259 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -173,8 +173,9 @@ EXPORT_SYMBOL(strlcpy);
-  * doesn't unnecessarily force the tail of the destination buffer to be
-  * zeroed.  If zeroing is desired please use strscpy_pad().
-  *
-- * Return: The number of characters copied (not including the trailing
-- *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
-+ * Returns:
-+ * * The number of characters copied (not including the trailing %NUL)
-+ * * -E2BIG if count is 0 or @src was truncated.
-  */
- ssize_t strscpy(char *dest, const char *src, size_t count)
- {
-@@ -253,8 +254,9 @@ EXPORT_SYMBOL(strscpy);
-  * For full explanation of why you may want to consider using the
-  * 'strscpy' functions please see the function docstring for strscpy().
-  *
-- * Return: The number of characters copied (not including the trailing
-- *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
-+ * Returns:
-+ * * The number of characters copied (not including the trailing %NUL)
-+ * * -E2BIG if count is 0 or @src was truncated.
-  */
- ssize_t strscpy_pad(char *dest, const char *src, size_t count)
- {
--- 
-2.15.0
+Please let me know your thoughts towards procuring the Wine Enthusiasts List.
+
+Best Regards,
+Denna Ross
+Research Analyst
+
+We respect your privacy, if you do not wish to receive any further emails from our end, please reply with a subject "Remove".
 
