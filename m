@@ -2,210 +2,92 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75187C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A2CC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1D522353
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="hOJdM8Gt"
+	by mail.kernel.org (Postfix) with ESMTP id 0DBCD22543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390243AbfGWNaf (ORCPT
+        id S2390209AbfGWNbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:30:35 -0400
-Received: from sonic302-20.consmr.mail.ir2.yahoo.com ([87.248.110.83]:38597
-        "EHLO sonic302-20.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390231AbfGWNad (ORCPT
+        Tue, 23 Jul 2019 09:31:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40880 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbfGWNbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:30:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1563888627; bh=c4EtERWmOlLnToAQZFFQ0tgD2PCoHHVP3KPET20i2Rc=; h=Subject:To:References:From:Cc:Date:In-Reply-To:From:Subject; b=hOJdM8Gt6pVCW6YyQ4XNXehelrl4JV9ErwYmtuxtnPNLyirHGF5FIg+8u7bp/3smfRPf0K2JXSfR3pQbMzzIzRzTW2sL80QGy3UPQOKTgxFtRcHaIoBey3zgH5d71CCHRi+mIWYiblGE0DCqQVLvdQq3LCDHY93VQ67jiZvuyKotHSxQv/lYoqJCG+zHqgl0hMQJkc3QVfrGAurWMF4pOPAogiYikej6rNV1KwvOFFmyXR6XLyl/3pNGPMMkegjjU0EFMCV657rZMgO1g4szXJTivxt+mPopzZ3S9xygr3dtBfNYg5p/V7sx7Kx6MmN7ih0m4zH/CrkwA09aHKn/vQ==
-X-YMail-OSG: VoRN6A4VM1l4MgAqDai7A20BNgPpLNGiGMptXZ7gTvP5UI0rOPzpRWwlssVYXrV
- b2E9kl3T.Wep2Eta6JYh71obWB5nE_4KkNvxKwBYubwNj4qjqO3N0c_hjVcXuUmO.X3eRDMXlHan
- Jw.EBIKmd2apV8D9AeKyU2.vJ01GnaXNGTinjm5bXnwVwy8bwbNq7Lex6fEACpIMtr.dr9qwiw85
- AHsRu5PbYo.kV280ouRr0Cl2QbdJkNJAMAXhcd_Od0Ni5YOCMgLKuZRcFKN2W6Yr2BP4YFBiU5Z5
- K81E29DdBVU2oYN1pmyRHKkb_yPZfY4g_lJHOiKBEHA7b2_bCsTcsD1LcOOo9h495WONkuK8U6hh
- eXFhX_fZEcKJbPAWiGy2eejGfgAuGqXiQi0eG7FsXcSaHEa62haLXZXljFwbT.iz26WmW6.kysxp
- CzzT2DvIvEHT97cNsz5JpvB90wjzL68rAzFuximpb4SbxOSGylB_cMGY9r.Sexz8YeWTK3yF4Wjy
- ayyWk4zcBkqMlGIvdAbkopbDjwYBlf.UPb7jxF477PR598s4IoMIl.ZDw3MxPM717lpjK2EK7TjD
- dp85PXh5Io0twhxdXxLRXLaoM3jSqLuaHsg7XmrhZlD6aDeY7I2DXkvXJfRre6.ci_.rCENk7jmK
- er5H47j3qzn3xCY01rW8IeuXTpPlr8Jy8Ut7D2kNBVUPOPUJN.RLvDONW8iDxbYymQFMY_cS0fJ2
- jGOStknuyGmgUD5mxxZFPyNf.3tNXpYGOUsy7yNOQBWcqqT5Eqgf0gXcBClWL5TJ7nXsG9mXStz4
- SAfLWLcxGbdbvMaLk2oAFYGH5LqygXQNgipBJpaK0NVXMT7bf8hPkMJZPsx5Z499AwPqZQyR07J2
- Bmw3hEEuTC6s9lWwaQsAmUJMj9zDak6btygzElH64_KOYHbJy2QdIcxKPQ2YQ.fP6a.Llx56wYJ8
- ccgYJ7auCAxfuoF6tBokKZBReZn49XZ8trDUAekir3LmKEFuz7QnkTEA6JvQQHW31y0t4.5C9SSz
- HmYM5kRIBKhuPmnnbKj7LKzimeUIQZeRTFj.7Yvis6BNMrl4PuUJIpbPcJl1lRjUKorm0ZlrX2O6
- pherF28Haf5FWhVQo6Lmt_qs6S4RLYJDZYiOSs6OYLP6Lt788lwG9UBc8fIO1VC.MaHyos4iIeKB
- zzgYB_t4KlbsOTz2q3BpQ84Pqtde6eV6iJ4Yk4mkly0e.aNinRnDY
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ir2.yahoo.com with HTTP; Tue, 23 Jul 2019 13:30:27 +0000
-Received: by smtp426.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 2f2ae19cf287ab3910bb19c095c0ecd7;
-          Tue, 23 Jul 2019 13:30:22 +0000 (UTC)
-Subject: Re: [PATCH v3 23/24] erofs: introduce cached decompression
-To:     dsterba@suse.cz
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-24-gaoxiang25@huawei.com>
- <20190722101818.GN20977@twin.jikos.cz>
- <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
- <20190723123104.GB2868@twin.jikos.cz>
-From:   Gao Xiang <hsiangkao@aol.com>
-Cc:     Gao Xiang <gaoxiang25@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Message-ID: <b623d1bc-7cb5-e466-10e1-bb3bfefcae10@aol.com>
-Date:   Tue, 23 Jul 2019 21:30:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 09:31:41 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hputB-0006E3-Cd; Tue, 23 Jul 2019 15:31:33 +0200
+Date:   Tue, 23 Jul 2019 15:31:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     "H.J. Lu" <hjl.tools@gmail.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
+ be reserved
+In-Reply-To: <20190723130513.GA25290@kroah.com>
+Message-ID: <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de>
+References: <7db7da45b435f8477f25e66f292631ff766a844c.1560969363.git.thomas.lendacky@amd.com> <20190713145909.30749-1-mike@fireburn.co.uk> <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de> <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com>
+ <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de> <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com> <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de>
+ <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com> <20190723130513.GA25290@kroah.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190723123104.GB2868@twin.jikos.cz>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/7/23 ????8:31, David Sterba wrote:
-> On Mon, Jul 22, 2019 at 06:58:59PM +0800, Gao Xiang wrote:
->> On 2019/7/22 ????6:18, David Sterba wrote:
->>> On Mon, Jul 22, 2019 at 10:50:42AM +0800, Gao Xiang wrote:
->>>> +choice
->>>> +	prompt "EROFS Data Decompression mode"
->>>> +	depends on EROFS_FS_ZIP
->>>> +	default EROFS_FS_ZIP_CACHE_READAROUND
->>>> +	help
->>>> +	  EROFS supports three options for decompression.
->>>> +	  "In-place I/O Only" consumes the minimum memory
->>>> +	  with lowest random read.
->>>> +
->>>> +	  "Cached Decompression for readaround" consumes
->>>> +	  the maximum memory with highest random read.
->>>> +
->>>> +	  If unsure, select "Cached Decompression for readaround"
->>>> +
->>>> +config EROFS_FS_ZIP_CACHE_DISABLED
->>>> +	bool "In-place I/O Only"
->>>> +	help
->>>> +	  Read compressed data into page cache and do in-place
->>>> +	  I/O decompression directly.
->>>> +
->>>> +config EROFS_FS_ZIP_CACHE_READAHEAD
->>>> +	bool "Cached Decompression for readahead"
->>>> +	help
->>>> +	  For each request, it caches the last compressed page
->>>> +	  for further reading.
->>>> +	  It still does in-place I/O for the rest compressed pages.
->>>> +
->>>> +config EROFS_FS_ZIP_CACHE_READAROUND
->>>> +	bool "Cached Decompression for readaround"
->>>> +	help
->>>> +	  For each request, it caches the both end compressed pages
->>>> +	  for further reading.
->>>> +	  It still does in-place I/O for the rest compressed pages.
->>>> +
->>>> +	  Recommended for performance priority.
->>>
->>> The number of individual Kconfig options is quite high, are you sure you
->>> need them to be split like that?
->>
->> You mean the above? these are 3 cache strategies, which impact the
->> runtime memory consumption and performance. I tend to leave the above
->> as it-is...
+On Tue, 23 Jul 2019, Greg KH wrote:
+> On Mon, Jul 15, 2019 at 01:16:48PM -0700, H.J. Lu wrote:
+> > >
+> > 
+> > Since building a workable kernel for different kernel configurations isn't a
+> > requirement for gold, I don't recommend gold for kernel.
 > 
-> No, I mean all Kconfig options, they're scattered over several patches,
-> best seen in the checked out branch. The cache strategies are actually
-> just one config option (choice).
+> Um, it worked before this commit, and now it doesn't.  "Some" companies
+> are using gold for linking the kernel today...
 
-I will change the cache strategy at runtime as Ted suggested.
-The cost is actually that erofs will always need a managed_cache inode
-even though users just use in-place IO for their products.
+gold is known to fail the kernel build. x32 vdso linking is not working
+since years and just because it 'works' for some configurations and breaks
+for no valid reasons even with those configurations is just not good
+enough.
 
-However, I notice that using separated Kconfig will make test harder,
-so that it leads to more bugs, that is what I really care about.
+As there is obviously no priority for fixing gold to work proper with the
+kernel, I'm not at all interested in these 'regression' reports and in odd
+'fixes' which just end up reverting or modifying perfectly valid changes
+without understanding the root cause, i.e. the most horrible engineering
+principle: duct-taping.
 
-Therefore I think making it at runtime is OK for me.
+TBH, I'm tired of it. We fail the build for clang if it does not support
+asm gotos and the clang people are actively working on fixing it and we're
+helping them as much as we can. The companies who used clang nevertheless
+have been on their own for years and if someone wants to use gold then
+nobody is preventing them from doing so. They can keep their duct-tape in
+their own trees.
 
-> 
->> I'm not sure vm_map_ram() is always better than vmap() for all
->> platforms (it has noticeable performance impact). However that
->> seems true for my test machines (x86-64, arm64).
->>
->> If vm_map_ram() is always the optimal choice compared with vmap(),
->> I will remove vmap() entirely, that is OK. But I am not sure for
->> every platforms though.
-> 
-> You can select the implementation by platform, I don't know what are the
-> criteria like cpu type etc, but I expect it's something that can be
-> determined at module load time. Eventually a module parameter can be the
-> the way to set it.
+See this thread for further discussion:
 
-OK, module parameter makes sense for me, and the overhead may be
-unnoticeable. I think it is fine to me.
-
-> 
->>> And so on. I'd suggest to go through all the options and reconsider them
->>> to be built-in, or runtime settings. Debugging features like the fault
->>> injections could be useful on non-debugging builds too, so a separate
->>> option is fine, otherwise grouping other debugging options under the
->>> main EROFS_FS_DEBUG would look more logical.
->>
->> The remaining one is EROFS_FS_CLUSTER_PAGE_LIMIT. It impacts the total
->> size of z_erofs_pcluster structure. It's a hard limit, and should be
->> configured as small as possible. I can remove it right now since multi-block
->> compression is not available now. However, it will be added again after
->> multi-block compression is supported.
->>
->> So, How about leave it right now and use the default value?
-> 
-> From the Kconfig and build-time settings perspective I think it's
-> misplaced. This affects testing, you'd have to rebuild and reinstall the
-> module to test any change, while it's "just" a number that can be either
-> module parameter, sysfs knob, mount option or special ioctl.
-> 
-> But I may be wrong, EROFS is a special purpose filesystem, so the
-> fine-grained build options might make sense (eg. due to smaller code).
-> The question should be how does each option affect typical production
-> build targets. Fewer is IMHO better.
-I have to admit, EROFS still has some special stuffs now (since we still
-have some TODO), However, I don't think EROFS cannot be effectively used
-for many productive uses right now.
-
-Considering that using linux-staging stuff is dangerous / unsuitable for
-most of companies, out of staging is better...
-
-And we still have to improve it to be more generic by time like what other fses do
-(IMO, writing a generic compression fs is not hard, many fses are there.
-I need to think more carefully in case of some performance loss which is out of
-too straight-forward generic code)...
-
-To be more specific, as for EROFS_FS_CLUSTER_PAGE_LIMIT...
-
-In the long term, I can introduce "struct biovec_slab"-like to erofs as
-in block/bio.c to support variable-sized z_erofs_pcluster.
-
-In the short term, I think EROFS_FS_CLUSTER_PAGE_LIMIT can be better set to
-the default value. It is a hard uplimit of the structure z_erofs_pcluster,
-which will greatly impact the memory consumption...
-
-Even if EROFS_FS_CLUSTER_PAGE_LIMIT is removed in the later Linux version
-by introducing biovec_slab-like stuff, I think it will have little influence
-to users? so I think that is a minor thing? Or I misunderstand something?
+ https://lkml.kernel.org/r/alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de
 
 Thanks,
-Gao Xiang
+
+	tglx
