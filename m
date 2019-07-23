@@ -2,148 +2,87 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8A3C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF90C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2161C2229A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:40:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X1YvonD3"
+	by mail.kernel.org (Postfix) with ESMTP id 551E72239F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563860427;
+	bh=+j2AOuISZmiPQxHemG/b+OJjdIwmlnQX7SnFfbIvn7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jQyyk/vW1tfLywI7VUao/aPwfbNoSDx/9sdvrGTSbWFlqszBTC9IhS4HOgP87ckQc
+	 Bf56Iw52ZHEgzfWT6DP+ptGSYSPaQ3aTAH6V2fp0ZewXXhjnxUwlt+6rDXd7rSD/fb
+	 O69mNwNgFCcPe3/eQlB758QZqoowPGJ+xeVEIJGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfGWFkP (ORCPT
+        id S1731552AbfGWFk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:40:15 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40868 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729349AbfGWFkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:40:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so18820890pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 22:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5nt2VugXjt5XrF3/XOR/oWFILicVPJkaeDN7wxmTV7U=;
-        b=X1YvonD3R6khALL7BjDbSfmeGb+oxFB0Yn8oSaY7vanh6Hs83Ohqkwv+euiD632z1e
-         WUi+KeGNsw5+gmHJ2bO3XJtc3mZljXxy/qpui12TO4jz7CXB1bJ5mp+gpodlkI/nWOGZ
-         rvBzo8LIOFkvjxQPflC17XaQI+Nac3FzfcryjNzEMEa/lBJaIfFQlHbopWUR9bxrQYVe
-         yyZbHJZ9JDSg1IJiGqx08/WiG2+5rN1fnAMpz9u+jrvGJ7hI0uaQVmqsi/vLyEGS+/bI
-         7oTzNegr32gKDR7QbPUd95mr8UIc1mbTEL0WjBsM42uJSRveXhwWwQbwSO4QRy/U0YVd
-         1o+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5nt2VugXjt5XrF3/XOR/oWFILicVPJkaeDN7wxmTV7U=;
-        b=s2l9LbE5etKbTZiBaARQqKVZNNS+WmIgFu8ioBK5Z9CKhfD5a9iz+DMUxwHYXYmAJ3
-         lZNqIJpcVG/ZGbvzamGrpHcgSHVXEKLfWmKoYMkwWznP4Coe92RJDDwQ0RHL4QLQoRMp
-         E5709D2GZgMD00zjABMfXXMdu0sQ5y+O0b2lG1Fw1z3BRpLj1DLJXMSrszrugz4fLV+q
-         MdO7uozGbZJrUMTUljta7sMvwTYuL/YQxIPjc7DDIVRiouEHMD8F0qNMW9vWnoEUy1eE
-         bTmjBZBzgiTG6RvIpIs+GM4q6SAw0iqBl/p2fWITGZL2DjT2JYfD+pUl3QvaB387rNbc
-         f7vA==
-X-Gm-Message-State: APjAAAXsLanMM+kLeyzb+2WYLJufl5uUtaXwhUVxaTRsmylTcHiUGMp2
-        a4iqYDKLuX1YeJxMxaZvT0G36g==
-X-Google-Smtp-Source: APXvYqwjjiGZqVdQpH4aZpzAsDjcY/hTViotRsKielUAYMaE/4MmwKXQ8bmTu5CBoKt30B6QXiYCJg==
-X-Received: by 2002:a63:c03:: with SMTP id b3mr10469564pgl.23.1563860413423;
-        Mon, 22 Jul 2019 22:40:13 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a15sm46535560pfg.102.2019.07.22.22.40.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 22:40:12 -0700 (PDT)
-Date:   Mon, 22 Jul 2019 22:41:36 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from
- unit name
-Message-ID: <20190723054136.GK7234@tuxbook-pro>
-References: <20190722123422.4571-1-vkoul@kernel.org>
- <20190722123422.4571-6-vkoul@kernel.org>
- <CAHLCerPC0thO9gsaDAxc+XaexinrzG6JGJ8BhB4bFFuQ-P9Jxg@mail.gmail.com>
- <20190723051426.GZ12733@vkoul-mobl.Dlink>
+        Tue, 23 Jul 2019 01:40:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729349AbfGWFkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:40:25 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2600C2229A;
+        Tue, 23 Jul 2019 05:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563860424;
+        bh=+j2AOuISZmiPQxHemG/b+OJjdIwmlnQX7SnFfbIvn7E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1sE6Dd8kroxZni3hrIzECi1WLHUUBaNidsUd5f4AswbX4xlfhFmlZZwkRB0Vg+ir7
+         /3ScQzQIzZFHSIJMaNljs5QPRp3XJz6hxwC1LPYwhCBUh+1yqsV2gInf1+c3lvGqik
+         1dPCPFeZFHUShI9MvWE++oBb5tQeSRFU0+gxL88Q=
+Date:   Tue, 23 Jul 2019 13:39:53 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Stefan Riedmueller <s.riedmueller@phytec.de>
+Cc:     s.hauer@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, martyn.welch@collabora.com,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/10] Add further support for PHYTEC phyBOARD-Segin
+Message-ID: <20190723053951.GN3738@dragon>
+References: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190723051426.GZ12733@vkoul-mobl.Dlink>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1562656767-273566-1-git-send-email-s.riedmueller@phytec.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 22 Jul 22:14 PDT 2019, Vinod Koul wrote:
-
-> On 23-07-19, 10:38, Amit Kucheria wrote:
-> > On Mon, Jul 22, 2019 at 6:06 PM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > Unit name is supposed to be a number, using a macro with hex value is
-> > 
-> > /s/name/address?
+On Tue, Jul 09, 2019 at 09:19:17AM +0200, Stefan Riedmueller wrote:
+> This patchstack adjusts the already existing naming for the PHYTEC
+> phyBOARD-Segin to the PHYTEC naming scheme that is already used with the
+> phyCORE-i.MX 6 and the phyBOARD-Mira.
 > 
-> Right, will fix.
+> Furthermore it introduces some small fixes and adds support for the PHYTEC
+> phyCORE-i.MX 6ULL which also comes with the phyBORAD-Segin. It comes in a
+> full featured option with either NAND flash or eMMC and a low cost option
+> only with NAND flash.
 > 
-> > > not recommended, so add the value in unit name.
-> > >
-> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name should not have leading "0x"
-> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name should not have leading "0x"
-> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name should not have leading "0x"
-> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name should not have leading "0x"
-> > > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name should not have leading "0x"
-> > >
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 +++++-----
-> > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> > > index 1ebbd568dfd7..9b27b8346ba1 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> > > @@ -963,27 +963,27 @@ ap_ts_i2c: &i2c14 {
-> > >  };
-> > >
-> > >  &pm8998_adc {
-> > > -       adc-chan@ADC5_AMUX_THM1_100K_PU {
-> > > +       adc-chan@4d {
-> > >                 reg = <ADC5_AMUX_THM1_100K_PU>;
+> Stefan Riedmueller (10):
+>   ARM: dts: imx6ul: phyboard-segin: Rename dts to PHYTEC name scheme
+>   ARM: dts: imx6ul: segin: Add boot media to dts filename
+>   ARM: dts: imx6ul: segin: Reduce eth drive strength
+>   ARM: dts: imx6ul: segin: Fix LED naming for phyCORE and PEB-EVAL-01
+>   ARM: dts: imx6ul: segin: Make FEC and ethphy configurable in dts
+>   ARM: dts: imx6ul: segin: Only enable NAND if it is populated
+>   ARM: dts: imx6ul: phycore: Add eMMC at usdhc2
+>   ARM: dts: imx6ul: segin: Move ECSPI interface to board include file
+>   ARM: dts: imx6ul: segin: Move machine include to dts files
+>   ARM: dts: imx6ull: Add support for PHYTEC phyBOARD-Segin with i.MX
+>     6ULL
 
-When I read this define I instantly know which channel we're referring
-to. The 4d above is simply there for syntactical purposes and needs only
-to be cared about if the reg is ever changed.
+I applied the series, but please send a follow-up patch for those
+undocumented board compatibles.
 
-So I like this form.
-
-> > 
-> > I'm a little conflicted about this change. If we're replacing the
-> > address with actual values, perhaps we should do that same for the reg
-> > property to keep them in sync? Admittedly though, it is a bit easier
-> > to read the macro name and figure out its meaning.
-> 
-> Well this was how Bjorn suggested, am okay if we do in any
-> other way. This fixes warning but keeps it bit readable too
-> 
-> Other way would be to make defines decimal values instead of hex
-> 
-
-While the ePAPRR states that the unit address must match the first reg,
-dtc enforces that the unit address string matches "%x" of the reg.
-
-Regards,
-Bjorn
-
-> Any better suggestions :)
-> 
-> -- 
-> ~Vinod
+Shawn
