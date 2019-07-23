@@ -2,244 +2,176 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69779C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41F5C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3336D218DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:46:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Wy+7lJEb"
+	by mail.kernel.org (Postfix) with ESMTP id CC995218DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390351AbfGWNqu (ORCPT
+        id S2390377AbfGWNrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:46:50 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39682 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfGWNqu (ORCPT
+        Tue, 23 Jul 2019 09:47:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390366AbfGWNrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:46:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so19465916pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NRUsmiPhuV/QvVA6HXpKfJ8yVBFuGtPyikAZnnW42UA=;
-        b=Wy+7lJEbJnUjhN/3d+P/WkzU1TxZAAofTXa0jNrPbUFhz6K1ul+KMpHQtEmKZomqe5
-         3bAVmyQF769rbi26y0OV9Yu5A3fWTY1p9OSV1amubIKbTK2awGPf0k/VMtr0ngExJpqi
-         hp2UfL11M+B2k0FCpS7rbGZUunpaXsuyXnklE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NRUsmiPhuV/QvVA6HXpKfJ8yVBFuGtPyikAZnnW42UA=;
-        b=D05DxlFjDn3Vai4/3ODXWyuarg9x0tAw7d7ypiCdw8qoLlmTTBBeedkP+fBKwYLm06
-         0ZDJHBhNjzrKGuSunqgOfg1rgEWiBnTS0ccsw3tselR3039ea7SbQLobPv54lgM1mjLQ
-         02+zpSPp0Vqy0vonKlWe7V9wWse19dw/211tdQJxKx4kBGNwp9L95VEB3bGBGV+gEb18
-         nFNrXcwQStk/0uG/xG8h73p66YHHzzg0C0Jdp+8AhlpUZ/f5k+CIkXQwLccseuAiLGZI
-         slkvVht5udmdWe7CeW+/hOi6uZlHJNdzgT0V/M8bSpsNKaA6F+OoZ/JhyTsy71bE3fvC
-         rSKw==
-X-Gm-Message-State: APjAAAVxDVUUhIDHXEdK+pnKlQt0Oa9tSjBCv4Y7vHXDYjBMccakrrcD
-        OYoMcFyg4oLY6Nbc1IVu/yc=
-X-Google-Smtp-Source: APXvYqwwmqbXZiz1onTBdcqfPg4rDWuCGZVgSbPwSIq0EFIwyiYsez+oy6N4sdX5ac4dIxLz2Ae89Q==
-X-Received: by 2002:a63:ee0c:: with SMTP id e12mr77677268pgi.184.1563889609265;
-        Tue, 23 Jul 2019 06:46:49 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id o129sm7572519pfg.1.2019.07.23.06.46.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 06:46:48 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 09:46:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH RFC] mm/page_idle: simple idle page tracking for virtual
- memory
-Message-ID: <20190723134647.GA104199@google.com>
-References: <156388286599.2859.5353604441686895041.stgit@buzz>
+        Tue, 23 Jul 2019 09:47:22 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NDhfuQ122867
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 09:47:21 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx25fks1m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 09:47:20 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 23 Jul 2019 14:47:19 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Jul 2019 14:47:15 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NDlFLl51380614
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 13:47:15 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBF5EB206B;
+        Tue, 23 Jul 2019 13:47:14 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B784DB2067;
+        Tue, 23 Jul 2019 13:47:14 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.189.166])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Jul 2019 13:47:14 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A223C16C2E3A; Tue, 23 Jul 2019 06:47:17 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 06:47:17 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Byungchul Park <byungchul.park@lge.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Byungchul Park <max.byungchul.park@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Reply-To: paulmck@linux.ibm.com
+References: <20190713154257.GE133650@google.com>
+ <20190713174111.GG26519@linux.ibm.com>
+ <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
+ <20190719003942.GA28226@X58A-UD3R>
+ <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
+ <20190719074329.GY14271@linux.ibm.com>
+ <CANrsvRM7ehvqcPtKMV7RyRCiXwe_R_TsLZiNtxBPY_qnSg2LNQ@mail.gmail.com>
+ <20190719195728.GF14271@linux.ibm.com>
+ <CAEXW_YQADrPRtJW7yJZyROH1_d2yOA7_1HVgm50wxpOC80+=Wg@mail.gmail.com>
+ <20190723110521.GA28883@X58A-UD3R>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156388286599.2859.5353604441686895041.stgit@buzz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190723110521.GA28883@X58A-UD3R>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19072313-0060-0000-0000-000003646153
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011481; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01236309; UDB=6.00651599; IPR=6.01017666;
+ MB=3.00027852; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-23 13:47:17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072313-0061-0000-0000-00004A42B60A
+Message-Id: <20190723134717.GT14271@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907230137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:54:26PM +0300, Konstantin Khlebnikov wrote:
-> The page_idle tracking feature currently requires looking up the pagemap
-> for a process followed by interacting with /sys/kernel/mm/page_idle.
-> This is quite cumbersome and can be error-prone too. If between
-> accessing the per-PID pagemap and the global page_idle bitmap, if
-> something changes with the page then the information is not accurate.
-> More over looking up PFN from pagemap in Android devices is not
-> supported by unprivileged process and requires SYS_ADMIN and gives 0 for
-> the PFN.
+On Tue, Jul 23, 2019 at 08:05:21PM +0900, Byungchul Park wrote:
+> On Fri, Jul 19, 2019 at 04:33:56PM -0400, Joel Fernandes wrote:
+> > On Fri, Jul 19, 2019 at 3:57 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> > >
+> > > On Fri, Jul 19, 2019 at 06:57:58PM +0900, Byungchul Park wrote:
+> > > > On Fri, Jul 19, 2019 at 4:43 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> > > > >
+> > > > > On Thu, Jul 18, 2019 at 08:52:52PM -0400, Joel Fernandes wrote:
+> > > > > > On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
+> > > > > > [snip]
+> > > > > > > > - There is a bug in the CPU stopper machinery itself preventing it
+> > > > > > > > from scheduling the stopper on Y. Even though Y is not holding up the
+> > > > > > > > grace period.
+> > > > > > >
+> > > > > > > Or any thread on Y is busy with preemption/irq disabled preventing the
+> > > > > > > stopper from being scheduled on Y.
+> > > > > > >
+> > > > > > > Or something is stuck in ttwu() to wake up the stopper on Y due to any
+> > > > > > > scheduler locks such as pi_lock or rq->lock or something.
+> > > > > > >
+> > > > > > > I think what you mentioned can happen easily.
+> > > > > > >
+> > > > > > > Basically we would need information about preemption/irq disabled
+> > > > > > > sections on Y and scheduler's current activity on every cpu at that time.
+> > > > > >
+> > > > > > I think all that's needed is an NMI backtrace on all CPUs. An ARM we
+> > > > > > don't have NMI solutions and only IPI or interrupt based backtrace
+> > > > > > works which should at least catch and the preempt disable and softirq
+> > > > > > disable cases.
+> > > > >
+> > > > > True, though people with systems having hundreds of CPUs might not
+> > > > > thank you for forcing an NMI backtrace on each of them.  Is it possible
+> > > > > to NMI only the ones that are holding up the CPU stopper?
+> > > >
+> > > > What a good idea! I think it's possible!
+> > > >
+> > > > But we need to think about the case NMI doesn't work when the
+> > > > holding-up was caused by IRQ disabled.
+> > > >
+> > > > Though it's just around the corner of weekend, I will keep thinking
+> > > > on it during weekend!
+> > >
+> > > Very good!
+> > 
+> > Me too will think more about it ;-) Agreed with point about 100s of
+> > CPUs usecase,
+> > 
+> > Thanks, have a great weekend,
 > 
-> This patch adds simplified interface which works only with mapped pages:
-> Run: "echo 6 > /proc/pid/clear_refs" to mark all mapped pages as idle.
-> Pages that still idle are marked with bit 57 in /proc/pid/pagemap.
-> Total size of idle pages is shown in /proc/pid/smaps (_rollup).
+> BTW, if there's any long code section with irq/preemption disabled, then
+> the problem would be not only about RCU stall. And we can also use
+> latency tracer or something to detect the bad situation.
 > 
-> Piece of comment is stolen from Joel Fernandes <joel@joelfernandes.org>
-
-This will not work well for the problem at hand, the heap profiler
-(heapprofd) only wants to clear the idle flag for the heap memory area which
-is what it is profiling. There is no reason to do it for all mapped pages.
-Using the /proc/pid/page_idle in my patch, it can be done selectively for
-particular memory areas.
-
-I had previously thought of having an interface that accepts an address
-range to set the idle flag, however that is also more complexity.
-
-thanks,
-
- - Joel
-
-
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Link: https://lore.kernel.org/lkml/20190722213205.140845-1-joel@joelfernandes.org/
-> ---
->  Documentation/admin-guide/mm/pagemap.rst |    3 ++-
->  Documentation/filesystems/proc.txt       |    3 +++
->  fs/proc/task_mmu.c                       |   33 ++++++++++++++++++++++++++++--
->  3 files changed, 36 insertions(+), 3 deletions(-)
+> So in this case, sending ipi/nmi to the CPUs where the stoppers cannot
+> to be scheduled does not give us additional meaningful information.
 > 
-> diff --git a/Documentation/admin-guide/mm/pagemap.rst b/Documentation/admin-guide/mm/pagemap.rst
-> index 340a5aee9b80..d7ee60287584 100644
-> --- a/Documentation/admin-guide/mm/pagemap.rst
-> +++ b/Documentation/admin-guide/mm/pagemap.rst
-> @@ -21,7 +21,8 @@ There are four components to pagemap:
->      * Bit  55    pte is soft-dirty (see
->        :ref:`Documentation/admin-guide/mm/soft-dirty.rst <soft_dirty>`)
->      * Bit  56    page exclusively mapped (since 4.2)
-> -    * Bits 57-60 zero
-> +    * Bit  57    page is idle
-> +    * Bits 58-60 zero
->      * Bit  61    page is file-page or shared-anon (since 3.5)
->      * Bit  62    page swapped
->      * Bit  63    page present
-> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-> index 99ca040e3f90..d222be8b4eb9 100644
-> --- a/Documentation/filesystems/proc.txt
-> +++ b/Documentation/filesystems/proc.txt
-> @@ -574,6 +574,9 @@ To reset the peak resident set size ("high water mark") to the process's
->  current value:
->      > echo 5 > /proc/PID/clear_refs
->  
-> +To mark all mapped pages as idle:
-> +    > echo 6 > /proc/PID/clear_refs
-> +
->  Any other value written to /proc/PID/clear_refs will have no effect.
->  
->  The /proc/pid/pagemap gives the PFN, which can be used to find the pageflags
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 731642e0f5a0..6da952574a1f 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -413,6 +413,7 @@ struct mem_size_stats {
->  	unsigned long private_clean;
->  	unsigned long private_dirty;
->  	unsigned long referenced;
-> +	unsigned long idle;
->  	unsigned long anonymous;
->  	unsigned long lazyfree;
->  	unsigned long anonymous_thp;
-> @@ -479,6 +480,10 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
->  	if (young || page_is_young(page) || PageReferenced(page))
->  		mss->referenced += size;
->  
-> +	/* Not accessed and still idle. */
-> +	if (!young && page_is_idle(page))
-> +		mss->idle += size;
-> +
->  	/*
->  	 * Then accumulate quantities that may depend on sharing, or that may
->  	 * differ page-by-page.
-> @@ -799,6 +804,9 @@ static void __show_smap(struct seq_file *m, const struct mem_size_stats *mss,
->  	SEQ_PUT_DEC(" kB\nPrivate_Clean:  ", mss->private_clean);
->  	SEQ_PUT_DEC(" kB\nPrivate_Dirty:  ", mss->private_dirty);
->  	SEQ_PUT_DEC(" kB\nReferenced:     ", mss->referenced);
-> +#ifdef CONFIG_IDLE_PAGE_TRACKING
-> +	SEQ_PUT_DEC(" kB\nIdle:           ", mss->idle);
-> +#endif
->  	SEQ_PUT_DEC(" kB\nAnonymous:      ", mss->anonymous);
->  	SEQ_PUT_DEC(" kB\nLazyFree:       ", mss->lazyfree);
->  	SEQ_PUT_DEC(" kB\nAnonHugePages:  ", mss->anonymous_thp);
-> @@ -969,6 +977,7 @@ enum clear_refs_types {
->  	CLEAR_REFS_MAPPED,
->  	CLEAR_REFS_SOFT_DIRTY,
->  	CLEAR_REFS_MM_HIWATER_RSS,
-> +	CLEAR_REFS_SOFT_ACCESS,
->  	CLEAR_REFS_LAST,
->  };
->  
-> @@ -1045,6 +1054,7 @@ static int clear_refs_pte_range(pmd_t *pmd, unsigned long addr,
->  	pte_t *pte, ptent;
->  	spinlock_t *ptl;
->  	struct page *page;
-> +	int young;
->  
->  	ptl = pmd_trans_huge_lock(pmd, vma);
->  	if (ptl) {
-> @@ -1058,8 +1068,16 @@ static int clear_refs_pte_range(pmd_t *pmd, unsigned long addr,
->  
->  		page = pmd_page(*pmd);
->  
-> +		young = pmdp_test_and_clear_young(vma, addr, pmd);
-> +
-> +		if (cp->type == CLEAR_REFS_SOFT_ACCESS) {
-> +			if (young)
-> +				set_page_young(page);
-> +			set_page_idle(page);
-> +			goto out;
-> +		}
-> +
->  		/* Clear accessed and referenced bits. */
-> -		pmdp_test_and_clear_young(vma, addr, pmd);
->  		test_and_clear_page_young(page);
->  		ClearPageReferenced(page);
->  out:
-> @@ -1086,8 +1104,16 @@ static int clear_refs_pte_range(pmd_t *pmd, unsigned long addr,
->  		if (!page)
->  			continue;
->  
-> +		young = ptep_test_and_clear_young(vma, addr, pte);
-> +
-> +		if (cp->type == CLEAR_REFS_SOFT_ACCESS) {
-> +			if (young)
-> +				set_page_young(page);
-> +			set_page_idle(page);
-> +			continue;
-> +		}
-> +
->  		/* Clear accessed and referenced bits. */
-> -		ptep_test_and_clear_young(vma, addr, pte);
->  		test_and_clear_page_young(page);
->  		ClearPageReferenced(page);
->  	}
-> @@ -1253,6 +1279,7 @@ struct pagemapread {
->  #define PM_PFRAME_MASK		GENMASK_ULL(PM_PFRAME_BITS - 1, 0)
->  #define PM_SOFT_DIRTY		BIT_ULL(55)
->  #define PM_MMAP_EXCLUSIVE	BIT_ULL(56)
-> +#define PM_IDLE			BIT_ULL(57)
->  #define PM_FILE			BIT_ULL(61)
->  #define PM_SWAP			BIT_ULL(62)
->  #define PM_PRESENT		BIT_ULL(63)
-> @@ -1326,6 +1353,8 @@ static pagemap_entry_t pte_to_pagemap_entry(struct pagemapread *pm,
->  		page = vm_normal_page(vma, addr, pte);
->  		if (pte_soft_dirty(pte))
->  			flags |= PM_SOFT_DIRTY;
-> +		if (!pte_young(pte) && page && page_is_idle(page))
-> +			flags |= PM_IDLE;
->  	} else if (is_swap_pte(pte)) {
->  		swp_entry_t entry;
->  		if (pte_swp_soft_dirty(pte))
+> I think Paul started to think about this to solve some real problem. I
+> seriously love to help RCU and it's my pleasure to dig deep into kind of
+> RCU stuff, but I've yet to define exactly what problem is. Sorry.
 > 
+> Could you share the real issue? I think you don't have to reproduce it.
+> Just sharing the issue that you got inspired from is enough. Then I
+> might be able to develop 'how' with Joel! :-) It's our pleasure!
+
+It is unfortunately quite intermittent.  I was hoping to find a way
+to make it happen more often.  Part of the underlying problem appears
+to be lock contention, in that reducing contention made it even more
+intermittent.  Which is good in general, but not for exercising the
+CPU-stopper issue.
+
+But perhaps your hardware will make this happen more readily than does
+mine.  The repeat-by is simple, namely run TREE04 on branch "dev" on an
+eight-CPU system.  It appear that the number of CPUs used by the test
+should match the number available on the system that you are running on,
+though perhaps affinity could allow mismatches.
+
+So why not try it and see what happens?
+
+							Thanx, Paul
+
