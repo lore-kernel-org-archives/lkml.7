@@ -2,122 +2,102 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92341C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59D6C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6701A223A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F9C2239F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YkSM2M1b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDX1N1Gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388428AbfGWO42 (ORCPT
+        id S2388440AbfGWO6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:56:28 -0400
-Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:52867
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732633AbfGWO41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:56:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KZ3ey2P0e5y8aqgx77XnaU/MNUPRQT3bxmxAw+9xfOLkMJcfBytL2RGjpIpGZKkjWtf23LJamsT6pTWN9MFkGquWbD59eN5unxPASFSx4e7Z92dL4YYU/x3OHBG16lqqsYP0U0FqZ+j7Jbg4c1t2/Sm/e3WnP5Gan27JO0ljyiEX9JG6HhLkYeFl7Uxc4tADq25DttekUKXeWxRSYMWJun1ys5twf1LiImg/EwQkx52j6LnawJ2bUaZufIZCI1qAevMdyr5uhRzLL9FUvJcGHy0ccX1zSzpNwhwg6T2dPAepgb+EMVAhRwVTqjPq5ZYf6pRBadFPQFOzz8ci0dWuRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UKLrYPXEShueXftdvrzxZO5snWp5SaalgZzsLn2a6wg=;
- b=IhfYwTxhkl2RP3qTK0JtOROjLPAZbvXtVqDw95kt91WMXUgfJUBn3Xe93VUq5vMuOQjmum+Aa07wGvAJeUHKWNISM4QmYv9/lsicJFv3u0aaW687gDz2ZgSw+r2kGLUZ6VjX2Mxrem+BNM1SGpndpk1ac8ekejEhtjJQBC5lfIa5c8GI10xcPeFnYYjPirs5O6hZlUY3Doe3TRUbeYO1wraGeEAyNCbUXEiQ1JuJzI685AnZhIwFMW/dRrkhd5yG5C3H5S8AAvxM+4cZUFJXxTtm3FhH4ze4yqIC+g2XcnEKNXQ8oS8+5+ZqZeqDlRnQcKT0rdn2P9Xst/7lib0HIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UKLrYPXEShueXftdvrzxZO5snWp5SaalgZzsLn2a6wg=;
- b=YkSM2M1bv+3btw+oF362T2E6s62dPdvex+P8nuOttQESkWjgQFqHXE5UKI5j8qO7HLAwIJh7Bos5DE1qiFFnWBjLLeDOjeqwbojFNWgFjKlsO5qOXJ7KlPJikBJv2S08V30MK2Z59FPYs3qgAJSw9G1kCxdShvQdzyNo+eEmpa4=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB3311.eurprd05.prod.outlook.com (10.170.238.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Tue, 23 Jul 2019 14:56:24 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
- 14:56:24 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
+        Tue, 23 Jul 2019 10:58:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45258 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731768AbfGWO6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:58:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so19273147pfq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YN0dWoQn0cKjt0et/r7MLvGQvysSwKVg2iDfI3VIAug=;
+        b=fDX1N1GjQFD1BWJWAk6igqdluO7njk7OuXzx8ck+v97w9ccMK8X08shux9jgn1Vp7T
+         iYuGxNxrLEAlLCeq4rTV67s3pwfM7XEDUFi5OLQ98iGQrLg0xZQszaHnsudPOT/MyR5t
+         RVen+W+umhyISvy3F+Qpb4kb/wvXI5yYjeFeOUp2WuDMvopoO6yolE0By2tJFXmDPy2G
+         1BFUGPJJnS2QABMmwSVdeQhTmEIOGxN5DWgrB21LufscKC7tXHzaBiZyLtbDpxwdZLOR
+         qpY5sD4D7fND4/roICiqD+6tk33oAyO/5k5w6a/R9OJQwuhro5KjQcb3RaWXnb81CT9p
+         Z3lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YN0dWoQn0cKjt0et/r7MLvGQvysSwKVg2iDfI3VIAug=;
+        b=TUCkjCRbf+mvo042eP/ZzF+6R0OuZwh0PxGwpNa5HpYYw7y0ODpUyFR9wwD4sfN5it
+         U5WJVlaynfcuA/2CnHOpIKxegMU3jV+m9oK0ZD3uQHlz+Zx54Tln62cLvE0vVcmY8qOz
+         dcncCgMkrws57X3zb+cReyv2MA/B1rqqzrnPGRaRXjlGsk8GCQ0dUILkvtQoh+Z2heVA
+         9YKbupMjyiPeWVEukuVjqxSQxN3nJV9YS5badtJZfFZm91o+0KQwjjWnqIqzPlz3oNUN
+         v4IvGIN+vtbZ9AmlWT8CHabX1DA17j7z6jxu1xza9s4H4WzZ495k+olm99fNojQtv0+v
+         foOQ==
+X-Gm-Message-State: APjAAAXaJR8sW65Nu4cLGVPqoqiydbgOIOx3njCNJ2l9a0mbhAmOZAQ0
+        ZxefNPETY2SzMVuXUhP2R1A=
+X-Google-Smtp-Source: APXvYqy+YHV5DSBChNbQ0BuXE9Jiuq2+C+ncXEEOWAG3jHF3oOoJUD2PHmwqZSsWb/jo2PCFjzPmHg==
+X-Received: by 2002:a63:9a41:: with SMTP id e1mr78076038pgo.210.1563893888028;
+        Tue, 23 Jul 2019 07:58:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a15sm33095984pgw.3.2019.07.23.07.58.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 07:58:06 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 07:58:05 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
 To:     Christoph Hellwig <hch@lst.de>
-CC:     =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] nouveau: remove the block parameter to
- nouveau_range_fault
-Thread-Topic: [PATCH 3/6] nouveau: remove the block parameter to
- nouveau_range_fault
-Thread-Index: AQHVQHIUDnMs0tk2hUuxzK+Cwn7RDqbYTK4A
-Date:   Tue, 23 Jul 2019 14:56:24 +0000
-Message-ID: <20190723145620.GK15331@mellanox.com>
-References: <20190722094426.18563-1-hch@lst.de>
- <20190722094426.18563-4-hch@lst.de>
-In-Reply-To: <20190722094426.18563-4-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR1501CA0028.namprd15.prod.outlook.com
- (2603:10b6:207:17::41) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 810b1f00-33f4-4691-d9a2-08d70f7dee7a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB3311;
-x-ms-traffictypediagnostic: VI1PR05MB3311:
-x-microsoft-antispam-prvs: <VI1PR05MB331121DA3B64641E5898ED65CFC70@VI1PR05MB3311.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 0107098B6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(396003)(39860400002)(189003)(199004)(71200400001)(71190400001)(256004)(8676002)(6116002)(3846002)(64756008)(76176011)(14454004)(6916009)(316002)(6506007)(86362001)(478600001)(6436002)(229853002)(5660300002)(6486002)(386003)(4744005)(99286004)(11346002)(25786009)(446003)(66066001)(1076003)(54906003)(7736002)(102836004)(52116002)(53936002)(305945005)(4326008)(476003)(2616005)(68736007)(66556008)(66476007)(8936002)(66946007)(81156014)(81166006)(33656002)(6512007)(486006)(2906002)(26005)(186003)(66446008)(36756003)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3311;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +U+aQ9ComUdtSu5ma3e9h0cA3v0Z+i4Ee4yWxNU9q57Aj8iNOVN5W+O/yavFbFty802oEecHj6JNe0y7xZrs7dikmR04JIGHQmoEK1afW5M869ko9msrOFp/eTkEv/tF2cJcXs77Q5XTboBjZMFEJ1GPGJHS1cw1R5tY1pe4XouRCABfWc7F135bNO+dJd1PDazO+KFAn7aT+bIJUQEcCs/zyaeiPLbCL8TZzcyp7J4Kj5dUoWrHwd5VTGQ6IVGFdtdRjb6WDD6E6Q1agtW14naa1yly6nNZLze+nrc7+q0vq9bA7WpfvFp6+N9O2FlSTcuX2dXrL828wT1edJ2L2CKXRo7cPPW4s2WIKaILS/K6z8XyrTF2FfjcWkwRnKzzwNlDQFZzvH4b0KukKVRZEy/FeXVN3ogGqpWDRpVrPaA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <DF48CC2DF2A4274387A23969DFE1D1B1@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>
+Subject: Re: Linux 5.3-rc1
+Message-ID: <20190723145805.GA5809@roeck-us.net>
+References: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
+ <20190722222126.GA27291@roeck-us.net>
+ <20190723054841.GA17148@lst.de>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 810b1f00-33f4-4691-d9a2-08d70f7dee7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 14:56:24.3381
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3311
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723054841.GA17148@lst.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:44:23AM +0200, Christoph Hellwig wrote:
-> The parameter is always false, so remove it as well as the -EAGAIN
-> handling that can only happen for the non-blocking case.
+On Tue, Jul 23, 2019 at 07:48:41AM +0200, Christoph Hellwig wrote:
+> The fix was sent last morning my time:
+> 
+> https://marc.info/?l=linux-scsi&m=156378725427719&w=2
 
-? Did the EAGAIN handling get removed in this patch?
+Here is the updated bisect for the ppc scsi problem.
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
->  drivers/gpu/drm/nouveau/nouveau_svm.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+Guenter
 
-Code seems fine
-
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-
-Jason
+---
+# bad: [f65420df914a85e33b2c8b1cab310858b2abb7c0] Merge tag 'scsi-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+# good: [168c79971b4a7be7011e73bf488b740a8e1135c8] Merge tag 'kbuild-v5.3-2' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
+git bisect start 'f65420df914a' '168c79971b4a'
+# good: [106d45f350c7cac876844dc685845cba4ffdb70b] scsi: zfcp: fix request object use-after-free in send path causing wrong traces
+git bisect good 106d45f350c7cac876844dc685845cba4ffdb70b
+# bad: [bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1] scsi: core: take the DMA max mapping size into account
+git bisect bad bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1
+# good: [0cdc58580b37a160fac4b884266b8b7cb096f539] scsi: sd_zbc: Fix compilation warning
+git bisect good 0cdc58580b37a160fac4b884266b8b7cb096f539
+# bad: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi: core: add a host / host template field for the virt boundary
+git bisect bad 7ad388d8e4c703980b7018b938cdeec58832d78d
+# good: [f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc] scsi: core: Fix race on creating sense cache
+git bisect good f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc
+# first bad commit: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi: core: add a host / host template field for the virt boundary
