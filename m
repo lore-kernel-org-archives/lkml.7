@@ -2,171 +2,291 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFDC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F52C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518D821955
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9B621738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:08:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsZq3YeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387700AbfGWBIY convert rfc822-to-8bit (ORCPT
+        id S2387686AbfGWBIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:08:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:4110 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731796AbfGWBIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Jul 2019 21:08:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 18:08:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
-   d="scan'208";a="196941132"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 18:08:22 -0700
-Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 22 Jul 2019 18:08:22 -0700
-Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
- FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 22 Jul 2019 18:08:21 -0700
-Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.134]) by
- SHSMSX105.ccr.corp.intel.com ([169.254.11.232]) with mapi id 14.03.0439.000;
- Tue, 23 Jul 2019 09:08:20 +0800
-From:   "Zhang, Tina" <tina.zhang@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Lu, Kechen" <kechen.lu@intel.com>
-CC:     "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kraxel@redhat.com" <kraxel@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>
-Subject: RE: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
-Thread-Topic: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
-Thread-Index: AQHVPT54hV4tNMEB+k2gOpC4yrLztKbRnH8AgAP/hYCAAO5GAIAA1wdg
-Date:   Tue, 23 Jul 2019 01:08:19 +0000
-Message-ID: <237F54289DF84E4997F34151298ABEBC876BC9AD@SHSMSX101.ccr.corp.intel.com>
-References: <20190718155640.25928-1-kechen.lu@intel.com>
-        <20190718155640.25928-3-kechen.lu@intel.com>
-        <20190719102516.60af527f@x1.home>
-        <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
- <20190722134124.16c55c2f@x1.home>
-In-Reply-To: <20190722134124.16c55c2f@x1.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOWUxMTJiZjQtN2I4Ni00MmFlLWE5YjctOGU2MjM4NmQyZDhhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWkYxNmlpN2I2dzg1blk0VXVNRWt6K1JnRkdIZnRVcWxtZUhDc1o3ZVc4bEYrK3BZTUowdVoyVVNhaHJZNHFGeiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46022 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731384AbfGWBIX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 21:08:23 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m23so39294857lje.12;
+        Mon, 22 Jul 2019 18:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iXecZHhC/EqaFk3SuaI94lJ9SQId4NXdMqEs66WG+tI=;
+        b=nsZq3YeGylIk6fKPnJyklhiLr9PpiuM+mKBhC9jyY1wNK4xfjXKe2uhtZ5DGR1u1WQ
+         gYJNhUlpQMKFuxvSQnb89Sk6ckQQs5lY3Q5qhEDdK3owjRcGlgV9klf+G99MDnN3ZCXJ
+         bP4hya3i84wNp/GBy+NXwAaexmIt4PH9lV9kh4OC5rngDa42FFyIJU1sjkdoGRs46nF1
+         e3faJgBb6F4I8MsnOvj4/El3tGI9elHxUm9Tk5tqZwP7a+wFS/nwOQoFUfEEH/ZUfg6K
+         qH+3cnEO7el2ooYYyXOJEVm7K/7lMAjbdnslUIAYR9CNmukrgOqvmPtWSZ8LVTSg2OOr
+         lKNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iXecZHhC/EqaFk3SuaI94lJ9SQId4NXdMqEs66WG+tI=;
+        b=nTpEUmFdGNEzeV5MxMo9uK1OoarDpqPYQ9+Y3lSfTAhP+4cdUbJEdVRlCEu2PFyoHw
+         obhPUbZrIAi710LhB3Rum9fh00hizUmx00nqlYwoJ2nZSSptcPOlmmCHDnknwOpQ0s4d
+         6ehbMn3x1RGkHZbSAz7UGlZrNX8E1HEkM5grO7N90V+dbYrUWY9WP520OXLYzaxNAdjP
+         LOpAAyQK4/UeCAoOANWDcnq8/Hva/coIgpxEJEfH/gn+2hlkEbvrtfmtXH4Nt9K7VULo
+         AYbQ2g4dXZ39VxrpAdreNRpu0gzU7OAB/d7JLi/fGOP2O9u7Bawphy9KyfATif0bkjYg
+         UbcA==
+X-Gm-Message-State: APjAAAWHyAC/h0ERml1ivRhT75kseJHJ90lOjTW1ip+NWp/C28eav7aZ
+        twzlvIcUDMT8XkXncSoQXOgI5Oxb
+X-Google-Smtp-Source: APXvYqz4qY6qqg0DHHzcKSgLAr5FELZT9pwCd6OnRQCGtYPL1hrxHflSWT7jIDshknUQSSFgylgG6w==
+X-Received: by 2002:a2e:9d8a:: with SMTP id c10mr14110238ljj.147.1563844099142;
+        Mon, 22 Jul 2019 18:08:19 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id y15sm6221587lfg.43.2019.07.22.18.08.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 18:08:18 -0700 (PDT)
+Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
+ tegra210
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
+ <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
+Message-ID: <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
+Date:   Tue, 23 Jul 2019 04:08:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+23.07.2019 3:58, Dmitry Osipenko пишет:
+> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>> This patch implements PMC wakeup sequence for Tegra210 and defines
+>> common used RTC alarm wake event.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/soc/tegra/pmc.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 111 insertions(+)
+>>
+>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>> index 91c84d0e66ae..c556f38874e1 100644
+>> --- a/drivers/soc/tegra/pmc.c
+>> +++ b/drivers/soc/tegra/pmc.c
+>> @@ -57,6 +57,12 @@
+>>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+>>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
+>> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
 
+Please follow the TRM's bits naming.
 
-> -----Original Message-----
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: Tuesday, July 23, 2019 3:41 AM
-> To: Lu, Kechen <kechen.lu@intel.com>
-> Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>;
-> kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan
-> <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian, Kevin
-> <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>
-> Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
-> 
-> On Mon, 22 Jul 2019 05:28:35 +0000
-> "Lu, Kechen" <kechen.lu@intel.com> wrote:
-> 
-> > Hi,
-> >
-> > > -----Original Message-----
-> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > > Sent: Saturday, July 20, 2019 12:25 AM
-> > > To: Lu, Kechen <kechen.lu@intel.com>
-> > > Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux-
-> > > kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>;
-> > > kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan
-> > > <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian,
-> > > Kevin <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>
-> > > Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq
-> > > type
-> > >
-> > > On Thu, 18 Jul 2019 23:56:36 +0800
-> > > Kechen Lu <kechen.lu@intel.com> wrote:
-> > >
-> > > > From: Tina Zhang <tina.zhang@intel.com>
-> > > >
-> > > > Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
-> > > > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display
-> > > >
-> > > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
-> > > > ---
-> > > >  include/uapi/linux/vfio.h | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > >
-> > > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > > index be6adab4f759..df28b17a6e2e 100644
-> > > > --- a/include/uapi/linux/vfio.h
-> > > > +++ b/include/uapi/linux/vfio.h
-> > > > @@ -469,6 +469,9 @@ struct vfio_irq_info_cap_type {
-> > > >  	__u32 subtype;  /* type specific */  };
-> > > >
-> > > > +#define VFIO_IRQ_TYPE_GFX				(1)
-> > > > +#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)
-> > > > +
-> > >
-> > > Please include a description defining exactly what this IRQ is intended to
-> signal.
-> > > For instance, if another vGPU vendor wanted to implement this in
-> > > their driver and didn't have the QEMU code for reference to what it
-> > > does with the IRQ, what would they need to know?  Thanks,
-> > >
-> > > Alex
-> > >
-> >
-> > Yes, that makes more sense. I'll add the description for it at next version
-> patch.
-> >
-> > BTW, may I have one more question? In the current design ideas, we
-> > partitioned the vGPU display eventfd counted 8-byte value into at most
-> > 8 events to deliver multiple display events, so we need different
-> > increasement counter value to differentiate the events. As this is the
-> > exposed thing the QEMU has to know, we plan adds a macro here
-> > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_EVENTFD_BASE_SHIFT to make sure
-> the
-> > partitions shift in 1 byte, does it make sense putting here? Looking forward
-> to your and Gerd's comments. Thanks!
-> 
-> Couldn't you expose this as another capability within the IRQ_INFO return
-> data?  If you were to define it as a macro, I assume that means it would be
-> hard coded, in which case this probably becomes an Intel specific IRQ, rather
-> than what appears to be framed as a generic graphics IRQ extension.  A new
-> capability could instead allow the vendor to specify their own value, where
-> we could define how userspace should interpret and make use of this value.
-> Thanks,
-Good suggestion. Currently, vfio_irq_info is used to save one irq info. What we need here is to use it to save several events info. Maybe we could figure out a general layout of this capability so that it can be leveraged by others, not only for display irq/events.
-Thanks.
+PMC_CNTRL_LATCHWAKE_EN
 
-BR,
-Tina
-
+>> +#define PMC_WAKE_MASK			0x0c
+>> +#define PMC_WAKE_LEVEL			0x10
+>> +#define PMC_WAKE_STATUS			0x14
+>> +#define PMC_SW_WAKE_STATUS		0x18
+>>  
+>>  #define DPD_SAMPLE			0x020
+>>  #define  DPD_SAMPLE_ENABLE		BIT(0)
+>> @@ -87,6 +93,11 @@
+>>  
+>>  #define PMC_SCRATCH41			0x140
+>>  
+>> +#define PMC_WAKE2_MASK			0x160
+>> +#define PMC_WAKE2_LEVEL			0x164
+>> +#define PMC_WAKE2_STATUS		0x168
+>> +#define PMC_SW_WAKE2_STATUS		0x16c
+>> +
+>>  #define PMC_SENSOR_CTRL			0x1b0
+>>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+>> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>>  	.alloc = tegra_pmc_irq_alloc,
+>>  };
+>>  
+>> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>> +{
+>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> +	unsigned int offset, bit;
+>> +	u32 value;
+>> +
+>> +	if (data->hwirq == ULONG_MAX)
+>> +		return 0;
+>> +
+>> +	offset = data->hwirq / 32;
+>> +	bit = data->hwirq % 32;
+>> +
+>> +	/*
+>> +	 * Latch wakeups to SW_WAKE_STATUS register to capture events
+>> +	 * that would not make it into wakeup event register during LP0 exit.
+>> +	 */
+>> +	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
+>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>> +	udelay(120);
 > 
-> Alex
+> Why it takes so much time to latch the values? Shouldn't some status-bit
+> be polled for the completion of latching?
+> 
+> Is this register-write really getting buffered in the PMC?
+> 
+>> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
+>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>> +	udelay(120);
+> 
+> 120 usecs to remove latching, really?
+> 
+>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
+>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
+>> +
+>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
+>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
+>> +
+>> +	/* enable PMC wake */
+>> +	if (data->hwirq >= 32)
+>> +		offset = PMC_WAKE2_MASK;
+>> +	else
+>> +		offset = PMC_WAKE_MASK;
+>> +
+>> +	value = tegra_pmc_readl(pmc, offset);
+>> +
+>> +	if (on)
+>> +		value |= 1 << bit;
+>> +	else
+>> +		value &= ~(1 << bit);
+>> +
+>> +	tegra_pmc_writel(pmc, value, offset);
+> 
+> Why the latching is done *before* writing into the WAKE registers? What
+> it is latching then?
+
+I'm looking at the TRM doc and it says that latching should be done
+*after* writing to the WAKE_MASK / LEVEL registers.
+
+Secondly it says that it's enough to do:
+
+value = tegra_pmc_readl(pmc, PMC_CNTRL);
+value |= PMC_CNTRL_LATCH_WAKEUPS;
+tegra_pmc_writel(pmc, value, PMC_CNTRL);
+
+in order to latch. There is no need for the delay and to remove the
+"LATCHWAKE_EN" bit, it should be a oneshot action.
+
+>> +	return 0;
+>> +}
+>> +
+>>  static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>  {
+>>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> @@ -1954,6 +2014,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>  	return 0;
+>>  }
+>>  
+>> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>> +{
+>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> +	unsigned int offset, bit;
+>> +	u32 value;
+>> +
+>> +	if (data->hwirq == ULONG_MAX)
+>> +		return 0;
+>> +
+>> +	offset = data->hwirq / 32;
+>> +	bit = data->hwirq % 32;
+>> +
+>> +	if (data->hwirq >= 32)
+>> +		offset = PMC_WAKE2_LEVEL;
+>> +	else
+>> +		offset = PMC_WAKE_LEVEL;
+>> +
+>> +	value = tegra_pmc_readl(pmc, offset);
+>> +
+>> +	switch (type) {
+>> +	case IRQ_TYPE_EDGE_RISING:
+>> +	case IRQ_TYPE_LEVEL_HIGH:
+>> +		value |= 1 << bit;
+>> +		break;
+>> +
+>> +	case IRQ_TYPE_EDGE_FALLING:
+>> +	case IRQ_TYPE_LEVEL_LOW:
+>> +		value &= ~(1 << bit);
+>> +		break;
+>> +
+>> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
+>> +		value ^= 1 << bit;
+>> +		break;
+>> +
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	tegra_pmc_writel(pmc, value, offset);
+> 
+> Shouldn't the WAKE_LEVEL be latched as well?
+> 
+>> +	return 0;
+>> +}
+>> +
+>>  static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>>  {
+>>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>> @@ -2540,6 +2643,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
+>>  	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
+>>  };
+>>  
+>> +static const struct tegra_wake_event tegra210_wake_events[] = {
+>> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
+>> +};
+>> +
+>>  static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>>  	.num_powergates = ARRAY_SIZE(tegra210_powergates),
+>>  	.powergates = tegra210_powergates,
+>> @@ -2557,10 +2664,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>>  	.regs = &tegra20_pmc_regs,
+>>  	.init = tegra20_pmc_init,
+>>  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
+>> +	.irq_set_wake = tegra210_pmc_irq_set_wake,
+>> +	.irq_set_type = tegra210_pmc_irq_set_type,
+>>  	.reset_sources = tegra210_reset_sources,
+>>  	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
+>>  	.reset_levels = NULL,
+>>  	.num_reset_levels = 0,
+>> +	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
+>> +	.wake_events = tegra210_wake_events,
+>>  };
+>>  
+>>  #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+>>
+> 
+
