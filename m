@@ -2,127 +2,100 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A684CC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8EAC7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE8721655
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026C221655
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SLWuek9A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H74A0OkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389112AbfGWKil (ORCPT
+        id S2389124AbfGWKiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:38:41 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9763 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfGWKil (ORCPT
+        Tue, 23 Jul 2019 06:38:51 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40986 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389114AbfGWKiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:38:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d36e3ac0000>; Tue, 23 Jul 2019 03:38:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 03:38:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 03:38:40 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 10:38:35 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jose Abreu <Jose.Abreu@synopsys.com>, Lars Persson <lists@bofh.nu>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722101830.GA24948@apalos>
- <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
- <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
- <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
- <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <2ad7bf21-1f1f-db0f-2358-4901b7988b7d@nvidia.com>
-Date:   Tue, 23 Jul 2019 11:38:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 06:38:51 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so18946474pff.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oJJwPLAueXtxcGlCD6Tbo/0lOc3eLv/7iWCoapVa8ow=;
+        b=H74A0OkK53PNTxp+3xX64AB7CmCxmHA9QmUrMj5pVW2BzDEsAI/QE3sNuR/4YdN+Bm
+         sBycghr3u74CwximQ0nefQymZWIsB4MyyIN/sMlX8OnH1nKxQGGJPymLXlDyuFrMTG+S
+         LDOeAPkSsMznr0JQ5eIiWZ+T8LTZOzgyn8xJ60yUGySCDHLhCYH/1j0Ln+zuvxwvVZKj
+         YpEw6wstepCt+tGrVAShqHeJxBppgBGWCUnQDMHEWEn1jUypBsPuf1wX0IFA7r21732F
+         fzAQcjTy8in38a56QucG6+PWrZELrxmn8jQSEmeSGjJ4hCAa69KPE8OloZqJTqu8dDgM
+         7QOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oJJwPLAueXtxcGlCD6Tbo/0lOc3eLv/7iWCoapVa8ow=;
+        b=Kk1bHEEW+HM83qSWDD5Y+dFGCj54WKnWMZC9fNSa+6BwFSmWXNV52e+U/nZroFXuPs
+         S+GuoGC5ocLILfWYrsplEqkOWu+GtqF7o27FWr0BB0WRj5hjsq6820cY/i+f+TAX2wZC
+         ohJZPidA7lrNlVWB+TqxwK/U3TcM+6dip4EF7JFvI1mLHIFPL4lnsnyXO2SWsCqTzXZ0
+         wLeSal/08ZYSx4/lxKhLEKuwye8ATp0fO+rJJhsiBGEDcToukMTbnmnofQsMSACFB91A
+         iFuPWEza46+DN8FJmRzZncBZTBMbPDK0ajYiZM9HPjG5ObyQWKt8rQJDipOUs+lu5b2Y
+         0mGg==
+X-Gm-Message-State: APjAAAVHyskkjwa2jKEUCi7P2j0IsAM9HvwLGT0SjJdloPlmOCHTk9J5
+        DJ21tsyNY7udPxsExE4QrWs=
+X-Google-Smtp-Source: APXvYqzuYXp35SrBzLoGEon+ubsLDyfehTkzqhmAJ+MDwKId9H+Ph/4X3ofmDJXq+sAICpnXj/cxVg==
+X-Received: by 2002:a17:90a:d14b:: with SMTP id t11mr81701030pjw.79.1563878330481;
+        Tue, 23 Jul 2019 03:38:50 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id o11sm72345572pfh.114.2019.07.23.03.38.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 03:38:49 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] drm/gma500: Use dev_get_drvdata where possible
+Date:   Tue, 23 Jul 2019 18:38:30 +0800
+Message-Id: <20190723103829.3848-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563878318; bh=TSX0vsbM4hlh2BIH8botP8IIgJ57VFrMnkO9PEsjFiU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SLWuek9Aad242GhpJ3cjl7QUaspjMq8XtmMQsVUN7uLuU1ky5UNTYfiS8I7ieq1vc
-         J/+ZLQkdyE97RV1hsIoJ6BIpmCOOid8NDVDazvI2DmITdcVMGOVA+Izsa4zAlLdQaQ
-         Bq0DBnCNSsl6jvg1EPBgFCn0+BVZRyJ7q+pHWJUvfGQgTtSCsdlD81BuZy8ZbVyPzZ
-         E/7/UFyEWSflInoM9SfjLSOb/GZBvskPqvsbCr7xW5D7bx8sityJMKPg6EpSiVcjAS
-         1+YdFxs8ODPw5pcugXm04Mry4B8L8DFjaQHIuKKSDs34jZStVfTitx9zMYyW34qJsb
-         Fe0dlqwrFLtog==
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Instead of using to_pci_dev + pci_get_drvdata,
+use dev_get_drvdata to make code simpler.
 
-On 23/07/2019 11:07, Jose Abreu wrote:
-> From: Jon Hunter <jonathanh@nvidia.com>
-> Date: Jul/23/2019, 11:01:24 (UTC+00:00)
-> 
->> This appears to be a winner and by disabling the SMMU for the ethernet
->> controller and reverting commit 954a03be033c7cef80ddc232e7cbdb17df735663
->> this worked! So yes appears to be related to the SMMU being enabled. We
->> had to enable the SMMU for ethernet recently due to commit
->> 954a03be033c7cef80ddc232e7cbdb17df735663.
-> 
-> Finally :)
-> 
-> However, from "git show 954a03be033c7cef80ddc232e7cbdb17df735663":
-> 
-> +         There are few reasons to allow unmatched stream bypass, and
-> +         even fewer good ones.  If saying YES here breaks your board
-> +         you should work on fixing your board.
-> 
-> So, how can we fix this ? Is your ethernet DT node marked as 
-> "dma-coherent;" ?
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/gpu/drm/gma500/power.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-TBH I have no idea. I can't say I fully understand your change or how it
-is breaking things for us.
-
-Currently, the Tegra DT binding does not have 'dma-coherent' set. I see
-this is optional, but I am not sure how you determine whether or not
-this should be set.
-
-Jon
-
+diff --git a/drivers/gpu/drm/gma500/power.c b/drivers/gpu/drm/gma500/power.c
+index bea8578846d1..d67e01ce7766 100644
+--- a/drivers/gpu/drm/gma500/power.c
++++ b/drivers/gpu/drm/gma500/power.c
+@@ -308,7 +308,7 @@ int psb_runtime_resume(struct device *dev)
+ 
+ int psb_runtime_idle(struct device *dev)
+ {
+-	struct drm_device *drmdev = pci_get_drvdata(to_pci_dev(dev));
++	struct drm_device *drmdev = dev_get_drvdata(dev);
+ 	struct drm_psb_private *dev_priv = drmdev->dev_private;
+ 	if (dev_priv->display_count)
+ 		return 0;
 -- 
-nvpublic
+2.20.1
+
