@@ -2,172 +2,535 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A93C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED70C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3CE8223A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4838223A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733182AbfGWItM (ORCPT
+        id S2387472AbfGWItQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:49:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43146 "EHLO mx1.redhat.com"
+        Tue, 23 Jul 2019 04:49:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:51164 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbfGWItL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:49:11 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 85FD183F4C;
-        Tue, 23 Jul 2019 08:49:10 +0000 (UTC)
-Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1353600CD;
-        Tue, 23 Jul 2019 08:49:00 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081447-mutt-send-email-mst@kernel.org>
- <85dd00e2-37a6-72b7-5d5a-8bf46a3526cf@redhat.com>
- <20190722040230-mutt-send-email-mst@kernel.org>
- <4bd2ff78-6871-55f2-44dc-0982ffef3337@redhat.com>
- <20190723010019-mutt-send-email-mst@kernel.org>
- <b4696f2e-678a-bdb2-4b7c-fb4ce040ec2a@redhat.com>
- <20190723032024-mutt-send-email-mst@kernel.org>
- <1d14de4d-0133-1614-9f64-3ded381de04e@redhat.com>
- <20190723035725-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <3f4178f1-0d71-e032-0f1f-802428ceca59@redhat.com>
-Date:   Tue, 23 Jul 2019 16:49:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727994AbfGWItN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 04:49:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF74F344;
+        Tue, 23 Jul 2019 01:49:11 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3C953F71F;
+        Tue, 23 Jul 2019 01:49:11 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 687B1680457; Tue, 23 Jul 2019 09:49:10 +0100 (BST)
+Date:   Tue, 23 Jul 2019 09:49:10 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds error event print functionality
+Message-ID: <20190723084910.GF15612@e110455-lin.cambridge.arm.com>
+References: <1561604994-26925-1-git-send-email-lowry.li@arm.com>
+ <20190718131737.GD5942@e110455-lin.cambridge.arm.com>
+ <20190719090816.GA4133@lowry.li@arm.com>
+ <20190719114009.GA16673@e110455-lin.cambridge.arm.com>
+ <20190722111506.GA8212@jamwan02-TSP300>
+ <20190722161800.GE15612@e110455-lin.cambridge.arm.com>
+ <20190723073623.GA32666@lowry.li@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190723035725-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 23 Jul 2019 08:49:10 +0000 (UTC)
+In-Reply-To: <20190723073623.GA32666@lowry.li@arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 23, 2019 at 07:37:42AM +0000, Lowry Li (Arm Technology China) wrote:
+> On Mon, Jul 22, 2019 at 04:18:01PM +0000, Liviu Dudau wrote:
+> > On Mon, Jul 22, 2019 at 11:15:12AM +0000, james qian wang (Arm Technology China) wrote:
+> > > On Fri, Jul 19, 2019 at 11:40:11AM +0000, Liviu Dudau wrote:
+> > > > On Fri, Jul 19, 2019 at 09:09:30AM +0000, Lowry Li (Arm Technology China) wrote:
+> > > > > Hi Liviu,
+> > > > > 
+> > > > > On Thu, Jul 18, 2019 at 01:17:37PM +0000, Liviu Dudau wrote:
+> > > > > > On Thu, Jun 27, 2019 at 04:10:36AM +0100, Lowry Li (Arm Technology China) wrote:
+> > > > > > > Adds to print the event message when error happens and the same event
+> > > > > > > will not be printed until next vsync.
+> > > > > > > 
+> > > > > > > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/arm/display/komeda/Makefile       |   1 +
+> > > > > > >  drivers/gpu/drm/arm/display/komeda/komeda_dev.h   |  13 ++
+> > > > > > >  drivers/gpu/drm/arm/display/komeda/komeda_event.c | 144 ++++++++++++++++++++++
+> > > > > > >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c   |   2 +
+> > > > > > >  4 files changed, 160 insertions(+)
+> > > > > > >  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> > > > > > > 
+> > > > > > > diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
+> > > > > > > index 38aa584..3f53d2d 100644
+> > > > > > > --- a/drivers/gpu/drm/arm/display/komeda/Makefile
+> > > > > > > +++ b/drivers/gpu/drm/arm/display/komeda/Makefile
+> > > > > > > @@ -7,6 +7,7 @@ ccflags-y := \
+> > > > > > >  komeda-y := \
+> > > > > > >  	komeda_drv.o \
+> > > > > > >  	komeda_dev.o \
+> > > > > > > +	komeda_event.o \
+> > > > > > >  	komeda_format_caps.o \
+> > > > > > >  	komeda_coeffs.o \
+> > > > > > >  	komeda_color_mgmt.o \
+> > > > > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > > > > > > index 096f9f7..e863ec3 100644
+> > > > > > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > > > > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > > > > > > @@ -40,6 +40,17 @@
+> > > > > > >  #define KOMEDA_ERR_TTNG			BIT_ULL(30)
+> > > > > > >  #define KOMEDA_ERR_TTF			BIT_ULL(31)
+> > > > > > >  
+> > > > > > > +#define KOMEDA_ERR_EVENTS	\
+> > > > > > > +	(KOMEDA_EVENT_URUN	| KOMEDA_EVENT_IBSY	| KOMEDA_EVENT_OVR |\
+> > > > > > > +	KOMEDA_ERR_TETO		| KOMEDA_ERR_TEMR	| KOMEDA_ERR_TITR |\
+> > > > > > > +	KOMEDA_ERR_CPE		| KOMEDA_ERR_CFGE	| KOMEDA_ERR_AXIE |\
+> > > > > > > +	KOMEDA_ERR_ACE0		| KOMEDA_ERR_ACE1	| KOMEDA_ERR_ACE2 |\
+> > > > > > > +	KOMEDA_ERR_ACE3		| KOMEDA_ERR_DRIFTTO	| KOMEDA_ERR_FRAMETO |\
+> > > > > > > +	KOMEDA_ERR_ZME		| KOMEDA_ERR_MERR	| KOMEDA_ERR_TCF |\
+> > > > > > > +	KOMEDA_ERR_TTNG		| KOMEDA_ERR_TTF)
+> > > > > > > +
+> > > > > > > +#define KOMEDA_WARN_EVENTS	KOMEDA_ERR_CSCE
+> > > > > > > +
+> > > > > > >  /* malidp device id */
+> > > > > > >  enum {
+> > > > > > >  	MALI_D71 = 0,
+> > > > > > > @@ -207,6 +218,8 @@ struct komeda_dev {
+> > > > > > >  
+> > > > > > >  struct komeda_dev *dev_to_mdev(struct device *dev);
+> > > > > > >  
+> > > > > > > +void komeda_print_events(struct komeda_events *evts);
+> > > > > > > +
+> > > > > > >  int komeda_dev_resume(struct komeda_dev *mdev);
+> > > > > > >  int komeda_dev_suspend(struct komeda_dev *mdev);
+> > > > > > >  #endif /*_KOMEDA_DEV_H_*/
+> > > > > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> > > > > > > new file mode 100644
+> > > > > > > index 0000000..309dbe2
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
+> > > > > > > @@ -0,0 +1,144 @@
+> > > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > > +/*
+> > > > > > > + * (C) COPYRIGHT 2019 ARM Limited. All rights reserved.
+> > > > > > > + * Author: James.Qian.Wang <james.qian.wang@arm.com>
+> > > > > > > + *
+> > > > > > > + */
+> > > > > > > +#include <drm/drm_print.h>
+> > > > > > > +
+> > > > > > > +#include "komeda_dev.h"
+> > > > > > > +
+> > > > > > > +struct komeda_str {
+> > > > > > > +	char *str;
+> > > > > > > +	u32 sz;
+> > > > > > > +	u32 len;
+> > > > > > > +};
+> > > > > > > +
+> > > > > > > +/* return 0 on success,  < 0 on no space.
+> > > > > > > + */
+> > > > > > > +static int komeda_sprintf(struct komeda_str *str, const char *fmt, ...)
+> > > > > > > +{
+> > > > > > > +	va_list args;
+> > > > > > > +	int num, free_sz;
+> > > > > > > +	int err;
+> > > > > > > +
+> > > > > > > +	free_sz = str->sz - str->len;
+> > > > > > > +	if (free_sz <= 0)
+> > > > > > > +		return -ENOSPC;
+> > > > > > > +
+> > > > > > > +	va_start(args, fmt);
+> > > > > > > +
+> > > > > > > +	num = vsnprintf(str->str + str->len, free_sz, fmt, args);
+> > > > > > > +
+> > > > > > > +	va_end(args);
+> > > > > > > +
+> > > > > > > +	if (num <= free_sz) {
+> > > > > > > +		str->len += num;
+> > > > > > > +		err = 0;
+> > > > > > > +	} else {
+> > > > > > > +		str->len = str->sz;
+> > > > > > > +		err = -ENOSPC;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	return err;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static void evt_sprintf(struct komeda_str *str, u64 evt, const char *msg)
+> > > > > > > +{
+> > > > > > > +	if (evt)
+> > > > > > > +		komeda_sprintf(str, msg);
+> > > > > > > +}
+> > > > > > 
+> > > > > > Why do we need this wrapper?
+> > > > > The komeda_sprintf is a generic function and will be used by other
+> > > > > places, while evt_sprintf is working for the detail event msg.
+> > > > 
+> > > > Yeah, I'm not buying this argument any more. We should not create new functions
+> > > > just because we want to save typing one if () condition. evt_sprintf does
+> > > > nothing with the extra evt argument other than checking that it is not zero.
+> > > 
+> > > Hi Liviu
+> > > 
+> > > But I think we'd better to have this function which can remove
+> > > many duplicate if () checks, and makes the code elegant and easy to
+> > > read. and I think that why the concept of function has been
+> > > introduced.
+> > > 
+> > > And in linux we can see lot of functions or MACRO that just for save one
+> > > word like:
+> > > 
+> > >   static inline void *kzalloc(size_t size, gfp_t flags)
+> > >   {
+> > > 	return kmalloc(size, flags | __GFP_ZERO);
+> > >   }
+> > 
+> > This is a different (and valid use) of creating macros. kzalloc() does
+> > something specific (initialises allocated memory with zeros) by using the
+> > generic kmalloc() function. The added __GFP_ZERO has a specific outcome to the
+> > invocation of the wrapped function. evt_sprintf() does nothing of this sort and
+> > it is arguably wrong, as it drops any possibility of passing arguments to the
+> > format string that komeda_sprintf() allows.
+> 
+> komeda_sprintf(struct komeda_str *str, const char *fmt, ...), will be
+> treated as a generic function, which may be called from other places,
+> with the possiblity support of passing arguments to the format string
+> of it.
+> 
+> evt_sprintf(struct komeda_str *str, u64 evt, const char *msg), is
+> a wrapper aim to to remove so many duplicate if() checks and make
+> the code elegant and easy to read.
+> 
+> About "drops any possibility of passing arguments to the format string
+> that komeda_sprintf() allows". In this wrapper, the 2nd parameter *msg
+> is already be set and no possible to be a format string, even it calls
+> komeda_sprintf, which supports passing arguments to the format string.
 
-On 2019/7/23 下午4:10, Michael S. Tsirkin wrote:
-> On Tue, Jul 23, 2019 at 03:53:06PM +0800, Jason Wang wrote:
->> On 2019/7/23 下午3:23, Michael S. Tsirkin wrote:
->>>>> Really let's just use kfree_rcu. It's way cleaner: fire and forget.
->>>> Looks not, you need rate limit the fire as you've figured out?
->>> See the discussion that followed. Basically no, it's good enough
->>> already and is only going to be better.
->>>
->>>> And in fact,
->>>> the synchronization is not even needed, does it help if I leave a comment to
->>>> explain?
->>> Let's try to figure it out in the mail first. I'm pretty sure the
->>> current logic is wrong.
->>
->> Here is what the code what to achieve:
->>
->> - The map was protected by RCU
->>
->> - Writers are: MMU notifier invalidation callbacks, file operations (ioctls
->> etc), meta_prefetch (datapath)
->>
->> - Readers are: memory accessor
->>
->> Writer are synchronized through mmu_lock. RCU is used to synchronized
->> between writers and readers.
->>
->> The synchronize_rcu() in vhost_reset_vq_maps() was used to synchronized it
->> with readers (memory accessors) in the path of file operations. But in this
->> case, vq->mutex was already held, this means it has been serialized with
->> memory accessor. That's why I think it could be removed safely.
->>
->> Anything I miss here?
->>
-> So invalidate callbacks need to reset the map, and they do
-> not have vq mutex. How can they do this and free
-> the map safely? They need synchronize_rcu or kfree_rcu right?
+Should this not be documented above the function?
 
+Anyway, I think we are getting side-tracked. My main argument is that we don't
+need this function and evt_str() function *at all*. We should just expose the
+events value into debugfs and let userspace decode the bit values.
 
-Invalidation callbacks need but file operations (e.g ioctl) not.
+> 
+> There are 27 places need check before calling into komeda_sprintf().
+> So I still think this wrapper is reasonable. It can make the code
+> elegant and easy to read. May I give another example:
 
+Those 27 calls are also made in an interrupt handler.
 
->
-> And I worry somewhat that synchronize_rcu in an MMU notifier
-> is a problem, MMU notifiers are supposed to be quick:
+Best regards,
+Liviu
 
+> 
+> void drm_property_blob_put(struct drm_property_blob *blob)
+> {
+>         if (!blob)
+>                 return;
+> 
+>         drm_mode_object_put(&blob->base);
+> }
+> 
+> Best regards,
+> Lowry
+> 
+> > > 
+> > > And for this "if () check" specific, I think this is also very popular
+> > > in linux like:
+> > > 
+> > >   static inline void __rcu_read_lock(void)
+> > >   {
+> > >  	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+> > > 		preempt_disable();
+> > >   }
+> > > 
+> > >   static inline void __rcu_read_unlock(void)
+> > >   {
+> > > 	if (IS_ENABLED(CONFIG_PREEMPT_COUNT))
+> > > 		preempt_enable();
+> > >   }
+> > 
+> > These are inline functions wrapping around the fact that a config option might
+> > be disabled. Not really the same thing with what we are talking here.
+> > 
+> > > 
+> > > thanks
+> > > James
+> > > 
+> > > > > 
+> > > > > > > +
+> > > > > > > +static void evt_str(struct komeda_str *str, u64 events)
+> > > > > > > +{
+> > > > > > > +	if (events == 0ULL) {
+> > > > > > > +		evt_sprintf(str, 1, "None");
+> > > > > > > +		return;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_EVENT_VSYNC, "VSYNC|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_EVENT_FLIP, "FLIP|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_EVENT_EOW, "EOW|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_EVENT_MODE, "OP-MODE|");
+> > > > > > > +
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_EVENT_URUN, "UNDERRUN|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_EVENT_OVR, "OVERRUN|");
+> > > > > > > +
+> > > > > > > +	/* GLB error */
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_MERR, "MERR|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
+> > > > > > > +
+> > > > > > > +	/* DOU error */
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_DRIFTTO, "DRIFTTO|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_TETO, "TETO|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_CSCE, "CSCE|");
+> > > > > > > +
+> > > > > > > +	/* LPU errors or events */
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_EVENT_IBSY, "IBSY|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_AXIE, "AXIE|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_ACE0, "ACE0|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_ACE1, "ACE1|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_ACE2, "ACE2|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_ACE3, "ACE3|");
+> > > > > > > +
+> > > > > > > +	/* LPU TBU errors*/
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_TCF, "TCF|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_TTNG, "TTNG|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_TITR, "TITR|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_TTF, "TTF|");
+> > > > > > > +
+> > > > > > > +	/* CU errors*/
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_CPE, "COPROC|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_ZME, "ZME|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_CFGE, "CFGE|");
+> > > > > > > +	evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
+> > > > > > > +
+> > > > > > > +	if (str->len > 0 && (str->str[str->len - 1] == '|')) {
+> > > > > > > +		str->str[str->len - 1] = 0;
+> > > > > > > +		str->len--;
+> > > > > > > +	}
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static bool is_new_frame(struct komeda_events *a)
+> > > > > > > +{
+> > > > > > > +	return (a->pipes[0] | a->pipes[1]) & KOMEDA_EVENT_FLIP;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +void komeda_print_events(struct komeda_events *evts)
+> > > > > > > +{
+> > > > > > > +	u64 print_evts = KOMEDA_ERR_EVENTS;
+> > > > > > > +	static bool en_print = true;
+> > > > > > > +
+> > > > > > > +	/* reduce the same msg print, only print the first evt for one frame */
+> > > > > > > +	if (evts->global || is_new_frame(evts))
+> > > > > > > +		en_print = true;
+> > > > > > > +	if (!en_print)
+> > > > > > > +		return;
+> > > > > > 
+> > > > > > When does en_print ever get false?
+> > > > > Once the events printed, it will be set false (pls find at the last
+> > > > > line of this function).
+> > > > 
+> > > > What is the point of making en_print a static variable? We print all the time
+> > > > when we have a global event anyway.
+> > > 
+> > > Hi Liviu:
+> > > 
+> > > | why make en_print a static.
+> > > 
+> > > Consider you commit a scene which may leads a UNDERUN. and it will
+> > > trigger HW UNDERRUN in every vsync peroid untill this sceen have been
+> > > replace by another scene. for a scene it will trigger same error again
+> > > and again. we don't need print them all for a scene one msg is enough.
+> > 
+> > The same can be achieved by removing en_print entirely and inverting the top
+> > condition:
+> > 
+> > 	if (!evts->global && !is_new_frame(evts))
+> > 		return;
+> 
+> It looks better and will change to this. Thanks a lot for this.
+> > > 
+> > > | we print all the time when we have a global event.
+> > > Since we only reduce the duplicate error, but want print all different error.
+> > > And per our HW design, the event reported by different component.
+> > > this global for collect the GCU error. the pipeline_event is for
+> > > LPU/CU/DOU. like UNDERUN which is only DOU error.
+> > > 
+> > > and current GCU only have one error type: opmode change error which only
+> > > can be happened on when we call change_opmode in crtc_enable/disable.
+> > > 
+> > > So don't worry, globl event which can not make en_print has been set to
+> > > true in every irq handling.
+> > 
+> > And that's the reason I'm asking why make en_print static if we reset it in
+> > every irq_handling (i.e. when we actually want to print). Does it really need
+> > to be static when we don't actually use the stored state?
+> > 
+> > Best regards,
+> > Liviu
+> > 
+> > 
+> > > 
+> > > Thanks
+> > > James
+> > > 
+> > > > 
+> > > > > > > +
+> > > > > > > +#ifdef DEBUG
+> > > > > > > +	print_evts |= KOMEDA_WARN_EVENTS;
+> > > > > > > +#endif
+> > > > > > > +
+> > > > > > > +	if ((evts->global | evts->pipes[0] | evts->pipes[1]) & print_evts) {
+> > > > > > > +		#define STR_SZ		128
+> > > > > > > +		char msg[STR_SZ];
+> > > > > > 
+> > > > > > I've counted about 27 evt_sprintf() calls in evt_str() function, with an
+> > > > > > average of 5 characters each, so thats 135 characters printed into a buffer
+> > > > > > that is only 128 bytes. Please don't do this!
+> > > > > komeda_sprintf() will check the size and also I thought those evt
+> > > > > will not populat together. But yes, I'd better change this to 256.
+> > > > > Will change this.
+> > > > > 
+> > > > > > > +		struct komeda_str str;
+> > > > > > > +
+> > > > > > > +		str.str = msg;
+> > > > > > > +		str.sz  = STR_SZ;
+> > > > > > > +		str.len = 0;
+> > > > > > > +
+> > > > > > > +		komeda_sprintf(&str, "gcu: ");
+> > > > > > > +		evt_str(&str, evts->global);
+> > > > > > > +		komeda_sprintf(&str, ", pipes[0]: ");
+> > > > > > > +		evt_str(&str, evts->pipes[0]);
+> > > > > > > +		komeda_sprintf(&str, ", pipes[1]: ");
+> > > > > > > +		evt_str(&str, evts->pipes[1]);
+> > > > > > > +
+> > > > > > > +		DRM_ERROR("err detect: %s\n", msg);
+> > > > > > > +
+> > > > > > > +		en_print = false;
+> > > > > > > +	}
+> > > > > > > +}
+> > > > > > > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > > > index 647bce5..1462bac 100644
+> > > > > > > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > > > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > > > > > > @@ -47,6 +47,8 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+> > > > > > >  	memset(&evts, 0, sizeof(evts));
+> > > > > > >  	status = mdev->funcs->irq_handler(mdev, &evts);
+> > > > > > >  
+> > > > > > > +	komeda_print_events(&evts);
+> > > > > > 
+> > > > > > Calling this function from the IRQ handler is a bad idea. We should use debugfs
+> > > > > > if you really want to have a trace of the events, but I personally don't see
+> > > > > > value in having this functionality in the kernel at all. You can expose the
+> > > > > > value of the evts->global and evts->pipes[] as integers and decode that in
+> > > > > > userspace or as a debugfs entry.
+> > > > > > 
+> > > > > > Best regards,
+> > > > > > Liviu
+> > > > > 
+> > > > > The name of this function is misleading, but this is printing out the
+> > > > > hardware detected errors, from which we can know directly once the
+> > > > > errors happened on the hardware. Like if the driver code was at
+> > > > > bring-up stage, the logs from this layer is helpful. So can we keep
+> > > > > this?
+> > > > 
+> > > > We should probably just collect the global and pipes values and expose
+> > > > them to userspace so that the printing and decoding of the messages happens
+> > > > there.
+> > > > 
+> > > > Best regards,
+> > > > Liviu
+> > > 
+> > > Hi Liviu:
+> > > 
+> > > Any special resons.
+> > > 
+> > > Since such error print is not only wanted by us, mostly it is required
+> > > and used by our customer to easily capture the problem.
+> > > If no special reasons, I want to keep it for avoiding the complaint
+> > > from our customer. 
+> > > 
+> > > Thanks
+> > > James
+> > > > 
+> > > > > 
+> > > > > Best regards,
+> > > > > Lowry
+> > > > > 
+> > > > > > > +
+> > > > > > >  	/* Notify the crtc to handle the events */
+> > > > > > >  	for (i = 0; i < kms->n_crtcs; i++)
+> > > > > > >  		komeda_crtc_handle_event(&kms->crtcs[i], &evts);
+> > > > > > > -- 
+> > > > > > > 1.9.1
+> > > > > > > 
+> > > > > > 
+> > > > > > -- 
+> > > > > > ====================
+> > > > > > | I would like to |
+> > > > > > | fix the world,  |
+> > > > > > | but they're not |
+> > > > > > | giving me the   |
+> > > > > >  \ source code!  /
+> > > > > >   ---------------
+> > > > > >     ¯\_(ツ)_/¯
+> > > > > 
+> > > > > -- 
+> > > > > Regards,
+> > > > > Lowry
+> > > > 
+> > > > -- 
+> > > > ====================
+> > > > | I would like to |
+> > > > | fix the world,  |
+> > > > | but they're not |
+> > > > | giving me the   |
+> > > >  \ source code!  /
+> > > >   ---------------
+> > > >     ¯\_(ツ)_/¯
+> > 
+> > -- 
+> > ====================
+> > | I would like to |
+> > | fix the world,  |
+> > | but they're not |
+> > | giving me the   |
+> >  \ source code!  /
+> >   ---------------
+> >     ¯\_(ツ)_/¯
+> 
+> -- 
+> Regards,
+> Lowry
 
-Looks not, since it can allow to be blocked and lots of driver depends 
-on this. (E.g mmu_notifier_range_blockable()).
-
-
-> they are on a read side critical section of SRCU.
->
-> If we could get rid of RCU that would be even better.
->
-> But now I wonder:
-> 	invalidate_start has to mark page as dirty
-> 	(this is what my patch added, current code misses this).
-
-
-Nope, current code did this but not the case when map need to be 
-invalidated in the vhost control path (ioctl etc).
-
-
->
-> 	at that point kernel can come and make the page clean again.
->
-> 	At that point VQ handlers can keep a copy of the map
-> 	and change the page again.
-
-
-We will increase invalidate_count which prevent the page being used by map.
-
-Thanks
-
-
->
->
-> At this point I don't understand how we can mark page dirty
-> safely.
->
->>>>>> Btw, for kvm ioctl it still uses synchronize_rcu() in kvm_vcpu_ioctl(),
->>>>>> (just a little bit more hard to trigger):
->>>>> AFAIK these never run in response to guest events.
->>>>> So they can take very long and guests still won't crash.
->>>> What if guest manages to escape to qemu?
->>>>
->>>> Thanks
->>> Then it's going to be slow. Why do we care?
->>> What we do not want is synchronize_rcu that guest is blocked on.
->>>
->> Ok, this looks like that I have some misunderstanding here of the reason why
->> synchronize_rcu() is not preferable in the path of ioctl. But in kvm case,
->> if rcu_expedited is set, it can triggers IPIs AFAIK.
->>
->> Thanks
->>
-> Yes, expedited is not good for something guest can trigger.
-> Let's just use kfree_rcu if we can. Paul said even though
-> documentation still says it needs to be rate-limited, that
-> part is basically stale and will get updated.
->
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
