@@ -2,112 +2,99 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64896C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9D7C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309F022512
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJEGgQaU"
+	by mail.kernel.org (Postfix) with ESMTP id 9F07B2253C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389167AbfGWKkX (ORCPT
+        id S1733106AbfGWKmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:40:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34798 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfGWKkX (ORCPT
+        Tue, 23 Jul 2019 06:42:49 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40022 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbfGWKmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:40:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so13006787pgc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PK0IBZUbQHnyOZDtUqj2prrcS6SHRWpLkmBXJgDEKWo=;
-        b=JJEGgQaULMIyBtsF9Zmew5QKL6iwU5DJsa+yzl56UpjBCSjzgnjbTm1D8sUg4zA1fo
-         Rqvm5clXYIpVWuG3UvJ9Guhup1h3dWDqi38rpeBx/FQY9fMC+0kHJ/8HCq7soKQOzCxx
-         nwgn3YjizCPCQ+Qi1XLpVkmwNITnKWINbFnzbGrSoayK4iQeWX6AjULlyQGLwmHCQtVV
-         amlHgx7MOvg5GCeXx3OWz4VxnjAET5qyqL22PCCiUT9Jg/TO7ESxfPptPJhKRwX6ycIF
-         GmOZ/RysLc2ZGHYfZv3DeeT+V/3DXyPwVvAGE2FKJKioGkfe9H/X7N7azeOk2u9XISBs
-         q4Kg==
+        Tue, 23 Jul 2019 06:42:49 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a15so41369885qtn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:42:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PK0IBZUbQHnyOZDtUqj2prrcS6SHRWpLkmBXJgDEKWo=;
-        b=ZapIzNnsPz5hp+GYwcM4AYwCJ6wehrpANu3ClVIp9lDxydOC5IKHBGUmEOYIerc+QM
-         d2XvEVhJWh1RdynS8Nu8uBrC06S07VAenmuwqc9OPDKNZuOTaBbgMvaTQNN7Nb0UCLgU
-         mtGPb6TA6X3wvKtwVHvvkpgHfpaZ5Zu+3pulZ759pxLX/io0b2zSL6pJXqbRsNqcp6J4
-         r0DcVXcvzSjqXOuWCXflka5DLNkygT9gMiS1bgGLJhDbikfi8+Bv8IU2zXiEBQ4sbqpu
-         W2uGBicRWobYc+EwqBraNxKtvFjQcjVOel8MZR96LWb0V3x7cd5YFigIvoDNlWTs92Lf
-         6Mtg==
-X-Gm-Message-State: APjAAAWVCLR6PmX4G+dycdrQyAa4XvCT71+duzhXtxlzQTSZyLoVd6rf
-        5XgRGJEOQBbKTnMCy1DDn18=
-X-Google-Smtp-Source: APXvYqxNi+SizBMl+BpgOlGEa4wEMzr8MJSUWRsgRL/2x6RHFUOsxCW0h9hrMpeXnwK8haoe2AWQXQ==
-X-Received: by 2002:a17:90a:1a45:: with SMTP id 5mr83413685pjl.43.1563878422662;
-        Tue, 23 Jul 2019 03:40:22 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id c8sm47990214pjq.2.2019.07.23.03.40.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=N4xK5veZG09uUkAaPdHZto+xy99VCECeBtRkb6sAB/w=;
+        b=Xhh+jWNF1gCkt9pxiYgXxHJKaB1GNKMVwFKquSTEcIp+V83p3BTWVtyBcc9YGruXbs
+         Irf3GAs2+zezcFdWdpnMcEyeOEWUHXj1wKHLr/PB01EMCFUna2LcBiWFs9LGkXp5n3s2
+         X4kXupF7gPRT+N/E57vbN7hEhe/iHiVLTcuQEk5iWgY0EUXH2bIhZBoSFMgKepmp/qf9
+         mrOQwHB3x6BqFLoQPoniUamt9t//DSCvh6gNiY/2E364nLMq2MrrEmryO6yPKGC04DIq
+         TX2GJ4/4z+c9sc/Q3qaB+74av+g3ZO38VlAS4Um5wue23R1HPKnBzQt4II7Id6bEyU+1
+         4AOQ==
+X-Gm-Message-State: APjAAAUs+ibFg2w175l/QnI/5dvdNOXJPHhVvlzp/rKdMWIUFHQ0IGf1
+        6ThvFqEdYbn9p+KjCp7lU1fyIg==
+X-Google-Smtp-Source: APXvYqyaExRlYw/QlDd/NWuqasay2jAYk3JOBnWzJfjESy3cklpZQkiKPy3zfhsnVUYaS/Q/QI1fjQ==
+X-Received: by 2002:a0c:d4d0:: with SMTP id y16mr52541534qvh.191.1563878568268;
+        Tue, 23 Jul 2019 03:42:48 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id b7sm18536990qtt.38.2019.07.23.03.42.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 03:40:22 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drm/qxl: Use dev_get_drvdata where possible
-Date:   Tue, 23 Jul 2019 18:40:00 +0800
-Message-Id: <20190723103959.4078-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 03:42:47 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 06:42:38 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190723062842-mutt-send-email-mst@kernel.org>
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+ <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
+ <20190722035657-mutt-send-email-mst@kernel.org>
+ <cfcd330d-5f4a-835a-69f7-c342d5d0d52d@redhat.com>
+ <20190723010156-mutt-send-email-mst@kernel.org>
+ <124be1a2-1c53-8e65-0f06-ee2294710822@redhat.com>
+ <20190723032800-mutt-send-email-mst@kernel.org>
+ <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+On Tue, Jul 23, 2019 at 04:42:19PM +0800, Jason Wang wrote:
+> > So how about this: do exactly what you propose but as a 2 patch series:
+> > start with the slow safe patch, and add then return uaddr optimizations
+> > on top. We can then more easily reason about whether they are safe.
+> 
+> 
+> If you stick, I can do this.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/gpu/drm/qxl/qxl_drv.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+So I definitely don't insist but I'd like us to get back to where
+we know existing code is very safe (if not super fast) and
+optimizing from there.  Bugs happen but I'd like to see a bisect
+giving us "oh it's because of XYZ optimization" and not the
+general "it's somewhere within this driver" that we are getting
+now.
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index f33e349c4ec5..af1e2b377945 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -206,16 +206,14 @@ static int qxl_pm_resume(struct device *dev)
- 
- static int qxl_pm_thaw(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 
- 	return qxl_drm_resume(drm_dev, true);
- }
- 
- static int qxl_pm_freeze(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 
- 	return qxl_drm_freeze(drm_dev);
- }
+Maybe the way to do this is to revert for this release cycle
+and target the next one. What do you think?
+
 -- 
-2.20.1
-
+MST
