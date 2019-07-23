@@ -2,60 +2,61 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68DAC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BC1C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F5D223A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB635218B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pPAsus1D"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zfcl13mc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389373AbfGWMU1 (ORCPT
+        id S2389747AbfGWMUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:20:27 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57672 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389688AbfGWMUZ (ORCPT
+        Tue, 23 Jul 2019 08:20:34 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:38679 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389708AbfGWMU2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:20:25 -0400
+        Tue, 23 Jul 2019 08:20:28 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190723122023euoutp029b592b9f7a0389ff830083a04ec27510~0CJkAq4Ok3163531635euoutp02s
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 12:20:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190723122023euoutp029b592b9f7a0389ff830083a04ec27510~0CJkAq4Ok3163531635euoutp02s
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190723122026euoutp01ab60e00aa7f17c283366bd62e6a6ff90~0CJmnRJmT2875828758euoutp01T
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 12:20:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190723122026euoutp01ab60e00aa7f17c283366bd62e6a6ff90~0CJmnRJmT2875828758euoutp01T
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563884423;
-        bh=E/h0xeZuDlNNpc19sQ9I4e8CfCTnOd78afTD5lcFh3M=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=pPAsus1DBleQ6S8y5rermerrTyuGuh8KA86IlfNttrx3SsT70dFDlokUXrKMAmhTz
-         6s1kMTKHhe0xWel0esD7M8F1H+E3n7q1mFSJtGKrEq8l9ZVQPBmSFZd1rQCgZQxtx8
-         PRdxuz1Qz4jKXKJSzJMu/7pvTWBn4LdOVAllPjNA=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        s=mail20170921; t=1563884426;
+        bh=mB6tpYvVSphzP6A9Pn9b/zTWKGneiQ3HT+TMiqcj+Qc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Zfcl13mcfhl4DkWxNKL9IxrK35MS46FUmKWJFRcKpuyz1v5Z5rqSxnnlwCSE/DCaX
+         lbNe8luIiA6gkWMM57wZVdBuUyrjcvMqTdNSLYzrqMRPlnc2/SykW4P+O/D5BBnrw4
+         q+wseNgX/G5EU8wQC3xz4U557c+ihT/SUfC3LjnM=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190723122023eucas1p14e0b1f612566a63f236384b167998f5d~0CJjR-aG73225832258eucas1p1M;
-        Tue, 23 Jul 2019 12:20:23 +0000 (GMT)
+        20190723122025eucas1p1d47c9b6838304eb0f9bbe1d7b4db9a7a~0CJl_YmjL0316803168eucas1p1Y;
+        Tue, 23 Jul 2019 12:20:25 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id FF.4B.04298.68BF63D5; Tue, 23
-        Jul 2019 13:20:22 +0100 (BST)
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 69.0C.04377.98BF63D5; Tue, 23
+        Jul 2019 13:20:25 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5~0CJinGERD2753327533eucas1p2K;
-        Tue, 23 Jul 2019 12:20:22 +0000 (GMT)
+        20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22~0CJlDr9J02753327533eucas1p2N;
+        Tue, 23 Jul 2019 12:20:24 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190723122022eusmtrp1e012e5e4af5b700844603da16e8bca7f~0CJicZZZb2487524875eusmtrp1g;
-        Tue, 23 Jul 2019 12:20:22 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-75-5d36fb866a77
+        20190723122024eusmtrp18e1c2b5fc07da399501cd94295ab0ccd~0CJk5GeSX2491824918eusmtrp1X;
+        Tue, 23 Jul 2019 12:20:24 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-ab-5d36fb89f5e6
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 17.D8.04140.68BF63D5; Tue, 23
-        Jul 2019 13:20:22 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DA.D8.04140.88BF63D5; Tue, 23
+        Jul 2019 13:20:24 +0100 (BST)
 Received: from AMDC3555.DIGITAL.local (unknown [106.120.51.67]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190723122021eusmtip2f9a8f6ab49accc2bea0b902873bf9f4f~0CJhzpRHb1612616126eusmtip2H;
-        Tue, 23 Jul 2019 12:20:21 +0000 (GMT)
+        20190723122024eusmtip2b8e737d5f88e4f720f9c1534dba52c25~0CJkSC1HV1668716687eusmtip27;
+        Tue, 23 Jul 2019 12:20:24 +0000 (GMT)
 From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
 To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -63,123 +64,232 @@ To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 Cc:     krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com,
         inki.dae@samsung.com, sw0312.kim@samsung.com,
         georgi.djakov@linaro.org, m.szyprowski@samsung.com
-Subject: [RFC PATCH 00/11] Simple QoS for exynos-bus driver using
- interconnect
-Date:   Tue, 23 Jul 2019 14:20:05 +0200
-Message-Id: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+Subject: [RFC PATCH 04/11] devfreq: exynos-bus: Clean up code
+Date:   Tue, 23 Jul 2019 14:20:09 +0200
+Message-Id: <20190723122016.30279-5-a.swigon@partner.samsung.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190723122016.30279-1-a.swigon@partner.samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAKsWRmVeSWpSXmKPExsWy7djPc7ptv81iDX5+1rM4dGwru8XGGetZ
-        La5/ec5qMf/IOVaLK1/fs1lM37uJzWLS/QksFufPb2C32PT4GqvF5V1z2Cw+9x5htJhxfh+T
-        xdojd9ktbjeuYLOYMfklmwO/x6ZVnWwed67tYfO4332cyWPzknqPg+/2MHn0bVnF6PF5k1wA
-        exSXTUpqTmZZapG+XQJXRuOWpYwF/yUr+o//YGpg3CjaxcjJISFgIrH/y0LWLkYuDiGBFYwS
-        Gzc+ZYFwvjBKfDjayg7hfGaUOHjiBgtMS9fGHqiq5YwSJ98fZ4ZrefjgEBNIFZuAp0TPxB1g
-        g0UEjjBKTF7wHqyFWWAVkPN9GyNIlbBAgMSXQ81gHSwCqhI3HtwCs3kFHCUO/n8DtU9eYvWG
-        A8wQcUGJkzOfgMWZgeLNW2czQ9RcY5eY+yUEwnaROPzyOjuELSzx6vgWKFtG4vTkHqiZxRJP
-        d94Hu05CoIFRYtOyI1CDrCUOH78IlOAAWqApsX6XPkTYUeL4kjfsIGEJAT6JG28FIU7gk5i0
-        bTozRJhXoqNNCMLUkljwOxqiUUKiafU1qNkeErfPvQQ7RkggVuLq6juMExgVZiH5axaSv2Yh
-        nLCAkXkVo3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYDo7/e/4px2MXy8lHWIU4GBU4uHd
-        sMc0Vog1say4MvcQowQHs5IIb2CDWawQb0piZVVqUX58UWlOavEhRmkOFiVx3mqGB9FCAumJ
-        JanZqakFqUUwWSYOTqkGRp5b1xXn3Lnms+VgbuEj3xZpXpN+Nharrm0Ll9cFLD8VbrylTdGP
-        I/h5zfmixStMC7f8kjngOmfBssXpgQt2ZH9/JH9BZlXl7MeiEcH9P5kdM65s3OHW+uV7wLrC
-        NKbzs6SvHdc9Gc7Hk+KxgMf2sVHqPUb2kI4H/3c6pQdUi6zfmX9Cz2lKuBJLcUaioRZzUXEi
-        APXghPVjAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsVy+t/xe7ptv81iDc7cYLM4dGwru8XGGetZ
-        La5/ec5qMf/IOVaLK1/fs1lM37uJzWLS/QksFufPb2C32PT4GqvF5V1z2Cw+9x5htJhxfh+T
-        xdojd9ktbjeuYLOYMfklmwO/x6ZVnWwed67tYfO4332cyWPzknqPg+/2MHn0bVnF6PF5k1wA
-        e5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJeRuOW
-        pYwF/yUr+o//YGpg3CjaxcjJISFgItG1sYeli5GLQ0hgKaNE7/y1zBAJCYmP62+wQtjCEn+u
-        dbFBFH1ilFh3/D9YEZuAp0TPxB2sIAkRgVOMEluXnwOrYhbYxChx9/hEdpAqYQE/iS1HTrCA
-        2CwCqhI3HtxiArF5BRwlDv5/wwKxQl5i9YYDzBBxQYmTM58AxTmABqlLrJ8nBBJmBipp3jqb
-        eQIj/ywkVbMQqmYhqVrAyLyKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMO62Hfu5ZQdj17vg
-        Q4wCHIxKPLwb9pjGCrEmlhVX5h5ilOBgVhLhDWwwixXiTUmsrEotyo8vKs1JLT7EaAr0wkRm
-        KdHkfGBKyCuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwKhfrc22
-        QHBfS/r2adPnBlrvbf5myrtp0atZ16Jk3370eNdxXeDrs7R2rsO6P3rdNqnWFPg0JvFMKuO2
-        aQu5ofssqHTVr79CgnuvMK79b9Dm+PbUzP+H9/x4Gvxxacs3VYGjDX8OK5g8f2H7SuCj/HTH
-        hKh7e1YdPqt6wEC34co96+kF4c4XWJ8psRRnJBpqMRcVJwIAZRGfl9ECAAA=
-X-CMS-MailID: 20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7djPc7qdv81iDfpe61gcOraV3WLjjPWs
+        Fte/PGe1mH/kHKvFla/v2Sym793EZjHp/gQWi/PnN7BbbHp8jdXi8q45bBafe48wWsw4v4/J
+        Yu2Ru+wWtxtXsFnMmPySzYHfY9OqTjaPO9f2sHnc7z7O5LF5Sb3HwXd7mDz6tqxi9Pi8SS6A
+        PYrLJiU1J7MstUjfLoErY/qfNqaCJ2oVcz5tYGxg/CjXxcjJISFgInHk/CG2LkYuDiGBFYwS
+        M/7sZIRwvjBK3Gw6zQrhfGaUODh1OxtMy4KWFqiW5YwSHV0tLHAtL+7dZwepYhPwlOiZuAOs
+        XUTgCKPE5AXvwaqYBVYBOd+3MYJUCQvYSsw+exusg0VAVaJ36mOwOK+Ao8StD3MYIfbJS6ze
+        cIAZxOYUcJLoOtrOBlEjKHFy5hMWEJsZqKZ562xmkAUSAi/ZJRbP6WCHaHaRuL7sETOELSzx
+        6vgWqLiMxOnJPSwQdrHE0533WSGaGxglNi07AtVgLXH4+EWgBAfQBk2J9bv0IcKOEv2rloCF
+        JQT4JG68FYS4gU9i0rbpzBBhXomONiEIU0tiwe9oiEYJiabV16Bme0jM67jNOIFRcRaSZ2Yh
+        eWYWwtoFjMyrGMVTS4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxAhPa6X/Hv+xg3PUn6RCjAAej
+        Eg/vhj2msUKsiWXFlbmHGCU4mJVEeAMbzGKFeFMSK6tSi/Lji0pzUosPMUpzsCiJ81YzPIgW
+        EkhPLEnNTk0tSC2CyTJxcEo1MBa0Tjv4dtljnyWuHbOiIj81z3Z9va3N+Jdd/k8er9nr7aZ8
+        cvZ8VbWd57dpIm+ZZXdWzgQ32aAupcmivHqdsn0SadVMh84IhDi92jx/k+xZLe6Tc/oPGyu1
+        fT7QX/t2bpmwnYhLTtqjKhtN01fZ27adW1T4+0+SwclcnsK9TQc+p+zTUy+bqcRSnJFoqMVc
+        VJwIAL+PyC5kAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xe7odv81iDfr361kcOraV3WLjjPWs
+        Fte/PGe1mH/kHKvFla/v2Sym793EZjHp/gQWi/PnN7BbbHp8jdXi8q45bBafe48wWsw4v4/J
+        Yu2Ru+wWtxtXsFnMmPySzYHfY9OqTjaPO9f2sHnc7z7O5LF5Sb3HwXd7mDz6tqxi9Pi8SS6A
+        PUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY/qf
+        NqaCJ2oVcz5tYGxg/CjXxcjJISFgIrGgpYWti5GLQ0hgKaPEhJbXLBAJCYmP62+wQtjCEn+u
+        dUEVfWKUON5wkBkkwSbgKdEzcQcrSEJE4BSjxNbl58CqmAU2MUrcPT6RHaRKWMBWYvbZ22A2
+        i4CqRO/Ux4wgNq+Ao8StD3MYIVbIS6zecABsKqeAk0TX0XY2EFsIqGbb9tdQ9YISJ2c+ATqP
+        A2iBusT6eUIgYWag1uats5knMArOQlI1C6FqFpKqBYzMqxhFUkuLc9Nzi430ihNzi0vz0vWS
+        83M3MQLjdNuxn1t2MHa9Cz7EKMDBqMTDu2GPaawQa2JZcWXuIUYJDmYlEd7ABrNYId6UxMqq
+        1KL8+KLSnNTiQ4ymQK9NZJYSTc4HppC8knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6Yklqdmp
+        qQWpRTB9TBycUg2Ml9iFergsQ6T35vznkKq8xfk9WfSkSKaM7a+DKzJ/1MTZuunqxhwo1/Cv
+        fpYdKV1YvenZhNM7fsUtKM2KzbrwT5H72wTzYy4P+DRy9W5WyquF221qa3i8U+LK5V8bXoio
+        V3OrHqwt7sj1XKWU55K4+Av/QxY5xvshfVUClcYi/js1+OVzNZVYijMSDbWYi4oTAe17qm/p
+        AgAA
+X-CMS-MailID: 20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5
+X-RootMTR: 20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5
-References: <CGME20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5@eucas1p2.samsung.com>
+X-CMS-RootMailID: 20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <CGME20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following patchset adds interconnect[1][2] framework support to the
-exynos-bus devfreq driver. Extending the devfreq driver with interconnect
-capabilities started as a response to the issue referenced in [3]. The
-patches can be subdivided into four logical groups:
+This patch adds minor improvements to the exynos-bus driver.
 
-(a) Refactoring the existing devfreq driver in order to improve readability
-and accommodate for adding new code (patches 01--04/11).
-
-(b) Tweaking the interconnect framework to support the exynos-bus use case
-(patches 05--07/11). Exporting of_icc_get_from_provider() allows us to
-avoid hardcoding every single graph edge in the DT or driver source, and
-relaxing the requirement contained in that function removes the need to
-provide dummy node IDs in the DT. Adjusting the logic in
-apply_constraints() (drivers/interconnect/core.c) accounts for the fact
-that every bus is a separate entity and therefore a separate interconnect
-provider, albeit constituting a part of a larger hierarchy.
-
-(c) Implementing interconnect providers in the exynos-bus devfreq driver
-and adding required DT properties for one selected platform, namely
-Exynos4412 (patches 08--09/11). Due to the fact that this aims to be a
-generic driver for various Exynos SoCs, node IDs are generated dynamically
-rather than hardcoded. This has been determined to be a simpler approach,
-but depends on changes described in (b).
-
-(d) Implementing a sample interconnect consumer for exynos-mixer targeted
-at the issue referenced in [3], again with DT info only for Exynos4412
-(patches 10--11/11).
-
-Integration of devfreq and interconnect functionalities comes down to one
-extra line in the devfreq target() callback, which selects either the
-frequency calculated by the devfreq governor, or the one requested with the
-interconnect API, whichever is higher. All new code works equally well when
-CONFIG_INTERCONNECT is 'n' (as in exynos_defconfig) in which case all
-interconnect API functions are no-ops.
-
+Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
 ---
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
+ drivers/devfreq/exynos-bus.c | 49 ++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
 
----
-References:
-[1] Documentation/interconnect/interconnect.rst
-[2] Documentation/devicetree/bindings/interconnect/interconnect.txt
-[3] https://patchwork.kernel.org/patch/10861757
-
-Artur Świgoń (10):
-  devfreq: exynos-bus: Extract exynos_bus_profile_init()
-  devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
-  devfreq: exynos-bus: Change goto-based logic to if-else logic
-  devfreq: exynos-bus: Clean up code
-  icc: Export of_icc_get_from_provider()
-  icc: Relax requirement in of_icc_get_from_provider()
-  icc: Relax condition in apply_constraints()
-  arm: dts: exynos: Add parents and #interconnect-cells to Exynos4412
-  devfreq: exynos-bus: Add interconnect functionality to exynos-bus
-  arm: dts: exynos: Add interconnects to Exynos4412 mixer
-
-Marek Szyprowski (1):
-  drm: exynos: mixer: Add interconnect support
-
- .../boot/dts/exynos4412-odroid-common.dtsi    |   1 +
- arch/arm/boot/dts/exynos4412.dtsi             |  10 +
- drivers/devfreq/exynos-bus.c                  | 296 ++++++++++++++----
- drivers/gpu/drm/exynos/exynos_mixer.c         |  68 +++-
- drivers/interconnect/core.c                   |  12 +-
- include/linux/interconnect-provider.h         |   6 +
- 6 files changed, 314 insertions(+), 79 deletions(-)
-
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index 4bb83b945bf7..412511ca7703 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -15,11 +15,10 @@
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/module.h>
+-#include <linux/of_device.h>
++#include <linux/of.h>
+ #include <linux/pm_opp.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/consumer.h>
+-#include <linux/slab.h>
+ 
+ #define DEFAULT_SATURATION_RATIO	40
+ #define DEFAULT_VOLTAGE_TOLERANCE	2
+@@ -256,7 +255,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+ 					struct exynos_bus *bus)
+ {
+ 	struct device *dev = bus->dev;
+-	int i, ret, count, size;
++	int i, ret, count;
+ 
+ 	/* Get the regulator to provide each bus with the power */
+ 	bus->regulator = devm_regulator_get(dev, "vdd");
+@@ -283,8 +282,7 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+ 	}
+ 	bus->edev_count = count;
+ 
+-	size = sizeof(*bus->edev) * count;
+-	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
++	bus->edev = devm_kcalloc(dev, count, sizeof(*bus->edev), GFP_KERNEL);
+ 	if (!bus->edev) {
+ 		ret = -ENOMEM;
+ 		goto err_regulator;
+@@ -388,7 +386,7 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+ 	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
+ 	if (!ondemand_data) {
+ 		ret = -ENOMEM;
+-		goto err;
++		goto out;
+ 	}
+ 	ondemand_data->upthreshold = 40;
+ 	ondemand_data->downdifferential = 5;
+@@ -400,14 +398,14 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+ 	if (IS_ERR(bus->devfreq)) {
+ 		dev_err(dev, "failed to add devfreq device\n");
+ 		ret = PTR_ERR(bus->devfreq);
+-		goto err;
++		goto out;
+ 	}
+ 
+ 	/* Register opp_notifier to catch the change of OPP  */
+ 	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to register opp notifier\n");
+-		goto err;
++		goto out;
+ 	}
+ 
+ 	/*
+@@ -417,16 +415,16 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+ 	ret = exynos_bus_enable_edev(bus);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to enable devfreq-event devices\n");
+-		goto err;
++		goto out;
+ 	}
+ 
+ 	ret = exynos_bus_set_event(bus);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to set event to devfreq-event devices\n");
+-		goto err;
++		goto out;
+ 	}
+ 
+-err:
++out:
+ 	return ret;
+ }
+ 
+@@ -446,27 +444,28 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+ 	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+ 	if (IS_ERR(parent_devfreq)) {
+ 		ret = -EPROBE_DEFER;
+-		goto err;
++		goto out;
+ 	}
+ 
+ 	passive_data = devm_kzalloc(dev, sizeof(*passive_data), GFP_KERNEL);
+ 	if (!passive_data) {
+ 		ret = -ENOMEM;
+-		goto err;
++		goto out;
+ 	}
+ 	passive_data->parent = parent_devfreq;
+ 
+ 	/* Add devfreq device for exynos bus with passive governor */
+-	bus->devfreq = devm_devfreq_add_device(dev, profile, DEVFREQ_GOV_PASSIVE,
++	bus->devfreq = devm_devfreq_add_device(dev, profile,
++						DEVFREQ_GOV_PASSIVE,
+ 						passive_data);
+ 	if (IS_ERR(bus->devfreq)) {
+ 		dev_err(dev,
+ 			"failed to add devfreq dev with passive governor\n");
+ 		ret = PTR_ERR(bus->devfreq);
+-		goto err;
++		goto out;
+ 	}
+ 
+-err:
++out:
+ 	return ret;
+ }
+ 
+@@ -484,11 +483,11 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
++	bus = devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
+ 	if (!bus)
+ 		return -ENOMEM;
+ 	mutex_init(&bus->lock);
+-	bus->dev = &pdev->dev;
++	bus->dev = dev;
+ 	platform_set_drvdata(pdev, bus);
+ 
+ 	/* Parse the device-tree to get the resource information */
+@@ -502,7 +501,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
+-	node = of_parse_phandle(dev->of_node, "devfreq", 0);
++	node = of_parse_phandle(np, "devfreq", 0);
+ 	if (node) {
+ 		of_node_put(node);
+ 		ret = exynos_bus_profile_init_passive(bus, profile);
+@@ -547,12 +546,10 @@ static int exynos_bus_resume(struct device *dev)
+ 	int ret;
+ 
+ 	ret = exynos_bus_enable_edev(bus);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_err(dev, "failed to enable the devfreq-event devices\n");
+-		return ret;
+-	}
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int exynos_bus_suspend(struct device *dev)
+@@ -561,12 +558,10 @@ static int exynos_bus_suspend(struct device *dev)
+ 	int ret;
+ 
+ 	ret = exynos_bus_disable_edev(bus);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_err(dev, "failed to disable the devfreq-event devices\n");
+-		return ret;
+-	}
+ 
+-	return 0;
++	return ret;
+ }
+ #endif
+ 
 -- 
 2.17.1
 
