@@ -2,110 +2,204 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C5AC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51057C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA9D21901
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A65521901
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSyIOGxI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UZjZjBDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389990AbfGWMuB (ORCPT
+        id S2389995AbfGWMvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:50:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40944 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfGWMuB (ORCPT
+        Tue, 23 Jul 2019 08:51:12 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50720 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731298AbfGWMvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:50:01 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so19094392pfp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ScN8WzRMKv9ujMKagsG6pPThL/4YrWzQ0Mh2lGU8I9Q=;
-        b=TSyIOGxIgaDKwv/VxCj9bFdSyEYkKmwRWtQYccafT2FZwvSVPVcwGy9p6YB3jYyvfE
-         IeYF5PtZPvSwA/3F6zkI8ozhCAqW8aWMETFoQu8cRdcCNYvdZCXrki5P2bKeogpqBf1U
-         WMbprsYbetR4G+JcREVUCLaDKpwNV683KXqQjMVypckUH0XsUeWzZmjF92kDBtefSYzV
-         pqwB917WJ7+yZsTh8QnRa9ZYQCRByw9Z3GBy9V58gi2Rk3qUvUosmftkhYzYmXk5taoN
-         Dn4Cu3sHOB1KHX5a6R+ensmxSRb8PpYckJXntTO3mH+0JCiq2XsT7/my9jVxTIJo1f6L
-         FXlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ScN8WzRMKv9ujMKagsG6pPThL/4YrWzQ0Mh2lGU8I9Q=;
-        b=QeCedJmevMijKN7VOJxIxsn9vZ3gIZQyfTwt3tn7XWR5247dAllUjYUgPnLJTSk1HK
-         igzqmZCGJEL0F6CCDFKJ2sp8quncbDcZDcAPa+qYcb1qJDiBpq3fOJWVy961NqQUzJuh
-         hW/4DLBsCctpGUZR4osp+usGtW0uxFFszbi6QzuWmKSuOv/6lFjo4wbE0eIbtN6n5Vuw
-         LqcHf+YyY94g8Xf4bn85FZ05fKkTwFKKCgnvd7P/5YRn/vc4gUFz/bZ1GfWCzG7hMQw1
-         64MkTU4Do4mfp0FaINuVzKP5PjYUyTyzcw6YAAnCCQUiei061R6hZSUdUBKJzNb56IAd
-         E90g==
-X-Gm-Message-State: APjAAAV6J9xkitD7u8H9wGvh73GNLB7KYM4zhjAiS1xtYxHh5pdqt5iZ
-        mIw0oO92r6jV5S8VA4u26Cs=
-X-Google-Smtp-Source: APXvYqxF0qCyIETGsOEUtisC5gjWspQwU9DqLrwTq+1COsi6j95zH/CKSyJl1TUBThdLpBE6qoH3GA==
-X-Received: by 2002:a62:4e58:: with SMTP id c85mr5635177pfb.176.1563886200947;
-        Tue, 23 Jul 2019 05:50:00 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id e17sm33750479pgm.21.2019.07.23.05.49.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 05:50:00 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     paul@paul-moore.com, eparis@redhat.com
-Cc:     linux-audit@redhat.com, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] kernel: auditfilter: Fix a possible null-pointer dereference in audit_watch_path()
-Date:   Tue, 23 Jul 2019 20:49:51 +0800
-Message-Id: <20190723124951.25713-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Tue, 23 Jul 2019 08:51:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NCon3h006938;
+        Tue, 23 Jul 2019 07:50:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563886249;
+        bh=52qhupjxn+B9564HmbrwKDqCkUUSaUEP+bThbTNl/c0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UZjZjBDCXQuig05ZYJEjPWaewnRPvtT3Brk3gwsAVHFCFV3inMgDhXKM2d9g537G1
+         DFvHo603gc3fRcBRH9iEEaJ2AeGyV18Ss+VKwkp0ADfjDUR0BA7zi3o/ephrxrU7tP
+         9vlavdAdchooy/tIjKH0d5GiVg6XkbuOYgPD1unU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NConV4066007
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jul 2019 07:50:49 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Jul 2019 07:50:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Jul 2019 07:50:49 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NCokSH027318;
+        Tue, 23 Jul 2019 07:50:47 -0500
+Subject: Re: [PATCH 4/9] irqchip/gic-v3: Add ESPI range support
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723104437.154403-1-maz@kernel.org>
+ <20190723104437.154403-5-maz@kernel.org>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <a54dfa07-2f3b-def7-fec4-b6dab2bcd84c@ti.com>
+Date:   Tue, 23 Jul 2019 18:20:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190723104437.154403-5-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In audit_find_rule(), there is an if statement on line 894 to check
-whether entry->rule.watch is NULL:
-    else if (entry->rule.watch)
 
-If entry->rule.watch is NULL, audit_compare_rule on 910 is called:
-    audit_compare_rule(&entry->rule, &e->rule))
 
-In audit_compare_rule(), a->watch is used on line 720:
-    if (strcmp(audit_watch_path(a->watch), ...)
+On 23/07/19 4:14 PM, Marc Zyngier wrote:
+> Add the required support for the ESPI range, which behave exactly like
+> the SPIs of old, only with new funky INTIDs.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/irqchip/irq-gic-v3.c       | 85 ++++++++++++++++++++++++------
+>  include/linux/irqchip/arm-gic-v3.h | 17 +++++-
+>  2 files changed, 85 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 2371e0a70215..d328a8de533f 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -51,13 +51,16 @@ struct gic_chip_data {
+>  	u32			nr_redist_regions;
+>  	u64			flags;
+>  	bool			has_rss;
+> -	unsigned int		irq_nr;
+>  	struct partition_desc	*ppi_descs[16];
+>  };
+>  
+>  static struct gic_chip_data gic_data __read_mostly;
+>  static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+>  
+> +#define GIC_ID_NR	(1U << GICD_TYPER_ID_BITS(gic_data.rdists.gicd_typer))
+> +#define GIC_LINE_NR	GICD_TYPER_SPIS(gic_data.rdists.gicd_typer)
+> +#define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
+> +
+>  /*
+>   * The behaviours of RPR and PMR registers differ depending on the value of
+>   * SCR_EL3.FIQ, and the behaviour of non-secure priority registers of the
+> @@ -100,6 +103,7 @@ static DEFINE_PER_CPU(bool, has_rss);
+>  enum gic_intid_range {
+>  	PPI_RANGE,
+>  	SPI_RANGE,
+> +	ESPI_RANGE,
+>  	LPI_RANGE,
+>  	__INVALID_RANGE__
+>  };
+> @@ -111,6 +115,8 @@ static enum gic_intid_range __get_intid_range(irq_hw_number_t hwirq)
+>  		return PPI_RANGE;
+>  	case 32 ... 1019:
+>  		return SPI_RANGE;
+> +	case ESPI_BASE_INTID ... 8191:
 
-In this case, a->watch is NULL, and audit_watch_path() will use:
-    watch->path
+as per dt documentation, shouldn't the range be
+	case ESPI_BASE_INTID ... 5119:
 
-Thus, a possible null-pointer dereference may occur in this case.
+> +		return ESPI_RANGE;
+>  	case 8192 ... GENMASK(23, 0):
+>  		return LPI_RANGE;
+>  	default:
+> @@ -141,6 +147,7 @@ static inline void __iomem *gic_dist_base(struct irq_data *d)
+>  		return gic_data_rdist_sgi_base();
+>  
+>  	case SPI_RANGE:
+> +	case ESPI_RANGE:
+>  		/* SPI -> dist_base */
+>  		return gic_data.dist_base;
+>  
+> @@ -234,6 +241,31 @@ static u32 convert_offset_index(struct irq_data *d, u32 offset, u32 *index)
+>  	case SPI_RANGE:
+>  		*index = d->hwirq;
+>  		return offset;
+> +	case ESPI_RANGE:
+> +		*index = d->hwirq - ESPI_BASE_INTID;
+> +		switch (offset) {
+> +		case GICD_ISENABLER:
+> +			return GICD_ISENABLERnE;
+> +		case GICD_ICENABLER:
+> +			return GICD_ICENABLERnE;
+> +		case GICD_ISPENDR:
+> +			return GICD_ISPENDRnE;
+> +		case GICD_ICPENDR:
+> +			return GICD_ICPENDRnE;
+> +		case GICD_ISACTIVER:
+> +			return GICD_ISACTIVERnE;
+> +		case GICD_ICACTIVER:
+> +			return GICD_ICACTIVERnE;
+> +		case GICD_IPRIORITYR:
+> +			return GICD_IPRIORITYRnE;
+> +		case GICD_ICFGR:
+> +			return GICD_ICFGRnE;
+> +		case GICD_IROUTER:
+> +			return GICD_IROUTERnE;
+> +		default:
+> +			break;
+> +		}
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -316,7 +348,7 @@ static int gic_irq_set_irqchip_state(struct irq_data *d,
+>  {
+>  	u32 reg;
+>  
+> -	if (d->hwirq >= gic_data.irq_nr) /* PPI/SPI only */
+> +	if (d->hwirq >= 8192) /* PPI/SPI only */
+>  		return -EINVAL;
+>  
+>  	switch (which) {
+> @@ -343,7 +375,7 @@ static int gic_irq_set_irqchip_state(struct irq_data *d,
+>  static int gic_irq_get_irqchip_state(struct irq_data *d,
+>  				     enum irqchip_irq_state which, bool *val)
+>  {
+> -	if (d->hwirq >= gic_data.irq_nr) /* PPI/SPI only */
+> +	if (d->hwirq >= 8192) /* PPI/SPI only */
+>  		return -EINVAL;
+>  
+>  	switch (which) {
+> @@ -567,7 +599,12 @@ static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs
+>  		gic_arch_enable_irqs();
+>  	}
+>  
+> -	if (likely(irqnr > 15 && irqnr < 1020) || irqnr >= 8192) {
+> +	/* Check for special IDs first */
+> +	if ((irqnr >= 1020 && irqnr <= 1023))
+> +		return;
 
-To fix this possible bug, an if statement is added in
-audit_compare_rule() to check a->watch before using a->watch.
+May be I am missing something here, what is special about these 4 interrupts? or
+you meant to check for reserved range here?
 
-This bug is found by a static analysis tool STCheck written by us.
+Thanks and regards,
+Lokesh
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- kernel/auditfilter.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-index b0126e9c0743..b0ad17b14609 100644
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -717,6 +717,8 @@ static int audit_compare_rule(struct audit_krule *a, struct audit_krule *b)
- 				return 1;
- 			break;
- 		case AUDIT_WATCH:
-+			if (!a->watch)
-+				break;
- 			if (strcmp(audit_watch_path(a->watch),
- 				   audit_watch_path(b->watch)))
- 				return 1;
--- 
-2.17.0
 
