@@ -2,163 +2,220 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88696C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D7EC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D0F2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0331229ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:05:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O9CkEp5x"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="clAJYjoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391938AbfGWVBw (ORCPT
+        id S2391960AbfGWVFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:01:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53874 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731830AbfGWVBv (ORCPT
+        Tue, 23 Jul 2019 17:05:21 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:4222 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729542AbfGWVFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:01:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NL1hJ8098993;
-        Tue, 23 Jul 2019 16:01:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563915703;
-        bh=u6SXikvGbSFU77KnFGFUWfACbpOyuISOALYakteXBb0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=O9CkEp5xCTYBUGASZzWVRrFKX6mskxwPOfQCOpkxx68DZlr3/1acoGJa82ue+d9dB
-         con4HqbuGQpT43hLr52sObTQFTt8sZXgyJJMz5dZFzRpGnX6Eo4i7At8vk2v/KB6Dr
-         zyCZejU/CIXstHxFU7TLFe7scnrhUV1MHBMbhpNE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NL1hPL046625
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Jul 2019 16:01:43 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Jul 2019 16:01:42 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Jul 2019 16:01:42 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NL1gEL050568;
-        Tue, 23 Jul 2019 16:01:42 -0500
-Subject: Re: [PATCH 5/8] ARM: dts: Drop bogus ahclkr clocks for dra7 mcasp 3
- to 8
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190723112811.44381-1-tony@atomide.com>
- <20190723112811.44381-6-tony@atomide.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <2c750847-700e-c835-ee53-a656b363c36c@ti.com>
-Date:   Tue, 23 Jul 2019 16:01:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Jul 2019 17:05:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3776960000>; Tue, 23 Jul 2019 14:05:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 14:05:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 14:05:19 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
+ 2019 21:05:15 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 23 Jul 2019 21:05:15 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d37768b0007>; Tue, 23 Jul 2019 14:05:15 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>, Ben Skeggs <bskeggs@redhat.com>
+Subject: [PATCH] mm/hmm: replace hmm_update with mmu_notifier_range
+Date:   Tue, 23 Jul 2019 14:05:06 -0700
+Message-ID: <20190723210506.25127-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190723112811.44381-6-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563915926; bh=rjC23JCqCu60sr5rHPIEAf4LwcRnQlVgUeBq46RAZu0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=clAJYjoGcvm398sj1Wc6QXusiqBt2h19IERPM5F4BhNYeDY+Dl6DDwBYlRyMojqx+
+         c78VwtXD7Iv1yCqHRNgQfoil9L/CJeqNtFHc0X0XyG4GXjuYaz5gBl8CGO4s+5vG2n
+         CX4bMazKSJZNVT4zgw9o4KOsejlQxYkY51ka1c/w525wmDsg+GvZ+2iOtPZAAycHW2
+         PuiTQhdhxPI00ooFnzLrElgS9azGgL4fNNdFxjrfi/lWQQuJwmNmhB+gI8is6+btQD
+         GoBt7AUMqR++W4l1w/ceYVCZpevJIRWuq+JMZmaIj+nNc1TdjVpENd0m3IS25SlgiQ
+         WmQGHhmhtcnBQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+The hmm_mirror_ops callback function sync_cpu_device_pagetables() passes
+a struct hmm_update which is a simplified version of struct
+mmu_notifier_range. This is unnecessary so replace hmm_update with
+mmu_notifier_range directly.
 
-On 7/23/19 6:28 AM, Tony Lindgren wrote:
-> The ahclkr clkctrl clock bit 28 only exists for mcasp 1 and 2 on dra7.
-> Otherwise we get the following warning on beagle-x15:
-> 
-> ti-sysc 48468000.target-module: could not add child clock ahclkr: -19
-> 
-> Fixes: 5241ccbf2819 ("ARM: dts: Add missing ranges for dra7 mcasp l3 ports")
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  arch/arm/boot/dts/dra7-l4.dtsi | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-> --- a/arch/arm/boot/dts/dra7-l4.dtsi
-> +++ b/arch/arm/boot/dts/dra7-l4.dtsi
-> @@ -2818,9 +2818,8 @@
->  					<SYSC_IDLE_SMART>;
->  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
->  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 0>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 28>;
-> -			clock-names = "fck", "ahclkx", "ahclkr";
-> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 24>;
-> +			clock-names = "fck", "ahclkx";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x0 0x68000 0x2000>,
-> @@ -2854,9 +2853,8 @@
->  					<SYSC_IDLE_SMART>;
->  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
->  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 0>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 24>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 28>;
-> -			clock-names = "fck", "ahclkx", "ahclkr";
-> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 24>;
-> +			clock-names = "fck", "ahclkx";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x0 0x6c000 0x2000>,
-> @@ -2890,9 +2888,8 @@
->  					<SYSC_IDLE_SMART>;
->  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
->  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 0>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 24>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 28>;
-> -			clock-names = "fck", "ahclkx", "ahclkr";
-> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 24>;
-> +			clock-names = "fck", "ahclkx";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x0 0x70000 0x2000>,
-> @@ -2926,9 +2923,8 @@
->  					<SYSC_IDLE_SMART>;
->  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
->  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 0>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 24>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 28>;
-> -			clock-names = "fck", "ahclkx", "ahclkr";
-> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 24>;
-> +			clock-names = "fck", "ahclkx";
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x0 0x74000 0x2000>,
-> @@ -2962,9 +2958,8 @@
->  					<SYSC_IDLE_SMART>;
->  			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
->  			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>,
-> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 28>;
-> -			clock-names = "fck", "ahclkx", "ahclkr";
-> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
-> +			clock-names = "fck", "ahclkx";
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+---
 
-The equivalent change to MCASP8 is missing.
+This is based on 5.3.0-rc1 plus Christoph Hellwig's 6 patches
+("hmm_range_fault related fixes and legacy API removal v2").
+Jason, I believe this is the patch you were requesting.
 
-regards
-Suman
+ drivers/gpu/drm/nouveau/nouveau_svm.c |  4 ++--
+ include/linux/hmm.h                   | 31 ++++-----------------------
+ mm/hmm.c                              | 13 ++++-------
+ 3 files changed, 10 insertions(+), 38 deletions(-)
 
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x0 0x78000 0x2000>,
-> 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
+u/nouveau_svm.c
+index a9c5c58d425b..6298d2dadb55 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -252,13 +252,13 @@ nouveau_svmm_invalidate(struct nouveau_svmm *svmm, u6=
+4 start, u64 limit)
+=20
+ static int
+ nouveau_svmm_sync_cpu_device_pagetables(struct hmm_mirror *mirror,
+-					const struct hmm_update *update)
++					const struct mmu_notifier_range *update)
+ {
+ 	struct nouveau_svmm *svmm =3D container_of(mirror, typeof(*svmm), mirror)=
+;
+ 	unsigned long start =3D update->start;
+ 	unsigned long limit =3D update->end;
+=20
+-	if (!update->blockable)
++	if (!mmu_notifier_range_blockable(update))
+ 		return -EAGAIN;
+=20
+ 	SVMM_DBG(svmm, "invalidate %016lx-%016lx", start, limit);
+diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+index 9f32586684c9..659e25a15700 100644
+--- a/include/linux/hmm.h
++++ b/include/linux/hmm.h
+@@ -340,29 +340,6 @@ static inline uint64_t hmm_device_entry_from_pfn(const=
+ struct hmm_range *range,
+=20
+ struct hmm_mirror;
+=20
+-/*
+- * enum hmm_update_event - type of update
+- * @HMM_UPDATE_INVALIDATE: invalidate range (no indication as to why)
+- */
+-enum hmm_update_event {
+-	HMM_UPDATE_INVALIDATE,
+-};
+-
+-/*
+- * struct hmm_update - HMM update information for callback
+- *
+- * @start: virtual start address of the range to update
+- * @end: virtual end address of the range to update
+- * @event: event triggering the update (what is happening)
+- * @blockable: can the callback block/sleep ?
+- */
+-struct hmm_update {
+-	unsigned long start;
+-	unsigned long end;
+-	enum hmm_update_event event;
+-	bool blockable;
+-};
+-
+ /*
+  * struct hmm_mirror_ops - HMM mirror device operations callback
+  *
+@@ -383,9 +360,9 @@ struct hmm_mirror_ops {
+ 	/* sync_cpu_device_pagetables() - synchronize page tables
+ 	 *
+ 	 * @mirror: pointer to struct hmm_mirror
+-	 * @update: update information (see struct hmm_update)
+-	 * Return: -EAGAIN if update.blockable false and callback need to
+-	 *          block, 0 otherwise.
++	 * @update: update information (see struct mmu_notifier_range)
++	 * Return: -EAGAIN if mmu_notifier_range_blockable(update) is false
++	 * and callback needs to block, 0 otherwise.
+ 	 *
+ 	 * This callback ultimately originates from mmu_notifiers when the CPU
+ 	 * page table is updated. The device driver must update its page table
+@@ -397,7 +374,7 @@ struct hmm_mirror_ops {
+ 	 * synchronous call.
+ 	 */
+ 	int (*sync_cpu_device_pagetables)(struct hmm_mirror *mirror,
+-					  const struct hmm_update *update);
++				const struct mmu_notifier_range *update);
+ };
+=20
+ /*
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 16b6731a34db..b810a4fa3de9 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -165,7 +165,6 @@ static int hmm_invalidate_range_start(struct mmu_notifi=
+er *mn,
+ {
+ 	struct hmm *hmm =3D container_of(mn, struct hmm, mmu_notifier);
+ 	struct hmm_mirror *mirror;
+-	struct hmm_update update;
+ 	struct hmm_range *range;
+ 	unsigned long flags;
+ 	int ret =3D 0;
+@@ -173,15 +172,10 @@ static int hmm_invalidate_range_start(struct mmu_noti=
+fier *mn,
+ 	if (!kref_get_unless_zero(&hmm->kref))
+ 		return 0;
+=20
+-	update.start =3D nrange->start;
+-	update.end =3D nrange->end;
+-	update.event =3D HMM_UPDATE_INVALIDATE;
+-	update.blockable =3D mmu_notifier_range_blockable(nrange);
+-
+ 	spin_lock_irqsave(&hmm->ranges_lock, flags);
+ 	hmm->notifiers++;
+ 	list_for_each_entry(range, &hmm->ranges, list) {
+-		if (update.end < range->start || update.start >=3D range->end)
++		if (nrange->end < range->start || nrange->start >=3D range->end)
+ 			continue;
+=20
+ 		range->valid =3D false;
+@@ -198,9 +192,10 @@ static int hmm_invalidate_range_start(struct mmu_notif=
+ier *mn,
+ 	list_for_each_entry(mirror, &hmm->mirrors, list) {
+ 		int rc;
+=20
+-		rc =3D mirror->ops->sync_cpu_device_pagetables(mirror, &update);
++		rc =3D mirror->ops->sync_cpu_device_pagetables(mirror, nrange);
+ 		if (rc) {
+-			if (WARN_ON(update.blockable || rc !=3D -EAGAIN))
++			if (WARN_ON(mmu_notifier_range_blockable(nrange) ||
++			    rc !=3D -EAGAIN))
+ 				continue;
+ 			ret =3D -EAGAIN;
+ 			break;
+--=20
+2.20.1
 
