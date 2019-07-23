@@ -2,72 +2,71 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E9BC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47012C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAFC21901
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194BA21901
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YG9fniY0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9grusXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389213AbfGWLKS (ORCPT
+        id S2389252AbfGWLKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:10:18 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40087 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729769AbfGWLKR (ORCPT
+        Tue, 23 Jul 2019 07:10:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37041 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389218AbfGWLKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:10:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so18968555pfp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:10:17 -0700 (PDT)
+        Tue, 23 Jul 2019 07:10:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so18977847pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:10:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LxPuevqDrXKRl+QxbN2Y5oAWPx3TYkvtTDFzWJOHnjs=;
-        b=YG9fniY0/+oHh3gEX8AcUgyWwxPgWQEPEhxjpZHpi94MqnZXwH+QdVyrVg+nmhEA8z
-         SM/UqyK6EtA4Bc5sa2cLFgokwYU2cT+2CdpDqH76HU2xSy0bx+tFcd89YVxyXRuE2vLg
-         MKlCtrYeWocOOwxzyIUrEwiYK2V+ct1EWD4rtV4vHOajVWE7zAA514xDwLU4s+36/CXp
-         oWHrs4WW3S/NtRJrA+HaLlsocF2CgILAkg5SO1ue14LiWHwap7WudPDhryPG1+wpEr77
-         RqA8g/5FuGum/BQHeLKg5v0+rVdCadygiLFXiEjpIN9sOreBsWuYIzbOT9LR7H+lf6Dh
-         jBnQ==
+        bh=TdC2f6TJF86FgwDX6KIDWxr/KpmV360i5Yrw3iyE1iw=;
+        b=q9grusXg7FRhKMtX21/0dcOkdQVBD1QHBhVPY5S/qj/KaUYNuBibLBKhoW+IIIiL1U
+         OSMGVNtBBUIc9Er+gmv9bpB3jOhTSOgpJLdOuVEto1b3OqnjBOXbmrkpsLgPTn3K7Bq6
+         94ct5pEJZ3o5xlHoXkv2dj838nPe1HBXkI73wObalKvZg8IBkatpdC2blOk8M0Guldw5
+         cXUrBQBgcq3BjSv46S3m6FFcWcUCzH7ClDC9YaVTYw7i/YlzIaRCp+HWZC2GYEc85pX4
+         Y5XgjMpDuNKPUX/eGnWcf3sDiUCC1AF7CXfD4oMmUeapfvrDrvUEF5r1pValTcdBfn47
+         NnfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LxPuevqDrXKRl+QxbN2Y5oAWPx3TYkvtTDFzWJOHnjs=;
-        b=kXJZV1RtRgzWiyDr1wABIHZFiCTAJA/3pE1SAtyEZ4ZiHXauawIFU2+sZubmd15e9P
-         Kbomet9/dRCtQbQUOmRWEKJhdtsGhHbhWzyx8XjrPicnYxuycF0bTcZFrQ75P+Svz3hf
-         N/xd9uLVCyMnk3HKLOOFWykJGCzcbry0JAJiCFEwlOZKmQ3f6EK/pHgGsvU1jfE6Yf5+
-         UlvxEKYBHNvBtBvoiWeEZTWzggGhObPfneTjW5fuqQXsDfhslmhy6bb/FcEhd/63ZM+E
-         Et011OdAXyDIDhv2efGuyYnzFFNcisbr2NgvqgTxEieVpyJYtpYPrnC4YFXG+8W8WuXe
-         4e2A==
-X-Gm-Message-State: APjAAAV7qLengKLwaMFReRfhPQmrZr1+x2YkL5oSxBOSOB1Y8mWbOvns
-        vxmCYxHl++V5J/EkkO9iAFk=
-X-Google-Smtp-Source: APXvYqwtnMRZGdchvBOx/iERHD9AcxxAfbmX8wbGsH4fMfJSma9v9udnTzlqmuaZglKQqjqCkiCFvA==
-X-Received: by 2002:a17:90a:3590:: with SMTP id r16mr82708219pjb.44.1563880217039;
-        Tue, 23 Jul 2019 04:10:17 -0700 (PDT)
+        bh=TdC2f6TJF86FgwDX6KIDWxr/KpmV360i5Yrw3iyE1iw=;
+        b=E9aRIaPDLTI9+ZDewHSZhsH+mj6Rmvq3MUnGmTMwUWnHlsqXJ3jckO74qqQkFw579t
+         f/zTK3ZRHijXl/OmRaebIgfMZvVNC9cIcw4V1eBF2C5OVm8COcdzTee9m6czIPKstNhA
+         yvs0GvjdFbP4Nb9nJyFubImi6QB/Fx3Uw2pzocLFyQBXCrjAUfJDBfIaPcxNwPAPUyQ9
+         cpsGAh6vUBf9lA1F//oKe7mgRhXUA4tcfq57fB2JmPd43VrFM55yxEhxdK848l1w00Lw
+         IwgppCUPfNsacIipWDSPNWr37OwuPwCy48siRdQholzWEF5ny4D1pwyB+WML0/YX16G4
+         r4/Q==
+X-Gm-Message-State: APjAAAXIU87tO5n0Vli5mSxVgk4WVhaejdJGn3AeqVERdtJe0wQCcee/
+        K343DN6CRaiAxOCkargqkiLfRek0C1Y=
+X-Google-Smtp-Source: APXvYqzFg8sL7ip6zspQWhRnUUbOYrrvGUS2Kinjim/SlCx29Bxi6970md1j/cfuqehMPa3Bnay/8A==
+X-Received: by 2002:a17:90a:8591:: with SMTP id m17mr83143286pjn.100.1563880237482;
+        Tue, 23 Jul 2019 04:10:37 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id v126sm11374576pgb.23.2019.07.23.04.10.13
+        by smtp.gmail.com with ESMTPSA id g4sm54517887pfo.93.2019.07.23.04.10.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 04:10:16 -0700 (PDT)
+        Tue, 23 Jul 2019 04:10:36 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
+Cc:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drm/radeon: Use dev_get_drvdata where possible
-Date:   Tue, 23 Jul 2019 19:10:08 +0800
-Message-Id: <20190723111008.10955-1-hslester96@gmail.com>
+Subject: [PATCH] drm/vmwgfx: Use dev_get_drvdata
+Date:   Tue, 23 Jul 2019 19:10:31 +0800
+Message-Id: <20190723111031.11012-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,59 +81,33 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/gpu/drm/radeon/radeon_drv.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index a6cbe11f79c6..b2bb74d5bffb 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -358,15 +358,13 @@ radeon_pci_shutdown(struct pci_dev *pdev)
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+index 9506190a0300..8f5f5980c9d8 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+@@ -1448,8 +1448,7 @@ static int vmw_pm_resume(struct device *kdev)
  
- static int radeon_pmops_suspend(struct device *dev)
+ static int vmw_pm_freeze(struct device *kdev)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 	return radeon_suspend_kms(drm_dev, true, true, false);
- }
+-	struct pci_dev *pdev = to_pci_dev(kdev);
+-	struct drm_device *dev = pci_get_drvdata(pdev);
++	struct drm_device *dev = dev_get_drvdata(kdev);
+ 	struct vmw_private *dev_priv = vmw_priv(dev);
+ 	int ret;
  
- static int radeon_pmops_resume(struct device *dev)
+@@ -1497,8 +1496,7 @@ static int vmw_pm_freeze(struct device *kdev)
+ 
+ static int vmw_pm_restore(struct device *kdev)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
+-	struct pci_dev *pdev = to_pci_dev(kdev);
+-	struct drm_device *dev = pci_get_drvdata(pdev);
++	struct drm_device *dev = dev_get_drvdata(kdev);
+ 	struct vmw_private *dev_priv = vmw_priv(dev);
+ 	int ret;
  
- 	/* GPU comes up enabled by the bios on resume */
- 	if (radeon_is_px(drm_dev)) {
-@@ -380,15 +378,13 @@ static int radeon_pmops_resume(struct device *dev)
- 
- static int radeon_pmops_freeze(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 	return radeon_suspend_kms(drm_dev, false, true, true);
- }
- 
- static int radeon_pmops_thaw(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 	return radeon_resume_kms(drm_dev, false, true);
- }
- 
-@@ -447,8 +443,7 @@ static int radeon_pmops_runtime_resume(struct device *dev)
- 
- static int radeon_pmops_runtime_idle(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 	struct drm_crtc *crtc;
- 
- 	if (!radeon_is_px(drm_dev)) {
 -- 
 2.20.1
 
