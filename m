@@ -2,140 +2,102 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA75C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161B6C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC172253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:22:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYuEXW5q"
+	by mail.kernel.org (Postfix) with ESMTP id E33CF2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbfGWUWE (ORCPT
+        id S2387474AbfGWUY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:22:04 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37794 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbfGWUWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:22:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so39575620wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rCsfgRk4Gb3dHRK/7OJQSsVifCQtFvi6RkLR5FcNfMA=;
-        b=BYuEXW5qEIEncGakWB5ey5U6QXpFCobmnswdZKuPlLJQYWX197mjl4y+bnWB8WvmPH
-         n9w/PIDZQw5RVXtWHk0uImOl+jCC60vI/uuvNpylCIOw9EtupLkqVVrDtphr3Fi9AWN3
-         toPTUIri1yNdvOFxHxyD86JKLUJiT4XSRmvRzJ+BHRlMwrTe1mOwu4ZFMd/NA7/QVg6Y
-         HLz3EOCSYGUVb3aS3rGwsLG5lO7sdxVkOB3P1rh5/h1ifKMu4UHdC87dsVKjQCH6j+BE
-         xZ8QE5OprPV/8serwDjBeAOMmEFfrFHiXwbBzjgxPIrSb0VGQ+fVNA29XtXN4DzXP5al
-         fIkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rCsfgRk4Gb3dHRK/7OJQSsVifCQtFvi6RkLR5FcNfMA=;
-        b=WLRdHZHi8uny2mnShbNEQ9Pf2WE60aRHUqTF7v3GRBsHwQgFJ1gIGHza+CtlzLkp8q
-         ypZazGJZUcO+1XX3A7XMnyRdhI1UKhDnwdyDj88vRiyxdBwNSo2SFpeK6CejKS7QLOYx
-         oPAdKo6Z54e1tI9dQZYviHXMEK6TqhyQp7/SRu31aprvvnai6uzZHyly2v7US/liImlV
-         tVcsarZgKnfEhLMQQjtH0MA3WWLbC7aqwQL/C00XnQD7S2IVa9sqS9UY2qta0SpwU7CN
-         aluNzsnmw53Ob/PgDAojGExB6U0dUyYgEjnFo+QTQxH5QDM1gTCkb2wWyMynLMrXtvvW
-         GPbw==
-X-Gm-Message-State: APjAAAUWpM/pL+BxicaR2cq/f6fdKqb0obVoSXelxwjkpCP1YFw4wFDb
-        /9UK6aEUtkbmymdc4ijKv/b1AwUmEOw=
-X-Google-Smtp-Source: APXvYqzTrdQFInj4OnnsUooZFNatTy1ah08LjCv1PGwgPPHfdZYkN7Y/Kd7t/jOijZNHAr7BWfQg5g==
-X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr72604693wme.81.1563913322259;
-        Tue, 23 Jul 2019 13:22:02 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id u2sm38916407wmc.3.2019.07.23.13.22.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 13:22:01 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 13:21:59 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] [v2] waitqueue: shut up clang -Wuninitialized warnings
-Message-ID: <20190723202159.GA79273@archlinux-threadripper>
-References: <20190719113638.4189771-1-arnd@arndb.de>
- <20190723105046.GD3402@hirez.programming.kicks-ass.net>
- <CAK8P3a3_sRmHVsEh=+83zR_Q3+Bh9fd+-iiCxt4PU4gkx0HZ7Q@mail.gmail.com>
+        Tue, 23 Jul 2019 16:24:29 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31967 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727247AbfGWUY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:24:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 13:24:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
+   d="scan'208";a="369028998"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jul 2019 13:24:27 -0700
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v5 0/9] Add Error Disconnect Recover (EDR) support
+Date:   Tue, 23 Jul 2019 13:21:42 -0700
+Message-Id: <cover.1563912591.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3_sRmHVsEh=+83zR_Q3+Bh9fd+-iiCxt4PU4gkx0HZ7Q@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 01:03:05PM +0200, Arnd Bergmann wrote:
-> On Tue, Jul 23, 2019 at 12:50 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > On Fri, Jul 19, 2019 at 01:36:00PM +0200, Arnd Bergmann wrote:
-> > > --- a/include/linux/wait.h
-> > > +++ b/include/linux/wait.h
-> > > @@ -70,8 +70,17 @@ extern void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *n
-> > >  #ifdef CONFIG_LOCKDEP
-> > >  # define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
-> > >       ({ init_waitqueue_head(&name); name; })
-> > > -# define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
-> > > +# if defined(__clang__) && __clang_major__ <= 9
-> > > +/* work around https://bugs.llvm.org/show_bug.cgi?id=42604 */
-> > > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name)                                      \
-> > > +     _Pragma("clang diagnostic push")                                        \
-> > > +     _Pragma("clang diagnostic ignored \"-Wuninitialized\"")                 \
-> > > +     struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)      \
-> > > +     _Pragma("clang diagnostic pop")
-> > > +# else
-> > > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
-> > >       struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
-> > > +# endif
-> >
-> > While this is indeed much better than before; do we really want to do
-> > this? That is, since clang-9 release will not need this, we're basically
-> > doing the above for pre-release compilers only.
-> 
-> Kernelci currently builds arch/arm and arch/arm64 kernels with clang-8,
-> and probably won't change to clang-9 until after that is released,
-> presumably in September.
-> 
-> Anyone doing x86 builds would use a clang-9 snapshot today
-> because of the asm-goto support, but so far the fix has not
-> been merged there either. I think the chances of it getting
-> fixed before the release are fairly good, but I don't know how
-> long it will actually take.
-> 
->        Arnd
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Furthermore, while x86 will only be supported by clang-9 and up, there
-are other architectures/configurations that work with earlier versions
-that will never see that fix. There are a few people that still use
-clang-7 for example.
+This patchset adds support for following features:
 
-In an ideal world, everyone should be using the latest version of clang
-because of all of the fixes and improvements that are going into that
-latest version but the same can be said of any piece of software. I am
-not sure that it is fair to force someone to upgrade when it works for
-them. Not everyone runs Ubuntu/Debian to get access to apt.llvm.org
-builds or wants to add random repositories to their list or wants to
-build clang from source.
+1. Error Disconnect Recover (EDR) support.
+2. _OSC based negotiation support for DPC.
 
-I suppose it comes down to policy: if we don't want to support versions
-of LLVM before 9.x then we should just break the build when it is
-detected but Nick has spoken out against that and I think that he has a
-fair point.
+You can find EDR spec in the following link.
 
-https://lore.kernel.org/lkml/CAKwvOdnzrMOCo4RRsfcR=K5ELWU8obgMqtOGZnx_avLrArjpRQ@mail.gmail.com/
+https://members.pcisig.com/wg/PCI-SIG/document/12614
 
-Cheers,
-Nathan
+Changes since v1:
+ * Rebased on top of v5.1-rc1
+
+Changes since v2:
+ * Split EDR support patch into multiple patches.
+ * Addressed Bjorn comments.
+
+Changes since v3:
+ * Moved EDR related ACPI functions/definitions to pci-acpi.c
+ * Modified commit history in few patches to include spec reference.
+ * Added support to handle DPC triggered by NON_FATAL errors.
+ * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+ * Addressed Bjorn comments.
+
+Changes since v4:
+ * Rebased on top of v5.3-rc1
+ * Fixed lock/unlock issue in edr_handle_event().
+ * Merged "Update error status after reset_link()" patch into this patchset.
+
+Kuppuswamy Sathyanarayanan (9):
+  PCI/ERR: Update error status after reset_link()
+  PCI/ACPI: Add _OSC based negotiation support for DPC
+  PCI/ACPI: Expose EDR support via _OSC to BIOS
+  PCI/DPC: Allow dpc_probe() even if firmware first mode is enabled
+  PCI/DPC: Add dpc_process_error() wrapper function
+  PCI/DPC: Add Error Disconnect Recover (EDR) support
+  PCI/AER: Allow clearing Error Status Register in FF mode
+  PCI/DPC: Add support for DPC recovery on NON_FATAL errors
+  PCI/DPC: Clear AER registers in EDR mode
+
+ drivers/acpi/pci_root.c         |   9 ++
+ drivers/pci/pci-acpi.c          |  91 +++++++++++++++
+ drivers/pci/pcie/Kconfig        |  10 ++
+ drivers/pci/pcie/aer.c          |   9 --
+ drivers/pci/pcie/dpc.c          | 201 +++++++++++++++++++++++++++++---
+ drivers/pci/pcie/err.c          |  11 +-
+ drivers/pci/pcie/portdrv_core.c |   8 +-
+ drivers/pci/probe.c             |   1 +
+ include/linux/acpi.h            |   4 +-
+ include/linux/pci-acpi.h        |  11 ++
+ include/linux/pci.h             |   2 +-
+ 11 files changed, 323 insertions(+), 34 deletions(-)
+
+-- 
+2.21.0
+
