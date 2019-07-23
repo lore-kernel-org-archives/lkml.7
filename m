@@ -2,70 +2,49 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201FEC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152B2C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8AD2081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/eG3eqs"
+	by mail.kernel.org (Postfix) with ESMTP id DFFED2081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563878730;
+	bh=0CxpEE6Px2Vo+8Rm/Kxf6isGcD4FPfDSxg90fTag+VM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MM8weX/an9xkPjjZS1AwPcYMrv1wtym0Mg/ThCT5OyCJEGjuLhiyBqwWRelk+ypgt
+	 dSsNMGMdLX8GCqbJQNU96WIgxtYtEEiZzSECQF+Hzfk0qb8ERkM2pRFtsc1jR5EC+1
+	 rkdxqpEuY+E6MKZ5kNM2NkGaDkvsfY2hd4TQUyZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389251AbfGWKpV (ORCPT
+        id S2389260AbfGWKp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:45:21 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34642 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389188AbfGWKpD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:45:03 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so20479747plt.1;
-        Tue, 23 Jul 2019 03:45:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tLr9+dN/788cYU44X9e1swSeL2hknE+Vg2zg7+VyNDI=;
-        b=J/eG3eqsBHV6rPMWCho+F/vhFO3t+zS6ukU3B76ICvgReFf14ic/ypbZmjkJGQvG6C
-         bvZ6EN8q/edMiWVM7GmnNnlGb92YslkGpsJ84m20Oiv+2peeEvTh6X7mRa9IdsRvHw8x
-         8jUGThWlUR6TWHS2bTJd/R26LOmRYNw59HTPBTtz1dIiV22UdkMsPOxroXRUQXktJz8O
-         sWOwPWRWxYmrkvGb437xmLhTfBoyRWBPPmnl1Ob2xafeLTlZY/fiA9tawLX6dA1XicuY
-         /pp/1Wn5Dx8XDyY3luzUVQEYJ6pmVXmhBig+9upD2l1D/cbN8qXSE603upJHm7O5H4YV
-         Edzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tLr9+dN/788cYU44X9e1swSeL2hknE+Vg2zg7+VyNDI=;
-        b=Z/mTcZZNJ3VblliAaRm0lxSlq4v24Kupo21ua9blW8S+nkHcKL4JtUE7ZAfZsXKNxD
-         9CknuXmIuvtxfAC+XJ0735OfI202yj6LM3yr1EmoLfCvYNoHhkvs4mRooDWhWF1L0dwz
-         EWCMaIIwroPiUGN0PtkkMwjV6tZdKMgNv3hdhb2q9AHmkt6a9DCGf/BfzQry5fpeYuAK
-         uexOuBDUYCdElFV2WpZ/NfEOCZUjcoo+OAgGYqzrx4mpebA+/7TI3pGDRtvDr5mIdEFm
-         lWHeHoOsq7cF9LuxZTHs1XfZXx2RRVOcwwWbWfH36z38CDcYRHP7HSzrZaEC0XSfUOpq
-         3LDg==
-X-Gm-Message-State: APjAAAXluTOEZkjLSZz+hdmBhxEesgWx69t0jxlblNOvFdw75gAXVXcl
-        t8h4sMN7xbuLmGkF7jM+mSN7KrbK
-X-Google-Smtp-Source: APXvYqwp2NR7lU0gvHB/ueXGroAMNzr/fcJ3cU7HRdWuer3b4zvJ8osGftOmVzjVlHD08+BizdYGwA==
-X-Received: by 2002:a17:902:1101:: with SMTP id d1mr35553096pla.212.1563878702598;
-        Tue, 23 Jul 2019 03:45:02 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.0.39])
-        by smtp.gmail.com with ESMTPSA id s5sm16795876pfm.97.2019.07.23.03.44.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 03:45:01 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     olteanv@gmail.com, andrew@lunn.ch, vivien.didelot@gmail.com,
-        f.fainelli@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] net: dsa: sja1105: sja1105_main: Add of_node_put()
-Date:   Tue, 23 Jul 2019 16:14:48 +0530
-Message-Id: <20190723104448.8125-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 23 Jul 2019 06:45:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:52602 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389175AbfGWKo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:44:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39285337;
+        Tue, 23 Jul 2019 03:44:56 -0700 (PDT)
+Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.197.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 505F83F71A;
+        Tue, 23 Jul 2019 03:44:55 -0700 (PDT)
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 8/9] dt-bindings: interrupt-controller: arm,gic-v3: Describe EPPI range support
+Date:   Tue, 23 Jul 2019 11:44:36 +0100
+Message-Id: <20190723104437.154403-9-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190723104437.154403-1-maz@kernel.org>
+References: <20190723104437.154403-1-maz@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,44 +52,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each iteration of for_each_child_of_node puts the previous node, but in
-the case of a return from the middle of the loop, there is no put, thus
-causing a memory leak. Hence add an of_node_put before the return.
-Issue found with Coccinelle.
+Update the GICv3 binding to allow interrupts in the EPPI range.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/interrupt-controller/arm,gic-v3.yaml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 32bf3a7cc3b6..6ed5f1e35789 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -625,6 +625,7 @@ static int sja1105_parse_ports_node(struct sja1105_private *priv,
- 		if (of_property_read_u32(child, "reg", &index) < 0) {
- 			dev_err(dev, "Port number not defined in device tree "
- 				"(property \"reg\")\n");
-+			of_node_put(child);
- 			return -ENODEV;
- 		}
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+index 98a3ecda8e07..1fe147daca4c 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+@@ -44,12 +44,13 @@ properties:
+       be at least 4.
  
-@@ -634,6 +635,7 @@ static int sja1105_parse_ports_node(struct sja1105_private *priv,
- 			dev_err(dev, "Failed to read phy-mode or "
- 				"phy-interface-type property for port %d\n",
- 				index);
-+			of_node_put(child);
- 			return -ENODEV;
- 		}
- 		ports[index].phy_mode = phy_mode;
-@@ -643,6 +645,7 @@ static int sja1105_parse_ports_node(struct sja1105_private *priv,
- 			if (!of_phy_is_fixed_link(child)) {
- 				dev_err(dev, "phy-handle or fixed-link "
- 					"properties missing!\n");
-+				of_node_put(child);
- 				return -ENODEV;
- 			}
- 			/* phy-handle is missing, but fixed-link isn't.
+       The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
+-      interrupts, 2 for interrupts in the Extended SPI range. Other values
+-      are reserved for future use.
++      interrupts, 2 for interrupts in the Extended SPI range, 3 for the
++      Extended PPI range. Other values are reserved for future use.
+ 
+       The 2nd cell contains the interrupt number for the interrupt type.
+       SPI interrupts are in the range [0-987]. PPI interrupts are in the
+       range [0-15]. Extented SPI interrupts are in the range [0-1023].
++      Extended PPI interrupts are in the range [0-127].
+ 
+       The 3rd cell is the flags, encoded as follows:
+       bits[3:0] trigger type and level flags.
 -- 
-2.19.1
+2.20.1
 
