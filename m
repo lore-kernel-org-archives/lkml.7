@@ -2,263 +2,253 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506A7C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3251DC76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A519223A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EFE2238E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388209AbfGWGqB (ORCPT
+        id S1730794AbfGWGqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 02:46:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41512 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388127AbfGWGp6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 02:45:58 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hpoYe-0006o3-Av
-        for linux-kernel@vger.kernel.org; Tue, 23 Jul 2019 06:45:56 +0000
-Received: by mail-pg1-f199.google.com with SMTP id m17so16405995pgh.21
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 23:45:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=NTVFB8vKi+UKrd0lcmO2aFDnhZ2NRKgCuTiopH4B1xw=;
-        b=TFI1TqUFjZLR9g2ORx3+vD5TawcSsLEbRN+wZ8e4WMdE6pknECyybqaL0sGL252+6g
-         2WwJBMPzsVpdMfVIgfwa7auZuRLELULN+CGVlcytLqo+ln3MECiMnz2Ddxiuyjy+fzFJ
-         d7siEA2edFvvPB74Ic9p9y1kdiPYhtjcD63AReU3FAMvRFgYgZBNP8rIuO5sf8gVf1Cq
-         BEF7Vf9J7iWhefyudTTNx05EA/t5n7jfKxLoNek4ulWxR8/Z/WYWx+Rz7mEKl/eToHcv
-         /LFsg4WSuaMSzH3Fj9CkhWd0Rawm5ol0aU3o48kJLKtyPi8uWX6w1ojF9TELqYBw+Oz0
-         d6bA==
-X-Gm-Message-State: APjAAAVr4cPZkOwE9iKzMnu/Mrn/gGJaBCMATfiijsZehFBVE3T7ux4J
-        1G3P/rve8ct/S/7uxtvg6YtuDZumK6JC4N1uG3pzYQ6VVWPINQLZcXi5FZ2j3EOMM6O9EaZ5SCF
-        pRlhUIftU30yGXnZI05RttZoauNaUX2xjzzulIP7zPQ==
-X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr21729818plp.126.1563864354964;
-        Mon, 22 Jul 2019 23:45:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxs9iIioNzu7vz8WW8REtE5WIODnwsxOgsmsl0xWVpe1VPwnU+RlbSnteraTcUgMOU1VRp0bA==
-X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr21729795plp.126.1563864354561;
-        Mon, 22 Jul 2019 23:45:54 -0700 (PDT)
-Received: from 2001-b011-380f-3c20-e8e0-1150-3bec-1563.dynamic-ip6.hinet.net (2001-b011-380f-3c20-e8e0-1150-3bec-1563.dynamic-ip6.hinet.net. [2001:b011:380f:3c20:e8e0:1150:3bec:1563])
-        by smtp.gmail.com with ESMTPSA id s43sm50209730pjb.10.2019.07.22.23.45.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 23:45:54 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3] Input: elantech: Enable SMBus on new (2018+) systems
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190722081739.GA804@penguin>
-Date:   Tue, 23 Jul 2019 14:45:51 +0800
-Cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Your Name <you@example.com>
-Content-Transfer-Encoding: 8bit
-Message-Id: <9AFB67C8-12BE-4794-BA82-BF7D1AED22E8@canonical.com>
-References: <20190121070258.1844-1-kai.heng.feng@canonical.com>
- <20190722074055.22427-1-kai.heng.feng@canonical.com>
- <20190722081739.GA804@penguin>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 23 Jul 2019 02:46:55 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55418 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729552AbfGWGqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 02:46:55 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CD062DD72BF5750FBEDE;
+        Tue, 23 Jul 2019 14:46:52 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Jul
+ 2019 14:46:48 +0800
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix to read source block before
+ invalidating it
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190718013718.70335-1-jaegeuk@kernel.org>
+ <20190718031214.GA78336@jaegeuk-macbookpro.roam.corp.google.com>
+ <19a25101-da74-de98-6ca4-a9fd9fa09ef2@huawei.com>
+ <20190718040005.GA81995@jaegeuk-macbookpro.roam.corp.google.com>
+ <91dbfa33-cda0-e6e7-d62f-6604939142d4@huawei.com>
+ <20190723012721.GA60134@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <45a9f47b-337c-527c-420d-b29e77a8ed22@huawei.com>
+Date:   Tue, 23 Jul 2019 14:46:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190723012721.GA60134@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-at 16:17, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-
-> Hi Kai-Heng,
->
-> On Mon, Jul 22, 2019 at 03:40:55PM +0800, Kai-Heng Feng wrote:
->> There are some new HP laptops with Elantech touchpad don't support
->> multitouch.
+On 2019/7/23 9:27, Jaegeuk Kim wrote:
+> On 07/18, Chao Yu wrote:
+>> On 2019/7/18 12:00, Jaegeuk Kim wrote:
+>>> On 07/18, Chao Yu wrote:
+>>>> On 2019/7/18 11:12, Jaegeuk Kim wrote:
+>>>>> f2fs_allocate_data_block() invalidates old block address and enable new block
+>>>>> address. Then, if we try to read old block by f2fs_submit_page_bio(), it will
+>>>>> give WARN due to reading invalid blocks.
+>>>>>
+>>>>> Let's make the order sanely back.
+>>>>
+>>>> Hmm.. to avoid WARM, we may suffer one more memcpy, I suspect this can reduce
+>>>> online resize or foreground gc ioctl performance...
+>>>
+>>> I worried about performance tho, more concern came to me that there may exist a
+>>> chance that other thread can allocate and write something in old block address.
 >>
->> Currently we use ETP_NEW_IC_SMBUS_HOST_NOTIFY() to check if SMBus is
->> supported, but in addition to firmware version, the bus type also
->> informs us if the IC can support SMBus, so also check that.
+>> Me too, however, previous invalid block address should be reused after a
+>> checkpoint, and checkpoint should have invalidated meta cache already, so there
+>> shouldn't be any race here.
+> 
+> I think SSR can reuse that before checkpoint.
+
+Yes, I should have considered that when I introduced readahead feature for
+migration of block, we've kept invalidating meta page cache in old block address
+whenever the block address is not valid.
+
+quoted from ("f2fs: readahead encrypted block during GC")
+
+"Note that for OPU, truncation, deletion, we need to invalid meta
+page after we invalid old block address, to make sure we won't load
+invalid data from target meta page during encrypted block migration."
+
+But to avoid potential issue, how about just enable meta page cache during GC?
+that is saying we should truncate all valid meta cache after one section has
+been moved.
+
+
+One more concern is whether below case exists during SSR?
+- write 4k to fileA;
+- fsync fileA, 4k data is writebacked to lbaA;
+- write 4k to fileA;
+- kworker flushs 4k to lbaB; dnode contain lbaB didn't be persisted yet;
+- write 4k to fileB;
+- kworker flush 4k to lbaA due to SSR;
+- SPOR  -> dnode with lbaA will be recovered, however lbaA contains fileB's data..
+
+Thanks,
+
+> 
 >>
->> In case of breaking old ICs, only enables SMBus on systems manufactured
->> after 2018, alongsides aforementioned checks.
+>> 	/*
+>> 	 * invalidate intermediate page cache borrowed from meta inode
+>> 	 * which are used for migration of encrypted inode's blocks.
+>> 	 */
+>> 	if (f2fs_sb_has_encrypt(sbi))
+>> 		invalidate_mapping_pages(META_MAPPING(sbi),
+>> 				MAIN_BLKADDR(sbi), MAX_BLKADDR(sbi) - 1);
 >>
->> Lastly, consolidats all check into elantech_use_host_notify() and use it
->> to determine whether to use PS/2 or SMBus.
+>> Thanks,
 >>
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> Signed-off-by: Your Name <you@example.com>
->
-> I do not think "Your Name" should be signing DCO here :)
-
-Yes I don’t know how I messed that up...
-
->
->> +static bool elantech_use_host_notify(struct psmouse *psmouse,
->> +				     struct elantech_device_info *info)
->> +{
->> +	bool host_notify = false;
->> +
->> +	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
->> +		host_notify = true;
->> +	else {
->> +		switch (info->bus) {
->> +		case ETP_BUS_PS2_ONLY:
->> +			/* expected case */
->> +			break;
->> +		case ETP_BUS_SMB_ALERT_ONLY:
->> +			/* fall-through  */
->> +		case ETP_BUS_PS2_SMB_ALERT:
->> +			psmouse_dbg(psmouse, "Ignoring SMBus provider  
->> through alert protocol.\n");
->> +			break;
->> +		case ETP_BUS_SMB_HST_NTFY_ONLY:
->> +			/* fall-through  */
->> +		case ETP_BUS_PS2_SMB_HST_NTFY:
->> +			/* SMbus implementation is stable since 2018 */
->> +			if (dmi_get_bios_year() >= 2018)
->> +				host_notify = true;
->> +			break;
->> +		default:
->> +			psmouse_dbg(psmouse,
->> +				    "Ignoring SMBus bus provider %d.\n",
->> +				    info->bus);
->> +		}
->> +	}
->
-> I think this is way too verbose. How about a bit more condensed form:
-
-The one revised by you is more succinct. Please use yours instead :)
-
-Thanks!
-
-Kai-Heng
-
->
->
-> Input: elantech - enable SMBus on new (2018+) systems
->
-> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
->
-> There are some new HP laptops with Elantech touchpad that don't support
-> multitouch.
->
-> Currently we use ETP_NEW_IC_SMBUS_HOST_NOTIFY() to check if SMBus is  
-> supported,
-> but in addition to firmware version, the bus type also informs us whether  
-> the IC
-> can support SMBus. To avoid breaking old ICs, we will only enable SMbus  
-> support
-> based the bus type on systems manufactured after 2018.
->
-> Lastly, let's consolidate all checks into elantech_use_host_notify() and  
-> use it
-> to determine whether to use PS/2 or SMBus.
->
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/input/mouse/elantech.c |   54 +++++++++++++++++++---------------------
->  1 file changed, 25 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/input/mouse/elantech.c  
-> b/drivers/input/mouse/elantech.c
-> index 2d8434b7b623..73544776a9ed 100644
-> --- a/drivers/input/mouse/elantech.c
-> +++ b/drivers/input/mouse/elantech.c
-> @@ -1827,6 +1827,30 @@ static int elantech_create_smbus(struct psmouse  
-> *psmouse,
->  				  leave_breadcrumbs);
->  }
->
-> +static bool elantech_use_host_notify(struct psmouse *psmouse,
-> +				     struct elantech_device_info *info)
-> +{
-> +	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
-> +		return true;
-> +
-> +	switch (info->bus) {
-> +	case ETP_BUS_PS2_ONLY:
-> +		/* expected case */
-> +		break;
-> +	case ETP_BUS_SMB_HST_NTFY_ONLY:
-> +	case ETP_BUS_PS2_SMB_HST_NTFY:
-> +		/* SMbus implementation is stable since 2018 */
-> +		if (dmi_get_bios_year() >= 2018)
-> +			return true;
-> +	default:
-> +		psmouse_dbg(psmouse,
-> +			    "Ignoring SMBus bus provider %d\n", info->bus);
-> +		break;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  /**
->   * elantech_setup_smbus - called once the PS/2 devices are enumerated
->   * and decides to instantiate a SMBus InterTouch device.
-> @@ -1846,7 +1870,7 @@ static int elantech_setup_smbus(struct psmouse  
-> *psmouse,
->  		 * i2c_blacklist_pnp_ids.
->  		 * Old ICs are up to the user to decide.
->  		 */
-> -		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
-> +		if (!elantech_use_host_notify(psmouse, info) ||
->  		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
->  			return -ENXIO;
->  	}
-> @@ -1866,34 +1890,6 @@ static int elantech_setup_smbus(struct psmouse  
-> *psmouse,
->  	return 0;
->  }
->
-> -static bool elantech_use_host_notify(struct psmouse *psmouse,
-> -				     struct elantech_device_info *info)
-> -{
-> -	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
-> -		return true;
-> -
-> -	switch (info->bus) {
-> -	case ETP_BUS_PS2_ONLY:
-> -		/* expected case */
-> -		break;
-> -	case ETP_BUS_SMB_ALERT_ONLY:
-> -		/* fall-through  */
-> -	case ETP_BUS_PS2_SMB_ALERT:
-> -		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert  
-> protocol.\n");
-> -		break;
-> -	case ETP_BUS_SMB_HST_NTFY_ONLY:
-> -		/* fall-through  */
-> -	case ETP_BUS_PS2_SMB_HST_NTFY:
-> -		return true;
-> -	default:
-> -		psmouse_dbg(psmouse,
-> -			    "Ignoring SMBus bus provider %d.\n",
-> -			    info->bus);
-> -	}
-> -
-> -	return false;
-> -}
-> -
->  int elantech_init_smbus(struct psmouse *psmouse)
->  {
->  	struct elantech_device_info info;
->
-> Thanks.
->
-> -- 
-> Dmitry
-
-
+>>>
+>>>>
+>>>> Can we just relief to use DATA_GENERIC_ENHANCE_READ for this case...?
+>>>
+>>> We need to keep consistency for this api.
+>>>
+>>> Thanks,
+>>>
+>>>>
+>>>>>
+>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>
+>>>> Except performance, I'm okay with this change.
+>>>>
+>>>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>> ---
+>>>>> v2:
+>>>>> I was fixing the comments. :)
+>>>>>
+>>>>>  fs/f2fs/gc.c | 70 +++++++++++++++++++++++++---------------------------
+>>>>>  1 file changed, 34 insertions(+), 36 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+>>>>> index 6691f526fa40..8974672db78f 100644
+>>>>> --- a/fs/f2fs/gc.c
+>>>>> +++ b/fs/f2fs/gc.c
+>>>>> @@ -796,6 +796,29 @@ static int move_data_block(struct inode *inode, block_t bidx,
+>>>>>  	if (lfs_mode)
+>>>>>  		down_write(&fio.sbi->io_order_lock);
+>>>>>  
+>>>>> +	mpage = f2fs_grab_cache_page(META_MAPPING(fio.sbi),
+>>>>> +					fio.old_blkaddr, false);
+>>>>> +	if (!mpage)
+>>>>> +		goto up_out;
+>>>>> +
+>>>>> +	fio.encrypted_page = mpage;
+>>>>> +
+>>>>> +	/* read source block in mpage */
+>>>>> +	if (!PageUptodate(mpage)) {
+>>>>> +		err = f2fs_submit_page_bio(&fio);
+>>>>> +		if (err) {
+>>>>> +			f2fs_put_page(mpage, 1);
+>>>>> +			goto up_out;
+>>>>> +		}
+>>>>> +		lock_page(mpage);
+>>>>> +		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
+>>>>> +						!PageUptodate(mpage))) {
+>>>>> +			err = -EIO;
+>>>>> +			f2fs_put_page(mpage, 1);
+>>>>> +			goto up_out;
+>>>>> +		}
+>>>>> +	}
+>>>>> +
+>>>>>  	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
+>>>>>  					&sum, CURSEG_COLD_DATA, NULL, false);
+>>>>>  
+>>>>> @@ -803,44 +826,18 @@ static int move_data_block(struct inode *inode, block_t bidx,
+>>>>>  				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
+>>>>>  	if (!fio.encrypted_page) {
+>>>>>  		err = -ENOMEM;
+>>>>> -		goto recover_block;
+>>>>> -	}
+>>>>> -
+>>>>> -	mpage = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
+>>>>> -					fio.old_blkaddr, FGP_LOCK, GFP_NOFS);
+>>>>> -	if (mpage) {
+>>>>> -		bool updated = false;
+>>>>> -
+>>>>> -		if (PageUptodate(mpage)) {
+>>>>> -			memcpy(page_address(fio.encrypted_page),
+>>>>> -					page_address(mpage), PAGE_SIZE);
+>>>>> -			updated = true;
+>>>>> -		}
+>>>>>  		f2fs_put_page(mpage, 1);
+>>>>> -		invalidate_mapping_pages(META_MAPPING(fio.sbi),
+>>>>> -					fio.old_blkaddr, fio.old_blkaddr);
+>>>>> -		if (updated)
+>>>>> -			goto write_page;
+>>>>> -	}
+>>>>> -
+>>>>> -	err = f2fs_submit_page_bio(&fio);
+>>>>> -	if (err)
+>>>>> -		goto put_page_out;
+>>>>> -
+>>>>> -	/* write page */
+>>>>> -	lock_page(fio.encrypted_page);
+>>>>> -
+>>>>> -	if (unlikely(fio.encrypted_page->mapping != META_MAPPING(fio.sbi))) {
+>>>>> -		err = -EIO;
+>>>>> -		goto put_page_out;
+>>>>> -	}
+>>>>> -	if (unlikely(!PageUptodate(fio.encrypted_page))) {
+>>>>> -		err = -EIO;
+>>>>> -		goto put_page_out;
+>>>>> +		goto recover_block;
+>>>>>  	}
+>>>>>  
+>>>>> -write_page:
+>>>>> +	/* write target block */
+>>>>>  	f2fs_wait_on_page_writeback(fio.encrypted_page, DATA, true, true);
+>>>>> +	memcpy(page_address(fio.encrypted_page),
+>>>>> +				page_address(mpage), PAGE_SIZE);
+>>>>> +	f2fs_put_page(mpage, 1);
+>>>>> +	invalidate_mapping_pages(META_MAPPING(fio.sbi),
+>>>>> +				fio.old_blkaddr, fio.old_blkaddr);
+>>>>> +
+>>>>>  	set_page_dirty(fio.encrypted_page);
+>>>>>  	if (clear_page_dirty_for_io(fio.encrypted_page))
+>>>>>  		dec_page_count(fio.sbi, F2FS_DIRTY_META);
+>>>>> @@ -871,11 +868,12 @@ static int move_data_block(struct inode *inode, block_t bidx,
+>>>>>  put_page_out:
+>>>>>  	f2fs_put_page(fio.encrypted_page, 1);
+>>>>>  recover_block:
+>>>>> -	if (lfs_mode)
+>>>>> -		up_write(&fio.sbi->io_order_lock);
+>>>>>  	if (err)
+>>>>>  		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
+>>>>>  								true, true);
+>>>>> +up_out:
+>>>>> +	if (lfs_mode)
+>>>>> +		up_write(&fio.sbi->io_order_lock);
+>>>>>  put_out:
+>>>>>  	f2fs_put_dnode(&dn);
+>>>>>  out:
+>>>>>
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> Linux-f2fs-devel mailing list
+>>>> Linux-f2fs-devel@lists.sourceforge.net
+>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>> .
+>>>
+> .
+> 
