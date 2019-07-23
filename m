@@ -2,184 +2,166 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38BAC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEC4C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A250221E70
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D232238C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563849404;
+	bh=ZjmxKozfFKHGpWIrPVKAeXJWZzSSxjFtmKBfxfrLBb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m7KohgGb3118ymW341Kb9lr0QudnOvj+vVYuNC7NREa88QzQmtJWfjIxUp7KBZur6
+	 MH2uEhQJ3t035VTP2W5+UdBsxyM8I8+GkRbl/fjZBvTB+2jo/j2fO9zPpsY6TiLOvz
+	 V4qSscy6poBK8YEixfRiMaWZx5iPksXBjX0k4eGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731389AbfGWCb7 (ORCPT
+        id S1731180AbfGWCgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 22:31:59 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:64959 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726741AbfGWCb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 22:31:59 -0400
-X-UUID: 6bcc48428b9048dda51d398fa812f6a7-20190723
-X-UUID: 6bcc48428b9048dda51d398fa812f6a7-20190723
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2016696171; Tue, 23 Jul 2019 10:31:51 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 23 Jul 2019 10:31:49 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 23 Jul 2019 10:31:49 +0800
-Message-ID: <1563849109.27558.14.camel@mtksdaap41>
-Subject: Re: [PATCH v2 00/12] Clean up "mediatek,larb" after adding
- device_link
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Yong Wu <yong.wu@mediatek.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>, <youlin.pei@mediatek.com>,
-        <devicetree@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>, Will Deacon <will.deacon@arm.com>,
-        <linux-kernel@vger.kernel.org>, Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-mediatek@lists.infradead.org>, <yingjoe.chen@mediatek.com>,
-        <anan.sun@mediatek.com>, Robin Murphy <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 23 Jul 2019 10:31:49 +0800
-In-Reply-To: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 22 Jul 2019 22:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbfGWCgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 22:36:42 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C97422389;
+        Tue, 23 Jul 2019 02:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563849401;
+        bh=ZjmxKozfFKHGpWIrPVKAeXJWZzSSxjFtmKBfxfrLBb0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tK7agweKzWNK/P2dMO2nsSyz7fTlwYn5cfijN8wssogZixRSSnw6a05/NVP80sroO
+         FNjAwrlLt0VeMCRn/vQQnzI3IW5qP78oNveL7Gvt3DRbH5QStv/mIzxyXfD2QWv/9K
+         MYpc7WWGMZXRbisrgEhxK5q8y8Z9AT18foEQ96NQ=
+Date:   Mon, 22 Jul 2019 19:36:40 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
+Message-ID: <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190719073903.9138-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719073903.9138-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yong:
+On 07/19, Chao Yu wrote:
+> Pinning a file is heavy, because skipping pinned files make GC
+> running with heavy load or no effect.
 
-I've added log  in mtk_smi_clk_enable() and mtk_smi_clk_disable(), and I
-boot MT8183 with display, the log is
+Pinned file is a part of NOCOW files, so I don't think we can simply drop it
+for backward compatibility.
 
-[    4.020340] mtk-smi-common 14019000.smi: mtk_smi_clk_enable()
-[    4.331371] mtk-smi-common 14019000.smi: mtk_smi_clk_disable()
-[    4.429578] mtk-smi-common 14019000.smi: mtk_smi_clk_enable()
-[    4.719743] mtk-smi-common 14019000.smi: mtk_smi_clk_disable()
-[    5.084770] mtk-smi-common 14019000.smi: mtk_smi_clk_enable()
-[    5.904310] mtk-smi-common 14019000.smi: mtk_smi_clk_disable()
-
-From the log, the clock is finally turned off, but the display works
-normally. This is because scpsys has turn the clock on,
-
-		scpsys: syscon@10006000 {
-			compatible = "mediatek,mt8183-scpsys", "syscon";
-			#power-domain-cells = <1>;
-			reg = <0 0x10006000 0 0x1000>;
-			clocks = <&topckgen CLK_TOP_MUX_AUD_INTBUS>,
-				 <&mmsys CLK_MM_SMI_COMMON>,
-				 <&mmsys CLK_MM_GALS_COMM0>,
-				 <&mmsys CLK_MM_GALS_COMM1>,
-			clock-names = "audio","mm-0",
-				      "mm-1", "mm-2";
-		}
-
-I'm worried that for MT8173, scpsys would not turn on subsys clock, this
-series would let display work abnormally, so I think smi common should
-not depend on scpsys to turn on the clock.
-
-You could simply remove the clock parameter in scpsys device node, and
-you would see the display works abnormally.
-
-Regards,
-CK
-
-
-On Mon, 2019-06-10 at 20:55 +0800, Yong Wu wrote:
-> MediaTek IOMMU block diagram always like below:
 > 
->         M4U
->          |
->     smi-common
->          |
->   -------------
->   |         |  ...
->   |         |
-> larb1     larb2
->   |         |
-> vdec       venc
+> So that this patch propose to separate nocow and pinfile semantics:
+> - NOCoW flag can only be set on regular file.
+> - NOCoW file will only trigger IPU at common writeback/flush.
+> - NOCow file will do OPU during GC.
 > 
-> All the consumer connect with smi-larb, then connect with smi-common.
+> For the demand of 1) avoid fragment of file's physical block and
+> 2) userspace don't care about file's specific physical address,
+> tagging file as NOCoW will be cheaper than pinned one.
 > 
-> MediaTek IOMMU don't have its power-domain. When the consumer works,
-> it should enable the smi-larb's power which also need enable the smi-common's
-> power firstly.
-> 
-> Thus, Firstly, use the device link connect the consumer and the
-> smi-larbs. then add device link between the smi-larb and smi-common.
-> 
-> After adding the device_link, then "mediatek,larb" property can be removed.
-> the iommu consumer don't need call the mtk_smi_larb_get/put to enable
-> the power and clock of smi-larb and smi-common.
-> 
-> This patchset depends on "MT8183 IOMMU SUPPORT"[1].
-> 
-> [1] https://lists.linuxfoundation.org/pipermail/iommu/2019-June/036552.html
-> 
-> Change notes:
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
 > v2:
->    1) rebase on v5.2-rc1.
->    2) Move adding device_link between the consumer and smi-larb into
-> iommu_add_device from Robin.
->    3) add DL_FLAG_AUTOREMOVE_CONSUMER even though the smi is built-in from Evan.
->    4) Remove the shutdown callback in iommu.   
+> - rebase code to fix compile error.
+>  fs/f2fs/data.c |  3 ++-
+>  fs/f2fs/f2fs.h |  1 +
+>  fs/f2fs/file.c | 22 +++++++++++++++++++---
+>  3 files changed, 22 insertions(+), 4 deletions(-)
 > 
-> v1: https://lists.linuxfoundation.org/pipermail/iommu/2019-January/032387.html
-> 
-> Yong Wu (12):
->   dt-binding: mediatek: Get rid of mediatek,larb for multimedia HW
->   iommu/mediatek: Add probe_defer for smi-larb
->   iommu/mediatek: Add device_link between the consumer and the larb
->     devices
->   memory: mtk-smi: Add device-link between smi-larb and smi-common
->   media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
->   media: mtk-mdp: Get rid of mtk_smi_larb_get/put
->   media: mtk-vcodec: Get rid of mtk_smi_larb_get/put
->   drm/mediatek: Get rid of mtk_smi_larb_get/put
->   memory: mtk-smi: Get rid of mtk_smi_larb_get/put
->   iommu/mediatek: Use builtin_platform_driver
->   arm: dts: mediatek: Get rid of mediatek,larb for MM nodes
->   arm64: dts: mediatek: Get rid of mediatek,larb for MM nodes
-> 
->  .../bindings/display/mediatek/mediatek,disp.txt    |  9 -----
->  .../bindings/media/mediatek-jpeg-decoder.txt       |  4 --
->  .../devicetree/bindings/media/mediatek-mdp.txt     |  8 ----
->  .../devicetree/bindings/media/mediatek-vcodec.txt  |  4 --
->  arch/arm/boot/dts/mt2701.dtsi                      |  1 -
->  arch/arm/boot/dts/mt7623.dtsi                      |  1 -
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 15 -------
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            | 11 -----
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 26 ------------
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  1 -
->  drivers/iommu/mtk_iommu.c                          | 45 +++++++--------------
->  drivers/iommu/mtk_iommu_v1.c                       | 39 +++++++-----------
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 22 ----------
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  2 -
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c      | 38 -----------------
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h      |  2 -
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |  1 -
->  .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c  | 21 ----------
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  3 --
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c |  1 -
->  .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  | 47 ----------------------
->  drivers/memory/mtk-smi.c                           | 31 ++++----------
->  include/soc/mediatek/smi.h                         | 20 ---------
->  23 files changed, 36 insertions(+), 316 deletions(-)
-> 
-
-
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index a2a28bb269bf..15fb8954c363 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
+>  
+>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
+>  {
+> -	if (f2fs_is_pinned_file(inode))
+> +	if (f2fs_is_pinned_file(inode) ||
+> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
+>  		return true;
+>  
+>  	/* if this is cold file, we should overwrite to avoid fragmentation */
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 596ab3e1dd7b..f6c5a3d2e659 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
+>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
+>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
+> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
+>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+>  
+>  /* Flags that should be inherited by new inodes from their parent. */
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 7ca545874060..ae0fec54cac6 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1692,6 +1692,7 @@ static const struct {
+>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
+> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
+>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+>  };
+>  
+> @@ -1715,7 +1716,8 @@ static const struct {
+>  		FS_NODUMP_FL |		\
+>  		FS_NOATIME_FL |		\
+>  		FS_DIRSYNC_FL |		\
+> -		FS_PROJINHERIT_FL)
+> +		FS_PROJINHERIT_FL |	\
+> +		FS_NOCOW_FL)
+>  
+>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+>  		fsflags |= FS_ENCRYPT_FL;
+>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+>  		fsflags |= FS_INLINE_DATA_FL;
+> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
+> -		fsflags |= FS_NOCOW_FL;
+>  
+>  	fsflags &= F2FS_GETTABLE_FS_FL;
+>  
+> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+>  	if (ret)
+>  		goto out;
+>  
+> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
+> +		if (!S_ISREG(inode->i_mode)) {
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		if (f2fs_should_update_outplace(inode, NULL)) {
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +
+> +		ret = f2fs_convert_inline_inode(inode);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+>  	ret = f2fs_setflags_common(inode, iflags,
+>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
+>  out:
+> -- 
+> 2.18.0.rc1
