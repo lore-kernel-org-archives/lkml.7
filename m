@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ADEC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90490C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212AE21842
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733F42070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389444AbfGWL2k (ORCPT
+        id S2389373AbfGWL2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:28:40 -0400
-Received: from muru.com ([72.249.23.125]:55670 "EHLO muru.com"
+        Tue, 23 Jul 2019 07:28:24 -0400
+Received: from muru.com ([72.249.23.125]:55620 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389427AbfGWL2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:28:35 -0400
+        id S1731468AbfGWL2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 07:28:21 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id A654F81BC;
-        Tue, 23 Jul 2019 11:28:59 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 12B0C81A0;
+        Tue, 23 Jul 2019 11:28:45 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
@@ -31,9 +31,9 @@ Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
         Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
         Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 8/8] ARM: dts: Fix lcdc sysc flags for am3
-Date:   Tue, 23 Jul 2019 04:28:11 -0700
-Message-Id: <20190723112811.44381-9-tony@atomide.com>
+Subject: [PATCH 1/8] ARM: OMAP2+: Fix missing SYSC_HAS_RESET_STATUS for dra7 epwmss
+Date:   Tue, 23 Jul 2019 04:28:04 -0700
+Message-Id: <20190723112811.44381-2-tony@atomide.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190723112811.44381-1-tony@atomide.com>
 References: <20190723112811.44381-1-tony@atomide.com>
@@ -44,31 +44,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LCDC controller on am335x has a sysconfig register without a
-SOFTRESET bit. Let's configure that by setting ti,sysc-mask = <0>
-as otherwise we get the following warning:
-
-ti-sysc 4830e000.target-module: idlemodes 00000087 != 00000007
-
-And the legacy platform data has LCDC midle unconfigured so let's
-remove that property.
+TRM says PWMSS_SYSCONFIG bit for SOFTRESET changes to zero when
+reset is completed. Let's configure it as otherwise we get warnings
+on boot when we check the data against dts provided data. Eventually
+the legacy platform data will be just dropped, but let's fix the
+warning first.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/am33xx-l4.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -2038,7 +2038,7 @@
- 			reg = <0xe000 0x4>,
- 			      <0xe054 0x4>;
- 			reg-names = "rev", "sysc";
--			ti,sysc-midle ;
-+			ti,sysc-mask = <0>;
- 			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
- 					<SYSC_IDLE_NO>,
- 					<SYSC_IDLE_SMART>;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -379,7 +379,8 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
+ static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
+ 	.rev_offs	= 0x0,
+ 	.sysc_offs	= 0x4,
+-	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET,
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
++			  SYSC_HAS_RESET_STATUS,
+ 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
+ };
 -- 
 2.21.0
