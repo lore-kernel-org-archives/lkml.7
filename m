@@ -2,149 +2,142 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDB6C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CF9C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6676D227C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:29:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SOC6zwd2"
+	by mail.kernel.org (Postfix) with ESMTP id C531B227C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391497AbfGWS3q (ORCPT
+        id S2391508AbfGWSbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:29:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39192 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731080AbfGWS3q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:29:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RRFyJIRsQXw1HyelIZmuqPSkCJ5sVdaDgZrRUn5Qers=; b=SOC6zwd238eNTxVRmBmENC25T
-        /PVrrzGC1396Nuj63jug527eA2ETr6mAg0Xp2s0ddwAJF51nkVQRSzAsJVTOAZoDHZ2l0RM+7v66X
-        RXHQx7bHdhWuTecaixTQgbz0sOBCNLoo/NGIrpMV95TuvI/syZVReZxgGVIIPdlsK4yH5h/OzA2qE
-        o3NyJdQQrNdy9wOQ0R74G5rhpUmp4qQuZEctFcAE0hHguOpLvSW2cjdBB3iEgP4MKRlgy6BfJESYJ
-        Ea0kiWLIA9YGXO6MvpnDOki6GHjs6fK2kjPsP/V3yxCwcYnw21aip0VGDtoBQTKtHirZaMZvfdpJ1
-        hzEmbcm1Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpzXk-0006kT-Kc; Tue, 23 Jul 2019 18:29:44 +0000
-Date:   Tue, 23 Jul 2019 11:29:44 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        lhenriques@suse.com, cmaiolino@redhat.com,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] mm: check for sleepable context in kvfree
-Message-ID: <20190723182944.GO363@bombadil.infradead.org>
-References: <20190723131212.445-1-jlayton@kernel.org>
- <3622a5fe9f13ddfd15b262dbeda700a26c395c2a.camel@kernel.org>
- <20190723175543.GL363@bombadil.infradead.org>
- <f43c131d9b635994aafed15cb72308b32d2eef67.camel@kernel.org>
- <20190723181124.GM363@bombadil.infradead.org>
- <d7cd46333eb1a29fb7e0e078dc4fef7646fe2a8c.camel@kernel.org>
+        Tue, 23 Jul 2019 14:31:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52984 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727021AbfGWSbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 14:31:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 366E8AC93;
+        Tue, 23 Jul 2019 18:31:02 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Jeff Layton" <jlayton@kernel.org>
+Cc:     "Ilya Dryomov" <idryomov@gmail.com>, "Sage Weil" <sage@redhat.com>,
+        <ceph-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] ceph: fix directories inode i_blkbits initialization
+References: <20190723155020.17338-1-lhenriques@suse.com>
+        <c657b0d65acd5e8bc9d5d726d68e2ad1fff38b51.camel@kernel.org>
+Date:   Tue, 23 Jul 2019 19:31:00 +0100
+In-Reply-To: <c657b0d65acd5e8bc9d5d726d68e2ad1fff38b51.camel@kernel.org> (Jeff
+        Layton's message of "Tue, 23 Jul 2019 13:18:31 -0400")
+Message-ID: <87o91k61sr.fsf@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7cd46333eb1a29fb7e0e078dc4fef7646fe2a8c.camel@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:19:03PM -0400, Jeff Layton wrote:
-> On Tue, 2019-07-23 at 11:11 -0700, Matthew Wilcox wrote:
-> > On Tue, Jul 23, 2019 at 02:05:11PM -0400, Jeff Layton wrote:
-> > > On Tue, 2019-07-23 at 10:55 -0700, Matthew Wilcox wrote:
-> > > > I think it's a bit of a landmine, to be honest.  How about we have kvfree()
-> > > > call vfree_atomic() instead?
-> > > 
-> > > Not a bad idea, though it means more overhead for the vfree case.
-> > > 
-> > > Since we're spitballing here...could we have kvfree figure out whether
-> > > it's running in a context where it would need to queue it instead and
-> > > only do it in that case?
-> > > 
-> > > We currently have to figure that out for the might_sleep_if anyway. We
-> > > could just have it DTRT instead of printk'ing and dumping the stack in
-> > > that case.
-> > 
-> > I don't think we have a generic way to determine if we're currently
-> > holding a spinlock.  ie this can fail:
-> > 
-> > spin_lock(&my_lock);
-> > kvfree(p);
-> > spin_unlock(&my_lock);
-> > 
-> > If we're preemptible, we can check the preempt count, but !CONFIG_PREEMPT
-> > doesn't record the number of spinlocks currently taken.
-> 
-> Ahh right...that makes sense.
-> 
-> Al also suggested on IRC that we could add a kvfree_atomic if that were
-> useful. That might be good for new callers, but we'd probably need a
-> patch like this one to suss out which of the existing kvfree callers
-> would need to switch to using it.
-> 
-> I think you're quite right that this is a landmine. That said, this
-> seems like something we ought to try to clean up.
+"Jeff Layton" <jlayton@kernel.org> writes:
 
-I'd rather add a kvfree_fast().  So something like this:
+> On Tue, 2019-07-23 at 16:50 +0100, Luis Henriques wrote:
+>> When filling an inode with info from the MDS, i_blkbits is being
+>> initialized using fl_stripe_unit, which contains the stripe unit in
+>> bytes.  Unfortunately, this doesn't make sense for directories as they
+>> have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
+>> to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
+>> 
+>>   UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
+>>   shift exponent 255 is too large for 32-bit type 'int'
+>> 
+>> Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
+>> is zero.
+>> 
+>> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> ---
+>>  fs/ceph/inode.c | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>> 
+>> Hi Jeff,
+>> 
+>> To be honest, I'm not sure CEPH_BLOCK_SHIFT is the right value to use
+>> here, but for sure the one currently being used isn't correct if the
+>> inode is a directory.  Using stripe units seems to be a bug that has
+>> been there since the beginning, but it definitely became bigger problem
+>> after commit 69448867abcb ("fs: shave 8 bytes off of struct inode").
+>> 
+>> This fix could also be moved into the 'switch' statement later in that
+>> function, in the S_IFDIR case, similar to commit 5ba72e607cdb ("ceph:
+>> set special inode's blocksize to page size").  Let me know which version
+>> you would prefer.
+>> 
+>
+> What happens with (e.g.) named pipes or symlinks? Do those inodes also
+> get this bogus value? Assuming that they do, I'd probably prefer this
+> patch since it'd fix things for all inode types, not just directories.
 
-diff --git a/mm/util.c b/mm/util.c
-index bab284d69c8c..992f0332dced 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -470,6 +470,28 @@ void *kvmalloc_node(size_t size, gfp_t flags, int node)
- }
- EXPORT_SYMBOL(kvmalloc_node);
- 
-+/**
-+ * kvfree_fast() - Free memory.
-+ * @addr: Pointer to allocated memory.
-+ *
-+ * kvfree_fast frees memory allocated by any of vmalloc(), kmalloc() or
-+ * kvmalloc().  It is slightly more efficient to use kfree() or vfree() if
-+ * you are certain that you know which one to use.
-+ *
-+ * Context: Either preemptible task context or not-NMI interrupt.  Must not
-+ * hold a spinlock as it can sleep.
-+ */
-+void kvfree_fast(const void *addr)
-+{
-+	might_sleep();
-+
-+	if (is_vmalloc_addr(addr))
-+		vfree(addr);
-+	else
-+		kfree(addr);
-+}
-+EXPORT_SYMBOL(kvfree_fast);
-+
- /**
-  * kvfree() - Free memory.
-  * @addr: Pointer to allocated memory.
-@@ -478,12 +500,12 @@ EXPORT_SYMBOL(kvmalloc_node);
-  * It is slightly more efficient to use kfree() or vfree() if you are certain
-  * that you know which one to use.
-  *
-- * Context: Either preemptible task context or not-NMI interrupt.
-+ * Context: Any context except NMI.
-  */
- void kvfree(const void *addr)
- {
- 	if (is_vmalloc_addr(addr))
--		vfree(addr);
-+		vfree_atomic(addr);
- 	else
- 		kfree(addr);
- }
+I tested symlinks and they seem to be handled correctly (i.e. the stripe
+units seems to be the same as the target file).  Regarding pipes, I
+didn't test them, but from the code it should be set to PAGE_SHIFT (see
+the above mentioned commit 5ba72e607cdb).
+
+Anyway, I can change the code to do *all* the i_blkbits initialization
+inside the switch statement.  Something like:
+
+switch (inode->i_mode & S_IFMT) {
+case S_IFIFO:
+case S_IFBLK:
+case S_IFCHR:
+case S_IFSOCK:
+	inode->i_blkbits = PAGE_SHIFT;
+        ...
+case S_IFREG:
+	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
+	...
+case S_IFLNK:
+	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
+	...
+case S_IFDIR:
+	inode->i_blkbits = CEPH_BLOCK_SHIFT;
+	...
+default:
+	pr_err();
+        ...
+}
+
+This would add some code duplication (S_IFREG and S_IFLNK cases), but
+maybe it's a bit more clear.  The other option would be obviously to
+leave the initialization outside the switch and only change the
+i_blkbits value in the S_IF{IFO,BLK,CHR,SOCK,DIR} cases.
+
+Cheers,
+-- 
+Luis
+
+
+>
+>> Cheers,
+>> --
+>> Luis
+>> 
+>> diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+>> index 791f84a13bb8..0e6d6db848b7 100644
+>> --- a/fs/ceph/inode.c
+>> +++ b/fs/ceph/inode.c
+>> @@ -800,7 +800,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
+>>  
+>>  	/* update inode */
+>>  	inode->i_rdev = le32_to_cpu(info->rdev);
+>> -	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
+>> +	/* directories have fl_stripe_unit set to zero */
+>> +	if (le32_to_cpu(info->layout.fl_stripe_unit))
+>> +		inode->i_blkbits =
+>> +			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
+>> +	else
+>> +		inode->i_blkbits = CEPH_BLOCK_SHIFT;
+>>  
+>>  	__ceph_update_quota(ci, iinfo->max_bytes, iinfo->max_files);
+>>  
