@@ -2,218 +2,148 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE3C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62246C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F77F2229A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363442239E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="vTWONxEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfGWFrT (ORCPT
+        id S1732183AbfGWFrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:47:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56514 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfGWFrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:47:18 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B380E30862BE;
-        Tue, 23 Jul 2019 05:47:17 +0000 (UTC)
-Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C08CE5D9C5;
-        Tue, 23 Jul 2019 05:47:04 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081447-mutt-send-email-mst@kernel.org>
- <85dd00e2-37a6-72b7-5d5a-8bf46a3526cf@redhat.com>
- <20190722040230-mutt-send-email-mst@kernel.org>
- <4bd2ff78-6871-55f2-44dc-0982ffef3337@redhat.com>
- <20190723010019-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b4696f2e-678a-bdb2-4b7c-fb4ce040ec2a@redhat.com>
-Date:   Tue, 23 Jul 2019 13:47:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190723010019-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 23 Jul 2019 05:47:18 +0000 (UTC)
+        Tue, 23 Jul 2019 01:47:23 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36476 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfGWFrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:47:21 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i21so39829373ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 22:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc:message-id:references
+         :to;
+        bh=IrDcbT/Tj7LW4qQdP9pAY4oN/qCVl2lkLiDwRQqQvc8=;
+        b=vTWONxEz9UUSnXiuneklcR1laKpRjeYEhhaoWkQHlR71Ag/K8rtfJK2zG884XpH2Ud
+         t7OtIc7XhkzcptTogl1wYN4WVnFeisp8/52o0jCP9DQowkSJeetZoaeRnc2xecaFjZgM
+         yalWDTjVRc0BcFr8xK6tER1Q1qAoh1hnlY+j5Wlqxz5ghEp5aa3/QayFhWhcxrAUJoQS
+         ytUn7krdijVvHLsNZE69Kae0MeAsClgAvnW1eSW1E2m7rWBnW4v2GpGgwEp0auAcqVoH
+         t0Kw6BTzNpxv/BjlVVRjHfpw9YBGtJdaNn9MSMsOpBUBrmyA/k9YbB/z9Pl99etArs0J
+         JnqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :message-id:references:to;
+        bh=IrDcbT/Tj7LW4qQdP9pAY4oN/qCVl2lkLiDwRQqQvc8=;
+        b=rny04dDVgPFk3MXY1bQpha1yb7R9l8W89Bj5SC9pZRM3XK2YLMd9+TFb39ETRWS2ZG
+         qo1fpv5MxBzxHwkDF2YjQvFSHt1NDAOnppxIwdB6TU3O8V7/47GaRtQxOxUtUN7u259W
+         Vf84iWz2gjCvLf+ID/LehCcKiJJ3ExptqWkiX1KAIUv0/ubanigMU4+JbSAlii/J7dfw
+         0olWHiHnwd8PsLFZOtuz22w52h6dEGmfco52Wfl+lw8nSGvfj95C3+8vfUhGlLpM+njV
+         M4qd6VLAw2iHabFS/M8o+T3cn2eS7O55qeksM7dFsKVB9oVoZSfh4ef/7+zzBLK8JeEl
+         CcUw==
+X-Gm-Message-State: APjAAAWAIkGhQmiktTnzvtWNb7rAxx/yV2jOf5XhDkxUcmhYl8XDWCRb
+        1u05BQqNBI5b+0e0mRQdD8Y=
+X-Google-Smtp-Source: APXvYqyQdg/ZkVNgm9xmjks50Y9ZPndCooHtzQc1BjfTJIx+KUxCra6dfSX77NigPwyGNWeQ2m0ZZA==
+X-Received: by 2002:a2e:8e83:: with SMTP id z3mr37958388ljk.98.1563860840165;
+        Mon, 22 Jul 2019 22:47:20 -0700 (PDT)
+Received: from [172.20.10.13] (212.27.18.194.bredband.3.dk. [212.27.18.194])
+        by smtp.gmail.com with ESMTPSA id c30sm6358929lfp.70.2019.07.22.22.47.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 22:47:19 -0700 (PDT)
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_8CF3AAB6-07CE-49A2-A597-846037581ABC";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] lightnvm: introduce pr_fmt for the previx nvm
+From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+X-Priority: 3
+In-Reply-To: <20190722043101epcms2p2645d83b2c4aca7fc446f8d9109342327@epcms2p2>
+Date:   Tue, 23 Jul 2019 07:47:15 +0200
+Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Klaus Birkelund Jensen <birkelund@gmail.com>
+Message-Id: <45E0A0E6-52B0-4BF9-B816-33F6ECDD0E5F@javigon.com>
+References: <BYAPR04MB5749126EF9E68D94125BACB486CA0@BYAPR04MB5749.namprd04.prod.outlook.com>
+ <20190720083043.23387-1-minwoo.im.dev@gmail.com>
+ <CGME20190720212747epcas1p4d3e17fefd1cbd2007a1a1a452dde9c55@epcms2p2>
+ <20190722043101epcms2p2645d83b2c4aca7fc446f8d9109342327@epcms2p2>
+To:     minwoo.im@samsung.com
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/7/23 下午1:01, Michael S. Tsirkin wrote:
-> On Tue, Jul 23, 2019 at 12:01:40PM +0800, Jason Wang wrote:
->> On 2019/7/22 下午4:08, Michael S. Tsirkin wrote:
->>> On Mon, Jul 22, 2019 at 01:24:24PM +0800, Jason Wang wrote:
->>>> On 2019/7/21 下午8:18, Michael S. Tsirkin wrote:
->>>>> On Sun, Jul 21, 2019 at 06:02:52AM -0400, Michael S. Tsirkin wrote:
->>>>>> On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
->>>>>>> syzbot has bisected this bug to:
->>>>>>>
->>>>>>> commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
->>>>>>> Author: Jason Wang<jasowang@redhat.com>
->>>>>>> Date:   Fri May 24 08:12:18 2019 +0000
->>>>>>>
->>>>>>>        vhost: access vq metadata through kernel virtual address
->>>>>>>
->>>>>>> bisection log:https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
->>>>>>> start commit:   6d21a41b Add linux-next specific files for 20190718
->>>>>>> git tree:       linux-next
->>>>>>> final crash:https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
->>>>>>> console output:https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
->>>>>>> kernel config:https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
->>>>>>> dashboard link:https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
->>>>>>> syz repro:https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
->>>>>>>
->>>>>>> Reported-by:syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
->>>>>>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
->>>>>>> address")
->>>>>>>
->>>>>>> For information about bisection process see:https://goo.gl/tpsmEJ#bisection
->>>>>> OK I poked at this for a bit, I see several things that
->>>>>> we need to fix, though I'm not yet sure it's the reason for
->>>>>> the failures:
->>>>>>
->>>>>>
->>>>>> 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
->>>>>>       That's just a bad hack, in particular I don't think device
->>>>>>       mutex is taken and so poking at two VQs will corrupt
->>>>>>       memory.
->>>>>>       So what to do? How about a per vq notifier?
->>>>>>       Of course we also have synchronize_rcu
->>>>>>       in the notifier which is slow and is now going to be called twice.
->>>>>>       I think call_rcu would be more appropriate here.
->>>>>>       We then need rcu_barrier on module unload.
->>>>>>       OTOH if we make pages linear with map then we are good
->>>>>>       with kfree_rcu which is even nicer.
->>>>>>
->>>>>> 2. Doesn't map leak after vhost_map_unprefetch?
->>>>>>       And why does it poke at contents of the map?
->>>>>>       No one should use it right?
->>>>>>
->>>>>> 3. notifier unregister happens last in vhost_dev_cleanup,
->>>>>>       but register happens first. This looks wrong to me.
->>>>>>
->>>>>> 4. OK so we use the invalidate count to try and detect that
->>>>>>       some invalidate is in progress.
->>>>>>       I am not 100% sure why do we care.
->>>>>>       Assuming we do, uaddr can change between start and end
->>>>>>       and then the counter can get negative, or generally
->>>>>>       out of sync.
->>>>>>
->>>>>> So what to do about all this?
->>>>>> I am inclined to say let's just drop the uaddr optimization
->>>>>> for now. E.g. kvm invalidates unconditionally.
->>>>>> 3 should be fixed independently.
->>>>> Above implements this but is only build-tested.
->>>>> Jason, pls take a look. If you like the approach feel
->>>>> free to take it from here.
->>>>>
->>>>> One thing the below does not have is any kind of rate-limiting.
->>>>> Given it's so easy to restart I'm thinking it makes sense
->>>>> to add a generic infrastructure for this.
->>>>> Can be a separate patch I guess.
->>>> I don't get why must use kfree_rcu() instead of synchronize_rcu() here.
->>> synchronize_rcu has very high latency on busy systems.
->>> It is not something that should be used on a syscall path.
->>> KVM had to switch to SRCU to keep it sane.
->>> Otherwise one guest can trivially slow down another one.
->>
->> I think you mean the synchronize_rcu_expedited()? Rethink of the code, the
->> synchronize_rcu() in ioctl() could be removed, since it was serialized with
->> memory accessor.
->
-> Really let's just use kfree_rcu. It's way cleaner: fire and forget.
+--Apple-Mail=_8CF3AAB6-07CE-49A2-A597-846037581ABC
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
+> On 22 Jul 2019, at 06.31, Minwoo Im <minwoo.im@samsung.com> wrote:
+>=20
+>>> @@ -1111,27 +1112,27 @@ static int nvm_init(struct nvm_dev *dev)
+>>>  	int ret =3D -EINVAL;
+>>>=20
+>>>  	if (dev->ops->identity(dev)) {
+>>> -		pr_err("nvm: device could not be identified\n");
+>>> +		pr_err("device could not be identified\n");
+>>>  		goto err;
+>>>  	}
+>>>=20
+>>> -	pr_debug("nvm: ver:%u.%u nvm_vendor:%x\n",
+>>> +	pr_debug("ver:%u.%u nvm_vendor:%x\n",
+>>>  				geo->major_ver_id, geo->minor_ver_id,
+>>>  				geo->vmnt);
+>> The above last 2 lines can be squashed and pr_debug call can be made =
+in
+>> 2 lines since you have removed the "nvm:" which shortens the first =
+line.
+>=20
+> Yeah Okay.  Will prepare V2 with this and also s/previx/prefix in the
+> title.
+>=20
+> Thanks for the review.
+>=20
+> Minwoo Im
 
-Looks not, you need rate limit the fire as you've figured out? And in 
-fact, the synchronization is not even needed, does it help if I leave a 
-comment to explain?
+Besides Chaitanya=E2=80=99s comments, looks good. You can add my review =
+on V2.
 
+Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
 
->
->> Btw, for kvm ioctl it still uses synchronize_rcu() in kvm_vcpu_ioctl(),
->> (just a little bit more hard to trigger):
->
-> AFAIK these never run in response to guest events.
-> So they can take very long and guests still won't crash.
+--Apple-Mail=_8CF3AAB6-07CE-49A2-A597-846037581ABC
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
 
+-----BEGIN PGP SIGNATURE-----
 
-What if guest manages to escape to qemu?
+iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAl02n2MACgkQPEYBfS0l
+eOAimBAAoRaQlUo+9zVTRoh3Xb2a+uWuwlxa2jeVXJLZ6GpUGNcibZrcSjas44L5
+YN/tN59dr7/G0bsryzgOQ/X3TXPOIUZI2RloWrhxcihgylT+81dNJsd2qaoGfPnX
+RbZQ7oRpvFmj0uN4QMD7TUqHhAXotvoh3HcXXmWlXWwO/hFeMZN8XqnN0JqJEIYn
+1L3tWML1DuEbkkllm+QZMPedXyhCxYOqTRjnIziHTI9RCJtWYqmNdrgLxx7pbdlK
+TNByGc6BxNU4rvJrsi7yDWH50EDYcIKDYjWnCM/jHYz8M0IjSq3/OxXtLvHVtBCO
+LmTIy/6uOqBPdIDYPBc2IkwMhmT5ZSxE0BfL8ME/CWDua1KLaKfc+Nw5bK/Dllnn
++rqsRAE34ZlbGdANWY7pPiRSHPRlATh+2OWoIuqhgnhx90UPPC5NaceZrMZ9tlTQ
+a4rYPENHHigD383kJ5EYCt9fShOKeEef0STFyTjiWlDGTVgPbny7hGc0SvKiU2mX
+XVHL2n50YstjpSF6ZJFY9q51aYJvkINcG2Vte25cpFIw3vBKKBn+78LVs2W9yXco
+VOdxXAu5kQiIFkcPoHioWVLJYX26FCpvJo2BTtkqqeE2OPCQU2i8DelIHEV38rpR
+W4TXHgfKvowcirfzVUp3IEh3BL/1C0ENm0DPTQWRE/1uCa3C+hI=
+=GMX1
+-----END PGP SIGNATURE-----
 
-Thanks
-
-
->
->
->>      case KVM_RUN: {
->> ...
->>          if (unlikely(oldpid != task_pid(current))) {
->>              /* The thread running this VCPU changed. */
->>              struct pid *newpid;
->>
->>              r = kvm_arch_vcpu_run_pid_change(vcpu);
->>              if (r)
->>                  break;
->>
->>              newpid = get_task_pid(current, PIDTYPE_PID);
->>              rcu_assign_pointer(vcpu->pid, newpid);
->>              if (oldpid)
->>                  synchronize_rcu();
->>              put_pid(oldpid);
->>          }
->> ...
->>          break;
->>
->>
->>>>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
->>>> Let me try to figure out the root cause then decide whether or not to go for
->>>> this way.
->>>>
->>>> Thanks
->>> The root cause of the crash is relevant, but we still need
->>> to fix issues 1-4.
->>>
->>> More issues (my patch tries to fix them too):
->>>
->>> 5. page not dirtied when mappings are torn down outside
->>>      of invalidate callback
->>
->> Yes.
->>
->>
->>> 6. potential cross-VM DOS by one guest keeping system busy
->>>      and increasing synchronize_rcu latency to the point where
->>>      another guest stars timing out and crashes
->>>
->>>
->>>
->> This will be addressed after I remove the synchronize_rcu() from ioctl path.
->>
->> Thanks
+--Apple-Mail=_8CF3AAB6-07CE-49A2-A597-846037581ABC--
