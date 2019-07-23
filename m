@@ -2,128 +2,155 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DE5C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4A6C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2038E218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B622218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:40:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="DjNggeZh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V7D/POwf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387503AbfGWAia (ORCPT
+        id S1730902AbfGWAkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:38:30 -0400
-Received: from smtprelay0132.hostedemail.com ([216.40.44.132]:57779 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728573AbfGWAi1 (ORCPT
+        Mon, 22 Jul 2019 20:40:55 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37765 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728573AbfGWAkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:38:27 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 13815180A8150;
-        Tue, 23 Jul 2019 00:38:26 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brake82_2c3d0225c592a
-X-Filterd-Recvd-Size: 3890
-Received: from joe-laptop.perches.com (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 23 Jul 2019 00:38:23 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 2/2] kernel-doc: core-api: Include string.h into core-api
-Date:   Mon, 22 Jul 2019 17:38:16 -0700
-Message-Id: <224a6ebf39955f4107c0c376d66155d970e46733.1563841972.git.joe@perches.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <cover.1563841972.git.joe@perches.com>
-References: <cover.1563841972.git.joe@perches.com>
+        Mon, 22 Jul 2019 20:40:55 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id E858321ADD;
+        Mon, 22 Jul 2019 20:40:53 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Mon, 22 Jul 2019 20:40:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=ea1eXoWpqlHrh4PNFoOkJoobCbGJqdR
+        95gve43bppWY=; b=DjNggeZhNCdlUyyXFp/MmWpcb5mpCX+fqULx2XOFp6E93B2
+        Ltob4RpUXyYQPuJ7JaThvGuSymQMqZlXhDuUSW6BdVJbWBEbFYNXOifRdowWfF0v
+        JEznR2696Gy3jLhH4DAVxmJZUnPjbCiSTu6c49Mc7q7mGlXPXh0iYsnG7A1JyZpB
+        nVLytB6ltwXLHnPO+HgjY7sdlD6n/Z9xS8vyIv2CHBFSQJUM72na7mckeAXdaBt1
+        hbmyMhJl5dcM5csC77iC4Pp1oSHq8hh89DqMTCPyMgeDmOXRKFl2j50mJbMpL8Dy
+        eR5wHd3AOr17y3RP8fqqklB35uoIekvXXphKJWA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ea1eXo
+        WpqlHrh4PNFoOkJoobCbGJqdR95gve43bppWY=; b=V7D/POwfWqx3e195N9nylY
+        bJGvoMjjjR5Nf1ouybjiuQMsoTNVdPtxsy7rC2rCUjsZdLxUiUYFCBcRigMu8vM1
+        K0gRp6acAUPCre71uUbdGTHAgmNs7w+gkFC53nQqN/1xreRfTmGL8pyYuDHWq3V5
+        poR9pOYPcDr5od64qCtYJT3FJrM9/L5S227Dbo/9aM8w+bcWR+o3A3evYjeMuvm1
+        z+EnIKQGgUTn8pOItTSHHXJ0SXPbVJlo6Q9JoPmD6xhiLGpEPQSqWdMzM5KJwi6W
+        JEMAJIOQgIkPfI54dTt3g+x/007BklffUU4cdfMNP2fvEK4rqITrWMYGVeTU8Tqw
+        ==
+X-ME-Sender: <xms:lFc2XeNDnMeJr4rp5MVqPG6mIg4Zs6FZXXLNv8X0jSM_irSPMfnpMg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrjeehgdefiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:lFc2XZEkqdx5hDVDbeupnTb98R46EHs38zSO0lGb2RK1vNNPa9fUSA>
+    <xmx:lFc2Xejz3xuRF1XqrEHhBUBIpP_4eTJYS8NHfR7KSJBjVKBohv109w>
+    <xmx:lFc2XdyuQHF1IV7_N0c5UtkPbJeJ3JjUMizDxbWC7vq97se4LVjSOA>
+    <xmx:lVc2Xa2wwkaO0XYuvZUn2EcOcqHUPuaRIaeFvHitgdI9V0FV297XMg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 4C3ADE074B; Mon, 22 Jul 2019 20:40:52 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-736-gdfb8e44-fmstable-20190718v2
+Mime-Version: 1.0
+Message-Id: <a0a8162e-c21b-4b3d-b096-1676c5cc9758@www.fastmail.com>
+In-Reply-To: <20190723003216.2910042-1-vijaykhemka@fb.com>
+References: <20190723003216.2910042-1-vijaykhemka@fb.com>
+Date:   Tue, 23 Jul 2019 10:11:05 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Vijay Khemka" <vijaykhemka@fb.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        "Sai Dasari" <sdasari@fb.com>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: tiogapass: Add VR devices
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-core-api should show all the various string functions including the
-newly added stracpy and stracpy_pad.
 
-Miscellanea:
 
-o Update the Returns: value for strscpy
-o fix a defect with %NUL)
+On Tue, 23 Jul 2019, at 10:04, Vijay Khemka wrote:
+> Adds voltage regulators Infineon pxe1610 devices to Facebook
+> tiogapass platform.
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- Documentation/core-api/kernel-api.rst |  3 +++
- include/linux/string.h                |  5 +++--
- lib/string.c                          | 10 ++++++----
- 3 files changed, 12 insertions(+), 6 deletions(-)
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
 
-diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
-index 08af5caf036d..f77de49b1d51 100644
---- a/Documentation/core-api/kernel-api.rst
-+++ b/Documentation/core-api/kernel-api.rst
-@@ -42,6 +42,9 @@ String Manipulation
- .. kernel-doc:: lib/string.c
-    :export:
- 
-+.. kernel-doc:: include/linux/string.h
-+   :internal:
-+
- .. kernel-doc:: mm/util.c
-    :functions: kstrdup kstrdup_const kstrndup kmemdup kmemdup_nul memdup_user
-                vmemdup_user strndup_user memdup_user_nul
-diff --git a/include/linux/string.h b/include/linux/string.h
-index f80b0973f0e5..329188fffc11 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -515,8 +515,9 @@ static inline void memcpy_and_pad(void *dest, size_t dest_len,
-  * But this can lead to bugs due to typos, or if prefix is a pointer
-  * and not a constant. Instead use str_has_prefix().
-  *
-- * Returns: 0 if @str does not start with @prefix
--         strlen(@prefix) if @str does start with @prefix
-+ * Returns:
-+ * * strlen(@prefix) if @str starts with @prefix
-+ * * 0 if @str does not start with @prefix
-  */
- static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
- {
-diff --git a/lib/string.c b/lib/string.c
-index 461fb620f85f..53582b6dce2a 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -173,8 +173,9 @@ EXPORT_SYMBOL(strlcpy);
-  * doesn't unnecessarily force the tail of the destination buffer to be
-  * zeroed.  If zeroing is desired please use strscpy_pad().
-  *
-- * Return: The number of characters copied (not including the trailing
-- *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
-+ * Returns:
-+ * * The number of characters copied (not including the trailing %NUL)
-+ * * -E2BIG if count is 0.
-  */
- ssize_t strscpy(char *dest, const char *src, size_t count)
- {
-@@ -253,8 +254,9 @@ EXPORT_SYMBOL(strscpy);
-  * For full explanation of why you may want to consider using the
-  * 'strscpy' functions please see the function docstring for strscpy().
-  *
-- * Return: The number of characters copied (not including the trailing
-- *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
-+ * Returns:
-+ * * The number of characters copied (not including the trailing %NUL)
-+ * * -E2BIG if count is 0.
-  */
- ssize_t strscpy_pad(char *dest, const char *src, size_t count)
- {
--- 
-2.15.0
-
+> ---
+> In v2: Renamed vr to regulator and fixed some typo in commit message.
+> 
+>  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> index c4521eda787c..e722e9aef907 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> @@ -144,6 +144,42 @@
+>  &i2c5 {
+>  	status = "okay";
+>  	// CPU Voltage regulators
+> +	regulator@48 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x48>;
+> +	};
+> +	regulator@4a {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x4a>;
+> +	};
+> +	regulator@50 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x50>;
+> +	};
+> +	regulator@52 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x52>;
+> +	};
+> +	regulator@58 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x58>;
+> +	};
+> +	regulator@5a {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x5a>;
+> +	};
+> +	regulator@68 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x68>;
+> +	};
+> +	regulator@70 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x70>;
+> +	};
+> +	regulator@72 {
+> +		compatible = "infineon,pxe1610";
+> +		reg = <0x72>;
+> +	};
+>  };
+>  
+>  &i2c6 {
+> -- 
+> 2.17.1
+> 
+>
