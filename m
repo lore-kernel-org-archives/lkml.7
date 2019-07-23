@@ -2,115 +2,87 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DA0C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE8EC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4257022513
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEE321873
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tsa3wQwW"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AyXw9ZsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbfGWJsN (ORCPT
+        id S1730937AbfGWJsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:48:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45178 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfGWJsN (ORCPT
+        Tue, 23 Jul 2019 05:48:30 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:23442 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfGWJsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:48:13 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so40343730lje.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 02:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qGX6IuhNcRSi9X6/a2qMSk1y8inVeGuBF+eTHUQ+bWY=;
-        b=tsa3wQwWVkiJ7WVoTIb0mGXxzhr+rtgVeVb1p2POWR3Nye0ykLEq0Jqwb5nl+qKYcW
-         gNtymOO5HvFleCtrRdTNTgbibysHwuhIIDazUdcgtZ3Hc3yAsrwgvEJaeqf7fHvMqLV5
-         TzhsVBYeKj8hdamyObhwyRrdzG1d5yAdwwRgpZvQKXoIA+F0bD7ERjXigIIHjMQ6WFse
-         kIW1aoYtQArsgYJ9PHGHHag79EY3mHtN0B5MQfcfMyi+qCQMgHck9ObeJ9cjVF0Mju77
-         mgENJnXZ09oupkvGkgGUNuIt1uLUG5tpeeUkb/hPcStDHrpsA9GbSy7BZNhYjZ75kZrn
-         TTpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qGX6IuhNcRSi9X6/a2qMSk1y8inVeGuBF+eTHUQ+bWY=;
-        b=ORHQ4LZi7ZOtWOY1xKqiCOgf0GirYY1GIOdR1HlzLDIkfq8yx5QYcZpttqk5zWy0Da
-         JYAmq41dRkn6Z8yQMgr2pLC2OmSObQ1YM8CJ+Xd01uD0Z4YtecK5nlzN1RhqRWQ6lcYm
-         qrwE9S062rajmSljplNoer0bViZrFNzewrQ9kCtgpHblgYXajEMD3Q5N17eTdhStOVjn
-         +bXZZ7MjJX9ws6VSunpUb7xrcC7o5rfjapRyNXX1FUFMz+ybIjGVXPaTzskkA85Ikx4/
-         OVrpMUydiysqdtoD13irSTrZGGuEEJ62Mu3berkMrRL9qDLznIXho922+qbUe3jFNZou
-         4NLA==
-X-Gm-Message-State: APjAAAUnWKoVng0Ir08GIQnK6QudW0ip5myVXzVfKW8EtUu02nKXWhyN
-        bomA9eHGFyM0ZktUE0D5TO0=
-X-Google-Smtp-Source: APXvYqx2KdFZ2X7fHRLTwQtjNLDqLUc5b3VWLVVUUpHBi/CuGq6RIWEyl1H6gKJWRqt9VAJ4OphOnQ==
-X-Received: by 2002:a2e:9209:: with SMTP id k9mr38066017ljg.96.1563875290418;
-        Tue, 23 Jul 2019 02:48:10 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id y29sm7920315ljd.43.2019.07.23.02.48.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 02:48:09 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 2B1244606E8; Tue, 23 Jul 2019 12:48:09 +0300 (MSK)
-Date:   Tue, 23 Jul 2019 12:48:09 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sys_prctl(): simplify arg2 judgment when calling
- PR_SET_TIMERSLACK
-Message-ID: <20190723094809.GE4832@uranus.lan>
-References: <1563852653-2382-1-git-send-email-xuyang2018.jy@cn.fujitsu.com>
- <20190723072338.GD4832@uranus.lan>
- <5D36C11D.1070804@cn.fujitsu.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D36C11D.1070804@cn.fujitsu.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+        Tue, 23 Jul 2019 05:48:30 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x6N9m2fe009018;
+        Tue, 23 Jul 2019 18:48:02 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x6N9m2fe009018
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563875283;
+        bh=GhMsfcEGMdo7a2JHO9NEXRnzfvlVBKPP4W3vxfX4aPo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AyXw9ZsFdwqTHQzzXKMEAEk1i47hd8FA31ANoRJ/n+p1wW5X9oX94dF5QDQ48RjbY
+         ct8UKjMIjvjHYKmmVGs7S96+r/d1+aBt0t02OlceDAItDkSzxfTQaiitkdLnTFhYxB
+         msMKZKA433x/wX+2iMNJQmtLmbG0cRH0HxgeOc0GiBcpg6BthaBsxqFKbFibgf33nb
+         8rbeyAlt+h9s7TNVJkxw1xmD9gSgWIYd8k9R4u2q/38vQgt2Uk/jJpXygs9Z1Psi+o
+         CpJyeFb/bJDNKA9HB0rRXT0JBeBPljBFrqMFRXGvC8d+2z4Afsd19VHN8u2yVhvyeO
+         yFCm4nLpjHQXw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] parisc: rename default_defconfig to defconfig
+Date:   Tue, 23 Jul 2019 18:47:51 +0900
+Message-Id: <20190723094751.463-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 04:11:09PM +0800, Yang Xu wrote:
-> > 2) according to man page passing negative value should be acceptable,
-> >     though it never worked as expected. I've been grepping "git log"
-> >     for this file and the former API is coming from
-> > 
-> > commit 6976675d94042fbd446231d1bd8b7de71a980ada
-> > Author: Arjan van de Ven<arjan@linux.intel.com>
-> > Date:   Mon Sep 1 15:52:40 2008 -0700
-> > 
-> >      hrtimer: create a "timer_slack" field in the task struct
-> > 
-> > which is 11 years old by now. Nobody complained so far even when man
-> > page is saying pretty obviously
-> > 
-> >         PR_SET_TIMERSLACK (since Linux 2.6.28)
-> >                Each thread has two associated timer slack values:  a  "default"
-> >                value, and a "current" value.  This operation sets the "current"
-> >                timer slack value for the calling  thread.   If  the  nanosecond
-> >                value  supplied in arg2 is greater than zero, then the "current"
-> >                value is set to this value.  If arg2 is less than  or  equal  to
-> >                zero,  the  "current"  timer  slack  is  reset  to  the thread's
-> >                "default" timer slack value.
-> > 
-> > So i think to match the man page (and assuming that accepting negative value
-> > has been supposed) we should rather do
-> > 
-> > 	if ((long)arg2<  0)
-> Looks correct. But if we set a ULONG_MAX(PR_GET_TIMERSLACK also limits ULONG_MAX)
-> value(about 4s) on 32bit machine, this code will think this value is a negative value and use default value.
-> 
-> I guess man page was written as "less than or equal to zero" because of this confusing code(arg2<=0, but arg2
-> is an unsinged long value).
-> I think we can change this man page and also add bounds value description.
+'default_defconfig' is an awkward name since 'defconfig' is the default.
+Let's simply say 'defconfig' like other architectures. You can drop the
+KBUILD_DEFCONFIG define by following the standard naming.
 
-OK, seems reasonable. I think we should use comparision with zero
-and simply update a man page.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ arch/parisc/Makefile                                 | 2 --
+ arch/parisc/configs/{default_defconfig => defconfig} | 0
+ 2 files changed, 2 deletions(-)
+ rename arch/parisc/configs/{default_defconfig => defconfig} (100%)
+
+diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
+index 8acb8fa1f8d6..b10a1179291a 100644
+--- a/arch/parisc/Makefile
++++ b/arch/parisc/Makefile
+@@ -19,8 +19,6 @@
+ 
+ KBUILD_IMAGE := vmlinuz
+ 
+-KBUILD_DEFCONFIG := default_defconfig
+-
+ NM		= sh $(srctree)/arch/parisc/nm
+ CHECKFLAGS	+= -D__hppa__=1
+ LIBGCC		= $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
+diff --git a/arch/parisc/configs/default_defconfig b/arch/parisc/configs/defconfig
+similarity index 100%
+rename from arch/parisc/configs/default_defconfig
+rename to arch/parisc/configs/defconfig
+-- 
+2.17.1
+
