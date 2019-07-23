@@ -2,86 +2,152 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187ADC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F13C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C9A227BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BEA223BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tp7DHuUA"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BvJfvYvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfGWJ1U (ORCPT
+        id S2387880AbfGWJ1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:27:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55350 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbfGWJ1U (ORCPT
+        Tue, 23 Jul 2019 05:27:31 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:52938 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727408AbfGWJ1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:27:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iGOng1nK2tteDL9Gsnzl+UsVfoooOvN9ZoRg2+d2ilw=; b=Tp7DHuUAJlzSf6P4KtvwjChc7
-        c5qrgpBua1VXye3VXufVT37jbn7IS+f994XRj2sqlb2i/AS2ZjLpo7xrbUqAs7mrwPJ/rRlVLMfc9
-        Vf1uhm/5plou3tAEsDVHf/xPz3OiQW0c2E1CFvkdM6kXqVc8uoxMH/txzl+dSq87q21t3oBOEbjW4
-        ju4ngtsB6ejw/pJbrDVh5ejyG/z9dLGyKNeuSlTeUp+XQ89t5AHrP+EAVllf4jj8i3GfPhmxyu7kX
-        ttwJclT/iqCEt4yyC7BTqfgblTu15Z7oA5V+dBciKU/eo426eQrz/ZNYcKLTftSH8uAutn6ahCxyZ
-        OxAVTZuPQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpr4l-00021J-OG; Tue, 23 Jul 2019 09:27:16 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 285AE20A291EC; Tue, 23 Jul 2019 11:27:14 +0200 (CEST)
-Date:   Tue, 23 Jul 2019 11:27:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Lockdep: Reduce stack trace memory usage
-Message-ID: <20190723092714.GA3402@hirez.programming.kicks-ass.net>
-References: <20190722182443.216015-1-bvanassche@acm.org>
+        Tue, 23 Jul 2019 05:27:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1563874050; x=1595410050;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=b531SE6MRYpUt8mqMq6kBzbDUygX4l0/zWJlNrWTyTY=;
+  b=BvJfvYvwcgjfN2d6+V5bI632bWVUO3FhL9XJlC/xiYyJfjz3hKklpTPt
+   SWj6akCCMQGut0ommegz8xfJIohQGko6a3wHKF4QPJlOxvMzeDOedJAuJ
+   A8Duypw1EZ/RKXAAV1Tzh/fDOz9mDBwz31Vb6unDl2TNPyFBk0DDt9NgQ
+   c=;
+X-IronPort-AV: E=Sophos;i="5.64,298,1559520000"; 
+   d="scan'208";a="775794056"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 23 Jul 2019 09:27:28 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id CF43DA272C;
+        Tue, 23 Jul 2019 09:27:27 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 23 Jul 2019 09:27:27 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.161.85) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 23 Jul 2019 09:27:22 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
+        <alisaidi@amazon.com>, <ronenk@amazon.com>, <barakw@amazon.com>,
+        <talel@amazon.com>, <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+Date:   Tue, 23 Jul 2019 12:27:08 +0300
+Message-ID: <20190723092711.11786-1-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190723092529.11310-1-jonnyc@amazon.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722182443.216015-1-bvanassche@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.85]
+X-ClientProxiedBy: EX13D27UWB003.ant.amazon.com (10.43.161.195) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:24:39AM -0700, Bart Van Assche wrote:
-> Hi Peter,
-> 
-> An unfortunate side effect of commit 669de8bda87b ("kernel/workqueue: Use
-> dynamic lockdep keys for workqueues") is that all stack traces associated
-> with the lockdep key are leaked when a workqueue is destroyed. Fix this by
-> storing each unique stack trace once. Please consider this patch series
-> for Linux kernel v5.4.
-> 
-> Thanks,
-> 
-> Bart.
-> 
-> Bart Van Assche (4):
->   locking/lockdep: Make it clear that what lock_class::key points at is
->     not modified
->   stacktrace: Constify 'entries' arguments
->   locking/lockdep: Reduce space occupied by stack traces
->   locking/lockdep: Report more stack trace statistics
-> 
->  include/linux/lockdep.h            |  11 +-
->  include/linux/stacktrace.h         |   4 +-
->  kernel/locking/lockdep.c           | 159 ++++++++++++++++++++++-------
->  kernel/locking/lockdep_internals.h |   9 +-
->  kernel/locking/lockdep_proc.c      |   8 +-
->  kernel/stacktrace.c                |   4 +-
->  6 files changed, 143 insertions(+), 52 deletions(-)
+Document Amazon's Annapurna Labs PCIe host bridge.
 
-Thanks a lot for doing this Bart, excellent stuff!
+Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+---
+ .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
+ MAINTAINERS                                   |  3 +-
+ 2 files changed, 47 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+new file mode 100644
+index 000000000000..89876190eb5a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+@@ -0,0 +1,45 @@
++* Amazon Annapurna Labs PCIe host bridge
++
++Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys DesignWare
++PCI core.
++It shares common functions with the PCIe DesignWare core driver and inherits
++common properties defined in Documentation/devicetree/bindings/pci/designware-pcie.txt.
++Properties of the host controller node that differ from it are:
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain
++			- "amazon,al-pcie"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Register ranges as listed in the reg-names property
++
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Must include the following entries
++			- "config"	PCIe ECAM space
++			- "controller"	AL proprietary registers
++			- "dbi"		Designware PCIe registers
++
++Example:
++
++	pcie-external0: pcie@fb600000 {
++		compatible = "amazon,al-pcie";
++		reg = <0x0 0xfb600000 0x0 0x00100000
++		       0x0 0xfd800000 0x0 0x00010000
++		       0x0 0xfd810000 0x0 0x00001000>;
++		reg-names = "config", "controller", "dbi";
++		bus-range = <0 255>;
++		device_type = "pci";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask = <0x00 0 0 7>;
++		interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
++		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5a6137df3f0e..29cca14a05a6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12201,10 +12201,11 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+ S:	Supported
+ F:	drivers/pci/controller/
+ 
+-PCIE DRIVER FOR ANNAPURNA LABS
++PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+ M:	Jonathan Chocron <jonnyc@amazon.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+ F:	drivers/pci/controller/dwc/pcie-al.c
+ 
+ PCIE DRIVER FOR AMLOGIC MESON
+-- 
+2.17.1
+
