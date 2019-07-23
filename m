@@ -3,137 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D748C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564B5C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7C6223A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8812238C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732674AbfGWFIq (ORCPT
+        id S1732711AbfGWFJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:08:46 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26832 "EHLO mga03.intel.com"
+        Tue, 23 Jul 2019 01:09:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:1853 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbfGWFIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:08:45 -0400
+        id S1731849AbfGWFJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:09:55 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 22:08:44 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 22:09:55 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
-   d="scan'208";a="196991815"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 22:08:43 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc:     huang ying <huang.ying.caritas@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>
-Subject: Re: kernel BUG at mm/swap_state.c:170!
-References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
-        <CAC=cRTMz5S636Wfqdn3UGbzwzJ+v_M46_juSfoouRLS1H62orQ@mail.gmail.com>
-        <CABXGCsOo-4CJicvTQm4jF4iDSqM8ic+0+HEEqP+632KfCntU+w@mail.gmail.com>
-        <878ssqbj56.fsf@yhuang-dev.intel.com>
-        <CABXGCsOhimxC17j=jApoty-o1roRhKYoe+oiqDZ3c1s2r3QxFw@mail.gmail.com>
-Date:   Tue, 23 Jul 2019 13:08:42 +0800
-In-Reply-To: <CABXGCsOhimxC17j=jApoty-o1roRhKYoe+oiqDZ3c1s2r3QxFw@mail.gmail.com>
-        (Mikhail Gavrilov's message of "Mon, 22 Jul 2019 12:56:18 +0500")
-Message-ID: <87zhl59w2t.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+   d="scan'208";a="196992280"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 22:09:54 -0700
+From:   Wu Hao <hao.wu@intel.com>
+To:     gregkh@linuxfoundation.org, mdf@kernel.org,
+        linux-fpga@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v3 00/12] FPGA DFL updates
+Date:   Tue, 23 Jul 2019 12:51:23 +0800
+Message-Id: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com> writes:
+Hi Greg
 
-> On Mon, 22 Jul 2019 at 12:53, Huang, Ying <ying.huang@intel.com> wrote:
->>
->> Yes.  This is quite complex.  Is the transparent huge page enabled in
->> your system?  You can check the output of
->>
->> $ cat /sys/kernel/mm/transparent_hugepage/enabled
->
-> always [madvise] never
->
->> And, whether is the swap device you use a SSD or NVMe disk (not HDD)?
->
-> NVMe INTEL Optane 905P SSDPE21D480GAM3
+This is v3 patchset which adds more features to FPGA DFL. This patchset
+is made on top of patch[1] and 5.3-rc1 tree. Documentation patch for DFL
+is added back to this patchset
 
-Thanks!  I have found another (easier way) to reproduce the panic.
-Could you try the below patch on top of v5.2-rc2?  It can fix the panic
-for me.
+Main changes from v2:
+  - update kernel version/date in sysfs doc (patch #4, #5, #8, #10, #11).
+  - add back Documentation patch (patch #12).
 
-Best Regards,
-Huang, Ying
+Main changes from v1:
+  - remove DRV/MODULE_VERSION modifications. (patch #1, #3, #4, #6)
+  - remove argsz from new ioctls. (patch #2)
+  - replace sysfs_create/remove_* with device_add/remove_* for sysfs entries.
+    (patch #5, #8, #11)
 
------------------------------------8<----------------------------------
-From 5e519c2de54b9fd4b32b7a59e47ce7f94beb8845 Mon Sep 17 00:00:00 2001
-From: Huang Ying <ying.huang@intel.com>
-Date: Tue, 23 Jul 2019 08:49:57 +0800
-Subject: [PATCH] dbg xa head
+[1] [PATCH] fpga: dfl: use driver core functions, not sysfs ones.
+    https://lkml.org/lkml/2019/7/4/36
 
----
- mm/huge_memory.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Wu Hao (12):
+  fpga: dfl: fme: support 512bit data width PR
+  fpga: dfl: fme: add DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+  fpga: dfl: pci: enable SRIOV support.
+  fpga: dfl: afu: add AFU state related sysfs interfaces
+  fpga: dfl: afu: add userclock sysfs interfaces.
+  fpga: dfl: add id_table for dfl private feature driver
+  fpga: dfl: afu: export __port_enable/disable function.
+  fpga: dfl: afu: add error reporting support.
+  fpga: dfl: afu: add STP (SignalTap) support
+  fpga: dfl: fme: add capability sysfs interfaces
+  fpga: dfl: fme: add global error reporting support
+  Documentation: fpga: dfl: add descriptions for virtualization and new
+    interfaces.
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 9f8bce9a6b32..c6ca1c7157ed 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2482,6 +2482,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	struct page *head = compound_head(page);
- 	pg_data_t *pgdat = page_pgdat(head);
- 	struct lruvec *lruvec;
-+	struct address_space *swap_cache = NULL;
-+	unsigned long offset;
- 	int i;
- 
- 	lruvec = mem_cgroup_page_lruvec(head, pgdat);
-@@ -2489,6 +2491,14 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	/* complete memcg works before add pages to LRU */
- 	mem_cgroup_split_huge_fixup(head);
- 
-+	if (PageAnon(head) && PageSwapCache(head)) {
-+		swp_entry_t entry = { .val = page_private(head) };
-+
-+		offset = swp_offset(entry);
-+		swap_cache = swap_address_space(entry);
-+		xa_lock(&swap_cache->i_pages);
-+	}
-+
- 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
- 		__split_huge_page_tail(head, i, lruvec, list);
- 		/* Some pages can be beyond i_size: drop them from page cache */
-@@ -2501,6 +2511,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		} else if (!PageAnon(page)) {
- 			__xa_store(&head->mapping->i_pages, head[i].index,
- 					head + i, 0);
-+		} else if (swap_cache) {
-+			__xa_store(&swap_cache->i_pages, offset + i,
-+				   head + i, 0);
- 		}
- 	}
- 
-@@ -2508,9 +2521,10 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	/* See comment in __split_huge_page_tail() */
- 	if (PageAnon(head)) {
- 		/* Additional pin to swap cache */
--		if (PageSwapCache(head))
-+		if (PageSwapCache(head)) {
- 			page_ref_add(head, 2);
--		else
-+			xa_unlock(&swap_cache->i_pages);
-+		} else
- 			page_ref_inc(head);
- 	} else {
- 		/* Additional pin to page cache */
+ Documentation/ABI/testing/sysfs-platform-dfl-fme  |  98 ++++++
+ Documentation/ABI/testing/sysfs-platform-dfl-port | 104 ++++++
+ Documentation/fpga/dfl.rst                        | 105 ++++++
+ drivers/fpga/Makefile                             |   3 +-
+ drivers/fpga/dfl-afu-error.c                      | 225 +++++++++++++
+ drivers/fpga/dfl-afu-main.c                       | 328 +++++++++++++++++-
+ drivers/fpga/dfl-afu.h                            |   7 +
+ drivers/fpga/dfl-fme-error.c                      | 385 ++++++++++++++++++++++
+ drivers/fpga/dfl-fme-main.c                       |  93 +++++-
+ drivers/fpga/dfl-fme-mgr.c                        | 110 ++++++-
+ drivers/fpga/dfl-fme-pr.c                         |  50 ++-
+ drivers/fpga/dfl-fme.h                            |   7 +-
+ drivers/fpga/dfl-pci.c                            |  39 +++
+ drivers/fpga/dfl.c                                | 166 +++++++++-
+ drivers/fpga/dfl.h                                |  54 ++-
+ include/uapi/linux/fpga-dfl.h                     |  19 ++
+ 16 files changed, 1722 insertions(+), 71 deletions(-)
+ create mode 100644 drivers/fpga/dfl-afu-error.c
+ create mode 100644 drivers/fpga/dfl-fme-error.c
+
 -- 
-2.20.1
+1.8.3.1
 
