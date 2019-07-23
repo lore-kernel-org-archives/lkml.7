@@ -2,342 +2,482 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641BCC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1E9C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228FE21926
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563920309;
-	bh=1+cODVZM/qmwLfQsqDC6EW0RoevtNVqfwy2Kt5hV9GU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O/yFgYcJSt3vRkG/BpBQ/9y/E7PBcbIyN329GVQwTG0hNBwtf38aaczg78fzOxxV2
-	 1uFLmkfgsqs8q8ZKtLTBSaJFWhYTOA4a9XVySPu4KDgyrSkeHVFnhVvhSVeMlRvDIo
-	 hn16aJuTHJ99hIc4G74kufoLRKtJyScaso/9ckBY=
+	by mail.kernel.org (Postfix) with ESMTP id EAE1E229ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392368AbfGWWS1 (ORCPT
+        id S2392410AbfGWWTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:18:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 18:19:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:60636 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731353AbfGWWS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:18:27 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1FE229EB;
-        Tue, 23 Jul 2019 22:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563920306;
-        bh=1+cODVZM/qmwLfQsqDC6EW0RoevtNVqfwy2Kt5hV9GU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kG9JjvDqjrTJCh5ASl2pMt+lqfbsmo4pvNaXgthdrnMMDpnHiM6Oqo5KBLn1QExkG
-         KOBRj001DR1gC5KlR6EYngtLST6d6UgFKDERL6p/nD5CU4T+xtAugrMrYHgm1W7GKF
-         E48rAqWj66gHhileoxzMZvPY/tdEN1lv6n2FdPIk=
-Received: by mail-qt1-f170.google.com with SMTP id l9so43471788qtu.6;
-        Tue, 23 Jul 2019 15:18:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAWAAPuOet51S8UTq6wVvA6lea7FbgcOp0LSIRWXkyvHJJ6qejbr
-        ubHCo0H5EmKjL4tkdj+IUq+FCIJuXFYltafRkw==
-X-Google-Smtp-Source: APXvYqwL5YJa/hlFZC87ZrY/NPKXE3+tfPRhQtETec8iN6L1IaDP5nYvSDpuyp9Mst1kiA2+E9tibeXu+D+dsvQc9RQ=
-X-Received: by 2002:aed:3f10:: with SMTP id p16mr54735204qtf.110.1563920305267;
- Tue, 23 Jul 2019 15:18:25 -0700 (PDT)
+        id S2387490AbfGWWTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 18:19:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0834C1596;
+        Tue, 23 Jul 2019 15:19:10 -0700 (PDT)
+Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DD7DD3F694;
+        Tue, 23 Jul 2019 15:19:06 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>, Dan Murphy <dmurphy@ti.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wpan@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v3 1/7] drivers: Introduce device lookup variants by name
+Date:   Tue, 23 Jul 2019 23:18:32 +0100
+Message-Id: <20190723221838.12024-2-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190723221838.12024-1-suzuki.poulose@arm.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-References: <20190720061647.234852-1-saravanak@google.com> <20190720061647.234852-4-saravanak@google.com>
- <CAL_JsqK9GTxxxjhhWwqxOW9XERFziu2O71ETV2RhXb7B1WFY2g@mail.gmail.com> <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
-In-Reply-To: <CAGETcx-hCrUvY5whZBihueqqCxmF3oDjFybjmoo3JUu87iiiEw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 23 Jul 2019 16:18:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
-Message-ID: <CAL_JsqJC-xvj5OJeFRPPNaYJj=-RqmXFJepZ5Q2+z36-7qyPgQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/7] of/platform: Add functional dependency link from
- DT bindings
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 2:49 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Jul 23, 2019 at 11:06 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Sat, Jul 20, 2019 at 12:17 AM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > Add device-links after the devices are created (but before they are
-> > > probed) by looking at common DT bindings like clocks and
-> > > interconnects.
-> >
-> > The structure now looks a lot better to me. A few minor things below.
->
-> Thanks.
->
-> > >
-> > > Automatically adding device-links for functional dependencies at the
-> > > framework level provides the following benefits:
-> > >
-> > > - Optimizes device probe order and avoids the useless work of
-> > >   attempting probes of devices that will not probe successfully
-> > >   (because their suppliers aren't present or haven't probed yet).
-> > >
-> > >   For example, in a commonly available mobile SoC, registering just
-> > >   one consumer device's driver at an initcall level earlier than the
-> > >   supplier device's driver causes 11 failed probe attempts before the
-> > >   consumer device probes successfully. This was with a kernel with all
-> > >   the drivers statically compiled in. This problem gets a lot worse if
-> > >   all the drivers are loaded as modules without direct symbol
-> > >   dependencies.
-> > >
-> > > - Supplier devices like clock providers, interconnect providers, etc
-> > >   need to keep the resources they provide active and at a particular
-> > >   state(s) during boot up even if their current set of consumers don't
-> > >   request the resource to be active. This is because the rest of the
-> > >   consumers might not have probed yet and turning off the resource
-> > >   before all the consumers have probed could lead to a hang or
-> > >   undesired user experience.
-> > >
-> > >   Some frameworks (Eg: regulator) handle this today by turning off
-> > >   "unused" resources at late_initcall_sync and hoping all the devices
-> > >   have probed by then. This is not a valid assumption for systems with
-> > >   loadable modules. Other frameworks (Eg: clock) just don't handle
-> > >   this due to the lack of a clear signal for when they can turn off
-> > >   resources. This leads to downstream hacks to handle cases like this
-> > >   that can easily be solved in the upstream kernel.
-> > >
-> > >   By linking devices before they are probed, we give suppliers a clear
-> > >   count of the number of dependent consumers. Once all of the
-> > >   consumers are active, the suppliers can turn off the unused
-> > >   resources without making assumptions about the number of consumers.
-> > >
-> > > By default we just add device-links to track "driver presence" (probe
-> > > succeeded) of the supplier device. If any other functionality provided
-> > > by device-links are needed, it is left to the consumer/supplier
-> > > devices to change the link when they probe.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  .../admin-guide/kernel-parameters.txt         |   5 +
-> > >  drivers/of/platform.c                         | 158 ++++++++++++++++++
-> > >  2 files changed, 163 insertions(+)
-> > >
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > index 138f6664b2e2..109b4310844f 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -3141,6 +3141,11 @@
-> > >                         This can be set from sysctl after boot.
-> > >                         See Documentation/sysctl/vm.txt for details.
-> > >
-> > > +       of_devlink      [KNL] Make device links from common DT bindings. Useful
-> > > +                       for optimizing probe order and making sure resources
-> > > +                       aren't turned off before the consumer devices have
-> > > +                       probed.
-> > > +
-> > >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
-> > >                         See Documentation/debugging-via-ohci1394.txt for more
-> > >                         info.
-> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > > index 04ad312fd85b..88a2086e26fa 100644
-> > > --- a/drivers/of/platform.c
-> > > +++ b/drivers/of/platform.c
-> > > @@ -509,6 +509,163 @@ int of_platform_default_populate(struct device_node *root,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
-> > >
-> > > +bool of_link_is_valid(struct device_node *con, struct device_node *sup)
-> > > +{
-> > > +       of_node_get(sup);
-> > > +       /*
-> > > +        * Don't allow linking a device node as a consumer of one of its
-> > > +        * descendant nodes. By definition, a child node can't be a functional
-> > > +        * dependency for the parent node.
-> > > +        */
-> > > +       while (sup) {
-> > > +               if (sup == con) {
-> > > +                       of_node_put(sup);
-> > > +                       return false;
-> > > +               }
-> > > +               sup = of_get_next_parent(sup);
-> > > +       }
-> > > +       return true;
-> > > +}
-> > > +
-> > > +static int of_link_to_phandle(struct device *dev, struct device_node *sup_np)
-> > > +{
-> > > +       struct platform_device *sup_dev;
-> > > +       u32 dl_flags = DL_FLAG_AUTOPROBE_CONSUMER;
-> > > +       int ret = 0;
-> > > +
-> > > +       /*
-> > > +        * Since we are trying to create device links, we need to find
-> > > +        * the actual device node that owns this supplier phandle.
-> > > +        * Often times it's the same node, but sometimes it can be one
-> > > +        * of the parents. So walk up the parent till you find a
-> > > +        * device.
-> > > +        */
-> > > +       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-> > > +               sup_np = of_get_next_parent(sup_np);
-> > > +       if (!sup_np)
-> > > +               return 0;
-> > > +
-> > > +       if (!of_link_is_valid(dev->of_node, sup_np)) {
-> > > +               of_node_put(sup_np);
-> > > +               return 0;
-> > > +       }
-> > > +       sup_dev = of_find_device_by_node(sup_np);
-> > > +       of_node_put(sup_np);
-> > > +       if (!sup_dev)
-> > > +               return -ENODEV;
-> > > +       if (!device_link_add(dev, &sup_dev->dev, dl_flags))
-> > > +               ret = -ENODEV;
-> > > +       put_device(&sup_dev->dev);
-> > > +       return ret;
-> > > +}
-> > > +
-> > > +static struct device_node *parse_prop_cells(struct device_node *np,
-> > > +                                           const char *prop, int i,
-> >
-> > I like 'i' for for loops, but less so for function params. Perhaps
-> > 'index' instead like of_parse_phandle_with_args.
->
-> Sounds good.
->
-> >
-> > > +                                           const char *binding,
-> > > +                                           const char *cell)
-> > > +{
-> > > +       struct of_phandle_args sup_args;
-> > > +
-> > > +       if (!i && strcmp(prop, binding))
-> >
-> > Why the '!i' test?
->
-> To avoid a string comparison for every index. It's kinda wasteful once
-> the first index passes.
+Add a helper to match the device name for device lookup. Also
+reuse this generic exported helper for the existing bus_find_device_by_name().
+and add similar variants for driver/class.
 
-That's not very obvious and pretty fragile though this is a static
-function. Perhaps we should split to match() and parse() functions. At
-least put a comment here as to what we're doing.
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexander Aring <alex.aring@gmail.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Harald Freudenberger <freude@linux.ibm.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: linux-leds@vger.kernel.org
+Cc: linux-rtc@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Cc: linux-wpan@vger.kernel.org
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Stefan Schmidt <stefan@datenfreihafen.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ drivers/base/bus.c               | 24 ------------------
+ drivers/base/core.c              |  6 +++++
+ drivers/hwtracing/stm/core.c     |  9 +------
+ drivers/leds/led-class.c         |  9 +------
+ drivers/rtc/interface.c          | 11 +--------
+ drivers/s390/cio/ccwgroup.c      | 10 +-------
+ drivers/s390/cio/device.c        | 15 +-----------
+ drivers/s390/crypto/zcrypt_api.c | 11 +--------
+ drivers/usb/roles/class.c        |  8 +-----
+ drivers/usb/typec/class.c        |  8 +-----
+ include/linux/device.h           | 42 +++++++++++++++++++++++++++++---
+ net/ieee802154/core.c            |  7 +-----
+ 12 files changed, 54 insertions(+), 106 deletions(-)
 
->
-> > > +               return NULL;
-> > > +
-> > > +       if (of_parse_phandle_with_args(np, binding, cell, i, &sup_args))
-> > > +               return NULL;
-> > > +
-> > > +       return sup_args.np;
-> > > +}
-> > > +
-> > > +static struct device_node *parse_clocks(struct device_node *np,
-> > > +                                       const char *prop, int i)
-> > > +{
-> > > +       return parse_prop_cells(np, prop, i, "clocks", "#clock-cells");
-> > > +}
-> > > +
-> > > +static struct device_node *parse_interconnects(struct device_node *np,
-> > > +                                              const char *prop, int i)
-> > > +{
-> > > +       return parse_prop_cells(np, prop, i, "interconnects",
-> > > +                               "#interconnect-cells");
-> > > +}
-> > > +
-> > > +static int strcmp_suffix(const char *str, const char *suffix)
-> > > +{
-> > > +       unsigned int len, suffix_len;
-> > > +
-> > > +       len = strlen(str);
-> > > +       suffix_len = strlen(suffix);
-> > > +       if (len <= suffix_len)
-> > > +               return -1;
-> > > +       return strcmp(str + len - suffix_len, suffix);
-> > > +}
-> > > +
-> > > +static struct device_node *parse_regulators(struct device_node *np,
-> > > +                                           const char *prop, int i)
-> > > +{
-> > > +       if (i || strcmp_suffix(prop, "-supply"))
-> > > +               return NULL;
-> > > +
-> > > +       return of_parse_phandle(np, prop, 0);
-> > > +}
-> > > +
-> > > +/**
-> > > + * struct supplier_bindings - Information for parsing supplier DT binding
-> > > + *
-> > > + * @parse_prop:                If the function cannot parse the property, return NULL.
-> > > + *                     Otherwise, return the phandle listed in the property
-> > > + *                     that corresponds to index i.
-> > > + */
-> > > +struct supplier_bindings {
-> > > +       struct device_node *(*parse_prop)(struct device_node *np,
-> > > +                                         const char *name, int i);
-> > > +};
-> > > +
-> > > +struct supplier_bindings bindings[] = {
-> >
-> > static const
->
-> Will do.
->
-> >
-> > > +       { .parse_prop = parse_clocks, },
-> > > +       { .parse_prop = parse_interconnects, },
-> > > +       { .parse_prop = parse_regulators, },
-> > > +       { },
-> > > +};
-> > > +
-> > > +static bool of_link_property(struct device *dev, struct device_node *con_np,
-> > > +                            const char *prop)
-> > > +{
-> > > +       struct device_node *phandle;
-> > > +       struct supplier_bindings *s = bindings;
-> > > +       unsigned int i = 0;
-> > > +       bool done = true;
-> > > +
-> > > +       while (!i && s->parse_prop) {
-> >
-> > Using 'i' is a little odd. Perhaps a 'matched' bool would be easier to read.
->
-> That's how I wrote it first (locally) and then redid it this way
-> because the bool felt very superfluous. I don't think this is that
-> hard to understand.
+diff --git a/drivers/base/bus.c b/drivers/base/bus.c
+index df3cac739813..a1d1e8256324 100644
+--- a/drivers/base/bus.c
++++ b/drivers/base/bus.c
+@@ -342,30 +342,6 @@ struct device *bus_find_device(struct bus_type *bus,
+ }
+ EXPORT_SYMBOL_GPL(bus_find_device);
+ 
+-static int match_name(struct device *dev, const void *data)
+-{
+-	const char *name = data;
+-
+-	return sysfs_streq(name, dev_name(dev));
+-}
+-
+-/**
+- * bus_find_device_by_name - device iterator for locating a particular device of a specific name
+- * @bus: bus type
+- * @start: Device to begin with
+- * @name: name of the device to match
+- *
+- * This is similar to the bus_find_device() function above, but it handles
+- * searching by a name automatically, no need to write another strcmp matching
+- * function.
+- */
+-struct device *bus_find_device_by_name(struct bus_type *bus,
+-				       struct device *start, const char *name)
+-{
+-	return bus_find_device(bus, start, (void *)name, match_name);
+-}
+-EXPORT_SYMBOL_GPL(bus_find_device_by_name);
+-
+ /**
+  * subsys_find_device_by_id - find a device with a specific enumeration number
+  * @subsys: subsystem
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index da84a73f2ba6..fb83647d685a 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3357,6 +3357,12 @@ void device_set_of_node_from_dev(struct device *dev, const struct device *dev2)
+ }
+ EXPORT_SYMBOL_GPL(device_set_of_node_from_dev);
+ 
++int device_match_name(struct device *dev, const void *name)
++{
++	return sysfs_streq(dev_name(dev), name);
++}
++EXPORT_SYMBOL_GPL(device_match_name);
++
+ int device_match_of_node(struct device *dev, const void *np)
+ {
+ 	return dev->of_node == np;
+diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
+index e55b902560de..2b6bd42632e8 100644
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -89,13 +89,6 @@ static struct class stm_class = {
+ 	.dev_groups	= stm_groups,
+ };
+ 
+-static int stm_dev_match(struct device *dev, const void *data)
+-{
+-	const char *name = data;
+-
+-	return sysfs_streq(name, dev_name(dev));
+-}
+-
+ /**
+  * stm_find_device() - find stm device by name
+  * @buf:	character buffer containing the name
+@@ -116,7 +109,7 @@ struct stm_device *stm_find_device(const char *buf)
+ 	if (!stm_core_up)
+ 		return NULL;
+ 
+-	dev = class_find_device(&stm_class, NULL, buf, stm_dev_match);
++	dev = class_find_device_by_name(&stm_class, buf);
+ 	if (!dev)
+ 		return NULL;
+ 
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 4793e77808e2..d54c8e4d8954 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -213,13 +213,6 @@ static int led_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
+ 
+-static int match_name(struct device *dev, const void *data)
+-{
+-	if (!dev_name(dev))
+-		return 0;
+-	return !strcmp(dev_name(dev), (char *)data);
+-}
+-
+ static int led_classdev_next_name(const char *init_name, char *name,
+ 				  size_t len)
+ {
+@@ -230,7 +223,7 @@ static int led_classdev_next_name(const char *init_name, char *name,
+ 	strlcpy(name, init_name, len);
+ 
+ 	while ((ret < len) &&
+-	       (dev = class_find_device(leds_class, NULL, name, match_name))) {
++	       (dev = class_find_device_by_name(leds_class, name))) {
+ 		put_device(dev);
+ 		ret = snprintf(name, len, "%s_%u", init_name, ++i);
+ 	}
+diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+index 72b7ddc43116..c93ef33b01d3 100644
+--- a/drivers/rtc/interface.c
++++ b/drivers/rtc/interface.c
+@@ -663,21 +663,12 @@ void rtc_update_irq(struct rtc_device *rtc,
+ }
+ EXPORT_SYMBOL_GPL(rtc_update_irq);
+ 
+-static int __rtc_match(struct device *dev, const void *data)
+-{
+-	const char *name = data;
+-
+-	if (strcmp(dev_name(dev), name) == 0)
+-		return 1;
+-	return 0;
+-}
+-
+ struct rtc_device *rtc_class_open(const char *name)
+ {
+ 	struct device *dev;
+ 	struct rtc_device *rtc = NULL;
+ 
+-	dev = class_find_device(rtc_class, NULL, name, __rtc_match);
++	dev = class_find_device_by_name(rtc_class, name);
+ 	if (dev)
+ 		rtc = to_rtc_device(dev);
+ 
+diff --git a/drivers/s390/cio/ccwgroup.c b/drivers/s390/cio/ccwgroup.c
+index c522e9313c50..d843e362c167 100644
+--- a/drivers/s390/cio/ccwgroup.c
++++ b/drivers/s390/cio/ccwgroup.c
+@@ -608,13 +608,6 @@ void ccwgroup_driver_unregister(struct ccwgroup_driver *cdriver)
+ }
+ EXPORT_SYMBOL(ccwgroup_driver_unregister);
+ 
+-static int __ccwgroupdev_check_busid(struct device *dev, const void *id)
+-{
+-	const char *bus_id = id;
+-
+-	return (strcmp(bus_id, dev_name(dev)) == 0);
+-}
+-
+ /**
+  * get_ccwgroupdev_by_busid() - obtain device from a bus id
+  * @gdrv: driver the device is owned by
+@@ -631,8 +624,7 @@ struct ccwgroup_device *get_ccwgroupdev_by_busid(struct ccwgroup_driver *gdrv,
+ {
+ 	struct device *dev;
+ 
+-	dev = driver_find_device(&gdrv->driver, NULL, bus_id,
+-				 __ccwgroupdev_check_busid);
++	dev = driver_find_device_by_name(&gdrv->driver, bus_id);
+ 
+ 	return dev ? to_ccwgroupdev(dev) : NULL;
+ }
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index c421899be20f..131430bd48d9 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -1695,18 +1695,6 @@ int ccw_device_force_console(struct ccw_device *cdev)
+ EXPORT_SYMBOL_GPL(ccw_device_force_console);
+ #endif
+ 
+-/*
+- * get ccw_device matching the busid, but only if owned by cdrv
+- */
+-static int
+-__ccwdev_check_busid(struct device *dev, const void *id)
+-{
+-	const char *bus_id = id;
+-
+-	return (strcmp(bus_id, dev_name(dev)) == 0);
+-}
+-
+-
+ /**
+  * get_ccwdev_by_busid() - obtain device from a bus id
+  * @cdrv: driver the device is owned by
+@@ -1723,8 +1711,7 @@ struct ccw_device *get_ccwdev_by_busid(struct ccw_driver *cdrv,
+ {
+ 	struct device *dev;
+ 
+-	dev = driver_find_device(&cdrv->driver, NULL, (void *)bus_id,
+-				 __ccwdev_check_busid);
++	dev = driver_find_device_by_name(&cdrv->driver, bus_id);
+ 
+ 	return dev ? to_ccwdev(dev) : NULL;
+ }
+diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
+index 1058b4b5cc1e..38a5a47b8c9c 100644
+--- a/drivers/s390/crypto/zcrypt_api.c
++++ b/drivers/s390/crypto/zcrypt_api.c
+@@ -133,12 +133,6 @@ struct zcdn_device {
+ static int zcdn_create(const char *name);
+ static int zcdn_destroy(const char *name);
+ 
+-/* helper function, matches the name for find_zcdndev_by_name() */
+-static int __match_zcdn_name(struct device *dev, const void *data)
+-{
+-	return strcmp(dev_name(dev), (const char *)data) == 0;
+-}
+-
+ /* helper function, matches the devt value for find_zcdndev_by_devt() */
+ static int __match_zcdn_devt(struct device *dev, const void *data)
+ {
+@@ -152,10 +146,7 @@ static int __match_zcdn_devt(struct device *dev, const void *data)
+  */
+ static inline struct zcdn_device *find_zcdndev_by_name(const char *name)
+ {
+-	struct device *dev =
+-		class_find_device(zcrypt_class, NULL,
+-				  (void *) name,
+-				  __match_zcdn_name);
++	struct device *dev = class_find_device_by_name(zcrypt_class, name);
+ 
+ 	return dev ? to_zcdn_dev(dev) : NULL;
+ }
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 86defca6623e..c8efe60e2465 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -90,11 +90,6 @@ static int switch_fwnode_match(struct device *dev, const void *fwnode)
+ 	return dev_fwnode(dev) == fwnode;
+ }
+ 
+-static int switch_name_match(struct device *dev, const void *name)
+-{
+-	return !strcmp((const char *)name, dev_name(dev));
+-}
+-
+ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 				   void *data)
+ {
+@@ -107,8 +102,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 		dev = class_find_device(role_class, NULL, con->fwnode,
+ 					switch_fwnode_match);
+ 	} else {
+-		dev = class_find_device(role_class, NULL, con->endpoint[ep],
+-					switch_name_match);
++		dev = class_find_device_by_name(role_class, con->endpoint[ep]);
+ 	}
+ 
+ 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index a18285a990a8..9b0d15b487e5 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -210,11 +210,6 @@ static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
+ 	return dev_fwnode(dev) == fwnode;
+ }
+ 
+-static int typec_port_name_match(struct device *dev, const void *name)
+-{
+-	return !strcmp((const char *)name, dev_name(dev));
+-}
+-
+ static void *typec_port_match(struct device_connection *con, int ep, void *data)
+ {
+ 	struct device *dev;
+@@ -227,8 +222,7 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
+ 		return class_find_device(typec_class, NULL, con->fwnode,
+ 					 typec_port_fwnode_match);
+ 
+-	dev = class_find_device(typec_class, NULL, con->endpoint[ep],
+-				typec_port_name_match);
++	dev = class_find_device_by_name(typec_class, con->endpoint[ep]);
+ 
+ 	return dev ? dev : ERR_PTR(-EPROBE_DEFER);
+ }
+diff --git a/include/linux/device.h b/include/linux/device.h
+index c330b75c6c57..3ba376b8b456 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -164,6 +164,7 @@ void subsys_dev_iter_init(struct subsys_dev_iter *iter,
+ struct device *subsys_dev_iter_next(struct subsys_dev_iter *iter);
+ void subsys_dev_iter_exit(struct subsys_dev_iter *iter);
+ 
++int device_match_name(struct device *dev, const void *name);
+ int device_match_of_node(struct device *dev, const void *np);
+ 
+ int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
+@@ -171,9 +172,20 @@ int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
+ struct device *bus_find_device(struct bus_type *bus, struct device *start,
+ 			       const void *data,
+ 			       int (*match)(struct device *dev, const void *data));
+-struct device *bus_find_device_by_name(struct bus_type *bus,
+-				       struct device *start,
+-				       const char *name);
++/**
++ * bus_find_device_by_name - device iterator for locating a particular device
++ * of a specific name.
++ * @bus: bus type
++ * @start: Device to begin with
++ * @name: name of the device to match
++ */
++static inline struct device *bus_find_device_by_name(struct bus_type *bus,
++						     struct device *start,
++						     const char *name)
++{
++	return bus_find_device(bus, start, name, device_match_name);
++}
++
+ struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
+ 					struct device *hint);
+ int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
+@@ -342,6 +354,18 @@ struct device *driver_find_device(struct device_driver *drv,
+ 				  struct device *start, const void *data,
+ 				  int (*match)(struct device *dev, const void *data));
+ 
++/**
++ * driver_find_device_by_name - device iterator for locating a particular device
++ * of a specific name.
++ * @driver: the driver we're iterating
++ * @name: name of the device to match
++ */
++static inline struct device *driver_find_device_by_name(struct device_driver *drv,
++							const char *name)
++{
++	return driver_find_device(drv, NULL, name, device_match_name);
++}
++
+ void driver_deferred_probe_add(struct device *dev);
+ int driver_deferred_probe_check_state(struct device *dev);
+ int driver_deferred_probe_check_state_continue(struct device *dev);
+@@ -471,6 +495,18 @@ extern struct device *class_find_device(struct class *class,
+ 					struct device *start, const void *data,
+ 					int (*match)(struct device *, const void *));
+ 
++/**
++ * class_find_device_by_name - device iterator for locating a particular device
++ * of a specific name.
++ * @class: class type
++ * @name: name of the device to match
++ */
++static inline struct device *class_find_device_by_name(struct class *class,
++						       const char *name)
++{
++	return class_find_device(class, NULL, name, device_match_name);
++}
++
+ struct class_attribute {
+ 	struct attribute attr;
+ 	ssize_t (*show)(struct class *class, struct class_attribute *attr,
+diff --git a/net/ieee802154/core.c b/net/ieee802154/core.c
+index 60b7ac56a1f5..de259b5170ab 100644
+--- a/net/ieee802154/core.c
++++ b/net/ieee802154/core.c
+@@ -23,11 +23,6 @@
+ LIST_HEAD(cfg802154_rdev_list);
+ int cfg802154_rdev_list_generation;
+ 
+-static int wpan_phy_match(struct device *dev, const void *data)
+-{
+-	return !strcmp(dev_name(dev), (const char *)data);
+-}
+-
+ struct wpan_phy *wpan_phy_find(const char *str)
+ {
+ 	struct device *dev;
+@@ -35,7 +30,7 @@ struct wpan_phy *wpan_phy_find(const char *str)
+ 	if (WARN_ON(!str))
+ 		return NULL;
+ 
+-	dev = class_find_device(&wpan_phy_class, NULL, str, wpan_phy_match);
++	dev = class_find_device_by_name(&wpan_phy_class, str);
+ 	if (!dev)
+ 		return NULL;
+ 
+-- 
+2.21.0
 
-Alright...
-
-> > > +               while ((phandle = s->parse_prop(con_np, prop, i))) {
-> > > +                       i++;
-> > > +                       if (of_link_to_phandle(dev, phandle))
-> > > +                               done = false;
-> >
-> > Just return here. No point in continuing as 'done' is never set back to true.
->
-> Actually, there is a point for this. Say Device-C depends on suppliers
-> Device-S1 and Device-S2 and they are listed in DT in that order.
->
-> Say, S1 gets populated after late_initcall_sync but S2 is probes way
-> before that. If I don't continue past a "failed linking" to S1 and
-> also link up to S2, then S2 will get a sync_state() callback before C
-> is probed. So I have to go through all possible suppliers and as many
-> as possible.
->
-> Let me add a comment about this somewhere in the code (probably the
-> header that defines the add_links() ops).
-
-Okay, makes sense.
-
-Rob
