@@ -2,146 +2,114 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CD2C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED41C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50AF1218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F1122353
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbfGWNWK (ORCPT
+        id S2390183AbfGWNZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:22:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:54750 "EHLO foss.arm.com"
+        Tue, 23 Jul 2019 09:25:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38174 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfGWNWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:22:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B355628;
-        Tue, 23 Jul 2019 06:22:08 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0B5B63F71F;
-        Tue, 23 Jul 2019 06:22:07 -0700 (PDT)
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH] Documentation/features/locking: update lists
-Date:   Tue, 23 Jul 2019 14:22:03 +0100
-Message-Id: <20190723132203.51814-1-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.11.0
+        id S1725778AbfGWNZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:25:24 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0EC44C057F2E;
+        Tue, 23 Jul 2019 13:25:24 +0000 (UTC)
+Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C709C5B685;
+        Tue, 23 Jul 2019 13:25:18 +0000 (UTC)
+Subject: Re: [PATCH 4/6] vhost: reset invalidate_count in
+ vhost_set_vring_num_addr()
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190723075718.6275-1-jasowang@redhat.com>
+ <20190723075718.6275-5-jasowang@redhat.com>
+ <20190723042143-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <4e52f1cb-f805-18f6-d50b-1379298de2e3@redhat.com>
+Date:   Tue, 23 Jul 2019 21:25:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190723042143-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 23 Jul 2019 13:25:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The locking feature lists don't match reality as of v5.3-rc1:
 
-* arm64 moved to queued spinlocks in commit:
+On 2019/7/23 下午5:17, Michael S. Tsirkin wrote:
+> On Tue, Jul 23, 2019 at 03:57:16AM -0400, Jason Wang wrote:
+>> The vhost_set_vring_num_addr() could be called in the middle of
+>> invalidate_range_start() and invalidate_range_end(). If we don't reset
+>> invalidate_count after the un-registering of MMU notifier, the
+>> invalidate_cont will run out of sync (e.g never reach zero). This will
+>> in fact disable the fast accessor path. Fixing by reset the count to
+>> zero.
+>>
+>> Reported-by: Michael S. Tsirkin <mst@redhat.com>
+>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   drivers/vhost/vhost.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>> index 03666b702498..89c9f08b5146 100644
+>> --- a/drivers/vhost/vhost.c
+>> +++ b/drivers/vhost/vhost.c
+>> @@ -2074,6 +2074,10 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
+>>   		d->has_notifier = false;
+>>   	}
+>>   
+>> +	/* reset invalidate_count in case we are in the middle of
+>> +	 * invalidate_start() and invalidate_end().
+>> +	 */
+>> +	vq->invalidate_count = 0;
+> I think that the code is ok but the comments are not very clear:
+> - we are never in the middle since we just removed the notifier
 
-  c11090474d70590170cf5fa6afe85864ab494b37
 
-  ("arm64: locking: Replace ticket lock implementation with qspinlock")
+If I read the code correctly, mmu_notifier_unregister() can only 
+guarantee to wait for the pending method to complete. So we can have:
 
-* xtensa moved to queued spinlocks and rwlocks in commit:
+invalidate_start()
 
-  579afe866f52adcd921272a224ab36733051059c
+mmu_notifier_unregister()
 
-  ("xtensa: use generic spinlock/rwlock implementation")
+invalidate_end()
 
-* architecture-specific rwsem support was removed in commit:
 
-  46ad0840b1584b92b5ff2cc3ed0b011dd6b8e0f1
+> - the result is not just disabling optimization:
+>    if notifier becomes negative, then later we
+>    can think it's ok to map when it isn't since
+>    notifier is active.
 
-  ("locking/rwsem: Remove arch specific rwsem files")
 
-So update the feature lists accordingly, and remove the now redundant
-rwsem-optimized list.
+I don't get how it could be negative, the only possible thing is to have 
+a positive value.
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
----
- .../locking/queued-rwlocks/arch-support.txt        |  2 +-
- .../locking/queued-spinlocks/arch-support.txt      |  4 +--
- .../locking/rwsem-optimized/arch-support.txt       | 34 ----------------------
- 3 files changed, 3 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/features/locking/rwsem-optimized/arch-support.txt
+Thanks
 
-diff --git a/Documentation/features/locking/queued-rwlocks/arch-support.txt b/Documentation/features/locking/queued-rwlocks/arch-support.txt
-index c683da198f31..ee922746a64c 100644
---- a/Documentation/features/locking/queued-rwlocks/arch-support.txt
-+++ b/Documentation/features/locking/queued-rwlocks/arch-support.txt
-@@ -30,5 +30,5 @@
-     |          um: | TODO |
-     |   unicore32: | TODO |
-     |         x86: |  ok  |
--    |      xtensa: | TODO |
-+    |      xtensa: |  ok  |
-     -----------------------
-diff --git a/Documentation/features/locking/queued-spinlocks/arch-support.txt b/Documentation/features/locking/queued-spinlocks/arch-support.txt
-index e3080b82aefd..c52116c1a049 100644
---- a/Documentation/features/locking/queued-spinlocks/arch-support.txt
-+++ b/Documentation/features/locking/queued-spinlocks/arch-support.txt
-@@ -9,7 +9,7 @@
-     |       alpha: | TODO |
-     |         arc: | TODO |
-     |         arm: | TODO |
--    |       arm64: | TODO |
-+    |       arm64: |  ok  |
-     |         c6x: | TODO |
-     |        csky: | TODO |
-     |       h8300: | TODO |
-@@ -30,5 +30,5 @@
-     |          um: | TODO |
-     |   unicore32: | TODO |
-     |         x86: |  ok  |
--    |      xtensa: | TODO |
-+    |      xtensa: |  ok  |
-     -----------------------
-diff --git a/Documentation/features/locking/rwsem-optimized/arch-support.txt b/Documentation/features/locking/rwsem-optimized/arch-support.txt
-deleted file mode 100644
-index 7521d7500fbe..000000000000
---- a/Documentation/features/locking/rwsem-optimized/arch-support.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--#
--# Feature name:          rwsem-optimized
--#         Kconfig:       !RWSEM_GENERIC_SPINLOCK
--#         description:   arch provides optimized rwsem APIs
--#
--    -----------------------
--    |         arch |status|
--    -----------------------
--    |       alpha: |  ok  |
--    |         arc: | TODO |
--    |         arm: |  ok  |
--    |       arm64: |  ok  |
--    |         c6x: | TODO |
--    |        csky: | TODO |
--    |       h8300: | TODO |
--    |     hexagon: | TODO |
--    |        ia64: |  ok  |
--    |        m68k: | TODO |
--    |  microblaze: | TODO |
--    |        mips: | TODO |
--    |       nds32: | TODO |
--    |       nios2: | TODO |
--    |    openrisc: | TODO |
--    |      parisc: | TODO |
--    |     powerpc: | TODO |
--    |       riscv: | TODO |
--    |        s390: |  ok  |
--    |          sh: |  ok  |
--    |       sparc: |  ok  |
--    |          um: |  ok  |
--    |   unicore32: | TODO |
--    |         x86: |  ok  |
--    |      xtensa: |  ok  |
--    -----------------------
--- 
-2.11.0
 
+>
+>>   	vhost_uninit_vq_maps(vq);
+>>   #endif
+>>   
+>> -- 
+>> 2.18.1
