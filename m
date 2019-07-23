@@ -2,206 +2,136 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F52C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F6C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7FC22513
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:26:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MJeyBx+9"
+	by mail.kernel.org (Postfix) with ESMTP id E0B6A2251B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563877667;
+	bh=SbvKRaKGPuTBUDhfKD2LGqcIetgWe+zsZ7pUAADHYBw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uV0bjaaHZrgrFZNg3Coj1VzkxYtba4iUSgZC1MU2EzDPs+IQTIj45GNdZkRNgse4Y
+	 pHimiIT/A0ILWdBUN483BP3sC5mvL9QEsOzonpDb11vZestuwgpgVxaR72KJPtTC4y
+	 bS7ZhD2qHQjApp6t23v1RkatruzG+MgCUOcpJz48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfGWK0e (ORCPT
+        id S2387878AbfGWK1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:26:34 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:39806 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726680AbfGWK0d (ORCPT
+        Tue, 23 Jul 2019 06:27:45 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39327 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731327AbfGWK1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:26:33 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5351FC0BA6;
-        Tue, 23 Jul 2019 10:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563877593; bh=hEN4MJmGoL8TyECNjNPp/0o3tB1vSRkRU+f8lSs6bsc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MJeyBx+91l87v0/GWugseqxgiUzuWlD6Ql3fB0LSS0Q7HD7OEv2CoWcDZvdO/3W7Q
-         BTuHPXPc6Ik2oqq+ge9sveWLU3rfxJRJbUU6iTRHpZsZWljeMbzEppkpPdB+X/EXwB
-         Y1MvDkntpfx/t0u2esyeN8MJl+6/GVrp+CoeA124CldW5PWoo5lI/uYr85HacU4voh
-         oNSR+HuzTbifssmWEFkSdBlMFntZ17IfxU7swhLX1oX9OR4kUnGNJ+XJqVHRh3+T4+
-         +DYpbVu/7tp/gW0POZusZB0mirAVK0HcEZShCqRXec6G2YaaylSrLQ/A0w8zTEngFf
-         L/qxQxpQMf9RQ==
-Received: from de02arcdev1.internal.synopsys.com (de02arcdev1.internal.synopsys.com [10.225.22.192])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8ADB1A0057;
-        Tue, 23 Jul 2019 10:26:30 +0000 (UTC)
-From:   Mischa Jonker <Mischa.Jonker@synopsys.com>
-To:     Vineet.Gupta1@synopsys.com, Alexey.Brodkin@synopsys.com,
-        kstewart@linuxfoundation.org, tglx@linutronix.de,
-        robh+dt@kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Mischa Jonker <Mischa.Jonker@synopsys.com>
-Subject: [PATCH 1/2] ARCv2: IDU-intc: Add support for edge-triggered interrupts
-Date:   Tue, 23 Jul 2019 12:26:05 +0200
-Message-Id: <20190723102606.309089-1-mischa.jonker@synopsys.com>
-X-Mailer: git-send-email 2.8.3
+        Tue, 23 Jul 2019 06:27:45 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r21so37454709otq.6;
+        Tue, 23 Jul 2019 03:27:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ajM+r2IdQ5rZtdFxjvMvXdnx3KB/ur/wGMtOzOPKc3A=;
+        b=oTwcSa/Sq+jmf1Q1GUK+n17NQeQo+4tD1dCkHHljZuxVErqVR/a0hP6RySZAFhzOP2
+         3RO6JT+qEGgAudlfpf9s08LEDrj7vvanJ4ej7GYktw9zmhYNIN/oykCIxuDLwdbPZyCk
+         fyIcZ5p3nHe8yuhl5gdZ43cG6HqClExly5py2lo6jSBJ8fLxsMjFGObjOlIG20pq9ATx
+         YChIRPMAH5lhF+jBxPekQWOreXmkH7XLrJY0q9KNInirUUGgfCC+HVAPibXFPdy9x8vJ
+         e1TmasSv3uYYywPeVzpgXFbxMbkyPR1UUKcuxKBtfOdF7tGbej+9GYM30tzLzUldKnLw
+         yqKw==
+X-Gm-Message-State: APjAAAVnVg/5DjcIqNFa0mu3qzpJbCJRWLYMPWW0NG8H9TLR9PK6hjsA
+        Uk1bdqQZ7Obhgq0VpmtUbG3HYvpr7/thSf7Hq+U=
+X-Google-Smtp-Source: APXvYqyRVvENaHdkxd3zgc6Gq0sdtakc+B0KKzT2csgrP84kMpJoBRiwQsWbqWCRDKE+CZYjkVIkPmOMjti7CiZ83SE=
+X-Received: by 2002:a9d:6b96:: with SMTP id b22mr56703354otq.262.1563877663855;
+ Tue, 23 Jul 2019 03:27:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <1563431200-3042-1-git-send-email-dsmythies@telus.net>
+ <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
+ <001201d54125$a6a82350$f3f869f0$@net> <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
+In-Reply-To: <20190723091551.nchopfpqlmdmzvge@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 23 Jul 2019 12:27:32 +0200
+Message-ID: <CAJZ5v0ji+ksapJ4kc2m5UM_O+AShAvJWmYhTQHiXiHnpTq+xRg@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Doug Smythies <dsmythies@telus.net>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "v4 . 18+" <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for an optional extra interrupt cell to specify edge
-vs level triggered. It is backward compatible with dts files with only
-one cell, and will default to level-triggered in such a case.
+On Tue, Jul 23, 2019 at 11:15 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 23-07-19, 00:10, Doug Smythies wrote:
+> > On 2019.07.21 23:52 Viresh Kumar wrote:
+> >
+> > > To avoid reducing the frequency of a CPU prematurely, we skip reducing
+> > > the frequency if the CPU had been busy recently.
+> > >
+> > > This should not be done when the limits of the policy are changed, for
+> > > example due to thermal throttling. We should always get the frequency
+> > > within limits as soon as possible.
+> > >
+> > > Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
+> > > Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
+> > > Reported-by: Doug Smythies <doug.smythies@gmail.com>
+> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > ---
+> > > @Doug: Please try this patch, it must fix the issue you reported.
+> >
+> > It fixes the driver = acpi-cpufreq ; governor = schedutil test case
+> > It does not fix the driver = intel_cpufreq ; governor = schedutil test case
+> >
+> > I have checked my results twice, but will check again in the day or two.
+>
+> The patch you tried to revert wasn't doing any driver specific stuff
+> but only schedutil. If that revert fixes your issue with both the
+> drivers, then this patch should do it as well.
+>
+> I am clueless now on what can go wrong with intel_cpufreq driver with
+> schedutil now.
+>
+> Though there is one difference between intel_cpufreq and acpi_cpufreq,
+> intel_cpufreq has fast_switch_possible=true and so it uses slightly
+> different path in schedutil. I tried to look from that perspective as
+> well but couldn't find anything wrong.
 
-Signed-off-by: Mischa Jonker <mischa.jonker@synopsys.com>
----
- arch/arc/kernel/mcip.c | 56 ++++++++++++++++++++++++++++++++++++++++++++------
- include/soc/arc/mcip.h | 11 ++++++++++
- 2 files changed, 61 insertions(+), 6 deletions(-)
+acpi-cpufreq should use fast switching on the Doug's system too.
 
-diff --git a/arch/arc/kernel/mcip.c b/arch/arc/kernel/mcip.c
-index 18b493d..fc45564 100644
---- a/arch/arc/kernel/mcip.c
-+++ b/arch/arc/kernel/mcip.c
-@@ -202,8 +202,8 @@ static void idu_set_dest(unsigned int cmn_irq, unsigned int cpu_mask)
- 	__mcip_cmd_data(CMD_IDU_SET_DEST, cmn_irq, cpu_mask);
- }
- 
--static void idu_set_mode(unsigned int cmn_irq, unsigned int lvl,
--			   unsigned int distr)
-+static void idu_set_mode(unsigned int cmn_irq, bool set_lvl, unsigned int lvl,
-+			 bool set_distr, unsigned int distr)
- {
- 	union {
- 		unsigned int word;
-@@ -212,8 +212,11 @@ static void idu_set_mode(unsigned int cmn_irq, unsigned int lvl,
- 		};
- 	} data;
- 
--	data.distr = distr;
--	data.lvl = lvl;
-+	data.word = __mcip_cmd_read(CMD_IDU_READ_MODE, cmn_irq);
-+	if (set_distr)
-+		data.distr = distr;
-+	if (set_lvl)
-+		data.lvl = lvl;
- 	__mcip_cmd_data(CMD_IDU_SET_MODE, cmn_irq, data.word);
- }
- 
-@@ -240,6 +243,25 @@ static void idu_irq_unmask(struct irq_data *data)
- 	raw_spin_unlock_irqrestore(&mcip_lock, flags);
- }
- 
-+static void idu_irq_ack(struct irq_data *data)
-+{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&mcip_lock, flags);
-+	__mcip_cmd(CMD_IDU_ACK_CIRQ, data->hwirq);
-+	raw_spin_unlock_irqrestore(&mcip_lock, flags);
-+}
-+
-+static void idu_irq_mask_ack(struct irq_data *data)
-+{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&mcip_lock, flags);
-+	__mcip_cmd_data(CMD_IDU_SET_MASK, data->hwirq, 1);
-+	__mcip_cmd(CMD_IDU_ACK_CIRQ, data->hwirq);
-+	raw_spin_unlock_irqrestore(&mcip_lock, flags);
-+}
-+
- static int
- idu_irq_set_affinity(struct irq_data *data, const struct cpumask *cpumask,
- 		     bool force)
-@@ -263,13 +285,32 @@ idu_irq_set_affinity(struct irq_data *data, const struct cpumask *cpumask,
- 	else
- 		distribution_mode = IDU_M_DISTRI_RR;
- 
--	idu_set_mode(data->hwirq, IDU_M_TRIG_LEVEL, distribution_mode);
-+	idu_set_mode(data->hwirq, false, 0, true, distribution_mode);
- 
- 	raw_spin_unlock_irqrestore(&mcip_lock, flags);
- 
- 	return IRQ_SET_MASK_OK;
- }
- 
-+static int idu_irq_set_type(struct irq_data *data, u32 type)
-+{
-+	unsigned long flags;
-+
-+	if (type & ~(IRQ_TYPE_EDGE_RISING | IRQ_TYPE_LEVEL_HIGH))
-+		return -EINVAL;
-+
-+	raw_spin_lock_irqsave(&mcip_lock, flags);
-+
-+	idu_set_mode(data->hwirq, true,
-+		     type & IRQ_TYPE_EDGE_RISING ? IDU_M_TRIG_EDGE :
-+						   IDU_M_TRIG_LEVEL,
-+		     false, 0);
-+
-+	raw_spin_unlock_irqrestore(&mcip_lock, flags);
-+
-+	return 0;
-+}
-+
- static void idu_irq_enable(struct irq_data *data)
- {
- 	/*
-@@ -289,7 +330,10 @@ static struct irq_chip idu_irq_chip = {
- 	.name			= "MCIP IDU Intc",
- 	.irq_mask		= idu_irq_mask,
- 	.irq_unmask		= idu_irq_unmask,
-+	.irq_ack		= idu_irq_ack,
-+	.irq_mask_ack		= idu_irq_mask_ack,
- 	.irq_enable		= idu_irq_enable,
-+	.irq_set_type		= idu_irq_set_type,
- #ifdef CONFIG_SMP
- 	.irq_set_affinity       = idu_irq_set_affinity,
- #endif
-@@ -317,7 +361,7 @@ static int idu_irq_map(struct irq_domain *d, unsigned int virq, irq_hw_number_t
- }
- 
- static const struct irq_domain_ops idu_irq_ops = {
--	.xlate	= irq_domain_xlate_onecell,
-+	.xlate	= irq_domain_xlate_onetwocell,
- 	.map	= idu_irq_map,
- };
- 
-diff --git a/include/soc/arc/mcip.h b/include/soc/arc/mcip.h
-index 50f49e0..d1a93c7 100644
---- a/include/soc/arc/mcip.h
-+++ b/include/soc/arc/mcip.h
-@@ -46,7 +46,9 @@ struct mcip_cmd {
- #define CMD_IDU_ENABLE			0x71
- #define CMD_IDU_DISABLE			0x72
- #define CMD_IDU_SET_MODE		0x74
-+#define CMD_IDU_READ_MODE		0x75
- #define CMD_IDU_SET_DEST		0x76
-+#define CMD_IDU_ACK_CIRQ		0x79
- #define CMD_IDU_SET_MASK		0x7C
- 
- #define IDU_M_TRIG_LEVEL		0x0
-@@ -119,4 +121,13 @@ static inline void __mcip_cmd_data(unsigned int cmd, unsigned int param,
- 	__mcip_cmd(cmd, param);
- }
- 
-+/*
-+ * Read MCIP register
-+ */
-+static inline unsigned int __mcip_cmd_read(unsigned int cmd, unsigned int param)
-+{
-+	__mcip_cmd(cmd, param);
-+	return read_aux_reg(ARC_REG_MCIP_READBACK);
-+}
-+
- #endif
--- 
-2.8.3
+> If you still find intel_cpufreq to be broken, even with this patch,
+> please set fast_switch_possible=false instead of true in
+> __intel_pstate_cpu_init() and try tests again. That shall make it very
+> much similar to acpi-cpufreq driver.
 
+I wonder if this helps.  Even so, we want fast switching to be used by
+intel_cpufreq.
+
+Anyway, it looks like the change reverted by the Doug's patch
+introduced a race condition that had not been present before.  Namely,
+need_freq_update is cleared in get_next_freq() when it is set _or_
+when the new freq is different from the cached one, so in the latter
+case if it happens to be set by sugov_limits() after evaluating
+sugov_should_update_freq() (which returned 'true' for timing reasons),
+that update will be lost now. [Previously the update would not be
+lost, because the clearing of need_freq_update depended only on its
+current value.] Where it matters is that in the "need_freq_update set"
+case, the "premature frequency reduction avoidance" should not be
+applied (as you noticed and hence the $subject patch).
+
+However, even with the $subject patch, need_freq_update may still be
+set by sugov_limits() after the check added by it and then cleared by
+get_next_freq(), so it doesn't really eliminate the problem.
+
+IMO eliminating would require invalidating next_freq this way or
+another when need_freq_update is set in sugov_should_update_freq(),
+which was done before commit ecd2884291261e3fddbc7651ee11a20d596bb514.
