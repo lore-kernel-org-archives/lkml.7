@@ -2,148 +2,74 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C57C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A3C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF0D22511
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="c/ZNarot"
+	by mail.kernel.org (Postfix) with ESMTP id B331B218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563868029;
+	bh=9oyXOwjjQfRkmBnzkflTCxxZW8XXgu2VWsi9uaQNOBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eglEqqLXkmmeOc+Wwgtj3ITuTA+Tcu68UhUbMzeJRD7jzn1zO9Gj4fsSYipyhYkJS
+	 FVLQINeY9ewxx2tXDShaHW4ooDB+CBe49M7lMaxrogvUSJdVISHBtdXpt+vi8Ipsk1
+	 mFXfUgJxd7MtJWGs+N28QCyPNAzN/Nq2RJZYUIAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388547AbfGWHrF (ORCPT
+        id S2388556AbfGWHrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:47:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44780 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbfGWHrF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:47:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p17so41989260wrf.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k7Xz7HKINwi2ffVMf/EFtJWFSDc7hqESTclfwKAt7K4=;
-        b=c/ZNarot1m0Bl1tmWrYyhQmPxIX3DYs2q2Gj5GPhiIoalP+pZaR0Bxcjs+qbtQggL+
-         HpYpvcffxSSoQ6e3vzPC+Jr1+Y7fqOWhByZoh68dmXrg2pmNrtn6QP4yekhQWLe32Smv
-         Lgcpdg3yij/uHiT6xRLXikibHtWQkH9y/yNWC8LWj1R9GmlW1Ow+dA4jDjhQER8wtODg
-         P3HNoJOjAMlxmxOQEDK0kNEfxcwZj8zCoRBY1pdZmhobsS52JB4o5lYmEFTwKw9bMbYD
-         P1FPqibH2KmI7rd/iym26Pv/u/mJxGS3RR6+vfownrLRWIsxXw7FD+oC8MyDj4OyJB3d
-         //sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k7Xz7HKINwi2ffVMf/EFtJWFSDc7hqESTclfwKAt7K4=;
-        b=l9qdzTUIeI3xuSLhur2zkdabJ/+rcOS2lF27qiet1B9DwpRf6v667c9l1EmWXvPzPB
-         q6hrWGG4qdas7RBu24H1+n7PnLjEUP41om4bUwq9cGOHPBbMfM6CqiICz8hcH+NzsMyw
-         77D0DzdH82cxFgbJQ4rMcL7Qr18gEn9kmZ3wJonY4/fLeMaJ7wM0071V1ziW+RprCSxS
-         WbEJ7s/1NLo59cq+yqptnNj6ly3UnIP4JXsAFOCMOvSPO5UsA75E8jRgUFvUTNhdQ81D
-         zo6WozH+Dw802L7E4I3OkCXgbKaccstAzB9hDdi2jFq4NVkK68GFKinP0ig200HvWb5K
-         gtug==
-X-Gm-Message-State: APjAAAV4dmk/Ko0CXE9nysLO1zRQnmvS/Ab8GhepPu55wgx842i0QAwN
-        yOkp+oexi7iRmxoxxm/nEEfa6g==
-X-Google-Smtp-Source: APXvYqz/ejC83D8aGx+4kC8dKQ0Qld0zLqocNAoCUYcBJW7FNfVPBFPaYnNJes3G5pDAlnW0XtkZBA==
-X-Received: by 2002:adf:c803:: with SMTP id d3mr4552216wrh.130.1563868022896;
-        Tue, 23 Jul 2019 00:47:02 -0700 (PDT)
-Received: from localhost (static.20.139.203.116.clients.your-server.de. [116.203.139.20])
-        by smtp.gmail.com with ESMTPSA id c1sm89787659wrh.1.2019.07.23.00.47.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 00:47:02 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 09:47:01 +0200
-From:   Roland Kammerer <roland.kammerer@linbit.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@google.com>,
-        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] [v2] drbd: dynamically allocate shash descriptor
-Message-ID: <20190723074701.fp2qjjm5dwj4i2x7@rck.sh>
-References: <20190722122647.351002-1-arnd@arndb.de>
+        Tue, 23 Jul 2019 03:47:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388536AbfGWHrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:47:06 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9DC218BE;
+        Tue, 23 Jul 2019 07:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563868025;
+        bh=9oyXOwjjQfRkmBnzkflTCxxZW8XXgu2VWsi9uaQNOBc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OL0cl/KK/IF0BukMfF9W8GDqFOcwP+U2iDVnpFrL+cnMacDlMA24O2us7o/i2JhLz
+         obZ8e/Zbzva0hVmJCzlON4oRwPlgMgfZ2iEQVskivmwkHpvSQwEiV51CJZx+jRVNCx
+         xPcjkwN0BCswql6r5iEZY+BucpWKHEi9kJaznj2w=
+Date:   Tue, 23 Jul 2019 15:46:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
+Subject: Re: [PATCH] firmware: imx: Add DSP IPC protocol interface
+Message-ID: <20190723074633.GJ15632@dragon>
+References: <20190718081943.10272-1-daniel.baluta@nxp.com>
+ <CAEnQRZDwBBR5qQT9NQX7c6kyrjp2Mw_so=QgkARw-gUgj3VeEA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190722122647.351002-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAEnQRZDwBBR5qQT9NQX7c6kyrjp2Mw_so=QgkARw-gUgj3VeEA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 02:26:34PM +0200, Arnd Bergmann wrote:
-> Building with clang and KASAN, we get a warning about an overly large
-> stack frame on 32-bit architectures:
-> 
-> drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
->       [-Werror,-Wframe-larger-than=]
-> 
-> We already allocate other data dynamically in this function, so
-> just do the same for the shash descriptor, which makes up most of
-> this memory.
-> 
-> Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Tue, Jul 23, 2019 at 10:44:09AM +0300, Daniel Baluta wrote:
+> Just realized that for this patch I forgot to add [PATCH v3]. Shawn,
+> should I resend?
 
-Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
+No need.
 
-> ---
-> v2:
-> - don't try to zero a NULL descriptor pointer,
->   based on review from Roland Kammerer.
-> ---
->  drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-> index 90ebfcae0ce6..2b3103c30857 100644
-> --- a/drivers/block/drbd/drbd_receiver.c
-> +++ b/drivers/block/drbd/drbd_receiver.c
-> @@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
->  	unsigned int key_len;
->  	char secret[SHARED_SECRET_MAX]; /* 64 byte */
->  	unsigned int resp_size;
-> -	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
-> +	struct shash_desc *desc;
->  	struct packet_info pi;
->  	struct net_conf *nc;
->  	int err, rv;
-> @@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
->  	memcpy(secret, nc->shared_secret, key_len);
->  	rcu_read_unlock();
->  
-> +	desc = kmalloc(sizeof(struct shash_desc) +
-> +		       crypto_shash_descsize(connection->cram_hmac_tfm),
-> +		       GFP_KERNEL);
-> +	if (!desc) {
-> +		rv = -1;
-> +		goto fail;
-> +	}
->  	desc->tfm = connection->cram_hmac_tfm;
->  
->  	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
-> @@ -5571,7 +5578,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
->  	kfree(peers_ch);
->  	kfree(response);
->  	kfree(right_response);
-> -	shash_desc_zero(desc);
-> +	if (desc) {
-> +		shash_desc_zero(desc);
-> +		kfree(desc);
-> +	}
->  
->  	return rv;
->  }
-> -- 
-> 2.20.0
-> 
+Shawn
