@@ -2,72 +2,70 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A40C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0E4C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE68C2184E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C512184E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jj93UquX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnk4GPD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387737AbfGWLuV (ORCPT
+        id S2387748AbfGWLuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:50:21 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35110 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387711AbfGWLuV (ORCPT
+        Tue, 23 Jul 2019 07:50:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41995 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730670AbfGWLuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:50:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u14so19044124pfn.2;
-        Tue, 23 Jul 2019 04:50:20 -0700 (PDT)
+        Tue, 23 Jul 2019 07:50:50 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t132so19306066pgb.9;
+        Tue, 23 Jul 2019 04:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=WUQa7K6zscCV3fr5I8Gtd2v9SYWgICuDAxYQisb0dZw=;
-        b=jj93UquXb5PC9RCWOpnZQ/vTnyfgNEfJYu7JO9l/0Re5ge5QDe5ObpOQy36pX3xsTx
-         Ubc2pBGepvs1fGVuqGvRNkXZoUKKjPfXnuR8ihuSEsOI4nKO+6GRfgIzzsZz4Wj9h/OA
-         TldCtGryyIkUvBkFtx5wg3TMZgUVKtmX7VKZHHOqW9BIFbGDcMeJL2umzopaE3wcbts7
-         kbNLsJ1ue79+TmwBQy9Xs9U1s7MnnZkyZ2j1sZcwWkjeoFDeSTU/B1qX/fIOq1IODsvR
-         5hzflMXNvThvRLjnM5vFHWlrW4Y6KoIqQlQ8TKoVTGKdHqxScqfNJ5hsqOmmvUkufVDE
-         iGHg==
+        bh=DBge7YjElO6QELDaAyXNwqPgMlSt8RrUe6yJAAvRsBQ=;
+        b=Fnk4GPD9ipYpd5G/f19UTtdckAVmhl7eF3OHln9LtlUnXrUu2/jxGWUjLAzQmExSpG
+         bcaurTnk/OtFq6bRq6UZ0ucc0zkcabTy0TyiWsNYf/FcmFFVmtUbtqp6ouigLf6PgoDF
+         JjpBRJ2d+DfY3vZK1lR5qtbDF/O6PKEFzdWwHBfD56I35umqUTJzxcK42rMI1xyM2JFd
+         m1WnXSDikxe2CIf+XxAslD+CI4JuD4sjpWKP0B31Vh0Qfm03/542BbVjEZeDzJiWGs5v
+         sZLA+XUet1HAFuaipHqKnXpgRUuMoVT+oJz1spVvVs48ItLX7r+JqM4zEcaBG6sb25PQ
+         cYdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=WUQa7K6zscCV3fr5I8Gtd2v9SYWgICuDAxYQisb0dZw=;
-        b=VreNtxHabzk4DMt09XTveMzUvJ8lmiBv71eV0zmyuafKWDvCdUEYQMv41zyMgtqCcK
-         MuqIafcj8nsE2/tx8ezqNpJhHSGUQCQigrrRA66NfZT0sDUTRzSr3KhucIxE3v62nycy
-         /iejK4t/TCSUe1gFberASFwOKbi9Cm8zyz0FyP3NgTBU++z3YitgcsaTdrLvRM2in+Yy
-         eabeN2MlMu/S9vTK8tN7HNwBV87n3FkBssx4feJXznzQC5KDiPKPqo7KqjdnkppB2xks
-         27HBbQf7ixru21UUmSNbtNFrMS8E+HJOzzw2iPuY0uxuSC1z5ajeD3j9ApSKXNHh3l4e
-         Ydnw==
-X-Gm-Message-State: APjAAAXi54oPrmkfin9t2f9dh6673lky9ABrq7R6yw61aGWJpXLqYHFx
-        L6GP1QQmiBSdnDyjiQKlBLw=
-X-Google-Smtp-Source: APXvYqzFozLyb5L5JjaqcJ4btOrVdBr7IfvYM65VEM7EB8e9SiaXohXKc1JUUgF27e3D0W/J8CqbIg==
-X-Received: by 2002:a63:101b:: with SMTP id f27mr73351394pgl.291.1563882620325;
-        Tue, 23 Jul 2019 04:50:20 -0700 (PDT)
+        bh=DBge7YjElO6QELDaAyXNwqPgMlSt8RrUe6yJAAvRsBQ=;
+        b=mnCexmY9QOxI1QOAse1BPLh4rmsjTiRohpkgGJhXJlBS6Ts3LpoHeEA28YJ5FITE33
+         wwIk/iovlfnjnG+/XjjiNWFeJ2PSydrtBg8V1vEr/Uso3au4s3g6fBhE9/BylkuhwA7l
+         BgD6OuDhtVetX1eEyS4P0z+EIqLt74qIqJ70fgL3aokBMaVmHY/2gkLCEykYs3rNoYHY
+         K2Ss63ZEY3jJqnGotYVEdhxbvvLsBE8ZZJwuvCuxtg2pvf4BTHIYRtwuZFRaI+1AemTx
+         oeOIBCOmr6m2j5FUavbv1Ed8E6vdipYJiPsf6Mdg+XyTeZJZIeRpKhEnzHJAf5ijBCHq
+         Nymw==
+X-Gm-Message-State: APjAAAW96t0yU5NMoleNIVX1w4eJvh4ZYZE4XqXi7cVooY2ISYndZjdE
+        1I1hWjwJy6IEz3ghiZ7fS6E=
+X-Google-Smtp-Source: APXvYqxYPpC+o8AAs6hL4yB8tUpEShKyZC5ohzxed8z8J49wrfr9XdIv7D0FoxCDD/sjmYDFuZMMfQ==
+X-Received: by 2002:a62:14c4:: with SMTP id 187mr5260749pfu.241.1563882649787;
+        Tue, 23 Jul 2019 04:50:49 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id r75sm58941857pfc.18.2019.07.23.04.50.17
+        by smtp.gmail.com with ESMTPSA id k6sm51991430pfi.12.2019.07.23.04.50.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 04:50:19 -0700 (PDT)
+        Tue, 23 Jul 2019 04:50:49 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Yong Zhi <yong.zhi@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Akihiro Tsukada <tskd08@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: pci: Use dev_get_drvdata where possible
-Date:   Tue, 23 Jul 2019 19:50:14 +0800
-Message-Id: <20190723115014.18537-1-hslester96@gmail.com>
+Subject: [PATCH] memstick: r592: Use dev_get_drvdata
+Date:   Tue, 23 Jul 2019 19:50:44 +0800
+Message-Id: <20190723115044.18591-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,73 +80,33 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/media/pci/intel/ipu3/ipu3-cio2.c | 3 +--
- drivers/media/pci/pt1/pt1.c              | 6 ++----
- drivers/media/pci/pt3/pt3.c              | 6 ++----
- 3 files changed, 5 insertions(+), 10 deletions(-)
+ drivers/memstick/host/r592.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2.c b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-index c1d133e17e4b..50a34bcd4d14 100644
---- a/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-+++ b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-@@ -2000,8 +2000,7 @@ static int __maybe_unused cio2_suspend(struct device *dev)
- 
- static int __maybe_unused cio2_resume(struct device *dev)
+diff --git a/drivers/memstick/host/r592.c b/drivers/memstick/host/r592.c
+index 2932f421b3ea..dd3a1f3dcc19 100644
+--- a/drivers/memstick/host/r592.c
++++ b/drivers/memstick/host/r592.c
+@@ -847,8 +847,7 @@ static void r592_remove(struct pci_dev *pdev)
+ #ifdef CONFIG_PM_SLEEP
+ static int r592_suspend(struct device *core_dev)
  {
--	struct pci_dev *pci_dev = to_pci_dev(dev);
--	struct cio2_device *cio2 = pci_get_drvdata(pci_dev);
-+	struct cio2_device *cio2 = dev_get_drvdata(dev);
- 	int r = 0;
- 	struct cio2_queue *q = cio2->cur_queue;
+-	struct pci_dev *pdev = to_pci_dev(core_dev);
+-	struct r592_device *dev = pci_get_drvdata(pdev);
++	struct r592_device *dev = dev_get_drvdata(core_dev);
  
-diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c
-index e51c80bc4646..72b191cfeb54 100644
---- a/drivers/media/pci/pt1/pt1.c
-+++ b/drivers/media/pci/pt1/pt1.c
-@@ -1217,8 +1217,7 @@ static void pt1_i2c_init(struct pt1 *pt1)
+ 	r592_clear_interrupts(dev);
+ 	memstick_suspend_host(dev->host);
+@@ -858,8 +857,7 @@ static int r592_suspend(struct device *core_dev)
  
- static int pt1_suspend(struct device *dev)
+ static int r592_resume(struct device *core_dev)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt1 *pt1 = pci_get_drvdata(pdev);
-+	struct pt1 *pt1 = dev_get_drvdata(dev);
+-	struct pci_dev *pdev = to_pci_dev(core_dev);
+-	struct r592_device *dev = pci_get_drvdata(pdev);
++	struct r592_device *dev = dev_get_drvdata(core_dev);
  
- 	pt1_init_streams(pt1);
- 	pt1_disable_ram(pt1);
-@@ -1230,8 +1229,7 @@ static int pt1_suspend(struct device *dev)
- 
- static int pt1_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt1 *pt1 = pci_get_drvdata(pdev);
-+	struct pt1 *pt1 = dev_get_drvdata(dev);
- 	int ret;
- 	int i;
- 
-diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c
-index 7a7afae4c84c..c0bc86793355 100644
---- a/drivers/media/pci/pt3/pt3.c
-+++ b/drivers/media/pci/pt3/pt3.c
-@@ -626,8 +626,7 @@ static void pt3_cleanup_adapter(struct pt3_board *pt3, int index)
- 
- static int pt3_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt3_board *pt3 = pci_get_drvdata(pdev);
-+	struct pt3_board *pt3 = dev_get_drvdata(dev);
- 	int i;
- 	struct pt3_adapter *adap;
- 
-@@ -646,8 +645,7 @@ static int pt3_suspend(struct device *dev)
- 
- static int pt3_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt3_board *pt3 = pci_get_drvdata(pdev);
-+	struct pt3_board *pt3 = dev_get_drvdata(dev);
- 	int i, ret;
- 	struct pt3_adapter *adap;
- 
+ 	r592_clear_interrupts(dev);
+ 	r592_enable_device(dev, false);
 -- 
 2.20.1
 
