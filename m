@@ -2,50 +2,38 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8E1C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E075BC7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794EC21921
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3032239E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389292AbfGWLSu (ORCPT
+        id S2389301AbfGWLTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:18:50 -0400
-Received: from smtprelay0108.hostedemail.com ([216.40.44.108]:54048 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726709AbfGWLSt (ORCPT
+        Tue, 23 Jul 2019 07:19:35 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:57447 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726709AbfGWLTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:18:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 8194F100E86C1;
-        Tue, 23 Jul 2019 11:18:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: rail43_69daedcfa5b08
-X-Filterd-Recvd-Size: 4704
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 23 Jul 2019 11:18:47 +0000 (UTC)
-Message-ID: <8016ee9b5ee38fae0c782420ca449f863270cca9.camel@perches.com>
-Subject: Re: get_maintainers.pl subsystem output
-From:   Joe Perches <joe@perches.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        "Duda, Sebastian" <sebastian.duda@fau.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Wolfgang Mauerer <wolfgang.mauerer@oth-regensburg.de>
-Date:   Tue, 23 Jul 2019 04:18:45 -0700
-In-Reply-To: <CAKXUXMwfd133rv0bMert-BBftaqxxr_93dUHpaUjEwE8RE_wwA@mail.gmail.com>
-References: <2c912379f96f502080bfcc79884cdc35@fau.de>
-         <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
-         <2835dfa18922905ffabafb11fca7e1d2@fau.de>
-         <CAKXUXMwfd133rv0bMert-BBftaqxxr_93dUHpaUjEwE8RE_wwA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Tue, 23 Jul 2019 07:19:34 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from haswell.alporthouse.com (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 17532000-1500050 
+        for multiple; Tue, 23 Jul 2019 12:19:15 +0100
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+To:     intel-gfx@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH] mei: Abort writes if incomplete after 1s
+Date:   Tue, 23 Jul 2019 12:19:13 +0100
+Message-Id: <20190723111913.20475-1-chris@chris-wilson.co.uk>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,79 +41,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-23 at 10:42 +0200, Lukas Bulwahn wrote:
-> On Tue, Jul 23, 2019 at 9:30 AM Duda, Sebastian <sebastian.duda@fau.de> wrote:
-> > when analyzing the patch
-> > `<20150128012747.824898918@linuxfoundation.org>` [1] with
-> > `get_maintainers.pl --subsystem --status --separator , /tmp/patch`,
-> > there is the following output:
-> > 
-> >      Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM),Josef Bacik
-> > <jbacik@fb.com> (maintainer:BTRFS FILE SYSTEM),David Sterba
-> > <dsterba@suse.cz> (maintainer:BTRFS FILE SYSTEM),Alexander Viro
-> > <viro@zeniv.linux.org.uk> (maintainer:FILESYSTEMS (VFS and
-> > infrastructure)),"Theodore Ts'o" <tytso@mit.edu> (maintainer:EXT4 FILE
-> > SYSTEM),Andreas Dilger <adilger.kernel@dilger.ca> (maintainer:EXT4 FILE
-> > SYSTEM),Jaegeuk Kim <jaegeuk@kernel.org> (maintainer:F2FS FILE
-> > SYSTEM),Changman Lee <cm224.lee@samsung.com> (maintainer:F2FS FILE
-> > SYSTEM),Miklos Szeredi <miklos@szeredi.hu> (maintainer:FUSE: FILESYSTEM
-> > IN USERSPACE),Steven Whitehouse <swhiteho@redhat.com> (supporter:GFS2
-> > FILE SYSTEM),Anton Altaparmakov <anton@tuxera.com> (supporter:NTFS
-> > FILESYSTEM),Hugh Dickins <hughd@google.com> (maintainer:TMPFS (SHMEM
-> > FILESYSTEM)),linux-btrfs@vger.kernel.org (open list:BTRFS FILE
-> > SYSTEM),linux-kernel@vger.kernel.org (open
-> > list),linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
-> > infrastructure)),linux-ext4@vger.kernel.org (open list:EXT4 FILE
-> > SYSTEM),linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE
-> > SYSTEM),fuse-devel@lists.sourceforge.net (open list:FUSE: FILESYSTEM IN
-> > USERSPACE),cluster-devel@redhat.com (open list:GFS2 FILE
-> > SYSTEM),linux-ntfs-dev@lists.sourceforge.net (open list:NTFS
-> > FILESYSTEM),linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
-> >      Maintained,Buried alive in reporters,Supported
-> >      BTRFS FILE SYSTEM,THE REST,FILESYSTEMS (VFS and infrastructure),EXT4
-> > FILE SYSTEM,F2FS FILE SYSTEM,FUSE: FILESYSTEM IN USERSPACE,GFS2 FILE
-> > SYSTEM,NTFS FILESYSTEM,MEMORY MANAGEMENT,TMPFS (SHMEM FILESYSTEM)
-> > 
-> > How can I parse this output automatically? or how can I generate a
-> > parsable output?
-[]
-> > I need the tuples of subsystems and status:
-> > (THE REST, Buried alive in reporters)
-> > (TMPFS, Maintained)
-> > (BTRFS FILE SYSTEM, Maintained)
-> > …
-> > (GFS2 FILE SYSTEM, Supported)
-> > 
-> > I'm not aware how to reliably assign the statuses to the subsystems.
+During i915 unload, it appears that it may get stuck waiting on a
+workqueue being hogged by mei:
 
-Again, run the script using the individual files
-contained in a patch
-instead of the entire patch.
+<7> [212.666912] i915 0000:00:02.0: [drm:drm_client_release] drm_fb_helper
+<3> [308.544943] INFO: task i915_module_loa:2612 blocked for more than 61 seconds.
+<3> [308.545047]       Tainted: G     U  W         5.3.0-rc1-CI-CI_DRM_6537+ #1
+<3> [308.545085] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+<6> [308.545128] i915_module_loa D13256  2612    960 0x00004004
+<4> [308.545137] Call Trace:
+<4> [308.545150]  ? __schedule+0x326/0x890
+<4> [308.545159]  ? wait_for_common+0x116/0x1f0
+<4> [308.545164]  schedule+0x2b/0xb0
+<4> [308.545169]  schedule_timeout+0x219/0x3c0
+<4> [308.545176]  ? wait_for_common+0x132/0x1f0
+<4> [308.545183]  ? _raw_spin_unlock_irq+0x24/0x30
+<4> [308.545189]  ? wait_for_common+0x116/0x1f0
+<4> [308.545193]  wait_for_common+0x13a/0x1f0
+<4> [308.545200]  ? wake_up_q+0x80/0x80
+<4> [308.545209]  flush_workqueue+0x19d/0x540
+<4> [308.545334]  ? intel_modeset_driver_remove+0xb3/0x140 [i915]
+<4> [308.545407]  intel_modeset_driver_remove+0xb3/0x140 [i915]
+<4> [308.545464]  i915_driver_remove+0xae/0x110 [i915]
+<4> [308.545522]  i915_pci_remove+0x19/0x30 [i915]
+<4> [308.545529]  pci_device_remove+0x36/0xb0
 
-I again suggest using gnu parallel.
+<6> [308.565422] Showing busy workqueues and worker pools:
+<6> [308.565425] workqueue events: flags=0x0
+<6> [308.565572]   pwq 2: cpus=1 node=0 flags=0x0 nice=0 active=2/256
+<6> [308.565635]     in-flight: 441:mei_cl_bus_rescan_work [mei]
+<6> [308.565641]     pending: dbs_work_handler
+<6> [308.565686] pool 2: cpus=1 node=0 flags=0x0 nice=0 hung=0s workers=5 idle: 2248 21 17 169
 
-> Joe, I hope this example makes more clear what and how Sebastian would
-> actually like to have the information from the MAINTAINERS file
-> presented for our use case. Currently, we would consider
-> get_maintainer.pl to be the proper place for such a feature in the
-> upstream development.
+<6> [308.553788] Workqueue: events mei_cl_bus_rescan_work [mei]
+<4> [308.553792] Call Trace:
+<4> [308.553799]  ? __schedule+0x326/0x890
+<4> [308.553808]  schedule+0x2b/0xb0
+<4> [308.553815]  mei_cl_write+0x430/0x5a0 [mei]
+<4> [308.553820]  ? __kmalloc+0x2b6/0x330
+<4> [308.553824]  ? wait_woken+0xa0/0xa0
+<4> [308.553835]  __mei_cl_send+0x1f4/0x240 [mei]
+<4> [308.553848]  mei_mkhi_fix+0x91/0x280 [mei]
+<4> [308.553859]  mei_cl_bus_dev_fixup+0xba/0x100 [mei]
+<4> [308.553868]  ? device_add+0x156/0x670
+<4> [308.553889]  ? mei_cl_bus_rescan_work+0x1bc/0x350 [mei]
+<4> [308.553896]  mei_cl_bus_rescan_work+0x1bc/0x350 [mei]
+<4> [308.553905]  process_one_work+0x245/0x5f0
+<4> [308.553915]  worker_thread+0x37/0x380
+<4> [308.553921]  ? process_one_work+0x5f0/0x5f0
+<4> [308.553924]  kthread+0x119/0x130
+<4> [308.553928]  ? kthread_park+0xa0/0xa0
+<4> [308.553934]  ret_from_fork+0x3a/0x50
 
-I believe I understand how you want to use
-the get_maintainer script output.
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Tomas Winkler <tomas.winkler@intel.com>
+---
+ drivers/misc/mei/bus.c    |  9 +++++++--
+ drivers/misc/mei/client.c |  5 +++--
+ drivers/misc/mei/main.c   | 18 ++++++++++++++----
+ 3 files changed, 24 insertions(+), 8 deletions(-)
 
-> Joe, would you support and would you accept if we extend
-> get_maintainer.pl to provide output of the status in such a way that
-> the status output can be clearly mapped to the subsystem?
-
-Not really, no.  I don't see much value in your
-request to others.  It seems you are doing some
-academic work rather than actually using it for
-sending patches.
-
-You are of course welcome to extexd the script
-in whatever manner you need for your own use,
-but even here, I don't believe you need to do
-anything to the script but change how you use it.
-
-
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index 985bd4fd3328..5b2db77d48db 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -66,9 +66,10 @@ ssize_t __mei_cl_send(struct mei_cl *cl, u8 *buf, size_t length,
+ 
+ 	while (cl->tx_cb_queued >= bus->tx_queue_limit) {
+ 		mutex_unlock(&bus->device_lock);
+-		rets = wait_event_interruptible(cl->tx_wait,
++		rets = wait_event_interruptible_timeout(cl->tx_wait,
+ 				cl->writing_state == MEI_WRITE_COMPLETE ||
+-				(!mei_cl_is_connected(cl)));
++				!mei_cl_is_connected(cl),
++				HZ);
+ 		mutex_lock(&bus->device_lock);
+ 		if (rets) {
+ 			if (signal_pending(current))
+@@ -79,6 +80,10 @@ ssize_t __mei_cl_send(struct mei_cl *cl, u8 *buf, size_t length,
+ 			rets = -ENODEV;
+ 			goto out;
+ 		}
++		if (cl->writing_state != MEI_WRITE_COMPLETE) {
++			rets = -EFAULT;
++			goto out;
++		}
+ 	}
+ 
+ 	cb = mei_cl_alloc_cb(cl, length, MEI_FOP_WRITE, NULL);
+diff --git a/drivers/misc/mei/client.c b/drivers/misc/mei/client.c
+index 1e3edbbacb1e..e7acc8aa9b15 100644
+--- a/drivers/misc/mei/client.c
++++ b/drivers/misc/mei/client.c
+@@ -1767,9 +1767,10 @@ ssize_t mei_cl_write(struct mei_cl *cl, struct mei_cl_cb *cb)
+ 	if (blocking && cl->writing_state != MEI_WRITE_COMPLETE) {
+ 
+ 		mutex_unlock(&dev->device_lock);
+-		rets = wait_event_interruptible(cl->tx_wait,
++		rets = wait_event_interruptible_timeout(cl->tx_wait,
+ 				cl->writing_state == MEI_WRITE_COMPLETE ||
+-				(!mei_cl_is_connected(cl)));
++				!mei_cl_is_connected(cl),
++				HZ);
+ 		mutex_lock(&dev->device_lock);
+ 		/* wait_event_interruptible returns -ERESTARTSYS */
+ 		if (rets) {
+diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+index f894d1f8a53e..0eb7bfd89a90 100644
+--- a/drivers/misc/mei/main.c
++++ b/drivers/misc/mei/main.c
+@@ -294,9 +294,10 @@ static ssize_t mei_write(struct file *file, const char __user *ubuf,
+ 			goto out;
+ 		}
+ 		mutex_unlock(&dev->device_lock);
+-		rets = wait_event_interruptible(cl->tx_wait,
++		rets = wait_event_interruptible_timeout(cl->tx_wait,
+ 				cl->writing_state == MEI_WRITE_COMPLETE ||
+-				(!mei_cl_is_connected(cl)));
++				!mei_cl_is_connected(cl),
++				HZ);
+ 		mutex_lock(&dev->device_lock);
+ 		if (rets) {
+ 			if (signal_pending(current))
+@@ -307,6 +308,10 @@ static ssize_t mei_write(struct file *file, const char __user *ubuf,
+ 			rets = -ENODEV;
+ 			goto out;
+ 		}
++		if (cl->writing_state != MEI_WRITE_COMPLETE) {
++			rets = -EFAULT;
++			goto out;
++		}
+ 	}
+ 
+ 	cb = mei_cl_alloc_cb(cl, length, MEI_FOP_WRITE, file);
+@@ -658,9 +663,10 @@ static int mei_fsync(struct file *fp, loff_t start, loff_t end, int datasync)
+ 
+ 	while (mei_cl_is_write_queued(cl)) {
+ 		mutex_unlock(&dev->device_lock);
+-		rets = wait_event_interruptible(cl->tx_wait,
++		rets = wait_event_interruptible_timeout(cl->tx_wait,
+ 				cl->writing_state == MEI_WRITE_COMPLETE ||
+-				!mei_cl_is_connected(cl));
++				!mei_cl_is_connected(cl),
++				HZ);
+ 		mutex_lock(&dev->device_lock);
+ 		if (rets) {
+ 			if (signal_pending(current))
+@@ -671,6 +677,10 @@ static int mei_fsync(struct file *fp, loff_t start, loff_t end, int datasync)
+ 			rets = -ENODEV;
+ 			goto out;
+ 		}
++		if (cl->writing_state != MEI_WRITE_COMPLETE) {
++			rets = -EFAULT;
++			goto out;
++		}
+ 	}
+ 	rets = 0;
+ out:
+-- 
+2.22.0
 
