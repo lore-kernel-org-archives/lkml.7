@@ -2,297 +2,158 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8E6C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11DDC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7692238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83BC2238C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L8nIHQ59"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nxXOuLKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfGWXjx (ORCPT
+        id S1727241AbfGWXko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:39:53 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17895 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfGWXjw (ORCPT
+        Tue, 23 Jul 2019 19:40:44 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45292 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfGWXko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:39:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d379ac30002>; Tue, 23 Jul 2019 16:39:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 16:39:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 16:39:49 -0700
-Received: from [10.110.103.56] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 23:39:48 +0000
-Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
- tegra210
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
- <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
- <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
- <b575ca93-9f34-b07a-1234-ef1ea2a6ddee@gmail.com>
- <71a88a9c-a542-557a-0eaa-3c90112dee0e@nvidia.com>
- <70ad28cb-c268-cbbe-36f5-39df26617d8e@gmail.com>
- <629826f9-c453-386a-9e88-bd64d23b8eab@nvidia.com>
- <71c8cab1-bf72-c073-be30-4263c6b7c871@gmail.com>
- <97096b6c-f2f5-b82a-b172-802f4a06d1af@nvidia.com>
- <a58de350-f6ce-9308-1ae0-885e732b575d@gmail.com>
- <a545cc66-45cd-504a-4390-8274b8b79540@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <6fefa6cc-f762-d473-a0ce-248d352a9a53@nvidia.com>
-Date:   Tue, 23 Jul 2019 16:39:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <a545cc66-45cd-504a-4390-8274b8b79540@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563925187; bh=N3IAqUEIz3E0SgyUkBMkTKLZhH0EQt+e9lHD4yC0uO4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=L8nIHQ59PSpUcwpKRDR3FjqTowbPJp34pVRXt5RGBQLy5h8bt1XNBJa607GMuXzja
-         m7QKPtHZ3HEDJkG775dX0EFJXNlLv0SX4WDuCR0asQBNy70UJFP8JDol9g0wLycvo4
-         mAnL82sbch4NPm4bNfhXfPscXTMg9CqXVAkE9MGbEbr+7fBwU7H4FgLQGNeYhxnVHD
-         Wgd+77HiZQmJZ+qeG/Majj9ReW0lAxO18jz4VL07GvlxedCVHrefPIDUgOAOMaQMl5
-         NRIjdukWxXYFGbA+C5FSp0CduZaWm51E5UV+7uM3LMLy8osh0nhzv7aUYBpIKbdmwr
-         D6jipUCOqZqLQ==
+        Tue, 23 Jul 2019 19:40:44 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6NNdoDw129407;
+        Tue, 23 Jul 2019 23:40:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=iTXW+qBxgmscyKRDm4rDkuaYwhXnZofHvZ2R9R8Uz4Y=;
+ b=nxXOuLKiK8KoaSaGs7WwtVuXIxEyT+156pDFlni3kjDMe2aGUD46IyZQ0/xQ5MywwPHD
+ aaWqIhjaI2ew3auUiZTPhITyyJF/X1qqOCmzquOy+haoGTxs6WyWdaIjEHvILb2Lz8Fk
+ eHB0EmIc8PTGBeYwa4c0bJZUfQfSgLsZfpLgANh5oCxrwlhqqCJkzy+x1zo+YtnXo4S/
+ xDHSJephx28gkPt7u5yN7SSqS1Cyt+0Ehr666YrLCbHeK8roWc6j5OOQ28hq241R+9B0
+ XXWrUZ/TIwOizrVD4vnYSDzi1mYSkvyC88Js5FLzhC6joSvwdf0EvuKQw3hfBB+QWyax xg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2tx61bsseb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 23:40:38 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6NNbZXj183349;
+        Tue, 23 Jul 2019 23:38:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2tx60xh2f6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 23:38:37 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6NNcaGA013920;
+        Tue, 23 Jul 2019 23:38:36 GMT
+Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Jul 2019 16:38:36 -0700
+From:   Jane Chu <jane.chu@oracle.com>
+To:     n-horiguchi@ah.jp.nec.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-nvdimm@lists.01.org
+Subject: [PATCH] mm/memory-failure: Poison read receives SIGKILL instead of SIGBUS if mmaped more than once
+Date:   Tue, 23 Jul 2019 17:38:30 -0600
+Message-Id: <1563925110-19359-1-git-send-email-jane.chu@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907230244
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907230244
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mmap /dev/dax more than once, then read the poison location using address
+from one of the mappings. The other mappings due to not having the page
+mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
+over SIGBUS, so user process looses the opportunity to handle the UE.
 
-On 7/23/19 7:27 AM, Dmitry Osipenko wrote:
-> 23.07.2019 6:43, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 23.07.2019 6:31, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 7/22/19 8:25 PM, Dmitry Osipenko wrote:
->>>> 23.07.2019 6:09, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 7/22/19 8:03 PM, Dmitry Osipenko wrote:
->>>>>> 23.07.2019 4:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> On 7/22/19 6:41 PM, Dmitry Osipenko wrote:
->>>>>>>> 23.07.2019 4:08, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>> 23.07.2019 3:58, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>> This patch implements PMC wakeup sequence for Tegra210 and defi=
-nes
->>>>>>>>>>> common used RTC alarm wake event.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>>> ---
->>>>>>>>>>>  =C2=A0=C2=A0 drivers/soc/tegra/pmc.c | 111
->>>>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>>>>  =C2=A0=C2=A0 1 file changed, 111 insertions(+)
->>>>>>>>>>>
->>>>>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>>>>>>>>> index 91c84d0e66ae..c556f38874e1 100644
->>>>>>>>>>> --- a/drivers/soc/tegra/pmc.c
->>>>>>>>>>> +++ b/drivers/soc/tegra/pmc.c
->>>>>>>>>>> @@ -57,6 +57,12 @@
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_OE=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(11) /* system clock
->>>>>>>>>>> enable */
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_POLARITY=C2=A0=C2=
-=A0=C2=A0 BIT(10) /* sys clk
->>>>>>>>>>> polarity */
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_CNTRL_MAIN_RST=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(4)
->>>>>>>>>>> +#define=C2=A0 PMC_CNTRL_LATCH_WAKEUPS=C2=A0=C2=A0=C2=A0 BIT(5)
->>>>>>>>> Please follow the TRM's bits naming.
->>>>>>>>>
->>>>>>>>> PMC_CNTRL_LATCHWAKE_EN
->>>>>>>>>
->>>>>>>>>>> +#define PMC_WAKE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0c
->>>>>>>>>>> +#define PMC_WAKE_LEVEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x10
->>>>>>>>>>> +#define PMC_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x14
->>>>>>>>>>> +#define PMC_SW_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x18
->>>>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #define DPD_SAMPLE=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x020
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 DPD_SAMPLE_ENABLE=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
->>>>>>>>>>> @@ -87,6 +93,11 @@
->>>>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #define PMC_SCRATCH41=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x140
->>>>>>>>>>>  =C2=A0=C2=A0 +#define PMC_WAKE2_MASK=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x160
->>>>>>>>>>> +#define PMC_WAKE2_LEVEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x164
->>>>>>>>>>> +#define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x168
->>>>>>>>>>> +#define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 0x16c
->>>>>>>>>>> +
->>>>>>>>>>>  =C2=A0=C2=A0 #define PMC_SENSOR_CTRL=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1b0
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_SCRATCH_WRITE=C2=A0=
-=C2=A0=C2=A0 BIT(2)
->>>>>>>>>>>  =C2=A0=C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_ENABLE_RST=C2=A0=C2=
-=A0=C2=A0 BIT(1)
->>>>>>>>>>> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops
->>>>>>>>>>> tegra_pmc_irq_domain_ops =3D {
->>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .alloc =3D tegra_pmc_irq_=
-alloc,
->>>>>>>>>>>  =C2=A0=C2=A0 };
->>>>>>>>>>>  =C2=A0=C2=A0 +static int tegra210_pmc_irq_set_wake(struct irq_=
-data *data,
->>>>>>>>>>> unsigned int on)
->>>>>>>>>>> +{
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc =3D irq_data_get_irq_=
-chip_data(data);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int offset, bit;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 value;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (data->hwirq =3D=3D ULONG_MAX)
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 offset =3D data->hwirq / 32;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 bit =3D data->hwirq % 32;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /*
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Latch wakeups to SW_WAKE_STATUS reg=
-ister to capture events
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * that would not make it into wakeup =
-event register during
->>>>>>>>>>> LP0 exit.
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value |=3D PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(120);
->>>>>>>>>> Why it takes so much time to latch the values? Shouldn't some
->>>>>>>>>> status-bit
->>>>>>>>>> be polled for the completion of latching?
->>>>>>>>>>
->>>>>>>>>> Is this register-write really getting buffered in the PMC?
->>>>>>>>>>
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value &=3D ~PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(120);
->>>>>>>>>> 120 usecs to remove latching, really?
->>>>>>>>>>
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS=
-);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATU=
-S);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* enable PMC wake */
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (data->hwirq >=3D 32)
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D PMC_WAKE=
-2_MASK;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D PMC_WAKE=
-_MASK;
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, offset);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (on)
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D 1 << bit=
-;
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value &=3D ~(1 << b=
-it);
->>>>>>>>>>> +
->>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, offset);
->>>>>>>>>> Why the latching is done *before* writing into the WAKE register=
-s?
->>>>>>>>>> What
->>>>>>>>>> it is latching then?
->>>>>>>>> I'm looking at the TRM doc and it says that latching should be do=
-ne
->>>>>>>>> *after* writing to the WAKE_MASK / LEVEL registers.
->>>>>>>>>
->>>>>>>>> Secondly it says that it's enough to do:
->>>>>>>>>
->>>>>>>>> value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>>>>>> value |=3D PMC_CNTRL_LATCH_WAKEUPS;
->>>>>>>>> tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>>>>>>>
->>>>>>>>> in order to latch. There is no need for the delay and to remove t=
-he
->>>>>>>>> "LATCHWAKE_EN" bit, it should be a oneshot action.
->>>>>>>> Although, no. TRM says "stops latching on transition from 1
->>>>>>>> to 0 (sequence - set to 1,set to 0)", so it's not a oneshot action=
-.
->>>>>>>>
->>>>>>>> Have you tested this code at all? I'm wondering how it happens to
->>>>>>>> work
->>>>>>>> without a proper latching.
->>>>>>> Yes, ofcourse its tested and this sequence to do transition is
->>>>>>> recommendation from Tegra designer.
->>>>>>> Will check if TRM doesn't have update properly or will re-confirm
->>>>>>> internally on delay time...
->>>>>>>
->>>>>>> On any of the wake event PMC wakeup happens and WAKE_STATUS registe=
-r
->>>>>>> will have bits set for all events that triggered wake.
->>>>>>> After wakeup PMC doesn't update SW_WAKE_STATUS register as per PMC
->>>>>>> design.
->>>>>>> SW latch register added in design helps to provide a way to capture
->>>>>>> those events that happen right during wakeup time and didnt make it=
- to
->>>>>>> SW_WAKE_STATUS register.
->>>>>>> So before next suspend entry, latching all prior wake events into S=
-W
->>>>>>> WAKE_STATUS and then clearing them.
->>>>>> I'm now wondering whether the latching cold be turned ON permanently
->>>>>> during of the PMC's probe, for simplicity.
->>>>> latching should be done on suspend-resume cycle as wake events gets
->>>>> generates on every suspend-resume cycle.
->>>> You're saying that PMC "doesn't update SW_WAKE_STATUS" after wake-up,
->>>> then I don't quite understand what's the point of disabling the latchi=
-ng
->>>> at all.
->>> When latch wake enable is set, events are latched and during 1 to 0
->>> transition latching is disabled.
->>>
->>> This is to avoid sw_wake_status and wake_status showing diff events.
->> Okay.
->>
->>> Currently driver is not relying on SW_WAKE_STATUS but its good to latch
->>> and clear so even at some point for some reason when SW_WAKE_STATUS is
->>> used, this wlil not cause mismatch with wake_status.
->> Then the latching need to be enabled on suspend and disabled early on
->> resume to get a proper WAKE status.
-> Actually, it will be better to simply not implement the latching until
-> it will become really needed. In general you shouldn't add into the
-> patchset anything that is unused.
+Although one may add MAP_POPULATE to mmap(2) to work around the issue,
+MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
+isn't always an option.
 
-OK, will remove latch_wake for now.
+Details -
 
-Will send next version once I get all the review feedback ..
+ndctl inject-error --block=10 --count=1 namespace6.0
+
+./read_poison -x dax6.0 -o 5120 -m 2
+mmaped address 0x7f5bb6600000
+mmaped address 0x7f3cf3600000
+doing local read at address 0x7f3cf3601400
+Killed
+
+Console messages in instrumented kernel -
+
+mce: Uncorrected hardware memory error in user-access at edbe201400
+Memory failure: tk->addr = 7f5bb6601000
+Memory failure: address edbe201: call dev_pagemap_mapping_shift
+dev_pagemap_mapping_shift: page edbe201: no PUD
+Memory failure: tk->size_shift == 0
+Memory failure: Unable to find user space address edbe201 in read_poison
+Memory failure: tk->addr = 7f3cf3601000
+Memory failure: address edbe201: call dev_pagemap_mapping_shift
+Memory failure: tk->size_shift = 21
+Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
+  => to deliver SIGKILL
+Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
+  => to deliver SIGBUS
+
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+---
+ mm/memory-failure.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index d9cc660..7038abd 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -315,7 +315,6 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+ 
+ 	if (*tkc) {
+ 		tk = *tkc;
+-		*tkc = NULL;
+ 	} else {
+ 		tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
+ 		if (!tk) {
+@@ -331,16 +330,21 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+ 		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+ 
+ 	/*
+-	 * In theory we don't have to kill when the page was
+-	 * munmaped. But it could be also a mremap. Since that's
+-	 * likely very rare kill anyways just out of paranoia, but use
+-	 * a SIGKILL because the error is not contained anymore.
++	 * Indeed a page could be mmapped N times within a process. And it's possible
++	 * that not all of those N VMAs contain valid mapping for the page. In which
++	 * case we don't want to send SIGKILL to the process on behalf of the VMAs
++	 * that don't have the valid mapping, because doing so will eclipse the SIGBUS
++	 * delivered on behalf of the active VMA.
+ 	 */
+ 	if (tk->addr == -EFAULT || tk->size_shift == 0) {
+ 		pr_info("Memory failure: Unable to find user space address %lx in %s\n",
+ 			page_to_pfn(p), tsk->comm);
+-		tk->addr_valid = 0;
++		if (tk != *tkc)
++			kfree(tk);
++		return;
+ 	}
++	if (tk == *tkc)
++		*tkc = NULL;
+ 	get_task_struct(tsk);
+ 	tk->tsk = tsk;
+ 	list_add_tail(&tk->nd, to_kill);
+-- 
+1.8.3.1
 
