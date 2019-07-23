@@ -2,138 +2,125 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087E0C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFA2C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C1221842
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABD9223BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iu7/PaC6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f7h8K/NX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387440AbfGWI6H (ORCPT
+        id S2387733AbfGWJAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:58:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53466 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727748AbfGWI6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:58:07 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB0EEC18B2D9;
-        Tue, 23 Jul 2019 08:58:06 +0000 (UTC)
-Received: from ovpn-117-106.ams2.redhat.com (ovpn-117-106.ams2.redhat.com [10.36.117.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D0EB41001B28;
-        Tue, 23 Jul 2019 08:58:04 +0000 (UTC)
-Message-ID: <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
-Subject: Re: [PATCH net-next v2 3/3] netlink: add validation of NLA_F_NESTED
- flag
-From:   Thomas Haller <thaller@redhat.com>
-To:     Michal Kubecek <mkubecek@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
-        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org
-Date:   Tue, 23 Jul 2019 10:57:54 +0200
-In-Reply-To: <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
-References: <cover.1556806084.git.mkubecek@suse.cz>
-         <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
-Organization: Red Hat
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rWRNAe4I++vsGAiuCtRA"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Tue, 23 Jul 2019 05:00:55 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48808 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727748AbfGWJAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:00:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0209561157; Tue, 23 Jul 2019 09:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563872454;
+        bh=EVKnOWzRkie6voTuz/y+NN9iApwRNseO39HZ9ZaKztA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iu7/PaC6J/cQuDrieBBS2cua4nRXyV5klWe1RXJRLji2Um8rYBpk99MlHvC49XUDQ
+         7jPng3hAcfOQGDaaMrqDg6t6ML1ZmjKjofeMYdQxyWLtDJmwtHYbehUCdgPKsubiPx
+         pfnFWlk21nrSCFTP8mRgsZ+MfA7OIl05MKdMJ98g=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 49C1A60850;
+        Tue, 23 Jul 2019 09:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563872453;
+        bh=EVKnOWzRkie6voTuz/y+NN9iApwRNseO39HZ9ZaKztA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f7h8K/NXZds7GQUIs+jKmAA2h8iL4yr4lRdC+V4qjGHGWXw0VvECrsvNDsWId3+G6
+         ulKshuZncQcWC87abYZ9AzrF7r6uHyTrCP5E+ZkCM1FuAGtXOU6+Mzfl/KIwAP9ajN
+         yNFTL6WfS/lGUdL/GuGirdsDVtO2TV9geClo2koE=
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 23 Jul 2019 08:58:06 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 23 Jul 2019 14:30:53 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Chris Lew <clew@codeaurora.org>
+Subject: Re: [PATCH] remoteproc: qcom: Move glink_ssr notification after stop
+In-Reply-To: <20190716050327.8866-1-bjorn.andersson@linaro.org>
+References: <20190716050327.8866-1-bjorn.andersson@linaro.org>
+Message-ID: <6259ebabc6183efb0045f9f990747d5e@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
 
---=-rWRNAe4I++vsGAiuCtRA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-05-02 at 16:15 +0200, Michal Kubecek wrote:
-> Add new validation flag NL_VALIDATE_NESTED which adds three
-> consistency
-> checks of NLA_F_NESTED_FLAG:
->=20
->   - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
->   - the flag is not set on attributes with other policies except
-> NLA_UNSPEC
->   - the flag is set on attribute passed to nla_parse_nested()
->=20
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
->=20
-> v2: change error messages to mention NLA_F_NESTED explicitly
+On 2019-07-16 10:33, Bjorn Andersson wrote:
+> glink_ssr is used to signal a remote processor "A" about the stopping 
+> of
+> another remote processor "B", so that in the event that remote 
+> processor
+> B is ever booted again the fifos of the glink channel between A and B 
+> is
+> in a known state.
+> 
+> But if remote processor A receives this notification before B is
+> actually stopped the newly reset fifo indices will be interpreted as
+> there being "data" on the channel and either side of the channel will
+> enter a fatal error handler.
+> 
+> Move the glink_ssr notification to the "unprepare" state of the
+> rproc_subdev to avoid this issue.
+> 
+> This has the side effect of us not notifying the dying remote processor
+> itself about its fate, which has been seen to block in certain resource
+> constraint scenarios.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  include/net/netlink.h | 11 ++++++++++-
->  lib/nlattr.c          | 15 +++++++++++++++
->  2 files changed, 25 insertions(+), 1 deletion(-)
+>  drivers/remoteproc/qcom_common.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_common.c 
+> b/drivers/remoteproc/qcom_common.c
+> index 6a448429f223..60650bcc8c67 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -200,7 +200,7 @@ void qcom_unregister_ssr_notifier(struct 
+> notifier_block *nb)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
+> 
+> -static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
+> +static void ssr_notify_unprepare(struct rproc_subdev *subdev)
+>  {
+>  	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+> 
+> @@ -220,7 +220,7 @@ void qcom_add_ssr_subdev(struct rproc *rproc,
+> struct qcom_rproc_ssr *ssr,
+>  			 const char *ssr_name)
+>  {
+>  	ssr->name = ssr_name;
+> -	ssr->subdev.stop = ssr_notify_stop;
+> +	ssr->subdev.unprepare = ssr_notify_unprepare;
+> 
+>  	rproc_add_subdev(rproc, &ssr->subdev);
+>  }
 
-Hi,
-
-
-libnl3 does currently not ever set NLA_F_NESTED flag.
-
-That means, nla_nest_start() will not work as it used to.
-https://github.com/thom311/libnl/blob/65b3dd5ac2d5de4c7a0c64e430596d9d27973=
-527/lib/attr.c#L902
-
-As workaround, one could call
-
-  nla_nest_start(msg, NLA_F_NESTED | attr);
-
-
-Of course, that is a bug in libnl3 that should be fixed. But it seems
-quite unfortunate to me.
-
-
-Does this flag and strict validation really provide any value? Commonly a n=
-etlink message
-is a plain TLV blob, and the meaning depends entirely on the policy.
-
-What I mean is that for example
-
-  NLA_PUT_U32 (msg, ATTR_IFINDEX, (uint32_t) ifindex)
-  NLA_PUT_STRING (msg, ATTR_IFNAME, "net")
-
-results in a 4 bytes payload that does not encode whether the data is a num=
-ber or
-a string.
-
-Why is it valuable in this case to encode additional type information insid=
-e the message,
-when it's commonly not done and also not necessary?
-
-
-best,
-Thomas
-
---=-rWRNAe4I++vsGAiuCtRA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEESep8Zw4IUOdBlRT2KcI2bk38VygFAl02zBIACgkQKcI2bk38
-VyiG5g/+Nz8gA69nc2FT1SLcKISfH9GaebM8sBPW0RtlQPuXuW9SItdje+WqATBZ
-0uAlHMrX1zk3G07WsN/V6lFAm4buMj5eDMvZgoR+lJKMklckegrPuGfWtvsQE3aB
-GLMcL5LmzelVaQG/BmKTFgFo+4RJwEEFzG5KXLDKVDT1ta9fFRwIIqfCQntZjWEX
-1SZS5zmAy5+XJJVgQTPM3W0mcT4hb9ycFK9+qijRUtBvgJmZVezwowC3SpVx2Vs/
-vR4PKmNi+tx6AT8u3fxMRUypiTZqOpqqWA2hq/1UzHGjV11MprD+zApN11ae6FTf
-1ARfAIa9DJXBGzRXGnqOpjg3GYVD5haA1U7v3xYW6sIoqpDkx4Cl3iwljIP117/c
-s9Jt6dVR+YWF7lugH5Tgwq6oo0AcwEbu64YP3+sEJaGwPm0CJMePfMzeacPwx5zF
-D1Guxi4O1EyyzXZO1Y60URAo3cRoxigssX5MHvKYEB70+A0YHPe1mhQ4YeJQRmX5
-ZAWXa3mIpy8i63F8zHXV7eUMWJL3PH7IxYCb+YqC9h8IKPItN6RVkv4M+bJZ0VJj
-K9Yyl5eup9Db7o5rThw22YBJ0xcNJvZjxCloQQs69Q7ElPbIykrqeEhEBLiRNyx/
-Oty9bR8bXrTZN3q9Oqd7kWn0FeQm18rFwKhVxlqI7HdDGeFjP0k=
-=vh60
------END PGP SIGNATURE-----
-
---=-rWRNAe4I++vsGAiuCtRA--
-
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
