@@ -2,162 +2,131 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB36C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAD8C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E8A218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB7B218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKCz6nXP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xSEXxIxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390325AbfGWNkT (ORCPT
+        id S2390339AbfGWNk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:40:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39412 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfGWNkT (ORCPT
+        Tue, 23 Jul 2019 09:40:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40467 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390327AbfGWNk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:40:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so20667460pls.6;
-        Tue, 23 Jul 2019 06:40:18 -0700 (PDT)
+        Tue, 23 Jul 2019 09:40:26 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r1so43223975wrl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=BOVz1Kra82hvNBDxaReMCbJJTvETWWuqjVtK593JxVg=;
-        b=UKCz6nXPPMCWqPF41HW9bNtwUGdbj5rSSH1jwIFH++xNuEzFlFd7CDAr7fw3vkiS98
-         /aasHjo0MjqTA16kYFth+5RYuejKYNMgxLs1SUiMOzKleZYl8o1X9FeXeioylDMz81Lh
-         f7P88/TOAd44OUhuteOseWGkJcIZdkRWPie7sMQyV5FolIaJCEhV5+Sr9o8LluQD5Wkp
-         ENzRsW68zxrARTrhHDCKGfHpKdcn/5VWYnR4TW+5GsMJ9rCneIFwv8xuCiAW86D1+wHK
-         cVli1HRc3iDb+InjAAoGWVtY/kpbd45jRoFLDP+8VEfswzyk4bdefYpwT4WBvXuSmaGy
-         ooew==
+        bh=Q1RW+7WTKu2ChwwqlFBnnA2Rj8nJVJpbRqrmrkf5EEQ=;
+        b=xSEXxIxOiTmnZaxDi2fXZ05ccWC0CcWv2io5iEuiF/kxgFafmrBskcJ0h5jC8TuAVF
+         pODCm3Ynf3hm8QkPNsqA8fwzxfZMcVTUwD8RoGVe0v5DaZtH7eJkjddS0AKJqjFk+Zj1
+         AkxlNEOLi/k9ofvfjsK+9fj9xHvr7n4zkrgRgv64P1yGjW95DtNGDjDiNd2JzM0XQTl9
+         h7B9hueKxSZboqqPCJ4Ob7/7JYEzCwKeLC7sGB2BM5xX4rq6LEGkbihHBsdPZnzhD/8W
+         LqMWpc8mjNbbY4R4SGpVezj56ly0mfqoMWD4zJc+XIfvsmzGqN3sB7vw/PDoUFnYg6rI
+         x++g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=BOVz1Kra82hvNBDxaReMCbJJTvETWWuqjVtK593JxVg=;
-        b=D+m35PmVUJse6+qaj/1iRoE7Pdvs9w5QaPYupj510G/SQ91bQpod2prtX0NScT/c38
-         mOkLnsgdQCvGhA3NVX/ZNbwQd3TIDIYwHBN3LJH9cQbZ5iVakzEyEYSU59jG90iJIFHU
-         8tCMMfbq1sd5L6jSiw2sZCIdFEobBhgIAOaluCim1yU6jaTUOmqad8t0lPbrmFKYiT2s
-         ZqTfQM+I4VtOgkZSLGBCTYFBajHNx8Yh1xIJ6BUxEqbDZMffr3/oIMYkw6wb0chYQfLr
-         pWV7hU1sNHEmROEa6Pw3zewn9TE7mpfIkJr2hLjEjHnTEycwaAnVV/M1jjmvyAaOCKZ/
-         Z52g==
-X-Gm-Message-State: APjAAAWwVNg5839fvFVYoU0pn5B4J5pmm+lT1K4XXn5WlYtHzOqGtlUa
-        bzeprZqKxMSnfDoorb3Jb9g=
-X-Google-Smtp-Source: APXvYqxY2wAyoAcNyqtGx+9qMC4h6LiQiC7bwt8cnuKWM7LHRHO75xH4vxYdWAEdtUbyeSSgS5bYrA==
-X-Received: by 2002:a17:902:7407:: with SMTP id g7mr81559137pll.214.1563889218366;
-        Tue, 23 Jul 2019 06:40:18 -0700 (PDT)
-Received: from localhost.localdomain ([125.142.23.13])
-        by smtp.gmail.com with ESMTPSA id g62sm41407999pje.11.2019.07.23.06.40.15
+        bh=Q1RW+7WTKu2ChwwqlFBnnA2Rj8nJVJpbRqrmrkf5EEQ=;
+        b=K6RpCm5koNlsUIz+h6xEAraujrSytGpiYoO+BYcSnrNAiDBgZgxVmL9L/uBghEDGdo
+         cxIxRR3qx3S/uvEOSEioaR3jeVtmGSWR4appv9mQCo1jUkeXVtVQVsc3vpW4eK3hDTjD
+         NJYEszkc1LMM4zc84/FejToDXi3YMS+zBOw5XQKSJfMtQG7AQfEtiYk2Q4x+Tgfs2pws
+         Wru1MB/a+TXx24VVL/L9ty8MRyf6U3AIk4EOeBnwSkT4CTYGGIZR55O10Ju/fZy2lFti
+         7xwOBDz+9N6uDH+914TTbI8/REhgNjCkUdAp4Cu+mXhjrQCQsovKrnOxa9EN/5haU7Xf
+         SNyw==
+X-Gm-Message-State: APjAAAVM8vpq9vmeWxc6WwxANvUdZKJ4U0xN7KUfM7oRbYxoe/Ylpu7D
+        hIix3jO4s469EWN7pjgEb2/LTw==
+X-Google-Smtp-Source: APXvYqzi2Mng9I27Xyg/Tj0RYk6yHHDedUhypLElGvurkGTGsxWuk3EVwBMNfBWenznT4gFozxyUJw==
+X-Received: by 2002:adf:ed04:: with SMTP id a4mr75709129wro.86.1563889224613;
+        Tue, 23 Jul 2019 06:40:24 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id q10sm43171756wrf.32.2019.07.23.06.40.23
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 06:40:17 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 22:40:12 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah <shuah@kernel.org>
-Cc:     valentina.manea.m@gmail.com, stern@rowland.harvard.edu,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] usbip: Skip DMA mapping and unmapping for urb at
- vhci
-Message-ID: <20190723134012.GA5532@localhost.localdomain>
-References: <20190705164355.14025-1-suwan.kim027@gmail.com>
- <20190705164355.14025-2-suwan.kim027@gmail.com>
- <d10b23b3-601d-c2c6-df2e-77b2ed9adc66@kernel.org>
+        Tue, 23 Jul 2019 06:40:24 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 14:40:22 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-sh@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 7/7] backlight: gpio: use a helper variable for
+ &pdev->dev
+Message-ID: <20190723134022.s74giqi3aq7v3djz@holly.lan>
+References: <20190722150302.29526-1-brgl@bgdev.pl>
+ <20190722150302.29526-8-brgl@bgdev.pl>
+ <20190722160908.GZ9224@smile.fi.intel.com>
+ <CAMRc=McGTk+i0SzWN7AvGu3deYbXX_rJX=7+dKRpKFPKM_qxDA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d10b23b3-601d-c2c6-df2e-77b2ed9adc66@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <CAMRc=McGTk+i0SzWN7AvGu3deYbXX_rJX=7+dKRpKFPKM_qxDA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 02:26:42PM -0600, shuah wrote:
-> Hi Suwan,
+On Tue, Jul 23, 2019 at 08:29:52AM +0200, Bartosz Golaszewski wrote:
+> pon., 22 lip 2019 o 18:09 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> napisał(a):
+> >
+> > On Mon, Jul 22, 2019 at 05:03:02PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > Instead of dereferencing pdev each time, use a helper variable for
+> > > the associated device pointer.
+> >
+> > >  static int gpio_backlight_probe(struct platform_device *pdev)
+> > >  {
+> > > -     struct gpio_backlight_platform_data *pdata =
+> > > -             dev_get_platdata(&pdev->dev);
+> > > +     struct gpio_backlight_platform_data *pdata;
+> > >       struct backlight_properties props;
+> > >       struct backlight_device *bl;
+> > >       struct gpio_backlight *gbl;
+> > >       enum gpiod_flags flags;
+> > > +     struct device *dev;
+> >
+> > Can't we do
+> >
+> >         struct device dev = &pdev->dev;
+> >         struct gpio_backlight_platform_data *pdata = dev_get_platdata(dev);
+> >
+> > ? It fits 80 nicely.
+> >
 > 
-> On 7/5/19 10:43 AM, Suwan Kim wrote:
-> > vhci doesn’t do DMA for remote device. Actually, the real DMA
-> > operation is done by network card driver. vhci just passes virtual
-> > address of the buffer to the network stack, so vhci doesn’t use and
-> > need dma address of the buffer of the URB.
-> > 
-> > When it comes to supporting SG for vhci, it is useful to use native
-> > SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
-> > fnuction can adjust the number of SG list (urb->num_mapped_sgs).
-> > 
-> > But HCD provides DMA mapping and unmapping function by default.
-> > Moreover, it causes unnecessary DMA mapping and unmapping which
-> > will be done again at the NIC driver and it wastes CPU cycles.
-> > So, implement map_urb_for_dma and unmap_urb_for_dma function for
-> > vhci in order to skip the DMA mapping and unmapping procedure.
-> > 
-> > To support SG, vhci_map_urb_for_dma() sets URB_DMA_MAP_SG flag in
-> > urb->transfer_flags if URB has SG list and this flag will tell the
-> > stub driver to use SG list.
-> > 
-> > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> > ---
-> >   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
-> >   1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-> > index 000ab7225717..14fc6d9f4e6a 100644
-> > --- a/drivers/usb/usbip/vhci_hcd.c
-> > +++ b/drivers/usb/usbip/vhci_hcd.c
-> > @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
-> >   	return 0;
-> >   }
-> > +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> > +			gfp_t mem_flags)
-> > +{
-> > +	dev_dbg(hcd->self.controller, "vhci does not map urb for dma\n");
-> > +
-> > +	if (urb->num_sgs)
-> > +		urb->transfer_flags |= URB_DMA_MAP_SG;
-> > +
-> 
-> Shouldn't this be part of patch 2. The debug message saying "no map"
-> and setting flag doesn't make sense.
+> IMO it's more readable like that with the reverse christmas tree layout.
 
-I think you are right. Setting flag should be in patch 2. Thank you
-for pointing out :)
-I will remove unnecessary debug messages and move setting flag to
-patch 2.
+There is no requirement for reverse christmas tree layout for this area
+of the kernel (and especially not where RCTL is used as a justification
+to avoid initializers).
 
-> > +       return 0;
-> 
-> This should be a tab and no spaces btw. chekpatch isn't happy.
-> 
-> > +}
-> > +
-> > +static void vhci_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
-> > +{
-> > +       dev_dbg(hcd->self.controller, "vhci does not unmap urb for dma\n");
-> 
-> This should be a tab and no spaces btw. chekpatch isn't happy.
-> 
-> 
-> WARNING: please, no spaces at the start of a line
-> #144: FILE: drivers/usb/usbip/vhci_hcd.c:1299:
-> +       return 0;$
-> 
-> WARNING: please, no spaces at the start of a line
-> #149: FILE: drivers/usb/usbip/vhci_hcd.c:1304:
-> +       dev_dbg(hcd->self.controller, "vhci does not unmap urb for dma\n");$
-> 
-> total: 0 errors, 2 warnings, 31 lines checked
+I have a weak personal preference for initializers although it is
+sufficiently weak I was happy to put a reviewed by on the original
+patch without comment.
 
-I'm sorry for my fault. I will check it.
 
-Regards,
-Suwan Kim
+Daniel.
