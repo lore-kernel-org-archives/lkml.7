@@ -8,63 +8,67 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B6EC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED68AC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034DE21903
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECF321903
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdO+FpwF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQONPhns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389859AbfGWMrO (ORCPT
+        id S2389869AbfGWMrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:47:14 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40097 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389797AbfGWMrN (ORCPT
+        Tue, 23 Jul 2019 08:47:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43096 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbfGWMrd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:47:13 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so19391253pgj.7;
-        Tue, 23 Jul 2019 05:47:12 -0700 (PDT)
+        Tue, 23 Jul 2019 08:47:33 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so19101585pfg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:47:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RvJTgF+BOn0RoftzxFYR6bLO76ZgRwKBwjddXUMQ278=;
-        b=mdO+FpwFctnohKCWuCH49mHKxqMsQRapR01Af2NxzrcvDyxseTNc7eUWdkK/utUCHY
-         a1rhqK8OJ8cwvhXB3dn6ojcTJq2G8rRAkiJF6ecFGdgIdb58pOscSftnbcMR21itm0Gg
-         pCtNfgAaUbQNy57nooxSvcv+25test50QR6cj7+8TiPEyW93TLUAOozBqpA0RrNe7ped
-         hsh9hj2l049LdLUYeQWTyk/M2rFypoDEz4PnM3LBrYP0oCgbgtb64bpq7ixorNfE/Cy9
-         A/aHpkVI7vcUkK9KlOBu1oNIxc9DoPhDZPe+uZ2nmsErEto2wFdiLfjTSaOtVaFwRMqy
-         YREQ==
+        bh=m3CjjylHJDgM8UoL8N43slI27v5A02DOYCpC+keeaAg=;
+        b=jQONPhnsbtkqI89cDYc0XbTjhAMYlmACChJwcksDP4iNqLLEGtOGc7Fr3jqrf3A4E4
+         8vydhwcufcKFSWeWVQHbGNRUTtSjaH/38/CNHUB4cO90CwWzRaFb2wscf53npIPO7N8A
+         WYw10FlPHd0Y+ni458dxI/F0AaqkeHDzq7Sb6FVdfq6LvS+DMWVIyMi4rnyKWyA4JseN
+         gqKSrKiPuVbEe40l6AMUHKl/OXQdds55rfkwnu/SmY+fuayu436lyMxv5yQzqPqH48xB
+         3300c2zsFmkgMP3NNxJdbiFKKGRde2g+/mujOPOdS1WIzhkLMSK3b3GMTJSEhQ4Zgyt4
+         U0Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RvJTgF+BOn0RoftzxFYR6bLO76ZgRwKBwjddXUMQ278=;
-        b=AaQ8AkTox92YhZxRHqDcNXyeb1wUfPt8CGb/6VLkik5NSL+80A6qFbxgoQwvbcp81u
-         /7cVTiQiKuMUVIfGBB3K+wa2ROuHQR1chysaCYfbGQKyzDBvPf5i4tYMDx2yJ1qsYr7H
-         wR17vReXte1EimYmzlAKtE1yW2NNr2rHhAIy6kbXmio+QmiR0DULSIB7gQgiO2AMI1PK
-         fMqslVvJ91turwP3LezU8iUz7um9MpU+2j+QVLJ7AbcqcgitGmQPD9/ZiwQGehkbfW/G
-         b6T1e5ixIYUMnjBwlfad/NqW6K7P4Z1ODuqmQI5F/HUNWx1PGIkpb6wfoYjIn2Iu+F00
-         4Xgw==
-X-Gm-Message-State: APjAAAWAixdin7/WHeOglz6Tqk6Fpv5Ngs+p7GT2iiwZqzva8WNtYoPT
-        EFwhxS37B8WuhjQr6VU6zyM=
-X-Google-Smtp-Source: APXvYqxcn0WFoYb8j7/TG4ohUCx982Olky66Q6qucS0ygw8/QdHxp5v3aoNavIwttB/3aRAs8TGeyA==
-X-Received: by 2002:aa7:9dc7:: with SMTP id g7mr5407603pfq.170.1563886032549;
-        Tue, 23 Jul 2019 05:47:12 -0700 (PDT)
+        bh=m3CjjylHJDgM8UoL8N43slI27v5A02DOYCpC+keeaAg=;
+        b=Mw4XG/xstTv2nlazE4CscWnqjcaXjz/dQ5qqk2AeOFbk8ctrALTpM/XJb/mflE7ogY
+         oGdBTf+4Q4eKECalV7Vr7AMmqVIz1s9tt5b5i02ttZyZoWM2ZBP/GCv4QUeNppBnkqFq
+         n1h6XxuTrXpMBunM6QULfUpNSIJ0jqwyKtohL7TQvaZj43EdXu3RFSKQr5BeWkeMCJ2Y
+         SXs09X+PerM8hxu6nhD/h0aguO5Rp1S6J/L1WYckJaS3Se4F+xX6PKTuyuscMAbtMNmk
+         CGlmrY+wOVB/K5hM9t5JBttVXlcS/slDnEl0OJ/xZ05mfZut3L69YfFOAMUyktYrizse
+         jBrw==
+X-Gm-Message-State: APjAAAWGAILVhtK+JLIWEFoVvs0yqSydX7OqbwqluiBvKrsO/OLE0/l7
+        peXXVYuT5jS6XZF0Hjio1Do=
+X-Google-Smtp-Source: APXvYqwdkAzmhJXxPf+K5KhZ/iibjQIPyH8wy433dDDgalWcZ5KwuUtYD7Lv6DLARviwoKhMNZKbNw==
+X-Received: by 2002:a17:90a:2562:: with SMTP id j89mr82421377pje.123.1563886052811;
+        Tue, 23 Jul 2019 05:47:32 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id w1sm36278872pjt.30.2019.07.23.05.47.10
+        by smtp.gmail.com with ESMTPSA id g2sm72335839pfq.88.2019.07.23.05.47.29
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 05:47:11 -0700 (PDT)
+        Tue, 23 Jul 2019 05:47:32 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Maxim Levitsky <maximlevitsky@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] mmc: sdhci-pci: Use dev_get_drvdata
-Date:   Tue, 23 Jul 2019 20:47:07 +0800
-Message-Id: <20190723124707.24782-1-hslester96@gmail.com>
+Subject: [PATCH] mtd: rawnand: r852: Use dev_get_drvdata
+Date:   Tue, 23 Jul 2019 20:47:27 +0800
+Message-Id: <20190723124727.24851-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,53 +83,31 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/mmc/host/sdhci-pci-core.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/mtd/nand/raw/r852.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 4041878eb0f3..d10aceed5bb7 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -1759,8 +1759,7 @@ static const struct sdhci_ops sdhci_pci_ops = {
+diff --git a/drivers/mtd/nand/raw/r852.c b/drivers/mtd/nand/raw/r852.c
+index dae0d235bb17..77774250fb11 100644
+--- a/drivers/mtd/nand/raw/r852.c
++++ b/drivers/mtd/nand/raw/r852.c
+@@ -998,7 +998,7 @@ static void r852_shutdown(struct pci_dev *pci_dev)
  #ifdef CONFIG_PM_SLEEP
- static int sdhci_pci_suspend(struct device *dev)
+ static int r852_suspend(struct device *device)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-+	struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
+-	struct r852_device *dev = pci_get_drvdata(to_pci_dev(device));
++	struct r852_device *dev = dev_get_drvdata(device);
  
- 	if (!chip)
- 		return 0;
-@@ -1773,8 +1772,7 @@ static int sdhci_pci_suspend(struct device *dev)
+ 	if (dev->ctlreg & R852_CTL_CARDENABLE)
+ 		return -EBUSY;
+@@ -1019,7 +1019,7 @@ static int r852_suspend(struct device *device)
  
- static int sdhci_pci_resume(struct device *dev)
+ static int r852_resume(struct device *device)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-+	struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
+-	struct r852_device *dev = pci_get_drvdata(to_pci_dev(device));
++	struct r852_device *dev = dev_get_drvdata(device);
  
- 	if (!chip)
- 		return 0;
-@@ -1789,8 +1787,7 @@ static int sdhci_pci_resume(struct device *dev)
- #ifdef CONFIG_PM
- static int sdhci_pci_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-+	struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
- 
- 	if (!chip)
- 		return 0;
-@@ -1803,8 +1800,7 @@ static int sdhci_pci_runtime_suspend(struct device *dev)
- 
- static int sdhci_pci_runtime_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-+	struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
- 
- 	if (!chip)
- 		return 0;
+ 	r852_disable_irqs(dev);
+ 	r852_card_update_present(dev);
 -- 
 2.20.1
 
