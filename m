@@ -2,115 +2,136 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAE9C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8764C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29BD229EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3B122387
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/azuwYc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FMl+YlnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfGWXYS (ORCPT
+        id S1726778AbfGWXY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:24:18 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34031 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfGWXYR (ORCPT
+        Tue, 23 Jul 2019 19:24:26 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19509 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfGWXYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:24:17 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so85604789iot.1;
-        Tue, 23 Jul 2019 16:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OKl/UO0N722owerZ7uvxTX5GkSBg77fwKXsdJcJ89jw=;
-        b=W/azuwYc5RF0CLl2tNylYs96mx//cO/dqpDHVSi7Tx5ZOsQpKCKderAm4PQFHc0Wlo
-         CA5ArjI4C7GISOF1gvZGapcPsBoiGrJOBC+Hhg+kEbHGOkqJwf7WmqohdzXTMSFD4asg
-         F6J9p+jkhfqSQTcRZWUIaMENq/j+pKJ+jSImB11LK7FMkGbjQP6eKY96aTkBo+aRrj0G
-         E+KI0xJHmHtf5Y32Fi5SvSZzpRUKwPLlGaZgi1exYiopX5P0DSZGynbyT1+s+bHOq+3Y
-         ZlSyTX7uG1STgviFa2wV6W6P2JmZpuODDmKO/5Mv5vrX6vSqd/fzi+zmaeVL1AYKEOHC
-         AhRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OKl/UO0N722owerZ7uvxTX5GkSBg77fwKXsdJcJ89jw=;
-        b=g4CWHeznJBgIRZIaiiD/7YGe/1ClqlUuh9UrElpvoCyk7HhORCHsmcYHoLDlEZdo8A
-         YKWJueS9bX8Ro3IQUQdKUhLEScSkPrUtEy4C69A1YZb3Frz38PG8c31rehfIBRrwDfy3
-         nwuRmfFXOtS1Pe9RxvDNCZsVA4npylp7QXdOa7EJvcilCxV4RUAu/Dh9kijrFpk4MTTw
-         N8RVClfisOZNm637gPIMxqSN5+gajpp155xVmc7ywDkj5iHQ5FI2aXdOYLR7rt5/elmH
-         i6bpGvWiJdsrrSQrpikPNQTZZZXdReiGeImJSW9xmruDtAt5GEDdrItgDoWG4wQhPeiJ
-         /37g==
-X-Gm-Message-State: APjAAAXAJ812OQeQLHBaT+7OwC9j4wXDFM42jX7rULmAVqfqShxyWC3b
-        YDLH/+qHs+BpAmKZ5U5rnrg=
-X-Google-Smtp-Source: APXvYqzEGthFomN6apTXtcZGPfFB3acwEY2rLrsGnZT81G/G8D+Oq6T6j0D+KB0q5WG7jl1jc5K5rQ==
-X-Received: by 2002:a02:5ec9:: with SMTP id h192mr79609871jab.25.1563924257148;
-        Tue, 23 Jul 2019 16:24:17 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id s10sm106218264iod.46.2019.07.23.16.24.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 16:24:16 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 17:24:14 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH 00/11] PCI: Move symbols to drivers/pci/pci.h
-Message-ID: <20190723232414.GB16776@JATN>
-References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
- <20190723230701.GA47047@google.com>
+        Tue, 23 Jul 2019 19:24:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d3797290000>; Tue, 23 Jul 2019 16:24:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 16:24:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 16:24:24 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
+ 2019 23:24:24 +0000
+Subject: Re: [PATCH 3/3] net/xdp: convert put_page() to put_user_page*()
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     <john.hubbard@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, <netdev@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-mm@kvack.org>,
+        <linux-rdma@vger.kernel.org>, <bpf@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190722223415.13269-1-jhubbard@nvidia.com>
+ <20190722223415.13269-4-jhubbard@nvidia.com>
+ <20190723002534.GA10284@iweiny-DESK2.sc.intel.com>
+ <a4e9b293-11f8-6b3c-cf4d-308e3b32df34@nvidia.com>
+ <20190723180612.GB29729@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <69540e85-b527-0252-7b29-8932660af72d@nvidia.com>
+Date:   Tue, 23 Jul 2019 16:24:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723230701.GA47047@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190723180612.GB29729@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563924265; bh=Dc+54X4TKuVoIQ6IGOnhUFUhE0Dy4dW4jkSZ2LHVHns=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FMl+YlnDhGCsZKKh1L0ErV+31siNAXGqpbM4Ti099eQ263WNqONoZoDhA6w28dloW
+         DANKq7E2Y7kdWPUACeMGcsz7IGCwEWqiwPgDnX3E9DHqqaxxYj9TrmIKWYGcLWA8z9
+         HaYbTpYicIHv06kxhQ58/gdGYse2x3h25DFKRTKYtQq+80JPY4IzGMpBTYSaFvHkoA
+         7F9/p/2HEcQ7syxo9toMK0sf5uUtUlNauO/KxNX+D2TkcJKNWZP3//+ZXgl5mcNywg
+         K1EWHc3E5G7xnnEUtcQBaKfZD5VJFBdwU+bLpLJtcvUt/rKIgSGElbmpHYwBZFPLKu
+         YnW6V/fpJl4Ag==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 06:07:01PM -0500, Bjorn Helgaas wrote:
-> On Thu, Jul 11, 2019 at 04:23:30PM -0600, Kelsey Skunberg wrote:
-> > Move symbols defined in include/linux/pci.h that are only used in
-> > drivers/pci/ to drivers/pci/pci.h.
-> > 
-> > Symbols only used in drivers/pci/ do not need to be visible to the rest of
-> > the kernel.
-> > 
-> > Kelsey Skunberg (11):
-> >   PCI: Move #define PCI_PM_* lines to drivers/pci/pci.h
-> >   PCI: Move PME declarations to drivers/pci/pci.h
-> >   PCI: Move *_host_bridge_device() declarations to drivers/pci.pci.h
-> >   PCI: Move PCI Virtual Channel declarations to drivers/pci/pci.h
-> >   PCI: Move pci_hotplug_*_size declarations to drivers/pci/pci.h
-> >   PCI: Move pci_bus_* declarations to drivers/pci/pci.h
-> >   PCI: Move pcie_update_link_speed() to drivers/pci/pci.h
-> >   PCI: Move pci_ats_init() to drivers/pci/pci.h
-> >   PCI: Move ECRC declarations to drivers/pci/pci.h
-> >   PCI: Move PTM declaration to drivers/pci/pci.h
-> >   PCI: Move pci_*_node() declarations to drivers/pci/pci.h
-> > 
-> >  drivers/pci/pci.h   | 48 ++++++++++++++++++++++++++++++++++++++++++---
-> >  include/linux/pci.h | 47 --------------------------------------------
-> >  2 files changed, 45 insertions(+), 50 deletions(-)
+On 7/23/19 11:06 AM, Ira Weiny wrote:
+> On Mon, Jul 22, 2019 at 09:41:34PM -0700, John Hubbard wrote:
+>> On 7/22/19 5:25 PM, Ira Weiny wrote:
+>>> On Mon, Jul 22, 2019 at 03:34:15PM -0700, john.hubbard@gmail.com wrote:
+...
+>> Obviously, this stuff is all subject to a certain amount of opinion, but I
+>> think I'm on really solid ground as far as precedent goes. So I'm pushing
+>> back on the NAK... :)
 > 
-> Hi Kelsey,
+> Fair enough...  However, we have discussed in the past how GUP can be a
+> confusing interface to use.
 > 
-> I didn't get these applied before v5.3-rc1, so now they don't apply
-> cleanly.  Would you mind refreshing them and posting a v2 that does
-> apply to my "master" branch (v5.3-rc1)?
+> So I'd like to see it be more directed.  Only using the __put_user_pages()
+> version allows us to ID callers easier through a grep of PUP_FLAGS_DIRTY_LOCK
+> in addition to directing users to use that interface rather than having to read
+> the GUP code to figure out that the 2 calls above are equal.  It is not a huge
+> deal but...
 > 
-> Bjorn
 
-Hi Bjorn,
+OK, combining all the feedback to date, which is:
 
-I can absolutely do that. I'll have v2 sent out soon.
+* the leading double underscore is unloved,
 
--Kelsey
+* set_page_dirty() is under investigation, but likely guilty of incitement
+  to cause bugs,
+
+
+...we end up with this:
+
+void put_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+			       bool make_dirty)
+
+...which I have a v2 patchset for, ready to send out. It makes IB all pretty 
+too. :)
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
