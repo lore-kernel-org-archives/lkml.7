@@ -2,202 +2,160 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A37C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8C7C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB71218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C37218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563887051;
-	bh=hZCf8bF5bYSsw3AStRNQjVvLJpUG0cq8278mU358RhQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=xvMai/WjDERDnD0xWJjm65zXp456nyGcH52yBsQQvauVLe5KTQ8WtXTDusUJy4ggV
-	 yp+9/b1hfFnuwhJVID9LW70KJPDpqv8Ja79rRegHToVn5M6n/eFHpyI6iQz7JgBPAm
-	 oZ+An/16J/O1799a18NBDJeAd3WUAKFHY13xvVqM=
+	s=default; t=1563887120;
+	bh=Q8D4t7cJn1/TNwgDJMoznl3qalYmQpoD/w0gjwZCvU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JK/6q4Kl1bmaiMYhYdB6LlX6wTb3XtxNfMzCPpXN+joAGn9+VriPkm+dz2Wah/oEA
+	 nSRIjS2rlSYFbC1SUe5EnR0sKaZYi9G+wdZWWTfF0pSbN4X0MscPcz0pPGgwNIAbxX
+	 ozHOhElwaO6th8JOsm+uuFAWABKJCsU2zk4zNIyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390062AbfGWNEK (ORCPT
+        id S2390065AbfGWNFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:04:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:54538 "EHLO foss.arm.com"
+        Tue, 23 Jul 2019 09:05:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731916AbfGWNEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:04:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E14B5337;
-        Tue, 23 Jul 2019 06:04:08 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2D013F71F;
-        Tue, 23 Jul 2019 06:04:07 -0700 (PDT)
-Subject: Re: [PATCH 4/9] irqchip/gic-v3: Add ESPI range support
-To:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190723104437.154403-1-maz@kernel.org>
- <20190723104437.154403-5-maz@kernel.org>
- <a54dfa07-2f3b-def7-fec4-b6dab2bcd84c@ti.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <de12cbf0-22ec-83d0-a034-9872f302101b@kernel.org>
-Date:   Tue, 23 Jul 2019 14:04:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1730059AbfGWNFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:05:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F59B218BE;
+        Tue, 23 Jul 2019 13:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563887116;
+        bh=Q8D4t7cJn1/TNwgDJMoznl3qalYmQpoD/w0gjwZCvU0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w5GCQXa6wPQfKGCsNtCBbWrn4TYdL5NoayvSI2QnniwHn3vH2QOt7WLbf7WL82SVR
+         BKFnVsZ1ldKA5RYw5M/ZRshEpBxmzUIsQ3/8JfEHqWc4KOqRi8PnrxaRcCVlA1Pw0e
+         WggY/vRi3aa6VHGbt4OQjVv6nStWqCIo/o1bCskk=
+Date:   Tue, 23 Jul 2019 15:05:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be
+ reserved
+Message-ID: <20190723130513.GA25290@kroah.com>
+References: <7db7da45b435f8477f25e66f292631ff766a844c.1560969363.git.thomas.lendacky@amd.com>
+ <20190713145909.30749-1-mike@fireburn.co.uk>
+ <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de>
+ <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com>
+ <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de>
+ <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com>
+ <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de>
+ <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a54dfa07-2f3b-def7-fec4-b6dab2bcd84c@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 13:50, Lokesh Vutla wrote:
+On Mon, Jul 15, 2019 at 01:16:48PM -0700, H.J. Lu wrote:
+> On Mon, Jul 15, 2019 at 3:35 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Mon, 15 Jul 2019, Thomas Gleixner wrote:
+> > > On Mon, 15 Jul 2019, Mike Lothian wrote:
+> > > > That build failure is from the current tip of Linus's tree
+> > > > If the fix is in, then it hasn't fixed the issue
+> > >
+> > > The reverted commit caused a build fail with gold as well. Let me stare at
+> > > your issue.
+> >
+> > So with gold the build fails in the reloc tool complaining about that
+> > relocation:
+> >
+> >   Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+> >
+> > The commit does:
+> >
+> > +extern char __end_of_kernel_reserve[];
+> > +
+> >
+> >  void __init setup_arch(char **cmdline_p)
+> >  {
+> > +       /*
+> > +        * Reserve the memory occupied by the kernel between _text and
+> > +        * __end_of_kernel_reserve symbols. Any kernel sections after the
+> > +        * __end_of_kernel_reserve symbol must be explicitly reserved with a
+> > +        * separate memblock_reserve() or they will be discarded.
+> > +        */
+> >         memblock_reserve(__pa_symbol(_text),
+> > -                        (unsigned long)__bss_stop - (unsigned long)_text);
+> > +                        (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
+> >
+> > So it replaces __bss_stop with __end_of_kernel_reserve here.
+> >
+> > --- a/arch/x86/kernel/vmlinux.lds.S
+> > +++ b/arch/x86/kernel/vmlinux.lds.S
+> > @@ -368,6 +368,14 @@ SECTIONS
+> >                 __bss_stop = .;
+> >         }
+> >
+> > +       /*
+> > +        * The memory occupied from _text to here, __end_of_kernel_reserve, is
+> > +        * automatically reserved in setup_arch(). Anything after here must be
+> > +        * explicitly reserved using memblock_reserve() or it will be discarded
+> > +        * and treated as available memory.
+> > +        */
+> > +       __end_of_kernel_reserve = .;
+> >
+> > And from the linker script __bss_stop and __end_of_kernel_reserve are
+> > exactly the same. From System.map (of a successful ld build):
+> >
+> > ffffffff82c00000 B __brk_base
+> > ffffffff82c00000 B __bss_stop
+> > ffffffff82c00000 B __end_bss_decrypted
+> > ffffffff82c00000 B __end_of_kernel_reserve
+> > ffffffff82c00000 B __start_bss_decrypted
+> > ffffffff82c00000 B __start_bss_decrypted_unused
+> >
+> > So how on earth can gold fail with that __end_of_kernel_reserve change?
+> >
+> > For some unknown reason it turns that relocation into an absolute
+> > one. That's clearly a gold bug^Wfeature and TBH, I'm more than concerned
+> > about that kind of behaviour.
+> >
+> > If we just revert that commit, then what do we achieve? We paper over the
+> > underlying problem, which is not really helping anything.
+> >
+> > Aside of that gold still fails to build the X32 VDSO and it does so for a
+> > very long time....
+> >
+> > Until we really understand what the problem is, this stays as is.
+> >
+> > @H.J.: Any insight on that?
+> >
 > 
-> 
-> On 23/07/19 4:14 PM, Marc Zyngier wrote:
->> Add the required support for the ESPI range, which behave exactly like
->> the SPIs of old, only with new funky INTIDs.
->>
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/irqchip/irq-gic-v3.c       | 85 ++++++++++++++++++++++++------
->>  include/linux/irqchip/arm-gic-v3.h | 17 +++++-
->>  2 files changed, 85 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
->> index 2371e0a70215..d328a8de533f 100644
->> --- a/drivers/irqchip/irq-gic-v3.c
->> +++ b/drivers/irqchip/irq-gic-v3.c
->> @@ -51,13 +51,16 @@ struct gic_chip_data {
->>  	u32			nr_redist_regions;
->>  	u64			flags;
->>  	bool			has_rss;
->> -	unsigned int		irq_nr;
->>  	struct partition_desc	*ppi_descs[16];
->>  };
->>  
->>  static struct gic_chip_data gic_data __read_mostly;
->>  static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
->>  
->> +#define GIC_ID_NR	(1U << GICD_TYPER_ID_BITS(gic_data.rdists.gicd_typer))
->> +#define GIC_LINE_NR	GICD_TYPER_SPIS(gic_data.rdists.gicd_typer)
->> +#define GIC_ESPI_NR	GICD_TYPER_ESPIS(gic_data.rdists.gicd_typer)
->> +
->>  /*
->>   * The behaviours of RPR and PMR registers differ depending on the value of
->>   * SCR_EL3.FIQ, and the behaviour of non-secure priority registers of the
->> @@ -100,6 +103,7 @@ static DEFINE_PER_CPU(bool, has_rss);
->>  enum gic_intid_range {
->>  	PPI_RANGE,
->>  	SPI_RANGE,
->> +	ESPI_RANGE,
->>  	LPI_RANGE,
->>  	__INVALID_RANGE__
->>  };
->> @@ -111,6 +115,8 @@ static enum gic_intid_range __get_intid_range(irq_hw_number_t hwirq)
->>  		return PPI_RANGE;
->>  	case 32 ... 1019:
->>  		return SPI_RANGE;
->> +	case ESPI_BASE_INTID ... 8191:
-> 
-> as per dt documentation, shouldn't the range be
-> 	case ESPI_BASE_INTID ... 5119:
+> Since building a workable kernel for different kernel configurations isn't a
+> requirement for gold, I don't recommend gold for kernel.
 
-Yes, you're right. Although I strongly suspect that someone will bump
-this limit up again at some point (there is enough space in the new
-register space for 4k interrupts -- madness).
+Um, it worked before this commit, and now it doesn't.  "Some" companies
+are using gold for linking the kernel today...
 
-> 
->> +		return ESPI_RANGE;
->>  	case 8192 ... GENMASK(23, 0):
->>  		return LPI_RANGE;
->>  	default:
->> @@ -141,6 +147,7 @@ static inline void __iomem *gic_dist_base(struct irq_data *d)
->>  		return gic_data_rdist_sgi_base();
->>  
->>  	case SPI_RANGE:
->> +	case ESPI_RANGE:
->>  		/* SPI -> dist_base */
->>  		return gic_data.dist_base;
->>  
->> @@ -234,6 +241,31 @@ static u32 convert_offset_index(struct irq_data *d, u32 offset, u32 *index)
->>  	case SPI_RANGE:
->>  		*index = d->hwirq;
->>  		return offset;
->> +	case ESPI_RANGE:
->> +		*index = d->hwirq - ESPI_BASE_INTID;
->> +		switch (offset) {
->> +		case GICD_ISENABLER:
->> +			return GICD_ISENABLERnE;
->> +		case GICD_ICENABLER:
->> +			return GICD_ICENABLERnE;
->> +		case GICD_ISPENDR:
->> +			return GICD_ISPENDRnE;
->> +		case GICD_ICPENDR:
->> +			return GICD_ICPENDRnE;
->> +		case GICD_ISACTIVER:
->> +			return GICD_ISACTIVERnE;
->> +		case GICD_ICACTIVER:
->> +			return GICD_ICACTIVERnE;
->> +		case GICD_IPRIORITYR:
->> +			return GICD_IPRIORITYRnE;
->> +		case GICD_ICFGR:
->> +			return GICD_ICFGRnE;
->> +		case GICD_IROUTER:
->> +			return GICD_IROUTERnE;
->> +		default:
->> +			break;
->> +		}
->> +		break;
->>  	default:
->>  		break;
->>  	}
->> @@ -316,7 +348,7 @@ static int gic_irq_set_irqchip_state(struct irq_data *d,
->>  {
->>  	u32 reg;
->>  
->> -	if (d->hwirq >= gic_data.irq_nr) /* PPI/SPI only */
->> +	if (d->hwirq >= 8192) /* PPI/SPI only */
->>  		return -EINVAL;
->>  
->>  	switch (which) {
->> @@ -343,7 +375,7 @@ static int gic_irq_set_irqchip_state(struct irq_data *d,
->>  static int gic_irq_get_irqchip_state(struct irq_data *d,
->>  				     enum irqchip_irq_state which, bool *val)
->>  {
->> -	if (d->hwirq >= gic_data.irq_nr) /* PPI/SPI only */
->> +	if (d->hwirq >= 8192) /* PPI/SPI only */
->>  		return -EINVAL;
->>  
->>  	switch (which) {
->> @@ -567,7 +599,12 @@ static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs
->>  		gic_arch_enable_irqs();
->>  	}
->>  
->> -	if (likely(irqnr > 15 && irqnr < 1020) || irqnr >= 8192) {
->> +	/* Check for special IDs first */
->> +	if ((irqnr >= 1020 && irqnr <= 1023))
->> +		return;
-> 
-> May be I am missing something here, what is special about these 4 interrupts? or
-> you meant to check for reserved range here?
+thanks,
 
-What's so special about the special INTID range is that these are not
-interrupts at all. That's how the GIC signals that *something else* is
-happening (see 2.2.1 "Special INTIDs" in the architecture spec). In
-practice, and as long as you run Linux in non-secure mode, only 1023 can
-happen.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
+greg k-h
