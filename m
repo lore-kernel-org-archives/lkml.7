@@ -2,94 +2,104 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26CDC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECE6C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15062253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6F62253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Or+FMFk9"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="0sQD7mu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392174AbfGWVnz (ORCPT
+        id S2392171AbfGWVqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:43:55 -0400
-Received: from mout.gmx.net ([212.227.15.15]:42447 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729131AbfGWVnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:43:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1563918227;
-        bh=n5+c+t7fbAX/WpckUnxzmiF3JNswIKT2Lwt/imiaxOE=;
-        h=X-UI-Sender-Class:Date:From:To:Subject;
-        b=Or+FMFk9q3sDs/od5FEs7Vmo+YbbXJrEdgyhKY0sYXa1nTLb6APRHC8hd/r0JqpZ1
-         T7c/YahBD4DpGChjrxSEqcssDb3NgdAGvI3tqKPx3UjZL3cnFoqfAvz76MwLHzjUFu
-         mqFzHjcFDWkrwY62Iu7+dml8DXom3Wm2o3TC5YJ0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530 ([87.191.208.243]) by mail.gmx.com (mrgmx002
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lhwgc-1iBZYH0kKY-00n9et; Tue, 23
- Jul 2019 23:43:47 +0200
-Date:   Tue, 23 Jul 2019 23:43:44 +0200
-From:   Helge Deller <deller@gmx.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
-Subject: [GIT PULL] parisc architecture fixes for kernel v5.3-rc2
-Message-ID: <20190723214344.GA30785@ls3530>
+        Tue, 23 Jul 2019 17:46:38 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52215 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727025AbfGWVqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 17:46:37 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NLkKR4252895
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 23 Jul 2019 14:46:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NLkKR4252895
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1563918381;
+        bh=UmnHuoPKJn7bSe4IZn9yAqGHKg6XhymatM+sgbIfMW0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=0sQD7mu5SB+IuKHYsGCMjet30SPL9KcvtCQtxZgGQTtc2bj3GDDb3pOS+BvJWLtex
+         /2qGehHzq8RiFz56YgL8ZHQ5PC1SOZkA7Nd0NEdN1h3VhW17PzL88Dn8MPrxTwKcW+
+         ItK75WOVfRhnWZc7jodEJoYDKEPXIf6+oCYFX5ULhXHyew+XuZHrF32Ps7zQV8NsQl
+         JyrMqhH4C2bl30AGnqnJG+fxTmdqSLUIcNnt/5itztxQI9cNR9md4dW4O1udGUeF8V
+         DfswajapZf8zc7FYeSzC59XRcoHBJ64bU3fqunLrhHX/ck6U5XCgoWNqNoDrMHky5i
+         mX254pjmhAiTw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NLkKgu252892;
+        Tue, 23 Jul 2019 14:46:20 -0700
+Date:   Tue, 23 Jul 2019 14:46:20 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-5f8eec3225ff7b86763b060164e9ce47b1a71406@git.kernel.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
+        tglx@linutronix.de, jolsa@kernel.org, ak@linux.intel.com,
+        hpa@zytor.com
+Reply-To: acme@redhat.com, tglx@linutronix.de, jolsa@kernel.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
+          ak@linux.intel.com
+In-Reply-To: <20190711181922.18765-1-andi@firstfloor.org>
+References: <20190711181922.18765-1-andi@firstfloor.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf script: Fix --max-blocks man page
+ description
+Git-Commit-ID: 5f8eec3225ff7b86763b060164e9ce47b1a71406
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Provags-ID: V03:K1:yKWTeekTt8mW3vPn+NuzxqgNNJFcy3Dg94bZfx0tECdORfQ5/ha
- NBE2wKgzfMHMaVTjWk4vBJPeZsFq9bSUbOFcBhK2AfQpVmjc2MnEkB7BBPngk9kdK2jbPhL
- h2X+xT9pRXoENd+uQuCdBeyg6CP9g9tsqpQ5TTTlY/2q9C/ztQTRankl7sgCCdACK9yjSkO
- ksDzhuOG3Dfs81PHJ0PwA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iD2Nj8GGyXM=:zUt2E4ns5OvNVhZjzq0hd+
- /yBJDGyL9HeQ2J6KqvvqUOFmNF1SqMU/3jMnMUZI8AoZUaBY0Jw9iZYRBe5ktz5lY4s5NNWRe
- Ve2wt9Bg0bGDIqHxyTvrGdOe+1P9fpT/TgH7jZQI2jeIspZo9NmGhrT8imP7MGk/ssIE366Op
- 9JMUFSnapkocv0axho8fic+R5jXP7Nm0SgVognrbUXvqYFhK/VJY0JTMatk1zVJ5DOWHk4uYz
- P5rivqfSm8xUhaHSma4uTnG7dCmGmCB6iw0nJFMSwS52LtaAQkcXaDg0PbYeS04nfsY0kWke0
- p2UbAu70fZ+8XYd91BYNbsT7XFOrdD30wWw0trCRfvEejdpsX87Exwvixfz6ecqO/ieR/Y/zL
- ZqLcPgwnmMNuN2EDr2ZBYRaIi3SmLyGyxQk/VhRcMGarTqy3eONkmSDvI14XEdobcmNimhjrF
- VpO5FyAAIN9f0J5sCFqJVuq+0g4r4X/+FRg/06SSocabLZA2zJYdgyGodOXV0JnqgxaVcolRp
- 4cSWcXCD3V8eIDqeN7caXWWMiC2+R3JkDPgeTpkTDiSa1iwjUJolYSFNXwkb+wJRh8Ipao3zX
- wHi01eugy1+jRN65bFxSfswgdoy1qsckphVKnZybGeNh0NQaQjDlqUN1ztvDWUMV+W1JWaMiW
- WbflL2+IvImd8FdJkrd2jEBlU6LIv/tC8Ue9CnQhPsDZuBKWGzogOZbjCYoQcc9UWTKBOVMdg
- 1dxQ/+eOhPLf6WyXUpsDsS8QX7/Ag4C3rpdUt8fGnjcbFV5BEnDWQZ+7efzglL/fywtFtK6iT
- Hedo+FbX/CTIbkZzMZBZw/7fm/FUTro/LC9Luq4C7QTrYP4CkfX7AKVqvsIIZxMIrcnXeLzmT
- hSPGhLoce3FWXi+7eR2y0s9UUxhzPrviCbLWZjVFuj8XgxHsGk2XhSKNjhwi7QyZjmQZV/bCd
- q6OtDXZAuqNU5qjaoxTRLdEczRxYRHfNH2wq3sXrmCyFzF4GuvcR4E+WJbHJYOEjZgmy2mxJD
- 6WaCx9iFWWq+pxSxH0bz0p4jSAx902Ce1wQp5qT/ozkhWDuq1650OmJINsM/OheumA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Commit-ID:  5f8eec3225ff7b86763b060164e9ce47b1a71406
+Gitweb:     https://git.kernel.org/tip/5f8eec3225ff7b86763b060164e9ce47b1a71406
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Thu, 11 Jul 2019 11:19:20 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 23 Jul 2019 08:57:54 -0300
 
-please pull two patches for the parisc architecture for kernel 5.3-rc2 from:
+perf script: Fix --max-blocks man page description
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.3-3
+The --max-blocks description was using the old name brstackasm.  Use
+brstackinsn instead.
 
-Changes:
-- Fix build issues when kprobes are enabled
-- Speed up ITLB/DTLB cache flushes when running on machines with combined TLBs
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190711181922.18765-1-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Documentation/perf-script.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Helge
-
-----------------------------------------------------------------
-Helge Deller (1):
-      parisc: Flush ITLB in flush_tlb_all_local() only on split TLB machines
-
-Sven Schnelle (1):
-      parisc: add kprobe_fault_handler()
-
- arch/parisc/include/asm/kprobes.h | 4 ++++
- arch/parisc/kernel/pacache.S      | 3 ++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index d4e2e18a5881..042b9e5dcc32 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -384,7 +384,7 @@ include::itrace.txt[]
+ 	perf script --time 0%-10%,30%-40%
+ 
+ --max-blocks::
+-	Set the maximum number of program blocks to print with brstackasm for
++	Set the maximum number of program blocks to print with brstackinsn for
+ 	each sample.
+ 
+ --reltime::
