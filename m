@@ -2,110 +2,148 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2F0C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E90C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B6E223A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6D9218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="t2sXYvg2";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="j0vPgDuj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="htnnr0+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390738AbfGWPO1 (ORCPT
+        id S2390784AbfGWPOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:14:27 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38866 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729004AbfGWPO1 (ORCPT
+        Tue, 23 Jul 2019 11:14:34 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43988 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729004AbfGWPOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:14:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id A8C8B8EE147;
-        Tue, 23 Jul 2019 08:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563894866;
-        bh=w7q5QNoBfsqpgw7GXu/6oW54dlngCPjMzC6fAoZt/Bs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=t2sXYvg2AcoJg19sebikgnWmsovJMQ2xg0q6uyzfwFKqu3LYgvcILcbZ7tgSehK1z
-         ZYo7LhAoHE4cbqadBcNGFJW6J8u2dq0DhUe9m5ww7t0zwjgp2Gi/ObVJp4E6ZXuLPK
-         UAwazd5xLlyfVzc7tjkkij3Z+aeDVpDd3m33Cqqo=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rfahQdfxX0zQ; Tue, 23 Jul 2019 08:14:25 -0700 (PDT)
-Received: from jarvis.lan (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 6274D8EE0EF;
-        Tue, 23 Jul 2019 08:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1563894864;
-        bh=w7q5QNoBfsqpgw7GXu/6oW54dlngCPjMzC6fAoZt/Bs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=j0vPgDujNCWgZRs4QVk4lgNq+IOhbdpTDTceLlR7BJA6soPPp93VBdCAoXMVUo2fj
-         a8TRyzDkakVHu76IjrPdOl5TBsZpTnO3QIgcQ4hzkjgVdcHdq9nQq5dUhj7F362TZt
-         SAJDfDdVuyLs+WD2e9yNsYEjxo+AGy6z5LJYvR2A=
-Message-ID: <1563894861.3609.6.camel@HansenPartnership.com>
-Subject: Re: Linux 5.3-rc1
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Guenter Roeck <linux@roeck-us.net>, Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>
-Date:   Tue, 23 Jul 2019 08:14:21 -0700
-In-Reply-To: <20190723145805.GA5809@roeck-us.net>
-References: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
-         <20190722222126.GA27291@roeck-us.net> <20190723054841.GA17148@lst.de>
-         <20190723145805.GA5809@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Jul 2019 11:14:31 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NFEFp5016166;
+        Tue, 23 Jul 2019 10:14:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563894855;
+        bh=R5v19pNEnEDaBQfuLB6eNOfYEHEZTYfqpkGujUAKksg=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=htnnr0+d/PbkcH83pzGMJlYuMy+5Sjqexfmk29m4oBugJhVVLlTRMyMN+AxgeWMs4
+         XFkEkk+oHCKUxrZSnpjthcFxwLO091Obx48UAAaFHiF6qmz1I57nUQ7ztYXPF2KXbX
+         SyCar1VGnynVEGV9jIfaIX39v3pEHtDczJjMz3RQ=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NFEFCG052141
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jul 2019 10:14:15 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Jul 2019 10:14:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Jul 2019 10:14:15 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NFEEA1094869;
+        Tue, 23 Jul 2019 10:14:14 -0500
+Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190509161109.10499-1-dmurphy@ti.com>
+ <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
+ <a8e3f2d3-18c3-3bdb-1318-8964afc7e032@ti.com>
+ <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
+ <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
+ <6fa79302-ad32-7f43-f9d5-af70aa789284@ti.com>
+ <f236a88a-485c-9002-1e4a-9a5ad0e1c81f@ti.com>
+Message-ID: <437b6371-8488-a0ff-fa68-d1fb5a81bb8b@ti.com>
+Date:   Tue, 23 Jul 2019 10:14:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <f236a88a-485c-9002-1e4a-9a5ad0e1c81f@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-23 at 07:58 -0700, Guenter Roeck wrote:
-> On Tue, Jul 23, 2019 at 07:48:41AM +0200, Christoph Hellwig wrote:
-> > The fix was sent last morning my time:
-> > 
-> > https://marc.info/?l=linux-scsi&m=156378725427719&w=2
-> 
-> Here is the updated bisect for the ppc scsi problem.
-> 
-> Guenter
-> 
-> ---
-> # bad: [f65420df914a85e33b2c8b1cab310858b2abb7c0] Merge tag 'scsi-
-> fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-> # good: [168c79971b4a7be7011e73bf488b740a8e1135c8] Merge tag 'kbuild-
-> v5.3-2' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild
-> git bisect start 'f65420df914a' '168c79971b4a'
-> # good: [106d45f350c7cac876844dc685845cba4ffdb70b] scsi: zfcp: fix
-> request object use-after-free in send path causing wrong traces
-> git bisect good 106d45f350c7cac876844dc685845cba4ffdb70b
-> # bad: [bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1] scsi: core: take
-> the DMA max mapping size into account
-> git bisect bad bdd17bdef7d8da4d8eee254abb4c92d8a566bdc1
-> # good: [0cdc58580b37a160fac4b884266b8b7cb096f539] scsi: sd_zbc: Fix
-> compilation warning
-> git bisect good 0cdc58580b37a160fac4b884266b8b7cb096f539
-> # bad: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi: core: add a
-> host / host template field for the virt boundary
-> git bisect bad 7ad388d8e4c703980b7018b938cdeec58832d78d
-> # good: [f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc] scsi: core: Fix
-> race on creating sense cache
-> git bisect good f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc
-> # first bad commit: [7ad388d8e4c703980b7018b938cdeec58832d78d] scsi:
-> core: add a host / host template field for the virt boundary
+Hello
 
-And reverting that commit fixes your problem?
+On 7/10/19 7:08 AM, Dan Murphy wrote:
+> Hello
+>
+> On 6/17/19 10:09 AM, Dan Murphy wrote:
+>> Marc
+>>
+>> On 6/10/19 11:35 AM, Dan Murphy wrote:
+>>> Bump
+>>>
+>>> On 6/6/19 8:16 AM, Dan Murphy wrote:
+>>>> Marc
+>>>>
+>>>> Bump
+>>>>
+>>>> On 5/31/19 6:51 AM, Dan Murphy wrote:
+>>>>> Marc
+>>>>>
+>>>>> On 5/15/19 3:54 PM, Dan Murphy wrote:
+>>>>>> Marc
+>>>>>>
+>>>>>> On 5/9/19 11:11 AM, Dan Murphy wrote:
+>>>>>>> Create a m_can platform framework that peripheral
+>>>>>>> devices can register to and use common code and register sets.
+>>>>>>> The peripheral devices may provide read/write and configuration
+>>>>>>> support of the IP.
+>>>>>>>
+>>>>>>> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
+>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>> v12 - Update the m_can_read/write functions to create a 
+>>>>>>> backtrace if the callback
+>>>>>>> pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
+>>>>>>>
+>>>>>> Is this able to be merged now?
+>>>>>
+>>>>> ping
+>>
+>> Wondering if there is anything else we need to do?
+>>
+>> The part has officially shipped and we had hoped to have driver 
+>> support in Linux as part of the announcement.
+>>
+> Is this being sent in a PR for 5.3?
+>
+> Dan
+>
+Adding Greg to this thread as I have no idea what is going on with 
+this.  This patch set has missed 2 merge windows and has
 
-James
+been ready since May.  Our customers are requesting status but we can 
+only point to the mail thread
 
+Here is the reference of the pinging I have done without reply
+
+https://lore.kernel.org/patchwork/patch/1071894/
+
+Dan
+
+
+>
+>> Dan
+>>
+>>
+>>>>>
+>>>>>
+>>>>>> Dan
+>>>>>>
+>>>>>> <snip>
