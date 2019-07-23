@@ -2,131 +2,112 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B66C7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29236C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C5221903
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1DF21903
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SvzV/uma"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioqX3pf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbfGWMo5 (ORCPT
+        id S1731771AbfGWMqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:44:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48406 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732327AbfGWMo5 (ORCPT
+        Tue, 23 Jul 2019 08:46:14 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39301 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727724AbfGWMqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:44:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=N9UdQqnOB55OuWBdAU8EUbiei4UyxqO1Nv88zjqQ7ak=; b=SvzV/umark6ZER0sswvLH8v85M
-        GNXtQ40xP8Ohm61V1o833snKpYrEn+CdmqNnTw9S+FSywW95mQNJUhTBnMmJH6TFf+MZi9CmDawdU
-        Uz7MfYP2QOsadFsPZJ0N54m7ObC625hd2wIlTq9l3Ps2aDEgQ2ycCBhebxkTvQcF0K66J8yg1MV0N
-        cZVeXLpsbt9kqJjKi1smAi0wtrwYSmEnpNdl4P/jZXxU+9Tnp9Mqsz5QBoCvI9qqwUKSy1rfhNUWr
-        s90Ek663/+R1xo3Z+KRs/SyPTvmD2jffFsaJD0ZvaozwJXgtQjahXzNyVEdtFpfroAQHFzSJtDRh2
-        YWHe+k8A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpu9w-0005Pw-Cs; Tue, 23 Jul 2019 12:44:48 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 89F9F201A942B; Tue, 23 Jul 2019 14:44:46 +0200 (CEST)
-Date:   Tue, 23 Jul 2019 14:44:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     mingo@redhat.com, tj@kernel.org, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        bristot@redhat.com, lizefan@huawei.com, longman@redhat.com,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH v2] sched/core: Fix cpu controller for !RT_GROUP_SCHED
-Message-ID: <20190723124446.GE3402@hirez.programming.kicks-ass.net>
-References: <20190719063455.27328-1-juri.lelli@redhat.com>
+        Tue, 23 Jul 2019 08:46:14 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so20611569pls.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AqD68kCeUjLnMnjMcDvk6An8PGKZbr6I3VjMH7CQavU=;
+        b=ioqX3pf2AXx4+ruf7u0grl5/sg5w01GEnvz5hinkDg93S923RNmBKgqlFYtXXDbB0i
+         uShMa1QoNj2Rl0KlhwyK5XFKu6fvKFmwl5fS0XaeNV4nQZItdxtC9GsPtab/yDZ0U5sE
+         bKaD1L0QdfUxUJMOrGkMIfgCGKR7dhfV/LBk61jEs6lFP+5NVd+6slpb5yuyf0Zu/JZl
+         r5og3oTOYf+T53l2JFTtXtgYeBN4giGTqKasFBQmX+/FwwQm2+2SQkOstqF8Db0eWx7V
+         IjwRFlHQu8TgY6oKO+lvCP57Re3pX/zCPFp1jOhVZyFSwfc4Ilq5lsZz6Yyyf56ZBWx1
+         6xhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AqD68kCeUjLnMnjMcDvk6An8PGKZbr6I3VjMH7CQavU=;
+        b=i/MD1AER0TZw9b/9KK+W1YCjk0N2GerZIsqGtRsDYQMDy1OSsEQfdCsMIiD5iIw8Ek
+         Ki1K0dAc9ldXKX8f3V/EoC+56F8LgfbwW5gHXu1xg0diZZm/IbICCs0vuvQ+mrjQCkSk
+         4Dio+6acAq92OuMkWpSuScX1pq0eSm/XjcK951JgfKTVhRj/Evf739hT4TOpNxB/PlaE
+         5pfWyENsmInDD6F711tAkaft32Y1Gi7+Ci5rnQdkPC5tqH16xWRNrGb2c8HF8iijZ8gV
+         EExkQDOIXc0OsCGC8jPi7U4MBaeukfLEeyyU8P/mdeiFnIH9Owx+nW07cbTuzKvYFsHz
+         VqOg==
+X-Gm-Message-State: APjAAAV677LRWjc3okSoCswyPZjtchrDJCd4V9hYAV1wZ08qCv7ElNa4
+        AmrTKCrCYibAC5JwpQ7MW5Q=
+X-Google-Smtp-Source: APXvYqyYoaqOvvayMf1QJzwsCxHgUGQSldq4g+XATVpQhRkgrl987jQ3qFZvjwCYRGvAQjXJNzCpdQ==
+X-Received: by 2002:a17:902:bd06:: with SMTP id p6mr82641670pls.189.1563885973897;
+        Tue, 23 Jul 2019 05:46:13 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id l26sm31702686pgb.90.2019.07.23.05.46.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 05:46:13 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Oded Gabbay <oded.gabbay@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] habanalabs: Use dev_get_drvdata
+Date:   Tue, 23 Jul 2019 20:46:08 +0800
+Message-Id: <20190723124608.24617-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190719063455.27328-1-juri.lelli@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 08:34:55AM +0200, Juri Lelli wrote:
-> On !CONFIG_RT_GROUP_SCHED configurations it is currently not possible to
-> move RT tasks between cgroups to which cpu controller has been attached;
-> but it is oddly possible to first move tasks around and then make them
-> RT (setschedule to FIFO/RR).
-> 
-> E.g.:
-> 
->   # mkdir /sys/fs/cgroup/cpu,cpuacct/group1
->   # chrt -fp 10 $$
->   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
->   bash: echo: write error: Invalid argument
->   # chrt -op 0 $$
->   # echo $$ > /sys/fs/cgroup/cpu,cpuacct/group1/tasks
->   # chrt -fp 10 $$
->   # cat /sys/fs/cgroup/cpu,cpuacct/group1/tasks
->   2345
->   2598
->   # chrt -p 2345
->   pid 2345's current scheduling policy: SCHED_FIFO
->   pid 2345's current scheduling priority: 10
-> 
-> Also, as Michal noted, it is currently not possible to enable cpu
-> controller on unified hierarchy with !CONFIG_RT_GROUP_SCHED (if there
-> are any kernel RT threads in root cgroup, they can't be migrated to the
-> newly created cpu controller's root in cgroup_update_dfl_csses()).
-> 
-> Existing code comes with a comment saying the "we don't support RT-tasks
-> being in separate groups". Such comment is however stale and belongs to
-> pre-RT_GROUP_SCHED times. Also, it doesn't make much sense for
-> !RT_GROUP_ SCHED configurations, since checks related to RT bandwidth
-> are not performed at all in these cases.
-> 
-> Make moving RT tasks between cpu controller groups viable by removing
-> special case check for RT (and DEADLINE) tasks.
+Instead of using to_pci_dev + pci_get_drvdata,
+use dev_get_drvdata to make code simpler.
 
-I have very vague memories of there being a matching test in
-sched_setscheduler(), but clearly that's no longer there.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Split v1 into different subsystems
 
-Thanks!
+ drivers/misc/habanalabs/habanalabs_drv.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-> Reviewed-by: Michal Koutný <mkoutny@suse.com>
-> Acked-by: Tejun Heo <tj@kernel.org>
-> ---
-> v1 -> v2: added comment about unified hierachy in changelog (Michal)
->           collected acks/reviews
-> ---
->  kernel/sched/core.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index fa43ce3962e7..be041dc7d313 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -6934,10 +6934,6 @@ static int cpu_cgroup_can_attach(struct cgroup_taskset *tset)
->  #ifdef CONFIG_RT_GROUP_SCHED
->  		if (!sched_rt_can_attach(css_tg(css), task))
->  			return -EINVAL;
-> -#else
-> -		/* We don't support RT-tasks being in separate groups */
-> -		if (task->sched_class != &fair_sched_class)
-> -			return -EINVAL;
->  #endif
->  		/*
->  		 * Serialize against wake_up_new_task() such that if its
-> -- 
-> 2.17.2
-> 
+diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
+index 6f6dbe93f1df..678f61646ca9 100644
+--- a/drivers/misc/habanalabs/habanalabs_drv.c
++++ b/drivers/misc/habanalabs/habanalabs_drv.c
+@@ -295,8 +295,7 @@ void destroy_hdev(struct hl_device *hdev)
+ 
+ static int hl_pmops_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct hl_device *hdev = pci_get_drvdata(pdev);
++	struct hl_device *hdev = dev_get_drvdata(dev);
+ 
+ 	pr_debug("Going to suspend PCI device\n");
+ 
+@@ -310,8 +309,7 @@ static int hl_pmops_suspend(struct device *dev)
+ 
+ static int hl_pmops_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct hl_device *hdev = pci_get_drvdata(pdev);
++	struct hl_device *hdev = dev_get_drvdata(dev);
+ 
+ 	pr_debug("Going to resume PCI device\n");
+ 
+-- 
+2.20.1
+
