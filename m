@@ -4,40 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF6DC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD301C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D8121926
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91390229EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392457AbfGWWTY (ORCPT
+        id S2392479AbfGWWTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:19:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:60776 "EHLO foss.arm.com"
+        Tue, 23 Jul 2019 18:19:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:60790 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392434AbfGWWTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:19:21 -0400
+        id S2392422AbfGWWTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 18:19:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E61F1684;
-        Tue, 23 Jul 2019 15:19:20 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2993D1688;
+        Tue, 23 Jul 2019 15:19:22 -0700 (PDT)
 Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C7DCB3F694;
-        Tue, 23 Jul 2019 15:19:18 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 923613F694;
+        Tue, 23 Jul 2019 15:19:20 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Subject: [PATCH v3 5/7] drivers: Introduce device lookup variants by ACPI_COMPANION device
-Date:   Tue, 23 Jul 2019 23:18:36 +0100
-Message-Id: <20190723221838.12024-6-suzuki.poulose@arm.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Elie Morisse <syniurge@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Nehal Shah <nehal-bakulchandra.shah@amd.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Shyam Sundar S K <shyam-sundar.s-k@amd.com>
+Subject: [PATCH v3 6/7] drivers: Add generic helper to match any device
+Date:   Tue, 23 Jul 2019 23:18:37 +0100
+Message-Id: <20190723221838.12024-7-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190723221838.12024-1-suzuki.poulose@arm.com>
 References: <20190723221838.12024-1-suzuki.poulose@arm.com>
@@ -48,197 +50,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a generic helper to match a device by the ACPI_COMPANION device
-and provide wrappers for the device lookup APIs.
+Add a generic helper to match any/all devices. Using this
+introduce new wrappers {bus/driver/class}_find_next_device().
 
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-spi@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Elie Morisse <syniurge@gmail.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Nehal Shah <nehal-bakulchandra.shah@amd.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Shyam Sundar S K <shyam-sundar.s-k@amd.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/base/core.c         |  6 ++++
- drivers/i2c/i2c-core-acpi.c | 11 ++-----
- drivers/spi/spi.c           |  8 +----
- include/linux/device.h      | 65 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 74 insertions(+), 16 deletions(-)
+ drivers/base/core.c                  |  6 ++++++
+ drivers/i2c/busses/i2c-amd-mp2-pci.c |  8 +-------
+ drivers/pci/probe.c                  |  7 +------
+ drivers/s390/cio/ccwgroup.c          |  8 +-------
+ drivers/scsi/scsi_proc.c             |  9 ++-------
+ include/linux/device.h               | 17 +++++++++++++++++
+ 6 files changed, 28 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 3abc32b60c0a..57d71bc2c559 100644
+index 57d71bc2c559..e22e29b3dc97 100644
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -3373,3 +3373,9 @@ int device_match_devt(struct device *dev, const void *pdevt)
- 	return dev->devt == *(dev_t *)pdevt;
+@@ -3379,3 +3379,9 @@ int device_match_acpi_dev(struct device *dev, const void *adev)
+ 	return ACPI_COMPANION(dev) == adev;
  }
- EXPORT_SYMBOL_GPL(device_match_devt);
+ EXPORT_SYMBOL(device_match_acpi_dev);
 +
-+int device_match_acpi_dev(struct device *dev, const void *adev)
++int device_match_any(struct device *dev, const void *unused)
 +{
-+	return ACPI_COMPANION(dev) == adev;
++	return 1;
 +}
-+EXPORT_SYMBOL(device_match_acpi_dev);
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 4dbbc9a35f65..bc80aafb521f 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -354,17 +354,11 @@ static int i2c_acpi_find_match_adapter(struct device *dev, const void *data)
- 	return ACPI_HANDLE(dev) == (acpi_handle)data;
- }
++EXPORT_SYMBOL_GPL(device_match_any);
+diff --git a/drivers/i2c/busses/i2c-amd-mp2-pci.c b/drivers/i2c/busses/i2c-amd-mp2-pci.c
+index c7fe3b44a860..5e4800d72e00 100644
+--- a/drivers/i2c/busses/i2c-amd-mp2-pci.c
++++ b/drivers/i2c/busses/i2c-amd-mp2-pci.c
+@@ -457,18 +457,12 @@ static struct pci_driver amd_mp2_pci_driver = {
+ };
+ module_pci_driver(amd_mp2_pci_driver);
  
--static int i2c_acpi_find_match_device(struct device *dev, const void *data)
+-static int amd_mp2_device_match(struct device *dev, const void *data)
 -{
--	return ACPI_COMPANION(dev) == data;
--}
- 
- struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
- {
--	struct device *dev;
-+	struct device *dev = bus_find_device_by_acpi_dev(&i2c_bus_type, handle);
- 
--	dev = bus_find_device(&i2c_bus_type, NULL, handle,
--			      i2c_acpi_find_match_adapter);
- 	return dev ? i2c_verify_adapter(dev) : NULL;
- }
- EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_by_handle);
-@@ -373,8 +367,7 @@ static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
- {
- 	struct device *dev;
- 
--	dev = bus_find_device(&i2c_bus_type, NULL, adev,
--			      i2c_acpi_find_match_device);
-+	dev = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
- 	return dev ? i2c_verify_client(dev) : NULL;
- }
- 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index a591da87981a..c486a6f84c2c 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3741,11 +3741,6 @@ static int spi_acpi_controller_match(struct device *dev, const void *data)
- 	return ACPI_COMPANION(dev->parent) == data;
- }
- 
--static int spi_acpi_device_match(struct device *dev, const void *data)
--{
--	return ACPI_COMPANION(dev) == data;
+-	return 1;
 -}
 -
- static struct spi_controller *acpi_spi_find_controller_by_adev(struct acpi_device *adev)
+ struct amd_mp2_dev *amd_mp2_find_device(void)
  {
  	struct device *dev;
-@@ -3765,8 +3760,7 @@ static struct spi_device *acpi_spi_find_device_by_adev(struct acpi_device *adev)
- {
- 	struct device *dev;
+ 	struct pci_dev *pci_dev;
  
--	dev = bus_find_device(&spi_bus_type, NULL, adev, spi_acpi_device_match);
--
-+	dev = bus_find_device_by_acpi_dev(&spi_bus_type, adev);
- 	return dev ? to_spi_device(dev) : NULL;
+-	dev = driver_find_device(&amd_mp2_pci_driver.driver, NULL, NULL,
+-				 amd_mp2_device_match);
++	dev = driver_find_next_device(&amd_mp2_pci_driver.driver, NULL);
+ 	if (!dev)
+ 		return NULL;
+ 
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index a3c7338fad86..dbeeb385fb9f 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -64,11 +64,6 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
+ 	return &r->res;
  }
  
+-static int find_anything(struct device *dev, const void *data)
+-{
+-	return 1;
+-}
+-
+ /*
+  * Some device drivers need know if PCI is initiated.
+  * Basically, we think PCI is not initiated when there
+@@ -79,7 +74,7 @@ int no_pci_devices(void)
+ 	struct device *dev;
+ 	int no_devices;
+ 
+-	dev = bus_find_device(&pci_bus_type, NULL, NULL, find_anything);
++	dev = bus_find_next_device(&pci_bus_type, NULL);
+ 	no_devices = (dev == NULL);
+ 	put_device(dev);
+ 	return no_devices;
+diff --git a/drivers/s390/cio/ccwgroup.c b/drivers/s390/cio/ccwgroup.c
+index d843e362c167..0005ec9285aa 100644
+--- a/drivers/s390/cio/ccwgroup.c
++++ b/drivers/s390/cio/ccwgroup.c
+@@ -581,11 +581,6 @@ int ccwgroup_driver_register(struct ccwgroup_driver *cdriver)
+ }
+ EXPORT_SYMBOL(ccwgroup_driver_register);
+ 
+-static int __ccwgroup_match_all(struct device *dev, const void *data)
+-{
+-	return 1;
+-}
+-
+ /**
+  * ccwgroup_driver_unregister() - deregister a ccw group driver
+  * @cdriver: driver to be deregistered
+@@ -597,8 +592,7 @@ void ccwgroup_driver_unregister(struct ccwgroup_driver *cdriver)
+ 	struct device *dev;
+ 
+ 	/* We don't want ccwgroup devices to live longer than their driver. */
+-	while ((dev = driver_find_device(&cdriver->driver, NULL, NULL,
+-					 __ccwgroup_match_all))) {
++	while ((dev = driver_find_next_device(&cdriver->driver, NULL))) {
+ 		struct ccwgroup_device *gdev = to_ccwgroupdev(dev);
+ 
+ 		ccwgroup_ungroup(gdev);
+diff --git a/drivers/scsi/scsi_proc.c b/drivers/scsi/scsi_proc.c
+index c074631086a4..5b313226f11c 100644
+--- a/drivers/scsi/scsi_proc.c
++++ b/drivers/scsi/scsi_proc.c
+@@ -372,15 +372,10 @@ static ssize_t proc_scsi_write(struct file *file, const char __user *buf,
+ 	return err;
+ }
+ 
+-static int always_match(struct device *dev, const void *data)
+-{
+-	return 1;
+-}
+-
+ static inline struct device *next_scsi_device(struct device *start)
+ {
+-	struct device *next = bus_find_device(&scsi_bus_type, start, NULL,
+-					      always_match);
++	struct device *next = bus_find_next_device(&scsi_bus_type, start);
++
+ 	put_device(start);
+ 	return next;
+ }
 diff --git a/include/linux/device.h b/include/linux/device.h
-index 93b2f55ef44e..7514ef3d3f1a 100644
+index 7514ef3d3f1a..8ae3f4b47293 100644
 --- a/include/linux/device.h
 +++ b/include/linux/device.h
-@@ -168,6 +168,7 @@ int device_match_name(struct device *dev, const void *name);
- int device_match_of_node(struct device *dev, const void *np);
+@@ -169,6 +169,7 @@ int device_match_of_node(struct device *dev, const void *np);
  int device_match_fwnode(struct device *dev, const void *fwnode);
  int device_match_devt(struct device *dev, const void *pdevt);
-+int device_match_acpi_dev(struct device *dev, const void *adev);
+ int device_match_acpi_dev(struct device *dev, const void *adev);
++int device_match_any(struct device *dev, const void *unused);
  
  int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
  		     int (*fn)(struct device *dev, void *data));
-@@ -224,6 +225,28 @@ static inline struct device *bus_find_device_by_devt(struct bus_type *bus,
+@@ -225,6 +226,16 @@ static inline struct device *bus_find_device_by_devt(struct bus_type *bus,
  	return bus_find_device(bus, NULL, &devt, device_match_devt);
  }
  
-+#ifdef CONFIG_ACPI
-+struct acpi_device;
-+
 +/**
-+ * bus_find_device_by_acpi_dev : device iterator for locating a particular device
-+ * matching the ACPI COMPANION device.
-+ * @bus: bus type
-+ * @adev: ACPI COMPANION device to match.
++ * bus_find_next_device - Find the next device after a given device in a
++ * given bus.
 + */
 +static inline struct device *
-+bus_find_device_by_acpi_dev(struct bus_type *bus, const struct acpi_device *adev)
++bus_find_next_device(struct bus_type *bus,struct device *cur)
 +{
-+	return bus_find_device(bus, NULL, adev, device_match_acpi_dev);
++	return bus_find_device(bus, cur, NULL, device_match_any);
 +}
-+#else
-+static inline struct device *
-+bus_find_device_by_acpi_dev(struct bus_type *bus, const void *adev)
-+{
-+	return NULL;
-+}
-+#endif
 +
- struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
- 					struct device *hint);
- int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
-@@ -442,6 +465,27 @@ static inline struct device *driver_find_device_by_devt(struct device_driver *dr
+ #ifdef CONFIG_ACPI
+ struct acpi_device;
+ 
+@@ -465,6 +476,12 @@ static inline struct device *driver_find_device_by_devt(struct device_driver *dr
  	return driver_find_device(drv, NULL, &devt, device_match_devt);
  }
  
-+#ifdef CONFIG_ACPI
-+/**
-+ * driver_find_device_by_acpi_dev : device iterator for locating a particular
-+ * device matching the ACPI_COMPANION device.
-+ * @driver: the driver we're iterating
-+ * @adev: ACPI_COMPANION device to match.
-+ */
-+static inline struct device *
-+driver_find_device_by_acpi_dev(struct device_driver *drv,
-+			       const struct acpi_device *adev)
++static inline struct device *driver_find_next_device(struct device_driver *drv,
++						     struct device *start)
 +{
-+	return driver_find_device(drv, NULL, adev, device_match_acpi_dev);
++	return driver_find_device(drv, start, NULL, device_match_any);
 +}
-+#else
-+static inline struct device *
-+driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
-+{
-+	return NULL;
-+}
-+#endif
 +
- void driver_deferred_probe_add(struct device *dev);
- int driver_deferred_probe_check_state(struct device *dev);
- int driver_deferred_probe_check_state_continue(struct device *dev);
-@@ -620,6 +664,27 @@ static inline struct device *class_find_device_by_devt(struct class *class,
- 	return class_find_device(class, NULL, &devt, device_match_devt);
- }
- 
-+#ifdef CONFIG_ACPI
-+struct acpi_device;
-+/**
-+ * class_find_device_by_acpi_dev : device iterator for locating a particular
-+ * device matching the ACPI_COMPANION device.
-+ * @class: class type
-+ * @adev: ACPI_COMPANION device to match.
-+ */
-+static inline struct device *
-+class_find_device_by_acpi_dev(struct class *class, const struct acpi_device *adev)
-+{
-+	return class_find_device(class, NULL, adev, device_match_acpi_dev);
-+}
-+#else
-+static inline struct device *
-+class_find_device_by_acpi_dev(struct class *class, const void *adev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- struct class_attribute {
- 	struct attribute attr;
- 	ssize_t (*show)(struct class *class, struct class_attribute *attr,
+ #ifdef CONFIG_ACPI
+ /**
+  * driver_find_device_by_acpi_dev : device iterator for locating a particular
 -- 
 2.21.0
 
