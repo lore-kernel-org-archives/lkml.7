@@ -2,147 +2,130 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FB4C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3457CC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFE821842
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6B121842
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:39:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UotmLHtj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="usbj8W35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732952AbfGWHi0 (ORCPT
+        id S2388477AbfGWHjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:38:26 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39795 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731630AbfGWHiZ (ORCPT
+        Tue, 23 Jul 2019 03:39:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34630 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732967AbfGWHjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:38:25 -0400
-Received: by mail-ed1-f66.google.com with SMTP id m10so42874417edv.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:38:24 -0700 (PDT)
+        Tue, 23 Jul 2019 03:39:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id k8so79841109iot.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7B0kZX39j3W386MkiBK5UtIQjJKLhUJXGNvhcv6FvJM=;
-        b=UotmLHtjCylIkscSMrotfIX1/Li5qjbBU2wYwaOu2++8uyWsR2wviLhrtbk9D81NUV
-         qfa1fZFnhwaoyKSsCHzf2q6gHNnlF2Q9F6c8BH4WjbNV5Ijw7ivhNnyrmBrOWELPOkXL
-         67diRvPht3Ri71Ku1n1tB/k+cTWzW/xAZUqiw=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tM6ZfP29yHIXHkq5iTMeXQ4AjIL/XiZWUkv0a/I2jO4=;
+        b=usbj8W35wjkWL0ZjAlNlOpJnA68U6AiUa2rQqc18HYqg/292MErMPXrVu08j64WLeQ
+         0w/jTSSPy0WoIa1kquvmlS805CgCn/VEtUT7IrJmyzU18EllsyifJC7GjO7DcfmHvBvR
+         1lyf1QQErv083xXVI6aqrUjw1695bMtzgRStNHuET/KnHMiXJnskh/TmNxT6IawrQ+EA
+         TvKJRpwMnvXZIcBT5iMCnNwriaUgwmZ36nWR+ZeyE3vz2HWijcT5QBjh0ZbBFjG2YQqK
+         UQW35jMAn/z+QawL1iqDcnfIDVcdW9nW1bK0w8F4SG8Eq6M2KAJD+fHb+ywbhzEI/nMR
+         8nYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=7B0kZX39j3W386MkiBK5UtIQjJKLhUJXGNvhcv6FvJM=;
-        b=QEK5hyEhr/3oxvFF+afrvUBzuv+K9q/vsBBRBb3Jei2Ij0ECg7PpmA+vcpzxj5MVvD
-         7oQX4Ibs74qNgCYSP+Qlgx0b5Yijz1yLjL0mRmIfCbhWvXF4sWV0JQwuP0yizeX9oC9g
-         xUeXcghFIjJ6cLHpAa9BBO93zCYFQwJy/IF/PNULWHu5EJlKTv8Gh3LJlzJHb8QPC9HF
-         VLMc+n1eS0/VzvPI6kZ6Yg0jfq4K8rmm4SpMRJ8+pdD1NkEyC0ZiZmIV0gPCzuI+AExp
-         TGrk7DFfZmuGocIPI4sDgYwvBtwGTMeX0Wtk7lSg0G2P46Nb0l3SLsT+7YKPzhi4VpBV
-         iIYg==
-X-Gm-Message-State: APjAAAWkteeMVvTz/ramIbnYs70N/TbkRg07ndHZcSqVq/ymc1vTQHDv
-        9/6NPSMJv5qdh/NlKKnRQ6Q=
-X-Google-Smtp-Source: APXvYqwF4gFYfyab0NSDDcoxUf0q4mq+1/ft/cvJV0XQFBad+3aIdLa/PEUi1UMzB5ntGyuBECBlJw==
-X-Received: by 2002:a50:fa05:: with SMTP id b5mr63382580edq.269.1563867503924;
-        Tue, 23 Jul 2019 00:38:23 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id q50sm12035831edd.91.2019.07.23.00.38.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 00:38:22 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 09:38:20 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jens Remus <jremus@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Martin Hostettler <textshell@uchuujin.de>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH] vt: Grab console_lock around con_is_bound in show_bind
-Message-ID: <20190723073820.GU15868@phenom.ffwll.local>
-Mail-Followup-To: Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Jens Remus <jremus@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Martin Hostettler <textshell@uchuujin.de>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tM6ZfP29yHIXHkq5iTMeXQ4AjIL/XiZWUkv0a/I2jO4=;
+        b=CHyN/ITv0jbrfXQUAn28ldSMOzcV2RtmtT8qSdbDqiyLc80/wTJXcTK/r0x2aYGbAq
+         L8VMbtsMHfOANSrPUl7wbYnxAPd+CDMUaEm+TtXvQ4Pp49sT+sFR+eSMpgeSRXXJ6jVd
+         L3C23DwWhdjjOreNskE0SGPZgmF8rbwUUocqJ/nKfci7xHgiA2XW4fnd8Ykqs1VD5n3N
+         ue+0mrltDwIjTV+zbFQGEeHOT+WgYPoHNnwnPXfGD3UiU90dCxR42ND7FkUPcsaGZkLZ
+         Ms3buIKELJgaKzpK5N++SofEaak7A1rXDKca8zBezknKK46mkUCWakWHkAJofG3LM3Bl
+         rNrw==
+X-Gm-Message-State: APjAAAVQGs63AJIXCmuzQYKSKvKvsPHtoVWHAqW9P2qYr+WAasnfdS7z
+        bl4a992o3ZdWSkRVWharenDv5uqCaH7gxEnVQJ316g==
+X-Google-Smtp-Source: APXvYqxknPLPiOAbuB7jqVAi6mu/Fl77yhGj6yGal1fmI4tdBfWn6NaR9DX5QN1Ija5E6QkqejVNYiWatG5/H9GGpW4=
+X-Received: by 2002:a5e:de0d:: with SMTP id e13mr45601420iok.144.1563867546989;
+ Tue, 23 Jul 2019 00:39:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000001a51c4058ddcb1b6@google.com>
+In-Reply-To: <0000000000001a51c4058ddcb1b6@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 23 Jul 2019 09:38:56 +0200
+Message-ID: <CACT4Y+ZGwKP+f4esJdx60AywO9b3Y5Bxb4zLtH6EEkaHpP6Zag@mail.gmail.com>
+Subject: Re: kernel panic: stack is corrupted in pointer
+To:     syzbot <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        bpf <bpf@vger.kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, alexander.deucher@amd.com,
+        amd-gfx@lists.freedesktop.org, Alexei Starovoitov <ast@kernel.org>,
+        christian.koenig@amd.com, Daniel Borkmann <daniel@iogearbox.net>,
+        david1.zhou@amd.com, DRI <dri-devel@lists.freedesktop.org>,
+        leo.liu@amd.com, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Wed, Jul 17, 2019 at 10:58 AM syzbot
+<syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    1438cde7 Add linux-next specific files for 20190716
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13988058600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+> dashboard link: https://syzkaller.appspot.com/bug?extid=79f5f028005a77ecb6bb
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111fc8afa00000
 
-Do you plan to pick this up in your console/vt/whatever-fixes branch?
-There's no reason for me to route this through drm-fixes.
--Daniel
+From the repro it looks like the same bpf stack overflow bug. +John
+We need to dup them onto some canonical report for this bug, or this
+becomes unmanageable.
 
-On Thu, Jul 18, 2019 at 10:09:03AM +0200, Daniel Vetter wrote:
-> Not really harmful not to, but also not harm in grabbing the lock. And
-> this shuts up a new WARNING I introduced in commit ddde3c18b700 ("vt:
-> More locking checks").
-> 
-> Reported-by: Jens Remus <jremus@linux.ibm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> Cc: Martin Hostettler <textshell@uchuujin.de>
-> Cc: Adam Borowski <kilobyte@angband.pl>
-> Cc: Mikulas Patocka <mpatocka@redhat.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
+#syz dup: kernel panic: corrupted stack end in dput
+
+> The bug was bisected to:
+>
+> commit 96a5d8d4915f3e241ebb48d5decdd110ab9c7dcf
+> Author: Leo Liu <leo.liu@amd.com>
+> Date:   Fri Jul 13 15:26:28 2018 +0000
+>
+>      drm/amdgpu: Make sure IB tests flushed after IP resume
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a46200600000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=16a46200600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12a46200600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com
+> Fixes: 96a5d8d4915f ("drm/amdgpu: Make sure IB tests flushed after IP
+> resume")
+>
+> Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
+> pointer+0x702/0x750 lib/vsprintf.c:2187
+> Shutting down cpus with NMI
+> Kernel Offset: disabled
+>
+>
 > ---
->  drivers/tty/vt/vt.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index ec92f36ab5c4..34aa39d1aed9 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -3771,7 +3771,11 @@ static ssize_t show_bind(struct device *dev, struct device_attribute *attr,
->  			 char *buf)
->  {
->  	struct con_driver *con = dev_get_drvdata(dev);
-> -	int bind = con_is_bound(con->con);
-> +	int bind;
-> +
-> +	console_lock();
-> +	bind = con_is_bound(con->con);
-> +	console_unlock();
->  
->  	return snprintf(buf, PAGE_SIZE, "%i\n", bind);
->  }
-> -- 
-> 2.20.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
