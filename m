@@ -2,129 +2,131 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02382C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC640C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB27229EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54772084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDPrieZ6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iTCMzgyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfGWUKI (ORCPT
+        id S1730669AbfGWULN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:10:08 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38196 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbfGWUKH (ORCPT
+        Tue, 23 Jul 2019 16:11:13 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46489 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbfGWULN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:10:07 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so10299939edo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:10:07 -0700 (PDT)
+        Tue, 23 Jul 2019 16:11:13 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so21000105plz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tUGsIMqs+SNwG7Wa9YryBNQpEKIGP6cwaQO1e+qGdxc=;
-        b=UDPrieZ62DZ2mz2+GrBJZ4KAevDIjPajIqVhkjl2OjmbVFtwXQggxYhH/QuuJAvk35
-         1T6VBw9/33sOIL8raiWYoSMHWLIko/lgbzkxEZPp9dZ4Xn0O3GitxItv4t5EeELcg3tY
-         V07jYxMBs4xXkAKNMyzbedqrCkl1yYzHG+0W2sfZIK7dKnDXnurviMo/kO+47YSr/t3p
-         8LLJpiV1smiHKIiCDXDYCNc8IBPKlmCd1dGasujo7jS02GhqaVxBKFTurNAKtZiC7Rd4
-         SHGu7j6p/OvE0lU1fUJFFIyKieaxXKU98sxS/cdL0mE+7/uyW5G6zWVvZKRdwXbKIWwl
-         GK3Q==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=QbT9jGu1lmx3/9h3LW15ROrOwQXxSF86nPLyM5BLkII=;
+        b=iTCMzgyFfG0OP9uRHM4PgqYmeTY0g0hC424bokI7JNfKuRDiJzS2wLzjLh0EP8I2L2
+         +HYLetQYiXmSxCGmJMqTzMS30qc2pCkBxCE/upXFcENcoBdrMBIIBK89qB1STSVOC3C/
+         MglHaKb+TPOMn6k5Rd/kcCj11LmsZAUzfaMm8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tUGsIMqs+SNwG7Wa9YryBNQpEKIGP6cwaQO1e+qGdxc=;
-        b=GAF/9n7RK67HF9kTr9aiWs7vib9vZ4VREL8432HNM/43JS64WLtjnPm54be7aQFYGL
-         F9Rm/Qv7FdV/dsn7oKKx/LaNufdNPp40RnGiZnTYqPUvxSA1mpjEJZB7WvjKjfcZ1b74
-         BekdYxagGS1CVo8DJOlVl9mPVCikszqIp0BG+X0utCuAJvUtUpxNj/r8mvnJPOxgaSZQ
-         1GaCpGFKjl1DcI72aDdn0atx0iHs4jFQq09lSVXtEWyKMmj9T1dXvomIiFaTmHIDBQhX
-         AmZvv8Lb+DtBblSBOVTFgZr0+zO95Nikc9/yfSfNCf8J8+wBrQR1daaAH60FF8jN21N4
-         pgfA==
-X-Gm-Message-State: APjAAAWqG6m0Lxlte00H1lfZiJokzvZ4qlSqwxwhxwCx6YCWyTWNhxvx
-        uwIaIyjohliONu9gxWBHV5XocXsdLmeZHzzENqY=
-X-Google-Smtp-Source: APXvYqwhuDJQWXBFchqde9MjHuP6u9IF20GvxtLPj5ajprHQwMd007jx38zaufMthkY298kJ81UMcN1e0xvJwExaeSk=
-X-Received: by 2002:a17:906:f85:: with SMTP id q5mr60616455ejj.192.1563912606283;
- Tue, 23 Jul 2019 13:10:06 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=QbT9jGu1lmx3/9h3LW15ROrOwQXxSF86nPLyM5BLkII=;
+        b=PgQOtVyiH5ELOwd2o3ZOsOxD1BobefVgSlBoumRCLbmfb6Dw8aCYEngnoA4+6gGpBi
+         iqvPQJ5EbpYWrpybWZdBfUacncoz3SlUK3uK/ucxvc1kXTD/h7Uhs9pM8Lu2ePfB8DGc
+         3UvQ/K9UBHk9pp+3/Iuh1Ae7NHmgCYQRmwd2en32Kdniym/ZkdO2XDtU1spG04qzyhVt
+         cmKYVtBdPiB3N276xDh215gvrJB42WoR42k5HT9LtVmuZmAWjPqQ0HcT78fRfQtCZdz+
+         9CnHhutDSSLF7cgI5lqC1LSJMNGASvOjuhFwrEMGj9gwab8rxF4SQHyKk9VdWVzgxOlQ
+         vNiw==
+X-Gm-Message-State: APjAAAVhbNwpEKJAIOhODk4bVKR4ZQOJ/qzmMX+LziX3F3z7ZV5jfXI/
+        vygmMmI+QbnZCXCuDCYNb4+osA==
+X-Google-Smtp-Source: APXvYqyUHxwi4zszpvLpkepttGZ93I6RHVvOvH/ZmJ63coG/n6yxOGvC7vHRakTYhBSKWoTO8G414w==
+X-Received: by 2002:a17:902:e282:: with SMTP id cf2mr83244845plb.301.1563912672555;
+        Tue, 23 Jul 2019 13:11:12 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b136sm51971272pfb.73.2019.07.23.13.11.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 13:11:11 -0700 (PDT)
+Message-ID: <5d3769df.1c69fb81.55d03.aa33@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-3-john.stultz@linaro.org> <20190718100654.GA19666@infradead.org>
- <CALAqxLX1s4mbitE-_1s1vFPJrbrCKqpyhYoFW0V6hMEqE=eKVw@mail.gmail.com>
-In-Reply-To: <CALAqxLX1s4mbitE-_1s1vFPJrbrCKqpyhYoFW0V6hMEqE=eKVw@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 23 Jul 2019 13:09:55 -0700
-Message-ID: <CAF6AEGuM1+pimGNhyKHbYR0BdH=hH+Sai0es8RjGHE9jKHjngw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] dma-buf: heaps: Add heap helpers
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190722215340.3071-2-ilina@codeaurora.org>
+References: <20190722215340.3071-1-ilina@codeaurora.org> <20190722215340.3071-2-ilina@codeaurora.org>
+Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the interrupt handler
+To:     Lina Iyer <ilina@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        mkshah@codeaurora.org, Lina Iyer <ilina@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 23 Jul 2019 13:11:10 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 9:09 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Thu, Jul 18, 2019 at 3:06 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > Is there any exlusion between mmap / vmap and the device accessing
-> > the data?  Without that you are going to run into a lot of coherency
-> > problems.
+Quoting Lina Iyer (2019-07-22 14:53:38)
+> Avoid locking in the interrupt context to improve latency. Since we
+> don't lock in the interrupt context, it is possible that we now could
+> race with the DRV_CONTROL register that writes the enable register and
+> cleared by the interrupt handler. For fire-n-forget requests, the
+> interrupt may be raised as soon as the TCS is triggered and the IRQ
+> handler may clear the enable bit before the DRV_CONTROL is read back.
+>=20
+> Use the non-sync variant when enabling the TCS register to avoid reading
+> back a value that may been cleared because the interrupt handler ran
+> immediately after triggering the TCS.
+>=20
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
 
-dma_fence is basically the way to handle exclusion between different
-device access (since device access tends to be asynchronous).  For
-device<->device access, each driver is expected to take care of any
-cache(s) that the device might have.  (Ie. device writing to buffer
-should flush it's caches if needed before signalling fence to let
-reading device know that it is safe to read, etc.)
+I have to read this patch carefully. The commit text isn't convincing me
+that it is actually safe to make this change. It mostly talks about the
+performance improvements and how we need to fix __tcs_trigger(), which
+is good, but I was hoping to be convinced that not grabbing the lock
+here is safe.=20
 
-_begin/end_cpu_access() is intended to be the exclusion for CPU access
-(which is synchronous)
+How do we ensure that drv->tcs_in_use is cleared before we call
+tcs_write() and try to look for a free bit? Isn't it possible that we'll
+get into a situation where the bitmap is all used up but the hardware
+has just received an interrupt and is going to clear out a bit and then
+an rpmh write fails with -EBUSY?
 
-BR,
--R
-
-> This has actually been a concern of mine recently, but at the higher
-> dma-buf core level.  Conceptually, there is the
-> dma_buf_map_attachment() and dma_buf_unmap_attachment() calls drivers
-> use to map the buffer to an attached device, and there are the
-> dma_buf_begin_cpu_access() and dma_buf_end_cpu_access() calls which
-> are to be done when touching the cpu mapped pages.  These look like
-> serializing functions, but actually don't seem to have any enforcement
-> mechanism to exclude parallel access.
->
-> To me it seems like adding the exclusion between those operations
-> should be done at the dmabuf core level, and would actually be helpful
-> for optimizing some of the cache maintenance rules w/ dmabuf.  Does
-> this sound like something closer to what your suggesting, or am I
-> misunderstanding your point?
->
-> Again, I really appreciate the review and feedback!
->
-> Thanks so much!
-> -john
+>  drivers/soc/qcom/rpmh-rsc.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index 5ede8d6de3ad..694ba881624e 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -242,9 +242,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+>                 write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, i, 0);
+>                 write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, i, 0);
+>                 write_tcs_reg(drv, RSC_DRV_IRQ_CLEAR, 0, BIT(i));
+> -               spin_lock(&drv->lock);
+>                 clear_bit(i, drv->tcs_in_use);
+> -               spin_unlock(&drv->lock);
+>                 if (req)
+>                         rpmh_tx_done(req, err);
+>         }
+> @@ -304,7 +302,7 @@ static void __tcs_trigger(struct rsc_drv *drv, int tc=
+s_id)
+>         enable =3D TCS_AMC_MODE_ENABLE;
+>         write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
+>         enable |=3D TCS_AMC_MODE_TRIGGER;
+> -       write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
+> +       write_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, enable);
+>  }
+> =20
+>  static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group =
+*tcs,
