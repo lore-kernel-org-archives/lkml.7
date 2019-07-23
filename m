@@ -2,112 +2,137 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49549C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0CCC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA6F20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pu7QRiQk"
+	by mail.kernel.org (Postfix) with ESMTP id C491120823
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387923AbfGWQTX (ORCPT
+        id S1731100AbfGWQTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:19:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44224 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbfGWQTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:19:20 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so19370723pfe.11;
-        Tue, 23 Jul 2019 09:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=utciOzF0KT/vzhyI5HhnvVFUYaN/yvk0fzwnCeqDMHU=;
-        b=pu7QRiQkyygYe3Hd3g9JGjCXsl/l3fvRDcrWf91F2tQlBdnh9Hr5jhkHHMAFuXaqzn
-         RdLOTYwBzJZK6szwSKTTz9iO+ePY8y+J15FzoSqmx3bgGJG7Zev2eYXD8KNY7JWJBJNW
-         Du9gEFuMoeE6e0KF/St0nRkTBSd3qEacrrYQGUeUeaZzNO5bsloqVmExtpAsFeZXqZwD
-         n9alyRGUzKUPBhSQr1/RsEC3ZaM1bNcTiQTkXVaXCeQbZhBZofroU2fxydsjyZFVBzQX
-         PesV4lu/tru8rLgiCXA5vwo/kTPMtFB4214C7z+enDSsaXlTdm4Dj7pMx0DtLoEZZj9k
-         7ljw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=utciOzF0KT/vzhyI5HhnvVFUYaN/yvk0fzwnCeqDMHU=;
-        b=Ryq1844iB9EbZFzc9SHPIzNx/0d+azVw3DIEWp5ctyDco/6OCXTCEL79K3WSZNHXrG
-         yKO6P51RuTDQ9iXXb+blWaSwLOM9Gob2yhDsx8vUlr5+TuyvWyvrZvRhGxy03hOkpVti
-         iOvxGF5TwGZK/l2N5BTwIXLupDvThHwQRrQer5RC0D+RcWrOLU1nAi7eyM7V6pB6Ke6H
-         wQe4XSHEGOKgBuF2dxzwdG/J4OLwoWD30DuOBCMQC6t7KfeHvr7Wk1ycmNO24/UJHuMP
-         dNZ4mq4chbKixkSrL65wKtzHyMoLcn5fBisAztdyd62VK/X5pSPgQ3Z6jQgoHoZ+olE7
-         BpUQ==
-X-Gm-Message-State: APjAAAXysuDKqdTXO0csTBd0bOUbnCmLMmGAZtRN9Qz/CJsJaoSrGQ0c
-        bcYMi6NLu6PCdte1H6X4RsPT5RO7
-X-Google-Smtp-Source: APXvYqz461jCg84f3q8N4Y2fKQcIQbFIv/9hUWPgyG7IaTSpCabyw4mx15RPQH9nHBCk9k0//Y2b6g==
-X-Received: by 2002:a62:107:: with SMTP id 7mr6664662pfb.4.1563898760177;
-        Tue, 23 Jul 2019 09:19:20 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d129sm48889826pfc.168.2019.07.23.09.19.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 09:19:19 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 09:19:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Steffen Maier <maier@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-scsi <linux-scsi@vger.kernel.org>
-Subject: Re: Linux 5.3-rc1
-Message-ID: <20190723161918.GB9140@roeck-us.net>
-References: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
- <20190722222126.GA27291@roeck-us.net>
- <1563839144.2504.5.camel@HansenPartnership.com>
- <4dc6ef77-afce-1c6d-add3-8df76332e672@roeck-us.net>
- <1563859682.2504.17.camel@HansenPartnership.com>
- <1e05670d-9e28-1b1d-249d-743c736e6d63@linux.ibm.com>
- <1563895995.3609.10.camel@HansenPartnership.com>
+        Tue, 23 Jul 2019 12:19:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54940 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728180AbfGWQTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:19:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B21ADAF19;
+        Tue, 23 Jul 2019 16:19:38 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
+Cc:     mbrugger@suse.com, hch@lst.de,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: [RFC] ARM: bcm2835: register dmabounce on devices hooked to main interconnect
+Date:   Tue, 23 Jul 2019 18:19:33 +0200
+Message-Id: <20190723161934.4590-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563895995.3609.10.camel@HansenPartnership.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 08:33:15AM -0700, James Bottomley wrote:
-[ ... ]
-> 
-> Yes, I think so.  Can someone try this, or something like it.
-> 
-> Thanks,
-> 
-> James
-> 
-> ---
-> 
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index 9381171c2fc0..4715671a1537 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -1793,7 +1793,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
->  	dma_set_seg_boundary(dev, shost->dma_boundary);
->  
->  	blk_queue_max_segment_size(q, shost->max_segment_size);
-> -	blk_queue_virt_boundary(q, shost->virt_boundary_mask);
-> +	if (shost->virt_boundary_mask)
-> +		blk_queue_virt_boundary(q, shost->virt_boundary_mask);
->  	dma_set_max_seg_size(dev, queue_max_segment_size(q));
->  
->  	/*
+NOTE: This patch builds upon Stefan's series providing basic support for
+RPi4[1]. I'm mostly interested in verifying if this is the correct approach
+to the issue stated below. If so I assume this will be added to Stefan's
+v2 series.
 
-This fixes the problem for me.
+The new Raspberry Pi 4 happens to have weird DMA constraints. Even
+though it might contain up to 4 GB of ram, most devices can only access
+the first lower GB of memory.
 
-Guenter
+This breaks the overall assumption DMA API makes whereas 32-bit DMA
+masks are always supported[2], and potentially breaks DMA addressing for
+all streaming DMA users. This has already been observed with
+'sdhci-iproc' but might as well happen elsewhere. Note that contiguous
+allocations are safe as 'dma_zone_size' is set accordingly.
+
+To get around that limitation we register arm's dmabounce dma-ops on all
+devices hooked to the SoC's main interconnect.
+
+[1] https://www.spinics.net/lists/arm-kernel/msg742120.html
+[2] https://www.spinics.net/lists/arm-kernel/msg742736.html
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ arch/arm/mach-bcm/Kconfig         |  1 +
+ arch/arm/mach-bcm/board_bcm2835.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+index 5e5f1fabc3d4..588326f7e269 100644
+--- a/arch/arm/mach-bcm/Kconfig
++++ b/arch/arm/mach-bcm/Kconfig
+@@ -168,6 +168,7 @@ config ARCH_BCM2835
+ 	select PINCTRL
+ 	select PINCTRL_BCM2835
+ 	select MFD_CORE
++	select DMABOUNCE if ARCH_MULTI_V7
+ 	help
+ 	  This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
+ 	  This SoC is used in the Raspberry Pi and Roku 2 devices.
+diff --git a/arch/arm/mach-bcm/board_bcm2835.c b/arch/arm/mach-bcm/board_bcm2835.c
+index c09cf25596af..7aff29f77ca7 100644
+--- a/arch/arm/mach-bcm/board_bcm2835.c
++++ b/arch/arm/mach-bcm/board_bcm2835.c
+@@ -3,6 +3,8 @@
+  * Copyright (C) 2010 Broadcom
+  */
+ 
++#include <linux/device.h>
++#include <linux/dma-mapping.h>
+ #include <linux/init.h>
+ #include <linux/irqchip.h>
+ #include <linux/of_address.h>
+@@ -24,8 +26,35 @@ static const char * const bcm2835_compat[] = {
+ 	NULL
+ };
+ 
++static int bcm2835_needs_bounce(struct device *dev, dma_addr_t dma_addr, size_t size)
++{
++	/*
++	 * The accepted dma addresses are [0xc0000000, 0xffffffff] which map to
++	 * ram's [0x00000000, 0x3fffffff].
++	 */
++	return dma_addr < 3ULL * SZ_1G;
++}
++
++static int bcm2835_platform_notify(struct device *dev)
++{
++	if (dev->parent && !strcmp("soc", dev_name(dev->parent))) {
++		dev->dma_mask = &dev->coherent_dma_mask;
++		dev->coherent_dma_mask = DMA_BIT_MASK(30);
++		dmabounce_register_dev(dev, 2048, 4096, bcm2835_needs_bounce);
++	}
++
++	return 0;
++}
++
++void __init bcm2835_init_early(void)
++{
++	if(of_machine_is_compatible("brcm,bcm2711"))
++		platform_notify = bcm2835_platform_notify;
++}
++
+ DT_MACHINE_START(BCM2835, "BCM2835")
+ 	.dma_zone_size	= SZ_1G,
+ 	.dt_compat = bcm2835_compat,
+ 	.smp = smp_ops(bcm2836_smp_ops),
++	.init_early = bcm2835_init_early,
+ MACHINE_END
+-- 
+2.22.0
+
