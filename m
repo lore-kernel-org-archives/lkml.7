@@ -2,228 +2,119 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA79C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CEAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899BD20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563897159;
-	bh=nf3tMC7wQ5RuCZRvfP/Vxh4DTYekeHgD7c277PFuEOk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KsfnERSRwbuBxPIuYEEJ6oGCG9vl9rEkyCNTP2Dunk1Na2KIyH/6kDITAoIPP/RlN
-	 jvWWlMzcpEsv4US9TY7W/gPWdRBs8wogGrm8hdqowYgJYOc1RhdHrG75DMtOBcE+yL
-	 We4YNoKIjnzpknGReR+pVPQtuJvXwcfSxCyYDbxU=
+	by mail.kernel.org (Postfix) with ESMTP id DBC86223BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gkraDMxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732311AbfGWPwi (ORCPT
+        id S1733194AbfGWPx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:52:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53208 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbfGWPwi (ORCPT
+        Tue, 23 Jul 2019 11:53:28 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38888 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730033AbfGWPx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:52:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tvYLzMxQOS+0VzYPNU7SkuEzCyO8+2yot/ohF+n2sKo=; b=jYMIZXOksfIBOyMmh7uCKgVA7
-        KMyeZxAA4C3bAl6ESGjtpGCeL1V+Rw4Ws4nts51kkidOdqpffUsMieNNdqscnW9GwFwHB31kl4PNg
-        YdLpM+NdDKbnrM6Wm/ilD6KeL+tdnkVNgwMzBjJ0t8ON8twfvasY8bemhIiocYllgpo4ZZ+WEZpAs
-        rRM1qOGCSRpsRbJ6vlup8GqZd+2oPzgbX06M44wo9zMRv6Pv3LO9qvezUsMCt5R7Bb+hFU5I563qI
-        3o1NUO/yyBYJhTQzk7QKNLS9iBz6haIJnpLNpWChhC2aSUck0qoaOndkvcscUtIyfU3Sl9OU0eM+t
-        /y3Dq/NXQ==;
-Received: from 177.41.98.220.dynamic.adsl.gvt.net.br ([177.41.98.220] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpx5e-0007zr-HR; Tue, 23 Jul 2019 15:52:34 +0000
-Date:   Tue, 23 Jul 2019 12:52:30 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Subject: Re: linux-next: build failure after merge of the v4l-dvb tree
-Message-ID: <20190723125230.1ca56edd@coco.lan>
-In-Reply-To: <13b14eb9475de71b408d1eed3c5e69fe089deeb0.camel@collabora.com>
-References: <20190723101341.751596b2@canb.auug.org.au>
-        <13b14eb9475de71b408d1eed3c5e69fe089deeb0.camel@collabora.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 23 Jul 2019 11:53:28 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6NFrHdq123362;
+        Tue, 23 Jul 2019 10:53:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563897197;
+        bh=BnpzLYQscthG64FXJPL0D5x3+LttJD4n7FxCLVoQ0rA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gkraDMxJpl13gmc0klMe62QZD5YLEBklo56Rv8top1IngDZE9KlmpfkvrrdenAnpw
+         TQ8GrX5yR+mAPQyR0Oh8LrD66BgHfo9ZvM7y99x+1GiGruvaXAIsVrP8pU1F4MlKQo
+         vOS5dopVL2UbV+bnnhcoATqIi3tx/ra1ezJKEwPM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6NFrHbk101439
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Jul 2019 10:53:17 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Jul 2019 10:53:17 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Jul 2019 10:53:17 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6NFrG4X017922;
+        Tue, 23 Jul 2019 10:53:16 -0500
+Subject: Re: Backlight in motorola Droid 4
+To:     Pavel Machek <pavel@ucw.cz>, <linux-omap@vger.kernel.org>,
+        <tony@atomide.com>, <sre@kernel.org>, <nekit1000@gmail.com>,
+        <mpartap@gmx.net>, <merlijn@wizzup.org>
+CC:     <jacek.anaszewski@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20190722205921.GA24787@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b8fbc94f-c087-2c9d-4532-ea423f1626e6@ti.com>
+Date:   Tue, 23 Jul 2019 10:53:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190722205921.GA24787@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 23 Jul 2019 12:14:20 -0300
-Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+Pavel
 
-> On Tue, 2019-07-23 at 10:13 +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the v4l-dvb tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > In file included from <command-line>:
-> > include/media/vp8-ctrls.h:25:2: error: unknown type name '__s8'
-> >   __s8 quant_update[4];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:26:2: error: unknown type name '__s8'
-> >   __s8 lf_update[4];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:27:2: error: unknown type name '__u8'
-> >   __u8 segment_probs[3];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:28:2: error: unknown type name '__u8'
-> >   __u8 padding;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:29:2: error: unknown type name '__u32'
-> >   __u32 flags;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:36:2: error: unknown type name '__s8'
-> >   __s8 ref_frm_delta[4];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:37:2: error: unknown type name '__s8'
-> >   __s8 mb_mode_delta[4];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:38:2: error: unknown type name '__u8'
-> >   __u8 sharpness_level;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:39:2: error: unknown type name '__u8'
-> >   __u8 level;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:40:2: error: unknown type name '__u16'
-> >   __u16 padding;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:41:2: error: unknown type name '__u32'
-> >   __u32 flags;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:45:2: error: unknown type name '__u8'
-> >   __u8 y_ac_qi;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:46:2: error: unknown type name '__s8'
-> >   __s8 y_dc_delta;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:47:2: error: unknown type name '__s8'
-> >   __s8 y2_dc_delta;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:48:2: error: unknown type name '__s8'
-> >   __s8 y2_ac_delta;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:49:2: error: unknown type name '__s8'
-> >   __s8 uv_dc_delta;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:50:2: error: unknown type name '__s8'
-> >   __s8 uv_ac_delta;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:51:2: error: unknown type name '__u16'
-> >   __u16 padding;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:55:2: error: unknown type name '__u8'
-> >   __u8 coeff_probs[4][8][3][11];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:56:2: error: unknown type name '__u8'
-> >   __u8 y_mode_probs[4];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:57:2: error: unknown type name '__u8'
-> >   __u8 uv_mode_probs[3];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:58:2: error: unknown type name '__u8'
-> >   __u8 mv_probs[2][19];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:59:2: error: unknown type name '__u8'
-> >   __u8 padding[3];
-> >   ^~~~
-> > include/media/vp8-ctrls.h:63:2: error: unknown type name '__u8'
-> >   __u8 range;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:64:2: error: unknown type name '__u8'
-> >   __u8 value;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:65:2: error: unknown type name '__u8'
-> >   __u8 bit_count;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:66:2: error: unknown type name '__u8'
-> >   __u8 padding;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:86:2: error: unknown type name '__u16'
-> >   __u16 width;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:87:2: error: unknown type name '__u16'
-> >   __u16 height;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:89:2: error: unknown type name '__u8'
-> >   __u8 horizontal_scale;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:90:2: error: unknown type name '__u8'
-> >   __u8 vertical_scale;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:92:2: error: unknown type name '__u8'
-> >   __u8 version;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:93:2: error: unknown type name '__u8'
-> >   __u8 prob_skip_false;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:94:2: error: unknown type name '__u8'
-> >   __u8 prob_intra;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:95:2: error: unknown type name '__u8'
-> >   __u8 prob_last;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:96:2: error: unknown type name '__u8'
-> >   __u8 prob_gf;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:97:2: error: unknown type name '__u8'
-> >   __u8 num_dct_parts;
-> >   ^~~~
-> > include/media/vp8-ctrls.h:99:2: error: unknown type name '__u32'
-> >   __u32 first_part_size;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:100:2: error: unknown type name '__u32'
-> >   __u32 first_part_header_bits;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:101:2: error: unknown type name '__u32'
-> >   __u32 dct_part_sizes[8];
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:103:2: error: unknown type name '__u64'
-> >   __u64 last_frame_ts;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:104:2: error: unknown type name '__u64'
-> >   __u64 golden_frame_ts;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:105:2: error: unknown type name '__u64'
-> >   __u64 alt_frame_ts;
-> >   ^~~~~
-> > include/media/vp8-ctrls.h:107:2: error: unknown type name '__u64'
-> >   __u64 flags;
-> >   ^~~~~
-> > 
-> > Caused by commit
-> > 
-> >   a57d6acaf352 ("media: uapi: Add VP8 stateless decoder API")
-> > 
-> > I have added the following fix patch for today.
-> >   
-> 
-> Looks good, thanks for the fix. I wonder why this
-> got triggered with VP8 only, and not with MPEG-2.
+On 7/22/19 3:59 PM, Pavel Machek wrote:
+> Hi!
+>
+> So now the backlight LED can be controlled. Good. (And thanks!)
+>
+> But I seem to remember that backlight had range from "is it really on?"
+> to "very bright"; now it seems to have range from "bright" to "very
+> bright".
+>
+> Any ideas what goes on there?
 
-I suspect that this got triggered by some change at linux-next, as
-it built fine here on the top of 5.3-rc1.
+In the LM3552 driver we are changing the Full scale brightness registers 
+for the
 
-Patch was applied earlier today.
+specific control bank.
 
-Thanks,
-Mauro
+#define LM3532_REG_CTRL_A_BRT    0x17
+#define LM3532_REG_CTRL_B_BRT    0x19
+#define LM3532_REG_CTRL_C_BRT    0x1b
+
+In the ti-lmu code the ALS zones were being modified not the control 
+bank brightness.
+
+#define LM3532_REG_BRT_A            0x70    /* zone 0 */
+#define LM3532_REG_BRT_B            0x76    /* zone 1 */
+#define LM3532_REG_BRT_C            0x7C    /* zone 2 */
+
+Not sure how the ALS is attached in the system if it reports to the host 
+and the host manages
+
+the back light or if the the ALS is connected directly to the LM3532.
+
+Maybe the ALS zone targets need to be updated to allow a fuller range.  
+The LM3532 may be stuck
+
+in a certain zone.
+
+Probably should set up the ALS properties in the device tree.
+
+Dan
+
+> Thanks,
+> 									Pavel
+>
