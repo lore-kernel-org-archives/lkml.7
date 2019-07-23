@@ -2,183 +2,81 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33413C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E76C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FDE21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563886888;
-	bh=CbmDLMjMi+Nd5R6Pl1B66vsTFwAu0X8Od5ob6t3Otuw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tHeLzm74Js2TuGReZGDV101f/c7wzL2yO/mA09/0pRbJtUVLbsrZgPgs3BfZwiRTp
-	 AY3xwSFbGmcXJE72tlqrg5F+AIYbmIQvlmIoNCxcos5585pQNUWUm0J2BbYKUUqBY2
-	 NfofjgEPPKzOxgmtHS7DB4enIXcYeXriYZJblWhk=
+	by mail.kernel.org (Postfix) with ESMTP id 9B93D218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390041AbfGWNB0 (ORCPT
+        id S2390050AbfGWND0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387961AbfGWNB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:01:26 -0400
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8891921670;
-        Tue, 23 Jul 2019 13:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563886884;
-        bh=CbmDLMjMi+Nd5R6Pl1B66vsTFwAu0X8Od5ob6t3Otuw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kJ666ehfoUBAoI2YSx+SVUOL2NzcWGe+pasJx61NM0E2XfSz5lGrmUerxSGuy6lXL
-         YHaLk0zDxiYnhzlDZ4vDTkSbddvYgI1I/A6hwhecveTCjW7DbHEDWDsSNunSb/rgj7
-         2Fhuuj2LpNazuUXoan0XpsuOKxvCQ8EoLnBZDIso=
-Received: by mail-lf1-f42.google.com with SMTP id z15so25009600lfh.13;
-        Tue, 23 Jul 2019 06:01:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAW38tGBwuCn9IW8FRqUH3x2Kd93SZo9VfAhcYcEQNiN8kbnMqEt
-        DODAAav8+5Mb0XUC0QAtv7wvbwp0LibAKfkTVcI=
-X-Google-Smtp-Source: APXvYqzsrG6nB7kU6t/8CnaY5zo3+o2W69whzh4IdxhPied3z2PagTqPDK+dlEb0CHK06r8rm64qmI6oQ9U81EJSSZ8=
-X-Received: by 2002:ac2:514b:: with SMTP id q11mr9488330lfd.33.1563886882779;
- Tue, 23 Jul 2019 06:01:22 -0700 (PDT)
+        Tue, 23 Jul 2019 09:03:26 -0400
+Received: from outbound-smtp29.blacknight.com ([81.17.249.32]:54464 "EHLO
+        outbound-smtp29.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731916AbfGWND0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:03:26 -0400
+Received: from mail.blacknight.com (unknown [81.17.254.26])
+        by outbound-smtp29.blacknight.com (Postfix) with ESMTPS id E59A1D0239
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:03:23 +0100 (IST)
+Received: (qmail 32687 invoked from network); 23 Jul 2019 13:03:23 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.36])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 23 Jul 2019 13:03:23 -0000
+Date:   Tue, 23 Jul 2019 14:03:21 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
+        linux-kernel@vger.kernel.org,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3] sched/topology: Improve load balancing on AMD EPYC
+Message-ID: <20190723130321.GK24383@techsingularity.net>
+References: <20190723104830.26623-1-matt@codeblueprint.co.uk>
+ <20190723114248.GJ24383@techsingularity.net>
+ <20190723120030.GN3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <CGME20190718143128eucas1p2677ae16d229dddcd9a0db8084f0da5cf@eucas1p2.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com> <20190718143044.25066-3-s.nawrocki@samsung.com>
-In-Reply-To: <20190718143044.25066-3-s.nawrocki@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 23 Jul 2019 15:01:11 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfLPjmjgX01UAyu_=7etUO1G7osMQDmyHVBNxF2Sdh=yA@mail.gmail.com>
-Message-ID: <CAJKOXPfLPjmjgX01UAyu_=7etUO1G7osMQDmyHVBNxF2Sdh=yA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/9] soc: samsung: Convert exynos-chipid driver to use
- the regmap API
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
-        kgene@kernel.org, pankaj.dubey@samsung.com,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20190723120030.GN3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jul 2019 at 16:31, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> Convert the driver to use regmap API in order to allow other
-> drivers, like ASV, to access the CHIPID registers.
->
-> This patch adds definition of selected CHIPID register offsets
-> and register bit fields for Exynos5422 SoC.
->
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v1 (RFC):
->  - new patch
-> ---
->  drivers/soc/samsung/exynos-chipid.c       | 33 ++++++----------
->  include/linux/soc/samsung/exynos-chipid.h | 48 +++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 20 deletions(-)
->  create mode 100644 include/linux/soc/samsung/exynos-chipid.h
->
-> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> index 78b123ee60c0..594b00488013 100644
-> --- a/drivers/soc/samsung/exynos-chipid.c
-> +++ b/drivers/soc/samsung/exynos-chipid.c
-> @@ -9,18 +9,16 @@
->   */
->
->  #include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/regmap.h>
->  #include <linux/slab.h>
-> +#include <linux/soc/samsung/exynos-chipid.h>
->  #include <linux/sys_soc.h>
->
-> -#define EXYNOS_SUBREV_MASK     (0xF << 4)
-> -#define EXYNOS_MAINREV_MASK    (0xF << 0)
-> -#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
-> -#define EXYNOS_MASK            0xFFFFF000
-> -
->  static const struct exynos_soc_id {
->         const char *name;
->         unsigned int id;
-> @@ -53,29 +51,24 @@ static const char * __init product_id_to_soc_id(unsigned int product_id)
->  int __init exynos_chipid_early_init(void)
->  {
->         struct soc_device_attribute *soc_dev_attr;
-> -       void __iomem *exynos_chipid_base;
->         struct soc_device *soc_dev;
->         struct device_node *root;
-> -       struct device_node *np;
-> +       struct regmap *regmap;
->         u32 product_id;
->         u32 revision;
-> +       int ret;
->
-> -       /* look up for chipid node */
-> -       np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
-> -       if (!np)
-> -               return -ENODEV;
-> -
-> -       exynos_chipid_base = of_iomap(np, 0);
-> -       of_node_put(np);
-> -
-> -       if (!exynos_chipid_base) {
-> -               pr_err("Failed to map SoC chipid\n");
-> -               return -ENXIO;
-> +       regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
-> +       if (IS_ERR(regmap)) {
-> +               pr_err("%s: failed to get regmap\n", __func__);
+On Tue, Jul 23, 2019 at 02:00:30PM +0200, Peter Zijlstra wrote:
+> On Tue, Jul 23, 2019 at 12:42:48PM +0100, Mel Gorman wrote:
+> > On Tue, Jul 23, 2019 at 11:48:30AM +0100, Matt Fleming wrote:
+> > > Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+> > > Cc: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+> > > Cc: Mel Gorman <mgorman@techsingularity.net>
+> > > Cc: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+> > > Cc: Borislav Petkov <bp@alien8.de>
+> > 
+> > Acked-by: Mel Gorman <mgorman@techsingularity.net>
+> > 
+> > The only caveat I can think of is that a future generation of Zen might
+> > take a different magic number than 32 as their remote distance. If or
+> > when this happens, it'll need additional smarts but lacking a crystal
+> > ball, we can cross that bridge when we come to it.
+> 
+> I just suggested to Matt on IRC we could do something along these lines,
+> but we can do that later.
+> 
 
-Other places do not use __func__ prefix so make it consistent. Add it
-in patch #1?
+That would seem fair but I do think it's something that could be done
+later (maybe 1 release away?) to avoid a false bisection to this patch by
+accident. I don't *think* there are any machines out there with a 1-hop
+distance of 14 but if there is, your patch would make a difference to
+MM behaviour.  In the same context, it might make sense to rename the
+value to somewhat reflective of the fact that "reclaim distance" affects
+scheduler placement. No good name springs to mind at the moment.
 
-> +               return PTR_ERR(regmap);
->         }
->
-> -       product_id = readl_relaxed(exynos_chipid_base);
-> +       ret = regmap_read(regmap, EXYNOS_CHIPID_REG_PRO_ID, &product_id);
-> +       if (ret < 0)
-> +               return ret;
-> +
->         revision = product_id & EXYNOS_REV_MASK;
-> -       iounmap(exynos_chipid_base);
->
->         soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
->         if (!soc_dev_attr)
-> diff --git a/include/linux/soc/samsung/exynos-chipid.h b/include/linux/soc/samsung/exynos-chipid.h
-> new file mode 100644
-> index 000000000000..25359d70d617
-> --- /dev/null
-> +++ b/include/linux/soc/samsung/exynos-chipid.h
-> @@ -0,0 +1,48 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018 Samsung Electronics Co., Ltd.
-> + *           http://www.samsung.com/
-> + *
-> + * Exynos - CHIPID support
-> + */
-> +
-> +#define EXYNOS_CHIPID_REG_PRO_ID       0x00
-> + #define EXYNOS_SUBREV_MASK            (0xf << 4)
-
-" #define" is unusual syntax. I think not used anywhere else. Stick to
-regular one.
-
-Best regards,
-Krzysztof
+-- 
+Mel Gorman
+SUSE Labs
