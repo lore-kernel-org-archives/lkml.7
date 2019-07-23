@@ -2,163 +2,90 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798C9C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D06C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409A4218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69ECA218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SDygoRUs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rRggj3sq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392049AbfGWV2S (ORCPT
+        id S2392075AbfGWV21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:28:18 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37082 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731025AbfGWV2R (ORCPT
+        Tue, 23 Jul 2019 17:28:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41467 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728967AbfGWV20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:28:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so19770368pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:28:17 -0700 (PDT)
+        Tue, 23 Jul 2019 17:28:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so19779765pff.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KE15xa18tTRocyVLkAyTsFK/CogeXePSTfih4gTWWqE=;
-        b=SDygoRUsTxW6TTuRaBj1iYCmOY2pEXsrRSkgpjtWINcS2KHYINYnEh3sSHGXM/Z9Z0
-         0UyPSL9FtaaX+eeg83GXipQUkmsgtEgfQewcrGVaqRRdVJdawtWqHD6+XrBoSfVPlUOT
-         VyahDnFtfgqFF5DeeFH4Q+q4WnnGIpZ9zjvdM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GkrR7KYfNoDcAsYt1Gds+pf2LHdaFmbB4lpahf+T2Jw=;
+        b=rRggj3sqxFwgCm8YCh/vX3qfGKm5VRHubQNgfCYrbYx+7P5SMvmD64K0V5ZVN6YsDn
+         2+DzM2o70B26hCVEcR9DrviwigZ6nrSQq1TBWd9R225/QVL6NqFAniAV+25CkUMZP01d
+         u2LnYPnZMnbEZub2w98kUHNolyW7+g0oxX5In2CX2ZK5kWCIqCI8JRTP2zTcCT5bTAsk
+         bK+TlK2evbV8J5jTc+KJw+YdkZfaYkN5SUDIQ5u7+kqW9K7f2LLqvPHa0y35PtzMU/GA
+         Y54teCzp2hGNXhcwth8mh+8FLrvXGukyMpOwlnI8M//Bfey7qLHxVsTqFBImmA1GfSlz
+         v/GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KE15xa18tTRocyVLkAyTsFK/CogeXePSTfih4gTWWqE=;
-        b=BFqJLBP5mIvlXfI7YnbvSJey0tNviDFQKPTlj/4UCzqSMs+4HbctAz5PNVvijCenC8
-         /nnLSmWFmwKdc7uu29B+/kawAc9RNgDFL/z7myzhjf5ViC+sSAwC5Hn30st8fbXOwVrD
-         AGX7j0VwuYzGTPM2Up/c0HV16lJjWZhhLr1nZNgRbckBAVgtH8nbG2joHVdhKSBrwAq+
-         MIoA/1E+4N1B4/fwjcirEjL+1w4h7fSazmckXM5+N2170qqxyPwIHHWMAQgn9YcTUlxk
-         wE/Kjfo1kUSlPLoeWFeCzUwXSvJVhsHNR/5WnpKdu25ZaSLhl1q5T+/W2dot5nk2RAbA
-         AxuA==
-X-Gm-Message-State: APjAAAVRxFnMWbTbgJ0YfIzYoQ8V+lfGuvlLNIlKeGKA8Qjhd144INHb
-        fHX4GT5f6iZQIvjl4zlVKSEpvQ==
-X-Google-Smtp-Source: APXvYqz47GoGURJ0taiC0XhIJxWtE1YOy/l5OZWV402tGZ0JRjtYHPc39Jdba1gAyo/qTxfnfJeItA==
-X-Received: by 2002:a17:90a:1a45:: with SMTP id 5mr85961043pjl.43.1563917297050;
-        Tue, 23 Jul 2019 14:28:17 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v10sm44579780pfe.163.2019.07.23.14.28.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jul 2019 14:28:16 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 14:28:15 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stephen Kitt <steve@sk2.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 2/2] kernel-doc: core-api: Include string.h into core-api
-Message-ID: <201907231428.6154FA6E04@keescook>
-References: <cover.1563841972.git.joe@perches.com>
- <224a6ebf39955f4107c0c376d66155d970e46733.1563841972.git.joe@perches.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GkrR7KYfNoDcAsYt1Gds+pf2LHdaFmbB4lpahf+T2Jw=;
+        b=MZ9H6m+w3FOYnH/Lw7nYX+YpCOmdgKVfhGcopEtTojgoOO26mUMFtdjQv9QDdK3NyU
+         QVDag8SJmcm8pSaWk8e9CuH+GvvutRVxlFz6mSWM95KlRDubsaIZ5XzGtO7k4PtWUIqv
+         FyIK8fQuv0pRzeT9DsNbxmXiJFd8kMKb/L09YI89pr7UrA5ObMDh0WFbH6B8we8mXleT
+         OeraXnCCvANO+s1IwJp7KTntwCTNtMD+kkrxhbjp8AVchrI2uXZclu0zR8YVAWdb2m2g
+         13kYRVADgj54cpLiLRb0wuzbGDRbwOU+2m6nlmVFgVwaw2aWSz/Ox59/1Z/LmL9p625C
+         wmfQ==
+X-Gm-Message-State: APjAAAUrtgyW7aNCaJDelrOW930b/+yYyRsBPbqF/D3SQTUki8JptUgO
+        o6no2TifaAlid8y3KXSaf3BD1vfL6KqFAP+m0+hLpw==
+X-Google-Smtp-Source: APXvYqyk35NJ1AMLcOio8BVcbDn442Y/nw305L+RX1QTpaRR6e6aBGPHKYXdZEBwQl12v829wWFaMtIrSL7Vg7eeBWY=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr84880063pjs.73.1563917305632;
+ Tue, 23 Jul 2019 14:28:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <224a6ebf39955f4107c0c376d66155d970e46733.1563841972.git.joe@perches.com>
+References: <20190722213250.238685-1-ndesaulniers@google.com>
+ <20190722213250.238685-2-ndesaulniers@google.com> <CAKwvOdm3iyeJfuivhQJqXB9FfC0zHgrfgoN_qW4poEyfcw3C9A@mail.gmail.com>
+ <CAMVonLjd3DoKQatdraG0t8X_F9Au-fA_vL2RSNfNPNbqvXWCDA@mail.gmail.com>
+In-Reply-To: <CAMVonLjd3DoKQatdraG0t8X_F9Au-fA_vL2RSNfNPNbqvXWCDA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 23 Jul 2019 14:28:14 -0700
+Message-ID: <CAKwvOdkJ2_E4e-mePb4JrQWqS7xYeKGKpcBr_VeGKaytuD_YrQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] x86/purgatory: use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
+To:     Vaibhav Rustagi <vaibhavrustagi@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 05:38:16PM -0700, Joe Perches wrote:
-> core-api should show all the various string functions including the
-> newly added stracpy and stracpy_pad.
-> 
-> Miscellanea:
-> 
-> o Update the Returns: value for strscpy
-> o fix a defect with %NUL)
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+On Mon, Jul 22, 2019 at 3:59 PM Vaibhav Rustagi
+<vaibhavrustagi@google.com> wrote:
+> The changes suggested will cause undefined symbols while loading the new kernel.
+> On doing 'nm purgatory.ro', I found below undefined symbols:
+>
+> U bmcp
+> U __stack_chk_fail
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  Documentation/core-api/kernel-api.rst |  3 +++
->  include/linux/string.h                |  5 +++--
->  lib/string.c                          | 10 ++++++----
->  3 files changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
-> index 08af5caf036d..f77de49b1d51 100644
-> --- a/Documentation/core-api/kernel-api.rst
-> +++ b/Documentation/core-api/kernel-api.rst
-> @@ -42,6 +42,9 @@ String Manipulation
->  .. kernel-doc:: lib/string.c
->     :export:
->  
-> +.. kernel-doc:: include/linux/string.h
-> +   :internal:
-> +
->  .. kernel-doc:: mm/util.c
->     :functions: kstrdup kstrdup_const kstrndup kmemdup kmemdup_nul memdup_user
->                 vmemdup_user strndup_user memdup_user_nul
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index f80b0973f0e5..329188fffc11 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -515,8 +515,9 @@ static inline void memcpy_and_pad(void *dest, size_t dest_len,
->   * But this can lead to bugs due to typos, or if prefix is a pointer
->   * and not a constant. Instead use str_has_prefix().
->   *
-> - * Returns: 0 if @str does not start with @prefix
-> -         strlen(@prefix) if @str does start with @prefix
-> + * Returns:
-> + * * strlen(@prefix) if @str starts with @prefix
-> + * * 0 if @str does not start with @prefix
->   */
->  static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
->  {
-> diff --git a/lib/string.c b/lib/string.c
-> index 461fb620f85f..53582b6dce2a 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -173,8 +173,9 @@ EXPORT_SYMBOL(strlcpy);
->   * doesn't unnecessarily force the tail of the destination buffer to be
->   * zeroed.  If zeroing is desired please use strscpy_pad().
->   *
-> - * Return: The number of characters copied (not including the trailing
-> - *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
-> + * Returns:
-> + * * The number of characters copied (not including the trailing %NUL)
-> + * * -E2BIG if count is 0.
->   */
->  ssize_t strscpy(char *dest, const char *src, size_t count)
->  {
-> @@ -253,8 +254,9 @@ EXPORT_SYMBOL(strscpy);
->   * For full explanation of why you may want to consider using the
->   * 'strscpy' functions please see the function docstring for strscpy().
->   *
-> - * Return: The number of characters copied (not including the trailing
-> - *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
-> + * Returns:
-> + * * The number of characters copied (not including the trailing %NUL)
-> + * * -E2BIG if count is 0.
->   */
->  ssize_t strscpy_pad(char *dest, const char *src, size_t count)
->  {
-> -- 
-> 2.15.0
-> 
-
+Thanks for the report, a v3: https://lkml.org/lkml/2019/7/23/864
+(Tested v3 with defconfig, defconfig+CONFIG_FUNCTION_TRACER,
++CONFIG_STACKPROTECTOR_STRONG, and allyesconfig)
 -- 
-Kees Cook
+Thanks,
+~Nick Desaulniers
