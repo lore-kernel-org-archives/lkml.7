@@ -2,110 +2,177 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFDEC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724D3C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4369922839
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:11:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2j4H0Cd"
+	by mail.kernel.org (Postfix) with ESMTP id 4A93120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388008AbfGWKLW (ORCPT
+        id S2388921AbfGWKMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:11:22 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46926 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732954AbfGWKLW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:11:22 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k189so151425pgk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:11:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hbUuvVU1khp7VKFUFggKwVLkVb4q2fUGBg+CHMkUJd0=;
-        b=l2j4H0CdEmZdpJCZvrzmmDahBvKCJ8fXgy9HbAdqesEQ8sZ1khYFM0LnORwhE0hYZ0
-         3Ze25ytmIxhjnmXe3bQwRjJ54RsCOGLmVfy40uxaV/DUaqP0KDeJlf9RZD41izLJrZiP
-         gqsxN0rhaGjKtFeWhCWAaiu7Qp4tfMieiTwmdDSW4eP7uzpVH0Fvu7FquuWyi0AqR6ek
-         YHV3VCX2oqZlsxUPmlxxHdyGpoK5fnI+6t/Je1c5LbRl6cw83448Ey1iIOjizX1xb2u9
-         1UIinCNFpTGduwYlPA3TYct8ABOKHz3JOc2A+IW+tqVEFULDqAXXgDGdoWRSrXKDwJDf
-         QwkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hbUuvVU1khp7VKFUFggKwVLkVb4q2fUGBg+CHMkUJd0=;
-        b=Jugl8rsRiOddaeH7vAsWkXSFIj0EIETKH3BjMNoyjy7tgsNDq4V8wY7f7c0H1CiBkC
-         og6MQL5xkt4caqiWfb+73v9RsMkED0ksDVPHHfVE+Sa8IY0so58hJSi26NxgVTCKNCx7
-         RF0i5mC3cuEAF38Ed1qt1H65ZnQLAibbhp/oyg99Jke7EhaPm3Ney2cC86SSWU4YRvDn
-         acwbj47tF7Wsqhwf4bfhiSG4cX3lg61jDkShDeIDwOJDHG846shE8oGtFJMNZ1xEIuIw
-         ZIo0GCjKieG3rA0Oxi4uQiQwScx/6eOIc6EV7KDyIxrtx0d7CIPRFJjW9ILqxMWmOld7
-         m0fA==
-X-Gm-Message-State: APjAAAVMo3C0RkN0i562FqTgfTAMoEgsOWbrXKOoSvbZtZT/SH617+VO
-        yumlVhakSm+RQOQkGthrt5E=
-X-Google-Smtp-Source: APXvYqwy0r8ZusvFqfsldnwyEu98w+HFWmNsxG7OqhmiSQqukGtgNtu0HJn5kk33sRugAZkhG5uf6w==
-X-Received: by 2002:a63:ff66:: with SMTP id s38mr76616987pgk.363.1563876681873;
-        Tue, 23 Jul 2019 03:11:21 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id s12sm43414905pgr.79.2019.07.23.03.11.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 03:11:21 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drm/bochs: Use dev_get_drvdata
-Date:   Tue, 23 Jul 2019 18:11:04 +0800
-Message-Id: <20190723101103.30250-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 06:12:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55977 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388794AbfGWKMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:12:51 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 70ACC30C1351;
+        Tue, 23 Jul 2019 10:12:51 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3E56B60BEC;
+        Tue, 23 Jul 2019 10:12:50 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 23 Jul 2019 12:12:51 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 12:12:49 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [GIT PULL] pidfd fixes
+Message-ID: <20190723101249.GA8994@redhat.com>
+References: <20190722142238.16129-1-christian@brauner.io>
+ <CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 23 Jul 2019 10:12:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+On 07/22, Linus Torvalds wrote:
+>
+> So if we set EXIT_ZOMBIE early, then I think we should change the
+> EXIT_DEAD case too. IOW, do something like this on top:
+> 
+>   --- a/kernel/exit.c
+>   +++ b/kernel/exit.c
+>   @@ -734,9 +734,10 @@ static void exit_notify(struct task_struct
+> *tsk, int group_dead)
+>                 autoreap = true;
+>         }
+> 
+>   -     tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
+>   -     if (tsk->exit_state == EXIT_DEAD)
+>   +     if (autoreap) {
+>   +             tsk->exit_state = EXIT_DEAD;
+>                 list_add(&tsk->ptrace_entry, &dead);
+>   +     }
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/gpu/drm/bochs/bochs_drv.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Yes, this needs cleanups. Actually I was going to suggest another change
+below, this way do_notify_pidfd() is only called when it is really needed.
+But then I decided a trivial one-liner makes more sense for the start.
 
-diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
-index 8f3a5bda9d03..d8a50200408c 100644
---- a/drivers/gpu/drm/bochs/bochs_drv.c
-+++ b/drivers/gpu/drm/bochs/bochs_drv.c
-@@ -83,16 +83,14 @@ static struct drm_driver bochs_driver = {
- #ifdef CONFIG_PM_SLEEP
- static int bochs_pm_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 
- 	return drm_mode_config_helper_suspend(drm_dev);
+I'll try to think. Perhaps we should also change do_notify_parent() to set
+p->exit_state, at least if autoreap. Then the early exit_state = EXIT_ZOMBIE
+won't look so confusing and we can do more (minor) cleanups.
+
+Oleg.
+
+--- x/kernel/exit.c
++++ x/kernel/exit.c
+@@ -182,6 +182,13 @@ static void delayed_put_task_struct(struct rcu_head *rhp)
+ 	put_task_struct(tsk);
  }
  
- static int bochs_pm_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-+	struct drm_device *drm_dev = dev_get_drvdata(dev);
++static void do_notify_pidfd(struct task_struct *task)
++{
++	struct pid *pid;
++
++	pid = task_pid(task);
++	wake_up_all(&pid->wait_pidfd);
++}
  
- 	return drm_mode_config_helper_resume(drm_dev);
+ void release_task(struct task_struct *p)
+ {
+@@ -218,6 +225,8 @@ void release_task(struct task_struct *p)
+ 		zap_leader = do_notify_parent(leader, leader->exit_signal);
+ 		if (zap_leader)
+ 			leader->exit_state = EXIT_DEAD;
++
++		do_notify_pidfd(leader);
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
+@@ -710,7 +719,7 @@ static void forget_original_parent(struct task_struct *father,
+  */
+ static void exit_notify(struct task_struct *tsk, int group_dead)
+ {
+-	bool autoreap;
++	bool autoreap, xxx;
+ 	struct task_struct *p, *n;
+ 	LIST_HEAD(dead);
+ 
+@@ -720,23 +729,22 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 	if (group_dead)
+ 		kill_orphaned_pgrp(tsk->group_leader, NULL);
+ 
+-	if (unlikely(tsk->ptrace)) {
+-		int sig = thread_group_leader(tsk) &&
+-				thread_group_empty(tsk) &&
+-				!ptrace_reparented(tsk) ?
+-			tsk->exit_signal : SIGCHLD;
++	autoreap = true;
++	xxx = thread_group_leader(tsk) && thread_group_empty(tsk);
++
++	if (xxx || unlikely(tsk->ptrace)) {
++		int sig = xxx && !ptrace_reparented(tsk)
++			? tsk->exit_signal : SIGCHLD;
+ 		autoreap = do_notify_parent(tsk, sig);
+-	} else if (thread_group_leader(tsk)) {
+-		autoreap = thread_group_empty(tsk) &&
+-			do_notify_parent(tsk, tsk->exit_signal);
+-	} else {
+-		autoreap = true;
+ 	}
+ 
+ 	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
+ 	if (tsk->exit_state == EXIT_DEAD)
+ 		list_add(&tsk->ptrace_entry, &dead);
+ 
++	if (xxx)
++		do_notify_pidfd(tsk);
++
+ 	/* mt-exec, de_thread() is waiting for group leader */
+ 	if (unlikely(tsk->signal->notify_count < 0))
+ 		wake_up_process(tsk->signal->group_exit_task);
+--- x/kernel/signal.c
++++ x/kernel/signal.c
+@@ -1881,14 +1881,6 @@ int send_sigqueue(struct sigqueue *q, struct pid *pid, enum pid_type type)
+ 	return ret;
  }
--- 
-2.20.1
+ 
+-static void do_notify_pidfd(struct task_struct *task)
+-{
+-	struct pid *pid;
+-
+-	pid = task_pid(task);
+-	wake_up_all(&pid->wait_pidfd);
+-}
+-
+ /*
+  * Let a parent know about the death of a child.
+  * For a stopped/continued status change, use do_notify_parent_cldstop instead.
+@@ -1912,9 +1904,6 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
+ 	BUG_ON(!tsk->ptrace &&
+ 	       (tsk->group_leader != tsk || !thread_group_empty(tsk)));
+ 
+-	/* Wake up all pidfd waiters */
+-	do_notify_pidfd(tsk);
+-
+ 	if (sig != SIGCHLD) {
+ 		/*
+ 		 * This is only possible if parent == real_parent.
 
