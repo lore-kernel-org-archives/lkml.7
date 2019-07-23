@@ -4,212 +4,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E723C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB462C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B5821926
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41ED21926
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pwa5kuTh"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bsrBTIGw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391370AbfGWSWO (ORCPT
+        id S2391429AbfGWSWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:22:14 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43511 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733131AbfGWSWO (ORCPT
+        Tue, 23 Jul 2019 14:22:33 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:41902 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733219AbfGWSWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:22:14 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f25so19811160pgv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 11:22:13 -0700 (PDT)
+        Tue, 23 Jul 2019 14:22:32 -0400
+Received: by mail-vk1-f196.google.com with SMTP id u64so8849771vku.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 11:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=2+Ndnfws7qHcc71bLCI/ev7m12lCCt8vDHBjewoDtbM=;
-        b=Pwa5kuThPVeb2jtNoPgRTCQP4MzLkXXrAD2BI/6pg75FZ0CsvJsMXhOK+Q/BvQZcG1
-         IcXF/uP7YXlG9QS+W+7jmWM6gdlyoDdrPSqiSr/er4If+RPJWx8+rc88HzUL8wzDMho2
-         /hiw/4IphFKCXSzS5I+p8uIPL9bWcx+fBmOmQ=
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g2TuUDb+cbDlJb1CcmjRJgoW+PPf4FRjIQWj89hrcAI=;
+        b=bsrBTIGwdheinL1kf92PRexRZFy2EFU93ZC/0biGWGKiSn3NfNGLvKJ11e57dBGbbI
+         zs+v2qiU6SZAaCEJJrJLNrxK5JUcT7g+al+3r9rDCPIoCGFdj+qmanISatk4NkGr+sfw
+         iMP2+IPYLxPPX2pXRHOdkFAjpzY0dioP53FaM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=2+Ndnfws7qHcc71bLCI/ev7m12lCCt8vDHBjewoDtbM=;
-        b=noIG1F2oAgq33PTCRycrGuqTs6NnITAgOVvvd5vaZe2XiQKadumNdV3aB4PadZFMWa
-         qacRr0hcXKULu4+zXw0BYIP5vhWDJexCUYqJ+fZMS6Q+TePtyG4bm3TTcH1nN00RqRhq
-         iPFvrd8bIq9H07knSHzTPeSLGj2uj4KSnAh6r0zYLLm6niHfyiFnqSABQwDkPO1+5If2
-         1HyX/szZFu7G4n+CA6UsptgNdfzREfDvdj/Mlzsiff/oM/dwnCQSzFbZneba81s9mTCK
-         iL6jrL9atCb3fO0UA9B3qaavEg3Iw25DFwEKpHxAM1D7rMwEDVOCJn2TB5Q1N+HOrhV+
-         pAtA==
-X-Gm-Message-State: APjAAAUQeN/pcFSn9aSkRKbeDU7lJvVjj4CF1yNTlw8ZyXMmkLnQCYW1
-        +OrVKr3L0pJtkc0/CReUlnuEXw==
-X-Google-Smtp-Source: APXvYqy3PVvvtRET9X7O0VbzJbOA90/EzjGTUnC9mVm/VS9fbE2Lcatnc+DHG3xR0Yjic9RMUdhrNw==
-X-Received: by 2002:a17:90a:380d:: with SMTP id w13mr82067459pjb.138.1563906133225;
-        Tue, 23 Jul 2019 11:22:13 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v185sm50352294pfb.14.2019.07.23.11.22.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 11:22:12 -0700 (PDT)
-Message-ID: <5d375054.1c69fb81.7ce3f.3591@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g2TuUDb+cbDlJb1CcmjRJgoW+PPf4FRjIQWj89hrcAI=;
+        b=JF1gBpzIHbsotgPfxsbvhEWhk9GkuEQVQIwNRtKITamRKCXZHr4nMk0c9FE3ocfcBA
+         4pCunPFnSuOV4aiJsy6yxSOghKwk+eWVuYjZpKojnQSvxEcHQ8/WnxYQHKZHoz7I/L2w
+         SV7h3pBjpiUUsJZmv5xdfZLtGBn9u5LEw2YBvsjxZ97W79cCSQ1eU2DKY5gbtRM4VNdi
+         EXsMQMTWAgNE+m4KO93ZTMzSh2ZJ79M/VYN2125r7RWU7Nja/C+1171wxPZlaGKPV1KA
+         aLOIsbs6i3szr/PdzPoL8jbuxjULGgJS2pQMJX8zXu0pPeSZg9fUplIQwQ3Qi2So+smG
+         Tz9Q==
+X-Gm-Message-State: APjAAAUXQhLfrEm396UMa/SyudqpibLS1O1pef6vc1WrKzypAOoO44R3
+        ihvbQX41GXNEk31WlXwTO9QAyjt/f4E6d/XQKV3/Ug==
+X-Google-Smtp-Source: APXvYqzUCSg04pkSjhBLbI+JQpTMn9imHUAevkK2QEgI+jbWlmx9Y0F6xoBI3+IEn10ojveNqT1RgG/5O/nr/BoTNWM=
+X-Received: by 2002:ac5:c4cc:: with SMTP id a12mr8150601vkl.28.1563906151394;
+ Tue, 23 Jul 2019 11:22:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190722215340.3071-1-ilina@codeaurora.org>
-References: <20190722215340.3071-1-ilina@codeaurora.org>
-Subject: Re: [PATCH V2 1/4] drivers: qcom: rpmh-rsc: simplify TCS locking
-To:     Lina Iyer <ilina@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 23 Jul 2019 11:22:11 -0700
+References: <20190723143450.33916-1-yuehaibing@huawei.com>
+In-Reply-To: <20190723143450.33916-1-yuehaibing@huawei.com>
+From:   Sumit Saxena <sumit.saxena@broadcom.com>
+Date:   Tue, 23 Jul 2019 23:52:19 +0530
+Message-ID: <CAL2rwxph0kNT2Vwf90La_=5uDgcHgKo-RJ+vrsXVWSXeJRWd_A@mail.gmail.com>
+Subject: Re: [PATCH -next] scsi: megaraid_sas: Make some functions static
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-07-22 14:53:37)
-> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
->=20
-> The tcs->lock was introduced to serialize access with in TCS group. But,
-> drv->lock is still needed to synchronize core aspects of the
-> communication. This puts the drv->lock in the critical and high latency
-> path of sending a request. drv->lock provides the all necessary
-> synchronization. So remove locking around TCS group and simply use the
-> drv->lock instead.
-
-This doesn't talk about removing the irq saving and restoring though.
-Can you keep irq saving and restoring in this patch and then remove that
-in the next patch with reasoning? It probably isn't safe if the lock is
-taken in interrupt context anyway.
-
->=20
-> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
-> [ilina: split patch into multiple files, update commit text]
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-
-> diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-int=
-ernal.h
-> index a7bbbb67991c..969d5030860e 100644
-> --- a/drivers/soc/qcom/rpmh-internal.h
-> +++ b/drivers/soc/qcom/rpmh-internal.h
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index e278fc11fe5c..5ede8d6de3ad 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -106,26 +106,26 @@ static int tcs_invalidate(struct rsc_drv *drv, int =
-type)
->  {
->         int m;
->         struct tcs_group *tcs;
-> +       int ret =3D 0;
-> =20
->         tcs =3D get_tcs_of_type(drv, type);
-> =20
-> -       spin_lock(&tcs->lock);
-> -       if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS)) {
-> -               spin_unlock(&tcs->lock);
-> -               return 0;
-> -       }
-> +       spin_lock(&drv->lock);
-> +       if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS))
-> +               goto done_invalidate;
-> =20
->         for (m =3D tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
->                 if (!tcs_is_free(drv, m)) {
-> -                       spin_unlock(&tcs->lock);
-> -                       return -EAGAIN;
-> +                       ret =3D -EAGAIN;
-> +                       goto done_invalidate;
->                 }
->                 write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, m, 0);
->                 write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, m, 0);
->         }
->         bitmap_zero(tcs->slots, MAX_TCS_SLOTS);
-> -       spin_unlock(&tcs->lock);
-> =20
-> +done_invalidate:
-> +       spin_unlock(&drv->lock);
+On Tue, Jul 23, 2019 at 8:05 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fix sparse warnings:
+>
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:541:1: warning: symbol 'megasas_alloc_cmdlist_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:580:1: warning: symbol 'megasas_alloc_request_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:661:1: warning: symbol 'megasas_alloc_reply_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:738:1: warning: symbol 'megasas_alloc_rdpq_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:920:1: warning: symbol 'megasas_alloc_cmds_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:1740:1: warning: symbol 'megasas_init_adapter_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:1966:1: warning: symbol 'map_cmd_status' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:2379:1: warning: symbol 'megasas_set_pd_lba' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:2718:1: warning: symbol 'megasas_build_ldio_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:3215:1: warning: symbol 'megasas_build_io_fusion' was not declared. Should it be static?
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:3328:6: warning: symbol 'megasas_prepare_secondRaid1_IO' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+> ---
+>  drivers/scsi/megaraid/megaraid_sas_fusion.c | 27 ++++++++++++++-------------
+>  1 file changed, 14 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> index a32b3f0..120e3c4 100644
+> --- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> +++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> @@ -537,7 +537,7 @@ static int megasas_create_sg_sense_fusion(struct megasas_instance *instance)
 >         return 0;
-
-return ret now?
-
 >  }
-> =20
-> @@ -349,41 +349,35 @@ static int tcs_write(struct rsc_drv *drv, const str=
-uct tcs_request *msg)
+>
+> -int
+> +static int
+>  megasas_alloc_cmdlist_fusion(struct megasas_instance *instance)
 >  {
->         struct tcs_group *tcs;
->         int tcs_id;
-> -       unsigned long flags;
->         int ret;
-> =20
->         tcs =3D get_tcs_for_msg(drv, msg);
->         if (IS_ERR(tcs))
->                 return PTR_ERR(tcs);
-> =20
-> -       spin_lock_irqsave(&tcs->lock, flags);
->         spin_lock(&drv->lock);
->         /*
->          * The h/w does not like if we send a request to the same address,
->          * when one is already in-flight or being processed.
->          */
->         ret =3D check_for_req_inflight(drv, tcs, msg);
-> -       if (ret) {
-> -               spin_unlock(&drv->lock);
-> +       if (ret)
->                 goto done_write;
-> -       }
-> =20
->         tcs_id =3D find_free_tcs(tcs);
->         if (tcs_id < 0) {
->                 ret =3D tcs_id;
-> -               spin_unlock(&drv->lock);
->                 goto done_write;
->         }
-> =20
->         tcs->req[tcs_id - tcs->offset] =3D msg;
->         set_bit(tcs_id, drv->tcs_in_use);
-> -       spin_unlock(&drv->lock);
-> =20
->         __tcs_buffer_write(drv, tcs_id, 0, msg);
->         __tcs_trigger(drv, tcs_id);
-> =20
->  done_write:
-> -       spin_unlock_irqrestore(&tcs->lock, flags);
-> +       spin_unlock(&drv->lock);
->         return ret;
+>         u32 max_mpt_cmd, i, j;
+> @@ -576,7 +576,8 @@ megasas_alloc_cmdlist_fusion(struct megasas_instance *instance)
+>
+>         return 0;
 >  }
-> =20
-> @@ -481,19 +475,18 @@ static int tcs_ctrl_write(struct rsc_drv *drv, cons=
-t struct tcs_request *msg)
+> -int
+> +
+> +static int
+>  megasas_alloc_request_fusion(struct megasas_instance *instance)
 >  {
->         struct tcs_group *tcs;
->         int tcs_id =3D 0, cmd_id =3D 0;
-> -       unsigned long flags;
->         int ret;
-> =20
->         tcs =3D get_tcs_for_msg(drv, msg);
->         if (IS_ERR(tcs))
->                 return PTR_ERR(tcs);
-> =20
-> -       spin_lock_irqsave(&tcs->lock, flags);
-> +       spin_lock(&drv->lock);
->         /* find the TCS id and the command in the TCS to write to */
->         ret =3D find_slots(tcs, msg, &tcs_id, &cmd_id);
->         if (!ret)
->                 __tcs_buffer_write(drv, tcs_id, cmd_id, msg);
-> -       spin_unlock_irqrestore(&tcs->lock, flags);
-> +       spin_unlock(&drv->lock);
-> =20
-
-These ones, just leave them doing the irq save restore for now?
-
+>         struct fusion_context *fusion;
+> @@ -657,7 +658,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
+>         return 0;
+>  }
+>
+> -int
+> +static int
+>  megasas_alloc_reply_fusion(struct megasas_instance *instance)
+>  {
+>         int i, count;
+> @@ -734,7 +735,7 @@ megasas_alloc_reply_fusion(struct megasas_instance *instance)
+>         return 0;
+>  }
+>
+> -int
+> +static int
+>  megasas_alloc_rdpq_fusion(struct megasas_instance *instance)
+>  {
+>         int i, j, k, msix_count;
+> @@ -916,7 +917,7 @@ megasas_free_reply_fusion(struct megasas_instance *instance) {
+>   * and is used as SMID of the cmd.
+>   * SMID value range is from 1 to max_fw_cmds.
+>   */
+> -int
+> +static int
+>  megasas_alloc_cmds_fusion(struct megasas_instance *instance)
+>  {
+>         int i;
+> @@ -1736,7 +1737,7 @@ static inline void megasas_free_ioc_init_cmd(struct megasas_instance *instance)
+>   *
+>   * This is the main function for initializing firmware.
+>   */
+> -u32
+> +static u32
+>  megasas_init_adapter_fusion(struct megasas_instance *instance)
+>  {
+>         struct fusion_context *fusion;
+> @@ -1962,7 +1963,7 @@ megasas_fusion_stop_watchdog(struct megasas_instance *instance)
+>   * @ext_status :       ext status of cmd returned by FW
+>   */
+>
+> -void
+> +static void
+>  map_cmd_status(struct fusion_context *fusion,
+>                 struct scsi_cmnd *scmd, u8 status, u8 ext_status,
+>                 u32 data_length, u8 *sense)
+> @@ -2375,7 +2376,7 @@ int megasas_make_sgl(struct megasas_instance *instance, struct scsi_cmnd *scp,
+>   *
+>   * Used to set the PD LBA in CDB for FP IOs
+>   */
+> -void
+> +static void
+>  megasas_set_pd_lba(struct MPI2_RAID_SCSI_IO_REQUEST *io_request, u8 cdb_len,
+>                    struct IO_REQUEST_INFO *io_info, struct scsi_cmnd *scp,
+>                    struct MR_DRV_RAID_MAP_ALL *local_map_ptr, u32 ref_tag)
+> @@ -2714,7 +2715,7 @@ megasas_set_raidflag_cpu_affinity(struct fusion_context *fusion,
+>   * Prepares the io_request and chain elements (sg_frame) for IO
+>   * The IO can be for PD (Fast Path) or LD
+>   */
+> -void
+> +static void
+>  megasas_build_ldio_fusion(struct megasas_instance *instance,
+>                           struct scsi_cmnd *scp,
+>                           struct megasas_cmd_fusion *cmd)
+> @@ -3211,7 +3212,7 @@ megasas_build_syspd_fusion(struct megasas_instance *instance,
+>   * Invokes helper functions to prepare request frames
+>   * and sets flags appropriate for IO/Non-IO cmd
+>   */
+> -int
+> +static int
+>  megasas_build_io_fusion(struct megasas_instance *instance,
+>                         struct scsi_cmnd *scp,
+>                         struct megasas_cmd_fusion *cmd)
+> @@ -3325,9 +3326,9 @@ megasas_get_request_descriptor(struct megasas_instance *instance, u16 index)
+>  /* megasas_prepate_secondRaid1_IO
+>   *  It prepares the raid 1 second IO
+>   */
+> -void megasas_prepare_secondRaid1_IO(struct megasas_instance *instance,
+> -                           struct megasas_cmd_fusion *cmd,
+> -                           struct megasas_cmd_fusion *r1_cmd)
+> +static void megasas_prepare_secondRaid1_IO(struct megasas_instance *instance,
+> +                                          struct megasas_cmd_fusion *cmd,
+> +                                          struct megasas_cmd_fusion *r1_cmd)
+>  {
+>         union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc, *req_desc2 = NULL;
+>         struct fusion_context *fusion;
+> --
+> 2.7.4
+>
+>
