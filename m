@@ -2,93 +2,102 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F58C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0782CC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFCE20840
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:35:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ZCkteSMt"
+	by mail.kernel.org (Postfix) with ESMTP id D2DB52184B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563925015;
+	bh=BuegP/V0qI4Z8kyW9R7aYMJWkIoqBWoCJg3WJV3ANEE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JICss7MDjds+Bi1sBWypyUUNec9C43OQv6zLyUei+xfuVJAwxZPZrVhZcw2S6KyYC
+	 9x01wrVRrfchkhjLDLpnV79tTJRdexiA+HNmHTLznEDWEzGVz6CFQb1DZGlB/qV5zP
+	 scGvSbQApfBeP1w5wgELJXRnTpdbUgakQSW8hOE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfGWXfI (ORCPT
+        id S1727124AbfGWXgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:35:08 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:57314 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfGWXfI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:35:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        Tue, 23 Jul 2019 19:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726862AbfGWXgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 19:36:54 -0400
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2C381886BF;
-        Wed, 24 Jul 2019 11:35:05 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1563924905;
-        bh=Nzps3/SY5bbhyY3INK4FUpJb1QUR3fJTW8PvT9B4cO8=;
-        h=From:To:Cc:Subject:Date;
-        b=ZCkteSMtpWGPDy0qHieIxu71kkVRyyk5ScITlCo2nHKzWsr16OBiohSuads9QIM0U
-         ET6n/lh7t+hse82TeWAMJG17+VY+VU6gZjJgBfIDK9EqBSfM6Z/2EGkBOgCMrOK+Wp
-         HAjCoj/KC7iIFyT/FIdToN7HhenQ75pABPGh8YAmUAsZTCIZnSMQhqeAoOVZaEaSVl
-         hEYLNsM70FLsNuwVl33mxMDCViuK/xPgAN+oc7qX2Q5pA9dg0rtIqUO6jzIrXt1Sp1
-         plJxZ8E1HuqbQlFFmbNOb2lryM+nAAcj/mjJwO8nhBGNNlHwdaJqRff5PAtoqhwB0j
-         sE4SYwo4WZ7tA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d3799a70000>; Wed, 24 Jul 2019 11:35:03 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id F302213EECE;
-        Wed, 24 Jul 2019 11:35:06 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id E781D1E04FD; Wed, 24 Jul 2019 11:35:04 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     madalin.bucur@nxp.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] fsl/fman: Remove comment referring to non-existent function
-Date:   Wed, 24 Jul 2019 11:35:01 +1200
-Message-Id: <20190723233501.6626-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F58B2184B;
+        Tue, 23 Jul 2019 23:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563925013;
+        bh=BuegP/V0qI4Z8kyW9R7aYMJWkIoqBWoCJg3WJV3ANEE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gEwrrwf7oydOanm0eePwlZFoYfow+Bm7AmlWOdxbHKfMLZE1v6M+hHx5AW70qzZyf
+         i3SaBy7lGtnn6tCVBp06LXAuJ2E6k4I6/7N+02PGSqdL6ZU+KOj2KF0079UKfYNPjH
+         jR3vUvCApW37szj2/TNaOIGsO9NJInHAFh3bjLmU=
+Date:   Tue, 23 Jul 2019 18:36:51 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH] PCI: Remove unused
+ EXPORT_SYMBOL()s from drivers/pci/bus.c
+Message-ID: <20190723233651.GD47047@google.com>
+References: <20190717182353.45557-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717182353.45557-1-skunberg.kelsey@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fm_set_max_frm() existed in the Freescale SDK as a callback for an
-early_param. When this code was ported to the upstream kernel the
-early_param was converted to a module_param making the reference to the
-function incorrect. The rest of the comment already does a good job of
-explaining the parameter so removing the reference to the non-existent
-function seems like the best thing to do.
+[+cc Greg]
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/net/ethernet/freescale/fman/fman.c | 3 ---
- 1 file changed, 3 deletions(-)
+On Wed, Jul 17, 2019 at 12:23:53PM -0600, Kelsey Skunberg wrote:
+> pci_bus_get() and pci_bus_put() are not used by a loadable kernel module
+> and do not need to be exported. Remove lines exporting pci_bus_get() and
+> pci_bus_put().
+> 
+> Functions were exported in commit fe830ef62ac6 ("PCI: Introduce
+> pci_bus_{get|put}() to manage PCI bus reference count"). No found history
+> of functions being used by a loadable kernel module.
+> 
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman.c b/drivers/net/eth=
-ernet/freescale/fman/fman.c
-index e80fedb27cee..210749bf1eac 100644
---- a/drivers/net/ethernet/freescale/fman/fman.c
-+++ b/drivers/net/ethernet/freescale/fman/fman.c
-@@ -2439,9 +2439,6 @@ MODULE_PARM_DESC(fsl_fm_rx_extra_headroom, "Extra h=
-eadroom for Rx buffers");
-  * buffers when not using jumbo frames.
-  * Must be large enough to accommodate the network MTU, but small enough
-  * to avoid wasting skb memory.
-- *
-- * Could be overridden once, at boot-time, via the
-- * fm_set_max_frm() callback.
-  */
- static int fsl_fm_max_frm =3D FSL_FM_MAX_FRAME_SIZE;
- module_param(fsl_fm_max_frm, int, 0);
---=20
-2.22.0
+Applied with Greg's ack to pci/hide for v5.4, thanks!
 
+> ---
+>  drivers/pci/bus.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 495059d923f7..8e40b3e6da77 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -417,11 +417,9 @@ struct pci_bus *pci_bus_get(struct pci_bus *bus)
+>  		get_device(&bus->dev);
+>  	return bus;
+>  }
+> -EXPORT_SYMBOL(pci_bus_get);
+>  
+>  void pci_bus_put(struct pci_bus *bus)
+>  {
+>  	if (bus)
+>  		put_device(&bus->dev);
+>  }
+> -EXPORT_SYMBOL(pci_bus_put);
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Linux-kernel-mentees mailing list
+> Linux-kernel-mentees@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
