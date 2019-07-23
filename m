@@ -2,381 +2,101 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72170C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F90C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35ED22238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:35:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mvD+jRhh"
+	by mail.kernel.org (Postfix) with ESMTP id 39D6820644
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563921386;
+	bh=S+OBtAljJE6cIolYurUB5uyTZhGfXmhmh+XdeLh/sNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bxbaqrSUthCH1dH7yoH/4F27ahN0Sih+0jW5Wtv/dPcQrrLGh6LC+m4m465iPyOHb
+	 eMi0bSYONQ+ErRG58uZ0FXQaUNV0ol/BfaL9F0mJrb/6I6nYw1xEh2KMM1V4yLpLN2
+	 gYVt7W7WmsxCDsW2wloSgi7fo9g14AYLSpG2Bpqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389605AbfGWWfl (ORCPT
+        id S2389416AbfGWWgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:35:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34738 "EHLO
+        Tue, 23 Jul 2019 18:36:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45533 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389588AbfGWWfe (ORCPT
+        with ESMTP id S1727172AbfGWWgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:35:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b13so19848599pfo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 15:35:33 -0700 (PDT)
+        Tue, 23 Jul 2019 18:36:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so19838439pfq.12;
+        Tue, 23 Jul 2019 15:36:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=a9df1aBp8aRLCGR2a9/ePqT7IGRC3SBDVB33J06YG3E=;
-        b=mvD+jRhhI2hqAwqkMhcgItMuaZfI4koFazSdjTev8IR7/2NMFOofFgmP1HhpSM1iD4
-         jp8d/9iXunM2UmR3hWUETUkBCI0bx2jfKRvlL6gt3CQmvu+n/Gs6NQHAvxZwPmfc1DII
-         dM8ZYTQ2NSvj5B9Wf375+WrOd6BtU9fC4ctwhe3zZuKMNTHg7z825fVJtBGgKreKrH79
-         qZQbohrlqFpFWLeCzpW5ct1Z1NmBqgDXI4OedBGIyiGGgdddXbaKiFKXbOJJCcBEdj4L
-         hTa07EiOfuObbMDwvPIk7RXIpjdFqZspY9r17ZFRpJrPHt97hkJ0VkhIqwN0XoipVzIe
-         vl/A==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zNouKbF6UyPadfEdFSK5fRF7G6CWHnxRN1FzAl+dNYs=;
+        b=SdQIiqD4fkEQwr9X83RCA6yuwNBY1uChpKnXh3cAh+UZV7T/q90T66/ebWnSWzMdU1
+         4ZhW4dn/MufMU2L+7JiJDj0tARsd7/JfDcK7Kqqk3vaKGtlGIJNFTFOKuIVEJ0tJg6HV
+         nJBlNrJlbG4z+e88LPyvn8BrL/xxUJQuiugCiM1POSvapwm84nYrkEXh/Mp5F/0QCKHD
+         T4d7iSWVbnhNQvkYjTIxXZMgF9DK7sKqcgjD1ReNDbfobnDjlowVaYpWEDPDMZN2xhW7
+         pis75BozdMnhMsLgEScEd3kHzIXXtW8zbGK+ErLn5nFgdmWdRJBTzk0v8ZxIrsyj4e4i
+         052A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=a9df1aBp8aRLCGR2a9/ePqT7IGRC3SBDVB33J06YG3E=;
-        b=m6/KOxVchJOZzxssTULkXm3U7Lhlnyh4xioNKDi0rv7uhLGrTAsZrzmJenf/WyQpMr
-         yQRBvjCIGhxS1fXzzqWYpa+VK1tTH726Nos+icaDtkDAG/5TPtsT+kAp4WWsA/RDz/TO
-         S3+7cawTeGIZ2ePYy3k4S4uv7dNgB84L1q2vbbcVFu5hrAdX5RQ9E08nbV4kBuq0LqNV
-         nQjPxBXdDmLA3hPocBhtqDm/9utwmNRhLtTT/av62fZnpnnYwpivfiHxIe3GOBjvSesY
-         3p48KDtRZBE2RQcJK/Ob7N/dnb5n8U7pKpTxWRfvf2TvgFR2M19JOLnZjnThKj/+3voF
-         UZHQ==
-X-Gm-Message-State: APjAAAX+OPbuMhE/LmWM8Dd46rxeyBgbOhOyh+BmtgC3KfZI8aq9jo0S
-        MvmZFwfxu7FEny9VHmFnG/QjWg==
-X-Google-Smtp-Source: APXvYqyL114K7eWF4i2epD59fFdy9Bai16Vh9NLPgVO1G6L+PL8oKl0zv3DaNS6OE9gUMDHgfBPOZw==
-X-Received: by 2002:a17:90a:2ec1:: with SMTP id h1mr84641946pjs.101.1563921333450;
-        Tue, 23 Jul 2019 15:35:33 -0700 (PDT)
-Received: from localhost.localdomain ([115.99.187.56])
-        by smtp.gmail.com with ESMTPSA id h16sm49036917pfo.34.2019.07.23.15.35.29
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zNouKbF6UyPadfEdFSK5fRF7G6CWHnxRN1FzAl+dNYs=;
+        b=lHezlGNQMLc06neDrlGeTu2C9jbKyLlRxOt/jlocy7Ycj217XlmUrHARZX9aeXleEW
+         1kGxfVrJ7+jlTgCBw8NBQgXy0lWSseNAAnrIXIw6l512r2/0oHMOntQRWcYjKt6wfL7l
+         FiSR8oMGA9qWzePUJovI8kK9fzoIS7jrBTETtXvhewGWg85ACeBb6Hl5S2EyWmiPfi+Z
+         6oqdKwmCOyNWa90AtbeWArqpQ+PObcT0v2e7gu50LriO0I/VwqbvBXSDcuMK+qXwwrDN
+         Vw6rVfu9kzVjR1K1qr/FM91leZgIPflK24v8Uk+a8uSNwgMJJamfya41YjTriPBW4uiB
+         SnTA==
+X-Gm-Message-State: APjAAAX+/XJDj4/9ssO2+FBrD/azA2l/bo2ooefm6EC1z6RC4394YTFP
+        ziDYOIDV2k/saph/qSLV3LU=
+X-Google-Smtp-Source: APXvYqziGHn+6jGrdziu5cLb9QnyDXXK2JmIkImwr7M2iRolvR/fyo5r25/cJX4zAbOa2Ux1/H46Dw==
+X-Received: by 2002:a62:5883:: with SMTP id m125mr7941308pfb.248.1563921384228;
+        Tue, 23 Jul 2019 15:36:24 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:2287])
+        by smtp.gmail.com with ESMTPSA id w132sm45870833pfd.78.2019.07.23.15.36.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 15:35:33 -0700 (PDT)
-From:   Vaishali Thakkar <vaishali.thakkar@linaro.org>
-To:     agross@kernel.org
-Cc:     david.brown@linaro.org, gregkh@linuxfoundation.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
-        Imran Khan <kimran@codeaurora.org>,
-        Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Subject: [PATCH v6 3/5] soc: qcom: Add socinfo driver
-Date:   Wed, 24 Jul 2019 04:05:13 +0530
-Message-Id: <20190723223515.27839-4-vaishali.thakkar@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190723223515.27839-1-vaishali.thakkar@linaro.org>
-References: <20190723223515.27839-1-vaishali.thakkar@linaro.org>
+        Tue, 23 Jul 2019 15:36:23 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 15:36:21 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Konstantin Khlebnikov <koct9i@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Cgroups <cgroups@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH] mm/backing-dev: show state of all bdi_writeback in
+ debugfs
+Message-ID: <20190723223621.GF696309@devbig004.ftw2.facebook.com>
+References: <156388617236.3608.2194886130557491278.stgit@buzz>
+ <20190723130729.522976a1f075d748fc946ff6@linux-foundation.org>
+ <CALYGNiMw_9MKxfCxq9QsXi3PbwQMwKmLufQqUnhYdt8C+sR2rA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALYGNiMw_9MKxfCxq9QsXi3PbwQMwKmLufQqUnhYdt8C+sR2rA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imran Khan <kimran@codeaurora.org>
+On Wed, Jul 24, 2019 at 12:24:41AM +0300, Konstantin Khlebnikov wrote:
+> Debugging such dynamic structure with gdb is a pain.
 
-The Qualcomm socinfo driver exposes information about the SoC, its
-version and its serial number to user space.
+Use drgn.  It's a lot better than hard coding these debug features
+into the kernel.
 
-Signed-off-by: Imran Khan <kimran@codeaurora.org>
-[Bjorn: Extract code to platform_driver, split patch in multiple]
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[Vaishali: Simplify declarations, introduce qcom_socinfo struct, Fix
-           memory leak, Remove extra code and Misc code refactoring]
-Signed-off-by: Vaishali Thakkar <vaishali.thakkar@linaro.org>
----
-Changes since v5:
-	-No code changes, fix diff.context setting for formatting
-         patches. Version 5 was adding context at the bottom of
-         the file with 'git am'.
-Changes since v4:
-	- Return PTR_ERR in qcom_socinfo_probe instead of error value
-	- Return PTR_ERR in smem probe to print proper error message
-	  when we fail to register the socinfo device
-	- Use dev_dbg instead of dev_err in qcom_smem_probe
-	- Use offset_of for exposing the value of serial_number
-	- Unregister the platform device in smem remove function
-	- Drop error message in socinfo_machine
-	- Misc: Add spaces between brackets and strings/numbers in
-	        soc_of_id, item ids->item id, socinfo->SoCinfo,
-		soc_of_id->soc_id
-Changes since v3:
-        - None
-Changes since v2:
-        - Fix typo in the work log under signed off by s
-Changes since v1:
-        - None
----
- drivers/soc/qcom/Kconfig   |   8 ++
- drivers/soc/qcom/Makefile  |   1 +
- drivers/soc/qcom/smem.c    |   9 ++
- drivers/soc/qcom/socinfo.c | 194 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 212 insertions(+)
- create mode 100644 drivers/soc/qcom/socinfo.c
+  https://github.com/osandov/drgn
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index a6d1bfb17279..661e47acc354 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -175,6 +175,14 @@ config QCOM_SMSM
- 	  Say yes here to support the Qualcomm Shared Memory State Machine.
- 	  The state machine is represented by bits in shared memory.
- 
-+config QCOM_SOCINFO
-+	tristate "Qualcomm socinfo driver"
-+	depends on QCOM_SMEM
-+	select SOC_BUS
-+	help
-+	 Say yes here to support the Qualcomm socinfo driver, providing
-+	 information about the SoC to user space.
-+
- config QCOM_WCNSS_CTRL
- 	tristate "Qualcomm WCNSS control driver"
- 	depends on ARCH_QCOM || COMPILE_TEST
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index eeb088beb15f..162788701a77 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_QCOM_SMEM) +=	smem.o
- obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
- obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
-+obj-$(CONFIG_QCOM_SOCINFO)	+= socinfo.o
- obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
- obj-$(CONFIG_QCOM_APR) += apr.o
- obj-$(CONFIG_QCOM_LLCC) += llcc-slice.o
-diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
-index f27c00d82ae4..0caf67e2f037 100644
---- a/drivers/soc/qcom/smem.c
-+++ b/drivers/soc/qcom/smem.c
-@@ -268,6 +268,7 @@ struct qcom_smem {
- 	struct smem_partition_header *partitions[SMEM_HOST_COUNT];
- 	size_t cacheline[SMEM_HOST_COUNT];
- 	u32 item_count;
-+	struct platform_device *socinfo;
- 
- 	unsigned num_regions;
- 	struct smem_region regions[];
-@@ -963,11 +964,19 @@ static int qcom_smem_probe(struct platform_device *pdev)
- 
- 	__smem = smem;
- 
-+	smem->socinfo = platform_device_register_data(&pdev->dev, "qcom-socinfo",
-+						      PLATFORM_DEVID_NONE, NULL,
-+						      0);
-+	if (IS_ERR(smem->socinfo))
-+		dev_dbg(&pdev->dev, "failed to register socinfo device\n");
-+
- 	return 0;
- }
- 
- static int qcom_smem_remove(struct platform_device *pdev)
- {
-+	platform_device_unregister(__smem->socinfo);
-+
- 	hwspin_lock_free(__smem->hwlock);
- 	__smem = NULL;
- 
-diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-new file mode 100644
-index 000000000000..1b9eb44df7fe
---- /dev/null
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -0,0 +1,194 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2009-2017, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017-2019, Linaro Ltd.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/random.h>
-+#include <linux/slab.h>
-+#include <linux/soc/qcom/smem.h>
-+#include <linux/string.h>
-+#include <linux/sys_soc.h>
-+#include <linux/types.h>
-+
-+/*
-+ * SoC version type with major number in the upper 16 bits and minor
-+ * number in the lower 16 bits.
-+ */
-+#define SOCINFO_MAJOR(ver) (((ver) >> 16) & 0xffff)
-+#define SOCINFO_MINOR(ver) ((ver) & 0xffff)
-+
-+#define SMEM_SOCINFO_BUILD_ID_LENGTH           32
-+
-+/*
-+ * SMEM item id, used to acquire handles to respective
-+ * SMEM region.
-+ */
-+#define SMEM_HW_SW_BUILD_ID            137
-+
-+/* Socinfo SMEM item structure */
-+struct socinfo {
-+	__le32 fmt;
-+	__le32 id;
-+	__le32 ver;
-+	char build_id[SMEM_SOCINFO_BUILD_ID_LENGTH];
-+	/* Version 2 */
-+	__le32 raw_id;
-+	__le32 raw_ver;
-+	/* Version 3 */
-+	__le32 hw_plat;
-+	/* Version 4 */
-+	__le32 plat_ver;
-+	/* Version 5 */
-+	__le32 accessory_chip;
-+	/* Version 6 */
-+	__le32 hw_plat_subtype;
-+	/* Version 7 */
-+	__le32 pmic_model;
-+	__le32 pmic_die_rev;
-+	/* Version 8 */
-+	__le32 pmic_model_1;
-+	__le32 pmic_die_rev_1;
-+	__le32 pmic_model_2;
-+	__le32 pmic_die_rev_2;
-+	/* Version 9 */
-+	__le32 foundry_id;
-+	/* Version 10 */
-+	__le32 serial_num;
-+	/* Version 11 */
-+	__le32 num_pmics;
-+	__le32 pmic_array_offset;
-+	/* Version 12 */
-+	__le32 chip_family;
-+	__le32 raw_device_family;
-+	__le32 raw_device_num;
-+};
-+
-+struct qcom_socinfo {
-+	struct soc_device *soc_dev;
-+	struct soc_device_attribute attr;
-+};
-+
-+struct soc_id {
-+	unsigned int id;
-+	const char *name;
-+};
-+
-+static const struct soc_id soc_id[] = {
-+	{ 87, "MSM8960" },
-+	{ 109, "APQ8064" },
-+	{ 122, "MSM8660A" },
-+	{ 123, "MSM8260A" },
-+	{ 124, "APQ8060A" },
-+	{ 126, "MSM8974" },
-+	{ 130, "MPQ8064" },
-+	{ 138, "MSM8960AB" },
-+	{ 139, "APQ8060AB" },
-+	{ 140, "MSM8260AB" },
-+	{ 141, "MSM8660AB" },
-+	{ 178, "APQ8084" },
-+	{ 184, "APQ8074" },
-+	{ 185, "MSM8274" },
-+	{ 186, "MSM8674" },
-+	{ 194, "MSM8974PRO" },
-+	{ 206, "MSM8916" },
-+	{ 208, "APQ8074-AA" },
-+	{ 209, "APQ8074-AB" },
-+	{ 210, "APQ8074PRO" },
-+	{ 211, "MSM8274-AA" },
-+	{ 212, "MSM8274-AB" },
-+	{ 213, "MSM8274PRO" },
-+	{ 214, "MSM8674-AA" },
-+	{ 215, "MSM8674-AB" },
-+	{ 216, "MSM8674PRO" },
-+	{ 217, "MSM8974-AA" },
-+	{ 218, "MSM8974-AB" },
-+	{ 246, "MSM8996" },
-+	{ 247, "APQ8016" },
-+	{ 248, "MSM8216" },
-+	{ 249, "MSM8116" },
-+	{ 250, "MSM8616" },
-+	{ 291, "APQ8096" },
-+	{ 305, "MSM8996SG" },
-+	{ 310, "MSM8996AU" },
-+	{ 311, "APQ8096AU" },
-+	{ 312, "APQ8096SG" },
-+};
-+
-+static const char *socinfo_machine(struct device *dev, unsigned int id)
-+{
-+	int idx;
-+
-+	for (idx = 0; idx < ARRAY_SIZE(soc_id); idx++) {
-+		if (soc_id[idx].id == id)
-+			return soc_id[idx].name;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int qcom_socinfo_probe(struct platform_device *pdev)
-+{
-+	struct qcom_socinfo *qs;
-+	struct socinfo *info;
-+	size_t item_size;
-+
-+	info = qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_HW_SW_BUILD_ID,
-+			      &item_size);
-+	if (IS_ERR(info)) {
-+		dev_err(&pdev->dev, "Couldn't find socinfo\n");
-+		return PTR_ERR(info);
-+	}
-+
-+	qs = devm_kzalloc(&pdev->dev, sizeof(*qs), GFP_KERNEL);
-+	if (!qs)
-+		return -ENOMEM;
-+
-+	qs->attr.family = "Snapdragon";
-+	qs->attr.machine = socinfo_machine(&pdev->dev,
-+					   le32_to_cpu(info->id));
-+	qs->attr.revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u.%u",
-+					   SOCINFO_MAJOR(le32_to_cpu(info->ver)),
-+					   SOCINFO_MINOR(le32_to_cpu(info->ver)));
-+	if (offsetof(struct socinfo, serial_num) <= item_size)
-+		qs->attr.serial_number = devm_kasprintf(&pdev->dev, GFP_KERNEL,
-+							"%u",
-+							le32_to_cpu(info->serial_num));
-+
-+	qs->soc_dev = soc_device_register(&qs->attr);
-+	if (IS_ERR(qs->soc_dev))
-+		return PTR_ERR(qs->soc_dev);
-+
-+	/* Feed the soc specific unique data into entropy pool */
-+	add_device_randomness(info, item_size);
-+
-+	platform_set_drvdata(pdev, qs->soc_dev);
-+
-+	return 0;
-+}
-+
-+static int qcom_socinfo_remove(struct platform_device *pdev)
-+{
-+	struct qcom_socinfo *qs = platform_get_drvdata(pdev);
-+
-+	soc_device_unregister(qs->soc_dev);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver qcom_socinfo_driver = {
-+	.probe = qcom_socinfo_probe,
-+	.remove = qcom_socinfo_remove,
-+	.driver  = {
-+		.name = "qcom-socinfo",
-+	},
-+};
-+
-+module_platform_driver(qcom_socinfo_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm SoCinfo driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:qcom-socinfo");
+Thanks.
+
 -- 
-2.17.1
-
+tejun
