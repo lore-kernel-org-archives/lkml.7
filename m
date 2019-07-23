@@ -2,80 +2,100 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8215EC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D55C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4D921926
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710B42238C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8CkXQHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392530AbfGWXAc (ORCPT
+        id S2392597AbfGWXCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:00:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:57337 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728418AbfGWXAb (ORCPT
+        Tue, 23 Jul 2019 19:02:12 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38138 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392608AbfGWXCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:00:31 -0400
-Received: from [192.168.1.110] ([95.118.72.89]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MSqbe-1hzWmY3zlm-00UIYa; Wed, 24 Jul 2019 01:00:21 +0200
-Subject: Re: [PATCH 3/3] platform//x86/pcengines-apuv2: update gpio button
- definition
-To:     Florian Eckert <eckert.florian@googlemail.com>
-Cc:     Florian Eckert <fe@dev.tdt.de>, info@metux.net,
-        dvhart@infradead.org, andy@infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190704090205.19400-1-fe@dev.tdt.de>
- <20190704090205.19400-4-fe@dev.tdt.de>
- <cca95ba1-6ac0-a2eb-9ae6-914a8783c1ad@metux.net>
- <CALPCC5wH_uAGYaHeM_d_yxxUZEd3f-MfhT7jdZSt9ythd08S9w@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <ab15f31b-e585-15c2-877a-5fcc13e85e14@metux.net>
-Date:   Wed, 24 Jul 2019 01:00:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CALPCC5wH_uAGYaHeM_d_yxxUZEd3f-MfhT7jdZSt9ythd08S9w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:EX1j4GM+pOLE65MKiwTA8Ks36S6bIA+Y7Mhd6g2mbt9wg4ebVug
- kqRDbgWT46bwxsFukXFSexKcJJPbVpE8uzNERTO/GR732zedwK0C2q9OrQSWHtDb51VJODw
- gtujqmGVbXaj/VRY8I84d/wwX0SlAuzYicXDP8fWf8w9Uc+LDFZTVdfNgi2/vDG/qS3rxwe
- cQn88ii5fnxPtp3PWojFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IsyNBD5FIIg=:9ZSiUeXe9Qr2cxzGf5qCAo
- v0GR4pblsBOU5yggDB/SNoh6X3cxXhWdWfsxSAW5FAvW8bVMnylmytJvYrdO/XBTJs/+br4Ic
- FUQmpu/vpO1sWCouvjagy7iLZMZK8HKizzJm1r9fbNIp7q9e9i6nE2KmfJHWAztLw+pdTrZRb
- +fHVDCW+uuO3VuQwK0YlqhImw5e901p3bflAF+Se+wdWgXVk6ufwjhQQkKR5PpnfWhKFjjE7g
- LozO5mk+AzdRbgh0lV9iNwZn0IODGyVKUUOptVvfu/k2oGxicK2d6Dfd22LlZmQ+Nfr/IssSf
- dVVro7ZoWM/noCe77DF/bXW/a+QRDqSzYxXw0OSuqh8brkHaop3sa7xPsNsz4vGbrVqRi40aD
- bl6xQYxyeohOFI2YPd2TtlYdNgnWo5W8Arp0uRS1SGjUz3JNc46HbwcUNjAttgroWg/1G3IO2
- MJIKr/fk8l8KejpxA5eToFCkXeH0dCltFOr65IzxyazgvmEvEnT4yi56tNV3WyaBhkNBMcCK3
- xyGdGIc8OIWsmN9qxfk8wAtw9asyZVjhUvPqgIm7r2IlaNKjJzcoyt4BMXpXKkDe9lEkrCdFR
- LtrIvy8L95gMg0yHohri1YryubtO2j2M78Zn0UfVpXx9mhmfi3PIfD6bsSy+V5K6O6kVqU6Zz
- g1fa20sHXrQpItedcXfb5PcV0yVKRse9WgPUWMYqcGTg+gHSU2rCThoWg6YflTxbKEkRt2SYz
- e2BWerFkaqkrfTclIu0NEPa6DpfqdIzPwelR1SCcQwuhyYM9LAHuSOrSoS0=
+        Tue, 23 Jul 2019 19:02:06 -0400
+Received: by mail-io1-f67.google.com with SMTP id j6so10304752ioa.5;
+        Tue, 23 Jul 2019 16:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WLivNX+IOU3BF5pVPZ4dT2PGyWr1z46q52x8JkbNVPY=;
+        b=Z8CkXQHtW2MsPGieVx6RX8eY6KKzotV/eE19hybmIqhS5dToSWjnczzuz+1Uhz6rrh
+         zxz4ZMS9cEwRPfXnSTKOW5vFjehBiljmlg3X5Oymz/MvTObEZ5yIV0dYXCM0cOuYiM47
+         0+DQlGJ16dCKLm+K09Sdb6aVtLmafnOddQhhRip9PBFKIb7qv7GjaliBMwqhpP4po6ho
+         2bd5iFeZBYllACr5dGiIlaK2i6/PSoPpL6wa1FI+xK2R7S7a/siCQNUhBTukQufvqygC
+         aeugjPFBUR4ng4oCJi5khHw2z0OogUaddtLA//mvVhVcIGG4HRoj5TT20nHyXs3rDOX2
+         bsdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WLivNX+IOU3BF5pVPZ4dT2PGyWr1z46q52x8JkbNVPY=;
+        b=WkFxVBxusoF8J4Rg2YejSuqnlOJCCChR/cjTmBJ/gSDlvad64JjnBgjrfwwt4vqDo+
+         66XxGvbr67AERM/eox8lN+7xKiSGYu1OPIGr9jHbmVR2JwyAsrnWd8RBEQ1/P2sedxRS
+         7BDKu2GuZRUPB0NjRsxa2dHU2M13NHM2PBPGR4y+P5wUxVOGoR78mgUZNMXycACRjL3Y
+         jU5QZjArFc6+xHE2DK5Wg58MPBUyaSbEtaIoz4BukKt+Vf3maPpa4bv5XRhlPVSnEecd
+         IhZMQqPSUlYxsHWLnALWLUvy+cLQsWK7tcK5vnOkCWnJnKZf/ZLisKyivn0gCUHaXuOn
+         w53g==
+X-Gm-Message-State: APjAAAUgH9tKjb7EMCT2Jck0fvnMoyUEK+SrL4nxqbH4KnwkjgwleKu3
+        1+ZUOUnI5nmgdlhCqVTCcM0=
+X-Google-Smtp-Source: APXvYqx+pftMEVYYB/3f9Gf0UovCtgpLezh4sifw7pJ/oYZWL0Q9aQ7ncsyrdWy5Sdc+AS5N6YhmHw==
+X-Received: by 2002:a02:37d6:: with SMTP id r205mr80277850jar.57.1563922925974;
+        Tue, 23 Jul 2019 16:02:05 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id m10sm84918390ioj.75.2019.07.23.16.02.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 16:02:05 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        secalert@redhat.com, Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nbd_genl_status: null check for nla_nest_start
+Date:   Tue, 23 Jul 2019 18:01:57 -0500
+Message-Id: <20190723230157.14484-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.07.19 09:06, Florian Eckert wrote:
->> I'd like to ack only the keycode change, but not the deprecated .gpio
->> field. I'll post a separate patch for the keycode change only.
-> 
-> I am fine if we only change the keycode.
-> Do I have to send a v2 patch set?
-> 
+nla_nest_start may fail and return NULL. The check is inserted, and
+errno is selected based on other call sites within the same source code.
 
-already sent one.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/block/nbd.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 9bcde2325893..dba362de4d91 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2149,6 +2149,12 @@ static int nbd_genl_status(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	dev_list = nla_nest_start_noflag(reply, NBD_ATTR_DEVICE_LIST);
++
++	if (!dev_list) {
++		ret = -EMSGSIZE;
++		goto out;
++	}
++
+ 	if (index == -1) {
+ 		ret = idr_for_each(&nbd_index_idr, &status_cb, reply);
+ 		if (ret) {
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.1
+
