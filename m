@@ -2,81 +2,114 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C0FC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B1CC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B06218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EF6218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563887710;
+	bh=mz9mTp7Gd95uhLBemlJRlCK00PVAZY0jiN6ov4dQQBg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=z25jhKlM+jepRvxQRwYqewa9PD8jM2wdIHICfG5J7aqmhGLWT0ivxKZFsIUZNUN0n
+	 UIHjgZKJ1nYT13bsjYL0nmeTItiWu6LWPaeulIVdkjr/w4LLIy+mpfxY8EVJLiEQMD
+	 zEPIiPk4Spj0lX/iTXqXszoG0rVWn07b+yegc8ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390074AbfGWNOP (ORCPT
+        id S2390096AbfGWNPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:14:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57250 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727311AbfGWNOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:14:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C11D4AC47;
-        Tue, 23 Jul 2019 13:14:13 +0000 (UTC)
-Date:   Tue, 23 Jul 2019 15:14:10 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Weitao Hou <houweitaoo@gmail.com>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com, david@redhat.com,
-        pasha.tatashin@soleen.com, dan.j.williams@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/hotplug: remove unneeded return for void function
-Message-ID: <20190723131401.GA24690@linux>
-References: <20190723130814.21826-1-houweitaoo@gmail.com>
+        Tue, 23 Jul 2019 09:15:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:54634 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727311AbfGWNPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:15:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD4D728;
+        Tue, 23 Jul 2019 06:15:07 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BECF93F71F;
+        Tue, 23 Jul 2019 06:15:06 -0700 (PDT)
+Subject: Re: [PATCH 3/9] dt-bindings: interrupt-controller: arm, gic-v3:
+ Describe ESPI range support
+To:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190723104437.154403-1-maz@kernel.org>
+ <20190723104437.154403-4-maz@kernel.org>
+ <04e80def-c8e3-a403-036e-2a64db935ed4@ti.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <e67ff715-9625-6aec-5e1f-28f7c9df66f6@kernel.org>
+Date:   Tue, 23 Jul 2019 14:15:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723130814.21826-1-houweitaoo@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <04e80def-c8e3-a403-036e-2a64db935ed4@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:08:14PM +0800, Weitao Hou wrote:
-> return is unneeded in void function
+On 23/07/2019 13:59, Lokesh Vutla wrote:
 > 
-> Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
-
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-
-> ---
->  mm/memory_hotplug.c | 2 --
->  1 file changed, 2 deletions(-)
 > 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 2a9bbddb0e55..c73f09913165 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -132,7 +132,6 @@ static void release_memory_resource(struct resource *res)
->  		return;
->  	release_resource(res);
->  	kfree(res);
-> -	return;
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTPLUG_SPARSE
-> @@ -979,7 +978,6 @@ static void rollback_node_hotadd(int nid)
->  	arch_refresh_nodedata(nid, NULL);
->  	free_percpu(pgdat->per_cpu_nodestats);
->  	arch_free_nodedata(pgdat);
-> -	return;
->  }
->  
->  
-> -- 
-> 2.18.0
+> On 23/07/19 4:14 PM, Marc Zyngier wrote:
+>> GICv3.1 introduces support for new interrupt ranges, one of them being
+>> the Extended SPI range (ESPI). The DT binding is extended to deal with
+>> it as a new interrupt class.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  .../devicetree/bindings/interrupt-controller/arm,gic-v3.yaml | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+>> index c34df35a25fc..98a3ecda8e07 100644
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+>> @@ -44,11 +44,12 @@ properties:
+>>        be at least 4.
+>>  
+>>        The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
+>> -      interrupts. Other values are reserved for future use.
+>> +      interrupts, 2 for interrupts in the Extended SPI range. Other values
+>> +      are reserved for future use.
 > 
+> Any reason why hardware did not consider extending SPIs from 1020:2043? This way
+> only EPPI would have been introduced. Just a thought.
 
+First, 1020-1023 is the special INTID range. You can't have anything
+else there.
+
+Then, making the range contiguous could imply that the range is also
+contiguous in the register space, which isn't possible (note that the
+EPPI range does it the other way around -- it is discontinuous in the
+INTID space, and yet continuous in the register space).
+
+Finally, the decision to push the numbering out towards the LPI range
+allows the ESPI space to be grown easily up to 4k.
+
+But frankly, none of that really matters. They are just numbers.
+
+> Either ways, just to be consistent with hardware numbering can ESPI range be 3
+> and EPPI range be 2?
+
+Well, the way I see it is that it is more logical for the binding
+itself. We already have 0 for SPIs and 1 for PPIs, despite PPIs being
+before SPIs in the INTID space.
+
+Thanks,
+
+	M.
 -- 
-Oscar Salvador
-SUSE L3
+Jazz is not dead, it just smells funny...
