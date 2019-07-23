@@ -7,62 +7,60 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7E1C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D13C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EBE22ADC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA1B2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="llunZeFS"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iDA4cLJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403988AbfGWVuI (ORCPT
+        id S2392205AbfGWVvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:50:08 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42629 "EHLO
+        Tue, 23 Jul 2019 17:51:01 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48103 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731612AbfGWVuH (ORCPT
+        with ESMTP id S2392189AbfGWVvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:50:07 -0400
+        Tue, 23 Jul 2019 17:51:00 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NLnJ2K253396
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NLomZh253519
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 23 Jul 2019 14:49:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NLnJ2K253396
+        Tue, 23 Jul 2019 14:50:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NLomZh253519
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1563918560;
-        bh=jEZ7ALSLtumeLXXb+vgVcxrPJSkSgkio94KoNbEl4Ew=;
+        s=2019071901; t=1563918649;
+        bh=IEij/GnBGNnp56JzgSfaId2G9nO0kTiOaD0kP2MqF+g=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=llunZeFSkgQsQV59HA+bgYcTUHzoospJ7Ox8OUtx6gQSgTmRXP2bHcUuN51nAateN
-         5BeLe1vz/uEHq01ZiXh4hErJJ0qajk1jp+A//KZ1AAb6N4IpHcGfg2sEYI6AUdGbnK
-         gm7i/BVScv77eIGtynKOs9T8PYbqYE8OYYCpIE3F/IP0W+2DE/uJ9fQhH5fkC2+Ynw
-         u1GB0uJkUnmzz2dyiBlC7uhRR81DUZZucM1Pu8PqXtKOc4sFn1iWi8yxqptmcUCDqX
-         HzXZuCYRpkS9Kd/qie04H2pRb+3LcoiXzwR1FS/Qz1bvhYsWJwUEosgm2o4J5Czwjn
-         mE92PZ8EFfVUA==
+        b=iDA4cLJlR6/sPXdNXUuSrIKcGXVO/aryLNevxPk5vUb0ZGLKzbxfP5pVjeFaDNe/k
+         0AqOhiw44VINUxz56+3yKflaP9fsGbSmQZQ8taIWeVqN0viFbmFc4cNDBFgocg3WhT
+         Eev3irIrXCEgckl13mNVF9sMjxEfCy7LLqxEMpelhmidmk+T9RDge/GZIhn8W/F8ix
+         uvUJrvwJAjspYh4lzg3pctu2Ncj6AOyO5HDfbxj2Ok5WYPaBcKaLaGflTgRurLCKO5
+         Ko9JgUjU/Jmq8xOnFZPRnppNXQbn35us3RS0avzxmapWnmqfI3Bgf6Le40DQMdBztr
+         KhtGmYrgxa4Kg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NLnIcZ253393;
-        Tue, 23 Jul 2019 14:49:18 -0700
-Date:   Tue, 23 Jul 2019 14:49:18 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NLom7x253516;
+        Tue, 23 Jul 2019 14:50:48 -0700
+Date:   Tue, 23 Jul 2019 14:50:48 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-08ef3af1579d0446db1c1bd08e2c42565addf10f@git.kernel.org>
-Cc:     jolsa@redhat.com, eranian@google.com, peterz@infradead.org,
-        songliubraving@fb.com, mbd@fb.com, tglx@linutronix.de,
-        mingo@kernel.org, irogers@google.com,
-        alexander.shishkin@linux.intel.com, nums@google.com,
-        linux-kernel@vger.kernel.org, jolsa@kernel.org, hpa@zytor.com,
-        acme@redhat.com, namhyung@kernel.org
-Reply-To: peterz@infradead.org, jolsa@redhat.com, eranian@google.com,
-          mingo@kernel.org, tglx@linutronix.de, mbd@fb.com,
-          songliubraving@fb.com, linux-kernel@vger.kernel.org,
-          nums@google.com, irogers@google.com,
-          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-          acme@redhat.com, hpa@zytor.com, jolsa@kernel.org
-In-Reply-To: <20190715142121.GC6032@krava>
-References: <20190715142121.GC6032@krava>
+From:   tip-bot for Alexey Budankov <tipbot@zytor.com>
+Message-ID: <tip-872c8ee8f0f47222f7b10da96eea84d0486540a3@git.kernel.org>
+Cc:     jolsa@kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, acme@redhat.com,
+        alexey.budankov@linux.intel.com, namhyung@kernel.org,
+        hpa@zytor.com, tglx@linutronix.de, ak@linux.intel.com,
+        alexander.shishkin@linux.intel.com
+Reply-To: hpa@zytor.com, tglx@linutronix.de, acme@redhat.com,
+          alexey.budankov@linux.intel.com, namhyung@kernel.org,
+          alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+          peterz@infradead.org, jolsa@kernel.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org
+In-Reply-To: <4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com>
+References: <4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf stat: Fix segfault for event group in repeat
- mode
-Git-Commit-ID: 08ef3af1579d0446db1c1bd08e2c42565addf10f
+Subject: [tip:perf/urgent] perf session: Fix loading of compressed data
+ split across adjacent records
+Git-Commit-ID: 872c8ee8f0f47222f7b10da96eea84d0486540a3
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -76,91 +74,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  08ef3af1579d0446db1c1bd08e2c42565addf10f
-Gitweb:     https://git.kernel.org/tip/08ef3af1579d0446db1c1bd08e2c42565addf10f
-Author:     Jiri Olsa <jolsa@redhat.com>
-AuthorDate: Mon, 15 Jul 2019 16:21:21 +0200
+Commit-ID:  872c8ee8f0f47222f7b10da96eea84d0486540a3
+Gitweb:     https://git.kernel.org/tip/872c8ee8f0f47222f7b10da96eea84d0486540a3
+Author:     Alexey Budankov <alexey.budankov@linux.intel.com>
+AuthorDate: Tue, 9 Jul 2019 17:48:14 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 23 Jul 2019 09:00:05 -0300
+CommitDate: Tue, 23 Jul 2019 09:04:03 -0300
 
-perf stat: Fix segfault for event group in repeat mode
+perf session: Fix loading of compressed data split across adjacent records
 
-Numfor Mbiziwo-Tiapo reported segfault on stat of event group in repeat
-mode:
+Fix decompression failure found during the loading of compressed trace
+collected on larger scale systems (>48 cores).
 
-  # perf stat -e '{cycles,instructions}' -r 10 ls
+The error happened due to lack of decompression space for a mmaped
+buffer data chunk split across adjacent PERF_RECORD_COMPRESSED records.
 
-It's caused by memory corruption due to not cleaned evsel's id array and
-index, which needs to be rebuilt in every stat iteration. Currently the
-ids index grows, while the array (which is also not freed) has the same
-size.
+  $ perf report -i bt.16384.data --stats
+  failed to decompress (B): 63869 -> 0 : Destination buffer is too small
+  user stack dump failure
+  Can't parse sample, err = -14
+  0x2637e436 [0x4080]: failed to process type: 9
+  Error:
+  failed to process sample
 
-Fixing this by releasing id array and zeroing ids index in
-perf_evsel__close function.
+  $ perf test 71
+  71: Zstd perf.data compression/decompression              : Ok
 
-We also need to keep the evsel_list alive for stat record (which is
-disabled in repeat mode).
-
-Reported-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Mark Drayton <mbd@fb.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190715142121.GC6032@krava
+Link: http://lkml.kernel.org/r/4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 9 ++++++++-
- tools/perf/util/evsel.c   | 2 ++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ tools/perf/util/session.c | 22 ++++++++++++++--------
+ tools/perf/util/session.h |  1 +
+ tools/perf/util/zstd.c    |  4 ++--
+ 3 files changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b55a534b4de0..352cf39d7c2f 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -607,7 +607,13 @@ try_again:
- 	 * group leaders.
- 	 */
- 	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
--	perf_evlist__close(evsel_list);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index d0fd6c614e68..37efa1f43d8b 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -36,10 +36,16 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	void *src;
+ 	size_t decomp_size, src_size;
+ 	u64 decomp_last_rem = 0;
+-	size_t decomp_len = session->header.env.comp_mmap_len;
++	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
+ 	struct decomp *decomp, *decomp_last = session->decomp_last;
+ 
+-	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
++	if (decomp_last) {
++		decomp_last_rem = decomp_last->size - decomp_last->head;
++		decomp_len += decomp_last_rem;
++	}
 +
-+	/*
-+	 * We need to keep evsel_list alive, because it's processed
-+	 * later the evsel_list will be closed after.
-+	 */
-+	if (!STAT_RECORD)
-+		perf_evlist__close(evsel_list);
- 
- 	return WEXITSTATUS(status);
- }
-@@ -1997,6 +2003,7 @@ int cmd_stat(int argc, const char **argv)
- 			perf_session__write_header(perf_stat.session, evsel_list, fd, true);
- 		}
- 
-+		perf_evlist__close(evsel_list);
- 		perf_session__delete(perf_stat.session);
++	mmap_len = sizeof(struct decomp) + decomp_len;
++	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
+ 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
+ 	if (decomp == MAP_FAILED) {
+ 		pr_err("Couldn't allocate memory for decompression\n");
+@@ -47,10 +53,10 @@ static int perf_session__process_compressed_event(struct perf_session *session,
  	}
  
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ebb46da4dfe5..52459dd5ad0c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
- 	xyarray__delete(evsel->sample_id);
- 	evsel->sample_id = NULL;
- 	zfree(&evsel->id);
-+	evsel->ids = 0;
+ 	decomp->file_pos = file_offset;
++	decomp->mmap_len = mmap_len;
+ 	decomp->head = 0;
+ 
+-	if (decomp_last) {
+-		decomp_last_rem = decomp_last->size - decomp_last->head;
++	if (decomp_last_rem) {
+ 		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
+ 		decomp->size = decomp_last_rem;
+ 	}
+@@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
+ 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
+ 	if (!decomp_size) {
+-		munmap(decomp, sizeof(struct decomp) + decomp_len);
++		munmap(decomp, mmap_len);
+ 		pr_err("Couldn't decompress data\n");
+ 		return -1;
+ 	}
+@@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
+ static void perf_session__release_decomp_events(struct perf_session *session)
+ {
+ 	struct decomp *next, *decomp;
+-	size_t decomp_len;
++	size_t mmap_len;
+ 	next = session->decomp;
+-	decomp_len = session->header.env.comp_mmap_len;
+ 	do {
+ 		decomp = next;
+ 		if (decomp == NULL)
+ 			break;
+ 		next = decomp->next;
+-		munmap(decomp, decomp_len + sizeof(struct decomp));
++		mmap_len = decomp->mmap_len;
++		munmap(decomp, mmap_len);
+ 	} while (1);
  }
  
- static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
-@@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
- 
- 	perf_evsel__close_fd(evsel);
- 	perf_evsel__free_fd(evsel);
-+	perf_evsel__free_id(evsel);
- }
- 
- int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index dd8920b745bc..863dbad87849 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -46,6 +46,7 @@ struct perf_session {
+ struct decomp {
+ 	struct decomp *next;
+ 	u64 file_pos;
++	size_t mmap_len;
+ 	u64 head;
+ 	size_t size;
+ 	char data[];
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+index 23bdb9884576..d2202392ffdb 100644
+--- a/tools/perf/util/zstd.c
++++ b/tools/perf/util/zstd.c
+@@ -99,8 +99,8 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+ 	while (input.pos < input.size) {
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
+-			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
+-			       src_size, output.size, ZSTD_getErrorName(ret));
++			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
++			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+ 			break;
+ 		}
+ 		output.dst  = dst + output.pos;
