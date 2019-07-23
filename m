@@ -4,86 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9F4C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB489C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9473320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCAD20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="bNcnoEEt"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jKYxqbAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbfGWLbx (ORCPT
+        id S1729990AbfGWLcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:31:53 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:16437 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727619AbfGWLbx (ORCPT
+        Tue, 23 Jul 2019 07:32:09 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:61216 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbfGWLcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:31:53 -0400
-X-Greylist: delayed 13295 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jul 2019 07:31:52 EDT
+        Tue, 23 Jul 2019 07:32:09 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x6NBUlfL009979;
-        Tue, 23 Jul 2019 20:30:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x6NBUlfL009979
+        by conuserg-12.nifty.com with ESMTP id x6NBVokV016476;
+        Tue, 23 Jul 2019 20:31:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x6NBVokV016476
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563881448;
-        bh=ek5fX7jirXhSrc0zijLJq9soxIn74LwbNyps/vviFNE=;
+        s=dec2015msa; t=1563881511;
+        bh=FMKX/ubGxre/ukuvU9QlLVNveSZcQipzq/t0YiXkFYA=;
         h=From:To:Cc:Subject:Date:From;
-        b=bNcnoEEt/rqgRZ2oyKDGrXH7Dm5JZERdwXRP8IKPxB3rFTaio12i1LKtVKPMlcnN6
-         8DWweeWlEVuHeKiHflIT9Zr+J57+jzktfr8bcpt90/ZGk5uF2EvU8cIZcPSNy++E5N
-         pmAlViyfNd7kMo/2RB20ziIuDoOPlOXdGVfz4nD6ckOhQOmgKpXNlKB7d1+Z/wx5I2
-         mCSoZpsniF6ubZqDq35r3GXKn1Za1m25NvPadKWxommFWQdmsu+T3vBwz1TzyloUKz
-         RP20AAAV5s3j5BigWJP9MDr3oPlUcyWxQqyb0P0H7z6iACrR5lkJmybbcJjLu3WexW
-         9TBHBwgX+JhpQ==
+        b=jKYxqbAc7eFe7fIhbo3o231TTntCPeW5u8gqwgxY2EHCbdUfvuUlPcugvedPu3KKR
+         8SaPXZWQlEsOQqksLF+0qWqYiGz84NeGLFcraHq2UlRAA5X1L1fzBaaowUbxqooaXR
+         o7eHojSRDMjcmPSPzQI2wj4Ykz62/YpWuqdJQdNm5jQ279fzXq60qQGZeHDtqL0z9E
+         Fj+9yMx+8MuzFJ15JZAnID1IFbmFsoXu6MHbYxv0d/H61uE5DZatrK5gVtNJbDmo7F
+         HyC8tbAGREuVRHhoyvPEPRJ7s4XsWP5Gvg+VlYQm58UqODvB9IVMFAe4WYHWI27M8h
+         /P0HvZKg4Xu6A==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
+To:     "David S . Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] sh: remove unneeded uapi asm-generic wrappers
-Date:   Tue, 23 Jul 2019 20:30:36 +0900
-Message-Id: <20190723113036.14576-1-yamada.masahiro@socionext.com>
+Subject: [PATCH] sparc: remove unneeded uapi/asm/statfs.h
+Date:   Tue, 23 Jul 2019 20:31:49 +0900
+Message-Id: <20190723113149.14776-1-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are listed in include/uapi/asm-generic/Kbuild, so Kbuild will
-automatically generate them.
+statfs.h is listed in include/uapi/asm-generic/Kbuild, so Kbuild will
+automatically generate it.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- arch/sh/include/uapi/asm/setup.h | 2 --
- arch/sh/include/uapi/asm/types.h | 2 --
- 2 files changed, 4 deletions(-)
- delete mode 100644 arch/sh/include/uapi/asm/setup.h
- delete mode 100644 arch/sh/include/uapi/asm/types.h
+ arch/sparc/include/uapi/asm/statfs.h | 7 -------
+ 1 file changed, 7 deletions(-)
+ delete mode 100644 arch/sparc/include/uapi/asm/statfs.h
 
-diff --git a/arch/sh/include/uapi/asm/setup.h b/arch/sh/include/uapi/asm/setup.h
+diff --git a/arch/sparc/include/uapi/asm/statfs.h b/arch/sparc/include/uapi/asm/statfs.h
 deleted file mode 100644
-index 4bd19f80f9b0..000000000000
---- a/arch/sh/include/uapi/asm/setup.h
+index 20c8f5bd340e..000000000000
+--- a/arch/sparc/include/uapi/asm/statfs.h
 +++ /dev/null
-@@ -1,2 +0,0 @@
+@@ -1,7 +0,0 @@
 -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#include <asm-generic/setup.h>
-diff --git a/arch/sh/include/uapi/asm/types.h b/arch/sh/include/uapi/asm/types.h
-deleted file mode 100644
-index 68100e108ea6..000000000000
---- a/arch/sh/include/uapi/asm/types.h
-+++ /dev/null
-@@ -1,2 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#include <asm-generic/types.h>
+-#ifndef ___ASM_SPARC_STATFS_H
+-#define ___ASM_SPARC_STATFS_H
+-
+-#include <asm-generic/statfs.h>
+-
+-#endif
 -- 
 2.17.1
 
