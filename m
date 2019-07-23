@@ -3,111 +3,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C52FC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28D9C7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11513223BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964BB218A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:22:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NZoqfZaK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFfEf+OX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbfGWKVk (ORCPT
+        id S1730297AbfGWKW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:21:40 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:16686 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727157AbfGWKVk (ORCPT
+        Tue, 23 Jul 2019 06:22:58 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35831 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbfGWKW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:21:40 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x6NAL83r014462;
-        Tue, 23 Jul 2019 19:21:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x6NAL83r014462
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563877268;
-        bh=leBBnmZaRTGH097gPwPQUaUdmJKXHcG6CKmg6v6AlGQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NZoqfZaKNjamoIrwCcuBndO2rk9EG8AZ+t8JvIqjyPUsbWD+MQ4TMY3DvzyD9bty9
-         8l1Vh455grWjoOFBWOmmpVU0HRIrwHslpj4YwqhtSeilNSE+AXegcHDzzryu6NIXf7
-         MLDPsx+iqzJxWTdf/9kIeJwmpYVqQDCm/Y/Cna1d0PfbM0TIjQca1YQlUwKaC8Jtq7
-         lHvhz0TiuFHyhiGTIg9ZYeslN40EFJoQ0WqDT5XHZu/PVVUWa1h8/7raUunQ9+ATOF
-         7kP2dZn0CkLYrb69JN7dLNhHN8mLz1hXFeg5HUVrj3a/oFpJe/Y3P61iVA1k7bARYf
-         6iYUwp3nSTY+A==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        uclinux-h8-devel@lists.sourceforge.jp
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] h8300: move definition of  __kernel_size_t etc. to posix_types.h
-Date:   Tue, 23 Jul 2019 19:21:06 +0900
-Message-Id: <20190723102106.11375-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 23 Jul 2019 06:22:58 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s1so12896585pgr.2;
+        Tue, 23 Jul 2019 03:22:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/H2B0WFxeIWcM+7UBhbw86h4wEoQFKN7p8J7MWvRdG0=;
+        b=uFfEf+OXm+zsoHCS/L0k4e8GIugD78wl1bTN61mUsqnPj9OLJWvoh2FJIBlv1FVnM7
+         7WYnUuB7HzDO/O/3aoWr/R4e2RWCdDTN1Pb3MU9IWMLTf7CieeBlkLQt65N72pgq0cIW
+         lRi9r0GJa+R2p0YWj9DigweXoOR62rvOptI5K7xHFH+l0XfM8WebXkz2vosJAwPEjAZh
+         4kFG4izIUh4bHOQ/luq3Gt9C53tV8Be8lnjJu125xzkxWpzPcvctfovL9IC8kGsmc/R2
+         gkft9S9GQLjPaBd0iTLs+uvoFf56JG1LDnG/LStB7E7PPbAMt4OMHfPphXHHXex5A027
+         fRBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/H2B0WFxeIWcM+7UBhbw86h4wEoQFKN7p8J7MWvRdG0=;
+        b=XHX5jlSlou39BnFKok2sDFFepgxBPbHdCOsDgDgi90vA9inZ6iO7rrCNXrN7hHSevq
+         Ad8i/tE0FaWC+GJ5BFId0zn+U45DFoerTcIvVQ702JVMw2byUWtub0h729oQ6zrZZIHE
+         cHZCxAlNOqoSnpbZhxkLP+m2DRKzF7QuMQMDn+Xgnbt40pdtldoJAMJp/U5tfMKWy93T
+         Mj2adLSZwPKGOFeNHYgX5vpHcuRscw6PADge7+3hLYKbcfEob9M+EUNE34Fyyd/zVs5j
+         xAzFnIqUD9W7CCd2hrOGMtYF4kYtjK/pXzPqVd6uhLRKFPTy6eJkjwGPrBwY41vP4lZy
+         yHmQ==
+X-Gm-Message-State: APjAAAWcD6dTnw7RS10xvfQ4GQrkm3YWEbsMDENmnIKJgtPLKoGSLlyT
+        AtE15rUv6PBvzv4wOZ+rFXpmotrGdzk=
+X-Google-Smtp-Source: APXvYqzeGMV7FlWpVDCe1XEqdS8Czj2+eFlTvaGhxKQYeG/y8MvzvrJAjYaNTTVwWBuB0xgIKHBWfw==
+X-Received: by 2002:a63:9c5:: with SMTP id 188mr42549409pgj.2.1563877377445;
+        Tue, 23 Jul 2019 03:22:57 -0700 (PDT)
+Received: from masabert (150-66-88-81m5.mineo.jp. [150.66.88.81])
+        by smtp.gmail.com with ESMTPSA id o14sm42539658pjp.29.2019.07.23.03.22.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 03:22:56 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id 7C620201372; Tue, 23 Jul 2019 19:22:53 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, shuah@kernel.org,
+        rdunlap@infradead.org, linux-kselftest@vger.kernel.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] selftests: kmod: Fix typo in kmod.sh
+Date:   Tue, 23 Jul 2019 19:22:52 +0900
+Message-Id: <20190723102252.19931-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.22.0.545.g9c9b961d7eb1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These types should be defined in posix_types.h, not in bitsperlong.h .
+This patch fixes some spelling typos in kmod.sh
 
-With these defines moved, h8300-specific bitsperlong.h is no longer
-needed since Kbuild will automatically create a wrapper of
-include/uapi/asm-generic/bitsperlong.h
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 ---
+ tools/testing/selftests/kmod/kmod.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- arch/h8300/include/uapi/asm/bitsperlong.h | 15 ---------------
- arch/h8300/include/uapi/asm/posix_types.h | 13 +++++++++++++
- 2 files changed, 13 insertions(+), 15 deletions(-)
- delete mode 100644 arch/h8300/include/uapi/asm/bitsperlong.h
- create mode 100644 arch/h8300/include/uapi/asm/posix_types.h
-
-diff --git a/arch/h8300/include/uapi/asm/bitsperlong.h b/arch/h8300/include/uapi/asm/bitsperlong.h
-deleted file mode 100644
-index a33e358f1c1b..000000000000
---- a/arch/h8300/include/uapi/asm/bitsperlong.h
-+++ /dev/null
-@@ -1,15 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef _UAPI__ASM_H8300_BITS_PER_LONG
--#define _UAPI__ASM_H8300_BITS_PER_LONG
--
--#include <asm-generic/bitsperlong.h>
--
--#if !defined(__ASSEMBLY__)
--/* h8300-unknown-linux required long */
--#define __kernel_size_t __kernel_size_t
--typedef unsigned long	__kernel_size_t;
--typedef long		__kernel_ssize_t;
--typedef long		__kernel_ptrdiff_t;
--#endif
--
--#endif /* _UAPI__ASM_H8300_BITS_PER_LONG */
-diff --git a/arch/h8300/include/uapi/asm/posix_types.h b/arch/h8300/include/uapi/asm/posix_types.h
-new file mode 100644
-index 000000000000..3efc9dd59476
---- /dev/null
-+++ b/arch/h8300/include/uapi/asm/posix_types.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-+#ifndef _UAPI_ASM_POSIX_TYPES_H
-+#define _UAPI_ASM_POSIX_TYPES_H
-+
-+/* h8300-unknown-linux required long */
-+#define __kernel_size_t __kernel_size_t
-+typedef unsigned long	__kernel_size_t;
-+typedef long		__kernel_ssize_t;
-+typedef long		__kernel_ptrdiff_t;
-+
-+#include <asm-generic/posix_types.h>
-+
-+#endif /* _UAPI_ASM_POSIX_TYPES_H */
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 0a76314b4414..8b944cf042f6 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -28,7 +28,7 @@
+ # override by exporting to your environment prior running this script.
+ # For instance this script assumes you do not have xfs loaded upon boot.
+ # If this is false, export DEFAULT_KMOD_FS="ext4" prior to running this
+-# script if the filesyste module you don't have loaded upon bootup
++# script if the filesystem module you don't have loaded upon bootup
+ # is ext4 instead. Refer to allow_user_defaults() for a list of user
+ # override variables possible.
+ #
+@@ -263,7 +263,7 @@ config_get_test_result()
+ config_reset()
+ {
+ 	if ! echo -n "1" >"$DIR"/reset; then
+-		echo "$0: reset shuld have worked" >&2
++		echo "$0: reset should have worked" >&2
+ 		exit 1
+ 	fi
+ }
+@@ -488,7 +488,7 @@ usage()
+ 	echo Example uses:
+ 	echo
+ 	echo "${TEST_NAME}.sh		-- executes all tests"
+-	echo "${TEST_NAME}.sh -t 0008	-- Executes test ID 0008 number of times is recomended"
++	echo "${TEST_NAME}.sh -t 0008	-- Executes test ID 0008 number of times is recommended"
+ 	echo "${TEST_NAME}.sh -w 0008	-- Watch test ID 0008 run until an error occurs"
+ 	echo "${TEST_NAME}.sh -s 0008	-- Run test ID 0008 once"
+ 	echo "${TEST_NAME}.sh -c 0008 3	-- Run test ID 0008 three times"
 -- 
-2.17.1
+2.22.0.545.g9c9b961d7eb1
 
