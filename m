@@ -2,129 +2,148 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2D4C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C57C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262A5218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF0D22511
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YGw56eDe"
+	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="c/ZNarot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388523AbfGWHqi (ORCPT
+        id S2388547AbfGWHrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:46:38 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45835 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbfGWHqh (ORCPT
+        Tue, 23 Jul 2019 03:47:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44780 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbfGWHrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:46:37 -0400
-Received: by mail-io1-f65.google.com with SMTP id g20so79804565ioc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:46:37 -0700 (PDT)
+        Tue, 23 Jul 2019 03:47:05 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p17so41989260wrf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:47:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BF1c8d41jsg6oXp3S/3NT2wDSVy305T/qra53xABPzg=;
-        b=YGw56eDe098/wOw+xMSGrLdq0mYtDf01/Mu1NugbtN6kcsCxY0xgoR7+S/yHkBiaob
-         nTh9CUYL1ratekF8t0QaEYPxMymSgkbZTHW6bP+WH57qdBWBuMimRIAxf8J3RuPf4Zzf
-         F70iTVz7EnwJ0JohhZh8W2GcJL5Mc7ONRTt6dApWytTsMwdX0CxVKe+nzS06EYdl9XYy
-         Fh9mXLn2aRERynRBvaF3fdg6brTUn1lNhlWrjYAcvxOR3R2ZY4DL1D8NLh7K3wNiJMEQ
-         6HSkgDGC0seBNYMIm2vGJSXGDnMgUAuOoInV8ZTLoCdoEB9xi3BFBISaV2a8PYw9jrZx
-         Rduw==
+        d=linbit-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k7Xz7HKINwi2ffVMf/EFtJWFSDc7hqESTclfwKAt7K4=;
+        b=c/ZNarot1m0Bl1tmWrYyhQmPxIX3DYs2q2Gj5GPhiIoalP+pZaR0Bxcjs+qbtQggL+
+         HpYpvcffxSSoQ6e3vzPC+Jr1+Y7fqOWhByZoh68dmXrg2pmNrtn6QP4yekhQWLe32Smv
+         Lgcpdg3yij/uHiT6xRLXikibHtWQkH9y/yNWC8LWj1R9GmlW1Ow+dA4jDjhQER8wtODg
+         P3HNoJOjAMlxmxOQEDK0kNEfxcwZj8zCoRBY1pdZmhobsS52JB4o5lYmEFTwKw9bMbYD
+         P1FPqibH2KmI7rd/iym26Pv/u/mJxGS3RR6+vfownrLRWIsxXw7FD+oC8MyDj4OyJB3d
+         //sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BF1c8d41jsg6oXp3S/3NT2wDSVy305T/qra53xABPzg=;
-        b=AdpMQXFqKFzTeVGhfPZjNtaqRqOtw5k3+NvtW/NAd8uYR8tK/1AmZRuBJbjRi9/WQj
-         7vzKdwo/WcVhn0aawgtqYWW5mF1i3Ski8FgYOOG9BhnEKsnH/Ibn9eKtvcI3hibAjtST
-         j0y4AntpF+vFVPWdVHJcbDWjmaXcIfsrcugkDd9bUVm49ArXD41vWP8cH0N4PZXcAKbK
-         PrSEcOAvP1afkIMb8gHtlx38qhSPOY6wIUNwz8N7J+ykxaSRMowin9Q9wEds/O4ucRVu
-         EI0opLLWt16G8kbGW3/UW7tfouw1wta+xrjuyW4ezFjWGdGMFNVmiijjuwhqp6FoyvU6
-         +sTw==
-X-Gm-Message-State: APjAAAUL9M+BKggsqwMgbGoMa8rp5u3+2X1MZpOTCce+Hfjl4VDTJyat
-        ps6cANBX+Wgcx8+sGRWL5OQSFv1GBMUOASQYdxciQA==
-X-Google-Smtp-Source: APXvYqwRo2VqyjI06/c7XjDdrM0HTAr8VaXoKKIMCZu49KVV2OV7WBJZvo86mnsoGFh9tbGAVqktHOLla+omBoqHRCw=
-X-Received: by 2002:a05:6638:81:: with SMTP id v1mr28465649jao.72.1563867996401;
- Tue, 23 Jul 2019 00:46:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k7Xz7HKINwi2ffVMf/EFtJWFSDc7hqESTclfwKAt7K4=;
+        b=l9qdzTUIeI3xuSLhur2zkdabJ/+rcOS2lF27qiet1B9DwpRf6v667c9l1EmWXvPzPB
+         q6hrWGG4qdas7RBu24H1+n7PnLjEUP41om4bUwq9cGOHPBbMfM6CqiICz8hcH+NzsMyw
+         77D0DzdH82cxFgbJQ4rMcL7Qr18gEn9kmZ3wJonY4/fLeMaJ7wM0071V1ziW+RprCSxS
+         WbEJ7s/1NLo59cq+yqptnNj6ly3UnIP4JXsAFOCMOvSPO5UsA75E8jRgUFvUTNhdQ81D
+         zo6WozH+Dw802L7E4I3OkCXgbKaccstAzB9hDdi2jFq4NVkK68GFKinP0ig200HvWb5K
+         gtug==
+X-Gm-Message-State: APjAAAV4dmk/Ko0CXE9nysLO1zRQnmvS/Ab8GhepPu55wgx842i0QAwN
+        yOkp+oexi7iRmxoxxm/nEEfa6g==
+X-Google-Smtp-Source: APXvYqz/ejC83D8aGx+4kC8dKQ0Qld0zLqocNAoCUYcBJW7FNfVPBFPaYnNJes3G5pDAlnW0XtkZBA==
+X-Received: by 2002:adf:c803:: with SMTP id d3mr4552216wrh.130.1563868022896;
+        Tue, 23 Jul 2019 00:47:02 -0700 (PDT)
+Received: from localhost (static.20.139.203.116.clients.your-server.de. [116.203.139.20])
+        by smtp.gmail.com with ESMTPSA id c1sm89787659wrh.1.2019.07.23.00.47.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 00:47:02 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 09:47:01 +0200
+From:   Roland Kammerer <roland.kammerer@linbit.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@google.com>,
+        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] [v2] drbd: dynamically allocate shash descriptor
+Message-ID: <20190723074701.fp2qjjm5dwj4i2x7@rck.sh>
+References: <20190722122647.351002-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190723072605.103456-1-drinkcat@chromium.org>
-In-Reply-To: <20190723072605.103456-1-drinkcat@chromium.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 23 Jul 2019 09:46:25 +0200
-Message-ID: <CACT4Y+bi5KkZ8igSeYVxjwtr8t0Vjz55gzWfAu_c8VMAqw0zPA@mail.gmail.com>
-Subject: Re: [PATCH] kmemleak: Increase maximum early log entries to 1000000
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722122647.351002-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 9:26 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> When KASan is enabled, a lot of memory is allocated early on,
-> and kmemleak complains (this is on a 4GB RAM system):
-> kmemleak: Early log buffer exceeded (129846), please increase
->   DEBUG_KMEMLEAK_EARLY_LOG_SIZE
->
-> Let's increase the upper limit to 1M entry. That would take up
-> 160MB of RAM at init (each early_log entry is 160 bytes), but
-> the memory would later be freed (early_log is __initdata).
+On Mon, Jul 22, 2019 at 02:26:34PM +0200, Arnd Bergmann wrote:
+> Building with clang and KASAN, we get a warning about an overly large
+> stack frame on 32-bit architectures:
+> 
+> drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+>       [-Werror,-Wframe-larger-than=]
+> 
+> We already allocate other data dynamically in this function, so
+> just do the same for the shash descriptor, which makes up most of
+> this memory.
+> 
+> Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Interesting. Is it on an arm64 system? On syzbot we use 16000 and it's
-enough for a very beefy config:
+Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
 
-https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-leak.config
-
-If it's freed later, I would increase the default as well. 400 never
-worked for me and I've seen people being confused and wasn't able to
-use kmemleak, e.g.:
-
-https://groups.google.com/forum/#!searchin/syzkaller/CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE|sort:date/syzkaller/Rzf2ZRC9Qxw/tLog4DHXAgAJ
-
-https://groups.google.com/forum/#!searchin/syzkaller/CONFIG_DEBUG_KMEMLEAK_EARLY_LOG_SIZE|sort:date/syzkaller/5HxmTuQ7U4A/XM8s2o2CCAAJ
-
-
-
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 > ---
->  lib/Kconfig.debug | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index f567875b87657de..1a197b8125768b9 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -595,7 +595,7 @@ config DEBUG_KMEMLEAK
->  config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
->         int "Maximum kmemleak early log entries"
->         depends on DEBUG_KMEMLEAK
-> -       range 200 40000
-> +       range 200 1000000
->         default 400
->         help
->           Kmemleak must track all the memory allocations to avoid
-> --
-> 2.22.0.657.g960e92d24f-goog
->
+> v2:
+> - don't try to zero a NULL descriptor pointer,
+>   based on review from Roland Kammerer.
+> ---
+>  drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+> index 90ebfcae0ce6..2b3103c30857 100644
+> --- a/drivers/block/drbd/drbd_receiver.c
+> +++ b/drivers/block/drbd/drbd_receiver.c
+> @@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+>  	unsigned int key_len;
+>  	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+>  	unsigned int resp_size;
+> -	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
+> +	struct shash_desc *desc;
+>  	struct packet_info pi;
+>  	struct net_conf *nc;
+>  	int err, rv;
+> @@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+>  	memcpy(secret, nc->shared_secret, key_len);
+>  	rcu_read_unlock();
+>  
+> +	desc = kmalloc(sizeof(struct shash_desc) +
+> +		       crypto_shash_descsize(connection->cram_hmac_tfm),
+> +		       GFP_KERNEL);
+> +	if (!desc) {
+> +		rv = -1;
+> +		goto fail;
+> +	}
+>  	desc->tfm = connection->cram_hmac_tfm;
+>  
+>  	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
+> @@ -5571,7 +5578,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+>  	kfree(peers_ch);
+>  	kfree(response);
+>  	kfree(right_response);
+> -	shash_desc_zero(desc);
+> +	if (desc) {
+> +		shash_desc_zero(desc);
+> +		kfree(desc);
+> +	}
+>  
+>  	return rv;
+>  }
+> -- 
+> 2.20.0
+> 
