@@ -2,172 +2,127 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24FEC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CB8C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A352A2238C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE87F2238C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:10:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="G++Hwup0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388251AbfGWHIf (ORCPT
+        id S2388256AbfGWHKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:08:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2702 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731529AbfGWHIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:08:34 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DEDB7EC9961CF990575B;
-        Tue, 23 Jul 2019 15:08:32 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Jul
- 2019 15:08:28 +0800
-Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20190719073903.9138-1-yuchao0@huawei.com>
- <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
-Date:   Tue, 23 Jul 2019 15:08:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 23 Jul 2019 03:10:09 -0400
+Received: from cmta19.telus.net ([209.171.16.92]:33133 "EHLO cmta19.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732685AbfGWHKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:10:09 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id povzhPPxQeRl4pow0hmKDw; Tue, 23 Jul 2019 01:10:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1563865806; bh=XH+cz0n2jFZrvdwK8js+vpCkuU9iaoulaMkw/K2zsms=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=G++Hwup0R1EK/XPjtggH/7xZv8yDgRDpKUb95GLBiwrkBrDvAEZeD1njy7Mmd5wG7
+         EpKPCzpaaQfcvyLKLX188WLHDfgAFRke/aU0Y6NKC7DvCyaozReFoNnodA8/7Qks9q
+         UxPwk2m+pVWDoO+RQjs1b5NvpZiy809PURrvIYwbba2iBziAt1hwZOeKXNlolVT4bV
+         kwxx30AteLw5o/C7L5lUGkWlezabsV4UZoA2NwLMQHvnEw4iFzaPRUbE3p5PxEgrMN
+         HK1l+Z2yLvLRUISRNmHra0y5pX6A4nn0VgFqDCjC73QYs1cV/l2tciqo4yIU/5qmfg
+         BmxRR8sZBoaJw==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=KqozJleN c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8
+ a=X7X60EFgtTFmTPkmaoQA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=cvBusfyB2V15izCimMoJ:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Rafael Wysocki'" <rjw@rjwysocki.net>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>
+Cc:     <linux-pm@vger.kernel.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        <joel@joelfernandes.org>, "'v4 . 18+'" <stable@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1563431200-3042-1-git-send-email-dsmythies@telus.net> <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
+In-Reply-To: <8091ef83f264feb2feaa827fbeefe08348bcd05d.1563778071.git.viresh.kumar@linaro.org>
+Subject: RE: [PATCH] cpufreq: schedutil: Don't skip freq update when limits change
+Date:   Tue, 23 Jul 2019 00:10:01 -0700
+Message-ID: <001201d54125$a6a82350$f3f869f0$@net>
 MIME-Version: 1.0
-In-Reply-To: <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdVAWfe+bwrPM5WESwOhTvNG8+jZwgAylY+w
+X-CMAE-Envelope: MS4wfIlZvk504tenK5OfDjLaKFLSYbpLAFtMePH9EnvmmFwRbTgJQDEN1WZ6akOpYspZyktenwTEGsQg2/SR9897cVSYAddD9ki03lKRcPwC7C1NLVSjsovm
+ mK3e/gC5KpzcmPsBNzjG6X34+TI051No1xRzPSUAskKB6v97KObyvM1XiXxX+u3RENtiItk2M6RCVjLAJlyUIS1o9wwKPMCKzNjxG4sFaDkw+e0WIgjaU90X
+ MR4p8AKCXJRAMlnryoJVSO1bnPEl13Zlk2wun46bb6zRtdInsj/d8FiCYGiWj2X9Gb4RIbe3Ci75bIaI6s0dljUHS/EAFNNsHpqfap5QBjauHxBPjP0XVQrU
+ hrkjhl+f5ecMEVe17c2Q9jn9fuVJTyU/NF7bc5AlEOvzIuT+LszyyCOW/3m8VWqULVflx1tdOtu5Rd1fdbaGzG3QczCybw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/23 10:36, Jaegeuk Kim wrote:
-> On 07/19, Chao Yu wrote:
->> Pinning a file is heavy, because skipping pinned files make GC
->> running with heavy load or no effect.
+On 2019.07.21 23:52 Viresh Kumar wrote:
+
+> To avoid reducing the frequency of a CPU prematurely, we skip reducing
+> the frequency if the CPU had been busy recently.
 > 
-> Pinned file is a part of NOCOW files, so I don't think we can simply drop it
-> for backward compatibility.
+> This should not be done when the limits of the policy are changed, for
+> example due to thermal throttling. We should always get the frequency
+> within limits as soon as possible.
+>
+> Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
+> Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
+> Reported-by: Doug Smythies <doug.smythies@gmail.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> @Doug: Please try this patch, it must fix the issue you reported.
 
-Yes,
+It fixes the driver = acpi-cpufreq ; governor = schedutil test case
+It does not fix the driver = intel_cpufreq ; governor = schedutil test case
 
-But what I concerned is that pin file is too heavy, so in order to satisfy below
-demand, how about introducing pin_file_2 flag to triggering IPU only during
-flush/writeback.
+I have checked my results twice, but will check again in the day or two.
 
+... Doug
+
+>
+> kernel/sched/cpufreq_schedutil.c | 6 ++++--
+> 1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index 636ca6f88c8e..b53c4f02b0f1 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -447,7 +447,7 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+>  	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
+> 	unsigned long util, max;
+>  	unsigned int next_f;
+> -	bool busy;
+> +	bool busy = false;
 > 
->>
->> So that this patch propose to separate nocow and pinfile semantics:
->> - NOCoW flag can only be set on regular file.
->> - NOCoW file will only trigger IPU at common writeback/flush.
->> - NOCow file will do OPU during GC.
->>
->> For the demand of 1) avoid fragment of file's physical block and
->> 2) userspace don't care about file's specific physical address,
->> tagging file as NOCoW will be cheaper than pinned one.
-
-^^^
-
-Thanks,
-
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->> v2:
->> - rebase code to fix compile error.
->>  fs/f2fs/data.c |  3 ++-
->>  fs/f2fs/f2fs.h |  1 +
->>  fs/f2fs/file.c | 22 +++++++++++++++++++---
->>  3 files changed, 22 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->> index a2a28bb269bf..15fb8954c363 100644
->> --- a/fs/f2fs/data.c
->> +++ b/fs/f2fs/data.c
->> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
->>  
->>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
->>  {
->> -	if (f2fs_is_pinned_file(inode))
->> +	if (f2fs_is_pinned_file(inode) ||
->> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
->>  		return true;
->>  
->>  	/* if this is cold file, we should overwrite to avoid fragmentation */
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 596ab3e1dd7b..f6c5a3d2e659 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
->>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
->>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
->>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
->> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
->>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
->>  
->>  /* Flags that should be inherited by new inodes from their parent. */
->> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->> index 7ca545874060..ae0fec54cac6 100644
->> --- a/fs/f2fs/file.c
->> +++ b/fs/f2fs/file.c
->> @@ -1692,6 +1692,7 @@ static const struct {
->>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
->>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
->>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
->> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
->>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
->>  };
->>  
->> @@ -1715,7 +1716,8 @@ static const struct {
->>  		FS_NODUMP_FL |		\
->>  		FS_NOATIME_FL |		\
->>  		FS_DIRSYNC_FL |		\
->> -		FS_PROJINHERIT_FL)
->> +		FS_PROJINHERIT_FL |	\
->> +		FS_NOCOW_FL)
->>  
->>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
->>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
->> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
->>  		fsflags |= FS_ENCRYPT_FL;
->>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
->>  		fsflags |= FS_INLINE_DATA_FL;
->> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
->> -		fsflags |= FS_NOCOW_FL;
->>  
->>  	fsflags &= F2FS_GETTABLE_FS_FL;
->>  
->> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
->>  	if (ret)
->>  		goto out;
->>  
->> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
->> +		if (!S_ISREG(inode->i_mode)) {
->> +			ret = -EINVAL;
->> +			goto out;
->> +		}
->> +
->> +		if (f2fs_should_update_outplace(inode, NULL)) {
->> +			ret = -EINVAL;
->> +			goto out;
->> +		}
->> +
->> +		ret = f2fs_convert_inline_inode(inode);
->> +		if (ret)
->> +			goto out;
->> +	}
->> +
->>  	ret = f2fs_setflags_common(inode, iflags,
->>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
->>  out:
->> -- 
->> 2.18.0.rc1
-> .
+> 	sugov_iowait_boost(sg_cpu, time, flags);
+> 	sg_cpu->last_update = time;
+> @@ -457,7 +457,9 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
+> 	if (!sugov_should_update_freq(sg_policy, time))
+>		return;
 > 
+> -	busy = sugov_cpu_is_busy(sg_cpu);
+> +	/* Limits may have changed, don't skip frequency update */
+> +	if (!sg_policy->need_freq_update)
+> +		busy = sugov_cpu_is_busy(sg_cpu);
+> 
+> 	util = sugov_get_util(sg_cpu);
+>  	max = sg_cpu->max;
+> -- 
+> 2.21.0.rc0.269.g1a574e7a288b
+
+
