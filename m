@@ -2,219 +2,72 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CD0C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4767AC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D04218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:04:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="efKs1W8U"
+	by mail.kernel.org (Postfix) with ESMTP id 27933229EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391710AbfGWTEm (ORCPT
+        id S2391588AbfGWTV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 15:04:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37918 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729050AbfGWTEm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 15:04:42 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y15so19606412pfn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 12:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iX2rdum8LwS0b+uhjozcZFGbYT8krqFFlh+UkKmMIgQ=;
-        b=efKs1W8UckyexrvbFaX1JVWquDQAPbnXf/uV6DA/2BeX7Sq1FLUVmAIsm9FHX1Cs5n
-         TAyM32QYxzLcWNgCnSAZ5VyuJekiCCSBWpzpyfwqq0bL6dHay0ud6YtB/9dkNbEY0Ua2
-         wHzWXgxYXBdRfbSQr4znDfnX8VifzQgMK4YE+UhYSliRgNsmeV6S20yvFiMUaTGctRS1
-         u4LWrgauSDB8KeFRRR6V0WU8oMA5rtXxd+04yUifdRITayoCQu94fv+0LKJcOQ/PKV6x
-         WWMD2T3RJCVuvzTE/F58mSllGUJ/vN3I9YGGgQUodn9Oq18qDjE8y/8qgI8uTrqBfdm4
-         MmEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iX2rdum8LwS0b+uhjozcZFGbYT8krqFFlh+UkKmMIgQ=;
-        b=GYqQ1cOP+rqk8We16Kui96DITNdbfKaEWMPFK438o0WUBSf7hdOajjzsmZGRAWL6eB
-         xUquTbOh4NmynbkpTCpmRZIV4aV/ge36dBHSpo7ge0fWEw8Tsg/ENlx1DMCUysHS5Ult
-         bcHyKfMKc7/3i62NtJ57ESxAk31p+hR8nTksBIM6PHKMOqh8KCadN8bMA85bRqRshgEx
-         h1yDQwkqrc0kUUvDbBgSkU0IFPO9PRJ0T5T2Vg/b8NZ1BBH4dCieDE9Ka2C099dsNNaH
-         XRpbfwfZAIdFB+kFyTWG4NHdv63CtsCs4RLaK6VnsaD1RnZOxIkuPNHSqO1NSmzL60Ea
-         oIIA==
-X-Gm-Message-State: APjAAAUzhto2eqayS1B7X0taBU7rSEROLqO7sC8PCZ8boCyHR2AINQ9H
-        l0W9eH3ZPr25SlbLgeXEc1A=
-X-Google-Smtp-Source: APXvYqxKieWmko2TRxQnmNvA4D7SHmkxX9uOaU1GAx9OGn5S18fj4nXY5cRSKlu4xGUuC4LMy0Mh8A==
-X-Received: by 2002:a63:c03:: with SMTP id b3mr13433296pgl.23.1563908681249;
-        Tue, 23 Jul 2019 12:04:41 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:a7f8])
-        by smtp.gmail.com with ESMTPSA id r2sm59085807pfl.67.2019.07.23.12.04.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 12:04:40 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 15:04:38 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] psi: annotate refault stalls from IO submission
-Message-ID: <20190723190438.GA22541@cmpxchg.org>
-References: <20190722201337.19180-1-hannes@cmpxchg.org>
- <20190723000226.GV7777@dread.disaster.area>
+        Tue, 23 Jul 2019 15:21:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:15978 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728728AbfGWTV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 15:21:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 12:21:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
+   d="scan'208";a="172054439"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 23 Jul 2019 12:21:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 2E2B981; Tue, 23 Jul 2019 22:21:54 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] thunderbolt: Switch to use device_property_count_uXX()
+Date:   Tue, 23 Jul 2019 22:21:54 +0300
+Message-Id: <20190723192154.68114-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723000226.GV7777@dread.disaster.area>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCing Jens for bio layer stuff
+Use use device_property_count_uXX() directly, that makes code neater.
 
-On Tue, Jul 23, 2019 at 10:02:26AM +1000, Dave Chinner wrote:
-> Even better: If this memstall and "refault" check is needed to
-> account for bio submission blocking, then page cache iteration is
-> the wrong place to be doing this check. It should be done entirely
-> in the bio code when adding pages to the bio because we'll only ever
-> be doing page cache read IO on page cache misses. i.e. this isn't
-> dependent on adding a new page to the LRU or not - if we add a new
-> page then we are going to be doing IO and so this does not require
-> magic pixie dust at the page cache iteration level
-
-That could work. I had it at the page cache level because that's
-logically where the refault occurs. But PG_workingset encodes
-everything we need from the page cache layer and is available where
-the actual stall occurs, so we should be able to push it down.
-
-> e.g. bio_add_page_memstall() can do the working set check and then
-> set a flag on the bio to say it contains a memstall page. Then on
-> submission of the bio the memstall condition can be cleared.
-
-A separate bio_add_page_memstall() would have all the problems you
-pointed out with the original patch: it's magic, people will get it
-wrong, and it'll be hard to verify and notice regressions.
-
-How about just doing it in __bio_add_page()? PG_workingset is not
-overloaded - when we see it set, we can generally and unconditionally
-flag the bio as containing userspace workingset pages.
-
-At submission time, in conjunction with the IO direction, we can
-clearly tell whether we are reloading userspace workingset data,
-i.e. stalling on memory.
-
-This?
-
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-From 033e0c4789ef4ceefb2d8038b4e162dfb434d03d Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Thu, 11 Jul 2019 16:01:40 -0400
-Subject: [PATCH] psi: annotate refault stalls from IO submission
+ drivers/thunderbolt/eeprom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-psi tracks the time tasks wait for refaulting pages to become
-uptodate, but it does not track the time spent submitting the IO. The
-submission part can be significant if backing storage is contended or
-when cgroup throttling (io.latency) is in effect - a lot of time is
-spent in submit_bio(). In that case, we underreport memory pressure.
-
-Annotate submit_bio() to account submission time as memory stall when
-the bio is reading userspace workingset pages.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- block/bio.c               |  3 +++
- block/blk-core.c          | 23 ++++++++++++++++++++++-
- include/linux/blk_types.h |  1 +
- 3 files changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index 29cd6cf4da51..6156cb1b9c2c 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -805,6 +805,9 @@ void __bio_add_page(struct bio *bio, struct page *page,
+diff --git a/drivers/thunderbolt/eeprom.c b/drivers/thunderbolt/eeprom.c
+index 81e8ac4c5805..2366406e49ac 100644
+--- a/drivers/thunderbolt/eeprom.c
++++ b/drivers/thunderbolt/eeprom.c
+@@ -414,7 +414,7 @@ static int tb_drom_copy_efi(struct tb_switch *sw, u16 *size)
+ 	struct device *dev = &sw->tb->nhi->pdev->dev;
+ 	int len, res;
  
- 	bio->bi_iter.bi_size += len;
- 	bio->bi_vcnt++;
-+
-+	if (PageWorkingset(page))
-+		bio_set_flag(bio, BIO_WORKINGSET);
- }
- EXPORT_SYMBOL_GPL(__bio_add_page);
+-	len = device_property_read_u8_array(dev, "ThunderboltDROM", NULL, 0);
++	len = device_property_count_u8(dev, "ThunderboltDROM");
+ 	if (len < 0 || len < sizeof(struct tb_drom_header))
+ 		return -EINVAL;
  
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 5d1fc8e17dd1..5993922d63fb 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -36,6 +36,7 @@
- #include <linux/blk-cgroup.h>
- #include <linux/debugfs.h>
- #include <linux/bpf.h>
-+#include <linux/psi.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/block.h>
-@@ -1127,6 +1128,10 @@ EXPORT_SYMBOL_GPL(direct_make_request);
-  */
- blk_qc_t submit_bio(struct bio *bio)
- {
-+	bool workingset_read = false;
-+	unsigned long pflags;
-+	blk_qc_t ret;
-+
- 	/*
- 	 * If it's a regular read/write or a barrier with data attached,
- 	 * go through the normal accounting stuff before submission.
-@@ -1142,6 +1147,8 @@ blk_qc_t submit_bio(struct bio *bio)
- 		if (op_is_write(bio_op(bio))) {
- 			count_vm_events(PGPGOUT, count);
- 		} else {
-+			if (bio_flagged(bio, BIO_WORKINGSET))
-+				workingset_read = true;
- 			task_io_account_read(bio->bi_iter.bi_size);
- 			count_vm_events(PGPGIN, count);
- 		}
-@@ -1156,7 +1163,21 @@ blk_qc_t submit_bio(struct bio *bio)
- 		}
- 	}
- 
--	return generic_make_request(bio);
-+	/*
-+	 * If we're reading data that is part of the userspace
-+	 * workingset, count submission time as memory stall. When the
-+	 * device is congested, or the submitting cgroup IO-throttled,
-+	 * submission can be a significant part of overall IO time.
-+	 */
-+	if (workingset_read)
-+		psi_memstall_enter(&pflags);
-+
-+	ret = generic_make_request(bio);
-+
-+	if (workingset_read)
-+		psi_memstall_leave(&pflags);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(submit_bio);
- 
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 6a53799c3fe2..2f77e3446760 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -209,6 +209,7 @@ enum {
- 	BIO_BOUNCED,		/* bio is a bounce bio */
- 	BIO_USER_MAPPED,	/* contains user pages */
- 	BIO_NULL_MAPPED,	/* contains invalid user pages */
-+	BIO_WORKINGSET,		/* contains userspace workingset pages */
- 	BIO_QUIET,		/* Make BIO Quiet */
- 	BIO_CHAIN,		/* chained bio, ->bi_remaining in effect */
- 	BIO_REFFED,		/* bio has elevated ->bi_cnt */
 -- 
-2.22.0
+2.20.1
 
