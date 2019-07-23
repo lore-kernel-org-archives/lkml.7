@@ -2,182 +2,140 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751CEC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA75C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A41421841
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC172253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:22:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NSMsF/Zh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYuEXW5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731345AbfGWUTB (ORCPT
+        id S1732547AbfGWUWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:19:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39004 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbfGWUTA (ORCPT
+        Tue, 23 Jul 2019 16:22:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37794 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728389AbfGWUWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:19:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id f17so15696188pfn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:19:00 -0700 (PDT)
+        Tue, 23 Jul 2019 16:22:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f17so39575620wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 13:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=j+oQw2jdtWVrhOuLyebLNsd7ea1r8/8WD8EWU9cDAVo=;
-        b=NSMsF/ZhLMfKzsKJ2MspdGWNCHdp7/PJbl+7N68yde2T9b7DjaJfjPc857JDqwI1qG
-         ztbRuSuLw0ZiEngAIk2lr7lgbNw92V5Ke9JI45W9JpPLiUqz9GAyeFXMO/N0XaYJLgVe
-         Usz6WsyTsIwMMnJcc6EmsOhMRqeNtKrfT2vWA=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rCsfgRk4Gb3dHRK/7OJQSsVifCQtFvi6RkLR5FcNfMA=;
+        b=BYuEXW5qEIEncGakWB5ey5U6QXpFCobmnswdZKuPlLJQYWX197mjl4y+bnWB8WvmPH
+         n9w/PIDZQw5RVXtWHk0uImOl+jCC60vI/uuvNpylCIOw9EtupLkqVVrDtphr3Fi9AWN3
+         toPTUIri1yNdvOFxHxyD86JKLUJiT4XSRmvRzJ+BHRlMwrTe1mOwu4ZFMd/NA7/QVg6Y
+         HLz3EOCSYGUVb3aS3rGwsLG5lO7sdxVkOB3P1rh5/h1ifKMu4UHdC87dsVKjQCH6j+BE
+         xZ8QE5OprPV/8serwDjBeAOMmEFfrFHiXwbBzjgxPIrSb0VGQ+fVNA29XtXN4DzXP5al
+         fIkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=j+oQw2jdtWVrhOuLyebLNsd7ea1r8/8WD8EWU9cDAVo=;
-        b=O3GivmWSmQYZHUT7DB5vo8Z7L/NoDHnX4mHX//+voZVWO7J7cRrOxgkvzDYsjSf291
-         3Nh3c5pYwc63+HSCZ+Pza7c5oCFjYv89iKJo0UrmNYMDdTiVpqMRWh5aaeEKxlXYp0RE
-         7HCyOD8+4xjpctHiOuNirP+8/JUMTZDHqfWxQ7FckyPBwymOEy/y8K+cf9u0NygY5ySq
-         wxyX4UVY8iBHyRm4iHCnNXGraKx0BGXfwH7bPycTBTIUDwA18FhrkInzDPiBksyj97AR
-         7lHs4EynWkltmoGN8Cs4rKHJ5GRNhcr3XL4VB5seaR9M9ELC+Rb98/C8Jq2guMl34nXc
-         wBHQ==
-X-Gm-Message-State: APjAAAUetRSwZvRLQVQYjDhmTCnRzS9v/NMBiplG1AzDqGUwAQKXqsJz
-        1sC1sW8QnW9p7tEX0rvIRdoNXQ==
-X-Google-Smtp-Source: APXvYqy9POj2+Xo/YOz/WRQitO0yZSvOEN3J5hTLe0FEyZ6UIHk6V8VuYl0CMgI/lhCvoIzz8gSysw==
-X-Received: by 2002:a63:c748:: with SMTP id v8mr46673106pgg.418.1563913140016;
-        Tue, 23 Jul 2019 13:19:00 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k6sm53132496pfi.12.2019.07.23.13.18.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rCsfgRk4Gb3dHRK/7OJQSsVifCQtFvi6RkLR5FcNfMA=;
+        b=WLRdHZHi8uny2mnShbNEQ9Pf2WE60aRHUqTF7v3GRBsHwQgFJ1gIGHza+CtlzLkp8q
+         ypZazGJZUcO+1XX3A7XMnyRdhI1UKhDnwdyDj88vRiyxdBwNSo2SFpeK6CejKS7QLOYx
+         oPAdKo6Z54e1tI9dQZYviHXMEK6TqhyQp7/SRu31aprvvnai6uzZHyly2v7US/liImlV
+         tVcsarZgKnfEhLMQQjtH0MA3WWLbC7aqwQL/C00XnQD7S2IVa9sqS9UY2qta0SpwU7CN
+         aluNzsnmw53Ob/PgDAojGExB6U0dUyYgEjnFo+QTQxH5QDM1gTCkb2wWyMynLMrXtvvW
+         GPbw==
+X-Gm-Message-State: APjAAAUWpM/pL+BxicaR2cq/f6fdKqb0obVoSXelxwjkpCP1YFw4wFDb
+        /9UK6aEUtkbmymdc4ijKv/b1AwUmEOw=
+X-Google-Smtp-Source: APXvYqzTrdQFInj4OnnsUooZFNatTy1ah08LjCv1PGwgPPHfdZYkN7Y/Kd7t/jOijZNHAr7BWfQg5g==
+X-Received: by 2002:a1c:a1c1:: with SMTP id k184mr72604693wme.81.1563913322259;
+        Tue, 23 Jul 2019 13:22:02 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id u2sm38916407wmc.3.2019.07.23.13.22.00
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 13:18:59 -0700 (PDT)
-Message-ID: <5d376bb3.1c69fb81.2bb4e.7771@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 23 Jul 2019 13:22:01 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 13:21:59 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] [v2] waitqueue: shut up clang -Wuninitialized warnings
+Message-ID: <20190723202159.GA79273@archlinux-threadripper>
+References: <20190719113638.4189771-1-arnd@arndb.de>
+ <20190723105046.GD3402@hirez.programming.kicks-ass.net>
+ <CAK8P3a3_sRmHVsEh=+83zR_Q3+Bh9fd+-iiCxt4PU4gkx0HZ7Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190723192159.GA18620@codeaurora.org>
-References: <20190722215340.3071-1-ilina@codeaurora.org> <5d375054.1c69fb81.7ce3f.3591@mx.google.com> <20190723192159.GA18620@codeaurora.org>
-Subject: Re: [PATCH V2 1/4] drivers: qcom: rpmh-rsc: simplify TCS locking
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 23 Jul 2019 13:18:58 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3_sRmHVsEh=+83zR_Q3+Bh9fd+-iiCxt4PU4gkx0HZ7Q@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-07-23 12:21:59)
-> On Tue, Jul 23 2019 at 12:22 -0600, Stephen Boyd wrote:
-> >Quoting Lina Iyer (2019-07-22 14:53:37)
-> >> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-> >>
-> >> The tcs->lock was introduced to serialize access with in TCS group. Bu=
-t,
-> >> drv->lock is still needed to synchronize core aspects of the
-> >> communication. This puts the drv->lock in the critical and high latency
-> >> path of sending a request. drv->lock provides the all necessary
-> >> synchronization. So remove locking around TCS group and simply use the
-> >> drv->lock instead.
+On Tue, Jul 23, 2019 at 01:03:05PM +0200, Arnd Bergmann wrote:
+> On Tue, Jul 23, 2019 at 12:50 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Fri, Jul 19, 2019 at 01:36:00PM +0200, Arnd Bergmann wrote:
+> > > --- a/include/linux/wait.h
+> > > +++ b/include/linux/wait.h
+> > > @@ -70,8 +70,17 @@ extern void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *n
+> > >  #ifdef CONFIG_LOCKDEP
+> > >  # define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
+> > >       ({ init_waitqueue_head(&name); name; })
+> > > -# define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
+> > > +# if defined(__clang__) && __clang_major__ <= 9
+> > > +/* work around https://bugs.llvm.org/show_bug.cgi?id=42604 */
+> > > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name)                                      \
+> > > +     _Pragma("clang diagnostic push")                                        \
+> > > +     _Pragma("clang diagnostic ignored \"-Wuninitialized\"")                 \
+> > > +     struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)      \
+> > > +     _Pragma("clang diagnostic pop")
+> > > +# else
+> > > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
+> > >       struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
+> > > +# endif
 > >
-> >This doesn't talk about removing the irq saving and restoring though.
-> You mean for drv->lock? It was not an _irqsave/_irqrestore anyways and
-> we were only removing the tcs->lock.
+> > While this is indeed much better than before; do we really want to do
+> > this? That is, since clang-9 release will not need this, we're basically
+> > doing the above for pre-release compilers only.
+> 
+> Kernelci currently builds arch/arm and arch/arm64 kernels with clang-8,
+> and probably won't change to clang-9 until after that is released,
+> presumably in September.
+> 
+> Anyone doing x86 builds would use a clang-9 snapshot today
+> because of the asm-goto support, but so far the fix has not
+> been merged there either. I think the chances of it getting
+> fixed before the release are fairly good, but I don't know how
+> long it will actually take.
+> 
+>        Arnd
 
-Yes drv->lock wasn't an irqsave/restore variant because it was a
-spinlock inside of an obviously already irqsaved region of code because
-the tcs->lock was outside the drv->lock and that was saving the irq
-flags.
+Furthermore, while x86 will only be supported by clang-9 and up, there
+are other architectures/configurations that work with earlier versions
+that will never see that fix. There are a few people that still use
+clang-7 for example.
 
->=20
-> >Can you keep irq saving and restoring in this patch and then remove that
-> >in the next patch with reasoning? It probably isn't safe if the lock is
-> >taken in interrupt context anyway.
-> >
-> Yes, the drv->lock should have been irqsave/irqrestore, but it hasn't
-> been changed by this patch.
+In an ideal world, everyone should be using the latest version of clang
+because of all of the fixes and improvements that are going into that
+latest version but the same can be said of any piece of software. I am
+not sure that it is fair to force someone to upgrade when it works for
+them. Not everyone runs Ubuntu/Debian to get access to apt.llvm.org
+builds or wants to add random repositories to their list or wants to
+build clang from source.
 
-It needs to be changed to maintain the irqsaving/restoring of the code.
+I suppose it comes down to policy: if we don't want to support versions
+of LLVM before 9.x then we should just break the build when it is
+detected but Nick has spoken out against that and I think that he has a
+fair point.
 
-> >> @@ -349,41 +349,35 @@ static int tcs_write(struct rsc_drv *drv, const =
-struct tcs_request *msg)
-> >>  {
-> >>         struct tcs_group *tcs;
-> >>         int tcs_id;
-> >> -       unsigned long flags;
-> >>         int ret;
-> >>
-> >>         tcs =3D get_tcs_for_msg(drv, msg);
-> >>         if (IS_ERR(tcs))
-> >>                 return PTR_ERR(tcs);
-> >>
-> >> -       spin_lock_irqsave(&tcs->lock, flags);
-> >>         spin_lock(&drv->lock);
-> >>         /*
-> >>          * The h/w does not like if we send a request to the same addr=
-ess,
-> >>          * when one is already in-flight or being processed.
-> >>          */
-> >>         ret =3D check_for_req_inflight(drv, tcs, msg);
-> >> -       if (ret) {
-> >> -               spin_unlock(&drv->lock);
-> >> +       if (ret)
-> >>                 goto done_write;
-> >> -       }
-> >>
-> >>         tcs_id =3D find_free_tcs(tcs);
-> >>         if (tcs_id < 0) {
-> >>                 ret =3D tcs_id;
-> >> -               spin_unlock(&drv->lock);
-> >>                 goto done_write;
-> >>         }
-> >>
-> >>         tcs->req[tcs_id - tcs->offset] =3D msg;
-> >>         set_bit(tcs_id, drv->tcs_in_use);
-> >> -       spin_unlock(&drv->lock);
-> >>
-> >>         __tcs_buffer_write(drv, tcs_id, 0, msg);
-> >>         __tcs_trigger(drv, tcs_id);
-> >>
-> >>  done_write:
-> >> -       spin_unlock_irqrestore(&tcs->lock, flags);
-> >> +       spin_unlock(&drv->lock);
-> >>         return ret;
-> >>  }
-> >>
-> >> @@ -481,19 +475,18 @@ static int tcs_ctrl_write(struct rsc_drv *drv, c=
-onst struct tcs_request *msg)
-> >>  {
-> >>         struct tcs_group *tcs;
-> >>         int tcs_id =3D 0, cmd_id =3D 0;
-> >> -       unsigned long flags;
-> >>         int ret;
-> >>
-> >>         tcs =3D get_tcs_for_msg(drv, msg);
-> >>         if (IS_ERR(tcs))
-> >>                 return PTR_ERR(tcs);
-> >>
-> >> -       spin_lock_irqsave(&tcs->lock, flags);
-> >> +       spin_lock(&drv->lock);
-> >>         /* find the TCS id and the command in the TCS to write to */
-> >>         ret =3D find_slots(tcs, msg, &tcs_id, &cmd_id);
-> >>         if (!ret)
-> >>                 __tcs_buffer_write(drv, tcs_id, cmd_id, msg);
-> >> -       spin_unlock_irqrestore(&tcs->lock, flags);
-> >> +       spin_unlock(&drv->lock);
-> >>
-> >
-> >These ones, just leave them doing the irq save restore for now?
-> >
-> drv->lock ??
->=20
+https://lore.kernel.org/lkml/CAKwvOdnzrMOCo4RRsfcR=K5ELWU8obgMqtOGZnx_avLrArjpRQ@mail.gmail.com/
 
-Yes, it should have irq save/restore still.
-
+Cheers,
+Nathan
