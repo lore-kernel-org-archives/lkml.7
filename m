@@ -2,177 +2,218 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CDEC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE3C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538EB2229A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F77F2229A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbfGWFok (ORCPT
+        id S1731981AbfGWFrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:44:40 -0400
-Received: from mga09.intel.com ([134.134.136.24]:55269 "EHLO mga09.intel.com"
+        Tue, 23 Jul 2019 01:47:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56514 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbfGWFoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:44:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 22:44:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
-   d="scan'208";a="163392678"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga008.jf.intel.com with ESMTP; 22 Jul 2019 22:44:38 -0700
-Received: from fmsmsx163.amr.corp.intel.com (10.18.125.72) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 22 Jul 2019 22:44:37 -0700
-Received: from bgsmsx104.gar.corp.intel.com (10.223.4.190) by
- fmsmsx163.amr.corp.intel.com (10.18.125.72) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 22 Jul 2019 22:44:36 -0700
-Received: from bgsmsx101.gar.corp.intel.com ([169.254.1.176]) by
- BGSMSX104.gar.corp.intel.com ([169.254.5.156]) with mapi id 14.03.0439.000;
- Tue, 23 Jul 2019 11:14:31 +0530
-From:   "Gote, Nitin R" <nitin.r.gote@intel.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-CC:     Kees Cook <keescook@chromium.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] selinux: convert struct sidtab count to refcount_t
-Thread-Topic: [PATCH] selinux: convert struct sidtab count to refcount_t
-Thread-Index: AQHVQIGaAIpBwRsLTUq40fonHwZflqbWQoqAgAFqC9A=
-Date:   Tue, 23 Jul 2019 05:44:30 +0000
-Message-ID: <12356C813DFF6F479B608F81178A561587AAD1@BGSMSX101.gar.corp.intel.com>
-References: <20190722113151.1584-1-nitin.r.gote@intel.com>
- <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
-In-Reply-To: <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjRmYTYxNzItYTgyYS00ZWY0LTlmNDEtN2Q3MWMxMzk3ZmQ2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiUXR5T2NaYVliaVlzMG9aZ2tIQTBWbkNjOWpRR1ZXS1BiQnZLNWlCMmxVaEJHelhNdWFIS2UxdFwvTXI5T3M5WXMifQ==
-x-originating-ip: [10.223.10.10]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725788AbfGWFrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:47:18 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B380E30862BE;
+        Tue, 23 Jul 2019 05:47:17 +0000 (UTC)
+Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C08CE5D9C5;
+        Tue, 23 Jul 2019 05:47:04 +0000 (UTC)
+Subject: Re: WARNING in __mmdrop
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+References: <0000000000008dd6bb058e006938@google.com>
+ <000000000000964b0d058e1a0483@google.com>
+ <20190721044615-mutt-send-email-mst@kernel.org>
+ <20190721081447-mutt-send-email-mst@kernel.org>
+ <85dd00e2-37a6-72b7-5d5a-8bf46a3526cf@redhat.com>
+ <20190722040230-mutt-send-email-mst@kernel.org>
+ <4bd2ff78-6871-55f2-44dc-0982ffef3337@redhat.com>
+ <20190723010019-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b4696f2e-678a-bdb2-4b7c-fb4ce040ec2a@redhat.com>
+Date:   Tue, 23 Jul 2019 13:47:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190723010019-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 23 Jul 2019 05:47:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT25kcmVqIE1vc25hY2Vr
-IFttYWlsdG86b21vc25hY2VAcmVkaGF0LmNvbV0NCj4gU2VudDogTW9uZGF5LCBKdWx5IDIyLCAy
-MDE5IDY6NDggUE0NCj4gVG86IEdvdGUsIE5pdGluIFIgPG5pdGluLnIuZ290ZUBpbnRlbC5jb20+
-DQo+IENjOiBLZWVzIENvb2sgPGtlZXNjb29rQGNocm9taXVtLm9yZz47IGtlcm5lbC0NCj4gaGFy
-ZGVuaW5nQGxpc3RzLm9wZW53YWxsLmNvbTsgUGF1bCBNb29yZSA8cGF1bEBwYXVsLW1vb3JlLmNv
-bT47DQo+IFN0ZXBoZW4gU21hbGxleSA8c2RzQHR5Y2hvLm5zYS5nb3Y+OyBFcmljIFBhcmlzIDxl
-cGFyaXNAcGFyaXNwbGFjZS5vcmc+Ow0KPiBTRWxpbnV4IGxpc3QgPHNlbGludXhAdmdlci5rZXJu
-ZWwub3JnPjsgTGludXgga2VybmVsIG1haWxpbmcgbGlzdCA8bGludXgtDQo+IGtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHNlbGludXg6IGNvbnZlcnQgc3Ry
-dWN0IHNpZHRhYiBjb3VudCB0byByZWZjb3VudF90DQo+IA0KPiBPbiBNb24sIEp1bCAyMiwgMjAx
-OSBhdCAxOjM1IFBNIE5pdGluR290ZSA8bml0aW4uci5nb3RlQGludGVsLmNvbT4gd3JvdGU6DQo+
-ID4gcmVmY291bnRfdCB0eXBlIGFuZCBjb3JyZXNwb25kaW5nIEFQSSBzaG91bGQgYmUgdXNlZCBp
-bnN0ZWFkIG9mDQo+ID4gYXRvbWljX3Qgd2hlbiB0aGUgdmFyaWFibGUgaXMgdXNlZCBhcyBhIHJl
-ZmVyZW5jZSBjb3VudGVyLiBUaGlzIGFsbG93cw0KPiA+IHRvIGF2b2lkIGFjY2lkZW50YWwgcmVm
-Y291bnRlciBvdmVyZmxvd3MgdGhhdCBtaWdodCBsZWFkIHRvDQo+ID4gdXNlLWFmdGVyLWZyZWUg
-c2l0dWF0aW9ucy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE5pdGluR290ZSA8bml0aW4uci5n
-b3RlQGludGVsLmNvbT4NCj4gDQo+IE5hY2suDQo+IA0KPiBUaGUgJ2NvdW50JyB2YXJpYWJsZSBp
-cyBub3QgdXNlZCBhcyBhIHJlZmVyZW5jZSBjb3VudGVyIGhlcmUuIEl0IHRyYWNrcyB0aGUNCj4g
-bnVtYmVyIG9mIGVudHJpZXMgaW4gc2lkdGFiLCB3aGljaCBpcyBhIHZlcnkgc3BlY2lmaWMgbG9v
-a3VwIHRhYmxlIHRoYXQgY2FuDQo+IG9ubHkgZ3JvdyAodGhlIGNvdW50IG5ldmVyIGRlY3JlYXNl
-cykuIEkgb25seSBtYWRlIGl0IGF0b21pYyBiZWNhdXNlIHRoZQ0KPiB2YXJpYWJsZSBpcyByZWFk
-IG91dHNpZGUgb2YgdGhlIHNpZHRhYidzIHNwaW4gbG9jayBhbmQgdGh1cyB0aGUgcmVhZHMgYW5k
-DQo+IHdyaXRlcyB0byBpdCBuZWVkIHRvIGJlIGd1YXJhbnRlZWQgdG8gYmUgYXRvbWljLiBUaGUg
-Y291bnRlciBpcyBvbmx5IHVwZGF0ZWQNCj4gdW5kZXIgdGhlIHNwaW4gbG9jaywgc28gaW5zZXJ0
-aW9ucyBkbyBub3QgcmFjZSB3aXRoIGVhY2ggb3RoZXIuDQoNCkFncmVlZC4gVGhhbmtzIGZvciBj
-bGFyaWZpY2F0aW9uLiANCkknbSBnb2luZyB0byBkaXNjb250aW51ZSB0aGlzIHBhdGNoLg0KDQo+
-IA0KPiBZb3VyIHBhdGNoLCBob3dldmVyLCBsZWFkIG1lIHRvIHJlYWxpemUgdGhhdCBJIGZvcmdv
-dCB0byBndWFyZCBhZ2FpbnN0DQo+IG92ZXJmbG93IGFib3ZlIFNJRFRBQl9NQVggd2hlbiBhIG5l
-dyBlbnRyeSBpcyBiZWluZyBpbnNlcnRlZC4gSXQgaXMNCj4gZXh0cmVtZWx5IHVubGlrZWx5IHRv
-IGhhcHBlbiBpbiBwcmFjdGljZSwgYnV0IHNob3VsZCBiZSBmaXhlZCBhbnl3YXkuDQo+IEknbGwg
-c2VuZCBhIHBhdGNoIHNob3J0bHkuDQo+IA0KDQpUaGFuayB5b3UuDQoNCj4gPiAtLS0NCj4gPiAg
-c2VjdXJpdHkvc2VsaW51eC9zcy9zaWR0YWIuYyB8IDE2ICsrKysrKysrLS0tLS0tLS0NCj4gPiBz
-ZWN1cml0eS9zZWxpbnV4L3NzL3NpZHRhYi5oIHwgIDIgKy0NCj4gPiAgMiBmaWxlcyBjaGFuZ2Vk
-LCA5IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEv
-c2VjdXJpdHkvc2VsaW51eC9zcy9zaWR0YWIuYw0KPiA+IGIvc2VjdXJpdHkvc2VsaW51eC9zcy9z
-aWR0YWIuYyBpbmRleCBlNjNhOTBmZjI3MjguLjIwZmUyMzVjNmM3MSAxMDA2NDQNCj4gPiAtLS0g
-YS9zZWN1cml0eS9zZWxpbnV4L3NzL3NpZHRhYi5jDQo+ID4gKysrIGIvc2VjdXJpdHkvc2VsaW51
-eC9zcy9zaWR0YWIuYw0KPiA+IEBAIC0yOSw3ICsyOSw3IEBAIGludCBzaWR0YWJfaW5pdChzdHJ1
-Y3Qgc2lkdGFiICpzKQ0KPiA+ICAgICAgICAgZm9yIChpID0gMDsgaSA8IFNFQ0lOSVRTSURfTlVN
-OyBpKyspDQo+ID4gICAgICAgICAgICAgICAgIHMtPmlzaWRzW2ldLnNldCA9IDA7DQo+ID4NCj4g
-PiAtICAgICAgIGF0b21pY19zZXQoJnMtPmNvdW50LCAwKTsNCj4gPiArICAgICAgIHJlZmNvdW50
-X3NldCgmcy0+Y291bnQsIDApOw0KPiA+DQo+ID4gICAgICAgICBzLT5jb252ZXJ0ID0gTlVMTDsN
-Cj4gPg0KPiA+IEBAIC0xMzAsNyArMTMwLDcgQEAgc3RhdGljIHN0cnVjdCBjb250ZXh0ICpzaWR0
-YWJfZG9fbG9va3VwKHN0cnVjdA0KPiA+IHNpZHRhYiAqcywgdTMyIGluZGV4LCBpbnQgYWxsb2Mp
-DQo+ID4NCj4gPiAgc3RhdGljIHN0cnVjdCBjb250ZXh0ICpzaWR0YWJfbG9va3VwKHN0cnVjdCBz
-aWR0YWIgKnMsIHUzMiBpbmRleCkgIHsNCj4gPiAtICAgICAgIHUzMiBjb3VudCA9ICh1MzIpYXRv
-bWljX3JlYWQoJnMtPmNvdW50KTsNCj4gPiArICAgICAgIHUzMiBjb3VudCA9IHJlZmNvdW50X3Jl
-YWQoJnMtPmNvdW50KTsNCj4gPg0KPiA+ICAgICAgICAgaWYgKGluZGV4ID49IGNvdW50KQ0KPiA+
-ICAgICAgICAgICAgICAgICByZXR1cm4gTlVMTDsNCj4gPiBAQCAtMjQ1LDcgKzI0NSw3IEBAIHN0
-YXRpYyBpbnQgc2lkdGFiX3JldmVyc2VfbG9va3VwKHN0cnVjdCBzaWR0YWIgKnMsDQo+IHN0cnVj
-dCBjb250ZXh0ICpjb250ZXh0LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHUzMiAqaW5kZXgpDQo+ID4gIHsNCj4gPiAgICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+
-ID4gLSAgICAgICB1MzIgY291bnQgPSAodTMyKWF0b21pY19yZWFkKCZzLT5jb3VudCk7DQo+ID4g
-KyAgICAgICB1MzIgY291bnQgPSAodTMyKXJlZmNvdW50X3JlYWQoJnMtPmNvdW50KTsNCj4gPiAg
-ICAgICAgIHUzMiBjb3VudF9sb2NrZWQsIGxldmVsLCBwb3M7DQo+ID4gICAgICAgICBzdHJ1Y3Qg
-c2lkdGFiX2NvbnZlcnRfcGFyYW1zICpjb252ZXJ0Ow0KPiA+ICAgICAgICAgc3RydWN0IGNvbnRl
-eHQgKmRzdCwgKmRzdF9jb252ZXJ0Ow0KPiA+IEBAIC0yNzIsNyArMjcyLDcgQEAgc3RhdGljIGlu
-dCBzaWR0YWJfcmV2ZXJzZV9sb29rdXAoc3RydWN0IHNpZHRhYiAqcywNCj4gc3RydWN0IGNvbnRl
-eHQgKmNvbnRleHQsDQo+ID4gICAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmcy0+bG9jaywgZmxh
-Z3MpOw0KPiA+DQo+ID4gICAgICAgICBjb252ZXJ0ID0gcy0+Y29udmVydDsNCj4gPiAtICAgICAg
-IGNvdW50X2xvY2tlZCA9ICh1MzIpYXRvbWljX3JlYWQoJnMtPmNvdW50KTsNCj4gPiArICAgICAg
-IGNvdW50X2xvY2tlZCA9ICh1MzIpcmVmY291bnRfcmVhZCgmcy0+Y291bnQpOw0KPiA+ICAgICAg
-ICAgbGV2ZWwgPSBzaWR0YWJfbGV2ZWxfZnJvbV9jb3VudChjb3VudF9sb2NrZWQpOw0KPiA+DQo+
-ID4gICAgICAgICAvKiBpZiBjb3VudCBoYXMgY2hhbmdlZCBiZWZvcmUgd2UgYWNxdWlyZWQgdGhl
-IGxvY2ssIHRoZW4gY2F0Y2ggdXAgKi8NCj4gPiBAQCAtMzE1LDcgKzMxNSw3IEBAIHN0YXRpYyBp
-bnQgc2lkdGFiX3JldmVyc2VfbG9va3VwKHN0cnVjdCBzaWR0YWIgKnMsDQo+IHN0cnVjdCBjb250
-ZXh0ICpjb250ZXh0LA0KPiA+ICAgICAgICAgICAgICAgICB9DQo+ID4NCj4gPiAgICAgICAgICAg
-ICAgICAgLyogYXQgdGhpcyBwb2ludCB3ZSBrbm93IHRoZSBpbnNlcnQgd29uJ3QgZmFpbCAqLw0K
-PiA+IC0gICAgICAgICAgICAgICBhdG9taWNfc2V0KCZjb252ZXJ0LT50YXJnZXQtPmNvdW50LCBj
-b3VudCArIDEpOw0KPiA+ICsgICAgICAgICAgICAgICByZWZjb3VudF9zZXQoJmNvbnZlcnQtPnRh
-cmdldC0+Y291bnQsIGNvdW50ICsgMSk7DQo+ID4gICAgICAgICB9DQo+ID4NCj4gPiAgICAgICAg
-IGlmIChjb250ZXh0LT5sZW4pDQo+ID4gQEAgLTMyOCw3ICszMjgsNyBAQCBzdGF0aWMgaW50IHNp
-ZHRhYl9yZXZlcnNlX2xvb2t1cChzdHJ1Y3Qgc2lkdGFiICpzLA0KPiBzdHJ1Y3QgY29udGV4dCAq
-Y29udGV4dCwNCj4gPiAgICAgICAgIC8qIHdyaXRlIGVudHJpZXMgYmVmb3JlIHdyaXRpbmcgbmV3
-IGNvdW50ICovDQo+ID4gICAgICAgICBzbXBfd21iKCk7DQo+ID4NCj4gPiAtICAgICAgIGF0b21p
-Y19zZXQoJnMtPmNvdW50LCBjb3VudCArIDEpOw0KPiA+ICsgICAgICAgcmVmY291bnRfc2V0KCZz
-LT5jb3VudCwgY291bnQgKyAxKTsNCj4gPg0KPiA+ICAgICAgICAgcmMgPSAwOw0KPiA+ICBvdXRf
-dW5sb2NrOg0KPiA+IEBAIC00MTgsNyArNDE4LDcgQEAgaW50IHNpZHRhYl9jb252ZXJ0KHN0cnVj
-dCBzaWR0YWIgKnMsIHN0cnVjdA0KPiBzaWR0YWJfY29udmVydF9wYXJhbXMgKnBhcmFtcykNCj4g
-PiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FQlVTWTsNCj4gPiAgICAgICAgIH0NCj4gPg0KPiA+
-IC0gICAgICAgY291bnQgPSAodTMyKWF0b21pY19yZWFkKCZzLT5jb3VudCk7DQo+ID4gKyAgICAg
-ICBjb3VudCA9ICh1MzIpcmVmY291bnRfcmVhZCgmcy0+Y291bnQpOw0KPiA+ICAgICAgICAgbGV2
-ZWwgPSBzaWR0YWJfbGV2ZWxfZnJvbV9jb3VudChjb3VudCk7DQo+ID4NCj4gPiAgICAgICAgIC8q
-IGFsbG9jYXRlIGxhc3QgbGVhZiBpbiB0aGUgbmV3IHNpZHRhYiAodG8gYXZvaWQgcmFjZSB3aXRo
-DQo+ID4gQEAgLTQzMSw3ICs0MzEsNyBAQCBpbnQgc2lkdGFiX2NvbnZlcnQoc3RydWN0IHNpZHRh
-YiAqcywgc3RydWN0DQo+IHNpZHRhYl9jb252ZXJ0X3BhcmFtcyAqcGFyYW1zKQ0KPiA+ICAgICAg
-ICAgfQ0KPiA+DQo+ID4gICAgICAgICAvKiBzZXQgY291bnQgaW4gY2FzZSBubyBuZXcgZW50cmll
-cyBhcmUgYWRkZWQgZHVyaW5nIGNvbnZlcnNpb24gKi8NCj4gPiAtICAgICAgIGF0b21pY19zZXQo
-JnBhcmFtcy0+dGFyZ2V0LT5jb3VudCwgY291bnQpOw0KPiA+ICsgICAgICAgcmVmY291bnRfc2V0
-KCZwYXJhbXMtPnRhcmdldC0+Y291bnQsIGNvdW50KTsNCj4gPg0KPiA+ICAgICAgICAgLyogZW5h
-YmxlIGxpdmUgY29udmVydCBvZiBuZXcgZW50cmllcyAqLw0KPiA+ICAgICAgICAgcy0+Y29udmVy
-dCA9IHBhcmFtczsNCj4gPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvc2VsaW51eC9zcy9zaWR0YWIu
-aCBiL3NlY3VyaXR5L3NlbGludXgvc3Mvc2lkdGFiLmgNCj4gPiBpbmRleCBiYmQ1YzBkMWYzYmQu
-LjY4ZGQ5NmE1YmViYSAxMDA2NDQNCj4gPiAtLS0gYS9zZWN1cml0eS9zZWxpbnV4L3NzL3NpZHRh
-Yi5oDQo+ID4gKysrIGIvc2VjdXJpdHkvc2VsaW51eC9zcy9zaWR0YWIuaA0KPiA+IEBAIC03MCw3
-ICs3MCw3IEBAIHN0cnVjdCBzaWR0YWJfY29udmVydF9wYXJhbXMgew0KPiA+DQo+ID4gIHN0cnVj
-dCBzaWR0YWIgew0KPiA+ICAgICAgICAgdW5pb24gc2lkdGFiX2VudHJ5X2lubmVyIHJvb3RzW1NJ
-RFRBQl9NQVhfTEVWRUwgKyAxXTsNCj4gPiAtICAgICAgIGF0b21pY190IGNvdW50Ow0KPiA+ICsg
-ICAgICAgcmVmY291bnRfdCBjb3VudDsNCj4gPiAgICAgICAgIHN0cnVjdCBzaWR0YWJfY29udmVy
-dF9wYXJhbXMgKmNvbnZlcnQ7DQo+ID4gICAgICAgICBzcGlubG9ja190IGxvY2s7DQo+ID4NCj4g
-PiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo+IA0KPiBUaGFua3MsDQo+IA0KPiAtLQ0KPiBPbmRyZWog
-TW9zbmFjZWsgPG9tb3NuYWNlIGF0IHJlZGhhdCBkb3QgY29tPg0KPiBTb2Z0d2FyZSBFbmdpbmVl
-ciwgU2VjdXJpdHkgVGVjaG5vbG9naWVzDQo+IFJlZCBIYXQsIEluYy4NCg==
+
+On 2019/7/23 下午1:01, Michael S. Tsirkin wrote:
+> On Tue, Jul 23, 2019 at 12:01:40PM +0800, Jason Wang wrote:
+>> On 2019/7/22 下午4:08, Michael S. Tsirkin wrote:
+>>> On Mon, Jul 22, 2019 at 01:24:24PM +0800, Jason Wang wrote:
+>>>> On 2019/7/21 下午8:18, Michael S. Tsirkin wrote:
+>>>>> On Sun, Jul 21, 2019 at 06:02:52AM -0400, Michael S. Tsirkin wrote:
+>>>>>> On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
+>>>>>>> syzbot has bisected this bug to:
+>>>>>>>
+>>>>>>> commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+>>>>>>> Author: Jason Wang<jasowang@redhat.com>
+>>>>>>> Date:   Fri May 24 08:12:18 2019 +0000
+>>>>>>>
+>>>>>>>        vhost: access vq metadata through kernel virtual address
+>>>>>>>
+>>>>>>> bisection log:https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
+>>>>>>> start commit:   6d21a41b Add linux-next specific files for 20190718
+>>>>>>> git tree:       linux-next
+>>>>>>> final crash:https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
+>>>>>>> console output:https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
+>>>>>>> kernel config:https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+>>>>>>> dashboard link:https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
+>>>>>>> syz repro:https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
+>>>>>>>
+>>>>>>> Reported-by:syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
+>>>>>>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
+>>>>>>> address")
+>>>>>>>
+>>>>>>> For information about bisection process see:https://goo.gl/tpsmEJ#bisection
+>>>>>> OK I poked at this for a bit, I see several things that
+>>>>>> we need to fix, though I'm not yet sure it's the reason for
+>>>>>> the failures:
+>>>>>>
+>>>>>>
+>>>>>> 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
+>>>>>>       That's just a bad hack, in particular I don't think device
+>>>>>>       mutex is taken and so poking at two VQs will corrupt
+>>>>>>       memory.
+>>>>>>       So what to do? How about a per vq notifier?
+>>>>>>       Of course we also have synchronize_rcu
+>>>>>>       in the notifier which is slow and is now going to be called twice.
+>>>>>>       I think call_rcu would be more appropriate here.
+>>>>>>       We then need rcu_barrier on module unload.
+>>>>>>       OTOH if we make pages linear with map then we are good
+>>>>>>       with kfree_rcu which is even nicer.
+>>>>>>
+>>>>>> 2. Doesn't map leak after vhost_map_unprefetch?
+>>>>>>       And why does it poke at contents of the map?
+>>>>>>       No one should use it right?
+>>>>>>
+>>>>>> 3. notifier unregister happens last in vhost_dev_cleanup,
+>>>>>>       but register happens first. This looks wrong to me.
+>>>>>>
+>>>>>> 4. OK so we use the invalidate count to try and detect that
+>>>>>>       some invalidate is in progress.
+>>>>>>       I am not 100% sure why do we care.
+>>>>>>       Assuming we do, uaddr can change between start and end
+>>>>>>       and then the counter can get negative, or generally
+>>>>>>       out of sync.
+>>>>>>
+>>>>>> So what to do about all this?
+>>>>>> I am inclined to say let's just drop the uaddr optimization
+>>>>>> for now. E.g. kvm invalidates unconditionally.
+>>>>>> 3 should be fixed independently.
+>>>>> Above implements this but is only build-tested.
+>>>>> Jason, pls take a look. If you like the approach feel
+>>>>> free to take it from here.
+>>>>>
+>>>>> One thing the below does not have is any kind of rate-limiting.
+>>>>> Given it's so easy to restart I'm thinking it makes sense
+>>>>> to add a generic infrastructure for this.
+>>>>> Can be a separate patch I guess.
+>>>> I don't get why must use kfree_rcu() instead of synchronize_rcu() here.
+>>> synchronize_rcu has very high latency on busy systems.
+>>> It is not something that should be used on a syscall path.
+>>> KVM had to switch to SRCU to keep it sane.
+>>> Otherwise one guest can trivially slow down another one.
+>>
+>> I think you mean the synchronize_rcu_expedited()? Rethink of the code, the
+>> synchronize_rcu() in ioctl() could be removed, since it was serialized with
+>> memory accessor.
+>
+> Really let's just use kfree_rcu. It's way cleaner: fire and forget.
+
+
+Looks not, you need rate limit the fire as you've figured out? And in 
+fact, the synchronization is not even needed, does it help if I leave a 
+comment to explain?
+
+
+>
+>> Btw, for kvm ioctl it still uses synchronize_rcu() in kvm_vcpu_ioctl(),
+>> (just a little bit more hard to trigger):
+>
+> AFAIK these never run in response to guest events.
+> So they can take very long and guests still won't crash.
+
+
+What if guest manages to escape to qemu?
+
+Thanks
+
+
+>
+>
+>>      case KVM_RUN: {
+>> ...
+>>          if (unlikely(oldpid != task_pid(current))) {
+>>              /* The thread running this VCPU changed. */
+>>              struct pid *newpid;
+>>
+>>              r = kvm_arch_vcpu_run_pid_change(vcpu);
+>>              if (r)
+>>                  break;
+>>
+>>              newpid = get_task_pid(current, PIDTYPE_PID);
+>>              rcu_assign_pointer(vcpu->pid, newpid);
+>>              if (oldpid)
+>>                  synchronize_rcu();
+>>              put_pid(oldpid);
+>>          }
+>> ...
+>>          break;
+>>
+>>
+>>>>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+>>>> Let me try to figure out the root cause then decide whether or not to go for
+>>>> this way.
+>>>>
+>>>> Thanks
+>>> The root cause of the crash is relevant, but we still need
+>>> to fix issues 1-4.
+>>>
+>>> More issues (my patch tries to fix them too):
+>>>
+>>> 5. page not dirtied when mappings are torn down outside
+>>>      of invalidate callback
+>>
+>> Yes.
+>>
+>>
+>>> 6. potential cross-VM DOS by one guest keeping system busy
+>>>      and increasing synchronize_rcu latency to the point where
+>>>      another guest stars timing out and crashes
+>>>
+>>>
+>>>
+>> This will be addressed after I remove the synchronize_rcu() from ioctl path.
+>>
+>> Thanks
