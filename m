@@ -2,114 +2,89 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED41C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE393C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F1122353
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B3622353
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XRJOd09f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390183AbfGWNZY (ORCPT
+        id S2390197AbfGWNZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:25:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38174 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfGWNZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:25:24 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0EC44C057F2E;
-        Tue, 23 Jul 2019 13:25:24 +0000 (UTC)
-Received: from [10.72.12.26] (ovpn-12-26.pek2.redhat.com [10.72.12.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C709C5B685;
-        Tue, 23 Jul 2019 13:25:18 +0000 (UTC)
-Subject: Re: [PATCH 4/6] vhost: reset invalidate_count in
- vhost_set_vring_num_addr()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190723075718.6275-1-jasowang@redhat.com>
- <20190723075718.6275-5-jasowang@redhat.com>
- <20190723042143-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4e52f1cb-f805-18f6-d50b-1379298de2e3@redhat.com>
-Date:   Tue, 23 Jul 2019 21:25:22 +0800
+        Tue, 23 Jul 2019 09:25:33 -0400
+Received: from mail-pf1-f177.google.com ([209.85.210.177]:34128 "EHLO
+        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390062AbfGWNZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:25:33 -0400
+Received: by mail-pf1-f177.google.com with SMTP id b13so19158232pfo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=W9fFRtycwBGl1XfsXz1J8YcCRRBJH8xSkRJL0Hp3dnU=;
+        b=XRJOd09fhZ4nCE55m/F4u3Y9IVCGcHG0seMTcSqayIn5d1xDWKLkCRyMBOJzCPLuzC
+         aJB/dc1OQOwkLsSMtiUbCYI6LiORSnFKz3Q44tUhAZj98liw3JaIGilyRrPVp3tGPAoA
+         mkx2YC4GEClZTUU1IJzk+3r4eaIjRL5bFRQCUr9RODbq+HF7azLwv1aSiwon57pDIGLY
+         JMDlI9vkiB9ebXjzZAEzx9T3JPaySfnVtArwoqsQkS3DYWrVoQyoZj/M08LzF8YWFGe0
+         /bpVe6i1jK3IRjKtqedDd7wN7UTewzh4IK4lCCYyJ1C+KvReZbJmzTJ2w+xcClDHgz44
+         GoOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W9fFRtycwBGl1XfsXz1J8YcCRRBJH8xSkRJL0Hp3dnU=;
+        b=OYCfLb1xg2LgK8uJRxx728DYF2/2zdwRv7HqZ4sGtQSZlJMuSJ/h0BaYh12e3bc0nA
+         kCR7Qyw6jHUvPHfwQPOV2qz+zIriOVz/88G3nEUDIfYXqcQnryBwXrJHMhQDp44Mu507
+         57HtD9/1sDBEbRk82cVpv/08XFn1ykQgvRUubPKO5bvNDfTuaBvxA1LOuyDdAS+b5yBz
+         9uGwKCe5Cpkgz42SJbtnYHZPAYhPn8La9Vi0DZGs7lwGN9EbUSmzlSYxrQ/ncICV9C2O
+         uvASRiaAekkISk4ecWcaJoFw41mjX3rHzZSQIp63ZEtXVnP+TdTCuPibuuRyH3tjQiNY
+         LNvQ==
+X-Gm-Message-State: APjAAAXmQ2w0SlggipcLzWxCWxEdaMjM6RhZ8QKxQzYmtIAQSKr1lTUO
+        hrzcI0lhe+G62LzqWnJWcOk=
+X-Google-Smtp-Source: APXvYqzVepc8390YynESunq2g1ntX4TTlPC264IA8b/jW2FzaKMPeNxbbirr08FA03ninB2G664W+Q==
+X-Received: by 2002:a63:6d6:: with SMTP id 205mr78459972pgg.262.1563888332132;
+        Tue, 23 Jul 2019 06:25:32 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id a12sm81713541pje.3.2019.07.23.06.25.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 06:25:31 -0700 (PDT)
+Subject: Re: [PATCH v2] block: blk-mq: Remove blk_mq_sched_started_request and
+ started_request
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Omar Sandoval <osandov@fb.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>
+References: <20190723032743.10552-1-marcos.souza.org@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c3c5d7d9-1b25-ba73-18b1-08f53758dbb4@kernel.dk>
+Date:   Tue, 23 Jul 2019 07:25:28 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190723042143-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190723032743.10552-1-marcos.souza.org@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 23 Jul 2019 13:25:24 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/22/19 9:27 PM, Marcos Paulo de Souza wrote:
+> blk_mq_sched_completed_request is a function that checks if the elevator
+> related to the request has started_request implemented, but currently, none of
+> the available IO schedulers implement started_request, so remove both.
 
-On 2019/7/23 下午5:17, Michael S. Tsirkin wrote:
-> On Tue, Jul 23, 2019 at 03:57:16AM -0400, Jason Wang wrote:
->> The vhost_set_vring_num_addr() could be called in the middle of
->> invalidate_range_start() and invalidate_range_end(). If we don't reset
->> invalidate_count after the un-registering of MMU notifier, the
->> invalidate_cont will run out of sync (e.g never reach zero). This will
->> in fact disable the fast accessor path. Fixing by reset the count to
->> zero.
->>
->> Reported-by: Michael S. Tsirkin <mst@redhat.com>
->> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual address")
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/vhost/vhost.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->> index 03666b702498..89c9f08b5146 100644
->> --- a/drivers/vhost/vhost.c
->> +++ b/drivers/vhost/vhost.c
->> @@ -2074,6 +2074,10 @@ static long vhost_vring_set_num_addr(struct vhost_dev *d,
->>   		d->has_notifier = false;
->>   	}
->>   
->> +	/* reset invalidate_count in case we are in the middle of
->> +	 * invalidate_start() and invalidate_end().
->> +	 */
->> +	vq->invalidate_count = 0;
-> I think that the code is ok but the comments are not very clear:
-> - we are never in the middle since we just removed the notifier
+Applied, thanks.
 
+-- 
+Jens Axboe
 
-If I read the code correctly, mmu_notifier_unregister() can only 
-guarantee to wait for the pending method to complete. So we can have:
-
-invalidate_start()
-
-mmu_notifier_unregister()
-
-invalidate_end()
-
-
-> - the result is not just disabling optimization:
->    if notifier becomes negative, then later we
->    can think it's ok to map when it isn't since
->    notifier is active.
-
-
-I don't get how it could be negative, the only possible thing is to have 
-a positive value.
-
-Thanks
-
-
->
->>   	vhost_uninit_vq_maps(vq);
->>   #endif
->>   
->> -- 
->> 2.18.1
