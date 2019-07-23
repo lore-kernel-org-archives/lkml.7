@@ -2,172 +2,55 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23665C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE5CC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A4721951
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B73721BF6
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387782AbfGWBXP (ORCPT
+        id S2387792AbfGWBXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:23:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39679 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387701AbfGWBXP (ORCPT
+        Mon, 22 Jul 2019 21:23:47 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52554 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727748AbfGWBXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:23:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so41234807wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 18:23:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WZU7Jdw+Za8incNJbIujsUd2IOXhC/sdGHLUcurCpXQ=;
-        b=CdxTo0dsICKEat8eGZfDw9CcqFRJh2/kGRMmVwqEU80DXhn8i6dJkUSJSITK0KR+Xk
-         shfItbQNX3wSTT54VLZ4GZDVeNAmrYOvG/kRqV5ucctgP4Z3BN7fq+/RqAtTnDvznuuV
-         RCxRUe7GvPE1zLUZDzKauI1xTMb6oX+7qO+lWC8YkHVm+PZwbDuLUFd9gqATA+sug2rn
-         r68f1GzGd6nMLtJ2PjO1bptW0mJqPkfpmfwG699ZEpjkQ2VCjuEJpFORafD4c7kabaFF
-         3GJO+ug9h/qqSs74sg+YyZz1gJlztEym7LRMKhgcl9YcbkgaJRahbgQ38Y5WVgs6+ej+
-         bsKA==
-X-Gm-Message-State: APjAAAWXPjB1HASToFon0ROvfDDlhGKW09FC6SnMBjdTZUCujsmMdNO2
-        rQZI4OLjqg/5TMlZnipBwikYng==
-X-Google-Smtp-Source: APXvYqw6MqaxdOJaVGoaJo1c7G78C3DB4nyV97RY1PR2+fqWaKurkxVjls7r/PsI13hDNxjqzg628w==
-X-Received: by 2002:a5d:630c:: with SMTP id i12mr72191361wru.312.1563844993487;
-        Mon, 22 Jul 2019 18:23:13 -0700 (PDT)
-Received: from mcroce-redhat.redhat.com (host21-50-dynamic.21-87-r.retail.telecomitalia.it. [87.21.50.21])
-        by smtp.gmail.com with ESMTPSA id c9sm35196753wml.41.2019.07.22.18.23.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 18:23:12 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Subject: [PATCH net-next] netfilter: conntrack: use shared sysctl constants
-Date:   Tue, 23 Jul 2019 03:23:03 +0200
-Message-Id: <20190723012303.2221-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 22 Jul 2019 21:23:46 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 332D315305A2A;
+        Mon, 22 Jul 2019 18:23:46 -0700 (PDT)
+Date:   Mon, 22 Jul 2019 18:23:45 -0700 (PDT)
+Message-Id: <20190722.182345.1929981445585560230.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 0/2] net: stmmac: Two fixes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1563784666.git.joabreu@synopsys.com>
+References: <cover.1563784666.git.joabreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 22 Jul 2019 18:23:46 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use shared sysctl variables for zero and one constants, as in commit
-eec4844fae7c ("proc/sysctl: add shared variables for range check")
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Mon, 22 Jul 2019 10:39:29 +0200
 
-Fixes: 8f14c99c7eda ("netfilter: conntrack: limit sysctl setting for boolean options")
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- net/netfilter/nf_conntrack_standalone.c | 34 ++++++++++++-------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+> Two fixes targeting -net.
 
-diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
-index e0d392cb3075..d97f4ea47cf3 100644
---- a/net/netfilter/nf_conntrack_standalone.c
-+++ b/net/netfilter/nf_conntrack_standalone.c
-@@ -511,8 +511,6 @@ static void nf_conntrack_standalone_fini_proc(struct net *net)
- /* Log invalid packets of a given protocol */
- static int log_invalid_proto_min __read_mostly;
- static int log_invalid_proto_max __read_mostly = 255;
--static int zero;
--static int one = 1;
- 
- /* size the user *wants to set */
- static unsigned int nf_conntrack_htable_size_user __read_mostly;
-@@ -629,8 +627,8 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- 	[NF_SYSCTL_CT_LOG_INVALID] = {
- 		.procname	= "nf_conntrack_log_invalid",
-@@ -654,8 +652,8 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- 	[NF_SYSCTL_CT_HELPER] = {
- 		.procname	= "nf_conntrack_helper",
-@@ -663,8 +661,8 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- #ifdef CONFIG_NF_CONNTRACK_EVENTS
- 	[NF_SYSCTL_CT_EVENTS] = {
-@@ -673,8 +671,8 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- #endif
- #ifdef CONFIG_NF_CONNTRACK_TIMESTAMP
-@@ -684,8 +682,8 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- #endif
- 	[NF_SYSCTL_CT_PROTO_TIMEOUT_GENERIC] = {
-@@ -759,16 +757,16 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- 	[NF_SYSCTL_CT_PROTO_TCP_LIBERAL] = {
- 		.procname       = "nf_conntrack_tcp_be_liberal",
- 		.maxlen         = sizeof(int),
- 		.mode           = 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- 	[NF_SYSCTL_CT_PROTO_TCP_MAX_RETRANS] = {
- 		.procname	= "nf_conntrack_tcp_max_retrans",
-@@ -904,8 +902,8 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1 	= &zero,
--		.extra2 	= &one,
-+		.extra1 	= SYSCTL_ZERO,
-+		.extra2 	= SYSCTL_ONE,
- 	},
- #endif
- #ifdef CONFIG_NF_CT_PROTO_GRE
--- 
-2.21.0
-
+Series applied.
