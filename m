@@ -2,105 +2,64 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A5FC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92BBC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79BF218B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B05E21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:35:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ubkCq9dp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387632AbfGWPec (ORCPT
+        id S2387666AbfGWPfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:34:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23892 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbfGWPec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:34:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 08:34:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
-   d="scan'208";a="174578077"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga006.jf.intel.com with ESMTP; 23 Jul 2019 08:34:28 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hpwo6-0004It-9g; Tue, 23 Jul 2019 18:34:26 +0300
-Date:   Tue, 23 Jul 2019 18:34:26 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sh@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 7/7] backlight: gpio: use a helper variable for
- &pdev->dev
-Message-ID: <20190723153426.GL9224@smile.fi.intel.com>
-References: <20190722150302.29526-1-brgl@bgdev.pl>
- <20190722150302.29526-8-brgl@bgdev.pl>
- <20190722160908.GZ9224@smile.fi.intel.com>
- <CAMRc=McGTk+i0SzWN7AvGu3deYbXX_rJX=7+dKRpKFPKM_qxDA@mail.gmail.com>
+        Tue, 23 Jul 2019 11:35:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44648 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733212AbfGWPfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:35:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=h95vwUAZb17z11iq6MTE7WMBYtBu9s65Dlh5cgJgPUg=; b=ubkCq9dpxj9v7lSz8/AQ/smT2
+        34fTGpEBrA8UiKObJOtvXQYgFS5Jlj7AtIcS9PpNJEoTnIB3Dtf7I2h3pX3vebsNbMXYL1JJvMCkQ
+        ZOsZLsAa4KxBZxW2ZEjDhZQg7/z3wsZNRg7zw7BsLwrCsM+bgrZ59KYceR6Lp1KUYQKJ5Gn3+gHhh
+        zDxYmihcYPDfqsxTP14i+3xl1seXb6EQ5KWCTjNCHsP7RLWug79t1WJi3dIaweAS067ifAyj5JHga
+        EUz4tu1Iw3U1BR+kuO3iq1Zfm/cga+KwskIWjkBJsv/625ICZMKSnpaHqvMCGHzQbPHPcOO02M8L1
+        PdsrO2O/Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpwol-0005pZ-I4; Tue, 23 Jul 2019 15:35:07 +0000
+Date:   Tue, 23 Jul 2019 08:35:07 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Murphy Zhou <jencce.kernel@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-scsi <linux-scsi@vger.kernel.org>
+Subject: Re: scsi_debug module panic
+Message-ID: <20190723153507.GA18638@infradead.org>
+References: <20190722233906.5kkmqjcoapw4ev62@XZHOUW.usersys.redhat.com>
+ <cd82bbd5-a8b4-3aa4-e342-ac888273923f@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McGTk+i0SzWN7AvGu3deYbXX_rJX=7+dKRpKFPKM_qxDA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cd82bbd5-a8b4-3aa4-e342-ac888273923f@infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 08:29:52AM +0200, Bartosz Golaszewski wrote:
-> pon., 22 lip 2019 o 18:09 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> napisał(a):
-> >
-> > On Mon, Jul 22, 2019 at 05:03:02PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Instead of dereferencing pdev each time, use a helper variable for
-> > > the associated device pointer.
-> >
-> > >  static int gpio_backlight_probe(struct platform_device *pdev)
-> > >  {
-> > > -     struct gpio_backlight_platform_data *pdata =
-> > > -             dev_get_platdata(&pdev->dev);
-> > > +     struct gpio_backlight_platform_data *pdata;
-> > >       struct backlight_properties props;
-> > >       struct backlight_device *bl;
-> > >       struct gpio_backlight *gbl;
-> > >       enum gpiod_flags flags;
-> > > +     struct device *dev;
-> >
-> > Can't we do
-> >
-> >         struct device dev = &pdev->dev;
-> >         struct gpio_backlight_platform_data *pdata = dev_get_platdata(dev);
-> >
-> > ? It fits 80 nicely.
-> >
-> 
-> IMO it's more readable like that with the reverse christmas tree layout.
+On Mon, Jul 22, 2019 at 07:37:49PM -0700, Randy Dunlap wrote:
+> [add linux-scsi]
 
-It makes more churn in the original code and for initializers the order is
-defined by its nature.
+Fix:
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+https://marc.info/?l=linux-scsi&m=156378725427719&w=2
