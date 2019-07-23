@@ -2,178 +2,152 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7EEC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BD6C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E72218EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673E6218EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390605AbfGWOfR (ORCPT
+        id S2390617AbfGWOfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:35:17 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46786 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388162AbfGWOfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:35:16 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B598BF1B5B365C8F856F;
-        Tue, 23 Jul 2019 22:35:05 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 23 Jul 2019
- 22:34:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
-        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <megaraidlinux.pdl@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: megaraid_sas: Make some functions static
-Date:   Tue, 23 Jul 2019 22:34:50 +0800
-Message-ID: <20190723143450.33916-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 23 Jul 2019 10:35:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55092 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387987AbfGWOfv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:35:51 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NEVEkd023990;
+        Tue, 23 Jul 2019 10:35:27 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx2eqw34c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jul 2019 10:35:26 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6NEWHn3032587;
+        Tue, 23 Jul 2019 10:35:26 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx2eqw33b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jul 2019 10:35:25 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6NEYbu5003257;
+        Tue, 23 Jul 2019 14:35:24 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 2twhrb60qc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Jul 2019 14:35:24 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NEZNpH49283478
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 14:35:23 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD1D8B2066;
+        Tue, 23 Jul 2019 14:35:23 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6065B205F;
+        Tue, 23 Jul 2019 14:35:22 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.85.152.234])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Jul 2019 14:35:22 +0000 (GMT)
+Subject: Re: [PATCH 2/2] powerpc: expose secure variables via sysfs
+To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>
+References: <1560459027-5248-1-git-send-email-nayna@linux.ibm.com>
+ <1560459027-5248-3-git-send-email-nayna@linux.ibm.com>
+ <87o92910fg.fsf@concordia.ellerman.id.au>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <6d2988c1-9b89-448b-4537-c3c6673b6dd1@linux.vnet.ibm.com>
+Date:   Tue, 23 Jul 2019 10:35:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <87o92910fg.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907230144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
-
-drivers/scsi/megaraid/megaraid_sas_fusion.c:541:1: warning: symbol 'megasas_alloc_cmdlist_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:580:1: warning: symbol 'megasas_alloc_request_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:661:1: warning: symbol 'megasas_alloc_reply_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:738:1: warning: symbol 'megasas_alloc_rdpq_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:920:1: warning: symbol 'megasas_alloc_cmds_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:1740:1: warning: symbol 'megasas_init_adapter_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:1966:1: warning: symbol 'map_cmd_status' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:2379:1: warning: symbol 'megasas_set_pd_lba' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:2718:1: warning: symbol 'megasas_build_ldio_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3215:1: warning: symbol 'megasas_build_io_fusion' was not declared. Should it be static?
-drivers/scsi/megaraid/megaraid_sas_fusion.c:3328:6: warning: symbol 'megasas_prepare_secondRaid1_IO' was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index a32b3f0..120e3c4 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -537,7 +537,7 @@ static int megasas_create_sg_sense_fusion(struct megasas_instance *instance)
- 	return 0;
- }
- 
--int
-+static int
- megasas_alloc_cmdlist_fusion(struct megasas_instance *instance)
- {
- 	u32 max_mpt_cmd, i, j;
-@@ -576,7 +576,8 @@ megasas_alloc_cmdlist_fusion(struct megasas_instance *instance)
- 
- 	return 0;
- }
--int
-+
-+static int
- megasas_alloc_request_fusion(struct megasas_instance *instance)
- {
- 	struct fusion_context *fusion;
-@@ -657,7 +658,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
- 	return 0;
- }
- 
--int
-+static int
- megasas_alloc_reply_fusion(struct megasas_instance *instance)
- {
- 	int i, count;
-@@ -734,7 +735,7 @@ megasas_alloc_reply_fusion(struct megasas_instance *instance)
- 	return 0;
- }
- 
--int
-+static int
- megasas_alloc_rdpq_fusion(struct megasas_instance *instance)
- {
- 	int i, j, k, msix_count;
-@@ -916,7 +917,7 @@ megasas_free_reply_fusion(struct megasas_instance *instance) {
-  * and is used as SMID of the cmd.
-  * SMID value range is from 1 to max_fw_cmds.
-  */
--int
-+static int
- megasas_alloc_cmds_fusion(struct megasas_instance *instance)
- {
- 	int i;
-@@ -1736,7 +1737,7 @@ static inline void megasas_free_ioc_init_cmd(struct megasas_instance *instance)
-  *
-  * This is the main function for initializing firmware.
-  */
--u32
-+static u32
- megasas_init_adapter_fusion(struct megasas_instance *instance)
- {
- 	struct fusion_context *fusion;
-@@ -1962,7 +1963,7 @@ megasas_fusion_stop_watchdog(struct megasas_instance *instance)
-  * @ext_status :	ext status of cmd returned by FW
-  */
- 
--void
-+static void
- map_cmd_status(struct fusion_context *fusion,
- 		struct scsi_cmnd *scmd, u8 status, u8 ext_status,
- 		u32 data_length, u8 *sense)
-@@ -2375,7 +2376,7 @@ int megasas_make_sgl(struct megasas_instance *instance, struct scsi_cmnd *scp,
-  *
-  * Used to set the PD LBA in CDB for FP IOs
-  */
--void
-+static void
- megasas_set_pd_lba(struct MPI2_RAID_SCSI_IO_REQUEST *io_request, u8 cdb_len,
- 		   struct IO_REQUEST_INFO *io_info, struct scsi_cmnd *scp,
- 		   struct MR_DRV_RAID_MAP_ALL *local_map_ptr, u32 ref_tag)
-@@ -2714,7 +2715,7 @@ megasas_set_raidflag_cpu_affinity(struct fusion_context *fusion,
-  * Prepares the io_request and chain elements (sg_frame) for IO
-  * The IO can be for PD (Fast Path) or LD
-  */
--void
-+static void
- megasas_build_ldio_fusion(struct megasas_instance *instance,
- 			  struct scsi_cmnd *scp,
- 			  struct megasas_cmd_fusion *cmd)
-@@ -3211,7 +3212,7 @@ megasas_build_syspd_fusion(struct megasas_instance *instance,
-  * Invokes helper functions to prepare request frames
-  * and sets flags appropriate for IO/Non-IO cmd
-  */
--int
-+static int
- megasas_build_io_fusion(struct megasas_instance *instance,
- 			struct scsi_cmnd *scp,
- 			struct megasas_cmd_fusion *cmd)
-@@ -3325,9 +3326,9 @@ megasas_get_request_descriptor(struct megasas_instance *instance, u16 index)
- /* megasas_prepate_secondRaid1_IO
-  *  It prepares the raid 1 second IO
-  */
--void megasas_prepare_secondRaid1_IO(struct megasas_instance *instance,
--			    struct megasas_cmd_fusion *cmd,
--			    struct megasas_cmd_fusion *r1_cmd)
-+static void megasas_prepare_secondRaid1_IO(struct megasas_instance *instance,
-+					   struct megasas_cmd_fusion *cmd,
-+					   struct megasas_cmd_fusion *r1_cmd)
- {
- 	union MEGASAS_REQUEST_DESCRIPTOR_UNION *req_desc, *req_desc2 = NULL;
- 	struct fusion_context *fusion;
--- 
-2.7.4
 
 
+On 07/05/2019 02:05 AM, Michael Ellerman wrote:
+> Hi Nayna,
+
+Hi Michael, Oliver,
+
+
+>
+> Nayna Jain <nayna@linux.ibm.com> writes:
+>> As part of PowerNV secure boot support, OS verification keys are stored
+>> and controlled by OPAL as secure variables. These need to be exposed to
+>> the userspace so that sysadmins can perform key management tasks.
+>>
+>> This patch adds the support to expose secure variables via a sysfs
+>> interface It reuses the the existing efi defined hooks and backend in
+>> order to maintain the compatibility with the userspace tools.
+> Which tools? Can you include a log demonstrating how they're used, ie.
+> so that I can test the sequence of commands.
+>
+>> Though it reuses a great deal of efi, POWER platforms do not use EFI.
+>> A new config, POWER_SECVAR_SYSFS, is defined to enable this new sysfs
+>> interface.
+> Sorry I haven't been able to keep up with all the discussions, but I
+> thought the consensus was that pretending to be EFI-like was a bad idea,
+> because we don't have actual EFI and we're not implementing an entirely
+> compatible scheme to EFI anyway.
+>
+> Greg suggested just putting the variables in sysfs, why does that not
+> work? Matthew mentioned "complex semantics around variable deletion and
+> immutability" but do we have to emulate those semantics on powerpc?
+
+Sorry for the delay in the response.
+
+Yes, I agree. The purpose of the v2 version of the patchset was to try 
+and quickly address Matthew's concerns. This version of the patchset:
+* is not using any EFI configs
+* is not exposing secure variables via efivarfs
+* is based on Greg's suggestion to use sysfs
+* is STILL using some of the existing EFI code, that is used by EFI to 
+expose its variables via sysfs, to avoid code duplication.
+* is using efivar hooks to expose secure variables for tool compatibility
+
+Assuming we all are in agreement, the next version of this patchset will 
+further improve upon these changes. It will refactor some of the sysfs 
+code from drivers/firmware/efi that is common to both EFI and POWER.  
+Since we do not have to emulate the complex semantics of efi on powerpc, 
+the sysfs interface should work for us.
+
+As per the tool, it will be efivar. I will provide the log demonstrating 
+how it is used with the next version.
+
+Is there something I missed in my understanding ?
+
+Thanks & Regards,
+      - Nayna
