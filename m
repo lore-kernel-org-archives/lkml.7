@@ -2,95 +2,97 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27FCC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596AAC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD9F22324
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EW0D7T3i"
+	by mail.kernel.org (Postfix) with ESMTP id 33A2521E6B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563843154;
+	bh=QoDXFktQWBBjpdyHJklib+lJgS4BW2A6BFE+HFerPWQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HtwztqjzprQ0HFRFYt7ef8eNEJCfoBN5LAoqYiI1atpnPqkxYMx1fqKQ30qukmu4h
+	 eoF81cYsCq/23R+ZBQB8tkCa4Ec5dAyf1wt8qR7H8KnA1ewNVt+yheD1hiPc23xVYy
+	 VzennFJBgr8teaUl/ONOrwyPF4HrvTfoqhsUXomg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfGWAto (ORCPT
+        id S1730916AbfGWAwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:49:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:32883 "EHLO ozlabs.org"
+        Mon, 22 Jul 2019 20:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfGWAto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:49:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728264AbfGWAwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 20:52:32 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45t0HS63rMz9s3Z;
-        Tue, 23 Jul 2019 10:49:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563842981;
-        bh=jBu0G6LyfdLlQ4QDdrcU7I+Un+OaoeNp8y0aT+nDIuc=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D7B2199C;
+        Tue, 23 Jul 2019 00:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563843151;
+        bh=QoDXFktQWBBjpdyHJklib+lJgS4BW2A6BFE+HFerPWQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EW0D7T3i9Jefogo6s3HH7TtQsS6HV/Gj2/9IY35QrYgsE/O6TQkEAKF5GFA08XWBC
-         WLx/D/Tl3OvSS4uJF+4powZVWfgozGVTzXOsb1PNtvAVH2DsbqxqLYWK91u5hhEJQ6
-         Bon2CD+CWfKnuMhnuM5fQ5o+SQqUbkwcwf5LZFyp4gZJZRCJOs7zc/P5Uxn+zcP3Ot
-         HnGd8VCrVmjBIVNPWx2LFf/U/SfQWBvUwM9MxV4SXnRscQuYZw9MQbSiJ++GXshTmQ
-         WaXXJGjnw3L/rXkPMWqoJKWNH2hpa5LTLLD+1JtfY4bMK+nJOfEJSabZhZKpnSnwaR
-         LtSywj7P4D3MA==
-Date:   Tue, 23 Jul 2019 10:49:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Maciej =?UTF-8?B?xbtlbmN6eWtvd3NraQ==?= <zenczykowski@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linux NetDev <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the net-next tree
-Message-ID: <20190723104940.0adf5524@canb.auug.org.au>
-In-Reply-To: <CANP3RGcqGrPnt9eOiAKRbxWVuBkRHRQdWPnANKwrYvtVnTqaSQ@mail.gmail.com>
-References: <20190723073518.59fa66e0@canb.auug.org.au>
-        <CANP3RGcqGrPnt9eOiAKRbxWVuBkRHRQdWPnANKwrYvtVnTqaSQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        b=qldAgseHrPTRQybgwoDYuxEyG8jbKlaOwXXZCKp00RlNMoCOAGqSm4bAf+McROJz/
+         mfL6Is692vmHZ+Bag8epiebNzp9yZjUrQw5ExCZEV6QC2Eng/d11n0S42hba7gjy8G
+         myaupLK4kQRgZBzodyvJKQEr/bHTIZpHrw5upEQ0=
+Date:   Mon, 22 Jul 2019 17:52:30 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 1/2] mm/filemap: don't initiate writeback if mapping has
+ no dirty pages
+Message-Id: <20190722175230.d357d52c3e86dc87efbd4243@linux-foundation.org>
+In-Reply-To: <156378816804.1087.8607636317907921438.stgit@buzz>
+References: <156378816804.1087.8607636317907921438.stgit@buzz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi Maciej,
+(cc linux-fsdevel and Jan)
 
-On Tue, 23 Jul 2019 09:46:29 +0900 Maciej =C5=BBenczykowski <zenczykowski@g=
-mail.com> wrote:
+On Mon, 22 Jul 2019 12:36:08 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+
+> Functions like filemap_write_and_wait_range() should do nothing if inode
+> has no dirty pages or pages currently under writeback. But they anyway
+> construct struct writeback_control and this does some atomic operations
+> if CONFIG_CGROUP_WRITEBACK=y - on fast path it locks inode->i_lock and
+> updates state of writeback ownership, on slow path might be more work.
+> Current this path is safely avoided only when inode mapping has no pages.
+> 
+> For example generic_file_read_iter() calls filemap_write_and_wait_range()
+> at each O_DIRECT read - pretty hot path.
+> 
+> This patch skips starting new writeback if mapping has no dirty tags set.
+> If writeback is already in progress filemap_write_and_wait_range() will
+> wait for it.
+> 
+> ...
 >
-> I'm afraid I'm currently travelling and due to an unplanned and f'ed up
-> office move I've lost (access to?) my dev workstation so I can't respin
-> this.  Might be too late either way?
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -408,7 +408,8 @@ int __filemap_fdatawrite_range(struct address_space *mapping, loff_t start,
+>  		.range_end = end,
+>  	};
+>  
+> -	if (!mapping_cap_writeback_dirty(mapping))
+> +	if (!mapping_cap_writeback_dirty(mapping) ||
+> +	    !mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
+>  		return 0;
+>  
+>  	wbc_attach_fdatawrite_inode(&wbc, mapping->host);
 
-Yeah, Dave doesn't rebase his trees, so just take this as a lesson for
-next time. :-)
+How does this play with tagged_writepages?  We assume that no tagging
+has been performed by any __filemap_fdatawrite_range() caller?
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02WaQACgkQAVBC80lX
-0GxIbgf/frRFMoWj8sD3HB2d4J8J+lqC1BgzDcqAgvm9mazSlYtq6bG70LCEFJ0Q
-KRnpYclsvCnWb0AmsWWrgso9ZSW2CiMC6Hh/NHy43M7KSNpoMw/xUfTza0qr06og
-wBB3aJnTJPqMpTrZngLwCtVyYwWwoVtlPtuOR9lHAPjBkiw3LsVo9CJP5ERGeWQc
-ifpS2qNSOxJY19RiB2rNlVAOrOvIdG+qfuDS7x8iw9tcFnoiGCza+hlo0leXJWBI
-G1KwVf62s12JNHtV/F8Ve6OL3xXKVuZRH0hKomGGtwERWp+xeorzwVAWxLRupp5B
-7VPouMYStir2gp9jtb9H1J1mZozNCQ==
-=A0ss
------END PGP SIGNATURE-----
-
---Sig_/Zt2g9Tv+QL2CPzT=BHt.MT9--
