@@ -2,208 +2,128 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C2DC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161DEC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414262239E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA1C205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o/mAhl7j"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PrXQOQhu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731782AbfGWJxW (ORCPT
+        id S1732471AbfGWJ5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:53:22 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36930 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731601AbfGWJxV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:53:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so18876487pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 02:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wxAKjAu/+mN6d743LHf4H6YA8TBDV51KnDFYD4mHasM=;
-        b=o/mAhl7jh1UIZHp1XTLOmf3rfByQ1xD3Uzxkpc/M/JopfB901CPWQKBe0Eif7Ibl+W
-         TLo/TSAvyNmlD+2bwXzz/FiKdYyaz2YgosyePDVHRZ7aPQMkNSS/1zJU5ED+BbYKdUCU
-         B3pE25F2SL5G2xVWxK9yK3zmrBHWHF0MsT/aKZqcsrPF7uL8GJ1DjyOgtyyu+qZMdSYE
-         TpzVMyHgjy0GiKYnikFceulv1Hpp0q7m0SaMEnZdFjFMh1NlcRIGDmpreUwbvPqSSNHp
-         Nxj8DIHlMFCS3nPMid727eHmsjVuBlGH11Pj4N7VVaNzr0Q1Mp3gUviOgfJMxX2DSvRQ
-         XWKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wxAKjAu/+mN6d743LHf4H6YA8TBDV51KnDFYD4mHasM=;
-        b=b0TvIpkvBGp5iJoD8nG72M8shRnFJxT8ftHCyVsUpmLgsXgniNViLLyG5a+JNrJ0FG
-         web1UdaRGGPRQLEH2awFgjmzzQ5VmxsywwDYzC1zXm7qIXrcu0SyD+GnJEUbXLyRZAA5
-         kF71fbW6Y75C3jYGRLI/oYe4L11TtAgtsIcK4bffyQzGq1bLNGZ0TVZgL3N6WKMH5dDi
-         BzCUi5cIg3vbsAVQuIxxJ6M6p4FT3/LmYG5lL0vxFH2F+b7tm1fcR+ds7lhHekucHmXG
-         KTaHO/q2CcPexICKhBoewn0SoqQyizo0y3+NnWfgOqY2xCheRY6Hby2IU9xYLJHhWJav
-         JRsg==
-X-Gm-Message-State: APjAAAXPeUg7t0WAhTRfcelwIxscpfynsP2IWw3mXem6I6TvNcWKk0rI
-        XwKnZ+Xi1BG8tP6Ar9aC4eUc2A==
-X-Google-Smtp-Source: APXvYqxv5Cqk6GS06ASEcJWpNdpfMCongDlWJndKSh3rpy8p/fDB+DMskYKMH8NIIq6ysBxa43fabw==
-X-Received: by 2002:a17:90a:ab01:: with SMTP id m1mr78299466pjq.69.1563875600379;
-        Tue, 23 Jul 2019 02:53:20 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id r61sm55682863pjb.7.2019.07.23.02.53.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 02:53:18 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 15:23:16 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] OPP: Add function to look up required OPP's for a
- given OPP
-Message-ID: <20190723095316.t5ltprixxd5veuj7@vireshk-i7>
-References: <20190717222340.137578-1-saravanak@google.com>
- <20190717222340.137578-3-saravanak@google.com>
+        Tue, 23 Jul 2019 05:57:45 -0400
+Received: from mail-eopbgr30060.outbound.protection.outlook.com ([40.107.3.60]:42915
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731566AbfGWJ5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:57:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qwsn99ZUdsWoQhGXaXYI6FYl0o0St+YUHaIEEbGB3zV/nBQFUU2pkYZpSJ4MJ3qq53bagkcdAWplurTvPU06K8XjVyvIFhrIvrA3Pe9zOvJz+NXsM5Nkm2ecSO+JrBXniDDzxNd1S8Cra2ewZ2FFkD3RGZ16VxrmtAvR4HxanKmexuPesEatN1WcPT2/tjyr659scyS58dfttmDPu0C+qhVcYrBthPBfVF+uIcJhvScFI9j/ID8qAvWgkcgG7UUg5VNeU7gllsDWhZ3j1GEbIh6UWFmFJLumnSxzh3hb7EUGJv7bDTVtFVRYnG0sWL8vuVKSgk/8Sv442AsDZVZhbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=url5aL2aUBWr/vZUhF+a832Sbsb601B6OUEdSXOMWJ8=;
+ b=KWdVG8qjOF0pLuHj53vYOiY3ev5gY0CMMsNueftsLSDSgFJb+M2Dr5hMX1QHhfTptA+sEydrhbPjPbpNWW67Kkun0ZLSva7552Quo2YLrrbn/Vul5QzWge0+y2k+woW0k5GmJFPg0cKKGPNG7j97X/YEzVMK0Dxaz4dwJayHG9AomIYwk8lGBYaF7EThib964ni+7BMpNctD/0JAH5MhYDbTOupvwyE4uBcUSZnJ/WGTNSJtwVqVk+z7SHQzWiQdqcB2AntWWUNJRGrndJ6ggGwAWmwOgke3X2Ygl6oAwITOwY9C02c3mvZ650yF8cB9N40t1nTsb0ILYGolbNiDrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=url5aL2aUBWr/vZUhF+a832Sbsb601B6OUEdSXOMWJ8=;
+ b=PrXQOQhutd+/ooed+7GjbAftWrczxATqvFBSoG5DKJkko6s1auGJ4ZfUhuQqxCMaIwP30pcPI/XNJ8nXgHMKHO6uapFdUB8pVYFXdyYUtCm2a5eDdPB8jjLT9wen0FVfZGMnb87vyDxAw1CJ8ZgtEoYoKQFUoBvMYUCxrVdtI9c=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3760.eurprd04.prod.outlook.com (52.134.15.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Tue, 23 Jul 2019 09:57:41 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::7c64:5296:4607:e10]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::7c64:5296:4607:e10%5]) with mapi id 15.20.2094.017; Tue, 23 Jul 2019
+ 09:57:41 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 08/14] crypto: caam - make CAAM_PTR_SZ dynamic
+Thread-Topic: [PATCH v6 08/14] crypto: caam - make CAAM_PTR_SZ dynamic
+Thread-Index: AQHVPLPcllkBIju9kE+rcZ/lhM5x/Q==
+Date:   Tue, 23 Jul 2019 09:57:41 +0000
+Message-ID: <VI1PR0402MB3485472C45A477FB0848802498C70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20190717152458.22337-1-andrew.smirnov@gmail.com>
+ <20190717152458.22337-9-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2e601f15-d190-4229-ecb8-08d70f5433eb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3760;
+x-ms-traffictypediagnostic: VI1PR0402MB3760:
+x-microsoft-antispam-prvs: <VI1PR0402MB37605BB0BF9F8E202C623AB198C70@VI1PR0402MB3760.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1169;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(256004)(478600001)(6436002)(6116002)(2906002)(86362001)(229853002)(486006)(6246003)(3846002)(4744005)(4326008)(71200400001)(71190400001)(76176011)(25786009)(9686003)(5660300002)(33656002)(53546011)(55016002)(6506007)(14454004)(2501003)(476003)(7696005)(44832011)(54906003)(26005)(8936002)(186003)(446003)(8676002)(316002)(99286004)(110136005)(7736002)(68736007)(66066001)(305945005)(102836004)(66556008)(81156014)(14444005)(66946007)(53936002)(64756008)(66476007)(81166006)(74316002)(52536014)(76116006)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3760;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: osmVcKj+ixELv/pRBlnLYFVxTIlXPdPN2dPMBtEGJGb1kI4VK2i//RQP+1kz2BvEsEYzv8PWHzb3xargG8j+cN6qNLEN5bRunaxOrLFNGhb12ABEFLAlqUqOxsZoC1+glv48rDxhoOAyhUFB8M6MIcCXBTiIGTJX6wRMlGS3Z3IYaGOS5/R+XyAN6bZRWI37NzCUizOzrRtqez/34moBoAAT5HKyLwwEhVgAom59LNII2jWoyxID7pQKWkT1PN7k2Of+Uqzf0av+6aMoUHN/avqK96QPEBQ/Z0Q7xZ1yg1XqTLS2O7RrRcyzyMcMaqYPjbcG0PrTwQaOp1Tcg2oKjcSAvz0bNQmoKBYpxW4jBYNlKWQlpwLAe0AgPaYh8WERkIGCiR88OBUz/ih4njl96uF7JaT3cBLo0RPmbCCSrZY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717222340.137578-3-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e601f15-d190-4229-ecb8-08d70f5433eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 09:57:41.7774
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: horia.geanta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3760
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-07-19, 15:23, Saravana Kannan wrote:
-> Add a function that allows looking up required OPPs given a source OPP
-> table, destination OPP table and the source OPP.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/opp/core.c     | 54 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h | 11 +++++++++
->  2 files changed, 65 insertions(+)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 438fcd134d93..72c055a3f6b7 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1883,6 +1883,60 @@ void dev_pm_opp_detach_genpd(struct opp_table *opp_table)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_detach_genpd);
->  
-> +/**
-> + * dev_pm_opp_xlate_opp() - Find required OPP for src_table OPP.
-> + * @src_table: OPP table which has dst_table as one of its required OPP table.
-> + * @dst_table: Required OPP table of the src_table.
-> + * @pstate: OPP of the src_table.
-
-You should use @ before parameters in the comments as well ? Just like
-you did that below.
-
-> + *
-> + * This function returns the OPP (present in @dst_table) pointed out by the
-> + * "required-opps" property of the OPP (present in @src_table).
-> + *
-> + * The callers are required to call dev_pm_opp_put() for the returned OPP after
-> + * use.
-> + *
-> + * Return: destination table OPP on success, otherwise NULL on errors.
-> + */
-> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
-
-Please name it dev_pm_opp_xlate_required_opp().
-
-> +					struct opp_table *dst_table,
-> +					struct dev_pm_opp *src_opp)
-> +{
-> +	struct dev_pm_opp *opp, *dest_opp = NULL;
-> +	int i;
-> +
-> +	if (!src_table || !dst_table || !src_opp)
-> +		return NULL;
-> +
-> +	for (i = 0; i < src_table->required_opp_count; i++) {
-> +		if (src_table->required_opp_tables[i]->np == dst_table->np)
-
-Why can't we just compare the table pointers instead ? Yeah, I know
-that's how I wrote that in the other xlate function, but I am confused
-now :)
-
-> +			break;
-> +	}
-> +
-> +	if (unlikely(i == src_table->required_opp_count)) {
-> +		pr_err("%s: Couldn't find matching OPP table (%p: %p)\n",
-> +		       __func__, src_table, dst_table);
-> +		return NULL;
-> +	}
-> +
-> +	mutex_lock(&src_table->lock);
-> +
-> +	list_for_each_entry(opp, &src_table->opp_list, node) {
-> +		if (opp == src_opp) {
-> +			dest_opp = opp->required_opps[i];
-> +			dev_pm_opp_get(dest_opp);
-> +			goto unlock;
-> +		}
-> +	}
-> +
-> +	pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src_table,
-> +	       dst_table);
-> +
-> +unlock:
-> +	mutex_unlock(&src_table->lock);
-> +
-> +	return dest_opp;
-> +}
-> +
->  /**
->   * dev_pm_opp_xlate_performance_state() - Find required OPP's pstate for src_table.
->   * @src_table: OPP table which has dst_table as one of its required OPP table.
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index af5021f27cb7..36f52b9cf24a 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -131,6 +131,9 @@ void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
->  struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names);
->  void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
->  int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
-> +struct dev_pm_opp *dev_pm_opp_xlate_opp(struct opp_table *src_table,
-> +					struct opp_table *dst_table,
-> +					struct dev_pm_opp *src_opp);
->  int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
->  int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
->  int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
-> @@ -304,6 +307,14 @@ static inline int dev_pm_opp_xlate_performance_state(struct opp_table *src_table
->  	return -ENOTSUPP;
->  }
->  
-> +static inline struct dev_pm_opp *dev_pm_opp_xlate_opp(
-> +						struct opp_table *src_table,
-> +						struct opp_table *dst_table,
-> +						struct dev_pm_opp *src_opp)
-> +{
-> +	return NULL;
-> +}
-> +
-
-Keep the order of declaring routines same, so this goes before the
-other xlate routine.
-
->  static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
->  {
->  	return -ENOTSUPP;
-> -- 
-> 2.22.0.510.g264f2c817a-goog
-
--- 
-viresh
+On 7/17/2019 6:25 PM, Andrey Smirnov wrote:=0A=
+> In order to be able to configure CAAM pointer size at run-time, which=0A=
+> needed to support i.MX8MQ, which is 64-bit SoC with 32-bit pointer=0A=
+> size, convert CAAM_PTR_SZ to refer to a global variable of the same=0A=
+> name ("caam_ptr_sz") and adjust the rest of the code accordingly. No=0A=
+> functional change intended.=0A=
+> =0A=
+I am seeing compilation errors like:=0A=
+=0A=
+In file included from drivers/crypto/caam/ctrl.c:25:0:=0A=
+drivers/crypto/caam/qi.h:87:6: error: variably modified 'sh_desc' at file s=
+cope=0A=
+  u32 sh_desc[MAX_SDLEN];=0A=
+      ^=0A=
+=0A=
+Adding comments for this commit, since it looks like the fixes=0A=
+should be included here (related to DESC_JOB_IO_LEN vs. DESC_JOB_IO_LEN_MAX=
+).=0A=
+=0A=
+Please make sure caam/qi and and caam/qi2 drivers are at least compile-test=
+ed.=0A=
+=0A=
+By caam/qi I am referring to:=0A=
+CONFIG_CRYPTO_DEV_FSL_CAAM_CRYPTO_API_QI=3Dy/m=0A=
+=0A=
+and caam/qi2:=0A=
+CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=3Dy/m=0A=
+=0A=
+Horia=0A=
