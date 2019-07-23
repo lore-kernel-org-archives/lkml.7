@@ -2,132 +2,158 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B2C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50DAC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB8F218EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79911218EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UiUhSzPc"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WLqofMgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732517AbfGWOdd (ORCPT
+        id S2387740AbfGWOfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:33:33 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52042 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728318AbfGWOdc (ORCPT
+        Tue, 23 Jul 2019 10:35:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36062 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730148AbfGWOe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:33:32 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190723143330euoutp0264be6f13c0bae5072bf7d83d7de9bfda~0D9xzaOEO1069310693euoutp02Q
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:33:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190723143330euoutp0264be6f13c0bae5072bf7d83d7de9bfda~0D9xzaOEO1069310693euoutp02Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563892410;
-        bh=3dI4WSCN1Syoio6H4JGJkxvn3KNeiKfNxDeEQLSlaYU=;
-        h=From:Subject:To:Cc:Date:References:From;
-        b=UiUhSzPc5CZRddVea4ybmGKb4JwVOOvz0Mt83DAxjdekSa7lxt1nJDsmiqIKVqUIB
-         a5OuIK63D8rvPOHEs8X7EvI9gCf+HExIzliDCO5jz2VKCHDdoDMxXnX9TP966IsNgk
-         TcxTBhqH7Chy5Y3kvulrLKyNQHMyrVAdb0aJIddU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190723143329eucas1p117643dc9e4f58b19fc3fd45658457b65~0D9xcUAJL2227822278eucas1p1d;
-        Tue, 23 Jul 2019 14:33:29 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 8F.18.04325.9BA173D5; Tue, 23
-        Jul 2019 15:33:29 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190723143329eucas1p211688de2902dbac72998fda9e694083d~0D9wxcVoa0227002270eucas1p2P;
-        Tue, 23 Jul 2019 14:33:29 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190723143328eusmtrp1d686ad3f98ed2c4ffbc8cd8ff46ef3cd~0D9wm7S621424814248eusmtrp1z;
-        Tue, 23 Jul 2019 14:33:28 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-f4-5d371ab91671
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C2.4B.04140.8BA173D5; Tue, 23
-        Jul 2019 15:33:28 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190723143328eusmtip2bca043c67d7707bbc87be382fc4714f6~0D9wYHACG0251202512eusmtip2B;
-        Tue, 23 Jul 2019 14:33:28 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] MAINTAINERS: handle fbdev changes through drm-misc tree
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Message-ID: <d449f697-ed25-8a3f-16d5-b981f1a52217@samsung.com>
-Date:   Tue, 23 Jul 2019 16:33:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 23 Jul 2019 10:34:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r7so19252747pfl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=11EGKG6b5hoi9YzMa3B9zcamZozuOz9TYFdeDHSi/VQ=;
+        b=WLqofMgKgwX+GBBcQ17R0iUnyDTfMjIuZc7IpLN2ckGPX+hUVUkkKoMZj9FhwUiZKT
+         AdminwPznOb1OAPsVPVbdpz5CvE0xheQ+a2Fa7GnwReA17UPZf46ynImqYVTMnImoysB
+         TvEXipsHmJVKm9XkI32JDbIEWcb+EWSJ+gYkY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=11EGKG6b5hoi9YzMa3B9zcamZozuOz9TYFdeDHSi/VQ=;
+        b=s0MJF3CTC7/0Wxd0/FUA/uHgA5VPa+nHrrEvn0EzUQfTJP8aHpqv/vXmXbEpwuJORw
+         XqU0/kLZcz6tOjGtbz4mqsBY/U4OjqsexLNEZcrXMoeTPBFZV0k0sitYb4n48exV4T/W
+         B9KeyV/x2Y8hhivVBlxRuPrnTKCg1M8QeMBspnxSQdFQpMF/4XHaDLKdxLOEjy5lKKJr
+         efS3bottXLO2E47YzS8vQDsptYE5bV7jVkiqHSbgC9X65CmVw7SBQ8WZWRsNQ9ybkfP2
+         tqtV5aly2Wgez3PElOYO7hyO9QFe2zbSptofAqt8O2QTMxBWbIjeciPEEEvBpl9YDlKK
+         EiCw==
+X-Gm-Message-State: APjAAAWbaPCwpyqj/wOnY9oWRkLvMTd4RlhHE0UDuQzRlDz3P5SbX/ko
+        SsHJSWsMwKZy+iQTz0Gqxt8=
+X-Google-Smtp-Source: APXvYqxOGRZiTbW/QTUYHoxI40F9UeoHJjkS/MqxYprvHRJGH4uUkNovTWILl0d4sr9ylHebOwhw0w==
+X-Received: by 2002:a63:d852:: with SMTP id k18mr5381517pgj.313.1563892498725;
+        Tue, 23 Jul 2019 07:34:58 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r1sm48527298pfq.100.2019.07.23.07.34.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 07:34:57 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 10:34:56 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, vdavydov.dev@gmail.com,
+        Brendan Gregg <bgregg@netflix.com>, kernel-team@android.com,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        carmenjackson@google.com, Christian Hansen <chansen3@cisco.com>,
+        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
+        David Howells <dhowells@redhat.com>, fmayer@google.com,
+        joaodias@google.com, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>,
+        minchan@google.com, minchan@kernel.org, namhyung@google.com,
+        sspatil@google.com, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, timmurray@google.com,
+        tkjos@google.com, Vlastimil Babka <vbabka@suse.cz>, wvw@google.com,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
+ using virtual indexing
+Message-ID: <20190723143456.GE104199@google.com>
+References: <20190722213205.140845-1-joel@joelfernandes.org>
+ <20190723060525.GA4552@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj227nsOJwcj4YvK7oMChK8lKGjbGT0Y/0r0Ahj5NSDim7ajvNS
-        EKMfTVaEusochgrm3LxmNm+oOdFZgiUaRJAXMlHT0ua84KWcR8l/z/t8z/N+z/PxURhTQEio
-        VE0Wq9Wo0qWkCLf3r38MbpNEKsNqlySyislvmGzU/ZuUDTxZJGQj7aXkJVzRuVKOK8YfOQUK
-        V9PRa1icKCqJTU/NZrWh8nhRyrv5eizTKsydbPog0KMa0oi8KaDPgd1mEBqRiGLoagRDHba9
-        YRlB67QBeVQM7UIwtpW471j/7CZ4kQVB8/YG4ocFBD0uF+5RkfR5KDTYdt3+tAL6ZheFHhxA
-        x0N18YtdHqODYG1iZjeHmJZD3c+BHZ6icPok9M1Ee+hD9E0Y728keIkfvC+ZwnlrIHydKhPw
-        +Bi0LJRingxAr5Lw/UcX6dkD9BXYfCDlQ/vDnLNZyOMjMGh6jPP6egRb+TN75hYEFtP23sNc
-        gF7nMOFZhNGnoaE9lKejwb24RvD7feHLgh+fwReK7MUYT4sh/yHDq09BY1UjuX+tsc2K8VgB
-        RssYWYBOmA80Mx9oZj7QzPw/QznCbSiQ1XHqZJYL17A5IZxKzek0ySGJGeomtPNPBred7lbU
-        tZngQDSFpD7iXEGkkiFU2Vye2oGAwqQB4uv6CCUjTlLl3WW1Gbe1unSWc6DDFC4NFN/zmrjF
-        0MmqLDaNZTNZ7f6pgPKW6JHV0JOHjE/dr33e6JiY8O7pv8o/DaGZNypedSrQ8rPL5YxluBWT
-        bywl5hTVREW12+djRQUjb+ueX53YCpfH39ms1MekCI/fD0G93aaVUZjrEwgjimdLNB2/gi/S
-        3FCOQ3L2ZVbluFcVfKpNWy3srdKHrZvKrHFkLBWZUEJIcS5FdSYI03Kqf8WIJhsjAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42I5/e/4Pd0dUuaxBg9uGVgsfHiX2eLK1/ds
-        Fif6PrBaXN41h82BxWPvtwUsHve7jzN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
-        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJdx4M065oKV7BUPN51iamBczdbFyMkhIWAi8fPq
-        V9YuRi4OIYGljBJPT95l6WLkAErISBxfXwZRIyzx51oXG0TNa0aJ/RtmM4Mk2ASsJCa2r2IE
-        sYUFPCSOvvzADmKLCCRIPH09H2wBs4CWxI8HL8BsXgE7ibWvTzCCzGcRUJU4+sIRJCwqECFx
-        5v0KFogSQYmTM5+wQLSqS/yZd4kZwhaXuPVkPhOELS+x/e0c5gmMArOQtMxC0jILScssJC0L
-        GFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbDtmM/t+xg7HoXfIhRgINRiYe3gsk8Vog1
-        say4MvcQowQHs5IIb2CDWawQb0piZVVqUX58UWlOavEhRlOgfyYyS4km5wNjNa8k3tDU0NzC
-        0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+OuFfGf769+2HZRo0G5p23x3qTf
-        N02DVDVOGy9Pv7lZ/KLsEQn3cNeX26YVv9nhpvtLpOrplodZwrmhU78ybi58d2yJ8WLTF/9n
-        aTovdra/HPy1w4eZRftI6o/Wd3su+qa/s5tQyz3JpXVX5Yo112Kvnuis/PZBVNfx2w5Xu+mx
-        D4z2LGhaHKCkxFKckWioxVxUnAgAtVDmyZ0CAAA=
-X-CMS-MailID: 20190723143329eucas1p211688de2902dbac72998fda9e694083d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190723143329eucas1p211688de2902dbac72998fda9e694083d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190723143329eucas1p211688de2902dbac72998fda9e694083d
-References: <CGME20190723143329eucas1p211688de2902dbac72998fda9e694083d@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723060525.GA4552@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fbdev patches will now go to upstream through drm-misc tree (IOW
-starting with v5.4 merge window fbdev changes will be included in
-DRM pull request) for improved maintainership and better integration
-testing. Update MAINTAINERS file accordingly.
+On Tue, Jul 23, 2019 at 08:05:25AM +0200, Michal Hocko wrote:
+> [Cc linux-api - please always do CC this list when introducing a user
+>  visible API]
 
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- MAINTAINERS |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry, will do.
 
-Index: b/MAINTAINERS
-===================================================================
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6389,7 +6389,7 @@ FRAMEBUFFER LAYER
- M:	Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
- L:	dri-devel@lists.freedesktop.org
- L:	linux-fbdev@vger.kernel.org
--T:	git git://github.com/bzolnier/linux.git
-+T:	git git://anongit.freedesktop.org/drm/drm-misc
- Q:	http://patchwork.kernel.org/project/linux-fbdev/list/
- S:	Maintained
- F:	Documentation/fb/
+> On Mon 22-07-19 17:32:04, Joel Fernandes (Google) wrote:
+> > The page_idle tracking feature currently requires looking up the pagemap
+> > for a process followed by interacting with /sys/kernel/mm/page_idle.
+> > This is quite cumbersome and can be error-prone too. If between
+> > accessing the per-PID pagemap and the global page_idle bitmap, if
+> > something changes with the page then the information is not accurate.
+> > More over looking up PFN from pagemap in Android devices is not
+> > supported by unprivileged process and requires SYS_ADMIN and gives 0 for
+> > the PFN.
+> > 
+> > This patch adds support to directly interact with page_idle tracking at
+> > the PID level by introducing a /proc/<pid>/page_idle file. This
+> > eliminates the need for userspace to calculate the mapping of the page.
+> > It follows the exact same semantics as the global
+> > /sys/kernel/mm/page_idle, however it is easier to use for some usecases
+> > where looking up PFN is not needed and also does not require SYS_ADMIN.
+> > It ended up simplifying userspace code, solving the security issue
+> > mentioned and works quite well. SELinux does not need to be turned off
+> > since no pagemap look up is needed.
+> > 
+> > In Android, we are using this for the heap profiler (heapprofd) which
+> > profiles and pin points code paths which allocates and leaves memory
+> > idle for long periods of time.
+> > 
+> > Documentation material:
+> > The idle page tracking API for virtual address indexing using virtual page
+> > frame numbers (VFN) is located at /proc/<pid>/page_idle. It is a bitmap
+> > that follows the same semantics as /sys/kernel/mm/page_idle/bitmap
+> > except that it uses virtual instead of physical frame numbers.
+> > 
+> > This idle page tracking API can be simpler to use than physical address
+> > indexing, since the pagemap for a process does not need to be looked up
+> > to mark or read a page's idle bit. It is also more accurate than
+> > physical address indexing since in physical address indexing, address
+> > space changes can occur between reading the pagemap and reading the
+> > bitmap. In virtual address indexing, the process's mmap_sem is held for
+> > the duration of the access.
+> 
+> I didn't get to read the actual code but the overall idea makes sense to
+> me. I can see this being useful for userspace memory management (along
+> with remote MADV_PAGEOUT, MADV_COLD).
+
+Thanks.
+
+> Normally I would object that a cumbersome nature of the existing
+> interface can be hidden in a userspace but I do agree that rowhammer has
+> made this one close to unusable for anything but a privileged process.
+
+Agreed, this is one of the primary motivations for the patch as you said.
+
+> I do not think you can make any argument about accuracy because
+> the information will never be accurate. Sure the race window is smaller
+> in principle but you can hardly say anything about how much or whether
+> at all.
+
+Sure, fair enough. That is why I wasn't beating the drum too much on the
+accuracy point. However, this surprisingly does work quite well.
+
+thanks,
+
+ - Joel
+
