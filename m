@@ -2,129 +2,128 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191A5C7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50947C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9252171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E3C218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387497AbfGWK4r (ORCPT
+        id S2389090AbfGWLAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:56:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:52860 "EHLO foss.arm.com"
+        Tue, 23 Jul 2019 07:00:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:52910 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbfGWK4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:56:47 -0400
+        id S1731069AbfGWLAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 07:00:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64A5D337;
-        Tue, 23 Jul 2019 03:56:46 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E61D53F71A;
-        Tue, 23 Jul 2019 03:56:43 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 11:56:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, james.morse@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com, steve.capper@arm.com
-Subject: Re: [PATCH V6 RESEND 0/3] arm64/mm: Enable memory hot remove
-Message-ID: <20190723105636.GA5004@lakrids.cambridge.arm.com>
-References: <1563171470-3117-1-git-send-email-anshuman.khandual@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6D6F337;
+        Tue, 23 Jul 2019 04:00:01 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C820A3F71A;
+        Tue, 23 Jul 2019 04:00:00 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 11:59:58 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 11/11] firmware: arm_scmi: Use asynchronous
+ CLOCK_RATE_SET when possible
+Message-ID: <20190723105958.GB2815@e107155-lin>
+References: <20190708154730.16643-1-sudeep.holla@arm.com>
+ <20190708154730.16643-12-sudeep.holla@arm.com>
+ <20190722212954.8924D21900@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1563171470-3117-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190722212954.8924D21900@mail.kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anshuman,
+On Mon, Jul 22, 2019 at 02:29:53PM -0700, Stephen Boyd wrote:
+> Quoting Sudeep Holla (2019-07-08 08:47:30)
+> > CLOCK_PROTOCOL_ATTRIBUTES provides attributes to indicate the maximum
+> > number of pending asynchronous clock rate changes supported by the
+> > platform. If it's non-zero, then we should be able to use asynchronous
+> > clock rate set for any clocks until the maximum limit is reached.
+> >
+> > Keeping the current count of pending asynchronous clock set rate
+> > requests, we can decide if we can you asynchronous request for the
+>
+> This last part of the sentence doesn't read properly. Please rewrite.
+>
 
-On Mon, Jul 15, 2019 at 11:47:47AM +0530, Anshuman Khandual wrote:
-> This series enables memory hot remove on arm64 after fixing a memblock
-> removal ordering problem in generic try_remove_memory() and a possible
-> arm64 platform specific kernel page table race condition. This series
-> is based on linux-next (next-20190712).
-> 
-> Concurrent vmalloc() and hot-remove conflict:
-> 
-> As pointed out earlier on the v5 thread [2] there can be potential conflict
-> between concurrent vmalloc() and memory hot-remove operation. This can be
-> solved or at least avoided with some possible methods. The problem here is
-> caused by inadequate locking in vmalloc() which protects installation of a
-> page table page but not the walk or the leaf entry modification.
-> 
-> Option 1: Making locking in vmalloc() adequate
-> 
-> Current locking scheme protects installation of page table pages but not the
-> page table walk or leaf entry creation which can conflict with hot-remove.
-> This scheme is sufficient for now as vmalloc() works on mutually exclusive
-> ranges which can proceed concurrently only if their shared page table pages
-> can be created while inside the lock. It achieves performance improvement
-> which will be compromised if entire vmalloc() operation (even if with some
-> optimization) has to be completed under a lock.
-> 
-> Option 2: Making sure hot-remove does not happen during vmalloc()
-> 
-> Take mem_hotplug_lock in read mode through [get|put]_online_mems() constructs
-> for the entire duration of vmalloc(). It protects from concurrent memory hot
-> remove operation and does not add any significant overhead to other concurrent
-> vmalloc() threads. It solves the problem in right way unless we do not want to
-> extend the usage of mem_hotplug_lock in generic MM.
-> 
-> Option 3: Memory hot-remove does not free (conflicting) page table pages
-> 
-> Don't not free page table pages (if any) for vmemmap mappings after unmapping
-> it's virtual range. The only downside here is that some page table pages might
-> remain empty and unused until next memory hot-add operation of the same memory
-> range.
-> 
-> Option 4: Dont let vmalloc and vmemmap share intermediate page table pages
-> 
-> The conflict does not arise if vmalloc and vmemap range do not share kernel
-> page table pages to start with. If such placement can be ensured in platform
-> kernel virtual address layout, this problem can be successfully avoided.
-> 
-> There are two generic solutions (Option 1 and 2) and two platform specific
-> solutions (Options 2 and 3). This series has decided to go with (Option 3)
-> which requires minimum changes while self-contained inside the functionality.
+Will fix.
 
-... while also leaking memory, right?
+> > incoming/new request.
+> >
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/firmware/arm_scmi/clock.c | 21 ++++++++++++++++++---
+> >  1 file changed, 18 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+> > index dd215bd11a58..70044b7c812e 100644
+> > --- a/drivers/firmware/arm_scmi/clock.c
+> > +++ b/drivers/firmware/arm_scmi/clock.c
+> > @@ -221,21 +222,35 @@ static int scmi_clock_rate_set(const struct scmi_handle *handle, u32 clk_id,
+> >                                u64 rate)
+> >  {
+> >         int ret;
+> > +       u32 flags = 0;
+> >         struct scmi_xfer *t;
+> >         struct scmi_clock_set_rate *cfg;
+> > +       struct clock_info *ci = handle->clk_priv;
+> >
+> >         ret = scmi_xfer_get_init(handle, CLOCK_RATE_SET, SCMI_PROTOCOL_CLOCK,
+> >                                  sizeof(*cfg), 0, &t);
+> >         if (ret)
+> >                 return ret;
+> >
+> > +       if (ci->max_async_req) {
+> > +               if (atomic_inc_return(&ci->cur_async_req) < ci->max_async_req)
+> > +                       flags |= CLOCK_SET_ASYNC;
+> > +               else
+> > +                       atomic_dec(&ci->cur_async_req);
+>
+> Can this be combined with the atomic_dec() below and done after either
+> transfer?
+>
 
-In my view, option 2 or 4 would have been preferable. Were there
-specific technical reasons to not go down either of those routes? I'm
-not sure that minimizing changes is the right rout given that this same
-problem presumably applies to other architectures, which will need to be
-fixed.
+Yes but cleaner.
 
-Do we know why we aren't seeing issues on other architectures? e.g. is
-the issue possible but rare (and hence not reported), or masked by
-something else (e.g. the layout of the kernel VA space)?
+> > +       }
+> > +
+> >         cfg = t->tx.buf;
+> > -       cfg->flags = cpu_to_le32(0);
+> > +       cfg->flags = cpu_to_le32(flags);
+> >         cfg->id = cpu_to_le32(clk_id);
+> >         cfg->value_low = cpu_to_le32(rate & 0xffffffff);
+> >         cfg->value_high = cpu_to_le32(rate >> 32);
+> >
+> > -       ret = scmi_do_xfer(handle, t);
+> > +       if (flags & CLOCK_SET_ASYNC) {
+> > +               ret = scmi_do_xfer_with_response(handle, t);
+> > +               atomic_dec(&ci->cur_async_req);
+> > +       } else {
+> > +               ret = scmi_do_xfer(handle, t);
+> > +       }
+>
+> I mean putting the atomic_dec() here.
+>
 
-I'd like to solve the underyling issue before we start adding new
-functionality.
+Understood and done locally, will post as v2.
 
-> Testing:
-> 
-> Memory hot remove has been tested on arm64 for 4K, 16K, 64K page config
-> options with all possible CONFIG_ARM64_VA_BITS and CONFIG_PGTABLE_LEVELS
-> combinations. Its only build tested on non-arm64 platforms.
-
-Could you please share how you've tested this?
-
-Having instructions so that I could reproduce this locally would be very
-helpful.
-
-Thanks,
-Mark.
+--
+Regards,
+Sudeep
