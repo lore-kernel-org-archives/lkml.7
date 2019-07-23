@@ -2,123 +2,121 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B42C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE937C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5DB1218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4B9218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Jq8Vzi93"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lt80K4Z+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392121AbfGWVe3 (ORCPT
+        id S2392134AbfGWVer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:34:29 -0400
-Received: from mout.gmx.net ([212.227.15.18]:56799 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731019AbfGWVe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:34:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1563917650;
-        bh=qgUZqMvf9CDgIeP64ai2WtrFeE/F4JInROCU4QA90us=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Jq8Vzi93QsM0GOvk8S6IRQWD8YncdKgxoyQKOPJysWeKwghvIqEUDfJlEE/k2mCLN
-         vlo3j9sM41UrgCryrL1bKbNRL+g2Qsudv1ZbWtXgUDi5HY5VlLkE3Terx5YY1U/Zjk
-         4u53L15HcmbCNb0mHASCROmOPEJUyYnLZGlUVrQE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.162] ([37.4.249.115]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0LuP5z-1iW8rV0G6p-011n66; Tue, 23
- Jul 2019 23:34:10 +0200
-Subject: Re: [PATCH v4 7/7] arm64: defconfig: enable cpufreq support for RPi3
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        stefan.wahren@i2se.com, linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
-        Catalin Marinas <catalin.marinas@arm.com>, ptesarik@suse.com,
-        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
-        Will Deacon <will.deacon@arm.com>, eric@anholt.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        mbrugger@suse.de, ssuloev@orpaltech.com
-References: <20190612182500.4097-1-nsaenzjulienne@suse.de>
- <20190612182500.4097-8-nsaenzjulienne@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <98a6dccd-b834-3596-cc4a-e97ebc9b01cb@gmx.net>
-Date:   Tue, 23 Jul 2019 23:34:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 17:34:47 -0400
+Received: from mail-pf1-f182.google.com ([209.85.210.182]:39029 "EHLO
+        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729084AbfGWVeq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 17:34:46 -0400
+Received: by mail-pf1-f182.google.com with SMTP id f17so15782134pfn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:34:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VWIEpkB+n44qq++ScgWqxmeSI/uO47Tg9yPkq7RW5zM=;
+        b=lt80K4Z+V8K9yGobfELvvO6KN7cDAATkM5sB7/0W8IECrsCK4UHj1uU0WAdzz/ZO26
+         r/HOZ8OnsLZP/RZkGSvpfHuHv524maccj1Ez/vGHlwE2piDXhMMnNArlJD3hYEWLROca
+         3AUzSTQir2yk7D3E4PR+ub3J5xlSjQq2S2e2Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VWIEpkB+n44qq++ScgWqxmeSI/uO47Tg9yPkq7RW5zM=;
+        b=uCyu6cGZgedtlQWqzmJkCFh3DQecxKZteKaPYZCYfETu6B43oh+0AEposT9D36QfWG
+         UyXU2QWneOTHV6gCNooICxhjAyThL+T4oqLRBB50Ba7be4zxxIDYiAP5O34m4I+atgUd
+         E2l+TN7sFlEMN/6HekCSJZZ3MRJZPk2e1bBjVIY955Zgl1/maMMja3FzHYioHjbuI6BE
+         BI+qmlDXtYIuiBxBVC3HEEC9NiH/K5CyQooQ4r4kV3IL30u42IXFIOsOiblwLBPEAwOo
+         Jg1Gn3UjXbkKm5GvW/h2X5dw2WXwywZJ5Awm57x1TnjVbga1/gC9dO/A9zvYsMgczj9I
+         APgw==
+X-Gm-Message-State: APjAAAV3mhK8+91scJZvaW7uon8eFGJOrtK9vi3fr86nZ4OcpA9Usg5b
+        /mvt1+f73KEB8fqicVt8noxWQQ==
+X-Google-Smtp-Source: APXvYqyxvdPPh9QAyeti89rkI4S8NU/d5TsJiHGgO3K6q0Ueyy23O+JaTEclPIDV2V5HehfwXgHf1g==
+X-Received: by 2002:aa7:9afc:: with SMTP id y28mr7646026pfp.252.1563917686160;
+        Tue, 23 Jul 2019 14:34:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 196sm46955301pfy.167.2019.07.23.14.34.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 14:34:45 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 14:34:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Rasmus Villemoes' <linux@rasmusvillemoes.dk>,
+        Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
+        Nitin Gote <nitin.r.gote@intel.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
+Message-ID: <201907231430.C679A37EC@keescook>
+References: <cover.1563841972.git.joe@perches.com>
+ <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
+ <eec901c6-ca51-89e4-1887-1ccab0288bee@rasmusvillemoes.dk>
+ <5ffdbf4f87054b47a2daf23a6afabecf@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612182500.4097-8-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:N3LqJoGUpptYNWRuJlS5DD9eWKeIqYHeFd/EMl9rCmCiDKtzLpx
- //855m3bntUOdB0/cZOBDSX4i4ubIEVPPWa+qMQGV2jRUPAZ2Gi2j7ja9rSqfVQbdA52r41
- YUPsgu3fQ5FFvUhzp8d/LqGMOv2i+VtAnWyoDsiC40arjmmFwW/SmyZJYnu0jxKI0hUghrq
- YU7RDm7dg3Hk/VTcCwvMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3DbHgGNVAlY=:3Fr6YLvCxR1vG+tDZUofNV
- Zvz0ywwaj1vMIeNiio2oorANWuTQGi/LnrwlYKLD8l+2b7jv49lU+pYOtf/hcOhH66bXzLoG8
- KczZSzN8EwNrUqyyZJWtpzip3Ct+q+WHLQ6hRnbcBDaq2c8TLprDFC0yGNWrBooTJ38NAKEVD
- hPsTk6DmMIVzVW+ZvxiO1E4PKiZwHDCGbenZjvKMJLLFZd9AfWs5NvBn0LgmEbHRJST3moXyS
- KBMFAeDh7fNhopRfPI6ha1bGYhH/wydlgEHyHoB2bObAFuw98m66eWT+HgeP6au2eLvH0JRgM
- 3HoL8twG+thkckIFHvigdWmZnt6u6Hv/ZfLGeIg8RC3qPkqfsFQu69mzfcFcfRnfg8xmc5DPj
- QO+8CIU/BiAYZ/3e6slmOEUcuU+9VG896hiDpgDQhN6iaUkPPhR/QiSKI2KUQG32bdb9ugWPV
- zk2N+CKqPkQEpawLV1RpfVATMRgMrh26lYnB45cWH/x+Wq9YkuzgwpNCYzMqkgT8CYn/Gchrl
- 1LpKDBRPhZMXaEJDcjpLhA8I4721UA1mgbHMk5CC4sLWSRtRfUxoqZ6xtTW2lpHw99fjl/ix5
- wPSQFMJt1SbNJXqDaIOqSL8d9b+q11vKNTpgQHBh78dg/fUapfZPBxJFydogyNJAlZ6nFsaXg
- /KxBCkVF8LU2a2hbP3jWHVnlzp2uQAjiVNPJFqL7ZHIxUciPKCHdX89M7EtNc5CMB4/Yo+tL0
- gpsw0X0fC7Z/mJAIRoqsMkcgc2xgxBpd4dHKZEi1PYhHUcsy3tSNQCZllxHC1XHWYJ/d9w9bS
- u94G3LkEDfjS8c3WTU3bpuQLEk3K/61iU4n6UFC4yxm6fikboMUf4F0OAAm7KZ+b0tLSROmbJ
- g6dggzlaqucuBOM+dXzjAaFJnnQxWQLgJYugxMnOCI6iFTfV8qJUddHkcyewjk6Eu0VrD6mhI
- re2qXMNEhvSwsHj7twmxwKivHO8RleJZ03E5CLe9WlZy87D9oGLHi5vWbrk/i2RJ7FWcOJEby
- lpMlR6xU6hrE7+ckmzaLdzVaHk+2fyoYg5QSUKKTm62XYwIJpyEtFSDmFEu7KN08m7W8vgMTx
- sjCdFNQnalq4uw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ffdbf4f87054b47a2daf23a6afabecf@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 12.06.19 um 20:24 schrieb Nicolas Saenz Julienne:
-> This enables both the new firmware clock driver and cpufreq driver
-> available for the RPi3 family of boards.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->
-> Changes since v2:
->   - Build both drivers as modules
->
->  arch/arm64/configs/defconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 5a8e853833cf..5e322e61b101 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -83,6 +83,7 @@ CONFIG_ACPI_CPPC_CPUFREQ=m
->  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
->  CONFIG_ARM_SCPI_CPUFREQ=y
->  CONFIG_ARM_IMX_CPUFREQ_DT=m
-> +CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
->  CONFIG_ARM_TEGRA186_CPUFREQ=y
->  CONFIG_ARM_SCPI_PROTOCOL=y
->  CONFIG_RASPBERRYPI_FIRMWARE=y
-> @@ -653,6 +654,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
->  CONFIG_COMMON_CLK_S2MPS11=y
->  CONFIG_CLK_QORIQ=y
->  CONFIG_COMMON_CLK_PWM=y
-> +CONFIG_CLK_RASPBERRYPI=m
->  CONFIG_CLK_IMX8MM=y
->  CONFIG_CLK_IMX8MQ=y
->  CONFIG_CLK_IMX8QXP=y
+On Tue, Jul 23, 2019 at 03:41:27PM +0000, David Laight wrote:
+> From: Rasmus Villemoes
+> > Sent: 23 July 2019 07:56
+> ...
+> > > +/**
+> > > + * stracpy - Copy a C-string into an array of char
+> > > + * @to: Where to copy the string, must be an array of char and not a pointer
+> > > + * @from: String to copy, may be a pointer or const char array
+> > > + *
+> > > + * Helper for strscpy.
+> > > + * Copies a maximum of sizeof(@to) bytes of @from with %NUL termination.
+> > > + *
+> > > + * Returns:
+> > > + * * The number of characters copied (not including the trailing %NUL)
+> > > + * * -E2BIG if @to is a zero size array.
+> > 
+> > Well, yes, but more importantly and generally: -E2BIG if the copy
+> > including %NUL didn't fit. [The zero size array thing could be made into
+> > a build bug for these stra* variants if one thinks that might actually
+> > occur in real code.]
+> 
+> Probably better is to return the size of the destination if the copy didn't fit
+> (zero if the buffer is zero length).
+> This allows code to do repeated:
+> 	offset += str*cpy(buf + offset, src, sizeof buf - offset);
+> and do a final check for overflow after all the copies.
+> 
+> The same is true for a snprintf()like function
 
-Applied to bcm2835-defconfig-64-next
+Please no; I understand the utility of the "max on error" condition for
+chaining, but chaining is less common than standard operations. And it
+requires that the size of the destination be known in multiple places,
+which isn't robust either.
 
-Thanks
+The very point of stracpy() is to not need to know the size of the
+destination (i.e. it's handled by the compiler). (And it can't be
+chained since it requires the base address of the array, not a char *.)
 
+-- 
+Kees Cook
