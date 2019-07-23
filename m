@@ -2,139 +2,166 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AB8C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA42C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E89A2238E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXGWiznk"
+	by mail.kernel.org (Postfix) with ESMTP id 7A7FE21BF6
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731061AbfGWD1K (ORCPT
+        id S1731169AbfGWD2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 23:27:10 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43378 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbfGWD1K (ORCPT
+        Mon, 22 Jul 2019 23:28:13 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:20448 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727314AbfGWD2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 23:27:10 -0400
-Received: by mail-pl1-f196.google.com with SMTP id 4so13029234pld.10;
-        Mon, 22 Jul 2019 20:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GRP7pr2OOjgRbOreV1kxricoKxpbSE+Edva7aK+xUiQ=;
-        b=fXGWiznkmj5kwTl4LV/rK/UBc1vKdzE/lRoCKq2t+H/nwZ+31Zb/87eCxxnntMNXC4
-         Ph7DVYIQDdsW7B9IdxUUP2d41s0ZptBlSBiyPKUYGi8nzCy3/+HR+r/cM5W1LObSTVRx
-         wI7NiisdUYMAswy8bUMhvbgac9PvnvrGN4olGHx1HVUg+PmfRC+esU4b9Axvinr+RCsV
-         qMGaxca7LFrVw1jTVn2XMplUmkEkmAJ8kRep3E1KE8zTKTUBnoF9dhmjz14E1Ixk8PkC
-         QBw9y3LFeWF17J428KZQQ3OecqQCsSrHX4lxq9PArrBrahu+J4VMsjPePdn21cOEgaux
-         qtoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GRP7pr2OOjgRbOreV1kxricoKxpbSE+Edva7aK+xUiQ=;
-        b=BMGPrQaz9BgqXxbvu3IES7furEJmAMRMacqc3by4M785Mf7X5GhykJNwMNOUdrqNrS
-         wXbjxv9ZdrHeWhEK7Dq8HUMmeR9akyI1oBGjznqk5R7nQSu6914jal64u0JNznN64EiJ
-         p4awuia/4RqDVc56Q2iqfSJ8j3c6lbRD3fWnF8FyiSTea8vhRvrrXAcPNuftpTbXMUNj
-         AWKRDYI2OgWWUraZDbmETuqZn6eVnIRd31TWMWjamU3iqzgp55zeBFUr9MVyJL1kBo4/
-         NbYyLBm6zdT+4SWadJLnLYWtRyAe6PPZ8VlbI9nF7xzZ2Dja1Wl+Tsew5dRQhp/SeNxO
-         HW8w==
-X-Gm-Message-State: APjAAAWjkL+UoCBso30j8JfpdcaP51kDJ3tE+5HYVWcfQg5YOfpqB+uL
-        vSyqik8Xd4jhgh+mKO8lvJ0oexIGI6s=
-X-Google-Smtp-Source: APXvYqwenlVjDz1d39lyo7MCi5QM1hoS6SK/Ormll0gf7flg5s/iUBUYNWcrAH7mNe6wAuXm4J8zpw==
-X-Received: by 2002:a17:902:a607:: with SMTP id u7mr78983045plq.43.1563852429181;
-        Mon, 22 Jul 2019 20:27:09 -0700 (PDT)
-Received: from continental.prv.suse.net ([191.248.110.143])
-        by smtp.gmail.com with ESMTPSA id h1sm51552956pfo.152.2019.07.22.20.27.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 20:27:08 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        axboe@kernel.dk
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>
-Subject: [PATCH v2] block: blk-mq: Remove blk_mq_sched_started_request and started_request
-Date:   Tue, 23 Jul 2019 00:27:41 -0300
-Message-Id: <20190723032743.10552-1-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Mon, 22 Jul 2019 23:28:13 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x6N3QSlo003193;
+        Tue, 23 Jul 2019 11:26:28 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 1A5EFAD7BC06911158C9;
+        Tue, 23 Jul 2019 11:26:28 +0800 (CST)
+In-Reply-To: <20190722234614.GA11971@bogus>
+References: <1562138144-2212-1-git-send-email-masonccyang@mxic.com.tw> <1562138144-2212-3-git-send-email-masonccyang@mxic.com.tw> <20190722234614.GA11971@bogus>
+To:     "Rob Herring" <robh@kernel.org>
+Cc:     anders.roxell@linaro.org, bbrezillon@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, lee.jones@linaro.org, liang.yang@amlogic.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com,
+        miquel.raynal@bootlin.com, paul@crapouillou.net,
+        paul.burton@mips.com, richard@nod.at, stefan@agner.ch,
+        vigneshr@ti.com
+Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND controller
+ bindings
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-KeepSent: 10139C27:59024E84-48258440:00113398;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF10139C27.59024E84-ON48258440.00113398-48258440.0012E6FA@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 23 Jul 2019 11:26:27 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/07/23 AM 11:26:28,
+        Serialize complete at 2019/07/23 AM 11:26:28
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x6N3QSlo003193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blk_mq_sched_completed_request is a function that checks if the elevator
-related to the request has started_request implemented, but currently, none of
-the available IO schedulers implement started_request, so remove both.
 
-Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
----
- Changes from v1:
- This was previously two patches, one removing blk_mq_sched_completed_request 
- and another one removing started_request, but now they are merged into this
- commit.
+Hi Rob,
 
- block/blk-mq-sched.h     | 9 ---------
- block/blk-mq.c           | 2 --
- include/linux/elevator.h | 1 -
- 3 files changed, 12 deletions(-)
 
-diff --git a/block/blk-mq-sched.h b/block/blk-mq-sched.h
-index cf22ab00fefb..126021fc3a11 100644
---- a/block/blk-mq-sched.h
-+++ b/block/blk-mq-sched.h
-@@ -61,15 +61,6 @@ static inline void blk_mq_sched_completed_request(struct request *rq, u64 now)
- 		e->type->ops.completed_request(rq, now);
- }
- 
--static inline void blk_mq_sched_started_request(struct request *rq)
--{
--	struct request_queue *q = rq->q;
--	struct elevator_queue *e = q->elevator;
--
--	if (e && e->type->ops.started_request)
--		e->type->ops.started_request(rq);
--}
--
- static inline void blk_mq_sched_requeue_request(struct request *rq)
- {
- 	struct request_queue *q = rq->q;
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index b038ec680e84..3e8902714253 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -669,8 +669,6 @@ void blk_mq_start_request(struct request *rq)
- {
- 	struct request_queue *q = rq->q;
- 
--	blk_mq_sched_started_request(rq);
--
- 	trace_block_rq_issue(q, rq);
- 
- 	if (test_bit(QUEUE_FLAG_STATS, &q->queue_flags)) {
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index 17cd0078377c..1dd014c9c87b 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -45,7 +45,6 @@ struct elevator_mq_ops {
- 	struct request *(*dispatch_request)(struct blk_mq_hw_ctx *);
- 	bool (*has_work)(struct blk_mq_hw_ctx *);
- 	void (*completed_request)(struct request *, u64);
--	void (*started_request)(struct request *);
- 	void (*requeue_request)(struct request *);
- 	struct request *(*former_request)(struct request_queue *, struct request *);
- 	struct request *(*next_request)(struct request_queue *, struct request *);
--- 
-2.22.0
+> 
+> Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix raw NAND 
+controller bindings
+> 
+> On Wed, Jul 03, 2019 at 03:15:44PM +0800, Mason Yang wrote:
+> > Document the bindings used by the Macronix raw NAND controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 20 
+++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/
+> Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > new file mode 100644
+> > index 0000000..ddd7660
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> > @@ -0,0 +1,20 @@
+> > +Macronix Raw NAND Controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: should be "macronix,nand-controller"
+> 
+> That's not very specific. There's only 1 version of this h/w?
+
+okay, will give it a apposite name.
+
+> 
+> > +- reg: should contain 1 entrie for the registers
+> 
+> s/entrie/entry/
+
+will fix it.
+
+> 
+> > +- interrupts: interrupt line connected to this raw NAND controller
+> > +- clock-names: should contain "ps_clk", "send_clk" and "send_dly_clk"
+> > +- clocks: should contain 3 phandles for the "ps_clk", "send_clk" and
+> > +    "send_dly_clk" clocks
+> 
+> You can drop '_clk' as that is redundant.
+
+okay, got it.
+
+> 
+> > +
+> > +Example:
+> > +
+> > +   nand: mxic-nfc@43c30000 {
+> > +      compatible = "macronix,nand-controller";
+> > +      reg = <0x43c30000 0x10000>;
+> > +      reg-names = "regs";
+> 
+> Not documented. You can drop as *-names is not generally useful when 
+> there is only 1 entry.
+
+okay, will fix it.
+
+> 
+> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> > +   };
+> > -- 
+> > 1.9.1
+> > 
+
+thanks for your time & review.
+best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
