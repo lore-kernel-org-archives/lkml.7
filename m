@@ -2,29 +2,29 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF75C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3847C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F8221734
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91EFB21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388761AbfGWQI3 (ORCPT
+        id S2388814AbfGWQIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:08:29 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2705 "EHLO huawei.com"
+        Tue, 23 Jul 2019 12:08:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2740 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727363AbfGWQI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:08:28 -0400
+        id S2388777AbfGWQIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:08:36 -0400
 Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0681BBBCE45D5BFE0D5D;
-        Wed, 24 Jul 2019 00:08:24 +0800 (CST)
+        by Forcepoint Email with ESMTP id 2C1734A5F9A2A176738C;
+        Wed, 24 Jul 2019 00:08:34 +0800 (CST)
 Received: from S00345302A-PC.china.huawei.com (10.202.227.237) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Jul 2019 00:08:15 +0800
+ 14.3.439.0; Wed, 24 Jul 2019 00:08:25 +0800
 From:   Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
 To:     <alex.williamson@redhat.com>, <eric.auger@redhat.com>
 CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,10 +32,12 @@ CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <john.garry@huawei.com>, <xuwei5@hisilicon.com>,
         <kevin.tian@intel.com>,
         Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v8 0/6] vfio/type1: Add support for valid iova list management
-Date:   Tue, 23 Jul 2019 17:06:31 +0100
-Message-ID: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
+Subject: [PATCH v8 3/6] vfio/type1: Update iova list on detach
+Date:   Tue, 23 Jul 2019 17:06:34 +0100
+Message-ID: <20190723160637.8384-4-shameerali.kolothum.thodi@huawei.com>
 X-Mailer: git-send-email 2.12.0.windows.1
+In-Reply-To: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
+References: <20190723160637.8384-1-shameerali.kolothum.thodi@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.202.227.237]
@@ -45,96 +47,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is to revive this series which almost made to 4.18 but got dropped
-as Alex found an issue[1] with IGD and USB devices RMRR region being
-reported as reserved regions.
+Get a copy of iova list on _group_detach and try to update the list.
+On success replace the current one with the copy. Leave the list as
+it is if update fails.
 
-Thanks to Eric for his work here[2]. It provides a way to exclude
-these regions while reporting the valid iova regions and this respin
-make use of that.
+Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+---
+v7 --> v8
+  -Fixed possible invalid holes in iova list if there are no more
+   reserved regions in vfio_iommu_resv_refresh().
+  -Handled iommu_get_group_resv_regions() err case in
+   vfio_iommu_resv_refresh()
+  -Tidy up of iova_copy list fail case.
+---
+ drivers/vfio/vfio_iommu_type1.c | 94 +++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
 
-Please note that I don't have a platform to verify the reported RMRR
-issue and appreciate testing on those platforms.
-
-Thanks,
-Shameer
-
-[1] https://lkml.org/lkml/2018/6/5/760
-[2] https://lore.kernel.org/patchwork/cover/1083072/
-
-v7-->v8
-  -Rebased to 5.3-rc1
-  -Addressed comments from Alex and Eric. Please see
-   individual patch history.
-  -Added Eric's R-by to patches 4/5/6
-
-v6-->v7
- -Rebased to 5.2-rc6 + Eric's patches
- -Added logic to exclude IOMMU_RESV_DIRECT_RELAXABLE reserved memory
-  region type(patch #2).
- -Dropped patch #4 of v6 as it is already part of mainline.
- -Addressed "container with only an mdev device will have an empty list"
-  case(patches 4/6 & 5/6 - Suggested by Alex)
-
-Old
-----
-This series introduces an iova list associated with a vfio 
-iommu. The list is kept updated taking care of iommu apertures,
-and reserved regions. Also this series adds checks for any conflict
-with existing dma mappings whenever a new device group is attached to
-the domain.
-
-User-space can retrieve valid iova ranges using VFIO_IOMMU_GET_INFO
-ioctl capability chains. Any dma map request outside the valid iova
-range will be rejected.
-
-v5 --> v6
-
- -Rebased to 4.17-rc1
- -Changed the ordering such that previous patch#7 "iommu/dma: Move
-  PCI window region reservation back...")  is now patch #4. This
-  will avoid any bisection issues pointed out by Alex.
- -Added Robins's Reviewed-by tag for patch#4
-
-v4 --> v5
-Rebased to next-20180315.
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index a3c9794ccf83..7005a8cfca1b 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -1867,12 +1867,93 @@ static void vfio_sanity_check_pfn_list(struct vfio_iommu *iommu)
+ 	WARN_ON(iommu->notifier.head);
+ }
  
- -Incorporated the corner case bug fix suggested by Alex to patch #5.
- -Based on suggestions by Alex and Robin, added patch#7. This
-  moves the PCI window  reservation back in to DMA specific path.
-  This is to fix the issue reported by Eric[1].
-
-v3 --> v4
- Addressed comments received for v3.
- -dma_addr_t instead of phys_addr_t
- -LIST_HEAD() usage.
- -Free up iova_copy list in case of error.
- -updated logic in filling the iova caps info(patch #5)
-
-RFCv2 --> v3
- Removed RFC tag.
- Addressed comments from Alex and Eric:
- - Added comments to make iova list management logic more clear.
- - Use of iova list copy so that original is not altered in
-   case of failure.
-
-RFCv1 --> RFCv2
- Addressed comments from Alex:
--Introduced IOVA list management and added checks for conflicts with 
- existing dma map entries during attach/detach.
-
-Shameer Kolothum (6):
-  vfio/type1: Introduce iova list and add iommu aperture validity check
-  vfio/type1: Check reserved region conflict and update iova list
-  vfio/type1: Update iova list on detach
-  vfio/type1: check dma map request is within a valid iova range
-  vfio/type1: Add IOVA range capability support
-  vfio/type1: remove duplicate retrieval of reserved regions
-
- drivers/vfio/vfio_iommu_type1.c | 518 +++++++++++++++++++++++++++++++-
- include/uapi/linux/vfio.h       |  26 +-
- 2 files changed, 531 insertions(+), 13 deletions(-)
-
++/*
++ * Called when a domain is removed in detach. It is possible that
++ * the removed domain decided the iova aperture window. Modify the
++ * iova aperture with the smallest window among existing domains.
++ */
++static void vfio_iommu_aper_expand(struct vfio_iommu *iommu,
++				   struct list_head *iova_copy)
++{
++	struct vfio_domain *domain;
++	struct iommu_domain_geometry geo;
++	struct vfio_iova *node;
++	dma_addr_t start = 0;
++	dma_addr_t end = (dma_addr_t)~0;
++
++	if (list_empty(iova_copy))
++		return;
++
++	list_for_each_entry(domain, &iommu->domain_list, next) {
++		iommu_domain_get_attr(domain->domain, DOMAIN_ATTR_GEOMETRY,
++				      &geo);
++		if (geo.aperture_start > start)
++			start = geo.aperture_start;
++		if (geo.aperture_end < end)
++			end = geo.aperture_end;
++	}
++
++	/* Modify aperture limits. The new aper is either same or bigger */
++	node = list_first_entry(iova_copy, struct vfio_iova, list);
++	node->start = start;
++	node = list_last_entry(iova_copy, struct vfio_iova, list);
++	node->end = end;
++}
++
++/*
++ * Called when a group is detached. The reserved regions for that
++ * group can be part of valid iova now. But since reserved regions
++ * may be duplicated among groups, populate the iova valid regions
++ * list again.
++ */
++static int vfio_iommu_resv_refresh(struct vfio_iommu *iommu,
++				   struct list_head *iova_copy)
++{
++	struct vfio_domain *d;
++	struct vfio_group *g;
++	struct vfio_iova *node;
++	dma_addr_t start, end;
++	LIST_HEAD(resv_regions);
++	int ret;
++
++	if (list_empty(iova_copy))
++		return -EINVAL;
++
++	list_for_each_entry(d, &iommu->domain_list, next) {
++		list_for_each_entry(g, &d->group_list, next) {
++			ret = iommu_get_group_resv_regions(g->iommu_group,
++							   &resv_regions);
++			if (ret)
++				goto done;
++		}
++	}
++
++	node = list_first_entry(iova_copy, struct vfio_iova, list);
++	start = node->start;
++	node = list_last_entry(iova_copy, struct vfio_iova, list);
++	end = node->end;
++
++	/* purge the iova list and create new one */
++	vfio_iommu_iova_free(iova_copy);
++
++	ret = vfio_iommu_aper_resize(iova_copy, start, end);
++	if (ret)
++		goto done;
++
++	/* Exclude current reserved regions from iova ranges */
++	ret = vfio_iommu_resv_exclude(iova_copy, &resv_regions);
++done:
++	vfio_iommu_resv_free(&resv_regions);
++	return ret;
++}
++
+ static void vfio_iommu_type1_detach_group(void *iommu_data,
+ 					  struct iommu_group *iommu_group)
+ {
+ 	struct vfio_iommu *iommu = iommu_data;
+ 	struct vfio_domain *domain;
+ 	struct vfio_group *group;
++	LIST_HEAD(iova_copy);
+ 
+ 	mutex_lock(&iommu->lock);
+ 
+@@ -1895,6 +1976,13 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+ 		}
+ 	}
+ 
++	/*
++	 * Get a copy of iova list. This will be used to update
++	 * and to replace the current one later. Please note that
++	 * we will leave the original list as it is if update fails.
++	 */
++	vfio_iommu_iova_get_copy(iommu, &iova_copy);
++
+ 	list_for_each_entry(domain, &iommu->domain_list, next) {
+ 		group = find_iommu_group(domain, iommu_group);
+ 		if (!group)
+@@ -1920,10 +2008,16 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+ 			iommu_domain_free(domain->domain);
+ 			list_del(&domain->next);
+ 			kfree(domain);
++			vfio_iommu_aper_expand(iommu, &iova_copy);
+ 		}
+ 		break;
+ 	}
+ 
++	if (!vfio_iommu_resv_refresh(iommu, &iova_copy))
++		vfio_iommu_iova_insert_copy(iommu, &iova_copy);
++	else
++		vfio_iommu_iova_free(&iova_copy);
++
+ detach_group_done:
+ 	mutex_unlock(&iommu->lock);
+ }
 -- 
 2.17.1
 
