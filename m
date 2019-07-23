@@ -2,343 +2,153 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01380C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9E9C41514
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB20120823
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634CF22543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:23:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ELjMKWsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388083AbfGWQVH (ORCPT
+        id S1732658AbfGWQX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:21:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36513 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfGWQVH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:21:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id k21so47773604ioj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 09:21:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=lMObaWa60YYuHoAufiNVBD5J6c9A8gPm9b0JcpFqeJQ=;
-        b=i6ML33E471XVhMIKGsp0UwELVK45TOkMwvq9lZou+zzHeM5Tlv9uXmbx8FdPb+Nv7C
-         LpMaqBKhJkaZq/uMWcH33rIe4l4cbspFRl3mwDST9tr0TNf32LlJSoKdSZtQnVJQvnrL
-         U6AV5988WhDHVh6TWcD+TENnTMqps1IGMvkEjx456Mw5rT8eHZ031N04rPDzCBfJz4NZ
-         7XSVNRAJ9PS0T6fmVYgpErsZu+VTDr4cDZY8GLIV8VkjO2LvbNgvenv69xbIO5472qeV
-         KZdyavrA27yG9lsIScykWjcDh/KuTKJomZPzhrOah2Hd1MTRq0Y47LpQJysajAQBJ0/T
-         oLUQ==
-X-Gm-Message-State: APjAAAWDuPnKWkXer6B9rKsztktpjVwIJySGxy1okcNzhh/3YrnivGrx
-        Yfqttn5lX/lbG3eLtLR0hbDrfTPcVOwTFc0uYwgo409DiRRj
-X-Google-Smtp-Source: APXvYqxv1sCPhch5GmOr4VSTvJsHr0ww4GZm+YUL5g64dbSXDBigeec+Cus+Il2QfZ+jylZmGIZNWHhr7KYlmYVpC9sVcGk95OnR
+        Tue, 23 Jul 2019 12:23:27 -0400
+Received: from mail-eopbgr770072.outbound.protection.outlook.com ([40.107.77.72]:60536
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725837AbfGWQX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 12:23:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ROG4Mn9nsW26B9AoMxSmnAx05Gd2ZEb4EFTkDgV0JYM0wv6tGrVEYvXspwMl9Zv6flDK1ExLwtoUwXpRHihRhH75qOVCk08qTr4w37uRznOXAehWsuF76Kcl7p6Zlh+8EClw6gPGtbNa0oMMgw5xOCD6LWkTFQ2VI/J680AdtddZWlql+7U84ycb1aq8a/Uc2tVUcPZACy29KpW1TEbmWh+aqWC+ZIFKEWwnXt7vj6a4WJVLZzkh3FvvwObTvLRn7I02qhmnBh5A/fpYPlmR9HxLwMBCKDqBPeCPZy8IetsQHNknZOuK9D//Pq7n9dVckpm5fF+287UJiSmhMKdrAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1H+PUymqNmgS/222ucsZnxhkrs0RPcKhEUVFrNKW/X0=;
+ b=eTxwudOeIMPOV3VeEEjw1NzBFzv8htNxSpUUxaOEW02rFbF+9bzo4xwipTvIW8IVxjoYIB6JngOgo/8jWOvo37db3h3P1qfyA3nzcVwCQfIJ+YSmoK9TXh4BFbd61y/Et7sQR2c5CaLip3mnRT4fMdN9e0LNXlqmzHwn5jp5O8UsL4zdq65hYVZvkqQq7VkW7j3XivexIBVmTkHzWR/bLoHeILXq+aAQMxsS/ILW4c79LCy3n7jOj1CejWj11oWi8P063hzR4OgwftU9lclRjss32ExdUfFKKVWKfwBkUwjF40SHdcs6sDRuJpXep0YFohoe4V73aAESqsizImfk+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1H+PUymqNmgS/222ucsZnxhkrs0RPcKhEUVFrNKW/X0=;
+ b=ELjMKWsWkIe3ZeVNIu5UwnsBfDJPbS8cBcjuWkA0Up4UtM2J9UU5qixR/Ae5nLmdSp5ijWGL/F1XGF8OE/80c3etU95u5xGTNhiA2bVCxxOsv30+YjI4hxt6ujdp9eCoW9TqQ4zA3K4fB+pyvK4trkDu2IwT3yTIJwvBKe0O+hE=
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
+ DM5PR12MB2358.namprd12.prod.outlook.com (52.132.141.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Tue, 23 Jul 2019 16:23:24 +0000
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::cda7:cfc1:ce62:bcb7]) by DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::cda7:cfc1:ce62:bcb7%10]) with mapi id 15.20.2094.013; Tue, 23 Jul
+ 2019 16:23:24 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH 03/14] PCI/P2PDMA: Apply host bridge white list for ACS
+Thread-Topic: [PATCH 03/14] PCI/P2PDMA: Apply host bridge white list for ACS
+Thread-Index: AQHVQOJ/hJntFdbC7U+X8XDxXeMMNKbYZBcA
+Date:   Tue, 23 Jul 2019 16:23:23 +0000
+Message-ID: <7ced9658-33f9-4496-4335-a6852f08ed12@amd.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
+ <20190722230859.5436-4-logang@deltatee.com>
+In-Reply-To: <20190722230859.5436-4-logang@deltatee.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: PR2P264CA0022.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::34)
+ To DM5PR12MB1546.namprd12.prod.outlook.com (2603:10b6:4:8::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a29deadf-5a1c-432b-2120-08d70f8a1574
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB2358;
+x-ms-traffictypediagnostic: DM5PR12MB2358:
+x-microsoft-antispam-prvs: <DM5PR12MB23583D8824C5743D0BEC7C8883C70@DM5PR12MB2358.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(189003)(199004)(65806001)(65826007)(65956001)(31686004)(71200400001)(8936002)(36756003)(316002)(58126008)(110136005)(6486002)(6512007)(54906003)(71190400001)(6436002)(8676002)(99286004)(7736002)(5660300002)(64756008)(64126003)(66446008)(68736007)(4326008)(66946007)(66556008)(305945005)(66476007)(46003)(256004)(6506007)(52116002)(11346002)(446003)(76176011)(86362001)(476003)(53936002)(2501003)(6246003)(186003)(14454004)(2906002)(2201001)(386003)(478600001)(102836004)(2616005)(25786009)(81156014)(229853002)(486006)(7416002)(81166006)(6116002)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB2358;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eTlI2kZPMY780FBUghE11PfWYHVCVxtMd1tdXYXFA9ibpPYAquas7Pg+XJwpkK6msFX2KRIoWVtMI2Zba10Zd+/WZhfsaVjD32iJW3IhJo1f75MF049NIu/Y6SfYL4JrYX0Oi1dh4hgqsIhRjjs5yC7yXzy4NuW6pzu6yiPUcUmXl/tmsNjbPnPADLU6mgwMVC6NiDM9dPq5PFRz5UU8nEpVreTVLrA+2lB0xl5iB3fcsfSI/duy0jcKWdSgAP1EJg/0im/JKeSE39JLneXIcllLhJ50tdi+B8uO8F+ZiQJYzIm6eQoDjsAZZNEQOotvTyC0mSPISsBk70LUz0Rtg4TPb/hNEjPxb058JxpxK8iX2YLNiKarwoupS/pUmwzvOhh9kYXus6kJ8Ncl8J7FzowPBhFkFt98SyTOTIuus8Y=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F27F267EF2060F4AB0608F6D12974C74@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a6b:3b89:: with SMTP id i131mr22107293ioa.33.1563898866186;
- Tue, 23 Jul 2019 09:21:06 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 09:21:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006241fe058e5b9490@google.com>
-Subject: KASAN: use-after-free Write in nr_insert_socket
-From:   syzbot <syzbot+5e54e8e637bc970bbd2b@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a29deadf-5a1c-432b-2120-08d70f8a1574
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 16:23:23.8992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ckoenig@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2358
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=178a5c10600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c8985c08e1f9727
-dashboard link: https://syzkaller.appspot.com/bug?extid=5e54e8e637bc970bbd2b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5e54e8e637bc970bbd2b@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in atomic_try_cmpxchg  
-/./include/asm-generic/atomic-instrumented.h:693 [inline]
-BUG: KASAN: use-after-free in refcount_inc_not_zero_checked+0xef/0x200  
-/lib/refcount.c:134
-Write of size 4 at addr ffff88805b0a2d00 by task syz-executor.1/29302
-
-CPU: 1 PID: 29302 Comm: syz-executor.1 Not tainted 5.2.0+ #64
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack /lib/dump_stack.c:77 [inline]
-  dump_stack+0x16f/0x1f0 /lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 /mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 /mm/kasan/report.c:482
-  kasan_report+0x12/0x17 /mm/kasan/common.c:612
-  check_memory_region_inline /mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 /mm/kasan/generic.c:192
-  __kasan_check_write+0x14/0x20 /mm/kasan/common.c:98
-  atomic_try_cmpxchg /./include/asm-generic/atomic-instrumented.h:693  
-[inline]
-  refcount_inc_not_zero_checked+0xef/0x200 /lib/refcount.c:134
-  refcount_inc_checked+0x17/0x70 /lib/refcount.c:156
-  sock_hold /./include/net/sock.h:649 [inline]
-  sk_add_node /./include/net/sock.h:701 [inline]
-  nr_insert_socket+0x2d/0xe0 /net/netrom/af_netrom.c:137
-  nr_rx_frame+0x1605/0x1e73 /net/netrom/af_netrom.c:1023
-  nr_loopback_timer+0x7b/0x170 /net/netrom/nr_loopback.c:59
-  call_timer_fn+0x1ac/0x700 /kernel/time/timer.c:1322
-  expire_timers /kernel/time/timer.c:1366 [inline]
-  __run_timers /kernel/time/timer.c:1685 [inline]
-  __run_timers /kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x66c/0x16a0 /kernel/time/timer.c:1698
-  __do_softirq+0x30d/0x970 /kernel/softirq.c:292
-  invoke_softirq /kernel/softirq.c:373 [inline]
-  irq_exit+0x1d0/0x200 /kernel/softirq.c:413
-  exiting_irq /./arch/x86/include/asm/apic.h:537 [inline]
-  smp_apic_timer_interrupt+0x14e/0x550 /arch/x86/kernel/apic/apic.c:1095
-  apic_timer_interrupt+0xf/0x20 /arch/x86/entry/entry_64.S:828
-  </IRQ>
-RIP: 0010:__preempt_count_sub /./arch/x86/include/asm/preempt.h:84 [inline]
-RIP: 0010:__raw_spin_unlock_irq /./include/linux/spinlock_api_smp.h:169  
-[inline]
-RIP: 0010:_raw_spin_unlock_irq+0x54/0x70 /kernel/locking/spinlock.c:199
-Code: c0 a0 e3 d2 88 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00  
-75 1e 48 83 3d d5 65 a0 01 00 74 12 fb 66 0f 1f 44 00 00 <65> ff 0d ad 7f  
-cf 78 41 5c 5d c3 0f 0b 48 c7 c7 a0 e3 d2 88 e8 d3
-RSP: 0018:ffff88808fc87370 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff11a5c74 RBX: ffff888092ace300 RCX: 0000000000000006
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff888092aceb4c
-RBP: ffff88808fc87378 R08: 1ffffffff14a6d50 R09: fffffbfff14a6d51
-R10: fffffbfff14a6d50 R11: ffffffff8a536a87 R12: ffff8880ae935380
-R13: ffff888053dde280 R14: 0000000000000000 R15: 0000000000000001
-  finish_lock_switch /kernel/sched/core.c:3004 [inline]
-  finish_task_switch+0x11d/0x690 /kernel/sched/core.c:3104
-  context_switch /kernel/sched/core.c:3257 [inline]
-  __schedule+0x77a/0x1530 /kernel/sched/core.c:3880
-  preempt_schedule_common+0x35/0x70 /kernel/sched/core.c:4025
-  _cond_resched+0x1d/0x30 /kernel/sched/core.c:5423
-  generic_perform_write+0x332/0x540 /mm/filemap.c:3344
-  __generic_file_write_iter+0x25e/0x630 /mm/filemap.c:3456
-  ext4_file_write_iter+0x373/0x1430 /fs/ext4/file.c:270
-  call_write_iter /./include/linux/fs.h:1870 [inline]
-  do_iter_readv_writev+0x5f8/0x8f0 /fs/read_write.c:693
-  do_iter_write /fs/read_write.c:970 [inline]
-  do_iter_write+0x184/0x610 /fs/read_write.c:951
-  vfs_iter_write+0x77/0xb0 /fs/read_write.c:983
-  iter_file_splice_write+0x66d/0xbe0 /fs/splice.c:746
-  do_splice_from /fs/splice.c:848 [inline]
-  direct_splice_actor+0x123/0x190 /fs/splice.c:1020
-  splice_direct_to_actor+0x366/0x970 /fs/splice.c:975
-  do_splice_direct+0x1da/0x2a0 /fs/splice.c:1063
-  do_sendfile+0x597/0xd00 /fs/read_write.c:1464
-  __do_sys_sendfile64 /fs/read_write.c:1519 [inline]
-  __se_sys_sendfile64 /fs/read_write.c:1511 [inline]
-  __x64_sys_sendfile64+0x15a/0x220 /fs/read_write.c:1511
-  do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fe4c4360c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000459829
-RDX: 0000000020000080 RSI: 0000000000000003 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000a198 R11: 0000000000000246 R12: 00007fe4c43616d4
-R13: 00000000004c6e87 R14: 00000000004dc238 R15: 00000000ffffffff
-
-Allocated by task 29302:
-  save_stack+0x23/0x90 /mm/kasan/common.c:69
-  set_track /mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc /mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 /mm/kasan/common.c:460
-  kasan_kmalloc+0x9/0x10 /mm/kasan/common.c:501
-  __do_kmalloc /mm/slab.c:3655 [inline]
-  __kmalloc+0x163/0x760 /mm/slab.c:3664
-  kmalloc /./include/linux/slab.h:557 [inline]
-  sk_prot_alloc+0x23a/0x310 /net/core/sock.c:1603
-  sk_alloc+0x39/0xf60 /net/core/sock.c:1657
-  nr_make_new /net/netrom/af_netrom.c:476 [inline]
-  nr_rx_frame+0x733/0x1e73 /net/netrom/af_netrom.c:959
-  nr_loopback_timer+0x7b/0x170 /net/netrom/nr_loopback.c:59
-  call_timer_fn+0x1ac/0x700 /kernel/time/timer.c:1322
-  expire_timers /kernel/time/timer.c:1366 [inline]
-  __run_timers /kernel/time/timer.c:1685 [inline]
-  __run_timers /kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x66c/0x16a0 /kernel/time/timer.c:1698
-  __do_softirq+0x30d/0x970 /kernel/softirq.c:292
-
-Freed by task 29300:
-  save_stack+0x23/0x90 /mm/kasan/common.c:69
-  set_track /mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x102/0x150 /mm/kasan/common.c:449
-  kasan_slab_free+0xe/0x10 /mm/kasan/common.c:457
-  __cache_free /mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2a0 /mm/slab.c:3756
-  sk_prot_free /net/core/sock.c:1640 [inline]
-  __sk_destruct+0x4f7/0x6e0 /net/core/sock.c:1726
-  sk_destruct+0x86/0xa0 /net/core/sock.c:1734
-  __sk_free+0xfb/0x360 /net/core/sock.c:1745
-  sk_free+0x42/0x50 /net/core/sock.c:1756
-  sock_put /./include/net/sock.h:1725 [inline]
-  sock_efree+0x61/0x80 /net/core/sock.c:2042
-  skb_release_head_state+0xeb/0x250 /net/core/skbuff.c:652
-  skb_release_all+0x16/0x60 /net/core/skbuff.c:663
-  __kfree_skb /net/core/skbuff.c:679 [inline]
-  kfree_skb /net/core/skbuff.c:697 [inline]
-  kfree_skb+0x101/0x380 /net/core/skbuff.c:691
-  nr_accept+0x56e/0x700 /net/netrom/af_netrom.c:819
-  __sys_accept4+0x34e/0x6a0 /net/socket.c:1754
-  __do_sys_accept4 /net/socket.c:1789 [inline]
-  __se_sys_accept4 /net/socket.c:1786 [inline]
-  __x64_sys_accept4+0x97/0xf0 /net/socket.c:1786
-  do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff88805b0a2c80
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 128 bytes inside of
-  2048-byte region [ffff88805b0a2c80, ffff88805b0a3480)
-The buggy address belongs to the page:
-page:ffffea00016c2880 refcount:1 mapcount:0 mapping:ffff8880aa400e00  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea000180bc08 ffffea00025aef08 ffff8880aa400e00
-raw: 0000000000000000 ffff88805b0a2400 0000000100000003 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88805b0a2c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88805b0a2c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88805b0a2d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff88805b0a2d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88805b0a2e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-------------[ cut here ]------------
-ODEBUG: activate not available (active state 0) object type: timer_list  
-hint: nr_heartbeat_expiry+0x0/0x410 /net/netrom/nr_timer.c:52
-WARNING: CPU: 1 PID: 29302 at lib/debugobjects.c:481  
-debug_print_object+0x168/0x250 /lib/debugobjects.c:481
-Modules linked in:
-CPU: 1 PID: 29302 Comm: syz-executor.1 Tainted: G    B             5.2.0+  
-#64
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:debug_print_object+0x168/0x250 /lib/debugobjects.c:481
-Code: dd 80 02 c6 87 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48  
-8b 14 dd 80 02 c6 87 48 c7 c7 80 f7 c5 87 e8 60 0d 09 fe <0f> 0b 83 05 e3  
-68 6a 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-RSP: 0018:ffff8880ae9099d0 EFLAGS: 00010082
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
-RDX: 0000000000000100 RSI: ffffffff815b9de2 RDI: ffffed1015d2132c
-RBP: ffff8880ae909a10 R08: ffff888092ace300 R09: fffffbfff13494e8
-R10: fffffbfff13494e7 R11: ffffffff89a4a73f R12: 0000000000000001
-R13: ffffffff88db3f40 R14: ffffffff8160d430 R15: 1ffff11015d21348
-FS:  00007fe4c4361700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2e620000 CR3: 000000007bf8a000 CR4: 00000000001406e0
-Call Trace:
-  <IRQ>
-  debug_object_activate+0x2e5/0x470 /lib/debugobjects.c:680
-  debug_timer_activate /kernel/time/timer.c:710 [inline]
-  __mod_timer /kernel/time/timer.c:1035 [inline]
-  mod_timer+0x415/0xb90 /kernel/time/timer.c:1096
-  sk_reset_timer+0x24/0x60 /net/core/sock.c:2821
-  nr_start_heartbeat+0x47/0x60 /net/netrom/nr_timer.c:79
-  nr_rx_frame+0x160d/0x1e73 /net/netrom/af_netrom.c:1025
-  nr_loopback_timer+0x7b/0x170 /net/netrom/nr_loopback.c:59
-  call_timer_fn+0x1ac/0x700 /kernel/time/timer.c:1322
-  expire_timers /kernel/time/timer.c:1366 [inline]
-  __run_timers /kernel/time/timer.c:1685 [inline]
-  __run_timers /kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x66c/0x16a0 /kernel/time/timer.c:1698
-  __do_softirq+0x30d/0x970 /kernel/softirq.c:292
-  invoke_softirq /kernel/softirq.c:373 [inline]
-  irq_exit+0x1d0/0x200 /kernel/softirq.c:413
-  exiting_irq /./arch/x86/include/asm/apic.h:537 [inline]
-  smp_apic_timer_interrupt+0x14e/0x550 /arch/x86/kernel/apic/apic.c:1095
-  apic_timer_interrupt+0xf/0x20 /arch/x86/entry/entry_64.S:828
-  </IRQ>
-RIP: 0010:__preempt_count_sub /./arch/x86/include/asm/preempt.h:84 [inline]
-RIP: 0010:__raw_spin_unlock_irq /./include/linux/spinlock_api_smp.h:169  
-[inline]
-RIP: 0010:_raw_spin_unlock_irq+0x54/0x70 /kernel/locking/spinlock.c:199
-Code: c0 a0 e3 d2 88 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00  
-75 1e 48 83 3d d5 65 a0 01 00 74 12 fb 66 0f 1f 44 00 00 <65> ff 0d ad 7f  
-cf 78 41 5c 5d c3 0f 0b 48 c7 c7 a0 e3 d2 88 e8 d3
-RSP: 0018:ffff88808fc87370 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff11a5c74 RBX: ffff888092ace300 RCX: 0000000000000006
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff888092aceb4c
-RBP: ffff88808fc87378 R08: 1ffffffff14a6d50 R09: fffffbfff14a6d51
-R10: fffffbfff14a6d50 R11: ffffffff8a536a87 R12: ffff8880ae935380
-R13: ffff888053dde280 R14: 0000000000000000 R15: 0000000000000001
-  finish_lock_switch /kernel/sched/core.c:3004 [inline]
-  finish_task_switch+0x11d/0x690 /kernel/sched/core.c:3104
-  context_switch /kernel/sched/core.c:3257 [inline]
-  __schedule+0x77a/0x1530 /kernel/sched/core.c:3880
-  preempt_schedule_common+0x35/0x70 /kernel/sched/core.c:4025
-  _cond_resched+0x1d/0x30 /kernel/sched/core.c:5423
-  generic_perform_write+0x332/0x540 /mm/filemap.c:3344
-  __generic_file_write_iter+0x25e/0x630 /mm/filemap.c:3456
-  ext4_file_write_iter+0x373/0x1430 /fs/ext4/file.c:270
-  call_write_iter /./include/linux/fs.h:1870 [inline]
-  do_iter_readv_writev+0x5f8/0x8f0 /fs/read_write.c:693
-  do_iter_write /fs/read_write.c:970 [inline]
-  do_iter_write+0x184/0x610 /fs/read_write.c:951
-  vfs_iter_write+0x77/0xb0 /fs/read_write.c:983
-  iter_file_splice_write+0x66d/0xbe0 /fs/splice.c:746
-  do_splice_from /fs/splice.c:848 [inline]
-  direct_splice_actor+0x123/0x190 /fs/splice.c:1020
-  splice_direct_to_actor+0x366/0x970 /fs/splice.c:975
-  do_splice_direct+0x1da/0x2a0 /fs/splice.c:1063
-  do_sendfile+0x597/0xd00 /fs/read_write.c:1464
-  __do_sys_sendfile64 /fs/read_write.c:1519 [inline]
-  __se_sys_sendfile64 /fs/read_write.c:1511 [inline]
-  __x64_sys_sendfile64+0x15a/0x220 /fs/read_write.c:1511
-  do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fe4c4360c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000459829
-RDX: 0000000020000080 RSI: 0000000000000003 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000a198 R11: 0000000000000246 R12: 00007fe4c43616d4
-R13: 00000000004c6e87 R14: 00000000004dc238 R15: 00000000ffffffff
-irq event stamp: 9211
-hardirqs last  enabled at (9210): [<ffffffff8100651a>]  
-trace_hardirqs_on_thunk+0x1a/0x20 /arch/x86/entry/thunk_64.S:41
-hardirqs last disabled at (9211): [<ffffffff8732831f>]  
-__raw_spin_lock_irqsave /./include/linux/spinlock_api_smp.h:108 [inline]
-hardirqs last disabled at (9211): [<ffffffff8732831f>]  
-_raw_spin_lock_irqsave+0x6f/0xd0 /kernel/locking/spinlock.c:159
-softirqs last  enabled at (8598): [<ffffffff8760069a>]  
-__do_softirq+0x69a/0x970 /kernel/softirq.c:319
-softirqs last disabled at (8879): [<ffffffff814526b0>] invoke_softirq  
-/kernel/softirq.c:373 [inline]
-softirqs last disabled at (8879): [<ffffffff814526b0>] irq_exit+0x1d0/0x200  
-/kernel/softirq.c:413
----[ end trace 1f19b790eed0288b ]---
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+QW0gMjMuMDcuMTkgdW0gMDE6MDggc2NocmllYiBMb2dhbiBHdW50aG9ycGU6DQo+IFdoZW4gYSBQ
+MlBETUEgdHJhbnNmZXIgaXMgcmVqZWN0ZWQgZHVlIHRvIEFDUyBiZWluZyBzZXQsIHdlDQo+IGNh
+biBhbHNvIGNoZWNrIHRoZSB3aGl0ZSBsaXN0IGFuZCBhbGxvdyB0aGUgdHJhbnNhY3Rpb25zLg0K
+Pg0KPiBEbyB0aGlzIGJ5IHB1c2hpbmcgdGhlIHdoaXRlbGlzdCBjaGVjayBpbnRvIHRoZQ0KPiB1
+cHN0cmVhbV9icmlkZ2VfZGlzdGFuY2UoKSBmdW5jdGlvbi4NCj4NCj4gU2lnbmVkLW9mZi1ieTog
+TG9nYW4gR3VudGhvcnBlIDxsb2dhbmdAZGVsdGF0ZWUuY29tPg0KDQpUaGlzIG9uZSBhbmQgcGF0
+Y2ggIzIgYXJlIFJldmlld2VkLWJ5OiBDaHJpc3RpYW4gS8O2bmlnIA0KPGNocmlzdGlhbi5rb2Vu
+aWdAYW1kLmNvbT4uDQoNCkJ1dCBJIGFjdHVhbGx5IHRoaW5rIHRoZSB0d28gcGF0Y2hlcyBjb3Vs
+ZCBiZSBtZXJnZWQuDQoNCkNocmlzdGlhbi4NCg0KPiAtLS0NCj4gICBkcml2ZXJzL3BjaS9wMnBk
+bWEuYyB8IDI1ICsrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwg
+MTQgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL3BjaS9wMnBkbWEuYyBiL2RyaXZlcnMvcGNpL3AycGRtYS5jDQo+IGluZGV4IDI4OWQwM2Ez
+MWU3ZC4uZDUwMzRlMjhkMWUxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BjaS9wMnBkbWEuYw0K
+PiArKysgYi9kcml2ZXJzL3BjaS9wMnBkbWEuYw0KPiBAQCAtMzI0LDE1ICszMjQsNyBAQCBzdGF0
+aWMgaW50IF9fdXBzdHJlYW1fYnJpZGdlX2Rpc3RhbmNlKHN0cnVjdCBwY2lfZGV2ICpwcm92aWRl
+ciwNCj4gICAJCWRpc3RfYSsrOw0KPiAgIAl9DQo+ICAgDQo+IC0JLyoNCj4gLQkgKiBBbGxvdyB0
+aGUgY29ubmVjdGlvbiBpZiBib3RoIGRldmljZXMgYXJlIG9uIGEgd2hpdGVsaXN0ZWQgcm9vdA0K
+PiAtCSAqIGNvbXBsZXgsIGJ1dCBhZGQgYW4gYXJiaXRyYXJ5IGxhcmdlIHZhbHVlIHRvIHRoZSBk
+aXN0YW5jZS4NCj4gLQkgKi8NCj4gLQlpZiAocm9vdF9jb21wbGV4X3doaXRlbGlzdChwcm92aWRl
+cikgJiYNCj4gLQkgICAgcm9vdF9jb21wbGV4X3doaXRlbGlzdChjbGllbnQpKQ0KPiAtCQlyZXR1
+cm4gKGRpc3RfYSArIGRpc3RfYikgfCBQMlBETUFfVEhSVV9IT1NUX0JSSURHRTsNCj4gLQ0KPiAt
+CXJldHVybiAoZGlzdF9hICsgZGlzdF9iKSB8IFAyUERNQV9OT1RfU1VQUE9SVEVEOw0KPiArCXJl
+dHVybiAoZGlzdF9hICsgZGlzdF9iKSB8IFAyUERNQV9USFJVX0hPU1RfQlJJREdFOw0KPiAgIA0K
+PiAgIGNoZWNrX2JfcGF0aF9hY3M6DQo+ICAgCWJiID0gYjsNCj4gQEAgLTM1MCw3ICszNDIsOCBA
+QCBzdGF0aWMgaW50IF9fdXBzdHJlYW1fYnJpZGdlX2Rpc3RhbmNlKHN0cnVjdCBwY2lfZGV2ICpw
+cm92aWRlciwNCj4gICAJfQ0KPiAgIA0KPiAgIAlpZiAoYWNzX2NudCkNCj4gLQkJcmV0dXJuIFAy
+UERNQV9OT1RfU1VQUE9SVEVEIHwgUDJQRE1BX0FDU19GT1JDRVNfVVBTVFJFQU07DQo+ICsJCXJl
+dHVybiAoZGlzdF9hICsgZGlzdF9iKSB8IFAyUERNQV9BQ1NfRk9SQ0VTX1VQU1RSRUFNIHwNCj4g
+KwkJCVAyUERNQV9USFJVX0hPU1RfQlJJREdFOw0KPiAgIA0KPiAgIAlyZXR1cm4gZGlzdF9hICsg
+ZGlzdF9iOw0KPiAgIH0NCj4gQEAgLTM5Nyw3ICszOTAsMTcgQEAgc3RhdGljIGludCB1cHN0cmVh
+bV9icmlkZ2VfZGlzdGFuY2Uoc3RydWN0IHBjaV9kZXYgKnByb3ZpZGVyLA0KPiAgIAkJCQkgICAg
+c3RydWN0IHBjaV9kZXYgKmNsaWVudCwNCj4gICAJCQkJICAgIHN0cnVjdCBzZXFfYnVmICphY3Nf
+bGlzdCkNCj4gICB7DQo+IC0JcmV0dXJuIF9fdXBzdHJlYW1fYnJpZGdlX2Rpc3RhbmNlKHByb3Zp
+ZGVyLCBjbGllbnQsIGFjc19saXN0KTsNCj4gKwlpbnQgZGlzdDsNCj4gKw0KPiArCWRpc3QgPSBf
+X3Vwc3RyZWFtX2JyaWRnZV9kaXN0YW5jZShwcm92aWRlciwgY2xpZW50LCBhY3NfbGlzdCk7DQo+
+ICsNCj4gKwlpZiAoIShkaXN0ICYgUDJQRE1BX1RIUlVfSE9TVF9CUklER0UpKQ0KPiArCQlyZXR1
+cm4gZGlzdDsNCj4gKw0KPiArCWlmIChyb290X2NvbXBsZXhfd2hpdGVsaXN0KHByb3ZpZGVyKSAm
+JiByb290X2NvbXBsZXhfd2hpdGVsaXN0KGNsaWVudCkpDQo+ICsJCXJldHVybiBkaXN0Ow0KPiAr
+DQo+ICsJcmV0dXJuIGRpc3QgfCBQMlBETUFfTk9UX1NVUFBPUlRFRDsNCj4gICB9DQo+ICAgDQo+
+ICAgc3RhdGljIGludCB1cHN0cmVhbV9icmlkZ2VfZGlzdGFuY2Vfd2FybihzdHJ1Y3QgcGNpX2Rl
+diAqcHJvdmlkZXIsDQoNCg==
