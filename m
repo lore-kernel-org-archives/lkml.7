@@ -2,202 +2,155 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D612C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B36C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19AAB21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E49E22543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390672AbfGWOil (ORCPT
+        id S2390677AbfGWOjW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:38:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:35444 "EHLO mga17.intel.com"
+        Tue, 23 Jul 2019 10:39:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63972 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730165AbfGWOil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:38:41 -0400
+        id S1727819AbfGWOjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:39:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 07:38:41 -0700
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 07:39:19 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
-   d="scan'208";a="197143796"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by fmsmga002.fm.intel.com with ESMTP; 23 Jul 2019 07:38:40 -0700
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCHv2 2/3] fpga: altera-cvp: Preparation for V2 parts.
-Reply-To: thor.thayer@linux.intel.com
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     richard.gong@linux.intel.com, agust@denx.de,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1563317287-18834-1-git-send-email-thor.thayer@linux.intel.com>
- <1563317287-18834-3-git-send-email-thor.thayer@linux.intel.com>
- <20190722005938.GB2583@archbook>
-Message-ID: <6e54c0ee-b8ec-4f95-cf81-70aacc82c72e@linux.intel.com>
-Date:   Tue, 23 Jul 2019 09:40:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190722005938.GB2583@archbook>
-Content-Type: text/plain; charset=utf-8; format=flowed
+   d="scan'208";a="193087830"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2019 07:39:19 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 23 Jul 2019 07:39:19 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 23 Jul 2019 07:39:19 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.110]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.60]) with mapi id 14.03.0439.000;
+ Tue, 23 Jul 2019 22:39:17 +0800
+From:   "Cao, Bingbu" <bingbu.cao@intel.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     "Zhi, Yong" <yong.zhi@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Akihiro Tsukada <tskd08@gmail.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] media: pci: Use dev_get_drvdata where possible
+Thread-Topic: [PATCH] media: pci: Use dev_get_drvdata where possible
+Thread-Index: AQHVQUzZm47z7MsLaUekFEorpks1o6bYRV7A
+Date:   Tue, 23 Jul 2019 14:39:17 +0000
+Message-ID: <EE45BB6704246A4E914B70E8B61FB42A15C77041@SHSMSX104.ccr.corp.intel.com>
+References: <20190723115014.18537-1-hslester96@gmail.com>
+In-Reply-To: <20190723115014.18537-1-hslester96@gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTBiZDNkYWEtN2YzNC00N2ZjLTkyZDctNmY1MjU3Yzg5MTQ3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibzRlWmVVZXByYkl0NWpwU3FOZzUrZnJjN0l4bW5uS3JOTUVXc0lqQTlEQ1BOYllhNXlsVERLWXlWXC81czlXNVEifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz,
 
-On 7/21/19 7:59 PM, Moritz Fischer wrote:
-> Thor,
-> 
-> On Tue, Jul 16, 2019 at 05:48:06PM -0500, thor.thayer@linux.intel.com wrote:
->> From: Thor Thayer <thor.thayer@linux.intel.com>
->>
->> In preparation for adding newer V2 parts that use a FIFO,
->> reorganize altera_cvp_chk_error() and change the write
->> function to block based.
->> V2 parts have a block size matching the FIFO while older
->> V1 parts write a 32 bit word at a time.
->>
->> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
->> ---
->> v2 Remove inline function declaration
->>     Reverse Christmas Tree format for local variables
->> ---
->>   drivers/fpga/altera-cvp.c | 72 ++++++++++++++++++++++++++++++-----------------
->>   1 file changed, 46 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
->> index b78c90580071..37419d6b9915 100644
->> --- a/drivers/fpga/altera-cvp.c
->> +++ b/drivers/fpga/altera-cvp.c
->> @@ -140,6 +140,41 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
->>   	return -ETIMEDOUT;
->>   }
->>   
->> +static int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
->> +{
->> +	struct altera_cvp_conf *conf = mgr->priv;
->> +	u32 val;
->> +
->> +	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
->> +	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
-> Same as in the other email, why can we ignore return values here. I
-> think the original code probably did that already.
 
-Yes, I actually didn't make any changes to this function. You can see I 
-moved it from below since it is used in the following function.
+________________________
+BRs,  
+Bingbu Cao                          
 
-I'm not checking the return code from any of the read/write functions 
-since the original driver didn't. Would you prefer I check and issue a 
-warning?
 
-Thanks for reviewing!
+-----Original Message-----
+From: Chuhong Yuan <hslester96@gmail.com> 
+Sent: Tuesday, July 23, 2019 7:50 PM
+Cc: Zhi, Yong <yong.zhi@intel.com>; Sakari Ailus <sakari.ailus@linux.intel.com>; Cao, Bingbu <bingbu.cao@intel.com>; Mauro Carvalho Chehab <mchehab@kernel.org>; Akihiro Tsukada <tskd08@gmail.com>; linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] media: pci: Use dev_get_drvdata where possible
 
->> +	if (val & VSE_CVP_STATUS_CFG_ERR) {
->> +		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
->> +			bytes);
->> +		return -EPROTO;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static int altera_cvp_send_block(struct altera_cvp_conf *conf,
->> +				 const u32 *data, size_t len)
->> +{
->> +	u32 mask, words = len / sizeof(u32);
->> +	int i, remainder;
->> +
->> +	for (i = 0; i < words; i++)
->> +		conf->write_data(conf, *data++);
->> +
->> +	/* write up to 3 trailing bytes, if any */
->> +	remainder = len % sizeof(u32);
->> +	if (remainder) {
->> +		mask = BIT(remainder * 8) - 1;
->> +		if (mask)
->> +			conf->write_data(conf, *data & mask);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int altera_cvp_teardown(struct fpga_manager *mgr,
->>   			       struct fpga_image_info *info)
->>   {
->> @@ -262,39 +297,29 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
->>   	return 0;
->>   }
->>   
->> -static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
->> -{
->> -	struct altera_cvp_conf *conf = mgr->priv;
->> -	u32 val;
->> -
->> -	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
->> -	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
->> -	if (val & VSE_CVP_STATUS_CFG_ERR) {
->> -		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
->> -			bytes);
->> -		return -EPROTO;
->> -	}
->> -	return 0;
->> -}
->> -
->>   static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
->>   			    size_t count)
->>   {
->>   	struct altera_cvp_conf *conf = mgr->priv;
->> +	size_t done, remaining, len;
->>   	const u32 *data;
->> -	size_t done, remaining;
->>   	int status = 0;
->> -	u32 mask;
->>   
->>   	/* STEP 9 - write 32-bit data from RBF file to CVP data register */
->>   	data = (u32 *)buf;
->>   	remaining = count;
->>   	done = 0;
->>   
->> -	while (remaining >= 4) {
->> -		conf->write_data(conf, *data++);
->> -		done += 4;
->> -		remaining -= 4;
->> +	while (remaining) {
->> +		if (remaining >= sizeof(u32))
->> +			len = sizeof(u32);
->> +		else
->> +			len = remaining;
->> +
->> +		altera_cvp_send_block(conf, data, len);
->> +		data++;
->> +		done += len;
->> +		remaining -= len;
->>   
->>   		/*
->>   		 * STEP 10 (optional) and STEP 11
->> @@ -312,11 +337,6 @@ static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
->>   		}
->>   	}
->>   
->> -	/* write up to 3 trailing bytes, if any */
->> -	mask = BIT(remaining * 8) - 1;
->> -	if (mask)
->> -		conf->write_data(conf, *data & mask);
->> -
->>   	if (altera_cvp_chkcfg)
->>   		status = altera_cvp_chk_error(mgr, count);
->>   
->> -- 
->> 2.7.4
->>
-> Cheers,
-> Moritz
-> 
+Instead of using to_pci_dev + pci_get_drvdata, use dev_get_drvdata to make code simpler.
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/media/pci/intel/ipu3/ipu3-cio2.c | 3 +--
+ drivers/media/pci/pt1/pt1.c              | 6 ++----
+ drivers/media/pci/pt3/pt3.c              | 6 ++----
+ 3 files changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2.c b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+index c1d133e17e4b..50a34bcd4d14 100644
+--- a/drivers/media/pci/intel/ipu3/ipu3-cio2.c
++++ b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+@@ -2000,8 +2000,7 @@ static int __maybe_unused cio2_suspend(struct device *dev)
+ 
+ static int __maybe_unused cio2_resume(struct device *dev)  {
+-	struct pci_dev *pci_dev = to_pci_dev(dev);
+-	struct cio2_device *cio2 = pci_get_drvdata(pci_dev);
++	struct cio2_device *cio2 = dev_get_drvdata(dev);
+
+Thanks for your patch.
+I think using pci_get_drvdata() here mainly make a pair with the pci_set_drvdata() in probe.
+
+ 	int r = 0;
+ 	struct cio2_queue *q = cio2->cur_queue;
+ 
+diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c index e51c80bc4646..72b191cfeb54 100644
+--- a/drivers/media/pci/pt1/pt1.c
++++ b/drivers/media/pci/pt1/pt1.c
+@@ -1217,8 +1217,7 @@ static void pt1_i2c_init(struct pt1 *pt1)
+ 
+ static int pt1_suspend(struct device *dev)  {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt1 *pt1 = pci_get_drvdata(pdev);
++	struct pt1 *pt1 = dev_get_drvdata(dev);
+ 
+ 	pt1_init_streams(pt1);
+ 	pt1_disable_ram(pt1);
+@@ -1230,8 +1229,7 @@ static int pt1_suspend(struct device *dev)
+ 
+ static int pt1_resume(struct device *dev)  {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt1 *pt1 = pci_get_drvdata(pdev);
++	struct pt1 *pt1 = dev_get_drvdata(dev);
+ 	int ret;
+ 	int i;
+ 
+diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c index 7a7afae4c84c..c0bc86793355 100644
+--- a/drivers/media/pci/pt3/pt3.c
++++ b/drivers/media/pci/pt3/pt3.c
+@@ -626,8 +626,7 @@ static void pt3_cleanup_adapter(struct pt3_board *pt3, int index)
+ 
+ static int pt3_suspend(struct device *dev)  {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt3_board *pt3 = pci_get_drvdata(pdev);
++	struct pt3_board *pt3 = dev_get_drvdata(dev);
+ 	int i;
+ 	struct pt3_adapter *adap;
+ 
+@@ -646,8 +645,7 @@ static int pt3_suspend(struct device *dev)
+ 
+ static int pt3_resume(struct device *dev)  {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt3_board *pt3 = pci_get_drvdata(pdev);
++	struct pt3_board *pt3 = dev_get_drvdata(dev);
+ 	int i, ret;
+ 	struct pt3_adapter *adap;
+ 
+--
+2.20.1
 
