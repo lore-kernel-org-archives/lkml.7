@@ -2,85 +2,126 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC7DC41517
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDCDC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C2F22387
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033A422387
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:17:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dAZim43y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392357AbfGWWRB (ORCPT
+        id S2392389AbfGWWRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:17:01 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:34174 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731353AbfGWWRB (ORCPT
+        Tue, 23 Jul 2019 18:17:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37255 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392359AbfGWWRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:17:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id u84so48892157iod.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 15:17:00 -0700 (PDT)
+        Tue, 23 Jul 2019 18:17:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i70so9356780pgd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 15:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1tRj12XMgs1Y3+O1rqUEapdlbt8lWOQ+IFc7/KZfXPw=;
+        b=dAZim43y7Eol9vmjAIB8BeRHMVgrkO1k/3/F/JV1WYKVM9LWLARy0MvDlAwVL63Flo
+         MlOPIFFQgonzgSA3mtZL/G9iRF2G47QTYenotSsBUZCEI8uwAit9C+Rif4ZqFQQPdnUY
+         8TdVLpPwlPoValbGfPqM1x5pMpvQFl+7gOoEU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Wc2GRQ8gP6XwuqazuIoFspLdgI5vGhNFmUdsnDHhoCY=;
-        b=BJW0Q2zNkGbBkBPVYS2ZmL+kKYOYNJbc6aBJ1O2iHqP/VwdJ5inG0k41j1GtsuNpTB
-         WqeCcMuH8ihnQcaRW0OW84cl0JhBwOe0AhYguJWoSFO9XMnvMd7GkOTOiyg/S5ZOgwoa
-         x/hsZ/ohqVP8A2Uejw8vQIXjXRdeg5ZMj64RIrX8dkMkaKsbUCnXaZP8dmxUWThbK2jK
-         tBa7qO18a8aFhd4TGmW5dtE+nQs4sa3ybmKPKiyB+mB+PGMignpnDnmPjKEcb2/mR3R6
-         GNxXxhAoceWF4b/Uy2Rgc0Lvzyd52CpVST+MaHY2X9c7jJmg+iYTbu2GxKX0F2XNB37w
-         sBQA==
-X-Gm-Message-State: APjAAAWLr+u6pPKuE4BQPkXxft6zeU3ALjX8j+JGN1E9M1YdTO4wbkKc
-        wR7fDxeFyQ/h+gdIHHhu6D3cTUseMemPsn/LDRe/375GVVyK
-X-Google-Smtp-Source: APXvYqynAoeiP6otUFVILsXnOFuFz0uSuLj1NQooZi4V+EzbzIGh6v4AwqOrxFa7CDpPfgeCk6q5DDGEZIUetLOW5G1d8Jhge8u1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1tRj12XMgs1Y3+O1rqUEapdlbt8lWOQ+IFc7/KZfXPw=;
+        b=gPQgG7INKdTbGmsyYN0A0D1PhJwu/rHC+q2Fa1NT7ix1n3CGcLF1eM1iVwUBsa5eA6
+         Rcl/jl1u+acKFN3Sfxd2fxw6yJjd/asTug5nUpA6RJoBhlOtv+vLEbaeNeLybA+0y9uy
+         Zve3CmO2HKeDxyv0Bztrx0WYHG3wX5QKeQ/Qs8SDs+4FpduV3RdIrtTTgbCrxMtU0d3Q
+         7r2iJ1R93JWOcT9L63hr+UjD6lfGNRdHQ0bCMnXH/GdPkFjjuHdXB6+eyliBnewe2ICm
+         ewy3YyC+8qmRq0JC4cQ0XLTXvw74hKmdwvtFCLxDTK8+NPUssssRNaOl3OJ9o1voaLfW
+         P+ww==
+X-Gm-Message-State: APjAAAXDYIx2D/+Xgj3fKOwdCOF0CssmSGi8ilkpSPPhQf68Sy+sjWfu
+        E2pJLNn7H2py5UWq5dj5kjdJh53jU0w=
+X-Google-Smtp-Source: APXvYqxKDpqoSQmoMeWiZyozdu8jr1jHK0awjq6kY6EUyZIN/fJ86cWjhWRbVYlYok3Jw6Y0JckOvA==
+X-Received: by 2002:a63:5452:: with SMTP id e18mr62112901pgm.232.1563920271498;
+        Tue, 23 Jul 2019 15:17:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r9sm25569080pjq.3.2019.07.23.15.17.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 15:17:50 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 15:17:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        NitinGote <nitin.r.gote@intel.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] selinux: convert struct sidtab count to refcount_t
+Message-ID: <201907231516.11DB47AA@keescook>
+References: <20190722113151.1584-1-nitin.r.gote@intel.com>
+ <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
+ <CAG48ez3zRoB7awMdb-koKYJyfP9WifTLevxLxLHioLhH=itZ-A@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6310:: with SMTP id p16mr73998019iog.118.1563920220602;
- Tue, 23 Jul 2019 15:17:00 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 15:17:00 -0700
-In-Reply-To: <000000000000ad1dfe058e5b89ab@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000034c84a058e608d45@google.com>
-Subject: Re: memory leak in rds_send_probe
-From:   syzbot <syzbot+5134cdf021c4ed5aaa5f@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, catalin.marinas@arm.com,
-        davem@davemloft.net, dvyukov@google.com, jack@suse.com,
-        kirill.shutemov@linux.intel.com, koct9i@gmail.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-rdma@vger.kernel.org, neilb@suse.de, netdev@vger.kernel.org,
-        rds-devel@oss.oracle.com, ross.zwisler@linux.intel.com,
-        santosh.shilimkar@oracle.com, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, willy@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez3zRoB7awMdb-koKYJyfP9WifTLevxLxLHioLhH=itZ-A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Tue, Jul 23, 2019 at 04:53:47PM +0200, Jann Horn wrote:
+> On Mon, Jul 22, 2019 at 3:44 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > On Mon, Jul 22, 2019 at 1:35 PM NitinGote <nitin.r.gote@intel.com> wrote:
+> > > refcount_t type and corresponding API should be
+> > > used instead of atomic_t when the variable is used as
+> > > a reference counter. This allows to avoid accidental
+> > > refcounter overflows that might lead to use-after-free
+> > > situations.
+> > >
+> > > Signed-off-by: NitinGote <nitin.r.gote@intel.com>
+> >
+> > Nack.
+> >
+> > The 'count' variable is not used as a reference counter here. It
+> > tracks the number of entries in sidtab, which is a very specific
+> > lookup table that can only grow (the count never decreases). I only
+> > made it atomic because the variable is read outside of the sidtab's
+> > spin lock and thus the reads and writes to it need to be guaranteed to
+> > be atomic. The counter is only updated under the spin lock, so
+> > insertions do not race with each other.
+> 
+> Probably shouldn't even be atomic_t... quoting Documentation/atomic_t.txt:
+> 
+> | SEMANTICS
+> | ---------
+> |
+> | Non-RMW ops:
+> |
+> | The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
+> | implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
+> | smp_store_release() respectively. Therefore, if you find yourself only using
+> | the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+> | and are doing it wrong.
+> 
+> So I think what you actually want here is a plain "int count", and then:
+>  - for unlocked reads, either READ_ONCE()+smp_rmb() or smp_load_acquire()
+>  - for writes, either smp_wmb()+WRITE_ONCE() or smp_store_release()
+> 
+> smp_load_acquire() and smp_store_release() are probably the nicest
+> here, since they are semantically clearer than smp_rmb()/smp_wmb().
 
-commit af49a63e101eb62376cc1d6bd25b97eb8c691d54
-Author: Matthew Wilcox <willy@linux.intel.com>
-Date:   Sat May 21 00:03:33 2016 +0000
+Perhaps we need a "statistics" counter type for these kinds of counters?
+"counter_t"? I bet there are a lot of atomic_t uses that are just trying
+to be counters. (likely most of atomic_t that isn't now refcount_t ...)
 
-     radix-tree: change naming conventions in radix_tree_shrink
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=176528c8600000
-start commit:   c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=14e528c8600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e528c8600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
-dashboard link: https://syzkaller.appspot.com/bug?extid=5134cdf021c4ed5aaa5f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145df0c8600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170001f4600000
-
-Reported-by: syzbot+5134cdf021c4ed5aaa5f@syzkaller.appspotmail.com
-Fixes: af49a63e101e ("radix-tree: change naming conventions in  
-radix_tree_shrink")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Kees Cook
