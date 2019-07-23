@@ -2,167 +2,147 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6D7C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937AEC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA63E21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6589720821
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jt33w5IV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAXU6pu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403874AbfGWStp (ORCPT
+        id S2391568AbfGWSuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:49:45 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:40215 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbfGWStp (ORCPT
+        Tue, 23 Jul 2019 14:50:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51997 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfGWSuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:49:45 -0400
-Received: by mail-yb1-f195.google.com with SMTP id j6so7977080ybm.7;
-        Tue, 23 Jul 2019 11:49:44 -0700 (PDT)
+        Tue, 23 Jul 2019 14:50:08 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so39542422wma.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 11:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=K+nFMmvAHZoKKuRIumqq+vH7ksKEN4lOKs7AKbTh4l4=;
-        b=jt33w5IV6DWsAGM+LMH+YDHLbJpJqVixE2xMhd1uVHq8PsomZRkwrzLVKP1nD1E75b
-         r8ka4tFp+NsDUuP0Qm0Ltk+odrIMq8QmrfnZZ/FX1HqCdwZHxoFCAjBocDBJqQu1lsOI
-         SHYUNvZByTrqHt+7suuHfFcL/t+giXYnmMRWRPeBP64KiNm0Pl/cbg3MwqVeUzEsWY4L
-         9H5v5vCUDRo9BvuF5R0gFSqLuVs1cvL0xkr1lMnXPDqfWENaqdNet9odGI9m690c7VET
-         7Gp7qDZkMXaDIToSOSA0bvJ2liXalmUnpwwBn0F1ahe7GMap2Nfik3Wzp3rH5Ab7fsuW
-         IEmg==
+        bh=CN2tNXbOxjbGVP/EEYoEmk5JyHi0LtwAS7W9SVzRNG0=;
+        b=KAXU6pu0tAbxDMLV1cJDWvfmDYD8RIG2WS3SfSd5DPuUuu8GNdjCctsnUg1uif5Fyo
+         ZYz30/FBDWDBLLO3QC/qK/PdfZUwzWXdCpslxmR/sefWX9AEws38Qp228HuYG6g5KwPU
+         +jj5uwlD6rLl2yV5JQMVmWjBEtqmrieVliTkLCNp1kgEuqS2ov6VOW03XdOJqrbnSqfR
+         98eKhk5xrHpzMBs+fNlJllfa1LgL/yz+nDT8Y/0dkC0SBZwtgip2TbGkZ3h0Vivg95ow
+         BZdXTOla2IkdQbzWuMyg1e0Exnjv1RnYJDCGtjND7ZLdExg/mhAoWx560qkZg7ISvStE
+         zxyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=K+nFMmvAHZoKKuRIumqq+vH7ksKEN4lOKs7AKbTh4l4=;
-        b=Ys3kr74XAgsY8plfKMiBTjVAIvaZ7pjiwsy5oU6DNpalqDErFJKjCZ2/slABGakqT1
-         AakfCNGOcGv+kJbCtZTJTQpR4MpXqoqM5PTXd39nx/PjKZ50uckiap3mo3jlBdUECjfE
-         p8V0aFHZwE37xNkRs8O0RhYHCAqaxx+Lv3+Zu4gzym/xkYscxOncowxvvU2J2HPnn/z/
-         sV3HS/91lWGnPvTDU/R8gf12RCjPVbjuaXKa1gYEWr5KB2OW2k7o/1T3I4NlNI4aroip
-         sOvjkpUsljWyyjdDskwWmnOLobGnFmvkYqt7DrK/prZmGwn2HEE7wyI2VRIpYZ8MSpg8
-         av8g==
-X-Gm-Message-State: APjAAAXU4V8rLrcpy3xSSmf3Y9brYbHKiR2SEn20+4pqhqYVIkbikadu
-        DHS2oxswdc5307j4dWdk2sfSYhxruDxCIoetChHHjg==
-X-Google-Smtp-Source: APXvYqyHscdOs6f139YrkqweP1G1e41na4dibEzYfR1PYJSu3kKzLWQJ6f6g9m8I6ZGsTqDGjicAu/6AkrqI/VdKVSo=
-X-Received: by 2002:a25:aaea:: with SMTP id t97mr46227201ybi.126.1563907783784;
- Tue, 23 Jul 2019 11:49:43 -0700 (PDT)
+        bh=CN2tNXbOxjbGVP/EEYoEmk5JyHi0LtwAS7W9SVzRNG0=;
+        b=lt3ABcUxcUmqhspvrPZGXZEZ16lfForGkjQc+HpfAilmNLjjixokjkiH0A3Innyd7A
+         YOMDoGdzAOVjVWjTHvgYtaYScpjcIxURuqF05TjIPHdCQiigSS8G93k/jDnb7TWqN4O1
+         5OezhWNLEhRUqJC7H/yHbPCGv144Ukjaa6sKEBuwrPX9O2ZOnAFnY0RVTV+klT1gFW/b
+         ZKcW4FwsPO07PsIkPZ+bn0t40WRFzFtG0jj3k8b6ElxQcJ8F0UF0uUs8nyWsnu/HCBLn
+         2ExpzIJ7sGlN0QykO8C7wwrQMkirNmyT63C7HCu9lZEq8sUYrxqXxHKUCUS0j+3t/a47
+         aYCg==
+X-Gm-Message-State: APjAAAWkhoAdvpKXZSXJUtPUW7eyyNZHq89N+jhYTdeKLrVnDlH+eYx9
+        9ibjyQPkciiFYRNfs0GXhVJrMtGABb4xu3XQs22KDQ==
+X-Google-Smtp-Source: APXvYqyF2orFVVIC2XK+vfV7OwNetJLVQX8lPzD2VkkTWWNfz0kNi6p3M8QDQi8vD79GXJc8LC3AdHGkATw0J3Ub3mE=
+X-Received: by 2002:a1c:67c3:: with SMTP id b186mr66210938wmc.34.1563907807023;
+ Tue, 23 Jul 2019 11:50:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190718143042.11059-1-acgoide@tycho.nsa.gov> <CAOQ4uxjCR76nbV_Lmoegaq6NqovWZD-XWEVS-X3e=BtDdjKkXQ@mail.gmail.com>
- <c74ad814-f188-37c6-9b3a-51178b538a2b@tycho.nsa.gov>
-In-Reply-To: <c74ad814-f188-37c6-9b3a-51178b538a2b@tycho.nsa.gov>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 23 Jul 2019 21:49:32 +0300
-Message-ID: <CAOQ4uxjzwCjOsiwE6DuaXNvLQN2QKRyOc6Tkw-xFZohUZSMtNw@mail.gmail.com>
-Subject: Re: [Non-DoD Source] Re: [RFC PATCH v2] fanotify, inotify, dnotify,
- security: add security hook for fs notifications
-To:     Aaron Goidel <acgoide@tycho.nsa.gov>
-Cc:     Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190723111008.10955-1-hslester96@gmail.com>
+In-Reply-To: <20190723111008.10955-1-hslester96@gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 23 Jul 2019 14:49:55 -0400
+Message-ID: <CADnq5_O3R1KFRZK3CSKbNNzwYH+qkNSX_icb678KRJ0Ak+UTLg@mail.gmail.com>
+Subject: Re: [PATCH] drm/radeon: Use dev_get_drvdata where possible
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     David Zhou <David1.Zhou@amd.com>, David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 7:17 PM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
+On Tue, Jul 23, 2019 at 9:36 AM Chuhong Yuan <hslester96@gmail.com> wrote:
 >
-> On 7/18/19 12:16 PM, Amir Goldstein wrote:
-> > On Thu, Jul 18, 2019 at 5:31 PM Aaron Goidel <acgoide@tycho.nsa.gov> wrote:
-> >>
-> >> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
-> >> index a90bb19dcfa2..9e3137badb6b 100644
-> >> --- a/fs/notify/fanotify/fanotify_user.c
-> >> +++ b/fs/notify/fanotify/fanotify_user.c
-> >> @@ -528,9 +528,10 @@ static const struct file_operations fanotify_fops = {
-> >>   };
-> >>
-> >>   static int fanotify_find_path(int dfd, const char __user *filename,
-> >> -                             struct path *path, unsigned int flags)
-> >> +                             struct path *path, unsigned int flags, __u64 mask)
-> >>   {
-> >>          int ret;
-> >> +       unsigned int mark_type;
-> >>
-> >>          pr_debug("%s: dfd=%d filename=%p flags=%x\n", __func__,
-> >>                   dfd, filename, flags);
-> >> @@ -567,8 +568,30 @@ static int fanotify_find_path(int dfd, const char __user *filename,
-> >>
-> >>          /* you can only watch an inode if you have read permissions on it */
-> >>          ret = inode_permission(path->dentry->d_inode, MAY_READ);
-> >> +       if (ret) {
-> >> +               path_put(path);
-> >> +               goto out;
-> >> +       }
-> >> +
-> >> +       switch (flags & FANOTIFY_MARK_TYPE_BITS) {
-> >> +       case FAN_MARK_MOUNT:
-> >> +               mark_type = FSNOTIFY_OBJ_TYPE_VFSMOUNT;
-> >> +               break;
-> >> +       case FAN_MARK_FILESYSTEM:
-> >> +               mark_type = FSNOTIFY_OBJ_TYPE_SB;
-> >> +               break;
-> >> +       case FAN_MARK_INODE:
-> >> +               mark_type = FSNOTIFY_OBJ_TYPE_INODE;
-> >> +               break;
-> >> +       default:
-> >> +               ret = -EINVAL;
-> >> +               goto out;
-> >> +       }
-> >> +
-> >> +       ret = security_inode_notify(path->dentry->d_inode, mask, mark_type);
-> >
-> > If you prefer 3 hooks security_{inode,mount,sb}_notify()
-> > please place them in fanotify_add_{inode,mount,sb}_mark().
-> >
-> > If you prefer single hook with path argument, please pass path
-> > down to fanotify_add_mark() and call security_path_notify() from there,
-> > where you already have the object type argument.
-> >
-> I'm not clear on why you want me to move the hook call down to
-> fanotify_add_mark(). I'd prefer to keep it adjacent to the existing
-> inode_permission() call so that all the security checking occurs from
-> one place.
-
-Fine.
-
-> Moving it down requires adding a path arg to that entire call
-> chain, even though it wouldn't otherwise be needed.
-
-That doesn't matter.
-
-> And that raises the
-> question of whether to continue passing the mnt_sb, mnt, or inode
-> separately or just extract all those from the path inside of
-> fanotify_add_*_mark().
-
-You lost me. The major issue I have is with passing @inode argument
-to hook for adding a mount watch. Makes no sense to me as @inode
-may be accessed from any mount and without passing @path to hook
-this information is lost.
-
+> Instead of using to_pci_dev + pci_get_drvdata,
+> use dev_get_drvdata to make code simpler.
 >
-> It also seems to destroy the parallelism with fanotify_remove_*_mark().
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-I don't know what that means.
+Applied.  thanks!
 
-> I also don't see any real benefit in splitting into three separate
-> hooks, especially as some security modules will want the path or inode
-> even for the mount or superblock cases, since they may have no relevant
-> security information for vfsmounts or superblocks.
+Alex
 
-OK. that is an argument for single hook with @path argument.
-That is fine by me.
-
-Thanks,
-Amir.
+> ---
+>  drivers/gpu/drm/radeon/radeon_drv.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+> index a6cbe11f79c6..b2bb74d5bffb 100644
+> --- a/drivers/gpu/drm/radeon/radeon_drv.c
+> +++ b/drivers/gpu/drm/radeon/radeon_drv.c
+> @@ -358,15 +358,13 @@ radeon_pci_shutdown(struct pci_dev *pdev)
+>
+>  static int radeon_pmops_suspend(struct device *dev)
+>  {
+> -       struct pci_dev *pdev = to_pci_dev(dev);
+> -       struct drm_device *drm_dev = pci_get_drvdata(pdev);
+> +       struct drm_device *drm_dev = dev_get_drvdata(dev);
+>         return radeon_suspend_kms(drm_dev, true, true, false);
+>  }
+>
+>  static int radeon_pmops_resume(struct device *dev)
+>  {
+> -       struct pci_dev *pdev = to_pci_dev(dev);
+> -       struct drm_device *drm_dev = pci_get_drvdata(pdev);
+> +       struct drm_device *drm_dev = dev_get_drvdata(dev);
+>
+>         /* GPU comes up enabled by the bios on resume */
+>         if (radeon_is_px(drm_dev)) {
+> @@ -380,15 +378,13 @@ static int radeon_pmops_resume(struct device *dev)
+>
+>  static int radeon_pmops_freeze(struct device *dev)
+>  {
+> -       struct pci_dev *pdev = to_pci_dev(dev);
+> -       struct drm_device *drm_dev = pci_get_drvdata(pdev);
+> +       struct drm_device *drm_dev = dev_get_drvdata(dev);
+>         return radeon_suspend_kms(drm_dev, false, true, true);
+>  }
+>
+>  static int radeon_pmops_thaw(struct device *dev)
+>  {
+> -       struct pci_dev *pdev = to_pci_dev(dev);
+> -       struct drm_device *drm_dev = pci_get_drvdata(pdev);
+> +       struct drm_device *drm_dev = dev_get_drvdata(dev);
+>         return radeon_resume_kms(drm_dev, false, true);
+>  }
+>
+> @@ -447,8 +443,7 @@ static int radeon_pmops_runtime_resume(struct device *dev)
+>
+>  static int radeon_pmops_runtime_idle(struct device *dev)
+>  {
+> -       struct pci_dev *pdev = to_pci_dev(dev);
+> -       struct drm_device *drm_dev = pci_get_drvdata(pdev);
+> +       struct drm_device *drm_dev = dev_get_drvdata(dev);
+>         struct drm_crtc *crtc;
+>
+>         if (!radeon_is_px(drm_dev)) {
+> --
+> 2.20.1
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
