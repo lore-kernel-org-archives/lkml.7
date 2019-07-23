@@ -2,144 +2,114 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A6C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E69C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55072238E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:14:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PjeA4UGX"
+	by mail.kernel.org (Postfix) with ESMTP id 6F30D2239E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 05:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563858941;
+	bh=usJZ1bRJrEJDFlg8XL703kkMQCrG8lPR8EcTOdlRAIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yp42XwEKYU5o7rbGDaDJGFXYtrMClYa6PMqqNiuFifHHnabNsuW8Hj0LMSR5de4Uk
+	 zPxfd4TUd1MsKYvtTXfXYWb7KcNGnuJCDm1Hw66kHjRIHsUYxivDiGGF55rZl2cfoy
+	 89fhb5j96by+d982NBKBGPS9YtJMI1peQpT6MnE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfGWFOv (ORCPT
+        id S1727905AbfGWFPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 01:14:51 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34757 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfGWFOv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 01:14:51 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so18503659pfo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 22:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=g82NP5kE6vDBcz0wRx3HQUPY+qpp2eV2hYfp3Uv8Vuo=;
-        b=PjeA4UGXWrX7eWxBKCqRGmYrPvlnc4Bc0zcv0AXulqxA13EAD5I6W1Ktegac4R8rd6
-         nqTUr59Y1cBaq2k5PsjAGgvvnd8+z2GDbhDRnvz0yhIpwiR10yY3ZczBOANft1O02EI3
-         YyMt9iV7PaFFWCcnbU3kl+A9jkJk3y6kjqTFTswd0Y0P3Rr5yCHC+VtY99tR+fmQfkQ8
-         QYz5Dqpan8whgAnXJmUkWJTHKQs2U6j2zK9U7z+zl1Q/ZklGFxcRNLmsRkSQ8XWpbRS+
-         psQHHJC3x4F8OqHl+YpZv32+3kFNTljWvL6+wz8F5UkLYDWdsj7FYp0gzepeFDhRxpuI
-         qADg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=g82NP5kE6vDBcz0wRx3HQUPY+qpp2eV2hYfp3Uv8Vuo=;
-        b=MlwQo7io4IwnyICxpGwiTT1EIhP75Bz9e8NVl4+gQB4BsWyQ+3vuxDorwqX9j+3dvM
-         FHqiB5a0YDcV//ZQ9VPNWXgcgAydG50b8Mzu2mSMdAsEx2U2MNbsVt71eZZnnFwDHiFt
-         avSl3FXyae/RIAuDAdgfRhqeF8ksz4pucjZNNTTSP3XtkDn8Wdnu8lPjuPRM8XrW1rpE
-         yRMG0qZj6VjJshbG0uaxdOaBHeRf5aH/DprssV2WgBjKXsdCchHxPwjJwXrJ/0y5jAtH
-         Qc5rsfVxYsy4y9PYGceEDFF76zkg7FjDgyHToybnMi7ouWzdjb2kOM5zLIgQ+fE3TJss
-         gY4g==
-X-Gm-Message-State: APjAAAVSNjyIhR/Sj2CR7k6AH2XqCNYWYhHm4khuYvKPoIHmf7qjEwLA
-        SXcfbbzQATdQ/H10pji1v5ybTA==
-X-Google-Smtp-Source: APXvYqzkV5mF55GBnujgmB5DhZBig4ykpvvwizIq6zr0p86mQc67qRs9Si4/HU58xo1Fk2BC6VTxTw==
-X-Received: by 2002:a62:834d:: with SMTP id h74mr4077651pfe.254.1563858890244;
-        Mon, 22 Jul 2019 22:14:50 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a3sm33729999pfc.70.2019.07.22.22.14.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Jul 2019 22:14:49 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Rob Clark <robclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: [RFC] clk: Remove cached cores in parent map during unregister
-Date:   Mon, 22 Jul 2019 22:14:46 -0700
-Message-Id: <20190723051446.20013-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Tue, 23 Jul 2019 01:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfGWFPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 01:15:40 -0400
+Received: from localhost (unknown [106.201.111.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D3E22238E;
+        Tue, 23 Jul 2019 05:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563858939;
+        bh=usJZ1bRJrEJDFlg8XL703kkMQCrG8lPR8EcTOdlRAIM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mxe/o6G+L3VwPTin+6ZGAroz2lw7CeeSiYm5KzQ8mw/V1kBQsxuvJQoH1LSw1a1Zu
+         HgX6Q8zYq+IPEvxexjh7PX0mbvCa9RiomNS9lBcqtKakEEg0VU2Dwl1aJYdAmOS1zD
+         /QDPOJGEjsXbMJgz5MzIYCnt9vQfr1OiyZElQSaY=
+Date:   Tue, 23 Jul 2019 10:44:26 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from
+ unit name
+Message-ID: <20190723051426.GZ12733@vkoul-mobl.Dlink>
+References: <20190722123422.4571-1-vkoul@kernel.org>
+ <20190722123422.4571-6-vkoul@kernel.org>
+ <CAHLCerPC0thO9gsaDAxc+XaexinrzG6JGJ8BhB4bFFuQ-P9Jxg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerPC0thO9gsaDAxc+XaexinrzG6JGJ8BhB4bFFuQ-P9Jxg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As clocks are registered their parents are resolved and the parent_map
-is updated to cache the clk_core objects of each existing parent.
-But in the event of a clock being unregistered this cache will carry
-dangling pointers if not invalidated, so do this for all children of the
-clock being unregistered.
+On 23-07-19, 10:38, Amit Kucheria wrote:
+> On Mon, Jul 22, 2019 at 6:06 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > Unit name is supposed to be a number, using a macro with hex value is
+> 
+> /s/name/address?
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Right, will fix.
 
-This resolves the issue seen where the DSI PLL (and it's provided clocks) is
-being registered and unregistered multiple times due to probe deferral.
+> > not recommended, so add the value in unit name.
+> >
+> > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name should not have leading "0x"
+> > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name should not have leading "0x"
+> > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name should not have leading "0x"
+> > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name should not have leading "0x"
+> > arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name should not have leading "0x"
+> >
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> > index 1ebbd568dfd7..9b27b8346ba1 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> > @@ -963,27 +963,27 @@ ap_ts_i2c: &i2c14 {
+> >  };
+> >
+> >  &pm8998_adc {
+> > -       adc-chan@ADC5_AMUX_THM1_100K_PU {
+> > +       adc-chan@4d {
+> >                 reg = <ADC5_AMUX_THM1_100K_PU>;
+> 
+> I'm a little conflicted about this change. If we're replacing the
+> address with actual values, perhaps we should do that same for the reg
+> property to keep them in sync? Admittedly though, it is a bit easier
+> to read the macro name and figure out its meaning.
 
-Marking it RFC because I don't fully understand the life of the clock yet.
+Well this was how Bjorn suggested, am okay if we do in any
+other way. This fixes warning but keeps it bit readable too
 
- drivers/clk/clk.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+Other way would be to make defines decimal values instead of hex
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index c0990703ce54..8cd1ad977c50 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2423,11 +2423,14 @@ bool clk_has_parent(struct clk *clk, struct clk *parent)
- EXPORT_SYMBOL_GPL(clk_has_parent);
- 
- static int clk_core_set_parent_nolock(struct clk_core *core,
--				      struct clk_core *parent)
-+				      struct clk_core *parent,
-+				      bool invalidate_parent)
- {
-+	struct clk_core *old_parent = core->parent;
- 	int ret = 0;
- 	int p_index = 0;
- 	unsigned long p_rate = 0;
-+	int i;
- 
- 	lockdep_assert_held(&prepare_lock);
- 
-@@ -2481,6 +2484,14 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
- 		__clk_recalc_accuracies(core);
- 	}
- 
-+	/* invalidate the parent cache */
-+	if (!parent && invalidate_parent) {
-+		for (i = 0; i < core->num_parents; i++) {
-+			if (core->parents[i].core == old_parent)
-+				core->parents[i].core = NULL;
-+		}
-+	}
-+
- runtime_put:
- 	clk_pm_runtime_put(core);
- 
-@@ -2517,7 +2528,8 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
- 		clk_core_rate_unprotect(clk->core);
- 
- 	ret = clk_core_set_parent_nolock(clk->core,
--					 parent ? parent->core : NULL);
-+					 parent ? parent->core : NULL,
-+					 false);
- 
- 	if (clk->exclusive_count)
- 		clk_core_rate_protect(clk->core);
-@@ -3772,7 +3784,7 @@ void clk_unregister(struct clk *clk)
- 		/* Reparent all children to the orphan list. */
- 		hlist_for_each_entry_safe(child, t, &clk->core->children,
- 					  child_node)
--			clk_core_set_parent_nolock(child, NULL);
-+			clk_core_set_parent_nolock(child, NULL, true);
- 	}
- 
- 	hlist_del_init(&clk->core->child_node);
+Any better suggestions :)
+
 -- 
-2.18.0
-
+~Vinod
