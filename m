@@ -2,78 +2,78 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B403C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAA3C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F350A22387
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06F12238C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563850234;
+	bh=tk2ImME7wgkuCKMHXoNvdEiYanrybl4tu/Ko28YBUfU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KuUgYYrYzDlKjgSTK+yi1eUb/ezsbcRhfRBFh/sCAd51HdH3ILX9GrCwGx7Tz73aA
+	 6TZ86xn37B9495Vt5I/t8O8fDSCC5cC8abQKoIPB+krW2yqc8Zyc0g6PuKoPGx09T5
+	 UWP4yYJ2fz9xp+auFI4x1CM7P8L7AOy21AJRJd6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbfGWCt0 (ORCPT
+        id S1732117AbfGWCud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 22:49:26 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2736 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726641AbfGWCt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 22:49:26 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BE7EACBB889C44CB166D;
-        Tue, 23 Jul 2019 10:49:24 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 23 Jul 2019
- 10:49:18 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
-        <dledford@redhat.com>, <jgg@ziepe.ca>
-CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] RDMA/hns: Fix build error for hip08
-Date:   Tue, 23 Jul 2019 10:49:08 +0800
-Message-ID: <20190723024908.11876-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 22 Jul 2019 22:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729066AbfGWCud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 22:50:33 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 808C622387;
+        Tue, 23 Jul 2019 02:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563850232;
+        bh=tk2ImME7wgkuCKMHXoNvdEiYanrybl4tu/Ko28YBUfU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F963pTbce2NtBx2uERfIVEKelVGw9gmBe9W1/tv/fz6YwK3bB1zZuyu1ocFNO8N07
+         zpMWoRj1lDmUOW8+NC1D2XxUu7viIF8Xx+cKNwcWLxysNJ2HBO9PeU0LLP14W5HZ+R
+         eEqXo48ZCGkSmVI7wLRE1z03ggwKNEjzxqdqrT4M=
+Date:   Tue, 23 Jul 2019 10:50:01 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson.Huang@nxp.com
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com,
+        sboyd@kernel.org, l.stach@pengutronix.de, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com,
+        agx@sigxcpu.org, leonard.crestez@nxp.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 5/6] clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+ IMX8MQ_CLK_TMU_ROOT
+Message-ID: <20190723024959.GI3738@dragon>
+References: <20190705045612.27665-1-Anson.Huang@nxp.com>
+ <20190705045612.27665-5-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705045612.27665-5-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
-but INFINIBAND_HNS is y, building fails:
+On Fri, Jul 05, 2019 at 12:56:11PM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> IMX8MQ_CLK_TMU_ROOT is ONLY used for thermal module, the driver
+> should manage this clock, so no need to have CLK_IS_CRITICAL flag
+> set.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
-hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
-drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
-hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/infiniband/hw/hns/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
-index b59da5d..4371c80 100644
---- a/drivers/infiniband/hw/hns/Kconfig
-+++ b/drivers/infiniband/hw/hns/Kconfig
-@@ -23,7 +23,8 @@ config INFINIBAND_HNS_HIP06
- 
- config INFINIBAND_HNS_HIP08
- 	bool "Hisilicon Hip08 Family RoCE support"
--	depends on INFINIBAND_HNS && PCI && HNS3
-+	depends on INFINIBAND_HNS && (INFINIBAND_HNS = HNS3)
-+	depends on PCI
- 	---help---
- 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
- 	  The RoCE engine is a PCI device.
--- 
-2.7.4
-
-
+Applied, thanks.
