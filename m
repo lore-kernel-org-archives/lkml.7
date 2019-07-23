@@ -2,120 +2,300 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DCAC7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F5AC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D34722296
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581E721E70
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="MuKW8WXb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqkkhgki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387821AbfGWBlQ (ORCPT
+        id S2387836AbfGWBll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:41:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38990 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbfGWBlQ (ORCPT
+        Mon, 22 Jul 2019 21:41:41 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42080 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728086AbfGWBll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:41:16 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so14255102pfn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 18:41:15 -0700 (PDT)
+        Mon, 22 Jul 2019 21:41:41 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t28so39423444lje.9;
+        Mon, 22 Jul 2019 18:41:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mtyYjbvYT2heRj7zhIigfjHr2V0fIIPHdJF4vL3wig8=;
-        b=MuKW8WXbMGjrX3CvBpqSseFDEOZDQW5PQK9D0KNskjLQ0aZ2dUIi5OT6AxazSiKm5r
-         VRHqkMAxaNb8aF0gGwvHpRZdAbO4RUdKJK1rcARlUsQpIv4C8NCx1G6S71pMzO/qVVCp
-         CB91Fv1KROPWBTMvGjyP4FHZKXsf5KtCDCf6br11IX/DJqu3GkBJcHEZKYE8mdX5FEDq
-         /O9iqMwsksX/rxEg5uMhmrj6IVc+CaxzSYJrfdCTRc0jKQHUblRuiktHBrLq0KwbBiYQ
-         MaZFiBvB/VcXJt6VSuSqWYyLotKi0BRJpbGO0zkVQPxyLz5S2PtWZGfWQsW9+TVBPS9u
-         KNTw==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r6WZl8Tm7/Ko0gUor1hFovtnmUpos3WnCMQDZV9siKY=;
+        b=sqkkhgkiz7B5qzS45rEp2JFlQiPYm0LlOQE3y47fDJkZ3OkSRSHPk47e1MO4W10sGu
+         9OFScRJURdXLoIo/dhb2W7TVoKJh7S+4DkkrvwXdKuZFraGAMIEcXzlRg20PeD50ykQJ
+         Q/lXSv7+z3OhFb4Ec4I4kNhs5puSUNTckZBizz3EBLECcvUj5shX1jyDCpqQLC0aTlZ6
+         GVzx3hcz11WidROEAQOMdchoKlkrLMcSfCGcxFFpp/cqT+fSwOIOfMML/RkIcQjKqQwq
+         scdEKXdv+FdFY0Zjn3DoMlzZ0Sd6YXi7OSVllAGmr0iIogmXtELQw+l8oEktQjtrQkfN
+         D+yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=mtyYjbvYT2heRj7zhIigfjHr2V0fIIPHdJF4vL3wig8=;
-        b=j5N5ptHKSLyLsldYgr+L6QpYlQwG+Bgoh0hu395t9jj02bYMANithoHHtdA9uGJlRM
-         mGCNuQOUFezFwDoWOnzm9lmUEPbWTgeV8Ev+jPybwCrJNOxTDfbVaybwU2WKIaI4HseD
-         u4UHyNHYIxgIzUWndFSZQDpqbsRfkAR8DCdU91uGKIbHnzUtLJFrdapUuxHj58f5D8qD
-         F0RVOkjukfeH6/ma+7SEPIW+rusYeXgOsbRWNKmYXPfRkWySTWb806GRR7Jv+3kWi6wp
-         Nkn866YjRT9L0CYHCuWK3NGlhqFaJMlK3gg8L9ziV12eJyU4dvQ/zEu+3/twuNO1C3gA
-         x0AQ==
-X-Gm-Message-State: APjAAAXcn1WqCqKY9ltw6y8LopXCtwrdHgvgH67LAkqCFLBC8dVIW0jV
-        BIQXe2p03tlxpk3akt4tHgzdvsk/
-X-Google-Smtp-Source: APXvYqy4owgCkNgFMI1V1j9i5eSd+HQLB/Rq4zAanIolUeAWZNYQnTbq9WyTNE1TBctUXR8odXTyZg==
-X-Received: by 2002:a63:101b:: with SMTP id f27mr71422412pgl.291.1563846074972;
-        Mon, 22 Jul 2019 18:41:14 -0700 (PDT)
-Received: from localhost.localdomain (118-171-128-147.dynamic-ip.hinet.net. [118.171.128.147])
-        by smtp.gmail.com with ESMTPSA id q22sm36525440pgh.49.2019.07.22.18.41.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 22 Jul 2019 18:41:14 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: stm32-booster: Remove .min_uV and .list_voltage for fixed regulator
-Date:   Tue, 23 Jul 2019 09:41:02 +0800
-Message-Id: <20190723014102.25103-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
+        bh=r6WZl8Tm7/Ko0gUor1hFovtnmUpos3WnCMQDZV9siKY=;
+        b=ZMV2vrZ89vpu8oP2e+46MvPq2yi94sbYJbV0ehAXG7jtn8wyxd6SLh1IYU/lzsrq/l
+         ftn0plM40H1DD1wUWqwTIVQ3h38dCoLDTnrhHn3uoXvwKyroaXY2jZNj5aBUjEHKOU1B
+         Ol9GBmRy/UekgZ0TJjtNPXj+FN6poOj6ySoP7zHVe0zzyTaKS/rQgmDflYv71H1VNSlX
+         4Ouh0aR3SvbHHs7BkR6V45gPSN+gPT2XGGgrjV5a9WZ3BL86n/M2rGq4MrC4NrcZE8ip
+         k3jEhE1Cv7quw/PnWyX44vflW9uzJMXrUBX1yk5fWYBFUwJ3e5E1Rnj0TULbDPoNdi2D
+         bkrA==
+X-Gm-Message-State: APjAAAWOd1VQs6CZLAeSHHMOOP/udACsCUH4vNGG02IXeXq4tJrIHamr
+        W5K+c/l5/KjE795LHLyPOH4L8TnT
+X-Google-Smtp-Source: APXvYqxNRlR1w3OQG9dgkuJ4vGJ1SCVsbMKy4X/7k7kfDkJZgaqsUnNtB3W229J0uuRSlg2h46B+NQ==
+X-Received: by 2002:a2e:9610:: with SMTP id v16mr37229753ljh.229.1563846097182;
+        Mon, 22 Jul 2019 18:41:37 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id t3sm6211769lfk.59.2019.07.22.18.41.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 18:41:36 -0700 (PDT)
+Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
+ tegra210
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
+ <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
+ <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
+Message-ID: <b575ca93-9f34-b07a-1234-ef1ea2a6ddee@gmail.com>
+Date:   Tue, 23 Jul 2019 04:41:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <ca32c2d8-d752-3ecd-3a3f-232366730c7b@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting .n_voltages = 1 and .fixed_uV is enough for fixed regulator,
-remove the redundant .min_uV and .list_voltage settings.
+23.07.2019 4:08, Dmitry Osipenko пишет:
+> 23.07.2019 3:58, Dmitry Osipenko пишет:
+>> 21.07.2019 22:40, Sowjanya Komatineni пишет:
+>>> This patch implements PMC wakeup sequence for Tegra210 and defines
+>>> common used RTC alarm wake event.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>  drivers/soc/tegra/pmc.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 111 insertions(+)
+>>>
+>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>> index 91c84d0e66ae..c556f38874e1 100644
+>>> --- a/drivers/soc/tegra/pmc.c
+>>> +++ b/drivers/soc/tegra/pmc.c
+>>> @@ -57,6 +57,12 @@
+>>>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>>>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+>>>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
+>>> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
+> 
+> Please follow the TRM's bits naming.
+> 
+> PMC_CNTRL_LATCHWAKE_EN
+> 
+>>> +#define PMC_WAKE_MASK			0x0c
+>>> +#define PMC_WAKE_LEVEL			0x10
+>>> +#define PMC_WAKE_STATUS			0x14
+>>> +#define PMC_SW_WAKE_STATUS		0x18
+>>>  
+>>>  #define DPD_SAMPLE			0x020
+>>>  #define  DPD_SAMPLE_ENABLE		BIT(0)
+>>> @@ -87,6 +93,11 @@
+>>>  
+>>>  #define PMC_SCRATCH41			0x140
+>>>  
+>>> +#define PMC_WAKE2_MASK			0x160
+>>> +#define PMC_WAKE2_LEVEL			0x164
+>>> +#define PMC_WAKE2_STATUS		0x168
+>>> +#define PMC_SW_WAKE2_STATUS		0x16c
+>>> +
+>>>  #define PMC_SENSOR_CTRL			0x1b0
+>>>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>>>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+>>> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>>>  	.alloc = tegra_pmc_irq_alloc,
+>>>  };
+>>>  
+>>> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>> +{
+>>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>>> +	unsigned int offset, bit;
+>>> +	u32 value;
+>>> +
+>>> +	if (data->hwirq == ULONG_MAX)
+>>> +		return 0;
+>>> +
+>>> +	offset = data->hwirq / 32;
+>>> +	bit = data->hwirq % 32;
+>>> +
+>>> +	/*
+>>> +	 * Latch wakeups to SW_WAKE_STATUS register to capture events
+>>> +	 * that would not make it into wakeup event register during LP0 exit.
+>>> +	 */
+>>> +	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>>> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
+>>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>> +	udelay(120);
+>>
+>> Why it takes so much time to latch the values? Shouldn't some status-bit
+>> be polled for the completion of latching?
+>>
+>> Is this register-write really getting buffered in the PMC?
+>>
+>>> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
+>>> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>> +	udelay(120);
+>>
+>> 120 usecs to remove latching, really?
+>>
+>>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
+>>> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
+>>> +
+>>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
+>>> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
+>>> +
+>>> +	/* enable PMC wake */
+>>> +	if (data->hwirq >= 32)
+>>> +		offset = PMC_WAKE2_MASK;
+>>> +	else
+>>> +		offset = PMC_WAKE_MASK;
+>>> +
+>>> +	value = tegra_pmc_readl(pmc, offset);
+>>> +
+>>> +	if (on)
+>>> +		value |= 1 << bit;
+>>> +	else
+>>> +		value &= ~(1 << bit);
+>>> +
+>>> +	tegra_pmc_writel(pmc, value, offset);
+>>
+>> Why the latching is done *before* writing into the WAKE registers? What
+>> it is latching then?
+> 
+> I'm looking at the TRM doc and it says that latching should be done
+> *after* writing to the WAKE_MASK / LEVEL registers.
+> 
+> Secondly it says that it's enough to do:
+> 
+> value = tegra_pmc_readl(pmc, PMC_CNTRL);
+> value |= PMC_CNTRL_LATCH_WAKEUPS;
+> tegra_pmc_writel(pmc, value, PMC_CNTRL);
+> 
+> in order to latch. There is no need for the delay and to remove the
+> "LATCHWAKE_EN" bit, it should be a oneshot action.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/stm32-booster.c | 4 ----
- 1 file changed, 4 deletions(-)
+Although, no. TRM says "stops latching on transition from 1
+to 0 (sequence - set to 1,set to 0)", so it's not a oneshot action.
 
-diff --git a/drivers/regulator/stm32-booster.c b/drivers/regulator/stm32-booster.c
-index 2a897666c650..03f162ffd144 100644
---- a/drivers/regulator/stm32-booster.c
-+++ b/drivers/regulator/stm32-booster.c
-@@ -20,7 +20,6 @@
- #define STM32MP1_SYSCFG_EN_BOOSTER_MASK	BIT(8)
- 
- static const struct regulator_ops stm32h7_booster_ops = {
--	.list_voltage	= regulator_list_voltage_linear,
- 	.enable		= regulator_enable_regmap,
- 	.disable	= regulator_disable_regmap,
- 	.is_enabled	= regulator_is_enabled_regmap,
-@@ -31,7 +30,6 @@ static const struct regulator_desc stm32h7_booster_desc = {
- 	.supply_name = "vdda",
- 	.n_voltages = 1,
- 	.type = REGULATOR_VOLTAGE,
--	.min_uV = 3300000,
- 	.fixed_uV = 3300000,
- 	.ramp_delay = 66000, /* up to 50us to stabilize */
- 	.ops = &stm32h7_booster_ops,
-@@ -53,7 +51,6 @@ static int stm32mp1_booster_disable(struct regulator_dev *rdev)
- }
- 
- static const struct regulator_ops stm32mp1_booster_ops = {
--	.list_voltage	= regulator_list_voltage_linear,
- 	.enable		= stm32mp1_booster_enable,
- 	.disable	= stm32mp1_booster_disable,
- 	.is_enabled	= regulator_is_enabled_regmap,
-@@ -64,7 +61,6 @@ static const struct regulator_desc stm32mp1_booster_desc = {
- 	.supply_name = "vdda",
- 	.n_voltages = 1,
- 	.type = REGULATOR_VOLTAGE,
--	.min_uV = 3300000,
- 	.fixed_uV = 3300000,
- 	.ramp_delay = 66000,
- 	.ops = &stm32mp1_booster_ops,
--- 
-2.20.1
+Have you tested this code at all? I'm wondering how it happens to work
+without a proper latching.
+
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>>  {
+>>>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>>> @@ -1954,6 +2014,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>>> +{
+>>> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>>> +	unsigned int offset, bit;
+>>> +	u32 value;
+>>> +
+>>> +	if (data->hwirq == ULONG_MAX)
+>>> +		return 0;
+>>> +
+>>> +	offset = data->hwirq / 32;
+>>> +	bit = data->hwirq % 32;
+>>> +
+>>> +	if (data->hwirq >= 32)
+>>> +		offset = PMC_WAKE2_LEVEL;
+>>> +	else
+>>> +		offset = PMC_WAKE_LEVEL;
+>>> +
+>>> +	value = tegra_pmc_readl(pmc, offset);
+>>> +
+>>> +	switch (type) {
+>>> +	case IRQ_TYPE_EDGE_RISING:
+>>> +	case IRQ_TYPE_LEVEL_HIGH:
+>>> +		value |= 1 << bit;
+>>> +		break;
+>>> +
+>>> +	case IRQ_TYPE_EDGE_FALLING:
+>>> +	case IRQ_TYPE_LEVEL_LOW:
+>>> +		value &= ~(1 << bit);
+>>> +		break;
+>>> +
+>>> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
+>>> +		value ^= 1 << bit;
+>>> +		break;
+>>> +
+>>> +	default:
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	tegra_pmc_writel(pmc, value, offset);
+>>
+>> Shouldn't the WAKE_LEVEL be latched as well?
+>>
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>>>  {
+>>>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+>>> @@ -2540,6 +2643,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
+>>>  	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
+>>>  };
+>>>  
+>>> +static const struct tegra_wake_event tegra210_wake_events[] = {
+>>> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
+>>> +};
+>>> +
+>>>  static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>>>  	.num_powergates = ARRAY_SIZE(tegra210_powergates),
+>>>  	.powergates = tegra210_powergates,
+>>> @@ -2557,10 +2664,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>>>  	.regs = &tegra20_pmc_regs,
+>>>  	.init = tegra20_pmc_init,
+>>>  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
+>>> +	.irq_set_wake = tegra210_pmc_irq_set_wake,
+>>> +	.irq_set_type = tegra210_pmc_irq_set_type,
+>>>  	.reset_sources = tegra210_reset_sources,
+>>>  	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
+>>>  	.reset_levels = NULL,
+>>>  	.num_reset_levels = 0,
+>>> +	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
+>>> +	.wake_events = tegra210_wake_events,
+>>>  };
+>>>  
+>>>  #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+>>>
+>>
+> 
 
