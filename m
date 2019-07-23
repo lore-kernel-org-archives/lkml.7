@@ -2,85 +2,95 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F70C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2214C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8898022543
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pjwch1Qk"
+	by mail.kernel.org (Postfix) with ESMTP id B253B218A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563904740;
+	bh=g7LiEOsyLqtFvTuQQE7e6AHEqwRcFGpAG5YSHimS78k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XCxfXu+fQ54pAEkV87iUHD+ugOJ5ebZEmJVXU0S0pxpmo3XirhJN7YN5XjnJLeVha
+	 ckez226bJMWWUQxMa3Idgz7bLkAbl3iCoqfDMcbzS1BVcTc3IhBmOP9vHuIcqDJq5X
+	 gEHgiOHUXX8UXqXYC9nQfVx1oA14C1k/SKQeph2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391228AbfGWRzp (ORCPT
+        id S2391086AbfGWR7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 13:55:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54112 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731661AbfGWRzo (ORCPT
+        Tue, 23 Jul 2019 13:59:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37677 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfGWR67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 13:55:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bl0M5NSk0nmCZFb/3HXW8+xYe1ZmbQXUvDwYm6YUgfk=; b=Pjwch1QkqUDzGn63jiv3m7mO8
-        eZhAGD1vxQSBR0t+nWjWFBkokMonpycyRfXPkWsfe4FEf9lJAWvfoGb/0yPbVYiH9z3Hhh6xXEDg5
-        zr4VUm0R/xlzryCVOr6PmUmENT6zpTuuKdMQwg5/UK7F1kaOI3VpvG89/rWSIF6RwvvpvQ3MpXHWN
-        yQ8muS9Odn+YEFoGSCibtUSbyROrieftl5Bnz5BTaI8Trw3xuvq+Cft1SdWFJ7V6Gtt+aMU6hGGal
-        5DaKTYERMJC5hF8XIY0NnhcBt26AgMGDV9jAY6zOWTBbVmIBad4tH4OAALgaUWdrWmFpnTCeI5V+N
-        5tdpZCS5A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpz0p-0004AD-Lp; Tue, 23 Jul 2019 17:55:43 +0000
-Date:   Tue, 23 Jul 2019 10:55:43 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        lhenriques@suse.com, cmaiolino@redhat.com,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] mm: check for sleepable context in kvfree
-Message-ID: <20190723175543.GL363@bombadil.infradead.org>
-References: <20190723131212.445-1-jlayton@kernel.org>
- <3622a5fe9f13ddfd15b262dbeda700a26c395c2a.camel@kernel.org>
+        Tue, 23 Jul 2019 13:58:59 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f17so39272063wme.2;
+        Tue, 23 Jul 2019 10:58:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CFpgVgUuyNvxrMZCyKWuK3LuxqE0J5JekFNJ3K5eJds=;
+        b=K5GeyaF3MQzyfh8HKPHkp7UVdhhleiUyCDOpzd6uOWw/WuP+BP0sKx60NcAI75X5pW
+         +tMKLg647jsKWxebnxW9Upm3ewV4KelzdIRyQ3cEntTXNHuHC1DlhA0CXtJ8tXMsZfqS
+         KA2T8k3PnDujoXy3oeRJfZUymWKvo+wPbgMbUbODEwO723x3JSCwk+8/rARpNWxI5t6C
+         KduPQL+WvmVh0Dq7F3p/0h/lP75ABdD/diowYfQr+RdVPA1eQrjb/9OdEwWvzt9IOHOp
+         oJLCEfUW8LhzIS9fGNhyDGq4U4VsDFO5q0T2lMvUMIpwrO/sqLsTRstkCSg9z6juA5MT
+         9xjQ==
+X-Gm-Message-State: APjAAAX5LC1VIORWAgc56qTUgB81yFAY5zjxzdqdrL87NA6A6b7ZBQ1B
+        5QIgvPHWy+4S/xli7PEunhI=
+X-Google-Smtp-Source: APXvYqxGy6ti+aro/+Ugouk2LFlHDkwecPIxNJNr4s2bexkT5TLGoN0A8azJ3yLVlYBc1LN2slYaiA==
+X-Received: by 2002:a05:600c:291:: with SMTP id 17mr68446436wmk.32.1563904736737;
+        Tue, 23 Jul 2019 10:58:56 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.239])
+        by smtp.googlemail.com with ESMTPSA id o26sm84382672wro.53.2019.07.23.10.58.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 10:58:55 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 19:58:53 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org,
+        willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v4 5/5] DT: arm: exynos4412: add event data type which is
+ monitored
+Message-ID: <20190723175853.GA29195@kozik-lap>
+References: <20190605091236.24263-1-l.luba@partner.samsung.com>
+ <CGME20190605091305eucas1p136332cc3d1a299d90617bddcb365bee0@eucas1p1.samsung.com>
+ <20190605091236.24263-6-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3622a5fe9f13ddfd15b262dbeda700a26c395c2a.camel@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190605091236.24263-6-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 01:52:36PM -0400, Jeff Layton wrote:
-> On Tue, 2019-07-23 at 09:12 -0400, Jeff Layton wrote:
-> > A lot of callers of kvfree only go down the vfree path under very rare
-> > circumstances, and so may never end up hitting the might_sleep_if in it.
-> > Ensure that when kvfree is called, that it is operating in a context
-> > where it is allowed to sleep.
-> > 
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: Luis Henriques <lhenriques@suse.com>
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  mm/util.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
+On Wed, Jun 05, 2019 at 11:12:36AM +0200, Lukasz Luba wrote:
+> The patch adds new field in the PPMU event which shows explicitly
+> what kind of data the event is monitoring. It is possible to change it
+> using defined values in exynos_ppmu.h file.
 > 
-> FWIW, I started looking at this after Luis sent me some ceph patches
-> that fixed a few of these problems. I have not done extensive testing
-> with this patch, so maybe consider this an RFC for now.
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> HCH points out that xfs uses kvfree as a generic "free this no matter
-> what it is" sort of wrapper and expects the callers to work out whether
-> they might be freeing a vmalloc'ed address. If that sort of usage turns
-> out to be prevalent, then we may need another approach to clean this up.
 
-I think it's a bit of a landmine, to be honest.  How about we have kvfree()
-call vfree_atomic() instead?
+I tried to apply this... but prerequisites were not merged into
+v5.3-rc1. This one will have to wait then till next release.
+
+Best regards,
+Krzysztof
+
