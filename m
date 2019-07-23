@@ -2,142 +2,98 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CF9C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33812C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C531B227C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E07A229EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563906672;
+	bh=8NJSy2/AOnI+kFUyRGjU/8c5DDTkihheD1qv1HEpBGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gUwz14cTBjBJd98Uqx3P6ZiCaqbnfGNScjf4ZR/7KSHYPcfBBBIpZgXr7lPjlx6Q+
+	 +XXXh5e17JIEeLm5OK/0lZR4aDekMOPnzYuKb8h3g0tTdiB5jV4xSPDAF+sK2mRwm8
+	 kEA8uptd1l9iuX7zqLGnE//ZaWzVs45GKAD7BObY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391508AbfGWSbE (ORCPT
+        id S2391525AbfGWSbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:31:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52984 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727021AbfGWSbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:31:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 366E8AC93;
-        Tue, 23 Jul 2019 18:31:02 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Ilya Dryomov" <idryomov@gmail.com>, "Sage Weil" <sage@redhat.com>,
-        <ceph-devel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] ceph: fix directories inode i_blkbits initialization
-References: <20190723155020.17338-1-lhenriques@suse.com>
-        <c657b0d65acd5e8bc9d5d726d68e2ad1fff38b51.camel@kernel.org>
-Date:   Tue, 23 Jul 2019 19:31:00 +0100
-In-Reply-To: <c657b0d65acd5e8bc9d5d726d68e2ad1fff38b51.camel@kernel.org> (Jeff
-        Layton's message of "Tue, 23 Jul 2019 13:18:31 -0400")
-Message-ID: <87o91k61sr.fsf@suse.com>
+        Tue, 23 Jul 2019 14:31:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43098 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbfGWSbK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 14:31:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so19822008pgv.10;
+        Tue, 23 Jul 2019 11:31:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=46tdGvqvoqxUIPeOgCWCop/dIrP81hhCst66zWIrm18=;
+        b=SDVTRIP1/O4vq28biyYxsADrCl2a61VQk7ivQNBMLIPv0W3YBIWihiV28+y5YSXpIK
+         LMsZkvnJsTD7eYI2nePCEmu0DMmWVz1Innsg4QV6NBKhEKeyqtZ5/qxvt7T3KeM97vBP
+         YJQHXIb3Dift3KIjicfx5QWbVBS5OGu6Vvz2cBW2N9cyMxU3f9fQxwQOKGlgkD4ZA1sZ
+         /fxVrMgS2Mt0BgpDx5opfhgehCGAhXPOPzFeibo/lZzvbjNBqppE1LuC4/8yOysz91dM
+         nlggWGeACuHV2oS4cFUx2y3iihZZikR3twsw3YuOA1Y5w3g3ByQzqgRa0wTA8SQI+RHf
+         Yg6g==
+X-Gm-Message-State: APjAAAXk3M/9HIURQtF6BNDQHvf+sNkNWuhrt1gv3mhSy+WZ3KjKqzbK
+        MokRYbfzBjVDX5NO0hK2Jjg=
+X-Google-Smtp-Source: APXvYqxo1DzIE0Lf6y7298mhooH13TsAceAasGh822+s662eZYiSCxHuKtu/K9AIM0ZUgGMR0qZCOw==
+X-Received: by 2002:a17:90a:d151:: with SMTP id t17mr82706672pjw.60.1563906669597;
+        Tue, 23 Jul 2019 11:31:09 -0700 (PDT)
+Received: from dennisz-mbp ([2620:10d:c091:500::cff2])
+        by smtp.gmail.com with ESMTPSA id r1sm41232037pgv.70.2019.07.23.11.31.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 11:31:08 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 14:31:06 -0400
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     dennis@kernel.org, tj@kernel.org, cl@linux.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] percpu: Fix a typo
+Message-ID: <20190723183106.GA85597@dennisz-mbp>
+References: <20190721095633.10979-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190721095633.10979-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Jeff Layton" <jlayton@kernel.org> writes:
+On Sun, Jul 21, 2019 at 11:56:33AM +0200, Christophe JAILLET wrote:
+> s/perpcu/percpu/
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  mm/percpu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/percpu.c b/mm/percpu.c
+> index 9821241fdede..febf7c7c888e 100644
+> --- a/mm/percpu.c
+> +++ b/mm/percpu.c
+> @@ -2220,7 +2220,7 @@ static void pcpu_dump_alloc_info(const char *lvl,
+>   * @base_addr: mapped address
+>   *
+>   * Initialize the first percpu chunk which contains the kernel static
+> - * perpcu area.  This function is to be called from arch percpu area
+> + * percpu area.  This function is to be called from arch percpu area
+>   * setup path.
+>   *
+>   * @ai contains all information necessary to initialize the first
+> -- 
+> 2.20.1
+> 
 
-> On Tue, 2019-07-23 at 16:50 +0100, Luis Henriques wrote:
->> When filling an inode with info from the MDS, i_blkbits is being
->> initialized using fl_stripe_unit, which contains the stripe unit in
->> bytes.  Unfortunately, this doesn't make sense for directories as they
->> have fl_stripe_unit set to '0'.  This means that i_blkbits will be set
->> to 0xff, causing an UBSAN undefined behaviour in i_blocksize():
->> 
->>   UBSAN: Undefined behaviour in ./include/linux/fs.h:731:12
->>   shift exponent 255 is too large for 32-bit type 'int'
->> 
->> Fix this by initializing i_blkbits to CEPH_BLOCK_SHIFT if fl_stripe_unit
->> is zero.
->> 
->> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> ---
->>  fs/ceph/inode.c | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->> 
->> Hi Jeff,
->> 
->> To be honest, I'm not sure CEPH_BLOCK_SHIFT is the right value to use
->> here, but for sure the one currently being used isn't correct if the
->> inode is a directory.  Using stripe units seems to be a bug that has
->> been there since the beginning, but it definitely became bigger problem
->> after commit 69448867abcb ("fs: shave 8 bytes off of struct inode").
->> 
->> This fix could also be moved into the 'switch' statement later in that
->> function, in the S_IFDIR case, similar to commit 5ba72e607cdb ("ceph:
->> set special inode's blocksize to page size").  Let me know which version
->> you would prefer.
->> 
->
-> What happens with (e.g.) named pipes or symlinks? Do those inodes also
-> get this bogus value? Assuming that they do, I'd probably prefer this
-> patch since it'd fix things for all inode types, not just directories.
+Applied to for-5.4 with a slightly more descriptive title.
 
-I tested symlinks and they seem to be handled correctly (i.e. the stripe
-units seems to be the same as the target file).  Regarding pipes, I
-didn't test them, but from the code it should be set to PAGE_SHIFT (see
-the above mentioned commit 5ba72e607cdb).
-
-Anyway, I can change the code to do *all* the i_blkbits initialization
-inside the switch statement.  Something like:
-
-switch (inode->i_mode & S_IFMT) {
-case S_IFIFO:
-case S_IFBLK:
-case S_IFCHR:
-case S_IFSOCK:
-	inode->i_blkbits = PAGE_SHIFT;
-        ...
-case S_IFREG:
-	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-	...
-case S_IFLNK:
-	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
-	...
-case S_IFDIR:
-	inode->i_blkbits = CEPH_BLOCK_SHIFT;
-	...
-default:
-	pr_err();
-        ...
-}
-
-This would add some code duplication (S_IFREG and S_IFLNK cases), but
-maybe it's a bit more clear.  The other option would be obviously to
-leave the initialization outside the switch and only change the
-i_blkbits value in the S_IF{IFO,BLK,CHR,SOCK,DIR} cases.
-
-Cheers,
--- 
-Luis
-
-
->
->> Cheers,
->> --
->> Luis
->> 
->> diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
->> index 791f84a13bb8..0e6d6db848b7 100644
->> --- a/fs/ceph/inode.c
->> +++ b/fs/ceph/inode.c
->> @@ -800,7 +800,12 @@ static int fill_inode(struct inode *inode, struct page *locked_page,
->>  
->>  	/* update inode */
->>  	inode->i_rdev = le32_to_cpu(info->rdev);
->> -	inode->i_blkbits = fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
->> +	/* directories have fl_stripe_unit set to zero */
->> +	if (le32_to_cpu(info->layout.fl_stripe_unit))
->> +		inode->i_blkbits =
->> +			fls(le32_to_cpu(info->layout.fl_stripe_unit)) - 1;
->> +	else
->> +		inode->i_blkbits = CEPH_BLOCK_SHIFT;
->>  
->>  	__ceph_update_quota(ci, iinfo->max_bytes, iinfo->max_files);
->>  
+Thanks,
+Dennis
