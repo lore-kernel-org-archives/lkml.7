@@ -2,99 +2,201 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA8BC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDEFC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9580218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JSZ6PnpI"
+	by mail.kernel.org (Postfix) with ESMTP id C1A2022543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390816AbfGWPOy (ORCPT
+        id S2390828AbfGWPPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:14:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49566 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbfGWPOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:14:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZQsVTPSDNSDkcFW9cXj3JbR5Y7NqzGJBRE1PkZOgQkU=; b=JSZ6PnpIJD6Tf8e+dQZEVPK9D+
-        NFsTUDdmiXl23ETstYe91SHCcUomsasfk9da7+u2KmA48gUfVpFRNjoPA6jHAeG7ZQt9myQrhsF14
-        g+E5B7n7wh83RWBc+DY60kRjreeRj2rbem4He4bvL5rSNgIsNvXkykj0Thyz9pxqBDsCEZVwynkBe
-        XcCkqBKMPZkHGCY9lj3CmCPnQbCCVekvYrZ5v81f3DDBjZOT/bcpWoZwTFERELx8vCYK26HbD2ygw
-        qlXNmFO63P+oXuCOAk+sJTP9xwVxkvKDDpUTNz5Exm0iZZNKy+nTVn8b/J4wQRg7IirMGjb+PjRPd
-        MKNdUk7w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpwV7-0000Q7-9p; Tue, 23 Jul 2019 15:14:49 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4A21A201A57EF; Tue, 23 Jul 2019 17:14:47 +0200 (CEST)
-Date:   Tue, 23 Jul 2019 17:14:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
- on i386
-Message-ID: <20190723151447.GO3419@hirez.programming.kicks-ass.net>
-References: <20190719170343.GA13680@linux.intel.com>
- <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net>
- <201907221012.41504DCD@keescook>
- <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
- <201907221135.2C2D262D8@keescook>
- <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
- <201907221620.F31B9A082@keescook>
- <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
- <20190723091820.GZ3402@hirez.programming.kicks-ass.net>
- <17F255F9-5084-4E30-9AD6-80A4F49BD0D8@amacapital.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <17F255F9-5084-4E30-9AD6-80A4F49BD0D8@amacapital.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 23 Jul 2019 11:15:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40811 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729358AbfGWPPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:15:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C94230C34D8;
+        Tue, 23 Jul 2019 15:15:00 +0000 (UTC)
+Received: from llong.com (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EDF95D9C5;
+        Tue, 23 Jul 2019 15:14:55 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v3] mm, slab: Extend slab/shrink to shrink all memcg caches
+Date:   Tue, 23 Jul 2019 11:14:45 -0400
+Message-Id: <20190723151445.7385-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 23 Jul 2019 15:15:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 07:04:46AM -0700, Andy Lutomirski wrote:
-> 
-> 
-> > On Jul 23, 2019, at 2:18 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> >> On Mon, Jul 22, 2019 at 04:47:36PM -0700, Andy Lutomirski wrote:
-> >> 
-> >> I don't love this whole concept, but I also don't have a better idea.
-> > 
-> > Are we really talking about changing the kernel because BPF is expecting
-> > things? That is, did we just elevate everything BPF can observe to ABI?
-> > 
-> 
-> No, this isn’t about internals in the kernel mode sense.
+Currently, a value of '1" is written to /sys/kernel/slab/<slab>/shrink
+file to shrink the slab by flushing out all the per-cpu slabs and free
+slabs in partial lists. This can be useful to squeeze out a bit more memory
+under extreme condition as well as making the active object counts in
+/proc/slabinfo more accurate.
 
-*phew*, I was scared for a wee moment.
+This usually applies only to the root caches, as the SLUB_MEMCG_SYSFS_ON
+option is usually not enabled and "slub_memcg_sysfs=1" not set. Even
+if memcg sysfs is turned on, it is too cumbersome and impractical to
+manage all those per-memcg sysfs files in a real production system.
 
-> It’s about the smallish number of cases where the kernel causes user
-> code to do a specific syscall and the user has a policy that doesn’t
-> allow that syscall.  This is visible to user code via seccomp and
-> ptrace.
-> 
-> Yes, it’s obnoxious.  Do you have any suggestions?
+So there is no practical way to shrink memcg caches.  Fix this by
+enabling a proper write to the shrink sysfs file of the root cache
+to scan all the available memcg caches and shrink them as well. For a
+non-root memcg cache (when SLUB_MEMCG_SYSFS_ON or slub_memcg_sysfs is
+on), only that cache will be shrunk when written.
 
-Not really; I think I just demonstrated I don't fully understand the
-problem space here :/
+On a 2-socket 64-core 256-thread arm64 system with 64k page after
+a parallel kernel build, the the amount of memory occupied by slabs
+before shrinking slabs were:
+
+ # grep task_struct /proc/slabinfo
+ task_struct        53137  53192   4288   61    4 : tunables    0    0
+ 0 : slabdata    872    872      0
+ # grep "^S[lRU]" /proc/meminfo
+ Slab:            3936832 kB
+ SReclaimable:     399104 kB
+ SUnreclaim:      3537728 kB
+
+After shrinking slabs (by echoing "1" to all shrink files):
+
+ # grep "^S[lRU]" /proc/meminfo
+ Slab:            1356288 kB
+ SReclaimable:     263296 kB
+ SUnreclaim:      1092992 kB
+ # grep task_struct /proc/slabinfo
+ task_struct         2764   6832   4288   61    4 : tunables    0    0
+ 0 : slabdata    112    112      0
+
+ [v3: Drop patch 2 & update doc]
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Acked-by: Christoph Lameter <cl@linux.com>
+---
+ Documentation/ABI/testing/sysfs-kernel-slab | 13 +++++---
+ mm/slab.h                                   |  1 +
+ mm/slab_common.c                            | 37 +++++++++++++++++++++
+ mm/slub.c                                   |  2 +-
+ 4 files changed, 48 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-kernel-slab b/Documentation/ABI/testing/sysfs-kernel-slab
+index 29601d93a1c2..ed35833ad7f0 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-slab
++++ b/Documentation/ABI/testing/sysfs-kernel-slab
+@@ -429,10 +429,15 @@ KernelVersion:	2.6.22
+ Contact:	Pekka Enberg <penberg@cs.helsinki.fi>,
+ 		Christoph Lameter <cl@linux-foundation.org>
+ Description:
+-		The shrink file is written when memory should be reclaimed from
+-		a cache.  Empty partial slabs are freed and the partial list is
+-		sorted so the slabs with the fewest available objects are used
+-		first.
++		The shrink file is used to reclaim unused slab cache
++		memory from a cache.  Empty per-cpu or partial slabs
++		are freed and the partial list is sorted so the slabs
++		with the fewest available objects are used first.
++		It only accepts a value of "1" on write for shrinking
++		the cache. Other input values are considered invalid.
++		Shrinking slab caches might be expensive and can
++		adversely impact other running applications.  So it
++		should be used with care.
+ 
+ What:		/sys/kernel/slab/cache/slab_size
+ Date:		May 2007
+diff --git a/mm/slab.h b/mm/slab.h
+index 9057b8056b07..5bf615cb3f99 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -174,6 +174,7 @@ int __kmem_cache_shrink(struct kmem_cache *);
+ void __kmemcg_cache_deactivate(struct kmem_cache *s);
+ void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
+ void slab_kmem_cache_release(struct kmem_cache *);
++void kmem_cache_shrink_all(struct kmem_cache *s);
+ 
+ struct seq_file;
+ struct file;
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 807490fe217a..6491c3a41805 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -981,6 +981,43 @@ int kmem_cache_shrink(struct kmem_cache *cachep)
+ }
+ EXPORT_SYMBOL(kmem_cache_shrink);
+ 
++/**
++ * kmem_cache_shrink_all - shrink a cache and all memcg caches for root cache
++ * @s: The cache pointer
++ */
++void kmem_cache_shrink_all(struct kmem_cache *s)
++{
++	struct kmem_cache *c;
++
++	if (!IS_ENABLED(CONFIG_MEMCG_KMEM) || !is_root_cache(s)) {
++		kmem_cache_shrink(s);
++		return;
++	}
++
++	get_online_cpus();
++	get_online_mems();
++	kasan_cache_shrink(s);
++	__kmem_cache_shrink(s);
++
++	/*
++	 * We have to take the slab_mutex to protect from the memcg list
++	 * modification.
++	 */
++	mutex_lock(&slab_mutex);
++	for_each_memcg_cache(c, s) {
++		/*
++		 * Don't need to shrink deactivated memcg caches.
++		 */
++		if (s->flags & SLAB_DEACTIVATED)
++			continue;
++		kasan_cache_shrink(c);
++		__kmem_cache_shrink(c);
++	}
++	mutex_unlock(&slab_mutex);
++	put_online_mems();
++	put_online_cpus();
++}
++
+ bool slab_is_available(void)
+ {
+ 	return slab_state >= UP;
+diff --git a/mm/slub.c b/mm/slub.c
+index e6c030e47364..9736eb10dcb8 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5294,7 +5294,7 @@ static ssize_t shrink_store(struct kmem_cache *s,
+ 			const char *buf, size_t length)
+ {
+ 	if (buf[0] == '1')
+-		kmem_cache_shrink(s);
++		kmem_cache_shrink_all(s);
+ 	else
+ 		return -EINVAL;
+ 	return length;
+-- 
+2.18.1
+
