@@ -2,293 +2,191 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C2BC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FABC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D129721E6B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563843755;
-	bh=D+YlPexN39Js9JHzNjJSmnK7mCNtkvo0bNRuFpiNPaY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FD0k8dP21TZIKnu7u65FyF3wOyfMufMScratFtvuwKzVIXlFgqLkjaG1iIL3/DbFH
-	 O9Iy4NO2T/H3ZYfiw2bQu2oeTdSCtcJRMreMAlMsp5A9u0idINpFQ1uFrsKOvEq4a1
-	 VDV2MhU3dkyl1lE7ck7aEag7HPITFVRa3ydVPAf8=
+	by mail.kernel.org (Postfix) with ESMTP id 04405218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbfGWBCe (ORCPT
+        id S2387570AbfGWBDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56806 "EHLO mail.kernel.org"
+        Mon, 22 Jul 2019 21:03:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:7612 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730868AbfGWBCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:02:33 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A3212199C;
-        Tue, 23 Jul 2019 01:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563843751;
-        bh=D+YlPexN39Js9JHzNjJSmnK7mCNtkvo0bNRuFpiNPaY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VQB7kFvDKPBO9FVTPLmCGcDinuLRw4fhoZTQxZOqbQbCFbjcI9kmJJBu1ACQK2zVG
-         uBS1F3DH5i+85N5WWkVn0ol7ghpd60EqShyhSKtTHRDd+eWUxVZWURU9e8uNYYPJKj
-         /S3fsRmWd5kEv60a5kGbWEZfpLp7Al456A2QPkdQ=
-Date:   Mon, 22 Jul 2019 18:02:31 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@kernel.org,
-        mgorman@techsingularity.net, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [v4 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages
- mapped correctly in mbind
-Message-Id: <20190722180231.b7abbe8bdb046d725bdd9e6b@linux-foundation.org>
-In-Reply-To: <6c948a96-7af1-c0d2-b3df-5fe613284d4f@suse.cz>
-References: <1563556862-54056-1-git-send-email-yang.shi@linux.alibaba.com>
-        <1563556862-54056-3-git-send-email-yang.shi@linux.alibaba.com>
-        <6c948a96-7af1-c0d2-b3df-5fe613284d4f@suse.cz>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1733149AbfGWBDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 21:03:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 18:03:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
+   d="scan'208";a="192902952"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Jul 2019 18:03:14 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] drivers: thermal: processor_thermal_device: Export sysfs inteface for TCC offset
+Date:   Mon, 22 Jul 2019 18:03:02 -0700
+Message-Id: <20190723010302.18048-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 09:25:09 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+This change exports an interface to read tcc offset and allow writing if
+the platform is not locked.
 
-> > since there may be pages off LRU temporarily.  We should migrate other
-> > pages if MPOL_MF_MOVE* is specified.  Set has_unmovable flag if some
-> > paged could not be not moved, then return -EIO for mbind() eventually.
-> > 
-> > With this change the above test would return -EIO as expected.
-> > 
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: Mel Gorman <mgorman@techsingularity.net>
-> > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> 
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Refer to Intel SDM for details on the MSR: MSR_TEMPERATURE_TARGET.
+Here TCC Activation Offset (R/W) bits allow temperature offset in degrees
+in relation to TjMAX.
 
-Thanks.
+This change will be useful for improving performance from user space for
+some platforms, if the current offset is not optimal.
 
-I'm a bit surprised that this doesn't have a cc:stable.  Did we
-consider that?
-
-Also, is this patch dependent upon "mm: mempolicy: make the behavior
-consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified"? 
-Doesn't look that way..
-
-Also, I have a note that you had concerns with "mm: mempolicy: make the
-behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were
-specified".  What is the status now?
-
-
-From: Yang Shi <yang.shi@linux.alibaba.com>
-Subject: mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
-
-When both MPOL_MF_MOVE* and MPOL_MF_STRICT was specified, mbind() should
-try best to migrate misplaced pages, if some of the pages could not be
-migrated, then return -EIO.
-
-There are three different sub-cases:
-1. vma is not migratable
-2. vma is migratable, but there are unmovable pages
-3. vma is migratable, pages are movable, but migrate_pages() fails
-
-If #1 happens, kernel would just abort immediately, then return -EIO,
-after the commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 ("mm: mempolicy:
-make mbind() return -EIO when MPOL_MF_STRICT is specified").
-
-If #3 happens, kernel would set policy and migrate pages with best-effort,
-but won't rollback the migrated pages and reset the policy back.
-
-Before that commit, they behaves in the same way.  It'd better to keep
-their behavior consistent.  But, rolling back the migrated pages and
-resetting the policy back sounds not feasible, so just make #1 behave as
-same as #3.
-
-Userspace will know that not everything was successfully migrated (via
--EIO), and can take whatever steps it deems necessary - attempt rollback,
-determine which exact page(s) are violating the policy, etc.
-
-Make queue_pages_range() return 1 to indicate there are unmovable pages or
-vma is not migratable.
-
-The #2 is not handled correctly in the current kernel, the following patch
-will fix it.
-
-Link: http://lkml.kernel.org/r/1561162809-59140-2-git-send-email-yang.shi@linux.alibaba.com
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
+ .../processor_thermal_device.c                | 91 ++++++++++++++++++-
+ 1 file changed, 87 insertions(+), 4 deletions(-)
 
- mm/mempolicy.c |   84 +++++++++++++++++++++++++++++++++--------------
- 1 file changed, 60 insertions(+), 24 deletions(-)
-
---- a/mm/mempolicy.c~mm-mempolicy-make-the-behavior-consistent-when-mpol_mf_move-and-mpol_mf_strict-were-specified
-+++ a/mm/mempolicy.c
-@@ -429,11 +429,14 @@ static inline bool queue_pages_required(
+diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+index 213ab3cc6b80..a35635129fed 100644
+--- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
++++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+@@ -137,6 +137,72 @@ static const struct attribute_group power_limit_attribute_group = {
+ 	.name = "power_limits"
+ };
+ 
++static ssize_t tcc_offset_degree_celsius_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	u64 val;
++	int err;
++
++	err = rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
++	if (err)
++		return err;
++
++	val = (val >> 24) & 0xff;
++	return sprintf(buf, "%d\n", (int)val);
++}
++
++static int tcc_offset_update(int tcc)
++{
++	u64 val;
++	int err;
++
++	if (!tcc)
++		return -EINVAL;
++
++	err = rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
++	if (err)
++		return err;
++
++	val = ~GENMASK_ULL(31, 24);
++	val = (tcc & 0xff) << 24;
++
++	err = wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++static int tcc_offset_save;
++
++static ssize_t tcc_offset_degree_celsius_store(struct device *dev,
++				struct device_attribute *attr, const char *buf,
++				size_t count)
++{
++	u64 val;
++	int tcc, err;
++
++	err = rdmsrl_safe(MSR_PLATFORM_INFO, &val);
++	if (err)
++		return err;
++
++	if (!(val & BIT(30)))
++		return -EACCES;
++
++	if (kstrtoint(buf, 0, &tcc))
++		return -EINVAL;
++
++	err = tcc_offset_update(tcc);
++	if (err)
++		return err;
++
++	tcc_offset_save = tcc;
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(tcc_offset_degree_celsius);
++
+ static int stored_tjmax; /* since it is fixed, we can have local storage */
+ 
+ static int get_tjmax(void)
+@@ -332,6 +398,7 @@ static void proc_thermal_remove(struct proc_thermal_device *proc_priv)
+ 	acpi_remove_notify_handler(proc_priv->adev->handle,
+ 				   ACPI_DEVICE_NOTIFY, proc_thermal_notify);
+ 	int340x_thermal_zone_remove(proc_priv->int340x_zone);
++	sysfs_remove_file(&proc_priv->dev->kobj, &dev_attr_tcc_offset_degree_celsius.attr);
+ 	sysfs_remove_group(&proc_priv->dev->kobj,
+ 			   &power_limit_attribute_group);
+ }
+@@ -355,8 +422,15 @@ static int int3401_add(struct platform_device *pdev)
+ 
+ 	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PLATFORM_DEV\n");
+ 
+-	return sysfs_create_group(&pdev->dev.kobj,
+-					 &power_limit_attribute_group);
++	ret = sysfs_create_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
++	if (ret)
++		return ret;
++
++	ret = sysfs_create_group(&pdev->dev.kobj, &power_limit_attribute_group);
++	if (ret)
++		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
++
++	return ret;
  }
  
- /*
-- * queue_pages_pmd() has three possible return values:
-+ * queue_pages_pmd() has four possible return values:
-+ * 2 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-  * 1 - pages are placed on the right node or queued successfully.
-  * 0 - THP was split.
-- * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
-- *        page was already on a node that does not follow the policy.
-+ * -EIO - is migration entry or only MPOL_MF_STRICT was specified and an
-+ *        existing page was already on a node that does not follow the
-+ *        policy.
-  */
- static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- 				unsigned long end, struct mm_walk *walk)
-@@ -463,7 +466,7 @@ static int queue_pages_pmd(pmd_t *pmd, s
- 	/* go to thp migration */
- 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
- 		if (!vma_migratable(walk->vma)) {
--			ret = -EIO;
-+			ret = 2;
- 			goto unlock;
- 		}
+ static int int3401_remove(struct platform_device *pdev)
+@@ -584,8 +658,15 @@ static int  proc_thermal_pci_probe(struct pci_dev *pdev,
  
-@@ -488,16 +491,29 @@ static int queue_pages_pte_range(pmd_t *
- 	struct queue_pages *qp = walk->private;
- 	unsigned long flags = qp->flags;
- 	int ret;
-+	bool has_unmovable = false;
- 	pte_t *pte;
- 	spinlock_t *ptl;
+ 	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PCI\n");
  
- 	ptl = pmd_trans_huge_lock(pmd, vma);
- 	if (ptl) {
- 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
--		if (ret > 0)
-+		switch (ret) {
-+		/* THP was split, fall through to pte walk */
-+		case 0:
-+			break;
-+		/* Pages are placed on the right node or queued successfully */
-+		case 1:
- 			return 0;
--		else if (ret < 0)
-+		/*
-+		 * Met unmovable pages, MPOL_MF_MOVE* & MPOL_MF_STRICT
-+		 * were specified.
-+		 */
-+		case 2:
-+			return 1;
-+		case -EIO:
- 			return ret;
-+		}
- 	}
- 
- 	if (pmd_trans_unstable(pmd))
-@@ -519,14 +535,21 @@ static int queue_pages_pte_range(pmd_t *
- 		if (!queue_pages_required(page, qp))
- 			continue;
- 		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
--			if (!vma_migratable(vma))
-+			/* MPOL_MF_STRICT must be specified if we get here */
-+			if (!vma_migratable(vma)) {
-+				has_unmovable |= true;
- 				break;
-+			}
- 			migrate_page_add(page, qp->pagelist, flags);
- 		} else
- 			break;
- 	}
- 	pte_unmap_unlock(pte - 1, ptl);
- 	cond_resched();
+-	return sysfs_create_group(&pdev->dev.kobj,
+-					 &power_limit_attribute_group);
++	ret = sysfs_create_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
++	if (ret)
++		return ret;
 +
-+	if (has_unmovable)
-+		return 1;
++	ret = sysfs_create_group(&pdev->dev.kobj, &power_limit_attribute_group);
++	if (ret)
++		sysfs_remove_file(&pdev->dev.kobj, &dev_attr_tcc_offset_degree_celsius.attr);
 +
- 	return addr != end ? -EIO : 0;
++	return ret;
  }
  
-@@ -639,7 +662,13 @@ static int queue_pages_test_walk(unsigne
-  *
-  * If pages found in a given range are on a set of nodes (determined by
-  * @nodes and @flags,) it's isolated and queued to the pagelist which is
-- * passed via @private.)
-+ * passed via @private.
-+ *
-+ * queue_pages_range() has three possible return values:
-+ * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-+ * 0 - queue pages successfully or no misplaced page.
-+ * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
-  */
- static int
- queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
-@@ -1182,6 +1211,7 @@ static long do_mbind(unsigned long start
- 	struct mempolicy *new;
- 	unsigned long end;
- 	int err;
-+	int ret;
- 	LIST_HEAD(pagelist);
+ static void  proc_thermal_pci_remove(struct pci_dev *pdev)
+@@ -611,6 +692,8 @@ static int proc_thermal_resume(struct device *dev)
+ 	proc_dev = dev_get_drvdata(dev);
+ 	proc_thermal_read_ppcc(proc_dev);
  
- 	if (flags & ~(unsigned long)MPOL_MF_VALID)
-@@ -1243,26 +1273,32 @@ static long do_mbind(unsigned long start
- 	if (err)
- 		goto mpol_out;
- 
--	err = queue_pages_range(mm, start, end, nmask,
-+	ret = queue_pages_range(mm, start, end, nmask,
- 			  flags | MPOL_MF_INVERT, &pagelist);
--	if (!err)
--		err = mbind_range(mm, start, end, new);
- 
--	if (!err) {
--		int nr_failed = 0;
-+	if (ret < 0)
-+		err = -EIO;
-+	else {
-+		err = mbind_range(mm, start, end, new);
- 
--		if (!list_empty(&pagelist)) {
--			WARN_ON_ONCE(flags & MPOL_MF_LAZY);
--			nr_failed = migrate_pages(&pagelist, new_page, NULL,
--				start, MIGRATE_SYNC, MR_MEMPOLICY_MBIND);
--			if (nr_failed)
--				putback_movable_pages(&pagelist);
--		}
-+		if (!err) {
-+			int nr_failed = 0;
- 
--		if (nr_failed && (flags & MPOL_MF_STRICT))
--			err = -EIO;
--	} else
--		putback_movable_pages(&pagelist);
-+			if (!list_empty(&pagelist)) {
-+				WARN_ON_ONCE(flags & MPOL_MF_LAZY);
-+				nr_failed = migrate_pages(&pagelist, new_page,
-+					NULL, start, MIGRATE_SYNC,
-+					MR_MEMPOLICY_MBIND);
-+				if (nr_failed)
-+					putback_movable_pages(&pagelist);
-+			}
++	tcc_offset_update(tcc_offset_save);
 +
-+			if ((ret > 0) ||
-+			    (nr_failed && (flags & MPOL_MF_STRICT)))
-+				err = -EIO;
-+		} else
-+			putback_movable_pages(&pagelist);
-+	}
- 
- 	up_write(&mm->mmap_sem);
-  mpol_out:
-_
+ 	return 0;
+ }
+ #else
+-- 
+2.17.2
 
