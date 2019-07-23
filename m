@@ -2,117 +2,119 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B27DC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20DDC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B551223A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40EA223A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHzFkm4K"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XGStVuHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbfGWMdv (ORCPT
+        id S1732329AbfGWMeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:33:51 -0400
-Received: from mail-vs1-f49.google.com ([209.85.217.49]:39110 "EHLO
-        mail-vs1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfGWMdv (ORCPT
+        Tue, 23 Jul 2019 08:34:07 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37488 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfGWMeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:33:51 -0400
-Received: by mail-vs1-f49.google.com with SMTP id u3so28640760vsh.6;
-        Tue, 23 Jul 2019 05:33:50 -0700 (PDT)
+        Tue, 23 Jul 2019 08:34:06 -0400
+Received: by mail-qt1-f194.google.com with SMTP id y26so41699683qto.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 05:34:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D0dIs1sQ5y8YZEU/+OCClL8Rpfn1hGrQQ6MN19phnZY=;
-        b=UHzFkm4KmM40XZnyBUt6L75G6kQ1V4Vxhj5QVcclbrobZ4nDsjNL7pxFleAHvWXQnb
-         8veYwp6mDL3q17/HxGf/JHREK4PSgrHwuqO0ST7c6Ueheu3oc1n8nrDtTb7K0f9A34WK
-         zpwNIoUiExrtHMOSPmZaUBpvpAkeVs+mXtCzwBxR+mVs67oXbokZiOK/JxwMcVASPDUY
-         i9MZEstk/fff4kgSPDMXpWL+LntJ6sazg/XH0gXQQyNTtXbaGtxPxyHfZJtsQV72NRrW
-         gtj3ZNqDBjLcedmVtQGkV+Ccag+xUGh0MY9nC7CZfRGR0klZjoD96dtl94WbWPDvF0Yq
-         PRZg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4z6g9JExYRcJA0cyMB6yiS2IpKsEL90puRfSbLhNOYM=;
+        b=XGStVuHcJ4wYu5EkGucnWz0qyLQPnOTtZqcARydulA7t9Ltx1lhLXGgV8Z2XduZicZ
+         xd5wu0OKMXkjcax/8x3LH30ryZwpioRAwsQ3V7xMq1Ciepu12twvmW8XlTTwtYCXolge
+         D91/c66cXBLOyYAMwxtWBJregnyDRwWMGle1KoOI3dX3A/2obklREelH5IVhrUXHvTw3
+         8tOemeLX+4Uln09N0Cg06tdLBr/VhglARToykSGyCF2NSFuHW0gZY1pjNOzLpZiRFfnB
+         uHVhv2+8uyrIUtD1uutViUZvSabCMm1x0Md5hfEA2mGZrPd1bqG1XIagtJ9qph2alxj4
+         tMHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D0dIs1sQ5y8YZEU/+OCClL8Rpfn1hGrQQ6MN19phnZY=;
-        b=dy7MCOUdDAxKzsLvSKnbUwU403B8erMonXsHxTjK+f+lpWP9+IvJcN79UehYOMGol/
-         XKatQ3nK9CnEYrGiVwLrE+uyEBWvZwfdRHGSJ3v/ZubQHhnJLuUvuOT/qgj79F8CKdhl
-         2VqUhlKz2WjyMsZk7oihfmu/xmxzXIabeygGQDarmYTnSmfXQrEPcQ9yDs06ojM71waN
-         dCGcNMpelBuTSmQWzt10g7iFIIZKLUGQ7OTBYzCwX96JeML/FWGiBpzekKmCJSl2B2wj
-         bT9uxIANVw4BhrIsM1yX/x/I5lIJC2CbxOt8CYlOuHW7v5WR0r1Lb2EfnFPngvS2UNOk
-         AH4g==
-X-Gm-Message-State: APjAAAUI9NMDU0izvgzbpxpZqqAVyrxp+i4Q7V08GvgDoxA2sgbdOl4W
-        7G4QPF2KPtskw6OZMjfg8pgewG8y8vqMyZg4ihk=
-X-Google-Smtp-Source: APXvYqzSwI6JXr33vGz1Zl73eg0VuLmYteeEtg8J0M2SAu5MYNWIXEzx/GDmHlFfIM5Fentm53RZyhjW/1UyEzL81nw=
-X-Received: by 2002:a67:f8d4:: with SMTP id c20mr5929303vsp.239.1563885230278;
- Tue, 23 Jul 2019 05:33:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4z6g9JExYRcJA0cyMB6yiS2IpKsEL90puRfSbLhNOYM=;
+        b=RuvEn6KDs8hfnOQTsT21DkgQm5cx8V0A/p8VEMSjZj0Ke5w/i8HTfqKq4JQVBmfr8n
+         CWLYdtChAYj2PXTHEeMzPKTREp1hVl3lj823MriCm5surGhmqWoWjoHuVbjGr3QuriDp
+         /RXZJ0tvtHHJLP+LrYodTRAPJJTAwQi/gk34/9MgNGjbyBIIcBqOo51O7Lb0Knaip7xz
+         XCMltoPLT7QeyMRCgHQDL08ZkX9V20Ff6FvkQLPwHQknRlDrFYrcMLxTYG8LHt4zzH9/
+         ZBSD6fFQn/OY4OGURQ29yUSX0bRvretcprBfaDqMuqNXaBjzuDQVNZkRvkHPrLwHUU46
+         DWQQ==
+X-Gm-Message-State: APjAAAVTWIWVinO5/Jzu04iygraSpm2M7zqHWXwjmw4kIGvIeEgpvI5u
+        u8d+F/T0z1PJzEn2Eq5kPgDGxA==
+X-Google-Smtp-Source: APXvYqwgtwYpT9cg3gaUoASZePIHM0GUXAfGQxCkQc4zdvADS6YRLfKQfN5B+6njowjdg51XBm6tUg==
+X-Received: by 2002:ac8:6c31:: with SMTP id k17mr51817374qtu.253.1563885245559;
+        Tue, 23 Jul 2019 05:34:05 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id i62sm20099024qke.52.2019.07.23.05.34.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 05:34:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hptzW-0004mn-JO; Tue, 23 Jul 2019 09:34:02 -0300
+Date:   Tue, 23 Jul 2019 09:34:02 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, oulijun@huawei.com,
+        xavier.huwei@huawei.com, dledford@redhat.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH] RDMA/hns: Fix build error for hip08
+Message-ID: <20190723123402.GA15357@ziepe.ca>
+References: <20190723024908.11876-1-yuehaibing@huawei.com>
+ <20190723074339.GJ5125@mtr-leonro.mtl.com>
 MIME-Version: 1.0
-References: <CAOGqxeVeEq803rrtGrnubRA8cP3dRCXsU15ss3pS1q6ik+k8Bw@mail.gmail.com>
- <7610bbc9-83d8-ee98-1425-07bb65448541@intel.com>
-In-Reply-To: <7610bbc9-83d8-ee98-1425-07bb65448541@intel.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Tue, 23 Jul 2019 08:34:21 -0400
-Message-ID: <CAOGqxeVR3XzAQ-yTH35hyT3KpL11nTwMY1Ca96ZW=K=PiWMnHA@mail.gmail.com>
-Subject: Re: Issue with sequence to switch to HS400
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723074339.GJ5125@mtr-leonro.mtl.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 1:21 AM Adrian Hunter <adrian.hunter@intel.com> wro=
-te:
->
-> On 23/07/19 1:31 AM, Alan Cooper wrote:
-> > I'm having a problem with a new SD/MMC controller and PHY in our
-> > latest SoC's. The issue I'm seeing is that I can't switch into HS400
-> > mode. This looks like something the driver is doing that doesn't meet
-> > the JEDEC spec. In the "HS400 timing mode selection" section of the
-> > JEDEC spec , in step 7 it states:
+On Tue, Jul 23, 2019 at 10:43:39AM +0300, Leon Romanovsky wrote:
+> On Tue, Jul 23, 2019 at 10:49:08AM +0800, YueHaibing wrote:
+> > If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
+> > but INFINIBAND_HNS is y, building fails:
 > >
-> > 7) Set the =E2=80=9CTiming Interface=E2=80=9D parameter in the HS_TIMIN=
-G [185] field
-> > of the Extended CSD register to 0x1 to switch to High Speed mode and
-> > then set the clock frequency to a value not greater than 52 MHz.
+> > drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
+> > hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
+> > drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
+> > hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
+> 
+> It means that you have a problem with header files of your hns3.
+> 
 > >
-> > In the function mmc_select_hs400() in mmc.c, I see that a switch
-> > command is done to set the eMMC device to HS mode and then
-> > mmc_set_timing(card->host, MMC_TIMING_MMC_HS) is used to change the
-> > controller to HS mode. The problem is that the "SD Host Controller
-> > Standard Specification" states that "UHS Mode Select" field of the
-> > "Host Control 2 Register" controls the mode when the "1.8V Signaling
-> > Enable" bit in the same register is set, so mmc_set_timing() is
-> > actually leaving the controller in SDR12 mode and mmc_select_hs400()
-> > will then set the clock to 52MHz. This causes our PHY to detect an
-> > illegal combination and return an error.
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> >  drivers/infiniband/hw/hns/Kconfig | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > >
-> > I think the easiest fix would be to change mmc_set_timing(card->host,
-> > MMC_TIMING_MMC_HS) to mmc_set_timing(card->host,
-> > MMC_TIMING_UHS_SDR25). The other possibility would be to change
-> > mmc_set_timing to handle the "1.8V Signaling Enable" bit properly.
-> > I'll submit a patch based on the feedback I get.
->
-> eMMC is governed by JEDEC specs not SD specs.
+> > diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+> > index b59da5d..4371c80 100644
+> > +++ b/drivers/infiniband/hw/hns/Kconfig
+> > @@ -23,7 +23,8 @@ config INFINIBAND_HNS_HIP06
+> >
+> >  config INFINIBAND_HNS_HIP08
+> >  	bool "Hisilicon Hip08 Family RoCE support"
+> > -	depends on INFINIBAND_HNS && PCI && HNS3
+> > +	depends on INFINIBAND_HNS && (INFINIBAND_HNS = HNS3)
+> 
+> This is wrong.
 
-My understanding is that JEDEC does not have a host controller spec so
-this driver uses the "SD Host Controller Standard Specification".
+It is tricky. It is asserting that the IB side is built as a module if
+the ethernet side is a module..
 
->
-> Please consider making a change in your driver instead.  For example, hoo=
-k
-> ->set_ios() and if 1.8V is enabled and timing is set to MMC_TIMING_MMC_HS
-> then change it to MMC_TIMING_UHS_SDR25.
+It is kind of a weird pattern as the module config is INFINIBAND_HNS
+and these others are just bool opens what to include, but I think it
+is OK..
 
-That's an easy fix, but it still leaves all other drivers/systems
-temporarily using SDR12 at 52MHz during the switch to HS400.
+Jason
