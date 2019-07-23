@@ -2,166 +2,126 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28276C7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901BAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8786206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A611206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GWGBJFlV"
+	dkim=pass (2048-bit key) header.d=casparzhang-com.20150623.gappssmtp.com header.i=@casparzhang-com.20150623.gappssmtp.com header.b="C34havDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbfGWKBb (ORCPT
+        id S1732842AbfGWKCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:01:31 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4715 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfGWKBb (ORCPT
+        Tue, 23 Jul 2019 06:02:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41483 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728557AbfGWKCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:01:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d36daf70000>; Tue, 23 Jul 2019 03:01:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 03:01:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 03:01:30 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 10:01:26 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jose Abreu <Jose.Abreu@synopsys.com>, Lars Persson <lists@bofh.nu>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722101830.GA24948@apalos>
- <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
- <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
- <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
-Date:   Tue, 23 Jul 2019 11:01:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 06:02:16 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o101so43420925ota.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=casparzhang-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=30UXoZPM+9RE8an6O7xxTToknZxq9ZoH5S52VkZVUZY=;
+        b=C34havDI1qpeD/ZbDajYiieBd3DQOuEyEZEm9XmYNVpHFkHU0xEGyOyTeTRn1glKGu
+         L0w5sgjbRZUXHzM2tAO+Xud81v/YfKGyHGMfdsvnIdYcy1o3634QYl1MEtA/dospRrPs
+         CUA18mjO4f6mrVUW/5XCy46Z6j2OA6wqA54s+X9ytuwN7cdVjEB/Qro1JnxG38nUkgrU
+         l1kehUwaz2eM5uU2sKPtS29DgVvaiyZp/S33ee7fOZ5L/pCSVwOVwOH4VL/hzXjCYB/W
+         4qkExEWmA5Q9U2xOAuNUxHzMdhfWZUJFhOrC/j3oWXszWZbBlbFMcBaCS7Q0Oj3QyFJI
+         aFNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=30UXoZPM+9RE8an6O7xxTToknZxq9ZoH5S52VkZVUZY=;
+        b=hmj9cCE5ELLHSlwXkFLLf/5VY5ktGNKcU+3XA8nFoTxsDaOGHTMdiW6bVv22+opooI
+         eEELnhqJ6qbYch8moBJwPhLsXENLeQKqVStyJVh7YZD1stKPiJc35Q7pdehPdQcwjkdf
+         eAY5otlj4pEG6BuYZ6zNg1KrmUwr1pDhpdsJdx3Vk9B3039ZknHppBA7f+9FyFbiYX+z
+         cHVWQhlc67jpPyXhN9OW9ZbS6BjeSqbllzRLy3uGvMDo666qrf5Tt/ObiW1x0DX26AVZ
+         UoJ3JXEL4aZHCn0oOtRjeB4vAopAFQmW69xVwPLBG3h1UbKfjAmhoyHOMhe+wTd3PTm+
+         ET3w==
+X-Gm-Message-State: APjAAAWFo028At1f8KOiI+KskqsSzl8bTkWIio4SXismkHAZqBGGkz7P
+        qFp6X1EZduunpFGV9+7kL3SnaYzvbGk=
+X-Google-Smtp-Source: APXvYqzxufKEXHQJFf9Zix4DWVvcjwlo4dsXaNVQdUuvIwurDnDzszSzb4mGi34w6ZGACrPcGn4gaA==
+X-Received: by 2002:a9d:4809:: with SMTP id c9mr21699259otf.199.1563876135310;
+        Tue, 23 Jul 2019 03:02:15 -0700 (PDT)
+Received: from casparzhang.com ([240e:390:e6f:dc80:cdd6:529c:3a94:95d7])
+        by smtp.gmail.com with ESMTPSA id w139sm15235606oiw.0.2019.07.23.03.02.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Jul 2019 03:02:13 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 18:02:09 +0800
+From:   Caspar Zhang <caspar@casparzhang.com>
+To:     Jason Xing <kerneljasonxing@linux.alibaba.com>
+Cc:     hannes@cmpxchg.org, surenb@google.com, mingo@redhat.com,
+        peterz@infradead.org, dennis@kernel.org, axboe@kernel.dk,
+        lizefan@huawei.com, tj@kernel.org, linux-kernel@vger.kernel.org,
+        caspar@linux.alibaba.com, joseph.qi@linux.alibaba.com
+Subject: Re: [PATCH] psi: get poll_work to run when calling poll syscall next
+ time
+Message-ID: <20190723100209.GA78446@casparzhang.com>
+References: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563876087; bh=egy5lIg2QcRmIaxcvymArPwrBaGWeS0BY9hTg1rDFtQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=GWGBJFlVEnm2Ted4BVDkDxLiVC0T9dTzRx5z3HLyjd+XFZIxMB3+HMQ3V2n8TOFFe
-         uv+KmlQFlVmL2mvbNG8Ts5rjNn/sR/iLxsKt7m6G7yAG67IcF63U5sG8kTPlI7rqWW
-         O6BnQicD7myht1gWcsRTm6i0Is+yU77G11VyLoIaqpZCNn3VysXT8RVEmPXplSUnRB
-         H5LJw3eRYSj9eXFoWgR/O9DwM4mePv0AijfUT5QOqPxOYZdBVSdWC4LYxWLqGLZP3a
-         bMe1g2IPQChTtM0zpzKwaXNPhqeL0B45qyYBhM5Ob5f4kobU63l3/wQhxcMMyciKjo
-         vAFvnmgMVO7QQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1563864339-2621-1-git-send-email-kerneljasonxing@linux.alibaba.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 23, 2019 at 02:45:39PM +0800, Jason Xing wrote:
+> Only when calling the poll syscall the first time can user
+> receive POLLPRI correctly. After that, user always fails to
+> acquire the event signal.
+>
+> Reproduce case:
+> 1. Get the monitor code in Documentation/accounting/psi.txt
+> 2. Run it, and wait for the event triggered.
+> 3. Kill and restart the process.
+>
+> If the user doesn't kill the monitor process, it seems the
+> poll_work works fine. After killing and restarting the monitor,
+> the poll_work in kernel will never run again due to the wrong
+> value of poll_scheduled. Therefore, we should reset the value
+> as group_init() does after the last trigger is destroyed.
+>
+> Signed-off-by: Jason Xing <kerneljasonxing@linux.alibaba.com>
 
-On 23/07/2019 09:14, Jose Abreu wrote:
-> From: Jose Abreu <joabreu@synopsys.com>
-> Date: Jul/22/2019, 15:04:49 (UTC+00:00)
-> 
->> From: Jon Hunter <jonathanh@nvidia.com>
->> Date: Jul/22/2019, 13:05:38 (UTC+00:00)
->>
->>>
->>> On 22/07/2019 12:39, Jose Abreu wrote:
->>>> From: Lars Persson <lists@bofh.nu>
->>>> Date: Jul/22/2019, 12:11:50 (UTC+00:00)
->>>>
->>>>> On Mon, Jul 22, 2019 at 12:18 PM Ilias Apalodimas
->>>>> <ilias.apalodimas@linaro.org> wrote:
->>>>>>
->>>>>> On Thu, Jul 18, 2019 at 07:48:04AM +0000, Jose Abreu wrote:
->>>>>>> From: Jon Hunter <jonathanh@nvidia.com>
->>>>>>> Date: Jul/17/2019, 19:58:53 (UTC+00:00)
->>>>>>>
->>>>>>>> Let me know if you have any thoughts.
->>>>>>>
->>>>>>> Can you try attached patch ?
->>>>>>>
->>>>>>
->>>>>> The log says  someone calls panic() right?
->>>>>> Can we trye and figure were that happens during the stmmac init phase?
->>>>>>
->>>>>
->>>>> The reason for the panic is hidden in this one line of the kernel logs:
->>>>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
->>>>>
->>>>> The init process is killed by SIGSEGV (signal 11 = 0xb).
->>>>>
->>>>> I would suggest you look for data corruption bugs in the RX path. If
->>>>> the code is fetched from the NFS mount then a corrupt RX buffer can
->>>>> trigger a crash in userspace.
->>>>>
->>>>> /Lars
->>>>
->>>>
->>>> Jon, I'm not familiar with ARM. Are the buffer addresses being allocated 
->>>> in a coherent region ? Can you try attached patch which adds full memory 
->>>> barrier before the sync ?
->>>
->>> TBH I am not sure about the buffer addresses either. The attached patch
->>> did not help. Same problem persists.
->>
->> OK. I'm just guessing now at this stage but can you disable SMP ?
+Reviewed-by: Caspar Zhang <caspar@linux.alibaba.com>
 
-I tried limiting the number of CPUs to one by setting 'maxcpus=0' on the
-kernel command line. However, this did not help.
+> ---
+>  kernel/sched/psi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index 7acc632..66f4385 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -1133,6 +1133,12 @@ static void psi_trigger_destroy(struct kref *ref)
+>  	if (kworker_to_destroy) {
+>  		kthread_cancel_delayed_work_sync(&group->poll_work);
+>  		kthread_destroy_worker(kworker_to_destroy);
+> +		/*
+> +		 * The poll_work should have the chance to be put into the
+> +		 * kthread queue when calling poll syscall next time. So
+> +		 * reset poll_scheduled to zero as group_init() does
+> +		 */
+> +		atomic_set(&group->poll_scheduled, 0);
+>  	}
+>  	kfree(t);
+>  }
+> --
+> 1.8.3.1
+>
 
->> We have to narrow down if this is coherency issue but you said that 
->> booting without NFS and then mounting manually the share works ... So, 
->> can you share logs with same debug prints in this condition in order to 
->> compare ?
-> 
-> Jon, I have one ARM based board and I can't face your issue but I 
-> noticed that my buffer addresses are being mapped using SWIOTLB. Can you 
-> disable IOMMU support on your setup and let me know if the problem 
-> persists ?
-
-This appears to be a winner and by disabling the SMMU for the ethernet
-controller and reverting commit 954a03be033c7cef80ddc232e7cbdb17df735663
-this worked! So yes appears to be related to the SMMU being enabled. We
-had to enable the SMMU for ethernet recently due to commit
-954a03be033c7cef80ddc232e7cbdb17df735663.
-
-Cheers
-Jon
-
--- 
-nvpublic
+--
+        Thanks,
+        Caspar
