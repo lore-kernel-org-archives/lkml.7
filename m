@@ -2,112 +2,88 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A4AC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5DAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C8C22512
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582032251B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389024AbfGWK3c (ORCPT
+        id S2389040AbfGWK3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:29:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:52346 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388997AbfGWK3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:29:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40CC0337;
-        Tue, 23 Jul 2019 03:29:31 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B15A3F71A;
-        Tue, 23 Jul 2019 03:29:29 -0700 (PDT)
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Lars Persson <lists@bofh.nu>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tue, 23 Jul 2019 06:29:39 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47271 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389028AbfGWK3i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:29:38 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hps37-0005i0-8w; Tue, 23 Jul 2019 12:29:37 +0200
+Message-ID: <1563877776.3731.3.camel@pengutronix.de>
+Subject: Re: [EXT] Re: [v1] gpu: ipu-v3: allow to build with ARCH_LAYERSCAPE
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Wen He <wen.he_1@nxp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722101830.GA24948@apalos>
- <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
- <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
- <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
- <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
-Date:   Tue, 23 Jul 2019 11:29:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Cc:     Leo Li <leoyang.li@nxp.com>
+Date:   Tue, 23 Jul 2019 12:29:36 +0200
+In-Reply-To: <DB7PR04MB5195F5731555285623955738E2F10@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190508105755.5881-1-wen.he_1@nxp.com>
+         <1562322724.4291.5.camel@pengutronix.de>
+         <DB7PR04MB5195F5731555285623955738E2F10@DB7PR04MB5195.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 11:07, Jose Abreu wrote:
-> From: Jon Hunter <jonathanh@nvidia.com>
-> Date: Jul/23/2019, 11:01:24 (UTC+00:00)
-> 
->> This appears to be a winner and by disabling the SMMU for the ethernet
->> controller and reverting commit 954a03be033c7cef80ddc232e7cbdb17df735663
->> this worked! So yes appears to be related to the SMMU being enabled. We
->> had to enable the SMMU for ethernet recently due to commit
->> 954a03be033c7cef80ddc232e7cbdb17df735663.
-> 
-> Finally :)
-> 
-> However, from "git show 954a03be033c7cef80ddc232e7cbdb17df735663":
-> 
-> +         There are few reasons to allow unmatched stream bypass, and
-> +         even fewer good ones.  If saying YES here breaks your board
-> +         you should work on fixing your board.
-> 
-> So, how can we fix this ? Is your ethernet DT node marked as
-> "dma-coherent;" ?
+On Tue, 2019-07-09 at 03:11 +0000, Wen He wrote:
+[...]
+> > Thank you for the patch, but this does not seem right.
+> > ipuv3-crtc.c is part of DRM_IMX, which already depends on IMX_IPUV3_CORE.
+> > How did you manage to make it try to compile imxdrm?
 
-The first thing to try would be booting the failing setup with 
-"iommu.passthrough=1" (or using CONFIG_IOMMU_DEFAULT_PASSTHROUGH) - if 
-that makes things seem OK, then the problem is likely related to address 
-translation; if not, then it's probably time to start looking at nasties 
-like coherency and ordering, although in principle I wouldn't expect the 
-SMMU to have too much impact there.
+I assume the answer to my question is that you have removed the
+IMX_IPUV3_CORE dependency in the LS1028A BSP?
 
-Do you know if the SMMU interrupts are working correctly? If not, it's 
-possible that an incorrect address or mapping direction could lead to 
-the DMA transaction just being silently terminated without any fault 
-indication, which generally presents as inexplicable weirdness (I've 
-certainly seen that on another platform with the mix of an unsupported 
-interrupt controller and an 'imperfect' ethernet driver).
+> Thanks for the review, Philipp,
+> 
+> NXP LS1028A platform use same Display IP with IMX8, so they have use same display
+> transmit controller drivers, config 'DRM_IMX' is used to support drm common drivers
+> on the NXP I.MX and LS1028A, display transmit controller is coming to plan upstream.  
 
-Just to confirm, has the original patch been tested with 
-CONFIG_DMA_API_DEBUG to rule out any high-level mishaps?
+Is it the i.MX8MQ DCSS or the i.MX8QM DPU that is shared with LS1028A?
 
-Robin.
+> Actually, we have done compile of the imxdrm on LS1028A BSP release.
+
+Can you point me changes that have been applied? It is still unclear to
+me how you managed to build imx-drm, unless you have removed the
+IMX_IPUV3_CORE dependency from DRM_IMX.
+
+> > Since LS1028A does not have the IPUv3, keeping this under COMPILE_TEST
+> > should be correct.
+> 
+> Although LS1028A does not have the IPVv3, but DRM_IMX depends on it, LS1028A display
+> Transmit controller drivers also depends on DRM_IMX, so we need add this dependency to
+> solve the compile issue.
+
+The imx-drm driver is not suited to drive the i.MX8 display controllers.
+They should get their own drm drivers, as they have nothing in common
+with the i.MX5/6 IPU. There are no video capture capabilities, so they
+don't need the subsystem spanning driver layout, and without muxable
+shared encoders there is no need for the component design either.
+
+regards
+Philipp
