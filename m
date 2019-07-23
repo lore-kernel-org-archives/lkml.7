@@ -2,77 +2,54 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EBFC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF9CC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A0A2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7272253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfGWUFA (ORCPT
+        id S1732357AbfGWUFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:05:00 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38267 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729886AbfGWUE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:04:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 13:04:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
-   d="scan'208";a="174648671"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.84])
-  by orsmga006.jf.intel.com with ESMTP; 23 Jul 2019 13:04:57 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel: Fix SLOTS pebs event constraint
-Date:   Tue, 23 Jul 2019 13:04:29 -0700
-Message-Id: <20190723200429.8180-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 23 Jul 2019 16:05:12 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35968 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbfGWUFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:05:11 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 46B59153BAE99;
+        Tue, 23 Jul 2019 13:05:11 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 13:05:10 -0700 (PDT)
+Message-Id: <20190723.130510.1914552116610187765.davem@davemloft.net>
+To:     hslester96@gmail.com
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ide: Use dev_get_drvdata where possible
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190723114952.18483-1-hslester96@gmail.com>
+References: <20190723114952.18483-1-hslester96@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Jul 2019 13:05:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Tue, 23 Jul 2019 19:49:52 +0800
 
-Sampling SLOTS event and ref-cycles event in a group on Icelake gives
-EINVAL.
+> Instead of using to_pci_dev + pci_get_drvdata,
+> use dev_get_drvdata to make code simpler.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 
-SLOTS event is the event stands for the fixed counter 3, not fixed
-counter 2. Wrong mask was set to SLOTS event in
-intel_icl_pebs_event_constraints[].
-
-Fixes: 6017608936c1 ("perf/x86/intel: Add Icelake support")
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/ds.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 505c73dc6a73..6601b8759c92 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -851,7 +851,7 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
- 
- struct event_constraint intel_icl_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x400000000ULL),	/* SLOTS */
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),	/* SLOTS */
- 
- 	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),	/* MEM_INST_RETIRED.LOAD */
--- 
-2.17.1
-
+Applied.
