@@ -2,123 +2,178 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC059C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2947C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9271022387
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F11229EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XU4E26h8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NdUtwPTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389350AbfGWWfX (ORCPT
+        id S2389557AbfGWWf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:35:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44032 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727761AbfGWWfX (ORCPT
+        Tue, 23 Jul 2019 18:35:27 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36135 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389434AbfGWWf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:35:23 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so19821657pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 15:35:22 -0700 (PDT)
+        Tue, 23 Jul 2019 18:35:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r7so19846643pfl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 15:35:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=BaDjXD/RG0kyUThXx34ExLwb9nVm9t9Qz5HyHcuaCuk=;
-        b=XU4E26h8825oOZUQmz4kbSqxedrUdNsyKDmDiQsMbLg6pw7auVMAtsRu03LejgQ56J
-         tFpYlWDrQVv0NOtgBqFxgxvRvP39mlEoLRwpVpH189VNdu4MA2CRblZW4bAkICmxxU8d
-         cTlOGMH36GlIZnkAjRuNg24F93lggpVYRdewrczApUM1I3GqDS5Dxfv4lcBjDr7QgGwi
-         4NWeC+mw9uxYNS+A+nyG3Qew8V2SQkjbg9nepj4Vfehg7MAnHAC2zLPrfPwOSe9X9rlR
-         FZj/k25TgdO7Wa96kn7IMSyfu+nk1xDn8osBlF/nbPOJ76Ua87y/ZsSsBmwOIhUr8G0H
-         1tUQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=x0riv3qXFNUHW9aogl2u0KORFwMPTEBgnFJrb7TrTKo=;
+        b=NdUtwPTDmyF+MRh1jbsokxVgxD6AafcT12ED5L6Y9I5m2QfLdOnwiR6uwiYtOV9tk0
+         h6VY892u4JoMBt9AMQKwRr3HNCU5gkqEMiFHV7K7lGmwXCVIOMPwP+eNArEltUq4Htwk
+         hZS5Zxmjtgtn/s7/3OKCx94HAQCliNP+XIaOEFOLyGWmeqk9aYexZPS0KUaFd0cAlQJQ
+         SDEKqRKPo4kEiGUAXM+TRKI3qSZr/0FLyRhUmimH4ErvW+ecrpeSW7bbOQVlwkym9WLT
+         e1rMnmwknhLBjz5GK9JBdbitBQZl7iFX0SPhBn3UI9mUaXPGBhAsUr5bmwvdaKhKiHrq
+         odSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BaDjXD/RG0kyUThXx34ExLwb9nVm9t9Qz5HyHcuaCuk=;
-        b=pEDZhtdj+Lyj2V9B4P3m00GrAWEifPqQTt94j5B/4a99+eD7+jrNjsfaURHatFE3CW
-         XFh6YMZnzK8nhc4qOkqb5t2z9ckWDvNUtg3/yFS1igTjY+D0LKSshIDYX4uc1Hm+3V59
-         ypLqqzIDWA49roYTIB4pqXc6sgdBeZYrP6wKV/vZTHu5Vs7b0JIs/tTIcbxz9khRo8Wc
-         uaWd+b6tmYXwW1EladaOgvjDt8KKV/rHH5/3mkXWDFs2itus4QYhlgc1CcamN7nCZEIw
-         CENUg39qIadYG/AIAQJYSzb/QASe2ehDERg510EE5KwyNO32lsxbpaufkmcAls+I4WV+
-         kEuA==
-X-Gm-Message-State: APjAAAWi07kabuoE+1FmxPSFpDLzv/Jf9yi77z4FWVYJJzdT2Zkei9EG
-        ZatNFXCYJEcMlhqQRnxXkWwUhA==
-X-Google-Smtp-Source: APXvYqxGklNuxBHWG/GtaQWMvTSDu9V41SozepAGSY3TA8rYq22Bm5hZOIEHU+MHeNVO0dpeqGfbCQ==
-X-Received: by 2002:a17:90a:970a:: with SMTP id x10mr85475018pjo.12.1563921322290;
-        Tue, 23 Jul 2019 15:35:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=x0riv3qXFNUHW9aogl2u0KORFwMPTEBgnFJrb7TrTKo=;
+        b=QuPfRxxtX0kKDV3ZGwIV2ox4fQdz3fURrtQQq3KW9Mqj+nyKpaGg24tT8l6c0ZqPOc
+         c0X7MrXD22vexJaBfSBFGsQGcq8smAh+YHfbDBtfjZl7yl2cu6eygJIi6SYeFgDnLwZg
+         2skZZVEK3PovOs/h1rP7C1SkbVw9jIutQWThgtr/2M5GMhJvBP2eEehgb2J63lBFz1Kp
+         v9/mBq6hiboKE3bCMR7xC1m6S7VfhHth1f4JiG0vOpm5htG2g4mJOBD2YzhfBlXlTffr
+         ULxagvxF7+lPCI1/15STPvhDxUTWQfj0V6lZunHSkmxMqjMwXMUygnJ/vMOCRb6MCkDa
+         Lphg==
+X-Gm-Message-State: APjAAAW0KrrA4L7288RFOrNOGUWm/aiVY6yn9lQP6lYEH7Mo61ccKAc6
+        kvtU+kJljycoH/yVvYBNrBjWbw==
+X-Google-Smtp-Source: APXvYqwkeWnj9VJarEoWXWZKcZ/pRvGNriNTC5RrGifBufFMtBzss48lhq5w0+ZlOY9imCz35H802g==
+X-Received: by 2002:aa7:9481:: with SMTP id z1mr8048059pfk.92.1563921326084;
+        Tue, 23 Jul 2019 15:35:26 -0700 (PDT)
 Received: from localhost.localdomain ([115.99.187.56])
-        by smtp.gmail.com with ESMTPSA id h16sm49036917pfo.34.2019.07.23.15.35.18
+        by smtp.gmail.com with ESMTPSA id h16sm49036917pfo.34.2019.07.23.15.35.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 15:35:21 -0700 (PDT)
+        Tue, 23 Jul 2019 15:35:25 -0700 (PDT)
 From:   Vaishali Thakkar <vaishali.thakkar@linaro.org>
 To:     agross@kernel.org
 Cc:     david.brown@linaro.org, gregkh@linuxfoundation.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         rafael@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
         Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Subject: [PATCH v6 0/5] soc: qcom: Add SoC info driver
-Date:   Wed, 24 Jul 2019 04:05:10 +0530
-Message-Id: <20190723223515.27839-1-vaishali.thakkar@linaro.org>
+Subject: [PATCH v6 1/5] base: soc: Add serial_number attribute to soc
+Date:   Wed, 24 Jul 2019 04:05:11 +0530
+Message-Id: <20190723223515.27839-2-vaishali.thakkar@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190723223515.27839-1-vaishali.thakkar@linaro.org>
+References: <20190723223515.27839-1-vaishali.thakkar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds SoC info driver which can provide information
-such as Chip ID, Chip family and serial number about Qualcomm SoCs
-to user space via sysfs. Furthermore, it allows userspace to get
-information about custom attributes and various image version
-information via debugfs.
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-The patchset cleanly applies on top of v5.2-rc7.
+Add new attribute named "serial_number" as a standard interface for
+user space to acquire the serial number of the device.
 
-Changes since v1:
-        - Align ifdefs to left, remove unnecessary debugfs dir
-          creation check and fix function signatures in patch 3
-        - Fix comment for teh case when serial number is not
-          available in patch 1
+For ST-Ericsson SoCs this is exposed by the cryptically named "soc_id"
+attribute, but this provides a human readable standardized name for this
+property.
 
-Changes since v2:
-        - Reorder patches [patch five -> patch two]
-
-Changes since v3:
-        - Add reviewed-bys from Greg
-        - Fix build warning when debugfs is disabled
-        - Remove extra checks for dir creations in patch 5
-
-Changes since v4:
-	- Added Reviewed-bys in multiple patches
-	- Bunch of nitpick fixes in patch 3
-	- Major refactoring for using core debugfs functions and
-	  eliminating duplicate code in patch 4 and 5 [detailed info
-	  can be found under --- in each patch]
-
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vaishali Thakkar <vaishali.thakkar@linaro.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
 Changes since v5:
 	- No code changes, fix diff.context setting for formatting
-	  patches. Version 4 was adding context at the bottom of
-	  the file with 'git am'. 
+          patches. Version 5 was adding context at the bottom of
+          the file with 'git am'.
+Changes since v4:
+	- Add Stephen's reviewed-by
+Changes since v3:
+        - Add Greg's Reviewed-by
+Changes since v2:
+        - None
+Changes since v1:
+	- Make comment more clear for the case when serial
+	  number is not available
+---
+ Documentation/ABI/testing/sysfs-devices-soc | 7 +++++++
+ drivers/base/soc.c                          | 7 +++++++
+ include/linux/sys_soc.h                     | 1 +
+ 3 files changed, 15 insertions(+)
 
-Vaishali Thakkar (5):
-  base: soc: Add serial_number attribute to soc
-  base: soc: Export soc_device_register/unregister APIs
-  soc: qcom: Add socinfo driver
-  soc: qcom: socinfo: Expose custom attributes
-  soc: qcom: socinfo: Expose image information
-
- Documentation/ABI/testing/sysfs-devices-soc |   7 +
- drivers/base/soc.c                          |   9 +
- drivers/soc/qcom/Kconfig                    |   8 +
- drivers/soc/qcom/Makefile                   |   1 +
- drivers/soc/qcom/smem.c                     |   9 +
- drivers/soc/qcom/socinfo.c                  | 468 ++++++++++++++++++++
- include/linux/sys_soc.h                     |   1 +
- 7 files changed, 503 insertions(+)
- create mode 100644 drivers/soc/qcom/socinfo.c
-
+diff --git a/Documentation/ABI/testing/sysfs-devices-soc b/Documentation/ABI/testing/sysfs-devices-soc
+index 6d9cc253f2b2..ba3a3fac0ee1 100644
+--- a/Documentation/ABI/testing/sysfs-devices-soc
++++ b/Documentation/ABI/testing/sysfs-devices-soc
+@@ -26,6 +26,13 @@ Description:
+ 		Read-only attribute common to all SoCs. Contains SoC family name
+ 		(e.g. DB8500).
+ 
++What:		/sys/devices/socX/serial_number
++Date:		January 2019
++contact:	Bjorn Andersson <bjorn.andersson@linaro.org>
++Description:
++		Read-only attribute supported by most SoCs. Contains the SoC's
++		serial number, if available.
++
+ What:		/sys/devices/socX/soc_id
+ Date:		January 2012
+ contact:	Lee Jones <lee.jones@linaro.org>
+diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+index 10b280f30217..b0933b9fe67f 100644
+--- a/drivers/base/soc.c
++++ b/drivers/base/soc.c
+@@ -33,6 +33,7 @@ static struct bus_type soc_bus_type = {
+ 
+ static DEVICE_ATTR(machine,  S_IRUGO, soc_info_get,  NULL);
+ static DEVICE_ATTR(family,   S_IRUGO, soc_info_get,  NULL);
++static DEVICE_ATTR(serial_number, S_IRUGO, soc_info_get,  NULL);
+ static DEVICE_ATTR(soc_id,   S_IRUGO, soc_info_get,  NULL);
+ static DEVICE_ATTR(revision, S_IRUGO, soc_info_get,  NULL);
+ 
+@@ -57,6 +58,9 @@ static umode_t soc_attribute_mode(struct kobject *kobj,
+ 	if ((attr == &dev_attr_revision.attr)
+ 	    && (soc_dev->attr->revision != NULL))
+ 		return attr->mode;
++	if ((attr == &dev_attr_serial_number.attr)
++	    && (soc_dev->attr->serial_number != NULL))
++		return attr->mode;
+ 	if ((attr == &dev_attr_soc_id.attr)
+ 	    && (soc_dev->attr->soc_id != NULL))
+ 		return attr->mode;
+@@ -77,6 +81,8 @@ static ssize_t soc_info_get(struct device *dev,
+ 		return sprintf(buf, "%s\n", soc_dev->attr->family);
+ 	if (attr == &dev_attr_revision)
+ 		return sprintf(buf, "%s\n", soc_dev->attr->revision);
++	if (attr == &dev_attr_serial_number)
++		return sprintf(buf, "%s\n", soc_dev->attr->serial_number);
+ 	if (attr == &dev_attr_soc_id)
+ 		return sprintf(buf, "%s\n", soc_dev->attr->soc_id);
+ 
+@@ -87,6 +93,7 @@ static ssize_t soc_info_get(struct device *dev,
+ static struct attribute *soc_attr[] = {
+ 	&dev_attr_machine.attr,
+ 	&dev_attr_family.attr,
++	&dev_attr_serial_number.attr,
+ 	&dev_attr_soc_id.attr,
+ 	&dev_attr_revision.attr,
+ 	NULL,
+diff --git a/include/linux/sys_soc.h b/include/linux/sys_soc.h
+index b7c70c3e953f..48ceea867dd6 100644
+--- a/include/linux/sys_soc.h
++++ b/include/linux/sys_soc.h
+@@ -12,6 +12,7 @@ struct soc_device_attribute {
+ 	const char *machine;
+ 	const char *family;
+ 	const char *revision;
++	const char *serial_number;
+ 	const char *soc_id;
+ 	const void *data;
+ };
 -- 
 2.17.1
 
