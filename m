@@ -2,113 +2,171 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C2FC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFDC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDD72199C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:03:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VQRQuOZW"
+	by mail.kernel.org (Postfix) with ESMTP id 518D821955
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387631AbfGWBDf (ORCPT
+        id S2387700AbfGWBIY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:03:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:49319 "EHLO ozlabs.org"
+        Mon, 22 Jul 2019 21:08:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:4110 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731828AbfGWBDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:03:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45t0bS1wKvz9s3Z;
-        Tue, 23 Jul 2019 11:03:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563843813;
-        bh=EgLzuuOlqciTbhsbAXpNasSCsMeGLSHIWQ28FtGs0I0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VQRQuOZWsUz9x7pT7riQeHCsTKnY4/Gxk+HepcfdxKw7AZj2N7lbFQLBUVRZema+X
-         urUkvYolS6kFFeiWaP6yHdUV34CcnxCpHVwVGe1037NC4zyiYwTbgI6ikw+E+drvwZ
-         R/Y+6PJeJImx1oghtkw9fWCuFuzXax7YFUs8kFQJ9nGiWisptq5Upd9SWD70680hj2
-         oNmeW5mO7BF9Rjqs8pQpdVl6RGgP7rQVNPAlvItuzvrOPI36l7GqQSk14JQxpstdKn
-         iO+H+en5kflYU9FvXechwyqanVyHIUWy2r26507iH3MYqXvVPz7vqWCIL8gmTWz+wW
-         093iKepYe2TmA==
-Date:   Tue, 23 Jul 2019 11:03:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Imre Deak <imre.deak@intel.com>
-Subject: linux-next: manual merge of the drm-intel tree with the
- kspp-gustavo tree
-Message-ID: <20190723110331.1967d000@canb.auug.org.au>
+        id S1731796AbfGWBIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 21:08:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 18:08:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
+   d="scan'208";a="196941132"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Jul 2019 18:08:22 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 22 Jul 2019 18:08:22 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 22 Jul 2019 18:08:21 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.134]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.232]) with mapi id 14.03.0439.000;
+ Tue, 23 Jul 2019 09:08:20 +0800
+From:   "Zhang, Tina" <tina.zhang@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Lu, Kechen" <kechen.lu@intel.com>
+CC:     "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kraxel@redhat.com" <kraxel@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>
+Subject: RE: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
+Thread-Topic: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
+Thread-Index: AQHVPT54hV4tNMEB+k2gOpC4yrLztKbRnH8AgAP/hYCAAO5GAIAA1wdg
+Date:   Tue, 23 Jul 2019 01:08:19 +0000
+Message-ID: <237F54289DF84E4997F34151298ABEBC876BC9AD@SHSMSX101.ccr.corp.intel.com>
+References: <20190718155640.25928-1-kechen.lu@intel.com>
+        <20190718155640.25928-3-kechen.lu@intel.com>
+        <20190719102516.60af527f@x1.home>
+        <31185F57AF7C4B4F87C41E735C23A6FE64E06F@shsmsx102.ccr.corp.intel.com>
+ <20190722134124.16c55c2f@x1.home>
+In-Reply-To: <20190722134124.16c55c2f@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOWUxMTJiZjQtN2I4Ni00MmFlLWE5YjctOGU2MjM4NmQyZDhhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWkYxNmlpN2I2dzg1blk0VXVNRWt6K1JnRkdIZnRVcWxtZUhDc1o3ZVc4bEYrK3BZTUowdVoyVVNhaHJZNHFGeiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ys73Uxj2mKTiAI7sxPqI1zL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ys73Uxj2mKTiAI7sxPqI1zL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the drm-intel tree got a conflict in:
+> -----Original Message-----
+> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> Sent: Tuesday, July 23, 2019 3:41 AM
+> To: Lu, Kechen <kechen.lu@intel.com>
+> Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>;
+> kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan
+> <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian, Kevin
+> <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>
+> Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq type
+> 
+> On Mon, 22 Jul 2019 05:28:35 +0000
+> "Lu, Kechen" <kechen.lu@intel.com> wrote:
+> 
+> > Hi,
+> >
+> > > -----Original Message-----
+> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > > Sent: Saturday, July 20, 2019 12:25 AM
+> > > To: Lu, Kechen <kechen.lu@intel.com>
+> > > Cc: intel-gvt-dev@lists.freedesktop.org; kvm@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org; Zhang, Tina <tina.zhang@intel.com>;
+> > > kraxel@redhat.com; zhenyuw@linux.intel.com; Lv, Zhiyuan
+> > > <zhiyuan.lv@intel.com>; Wang, Zhi A <zhi.a.wang@intel.com>; Tian,
+> > > Kevin <kevin.tian@intel.com>; Yuan, Hang <hang.yuan@intel.com>
+> > > Subject: Re: [RFC PATCH v4 2/6] vfio: Introduce vGPU display irq
+> > > type
+> > >
+> > > On Thu, 18 Jul 2019 23:56:36 +0800
+> > > Kechen Lu <kechen.lu@intel.com> wrote:
+> > >
+> > > > From: Tina Zhang <tina.zhang@intel.com>
+> > > >
+> > > > Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
+> > > > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display
+> > > >
+> > > > Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+> > > > ---
+> > > >  include/uapi/linux/vfio.h | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > > index be6adab4f759..df28b17a6e2e 100644
+> > > > --- a/include/uapi/linux/vfio.h
+> > > > +++ b/include/uapi/linux/vfio.h
+> > > > @@ -469,6 +469,9 @@ struct vfio_irq_info_cap_type {
+> > > >  	__u32 subtype;  /* type specific */  };
+> > > >
+> > > > +#define VFIO_IRQ_TYPE_GFX				(1)
+> > > > +#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)
+> > > > +
+> > >
+> > > Please include a description defining exactly what this IRQ is intended to
+> signal.
+> > > For instance, if another vGPU vendor wanted to implement this in
+> > > their driver and didn't have the QEMU code for reference to what it
+> > > does with the IRQ, what would they need to know?  Thanks,
+> > >
+> > > Alex
+> > >
+> >
+> > Yes, that makes more sense. I'll add the description for it at next version
+> patch.
+> >
+> > BTW, may I have one more question? In the current design ideas, we
+> > partitioned the vGPU display eventfd counted 8-byte value into at most
+> > 8 events to deliver multiple display events, so we need different
+> > increasement counter value to differentiate the events. As this is the
+> > exposed thing the QEMU has to know, we plan adds a macro here
+> > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_EVENTFD_BASE_SHIFT to make sure
+> the
+> > partitions shift in 1 byte, does it make sense putting here? Looking forward
+> to your and Gerd's comments. Thanks!
+> 
+> Couldn't you expose this as another capability within the IRQ_INFO return
+> data?  If you were to define it as a macro, I assume that means it would be
+> hard coded, in which case this probably becomes an Intel specific IRQ, rather
+> than what appears to be framed as a generic graphics IRQ extension.  A new
+> capability could instead allow the vendor to specify their own value, where
+> we could define how userspace should interpret and make use of this value.
+> Thanks,
+Good suggestion. Currently, vfio_irq_info is used to save one irq info. What we need here is to use it to save several events info. Maybe we could figure out a general layout of this capability so that it can be leveraged by others, not only for display irq/events.
+Thanks.
 
-  drivers/gpu/drm/i915/display/intel_dp.c
+BR,
+Tina
 
-between commit:
-
-  b6ac32eac063 ("drm/i915: Mark expected switch fall-throughs")
-
-from the kspp-gustavo tree and commit:
-
-  bc85328ff431 ("drm/i915: Move the TypeC port handling code to a separate =
-file")
-  4f36afb26cbe ("drm/i915: Sanitize the TypeC FIA lane configuration decodi=
-ng")
-
-from the drm-intel tree.
-
-I fixed it up (bc85328ff431 moved the function updated by b6ac32eac063
-and 4f36afb26cbe added an equivalt fixup) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ys73Uxj2mKTiAI7sxPqI1zL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl02XOMACgkQAVBC80lX
-0GwDbwgAlaf+xE1tNCPsgcl5HiOTZUxrqytDq4ycNhd8xFpJEaYjWRt9ldGASVMz
-UfcpujMglgxs74dUunYoPKpX1dRDvwStCnTsAhqmNFYsYvITqfCcFXeQow0a+FEq
-FTaY8ukiLVLud61SU2OtRuDhynlvaH1MGcWFy7VmWXq5I64aGKoLAK6TkrUnYBEP
-hmMG0nH6qXD5npB2HkGnSrFszOKMfU775mHEjTDXPLbYyb/IcKqFVXU8fil0t6YC
-mdbekGPEh8a97++FZRMqndFuxipjobnmIef3ncpGwRsEDin7bakacvn4HGAtQdd/
-pHErDey/00MZW90mXE4cjshBlsIdBw==
-=0Gt0
------END PGP SIGNATURE-----
-
---Sig_/ys73Uxj2mKTiAI7sxPqI1zL--
+> 
+> Alex
