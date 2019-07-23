@@ -2,118 +2,200 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC8C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F7C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A39218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:25:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HTBAoz1a"
+	by mail.kernel.org (Postfix) with ESMTP id 3C19A229ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563917271;
+	bh=4NFI9TiqwpBApw1YifG8x0kCYiixU8JIJEyFKOdPLcQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vsoVc2z99kMsC1KNW5zuo6uZVynv9SPpJOanVxycxzUNY0SmPMB74kDkRg7sV1rpN
+	 3wNbVamoatvkTCt7Gy4AnJ595XcK2BoZSq/fEpHsmSquWLtNLN2fWOkt3pDOiiZ0iV
+	 lYSVwdReJ19G+jWWWnPMDDzr32ONTMydE/aZOy1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389273AbfGWVZu (ORCPT
+        id S2389290AbfGWV1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:25:50 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11035 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729142AbfGWVZu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:25:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d377b5a0000>; Tue, 23 Jul 2019 14:25:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 14:25:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 14:25:49 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 21:25:44 +0000
-Subject: Re: [PATCH v2 1/3] mm: document zone device struct page field usage
-To:     Matthew Wilcox <willy@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190719192955.30462-1-rcampbell@nvidia.com>
- <20190719192955.30462-2-rcampbell@nvidia.com>
- <20190721160204.GB363@bombadil.infradead.org>
- <20190722051345.GB6157@iweiny-DESK2.sc.intel.com>
- <20190722110825.GD363@bombadil.infradead.org>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <80dbf7fc-5c13-f43f-7b87-8273126562e9@nvidia.com>
-Date:   Tue, 23 Jul 2019 14:25:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190722110825.GD363@bombadil.infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Tue, 23 Jul 2019 17:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731025AbfGWV1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 17:27:50 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61A0C218D4;
+        Tue, 23 Jul 2019 21:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563917268;
+        bh=4NFI9TiqwpBApw1YifG8x0kCYiixU8JIJEyFKOdPLcQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cuq1pcdwr9pbVEUEBoIRwZ38v4IisgkBLnREJQcN38TdMiXEFBo00LcICXxvFlbe3
+         Dt7zDQaWjfXMhOamjTjl6XYgbYloo2bqfT9O0l50ukL7dUEz4a7acvxfp6ojjCKPLo
+         yXRJTiTAx/cTgE8a5quXEwNhewx9TXWXsWvbLUak=
+Date:   Tue, 23 Jul 2019 14:27:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     davem@davemloft.net, arnd@arndb.de, dhowells@redhat.com,
+        jakub@redhat.com, ndesaulniers@google.com, morbo@google.com,
+        jyknight@google.com, natechancellor@gmail.com,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] asm-generic: fix -Wtype-limits compiler warnings
+Message-Id: <20190723142747.8efd9ab06518470ec8067306@linux-foundation.org>
+In-Reply-To: <1563914986-26502-1-git-send-email-cai@lca.pw>
+References: <1563914986-26502-1-git-send-email-cai@lca.pw>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563917146; bh=ScttwGqLrhEb0twi6RY7tFc+yqiFYp5H9qvTzCFtqzA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HTBAoz1a35vMm9dEfCZ9ucGpRtfWn50k5XdHWQVnukyE3m4YsOS4KQVKIsztIfDG9
-         Jr0YpCMG6BmNA6okSTPpFptOsHIM0sypKIueyTnOAfpztK5966N2vMbYPQmDP4B/Y7
-         nM8KL1CHebF5U+sP0Ndew6xc0qN4osk2ZJYTr2Ag/Igr6KRGSfW5rniAruh3Y2bbV5
-         0UxiCI+wk73K5fjrq9UsYu+brV/O+JnzOO6nCO2lRcCAyYpfjvNrXVVWHOjhoNc0jA
-         tgK7zRpvNHjr24v+oVtRKra2bSx28Xtg/4UpRVPaLqu+X/p0Tjb0chqcVlzoG6WqNC
-         GYZ89VE/Dp4sA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 23 Jul 2019 16:49:46 -0400 Qian Cai <cai@lca.pw> wrote:
 
-On 7/22/19 4:08 AM, Matthew Wilcox wrote:
-> On Sun, Jul 21, 2019 at 10:13:45PM -0700, Ira Weiny wrote:
->> On Sun, Jul 21, 2019 at 09:02:04AM -0700, Matthew Wilcox wrote:
->>> On Fri, Jul 19, 2019 at 12:29:53PM -0700, Ralph Campbell wrote:
->>>> Struct page for ZONE_DEVICE private pages uses the page->mapping and
->>>> and page->index fields while the source anonymous pages are migrated to
->>>> device private memory. This is so rmap_walk() can find the page when
->>>> migrating the ZONE_DEVICE private page back to system memory.
->>>> ZONE_DEVICE pmem backed fsdax pages also use the page->mapping and
->>>> page->index fields when files are mapped into a process address space.
->>>>
->>>> Restructure struct page and add comments to make this more clear.
->>>
->>> NAK.  I just got rid of this kind of foolishness from struct page,
->>> and you're making it harder to understand, not easier.  The comments
->>> could be improved, but don't lay it out like this again.
->>
->> Was V1 of Ralphs patch ok?  It seemed ok to me.
+> The commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+> compilation warning because "rx_frag_size" is an "ushort" while
+> PAGE_SHIFT here is 16. The commit changed the get_order() to be a
+> multi-line macro where compilers insist to check all statements in the
+> macro even when __builtin_constant_p(rx_frag_size) will return false as
+> "rx_frag_size" is a module parameter.
 > 
-> Yes, v1 was fine.  This seems like a regression.
+> In file included from ./arch/powerpc/include/asm/page_64.h:107,
+>                  from ./arch/powerpc/include/asm/page.h:242,
+>                  from ./arch/powerpc/include/asm/mmu.h:132,
+>                  from ./arch/powerpc/include/asm/lppaca.h:47,
+>                  from ./arch/powerpc/include/asm/paca.h:17,
+>                  from ./arch/powerpc/include/asm/current.h:13,
+>                  from ./include/linux/thread_info.h:21,
+>                  from ./arch/powerpc/include/asm/processor.h:39,
+>                  from ./include/linux/prefetch.h:15,
+>                  from drivers/net/ethernet/emulex/benet/be_main.c:14:
+> drivers/net/ethernet/emulex/benet/be_main.c: In function
+> 'be_rx_cqs_create':
+> ./include/asm-generic/getorder.h:54:9: warning: comparison is always
+> true due to limited range of data type [-Wtype-limits]
+>    (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+>          ^
+> drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+> of macro 'get_order'
+>   adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+>                                  ^~~~~~~~~
 > 
+> Fix it by moving almost all of this multi-line macro into a proper
+> function __get_order(), and leave get_order() as a single-line macro in
+> order to avoid compilation errors.
+> 
+> ...
+>
+> --- a/include/asm-generic/getorder.h
+> +++ b/include/asm-generic/getorder.h
+> @@ -15,6 +15,16 @@ int __get_order(unsigned long size)
+>  {
+>  	int order;
+>  
+> +	if (__builtin_constant_p(size)) {
+> +		if (!size)
+> +			return BITS_PER_LONG - PAGE_SHIFT;
+> +
+> +		if (size < (1UL << PAGE_SHIFT))
+> +			return 0;
+> +
+> +		return ilog2((size) - 1) - PAGE_SHIFT + 1;
+> +	}
+> +
+>  	size--;
+>  	size >>= PAGE_SHIFT;
+>  #if BITS_PER_LONG == 32
+> @@ -49,11 +59,6 @@ int __get_order(unsigned long size)
+>   */
+>  #define get_order(n)						\
+>  (								\
+> -	__builtin_constant_p(n) ? (				\
+> -		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
+> -		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
+> -		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
+> -	) :							\
+>  	__get_order(n)						\
+>  )
 
-This is about what people find "easiest to understand" and so
-I'm not surprised that opinions differ.
-What if I post a v3 based on v1 but remove the _zd_pad_* variables
-that Christoph found misleading and add some more comments
-about how the different ZONE_DEVICE types use the 3 remaining
-words (basically the comment from v2)?
+So we can remove __get_order() altogether now?
+
+--- a/include/asm-generic/getorder.h~asm-generic-fix-wtype-limits-compiler-warnings-fix
++++ a/include/asm-generic/getorder.h
+@@ -7,11 +7,29 @@
+ #include <linux/compiler.h>
+ #include <linux/log2.h>
+ 
+-/*
+- * Runtime evaluation of get_order()
++/**
++ * get_order - Determine the allocation order of a memory size
++ * @size: The size for which to get the order
++ *
++ * Determine the allocation order of a particular sized block of memory.  This
++ * is on a logarithmic scale, where:
++ *
++ *	0 -> 2^0 * PAGE_SIZE and below
++ *	1 -> 2^1 * PAGE_SIZE to 2^0 * PAGE_SIZE + 1
++ *	2 -> 2^2 * PAGE_SIZE to 2^1 * PAGE_SIZE + 1
++ *	3 -> 2^3 * PAGE_SIZE to 2^2 * PAGE_SIZE + 1
++ *	4 -> 2^4 * PAGE_SIZE to 2^3 * PAGE_SIZE + 1
++ *	...
++ *
++ * The order returned is used to find the smallest allocation granule required
++ * to hold an object of the specified size.
++ *
++ * The result is undefined if the size is 0.
++ *
++ * This function may be used to initialise variables with compile time
++ * evaluations of constants.
+  */
+-static inline __attribute_const__
+-int __get_order(unsigned long size)
++static inline __attribute_const__ int get_order(unsigned long size)
+ {
+ 	int order;
+ 
+@@ -35,33 +53,6 @@ int __get_order(unsigned long size)
+ 	return order;
+ }
+ 
+-/**
+- * get_order - Determine the allocation order of a memory size
+- * @size: The size for which to get the order
+- *
+- * Determine the allocation order of a particular sized block of memory.  This
+- * is on a logarithmic scale, where:
+- *
+- *	0 -> 2^0 * PAGE_SIZE and below
+- *	1 -> 2^1 * PAGE_SIZE to 2^0 * PAGE_SIZE + 1
+- *	2 -> 2^2 * PAGE_SIZE to 2^1 * PAGE_SIZE + 1
+- *	3 -> 2^3 * PAGE_SIZE to 2^2 * PAGE_SIZE + 1
+- *	4 -> 2^4 * PAGE_SIZE to 2^3 * PAGE_SIZE + 1
+- *	...
+- *
+- * The order returned is used to find the smallest allocation granule required
+- * to hold an object of the specified size.
+- *
+- * The result is undefined if the size is 0.
+- *
+- * This function may be used to initialise variables with compile time
+- * evaluations of constants.
+- */
+-#define get_order(n)						\
+-(								\
+-	__get_order(n)						\
+-)
+-
+ #endif	/* __ASSEMBLY__ */
+ 
+ #endif	/* __ASM_GENERIC_GETORDER_H */
+_
+
