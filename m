@@ -3,298 +3,245 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDDAC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6976C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E82C218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9574621738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeyXjkQA"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="wvk5M5Je"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390391AbfGWN4k (ORCPT
+        id S1732631AbfGWN7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:56:40 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35844 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfGWN4j (ORCPT
+        Tue, 23 Jul 2019 09:59:14 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:33522 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725907AbfGWN7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:56:39 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k8so20665391plt.3;
-        Tue, 23 Jul 2019 06:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rEaM5iARO/otY5CB0Q+ud/LRqI7Ysq17G3aAmdafXi8=;
-        b=SeyXjkQAhvbw+tUwvo+eecFXjxIz3000spt05+4PQ146TkcTNLUDoZ+cIL7VBbcFhU
-         WInpgqv0jahR+72BKNZc1XatHi13pLhnHmg+vCGOTvufKAE19A9BQlJ5Z35htv54Ylnd
-         uYIRQOtdWFo4zdMCefVVPOVSlg5l5Ui7vLdUoAR6DOSb7gJkD9zOCM5jA+CRbSQx0iwn
-         6fxNf7439Q2oErrhpb/K3MeSBFDBlDMLdOm4B7AX+e+WhXosjhtQCxBpbMvI2I04dFBk
-         KXceBqIZ98NEL0LwAMeN0nY85Ril7FI/1Zkiq44NJ34No13OQ9cUvagioh5rAZlIHOEq
-         nAww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rEaM5iARO/otY5CB0Q+ud/LRqI7Ysq17G3aAmdafXi8=;
-        b=Se7b+U7hiF/0OY6oYyeevjRyhq1ZGpevcQZ/NQw4uivIuMBnAqvVi7rzzndqQ3tjp3
-         Q7i7RtIGbIVF1XAyHfUffscEN8cuag5xj5SLnFpsp5Uv0iE6za5dEllL2cO1E/gAhasA
-         3sXMswzKptqctAJ9xGT+dn0sFfMDHK2VP6uftqWhpqIuD3xTdoXiL80Qy5YpMB6rogb4
-         xovet5Un667ZBHleaCnSnLmEQF0mO9H9zLX6oE50E7K8sMh6/MtdxS2OzBRhcG3U8gwa
-         T4hLXxkEEYyxjf8xWbS3ncmy+Dvgz4vbUzEYzOBmhkuPm6XR2c6Al2Lbc8nJe26F/E41
-         1gvA==
-X-Gm-Message-State: APjAAAU74MWdZKk0vpBEeU9/4KzLc2MfdKisr7eHGFd+NPBj1H5e6eGY
-        SK6npO6T3aq6oJX+x13C+uA=
-X-Google-Smtp-Source: APXvYqwy0UdFfEUTseNw57g/L1CWJYiz26hdYYO3uV8l9BcOz+fo1TP4AbbyXm8FzaNUmTtLdwFIXQ==
-X-Received: by 2002:a17:902:7894:: with SMTP id q20mr77830015pll.339.1563890198681;
-        Tue, 23 Jul 2019 06:56:38 -0700 (PDT)
-Received: from localhost.localdomain ([125.142.23.13])
-        by smtp.gmail.com with ESMTPSA id v10sm43807453pfe.163.2019.07.23.06.56.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 06:56:38 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 22:56:33 +0900
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah <shuah@kernel.org>
-Cc:     valentina.manea.m@gmail.com, stern@rowland.harvard.edu,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] usbip: Implement SG support to vhci
-Message-ID: <20190723135633.GB5532@localhost.localdomain>
-References: <20190705164355.14025-1-suwan.kim027@gmail.com>
- <20190705164355.14025-3-suwan.kim027@gmail.com>
- <f66e55a2-16e0-8822-8b5b-3390b6c4073b@kernel.org>
+        Tue, 23 Jul 2019 09:59:14 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id B35F72E148D;
+        Tue, 23 Jul 2019 16:59:08 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id frB3hPlU0a-x8B0wU3s;
+        Tue, 23 Jul 2019 16:59:08 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1563890348; bh=nBIIHjCFTEo7qsFwDoL4x/nujKFzXvipAp3pDUSMVXc=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=wvk5M5JeNxNSno7f42PKUw0g7uQGaGVewJo6mraA6Wcr5QDyBxzh7bZT0UhLd40Xb
+         B8A5hz1MlbU1kxlYZYb8ccEUnm3eYcyY6I5l2HRQV3j+D1apMVOkUHQ0fVbelEiizd
+         TxmizULvBuSb1ld34atuZsE6/crymbEXG7z7nvsY=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:38b3:1cdf:ad1a:1fe1])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id aeAd1EbwGg-x8AmOEwo;
+        Tue, 23 Jul 2019 16:59:08 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] mm/page_idle: simple idle page tracking for virtual
+ memory
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <156388286599.2859.5353604441686895041.stgit@buzz>
+ <20190723134647.GA104199@google.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <53719394-2679-81ae-686e-c138522c0dfc@yandex-team.ru>
+Date:   Tue, 23 Jul 2019 16:59:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f66e55a2-16e0-8822-8b5b-3390b6c4073b@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190723134647.GA104199@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 09:51:30PM -0600, shuah wrote:
-> On 7/5/19 10:43 AM, Suwan Kim wrote:
-> > There are bugs on vhci with usb 3.0 storage device. Originally, vhci
-> > doesn't supported SG, so USB storage driver on vhci breaks SG list
+
+
+On 23.07.2019 16:46, Joel Fernandes wrote:
+> On Tue, Jul 23, 2019 at 02:54:26PM +0300, Konstantin Khlebnikov wrote:
+>> The page_idle tracking feature currently requires looking up the pagemap
+>> for a process followed by interacting with /sys/kernel/mm/page_idle.
+>> This is quite cumbersome and can be error-prone too. If between
+>> accessing the per-PID pagemap and the global page_idle bitmap, if
+>> something changes with the page then the information is not accurate.
+>> More over looking up PFN from pagemap in Android devices is not
+>> supported by unprivileged process and requires SYS_ADMIN and gives 0 for
+>> the PFN.
+>>
+>> This patch adds simplified interface which works only with mapped pages:
+>> Run: "echo 6 > /proc/pid/clear_refs" to mark all mapped pages as idle.
+>> Pages that still idle are marked with bit 57 in /proc/pid/pagemap.
+>> Total size of idle pages is shown in /proc/pid/smaps (_rollup).
+>>
+>> Piece of comment is stolen from Joel Fernandes <joel@joelfernandes.org>
 > 
-> grammar - Currently vhci doesn't support?
-
-Yes, that is what I intended. Please excuse my poor english.
-
-> > into multiple URBs and it causes error that a transfer got terminated
-> > too early because the transfer length for one of the URBs was not
-> > divisible by the maxpacket size.
-> > 
-> > In this patch, vhci basically support SG and it sends each SG list
+> This will not work well for the problem at hand, the heap profiler
+> (heapprofd) only wants to clear the idle flag for the heap memory area which
+> is what it is profiling. There is no reason to do it for all mapped pages.
+> Using the /proc/pid/page_idle in my patch, it can be done selectively for
+> particular memory areas.
 > 
-> What does basically support mean here? Do you mean basic support?
+> I had previously thought of having an interface that accepts an address
+> range to set the idle flag, however that is also more complexity.
 
-What I intended was that vhci supports SG regardless of whether the
-server's host controller supports SG or not, because stub driver
-splits SG list into several URBs if the server's host controller
-doesn't support SG. I will rewrite the description to make it more
-clear.
+Profiler could look into particular area in /proc/pid/smaps
+or count idle pages via /proc/pid/pagemap.
 
-> > entry to the stub driver. Then, the stub driver sees the total length
-> > of the buffer and allocates SG table and pages according to the total
-> > buffer length calling sgl_alloc(). After the stub driver receives
-> > completed URB, it again sends each SG list entry to vhci.
-> > 
-> > If HCD of the server doesn't support SG, the stub driver breaks a
-> > single SG reqeust into several URBs and submit them to the server's
-> > HCD. When all the split URBs are completed, the stub driver
-> > reassembles the URBs into a single return command and sends it to
-> > vhci.
-> > 
-> > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
-> > ---
-> >   drivers/usb/usbip/stub.h         |   7 +-
-> >   drivers/usb/usbip/stub_main.c    |  52 +++++---
-> >   drivers/usb/usbip/stub_rx.c      | 207 ++++++++++++++++++++++---------
-> >   drivers/usb/usbip/stub_tx.c      | 108 +++++++++++-----
-> >   drivers/usb/usbip/usbip_common.c |  60 +++++++--
-> >   drivers/usb/usbip/vhci_hcd.c     |  10 +-
-> >   drivers/usb/usbip/vhci_tx.c      |  49 ++++++--
-> >   7 files changed, 372 insertions(+), 121 deletions(-)
-> > 
+Selective /proc/pid/clear_refs is not so hard to add.
+Somthing like echo "6 561214d03000-561214d29000" > /proc/pid/clear_refs
+might be useful for all other operations.
+
 > 
-> btw checkpatch isn't very happy with this patch. A few coding style
-> issues. Please run checkpatch before sending patches.
-
-I'm sorry for sending it without running checkpatch.
-I will fix all problems with checkpatch and resend v3.
-
-> > diff --git a/drivers/usb/usbip/stub.h b/drivers/usb/usbip/stub.h
-> > index 35618ceb2791..d11270560c24 100644
-> > --- a/drivers/usb/usbip/stub.h
-> > +++ b/drivers/usb/usbip/stub.h
-> > @@ -52,7 +52,11 @@ struct stub_priv {
-> >   	unsigned long seqnum;
-> >   	struct list_head list;
-> >   	struct stub_device *sdev;
-> > -	struct urb *urb;
-> > +	struct urb **urbs;
-> > +	struct scatterlist *sgl;
-> > +	int num_urbs;
-> > +	int completed_urbs;
-> > +	int urb_status;
-> >   	int unlinking;
-> >   };
-> > @@ -86,6 +90,7 @@ extern struct usb_device_driver stub_driver;
-> >   struct bus_id_priv *get_busid_priv(const char *busid);
-> >   void put_busid_priv(struct bus_id_priv *bid);
-> >   int del_match_busid(char *busid);
-> > +void stub_free_priv_and_urb(struct stub_priv *priv);
-> >   void stub_device_cleanup_urbs(struct stub_device *sdev);
-> >   /* stub_rx.c */
-> > diff --git a/drivers/usb/usbip/stub_main.c b/drivers/usb/usbip/stub_main.c
-> > index 2e4bfccd4bfc..dec5af9f7179 100644
-> > --- a/drivers/usb/usbip/stub_main.c
-> > +++ b/drivers/usb/usbip/stub_main.c
-> > @@ -6,6 +6,7 @@
-> >   #include <linux/string.h>
-> >   #include <linux/module.h>
-> >   #include <linux/device.h>
-> > +#include <linux/scatterlist.h>
-> >   #include "usbip_common.h"
-> >   #include "stub.h"
-> > @@ -288,6 +289,39 @@ static struct stub_priv *stub_priv_pop_from_listhead(struct list_head *listhead)
-> >   	return NULL;
-> >   }
-> > +void stub_free_priv_and_urb(struct stub_priv *priv)
-> > +{
-> > +	struct urb *urb;
-> > +	int i;
-> > +
-> > +	for (i = 0; i < priv->num_urbs; i++) {
-> > +		urb = priv->urbs[i];
-> > +		if (urb->setup_packet) {
-> > +			kfree(urb->setup_packet);
-> > +			urb->setup_packet = NULL;
-> > +		}
-> > +
+> thanks,
 > 
-> You don't need urb->setup_packet null check. kfree() is safe
-> to call with null pointer. btw checkpatch tells you this.
-
-Ok. I will remove null check.
-
-> > +		if (urb->transfer_buffer && !priv->sgl) {
+>   - Joel
 > 
-> Is this conditional necessary? Why are you checking priv->sgl?
-> Are there cases where you have memory leak? Is there a case
-> when urb->transfer_buffer valid when priv->sgl isn't null?
-
-In my implementation, if URB has an SG list, whether SG is supported
-by the server's host controller or not, stub driver allocates SG list
-and pages calling sg_alloc().
-
-At this time, if the server's host controller does not support SG,
-stub driver stores SG list in stub_priv->sgl (not in urb->sg) and
-allocates URBs according to each entry of SG list. The page of each
-SG list entry is mapped to each URB's transfer buffer.
-(urb->transfer_buffer = sg_virt(sg))
-
-So, when deallocating these URBs, stub driver doesn't deallocate the
-URB's buffer with kfree(), but use sgl_free() to deallocate the SG
-list stored in stub_priv (priv->sgl) and all the pages mapped to each
-URB's buffer at once.
-
-> > +			kfree(urb->transfer_buffer);
-> > +			urb->transfer_buffer = NULL;
-> > +		}
-> > +
-> > +		if (urb->num_sgs) {
-> > +			sgl_free(urb->sg);
-> > +			urb->sg = NULL;
-> > +			urb->num_sgs = 0;
-> > +		}
-> > +
-> > +		usb_free_urb(urb);
-> > +	}
-> > +
-> > +	list_del(&priv->list);
-> > +	if (priv->sgl)
-> > +		sgl_free(priv->sgl);
-> > +	kfree(priv->urbs);
-> > +	kmem_cache_free(stub_priv_cache, priv);
-> > +}
-> > +
-> >   static struct stub_priv *stub_priv_pop(struct stub_device *sdev)
-> >   {
-> >   	unsigned long flags;
-> > @@ -314,25 +348,15 @@ static struct stub_priv *stub_priv_pop(struct stub_device *sdev)
-> >   void stub_device_cleanup_urbs(struct stub_device *sdev)
-> >   {
-> >   	struct stub_priv *priv;
-> > -	struct urb *urb;
-> > +	int i;
-> >   	dev_dbg(&sdev->udev->dev, "Stub device cleaning up urbs\n");
-> >   	while ((priv = stub_priv_pop(sdev))) {
-> > -		urb = priv->urb;
-> > -		dev_dbg(&sdev->udev->dev, "free urb seqnum %lu\n",
-> > -			priv->seqnum);
-> > -		usb_kill_urb(urb);
-> > -
-> > -		kmem_cache_free(stub_priv_cache, priv);
-> > -
-> > -		kfree(urb->transfer_buffer);
-> > -		urb->transfer_buffer = NULL;
-> > +		for (i = 0; i < priv->num_urbs; i++)
-> > +			usb_kill_urb(priv->urbs[i]);
-> > -		kfree(urb->setup_packet);
-> > -		urb->setup_packet = NULL;
-> > -
-> > -		usb_free_urb(urb);
-> > +		stub_free_priv_and_urb(priv);
-> >   	}
-> >   }
-> > diff --git a/drivers/usb/usbip/stub_rx.c b/drivers/usb/usbip/stub_rx.c
-> > index b0a855acafa3..8e32697acabb 100644
-> > --- a/drivers/usb/usbip/stub_rx.c
-> > +++ b/drivers/usb/usbip/stub_rx.c
-> > @@ -7,6 +7,7 @@
-> >   #include <linux/kthread.h>
-> >   #include <linux/usb.h>
-> >   #include <linux/usb/hcd.h>
-> > +#include <linux/scatterlist.h>
-> >   #include "usbip_common.h"
-> >   #include "stub.h"
-> > @@ -201,7 +202,7 @@ static void tweak_special_requests(struct urb *urb)
-> >   static int stub_recv_cmd_unlink(struct stub_device *sdev,
-> >   				struct usbip_header *pdu)
-> >   {
-> > -	int ret;
-> > +	int ret, i;
-> >   	unsigned long flags;
-> >   	struct stub_priv *priv;
-> > @@ -246,12 +247,13 @@ static int stub_recv_cmd_unlink(struct stub_device *sdev,
-> >   		 * so a driver in a client host will know the failure
-> >   		 * of the unlink request ?
-> >   		 */
-> > -		ret = usb_unlink_urb(priv->urb);
-> > -		if (ret != -EINPROGRESS)
-> > -			dev_err(&priv->urb->dev->dev,
-> > -				"failed to unlink a urb # %lu, ret %d\n",
-> > -				priv->seqnum, ret);
-> > -
-> > +		for (i = priv->completed_urbs; i < priv->num_urbs; i++) {
-> > +			ret = usb_unlink_urb(priv->urbs[i]);
-> > +			if (ret != -EINPROGRESS)
-> > +				dev_err(&priv->urbs[i]->dev->dev,
-> > +					"failed to unlink a urb # %lu, ret %d\n",
-> > +					priv->seqnum, ret);
 > 
-> This could result in several error messages. This code path is much
-> longer now compared to previous.
-
-I don't know what function or part you point to. stub_recv_cmd_unlink()?
-
-Regards,
-Suwan Kim
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> Link: https://lore.kernel.org/lkml/20190722213205.140845-1-joel@joelfernandes.org/
+>> ---
+>>   Documentation/admin-guide/mm/pagemap.rst |    3 ++-
+>>   Documentation/filesystems/proc.txt       |    3 +++
+>>   fs/proc/task_mmu.c                       |   33 ++++++++++++++++++++++++++++--
+>>   3 files changed, 36 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/mm/pagemap.rst b/Documentation/admin-guide/mm/pagemap.rst
+>> index 340a5aee9b80..d7ee60287584 100644
+>> --- a/Documentation/admin-guide/mm/pagemap.rst
+>> +++ b/Documentation/admin-guide/mm/pagemap.rst
+>> @@ -21,7 +21,8 @@ There are four components to pagemap:
+>>       * Bit  55    pte is soft-dirty (see
+>>         :ref:`Documentation/admin-guide/mm/soft-dirty.rst <soft_dirty>`)
+>>       * Bit  56    page exclusively mapped (since 4.2)
+>> -    * Bits 57-60 zero
+>> +    * Bit  57    page is idle
+>> +    * Bits 58-60 zero
+>>       * Bit  61    page is file-page or shared-anon (since 3.5)
+>>       * Bit  62    page swapped
+>>       * Bit  63    page present
+>> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+>> index 99ca040e3f90..d222be8b4eb9 100644
+>> --- a/Documentation/filesystems/proc.txt
+>> +++ b/Documentation/filesystems/proc.txt
+>> @@ -574,6 +574,9 @@ To reset the peak resident set size ("high water mark") to the process's
+>>   current value:
+>>       > echo 5 > /proc/PID/clear_refs
+>>   
+>> +To mark all mapped pages as idle:
+>> +    > echo 6 > /proc/PID/clear_refs
+>> +
+>>   Any other value written to /proc/PID/clear_refs will have no effect.
+>>   
+>>   The /proc/pid/pagemap gives the PFN, which can be used to find the pageflags
+>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>> index 731642e0f5a0..6da952574a1f 100644
+>> --- a/fs/proc/task_mmu.c
+>> +++ b/fs/proc/task_mmu.c
+>> @@ -413,6 +413,7 @@ struct mem_size_stats {
+>>   	unsigned long private_clean;
+>>   	unsigned long private_dirty;
+>>   	unsigned long referenced;
+>> +	unsigned long idle;
+>>   	unsigned long anonymous;
+>>   	unsigned long lazyfree;
+>>   	unsigned long anonymous_thp;
+>> @@ -479,6 +480,10 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
+>>   	if (young || page_is_young(page) || PageReferenced(page))
+>>   		mss->referenced += size;
+>>   
+>> +	/* Not accessed and still idle. */
+>> +	if (!young && page_is_idle(page))
+>> +		mss->idle += size;
+>> +
+>>   	/*
+>>   	 * Then accumulate quantities that may depend on sharing, or that may
+>>   	 * differ page-by-page.
+>> @@ -799,6 +804,9 @@ static void __show_smap(struct seq_file *m, const struct mem_size_stats *mss,
+>>   	SEQ_PUT_DEC(" kB\nPrivate_Clean:  ", mss->private_clean);
+>>   	SEQ_PUT_DEC(" kB\nPrivate_Dirty:  ", mss->private_dirty);
+>>   	SEQ_PUT_DEC(" kB\nReferenced:     ", mss->referenced);
+>> +#ifdef CONFIG_IDLE_PAGE_TRACKING
+>> +	SEQ_PUT_DEC(" kB\nIdle:           ", mss->idle);
+>> +#endif
+>>   	SEQ_PUT_DEC(" kB\nAnonymous:      ", mss->anonymous);
+>>   	SEQ_PUT_DEC(" kB\nLazyFree:       ", mss->lazyfree);
+>>   	SEQ_PUT_DEC(" kB\nAnonHugePages:  ", mss->anonymous_thp);
+>> @@ -969,6 +977,7 @@ enum clear_refs_types {
+>>   	CLEAR_REFS_MAPPED,
+>>   	CLEAR_REFS_SOFT_DIRTY,
+>>   	CLEAR_REFS_MM_HIWATER_RSS,
+>> +	CLEAR_REFS_SOFT_ACCESS,
+>>   	CLEAR_REFS_LAST,
+>>   };
+>>   
+>> @@ -1045,6 +1054,7 @@ static int clear_refs_pte_range(pmd_t *pmd, unsigned long addr,
+>>   	pte_t *pte, ptent;
+>>   	spinlock_t *ptl;
+>>   	struct page *page;
+>> +	int young;
+>>   
+>>   	ptl = pmd_trans_huge_lock(pmd, vma);
+>>   	if (ptl) {
+>> @@ -1058,8 +1068,16 @@ static int clear_refs_pte_range(pmd_t *pmd, unsigned long addr,
+>>   
+>>   		page = pmd_page(*pmd);
+>>   
+>> +		young = pmdp_test_and_clear_young(vma, addr, pmd);
+>> +
+>> +		if (cp->type == CLEAR_REFS_SOFT_ACCESS) {
+>> +			if (young)
+>> +				set_page_young(page);
+>> +			set_page_idle(page);
+>> +			goto out;
+>> +		}
+>> +
+>>   		/* Clear accessed and referenced bits. */
+>> -		pmdp_test_and_clear_young(vma, addr, pmd);
+>>   		test_and_clear_page_young(page);
+>>   		ClearPageReferenced(page);
+>>   out:
+>> @@ -1086,8 +1104,16 @@ static int clear_refs_pte_range(pmd_t *pmd, unsigned long addr,
+>>   		if (!page)
+>>   			continue;
+>>   
+>> +		young = ptep_test_and_clear_young(vma, addr, pte);
+>> +
+>> +		if (cp->type == CLEAR_REFS_SOFT_ACCESS) {
+>> +			if (young)
+>> +				set_page_young(page);
+>> +			set_page_idle(page);
+>> +			continue;
+>> +		}
+>> +
+>>   		/* Clear accessed and referenced bits. */
+>> -		ptep_test_and_clear_young(vma, addr, pte);
+>>   		test_and_clear_page_young(page);
+>>   		ClearPageReferenced(page);
+>>   	}
+>> @@ -1253,6 +1279,7 @@ struct pagemapread {
+>>   #define PM_PFRAME_MASK		GENMASK_ULL(PM_PFRAME_BITS - 1, 0)
+>>   #define PM_SOFT_DIRTY		BIT_ULL(55)
+>>   #define PM_MMAP_EXCLUSIVE	BIT_ULL(56)
+>> +#define PM_IDLE			BIT_ULL(57)
+>>   #define PM_FILE			BIT_ULL(61)
+>>   #define PM_SWAP			BIT_ULL(62)
+>>   #define PM_PRESENT		BIT_ULL(63)
+>> @@ -1326,6 +1353,8 @@ static pagemap_entry_t pte_to_pagemap_entry(struct pagemapread *pm,
+>>   		page = vm_normal_page(vma, addr, pte);
+>>   		if (pte_soft_dirty(pte))
+>>   			flags |= PM_SOFT_DIRTY;
+>> +		if (!pte_young(pte) && page && page_is_idle(page))
+>> +			flags |= PM_IDLE;
+>>   	} else if (is_swap_pte(pte)) {
+>>   		swp_entry_t entry;
+>>   		if (pte_swp_soft_dirty(pte))
+>>
