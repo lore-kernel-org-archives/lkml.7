@@ -2,175 +2,211 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CFBC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC11C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FC721842
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B995021842
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cflKZwxI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XHQrWRNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732017AbfGWLrI (ORCPT
+        id S1732093AbfGWLrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:47:08 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56975 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfGWLrH (ORCPT
+        Tue, 23 Jul 2019 07:47:35 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35681 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732025AbfGWLre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:47:07 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NBkrb4062387
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 23 Jul 2019 04:46:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NBkrb4062387
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1563882414;
-        bh=qT+FDup0Me5aVWQhadL8fdnMwdNwLZvNaBXtadYdgBc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=cflKZwxIhx2gxMze4DfcNoJ7D/sA/Xdw8SS/P2o6qmoY5iNn4kMtVK1x0lATdght1
-         L7N2kIrIrFuKVlUJf9TfUSwLpWTFxg44CQtApnRTk9mxACPz4bzEsexADMKIGk8Jtj
-         kKt1ZUC6YPUFPW38vuPof7Xn/Li6CKW4LhhciqBQbjw76pgJBgqWB1vKfqogra+i7+
-         ej+t+5VuAWO70WgLqyEgUP38spDZwDQffWqioENlbS2t8SqZJRtuO9LapUrZnrq/yo
-         ShMg/roduaWvueiyV2fctS31AAYWmnR/oD50+gE/inKEVrOoeSDU2hv+0GuAs2KE07
-         X0Oypuy1fA3Wg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NBkrjZ062384;
-        Tue, 23 Jul 2019 04:46:53 -0700
-Date:   Tue, 23 Jul 2019 04:46:53 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Masahiro Yamada <tipbot@zytor.com>
-Message-ID: <tip-701010532164eaacd415ec5683717da03f4b822d@git.kernel.org>
-Cc:     yamada.masahiro@socionext.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org
-Reply-To: yamada.masahiro@socionext.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          mingo@kernel.org
-In-Reply-To: <20190723112646.14046-1-yamada.masahiro@socionext.com>
-References: <20190723112646.14046-1-yamada.masahiro@socionext.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/build] x86/build: Remove unneeded uapi asm-generic
- wrappers
-Git-Commit-ID: 701010532164eaacd415ec5683717da03f4b822d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 23 Jul 2019 07:47:34 -0400
+Received: by mail-vs1-f67.google.com with SMTP id u124so28593716vsu.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=geUtppPrfRUg4NfGL34dbIx6S9V8ieUS4VVaIVpw7T8=;
+        b=XHQrWRNWIaq7gVu+WqM3lUbu5At0fR8soQbqJWerzBGj3iq8Jh7FQC7HnYdnsrOw/2
+         4h/UOI2Ijk7FIguCbMP3BBZ1T4Rh3tPZWKVodUrEvqoPW+kWoqco+yb87JwscfUzvEFs
+         zehINR8WOnJCyVs3GU2GnoHiLBKmYJuKJVoxAOSZnOyBJHjfqTxEd8Z69ehjQ93WugMB
+         ZUw6rrD+qlQUD/hrb9TP3Xpm/L8iW5DfSAW+9zgbQNC12ySW9S83Rpw49/bhMFpjwvqq
+         rwncfnzLh0DIOBSPVbSG0QHW6FSz+tpga99c6gZT3oNQJmKlt+iLpPliZjBAEhXiOfL0
+         /UDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=geUtppPrfRUg4NfGL34dbIx6S9V8ieUS4VVaIVpw7T8=;
+        b=uNk6uJcs4UU0dUJ/BxcpS87krvqnRLiYeJvwPberKDtuZpGM3IjR4yYBHRBVBrpeEr
+         HvXJXf0B++cYGkCBrdCeKg5A8diSII+Lxtw2RU5bVUaTbBD3rti4wCnyjjqQYhc3xj2l
+         J0E/SUxcJgwGdXc153zhzycwwf/+LaV0l35C/Vtb3A0Uk2hXGvTq856quU8lBAAP60q4
+         fw477tXr7EV9ZWbegrHbiIXrVELV+aqbIja7aqHxaEwcRbR3XHi1t/SDU+jLv/LWsE9d
+         qDn1C28ctqixGLiIGW4sfgFoL2K9v2pGn/OhxPnaBS9yGFkEXeKiBsfAoe8iAx71db+t
+         IocQ==
+X-Gm-Message-State: APjAAAWeSruSVpSCWtlFZlgFjBeeku0TXLI2h5fd0w3PBLuaXqvEvLXv
+        LjsZ7YxnOmpiGlLnLmeW8zUzCOQJPGaiEOwJ+JT4cQ==
+X-Google-Smtp-Source: APXvYqyQ7eltBtSxqPsnhCuQloUKpx1CQdA3jlUrwfbQpQPR8C3fB3pvMyrBd8baT9CeIxn12qkGDoiwZQb6qlcis+s=
+X-Received: by 2002:a67:ee16:: with SMTP id f22mr46522596vsp.191.1563882453209;
+ Tue, 23 Jul 2019 04:47:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com> <20190722153745.32446-5-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20190722153745.32446-5-lorenzo.pieralisi@arm.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 23 Jul 2019 13:46:56 +0200
+Message-ID: <CAPDyKFppc32r=3w3g5nmHWDR5qR1vxsYjQ1b_GQoc_Gk=ni24A@mail.gmail.com>
+Subject: Re: [PATCH 4/6] ARM: psci: cpuidle: Introduce PSCI CPUidle driver
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  701010532164eaacd415ec5683717da03f4b822d
-Gitweb:     https://git.kernel.org/tip/701010532164eaacd415ec5683717da03f4b822d
-Author:     Masahiro Yamada <yamada.masahiro@socionext.com>
-AuthorDate: Tue, 23 Jul 2019 20:26:45 +0900
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 23 Jul 2019 13:42:14 +0200
+[...]
 
-x86/build: Remove unneeded uapi asm-generic wrappers
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -0,0 +1,150 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * PSCI CPU idle driver.
+> + *
+> + * Copyright (C) 2019 ARM Ltd.
+> + * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> + */
+> +
+> +#define pr_fmt(fmt) "CPUidle PSCI: " fmt
+> +
+> +#include <linux/cpuidle.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/cpu_pm.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/psci.h>
+> +#include <linux/slab.h>
+> +
+> +#include <asm/cpuidle.h>
 
-These are listed in include/uapi/asm-generic/Kbuild, so Kbuild will
-automatically generate them.
+This should go away, right?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190723112646.14046-1-yamada.masahiro@socionext.com
+> +
+> +#include "dt_idle_states.h"
+> +
+> +static int psci_enter_idle_state(struct cpuidle_device *dev,
+> +                               struct cpuidle_driver *drv, int idx)
+> +{
+> +       return CPU_PM_CPU_IDLE_ENTER(psci_cpu_suspend_enter, idx);
+> +}
+> +
+> +static struct cpuidle_driver psci_idle_driver __initdata = {
+> +       .name = "psci_idle",
+> +       .owner = THIS_MODULE,
+> +       /*
+> +        * PSCI idle states relies on architectural WFI to
+> +        * be represented as state index 0.
+> +        */
+> +       .states[0] = {
+> +               .enter                  = psci_enter_idle_state,
+> +               .exit_latency           = 1,
+> +               .target_residency       = 1,
+> +               .power_usage            = UINT_MAX,
+> +               .name                   = "WFI",
+> +               .desc                   = "ARM WFI",
+> +       }
+> +};
+> +
+> +static const struct of_device_id psci_idle_state_match[] __initconst = {
+> +       { .compatible = "arm,idle-state",
+> +         .data = psci_enter_idle_state },
+> +       { },
+> +};
+> +
+> +static int __init psci_idle_init_cpu(int cpu)
+> +{
+> +       struct cpuidle_driver *drv;
+> +       struct device_node *cpu_node;
+> +       const char *enable_method;
+> +       int ret = 0;
+> +
+> +       drv = kmemdup(&psci_idle_driver, sizeof(*drv), GFP_KERNEL);
+> +       if (!drv)
+> +               return -ENOMEM;
+> +
+> +       drv->cpumask = (struct cpumask *)cpumask_of(cpu);
+> +
+> +       cpu_node = of_get_cpu_node(cpu, NULL);
+> +       if (!cpu_node)
+> +               return -ENODEV;
 
----
- arch/x86/include/uapi/asm/errno.h    | 1 -
- arch/x86/include/uapi/asm/fcntl.h    | 1 -
- arch/x86/include/uapi/asm/ioctl.h    | 1 -
- arch/x86/include/uapi/asm/ioctls.h   | 1 -
- arch/x86/include/uapi/asm/ipcbuf.h   | 1 -
- arch/x86/include/uapi/asm/param.h    | 1 -
- arch/x86/include/uapi/asm/resource.h | 1 -
- arch/x86/include/uapi/asm/termbits.h | 1 -
- arch/x86/include/uapi/asm/termios.h  | 1 -
- arch/x86/include/uapi/asm/types.h    | 7 -------
- 10 files changed, 16 deletions(-)
+You should free drv in case of error here (goto out_kfree_drv; etc).
 
-diff --git a/arch/x86/include/uapi/asm/errno.h b/arch/x86/include/uapi/asm/errno.h
-deleted file mode 100644
-index 4c82b503d92f..000000000000
---- a/arch/x86/include/uapi/asm/errno.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/errno.h>
-diff --git a/arch/x86/include/uapi/asm/fcntl.h b/arch/x86/include/uapi/asm/fcntl.h
-deleted file mode 100644
-index 46ab12db5739..000000000000
---- a/arch/x86/include/uapi/asm/fcntl.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/fcntl.h>
-diff --git a/arch/x86/include/uapi/asm/ioctl.h b/arch/x86/include/uapi/asm/ioctl.h
-deleted file mode 100644
-index b279fe06dfe5..000000000000
---- a/arch/x86/include/uapi/asm/ioctl.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/ioctl.h>
-diff --git a/arch/x86/include/uapi/asm/ioctls.h b/arch/x86/include/uapi/asm/ioctls.h
-deleted file mode 100644
-index ec34c760665e..000000000000
---- a/arch/x86/include/uapi/asm/ioctls.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/ioctls.h>
-diff --git a/arch/x86/include/uapi/asm/ipcbuf.h b/arch/x86/include/uapi/asm/ipcbuf.h
-deleted file mode 100644
-index 84c7e51cb6d0..000000000000
---- a/arch/x86/include/uapi/asm/ipcbuf.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/ipcbuf.h>
-diff --git a/arch/x86/include/uapi/asm/param.h b/arch/x86/include/uapi/asm/param.h
-deleted file mode 100644
-index 965d45427975..000000000000
---- a/arch/x86/include/uapi/asm/param.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/param.h>
-diff --git a/arch/x86/include/uapi/asm/resource.h b/arch/x86/include/uapi/asm/resource.h
-deleted file mode 100644
-index 04bc4db8921b..000000000000
---- a/arch/x86/include/uapi/asm/resource.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/resource.h>
-diff --git a/arch/x86/include/uapi/asm/termbits.h b/arch/x86/include/uapi/asm/termbits.h
-deleted file mode 100644
-index 3935b106de79..000000000000
---- a/arch/x86/include/uapi/asm/termbits.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/termbits.h>
-diff --git a/arch/x86/include/uapi/asm/termios.h b/arch/x86/include/uapi/asm/termios.h
-deleted file mode 100644
-index 280d78a9d966..000000000000
---- a/arch/x86/include/uapi/asm/termios.h
-+++ /dev/null
-@@ -1 +0,0 @@
--#include <asm-generic/termios.h>
-diff --git a/arch/x86/include/uapi/asm/types.h b/arch/x86/include/uapi/asm/types.h
-deleted file mode 100644
-index df55e1ddb0c9..000000000000
---- a/arch/x86/include/uapi/asm/types.h
-+++ /dev/null
-@@ -1,7 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_X86_TYPES_H
--#define _ASM_X86_TYPES_H
--
--#include <asm-generic/types.h>
--
--#endif /* _ASM_X86_TYPES_H */
+> +
+> +       /*
+> +        * Check whether the enable-method for the cpu is PSCI, fail
+> +        * if it is not.
+> +        */
+> +       enable_method = of_get_property(cpu_node, "enable-method", NULL);
+> +       if (!enable_method || (strcmp(enable_method, "psci")))
+> +               ret = -ENODEV;
+> +
+> +       of_node_put(cpu_node);
+> +       if (ret)
+> +               return ret;
+
+You should free drv in case of error here (goto out_kfree_drv;).
+
+> +
+> +       /*
+> +        * Initialize idle states data, starting at index 1, since
+> +        * by default idle state 0 is the quiescent state reached
+> +        * by the cpu by executing the wfi instruction.
+> +        *
+> +        * If no DT idle states are detected (ret == 0) let the driver
+> +        * initialization fail accordingly since there is no reason to
+> +        * initialize the idle driver if only wfi is supported, the
+> +        * default archictectural back-end already executes wfi
+> +        * on idle entry.
+> +        */
+> +       ret = dt_init_idle_driver(drv, psci_idle_state_match, 1);
+> +       if (ret <= 0) {
+> +               ret = ret ? : -ENODEV;
+> +               goto out_kfree_drv;
+> +       }
+> +
+> +       /*
+> +        * Initialize PSCI idle states.
+> +        */
+> +       ret = psci_cpu_init_idle(cpu);
+> +       if (ret) {
+> +               pr_err("CPU %d failed to PSCI idle\n", cpu);
+> +               goto out_kfree_drv;
+> +       }
+> +
+> +       ret = cpuidle_register(drv, NULL);
+> +       if (ret)
+> +               goto out_kfree_drv;
+> +
+> +       return 0;
+> +
+> +out_kfree_drv:
+> +       kfree(drv);
+> +       return ret;
+> +}
+> +
+
+[...]
+
+Kind regards
+Uffe
