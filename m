@@ -6,91 +6,76 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0E2C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8215EC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B51821926
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4D921926
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbfGWW71 (ORCPT
+        id S2392530AbfGWXAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:59:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41975 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728418AbfGWW71 (ORCPT
+        Tue, 23 Jul 2019 19:00:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:57337 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728418AbfGWXAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:59:27 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hq3kU-0007Uh-Nf; Wed, 24 Jul 2019 00:59:11 +0200
-Date:   Wed, 24 Jul 2019 00:59:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Kees Cook <keescook@chromium.org>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
- on i386
-In-Reply-To: <201907231437.DB20BEBD3@keescook>
-Message-ID: <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de>
-References: <20190719170343.GA13680@linux.intel.com> <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net> <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de> <201907221135.2C2D262D8@keescook>
- <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com> <201907221620.F31B9A082@keescook> <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com> <201907231437.DB20BEBD3@keescook>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 23 Jul 2019 19:00:31 -0400
+Received: from [192.168.1.110] ([95.118.72.89]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MSqbe-1hzWmY3zlm-00UIYa; Wed, 24 Jul 2019 01:00:21 +0200
+Subject: Re: [PATCH 3/3] platform//x86/pcengines-apuv2: update gpio button
+ definition
+To:     Florian Eckert <eckert.florian@googlemail.com>
+Cc:     Florian Eckert <fe@dev.tdt.de>, info@metux.net,
+        dvhart@infradead.org, andy@infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-4-fe@dev.tdt.de>
+ <cca95ba1-6ac0-a2eb-9ae6-914a8783c1ad@metux.net>
+ <CALPCC5wH_uAGYaHeM_d_yxxUZEd3f-MfhT7jdZSt9ythd08S9w@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <ab15f31b-e585-15c2-877a-5fcc13e85e14@metux.net>
+Date:   Wed, 24 Jul 2019 01:00:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <CALPCC5wH_uAGYaHeM_d_yxxUZEd3f-MfhT7jdZSt9ythd08S9w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:EX1j4GM+pOLE65MKiwTA8Ks36S6bIA+Y7Mhd6g2mbt9wg4ebVug
+ kqRDbgWT46bwxsFukXFSexKcJJPbVpE8uzNERTO/GR732zedwK0C2q9OrQSWHtDb51VJODw
+ gtujqmGVbXaj/VRY8I84d/wwX0SlAuzYicXDP8fWf8w9Uc+LDFZTVdfNgi2/vDG/qS3rxwe
+ cQn88ii5fnxPtp3PWojFw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IsyNBD5FIIg=:9ZSiUeXe9Qr2cxzGf5qCAo
+ v0GR4pblsBOU5yggDB/SNoh6X3cxXhWdWfsxSAW5FAvW8bVMnylmytJvYrdO/XBTJs/+br4Ic
+ FUQmpu/vpO1sWCouvjagy7iLZMZK8HKizzJm1r9fbNIp7q9e9i6nE2KmfJHWAztLw+pdTrZRb
+ +fHVDCW+uuO3VuQwK0YlqhImw5e901p3bflAF+Se+wdWgXVk6ufwjhQQkKR5PpnfWhKFjjE7g
+ LozO5mk+AzdRbgh0lV9iNwZn0IODGyVKUUOptVvfu/k2oGxicK2d6Dfd22LlZmQ+Nfr/IssSf
+ dVVro7ZoWM/noCe77DF/bXW/a+QRDqSzYxXw0OSuqh8brkHaop3sa7xPsNsz4vGbrVqRi40aD
+ bl6xQYxyeohOFI2YPd2TtlYdNgnWo5W8Arp0uRS1SGjUz3JNc46HbwcUNjAttgroWg/1G3IO2
+ MJIKr/fk8l8KejpxA5eToFCkXeH0dCltFOr65IzxyazgvmEvEnT4yi56tNV3WyaBhkNBMcCK3
+ xyGdGIc8OIWsmN9qxfk8wAtw9asyZVjhUvPqgIm7r2IlaNKjJzcoyt4BMXpXKkDe9lEkrCdFR
+ LtrIvy8L95gMg0yHohri1YryubtO2j2M78Zn0UfVpXx9mhmfi3PIfD6bsSy+V5K6O6kVqU6Zz
+ g1fa20sHXrQpItedcXfb5PcV0yVKRse9WgPUWMYqcGTg+gHSU2rCThoWg6YflTxbKEkRt2SYz
+ e2BWerFkaqkrfTclIu0NEPa6DpfqdIzPwelR1SCcQwuhyYM9LAHuSOrSoS0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019, Kees Cook wrote:
-> On Mon, Jul 22, 2019 at 04:47:36PM -0700, Andy Lutomirski wrote:
-> > I don't love this whole concept, but I also don't have a better idea.
+On 23.07.19 09:06, Florian Eckert wrote:
+>> I'd like to ack only the keycode change, but not the deprecated .gpio
+>> field. I'll post a separate patch for the keycode change only.
 > 
-> How about we revert the vDSO change? :P
-
-Sigh. Add more special case code to the VDSO again?
-
-> I keep coming back to using the vDSO return address as an indicator.
-> Most vDSO calls don't make syscalls, yes? So they're normally
-> unfilterable by seccomp.
+> I am fine if we only change the keycode.
+> Do I have to send a v2 patch set?
 > 
-> What was the prior vDSO behavior?
 
-The behaviour is pretty much the same as before:
+already sent one.
 
-  If the requested clock id is supported by the VDSO and the platform has a
-  VDSO capable clocksource, everything is handled in user space.
-
-  If either of the conditions is false, fall back to a syscall.
-
-The implementation detail changed for 32bit (native and compat):
-
-. The original VDSO used sys_clock_gettime() as fallback, the new one uses
-  sys_clock_gettime64().
-
-The reason is that we need to support 2038 safe vdso_clock_gettime64() for
-32bit which requires to use sys_clock_gettime64() as fallback. So we use
-the same fallback for the non 2038 safe vdso_clock_gettime() variant as
-well to avoid having different implementations of the fallback code.
-
-And as we have sys_clock_gettime64() exposed for 32bit anyway you need to
-deal with that in seccomp independently of the VDSO. It does not make sense
-to treat sys_clock_gettime() differently than sys_clock_gettime64(). They
-both expose the same information, but the latter is y2038 safe.
-
-So changing vdso back to the original fallback for 32bit (native and
-compat) is just a temporary bandaid as seccomp needs to deal with the y2038
-safe variant anyway.
-
-Thanks,
-
-	tglx
-
-
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
