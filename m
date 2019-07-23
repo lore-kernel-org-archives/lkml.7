@@ -2,157 +2,117 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E7DC7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B27DC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310FB223A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B551223A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 12:33:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHzFkm4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbfGWMab (ORCPT
+        id S1732221AbfGWMdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 08:30:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45866 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726438AbfGWMaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:30:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6BAE3AD7B;
-        Tue, 23 Jul 2019 12:30:28 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 3BB05DA7D5; Tue, 23 Jul 2019 14:31:05 +0200 (CEST)
-Date:   Tue, 23 Jul 2019 14:31:05 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     dsterba@suse.cz, Gao Xiang <gaoxiang25@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v3 23/24] erofs: introduce cached decompression
-Message-ID: <20190723123104.GB2868@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Gao Xiang <hsiangkao@aol.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
-        Chao Yu <yuchao0@huawei.com>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>
-References: <20190722025043.166344-1-gaoxiang25@huawei.com>
- <20190722025043.166344-24-gaoxiang25@huawei.com>
- <20190722101818.GN20977@twin.jikos.cz>
- <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
+        Tue, 23 Jul 2019 08:33:51 -0400
+Received: from mail-vs1-f49.google.com ([209.85.217.49]:39110 "EHLO
+        mail-vs1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfGWMdv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 08:33:51 -0400
+Received: by mail-vs1-f49.google.com with SMTP id u3so28640760vsh.6;
+        Tue, 23 Jul 2019 05:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=D0dIs1sQ5y8YZEU/+OCClL8Rpfn1hGrQQ6MN19phnZY=;
+        b=UHzFkm4KmM40XZnyBUt6L75G6kQ1V4Vxhj5QVcclbrobZ4nDsjNL7pxFleAHvWXQnb
+         8veYwp6mDL3q17/HxGf/JHREK4PSgrHwuqO0ST7c6Ueheu3oc1n8nrDtTb7K0f9A34WK
+         zpwNIoUiExrtHMOSPmZaUBpvpAkeVs+mXtCzwBxR+mVs67oXbokZiOK/JxwMcVASPDUY
+         i9MZEstk/fff4kgSPDMXpWL+LntJ6sazg/XH0gXQQyNTtXbaGtxPxyHfZJtsQV72NRrW
+         gtj3ZNqDBjLcedmVtQGkV+Ccag+xUGh0MY9nC7CZfRGR0klZjoD96dtl94WbWPDvF0Yq
+         PRZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D0dIs1sQ5y8YZEU/+OCClL8Rpfn1hGrQQ6MN19phnZY=;
+        b=dy7MCOUdDAxKzsLvSKnbUwU403B8erMonXsHxTjK+f+lpWP9+IvJcN79UehYOMGol/
+         XKatQ3nK9CnEYrGiVwLrE+uyEBWvZwfdRHGSJ3v/ZubQHhnJLuUvuOT/qgj79F8CKdhl
+         2VqUhlKz2WjyMsZk7oihfmu/xmxzXIabeygGQDarmYTnSmfXQrEPcQ9yDs06ojM71waN
+         dCGcNMpelBuTSmQWzt10g7iFIIZKLUGQ7OTBYzCwX96JeML/FWGiBpzekKmCJSl2B2wj
+         bT9uxIANVw4BhrIsM1yX/x/I5lIJC2CbxOt8CYlOuHW7v5WR0r1Lb2EfnFPngvS2UNOk
+         AH4g==
+X-Gm-Message-State: APjAAAUI9NMDU0izvgzbpxpZqqAVyrxp+i4Q7V08GvgDoxA2sgbdOl4W
+        7G4QPF2KPtskw6OZMjfg8pgewG8y8vqMyZg4ihk=
+X-Google-Smtp-Source: APXvYqzSwI6JXr33vGz1Zl73eg0VuLmYteeEtg8J0M2SAu5MYNWIXEzx/GDmHlFfIM5Fentm53RZyhjW/1UyEzL81nw=
+X-Received: by 2002:a67:f8d4:: with SMTP id c20mr5929303vsp.239.1563885230278;
+ Tue, 23 Jul 2019 05:33:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41f1659a-0d16-4316-34fc-335b7d142d5c@aol.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+References: <CAOGqxeVeEq803rrtGrnubRA8cP3dRCXsU15ss3pS1q6ik+k8Bw@mail.gmail.com>
+ <7610bbc9-83d8-ee98-1425-07bb65448541@intel.com>
+In-Reply-To: <7610bbc9-83d8-ee98-1425-07bb65448541@intel.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Tue, 23 Jul 2019 08:34:21 -0400
+Message-ID: <CAOGqxeVR3XzAQ-yTH35hyT3KpL11nTwMY1Ca96ZW=K=PiWMnHA@mail.gmail.com>
+Subject: Re: Issue with sequence to switch to HS400
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 06:58:59PM +0800, Gao Xiang wrote:
-> On 2019/7/22 ????6:18, David Sterba wrote:
-> > On Mon, Jul 22, 2019 at 10:50:42AM +0800, Gao Xiang wrote:
-> >> +choice
-> >> +	prompt "EROFS Data Decompression mode"
-> >> +	depends on EROFS_FS_ZIP
-> >> +	default EROFS_FS_ZIP_CACHE_READAROUND
-> >> +	help
-> >> +	  EROFS supports three options for decompression.
-> >> +	  "In-place I/O Only" consumes the minimum memory
-> >> +	  with lowest random read.
-> >> +
-> >> +	  "Cached Decompression for readaround" consumes
-> >> +	  the maximum memory with highest random read.
-> >> +
-> >> +	  If unsure, select "Cached Decompression for readaround"
-> >> +
-> >> +config EROFS_FS_ZIP_CACHE_DISABLED
-> >> +	bool "In-place I/O Only"
-> >> +	help
-> >> +	  Read compressed data into page cache and do in-place
-> >> +	  I/O decompression directly.
-> >> +
-> >> +config EROFS_FS_ZIP_CACHE_READAHEAD
-> >> +	bool "Cached Decompression for readahead"
-> >> +	help
-> >> +	  For each request, it caches the last compressed page
-> >> +	  for further reading.
-> >> +	  It still does in-place I/O for the rest compressed pages.
-> >> +
-> >> +config EROFS_FS_ZIP_CACHE_READAROUND
-> >> +	bool "Cached Decompression for readaround"
-> >> +	help
-> >> +	  For each request, it caches the both end compressed pages
-> >> +	  for further reading.
-> >> +	  It still does in-place I/O for the rest compressed pages.
-> >> +
-> >> +	  Recommended for performance priority.
-> > 
-> > The number of individual Kconfig options is quite high, are you sure you
-> > need them to be split like that?
-> 
-> You mean the above? these are 3 cache strategies, which impact the
-> runtime memory consumption and performance. I tend to leave the above
-> as it-is...
+On Tue, Jul 23, 2019 at 1:21 AM Adrian Hunter <adrian.hunter@intel.com> wro=
+te:
+>
+> On 23/07/19 1:31 AM, Alan Cooper wrote:
+> > I'm having a problem with a new SD/MMC controller and PHY in our
+> > latest SoC's. The issue I'm seeing is that I can't switch into HS400
+> > mode. This looks like something the driver is doing that doesn't meet
+> > the JEDEC spec. In the "HS400 timing mode selection" section of the
+> > JEDEC spec , in step 7 it states:
+> >
+> > 7) Set the =E2=80=9CTiming Interface=E2=80=9D parameter in the HS_TIMIN=
+G [185] field
+> > of the Extended CSD register to 0x1 to switch to High Speed mode and
+> > then set the clock frequency to a value not greater than 52 MHz.
+> >
+> > In the function mmc_select_hs400() in mmc.c, I see that a switch
+> > command is done to set the eMMC device to HS mode and then
+> > mmc_set_timing(card->host, MMC_TIMING_MMC_HS) is used to change the
+> > controller to HS mode. The problem is that the "SD Host Controller
+> > Standard Specification" states that "UHS Mode Select" field of the
+> > "Host Control 2 Register" controls the mode when the "1.8V Signaling
+> > Enable" bit in the same register is set, so mmc_set_timing() is
+> > actually leaving the controller in SDR12 mode and mmc_select_hs400()
+> > will then set the clock to 52MHz. This causes our PHY to detect an
+> > illegal combination and return an error.
+> >
+> > I think the easiest fix would be to change mmc_set_timing(card->host,
+> > MMC_TIMING_MMC_HS) to mmc_set_timing(card->host,
+> > MMC_TIMING_UHS_SDR25). The other possibility would be to change
+> > mmc_set_timing to handle the "1.8V Signaling Enable" bit properly.
+> > I'll submit a patch based on the feedback I get.
+>
+> eMMC is governed by JEDEC specs not SD specs.
 
-No, I mean all Kconfig options, they're scattered over several patches,
-best seen in the checked out branch. The cache strategies are actually
-just one config option (choice).
+My understanding is that JEDEC does not have a host controller spec so
+this driver uses the "SD Host Controller Standard Specification".
 
-> I'm not sure vm_map_ram() is always better than vmap() for all
-> platforms (it has noticeable performance impact). However that
-> seems true for my test machines (x86-64, arm64).
-> 
-> If vm_map_ram() is always the optimal choice compared with vmap(),
-> I will remove vmap() entirely, that is OK. But I am not sure for
-> every platforms though.
+>
+> Please consider making a change in your driver instead.  For example, hoo=
+k
+> ->set_ios() and if 1.8V is enabled and timing is set to MMC_TIMING_MMC_HS
+> then change it to MMC_TIMING_UHS_SDR25.
 
-You can select the implementation by platform, I don't know what are the
-criteria like cpu type etc, but I expect it's something that can be
-determined at module load time. Eventually a module parameter can be the
-the way to set it.
-
-> > And so on. I'd suggest to go through all the options and reconsider them
-> > to be built-in, or runtime settings. Debugging features like the fault
-> > injections could be useful on non-debugging builds too, so a separate
-> > option is fine, otherwise grouping other debugging options under the
-> > main EROFS_FS_DEBUG would look more logical.
-> 
-> The remaining one is EROFS_FS_CLUSTER_PAGE_LIMIT. It impacts the total
-> size of z_erofs_pcluster structure. It's a hard limit, and should be
-> configured as small as possible. I can remove it right now since multi-block
-> compression is not available now. However, it will be added again after
-> multi-block compression is supported.
-> 
-> So, How about leave it right now and use the default value?
-
-From the Kconfig and build-time settings perspective I think it's
-misplaced. This affects testing, you'd have to rebuild and reinstall the
-module to test any change, while it's "just" a number that can be either
-module parameter, sysfs knob, mount option or special ioctl.
-
-But I may be wrong, EROFS is a special purpose filesystem, so the
-fine-grained build options might make sense (eg. due to smaller code).
-The question should be how does each option affect typical production
-build targets. Fewer is IMHO better.
+That's an easy fix, but it still leaves all other drivers/systems
+temporarily using SDR12 at 52MHz during the switch to HS400.
