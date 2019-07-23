@@ -2,148 +2,110 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2184C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFDEC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791C420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4369922839
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="STMumYTj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2j4H0Cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387938AbfGWKLM (ORCPT
+        id S2388008AbfGWKLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:11:12 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:6448 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732954AbfGWKLL (ORCPT
+        Tue, 23 Jul 2019 06:11:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46926 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732954AbfGWKLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:11:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d36dd3f0000>; Tue, 23 Jul 2019 03:11:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 03:11:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 03:11:10 -0700
-Received: from [10.25.72.214] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 10:11:08 +0000
-Subject: Re: [PATCH v2] drm/tegra: sor: Enable HDA interrupts at plugin
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1563787632-19762-1-git-send-email-viswanathl@nvidia.com>
- <11288075-f34a-222c-66da-2bfd13db987c@gmail.com>
-From:   Viswanath L <viswanathl@nvidia.com>
-Message-ID: <fe7a0f13-4e85-56db-7629-92c6a8f67014@nvidia.com>
-Date:   Tue, 23 Jul 2019 15:41:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 06:11:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k189so151425pgk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hbUuvVU1khp7VKFUFggKwVLkVb4q2fUGBg+CHMkUJd0=;
+        b=l2j4H0CdEmZdpJCZvrzmmDahBvKCJ8fXgy9HbAdqesEQ8sZ1khYFM0LnORwhE0hYZ0
+         3Ze25ytmIxhjnmXe3bQwRjJ54RsCOGLmVfy40uxaV/DUaqP0KDeJlf9RZD41izLJrZiP
+         gqsxN0rhaGjKtFeWhCWAaiu7Qp4tfMieiTwmdDSW4eP7uzpVH0Fvu7FquuWyi0AqR6ek
+         YHV3VCX2oqZlsxUPmlxxHdyGpoK5fnI+6t/Je1c5LbRl6cw83448Ey1iIOjizX1xb2u9
+         1UIinCNFpTGduwYlPA3TYct8ABOKHz3JOc2A+IW+tqVEFULDqAXXgDGdoWRSrXKDwJDf
+         QwkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hbUuvVU1khp7VKFUFggKwVLkVb4q2fUGBg+CHMkUJd0=;
+        b=Jugl8rsRiOddaeH7vAsWkXSFIj0EIETKH3BjMNoyjy7tgsNDq4V8wY7f7c0H1CiBkC
+         og6MQL5xkt4caqiWfb+73v9RsMkED0ksDVPHHfVE+Sa8IY0so58hJSi26NxgVTCKNCx7
+         RF0i5mC3cuEAF38Ed1qt1H65ZnQLAibbhp/oyg99Jke7EhaPm3Ney2cC86SSWU4YRvDn
+         acwbj47tF7Wsqhwf4bfhiSG4cX3lg61jDkShDeIDwOJDHG846shE8oGtFJMNZ1xEIuIw
+         ZIo0GCjKieG3rA0Oxi4uQiQwScx/6eOIc6EV7KDyIxrtx0d7CIPRFJjW9ILqxMWmOld7
+         m0fA==
+X-Gm-Message-State: APjAAAVMo3C0RkN0i562FqTgfTAMoEgsOWbrXKOoSvbZtZT/SH617+VO
+        yumlVhakSm+RQOQkGthrt5E=
+X-Google-Smtp-Source: APXvYqwy0r8ZusvFqfsldnwyEu98w+HFWmNsxG7OqhmiSQqukGtgNtu0HJn5kk33sRugAZkhG5uf6w==
+X-Received: by 2002:a63:ff66:: with SMTP id s38mr76616987pgk.363.1563876681873;
+        Tue, 23 Jul 2019 03:11:21 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id s12sm43414905pgr.79.2019.07.23.03.11.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 03:11:21 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] drm/bochs: Use dev_get_drvdata
+Date:   Tue, 23 Jul 2019 18:11:04 +0800
+Message-Id: <20190723101103.30250-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <11288075-f34a-222c-66da-2bfd13db987c@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563876671; bh=TrDkC7hsFFcEl4fFQwj2yJrxHnLvANWklBQezwVn45M=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=STMumYTjuQ59pk4DtURsj11uADdFVJMqM26OY1UrP8Sm1C9yLu2I6YnwZ8035SmY8
-         mtbuwEFCzmwj7jQRRjTLWZeGb2pYQ3TcOHRfsQcy5a6Gvj06na0kKlNYlYkhuM72EL
-         bmb8Dek5nTPO/FK0DUKaGzxqZFAjMwm9V5F0LNm2mQC81FhK8pZnyiZnZ9Yizszpe4
-         NJP4caAFZsIlBi6pldh/I6RXJVhAOXBKkRAaj1HczD8SpXJYTv5+g8KH/8leFDkRda
-         fYWOiqfP741uoeLIqjespDjldVE079J6XDehaMCqcY5Iq3Hctrn9iJdQtKL/IZBZNZ
-         8feLpogYx22ew==
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your comments, Dmitry. Please see my responses inline.
+Instead of using to_pci_dev + pci_get_drvdata,
+use dev_get_drvdata to make code simpler.
 
-On 7/23/2019 6:00 AM, Dmitry Osipenko wrote:
-> 22.07.2019 12:27, Viswanath L =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> HDMI plugout calls runtime suspend, which clears interrupt registers
->> and causes audio functionality to break on subsequent plugin; setting
->> interrupt registers in sor_audio_prepare() solves the issue
-> Hello Viswanath,
->
-> A dot should be in the end of sentence, please. And should be better to
-> s/plugin/plug-in/ in the commit's message/title because 'plugin' sounds
-> as a noun.
-[VL] Yes, I'll make the above changes.
->
-> Please don't version patch as v2 if v1 wasn't ever sent out.
-[VL] Now that I have sent v2, shall I continue with v2 for the next=20
-patch? Apologies for this oversight.
->
-> You should add a stable tag here to get patch backported into stable
-> kernel versions:
->
-> Cc: <stable@vger.kernel.org>
-[VL] Yes, will add.
->
->> Signed-off-by: Viswanath L <viswanathl@nvidia.com>
-> The kernel upstreaming rules require a full name. I'm pretty sure that L
-> isn't yours surname.
-[VL] My name appears as "Viswanath L" in all company records and email=20
-lists. I would strongly prefer to keep it this way, unless that is an=20
-absolute no-no.
->> ---
->>   drivers/gpu/drm/tegra/sor.c | 18 +++++++++---------
->>   1 file changed, 9 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
->> index 5be5a08..0470cfe 100644
->> --- a/drivers/gpu/drm/tegra/sor.c
->> +++ b/drivers/gpu/drm/tegra/sor.c
->> @@ -2164,6 +2164,15 @@ static void tegra_sor_audio_prepare(struct tegra_=
-sor *sor)
->>  =20
->>   	value =3D SOR_AUDIO_HDA_PRESENSE_ELDV | SOR_AUDIO_HDA_PRESENSE_PD;
->>   	tegra_sor_writel(sor, value, SOR_AUDIO_HDA_PRESENSE);
->> +
->> +	/*
->> +	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
->> +	 * is used for interoperability between the HDA codec driver and the
->> +	 * HDMI/DP driver.
->> +	 */
->> +	value =3D SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
->> +	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
->> +	tegra_sor_writel(sor, value, SOR_INT_MASK);
->>   }
->>  =20
->>   static void tegra_sor_audio_unprepare(struct tegra_sor *sor)
->> @@ -2913,15 +2922,6 @@ static int tegra_sor_init(struct host1x_client *c=
-lient)
->>   	if (err < 0)
->>   		return err;
->>  =20
->> -	/*
->> -	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
->> -	 * is used for interoperability between the HDA codec driver and the
->> -	 * HDMI/DP driver.
->> -	 */
->> -	value =3D SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
->> -	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
->> -	tegra_sor_writel(sor, value, SOR_INT_MASK);
->> -
->>   	return 0;
->>   }
->>  =20
->>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/gpu/drm/bochs/bochs_drv.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
+index 8f3a5bda9d03..d8a50200408c 100644
+--- a/drivers/gpu/drm/bochs/bochs_drv.c
++++ b/drivers/gpu/drm/bochs/bochs_drv.c
+@@ -83,16 +83,14 @@ static struct drm_driver bochs_driver = {
+ #ifdef CONFIG_PM_SLEEP
+ static int bochs_pm_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 
+ 	return drm_mode_config_helper_suspend(drm_dev);
+ }
+ 
+ static int bochs_pm_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
++	struct drm_device *drm_dev = dev_get_drvdata(dev);
+ 
+ 	return drm_mode_config_helper_resume(drm_dev);
+ }
+-- 
+2.20.1
+
