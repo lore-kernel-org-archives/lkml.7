@@ -2,123 +2,272 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAD5C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE43C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF40821E6B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD9921E6B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bkYeL3+k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzV9aLyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbfGWA4w (ORCPT
+        id S1731794AbfGWA7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:56:52 -0400
-Received: from mail-eopbgr80089.outbound.protection.outlook.com ([40.107.8.89]:17230
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728679AbfGWA4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:56:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fLjszwKIGOtF4Uvhw3zxUADTNBqvc95tWKQRsyHK1bcfzzEr8xbq7wgVvQG/gtD+1E/53Iysf+sMMU6rrKbY+xzMPITOrUVA72d/MsCaHY6xcPoqasMMaKm7pjUZKOlKKYhkYX5+w4a6W540FN5X8DAKh5Rp34MpJqgikS+aAEvtTN3oQ7GNxLc5J1oegx96M+Bw+7hVogkEy330oGNTcWwBQaEVKAbjP2OOtxsUACVOTTF43wgKvqlelrSm73qIT/fJ031ZarZddLInSMTIpSFDKvZO1Wjqdgr1SRof4oacKnUAxLJ1pFhAZbg4NX3ZiXY2rOwr91jflFXYIA7vvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2i0WmTErKnjdY6v4nm4iXLBxTZGu71iCTTFKfLzfNoc=;
- b=VOMo4bTbqzEgg8nMBYPXmES4wZL5PqH8HnodV/xH9EAY5h/vFVhy1U8064ruKxqEaX7TEg9H5Oa8YPj8AQQyRAPLXBHdQdgvxor2tDWzCbH0W+IOUmgQKCmkTXOR+OXSsMg6N+Awaa4vRJGf1uW9hhYCtNy8zxcdNeGGrx44a7OrWr5FsHyYDYhNKe9SbzWHLZJLYKpdCNN8IdjhqHdtOJWl4wEvx9QjWBh9/GtD9XkQAaYsuS/oC1tLi8XgNN1Ej6fjmUuYGvGNaVTnhpupLw1kAROJRy5ep1MGc5UxkQdcHkdfMa3apacm7pFDM9EB1R3Tk0of6UXqJfYUkTA4Lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2i0WmTErKnjdY6v4nm4iXLBxTZGu71iCTTFKfLzfNoc=;
- b=bkYeL3+k6B7vosPFKlIJArp9pQAdwdrAmjH6kutQpgf3+77n8/iZ0qvJY54aBEHaa46Ueru+wcX9grMternivbN3XY/EHPEBn4cfBHxNa140mvjxCOsJSuIgy/t3rWVX83UE3wcTj7HbCFnBnwD8Jk0WJyXwg+8tRnPanlP8imE=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5763.eurprd04.prod.outlook.com (20.178.117.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Tue, 23 Jul 2019 00:56:47 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::2023:c0e5:8a63:2e47]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::2023:c0e5:8a63:2e47%5]) with mapi id 15.20.2094.011; Tue, 23 Jul 2019
- 00:56:47 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] clk: imx: imx8mm: fix audio pll setting
-Thread-Topic: [PATCH] clk: imx: imx8mm: fix audio pll setting
-Thread-Index: AQHVOrjKqRILo4kj1ESmmUTSG4SPJabXPg0AgAAvSDA=
-Date:   Tue, 23 Jul 2019 00:56:47 +0000
-Message-ID: <AM0PR04MB44815D9F3B2ABC00D0CF311288C70@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1563157783-31846-1-git-send-email-peng.fan@nxp.com>
- <20190722220645.C51BC219BE@mail.kernel.org>
-In-Reply-To: <20190722220645.C51BC219BE@mail.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af149ee4-5aa8-4909-d091-08d70f08a36d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5763;
-x-ms-traffictypediagnostic: AM0PR04MB5763:
-x-microsoft-antispam-prvs: <AM0PR04MB5763F7879112970DC5A6277B88C70@AM0PR04MB5763.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0107098B6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(54906003)(11346002)(476003)(110136005)(316002)(66446008)(66556008)(6246003)(64756008)(229853002)(66946007)(66476007)(76116006)(446003)(33656002)(9686003)(76176011)(55016002)(44832011)(2201001)(66066001)(3846002)(2906002)(6116002)(71200400001)(71190400001)(81166006)(81156014)(53936002)(4744005)(7696005)(86362001)(8936002)(14444005)(25786009)(74316002)(7416002)(7736002)(305945005)(2501003)(8676002)(478600001)(26005)(6506007)(5660300002)(102836004)(52536014)(99286004)(486006)(186003)(256004)(4326008)(14454004)(68736007)(6436002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5763;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6xxQ+OeQRQ+eX/NE46zPTPsOgXJZNJvi1qyzEZfU1rJKwsfOBaxRAb5xMFwOzOmIkpd4KmJEmYzQf8LEQoaI3i3c5wVnKusTJ8t4qKSIoyM0M8djLuqOeUKXxXwEwxCyE9hGTo5+k2rc2yoFIgiKl8yFBuQHZ6HHERoXcNDOtD5iojm1CYFm9GXGQnFff7smk2PocenFHic0Y5ze4F0HSPOCv424+wQ3KupDOQLHFSNqtY0BvpWFr8wKX+FqxItfYXTlKM9caYjini+8bAvpiS7pGGG5WLDzlsxhKyT/W8O6ZzAh8ZIKJkqh73y6ePKKJlTr1d4enK8wRJ1aRAn/qPvpAyirwyJeePkQXdg0wy707Uo+wmveUNkHumpaZ8ymw5hemJeJ7DZ9hm+kenYB/WgMBh0dii0GF3Pnsf2EF1A=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 22 Jul 2019 20:59:02 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37332 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731406AbfGWA7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 20:59:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z28so39425370ljn.4;
+        Mon, 22 Jul 2019 17:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=msmKv+diyW3ZToy5cpA1UsEEYrgAfasPnODmQX4WK/8=;
+        b=gzV9aLyMYV9JtY3JdLlyRvsVeC1i+yyOa5FknnI+Fb6FK7Ig52um6Ig2oV0LaLtkb6
+         WUxboo+MiO0ubljmg3ZpqkHMnXS2447E1XDjNsARclHsDJcNzKZCj8Q7AC6BdbdJ8TBQ
+         44qTKw0ocwWyiiSHEEJcZIFuhUUeo3E2SwSTp7xr+3Z3PNy+WX8ZnqEgnLH4Kavztb3Z
+         0Qv5qK1KgWLj+8Ifqttm/qeouV3mNEHwm3EYHWhjV377QO8RatYsqjAYi47vzZEXdp7H
+         1K3PIuwv9UxF2IU5Bp+CxbfaaZhNOlZEyt8uHgQOlcnucSb0J/vl9jQjvCE7JVK5uCAz
+         UX/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=msmKv+diyW3ZToy5cpA1UsEEYrgAfasPnODmQX4WK/8=;
+        b=BZCpFDcoQw9si/ftgDToPEqStK8biwJikdHVWKPxLOR1xP1vEmXAz1AGPHikeLDRhu
+         VjI/zdbVJh4KzONHUHsehtSQ6CTj7//NQqQ4CEBsT5yZmNIWnmquGl8lNCeBszuAlWij
+         sgJSBlCLAlbaEDCE5D1lrTrbElSPE/lCrJFv2sRm6upYDAQ3cK+nJg+V4jP/T18ln5fG
+         VCyDRYc+81Nkarwu6QENK3w2qxSQ1qyFJSlncR6b9ymmwWH/ns8YvKGVoz53uuSLDNIU
+         qIoYLshQmH8xHkkp4FdJBL5rIaeiPTWCY8gkjrVxxY5GrkqAKP6WeGrHX5uSWhQul9po
+         wiIg==
+X-Gm-Message-State: APjAAAVSz1vF7YUUIcOvGT4001fksPHAOqHiYBorquz9c5USrlq38Ym+
+        3MTJvpFDcppV+an488oWiwOpcLb1
+X-Google-Smtp-Source: APXvYqxe1m6MerGRIs/yzKqYPqUsYZQFyq3yLTG16hH6N14t2GPxfXwuhz2H2Ph7jcvSClKnPyz+0A==
+X-Received: by 2002:a2e:3013:: with SMTP id w19mr38002953ljw.73.1563843538325;
+        Mon, 22 Jul 2019 17:58:58 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id h4sm7798802ljj.31.2019.07.22.17.58.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 17:58:57 -0700 (PDT)
+Subject: Re: [PATCH V6 16/21] soc/tegra: pmc: Add pmc wake support for
+ tegra210
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0b3d08ea-4633-8a54-ba66-c3f3146a1ece@gmail.com>
+Date:   Tue, 23 Jul 2019 03:58:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af149ee4-5aa8-4909-d091-08d70f08a36d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 00:56:47.1373
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5763
+In-Reply-To: <1563738060-30213-17-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RlcGhlbiwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBjbGs6IGlteDogaW14OG1tOiBm
-aXggYXVkaW8gcGxsIHNldHRpbmcNCj4gDQo+IFF1b3RpbmcgUGVuZyBGYW4gKDIwMTktMDctMTQg
-MTk6NTU6NDMpDQo+ID4gRnJvbTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+ID4NCj4g
-PiBUaGUgQVVESU8gUExMIG1heCBzdXBwb3J0IDY1ME0sIHNvIHRoZSBvcmlnaW5hbCBjbGsgc2V0
-dGluZ3MgdmlvbGF0ZQ0KPiA+IHNwZWMuIFRoaXMgcGF0Y2ggbWFrZXMgdGhlIG91dHB1dCA3ODY0
-MzIwMDAgLT4gMzkzMjE2MDAwLCBhbmQNCj4gPiA3MjI1MzQ0MDAgLT4gMzYxMjY3MjAwIHRvIGFs
-aWduZWQgd2l0aCBOWFAgdmVuZG9yIGtlcm5lbCB3aXRob3V0IGFueQ0KPiA+IGltcGFjdCBvbiBh
-dWRpbyBmdW5jdGlvbmFsaXR5IGFuZCBnbyB3aXRoaW4gNjUwTUh6IFBMTCBsaW1pdC4NCj4gPg0K
-PiA+IENjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4NCj4gPiBGaXhlczogYmE1NjI1YzNlMjcy
-ICgiY2xrOiBpbXg6IEFkZCBjbG9jayBkcml2ZXIgc3VwcG9ydCBmb3IgaW14OG1tIikNCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gPiAtLS0NCj4gDQo+
-IElzIHRoaXMgYSBwcm9ibGVtIHJpZ2h0IG5vdywgaS5lLiBzaG91bGQgSSBhcHBseSB0aGlzIHRv
-IGNsay1maXhlcz8gT3IgY2FuIHRoaXMgd2FpdA0KPiB1bnRpbCBuZXh0IG1lcmdlIHdpbmRvdz8N
-Cg0KQ291bGQgd2FpdCB1bnRpbCBuZXh0IG1lcmdlIHdpbmRvdy4NCg0KVGhhbmtzLA0KUGVuZy4N
-Cg0K
+21.07.2019 22:40, Sowjanya Komatineni пишет:
+> This patch implements PMC wakeup sequence for Tegra210 and defines
+> common used RTC alarm wake event.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 91c84d0e66ae..c556f38874e1 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -57,6 +57,12 @@
+>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
+> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
+> +
+> +#define PMC_WAKE_MASK			0x0c
+> +#define PMC_WAKE_LEVEL			0x10
+> +#define PMC_WAKE_STATUS			0x14
+> +#define PMC_SW_WAKE_STATUS		0x18
+>  
+>  #define DPD_SAMPLE			0x020
+>  #define  DPD_SAMPLE_ENABLE		BIT(0)
+> @@ -87,6 +93,11 @@
+>  
+>  #define PMC_SCRATCH41			0x140
+>  
+> +#define PMC_WAKE2_MASK			0x160
+> +#define PMC_WAKE2_LEVEL			0x164
+> +#define PMC_WAKE2_STATUS		0x168
+> +#define PMC_SW_WAKE2_STATUS		0x16c
+> +
+>  #define PMC_SENSOR_CTRL			0x1b0
+>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+> @@ -1922,6 +1933,55 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>  	.alloc = tegra_pmc_irq_alloc,
+>  };
+>  
+> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+> +{
+> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+> +	unsigned int offset, bit;
+> +	u32 value;
+> +
+> +	if (data->hwirq == ULONG_MAX)
+> +		return 0;
+> +
+> +	offset = data->hwirq / 32;
+> +	bit = data->hwirq % 32;
+> +
+> +	/*
+> +	 * Latch wakeups to SW_WAKE_STATUS register to capture events
+> +	 * that would not make it into wakeup event register during LP0 exit.
+> +	 */
+> +	value = tegra_pmc_readl(pmc, PMC_CNTRL);
+> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
+> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+> +	udelay(120);
+
+Why it takes so much time to latch the values? Shouldn't some status-bit
+be polled for the completion of latching?
+
+Is this register-write really getting buffered in the PMC?
+
+> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
+> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+> +	udelay(120);
+
+120 usecs to remove latching, really?
+
+> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
+> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
+> +
+> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
+> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
+> +
+> +	/* enable PMC wake */
+> +	if (data->hwirq >= 32)
+> +		offset = PMC_WAKE2_MASK;
+> +	else
+> +		offset = PMC_WAKE_MASK;
+> +
+> +	value = tegra_pmc_readl(pmc, offset);
+> +
+> +	if (on)
+> +		value |= 1 << bit;
+> +	else
+> +		value &= ~(1 << bit);
+> +
+> +	tegra_pmc_writel(pmc, value, offset);
+
+Why the latching is done *before* writing into the WAKE registers? What
+it is latching then?
+
+> +	return 0;
+> +}
+> +
+>  static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>  {
+>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+> @@ -1954,6 +2014,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+>  	return 0;
+>  }
+>  
+> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+> +{
+> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+> +	unsigned int offset, bit;
+> +	u32 value;
+> +
+> +	if (data->hwirq == ULONG_MAX)
+> +		return 0;
+> +
+> +	offset = data->hwirq / 32;
+> +	bit = data->hwirq % 32;
+> +
+> +	if (data->hwirq >= 32)
+> +		offset = PMC_WAKE2_LEVEL;
+> +	else
+> +		offset = PMC_WAKE_LEVEL;
+> +
+> +	value = tegra_pmc_readl(pmc, offset);
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		value |= 1 << bit;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		value &= ~(1 << bit);
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
+> +		value ^= 1 << bit;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	tegra_pmc_writel(pmc, value, offset);
+
+Shouldn't the WAKE_LEVEL be latched as well?
+
+> +	return 0;
+> +}
+> +
+>  static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+>  {
+>  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+> @@ -2540,6 +2643,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
+>  	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
+>  };
+>  
+> +static const struct tegra_wake_event tegra210_wake_events[] = {
+> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
+> +};
+> +
+>  static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>  	.num_powergates = ARRAY_SIZE(tegra210_powergates),
+>  	.powergates = tegra210_powergates,
+> @@ -2557,10 +2664,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
+>  	.regs = &tegra20_pmc_regs,
+>  	.init = tegra20_pmc_init,
+>  	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
+> +	.irq_set_wake = tegra210_pmc_irq_set_wake,
+> +	.irq_set_type = tegra210_pmc_irq_set_type,
+>  	.reset_sources = tegra210_reset_sources,
+>  	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
+>  	.reset_levels = NULL,
+>  	.num_reset_levels = 0,
+> +	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
+> +	.wake_events = tegra210_wake_events,
+>  };
+>  
+>  #define TEGRA186_IO_PAD_TABLE(_pad)					     \
+> 
+
