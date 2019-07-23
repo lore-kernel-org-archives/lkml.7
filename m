@@ -3,106 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1672C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DE8C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C7D217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23B1217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387633AbfGWPjw (ORCPT
+        id S2388708AbfGWPjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:39:52 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35852 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfGWPjw (ORCPT
+        Tue, 23 Jul 2019 11:39:55 -0400
+Received: from smtprelay0127.hostedemail.com ([216.40.44.127]:41191 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725601AbfGWPjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:39:52 -0400
-Received: by mail-oi1-f194.google.com with SMTP id q4so3457696oij.3;
-        Tue, 23 Jul 2019 08:39:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3LRI5UFjq44LBBsGkyZn0c1iwjTBwJ4UTljGvj/dw6Y=;
-        b=h8vwLnbBPQsGxc9Dxgi6cnp+tWZL66OzaUK0LLg5lps8jOzDiMNzLQP4DlBgNNqcAX
-         pveKI/1u+uoctBKef0HfBbHjGns8cK0kmus8RoLprdo0cXf34n7ItPeGGlRWProrTMHp
-         iopk176bO0r4d9tql6rtiF7xEOc+bDCxHTUzBEyrCRr+CpiP0ez6XcsXHjB0OKuMibeq
-         JPUgfrjUIf3VdKwoaPBGllX3HYgu9ScN+K20RkQj3BcLJOuEDJ+ltghRg7m6Nnek+b5K
-         HVHgb3yxBjcAU+PHJ81JyaCbwy4rJ+YlX3pPQJYTZWMwd9xZE1eIAqS/wDi+c+yrXnFz
-         AGAA==
-X-Gm-Message-State: APjAAAVGpZj2loLCqwtzl5KfRYetKi2RpIKSQpIHmKCRWlP7opJsQVEt
-        h9nFnaSEDZzz7qKrs6C9rX0We25AOqI3D2p81WlCZw==
-X-Google-Smtp-Source: APXvYqwCaeRX0/ukewQLWY9NtFhKzlFerKVFsRpBXybOEA8aU+bcGmK/xxtuS8ZeOR85kl+PHrPdml7b97UouubKPrk=
-X-Received: by 2002:aca:bd43:: with SMTP id n64mr34013805oif.148.1563896390666;
- Tue, 23 Jul 2019 08:39:50 -0700 (PDT)
+        Tue, 23 Jul 2019 11:39:54 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DB889182CF665;
+        Tue, 23 Jul 2019 15:39:52 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fowl35_38e5e5eee520d
+X-Filterd-Recvd-Size: 2880
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 23 Jul 2019 15:39:50 +0000 (UTC)
+Message-ID: <c9ef2b56eaf36c8e5449b751ab6e5971b6b34311.camel@perches.com>
+Subject: Re: [PATCH V2 1/2] string: Add stracpy and stracpy_pad mechanisms
+From:   Joe Perches <joe@perches.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
+        kernel-hardening@lists.openwall.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Tue, 23 Jul 2019 08:39:49 -0700
+In-Reply-To: <ce1320d8-60df-7c54-2348-6aabac63c24d@rasmusvillemoes.dk>
+References: <cover.1563889130.git.joe@perches.com>
+         <ed4611a4a96057bf8076856560bfbf9b5e95d390.1563889130.git.joe@perches.com>
+         <ce1320d8-60df-7c54-2348-6aabac63c24d@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <20190723080441.19110-1-geert@linux-m68k.org>
-In-Reply-To: <20190723080441.19110-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 23 Jul 2019 17:39:39 +0200
-Message-ID: <CAMuHMdVuVqXnW8SEnpcbvh8agYvPh775rv9tmV9kGUa6Q2wcwA@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.3-rc1
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     linux-um@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-mips@vger.kernel.org,
-        Parisc List <linux-parisc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 5:22 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Below is the list of build error/warning regressions/improvements in
-> v5.3-rc1[1] compared to v5.2[2].
+On Tue, 2019-07-23 at 16:37 +0200, Rasmus Villemoes wrote:
+> On 23/07/2019 15.51, Joe Perches wrote:
+> > Several uses of strlcpy and strscpy have had defects because the
+> > last argument of each function is misused or typoed.
+> > 
+> > Add macro mechanisms to avoid this defect.
+> > 
+> > stracpy (copy a string to a string array) must have a string
+> > array as the first argument (dest) and uses sizeof(dest) as the
+> > count of bytes to copy.
+> > 
+> > These mechanisms verify that the dest argument is an array of
+> > char or other compatible types like u8 or s8 or equivalent.
+> Sorry, but "compatible types" has a very specific meaning in C, so
+> please don't use that word.
 
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/5f9e832c137075045d15cd6899ab0505cfb2ca4b/ (241 out of 242 configs)
-> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0ecfebd2b52404ae0c54a878c872bb93363ada36/ (all 242 configs)
->
->
-> *** ERRORS ***
->
-> 11 error regressions:
->   + /kisskb/src/drivers/misc/lkdtm/bugs.c: error: 'X86_CR4_SMEP' undeclared (first use in this function):  => 281:13
->   + /kisskb/src/drivers/misc/lkdtm/bugs.c: error: implicit declaration of function 'native_read_cr4' [-Werror=implicit-function-declaration]:  => 279:8
->   + /kisskb/src/drivers/misc/lkdtm/bugs.c: error: implicit declaration of function 'native_write_cr4' [-Werror=implicit-function-declaration]:  => 288:2
+I think you are being overly pedantic here but
+what wording do you actually suggest?
 
-um-all{mod,yes}config
+>  And yes, the kernel disables -Wpointer-sign,
+> so passing an u8* or s8* when strscpy() expects a char* is silently
+> accepted, but does such code exist?
 
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2446' declared with attribute error: BUILD_BUG_ON failed: err_str[sizeof(err_str) - 2] != '\n':  => 2445:3
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2452' declared with attribute error: BUILD_BUG_ON failed: err_str[sizeof(err_str) - 2] != '\n':  => 2451:3
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2790' declared with attribute error: BUILD_BUG_ON failed: invalid_ap_str[sizeof(invalid_ap_str) - 2] != '\n':  => 2789:5
->   + /kisskb/src/drivers/net/wireless/intel/iwlwifi/fw/dbg.c: error: call to '__compiletime_assert_2801' declared with attribute error: BUILD_BUG_ON failed: invalid_ap_str[sizeof(invalid_ap_str) - 2] != '\n':  => 2800:5
+u8 definitely, s8 I'm not sure.
 
-powerpc-all{mod,yes}config{,+64K_PAGES}
-mips-allmodconfig
+I don't find via grep a use of s8 foo[] = "bar";
+or "signed char foo[] = "bar";
 
->   + /kisskb/src/include/linux/kprobes.h: error: implicit declaration of function 'kprobe_fault_handler'; did you mean 'kprobe_page_fault'? [-Werror=implicit-function-declaration]:  => 477:9
+I don't think it bad to allow it.
 
-parisc-allmodconfig
+> > V2: Use __same_type testing char[], signed char[], and unsigned char[]
+> >     Rename to, from, and size, dest, src and count
+> 
+> count is just as bad as size in terms of "the expression src might
+> contain that identifier". But there's actually no reason to even declare
+> a local variable, just use ARRAY_SIZE() directly as the third argument
+> to strscpy().
 
->   + /kisskb/src/mm/hmm.c: error: implicit declaration of function 'pud_pfn' [-Werror=implicit-function-declaration]:  => 753:3, 753:9
->   + /kisskb/src/mm/hmm.c: error: implicit declaration of function 'pud_pfn'; did you mean 'pte_pfn'? [-Werror=implicit-function-declaration]:  => 753:9
+I don't care about that myself.
+It's a macro local identifier and shadowing in a macro
+is common.  I'm not a big fan of useless underscores.
 
-ppc64_book3e_allmodconfig
-um-all{mod,yes}config
-
->   + error: "vmf_insert_mixed" [drivers/gpu/drm/exynos/exynosdrm.ko] undefined!:  => N/A
-
-sh-all{mod,yes}config (fix available)
+I think either works.
 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
