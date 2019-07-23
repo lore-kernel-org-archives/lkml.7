@@ -2,94 +2,123 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06575C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BDBC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A4D218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4F421901
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbfGWLDX (ORCPT
+        id S2389146AbfGWLGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:03:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45559 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbfGWLDX (ORCPT
+        Tue, 23 Jul 2019 07:06:32 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:57998 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730449AbfGWLGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:03:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x22so36515267qtp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 04:03:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5gRVq4mioQ1Lvj1oyc3VAOJ7VbnTpBvpRXYz+4yO8Nc=;
-        b=I8SwtphlJZxFmjXL7x8EqC+XIeUVx80ygx1bG9h3PjWtMpApZQTFQVJJMC13zD5JTy
-         ZazinW7tU+9nMTCVaNMlVKP0zSbdBp7zpT3zfXxaJcB1Egh5tLwuKwngevEKcm/qvBvK
-         pNzutLJ9777kUJXkSkOmgoV1up0u4TPthGqd2dRG0Q06ZiRTSBhjANhcKw+1sdVEuAfd
-         MzhYR9sJt2kU1BY9C7f2pQxlip3D++CAWnEOT9qwZlNNhQ0m1BlxzLC4g066m+a3aF2A
-         Y1raoJhIzDH6WRbV8KF1/7iy63yXibNjdNhnpXOACwyIc6OKaOK25Tl2MaysWM7zFTf1
-         CmuQ==
-X-Gm-Message-State: APjAAAVjOxbku+Ckt8Woc3W+I/9LTSULurLJGrWZDg5Pu+AT4/8KyPag
-        S5JahKKGj2wsM+tS5YWnRMne10PvHd/9rP5aZUc=
-X-Google-Smtp-Source: APXvYqymwmOaskE8rbh7ovV9rgwtK6VxQ1bYhj3/rCq07wk9U9KOYskMFb43QKYAif1XY/b5+WcMEz8efuseBdkPQKI=
-X-Received: by 2002:a0c:dd86:: with SMTP id v6mr54513824qvk.176.1563879801936;
- Tue, 23 Jul 2019 04:03:21 -0700 (PDT)
+        Tue, 23 Jul 2019 07:06:32 -0400
+Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
+        by 156.147.23.51 with ESMTP; 23 Jul 2019 20:06:29 +0900
+X-Original-SENDERIP: 156.147.1.151
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.151 with ESMTP; 23 Jul 2019 20:06:29 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Tue, 23 Jul 2019 20:05:21 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Byungchul Park <max.byungchul.park@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@lge.com
+Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
+Message-ID: <20190723110521.GA28883@X58A-UD3R>
+References: <20190713151330.GE26519@linux.ibm.com>
+ <20190713154257.GE133650@google.com>
+ <20190713174111.GG26519@linux.ibm.com>
+ <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
+ <20190719003942.GA28226@X58A-UD3R>
+ <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
+ <20190719074329.GY14271@linux.ibm.com>
+ <CANrsvRM7ehvqcPtKMV7RyRCiXwe_R_TsLZiNtxBPY_qnSg2LNQ@mail.gmail.com>
+ <20190719195728.GF14271@linux.ibm.com>
+ <CAEXW_YQADrPRtJW7yJZyROH1_d2yOA7_1HVgm50wxpOC80+=Wg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190719113638.4189771-1-arnd@arndb.de> <20190723105046.GD3402@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190723105046.GD3402@hirez.programming.kicks-ass.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 23 Jul 2019 13:03:05 +0200
-Message-ID: <CAK8P3a3_sRmHVsEh=+83zR_Q3+Bh9fd+-iiCxt4PU4gkx0HZ7Q@mail.gmail.com>
-Subject: Re: [PATCH] [v2] waitqueue: shut up clang -Wuninitialized warnings
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YQADrPRtJW7yJZyROH1_d2yOA7_1HVgm50wxpOC80+=Wg@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 12:50 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> On Fri, Jul 19, 2019 at 01:36:00PM +0200, Arnd Bergmann wrote:
-> > --- a/include/linux/wait.h
-> > +++ b/include/linux/wait.h
-> > @@ -70,8 +70,17 @@ extern void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *n
-> >  #ifdef CONFIG_LOCKDEP
-> >  # define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
-> >       ({ init_waitqueue_head(&name); name; })
-> > -# define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
-> > +# if defined(__clang__) && __clang_major__ <= 9
-> > +/* work around https://bugs.llvm.org/show_bug.cgi?id=42604 */
-> > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name)                                      \
-> > +     _Pragma("clang diagnostic push")                                        \
-> > +     _Pragma("clang diagnostic ignored \"-Wuninitialized\"")                 \
-> > +     struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)      \
-> > +     _Pragma("clang diagnostic pop")
-> > +# else
-> > +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
-> >       struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
-> > +# endif
->
-> While this is indeed much better than before; do we really want to do
-> this? That is, since clang-9 release will not need this, we're basically
-> doing the above for pre-release compilers only.
+On Fri, Jul 19, 2019 at 04:33:56PM -0400, Joel Fernandes wrote:
+> On Fri, Jul 19, 2019 at 3:57 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> >
+> > On Fri, Jul 19, 2019 at 06:57:58PM +0900, Byungchul Park wrote:
+> > > On Fri, Jul 19, 2019 at 4:43 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+> > > >
+> > > > On Thu, Jul 18, 2019 at 08:52:52PM -0400, Joel Fernandes wrote:
+> > > > > On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
+> > > > > [snip]
+> > > > > > > - There is a bug in the CPU stopper machinery itself preventing it
+> > > > > > > from scheduling the stopper on Y. Even though Y is not holding up the
+> > > > > > > grace period.
+> > > > > >
+> > > > > > Or any thread on Y is busy with preemption/irq disabled preventing the
+> > > > > > stopper from being scheduled on Y.
+> > > > > >
+> > > > > > Or something is stuck in ttwu() to wake up the stopper on Y due to any
+> > > > > > scheduler locks such as pi_lock or rq->lock or something.
+> > > > > >
+> > > > > > I think what you mentioned can happen easily.
+> > > > > >
+> > > > > > Basically we would need information about preemption/irq disabled
+> > > > > > sections on Y and scheduler's current activity on every cpu at that time.
+> > > > >
+> > > > > I think all that's needed is an NMI backtrace on all CPUs. An ARM we
+> > > > > don't have NMI solutions and only IPI or interrupt based backtrace
+> > > > > works which should at least catch and the preempt disable and softirq
+> > > > > disable cases.
+> > > >
+> > > > True, though people with systems having hundreds of CPUs might not
+> > > > thank you for forcing an NMI backtrace on each of them.  Is it possible
+> > > > to NMI only the ones that are holding up the CPU stopper?
+> > >
+> > > What a good idea! I think it's possible!
+> > >
+> > > But we need to think about the case NMI doesn't work when the
+> > > holding-up was caused by IRQ disabled.
+> > >
+> > > Though it's just around the corner of weekend, I will keep thinking
+> > > on it during weekend!
+> >
+> > Very good!
+> 
+> Me too will think more about it ;-) Agreed with point about 100s of
+> CPUs usecase,
+> 
+> Thanks, have a great weekend,
 
-Kernelci currently builds arch/arm and arch/arm64 kernels with clang-8,
-and probably won't change to clang-9 until after that is released,
-presumably in September.
+BTW, if there's any long code section with irq/preemption disabled, then
+the problem would be not only about RCU stall. And we can also use
+latency tracer or something to detect the bad situation.
 
-Anyone doing x86 builds would use a clang-9 snapshot today
-because of the asm-goto support, but so far the fix has not
-been merged there either. I think the chances of it getting
-fixed before the release are fairly good, but I don't know how
-long it will actually take.
+So in this case, sending ipi/nmi to the CPUs where the stoppers cannot
+to be scheduled does not give us additional meaningful information.
 
-       Arnd
+I think Paul started to think about this to solve some real problem. I
+seriously love to help RCU and it's my pleasure to dig deep into kind of
+RCU stuff, but I've yet to define exactly what problem is. Sorry.
+
+Could you share the real issue? I think you don't have to reproduce it.
+Just sharing the issue that you got inspired from is enough. Then I
+might be able to develop 'how' with Joel! :-) It's our pleasure!
+
+Thanks,
+Byungchul
