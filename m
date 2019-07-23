@@ -2,77 +2,230 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4CDC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600F8C76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57AD8223DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q7g8/hNy"
+	by mail.kernel.org (Postfix) with ESMTP id 3D9E6227B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388945AbfGWJS1 (ORCPT
+        id S1729914AbfGWJTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:18:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51152 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfGWJS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:18:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1R2qVL2FwLoBS7z/Jf8svy/wd0xYkPtd4YrOC2qNAxI=; b=q7g8/hNy8aFZ0LMT7ZqZPMk//
-        Q0DUxwvVvzOK8PKRTEv3qhxbmWl3rAvcESRwXrYHKFHpBOh6jIiT/NIxKILGoy//vj8RcW30+mxwf
-        YA2G3k9eFicpCxP2GMrxkQYUTe5TagQukzxEKIKF2KSRPx63808YO2aeI39Fhn8CevZp/XBlTotUk
-        At0x4KIF+6eyPX9dN9/J5+CSi2QVwe5y1MQNyBz6kMSgiOH4hL1s73dyPfWYKs+3TvpowGIAEKNJ/
-        SglBCQcW7dO9zu7Omy+PlLEMDIUB3m1IOdHvYXmxZ8M+KmyCn/qIJGtl4orsU8pUQ5Aa+H3KLeec5
-        3GrmOQJKg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpqwA-0005fs-Cm; Tue, 23 Jul 2019 09:18:22 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A20B820B9A4F6; Tue, 23 Jul 2019 11:18:20 +0200 (CEST)
-Date:   Tue, 23 Jul 2019 11:18:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
- on i386
-Message-ID: <20190723091820.GZ3402@hirez.programming.kicks-ass.net>
-References: <20190719170343.GA13680@linux.intel.com>
- <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net>
- <201907221012.41504DCD@keescook>
- <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de>
- <201907221135.2C2D262D8@keescook>
- <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com>
- <201907221620.F31B9A082@keescook>
- <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 23 Jul 2019 05:19:45 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57436 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfGWJTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:19:44 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CD23620034E;
+        Tue, 23 Jul 2019 11:19:41 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 97256200307;
+        Tue, 23 Jul 2019 11:19:38 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 92891402FC;
+        Tue, 23 Jul 2019 17:19:34 +0800 (SGT)
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: [RESEND PATCH v6] dmaengine: fsl-edma: add i.mx7ulp edma2 version support
+Date:   Tue, 23 Jul 2019 16:57:42 +0800
+Message-Id: <1563872262-18376-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 04:47:36PM -0700, Andy Lutomirski wrote:
+Add edma2 for i.mx7ulp by version v3, since v2 has already
+been used by mcf-edma.
+The big changes based on v1 are belows:
+1. only one dmamux.
+2. another clock dma_clk except dmamux clk.
+3. 16 independent interrupts instead of only one interrupt for
+all channels.
 
-> I don't love this whole concept, but I also don't have a better idea.
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+---
+Change from v5(https://lkml.org/lkml/2019/6/25/444):
+Fix below build issue, replace platform_irq_count() instead
+of of_irq_count():
+https://lkml.org/lkml/2019/7/8/5
 
-Are we really talking about changing the kernel because BPF is expecting
-things? That is, did we just elevate everything BPF can observe to ABI?
+ drivers/dma/fsl-edma-common.c | 18 +++++++++++-
+ drivers/dma/fsl-edma-common.h |  4 +++
+ drivers/dma/fsl-edma.c        | 66 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 87 insertions(+), 1 deletion(-)
 
-/me runs for cover.
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 26952f5..26c7e0f 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+ 	iowrite8(val8, addr + off);
+ }
+ 
++void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
++		     u32 off, u32 slot, bool enable)
++{
++	u32 val;
++
++	if (enable)
++		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
++	else
++		val = EDMAMUX_CHCFG_DIS;
++
++	iowrite32(val, addr + off * 4);
++}
++
+ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 			unsigned int slot, bool enable)
+ {
+@@ -108,7 +121,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
+ 	slot = EDMAMUX_CHCFG_SOURCE(slot);
+ 
+-	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
++	if (fsl_chan->edma->drvdata->version == v3)
++		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
++	else
++		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+ }
+ EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
+ 
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 4e17556..5eaa290 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -125,6 +125,7 @@ struct fsl_edma_chan {
+ 	dma_addr_t			dma_dev_addr;
+ 	u32				dma_dev_size;
+ 	enum dma_data_direction		dma_dir;
++	char				chan_name[16];
+ };
+ 
+ struct fsl_edma_desc {
+@@ -139,11 +140,13 @@ struct fsl_edma_desc {
+ enum edma_version {
+ 	v1, /* 32ch, Vybrid, mpc57x, etc */
+ 	v2, /* 64ch Coldfire */
++	v3, /* 32ch, i.mx7ulp */
+ };
+ 
+ struct fsl_edma_drvdata {
+ 	enum edma_version	version;
+ 	u32			dmamuxs;
++	bool			has_dmaclk;
+ 	int			(*setup_irq)(struct platform_device *pdev,
+ 					     struct fsl_edma_engine *fsl_edma);
+ };
+@@ -153,6 +156,7 @@ struct fsl_edma_engine {
+ 	void __iomem		*membase;
+ 	void __iomem		*muxbase[DMAMUX_NR];
+ 	struct clk		*muxclk[DMAMUX_NR];
++	struct clk		*dmaclk;
+ 	struct mutex		fsl_edma_mutex;
+ 	const struct fsl_edma_drvdata *drvdata;
+ 	u32			n_chans;
+diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
+index fcbad6a..54cbdfd 100644
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -162,6 +162,50 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
+ 	return 0;
+ }
+ 
++static int
++fsl_edma2_irq_init(struct platform_device *pdev,
++		   struct fsl_edma_engine *fsl_edma)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int i, ret, irq;
++	int count;
++
++	count = platform_irq_count(pdev);
++	dev_dbg(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
++	if (count <= 2) {
++		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
++		return -EINVAL;
++	}
++	/*
++	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
++	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
++	 * For now, just simply request irq without IRQF_SHARED flag, since 16
++	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
++	 */
++	for (i = 0; i < count; i++) {
++		irq = platform_get_irq(pdev, i);
++		if (irq < 0)
++			return -ENXIO;
++
++		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
++
++		/* The last IRQ is for eDMA err */
++		if (i == count - 1)
++			ret = devm_request_irq(&pdev->dev, irq,
++						fsl_edma_err_handler,
++						0, "eDMA2-ERR", fsl_edma);
++		else
++			ret = devm_request_irq(&pdev->dev, irq,
++						fsl_edma_tx_handler, 0,
++						fsl_edma->chans[i].chan_name,
++						fsl_edma);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static void fsl_edma_irq_exit(
+ 		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
+ {
+@@ -187,8 +231,16 @@ static struct fsl_edma_drvdata vf610_data = {
+ 	.setup_irq = fsl_edma_irq_init,
+ };
+ 
++static struct fsl_edma_drvdata imx7ulp_data = {
++	.version = v3,
++	.dmamuxs = 1,
++	.has_dmaclk = true,
++	.setup_irq = fsl_edma2_irq_init,
++};
++
+ static const struct of_device_id fsl_edma_dt_ids[] = {
+ 	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
++	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+@@ -236,6 +288,20 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	fsl_edma_setup_regs(fsl_edma);
+ 	regs = &fsl_edma->regs;
+ 
++	if (drvdata->has_dmaclk) {
++		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
++		if (IS_ERR(fsl_edma->dmaclk)) {
++			dev_err(&pdev->dev, "Missing DMA block clock.\n");
++			return PTR_ERR(fsl_edma->dmaclk);
++		}
++
++		ret = clk_prepare_enable(fsl_edma->dmaclk);
++		if (ret) {
++			dev_err(&pdev->dev, "DMA clk block failed.\n");
++			return ret;
++		}
++	}
++
+ 	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
+ 		char clkname[32];
+ 
+-- 
+2.7.4
+
