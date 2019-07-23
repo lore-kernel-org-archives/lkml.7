@@ -2,90 +2,102 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81025C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A5C7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3992238B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24992238B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 02:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="enwqPukv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMxJbXGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbfGWCQg (ORCPT
+        id S1730363AbfGWCQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 22:16:36 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41235 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfGWCQg (ORCPT
+        Mon, 22 Jul 2019 22:16:40 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42275 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfGWCQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 22:16:36 -0400
-Received: by mail-qk1-f193.google.com with SMTP id v22so30011192qkj.8;
-        Mon, 22 Jul 2019 19:16:35 -0700 (PDT)
+        Mon, 22 Jul 2019 22:16:39 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v15so42351266eds.9;
+        Mon, 22 Jul 2019 19:16:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7GgnchVxa85kofAIjboqJCKA6VShjGUyfwivNl63GJ8=;
-        b=enwqPukvvi2Os0t54GJuz6TCm4CbxxKrSuAL/QdPmtJdzjuFCj+I3xLRmS9ubxIVnU
-         BmX3XK1IKQ5Bp0Kt/rsUlcMLdEBkkWjkLRdZWwI1i4MFfM4/gIPrgaFA4uZFUnjSXwTo
-         BJKEsm19zmW8OfM4acCvQ/4de/DyLISE1/szE=
+         :cc:content-transfer-encoding;
+        bh=0d1KOuIEFnf1KFCnr4djXsFhQxtzBMVUUZ05z+W/5jo=;
+        b=fMxJbXGSICZlJtOwdqceWfojiNmjnRgT5K43L+Zm5AQhz/7xvxndUvQkWy3Hw5n2yC
+         WnbX36qnW5HcnoafAekJ3rVs/H92XUHH8eM0dkSgfNS/6dEmXtPzRzWjPdAYGpipf/7w
+         eB1zipAXEkUgnnxJtBd5/0X3bOZ4ZC8lnwoIBOiiCLT/ECjy4HA1Aj1T1OH7mfNLp7H0
+         +kYqY3ojl3sTigxtk8gDlOuLOakd2zsB1ei5dfMJ2nfo4hZGjpTTWHo+a1dX4Pha5HUp
+         WKD1rNoh00njvz9fQVmjM7HWtvUowpkMnQWxrOyqOG/rIZOb24qplrsXB9+WePQTIwFy
+         OOSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7GgnchVxa85kofAIjboqJCKA6VShjGUyfwivNl63GJ8=;
-        b=aWP401S5NUvUAJWQoVWOXvRIGPvrERGQVvQrWxKAy2SQzliBOJblbrEfgGyLXpWOIh
-         L5iHptgwC2Ldi9TGRtubb0GAQJ/94hSs9rRGp6vUYDiUa1/QKPKjMDgDbCjPYTbgOYLZ
-         /MFp6seg7sZ//zhlVDahoFqZ+lEmTGrVZQAOaO/ZbW1od1H/UTa6ITMxYs2ftG9TswQH
-         d6JLYWFyvyOBk/ECkhfcMQPC1AjHvof+sGZRuZHNAR0J3JuEISkjjQXUom0uQn+mlYYt
-         eF88QenYofTZGHWyQ9yZrG298inGschoYWA0mjUW0GR1Ca8+8dIt6skWaZgu0qliTq7+
-         ToOA==
-X-Gm-Message-State: APjAAAU2ftNR4ta/H/m6Qcko+UwMb310vHVFXUQOidtCfG0/j/VxFDDS
-        w9ckG2mAQLMoSBKyPwaQWeeSq67/p4iVRTsmqUU=
-X-Google-Smtp-Source: APXvYqxU3suR2c+fS3yT0aq2lqnTUt++7MYnhK9oL6tGmvBmBmm6edtD6GqRPtAqNuBdgfYwI2gPuRDH4KkZOah0kFs=
-X-Received: by 2002:a05:620a:16d6:: with SMTP id a22mr49006146qkn.414.1563848195224;
- Mon, 22 Jul 2019 19:16:35 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0d1KOuIEFnf1KFCnr4djXsFhQxtzBMVUUZ05z+W/5jo=;
+        b=eo2PDrwwt+I5LsZBipDIJP6LXGhvBSFDC6NtfKNo/h1RAJWW3z3SpIJ+Ih4xfKIbKz
+         eZKdZzO4H3mrCDiiRV2+hYxUno6fymUr76eABPogknf/CgXN4RfYDrQMp+1XY4qLoU65
+         M4nR5FZxq0ZKgnSFdnY6bTAdGG6FhZP0p6itCWUpZ+TagpcagPu2o96kopkXtd9+Qpgk
+         2zG5E+rFx5U3gAys9U561b1jGzOfrJ2R7E6Ex2i+2yocr21+Ru3/HNbL3ow1GCBLx6xg
+         2DYtnimw1aqHOdKYhB5OZsvXRkorvZduzWqzRS8yql2X4ub6L+RWKBLNgD3H5tTVWEJj
+         AAXA==
+X-Gm-Message-State: APjAAAWcmEEDjjWlWJZ4xE2Z7QyEqnVwEZMySk07SRUZXOh7i8rbCC84
+        58i0+A7sPjzN1l0jGaE5J1MlWBRnzImOP7CugrO4uFZrvzo=
+X-Google-Smtp-Source: APXvYqy4q3AMNZbXBpqbDGc239s6nk2XqlT/lo3mXwgLbjbnfoME99u3vIkOa8SniVmPP8GMstUG/4SE0VABk101Q4E=
+X-Received: by 2002:aa7:ca41:: with SMTP id j1mr64655205edt.149.1563848198072;
+ Mon, 22 Jul 2019 19:16:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190723003216.2910042-1-vijaykhemka@fb.com> <a0a8162e-c21b-4b3d-b096-1676c5cc9758@www.fastmail.com>
-In-Reply-To: <a0a8162e-c21b-4b3d-b096-1676c5cc9758@www.fastmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 23 Jul 2019 02:16:23 +0000
-Message-ID: <CACPK8XddLM934ArbA13GEN6m9KpgOkQattE5p8qBpv-yL4mJ9Q@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: aspeed: tiogapass: Add VR devices
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Vijay Khemka <vijaykhemka@fb.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
+References: <20190722074133.17777-1-hslester96@gmail.com> <20190722.182235.195933962601112626.davem@davemloft.net>
+In-Reply-To: <20190722.182235.195933962601112626.davem@davemloft.net>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Tue, 23 Jul 2019 10:16:27 +0800
+Message-ID: <CANhBUQ0FMJATcjkb0RYyM8LhA92htq9mddLqcNB94FcxMBGsbg@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: Merge cpu_to_le32s + memcpy to put_unaligned_le32
+To:     David Miller <davem@davemloft.net>
+Cc:     Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Steve Glendinning <steve.glendinning@shawell.net>,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 at 00:40, Andrew Jeffery <andrew@aj.id.au> wrote:
+David Miller <davem@davemloft.net> =E4=BA=8E2019=E5=B9=B47=E6=9C=8823=E6=97=
+=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=889:22=E5=86=99=E9=81=93=EF=BC=9A
 >
+> From: Chuhong Yuan <hslester96@gmail.com>
+> Date: Mon, 22 Jul 2019 15:41:34 +0800
 >
->
-> On Tue, 23 Jul 2019, at 10:04, Vijay Khemka wrote:
-> > Adds voltage regulators Infineon pxe1610 devices to Facebook
-> > tiogapass platform.
+> > Merge the combo uses of cpu_to_le32s and memcpy.
+> > Use put_unaligned_le32 instead.
+> > This simplifies the code.
 > >
-> > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 >
-> Acked-by: Andrew Jeffery <andrew@aj.id.au>
+> Isn't the skb->data aligned to 4 bytes in these situations?
+>
+> If so, we should use the aligned variants.
+>
+> Thank you.
 
-Thanks, applied to aspeed's dt-for-5.4.
+I have checked the five changed files.
+I find that they all have used get_unaligned_le32 for skb->data
+according to my previous applied patches and existing code.
+So I think the skb->data is unaligned in these situations.
 
-Cheers,
-
-Joel
+Usages of get_unaligned_le32:
+asix_common.c: line 104 and 133
+ax88179_178a.c: https://lkml.org/lkml/2019/7/19/652
+lan78xx.c: https://lkml.org/lkml/2019/7/19/573
+smsc75xx.c: https://lkml.org/lkml/2019/7/19/617
+sr9800.c: line 73
