@@ -2,95 +2,212 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C851BC76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B31C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997CD21911
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 06:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="FVjTuMHq"
+	by mail.kernel.org (Postfix) with ESMTP id 5619421911
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388039AbfGWG7m (ORCPT
+        id S2388129AbfGWHCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 02:59:42 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:35609 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfGWG7m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 02:59:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1563865180;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=HMzGT/OWeM8K38nQoAk3mo3OqufNI1pKnUDvqT6/cQs=;
-        b=FVjTuMHqDvjkEG/vuqqhOP+HhQf8ysADLQAQCZXBn2CcjTWDqGV+VqILiJIVi0/B1V
-        UKC5IT0yeuwPS3hHpom2IFtWnriVc2CQReJAlEaqu5SJPn99e9w7HAaRUF9K4QijmSWn
-        prK8aeZAUayMHFILwR8u9yK+GZ8vEuO0kzol6UcGjyTpyHMKKR0MvugmX0REc7gjEfzG
-        6oj/8wHWRx2sCAFgSRtfP/7D+pwCmah1q3gHtDfjrCLnDNZu6aW71Swc8CkavEb5ivrW
-        s2tlvuttkN2tQPwmBxNvzWdETu/Ic4WdxUZGMuvKFC3FtaI/Xs2Wp2WXAK2+DphXd/CT
-        peCw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCzzAWjYNpPLf7dKT9br2BTgS7Wra5BtV3XNo7sm"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:26fe:7700:487b:93ce:9f6c:e3a4]
-        by smtp.strato.de (RZmta 44.24 AUTH)
-        with ESMTPSA id j00b6dv6N6xJJkB
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 23 Jul 2019 08:59:19 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Letux-kernel] [PATCH v3 0/5] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190717181455.GB6522@ravnborg.org>
-Date:   Tue, 23 Jul 2019 08:59:29 +0200
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Belisko Marek <marek.belisko@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
+        Tue, 23 Jul 2019 03:02:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48574 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725837AbfGWHCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:02:48 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 98D30E3EF60CA17B3872;
+        Tue, 23 Jul 2019 15:01:38 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Jul
+ 2019 15:01:33 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
+ in image
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Chao Yu <chao@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190424094850.118323-1-yuchao0@huawei.com>
+ <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
+ <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
+ <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
+ <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
+ <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
+ <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
+ <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <00726135-f210-7791-a372-ef9cb1ae209f@huawei.com>
+Date:   Tue, 23 Jul 2019 15:01:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Message-Id: <201E8D0D-96A3-4E32-AF88-030879162F61@goldelico.com>
-References: <cover.1559905870.git.hns@goldelico.com> <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com> <20190625204356.GF18595@ravnborg.org> <20190626073350.GA15288@ravnborg.org> <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com> <33D92C0E-A430-4C34-A698-646F2592093D@goldelico.com> <20190717181455.GB6522@ravnborg.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-X-Mailer: Apple Mail (2.3124)
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-> Am 17.07.2019 um 20:14 schrieb Sam Ravnborg <sam@ravnborg.org>:
+On 2019/7/23 9:35, Jaegeuk Kim wrote:
+> On 07/16, Chao Yu wrote:
+>> Hi Jaegeuk,
+>>
+>> On 2019/5/9 9:15, Chao Yu wrote:
+>>> On 2019/5/5 10:51, Chao Yu wrote:
+>>>> On 2019/5/1 11:22, Jaegeuk Kim wrote:
+>>>>> On 04/29, Chao Yu wrote:
+>>>>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
+>>>>>>> On 04/24, Chao Yu wrote:
+>>>>>>>> This patch fixes to do sanity with enabled features in image, if
+>>>>>>>> there are features kernel can not recognize, just fail the mount.
+>>>>>>>
+>>>>>>> We need to figure out per-feature-based rejection, since some of them can
+>>>>>>> be set without layout change.
+>>
+>> What about adding one field in superblock for compatible features in future?
+>>
+>> sb.feature(F2FS_FEATURE_LAST, max] stores uncompatible features
+>> sb.compatible_feature stores compatible features
+>>
+>> If we follow above rule when adding one feature, then, we can fail the mount if
+>> sb.feature(F2FS_FEATURE_LAST, max] is valid.
 > 
-> Hi Nikolaus.
+> How about adding required_features flag in sb to check part of features only?
+
+You mean all incompatible features can be add into sb.required_features later
+like this?
+
+__le32 required_features;	/* incompatible feature to old kernel */
+
+And we can check required_features with supported features in current kernel?
+
+if (le32_to_cpu(raw_super->required_features) &
+	(~NOW_SUPPORTED_FEATURES_IN_CURRENT_KERNEL)) {
+	print msg & ret error;
+}
+
+Thanks,
+
 > 
->>>>>> BTW: should also be applied to 5.2
->>>>> The drm bits are reviewed. The DT bits needs OK from DT people.
->>>>> When we have OK from DT people we can apply them all to drm-misc-next.
->>>> 
->>>> I got OK on irc from Rob to process these.
->>>> All patches are now applied to drm-misc-next.
->>> 
->>> Thanks for taking care of this!
->> 
->> I have checked but it seems they are still not merged into linux-next.
+>>
+>> Thanks,
+>>
+>>>>>>
+>>>>>> So any suggestion on how to implement this?
+>>>>>
+>>>>> Which features do we need to disallow? When we introduce new features, they
+>>>>
+>>>> I guess it should be the new features.
+>>>>
+>>>>> didn't hurt the previous flow by checking f2fs_sb_has_###().
+>>>>
+>>>> Yes, but new features may use new disk layout, if old kernel handled it with old
+>>>> disk layout, there must be problematic.
+>>>>
+>>>> e.g. format image with -O extra_attr, and mount it with kernel who don't
+>>>> recognize new inode layout.
+>>>
+>>> Jaegeuk,
+>>>
+>>> Any thoughts?
+>>>
+>>> Thanks,
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Maybe:
+>>>>>>
+>>>>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
+>>>>>> 	check 4.14+ features
+>>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
+>>>>>> 	check 4.9+ features
+>>>>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
+>>>>>> 	check 4.4+ features
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>>>>>> ---
+>>>>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
+>>>>>>>>  fs/f2fs/super.c |  9 +++++++++
+>>>>>>>>  2 files changed, 22 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>>>>> index f5ffc09705eb..15b640967e12 100644
+>>>>>>>> --- a/fs/f2fs/f2fs.h
+>>>>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
+>>>>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+>>>>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+>>>>>>>>  
+>>>>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
+>>>>>>>> +				F2FS_FEATURE_BLKZONED |			\
+>>>>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
+>>>>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
+>>>>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
+>>>>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
+>>>>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
+>>>>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
+>>>>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
+>>>>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
+>>>>>>>> +				F2FS_FEATURE_VERITY |			\
+>>>>>>>> +				F2FS_FEATURE_SB_CHKSUM)
+>>>>>>>> +
+>>>>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+>>>>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+>>>>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
+>>>>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>>>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
+>>>>>>>> --- a/fs/f2fs/super.c
+>>>>>>>> +++ b/fs/f2fs/super.c
+>>>>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+>>>>>>>>  		return 1;
+>>>>>>>>  	}
+>>>>>>>>  
+>>>>>>>> +	/* check whether kernel supports all features */
+>>>>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
+>>>>>>>> +		f2fs_msg(sb, KERN_INFO,
+>>>>>>>> +			"Unsupported feature:%u: supported:%u",
+>>>>>>>> +			le32_to_cpu(raw_super->feature),
+>>>>>>>> +			F2FS_ALL_FEATURES);
+>>>>>>>> +		return 1;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
+>>>>>>>>  	if (sanity_check_area_boundary(sbi, bh))
+>>>>>>>>  		return 1;
+>>>>>>>> -- 
+>>>>>>>> 2.18.0.rc1
+>>>>> .
+>>>>>
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> Linux-f2fs-devel mailing list
+>>>> Linux-f2fs-devel@lists.sourceforge.net
+>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>>> .
+>>>>
+>>>
+>>>
+>>> _______________________________________________
+>>> Linux-f2fs-devel mailing list
+>>> Linux-f2fs-devel@lists.sourceforge.net
+>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>> .
+>>>
+> .
 > 
-> They will appear in next merge window. They were to late to hit current
-> merge window, as the cut-of time is around .rc5 in the drm subsystem.
-> And this is not really a fix so not stable material.
-
-have finally arrived. I just wasn't patient enough :)
-
-BR and thanks,
-Nikolaus
-
