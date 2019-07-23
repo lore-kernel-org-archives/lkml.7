@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69984C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE8FC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA4620693
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552C720644
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563881368;
-	bh=R0G+tEYl12mLaGVfWo+nEJWH5ZK2knSLm7YHhQ4ojBM=;
+	s=default; t=1563881371;
+	bh=Y3AXI0crJJO5PJiXGzotsv0F7VGKZPHiU/9R+K7HquI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=um0dlqiASZONFf51Q1shgyi+4Yz/zqdzVWQJGRzPjQgDvWdL03CZHnJfW3wKdeIrd
-	 bOnFng/rxXhAOyzb5IcIJP/MfXiTxXnGBOl9SahA2i0nDBp5yYxownh2EBee7e9VQr
-	 qEu4+7kAOPe0l9TDZgndfpJr8IsYu2jK2lorUAd8=
+	b=ZD7zgcwXRFSxhUwm+VPRiEkPOvqvjMJ8a72v5JtAXBc6prUmG+buf6l2Th3whX2xh
+	 9rBp2y09C6ZPvnxfTJZEtuf3Vuw+qRhsYf3CMnlz+J/mhWvQR13wLKB9RuL+UnnvQn
+	 sj/JstiVzOz5WHf3W2gbq7SoqfXPmEjrfspgBcnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389455AbfGWL31 (ORCPT
+        id S2389477AbfGWL3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:29:27 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46408 "EHLO
+        Tue, 23 Jul 2019 07:29:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46410 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727643AbfGWL30 (ORCPT
+        with ESMTP id S1727826AbfGWL30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Jul 2019 07:29:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=/xcRR8hlXNifn1w7hoVZZ7dxqbnCqlrjhjGc+MdxHNE=; b=R2+F0tWvbCyz
-        j8dY6LaPO2gV1YB5csBcASXIsg+Edrkw3Z4+nCRA3673oiXdPxjKp2a1x5hZkunL8t4maK9a+/Uds
-        z60doExHA+qTaPRMuyzylMZOCNH3s7SrarDQCr7wMGLG3+0svk2zZabRLI/j6fx+wQkZkQQF+VN12
-        G6mV8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=Gc5GLXyF8cKvljRTkgH1UFhNedj29JjDLTkvJDEc7W0=; b=xuXgz1dXWP4t
+        ClDwPye7sG3zp5ovMYhmDPi/WooqCY3oP/c0ZrHG+LsPnZMNABCTAMxvuqWcJwEhzYNBhjfaAk8Ti
+        FvypW+1YDmqFjWDRhtxv0IgACyLnZ0YcWYPyCTEGGVMJgnkPaYTSvKNY6Z/fLOri18vFBEhyc97fO
+        tpNuE=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hpsyw-0003Ly-7F; Tue, 23 Jul 2019 11:29:22 +0000
+        id 1hpsyw-0003Lw-3U; Tue, 23 Jul 2019 11:29:22 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id BACB72742B60; Tue, 23 Jul 2019 12:29:21 +0100 (BST)
+        id 859742742B59; Tue, 23 Jul 2019 12:29:21 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Maarten ter Huurne <maarten@treewalker.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, od@zcrc.me,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: Applied "regulator: act8865: Add support for act8600 charger" to the regulator tree
-In-Reply-To: <20190723011418.29143-1-paul@crapouillou.net>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: stm32-booster: Remove .min_uV and .list_voltage for fixed regulator" to the regulator tree
+In-Reply-To: <20190723014102.25103-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190723112921.BACB72742B60@ypsilon.sirena.org.uk>
+Message-Id: <20190723112921.859742742B59@ypsilon.sirena.org.uk>
 Date:   Tue, 23 Jul 2019 12:29:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: act8865: Add support for act8600 charger
+   regulator: stm32-booster: Remove .min_uV and .list_voltage for fixed regulator
 
 has been applied to the regulator tree at
 
@@ -87,138 +87,59 @@ to this mail.
 Thanks,
 Mark
 
-From 2d09a79bf637f91d1bbfcfd4520e3639dd15897c Mon Sep 17 00:00:00 2001
-From: Maarten ter Huurne <maarten@treewalker.org>
-Date: Mon, 22 Jul 2019 21:14:18 -0400
-Subject: [PATCH] regulator: act8865: Add support for act8600 charger
+From 03b77f0b8587a9a0f9d2f1503da3d120aa6fe730 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Tue, 23 Jul 2019 09:41:02 +0800
+Subject: [PATCH] regulator: stm32-booster: Remove .min_uV and .list_voltage
+ for fixed regulator
 
-This provides a way to monitor battery charge status via the power
-supply subsystem.
+Setting .n_voltages = 1 and .fixed_uV is enough for fixed regulator,
+remove the redundant .min_uV and .list_voltage settings.
 
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://lore.kernel.org/r/20190723011418.29143-1-paul@crapouillou.net
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Link: https://lore.kernel.org/r/20190723014102.25103-1-axel.lin@ingics.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/act8865-regulator.c | 84 +++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+ drivers/regulator/stm32-booster.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
-index cf72d7c6b8c9..e63285de485d 100644
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -16,6 +16,7 @@
- #include <linux/regulator/act8865.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/power_supply.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/regmap.h>
+diff --git a/drivers/regulator/stm32-booster.c b/drivers/regulator/stm32-booster.c
+index 2a897666c650..03f162ffd144 100644
+--- a/drivers/regulator/stm32-booster.c
++++ b/drivers/regulator/stm32-booster.c
+@@ -20,7 +20,6 @@
+ #define STM32MP1_SYSCFG_EN_BOOSTER_MASK	BIT(8)
  
-@@ -118,6 +119,11 @@
- #define ACT8600_LDO10_ENA		0x40	/* ON - [6] */
- #define ACT8600_SUDCDC_VSEL_MASK	0xFF	/* SUDCDC VSET - [7:0] */
- 
-+#define ACT8600_APCH_CHG_ACIN		BIT(7)
-+#define ACT8600_APCH_CHG_USB		BIT(6)
-+#define ACT8600_APCH_CSTATE0		BIT(5)
-+#define ACT8600_APCH_CSTATE1		BIT(4)
-+
- /*
-  * ACT8865 voltage number
-  */
-@@ -372,6 +378,75 @@ static void act8865_power_off(void)
- 	while (1);
+ static const struct regulator_ops stm32h7_booster_ops = {
+-	.list_voltage	= regulator_list_voltage_linear,
+ 	.enable		= regulator_enable_regmap,
+ 	.disable	= regulator_disable_regmap,
+ 	.is_enabled	= regulator_is_enabled_regmap,
+@@ -31,7 +30,6 @@ static const struct regulator_desc stm32h7_booster_desc = {
+ 	.supply_name = "vdda",
+ 	.n_voltages = 1,
+ 	.type = REGULATOR_VOLTAGE,
+-	.min_uV = 3300000,
+ 	.fixed_uV = 3300000,
+ 	.ramp_delay = 66000, /* up to 50us to stabilize */
+ 	.ops = &stm32h7_booster_ops,
+@@ -53,7 +51,6 @@ static int stm32mp1_booster_disable(struct regulator_dev *rdev)
  }
  
-+static int act8600_charger_get_status(struct regmap *map)
-+{
-+	unsigned int val;
-+	int ret;
-+	u8 state0, state1;
-+
-+	ret = regmap_read(map, ACT8600_APCH_STAT, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	state0 = val & ACT8600_APCH_CSTATE0;
-+	state1 = val & ACT8600_APCH_CSTATE1;
-+
-+	if (state0 && !state1)
-+		return POWER_SUPPLY_STATUS_CHARGING;
-+	if (!state0 && state1)
-+		return POWER_SUPPLY_STATUS_NOT_CHARGING;
-+	if (!state0 && !state1)
-+		return POWER_SUPPLY_STATUS_DISCHARGING;
-+
-+	return POWER_SUPPLY_STATUS_UNKNOWN;
-+}
-+
-+static int act8600_charger_get_property(struct power_supply *psy,
-+		enum power_supply_property psp, union power_supply_propval *val)
-+{
-+	struct regmap *map = power_supply_get_drvdata(psy);
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		ret = act8600_charger_get_status(map);
-+		if (ret < 0)
-+			return ret;
-+
-+		val->intval = ret;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static enum power_supply_property act8600_charger_properties[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+};
-+
-+static const struct power_supply_desc act8600_charger_desc = {
-+	.name = "act8600-charger",
-+	.type = POWER_SUPPLY_TYPE_BATTERY,
-+	.properties = act8600_charger_properties,
-+	.num_properties = ARRAY_SIZE(act8600_charger_properties),
-+	.get_property = act8600_charger_get_property,
-+};
-+
-+static int act8600_charger_probe(struct device *dev, struct regmap *regmap)
-+{
-+	struct power_supply *charger;
-+	struct power_supply_config cfg = {
-+		.drv_data = regmap,
-+		.of_node = dev->of_node,
-+	};
-+
-+	charger = devm_power_supply_register(dev, &act8600_charger_desc, &cfg);
-+
-+	return IS_ERR(charger) ? PTR_ERR(charger) : 0;
-+}
-+
- static int act8865_pmic_probe(struct i2c_client *client,
- 			      const struct i2c_device_id *i2c_id)
- {
-@@ -483,6 +558,15 @@ static int act8865_pmic_probe(struct i2c_client *client,
- 		}
- 	}
- 
-+	if (type == ACT8600) {
-+		ret = act8600_charger_probe(dev, act8865->regmap);
-+		if (ret < 0) {
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to probe charger");
-+			return ret;
-+		}
-+	}
-+
- 	i2c_set_clientdata(client, act8865);
- 
- 	return 0;
+ static const struct regulator_ops stm32mp1_booster_ops = {
+-	.list_voltage	= regulator_list_voltage_linear,
+ 	.enable		= stm32mp1_booster_enable,
+ 	.disable	= stm32mp1_booster_disable,
+ 	.is_enabled	= regulator_is_enabled_regmap,
+@@ -64,7 +61,6 @@ static const struct regulator_desc stm32mp1_booster_desc = {
+ 	.supply_name = "vdda",
+ 	.n_voltages = 1,
+ 	.type = REGULATOR_VOLTAGE,
+-	.min_uV = 3300000,
+ 	.fixed_uV = 3300000,
+ 	.ramp_delay = 66000,
+ 	.ops = &stm32mp1_booster_ops,
 -- 
 2.20.1
 
