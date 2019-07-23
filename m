@@ -2,99 +2,87 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9D7C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986EAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F07B2253C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1292081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563878689;
+	bh=xdtqaEeHVlVOHwjE3Ty6Q/s0Os7Iw4rjL0iAJn367Ik=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dLmIAxKGj9z6Htrjn7DlY98R0X6Lnrctnt8vfMw6uEtyyUlEFZL44vWhQ6w47mDC5
+	 u8durRKmvFmEfx0uO4gIjWfYQm4UQ9xQ/jOyXkw4EVq5ho8xSPb6OULsx0K60vHw6L
+	 5E5Zdm7sevtXLkImGyUZpDMIcSXb029tkJUHlJRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733106AbfGWKmt (ORCPT
+        id S2387999AbfGWKos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:42:49 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40022 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfGWKmt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:42:49 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a15so41369885qtn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:42:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N4xK5veZG09uUkAaPdHZto+xy99VCECeBtRkb6sAB/w=;
-        b=Xhh+jWNF1gCkt9pxiYgXxHJKaB1GNKMVwFKquSTEcIp+V83p3BTWVtyBcc9YGruXbs
-         Irf3GAs2+zezcFdWdpnMcEyeOEWUHXj1wKHLr/PB01EMCFUna2LcBiWFs9LGkXp5n3s2
-         X4kXupF7gPRT+N/E57vbN7hEhe/iHiVLTcuQEk5iWgY0EUXH2bIhZBoSFMgKepmp/qf9
-         mrOQwHB3x6BqFLoQPoniUamt9t//DSCvh6gNiY/2E364nLMq2MrrEmryO6yPKGC04DIq
-         TX2GJ4/4z+c9sc/Q3qaB+74av+g3ZO38VlAS4Um5wue23R1HPKnBzQt4II7Id6bEyU+1
-         4AOQ==
-X-Gm-Message-State: APjAAAUs+ibFg2w175l/QnI/5dvdNOXJPHhVvlzp/rKdMWIUFHQ0IGf1
-        6ThvFqEdYbn9p+KjCp7lU1fyIg==
-X-Google-Smtp-Source: APXvYqyaExRlYw/QlDd/NWuqasay2jAYk3JOBnWzJfjESy3cklpZQkiKPy3zfhsnVUYaS/Q/QI1fjQ==
-X-Received: by 2002:a0c:d4d0:: with SMTP id y16mr52541534qvh.191.1563878568268;
-        Tue, 23 Jul 2019 03:42:48 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id b7sm18536990qtt.38.2019.07.23.03.42.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 03:42:47 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 06:42:38 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-Subject: Re: WARNING in __mmdrop
-Message-ID: <20190723062842-mutt-send-email-mst@kernel.org>
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
- <20190722035657-mutt-send-email-mst@kernel.org>
- <cfcd330d-5f4a-835a-69f7-c342d5d0d52d@redhat.com>
- <20190723010156-mutt-send-email-mst@kernel.org>
- <124be1a2-1c53-8e65-0f06-ee2294710822@redhat.com>
- <20190723032800-mutt-send-email-mst@kernel.org>
- <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
+        Tue, 23 Jul 2019 06:44:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:52512 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726920AbfGWKor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:44:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E51D337;
+        Tue, 23 Jul 2019 03:44:47 -0700 (PDT)
+Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.197.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 441A73F71A;
+        Tue, 23 Jul 2019 03:44:46 -0700 (PDT)
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/9] irqchip/gic-v3: Add support for GICv3.1 extended PPI/SPI ranges
+Date:   Tue, 23 Jul 2019 11:44:28 +0100
+Message-Id: <20190723104437.154403-1-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 04:42:19PM +0800, Jason Wang wrote:
-> > So how about this: do exactly what you propose but as a 2 patch series:
-> > start with the slow safe patch, and add then return uaddr optimizations
-> > on top. We can then more easily reason about whether they are safe.
-> 
-> 
-> If you stick, I can do this.
+Apparently, having ~1000 wired interrupts is not enough, and some
+people need more. Fear not! The GIC Achitecture Department hereby
+grants you another 1024 SPIs, together with 64 PPIs, provided that you
+implement GICv3.1 (see [1] for the details)
 
-So I definitely don't insist but I'd like us to get back to where
-we know existing code is very safe (if not super fast) and
-optimizing from there.  Bugs happen but I'd like to see a bisect
-giving us "oh it's because of XYZ optimization" and not the
-general "it's somewhere within this driver" that we are getting
-now.
+This series implements the required support, which requires a bit of
+infrastructure rework in order to make the thing less horrible...
 
-Maybe the way to do this is to revert for this release cycle
-and target the next one. What do you think?
+This has been tested on a FastModel.
+
+[1] https://developer.arm.com/docs/ihi0069/latest (version E)
+
+Marc Zyngier (9):
+  irqchip/gic: Rework gic_configure_irq to take the full ICFGR base
+  irqchip/gic-v3: Add INTID range and convertion primitives
+  dt-bindings: interrupt-controller: arm,gic-v3: Describe ESPI range
+    support
+  irqchip/gic-v3: Add ESPI range support
+  irqchip/gic: Prepare for more than 16 PPIs
+  irqchip/gic-v3: Dynamically allocate PPI NMI refcounts
+  irqchip/gic-v3: Dynamically allocate PPI partition descriptors
+  dt-bindings: interrupt-controller: arm,gic-v3: Describe EPPI range
+    support
+  irqchip/gic-v3: Add EPPI range support
+
+ .../interrupt-controller/arm,gic-v3.yaml      |   6 +-
+ drivers/irqchip/irq-gic-common.c              |  33 +-
+ drivers/irqchip/irq-gic-common.h              |   2 +-
+ drivers/irqchip/irq-gic-v3.c                  | 323 ++++++++++++++----
+ drivers/irqchip/irq-gic.c                     |  12 +-
+ drivers/irqchip/irq-hip04.c                   |   9 +-
+ include/linux/irqchip/arm-gic-v3.h            |  29 +-
+ 7 files changed, 319 insertions(+), 95 deletions(-)
 
 -- 
-MST
+2.20.1
+
