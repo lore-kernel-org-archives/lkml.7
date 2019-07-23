@@ -2,152 +2,149 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BD6C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C21C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673E6218EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF69F227C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563892563;
+	bh=RhgZmcSMrQfqbKW3yJR0qQgPijWPcwlwWIuyvyAMaj0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X95B8sLRwJBjSTpkGd6C+jIUDpR4mInh5obNWiE3SiJZQ/8r8f2M+dOr0ZWqfHwR0
+	 bvi+E3aX1wkZ2lKLtqgv2QwElIKlSZ5vhB5hAB+HyTuPtAjlEIWdG9uy3pXLPGP8Sy
+	 PrfOtvt/rGg2d9Ao9kXhOItcYZRNRxTnEouWfOyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390617AbfGWOfv (ORCPT
+        id S2390628AbfGWOgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:35:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55092 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387987AbfGWOfv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:35:51 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NEVEkd023990;
-        Tue, 23 Jul 2019 10:35:27 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx2eqw34c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jul 2019 10:35:26 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6NEWHn3032587;
-        Tue, 23 Jul 2019 10:35:26 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx2eqw33b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jul 2019 10:35:25 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6NEYbu5003257;
-        Tue, 23 Jul 2019 14:35:24 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01dal.us.ibm.com with ESMTP id 2twhrb60qc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jul 2019 14:35:24 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NEZNpH49283478
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jul 2019 14:35:23 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD1D8B2066;
-        Tue, 23 Jul 2019 14:35:23 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6065B205F;
-        Tue, 23 Jul 2019 14:35:22 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.85.152.234])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jul 2019 14:35:22 +0000 (GMT)
-Subject: Re: [PATCH 2/2] powerpc: expose secure variables via sysfs
-To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, "Oliver O'Halloran" <oohall@gmail.com>
-Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>
-References: <1560459027-5248-1-git-send-email-nayna@linux.ibm.com>
- <1560459027-5248-3-git-send-email-nayna@linux.ibm.com>
- <87o92910fg.fsf@concordia.ellerman.id.au>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <6d2988c1-9b89-448b-4537-c3c6673b6dd1@linux.vnet.ibm.com>
-Date:   Tue, 23 Jul 2019 10:35:22 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 23 Jul 2019 10:36:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732590AbfGWOgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:36:01 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D152227BE;
+        Tue, 23 Jul 2019 14:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563892560;
+        bh=RhgZmcSMrQfqbKW3yJR0qQgPijWPcwlwWIuyvyAMaj0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wLzKco/ArT5Dvfhgx+RaF8Fzo9J01LD8d96HbTMMRKdSTPSycFxvhs5LCOraxZkJZ
+         JkUM874oADKHLP14egH8DMTatS/Yt2U7n9FBkCxywEqixwbZPny1z7mEeiOeM5TeiK
+         jnDroFl49M4ihJT2TP4q5KB7tPiKJpsXJPqPjJX8=
+Received: by mail-qk1-f170.google.com with SMTP id s22so31295834qkj.12;
+        Tue, 23 Jul 2019 07:36:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAVnMfvA9112Z+IklUnI3TUlOV542NX0V7aAXidWh3Gwxr5cA9Se
+        BWWdbQQqCzkzoN2skbnvbzJTvQ833ug4/bsDPg==
+X-Google-Smtp-Source: APXvYqwO37a9Uf29MCK2pQZVWi4gKhtu8lPzPkbArTZ/nniUVYHOSr3nEpVeFoaSFAMyZM3mOkSYpKT/tr0qovfkO7M=
+X-Received: by 2002:a37:a48e:: with SMTP id n136mr51861407qke.223.1563892559731;
+ Tue, 23 Jul 2019 07:35:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87o92910fg.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907230144
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+ <1561361052-13072-3-git-send-email-neal.liu@mediatek.com> <20190722171320.GA9806@bogus>
+ <1563848465.31451.4.camel@mtkswgap22>
+In-Reply-To: <1563848465.31451.4.camel@mtkswgap22>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 23 Jul 2019 08:35:47 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek ARMv8 SoCs
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
+>
 
+Please don't top post to lists.
 
-On 07/05/2019 02:05 AM, Michael Ellerman wrote:
-> Hi Nayna,
+> Dear Rob,
+>         You can check my driver for detail:
+>         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
 
-Hi Michael, Oliver,
-
+I could, or you could just answer my question.
 
 >
-> Nayna Jain <nayna@linux.ibm.com> writes:
->> As part of PowerNV secure boot support, OS verification keys are stored
->> and controlled by OPAL as secure variables. These need to be exposed to
->> the userspace so that sysadmins can perform key management tasks.
->>
->> This patch adds the support to expose secure variables via a sysfs
->> interface It reuses the the existing efi defined hooks and backend in
->> order to maintain the compatibility with the userspace tools.
-> Which tools? Can you include a log demonstrating how they're used, ie.
-> so that I can test the sequence of commands.
+>         This driver is registered as hardware random number generator, and
+> combines with rng-core.
+>         We want to add one rng hw based on the dts. Is this proper or do you
+> have other suggestion to meet this requirement?
+
+It depends. There doesn't appear to be any resource configuration, so
+why does it need to be in DT. DT is not the only way instantiate
+drivers.
+
+Rob
+
 >
->> Though it reuses a great deal of efi, POWER platforms do not use EFI.
->> A new config, POWER_SECVAR_SYSFS, is defined to enable this new sysfs
->> interface.
-> Sorry I haven't been able to keep up with all the discussions, but I
-> thought the consensus was that pretending to be EFI-like was a bad idea,
-> because we don't have actual EFI and we're not implementing an entirely
-> compatible scheme to EFI anyway.
+>         Thanks
 >
-> Greg suggested just putting the variables in sysfs, why does that not
-> work? Matthew mentioned "complex semantics around variable deletion and
-> immutability" but do we have to emulate those semantics on powerpc?
-
-Sorry for the delay in the response.
-
-Yes, I agree. The purpose of the v2 version of the patchset was to try 
-and quickly address Matthew's concerns. This version of the patchset:
-* is not using any EFI configs
-* is not exposing secure variables via efivarfs
-* is based on Greg's suggestion to use sysfs
-* is STILL using some of the existing EFI code, that is used by EFI to 
-expose its variables via sysfs, to avoid code duplication.
-* is using efivar hooks to expose secure variables for tool compatibility
-
-Assuming we all are in agreement, the next version of this patchset will 
-further improve upon these changes. It will refactor some of the sysfs 
-code from drivers/firmware/efi that is common to both EFI and POWER.  
-Since we do not have to emulate the complex semantics of efi on powerpc, 
-the sysfs interface should work for us.
-
-As per the tool, it will be efivar. I will provide the log demonstrating 
-how it is used with the next version.
-
-Is there something I missed in my understanding ?
-
-Thanks & Regards,
-      - Nayna
+>
+> On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
+> > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
+> > > Document the binding used by the MediaTek ARMv8 SoCs random
+> > > number generator with TrustZone enabled.
+> > >
+> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > ---
+> > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > new file mode 100644
+> > > index 0000000..c04ce15
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > @@ -0,0 +1,10 @@
+> > > +MediaTek random number generator with TrustZone enabled
+> > > +
+> > > +Required properties:
+> > > +- compatible : Should be "mediatek,mtk-sec-rng"
+> >
+> > What's the interface to access this?
+> >
+> > A node with a 'compatible' and nothing else is a sign of something that
+> > a parent device should instantiate and doesn't need to be in DT. IOW,
+> > what do complete bindings for firmware functions look like?
+> >
+> > > +
+> > > +Example:
+> > > +
+> > > +hwrng: hwrng {
+> > > +   compatible = "mediatek,mtk-sec-rng";
+> > > +}
+> > > --
+> > > 1.7.9.5
+> > >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>
+>
