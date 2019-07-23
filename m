@@ -6,74 +6,58 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C528C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F49EC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC66520449
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C12A223BB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733167AbfGWIRh (ORCPT
+        id S1733192AbfGWIRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:17:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39643 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfGWIRh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:17:37 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hppzH-0007kO-06; Tue, 23 Jul 2019 10:17:31 +0200
-Date:   Tue, 23 Jul 2019 10:17:29 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-cc:     Mike Lothian <mike@fireburn.co.uk>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
-In-Reply-To: <alpine.DEB.2.21.1907230837400.1659@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1907231013340.1659@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de> <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
- <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com> <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de> <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com> <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
- <alpine.DEB.2.21.1907230837400.1659@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 23 Jul 2019 04:17:43 -0400
+Received: from 8bytes.org ([81.169.241.247]:44932 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727903AbfGWIRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 04:17:41 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 5F4E43A2; Tue, 23 Jul 2019 10:17:40 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 10:17:35 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] iommu/vt-d: Don't queue_iova() if there is no flush
+ queue
+Message-ID: <20190723081735.GJ12009@8bytes.org>
+References: <20190716213806.20456-1-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190716213806.20456-1-dima@arista.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019, Thomas Gleixner wrote:
-> On Tue, 23 Jul 2019, Masahiro Yamada wrote:
-> > Right.
-> > I was able to build with ld.gold
-> > 
-> > So, we can use gold, depending on the kernel configuration.
-> 
-> That's exactly the problem. It breaks with random kernel configurations
-> which is not acceptable except for people who know what they are doing.
-> 
-> I'm tired of dealing with half baken fixes and 'regression' reports. Either
-> there is an effort to fix the issues with gold like the clang people fix
-> their issues or it needs to be disabled. We have a clear statement that
-> gold developers have other priorities.
+On Tue, Jul 16, 2019 at 10:38:05PM +0100, Dmitry Safonov wrote:
 
-That said, I'm perfectly happy to move this to x86 and leave it alone for
-other architectures, but it does not make sense to me.
+> @@ -235,6 +236,11 @@ static inline void init_iova_domain(struct iova_domain *iovad,
+>  {
+>  }
+>  
+> +bool has_iova_flush_queue(struct iova_domain *iovad)
+> +{
+> +	return false;
+> +}
+> +
 
-If the gold fans care enough, then we can add something like
-CONFIG_I_WANT_TO_USE_GOLD_AND_DEAL_WITH_THE_FALLOUT_MYSELF.
+This needs to be 'static inline', I queued a patch on-top of my fixes
+branch.
 
-Thanks,
+Regards,
 
-	tglx
+	Joerg
