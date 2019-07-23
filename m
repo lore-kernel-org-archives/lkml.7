@@ -2,71 +2,59 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90490C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7524C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733F42070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F7C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 11:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389373AbfGWL2Y (ORCPT
+        id S2387597AbfGWL3C convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 07:28:24 -0400
-Received: from muru.com ([72.249.23.125]:55620 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731468AbfGWL2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 07:28:21 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 12B0C81A0;
-        Tue, 23 Jul 2019 11:28:45 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/8] ARM: OMAP2+: Fix missing SYSC_HAS_RESET_STATUS for dra7 epwmss
-Date:   Tue, 23 Jul 2019 04:28:04 -0700
-Message-Id: <20190723112811.44381-2-tony@atomide.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190723112811.44381-1-tony@atomide.com>
-References: <20190723112811.44381-1-tony@atomide.com>
+        Tue, 23 Jul 2019 07:29:02 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:65146 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727826AbfGWL3B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 07:29:01 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 17532238-1500050 
+        for multiple; Tue, 23 Jul 2019 12:28:49 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <5B8DA87D05A7694D9FA63FD143655C1B9DC7C082@hasmsx108.ger.corp.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Usyskin, Alexander" <alexander.usyskin@intel.com>,
+        "C, Ramalingam" <ramalingam.c@intel.com>
+References: <20190723111913.20475-1-chris@chris-wilson.co.uk>
+ <5B8DA87D05A7694D9FA63FD143655C1B9DC7C082@hasmsx108.ger.corp.intel.com>
+Message-ID: <156388132716.31349.11822559564861280475@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: RE: [PATCH] mei: Abort writes if incomplete after 1s
+Date:   Tue, 23 Jul 2019 12:28:47 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TRM says PWMSS_SYSCONFIG bit for SOFTRESET changes to zero when
-reset is completed. Let's configure it as otherwise we get warnings
-on boot when we check the data against dts provided data. Eventually
-the legacy platform data will be just dropped, but let's fix the
-warning first.
+Quoting Winkler, Tomas (2019-07-23 12:25:14)
+> > 
+> > During i915 unload, it appears that it may get stuck waiting on a workqueue
+> > being hogged by mei:
+> 
+> Thanks for the bug report, but this is not a proper fix, we will try to work it out.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Perfect :)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-@@ -379,7 +379,8 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
- static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
- 	.rev_offs	= 0x0,
- 	.sysc_offs	= 0x4,
--	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET,
-+	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
-+			  SYSC_HAS_RESET_STATUS,
- 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
- 	.sysc_fields	= &omap_hwmod_sysc_type2,
- };
--- 
-2.21.0
+It's only happened a couple of times in the last week or so, but if you
+want to throw patches at intel-gfx-trybot@lists.freedesktop.org to try
+and grab more information, please feel free to.
+-Chris
