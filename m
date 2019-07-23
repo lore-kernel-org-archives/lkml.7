@@ -2,177 +2,121 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AF4C7618E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73729C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BA62081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5BD2081B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ja3PUCfn";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="qdb5JCSo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F3dkwvek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbfGWKuP (ORCPT
+        id S1733059AbfGWKuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:50:15 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:55042 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728856AbfGWKuO (ORCPT
+        Tue, 23 Jul 2019 06:50:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46862 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfGWKuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:50:14 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 19AA1C0141;
-        Tue, 23 Jul 2019 10:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563879013; bh=3mkM3M0f40d6a+V7LkMD7dR21gv8wo41VcJOsox36Z0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=ja3PUCfnxXGvkrt6yAsuM3K1flFn80vNc07wEkjPMVsfCuErbH5LvraC1SQpWJQmM
-         7zGB+w1GB/GEt8MW2HOuGwwAJbx947pr4IYhOr7LjVTaKXQG5YKfmRNTTWAEqFsnU3
-         SnyMFjY9aucwGU9uT0ahCGWUFuANMoznwLUy+hS+yHpio5O70xfDEK06frFklAwnk3
-         tmifih5zyKiHeDjeYtL+LKqtDRLRHuCNyWFB6ZaeQTzIM0+JEzLfPI0j2r7sIiOW+O
-         yPxpxH1brQGQiONvbFIj31EO190pIBxo6UUYk8TaWCpx1hR+4mfvM6Vppz998pMnYn
-         9oHvTQcM2v1FQ==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 6574DA0093;
-        Tue, 23 Jul 2019 10:49:55 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 23 Jul 2019 03:49:52 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 23 Jul 2019 03:49:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=keQKubvtCkA4oQwi1bxVHZ5/2/0FHBBLeJVRxaot9wfgJantzQOvk948/voQJNk2njzdPBQezacPWp+w8ORxGpSFOg4tlNEWgaBokvkDfnC6tD7PKh15S4MbzTOei5a6H2uCtOxcVXz99Q/fhpkknFTSrnwYRjUzsOSdMytK08cUyKvfY0FBHwEMaoDE2BnLOeICai6V8Ee2gPb9cZYk46U5ecAA4Gj0MCBBejb5nX7BKspTjPRoaHfbcSGf7Iq28A/L/CByhE537rA3lRq0pjbgOPghQJ4FjSSU/8ocgCE/v9tzVlLyESusq7LNsgmCrSlsIPCt7sZFud3KnA5scg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mkM3M0f40d6a+V7LkMD7dR21gv8wo41VcJOsox36Z0=;
- b=YAmro6jMRczVsLv3JnOr5HaR/c75+ugvuv0TOo1WLj2JtDJViWMCRxypqCuQ9gtiFM4roJc3ddsXHRf4Wl79f36iSuWpnMNTBw/BseQpBGT/2XvAgl9SfymNs6aU7XFhqDMtykUThcFrXahEJVw8uebhNAJ44j2CVA+kxXOC6yOVmoxwLb/IXfcbbidelRP4VGCR9F9m5ZOWm9tBy+xN02MIf0e5eWeCbfbDb1Zd9FyWXIvwQMEbQQgfAflBGbklyhYkJZTxt+Zxybm0JI7/QlGWEQexmDPKusz+KCUbAARsGIZOzEkB3vLE9J9+03eXJ09q7jQCL/ICtu2WkInKBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mkM3M0f40d6a+V7LkMD7dR21gv8wo41VcJOsox36Z0=;
- b=qdb5JCSo7peH4NGoAbSsMmz3iosxOEq229OtgOUzNtdDkaOJoOLJfxtCvCRWI/gHBdcEtchToqHjbvG3svExMItrL/0eOEjHk1lM4WYI6O3Okij1X2ccMJDvywBMDTeVXa1IbrG1Vq7c09I1/suMUUYiC32PhbiwMVW5rzQsivU=
-Received: from BYAPR12MB3269.namprd12.prod.outlook.com (20.179.93.146) by
- BYAPR12MB2695.namprd12.prod.outlook.com (20.176.255.224) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.14; Tue, 23 Jul 2019 10:49:50 +0000
-Received: from BYAPR12MB3269.namprd12.prod.outlook.com
- ([fe80::f5b8:ac6e:ea68:cb1c]) by BYAPR12MB3269.namprd12.prod.outlook.com
- ([fe80::f5b8:ac6e:ea68:cb1c%4]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
- 10:49:50 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Lars Persson <lists@bofh.nu>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Topic: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
- Pool
-Thread-Index: AQHVMYtq2Zx4WVoG/U2kL8GCK0bP/abPQEOAgADTx+CABnZ9AIAADuYAgAAFQOCAAAnIAIAABLTAgAFMy7CAAB4gAIAAAO7wgAAJdICAAAG8AA==
-Date:   Tue, 23 Jul 2019 10:49:49 +0000
-Message-ID: <BYAPR12MB3269D050556BD51030DCDDFCD3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
-References: <cover.1562149883.git.joabreu@synopsys.com>
- <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
- <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
- <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20190722101830.GA24948@apalos>
- <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
- <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
- <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
- <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
- <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
- <2ad7bf21-1f1f-db0f-2358-4901b7988b7d@nvidia.com>
-In-Reply-To: <2ad7bf21-1f1f-db0f-2358-4901b7988b7d@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 558eb7de-5c07-404a-b392-08d70f5b7c73
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR12MB2695;
-x-ms-traffictypediagnostic: BYAPR12MB2695:
-x-microsoft-antispam-prvs: <BYAPR12MB2695FA4E9E874926B15A35C2D3C70@BYAPR12MB2695.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0107098B6C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(366004)(396003)(376002)(346002)(189003)(199004)(71190400001)(7416002)(33656002)(256004)(305945005)(7696005)(71200400001)(74316002)(102836004)(7736002)(6506007)(316002)(186003)(99286004)(486006)(26005)(54906003)(68736007)(4326008)(8676002)(11346002)(14454004)(446003)(53546011)(25786009)(476003)(76176011)(110136005)(8936002)(6116002)(81166006)(66946007)(6246003)(64756008)(3846002)(81156014)(66556008)(76116006)(5660300002)(66446008)(66476007)(52536014)(66066001)(229853002)(55016002)(9686003)(6436002)(86362001)(53936002)(478600001)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB2695;H:BYAPR12MB3269.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LOwEuxdiQ1uOAsthaaEN+J44Tt7A/gEQ+I2nyD+8jvkvLebEq3ZmgEfT+//FE4JRMtAqmvR0n0xg88YTuiC5P/h9h5SBiecKb22NUaUPGgj3CeOq873m7zKBy47bRZoeQjVmjcB41OQcSbwgbwzDsGpXcxM61jCObkfWLVTwZ0dUMrX0LemFfx0tj5wao0orZkyC9mD8Ow9xJ+pl2QVDLJVvXZ7PKQSJNdoc0amy/u4YWu2+GIIciVoFEF1/y030ct7MHVWbrRl/B2XNB7ugmpvUxmIx99ag2SAR9O+I3WGfdqcGFZFLqNT/rhC6zW9xRp0aM7e6Harhw68avNSNuM1gShmsMf3VXg31JWOw22Ms4sxwg50AkKfP+9iVFEjCiCSVG7BF5Eyqwr2K39NX+vF0sDXecmdl5K7of9d6b24=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 23 Jul 2019 06:50:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=r8pKJvTBYjQmA6xTW4SL+CVHf8xD1EdzIVVKROq07g0=; b=F3dkwvekQOj0BURpaHhiZAWhe
+        nKECJ8K5l/SXfNzSKObLubCNxcf+1eSEv1sQ7ldrVN2U+LDFAZRIVDrkJ/Cg+6VQekTiSssh1rjIs
+        5BOFxYnz/izr9ryMelPm7pDNVyNEFRyG/ZIU5/w5ZkW0qJh0jOZG0MQxkmkR1v2YBOhtJDrWpS+3t
+        4MkVXXZUX/L3ytyZszCGnfVSoUkYBg3gfypyqgHcLXtSsrPoXwjuUK80Yd8syNpKGWI24htT0bURN
+        8cgelbGtYRw8d4mry8PknQ5nGrj1wdE4rewfjbsgw3ZF4FhYfi5YpJlu7FkSvHOkpVxzCtSI1CnG+
+        gVScYG/3Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpsNb-0003mE-QQ; Tue, 23 Jul 2019 10:50:47 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3E6B2201A9429; Tue, 23 Jul 2019 12:50:46 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 12:50:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] [v2] waitqueue: shut up clang -Wuninitialized warnings
+Message-ID: <20190723105046.GD3402@hirez.programming.kicks-ass.net>
+References: <20190719113638.4189771-1-arnd@arndb.de>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 558eb7de-5c07-404a-b392-08d70f5b7c73
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 10:49:49.9693
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2695
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719113638.4189771-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+DQpEYXRlOiBKdWwvMjMvMjAx
-OSwgMTE6Mzg6MzMgKFVUQyswMDowMCkNCg0KPiANCj4gT24gMjMvMDcvMjAxOSAxMTowNywgSm9z
-ZSBBYnJldSB3cm90ZToNCj4gPiBGcm9tOiBKb24gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNv
-bT4NCj4gPiBEYXRlOiBKdWwvMjMvMjAxOSwgMTE6MDE6MjQgKFVUQyswMDowMCkNCj4gPiANCj4g
-Pj4gVGhpcyBhcHBlYXJzIHRvIGJlIGEgd2lubmVyIGFuZCBieSBkaXNhYmxpbmcgdGhlIFNNTVUg
-Zm9yIHRoZSBldGhlcm5ldA0KPiA+PiBjb250cm9sbGVyIGFuZCByZXZlcnRpbmcgY29tbWl0IDk1
-NGEwM2JlMDMzYzdjZWY4MGRkYzIzMmU3Y2JkYjE3ZGY3MzU2NjMNCj4gPj4gdGhpcyB3b3JrZWQh
-IFNvIHllcyBhcHBlYXJzIHRvIGJlIHJlbGF0ZWQgdG8gdGhlIFNNTVUgYmVpbmcgZW5hYmxlZC4g
-V2UNCj4gPj4gaGFkIHRvIGVuYWJsZSB0aGUgU01NVSBmb3IgZXRoZXJuZXQgcmVjZW50bHkgZHVl
-IHRvIGNvbW1pdA0KPiA+PiA5NTRhMDNiZTAzM2M3Y2VmODBkZGMyMzJlN2NiZGIxN2RmNzM1NjYz
-Lg0KPiA+IA0KPiA+IEZpbmFsbHkgOikNCj4gPiANCj4gPiBIb3dldmVyLCBmcm9tICJnaXQgc2hv
-dyA5NTRhMDNiZTAzM2M3Y2VmODBkZGMyMzJlN2NiZGIxN2RmNzM1NjYzIjoNCj4gPiANCj4gPiAr
-ICAgICAgICAgVGhlcmUgYXJlIGZldyByZWFzb25zIHRvIGFsbG93IHVubWF0Y2hlZCBzdHJlYW0g
-YnlwYXNzLCBhbmQNCj4gPiArICAgICAgICAgZXZlbiBmZXdlciBnb29kIG9uZXMuICBJZiBzYXlp
-bmcgWUVTIGhlcmUgYnJlYWtzIHlvdXIgYm9hcmQNCj4gPiArICAgICAgICAgeW91IHNob3VsZCB3
-b3JrIG9uIGZpeGluZyB5b3VyIGJvYXJkLg0KPiA+IA0KPiA+IFNvLCBob3cgY2FuIHdlIGZpeCB0
-aGlzID8gSXMgeW91ciBldGhlcm5ldCBEVCBub2RlIG1hcmtlZCBhcyANCj4gPiAiZG1hLWNvaGVy
-ZW50OyIgPw0KPiANCj4gVEJIIEkgaGF2ZSBubyBpZGVhLiBJIGNhbid0IHNheSBJIGZ1bGx5IHVu
-ZGVyc3RhbmQgeW91ciBjaGFuZ2Ugb3IgaG93IGl0DQo+IGlzIGJyZWFraW5nIHRoaW5ncyBmb3Ig
-dXMuDQo+IA0KPiBDdXJyZW50bHksIHRoZSBUZWdyYSBEVCBiaW5kaW5nIGRvZXMgbm90IGhhdmUg
-J2RtYS1jb2hlcmVudCcgc2V0LiBJIHNlZQ0KPiB0aGlzIGlzIG9wdGlvbmFsLCBidXQgSSBhbSBu
-b3Qgc3VyZSBob3cgeW91IGRldGVybWluZSB3aGV0aGVyIG9yIG5vdA0KPiB0aGlzIHNob3VsZCBi
-ZSBzZXQuDQoNCkZyb20gbXkgdW5kZXJzdGFuZGluZyBpdCBtZWFucyB0aGF0IHlvdXIgZGV2aWNl
-IC8gSVAgRE1BIGFjY2Vzc2VzIGFyZSBjb2hlcmVudCByZWdhcmRpbmcgdGhlIENQVSBwb2ludCBv
-ZiB2aWV3LiBJIHRoaW5rIGl0IHdpbGwgYmUgdGhlIGNhc2UgaWYgR01BQyBpcyBub3QgYmVoaW5k
-IGFueSBraW5kIG9mIElPTU1VIGluIHRoZSBIVyBhcmNoLg0KDQpJIGRvbid0IGtub3cgYWJvdXQg
-dGhpcyBTTU1VIGJ1dCB0aGUgc291cmNlIGRvZXMgaGF2ZSBzb21lIHNwZWNpYWwgDQpjb25kaXRp
-b25zIHdoZW4gZGV2aWNlIGlzIGRtYS1jb2hlcmVudC4NCg0KLS0tDQpUaGFua3MsDQpKb3NlIE1p
-Z3VlbCBBYnJldQ0K
+On Fri, Jul 19, 2019 at 01:36:00PM +0200, Arnd Bergmann wrote:
+> When CONFIG_LOCKDEP is set, every use of DECLARE_WAIT_QUEUE_HEAD_ONSTACK()
+> produces an bogus warning from clang, which is particularly annoying
+> for allmodconfig builds:
+> 
+> fs/namei.c:1646:34: error: variable 'wq' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+>         DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
+>                                         ^~
+> include/linux/wait.h:74:63: note: expanded from macro 'DECLARE_WAIT_QUEUE_HEAD_ONSTACK'
+>         struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
+>                                ~~~~                                  ^~~~
+> include/linux/wait.h:72:33: note: expanded from macro '__WAIT_QUEUE_HEAD_INIT_ONSTACK'
+>         ({ init_waitqueue_head(&name); name; })
+>                                        ^~~~
+> 
+> A patch for clang has already been proposed and should soon be
+> merged for clang-9, but for now all clang versions produce the
+> warning in an otherwise (almost) clean allmodconfig build.
+> 
+> Link: https://bugs.llvm.org/show_bug.cgi?id=31829
+> Link: https://bugs.llvm.org/show_bug.cgi?id=42604
+> Link: https://lore.kernel.org/lkml/20190703081119.209976-1-arnd@arndb.de/
+> Link: https://reviews.llvm.org/D64678
+> Link: https://storage.kernelci.org/next/master/next-20190717/arm64/allmodconfig/clang-8/build-warnings.log
+> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: given that kernelci is getting close to reporting a clean build for
+>     clang, I'm trying again with a less invasive approach after my
+>     first version was not too popular.
+> ---
+>  include/linux/wait.h | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/wait.h b/include/linux/wait.h
+> index ddb959641709..276499ae1a3e 100644
+> --- a/include/linux/wait.h
+> +++ b/include/linux/wait.h
+> @@ -70,8 +70,17 @@ extern void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *n
+>  #ifdef CONFIG_LOCKDEP
+>  # define __WAIT_QUEUE_HEAD_INIT_ONSTACK(name) \
+>  	({ init_waitqueue_head(&name); name; })
+> -# define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
+> +# if defined(__clang__) && __clang_major__ <= 9
+> +/* work around https://bugs.llvm.org/show_bug.cgi?id=42604 */
+> +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name)					\
+> +	_Pragma("clang diagnostic push")					\
+> +	_Pragma("clang diagnostic ignored \"-Wuninitialized\"")			\
+> +	struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)	\
+> +	_Pragma("clang diagnostic pop")
+> +# else
+> +#  define DECLARE_WAIT_QUEUE_HEAD_ONSTACK(name) \
+>  	struct wait_queue_head name = __WAIT_QUEUE_HEAD_INIT_ONSTACK(name)
+> +# endif
+
+While this is indeed much better than before; do we really want to do
+this? That is, since clang-9 release will not need this, we're basically
+doing the above for pre-release compilers only.
+
