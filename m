@@ -2,83 +2,104 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B30C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C9EC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FED22543
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B4422543
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qMcb0tg6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732705AbfGWNdy (ORCPT
+        id S2390278AbfGWNeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:33:54 -0400
-Received: from smtprelay0178.hostedemail.com ([216.40.44.178]:37552 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732181AbfGWNdy (ORCPT
+        Tue, 23 Jul 2019 09:34:01 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:38455 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732181AbfGWNeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:33:54 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id D6461180273E0;
-        Tue, 23 Jul 2019 13:33:52 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: boys93_78379f489d811
-X-Filterd-Recvd-Size: 2231
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 23 Jul 2019 13:33:45 +0000 (UTC)
-Message-ID: <269b4b895d64deef4a6d0033dcbed48da11fbce0.camel@perches.com>
-Subject: Re: get_maintainers.pl subsystem output
-From:   Joe Perches <joe@perches.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     "Duda, Sebastian" <sebastian.duda@fau.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Wolfgang Mauerer <wolfgang.mauerer@oth-regensburg.de>
-Date:   Tue, 23 Jul 2019 06:33:44 -0700
-In-Reply-To: <CAKXUXMym7Sd28gVxVXj60XS+aoqM4DAtEp2aA7BUUu06YQYufg@mail.gmail.com>
-References: <2c912379f96f502080bfcc79884cdc35@fau.de>
-         <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
-         <2835dfa18922905ffabafb11fca7e1d2@fau.de>
-         <CAKXUXMwfd133rv0bMert-BBftaqxxr_93dUHpaUjEwE8RE_wwA@mail.gmail.com>
-         <8016ee9b5ee38fae0c782420ca449f863270cca9.camel@perches.com>
-         <CAKXUXMym7Sd28gVxVXj60XS+aoqM4DAtEp2aA7BUUu06YQYufg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Jul 2019 09:34:01 -0400
+Received: by mail-qt1-f202.google.com with SMTP id r58so38571803qtb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Sgnu4vpaA9XtGSZHcQIHrWEp1ODMF66MA7HE6PUCeb0=;
+        b=qMcb0tg6w5Hgz5CXMpdF61VWMgpjZRT022UxsxP/x4R1+wYJcZUdRNfdF0rZSO1Sf6
+         f8u8RMtgKPPoI5O2nvFaGLkLzeGs1HQ/+em4S7GGwR+aQwu46L8psfJRk7bEd1nvogeR
+         amDLIfE61X64r7wuJbfgMX8JTFoqsc/yTnCeTY7LMHQpusKm7PLf9YymyDYm6V6gGvsR
+         cCam2td6JZ8c4sDlIadfByNhhppzG/k1FfiBHlf13vXnRrpLKE13kquPOh8dETueOoxl
+         cdwK28hHC2tA6p0fWJQP9K5rSDaMsz9ClwLOIB5eBPEb3NAYgTk78W+GA8yoW8cNYAnW
+         Bnbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Sgnu4vpaA9XtGSZHcQIHrWEp1ODMF66MA7HE6PUCeb0=;
+        b=XDeCLHMaa6xmpJDxZIlQ5Va36vDPbBUMRlV7632a5mrGXuxPjMlPJ41tG7ihR7uDyd
+         HIqsQ+ziwRrv1443vZmFXsdfPGG84eCPDrSsbc44WLpsAK70HI+MpTte0ZNjCXh7yhA1
+         39qMd4qNU5nm4fr+Dyjbo6+5+lzimz1qHxjsvj8oKDRlX7lnaPPsKS8gVttu/v0mWcun
+         1cjcb+giiqq7jmfZ7LktMvrOc7M0KQdZ8i9lgAO/Y1X7uwNmHjeyV5U9quC49OGtqlRW
+         gweG/EsujBzYK4ucruPFy6zKzn/LvwC5WA0kQFeGH/EkaJO1261Alsv899koHRtJZeew
+         bfwQ==
+X-Gm-Message-State: APjAAAWap4PoLAkJDlsQO5/QJs8rLdR7SMHmqUEAeJS/xeut6aL2TZD8
+        Iqk7DuKPT1+vo8uZ3EDGzUh15HJimWSD
+X-Google-Smtp-Source: APXvYqwtzu9aeMCIKMEiBMz0fAzsdRhGOi6XU++84WSHIsiecjBtKVrhgT0aC0/oz6nlkaMysnlfNYLM4R3M
+X-Received: by 2002:ac8:3fb3:: with SMTP id d48mr53297333qtk.290.1563888840244;
+ Tue, 23 Jul 2019 06:34:00 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 21:33:22 +0800
+Message-Id: <20190723133322.243286-1-tzungbi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
+Subject: [PATCH v2] platform/chrome: cros_ec_trace: update generating script
+From:   Tzung-Bi Shih <tzungbi@google.com>
+To:     bleung@chromium.org, enric.balletbo@collabora.com,
+        groeck@chromium.org
+Cc:     linux-kernel@vger.kernel.org, cychiang@google.com,
+        dgreid@google.com, tzungbi@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-23 at 15:25 +0200, Lukas Bulwahn wrote:
-> Hi Joe,
+To remove ", \" from the last line.
 
-Hi again.
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+---
+Changes from v1:
+- simpler awk code
 
-> On Tue, Jul 23, 2019 at 1:18 PM Joe Perches <joe@perches.com> wrote:
-> > On Tue, 2019-07-23 at 10:42 +0200, Lukas Bulwahn wrote:
-> [...]
-> > > Joe, would you support and would you accept if we extend
-> > > get_maintainer.pl to provide output of the status in such a way that
-> > > the status output can be clearly mapped to the subsystem?
-> > 
-> > Not really, no.  I don't see much value in your
-> > request to others.  It seems you are doing some
-> > academic work rather than actually using it for
-> > sending patches.
-> > 
-> 
-> Thank you for that indication. It is good to know that our use case is
-> too special to be covered in the existing tool and serves no one else
-> besides our research work.
+ drivers/platform/chrome/cros_ec_trace.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Seems a bit harsh a description, and yes, I've
-not ever seen a single request similar to yours
-to use get_maintainer in such a manner.
-
+diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
+index 0a76412095a9..667460952dad 100644
+--- a/drivers/platform/chrome/cros_ec_trace.c
++++ b/drivers/platform/chrome/cros_ec_trace.c
+@@ -6,7 +6,18 @@
+ #define TRACE_SYMBOL(a) {a, #a}
+ 
+ // Generate the list using the following script:
+-// sed -n 's/^#define \(EC_CMD_[[:alnum:]_]*\)\s.*/\tTRACE_SYMBOL(\1), \\/p' include/linux/mfd/cros_ec_commands.h
++// sed -n 's/^#define \(EC_CMD_[[:alnum:]_]*\)\s.*/\tTRACE_SYMBOL(\1), \\/p' \
++// include/linux/mfd/cros_ec_commands.h | awk '
++// {
++//   if (NR != 1)
++//     print buf;
++//   buf = $0;
++// }
++// END {
++//   gsub(/, \\/, "", buf);
++//   print buf;
++// }
++// '
+ #define EC_CMDS \
+ 	TRACE_SYMBOL(EC_CMD_PROTO_VERSION), \
+ 	TRACE_SYMBOL(EC_CMD_HELLO), \
+-- 
+2.22.0.657.g960e92d24f-goog
 
