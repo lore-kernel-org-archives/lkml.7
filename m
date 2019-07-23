@@ -2,185 +2,111 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA99C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428E5C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7562257F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RY++HW4S"
+	by mail.kernel.org (Postfix) with ESMTP id 167B222ADF
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388267AbfGWHPX (ORCPT
+        id S2388271AbfGWHRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:15:23 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32782 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfGWHPX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:15:23 -0400
-Received: by mail-ot1-f65.google.com with SMTP id q20so42971552otl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=l8ikddQeaKpRv73RcpRnjhbVGDZiHul3jH+N9vzFDo0=;
-        b=RY++HW4S6YvluB3ykZ83EnXbkxdRn0XGH/M6sHwl0pXMKHpPhZYXssPidQ+Mk6BwUU
-         hWb+4ljjVQo6lbPZf/R0uVj+O6yVvuDNPJp/A6YWXTlNvtMRSNByXd6TWJJQYjKyH0sg
-         P6arGJ5bHvMAO/bBtzVTYc3ypt0tF6QA91Qbbjd5Uhwc7n5TRl9ynpygqiv9Aeue2vmO
-         Y/pOGxpZfT8bedkrbPBizevmTfZTBlUUYGB3xJWMcC8W5oLes/32Zl6ZZn+pj8len4Bc
-         qp4E7r38ihani7d4VzCZWoephD1iHCzBQ03daY7c/EksFK9d6GApKWW61k+Ljpw4yu/9
-         BnkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=l8ikddQeaKpRv73RcpRnjhbVGDZiHul3jH+N9vzFDo0=;
-        b=g+xmnSv/eCIAakLzBA+otHVk9uQs28Ms17V9N8KpXEDiw0BZTV/kPnXOCAhe6DAnG8
-         6xLg5nak44upJ+bB6qOQX0oJrF3El2dYhan43flKS98BklLxANmV5s1up3h8xEBUxXkQ
-         OF3dfhF2pK1APNoEiqMMqcMZRzTo5lypYVF5tVfum11YItIcuRNwLHVQWH6JP3GUUAkT
-         bTEow/Bppr5BjI0VzO9/Ar5V6OmpFl7RJp/sK5/nLEXwG4tghw4dqyDKUXmwv23fJlg+
-         kjSOrqt5YGjKVhEc8efQutGYHO5txDgQushPSbfzL0D7yiBOZZu9DQo+hazLVSJBUP8I
-         PRzg==
-X-Gm-Message-State: APjAAAXKyDI5c0dU0uudbYFUtt9Xl/VklKirC18W7FmOoE/keswDxfny
-        xH7umJTqB4xfu8Oyiw4950ydycLgf4LCfuOLZdYOQQ==
-X-Google-Smtp-Source: APXvYqyp8TgTe2khLJdrQYV8bgnp91uAA8cka2Kr5b2hVsvEQfFjYhJXGxWzPoz1jz7B+clUCkkZOlaqP3pKxWeAyIY=
-X-Received: by 2002:a05:6830:13c2:: with SMTP id e2mr55602193otq.123.1563866121892;
- Tue, 23 Jul 2019 00:15:21 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a9d:7541:0:0:0:0:0 with HTTP; Tue, 23 Jul 2019 00:15:21
- -0700 (PDT)
-In-Reply-To: <20190723033103.GA13829@ming.t460p>
-References: <cover.1563782844.git.baolin.wang@linaro.org> <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
- <20190722141940.GA26528@ming.t460p> <CAMz4ku+R8OdAQ2S91Xe=V-nZL1Nu5g=_xpHqQCzNF6JeBHY3rw@mail.gmail.com>
- <20190723033103.GA13829@ming.t460p>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 23 Jul 2019 15:15:21 +0800
-Message-ID: <CAMz4ku+4z6LiREAWc0KN06=yxUjqoH6GM33S9qeGHOg2aAwyLQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/7] blk-mq: Export blk_mq_hctx_has_pending() function
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Jul 2019 03:17:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:49754 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbfGWHRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:17:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8981A344;
+        Tue, 23 Jul 2019 00:17:44 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E2273F71F;
+        Tue, 23 Jul 2019 00:19:44 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 08:17:41 +0100
+Message-ID: <86k1c9nrsa.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] arm64: Allow early timestamping of kernel log
+In-Reply-To: <CA+CK2bAFgDcc6ySCz7zzyeN0wg5WTcxFrKYQ6y5sz7grw-BfAw@mail.gmail.com>
+References: <20190722103330.255312-1-marc.zyngier@arm.com>
+        <CA+CK2bAFgDcc6ySCz7zzyeN0wg5WTcxFrKYQ6y5sz7grw-BfAw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019, Ming Lei <ming.lei@redhat.com> wrote:
-> On Tue, Jul 23, 2019 at 11:12:57AM +0800, Baolin Wang wrote:
->> Hi Ming,
->>
->> On Mon, 22 Jul 2019 at 22:19, Ming Lei <ming.lei@redhat.com> wrote:
->> >
->> > On Mon, Jul 22, 2019 at 09:09:36PM +0800, Baolin Wang wrote:
->> > > Some SD/MMC host controllers can support packed command or packed
->> > > request,
->> > > that means we can package several requests to host controller at one
->> > > time
->> > > to improve performence. And this patch set will introduce MMC packed
->> > > function
->> > > to support this feature by following patches.
->> > >
->> > > To support MMC packed function, the MMC layer need to know if there
->> > > are
->> > > requests are pending now in hardware queue to help to combine
->> > > requests
->> > > as much as possible. If we know there are requests pending in
->> > > hardware
->> > > queue, then we should not package requests to host controller
->> > > immediately,
->> > > instead we should collect more requests into MMC packed queue to be
->> > > packed
->> > > to host controller with packed condition.
->> > >
->> > > Thus export this function for MMC packed function.
->> > >
->> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> > > ---
->> > >  block/blk-mq.c         |    3 ++-
->> > >  include/linux/blk-mq.h |    1 +
->> > >  2 files changed, 3 insertions(+), 1 deletion(-)
->> > >
->> > > diff --git a/block/blk-mq.c b/block/blk-mq.c
->> > > index b038ec6..5bd4ef9 100644
->> > > --- a/block/blk-mq.c
->> > > +++ b/block/blk-mq.c
->> > > @@ -63,12 +63,13 @@ static int blk_mq_poll_stats_bkt(const struct
->> > > request *rq)
->> > >   * Check if any of the ctx, dispatch list or elevator
->> > >   * have pending work in this hardware queue.
->> > >   */
->> > > -static bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
->> > > +bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
->> > >  {
->> > >       return !list_empty_careful(&hctx->dispatch) ||
->> > >               sbitmap_any_bit_set(&hctx->ctx_map) ||
->> > >                       blk_mq_sched_has_work(hctx);
->> > >  }
->> > > +EXPORT_SYMBOL_GPL(blk_mq_hctx_has_pending);
->> >
->> > Just wondering why you don't use the 'last' field of 'struct
->> > blk_mq_queue_data',
->> > which is passed to .queue_rq(), and supposed for implementing batch
->> > submission.
->>
->> The 'last' field of 'struct blk_mq_queue_data' does not indicate the
->> last request in the hardware queue, since we want to collect more
->> requests from block layer as much as possible to be packed later.
->>
->> And from blk_mq_do_dispatch_sched()--->blk_mq_dispatch_rq_list()--->
->> queue_rq(), I always get 'bd.last = true', which is not useful to
->> combine requests for MMC packed queue. Maybe I missed anything?
->
-> That is one flaw of current implementation, and we may improve it,
-> so other drivers(virtio-io, ...) can benefit from it too.
->
+On Mon, 22 Jul 2019 21:52:42 +0100,
+Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+> 
+> On Mon, Jul 22, 2019 at 3:33 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> >
+> > So far, we've let the arm64 kernel start its meaningful time stamping
+> > of the kernel log pretty late, which is caused by sched_clock() being
+> > initialised rather late compared to other architectures.
+> >
+> > Pavel Tatashin proposed[1] to move the initialisation of sched_clock
+> > much earlier, which I had objections to. The reason for initialising
+> > sched_clock late is that a number of systems have broken counters, and
+> > we need to apply all kind of terrifying workarounds to avoid time
+> > going backward on the affected platforms. Being able to identify the
+> > right workaround comes pretty late in the kernel boot, and providing
+> > an unreliable sched_clock, even for a short period of time, isn't an
+> > appealing prospect.
+> >
+> > To address this, I'm proposing that we allow an architecture to chose
+> > to (1) divorce time stamping and sched_clock during the early phase of
+> > booting, and (2) inherit the time stamping clock as the new epoch the
+> > first time a sched_sched clock gets registered.
+> 
+> Could we have a stable clock config for arm64: if it is known that
+> this Linux build is going to run on non-broken firmware, and with a
+> known stable cntvct_el0 register it can be optionally configured to
+> use that stable sched_clock instead of generic clock that arm64 is
+> using?
 
-OK. I am not sure can I add a new flag to indicate if there are
-requests are pending in the hardware queue? That will help MMC driver
-to combine more requests.
+Hmmm. Then I guess a prerequisite is this patch:
 
-Or do you have any other good suggestion? Thanks.
+https://lwn.net/Articles/490040/
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 5bd4ef9..cb240f4 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1257,6 +1257,8 @@ bool blk_mq_dispatch_rq_list(struct
-request_queue *q, struct list_head *list,
-                        bd.last = !blk_mq_get_driver_tag(nxt);
-                }
+as the number of systems this will reliably run on is a close
+approximation to zero. Yes, counting is hard...
 
-+               bd.rq_pending = blk_mq_hctx_has_pending(hctx);
-+
-                ret = q->mq_ops->queue_rq(hctx, &bd);
-                if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
-                        /*
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 15a2b7b..9b06fe0 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -118,6 +118,7 @@ struct blk_mq_tag_set {
- struct blk_mq_queue_data {
-        struct request *rq;
-        bool last;
-+       bool rq_pending;
- };
+More seriously, we've been there before (cue the 32bit ARM port 8
+years ago), and really don't want to go back to a time where we had
+multiple config options for everything. There is one kernel, which
+should run *reliably* on everything.
+
+> This way, the early printk are going to be available on those
+> systems without adding a different method for printk's only. It would
+> also mean that other users of early sched_clock() such as ftrace could
+> benefit from it.
+
+See above. But maybe the real thing to do is to allow local_clock() to
+be overridden. Same effect, same complexity, just hidden away from any
+given subsystem.
+
+Thanks,
+
+	M.
 
 -- 
-Baolin Wang
-Best Regards
+Jazz is not dead, it just smells funny.
