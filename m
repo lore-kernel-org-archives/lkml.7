@@ -2,218 +2,220 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04B4C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2B8C76188
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A23621911
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6BF21911
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gVD3kf8g"
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="UFpzkT8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388356AbfGWH3h (ORCPT
+        id S2388365AbfGWHaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:29:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36148 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388344AbfGWH3g (ORCPT
+        Tue, 23 Jul 2019 03:30:06 -0400
+Received: from mx-rz-3.rrze.uni-erlangen.de ([131.188.11.22]:50693 "EHLO
+        mx-rz-3.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388285AbfGWHaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:29:36 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so79814491iom.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:29:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M8k424NyrneZm8uYnqNL+NvCg5Ao/qU37IRKKlkguJs=;
-        b=gVD3kf8g3YfT1qidprM/VLJGPdEQPy1Hnw16DDFu13W6WbaGz1OXLg1escxepEY54T
-         77fQVy0lRaIQUOENQv8EKWb6GRiluTTF48lL6xnGviCbVEuKBqVR9FnZ62o7l+d14ZJL
-         tqVAG5qBjAeDhlky5+h0Dn0JsrxD996FLQY343NZ2x2IPJ0fu7mJsTjHKu3S0/Pm/2Rg
-         kNQX1qp4GkLrEM3KP0FvfA8qrWetPXhUIWcNNcHlrhhmOkfKzgOQN4XNO/e6DMT9g4Ka
-         Rw82TLAn06p54KCMslSn4DISydKWvQOsxe/liJ5uJGHxIkmy3wxUaWlCBHpqDYD3gtzO
-         FPmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M8k424NyrneZm8uYnqNL+NvCg5Ao/qU37IRKKlkguJs=;
-        b=quBIHtqOehBhdsP4HJvldnSgYprAw9NDke/adEe9JxBex+ImM0k3ZsNX60YgvkQOd0
-         3Zr48/X4CSQmt3IYgYYrOWL4jQ6TyF9xxqsxJ6iwiwV8eNcIV53o2vcskE0taFFAeLsR
-         qYxfOAX/iYfFDQY9GHBASrCM6MfzLIz9DjRXF+baqIV6YyRH261/HBkRQhYoBrSSmHMM
-         /m2mxSF5foqx5BkHmyDtTUNBKvpznx5rNS9A4gNZz4+vDE93ATsO58zVDpHaIyv9JuAT
-         178B+v6gARPxVQhxZQsJb2L2og4+UkwkW+0pgEcEEUdiTzQLHbUUek2w23vCcSprleqr
-         4MHw==
-X-Gm-Message-State: APjAAAVqR4ZgIp8bCtCuC+LB4puJLOZhhbGyvRjHzLOcdauknrM5q8pS
-        toalWH2WLYBsapgB5aBzV+QVXunknzLCfK57t7qC6w==
-X-Google-Smtp-Source: APXvYqxrzGaWpbAdT7VSuME5l8UlNpP6Yvd6/8U85eUm7iqJjLmC8f2GYueYIB5AnXjkoDtWaBaGbQblTGi77c+Lsps=
-X-Received: by 2002:a6b:4101:: with SMTP id n1mr42187939ioa.138.1563866974368;
- Tue, 23 Jul 2019 00:29:34 -0700 (PDT)
+        Tue, 23 Jul 2019 03:30:05 -0400
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx-rz-3.rrze.uni-erlangen.de (Postfix) with ESMTPS id 45t99Q5DDmz1xn3;
+        Tue, 23 Jul 2019 09:30:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
+        t=1563867002; bh=13skyY+ZGLpqMmcP07B5MdUor/CZCIhEq8X/nTHu8wk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From:To:CC:
+         Subject;
+        b=UFpzkT8O6jU+vkvYRN06CvtUKBIzSfbypP5IJza10HsfrUsjc/bWJuNSIBxp5UgOY
+         dgnhAbRxys4Jnr4RdMtSTmhWLJfI7iv5kc41uiDPOIPQYBnR+257ZIuMP3Cb1jICI6
+         iJv6l8r4QPB3vLXbHJfIW/v9BOdREbyvTIXvlEWsFzSMBLnx5d8xPoajU2lfABUIM8
+         bh38cpBOW9P6aw6qK3esExvs8YJdjwXvkWeY8yIiKU3SxIwsRvPAglfllXDr6Rscoa
+         nN8aSw31Y1IGqwgdiIZgQrUE63JJwAZ1BOX5a7eWVsWfrCqVaeOyp9XBjltzqdbOXX
+         ySmKj2dlIPMkA==
+X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 131.188.11.37
+Received: from faumail.fau.de (smtp-auth.uni-erlangen.de [131.188.11.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: U2FsdGVkX1+rhsFEdpRx6XmGg/iUkhy/LK3IVpIIbvI=)
+        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 45t99M5qQRz1yQ0;
+        Tue, 23 Jul 2019 09:29:59 +0200 (CEST)
+Received: from kUd8DOJMh/hOHCE3o9CDi9/jEtWv6tTVqEMd9jr5svE=
+ by faumail.uni-erlangen.de
+ with HTTP (HTTP/1.1 POST); Tue, 23 Jul 2019 09:29:59 +0200
 MIME-Version: 1.0
-References: <0000000000003fd4ab058e46951f@google.com>
-In-Reply-To: <0000000000003fd4ab058e46951f@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 23 Jul 2019 09:29:23 +0200
-Message-ID: <CACT4Y+YLqSt34ka5kQQNBeo+GvGZ0dzNFL3Rb8_1Cid_C75_2w@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in h5_rx_3wire_hdr
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzbot <syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 23 Jul 2019 09:29:59 +0200
+From:   "Duda, Sebastian" <sebastian.duda@fau.de>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
+        ralf.ramsauer@oth-regensburg.de, wolfgang.mauerer@oth-regensburg.de
+Subject: Re: get_maintainers.pl subsystem output
+In-Reply-To: <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
+References: <2c912379f96f502080bfcc79884cdc35@fau.de>
+ <5a468c6cbba8ceeed6bbeb8d19ca2d46cb749a47.camel@perches.com>
+Message-ID: <2835dfa18922905ffabafb11fca7e1d2@fau.de>
+X-Sender: sebastian.duda@fau.de
+User-Agent: Roundcube Webmail/1.2.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 5:18 PM syzbot
-<syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    6d21a41b Add linux-next specific files for 20190718
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1377958fa00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0abbda0523882250a97a
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113e2bb7a00000
+Hi Joe,
 
-+drivers/bluetooth/hci_h5.c maintainers
+when analyzing the patch 
+`<20150128012747.824898918@linuxfoundation.org>` [1] with 
+`get_maintainers.pl --subsystem --status --separator , /tmp/patch`, 
+there is the following output:
 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0abbda0523882250a97a@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: use-after-free in h5_rx_3wire_hdr+0x35d/0x3c0
-> /drivers/bluetooth/hci_h5.c:438
-> Read of size 1 at addr ffff8880a161d1c8 by task syz-executor.4/12040
->
-> CPU: 1 PID: 12040 Comm: syz-executor.4 Not tainted 5.2.0-next-20190718 #41
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack /lib/dump_stack.c:77 [inline]
->   dump_stack+0x172/0x1f0 /lib/dump_stack.c:113
->   print_address_description.cold+0xd4/0x306 /mm/kasan/report.c:351
->   __kasan_report.cold+0x1b/0x36 /mm/kasan/report.c:482
->   kasan_report+0x12/0x17 /mm/kasan/common.c:612
->   __asan_report_load1_noabort+0x14/0x20 /mm/kasan/generic_report.c:129
->   h5_rx_3wire_hdr+0x35d/0x3c0 /drivers/bluetooth/hci_h5.c:438
->   h5_recv+0x32f/0x500 /drivers/bluetooth/hci_h5.c:563
->   hci_uart_tty_receive+0x279/0x790 /drivers/bluetooth/hci_ldisc.c:600
->   tiocsti /drivers/tty/tty_io.c:2197 [inline]
->   tty_ioctl+0x949/0x14f0 /drivers/tty/tty_io.c:2573
->   vfs_ioctl /fs/ioctl.c:46 [inline]
->   file_ioctl /fs/ioctl.c:509 [inline]
->   do_vfs_ioctl+0xdb6/0x13e0 /fs/ioctl.c:696
->   ksys_ioctl+0xab/0xd0 /fs/ioctl.c:713
->   __do_sys_ioctl /fs/ioctl.c:720 [inline]
->   __se_sys_ioctl /fs/ioctl.c:718 [inline]
->   __x64_sys_ioctl+0x73/0xb0 /fs/ioctl.c:718
->   do_syscall_64+0xfd/0x6a0 /arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459819
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f7a3b459c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459819
-> RDX: 0000000020000080 RSI: 0000000000005412 RDI: 0000000000000003
-> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a3b45a6d4
-> R13: 00000000004c408a R14: 00000000004d7ff0 R15: 00000000ffffffff
->
-> Allocated by task 9200:
->   save_stack+0x23/0x90 /mm/kasan/common.c:69
->   set_track /mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc /mm/kasan/common.c:487 [inline]
->   __kasan_kmalloc.constprop.0+0xcf/0xe0 /mm/kasan/common.c:460
->   kasan_kmalloc+0x9/0x10 /mm/kasan/common.c:501
->   __do_kmalloc_node /mm/slab.c:3615 [inline]
->   __kmalloc_node_track_caller+0x4e/0x70 /mm/slab.c:3629
->   __kmalloc_reserve.isra.0+0x40/0xf0 /net/core/skbuff.c:141
->   __alloc_skb+0x10b/0x5e0 /net/core/skbuff.c:209
->   alloc_skb /./include/linux/skbuff.h:1055 [inline]
->   bt_skb_alloc /./include/net/bluetooth/bluetooth.h:339 [inline]
->   h5_rx_pkt_start+0xce/0x270 /drivers/bluetooth/hci_h5.c:474
->   h5_recv+0x32f/0x500 /drivers/bluetooth/hci_h5.c:563
->   hci_uart_tty_receive+0x279/0x790 /drivers/bluetooth/hci_ldisc.c:600
->   tty_ldisc_receive_buf+0x15f/0x1c0 /drivers/tty/tty_buffer.c:465
->   tty_port_default_receive_buf+0x7d/0xb0 /drivers/tty/tty_port.c:38
->   receive_buf /drivers/tty/tty_buffer.c:481 [inline]
->   flush_to_ldisc+0x222/0x390 /drivers/tty/tty_buffer.c:533
->   process_one_work+0x9af/0x1740 /kernel/workqueue.c:2269
->   worker_thread+0x98/0xe40 /kernel/workqueue.c:2415
->   kthread+0x361/0x430 /kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
->
-> Freed by task 9200:
->   save_stack+0x23/0x90 /mm/kasan/common.c:69
->   set_track /mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x102/0x150 /mm/kasan/common.c:449
->   kasan_slab_free+0xe/0x10 /mm/kasan/common.c:457
->   __cache_free /mm/slab.c:3425 [inline]
->   kfree+0x10a/0x2c0 /mm/slab.c:3756
->   skb_free_head+0x93/0xb0 /net/core/skbuff.c:591
->   skb_release_data+0x42d/0x7c0 /net/core/skbuff.c:611
->   skb_release_all+0x4d/0x60 /net/core/skbuff.c:665
->   __kfree_skb /net/core/skbuff.c:679 [inline]
->   kfree_skb /net/core/skbuff.c:697 [inline]
->   kfree_skb+0x101/0x3c0 /net/core/skbuff.c:691
->   h5_reset_rx+0x4c/0x120 /drivers/bluetooth/hci_h5.c:530
->   h5_rx_3wire_hdr+0x2f5/0x3c0 /drivers/bluetooth/hci_h5.c:440
->   h5_recv+0x32f/0x500 /drivers/bluetooth/hci_h5.c:563
->   hci_uart_tty_receive+0x279/0x790 /drivers/bluetooth/hci_ldisc.c:600
->   tty_ldisc_receive_buf+0x15f/0x1c0 /drivers/tty/tty_buffer.c:465
->   tty_port_default_receive_buf+0x7d/0xb0 /drivers/tty/tty_port.c:38
->   receive_buf /drivers/tty/tty_buffer.c:481 [inline]
->   flush_to_ldisc+0x222/0x390 /drivers/tty/tty_buffer.c:533
->   process_one_work+0x9af/0x1740 /kernel/workqueue.c:2269
->   worker_thread+0x98/0xe40 /kernel/workqueue.c:2415
->   kthread+0x361/0x430 /kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff8880a161d1c0
->   which belongs to the cache kmalloc-8k of size 8192
-> The buggy address is located 8 bytes inside of
->   8192-byte region [ffff8880a161d1c0, ffff8880a161f1c0)
-> The buggy address belongs to the page:
-> page:ffffea0002858700 refcount:1 mapcount:0 mapping:ffff8880aa4021c0
-> index:0x0 compound_mapcount: 0
-> flags: 0x1fffc0000010200(slab|head)
-> raw: 01fffc0000010200 ffffea0002850508 ffffea000262ed08 ffff8880aa4021c0
-> raw: 0000000000000000 ffff8880a161d1c0 0000000100000001 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8880a161d080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8880a161d100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > ffff8880a161d180: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->                                                ^
->   ffff8880a161d200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8880a161d280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000003fd4ab058e46951f%40google.com.
+     Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM),Josef Bacik 
+<jbacik@fb.com> (maintainer:BTRFS FILE SYSTEM),David Sterba 
+<dsterba@suse.cz> (maintainer:BTRFS FILE SYSTEM),Alexander Viro 
+<viro@zeniv.linux.org.uk> (maintainer:FILESYSTEMS (VFS and 
+infrastructure)),"Theodore Ts'o" <tytso@mit.edu> (maintainer:EXT4 FILE 
+SYSTEM),Andreas Dilger <adilger.kernel@dilger.ca> (maintainer:EXT4 FILE 
+SYSTEM),Jaegeuk Kim <jaegeuk@kernel.org> (maintainer:F2FS FILE 
+SYSTEM),Changman Lee <cm224.lee@samsung.com> (maintainer:F2FS FILE 
+SYSTEM),Miklos Szeredi <miklos@szeredi.hu> (maintainer:FUSE: FILESYSTEM 
+IN USERSPACE),Steven Whitehouse <swhiteho@redhat.com> (supporter:GFS2 
+FILE SYSTEM),Anton Altaparmakov <anton@tuxera.com> (supporter:NTFS 
+FILESYSTEM),Hugh Dickins <hughd@google.com> (maintainer:TMPFS (SHMEM 
+FILESYSTEM)),linux-btrfs@vger.kernel.org (open list:BTRFS FILE 
+SYSTEM),linux-kernel@vger.kernel.org (open 
+list),linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and 
+infrastructure)),linux-ext4@vger.kernel.org (open list:EXT4 FILE 
+SYSTEM),linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE 
+SYSTEM),fuse-devel@lists.sourceforge.net (open list:FUSE: FILESYSTEM IN 
+USERSPACE),cluster-devel@redhat.com (open list:GFS2 FILE 
+SYSTEM),linux-ntfs-dev@lists.sourceforge.net (open list:NTFS 
+FILESYSTEM),linux-mm@kvack.org (open list:MEMORY MANAGEMENT)
+     Maintained,Buried alive in reporters,Supported
+     BTRFS FILE SYSTEM,THE REST,FILESYSTEMS (VFS and infrastructure),EXT4 
+FILE SYSTEM,F2FS FILE SYSTEM,FUSE: FILESYSTEM IN USERSPACE,GFS2 FILE 
+SYSTEM,NTFS FILESYSTEM,MEMORY MANAGEMENT,TMPFS (SHMEM FILESYSTEM)
+
+How can I parse this output automatically? or how can I generate a 
+parsable output?
+
+I need the tuples of subsystems and status:
+(THE REST, Buried alive in reporters)
+(TMPFS, Maintained)
+(BTRFS FILE SYSTEM, Maintained)
+…
+(GFS2 FILE SYSTEM, Supported)
+
+I'm not aware how to reliably assign the statuses to the subsystems.
+
+Thank you in advance
+Kind regards
+
+Sebastian Duda
+
+[1] https://lore.kernel.org/patchwork/patch/537252/
+
+On 2019-07-19 10:50, Joe Perches wrote:
+> On Fri, 2019-07-19 at 07:35 +0000, Duda, Sebastian wrote:
+>> Hi Joe,
+>> 
+>> I'm conducting a large-scale patch analysis of the LKML with 1.8 
+>> million
+>> patch emails. I'm using the `get_maintainer.pl` script to know which
+>> patch is related to which subsystem.
+> 
+> The MAINTAINERS file is updated frequently.
+> 
+> Are you also using the MAINTAINERS file used
+> at the time each patch was submitted?
+> 
+>> I ran into two issues while using the script:
+>> 
+>> 1. When I use the script the trivial way
+>> 
+>>      $ scripts/get_maintainer.pl --subsystem --status --separator ,
+>> drivers/media/i2c/adv748x/
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org>
+>> (maintainer:MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC
+>> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+>>      Maintained,Buried alive in reporters
+>>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),THE REST
+>> 
+>> the output is hard to parse because the status `Maintained` is 
+>> displayed
+>> only once but related to two subsystems.
+>> 
+>> I'd prefer a more table like representation, like this:
+>> 
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),linux-media@vger.kernel.org (open
+>> list:ANALOG DEVICES INC ADV748X DRIVER),ANALOG DEVICES INC ADV748X
+>> DRIVER,Maintained
+>>      Mauro Carvalho Chehab <mchehab@kernel.org> (maintainer:MEDIA 
+>> INPUT
+>> INFRASTRUCTURE (V4L/DVB)),MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),Maintained
+>>      linux-kernel@vger.kernel.org (open list),THE REST,Buried alive in
+>> reporters
+>> 
+>> 
+>> 2. I want to analyze multiple patches, currently I am calling the 
+>> script
+>> once per patch. When calling the script with multiple files the files
+>> output is merged
+>> 
+>>      $ scripts/get_maintainer.pl --subsystem --status --separator ','
+>> drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org>
+>> (maintainer:MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC
+>> ADV748X DRIVER),linux-kernel@vger.kernel.org (open
+>> list),platform-driver-x86@vger.kernel.org (open list:ACPI WMI DRIVER)
+>>      Maintained,Buried alive in reporters,Orphan
+>>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),THE REST,ACPI WMI DRIVER
+>> 
+>> I'd like to run the script with all files but separated output, like
+>> this:
+>> 
+>>      $ scripts/get_maintainer.pl --subsystem --status --separator ','
+>> --separate-files drivers/media/i2c/adv748x/ include/uapi/linux/wmi.h
+>>      Kieran Bingham <kieran.bingham@ideasonboard.com> 
+>> (maintainer:ANALOG
+>> DEVICES INC ADV748X DRIVER),Mauro Carvalho Chehab <mchehab@kernel.org>
+>> (maintainer:MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB)),linux-media@vger.kernel.org (open list:ANALOG DEVICES INC
+>> ADV748X DRIVER),linux-kernel@vger.kernel.org (open list)
+>>      Maintained,Buried alive in reporters
+>>      ANALOG DEVICES INC ADV748X DRIVER,MEDIA INPUT INFRASTRUCTURE
+>> (V4L/DVB),THE REST
+>> 
+>>      platform-driver-x86@vger.kernel.org (open list:ACPI WMI
+>> DRIVER),linux-kernel@vger.kernel.org (open list)
+>>      Orphan,Buried alive in reporters
+>>      ACPI WMI DRIVER,THE REST
+>> 
+>> 
+>> My Questions are:
+>> 1. How can I make get_maintainer's output to be more table-like?
+> 
+> I suggest adding --nogit --nogit-fallback --roles --norolestats
+> 
+>> 2. How can I make get_maintainer.pl to separate each file's output?
+> 
+> Run the script with multiple invocations. once for each file
+> modified by the patch.
