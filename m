@@ -2,217 +2,127 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E611C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93201C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E7DC229EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oJY3y4jJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mHbrgoKW"
+	by mail.kernel.org (Postfix) with ESMTP id 666ED2064C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 19:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563910263;
+	bh=mbTmS1LZImw57qCGpPA/d2LPrQGTEffRKbLn+C2T+8M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uSVkuRSGPYMyH4iwkJQ1vp0Lc171npmoheg6nVcWjL7Gfv4W5petnrkoK/u3eQVvN
+	 K0N8yFKIhSY9jYdEusRhpfRfcG/yPTfO7sivlgNlsvCe6XlHGqrD0SDRTA/9vGrrMM
+	 z21D4GconwLDy1g6jf/VqRTru/1dUEeADJNWOCe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391658AbfGWTWF (ORCPT
+        id S1729858AbfGWTbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 15:22:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48260 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388860AbfGWTWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 15:22:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0AA1360FEA; Tue, 23 Jul 2019 19:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563909723;
-        bh=bfET2k5xpnZDhEFDAJZolFfmIsNzlqNPLX0+nG24TTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oJY3y4jJSJfOXehEeN11f5G5Q74+niajD7c81rIWMX2dfKdROLpyaLfbRKONGKjnh
-         W6ayyZRSolnrpqXPJuFk3Mw+Gf0YUXqEJY8vF6mHMIGhWRUCgstLMM6haLCGMwDzWf
-         nkCrFpU/Lbbm8ZIfanCEYFlbYfXJscb9n6B7FFRw=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 23 Jul 2019 15:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbfGWTbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 15:31:01 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2CF0618DC;
-        Tue, 23 Jul 2019 19:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563909720;
-        bh=bfET2k5xpnZDhEFDAJZolFfmIsNzlqNPLX0+nG24TTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mHbrgoKWIZ4I5DlJ2XtJTN6hAqWkfj1OgCvpe7u1bG2bTmW6RJN6jsrXfZDOcQXh0
-         B/vAvQtArVZqbfwcbX1yloGPXzmnDuaKWVhPUn9JRT6g8WB+nN5mGGyeVHA0lKIMCO
-         BTk5XmSRF9J0lWwoniPbJkqVTGm2tMhGpG6EZ020=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2CF0618DC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 23 Jul 2019 13:21:59 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-Subject: Re: [PATCH V2 1/4] drivers: qcom: rpmh-rsc: simplify TCS locking
-Message-ID: <20190723192159.GA18620@codeaurora.org>
-References: <20190722215340.3071-1-ilina@codeaurora.org>
- <5d375054.1c69fb81.7ce3f.3591@mx.google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D99A0229F4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 19:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563910261;
+        bh=mbTmS1LZImw57qCGpPA/d2LPrQGTEffRKbLn+C2T+8M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1SKAdmGIP5V9n4U3iDtQgoUB4KJNKHm8vWv83J5jUAGHPq2I+9IegTZY0Reev5bGy
+         h+bTqfnNy06sW3hBXcbfXbrziQqYMLnZ4LMzIF4jlaXA9DYm6C23J9oKJjdwHT4o6p
+         sBh0foHkyMaToOgevEUwzxRYpjVKkYd1NKT24zIk=
+Received: by mail-qt1-f169.google.com with SMTP id x22so38102648qtp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 12:31:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAWAobG+FFLpvV5i7WxcoXaJnyh0V6UVnlJHr4wKOezr7p9vBaNO
+        2FSr43o2TaYCahBAHHjdc9N7MEMS6FB9f5YE3w==
+X-Google-Smtp-Source: APXvYqzkONB94qiS0aaPqoXHPWiUsz2yZHq4eyfhIpE5HUHXaIbrO3XgPshMXsWt7ElpDdO9ORrX5rUbMT89+jDiA6w=
+X-Received: by 2002:a0c:b786:: with SMTP id l6mr55983683qve.148.1563910260061;
+ Tue, 23 Jul 2019 12:31:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d375054.1c69fb81.7ce3f.3591@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190723181624.203864-1-swboyd@chromium.org> <20190723181624.203864-3-swboyd@chromium.org>
+In-Reply-To: <20190723181624.203864-3-swboyd@chromium.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 23 Jul 2019 13:30:48 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKMmQdvQmybXbGf_CZkvd1TTeMBPyk3uEUOK9Vz1+9PNg@mail.gmail.com>
+Message-ID: <CAL_JsqKMmQdvQmybXbGf_CZkvd1TTeMBPyk3uEUOK9Vz1+9PNg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] treewide: Remove dev_err() usage after platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23 2019 at 12:22 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-07-22 14:53:37)
->> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
->>
->> The tcs->lock was introduced to serialize access with in TCS group. But,
->> drv->lock is still needed to synchronize core aspects of the
->> communication. This puts the drv->lock in the critical and high latency
->> path of sending a request. drv->lock provides the all necessary
->> synchronization. So remove locking around TCS group and simply use the
->> drv->lock instead.
+On Tue, Jul 23, 2019 at 12:16 PM Stephen Boyd <swboyd@chromium.org> wrote:
 >
->This doesn't talk about removing the irq saving and restoring though.
-You mean for drv->lock? It was not an _irqsave/_irqrestore anyways and
-we were only removing the tcs->lock.
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
 
->Can you keep irq saving and restoring in this patch and then remove that
->in the next patch with reasoning? It probably isn't safe if the lock is
->taken in interrupt context anyway.
->
-Yes, the drv->lock should have been irqsave/irqrestore, but it hasn't
-been changed by this patch.
+Nice. Would be nice to see this for other commonly called functions in
+probe though we have deal with cases of failure being okay.
 
->>
->> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
->> [ilina: split patch into multiple files, update commit text]
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 >
->> diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
->> index a7bbbb67991c..969d5030860e 100644
->> --- a/drivers/soc/qcom/rpmh-internal.h
->> +++ b/drivers/soc/qcom/rpmh-internal.h
->> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
->> index e278fc11fe5c..5ede8d6de3ad 100644
->> --- a/drivers/soc/qcom/rpmh-rsc.c
->> +++ b/drivers/soc/qcom/rpmh-rsc.c
->> @@ -106,26 +106,26 @@ static int tcs_invalidate(struct rsc_drv *drv, int type)
->>  {
->>         int m;
->>         struct tcs_group *tcs;
->> +       int ret = 0;
->>
->>         tcs = get_tcs_of_type(drv, type);
->>
->> -       spin_lock(&tcs->lock);
->> -       if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS)) {
->> -               spin_unlock(&tcs->lock);
->> -               return 0;
->> -       }
->> +       spin_lock(&drv->lock);
->> +       if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS))
->> +               goto done_invalidate;
->>
->>         for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
->>                 if (!tcs_is_free(drv, m)) {
->> -                       spin_unlock(&tcs->lock);
->> -                       return -EAGAIN;
->> +                       ret = -EAGAIN;
->> +                       goto done_invalidate;
->>                 }
->>                 write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, m, 0);
->>                 write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, m, 0);
->>         }
->>         bitmap_zero(tcs->slots, MAX_TCS_SLOTS);
->> -       spin_unlock(&tcs->lock);
->>
->> +done_invalidate:
->> +       spin_unlock(&drv->lock);
->>         return 0;
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
 >
->return ret now?
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
 >
-Yes, will do.
->>  }
->>
->> @@ -349,41 +349,35 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
->>  {
->>         struct tcs_group *tcs;
->>         int tcs_id;
->> -       unsigned long flags;
->>         int ret;
->>
->>         tcs = get_tcs_for_msg(drv, msg);
->>         if (IS_ERR(tcs))
->>                 return PTR_ERR(tcs);
->>
->> -       spin_lock_irqsave(&tcs->lock, flags);
->>         spin_lock(&drv->lock);
->>         /*
->>          * The h/w does not like if we send a request to the same address,
->>          * when one is already in-flight or being processed.
->>          */
->>         ret = check_for_req_inflight(drv, tcs, msg);
->> -       if (ret) {
->> -               spin_unlock(&drv->lock);
->> +       if (ret)
->>                 goto done_write;
->> -       }
->>
->>         tcs_id = find_free_tcs(tcs);
->>         if (tcs_id < 0) {
->>                 ret = tcs_id;
->> -               spin_unlock(&drv->lock);
->>                 goto done_write;
->>         }
->>
->>         tcs->req[tcs_id - tcs->offset] = msg;
->>         set_bit(tcs_id, drv->tcs_in_use);
->> -       spin_unlock(&drv->lock);
->>
->>         __tcs_buffer_write(drv, tcs_id, 0, msg);
->>         __tcs_trigger(drv, tcs_id);
->>
->>  done_write:
->> -       spin_unlock_irqrestore(&tcs->lock, flags);
->> +       spin_unlock(&drv->lock);
->>         return ret;
->>  }
->>
->> @@ -481,19 +475,18 @@ static int tcs_ctrl_write(struct rsc_drv *drv, const struct tcs_request *msg)
->>  {
->>         struct tcs_group *tcs;
->>         int tcs_id = 0, cmd_id = 0;
->> -       unsigned long flags;
->>         int ret;
->>
->>         tcs = get_tcs_for_msg(drv, msg);
->>         if (IS_ERR(tcs))
->>                 return PTR_ERR(tcs);
->>
->> -       spin_lock_irqsave(&tcs->lock, flags);
->> +       spin_lock(&drv->lock);
->>         /* find the TCS id and the command in the TCS to write to */
->>         ret = find_slots(tcs, msg, &tcs_id, &cmd_id);
->>         if (!ret)
->>                 __tcs_buffer_write(drv, tcs_id, cmd_id, msg);
->> -       spin_unlock_irqrestore(&tcs->lock, flags);
->> +       spin_unlock(&drv->lock);
->>
->
->These ones, just leave them doing the irq save restore for now?
->
-drv->lock ??
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
 
---Lina
+What about cases of pr_err, pr_warn, etc.? And the subsystem specific
+prints like edac_printk and DRM_ERROR/DRM_DEV_ERROR.
 
+There's also some cases that the irq seems to be optional. They use
+dev_info, but will now have an error level print. That's fine with me,
+but some may complain...
+
+> )
+> ...
+> }
+> // </smpl>
+>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Javier Martinez Canillas <javierm@redhat.com>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
