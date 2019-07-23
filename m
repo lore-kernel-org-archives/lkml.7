@@ -3,221 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8461CC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DFAC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABCA2081B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60AD22513
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="m2QO0kdL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFRe9yqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbfGWKsh (ORCPT
+        id S1731218AbfGWKti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:48:37 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38634 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729671AbfGWKsg (ORCPT
+        Tue, 23 Jul 2019 06:49:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36484 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729177AbfGWKth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:48:36 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r12so8591298edo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:48:32 -0700 (PDT)
+        Tue, 23 Jul 2019 06:49:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l21so19240884pgm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=/vbv8X7Ffa53TnjHVA0Vtm+sDJ1pMmI/u+My+FwraRA=;
-        b=m2QO0kdLiNSFb6rRE9L049cc1C6UBL+zUeXbF2OB0gNyiWkLdgK2F+0p/5cRkvTBUQ
-         74pku7WzeieXlWYJx25ab+fvHvpdkz1E2beMszzVrni1UJKMVtCeLJUhTml3OK/YNbD4
-         zipyUn5Sk4dObc2nwMW3vVsh13ut5V2K/L4kebI+ROvkdRi9fd8oR9FwKoA6Z6BiXWWs
-         Tc3ne0LO6Jz8KLwoZeW59YHPBsZHFmRdKzOSQ7STyVxywIWsVT5I5UDUprg4In6ElKl2
-         s9Qo9mEwC0kaNQvyk1NIh9kLt8o3qSe6yvlyVLqQt75P2nw5ucmzRi3JFGg7/vbnPymh
-         1ocg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PaKr0cKMyAMbxH4E21XrY6gVVY8VgDaZGXDVqfVaPKI=;
+        b=TFRe9yquqg8Peo0OXTizXKupWPaxzss8ZBIC0a/Jc6OSatHlAPFz45h3RyLVNRHTLD
+         EvZ1K18FI+/W4T+fx8/lQFxLaj3jFufNG9DEdRjrDtIUtV+g8oU2ib1naBILnhS3cK02
+         mC7lTi+D2FTMAd8lZJJMCYK3M3XwLAw7nsRCJbsC56SfJyrW5CZVcqZ0R8OSwc7Q6gDW
+         feHg78r7P0vSZpfbD1PqqK/5UJlGPjQN3rMTS6EpQmvl41rft+y3Hsz9/oMOGDPEzp/V
+         pk/1Krjw0za6kFS0DnPXFdgPV9KGCaSgMfuUzgB7TLP8BEiqzksmtHKPGJ2p4HWKUnqs
+         HNMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/vbv8X7Ffa53TnjHVA0Vtm+sDJ1pMmI/u+My+FwraRA=;
-        b=V/cDEO1yKfV6RdTki6FMDWFDD6iEWQ7Zcey3hI0JwuGROGnXBw8hyHltBCgoZY1yI9
-         /xgTwnsxgzlyk2/rjpXSHVYWoOIJMZD3qD0X1zeNp54cH1oQG2R9limyjSj4td2CEvoI
-         cuqVRRutzbZHexzUSruYJt6HJqxcbKOGsTDuXjguRMCUW2yDbqZR9Jwv+lza8WVHWE9U
-         ZVIHUP5q5fAkbOMg0jHXjyPJLGEOy9KyqUEcFeKj9nuk2PDFX4zJc4gpwDKbPrIoDyD0
-         4fjRInV67NA+IM15XxfIBLh31srvInk4D+Z770RWibAvgkonrW+z3eD9jAfZJ+vjf7us
-         BCiw==
-X-Gm-Message-State: APjAAAVkpL6xU12foli6jt/jCQ+09OWLbvZhBU9fiD6iCkM15PeL5tUW
-        YqmKJ49Rzmvq3eNpPt90E6A=
-X-Google-Smtp-Source: APXvYqzOq5992isXNLSurSiU4XHy9//XtcjOz9XGrfXM13/Yhsx7Z7EDVFV2lELDPzO1EUplQj/D9Q==
-X-Received: by 2002:a17:906:838a:: with SMTP id p10mr55331714ejx.237.1563878912114;
-        Tue, 23 Jul 2019 03:48:32 -0700 (PDT)
-Received: from localhost (5ec096bd.skybroadband.com. [94.192.150.189])
-        by smtp.gmail.com with ESMTPSA id l1sm11632097edr.17.2019.07.23.03.48.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 03:48:31 -0700 (PDT)
-From:   Matt Fleming <matt@codeblueprint.co.uk>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v3] sched/topology: Improve load balancing on AMD EPYC
-Date:   Tue, 23 Jul 2019 11:48:30 +0100
-Message-Id: <20190723104830.26623-1-matt@codeblueprint.co.uk>
-X-Mailer: git-send-email 2.13.7
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PaKr0cKMyAMbxH4E21XrY6gVVY8VgDaZGXDVqfVaPKI=;
+        b=ESVyZ4xHlJleLstr+9CrkMN6GNS4EKEhcCYD6RZhe/MwuWqVhi5rrDZYOkgVtmGtPR
+         xJhwvWZNugeqq69l4gMREO/0/w+AMH41OH+8UVVTQJ7ZSKXJBe9T1QrpneFhdiRpGe6b
+         104EQbyvszeqzSIIf6JiEVhWXFSGcX1KQsgB6hI5/ojHIqok2njtcTuHSrtSOZHjBETU
+         NYjX7KpPMzcdQeukWZ94TAhPL+JlwuKaj33ytmNE6POrKcO95EBQsEN9bQsHKJguZ3m1
+         KQMC5zipMEGtm3GTcHRqwv9mAk7+znX6wTPONKXhWDAmGLDtcQBOozjk1P+zphkFMU3Z
+         ng4A==
+X-Gm-Message-State: APjAAAWqLsNOv5CDDXTa1a7131zfvJTsyqNOFLMwZeNx+e73btZ2l1b0
+        6/0KUt5Gw76uCf6DXxUJdc4=
+X-Google-Smtp-Source: APXvYqxHsdukCA+O9iUTa29WbVMRx69zB5fWnnDeqXvTnlu03AHqqUvNaaOfb850HB9n0RVe2l6A+A==
+X-Received: by 2002:a63:6904:: with SMTP id e4mr15449455pgc.321.1563878976901;
+        Tue, 23 Jul 2019 03:49:36 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.0.39])
+        by smtp.gmail.com with ESMTPSA id b37sm69067763pjc.15.2019.07.23.03.49.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 03:49:36 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     kishon@ti.com, linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] phy: marvell: phy-armada38x-comphy: Add of_node_put() before return
+Date:   Tue, 23 Jul 2019 16:19:19 +0530
+Message-Id: <20190723104919.8198-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD_BALANCE_{FORK,EXEC} and SD_WAKE_AFFINE are stripped in sd_init()
-for any sched domains with a NUMA distance greater than 2 hops
-(RECLAIM_DISTANCE). The idea being that it's expensive to balance
-across domains that far apart.
+Each iteration of for_each_available_child_of_node puts the previous
+node, but in the case of a return from the middle of the loop, there is
+no put, thus causing a memory leak. Hence add an of_node_put before the
+return.
+Issue found with Coccinelle.
 
-However, as is rather unfortunately explained in
-
-  commit 32e45ff43eaf ("mm: increase RECLAIM_DISTANCE to 30")
-
-the value for RECLAIM_DISTANCE is based on node distance tables from
-2011-era hardware.
-
-Current AMD EPYC machines have the following NUMA node distances:
-
-node distances:
-node   0   1   2   3   4   5   6   7
-  0:  10  16  16  16  32  32  32  32
-  1:  16  10  16  16  32  32  32  32
-  2:  16  16  10  16  32  32  32  32
-  3:  16  16  16  10  32  32  32  32
-  4:  32  32  32  32  10  16  16  16
-  5:  32  32  32  32  16  10  16  16
-  6:  32  32  32  32  16  16  10  16
-  7:  32  32  32  32  16  16  16  10
-
-where 2 hops is 32.
-
-The result is that the scheduler fails to load balance properly across
-NUMA nodes on different sockets -- 2 hops apart.
-
-For example, pinning 16 busy threads to NUMA nodes 0 (CPUs 0-7) and 4
-(CPUs 32-39) like so,
-
-  $ numactl -C 0-7,32-39 ./spinner 16
-
-causes all threads to fork and remain on node 0 until the active
-balancer kicks in after a few seconds and forcibly moves some threads
-to node 4.
-
-Override node_reclaim_distance for AMD Zen.
-
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
 ---
- arch/x86/kernel/cpu/amd.c |  3 +++
- include/linux/topology.h  | 14 ++++++++++++++
- kernel/sched/topology.c   |  3 ++-
- mm/khugepaged.c           |  2 +-
- mm/page_alloc.c           |  2 +-
- 5 files changed, 21 insertions(+), 3 deletions(-)
+ drivers/phy/marvell/phy-armada38x-comphy.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 8d4e50428b68..d94bf83d5ee6 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -8,6 +8,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
- #include <linux/random.h>
-+#include <linux/topology.h>
- #include <asm/processor.h>
- #include <asm/apic.h>
- #include <asm/cacheinfo.h>
-@@ -824,6 +825,8 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
- {
- 	set_cpu_cap(c, X86_FEATURE_ZEN);
+diff --git a/drivers/phy/marvell/phy-armada38x-comphy.c b/drivers/phy/marvell/phy-armada38x-comphy.c
+index 3e00bc679d4e..6960dfd8ad8c 100644
+--- a/drivers/phy/marvell/phy-armada38x-comphy.c
++++ b/drivers/phy/marvell/phy-armada38x-comphy.c
+@@ -200,8 +200,10 @@ static int a38x_comphy_probe(struct platform_device *pdev)
+ 		}
  
-+	node_reclaim_distance = 32;
-+
- 	/*
- 	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
- 	 * Always set it, except when running under a hypervisor.
-diff --git a/include/linux/topology.h b/include/linux/topology.h
-index 47a3e3c08036..579522ec446c 100644
---- a/include/linux/topology.h
-+++ b/include/linux/topology.h
-@@ -59,6 +59,20 @@ int arch_update_cpu_topology(void);
-  */
- #define RECLAIM_DISTANCE 30
- #endif
-+
-+/*
-+ * The following tunable allows platforms to override the default node
-+ * reclaim distance (RECLAIM_DISTANCE) if remote memory accesses are
-+ * sufficiently fast that the default value actually hurts
-+ * performance.
-+ *
-+ * AMD EPYC machines use this because even though the 2-hop distance
-+ * is 32 (3.2x slower than a local memory access) performance actually
-+ * *improves* if allowed to reclaim memory and load balance tasks
-+ * between NUMA nodes 2-hops apart.
-+ */
-+extern int __read_mostly node_reclaim_distance;
-+
- #ifndef PENALTY_FOR_NODE_WITH_CPUS
- #define PENALTY_FOR_NODE_WITH_CPUS	(1)
- #endif
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index f751ce0b783e..f684fde00536 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1284,6 +1284,7 @@ static int			sched_domains_curr_level;
- int				sched_max_numa_distance;
- static int			*sched_domains_numa_distance;
- static struct cpumask		***sched_domains_numa_masks;
-+int __read_mostly		node_reclaim_distance = RECLAIM_DISTANCE;
- #endif
+ 		phy = devm_phy_create(&pdev->dev, child, &a38x_comphy_ops);
+-		if (IS_ERR(phy))
++		if (IS_ERR(phy)) {
++			of_node_put(child);
+ 			return PTR_ERR(phy);
++		}
  
- /*
-@@ -1402,7 +1403,7 @@ sd_init(struct sched_domain_topology_level *tl,
- 
- 		sd->flags &= ~SD_PREFER_SIBLING;
- 		sd->flags |= SD_SERIALIZE;
--		if (sched_domains_numa_distance[tl->numa_level] > RECLAIM_DISTANCE) {
-+		if (sched_domains_numa_distance[tl->numa_level] > node_reclaim_distance) {
- 			sd->flags &= ~(SD_BALANCE_EXEC |
- 				       SD_BALANCE_FORK |
- 				       SD_WAKE_AFFINE);
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index eaaa21b23215..ccede2425c3f 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -710,7 +710,7 @@ static bool khugepaged_scan_abort(int nid)
- 	for (i = 0; i < MAX_NUMNODES; i++) {
- 		if (!khugepaged_node_load[i])
- 			continue;
--		if (node_distance(nid, i) > RECLAIM_DISTANCE)
-+		if (node_distance(nid, i) > node_reclaim_distance)
- 			return true;
- 	}
- 	return false;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 272c6de1bf4e..0d54cd2c43a4 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3522,7 +3522,7 @@ bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
- static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
- {
- 	return node_distance(zone_to_nid(local_zone), zone_to_nid(zone)) <=
--				RECLAIM_DISTANCE;
-+				node_reclaim_distance;
- }
- #else	/* CONFIG_NUMA */
- static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
+ 		priv->lane[val].base = base + 0x28 * val;
+ 		priv->lane[val].priv = priv;
 -- 
-2.13.7
+2.19.1
 
