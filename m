@@ -2,94 +2,120 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC32C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1414CC76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539B7218F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC1921901
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Egjg8ecg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="0IgNld4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390715AbfGWOpT (ORCPT
+        id S2390729AbfGWOpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:45:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44128 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390586AbfGWOpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:45:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so19549217pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=7YnBSVvlh+RCnM6IZNv0+Q87Dux4OO9ol8dRHcOWC60=;
-        b=Egjg8ecg4MJEW+UwWlnkEOGqbJLlAv2REIYQenCtCVdCXNdjaIqMCK/VFfuLi94TEU
-         bLhvsb5hIdCahut/FS9Bhacah5uyRvGz6WuB0/wKVrlc7jLe2gRtaw2H+QrfK5hPok0X
-         uYWiBzYuJFceIO8Pp7vnPWud5a6saCzIUc+bw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=7YnBSVvlh+RCnM6IZNv0+Q87Dux4OO9ol8dRHcOWC60=;
-        b=hkMsoBodjgqe71QHuWMMdy4wQ7qgB5f+JcrzoCWZ5PsCDloJuh4Ity5SPT4Hi3Vyrs
-         CObzAZH6V9BNSGAoSYcMc439QJLE2lnWuwlkxgAIRZ43yCF8bAIcCJcSTkBg1qMaEXGQ
-         pyR7hvMFgbhw5PiT6xASD+kLazY3ijtRVAEyFMPqHISL9s35FH9LhQWC/tCv3c+3imhD
-         rWLCoNNRnXoQg+Oz+3TEkodgaw2Vecq4wzKiH7MtFu4iriwvV/NRHk8iITXxhnVuf32p
-         1HET/tTFjezqczekyIF7du4RK7P7rfzm81MtQKYZePBARIzTTX0h/n/yc5tIMQS8/xrt
-         XEuw==
-X-Gm-Message-State: APjAAAXhUpF9u2kLfAB/JzfBEka9rORZeldHJyNQeywVHnvclekPHlmj
-        ++TbAq4+nyZyJpOeCxPPmuW1Qg==
-X-Google-Smtp-Source: APXvYqxVzuR+tqiRGt2xIUK6sQfvU8WFug6sR5L+QtBOMxaXOfBU3xsg6oVaJewt/Ape2FFfq++ZAQ==
-X-Received: by 2002:aa7:9217:: with SMTP id 23mr6237390pfo.239.1563893118612;
-        Tue, 23 Jul 2019 07:45:18 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id d2sm37940880pgo.0.2019.07.23.07.45.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 07:45:18 -0700 (PDT)
-Message-ID: <5d371d7e.1c69fb81.75d9c.87e4@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190722123422.4571-3-vkoul@kernel.org>
-References: <20190722123422.4571-1-vkoul@kernel.org> <20190722123422.4571-3-vkoul@kernel.org>
-Subject: Re: [PATCH 2/5] arm64: dts: qcom: sdm845: remove unnecessary properties for dsi nodes
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 23 Jul 2019 10:45:33 -0400
+Received: from vern.gendns.com ([98.142.107.122]:35634 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732850AbfGWOpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:45:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OuZctdUUveCDjOVizawYZ+/RE1oqBYnynbzzPf+MOl8=; b=0IgNld4+UjgjRm3pgN/LIyj7UB
+        jJ7eayhB6Z81Zqx5kKpW0HvC5qok+wvM4G+cAi5+W7Z5FxQwMhJvK+0dX9Fyh62mFCwzFsUPsDgf+
+        rCpSDDMriqtQBQwnn6m15+Rsl8TYsNkGWMFcQciOBJxc0XTGPQwMXP0zOo6PQ4WV2AIU5Lc0ItcBY
+        Nyaa+SaDjbJcbXES+lQRT66SAuO1dpNWLCvFCCmds+7PI0TQE8VDvAK4cqKVdNFApXfEPM9X4rTWh
+        RNH03l7b2r/qRMx9wfq9sBBhqK06wgYqzc3JaIp4NO4yKuc+pjZMtRL3g5x0HtZq80oxHFiQ5LUfs
+        vKjBxGAg==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:49700 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1hpw2l-009zPy-D8; Tue, 23 Jul 2019 10:45:31 -0400
+Subject: Re: [PATCH 3/4] ARM: dts: am33xx: Add nodes for eQEP
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 23 Jul 2019 07:45:17 -0700
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190722154538.5314-4-david@lechnology.com>
+ <20190723084213.GR5447@atomide.com>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <af21fd76-7123-b317-896b-bfe18d293325@lechnology.com>
+Date:   Tue, 23 Jul 2019 09:45:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20190723084213.GR5447@atomide.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-07-22 05:34:19)
-> We get a warning about unnecessary properties of
->=20
-> arch/arm64/boot/dts/qcom/sdm845.dtsi:2211.22-2257.6: Warning (avoid_unnec=
-essary_addr_size): /soc/mdss@ae00000/dsi@ae94000: unnecessary #address-cell=
-s/#size-cells without "ranges" or child "reg" property
-> arch/arm64/boot/dts/qcom/sdm845.dtsi:2278.22-2324.6: Warning (avoid_unnec=
-essary_addr_size): /soc/mdss@ae00000/dsi@ae96000: unnecessary #address-cell=
-s/#size-cells without "ranges" or child "reg" property
->=20
-> So, remove these properties
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+On 7/23/19 3:42 AM, Tony Lindgren wrote:
+> * David Lechner <david@lechnology.com> [190722 15:46]:
+>> This adds new nodes for the Texas Instruments Enhanced Quadrature
+>> Encoder Pulse (eQEP) module in the PWM subsystem on AM33XX.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
+>>   arch/arm/boot/dts/am33xx-l4.dtsi | 27 +++++++++++++++++++++++++++
+>>   1 file changed, 27 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+>> index 3b1fb2ba4dff..7fdc2f61c553 100644
+>> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+>> @@ -1908,6 +1908,15 @@
+>>   					status = "disabled";
+>>   				};
+>>   
+>> +				eqep0: eqep@180 {
+>> +					compatible = "ti,am3352-eqep";
+>> +					reg = <0x180 0x80>;
+>> +					clocks = <&l4ls_gclk>;
+>> +					clock-names = "fck";
+>> +					interrupts = <79>;
+>> +					status = "disabled";
+>> +				};
+>> +
+> 
+> You probably no longer need to map any clocks here as this> is now a child of the interconnect target module managed
+> by ti-sysc driver. I have not checked but probably l4ls_gclk
+> is same as clocks = <&l4ls_clkctrl AM3_L4LS_EPWMSS0_CLKCTRL 0>
+> already managed by ti-sysc. If so, then just using runtime PM
+> calls in any of the child device drivers will keep it enabled.
+> 
+> If l4ls_gclk is a separate functional clock, then it still
+> needs to be managed by the child device driver directly.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+The clock is included so that we can get the clock rate for
+the timing aspects of the eQEP, not for power management.
 
+I chose to use the "fck" name to be consistent with the
+sibling EHRPWM and ECAP nodes that already have the same
+bindings for the same clock.
