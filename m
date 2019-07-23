@@ -2,117 +2,90 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F94DC76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D458EC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2204C22BEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC08822AEC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxwu/bjd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FV39AKdM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391470AbfGWSYp (ORCPT
+        id S2391486AbfGWSYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:24:45 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:46216 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391458AbfGWSYo (ORCPT
+        Tue, 23 Jul 2019 14:24:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42403 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391475AbfGWSYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:24:44 -0400
-Received: by mail-ua1-f66.google.com with SMTP id o19so17343826uap.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 11:24:44 -0700 (PDT)
+        Tue, 23 Jul 2019 14:24:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so19544804pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 11:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2LM8ziNL3CjgvMJTgYt5n9A1u1GBpSBnH6t18zKFSsY=;
-        b=dxwu/bjdyI5X0wkqDq4wvOZ2cgg85jGFAhDCjX4xY961JAzWPrWz8jRCox4IeAiTQe
-         htUEExMwEN2xa6pU0eeuHLmFtROYIvA+KY46RqTVDKL0DMNG8f/ZrZYx4kQFKSROfM9D
-         anTaec2xnlEoQZ3jLHkriu6aeuYEmnWZypEGlnHDGCGddHoYWW43+wqBeZC51eebDMuK
-         nnY2IXNtXVImBNX1JSwDacrvAIdkb+37L6l7QRTlm2nKDmiDqAx2vSwVoBWNQclf938l
-         9YGv8FSVg2QH/MbGx3RLtS2tYQtMwJ2+5LC1okLfHry+M2pSh3ccGC53S5pzUUEaXkYt
-         eRaw==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=b41n3LREvvCVOT99upf2mTScwjCvonjOKLeOr7b3C5o=;
+        b=FV39AKdMDQeD6YqtoKQSMhCbjgrTyHJN60X0SWmNCD+O9p2bX6C8qYJz0eINu0Vkyf
+         LAbFt2BoaV/5c012dA0FE9DnPmAfbtAoMuMuWTdOwtIgpVHXOPYq/wXTmyg0mmReH1eo
+         bP8CKJ5kluT1kIqJojulM3Lhe452qac63uGtA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2LM8ziNL3CjgvMJTgYt5n9A1u1GBpSBnH6t18zKFSsY=;
-        b=BVsAfE20AfGQ1AK6w1TO/vLQZcZb5RM+xdgI6nJmlmn41Yj7VzPdsjg/jCAR1O0x/D
-         ftYbKc/fEp/WGsXEV05YD7pjOCXJsUPcKAfNWL8jkKiOxL+g/18YqDurtlbDP4FpHcwk
-         IJjxTDI5LXqJuBfn63bbNCJM1AwEnMiZrRE0hlxgED0EEwBdQfdA8g5dfVWnACRTtZV8
-         pg70SSOJYytS6/tp2vOfLUEIJo8uQQl/m0HVxnTpGkOPq4urgc97mhJFOAwcuY2xYuxa
-         mGM8QKj+yIh9y3eiu5ny+lOn6vhFRCqEMoq+hFueU3cpV58HERaQid14vh9Nnw0TZPfm
-         Ek0g==
-X-Gm-Message-State: APjAAAUrTLO1hpyOM/yaO75A3LRrg24/Y43/mmsLDkfT5drSybj/5maW
-        TujbVfhehKX5rrA/1zAiCmq/mnvVaHfjfL1uz58=
-X-Google-Smtp-Source: APXvYqyehGC65PVaY+0eH4p3T4O9QClKnlD0GY/7lFy3Bk8wqhtz1YDy/+KqzXFlndu/if6IdKDgDZ9FcaOhQQ0nw4Y=
-X-Received: by 2002:ab0:6798:: with SMTP id v24mr20659759uar.43.1563906283854;
- Tue, 23 Jul 2019 11:24:43 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=b41n3LREvvCVOT99upf2mTScwjCvonjOKLeOr7b3C5o=;
+        b=peMcRP+oFHolDJKZEom+ObVjy6S+NNzwY4YAQLBBf/BXu6DQn0Sh6EhQDgDUE4ydy8
+         QQ7uR9ULDjGapQuExkbowGX06eNJ02V2jwKRvOLJfG6b0aFo4R3F4GplaaxzY0/Ma/AT
+         ftZuEZ5xf3V2CuVdaciYgFvagmUKfwp8p9cAESoLz2ZdwYCG1jhCyhtBjgknQAcJ95Xk
+         xrEMFnhxqJjTwq1SLxx/Bxy9mxqo03kM/9nkhachmumUpsxBXTqVLA1c2HdwAjZzduKl
+         6gFWt0BywAzZn4/Z+sw+10hjpEjIPdEl7RoR1wcGGEpsnpT4x8YMJq3hr5QwXtXVkjMc
+         nN7w==
+X-Gm-Message-State: APjAAAX6o+ueK4R5DIG1FUpthzC1McW6pTynCYk+hCBH+gHGCsQe+Van
+        D2AB70xADzEM9eBf7QUKMuV12g==
+X-Google-Smtp-Source: APXvYqx0i7nBRik0fKx4AbxAnDtKCTytjeuS/7WcJwq1Evpncx6GnzRR1koiuEsmKqC3CiPSEsktfA==
+X-Received: by 2002:a17:90a:4f0e:: with SMTP id p14mr80829741pjh.40.1563906291568;
+        Tue, 23 Jul 2019 11:24:51 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id t29sm53263348pfq.156.2019.07.23.11.24.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 11:24:51 -0700 (PDT)
+Message-ID: <5d3750f3.1c69fb81.923dc.874d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190723124608.24617-1-hslester96@gmail.com>
-In-Reply-To: <20190723124608.24617-1-hslester96@gmail.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Tue, 23 Jul 2019 21:24:18 +0300
-Message-ID: <CAFCwf11Y_wxeWdjy_838+Br_vPmMh-dZ0++TKapa6ib_swwbOA@mail.gmail.com>
-Subject: Re: [PATCH v2] habanalabs: Use dev_get_drvdata
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190722215340.3071-3-ilina@codeaurora.org>
+References: <20190722215340.3071-1-ilina@codeaurora.org> <20190722215340.3071-3-ilina@codeaurora.org>
+Subject: Re: [PATCH V2 3/4] drivers: qcom: rpmh: switch over from spinlock irq variants
+To:     Lina Iyer <ilina@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 23 Jul 2019 11:24:50 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 3:46 PM Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> Instead of using to_pci_dev + pci_get_drvdata,
-> use dev_get_drvdata to make code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
-> Changes in v2:
->   - Split v1 into different subsystems
->
->  drivers/misc/habanalabs/habanalabs_drv.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-> index 6f6dbe93f1df..678f61646ca9 100644
-> --- a/drivers/misc/habanalabs/habanalabs_drv.c
-> +++ b/drivers/misc/habanalabs/habanalabs_drv.c
-> @@ -295,8 +295,7 @@ void destroy_hdev(struct hl_device *hdev)
->
->  static int hl_pmops_suspend(struct device *dev)
->  {
-> -       struct pci_dev *pdev = to_pci_dev(dev);
-> -       struct hl_device *hdev = pci_get_drvdata(pdev);
-> +       struct hl_device *hdev = dev_get_drvdata(dev);
->
->         pr_debug("Going to suspend PCI device\n");
->
-> @@ -310,8 +309,7 @@ static int hl_pmops_suspend(struct device *dev)
->
->  static int hl_pmops_resume(struct device *dev)
->  {
-> -       struct pci_dev *pdev = to_pci_dev(dev);
-> -       struct hl_device *hdev = pci_get_drvdata(pdev);
-> +       struct hl_device *hdev = dev_get_drvdata(dev);
->
->         pr_debug("Going to resume PCI device\n");
->
-> --
-> 2.20.1
->
+Quoting Lina Iyer (2019-07-22 14:53:39)
+> From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+>=20
+> Switch over from using _irqsave/_irqrestore variants since we no longer
+> race with a lock from the interrupt handler. While we are at it, rename
+> the cache_lock to just lock to allow use of the lock to synchronize
+> controller access.
 
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-And pushed to -next
+Is there a reason why it can't be a mutex now?
 
-Thanks,
-Oded
+>=20
+> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
