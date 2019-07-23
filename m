@@ -2,107 +2,117 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2339C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C57C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A710F2239F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6AD2239F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 17:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563901277;
-	bh=jZ/NKFx6EAiSSbKP6Pqh+pROf76ugHXlNwOSk3+A29I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HbZ+OdhcGYfP6N6drMdI6l7opyH+tufl6pkC7R0Z2nTtCLGnE1zvOPYFu8KskTdYv
-	 VxPSG+8wDAtW00vqVZMiIkP6Pxa79t1rwXQdRdLsat/AnlUtNs9jwkxdNnGYi5N4dY
-	 3ZrBYhyG/FJZvgdNUlUbRLcRdNqTTTln7tetTMSw=
+	s=default; t=1563901359;
+	bh=lQjavqiC2qRLtl3NYg6kHgekbdBLQngZk1KaVK2VGAA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Okdp4287l3/rzny7QBTfS/1DeiZJt4dQxqLueinSQZTCl1Foy+V0hvV++ZCmRDyUy
+	 X20PPuAVhYbyhRtfyQodEy2hdUgalEtfk5pOo6efKjqFQeBeTb7dAtibMZlvJTSAbz
+	 NKZCrE9J1xqBTgTmxPJOZE7f6P/qi+6UCP/M8dzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390955AbfGWRBQ (ORCPT
+        id S2390963AbfGWRCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 13:01:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39186 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730940AbfGWRBQ (ORCPT
+        Tue, 23 Jul 2019 13:02:38 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40091 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731062AbfGWRCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 13:01:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lM4rRR9UlNkzJHNHnArlH/ByV65Pyr5ihMbwu1aCo6M=; b=ahn4jTwYjyNa4M8unrPay3xxJ
-        qlIqnbejiYbw3DRIt9C70tkP9EFqJ3giqYyOya76N0uvawyijpYmPkEBsUhrU6LcdIrOh0cwbToHJ
-        eSDRJERbOtHPC03u2b8BaWLgxBA86iMxobxTGynSM5rNTOe9wRcDXZRV7dWKMKwTfnGMw=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hpy9U-0004J0-5S; Tue, 23 Jul 2019 17:00:36 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7DD202742B59; Tue, 23 Jul 2019 18:00:35 +0100 (BST)
-Date:   Tue, 23 Jul 2019 18:00:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     festevam@gmail.com, perex@perex.cz, tiwai@suse.com,
-        Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com, timur@kernel.org,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        shengjiu.wang@nxp.com, angus@akkea.ca, kernel@pengutronix.de,
-        l.stach@pengutronix.de, viorel.suman@nxp.com
-Subject: Re: [PATCH 01/10] ASoC: fsl_sai: add of_match data
-Message-ID: <20190723170035.GO5365@sirena.org.uk>
-References: <20190722124833.28757-1-daniel.baluta@nxp.com>
- <20190722124833.28757-2-daniel.baluta@nxp.com>
+        Tue, 23 Jul 2019 13:02:37 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w196so11509311oie.7;
+        Tue, 23 Jul 2019 10:02:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KgfRmlcrUJGTDhuXTiU2E03uzZT7aOuQamw3pXJdIpM=;
+        b=EPJdgu4M1PKSlLXxh4YXgDwsf0g5g65L3GlDbqLwyTrU+zGqJyL3ps20VJL0AiPfZL
+         rl6BQ8aS97aZDDFfE1AIGGbvX6MJDiwzz/JXmSxHLjRUWBjgXmREkbs7AjsSjwvdr7rH
+         XMuWrUsBu3D5QMlGuaQFIOrVUmsvamwPfMoYU1EANR1hwxk6vYdl7gv3e7ca3p82j2AB
+         buBljq2Z0cqEHXJ/ULvkENJMhqVbBk/kZNHwTqwsRWuLNsTu6in2kk4snkHaEPdsN/FP
+         9u6lxYdwEadrUKW7nRuhXJq4HXk4NOLZAk6G0bxg6LZG/h3wt/oKT+pXeNGFAGy4eVMS
+         le/Q==
+X-Gm-Message-State: APjAAAUGiCDyjE6DL4HhYiGK4KCp8DSzRqucDJ910wr8J2f3FUOiqUky
+        tE3sCIyEUnRKnmcDAJq2VO8ktnM7nFr1M2wfCEc=
+X-Google-Smtp-Source: APXvYqxqbROdwpT75E96TYLktPE5J7300pzz8aqHDaKgjFhFHAChVD1Ln2hhsPN+74SAx5729mrBpJC1ZYLzuVLbNT4=
+X-Received: by 2002:a54:4109:: with SMTP id l9mr38891416oic.93.1563901356701;
+ Tue, 23 Jul 2019 10:02:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9DptZICXTlJ7FQ09"
-Content-Disposition: inline
-In-Reply-To: <20190722124833.28757-2-daniel.baluta@nxp.com>
-X-Cookie: Avoid contact with eyes.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190722182451.GB24412@kroah.com> <20190722223337.36199-1-ravisadineni@chromium.org>
+ <CAJZ5v0ikknRGPg0fhPRB2oLxtC0kD=8DX=6Z9MgtAYTO+YZ3ng@mail.gmail.com> <CAEZbON5aC+iYzg58YH59rvfvcUYkjwQyjA9wAJstFEQvUei_-A@mail.gmail.com>
+In-Reply-To: <CAEZbON5aC+iYzg58YH59rvfvcUYkjwQyjA9wAJstFEQvUei_-A@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 23 Jul 2019 19:02:25 +0200
+Message-ID: <CAJZ5v0hk8kvRUzw1Xs0S8+kcn++=4JNO7fjty3S9nq5iM=BG3w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] power: Refactor device level sysfs.
+To:     Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Todd Broch <tbroch@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 23, 2019 at 6:57 PM Ravi Chandra Sadineni
+<ravisadineni@chromium.org> wrote:
+>
+> Hi Greg,
+>
+> https://patchwork.kernel.org/patch/11045069/ seems to create a virtual
+> device under wakeup class with the same name as the actual device. I
+> don't see a way to reliably map these virtual devices to the actual
+> device sysfs node. For example if we have to know if a particular
+> input device has triggered a wake event, we have to look for a virtual
+> device under /sys/class/wakeup with the same name. I am afraid that
+> depending just on the name might be too risky as there can be multiple
+> devices under different buses with the same name.  Am I missing
+> something?
 
---9DptZICXTlJ7FQ09
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There can be a symlink (say "wakeup_source") from under the actual
+device to the virtual wakeup one associated with it.
 
-On Mon, Jul 22, 2019 at 03:48:24PM +0300, Daniel Baluta wrote:
-> From: Lucas Stach <l.stach@pengutronix.de>
->=20
-> New revisions of the SAI IP block have even more differences that need
-> be taken into account by the driver. To avoid sprinking compatible
-> checks all over the driver move the current differences into of_match_dat=
-a.
->=20
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  sound/soc/fsl/fsl_sai.c | 22 ++++++++++++++--------
+Then we can advise everybody to use the symlink for the stats and
+deprecate the stats attributes under the actual device going forward.
+:-)
 
-You need to supply your own signoff if you're sending someone else's
-patch - see submitting-patches.rst for details on what signoffs mean and
-why they're required.
+I have a plan to cut a patch to add such a symlink, but you can try to
+beat me to that if you want.
 
---9DptZICXTlJ7FQ09
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl03PTIACgkQJNaLcl1U
-h9Ce4wf9FPwW9YoTZLNQAPLcH2tdxWqllpH3ZIAiKSDjWkeH9SHfV2iiH1AAMTIL
-yM/q6mJxSQPQ4MLekLosnBJXVMkh6/2U8t2pX6YsLFs//vvguPT5XnBZ3VGti2vo
-/jvnayUvKMLs/KhI6EvTT+6UVOBnPos0aFMsLkNbdVzb76jIOPX4kVy/TTiqoSjY
-sAtGZkl3m0hfwBlOxWPRgkuJdsckLcRLAvVV99ZopDdsWDo2m0KLEXDCm/81P0F6
-oVukPsYlmNfOuU5XpKC+/droD+XBK4AO9gy42C4aFkeSsA8eRmFvLlGjEHXlqBU9
-DWoy0wiEwu0NjI5w/kgYiLSufz+TTA==
-=kOOi
------END PGP SIGNATURE-----
-
---9DptZICXTlJ7FQ09--
+> On Tue, Jul 23, 2019 at 12:44 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Tue, Jul 23, 2019 at 12:33 AM Ravi Chandra Sadineni
+> > <ravisadineni@chromium.org> wrote:
+> > >
+> > > wakeup_abort_count and wakeup_count attributes print the
+> > > same (wakeup_count) variable. Thus this patchset removes the
+> > > duplicate wakeup_abort_count sysfs attribute. This patchset also
+> > > exposes event_count as a sysfs attribute.
+> > >
+> > > Ravi Chandra Sadineni (2):
+> > >   power: sysfs: Remove wakeup_abort_count attribute.
+> > >   power:sysfs: Expose device wakeup_event_count.
+> >
+> > I don't think you need this at all, because
+> > https://patchwork.kernel.org/patch/11045069/ is exposing what you need
+> > already.
+> >
+> > Thanks!
