@@ -2,134 +2,145 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5022C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5814BC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75F621955
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2517621955
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 00:30:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3qJWuJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732007AbfGWAZh (ORCPT
+        id S1728679AbfGWAaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 20:25:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:52276 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbfGWAZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 20:25:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Jul 2019 17:25:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,297,1559545200"; 
-   d="scan'208";a="180568074"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga002.jf.intel.com with ESMTP; 22 Jul 2019 17:25:34 -0700
-Date:   Mon, 22 Jul 2019 17:25:34 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH 3/3] net/xdp: convert put_page() to put_user_page*()
-Message-ID: <20190723002534.GA10284@iweiny-DESK2.sc.intel.com>
-References: <20190722223415.13269-1-jhubbard@nvidia.com>
- <20190722223415.13269-4-jhubbard@nvidia.com>
+        Mon, 22 Jul 2019 20:30:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38891 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbfGWAaI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 20:30:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h28so27967298lfj.5;
+        Mon, 22 Jul 2019 17:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ydn5aXtbjPIthQYkb8DxoEn6a0yqGKXsQnxBhhcpdZQ=;
+        b=C3qJWuJWplSYB8ByJ1dwwDffH+KZUkfbYP8PHNyRm7cS/J1Lir7t1sFAkd07DEZqco
+         08WCgeHqWzSwGYLlx/e60/hNdrUMI3hGElgtiiCFrs4PpjekwDHCfq6ylyJJ1FWzkP3Q
+         GEsZC6UYDteoP9+Pvc5RQB2YVkHLHgpi1MbQs7RwDjENUD+pVX6QrWtfhlscMQaMNWqn
+         clSawOJRK912XFD7BG6itU8Vfe5Nf/QqCdSDKv2ag3i7cjsGLXq6vue3FRNnYG1YnC45
+         a8+8SQzOd9C/UbVtMUQ3rkSV8qXQGpCuJGzhk1OVXSfnLTwLAK9MN3kf2nrx4wRe+QQE
+         yjwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ydn5aXtbjPIthQYkb8DxoEn6a0yqGKXsQnxBhhcpdZQ=;
+        b=HMa51Hwi+NwdEtkJihUrm52xTJsv98B/qWp/VmCw/tG4/MvkEoAXQnqK43Qqq+nRrZ
+         6VCzr538OJ8D7qibZFR2RG93ps1liu7OATLXKeytbCHfeuFcdKKEZyR+9TtdjmcpI3/m
+         sP4OVBFRWSyM8BT4MnlHc245C/OVUkCShrw0Ev8RGFlqDoViE3eVZ1dyVFrsGp+InVu7
+         TI7EpJxT37XEFYqNCaLCTSyGQm/HsFsZSkTVeAOsjZEoRhHcOqUm4FT9gYLxBrW15+5p
+         d0+hNaGfNEypWbQ0gNdik0C3/tn+knXR+5bUIl3Wd9XVuBMzmlbnJ2rH8NFku43ZE6kB
+         UOxQ==
+X-Gm-Message-State: APjAAAWYvHmVY+BHhoYacSeyWBgKkgG2gzQCN0uDGTorFkcmMMZxQ/wD
+        ZxY2E57j+5KNQBR4RGnJQfzPBHoR
+X-Google-Smtp-Source: APXvYqxmsDUOvMm9RFs8rcYOlKF/8VpQPPWJKSzE41Iv1hLPzW7DNrnvEdDNJfjW6mv1WwHX4ehs2g==
+X-Received: by 2002:a19:7f17:: with SMTP id a23mr35997598lfd.49.1563841806644;
+        Mon, 22 Jul 2019 17:30:06 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id e26sm7804856ljl.33.2019.07.22.17.30.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jul 2019 17:30:05 -0700 (PDT)
+Subject: Re: [PATCH v2] drm/tegra: sor: Enable HDA interrupts at plugin
+To:     Viswanath L <viswanathl@nvidia.com>, thierry.reding@gmail.com,
+        airlied@linux.ie, daniel@ffwll.ch, jonathanh@nvidia.com
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1563787632-19762-1-git-send-email-viswanathl@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <11288075-f34a-222c-66da-2bfd13db987c@gmail.com>
+Date:   Tue, 23 Jul 2019 03:30:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <1563787632-19762-1-git-send-email-viswanathl@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190722223415.13269-4-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 03:34:15PM -0700, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Cc: Bj�rn T�pel <bjorn.topel@intel.com>
-> Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+22.07.2019 12:27, Viswanath L пишет:
+> HDMI plugout calls runtime suspend, which clears interrupt registers
+> and causes audio functionality to break on subsequent plugin; setting
+> interrupt registers in sor_audio_prepare() solves the issue
+
+Hello Viswanath,
+
+A dot should be in the end of sentence, please. And should be better to
+s/plugin/plug-in/ in the commit's message/title because 'plugin' sounds
+as a noun.
+
+Please don't version patch as v2 if v1 wasn't ever sent out.
+
+You should add a stable tag here to get patch backported into stable
+kernel versions:
+
+Cc: <stable@vger.kernel.org>
+
+> Signed-off-by: Viswanath L <viswanathl@nvidia.com>
+
+The kernel upstreaming rules require a full name. I'm pretty sure that L
+isn't yours surname.
+
 > ---
->  net/xdp/xdp_umem.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
+>  drivers/gpu/drm/tegra/sor.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-> index 83de74ca729a..0325a17915de 100644
-> --- a/net/xdp/xdp_umem.c
-> +++ b/net/xdp/xdp_umem.c
-> @@ -166,14 +166,7 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
+> diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
+> index 5be5a08..0470cfe 100644
+> --- a/drivers/gpu/drm/tegra/sor.c
+> +++ b/drivers/gpu/drm/tegra/sor.c
+> @@ -2164,6 +2164,15 @@ static void tegra_sor_audio_prepare(struct tegra_sor *sor)
 >  
->  static void xdp_umem_unpin_pages(struct xdp_umem *umem)
->  {
-> -	unsigned int i;
-> -
-> -	for (i = 0; i < umem->npgs; i++) {
-> -		struct page *page = umem->pgs[i];
-> -
-> -		set_page_dirty_lock(page);
-> -		put_page(page);
-> -	}
-> +	put_user_pages_dirty_lock(umem->pgs, umem->npgs);
-
-What is the difference between this and
-
-__put_user_pages(umem->pgs, umem->npgs, PUP_FLAGS_DIRTY_LOCK);
-
-?
-
-I'm a bit concerned with adding another form of the same interface.  We should
-either have 1 call with flags (enum in this case) or multiple calls.  Given the
-previous discussion lets move in the direction of having the enum but don't
-introduce another caller of the "old" interface.
-
-So I think on this patch NAK from me.
-
-I also don't like having a __* call in the exported interface but there is a
-__get_user_pages_fast() call so I guess there is precedent.  :-/
-
-Ira
-
+>  	value = SOR_AUDIO_HDA_PRESENSE_ELDV | SOR_AUDIO_HDA_PRESENSE_PD;
+>  	tegra_sor_writel(sor, value, SOR_AUDIO_HDA_PRESENSE);
+> +
+> +	/*
+> +	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
+> +	 * is used for interoperability between the HDA codec driver and the
+> +	 * HDMI/DP driver.
+> +	 */
+> +	value = SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
+> +	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
+> +	tegra_sor_writel(sor, value, SOR_INT_MASK);
+>  }
 >  
->  	kfree(umem->pgs);
->  	umem->pgs = NULL;
-> -- 
-> 2.22.0
+>  static void tegra_sor_audio_unprepare(struct tegra_sor *sor)
+> @@ -2913,15 +2922,6 @@ static int tegra_sor_init(struct host1x_client *client)
+>  	if (err < 0)
+>  		return err;
+>  
+> -	/*
+> -	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
+> -	 * is used for interoperability between the HDA codec driver and the
+> -	 * HDMI/DP driver.
+> -	 */
+> -	value = SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
+> -	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
+> -	tegra_sor_writel(sor, value, SOR_INT_MASK);
+> -
+>  	return 0;
+>  }
+>  
 > 
+
