@@ -2,101 +2,104 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DE8C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB1EC7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23B1217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726A3217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 15:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388708AbfGWPjz (ORCPT
+        id S2388740AbfGWPkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 11:39:55 -0400
-Received: from smtprelay0127.hostedemail.com ([216.40.44.127]:41191 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725601AbfGWPjy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 11:39:54 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DB889182CF665;
-        Tue, 23 Jul 2019 15:39:52 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fowl35_38e5e5eee520d
-X-Filterd-Recvd-Size: 2880
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 23 Jul 2019 15:39:50 +0000 (UTC)
-Message-ID: <c9ef2b56eaf36c8e5449b751ab6e5971b6b34311.camel@perches.com>
-Subject: Re: [PATCH V2 1/2] string: Add stracpy and stracpy_pad mechanisms
-From:   Joe Perches <joe@perches.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Tue, 23 Jul 2019 08:39:49 -0700
-In-Reply-To: <ce1320d8-60df-7c54-2348-6aabac63c24d@rasmusvillemoes.dk>
-References: <cover.1563889130.git.joe@perches.com>
-         <ed4611a4a96057bf8076856560bfbf9b5e95d390.1563889130.git.joe@perches.com>
-         <ce1320d8-60df-7c54-2348-6aabac63c24d@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Tue, 23 Jul 2019 11:40:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24246 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388432AbfGWPj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 11:39:59 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 08:39:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,299,1559545200"; 
+   d="scan'208";a="193104316"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jul 2019 08:39:57 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hpwtQ-0004OM-5z; Tue, 23 Jul 2019 18:39:56 +0300
+Date:   Tue, 23 Jul 2019 18:39:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: Use dev_get_drvdata
+Message-ID: <20190723153956.GN9224@smile.fi.intel.com>
+References: <20190723082933.21134-1-hslester96@gmail.com>
+ <CAMpxmJUCPCyC-n9V+o5veMTm-yui8H2vdn1ceqZN=VG+yosLOw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJUCPCyC-n9V+o5veMTm-yui8H2vdn1ceqZN=VG+yosLOw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-23 at 16:37 +0200, Rasmus Villemoes wrote:
-> On 23/07/2019 15.51, Joe Perches wrote:
-> > Several uses of strlcpy and strscpy have had defects because the
-> > last argument of each function is misused or typoed.
-> > 
-> > Add macro mechanisms to avoid this defect.
-> > 
-> > stracpy (copy a string to a string array) must have a string
-> > array as the first argument (dest) and uses sizeof(dest) as the
-> > count of bytes to copy.
-> > 
-> > These mechanisms verify that the dest argument is an array of
-> > char or other compatible types like u8 or s8 or equivalent.
-> Sorry, but "compatible types" has a very specific meaning in C, so
-> please don't use that word.
-
-I think you are being overly pedantic here but
-what wording do you actually suggest?
-
->  And yes, the kernel disables -Wpointer-sign,
-> so passing an u8* or s8* when strscpy() expects a char* is silently
-> accepted, but does such code exist?
-
-u8 definitely, s8 I'm not sure.
-
-I don't find via grep a use of s8 foo[] = "bar";
-or "signed char foo[] = "bar";
-
-I don't think it bad to allow it.
-
-> > V2: Use __same_type testing char[], signed char[], and unsigned char[]
-> >     Rename to, from, and size, dest, src and count
+On Tue, Jul 23, 2019 at 10:34:28AM +0200, Bartosz Golaszewski wrote:
+> wt., 23 lip 2019 o 10:29 Chuhong Yuan <hslester96@gmail.com> napisał(a):
+> >
+> > Instead of using to_pci_dev + pci_get_drvdata,
+> > use dev_get_drvdata to make code simpler.
+> >
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-pch.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
+> > index 1d99293096f2..3f3d9a94b709 100644
+> > --- a/drivers/gpio/gpio-pch.c
+> > +++ b/drivers/gpio/gpio-pch.c
+> > @@ -409,8 +409,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
+> >
+> >  static int __maybe_unused pch_gpio_suspend(struct device *dev)
+> >  {
+> > -       struct pci_dev *pdev = to_pci_dev(dev);
+> > -       struct pch_gpio *chip = pci_get_drvdata(pdev);
+> > +       struct pch_gpio *chip = dev_get_drvdata(dev);
+> >         unsigned long flags;
+> >
+> >         spin_lock_irqsave(&chip->spinlock, flags);
+> > @@ -422,8 +421,7 @@ static int __maybe_unused pch_gpio_suspend(struct device *dev)
+> >
+> >  static int __maybe_unused pch_gpio_resume(struct device *dev)
+> >  {
+> > -       struct pci_dev *pdev = to_pci_dev(dev);
+> > -       struct pch_gpio *chip = pci_get_drvdata(pdev);
+> > +       struct pch_gpio *chip = dev_get_drvdata(dev);
+> >         unsigned long flags;
+> >
+> >         spin_lock_irqsave(&chip->spinlock, flags);
+> > --
+> > 2.20.1
+> >
 > 
-> count is just as bad as size in terms of "the expression src might
-> contain that identifier". But there's actually no reason to even declare
-> a local variable, just use ARRAY_SIZE() directly as the third argument
-> to strscpy().
+> The subject line should start with gpio: pch: ...
 
-I don't care about that myself.
-It's a macro local identifier and shadowing in a macro
-is common.  I'm not a big fan of useless underscores.
+I can change it when apply to gpio-intel tree.
 
-I think either works.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
