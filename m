@@ -2,158 +2,101 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8DCC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5D1C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A202147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:04:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="il988Img"
+	by mail.kernel.org (Postfix) with ESMTP id EAC02223BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 10:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729862AbfGWKEK (ORCPT
+        id S1732877AbfGWKGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 06:04:10 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33021 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfGWKEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 06:04:09 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so20362680plo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 03:04:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YpUM1Im+XRL13SexNhkl9pzwji5CXQiG7CSz3y2BWPQ=;
-        b=il988Img6c4wKh6uWkXOX+qoaDNsC08/nBXqNp0wwfCmRJqGOdbpGusPcc2mDBESgw
-         sbnGpJRaaADtKWcAW9g3X3AmyKTqoJKf+M7vRurOB9HCyRnbGRyM6KVJ1sGbXILS+xD6
-         +ehsGxDQjMiGKyaqnyPB6TcpLU88zycboAIrGszRmf+/cUKXS0yqivUvA+ikFN+rh2Ma
-         RE0mI9sdVaUpK5epaNfKafiYZjh4T4+Baf7BToZFR5BbDRNa6GvzY7xMzpllTEoDG4OS
-         ECy30v1BWaYlim2sft1qt8Pavn3QIj+9YBuUOLDvTu9RVqqWp5GoCDjhOGVQDuhiDy4Q
-         q5nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YpUM1Im+XRL13SexNhkl9pzwji5CXQiG7CSz3y2BWPQ=;
-        b=GQpKohhD+MPvbYuvkYeQDjIMe2OL9FuEg6evQVyO6Rz0AF+d1kgQsf+p0bzqZCt+FK
-         Vx1BpazRki0VHeWd+jQ+SaquW/wOp2fPNO6ctsuKYweqSBRtDwU5INE81lMDTKSDxIUw
-         Ssjyu9euQH7b0UAI4USET5GJDfijHvQmzbKpc16Mpc6SQP/1aWEaHtDWL7ZDpUnDgqQO
-         vO4dbI+kHheSeMBwHwuhtiGDXJ9xewbv8iTXYfkxzGp5/1dwzRynsYHatMYQ+gzxO/2r
-         eCciFjVsPhyvqPSdBjVbjPzoloech2QHSErlKiqtIB7aJ8I/vRpJrVnTBigKg8bnVR7I
-         bqgA==
-X-Gm-Message-State: APjAAAVEPiR4T43OrjvP1uKaWWoHePejAQvUPdZ+D+p622wwFdgY7529
-        X5aSqYcljEJ8916975h4r1c5ow==
-X-Google-Smtp-Source: APXvYqxL20ZsFOnKLphiCT4Vy4tslrXNuQ4Q67ehYKSMAxdeRlDY8/KD73Moz7KT7p/7p+Ul845UmQ==
-X-Received: by 2002:a17:902:788f:: with SMTP id q15mr81217864pll.236.1563876249250;
-        Tue, 23 Jul 2019 03:04:09 -0700 (PDT)
-Received: from localhost ([122.172.28.117])
-        by smtp.gmail.com with ESMTPSA id r9sm23763629pjq.3.2019.07.23.03.04.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 03:04:08 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 15:34:06 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] PM / devfreq: Add required OPPs support to
- passive governor
-Message-ID: <20190723100406.7zchvflrmoaipxek@vireshk-i7>
-References: <20190717222340.137578-1-saravanak@google.com>
- <20190717222340.137578-6-saravanak@google.com>
+        Tue, 23 Jul 2019 06:06:37 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2738 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729188AbfGWKGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 06:06:36 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7895113D89DE9AEC72C9;
+        Tue, 23 Jul 2019 18:06:33 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 23 Jul 2019
+ 18:06:24 +0800
+Subject: Re: [PATCH] RDMA/hns: Fix build error for hip08
+To:     Leon Romanovsky <leon@kernel.org>
+References: <20190723024908.11876-1-yuehaibing@huawei.com>
+ <20190723074339.GJ5125@mtr-leonro.mtl.com>
+CC:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <dd405aec-17ca-4ac4-9620-f28f7758022c@huawei.com>
+Date:   Tue, 23 Jul 2019 18:06:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717222340.137578-6-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190723074339.GJ5125@mtr-leonro.mtl.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-07-19, 15:23, Saravana Kannan wrote:
-> Look at the required OPPs of the "parent" device to determine the OPP that
-> is required from the slave device managed by the passive governor. This
-> allows having mappings between a parent device and a slave device even when
-> they don't have the same number of OPPs.
+
+On 2019/7/23 15:43, Leon Romanovsky wrote:
+> On Tue, Jul 23, 2019 at 10:49:08AM +0800, YueHaibing wrote:
+>> If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
+>> but INFINIBAND_HNS is y, building fails:
+>>
+>> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
+>> hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
+>> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
+>> hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
 > 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/devfreq/governor_passive.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
+> It means that you have a problem with header files of your hns3.
+
+hnae3_unregister_client is a EXPORT_SYMBOL. If INFINIBAND_HNS is y,
+hns-roce-hw-v2 will be built-in, but as HNS3 is set to m, linking will failed.
+
+I can't see how to fix this in header files of hns3, or am I missing something?
+
 > 
-> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
-> index 58308948b863..24ce94c80f06 100644
-> --- a/drivers/devfreq/governor_passive.c
-> +++ b/drivers/devfreq/governor_passive.c
-> @@ -19,7 +19,7 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
->  			= (struct devfreq_passive_data *)devfreq->data;
->  	struct devfreq *parent_devfreq = (struct devfreq *)p_data->parent;
->  	unsigned long child_freq = ULONG_MAX;
-> -	struct dev_pm_opp *opp;
-> +	struct dev_pm_opp *opp = NULL, *p_opp = NULL;
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/infiniband/hw/hns/Kconfig | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+>> index b59da5d..4371c80 100644
+>> --- a/drivers/infiniband/hw/hns/Kconfig
+>> +++ b/drivers/infiniband/hw/hns/Kconfig
+>> @@ -23,7 +23,8 @@ config INFINIBAND_HNS_HIP06
+>>
+>>  config INFINIBAND_HNS_HIP08
+>>  	bool "Hisilicon Hip08 Family RoCE support"
+>> -	depends on INFINIBAND_HNS && PCI && HNS3
+>> +	depends on INFINIBAND_HNS && (INFINIBAND_HNS = HNS3)
+> 
+> This is wrong.
+> 
+>> +	depends on PCI
+>>  	---help---
+>>  	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
+>>  	  The RoCE engine is a PCI device.
+>> --
+>> 2.7.4
+>>
+>>
+> 
+> .
+> 
 
-This won't be required if ...
-
->  	int i, count, ret = 0;
->  
->  	/*
-> @@ -56,13 +56,20 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
->  	 * list of parent device. Because in this case, *freq is temporary
->  	 * value which is decided by ondemand governor.
->  	 */
-> -	opp = devfreq_recommended_opp(parent_devfreq->dev.parent, freq, 0);
-> -	if (IS_ERR(opp)) {
-> -		ret = PTR_ERR(opp);
-> +	p_opp = devfreq_recommended_opp(parent_devfreq->dev.parent, freq, 0);
-> +	if (IS_ERR(p_opp)) {
-> +		ret = PTR_ERR(p_opp);
->  		goto out;
->  	}
->  
-> -	dev_pm_opp_put(opp);
-> +	if (devfreq->opp_table && parent_devfreq->opp_table)
-> +		opp = dev_pm_opp_xlate_opp(parent_devfreq->opp_table,
-> +					   devfreq->opp_table, p_opp);
-
-you put p_opp right here.
-
-Also shouldn't you try to get p_opp under the above if block only? As
-that is the only user of it ?
-
-> +	if (opp) {
-> +		*freq = dev_pm_opp_get_freq(opp);
-> +		dev_pm_opp_put(opp);
-> +		goto out;
-> +	}
->  
->  	/*
->  	 * Get the OPP table's index of decided freqeuncy by governor
-> @@ -89,6 +96,9 @@ static int devfreq_passive_get_target_freq(struct devfreq *devfreq,
->  	*freq = child_freq;
->  
->  out:
-> +	if (!IS_ERR_OR_NULL(opp))
-> +		dev_pm_opp_put(p_opp);
-> +
->  	return ret;
->  }
->  
-> -- 
-> 2.22.0.510.g264f2c817a-goog
-
--- 
-viresh
