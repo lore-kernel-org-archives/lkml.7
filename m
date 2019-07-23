@@ -2,130 +2,125 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D8CC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987CDC76190
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61CF227B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:25:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="n21hbjdI"
+	by mail.kernel.org (Postfix) with ESMTP id 71BE221849
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 14:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563892033;
+	bh=N+Ue7x6CR5Jb4q9/FJUaj8bwy6sXpTBfgYk9DGdpaTA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vYugJUDhtdb7bJz56llDqjtSXEFRhn3oe6/KYSNwSgQZ0ro62mOp3bftAVWbiv8sO
+	 gW8A6bKd9bo2cplpGqr+lGCNlnzev9raBwgOKFKN8IRjsZC77FBIKCLaBIXQx4wkFI
+	 hGbjtsMOnR+BbSC1o+6BhdUeYwCKfdJvqQ0qubjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390478AbfGWOZu (ORCPT
+        id S2390525AbfGWO1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 10:25:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33983 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729666AbfGWOZu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 10:25:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id i2so20702131plt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 07:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wJZ801ANBKnPIKQYwYJaIw5FVuF7oY1lEYc4x9KCGg8=;
-        b=n21hbjdIvqGA7so7xre9KxtX9A25carBopCDVVwJ0cju9rZ3C2askKWnyx4AV63WUb
-         GQqOeqF99/UITIYGwZ1M4TCxAN1tds/splo04dXVQcH4Vk3/O+CDH9c5jALBwmi129aX
-         nexyLOhLqykV1k4gcufHhkE98OYvN4BYMRZ+U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wJZ801ANBKnPIKQYwYJaIw5FVuF7oY1lEYc4x9KCGg8=;
-        b=ArsZgvAhFPgXoK8KBcPt8T2J3pau4/sP7mszYwkgzjEYHe3zzczdd1TtF5oYZftsUp
-         W2BD/YVZrhYsbnSQZU5oSbdaskRspqoRXw8WLg0MzlA3PGWW5s+ln5/xr4P/m8P4Xi0W
-         a7xA9grLBo/Yf/LJaDFhk0HOjnfQTUukpXb0G2rqG5jFZzIeHqBT4LfVjhjhnruwsTgx
-         32+yij1tIz+tLgJByxvgSJV3JJQDawpljsK4s62u9krUrnwm/3brpYaTwMTOr6gtcjtv
-         NtgotC2/EzpEiVpfVA1OZatRujhGWSZTuGsFRqtsP3pOhAahTkgtcMYFe3I6q+ECihQS
-         HP1A==
-X-Gm-Message-State: APjAAAXLCZW0pFPcjQYfXchAZJDcsH6M3PQEp4oe372vkDaYjzgeuqe5
-        yt4uBhdr1W6Xvit5/G6DPYI=
-X-Google-Smtp-Source: APXvYqzTB9qvvsmDg4Qv92Ie0WxPkNg5+9vi47JkPUPkzdmySjr1W+rQOyNBacsorNKTD8yGc5TgoQ==
-X-Received: by 2002:a17:902:8203:: with SMTP id x3mr81493411pln.304.1563891949369;
-        Tue, 23 Jul 2019 07:25:49 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id p27sm64054292pfq.136.2019.07.23.07.25.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 07:25:48 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 10:25:47 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH RFC] mm/page_idle: simple idle page tracking for virtual
- memory
-Message-ID: <20190723142547.GD104199@google.com>
-References: <156388286599.2859.5353604441686895041.stgit@buzz>
- <20190723134647.GA104199@google.com>
- <53719394-2679-81ae-686e-c138522c0dfc@yandex-team.ru>
+        Tue, 23 Jul 2019 10:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729666AbfGWO1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 10:27:12 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C1C227C2;
+        Tue, 23 Jul 2019 14:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563892031;
+        bh=N+Ue7x6CR5Jb4q9/FJUaj8bwy6sXpTBfgYk9DGdpaTA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O1tSrR6mLbZR2SFl5YStt8tI1T83OBm70Z8ESu4jcAzFa76wk+ollTJfV90NuHKPx
+         xeJRnVTTCeDOA5854nbQ/Irg5lO5cqWRHIUSmuzsmVc3dnP6/LcYuSBKXeO4et/siu
+         InSv1WptHw8epZnmkfzgcuUtAzp1VubwZCYLYtDs=
+Received: by mail-qt1-f175.google.com with SMTP id x22so37187292qtp.12;
+        Tue, 23 Jul 2019 07:27:11 -0700 (PDT)
+X-Gm-Message-State: APjAAAUw3F81CU0FCn9XvIaIwEggNIst5q4NehvDJ8R3Vf131HnF+fsy
+        NRJAPGAzOnFySJ6PyHgNlIAwf3qw63Cw+QJdlw==
+X-Google-Smtp-Source: APXvYqzYpyWF+jLJrs6e1TZWlyLbEwUvquqzpcgaB5p3hKJ4WN2M09TU5Mw7X6X1t5LhM8wDdbeIHPeJsHsMaGrnJvw=
+X-Received: by 2002:ac8:3908:: with SMTP id s8mr8582738qtb.224.1563892030231;
+ Tue, 23 Jul 2019 07:27:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53719394-2679-81ae-686e-c138522c0dfc@yandex-team.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-2-saravanak@google.com>
+ <98b2e315-e8da-80ad-1ef8-e6b222c1c6fe@codeaurora.org> <CAGETcx9KSqvyzbM-S8LvBObkNBt38K683Ljm8nNQuhxk7MuvAg@mail.gmail.com>
+ <20190722233501.GA19594@bogus> <CAGETcx9GzQj0ZHNF+uR2cGHUkQ5sOPYEwyXKK1dJ2sJbHVSVyw@mail.gmail.com>
+In-Reply-To: <CAGETcx9GzQj0ZHNF+uR2cGHUkQ5sOPYEwyXKK1dJ2sJbHVSVyw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 23 Jul 2019 08:26:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJeGK2m6hVEqvFxW6dEhi22LXaRKgb5JmnJfmCp+J6XuA@mail.gmail.com>
+Message-ID: <CAL_JsqJeGK2m6hVEqvFxW6dEhi22LXaRKgb5JmnJfmCp+J6XuA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: opp: Introduce opp-peak-KBps and
+ opp-avg-KBps bindings
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Sibi Sankar <sibis@codeaurora.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 04:59:07PM +0300, Konstantin Khlebnikov wrote:
-> 
-> 
-> On 23.07.2019 16:46, Joel Fernandes wrote:
-> > On Tue, Jul 23, 2019 at 02:54:26PM +0300, Konstantin Khlebnikov wrote:
-> > > The page_idle tracking feature currently requires looking up the pagemap
-> > > for a process followed by interacting with /sys/kernel/mm/page_idle.
-> > > This is quite cumbersome and can be error-prone too. If between
-> > > accessing the per-PID pagemap and the global page_idle bitmap, if
-> > > something changes with the page then the information is not accurate.
-> > > More over looking up PFN from pagemap in Android devices is not
-> > > supported by unprivileged process and requires SYS_ADMIN and gives 0 for
-> > > the PFN.
-> > > 
-> > > This patch adds simplified interface which works only with mapped pages:
-> > > Run: "echo 6 > /proc/pid/clear_refs" to mark all mapped pages as idle.
-> > > Pages that still idle are marked with bit 57 in /proc/pid/pagemap.
-> > > Total size of idle pages is shown in /proc/pid/smaps (_rollup).
-> > > 
-> > > Piece of comment is stolen from Joel Fernandes <joel@joelfernandes.org>
-> > 
-> > This will not work well for the problem at hand, the heap profiler
-> > (heapprofd) only wants to clear the idle flag for the heap memory area which
-> > is what it is profiling. There is no reason to do it for all mapped pages.
-> > Using the /proc/pid/page_idle in my patch, it can be done selectively for
-> > particular memory areas.
-> > 
-> > I had previously thought of having an interface that accepts an address
-> > range to set the idle flag, however that is also more complexity.
-> 
-> Profiler could look into particular area in /proc/pid/smaps
-> or count idle pages via /proc/pid/pagemap.
-> 
-> Selective /proc/pid/clear_refs is not so hard to add.
-> Somthing like echo "6 561214d03000-561214d29000" > /proc/pid/clear_refs
-> might be useful for all other operations.
+On Mon, Jul 22, 2019 at 5:41 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Mon, Jul 22, 2019 at 4:35 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Jul 16, 2019 at 11:58:08AM -0700, Saravana Kannan wrote:
+> > > On Tue, Jul 16, 2019 at 10:25 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+> > > >
+> > > > Hey Saravana,
+> > > >
+> > > > https://patchwork.kernel.org/patch/10850815/
+> > > > There was already a discussion ^^ on how bandwidth bindings were to be
+> > > > named.
+> > >
+> > > Yes, I'm aware of that series. That series is trying to define a BW
+> > > mapping for an existing frequency OPP table. This patch is NOT about
+> > > adding a mapping to an existing table. This patch is about adding the
+> > > notion of BW OPP tables where BW is the "key" instead of "frequency".
+> > >
+> > > So let's not mixed up these two series.
+> >
+> > Maybe different reasons, but in the end we'd end up with 2 bandwidth
+> > properties. We need to sort out how they'd overlap/coexist.
+>
+> Oh, I totally agree! My point is that the other mapping isn't the
+> right approach because it doesn't handle a whole swath of use cases.
+> The one I'm proposing can act as a super set of the other (as in, can
+> handle that use case too).
+>
+> > The same comment in that series about defining a standard unit suffix
+> > also applies to this one.
+>
+> I thought I read that whole series and I don't remember reading about
+> the unit suffix. But I'll take a closer look. I've chosen to keep the
+> DT units at least as "high of a resolution" as what the APIs accept
+> today. The APIs take KB/s. So I make sure DT can capture KB/s
+> differences. If we all agree that KB/s is "too accurate" then I think
+> we should change everything to MB/s.
 
-This seems really odd of an interface. Also I don't see how you can avoid
-looking up reverse maps to determine if a page is really idle.
+Either one is fine with me, but trying to align to what the OS picked
+doesn't work. What does BSD use for example? More important is
+aligning across DT properties so we don't have folks picking whatever
+random unit they like. We generally try to go with the smallest units
+that will have enough (32-bit) range for everyone, so that's probably
+KB/s here.
 
-What is also more odd is that traditionally clear_refs does interfere with
-reclaim due to clearing of accessed bit. Now you have one of the interfaces
-with clear_refs that does not interfere with reclaim. That is makes it very
-inconsistent. Also in this patch you have 2 interfaces to solve this, where
-as my patch added a single clean interface that is easy to use and does not
-need parsing of address ranges.
-
-All in all, I don't see much the point of this honestly. But thanks for
-poking at it.
-
-thanks,
-
- - Joel
-
+Rob
