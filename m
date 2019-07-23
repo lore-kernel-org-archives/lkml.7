@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AA0C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423A7C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E947229EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CB3229EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 20:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563912360;
-	bh=a07mUGGtDLw1O/GxAlCS3+F+irmF9H3XDmJT+P6GoAo=;
+	s=default; t=1563912366;
+	bh=uiyb9SpszJ9UNaXRZ5p1Odgp4bBrWvQnD28YHueCz40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r8bbp5e8DwmgSCZLIx42pzv9FGR6QP8012KEUqs769jI2Qc9lR5xOB8sXvoCJKRgl
-	 uwZNQNwwq+0aez9ay+JHHNhhM99Bd8AUJBNruIcZ9DWLya8x9BzQXzbUXuP8QezzMv
-	 b804wu/DW8nD6vXMgp21EnPvvoI3pF2A7ekRZOjU=
+	b=WkoPMJzmo12avTJ0CY3cD3yO1N+WDb7QX8w364u23rfqE9qcfGdFOzc9b3bTc+YRZ
+	 VYXkyo0Y2qgJCLkOqJlroIGH5c1D3+q/FT4dDVGrNdsJ7Fk9tW9RmTK/hIg4O9NZyg
+	 izrenq1Rp2emUYH0Hu6j0QUwnpDkx6bgyS0AgyPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733134AbfGWUF7 (ORCPT
+        id S2387781AbfGWUGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 16:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50176 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 16:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfGWUF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 16:05:57 -0400
+        id S1726695AbfGWUGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 16:06:03 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.182.218.90])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91841229EB;
-        Tue, 23 Jul 2019 20:05:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CB4B229F3;
+        Tue, 23 Jul 2019 20:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563912357;
-        bh=a07mUGGtDLw1O/GxAlCS3+F+irmF9H3XDmJT+P6GoAo=;
+        s=default; t=1563912362;
+        bh=uiyb9SpszJ9UNaXRZ5p1Odgp4bBrWvQnD28YHueCz40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QFBPIaZCsTvU4LwaXxOPRNKGpr3clIfL/y5vh40SzD8Hvg5CC0+ow9Hw98mhLxnb2
-         fbSt6oL9Qrpozl8zaqtlz0dKATZRNDdt5BQKyFs8YrktXGawqJh8EaQ7oDef1Eut2Y
-         e9uJiHlT2hoH8hRlN+LbmEdw6XSQz9x2Xp6YgKs0=
+        b=1LwdP7gmdy81JaZy0l0G+P1/Ej21FtHvaaeb/+1INap4c90T3SUKXeW/tvNYQmUW1
+         aU45/f/E1104UcNADUHyRwiSQvUUsuDg8w39duVAz6ZhFLCUd2I8lc8p0S1CHQwELN
+         8qbgA+/VCUoEOBVh016cptFCzSKTvYeImDLR0IAI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Denis Bakhvalov <denis.bakhvalov@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 03/10] perf script: Fix off by one in brstackinsn IPC computation
-Date:   Tue, 23 Jul 2019 17:05:23 -0300
-Message-Id: <20190723200530.14090-4-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 04/10] perf tools: Fix proper buffer size for feature processing
+Date:   Tue, 23 Jul 2019 17:05:24 -0300
+Message-Id: <20190723200530.14090-5-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190723200530.14090-1-acme@kernel.org>
 References: <20190723200530.14090-1-acme@kernel.org>
@@ -61,56 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-When we hit the end of a program block, need to count the last
-instruction too for the IPC computation. This caused large errors for
-small blocks.
+After Song Liu's segfault fix for pipe mode, Arnaldo reported following
+error:
 
-  % perf script -b ls / > /dev/null
+  # perf record -o - | perf script
+  0x514 [0x1ac]: failed to process type: 80
 
-Before:
+It's caused by wrong buffer size setup in feature processing, which
+makes cpu topology feature fail, because it's using buffer size to
+recognize its header version.
 
-  % perf script -F +brstackinsn --xed
-  ...
-        00007f94c9ac70d8                        jz 0x7f94c9ac70e3                       # PRED 3 cycles [36] 4.33 IPC
-        00007f94c9ac70e3                        testb  $0x20, 0x31d(%rbx)
-        00007f94c9ac70ea                        jnz 0x7f94c9ac70b0
-        00007f94c9ac70ec                        testb  $0x8, 0x205ad(%rip)
-        00007f94c9ac70f3                        jz 0x7f94c9ac6ff0               # PRED 1 cycles [37] 3.00 IPC
-
-After:
-
-  % perf script -F +brstackinsn --xed
-  ...
-        00007f94c9ac70d8                        jz 0x7f94c9ac70e3                       # PRED 3 cycles [15] 4.67 IPC
-        00007f94c9ac70e3                        testb  $0x20, 0x31d(%rbx)
-        00007f94c9ac70ea                        jnz 0x7f94c9ac70b0
-        00007f94c9ac70ec                        testb  $0x8, 0x205ad(%rip)
-        00007f94c9ac70f3                        jz 0x7f94c9ac6ff0               # PRED 1 cycles [16] 4.00 IPC
-
-Suggested-by: Denis Bakhvalov <denis.bakhvalov@intel.com>
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190711181922.18765-2-andi@firstfloor.org
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
+Link: http://lkml.kernel.org/r/20190715140426.32509-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 2 +-
+ tools/perf/util/header.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 8f24865596af..0140ddb8dd0b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1059,7 +1059,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index c24db7f4909c..20111f8da5cb 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3747,7 +3747,7 @@ int perf_event__process_feature(struct perf_session *session,
+ 		return 0;
  
- 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
- 			if (ip == end) {
--				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, insn, fp,
-+				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, ++insn, fp,
- 							    &total_cycles);
- 				if (PRINT_FIELD(SRCCODE))
- 					printed += print_srccode(thread, x.cpumode, ip);
+ 	ff.buf  = (void *)fe->data;
+-	ff.size = event->header.size - sizeof(event->header);
++	ff.size = event->header.size - sizeof(*fe);
+ 	ff.ph = &session->header;
+ 
+ 	if (feat_ops[feat].process(&ff, NULL))
 -- 
 2.21.0
 
