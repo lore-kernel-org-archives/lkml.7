@@ -2,81 +2,217 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CA7C76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBE4C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED08227BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE862253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 23:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dFlkIYFB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fM855tyZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfGWXaV (ORCPT
+        id S1726923AbfGWXa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 19:30:21 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17344 "EHLO
+        Tue, 23 Jul 2019 19:30:27 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17347 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfGWXaV (ORCPT
+        with ESMTP id S1726768AbfGWXa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 19:30:21 -0400
+        Tue, 23 Jul 2019 19:30:27 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d37988a0000>; Tue, 23 Jul 2019 16:30:18 -0700
+        id <B5d37988e0000>; Tue, 23 Jul 2019 16:30:22 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Jul 2019 16:30:20 -0700
+  Tue, 23 Jul 2019 16:30:24 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 16:30:20 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 23:30:20 +0000
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 16:30:24 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
+ 2019 23:30:21 +0000
 Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 23 Jul 2019 23:30:20 +0000
+ Transport; Tue, 23 Jul 2019 23:30:21 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d37988b000b>; Tue, 23 Jul 2019 16:30:19 -0700
+        id <B5d37988d0000>; Tue, 23 Jul 2019 16:30:21 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     <linux-mm@kvack.org>
 CC:     <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH 0/2] mm/hmm: more HMM clean up
-Date:   Tue, 23 Jul 2019 16:30:14 -0700
-Message-ID: <20190723233016.26403-1-rcampbell@nvidia.com>
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 1/2] mm/hmm: a few more C style and comment clean ups
+Date:   Tue, 23 Jul 2019 16:30:15 -0700
+Message-ID: <20190723233016.26403-2-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190723233016.26403-1-rcampbell@nvidia.com>
+References: <20190723233016.26403-1-rcampbell@nvidia.com>
 MIME-Version: 1.0
 X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563924618; bh=FDbwFDSZuMyIknDuhtiS91edYJrPm1xbqLmLfcav/Qw=;
+        t=1563924622; bh=vXNCPdLtOKpCMqnhnrWYHHQ4R9DMFg9c7ubyhWGAGSI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=dFlkIYFBEahjwsEE41Zja3tD83QFXyCZwYtuwUf3HBcIKWr/C8XVrbvjMIQm1+Lo0
-         Vj9TsJdpNOTAuaK1b1PgiMTlip9kDy1Hfro5q2mEpL2opgUnegJ+1Fm/F6MF2PATXh
-         Gd4P7ZaDfwpKawPOmovjf/1lrYBxgpvagSXMctDX0o22gStsuEe+M9kyU+x8hKXAqg
-         ZJ4W7J3TKLOk1fnttYAcYFo9E0VkpNcMBwcb3tYKJfDKaYa+xUks4qBrTaaHRcUxac
-         s1QP7P4RLQPRM52ylO0zWpcoLzP69Zz9JWkIk20IcPGb5KoSw3Lgd9zqvwWvb7mbg5
-         uywZaQAcOHSBQ==
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Type:Content-Transfer-Encoding;
+        b=fM855tyZ1WcjIgnyEsZQy7O05+TECy5DrMYAhbx2p36jOb6O5IiErvFCE8Lfi3V8G
+         RLKkR7eVIPK8qwtQXYw9OvS/KqkTsUX7wV7H36PbDzfFgGhMyICZWtaMoJCBxf4mJ/
+         qtpLJkHil520lNp2U4onHfGqewP3oynUtHuuQWeDqYnGvh+SS9rz2Fc7jEixEHxaY4
+         Ry9ODubJpC+UqxGV22eGSI8sYEs2SR9kkm5Jc8AaQQYyGVcWcRhT3uN/9Wy8D4pPXz
+         jUsp5ObCYqjuFQMgsIG9zmKwJ8XI9SaD5eRZoEk51lNi5lqTgUkI35WbFckjVjIvZm
+         pb4A5wgPe7U/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here are two more patches for things I found to clean up.
-I assume this will go into Jason's tree since there will likely be
-more HMM changes in this cycle.
+A few more comments and minor programming style clean ups.
+There should be no functional changes.
 
-Ralph Campbell (2):
-  mm/hmm: a few more C style and comment clean ups
-  mm/hmm: make full use of walk_page_range()
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Christoph Hellwig <hch@lst.de>
+---
+ mm/hmm.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
- mm/hmm.c | 231 +++++++++++++++++++++----------------------------------
- 1 file changed, 86 insertions(+), 145 deletions(-)
-
+diff --git a/mm/hmm.c b/mm/hmm.c
+index b810a4fa3de9..8271f110c243 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -32,7 +32,7 @@ static const struct mmu_notifier_ops hmm_mmu_notifier_ops=
+;
+  * hmm_get_or_create - register HMM against an mm (HMM internal)
+  *
+  * @mm: mm struct to attach to
+- * Returns: returns an HMM object, either by referencing the existing
++ * Return: an HMM object, either by referencing the existing
+  *          (per-process) object, or by creating a new one.
+  *
+  * This is not intended to be used directly by device drivers. If mm alrea=
+dy
+@@ -323,8 +323,8 @@ static int hmm_pfns_bad(unsigned long addr,
+ }
+=20
+ /*
+- * hmm_vma_walk_hole() - handle a range lacking valid pmd or pte(s)
+- * @start: range virtual start address (inclusive)
++ * hmm_vma_walk_hole_() - handle a range lacking valid pmd or pte(s)
++ * @addr: range virtual start address (inclusive)
+  * @end: range virtual end address (exclusive)
+  * @fault: should we fault or not ?
+  * @write_fault: write fault ?
+@@ -374,9 +374,9 @@ static inline void hmm_pte_need_fault(const struct hmm_=
+vma_walk *hmm_vma_walk,
+ 	/*
+ 	 * So we not only consider the individual per page request we also
+ 	 * consider the default flags requested for the range. The API can
+-	 * be use in 2 fashions. The first one where the HMM user coalesce
+-	 * multiple page fault into one request and set flags per pfns for
+-	 * of those faults. The second one where the HMM user want to pre-
++	 * be used 2 ways. The first one where the HMM user coalesces
++	 * multiple page faults into one request and sets flags per pfn for
++	 * those faults. The second one where the HMM user wants to pre-
+ 	 * fault a range with specific flags. For the latter one it is a
+ 	 * waste to have the user pre-fill the pfn arrays with a default
+ 	 * flags value.
+@@ -386,7 +386,7 @@ static inline void hmm_pte_need_fault(const struct hmm_=
+vma_walk *hmm_vma_walk,
+ 	/* We aren't ask to do anything ... */
+ 	if (!(pfns & range->flags[HMM_PFN_VALID]))
+ 		return;
+-	/* If this is device memory than only fault if explicitly requested */
++	/* If this is device memory then only fault if explicitly requested */
+ 	if ((cpu_flags & range->flags[HMM_PFN_DEVICE_PRIVATE])) {
+ 		/* Do we fault on device memory ? */
+ 		if (pfns & range->flags[HMM_PFN_DEVICE_PRIVATE]) {
+@@ -500,7 +500,7 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
+ 	hmm_vma_walk->last =3D end;
+ 	return 0;
+ #else
+-	/* If THP is not enabled then we should never reach that code ! */
++	/* If THP is not enabled then we should never reach this code ! */
+ 	return -EINVAL;
+ #endif
+ }
+@@ -624,13 +624,12 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+ 	pte_t *ptep;
+ 	pmd_t pmd;
+=20
+-
+ again:
+ 	pmd =3D READ_ONCE(*pmdp);
+ 	if (pmd_none(pmd))
+ 		return hmm_vma_walk_hole(start, end, walk);
+=20
+-	if (pmd_huge(pmd) && (range->vma->vm_flags & VM_HUGETLB))
++	if (pmd_huge(pmd) && is_vm_hugetlb_page(vma))
+ 		return hmm_pfns_bad(start, end, walk);
+=20
+ 	if (thp_migration_supported() && is_pmd_migration_entry(pmd)) {
+@@ -655,11 +654,11 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+=20
+ 	if (pmd_devmap(pmd) || pmd_trans_huge(pmd)) {
+ 		/*
+-		 * No need to take pmd_lock here, even if some other threads
++		 * No need to take pmd_lock here, even if some other thread
+ 		 * is splitting the huge pmd we will get that event through
+ 		 * mmu_notifier callback.
+ 		 *
+-		 * So just read pmd value and check again its a transparent
++		 * So just read pmd value and check again it's a transparent
+ 		 * huge or device mapping one and compute corresponding pfn
+ 		 * values.
+ 		 */
+@@ -673,7 +672,7 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+ 	}
+=20
+ 	/*
+-	 * We have handled all the valid case above ie either none, migration,
++	 * We have handled all the valid cases above ie either none, migration,
+ 	 * huge or transparent huge. At this point either it is a valid pmd
+ 	 * entry pointing to pte directory or it is a bad pmd that will not
+ 	 * recover.
+@@ -793,10 +792,10 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, uns=
+igned long hmask,
+ 	pte_t entry;
+ 	int ret =3D 0;
+=20
+-	size =3D 1UL << huge_page_shift(h);
++	size =3D huge_page_size(h);
+ 	mask =3D size - 1;
+ 	if (range->page_shift !=3D PAGE_SHIFT) {
+-		/* Make sure we are looking at full page. */
++		/* Make sure we are looking at a full page. */
+ 		if (start & mask)
+ 			return -EINVAL;
+ 		if (end < (start + size))
+@@ -807,8 +806,7 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsig=
+ned long hmask,
+ 		size =3D PAGE_SIZE;
+ 	}
+=20
+-
+-	ptl =3D huge_pte_lock(hstate_vma(walk->vma), walk->mm, pte);
++	ptl =3D huge_pte_lock(hstate_vma(vma), walk->mm, pte);
+ 	entry =3D huge_ptep_get(pte);
+=20
+ 	i =3D (start - range->start) >> range->page_shift;
+@@ -857,7 +855,7 @@ static void hmm_pfns_clear(struct hmm_range *range,
+  * @start: start virtual address (inclusive)
+  * @end: end virtual address (exclusive)
+  * @page_shift: expect page shift for the range
+- * Returns 0 on success, -EFAULT if the address space is no longer valid
++ * Return: 0 on success, -EFAULT if the address space is no longer valid
+  *
+  * Track updates to the CPU page table see include/linux/hmm.h
+  */
 --=20
 2.20.1
 
