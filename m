@@ -2,105 +2,71 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DFC7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DC4C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FAC218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5478227B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 13:40:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htZKGSZg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="roktKFKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390350AbfGWNkd (ORCPT
+        id S2390364AbfGWNkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 09:40:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37104 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390330AbfGWNk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 09:40:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so19174196pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 06:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jugRb2vt232DJ0Tf9bLWXh+Q8rg8VA+VLd86FZGf/5M=;
-        b=htZKGSZgs7EAS6bHJHCCD1rlhs+g8kjPbkcAjHDjjnVRqUXoJ/Op7Nc8H/+IN4uKHK
-         41NySenxDvpM4uOPOzcGBovI94jHxhaiHYI4P9ILZpM9swPw9CFPT9M3XoKf4auraunj
-         cKxA4D0m1M3ZukOiqFvDsxYOmNYOOg3Ftv6DvBN9Gou3MP/QZPdwQtHmbtA+JDKLIV9b
-         QfznGZ8dq7j44JmbcM48IYAldcSLRBcQ283zrv21VxAh9rNYiAvlbRQ36EP7Rk4DFvio
-         pu3bzJcO6i/1PuOi20iHkvNQQPnsbhpLwIvXbOk8/vj8cF44m3BlwcGGDMSRyMS2jiZY
-         lZKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jugRb2vt232DJ0Tf9bLWXh+Q8rg8VA+VLd86FZGf/5M=;
-        b=YWeVGjPRvogh072r2UKnduYvrvRfUZoF9ru5m7zJTwusnmwNQ6pikuPB02xgtxNjYw
-         V7ificzo0lvyxwhaXCmoseYwDAsH8MenvDXFPZWm6f7NrdXDOvjA3lrxNSPf/H8o1XeZ
-         GH3tjK6yoP/REqHH3O2yB8fccME5Oj20yS3YcrzOuu4wB42REJvvl9muscvJ1Nv6uhIV
-         FrKwHg3BgbVLBQoy+e6tegx2JWSLVMSi6cEHshqxh6FyIc4ZOR5f1/4zSrsU5MeXmekx
-         bRu7kWkTzDWwWDmM/WaAghlf1NkgGrsStFWxSggUrQJOvvEIqCiiY+FkNGiY6yeNn+1q
-         jVqA==
-X-Gm-Message-State: APjAAAXS7VQrEqG1YY/qX6J95EaMXH83Sw1D+9c+nyD42ZA9Rc2eXXG2
-        Xc2UnNxk64J8lFIx+PNR16I=
-X-Google-Smtp-Source: APXvYqy8VT8V/nFcsrgzWFDj6Z0IY9HPcv+uKoEjpRhDzmbL3rSCPKiqORlzVCMoErFHH2h5eRopMA==
-X-Received: by 2002:a17:90a:9903:: with SMTP id b3mr81880307pjp.80.1563889226916;
-        Tue, 23 Jul 2019 06:40:26 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id d6sm37813630pgf.55.2019.07.23.06.40.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 06:40:26 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     perex@perex.cz, tiwai@suse.com, huangfq.daxian@gmail.com,
-        tglx@linutronix.de, allison@lohutok.net
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] ALSA: isa: gus: Fix a possible null-pointer dereference in snd_gf1_mem_xfree()
-Date:   Tue, 23 Jul 2019 21:40:20 +0800
-Message-Id: <20190723134020.25972-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Tue, 23 Jul 2019 09:40:46 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:59312 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390251AbfGWNkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 09:40:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=WT3oDovkoe1bfd1iWcc8ualJNMhBVWi0I2gGsRsRw5Y=; b=roktKFKgOalv46lwcSCeBJOVe0
+        7nL/GlBlNk6uA5Nnp85pRtUg1HozlzNczDECrhxg+a+zgapXw3U6EbzY7ieDqCs2PMXLShiJ1AdDy
+        eBT9rWtMjv/5dSy5jZuRTbWxYTYc+B/LiOqVe6tmw7azDaN6OsK8hN6G42AXRxNZZzbQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hpv1x-0001ER-T9; Tue, 23 Jul 2019 15:40:37 +0200
+Date:   Tue, 23 Jul 2019 15:40:37 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net: dsa: mv88e6xxx: avoid some redundant vtu
+ load/purge operations
+Message-ID: <20190723134037.GA2381@lunn.ch>
+References: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722233713.31396-1-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In snd_gf1_mem_xfree(), there is an if statement on line 72 and line 74
-to check whether block->next is NULL:
-    if (block->next)
+On Mon, Jul 22, 2019 at 11:37:26PM +0000, Rasmus Villemoes wrote:
+> We have an ERPS (Ethernet Ring Protection Switching) setup involving
+> mv88e6250 switches which we're in the process of switching to a BSP
+> based on the mainline driver. Breaking any link in the ring works as
+> expected, with the ring reconfiguring itself quickly and traffic
+> continuing with almost no noticable drops. However, when plugging back
+> the cable, we see 5+ second stalls.
 
-When block->next is NULL, block->next is used on line 84:
-    block->next->prev = block->prev;
+Hi Rasmus
 
-Thus, a possible null-pointer dereference may occur in this case.
+I would prefer Vivien reviews this patch. But he is away at the
+moment. Are you O.K. to wait a few days?
 
-To fix this possible bug, block->next is checked before using it.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- sound/isa/gus/gus_mem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/sound/isa/gus/gus_mem.c b/sound/isa/gus/gus_mem.c
-index cb02d18dde60..ed6205b88057 100644
---- a/sound/isa/gus/gus_mem.c
-+++ b/sound/isa/gus/gus_mem.c
-@@ -81,7 +81,8 @@ int snd_gf1_mem_xfree(struct snd_gf1_mem * alloc, struct snd_gf1_mem_block * blo
- 		if (block->prev)
- 			block->prev->next = NULL;
- 	} else {
--		block->next->prev = block->prev;
-+		if (block->next)
-+			block->next->prev = block->prev;
- 		if (block->prev)
- 			block->prev->next = block->next;
- 	}
--- 
-2.17.0
-
+	Andrew
