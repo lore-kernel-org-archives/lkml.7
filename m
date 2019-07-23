@@ -2,203 +2,326 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F7AC76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D668C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC21218EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68E52239D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 04:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbfGWECA (ORCPT
+        id S1726583AbfGWEG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 00:02:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49038 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfGWECA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 00:02:00 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9871C308FBB1;
-        Tue, 23 Jul 2019 04:01:58 +0000 (UTC)
-Received: from [10.72.12.57] (ovpn-12-57.pek2.redhat.com [10.72.12.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D8ABF60BEC;
-        Tue, 23 Jul 2019 04:01:42 +0000 (UTC)
-Subject: Re: WARNING in __mmdrop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
-        aarcange@redhat.com, akpm@linux-foundation.org,
-        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
-        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
-        keescook@chromium.org, ldv@altlinux.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        wad@chromium.org
-References: <0000000000008dd6bb058e006938@google.com>
- <000000000000964b0d058e1a0483@google.com>
- <20190721044615-mutt-send-email-mst@kernel.org>
- <20190721081447-mutt-send-email-mst@kernel.org>
- <85dd00e2-37a6-72b7-5d5a-8bf46a3526cf@redhat.com>
- <20190722040230-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4bd2ff78-6871-55f2-44dc-0982ffef3337@redhat.com>
-Date:   Tue, 23 Jul 2019 12:01:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 00:06:26 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16438 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725862AbfGWEG0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 00:06:26 -0400
+X-UUID: 9e593d26a7724b8e80f6b27e131864e2-20190723
+X-UUID: 9e593d26a7724b8e80f6b27e131864e2-20190723
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 438653219; Tue, 23 Jul 2019 12:06:19 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 23 Jul 2019 12:06:11 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 23 Jul 2019 12:06:12 +0800
+Message-ID: <1563854772.6751.11.camel@mtksdaap41>
+Subject: Re: [PATCH v6 14/14] arm64: dts: Add power controller device node
+ of MT8183
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Yong Wu <yong.wu@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 23 Jul 2019 12:06:12 +0800
+In-Reply-To: <1563241851.796.7.camel@mtksdaap41>
+References: <1560998286-9189-1-git-send-email-weiyi.lu@mediatek.com>
+         <1560998286-9189-15-git-send-email-weiyi.lu@mediatek.com>
+         <1561971461.12937.8.camel@mtksdaap41> <1563178045.17756.5.camel@mtksdaap41>
+         <1563181637.6212.1.camel@mtksdaap41> <1563241851.796.7.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20190722040230-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 23 Jul 2019 04:01:59 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2019-07-16 at 09:50 +0800, CK Hu wrote:
+> Hi, Weiyi:
+> 
+> On Mon, 2019-07-15 at 17:07 +0800, Weiyi Lu wrote:
+> > On Mon, 2019-07-15 at 16:07 +0800, CK Hu wrote:
+> > > Hi, Weiyi:
+> > > 
+> > > On Mon, 2019-07-01 at 16:57 +0800, CK Hu wrote:
+> > > > Hi, Weiyi:
+> > > > 
+> > > > On Thu, 2019-06-20 at 10:38 +0800, Weiyi Lu wrote:
+> > > > > Add power controller node and smi-common node for MT8183
+> > > > > In scpsys node, it contains clocks and regmapping of
+> > > > > infracfg and smi-common for bus protection.
+> > > > > 
+> > > > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 62 ++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 62 insertions(+)
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > > > > index 08274bf..75c4881 100644
+> > > > > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > > > > @@ -8,6 +8,7 @@
+> > > > >  #include <dt-bindings/clock/mt8183-clk.h>
+> > > > >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > > >  #include <dt-bindings/interrupt-controller/irq.h>
+> > > > > +#include <dt-bindings/power/mt8183-power.h>
+> > > > >  
+> > > > >  / {
+> > > > >  	compatible = "mediatek,mt8183";
+> > > > > @@ -196,6 +197,62 @@
+> > > > >  			#clock-cells = <1>;
+> > > > >  		};
+> > > > >  
+> > > > > +		scpsys: syscon@10006000 {
+> > > > > +			compatible = "mediatek,mt8183-scpsys", "syscon";
+> > > > > +			#power-domain-cells = <1>;
+> > > > > +			reg = <0 0x10006000 0 0x1000>;
+> > > > > +			clocks = <&topckgen CLK_TOP_MUX_AUD_INTBUS>,
+> > > > > +				 <&infracfg CLK_INFRA_AUDIO>,
+> > > > > +				 <&infracfg CLK_INFRA_AUDIO_26M_BCLK>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_MFG>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_MM>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_CAM>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_IMG>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_IPU_IF>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_DSP>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_DSP1>,
+> > > > > +				 <&topckgen CLK_TOP_MUX_DSP2>,
+> > > > > +				 <&mmsys CLK_MM_SMI_COMMON>,
+> > > > > +				 <&mmsys CLK_MM_SMI_LARB0>,
+> > > > > +				 <&mmsys CLK_MM_SMI_LARB1>,
+> > > > > +				 <&mmsys CLK_MM_GALS_COMM0>,
+> > > > > +				 <&mmsys CLK_MM_GALS_COMM1>,
+> > > > > +				 <&mmsys CLK_MM_GALS_CCU2MM>,
+> > > > > +				 <&mmsys CLK_MM_GALS_IPU12MM>,
+> > > > > +				 <&mmsys CLK_MM_GALS_IMG2MM>,
+> > > > > +				 <&mmsys CLK_MM_GALS_CAM2MM>,
+> > > > > +				 <&mmsys CLK_MM_GALS_IPU2MM>,
+> > > 
+> > > I've removed all mmsys clock in scpsys node and display still works, so
+> > > I think these subsys clock could be removed from scpsys node. It's
+> > > reasonable that subsys clock is controlled by subsys device or the
+> > > device use it. In MT2712 [1], the scpsys does not control subsys clock
+> > > and it works, so I think you should remove subsys clock in scpsys device
+> > > node.
+> > > 
+> > > [1]
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/mediatek/mt2712e.dtsi?h=v5.2
+> > > 
+> > > Regards,
+> > > CK
+> > > 
+> > 
+> > Hello CK,
+> > 
+> > Sorry, I can't agree with you at all.
+> > I thought you just created an environment where the MM (DISP) power
+> > domain could not be turned on and off properly.
+> > If you delete those mmsys clocks listed, bus protection will not work.
+> > These clocks are used for bus protection that I mentioned in patch [2].
+> > I guess you are now trying to solve the problem that mmsys blocks are
+> > used for probing two drivers. One for the display and another for the
+> > clock. Right?
+> > In the previous test you mentioned, you have affected the registration
+> > of mmsys clock first. This is why you saw the boot failure. I think boot
+> > failure is the real problem I should avoid if mmsys clock cannot probe.
+> > 
+> > [2] https://patchwork.kernel.org/patch/11005747/
+> > 
+> 
+> OK, I'll try another way to fix the probe problem, but I still have
+> question about bus protection. I'm not sure how bus protection works,
+> but I think that what mtk_scpsys_ext_clear_bus_protection() do could be
+> moved in mtk_smi_clk_enable(). How do you think?
+> 
+> Regards,
+> CK
+> 
 
-On 2019/7/22 下午4:08, Michael S. Tsirkin wrote:
-> On Mon, Jul 22, 2019 at 01:24:24PM +0800, Jason Wang wrote:
->> On 2019/7/21 下午8:18, Michael S. Tsirkin wrote:
->>> On Sun, Jul 21, 2019 at 06:02:52AM -0400, Michael S. Tsirkin wrote:
->>>> On Sat, Jul 20, 2019 at 03:08:00AM -0700, syzbot wrote:
->>>>> syzbot has bisected this bug to:
->>>>>
->>>>> commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
->>>>> Author: Jason Wang<jasowang@redhat.com>
->>>>> Date:   Fri May 24 08:12:18 2019 +0000
->>>>>
->>>>>       vhost: access vq metadata through kernel virtual address
->>>>>
->>>>> bisection log:https://syzkaller.appspot.com/x/bisect.txt?x=149a8a20600000
->>>>> start commit:   6d21a41b Add linux-next specific files for 20190718
->>>>> git tree:       linux-next
->>>>> final crash:https://syzkaller.appspot.com/x/report.txt?x=169a8a20600000
->>>>> console output:https://syzkaller.appspot.com/x/log.txt?x=129a8a20600000
->>>>> kernel config:https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
->>>>> dashboard link:https://syzkaller.appspot.com/bug?extid=e58112d71f77113ddb7b
->>>>> syz repro:https://syzkaller.appspot.com/x/repro.syz?x=10139e68600000
->>>>>
->>>>> Reported-by:syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com
->>>>> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual
->>>>> address")
->>>>>
->>>>> For information about bisection process see:https://goo.gl/tpsmEJ#bisection
->>>> OK I poked at this for a bit, I see several things that
->>>> we need to fix, though I'm not yet sure it's the reason for
->>>> the failures:
->>>>
->>>>
->>>> 1. mmu_notifier_register shouldn't be called from vhost_vring_set_num_addr
->>>>      That's just a bad hack, in particular I don't think device
->>>>      mutex is taken and so poking at two VQs will corrupt
->>>>      memory.
->>>>      So what to do? How about a per vq notifier?
->>>>      Of course we also have synchronize_rcu
->>>>      in the notifier which is slow and is now going to be called twice.
->>>>      I think call_rcu would be more appropriate here.
->>>>      We then need rcu_barrier on module unload.
->>>>      OTOH if we make pages linear with map then we are good
->>>>      with kfree_rcu which is even nicer.
->>>>
->>>> 2. Doesn't map leak after vhost_map_unprefetch?
->>>>      And why does it poke at contents of the map?
->>>>      No one should use it right?
->>>>
->>>> 3. notifier unregister happens last in vhost_dev_cleanup,
->>>>      but register happens first. This looks wrong to me.
->>>>
->>>> 4. OK so we use the invalidate count to try and detect that
->>>>      some invalidate is in progress.
->>>>      I am not 100% sure why do we care.
->>>>      Assuming we do, uaddr can change between start and end
->>>>      and then the counter can get negative, or generally
->>>>      out of sync.
->>>>
->>>> So what to do about all this?
->>>> I am inclined to say let's just drop the uaddr optimization
->>>> for now. E.g. kvm invalidates unconditionally.
->>>> 3 should be fixed independently.
->>> Above implements this but is only build-tested.
->>> Jason, pls take a look. If you like the approach feel
->>> free to take it from here.
->>>
->>> One thing the below does not have is any kind of rate-limiting.
->>> Given it's so easy to restart I'm thinking it makes sense
->>> to add a generic infrastructure for this.
->>> Can be a separate patch I guess.
->>
->> I don't get why must use kfree_rcu() instead of synchronize_rcu() here.
-> synchronize_rcu has very high latency on busy systems.
-> It is not something that should be used on a syscall path.
-> KVM had to switch to SRCU to keep it sane.
-> Otherwise one guest can trivially slow down another one.
+I think we need to consider the disable case as well.
+And SMI may not be the only DISP power domain user. As far as I know and
+being requested, bus protection should only be set when DISP power
+domain is going to be turned OFF, and vise versa.
+But if SMI will turn ON before all the other multimedia drivers and be
+the last one to turn OFF DISP power domain, it might be worth trying.
 
+> > > 
+> > > > 
+> > > > Up to now, MT8183 mmsys has the same resource with another device node:
+> > > > 
+> > > > 		mmsys: syscon@14000000 {
+> > > > 			compatible = "mediatek,mt8183-mmsys", "syscon";
+> > > > 			reg = <0 0x14000000 0 0x1000>;
+> > > > 			#clock-cells = <1>;
+> > > > 		};
+> > > > 
+> > > > 		display_components: dispsys@14000000 {
+> > > > 			compatible = "mediatek,mt8183-display";
+> > > > 			reg = <0 0x14000000 0 0x1000>;
+> > > > 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> > > > 		};
+> > > > 
+> > > > I think this two node should be merge into one node, so I've try to
+> > > > merge them:
+> > > > 
+> > > > 		mmsys: syscon@14000000 {
+> > > > 			compatible = "mediatek,mt8183-mmsys", "syscon";
+> > > > 			reg = <0 0x14000000 0 0x1000>;
+> > > > 			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> > > > 			#clock-cells = <1>;
+> > > > 		};
+> > > > 
+> > > > But I got a kernel panic when boot,
+> > > > 
+> > > > [    3.458523] Unable to handle kernel paging request at virtual address
+> > > > fffffffffffffdfb
+> > > > [    3.466999] Mem abort info:
+> > > > [    3.470116]   ESR = 0x96000005
+> > > > [    3.473268]   Exception class = DABT (current EL), IL = 32 bits
+> > > > [    3.479375]   SET = 0, FnV = 0
+> > > > [    3.482530]   EA = 0, S1PTW = 0
+> > > > [    3.485785] Data abort info:
+> > > > [    3.488831]   ISV = 0, ISS = 0x00000005
+> > > > [    3.493067]   CM = 0, WnR = 0
+> > > > [    3.496229] swapper pgtable: 4k pages, 39-bit VAs, pgdp =
+> > > > 000000004f8fa26d
+> > > > [    3.503214] [fffffffffffffdfb] pgd=0000000000000000,
+> > > > pud=0000000000000000
+> > > > [    3.510408] Internal error: Oops: 96000005 [#1] PREEMPT SMP
+> > > > [    3.515974] Modules linked in:
+> > > > [    3.519023] Process kworker/0:3 (pid: 106, stack limit =
+> > > > 0x00000000281d0651)
+> > > > [    3.526066] CPU: 0 PID: 106 Comm: kworker/0:3 Tainted: G        W
+> > > > 4.19.43 #208
+> > > > [    3.533974] Hardware name: MediaTek kukui rev1 board (DT)
+> > > > [    3.539374] Workqueue: events deferred_probe_work_func
+> > > > [    3.544507] pstate: 20000005 (nzCv daif -PAN -UAO)
+> > > > [    3.549294] pc : clk_prepare+0x18/0x40
+> > > > [    3.553038] lr : scpsys_clk_enable+0x40/0xb4
+> > > > [    3.557299] sp : ffffff800855b9e0
+> > > > [    3.560606] x29: ffffff800855b9f0 x28: ffffff93e1e5f594
+> > > > [    3.565911] x27: 000000000000000f x26: ffffff93e1e5e9b8
+> > > > [    3.571217] x25: 000000003b9aca00 x24: ffffff800858530c
+> > > > [    3.576522] x23: ffffffffffffffff x22: fffffffffffffdfb
+> > > > [    3.581827] x21: 000000000000000a x20: ffffffccb89aafc8
+> > > > [    3.587132] x19: fffffffffffffdfb x18: 00005a5c77082016
+> > > > [    3.592438] x17: 0000000000000400 x16: 0000000000000001
+> > > > [    3.597743] x15: 0000000000000009 x14: ffffff93e271c908
+> > > > [    3.603048] x13: 0000000000000b22 x12: 0000000000000008
+> > > > [    3.608353] x11: 0000000001d063de x10: 0000000000000008
+> > > > [    3.613659] x9 : 00000000ffffffed x8 : 0000000000000000
+> > > > [    3.618964] x7 : 736d6c2dff7224fe x6 : 0000008000000000
+> > > > [    3.624269] x5 : 0000000000000000 x4 : 0000000080000000
+> > > > [    3.629575] x3 : 002f6d6e74000000 x2 : 0000000000000000
+> > > > [    3.634880] x1 : 000000000000000a x0 : fffffffffffffdfb
+> > > > [    3.640185] Call trace:
+> > > > [    3.642625]  clk_prepare+0x18/0x40
+> > > > [    3.646019]  scpsys_clk_enable+0x40/0xb4
+> > > > [    3.649935]  scpsys_power_on+0x13c/0x304
+> > > > [    3.653850]  scpsys_probe+0xe0/0x5fc
+> > > > [    3.657419]  platform_drv_probe+0x80/0xb0
+> > > > [    3.661420]  really_probe+0x114/0x28c
+> > > > [    3.665075]  driver_probe_device+0x64/0xfc
+> > > > [    3.669164]  __device_attach_driver+0xb8/0xd0
+> > > > [    3.673513]  bus_for_each_drv+0x88/0xd0
+> > > > [    3.677341]  __device_attach+0xac/0x130
+> > > > [    3.681169]  device_initial_probe+0x20/0x2c
+> > > > [    3.685344]  bus_probe_device+0x34/0x90
+> > > > [    3.689172]  deferred_probe_work_func+0x74/0xac
+> > > > [    3.693698]  process_one_work+0x210/0x420
+> > > > [    3.697700]  worker_thread+0x278/0x3e4
+> > > > [    3.701443]  kthread+0x11c/0x12c
+> > > > [    3.704665]  ret_from_fork+0x10/0x18
+> > > > 
+> > > > I'm not really understand what happen, but scpsys and mmsys point to
+> > > > each other in MT8183. Why these two node point to each other in MT8183?
+> > > > If this is really hardware limitation, we need to solve this in driver.
+> > > > If this is not a hardware limitation, I would like to re-organize device
+> > > > tree to prevent this problem.
+> > > > 
+> > > > Regards,
+> > > > CK
+> > > > 
+> > > > 
+> > > > > +				 <&imgsys CLK_IMG_LARB5>,
+> > > > > +				 <&imgsys CLK_IMG_LARB2>,
+> > > > > +				 <&camsys CLK_CAM_LARB6>,
+> > > > > +				 <&camsys CLK_CAM_LARB3>,
+> > > > > +				 <&camsys CLK_CAM_SENINF>,
+> > > > > +				 <&camsys CLK_CAM_CAMSV0>,
+> > > > > +				 <&camsys CLK_CAM_CAMSV1>,
+> > > > > +				 <&camsys CLK_CAM_CAMSV2>,
+> > > > > +				 <&camsys CLK_CAM_CCU>,
+> > > > > +				 <&ipu_conn CLK_IPU_CONN_IPU>,
+> > > > > +				 <&ipu_conn CLK_IPU_CONN_AHB>,
+> > > > > +				 <&ipu_conn CLK_IPU_CONN_AXI>,
+> > > > > +				 <&ipu_conn CLK_IPU_CONN_ISP>,
+> > > > > +				 <&ipu_conn CLK_IPU_CONN_CAM_ADL>,
+> > > > > +				 <&ipu_conn CLK_IPU_CONN_IMG_ADL>;
+> > > > > +			clock-names = "audio", "audio1", "audio2",
+> > > > > +				      "mfg", "mm", "cam",
+> > > > > +				      "isp", "vpu", "vpu1",
+> > > > > +				      "vpu2", "vpu3", "mm-0",
+> > > > > +				      "mm-1", "mm-2", "mm-3",
+> > > > > +				      "mm-4", "mm-5", "mm-6",
+> > > > > +				      "mm-7", "mm-8", "mm-9",
+> > > > > +				      "isp-0", "isp-1", "cam-0",
+> > > > > +				      "cam-1", "cam-2", "cam-3",
+> > > > > +				      "cam-4", "cam-5", "cam-6",
+> > > > > +				      "vpu-0", "vpu-1", "vpu-2",
+> > > > > +				      "vpu-3", "vpu-4", "vpu-5";
+> > > > > +			infracfg = <&infracfg>;
+> > > > > +			smi_comm = <&smi_common>;
+> > > > > +		};
+> > > > > +
+> > > > >  		apmixedsys: syscon@1000c000 {
+> > > > >  			compatible = "mediatek,mt8183-apmixedsys", "syscon";
+> > > > >  			reg = <0 0x1000c000 0 0x1000>;
+> > > > > @@ -260,6 +317,11 @@
+> > > > >  			#clock-cells = <1>;
+> > > > >  		};
+> > > > >  
+> > > > > +		smi_common: smi@14019000 {
+> > > > > +			compatible = "mediatek,mt8183-smi-common", "syscon";
+> > > > > +			reg = <0 0x14019000 0 0x1000>;
+> > > > > +		};
+> > > > > +
+> > > > >  		imgsys: syscon@15020000 {
+> > > > >  			compatible = "mediatek,mt8183-imgsys", "syscon";
+> > > > >  			reg = <0 0x15020000 0 0x1000>;
+> > > > 
+> > > 
+> > > 
+> > 
+> > 
+> 
+> 
 
-I think you mean the synchronize_rcu_expedited()? Rethink of the code, 
-the synchronize_rcu() in ioctl() could be removed, since it was 
-serialized with memory accessor.
-
-Btw, for kvm ioctl it still uses synchronize_rcu() in kvm_vcpu_ioctl(), 
-(just a little bit more hard to trigger):
-
-
-     case KVM_RUN: {
-...
-         if (unlikely(oldpid != task_pid(current))) {
-             /* The thread running this VCPU changed. */
-             struct pid *newpid;
-
-             r = kvm_arch_vcpu_run_pid_change(vcpu);
-             if (r)
-                 break;
-
-             newpid = get_task_pid(current, PIDTYPE_PID);
-             rcu_assign_pointer(vcpu->pid, newpid);
-             if (oldpid)
-                 synchronize_rcu();
-             put_pid(oldpid);
-         }
-...
-         break;
-
-
->
->>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
->>
->> Let me try to figure out the root cause then decide whether or not to go for
->> this way.
->>
->> Thanks
-> The root cause of the crash is relevant, but we still need
-> to fix issues 1-4.
->
-> More issues (my patch tries to fix them too):
->
-> 5. page not dirtied when mappings are torn down outside
->     of invalidate callback
-
-
-Yes.
-
-
->
-> 6. potential cross-VM DOS by one guest keeping system busy
->     and increasing synchronize_rcu latency to the point where
->     another guest stars timing out and crashes
->
->
->
-
-This will be addressed after I remove the synchronize_rcu() from ioctl path.
-
-Thanks
 
