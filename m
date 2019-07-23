@@ -2,136 +2,180 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B54C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B4CC76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5ADA2083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17639216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 03:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x4Y4Khhm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxV92/sY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfGWDNK (ORCPT
+        id S1729832AbfGWDNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 23:13:10 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41797 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfGWDNK (ORCPT
+        Mon, 22 Jul 2019 23:13:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34384 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfGWDNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 23:13:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id o101so42539721ota.8
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 20:13:09 -0700 (PDT)
+        Mon, 22 Jul 2019 23:13:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so18360282pfo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jul 2019 20:13:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qRk0XCUOOeLhkURXIsrcmBZYRHclzXxoMPAdT26EhIw=;
-        b=x4Y4KhhmBcGhMNRZHlH8uiKQqB7vPuwd9a3vzI/zUfipkeumIIxotuiLo/omBUZo1V
-         I4yEENG2NJUeqgWbP1S7e+ALHfprLJHn0HSpbkd3gTfSAJAhc7mDQvXrKA9zm1A2m786
-         /cvOT/9UgYlY1auQIn+F0rRuWUy1Qdqd5ONcxYNl502flymtImq5ZwDi9EUAlsslM6FR
-         +L5kCSnrHL8qYuXoSb8ERiW3n5QlIqnThtyaAS1MAm7K+zC/omTtboVBCT/izDVm35/7
-         6cdpMss5uZ4caCUgvGkE+eHNrp1Kki6vY7MNrEXIPrHCfePxLgKg+ccP5BOClq03YZiN
-         odIQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DEPyqOFBjYOs8r/K2MnwvAKT/cOE+11qZMvmIBt/O40=;
+        b=JxV92/sYCzZyDebfI8BDV+r6UdBlKENd9J3R2uShbj8Fh7BUdpGhjtgGcXhIa4fW95
+         BRCzKGQidiuafKZrKaE2gSRxcRvy9g8At42mnM1aBciayx1DIO7e8LQMKOgo83PZaRoy
+         g0jNuy9qnWpqCKV9wWIdrIxTxAbiicFPUsQo6Vb19nNMzSv4SbVrBhdfUU1lHHWSNEio
+         GxMmR78OLQOz1tT+kEVPMdXQaE/NNwFLXMck4Oxv++54Wa8nAmyQC6CG54PiNLnutC6b
+         iRSxLD/epCzXzYXcA/ENZE0EyxXm83a36lIILeDtcm60NYe8nx4OufqfLxSgaaNpeLEH
+         awvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qRk0XCUOOeLhkURXIsrcmBZYRHclzXxoMPAdT26EhIw=;
-        b=C0t1Gll1v5u67v4Z35auFPcU+ie5ObpTVgFm2N2/VoEqqI51G0oXPwea49wqIPQ2MB
-         4JVCA9mjj1OcG7t8j/bfD2tKJVWtoA8GqYWxmlvm9kidZmC7zXgZKccJOmysUNbd87vX
-         K1U7P37IGHR1agOs0qwiwzE8Zz0XsxPAKtq+eccbWZcKmTjqrXjMSgKQkBctwtw9Fx4/
-         ZJRq7syVbCZA6sgQby1NGSYomnxX+mc90MiBgbriv1i0UFi6QuMnY7ObPaSr5dxAMyWJ
-         IpuSY5BiPugyWxG1/bhIG/AhKEqMpcoEwjuQt2xpAxhwHlrZ1P+iMIrjFraWhcj6HBZH
-         UHjA==
-X-Gm-Message-State: APjAAAU+TAzCeFbpKRkoEao+jzKBbXTV+sXGJogY1A1kJIpsvrVjfOXi
-        IbGM3TpY6Te8FKQA+cRaSSYXuxo+8/efL4VO+oSALQ==
-X-Google-Smtp-Source: APXvYqy1vfQdOXDImruQOKc6WqzDViO9H0BO7gpFE3uIOrbEzPmKXH6lGJp5FeQx/o3OtwHJ/PUcvdKi5AteHgD6TkQ=
-X-Received: by 2002:a9d:590d:: with SMTP id t13mr38048922oth.281.1563851589136;
- Mon, 22 Jul 2019 20:13:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DEPyqOFBjYOs8r/K2MnwvAKT/cOE+11qZMvmIBt/O40=;
+        b=f+/qDd+5YPmlkNne2tbCBV8dts0qRfpV4W26gjO15vyqjo97qk8Rg6OIfx3WEuDPcX
+         Wqo2IqOXnLZQfobp74Gqtb9rfChInA1PY+A1Sy6FYIdQx6A5Oqgq/vRL7zv24e6JTVD+
+         WvIegyWMWaG9vMT5f0yrfigoKO13JbQEe8jn65Bgdv7gY9k83kCp1gM2yObl87aaTFaW
+         sG/vqZ9Veh2K4rC+EchO6SYcDrAJns6sX2Q4jkWTFmuEDjd6urFKU1VmkLL5ClpIwwda
+         z2h7+0+WUHzIXlRp3w0y2a3f3DMgubtfE5Gm0C0vyySpSpQg+dcIny6sD0wuGS7677/b
+         qVog==
+X-Gm-Message-State: APjAAAUxbVcvdWXFarSoS/oNRIBuW7xZjBFCdi5KotL4luFo7z3aH3L5
+        Ly6dc82S9EMjfywj9LPIptAlUVpm
+X-Google-Smtp-Source: APXvYqxxk7yVAf59cZn5dAs97QoWkozCGI9o2Jy/lk91i/POwY+BJErjiRaEKlBOEVuJ+2oy/0U/pw==
+X-Received: by 2002:a17:90a:c68c:: with SMTP id n12mr80445270pjt.33.1563851624700;
+        Mon, 22 Jul 2019 20:13:44 -0700 (PDT)
+Received: from localhost ([175.223.34.148])
+        by smtp.gmail.com with ESMTPSA id a12sm76925027pje.3.2019.07.22.20.13.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 22 Jul 2019 20:13:43 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 12:13:40 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Konstantin Khlebnikov <koct9i@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] printk/panic: Access the main printk log in panic()
+ only when safe
+Message-ID: <20190723031340.GA19463@jagdpanzerIV>
+References: <20190716072805.22445-1-pmladek@suse.com>
+ <20190716072805.22445-2-pmladek@suse.com>
+ <20190717095615.GD3664@jagdpanzerIV>
+ <20190718083629.nso3vwbvmankqgks@pathway.suse.cz>
+ <20190718094934.GA10041@jagdpanzerIV>
+ <20190719125753.miniwfq4nhicy76n@pathway.suse.cz>
 MIME-Version: 1.0
-References: <cover.1563782844.git.baolin.wang@linaro.org> <94a0d20e6304b909391abd9a425c71c376cad964.1563782844.git.baolin.wang@linaro.org>
- <20190722141940.GA26528@ming.t460p>
-In-Reply-To: <20190722141940.GA26528@ming.t460p>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 23 Jul 2019 11:12:57 +0800
-Message-ID: <CAMz4ku+R8OdAQ2S91Xe=V-nZL1Nu5g=_xpHqQCzNF6JeBHY3rw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/7] blk-mq: Export blk_mq_hctx_has_pending() function
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190719125753.miniwfq4nhicy76n@pathway.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ming,
+On (07/19/19 14:57), Petr Mladek wrote:
+[..]
+> > Where do nested printk()-s come from? Which one of the following
+> > scenarios you cover in commit message:
+> > 
+> > scenario 1
+> > 
+> > - we have CPUB which holds logbuf_lock
+> > - we have CPUA which panic()-s the system, but can't bring CPUB down,
+> >   so logbuf_lock stays locked on remote CPU
+> 
+> No, this scenario is not affected by this patch. It would always lead to
+> a deadlock.
 
-On Mon, 22 Jul 2019 at 22:19, Ming Lei <ming.lei@redhat.com> wrote:
->
-> On Mon, Jul 22, 2019 at 09:09:36PM +0800, Baolin Wang wrote:
-> > Some SD/MMC host controllers can support packed command or packed request,
-> > that means we can package several requests to host controller at one time
-> > to improve performence. And this patch set will introduce MMC packed function
-> > to support this feature by following patches.
-> >
-> > To support MMC packed function, the MMC layer need to know if there are
-> > requests are pending now in hardware queue to help to combine requests
-> > as much as possible. If we know there are requests pending in hardware
-> > queue, then we should not package requests to host controller immediately,
-> > instead we should collect more requests into MMC packed queue to be packed
-> > to host controller with packed condition.
-> >
-> > Thus export this function for MMC packed function.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > ---
-> >  block/blk-mq.c         |    3 ++-
-> >  include/linux/blk-mq.h |    1 +
-> >  2 files changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> > index b038ec6..5bd4ef9 100644
-> > --- a/block/blk-mq.c
-> > +++ b/block/blk-mq.c
-> > @@ -63,12 +63,13 @@ static int blk_mq_poll_stats_bkt(const struct request *rq)
-> >   * Check if any of the ctx, dispatch list or elevator
-> >   * have pending work in this hardware queue.
-> >   */
-> > -static bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
-> > +bool blk_mq_hctx_has_pending(struct blk_mq_hw_ctx *hctx)
-> >  {
-> >       return !list_empty_careful(&hctx->dispatch) ||
-> >               sbitmap_any_bit_set(&hctx->ctx_map) ||
-> >                       blk_mq_sched_has_work(hctx);
-> >  }
-> > +EXPORT_SYMBOL_GPL(blk_mq_hctx_has_pending);
->
-> Just wondering why you don't use the 'last' field of 'struct blk_mq_queue_data',
-> which is passed to .queue_rq(), and supposed for implementing batch submission.
+Agreed, in many cases we won't be able to panic() the system properly,
+deadlocking somewhere in smp_send_stop().
 
-The 'last' field of 'struct blk_mq_queue_data' does not indicate the
-last request in the hardware queue, since we want to collect more
-requests from block layer as much as possible to be packed later.
+> > scenario 2
+> > 
+> > - we have CPUA which holds logbuf_lock
+> > - we have panic() on CPUA, but it cannot bring down some other CPUB
+> >   so logbuf_lock stays locked on local CPU, and it cannot re-init
+> >   logbuf.
+[..]
+>   + Before:
+>       + printk_safe_flush_on_panic() will keep logbuf_lock locked
+> 	and do nothing.
+> 
+>       + kmsg_dump(), console_unblank(), or console_flush_on_panic()
+> 	will deadlock when they try to get logbuf_lock(). They will
+> 	not be able to process any single line.
+> 
+>   + After:
+>       + printk_bust_lock_safe() will keep logbuf_lock locked
+> 
+>       + All functions using logbuf_lock will not get called.
+> 	We will not see the messages (as previously) but the
+> 	system will not deadlock.
+> 
+> 
+> But there is one more scenario 3:
 
-And from blk_mq_do_dispatch_sched()--->blk_mq_dispatch_rq_list()--->
-queue_rq(), I always get 'bd.last = true', which is not useful to
-combine requests for MMC packed queue. Maybe I missed anything?
+Yes!
 
-Thanks for your comments.
+>   - we have CPUB which loops or is deadlocked in IRQ context
+> 
+>   - we have CPUA which panic()-s the system, but can't bring CPUB down,
+>     so logbuf_lock might be takes and release from time to time
+>     by CPUB
 
--- 
-Baolin Wang
-Best Regards
+Great!
+
+This is the only case when we actually need to pay attention to
+num_online_cpus(), because there is an active logbuf_lock owner;
+in any other case we can unconditionally re-init printk() locks.
+
+But there is more to it.
+
+Note, that the problem in scenario 3 is bigger than just logbuf_lock.
+Regardless of logbuf implementation we will not be able to panic()
+the system.
+
+If we have a never ending source of printk() messages, coming from
+misbehaving CPU which stuck in printing loop in IRQ context, then
+flush_on_panic() will never end or kmsg dump will never stop, etc.
+We need to cut off misbehaving CPUs. Panic CPU waits (for up to 1
+second?) in smp_send_stop() for secondary CPUs to die, if some
+secondary CPUs are still chatty after that then most likely those
+CPUs don't have anything good to say, just a pointless flood of same
+messages over and over again; which, however, will not let panic
+CPU to proceed.
+
+And this is where the idea of "disconnecting" those CPUs from main
+logbuf come from.
+
+So what we can do:
+- smp_send_stop()
+- disconnect all-but-self from logbuf (via printk-safe)
+- wait for 1 or 2 more extra seconds for secondary CPUs to leave
+  console_unlock() and to redirect printks to per-CPU buffers
+- after that we are sort of good-to-go: re-init printk locks
+  and do kmsg_dump, flush_on_panic().
+
+Note, misbehaving CPUs will write to per-CPU buffers, they are not
+expected to be able to flush per-CPU buffers to the main logbuf. That
+will require enabled IRQs, which should deliver stop IPI. But we can
+do even more - just disable print_safe irq work on disconnect CPUs.
+
+So, shall we try one more time with the "disconnect" misbehaving CPUs
+approach? I can send an RFC patch.
+
+	-ss
