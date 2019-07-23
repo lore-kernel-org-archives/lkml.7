@@ -2,57 +2,112 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFB1C76188
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F71C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA2A227B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8626921911
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388367AbfGWHbb (ORCPT
+        id S2388377AbfGWHc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:31:31 -0400
-Received: from viti.kaiser.cx ([85.214.81.225]:52098 "EHLO viti.kaiser.cx"
+        Tue, 23 Jul 2019 03:32:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11117 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfGWHbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:31:31 -0400
-Received: from martin by viti.kaiser.cx with local (Exim 4.89)
-        (envelope-from <martin@viti.kaiser.cx>)
-        id 1hppGg-0000Pz-52; Tue, 23 Jul 2019 09:31:26 +0200
-Date:   Tue, 23 Jul 2019 09:31:26 +0200
-From:   Martin Kaiser <lists@kaiser.cx>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: next-20190722, imx25: Oops when loading a module
-Message-ID: <20190723073126.yzein5pwgyha75hv@viti.kaiser.cx>
-References: <20190722101312.2nakxrfy7yn4a4ro@viti.kaiser.cx>
- <20190722161307.GB4297@linux-8ccs>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722161307.GB4297@linux-8ccs>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1732747AbfGWHc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:32:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 00:32:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,298,1559545200"; 
+   d="scan'208";a="188783936"
+Received: from jiajial1-mobl1.ccr.corp.intel.com ([10.255.30.115])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Jul 2019 00:32:54 -0700
+Message-ID: <1563867173.2455.50.camel@intel.com>
+Subject: Re: [PATCH] int340X/processor_thermal_device: Fix
+ proc_thermal_rapl_remove()
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 23 Jul 2019 15:32:53 +0800
+In-Reply-To: <CAJZ5v0ik4b0LZ_WwscvZ_WibaN89DWCy-J1KZCJCCkh5TiGXAg@mail.gmail.com>
+References: <3270289.QqOHTbhTGK@kreacher>
+         <CAJZ5v0ik4b0LZ_WwscvZ_WibaN89DWCy-J1KZCJCCkh5TiGXAg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jessica,
+On 二, 2019-07-23 at 09:30 +0200, Rafael J. Wysocki wrote:
+> On Mon, Jul 22, 2019 at 12:23 PM Rafael J. Wysocki <rjw@rjwysocki.net
+> > wrote:
+> > 
+> > 
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > 
+> > Passing 0 to cpuhp_remove_state() triggers the BUG_ON() in
+> > __cpuhp_remove_state_cpuslocked() and the argument passed to
+> > powercap_unregister_control_type() is expected to be a valid
+> > pointer, so avoid calling these functions with incorrect
+> > arguments from proc_thermal_rapl_remove().
+> > 
+> > Fixes: 555c45fe0d04 ("int340X/processor_thermal_device: add support
+> > for MMIO RAPL")
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Zhang Rui <rui.zhang@intel.com>
 
-Thus wrote Jessica Yu (jeyu@kernel.org):
-
-> Hi Martin,
-
-> Thank you for reporting this. Could you please try the patch I posted here:
-
->  https://lore.kernel.org/lkml/20190722161006.GA4297@linux-8ccs/
-
-> And let me know if that fixes the issue for you?
-
-yes, your patch fixes the issue on my system. Thanks.
-
-Tested-by: Martin Kaiser <martin@kaiser.cx>
+> Any comments?
+> 
+> If not, I'll queue this up along with the other RAPL-related fix
+> (https://patchwork.kernel.org/patch/11050999/).
+> 
+> > 
+> > ---
+> >  drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> > |    4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > Index: linux-
+> > pm/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> > ===================================================================
+> > --- linux-
+> > pm.orig/drivers/thermal/intel/int340x_thermal/processor_thermal_dev
+> > ice.c
+> > +++ linux-
+> > pm/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> > @@ -487,6 +487,7 @@ static int proc_thermal_rapl_add(struct
+> >                                 rapl_mmio_cpu_online,
+> > rapl_mmio_cpu_down_prep);
+> >         if (ret < 0) {
+> >                 powercap_unregister_control_type(rapl_mmio_priv.con
+> > trol_type);
+> > +               rapl_mmio_priv.control_type = NULL;
+> >                 return ret;
+> >         }
+> >         rapl_mmio_priv.pcap_rapl_online = ret;
+> > @@ -496,6 +497,9 @@ static int proc_thermal_rapl_add(struct
+> > 
+> >  static void proc_thermal_rapl_remove(void)
+> >  {
+> > +       if (IS_ERR_OR_NULL(rapl_mmio_priv.control_type))
+> > +               return;
+> > +
+> >         cpuhp_remove_state(rapl_mmio_priv.pcap_rapl_online);
+> >         powercap_unregister_control_type(rapl_mmio_priv.control_typ
+> > e);
+> >  }
+> > 
+> > 
+> > 
