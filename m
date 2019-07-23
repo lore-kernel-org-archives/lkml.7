@@ -7,60 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D13C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C110C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA1B2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E54E2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iDA4cLJl"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="i1Ft/gO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392205AbfGWVvB (ORCPT
+        id S2392221AbfGWVvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:51:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48103 "EHLO
+        Tue, 23 Jul 2019 17:51:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:32947 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392189AbfGWVvA (ORCPT
+        with ESMTP id S1731976AbfGWVvM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:51:00 -0400
+        Tue, 23 Jul 2019 17:51:12 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NLomZh253519
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NLo4H2253471
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 23 Jul 2019 14:50:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NLomZh253519
+        Tue, 23 Jul 2019 14:50:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NLo4H2253471
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1563918649;
-        bh=IEij/GnBGNnp56JzgSfaId2G9nO0kTiOaD0kP2MqF+g=;
+        s=2019071901; t=1563918605;
+        bh=z7GsT5U770crz5ukSnI1EjzNJ7SHob0/daeGGzsaBHQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=iDA4cLJlR6/sPXdNXUuSrIKcGXVO/aryLNevxPk5vUb0ZGLKzbxfP5pVjeFaDNe/k
-         0AqOhiw44VINUxz56+3yKflaP9fsGbSmQZQ8taIWeVqN0viFbmFc4cNDBFgocg3WhT
-         Eev3irIrXCEgckl13mNVF9sMjxEfCy7LLqxEMpelhmidmk+T9RDge/GZIhn8W/F8ix
-         uvUJrvwJAjspYh4lzg3pctu2Ncj6AOyO5HDfbxj2Ok5WYPaBcKaLaGflTgRurLCKO5
-         Ko9JgUjU/Jmq8xOnFZPRnppNXQbn35us3RS0avzxmapWnmqfI3Bgf6Le40DQMdBztr
-         KhtGmYrgxa4Kg==
+        b=i1Ft/gO5HOhR1hg7xN8qEN6CVgWnqlbuI0jE/zfwpcGZKXdjhly4z1Z7deRQX4Tte
+         2S+ViuGNbpRwCeGCztPuaK5KgKc052v4tK5Cnd8sl/sXAR3LrxinfcrJsBhD4QrsVG
+         deNP4u89BCyjqv5KOMTIMht8MlANrlPyLjQj+eLMOFhWPDpzWXUgV48i4okGixFVOU
+         6oQGWcgVo6R49xP3f9Rqwx6KRbMoEHkiaTjUamm7jE+OReQ7oDj/yIYYc7e8wGDOK4
+         e0zVYq/yrXLGglm1eg9Bvi6RQyv/YhfIGoDMElSIU259MiiYd3pUzjz+KvV9HoeJHQ
+         iu+U8XGD3R/XQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NLom7x253516;
-        Tue, 23 Jul 2019 14:50:48 -0700
-Date:   Tue, 23 Jul 2019 14:50:48 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NLo4R7253468;
+        Tue, 23 Jul 2019 14:50:04 -0700
+Date:   Tue, 23 Jul 2019 14:50:04 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Alexey Budankov <tipbot@zytor.com>
-Message-ID: <tip-872c8ee8f0f47222f7b10da96eea84d0486540a3@git.kernel.org>
-Cc:     jolsa@kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org, acme@redhat.com,
-        alexey.budankov@linux.intel.com, namhyung@kernel.org,
-        hpa@zytor.com, tglx@linutronix.de, ak@linux.intel.com,
-        alexander.shishkin@linux.intel.com
-Reply-To: hpa@zytor.com, tglx@linutronix.de, acme@redhat.com,
-          alexey.budankov@linux.intel.com, namhyung@kernel.org,
-          alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-          peterz@infradead.org, jolsa@kernel.org,
-          linux-kernel@vger.kernel.org, mingo@kernel.org
-In-Reply-To: <4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com>
-References: <4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com>
+From:   tip-bot for Cong Wang <tipbot@zytor.com>
+Message-ID: <tip-146540fb545b8464ba1be298e3392daca0d183a2@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
+        acme@redhat.com, tglx@linutronix.de, xiyou.wangcong@gmail.com,
+        ak@linux.intel.com, jolsa@kernel.org
+Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+          jolsa@kernel.org, xiyou.wangcong@gmail.com, ak@linux.intel.com,
+          tglx@linutronix.de, acme@redhat.com
+In-Reply-To: <20190517221039.8975-1-xiyou.wangcong@gmail.com>
+References: <20190517221039.8975-1-xiyou.wangcong@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf session: Fix loading of compressed data
- split across adjacent records
-Git-Commit-ID: 872c8ee8f0f47222f7b10da96eea84d0486540a3
+Subject: [tip:perf/urgent] perf stat: Always separate stalled cycles per
+ insn
+Git-Commit-ID: 146540fb545b8464ba1be298e3392daca0d183a2
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,134 +70,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  872c8ee8f0f47222f7b10da96eea84d0486540a3
-Gitweb:     https://git.kernel.org/tip/872c8ee8f0f47222f7b10da96eea84d0486540a3
-Author:     Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate: Tue, 9 Jul 2019 17:48:14 +0300
+Commit-ID:  146540fb545b8464ba1be298e3392daca0d183a2
+Gitweb:     https://git.kernel.org/tip/146540fb545b8464ba1be298e3392daca0d183a2
+Author:     Cong Wang <xiyou.wangcong@gmail.com>
+AuthorDate: Fri, 17 May 2019 15:10:39 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 23 Jul 2019 09:04:03 -0300
+CommitDate: Tue, 23 Jul 2019 09:03:46 -0300
 
-perf session: Fix loading of compressed data split across adjacent records
+perf stat: Always separate stalled cycles per insn
 
-Fix decompression failure found during the loading of compressed trace
-collected on larger scale systems (>48 cores).
+The "stalled cycles per insn" is appended to "instructions" when the CPU
+has this hardware counter directly. We should always make it a separate
+line, which also aligns to the output when we hit the "if (total &&
+avg)" branch.
 
-The error happened due to lack of decompression space for a mmaped
-buffer data chunk split across adjacent PERF_RECORD_COMPRESSED records.
+Before:
 
-  $ perf report -i bt.16384.data --stats
-  failed to decompress (B): 63869 -> 0 : Destination buffer is too small
-  user stack dump failure
-  Can't parse sample, err = -14
-  0x2637e436 [0x4080]: failed to process type: 9
-  Error:
-  failed to process sample
+  $ sudo perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  4565048704,,instructions,64114578096,100.00,1.34,insn per cycle,,
+  3396325133,,cycles,64146628546,100.00,,
 
-  $ perf test 71
-  71: Zstd perf.data compression/decompression              : Ok
+After:
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+  $ sudo ./tools/perf/perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  6721924,,instructions,24026790339,100.00,0.22,insn per cycle
+  ,,,,,0.00,stalled cycles per insn
+  30939953,,cycles,24025512526,100.00,,
+
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com
+Link: http://lkml.kernel.org/r/20190517221039.8975-1-xiyou.wangcong@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 22 ++++++++++++++--------
- tools/perf/util/session.h |  1 +
- tools/perf/util/zstd.c    |  4 ++--
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ tools/perf/util/stat-shadow.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index d0fd6c614e68..37efa1f43d8b 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -36,10 +36,16 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	void *src;
- 	size_t decomp_size, src_size;
- 	u64 decomp_last_rem = 0;
--	size_t decomp_len = session->header.env.comp_mmap_len;
-+	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
- 	struct decomp *decomp, *decomp_last = session->decomp_last;
- 
--	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
-+	if (decomp_last) {
-+		decomp_last_rem = decomp_last->size - decomp_last->head;
-+		decomp_len += decomp_last_rem;
-+	}
-+
-+	mmap_len = sizeof(struct decomp) + decomp_len;
-+	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
- 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
- 	if (decomp == MAP_FAILED) {
- 		pr_err("Couldn't allocate memory for decompression\n");
-@@ -47,10 +53,10 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	}
- 
- 	decomp->file_pos = file_offset;
-+	decomp->mmap_len = mmap_len;
- 	decomp->head = 0;
- 
--	if (decomp_last) {
--		decomp_last_rem = decomp_last->size - decomp_last->head;
-+	if (decomp_last_rem) {
- 		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
- 		decomp->size = decomp_last_rem;
- 	}
-@@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
- 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
- 	if (!decomp_size) {
--		munmap(decomp, sizeof(struct decomp) + decomp_len);
-+		munmap(decomp, mmap_len);
- 		pr_err("Couldn't decompress data\n");
- 		return -1;
- 	}
-@@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
- static void perf_session__release_decomp_events(struct perf_session *session)
- {
- 	struct decomp *next, *decomp;
--	size_t decomp_len;
-+	size_t mmap_len;
- 	next = session->decomp;
--	decomp_len = session->header.env.comp_mmap_len;
- 	do {
- 		decomp = next;
- 		if (decomp == NULL)
- 			break;
- 		next = decomp->next;
--		munmap(decomp, decomp_len + sizeof(struct decomp));
-+		mmap_len = decomp->mmap_len;
-+		munmap(decomp, mmap_len);
- 	} while (1);
- }
- 
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index dd8920b745bc..863dbad87849 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -46,6 +46,7 @@ struct perf_session {
- struct decomp {
- 	struct decomp *next;
- 	u64 file_pos;
-+	size_t mmap_len;
- 	u64 head;
- 	size_t size;
- 	char data[];
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 23bdb9884576..d2202392ffdb 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -99,8 +99,8 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
--			       src_size, output.size, ZSTD_getErrorName(ret));
-+			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-+			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
- 			break;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 656065af4971..accb1bf1cfd8 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -819,7 +819,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					"stalled cycles per insn",
+ 					ratio);
+ 		} else if (have_frontend_stalled) {
+-			print_metric(config, ctxp, NULL, NULL,
++			out->new_line(config, ctxp);
++			print_metric(config, ctxp, NULL, "%7.2f ",
+ 				     "stalled cycles per insn", 0);
  		}
- 		output.dst  = dst + output.pos;
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
