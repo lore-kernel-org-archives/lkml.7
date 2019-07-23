@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECE6C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 359B8C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6F62253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D002253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="0sQD7mu5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OZDaTl7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392171AbfGWVqi (ORCPT
+        id S2392190AbfGWVrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:46:38 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52215 "EHLO
+        Tue, 23 Jul 2019 17:47:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52291 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfGWVqh (ORCPT
+        with ESMTP id S2392173AbfGWVrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:46:37 -0400
+        Tue, 23 Jul 2019 17:47:12 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NLkKR4252895
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6NLl4rJ253003
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 23 Jul 2019 14:46:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NLkKR4252895
+        Tue, 23 Jul 2019 14:47:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6NLl4rJ253003
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1563918381;
-        bh=UmnHuoPKJn7bSe4IZn9yAqGHKg6XhymatM+sgbIfMW0=;
+        s=2019071901; t=1563918425;
+        bh=H9KbfxF8BQHFZl9IR2r05MTgWvvujShaR8IVagHtCnU=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=0sQD7mu5SB+IuKHYsGCMjet30SPL9KcvtCQtxZgGQTtc2bj3GDDb3pOS+BvJWLtex
-         /2qGehHzq8RiFz56YgL8ZHQ5PC1SOZkA7Nd0NEdN1h3VhW17PzL88Dn8MPrxTwKcW+
-         ItK75WOVfRhnWZc7jodEJoYDKEPXIf6+oCYFX5ULhXHyew+XuZHrF32Ps7zQV8NsQl
-         JyrMqhH4C2bl30AGnqnJG+fxTmdqSLUIcNnt/5itztxQI9cNR9md4dW4O1udGUeF8V
-         DfswajapZf8zc7FYeSzC59XRcoHBJ64bU3fqunLrhHX/ck6U5XCgoWNqNoDrMHky5i
-         mX254pjmhAiTw==
+        b=OZDaTl7IFMlnApjBI80Xz7DpuMcsBtjTlxWoTSoU5yBBetvvYOMkkCr1YdjLiNeId
+         lkFE3AjhVLnok6T4Y+1x6l2kNH8uKS2YfGcGocG1AF6NIiu8iHgS89TpCAuNK3NEhv
+         vblNSIKcVkB4yApccLVIEdYh1G0v998zYZ6brrHYd++lLgn3xqmjyZdshsoje9pPrW
+         g63/esvCDVmio+XsD04EZbW6nfvh/DMznlzWb3cQy9d20LTFdrcWXP1QhSBikrgO7c
+         u9ht2F+1fdoPn0SKTLxd9y/xf/UUtXdoB6aRt+8E3cPi06yxeVryuE2S2aS0NaHMvQ
+         dCWx2bk6TWFWQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NLkKgu252892;
-        Tue, 23 Jul 2019 14:46:20 -0700
-Date:   Tue, 23 Jul 2019 14:46:20 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6NLl3Cw253000;
+        Tue, 23 Jul 2019 14:47:03 -0700
+Date:   Tue, 23 Jul 2019 14:47:03 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-5f8eec3225ff7b86763b060164e9ce47b1a71406@git.kernel.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
-        tglx@linutronix.de, jolsa@kernel.org, ak@linux.intel.com,
-        hpa@zytor.com
-Reply-To: acme@redhat.com, tglx@linutronix.de, jolsa@kernel.org,
-          linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-          ak@linux.intel.com
-In-Reply-To: <20190711181922.18765-1-andi@firstfloor.org>
-References: <20190711181922.18765-1-andi@firstfloor.org>
+Message-ID: <tip-7db7218a7ea577f04c2df92453d47ab5ebfc8863@git.kernel.org>
+Cc:     tglx@linutronix.de, acme@redhat.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, jolsa@kernel.org, hpa@zytor.com,
+        ak@linux.intel.com
+Reply-To: linux-kernel@vger.kernel.org, jolsa@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, mingo@kernel.org,
+          acme@redhat.com, ak@linux.intel.com
+In-Reply-To: <20190711181922.18765-3-andi@firstfloor.org>
+References: <20190711181922.18765-3-andi@firstfloor.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf script: Fix --max-blocks man page
- description
-Git-Commit-ID: 5f8eec3225ff7b86763b060164e9ce47b1a71406
+Subject: [tip:perf/urgent] perf script: Improve man page description of
+ metrics
+Git-Commit-ID: 7db7218a7ea577f04c2df92453d47ab5ebfc8863
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,36 +70,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5f8eec3225ff7b86763b060164e9ce47b1a71406
-Gitweb:     https://git.kernel.org/tip/5f8eec3225ff7b86763b060164e9ce47b1a71406
+Commit-ID:  7db7218a7ea577f04c2df92453d47ab5ebfc8863
+Gitweb:     https://git.kernel.org/tip/7db7218a7ea577f04c2df92453d47ab5ebfc8863
 Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Thu, 11 Jul 2019 11:19:20 -0700
+AuthorDate: Thu, 11 Jul 2019 11:19:22 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 23 Jul 2019 08:57:54 -0300
+CommitDate: Tue, 23 Jul 2019 08:58:11 -0300
 
-perf script: Fix --max-blocks man page description
+perf script: Improve man page description of metrics
 
-The --max-blocks description was using the old name brstackasm.  Use
-brstackinsn instead.
+Clarify that a metric is based on events, not referring to itself. Also
+some improvements with the sentences.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190711181922.18765-1-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20190711181922.18765-3-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf-script.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index d4e2e18a5881..042b9e5dcc32 100644
+index 042b9e5dcc32..caaab28f8400 100644
 --- a/tools/perf/Documentation/perf-script.txt
 +++ b/tools/perf/Documentation/perf-script.txt
-@@ -384,7 +384,7 @@ include::itrace.txt[]
- 	perf script --time 0%-10%,30%-40%
+@@ -228,11 +228,11 @@ OPTIONS
  
- --max-blocks::
--	Set the maximum number of program blocks to print with brstackasm for
-+	Set the maximum number of program blocks to print with brstackinsn for
- 	each sample.
+ 	With the metric option perf script can compute metrics for
+ 	sampling periods, similar to perf stat. This requires
+-	specifying a group with multiple metrics with the :S option
++	specifying a group with multiple events defining metrics with the :S option
+ 	for perf record. perf will sample on the first event, and
+-	compute metrics for all the events in the group. Please note
++	print computed metrics for all the events in the group. Please note
+ 	that the metric computed is averaged over the whole sampling
+-	period, not just for the sample point.
++	period (since the last sample), not just for the sample point.
  
- --reltime::
+ 	For sample events it's possible to display misc field with -F +misc option,
+ 	following letters are displayed for each bit:
