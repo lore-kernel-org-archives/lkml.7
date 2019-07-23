@@ -3,203 +3,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59773C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597B9C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2592E218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E695218BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="AaPTUtJR"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="nwMUscdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388514AbfGWHpz (ORCPT
+        id S2388534AbfGWHqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:45:55 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34221 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbfGWHpz (ORCPT
+        Tue, 23 Jul 2019 03:46:38 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.3]:48839 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726393AbfGWHqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:45:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so79875834iot.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:45:54 -0700 (PDT)
+        Tue, 23 Jul 2019 03:46:37 -0400
+Received: from [85.158.142.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-a.eu-central-1.aws.symcld.net id 98/58-13662-A5BB63D5; Tue, 23 Jul 2019 07:46:34 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKJsWRWlGSWpSXmKPExsWSoc9ppBu12yz
+  W4M4dZov7X48yWlzeNYfNou+cuwOzx51re9g8ni1cz+LxeZNcAHMUa2ZeUn5FAmvGsu9bGQs+
+  s1R8OHiQuYGxh6WLkYuDUWAps8Tlkx1MXYycQM4xFok7Vz0g7PWMEg0ThECKWAROMEvcaN7GD
+  OIICUxikljw5C47hHOfUeLU48tsIC1sAoYS8968ZwSxRQSKJaYvmgIWZxaIknhybi7YCmEBR4
+  neF41sEDVOEvMu7oayjSS6zz5mBbFZBFQlNt2bwA5i8wrESszpWc4MYgsJuEgcmrMMaA4HB6e
+  Aq8SvbyIQl8pKfGlczQyxSlzi1pP5YKskBAQkluw5zwxhi0q8fPyPFaI+XqJ9/1t2iLiOxNnr
+  TxghbCWJZTdmsULYshKX5ndDxX0lFqw+CBW/BfTvSzMIW0ti1k6Y+TkS7z5egapRk3i3eTNUr
+  4zEvrcXWUFhJSHQzSbxfc9eNohfkiU+zD3LPoFRdxaSuyFsHYkFuz+xQdjaEssWvmaeBQ4KQY
+  mTM5+wLGBkWcVomVSUmZ5RkpuYmaNraGCga2horGusa2RkpJdYpZuol1qqm5yaV1KUCJTVSyw
+  v1iuuzE3OSdHLSy3ZxAhMQSmFzPd2MF6Y+UbvEKMkB5OSKK/9dLNYIb6k/JTKjMTijPii0pzU
+  4kOMMhwcShK823cB5QSLUtNTK9Iyc4DpECYtwcGjJMIbCpLmLS5IzC3OTIdInWLU5Zjwcu4iZ
+  iGWvPy8VClx3jc7gYoEQIoySvPgRsBS8yVGWSlhXkYGBgYhnoLUotzMElT5V4ziHIxKwry3QF
+  bxZOaVwG16BXQEE9ARe1XAjihJREhJNTCVHFV8yb1i71FvJec/iy7+tt+aKxbTfV1SIG3DmqB
+  1M+odDVdf0D+y66hm9MxpXP43u1cGXjQv2tme+vX+LJkXDq52CkWv4ta9vMTOMHHChUQ2/sQ1
+  uXXXXE2qWRyeHJl9nXntg6aWBWcDp4ZfOJgtksU0aZ3h1Fl17wQsnkx7k3F8/8VvpgkTz9axs
+  i7MNPSb4LRM63UW/xEzjuqFc150Lrtm9tv/eFx6Q+TuXovtCtlmUw9Ojli981k4n5nigbO52+
+  x+eCzNnsVnH9pjrpd3/Yj+r6s8EzdvN5NpdefhZtgQFT3td9yJVpm07GjTEttt8ut0pj874z3
+  598TJqTZHmzcfn/xTYt/mFKOzbN1ZSizFGYmGWsxFxYkASd1buUgEAAA=
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-23.tower-223.messagelabs.com!1563867993!75705!1
+X-Originating-IP: [104.47.9.50]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.43.9; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 4614 invoked from network); 23 Jul 2019 07:46:34 -0000
+Received: from mail-ve1eur03lp2050.outbound.protection.outlook.com (HELO EUR03-VE1-obe.outbound.protection.outlook.com) (104.47.9.50)
+  by server-23.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 23 Jul 2019 07:46:34 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G58VyDlvMgMLatKc4rr2ObO2t7vUkz7vXY+YTGi1dQzhJ40lSf+W0HlB+ZE5mTXo9+gWN34868zJCQOywsUriJyiV80I0jpS9ZJdfHktG2yIr4nZsoC2C4uGh44G5dqLxk6iSV/QnAOhH/bi7jbE+b2mL8EWs69U4xDNJm34M83qPsnMf4U0RY1wR8Gk2L/+i43xHpT7hRDlj1vGRXRNZuWyoNBTPd+I5YVTrNRqwZBedgwJuu2N6s6ZjBzSqkqYh6PtHHNiH3iGyJO8nhdeUxDNzOHPTszkB/neuSCCBftC/nkfTxPimtyWFGOnRpRjZkZfyRrLmLDcGlnPDBZ8mA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GxUJIe14Wq786IbDjx0g6MgxZjm8hxrA1uWm7jtaZI8=;
+ b=LzrI6r2wPYrcA/idpOyPOEMYivqZNkSOYHRoPRdb9nwoGMKztRBcSjWMEV9WmsUQVtUgQMBwOU0zpQEhL2AxP85lkumrPmsoCNI7fBO4W6olla0nB3Sbu0P6CwyYeECn0baEEmazG28EBHCIqgyi5SRN0iThoZ0U4Pj2EVOqi2ZDoW1F9gma7oFq9wuR/FqcK1bjuWmIoCUof0Yr0ZNH955wIna6kxNjLXsS9ygR+V4tR2P5qQamY+uvflOaxAGBZgT90VXlzr6SC5AUsWVKyqHTGtxL5bpjMsq7R5Vap8uWPAKsITClRPaOmmqRNcg0NHgK/v9ydlL4/2jzB7ivQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=diasemi.com;dmarc=pass action=none
+ header.from=diasemi.com;dkim=pass header.d=diasemi.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BT0utqb6aDy4mLvXW1LBMi7UGN//r+QNpXUxBB/VbEE=;
-        b=AaPTUtJRTF6jZOMTgWEyC6y2aRQEu2iFMZgbUh48TChZSvfo8V4ZeMuRkpge8V+yFV
-         6guAYk3TlAedZIw6upGyuY05AEGNBJKVljzkhBr3mLiEjJpEecffW3fd9ucQQL5ylhZX
-         Fz30AaNFhi8wGNfi8Rpr1lAipL1cWZXAHV5nZue0W6BKIaAM910r5pzzU9iekmbeYQL8
-         bKEFzZcPw1w43YqJmFOU+Aq0JRMF8geTMWCDodpLFrfvtgoTKe5C7isW42JGjigDXPUP
-         Vy2nI9Wtl2dFXIFe3qWGPd0Q9HfU9vG3Tk+f05nRGRa3kqATdOpTvgL4LWKJedhyjutu
-         kv1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BT0utqb6aDy4mLvXW1LBMi7UGN//r+QNpXUxBB/VbEE=;
-        b=GwNv6NLdS1Y8YuEw7Eq0VtrjhElniV9muHSG/A8WqNVNdNJheHt0J3ZsgEyf+dZ0T/
-         16IcFJn9rumPvmkPAVUKx5ErLzXrH4I7T5Cv+PjWy17hVkE//fN/gVBwAR9N3RMUX+VV
-         LYSBfaFNHNhzzyaWIFLwyfb6xP972WhIS61QBmRa4dOo0MMTH9jVwylYV0qHvjpm+tk9
-         IP2sN+uRDHtzK1XE4Nf631/6HsXtssK06l8AybnQ/7XvI+xc/cmydERPGBfp0hiVS0DC
-         yucmiZWrI9fCYzYPQyhTGPp8u9Hj2ezhWLw31D2/6GVvuq/cKKhLNkp191MwEIZX9l7D
-         ZfFg==
-X-Gm-Message-State: APjAAAWju/2jM2uHF3GRF0mhh9/suD/B2YWBWLtS/7KeHyZYZ6nUH7Uv
-        /rqd2rF5tWop6Yu98bHNWtjc3BZ+AOkoYDR6Ttw=
-X-Google-Smtp-Source: APXvYqyNe2NrO6fhmK0Lv25MrmKSYiYlqvOZkRf4p1ip6K8JbOfSnh7cMLrBf9IoRChrcaKJDEEfQxcy9GNOymgNOlo=
-X-Received: by 2002:a02:37d6:: with SMTP id r205mr76200009jar.57.1563867954303;
- Tue, 23 Jul 2019 00:45:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMRc=MdaLPcy4fJOEbcXAriHLHrXUZD6Bh5X2Eq+2OBvcC4cOQ@mail.gmail.com>
- <20190722161006.GA4297@linux-8ccs>
-In-Reply-To: <20190722161006.GA4297@linux-8ccs>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 Jul 2019 09:45:43 +0200
-Message-ID: <CAMRc=MezKpDU0urpMMuqUCqDBnmHBooVdry4jqUeffr4V7cXFQ@mail.gmail.com>
-Subject: Re: [v5.3-rc1 regression] Hitting a kernel BUG() when trying to load
- a module on DaVinci SoC
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        Jian Cheng <cj.chengjian@huawei.com>,
-        Nadav Amit <namit@vmware.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Adam Ford <aford173@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector2-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GxUJIe14Wq786IbDjx0g6MgxZjm8hxrA1uWm7jtaZI8=;
+ b=nwMUscddHyJ4oripDMqK5QV+Ab+ZvEpO1l4tMKRPzUHIOemwKQasKeLqgARgEH2Marg1wZ8gHdzO9i+8cRLDjyVy0HhSjy/bgHDrY30p9SAlGKGu7rLYR7d3x7K+J3dYwkUCblvLUggC+Tj60PWycmYJjc8xhKIy6nrvEe9qSUE=
+Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM (20.177.113.222) by
+ AM6PR10MB1943.EURPRD10.PROD.OUTLOOK.COM (52.134.117.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.10; Tue, 23 Jul 2019 07:46:32 +0000
+Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e011:a77f:4065:5798]) by AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e011:a77f:4065:5798%3]) with mapi id 15.20.2094.013; Tue, 23 Jul 2019
+ 07:46:32 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Support Opensource <Support.Opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: RE: [PATCH] mfd: da9063: remove now unused platform_data
+Thread-Topic: [PATCH] mfd: da9063: remove now unused platform_data
+Thread-Index: AQHVQLsM5bJ5W86gXUiinLCTek12g6bX01Lw
+Date:   Tue, 23 Jul 2019 07:46:32 +0000
+Message-ID: <AM6PR10MB2181D3B706CBEB23C55938F8FEC70@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190722182628.7533-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190722182628.7533-1-wsa+renesas@sang-engineering.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4b2785e-0052-4c2e-e511-08d70f41e194
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR10MB1943;
+x-ms-traffictypediagnostic: AM6PR10MB1943:
+x-microsoft-antispam-prvs: <AM6PR10MB1943CA145FFF7D8F1687B09AF5C70@AM6PR10MB1943.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0107098B6C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(346002)(136003)(366004)(376002)(189003)(199004)(102836004)(110136005)(7736002)(66066001)(54906003)(305945005)(6506007)(53546011)(99286004)(446003)(26005)(4744005)(25786009)(7696005)(74316002)(53936002)(11346002)(55016002)(9686003)(2906002)(6246003)(186003)(486006)(476003)(66446008)(68736007)(4326008)(8936002)(33656002)(76116006)(81156014)(81166006)(66476007)(66556008)(66946007)(64756008)(8676002)(3846002)(6116002)(52536014)(76176011)(14444005)(256004)(71190400001)(71200400001)(2501003)(86362001)(478600001)(6436002)(5660300002)(229853002)(14454004)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB1943;H:AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: J2ia2MmDcGJNtJ7swWaWc2cuoDjxGhPeRJJ+/l7rIUyqeRA2puWt4p6WCxNzdrTFhCLC6gxki/YWbmXYFV+vQIZglVIfwN+Oc8l/7ZPuR4Td5NH0O+I+DmpBGHR6ZjNXGziQhsjKf7x7ERsa9NqWS+IvfVlx+yCdu9+U3zOI4DlH6W9Golu0QmiT9VRxRjIZCioShHR02CCn5DLhEZG91eFS/W7Jc2dt8q8TzgxKLdLuJET8L0CbheTB3K7GwCUyZEDwvdafIcMvdl9J71Fok1eaRDhPYEpb2g656fJ8fuHWjG4vKXHHoA1jUPtLnp63PN1sBis5jOyot8nnLB5YL+nniTTeLrwXiETqKh5UwSSmW4ix2mQ5B7oH8ECrS3tEPgQEE+oTHn+WgIMR++sJepCvvlFvcHCJD+axjyD7G6g=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4b2785e-0052-4c2e-e511-08d70f41e194
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2019 07:46:32.7077
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: stephen.twiss@diasemi.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB1943
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 22 lip 2019 o 18:10 Jessica Yu <jeyu@kernel.org> napisa=C5=82(a):
->
-> +++ Bartosz Golaszewski [22/07/19 14:12 +0200]:
-> >Hi,
-> >
-> >with v5.3-rc1 I'm hitting the following BUG() when trying to load the
-> >gpio-backlight module:
-> >
-> >kernel BUG at kernel/module.c:1919!
-> >Internal error: Oops - BUG: 0 [#1] PREEMPT ARM
-> >Modules linked in:
-> >CPU: 0 PID: 1 Comm: systemd Tainted: G        W
-> >5.2.0-rc2-00005-g7dabaa5ce05a #19
-> >Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
-> >PC is at frob_text.constprop.16+0x2c/0x34
-> >LR is at load_module+0x1888/0x21b4
-> >pc : [<c0081bbc>]    lr : [<c0083c4c>]    psr: 20000013
-> >sp : c6837e58  ip : c6b4fa80  fp : bf00574c
-> >r10: c0601008  r9 : bf005740  r8 : c0493e38
-> >r7 : c00807f8  r6 : 00000000  r5 : 00000001  r4 : c6837f38
-> >r3 : 00000fff  r2 : bf000000  r1 : 00004b80  r0 : bf005818
-> >Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> >Control: 0005317f  Table: c6b78000  DAC: 00000051
-> >Process systemd (pid: 1, stack limit =3D 0x(ptrval))
-> >Stack: (0xc6837e58 to 0xc6838000)
-> >7e40:                                                       bf005740 c64=
-92a90
-> >7e60: 00000001 c6bf5788 00000003 c6837f38 bf0058c0 bf0058a8 bf00a495 c04=
-93e38
-> >7e80: 00000000 c05368c0 00000001 00000000 c0580030 c0574b28 00000000 000=
-00000
-> >7ea0: 00000000 00000000 00000000 00000000 6e72656b 00006c65 00000000 000=
-00000
-> >7ec0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 000=
-00000
-> >7ee0: 00000000 00000000 00000000 aefb2bb8 7fffffff c0601008 00000000 000=
-00004
-> >7f00: b6cee714 c00091e4 c6836000 00000000 005bc668 c00847b0 7fffffff 000=
-00000
-> >7f20: 00000003 00000000 0000b2d0 c884e000 0000b2d0 00000000 c8852dcb c88=
-533a0
-> >7f40: c884e000 0000b2d0 c8858cb8 c8858b34 c88568d4 000058c0 00006190 000=
-023b8
-> >7f60: 00006713 00000000 00000000 00000000 000023a8 00000024 00000025 000=
-00019
-> >7f80: 0000001d 00000011 00000000 aefb2bb8 00000000 00000000 00000000 000=
-00000
-> >7fa0: 0000017b c0009000 00000000 00000000 00000004 b6cee714 00000000 000=
-00000
-> >7fc0: 00000000 00000000 00000000 0000017b 00000000 00000000 00000001 005=
-bc668
-> >7fe0: be907b00 be907af0 b6ce66b0 b6c3fac0 60000010 00000004 00000000 000=
-00000
-> >[<c0081bbc>] (frob_text.constprop.16) from [<c0083c4c>]
-> >(load_module+0x1888/0x21b4)
-> >[<c0083c4c>] (load_module) from [<c00847b0>] (sys_finit_module+0xbc/0xdc=
-)
-> >[<c00847b0>] (sys_finit_module) from [<c0009000>] (ret_fast_syscall+0x0/=
-0x50)
-> >Exception stack(0xc6837fa8 to 0xc6837ff0)
-> >7fa0:                   00000000 00000000 00000004 b6cee714 00000000 000=
-00000
-> >7fc0: 00000000 00000000 00000000 0000017b 00000000 00000000 00000001 005=
-bc668
-> >7fe0: be907b00 be907af0 b6ce66b0 b6c3fac0
-> >Code: e1a01621 e1a00002 eafe4531 e7f001f2 (e7f001f2)
-> >---[ end trace 2cbefb0005882c52 ]---
-> >Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x0000000=
-b
-> >---[ end Kernel panic - not syncing: Attempted to kill init!
-> >exitcode=3D0x0000000b ]---
-> >
-> >I bisected it to commit 06bd260e836d ("modules: fix BUG when load
-> >module with rodata=3Dn") with commit 7dabaa5ce05a ("modules: fix compile
-> >error if don't have strict module rwx") on top to make it build.
-> >
-> >Let me know if you need me to provide more info.
-> >
-> >Best regards,
-> >Bartosz Golaszewski
->
-> Hi Bartosz,
->
-> Thanks for reporting this, I was able to reproduce this on qemu.
->
-> This is due to hitting the BUG_ON() in frob_text() due to layout->base
-> and/or layout->text_size not being page-aligned. These values are
-> always page-aligned when CONFIG_STRICT_MODULE_RWX=3Dy, but in commit
-> 2eef1399a86 ("modules: fix BUG when load module with rodata=3Dn"), the
-> frob_text()+set_memory_x() calls got moved *outside* of the
-> STRICT_MODULE_RWX block since some arches (like x86 and arm64)
-> allocate non-executable module memory via module_alloc(), so naturally
-> the module text needed to be made executable at a later stage of
-> load_module(), regardless of whether STRICT_MODULE_RWX is set or not.
-> In your case, you must've had CONFIG_STRICT_MODULE_RWX=3Dn and so we
-> were calling frob_text() with non-page-aligned values, triggering the
-> BUG_ON().
->
-> In any case, could you please try and see if the following patch fixes
-> the issue for you?
->
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 5933395af9a0..cd8df516666d 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -64,14 +64,9 @@
->
->  /*
->   * Modules' sections will be aligned on page boundaries
-> - * to ensure complete separation of code and data, but
-> - * only when CONFIG_STRICT_MODULE_RWX=3Dy
-> + * to ensure complete separation of code and data
->   */
-> -#ifdef CONFIG_STRICT_MODULE_RWX
->  # define debug_align(X) ALIGN(X, PAGE_SIZE)
-> -#else
-> -# define debug_align(X) (X)
-> -#endif
->
->  /* If this is set, the section belongs in the init part of the module */
->  #define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG-1))
+Hiya Wolfram,
 
-That helps, thanks!
+On 22 July 2019 19:26, Wolfram Sang wrote:
 
-Please Cc me on the actual submitted patch.
+> To: linux-kernel@vger.kernel.org
+> Subject: [PATCH] mfd: da9063: remove now unused platform_data
+>=20
+> All preparational patches have been applied, we can now remove the
+> include file for platform_data. Yiha!
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  include/Kbuild                   |  1 -
+>  include/linux/mfd/da9063/pdata.h | 60 --------------------------------
+>  2 files changed, 61 deletions(-)
+>  delete mode 100644 include/linux/mfd/da9063/pdata.h
 
-Bart
+Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
+Regards,
+Steve
