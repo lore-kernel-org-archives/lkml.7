@@ -2,135 +2,202 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2C2C7618F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DCFC7618F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D29A21BF6
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="firBOTyJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0315A21E70
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 01:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563845750;
+	bh=FPkhYZRerqlQyPmcW02dE8STqYcZI7MQzFDIeGLxF5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NcEpwMSDmBkT+d13w67m0HoVBKAfYAkbQrAcTbfMWRCSTnWNpzvCfEXEPmghrT580
+	 6YgacHios97HvPPZo8+2q+ckIPyB56FBx2PpK+6b0m1K1V042WTV1CuMUfblgZquEt
+	 Kgb7ctzdTgU0PzaR6DXplfIhYRI7zG5ujXvQY2O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbfGWBbg (ORCPT
+        id S2387791AbfGWBfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Jul 2019 21:31:36 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:22454 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbfGWBbf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Jul 2019 21:31:35 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x6N1VGIT023670;
-        Tue, 23 Jul 2019 10:31:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6N1VGIT023670
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1563845477;
-        bh=4FI5v7yChWDKy40TghmAxFQlb9RspR/YzR92MYe74dA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=firBOTyJ0pdoQGtFGnzZ6q4adxXd87IsePKVeEFn8ghWsWvxlrraAyE+U/2RTvo3F
-         D+HW8iJwj3RNY/UNdo88jhZ3HAvp9Y6Evsvr2fDBcqMSvcEf9kVq/aMAx3rIfMa1JT
-         grXHpOEFtx7LRjfEnNeP9cmaMux6A3Qdao8LAzt3oNuOxJJtNGKdlzqETe276gPEbA
-         AQcVdpU3wlhNdpZaEeOrgvPd+hOEFF+eKImq6kmDQpxxqN+EWIVTws9gRSRNEjDgR8
-         PBtR8RrxiLO9EQhbZp1XDR4KY83bWcSg0h4b+oOFXmS+SJWeSkN7FqKGbGVeWAJKrr
-         Duz71cJFbRrBA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id h28so27713083vsl.12;
-        Mon, 22 Jul 2019 18:31:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAWoSpgoZzRc6+KSGirlpg8/hhDmDsIAPOmO/nvMUCkl49pVxV6Q
-        DhGETZqAB7sC2H25KEC/T4rE1gLUzpvP24dCYD4=
-X-Google-Smtp-Source: APXvYqz7MjjaBBE2iAX4oDJ6Ko66XfysBBN8YWUa9IqFK09d14YsOVeWpMdByphk9B/+3vRqmd9GfoRG1icX7+vEmKY=
-X-Received: by 2002:a67:fc45:: with SMTP id p5mr45866193vsq.179.1563845475801;
- Mon, 22 Jul 2019 18:31:15 -0700 (PDT)
+        Mon, 22 Jul 2019 21:35:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726590AbfGWBfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Jul 2019 21:35:48 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25B0A21BF6;
+        Tue, 23 Jul 2019 01:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563845747;
+        bh=FPkhYZRerqlQyPmcW02dE8STqYcZI7MQzFDIeGLxF5E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NLgWqwWaHXADqJBkd8U7l6lbJJeIbxkQ4KjdPlEL8JBdTq9x4yzh4Zd+2mQwbgsUI
+         +s6VOnjnGW75bkxav6MNivZK3GmtBTjuEXrGLNoGmSJdID1+sgYpqO/sFn/SEQpFOq
+         mXyPC7ZXH6emOEQ/bO0hTzDRqwFqZx16ehJP6gFc=
+Date:   Mon, 22 Jul 2019 18:35:46 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity with enabled features
+ in image
+Message-ID: <20190723013546.GA60778@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190424094850.118323-1-yuchao0@huawei.com>
+ <20190428133802.GB37346@jaegeuk-macbookpro.roam.corp.google.com>
+ <373f4633-d331-5cf3-74b7-e982072bc4b4@kernel.org>
+ <20190501032242.GA84420@jaegeuk-macbookpro.roam.corp.google.com>
+ <3f170d86-e556-13ae-ce19-3bba3944f5fa@huawei.com>
+ <192bae92-2193-570f-7b50-00334271bd2e@huawei.com>
+ <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de>
- <20190716170606.GA38406@archlinux-threadripper> <alpine.DEB.2.21.1907162059200.1767@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907162135590.1767@nanos.tec.linutronix.de>
- <CAK7LNASBiaMX8ihnmhLGmYfHX=ZHZmVN91nxmFZe-OCaw6Px2w@mail.gmail.com>
- <alpine.DEB.2.21.1907170955250.1767@nanos.tec.linutronix.de> <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
-In-Reply-To: <CAHbf0-GyQzWcRg_BP2B5pVzEJoxSE_hX5xFypS--7Q5LSHxzWw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 23 Jul 2019 10:30:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
-Message-ID: <CAK7LNATJGbSYyuxV7npC_bQiXQShb=7J7dcQcOaupnL5-GhADg@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: Fail if gold linker is detected
-To:     Mike Lothian <mike@fireburn.co.uk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a16a0c1c-16c6-5fe8-bfc4-7cc0e0866c77@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 6:12 PM Mike Lothian <mike@fireburn.co.uk> wrote:
->
-> On Wed, 17 Jul 2019 at 08:57, Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Wed, 17 Jul 2019, Masahiro Yamada wrote:
-> > > On Wed, Jul 17, 2019 at 4:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > > So instead of dealing with attempts to duct tape gold support without
-> > > > understanding the root cause and without support from the gold folks, fail
-> > > > the build when gold is detected.
-> > > >
-> > >
-> > > The code looks OK in the build system point of view.
-> > >
-> > > Please let me confirm this, just in case:
-> > > For now, we give up all architectures, not only x86, right?
-> >
-> > Well, that's the logical consequence of a statement which says: don't use
-> > gold for the kernel.
-> >
-> > > I have not not heard much from other arch maintainers.
-> >
-> > Cc'ed linux-arch for that matter.
-> >
+On 07/16, Chao Yu wrote:
+> Hi Jaegeuk,
+> 
+> On 2019/5/9 9:15, Chao Yu wrote:
+> > On 2019/5/5 10:51, Chao Yu wrote:
+> >> On 2019/5/1 11:22, Jaegeuk Kim wrote:
+> >>> On 04/29, Chao Yu wrote:
+> >>>> On 2019-4-28 21:38, Jaegeuk Kim wrote:
+> >>>>> On 04/24, Chao Yu wrote:
+> >>>>>> This patch fixes to do sanity with enabled features in image, if
+> >>>>>> there are features kernel can not recognize, just fail the mount.
+> >>>>>
+> >>>>> We need to figure out per-feature-based rejection, since some of them can
+> >>>>> be set without layout change.
+> 
+> What about adding one field in superblock for compatible features in future?
+> 
+> sb.feature(F2FS_FEATURE_LAST, max] stores uncompatible features
+> sb.compatible_feature stores compatible features
+> 
+> If we follow above rule when adding one feature, then, we can fail the mount if
+> sb.feature(F2FS_FEATURE_LAST, max] is valid.
+
+How about adding required_features flag in sb to check part of features only?
+
+> 
+> Thanks,
+> 
+> >>>>
+> >>>> So any suggestion on how to implement this?
+> >>>
+> >>> Which features do we need to disallow? When we introduce new features, they
+> >>
+> >> I guess it should be the new features.
+> >>
+> >>> didn't hurt the previous flow by checking f2fs_sb_has_###().
+> >>
+> >> Yes, but new features may use new disk layout, if old kernel handled it with old
+> >> disk layout, there must be problematic.
+> >>
+> >> e.g. format image with -O extra_attr, and mount it with kernel who don't
+> >> recognize new inode layout.
+> > 
+> > Jaegeuk,
+> > 
+> > Any thoughts?
+> > 
 > > Thanks,
-> >
-> >         tglx
->
-> Hi
->
-> I've done a bit more digging, I had a second machine that was building
-> Linus's tree just fine with ld.gold
->
-> I tried forcing ld.bfd on the problem machine and got this:
->
-> ld.bfd: arch/x86/boot/compressed/head_64.o: warning: relocation in
-> read-only section `.head.text'
-> ld.bfd: warning: creating a DT_TEXTREL in object
->
-> I had a look at the differences in the kernel configs and noticed this:
->
-> CONFIG_RANDOMIZE_BASE=y
-> CONFIG_X86_NEED_RELOCS=y
-> CONFIG_PHYSICAL_ALIGN=0x1000000
-> CONFIG_DYNAMIC_MEMORY_LAYOUT=y
-> CONFIG_RANDOMIZE_MEMORY=y
-> CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING=0x0
->
-> Unsetting CONFIG_RANDOMIZE_BASE=y gets things working for me with ld.gold again
-
-
-Right.
-I was able to build with ld.gold
-
-So, we can use gold, depending on the kernel configuration.
-
-
-> In light of this - can we drop this patch?
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> Maybe:
+> >>>>
+> >>>> if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0))
+> >>>> 	check 4.14+ features
+> >>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0))
+> >>>> 	check 4.9+ features
+> >>>> else if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 4, 0))
+> >>>> 	check 4.4+ features
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>>>
+> >>>>>>
+> >>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>>>> ---
+> >>>>>>  fs/f2fs/f2fs.h  | 13 +++++++++++++
+> >>>>>>  fs/f2fs/super.c |  9 +++++++++
+> >>>>>>  2 files changed, 22 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >>>>>> index f5ffc09705eb..15b640967e12 100644
+> >>>>>> --- a/fs/f2fs/f2fs.h
+> >>>>>> +++ b/fs/f2fs/f2fs.h
+> >>>>>> @@ -151,6 +151,19 @@ struct f2fs_mount_info {
+> >>>>>>  #define F2FS_FEATURE_VERITY		0x0400	/* reserved */
+> >>>>>>  #define F2FS_FEATURE_SB_CHKSUM		0x0800
+> >>>>>>  
+> >>>>>> +#define F2FS_ALL_FEATURES	(F2FS_FEATURE_ENCRYPT |			\
+> >>>>>> +				F2FS_FEATURE_BLKZONED |			\
+> >>>>>> +				F2FS_FEATURE_ATOMIC_WRITE |		\
+> >>>>>> +				F2FS_FEATURE_EXTRA_ATTR |		\
+> >>>>>> +				F2FS_FEATURE_PRJQUOTA |			\
+> >>>>>> +				F2FS_FEATURE_INODE_CHKSUM |		\
+> >>>>>> +				F2FS_FEATURE_FLEXIBLE_INLINE_XATTR |	\
+> >>>>>> +				F2FS_FEATURE_QUOTA_INO |		\
+> >>>>>> +				F2FS_FEATURE_INODE_CRTIME |		\
+> >>>>>> +				F2FS_FEATURE_LOST_FOUND |		\
+> >>>>>> +				F2FS_FEATURE_VERITY |			\
+> >>>>>> +				F2FS_FEATURE_SB_CHKSUM)
+> >>>>>> +
+> >>>>>>  #define __F2FS_HAS_FEATURE(raw_super, mask)				\
+> >>>>>>  	((raw_super->feature & cpu_to_le32(mask)) != 0)
+> >>>>>>  #define F2FS_HAS_FEATURE(sbi, mask)	__F2FS_HAS_FEATURE(sbi->raw_super, mask)
+> >>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> >>>>>> index 4f8e9ab48b26..57f2fc6d14ba 100644
+> >>>>>> --- a/fs/f2fs/super.c
+> >>>>>> +++ b/fs/f2fs/super.c
+> >>>>>> @@ -2573,6 +2573,15 @@ static int sanity_check_raw_super(struct f2fs_sb_info *sbi,
+> >>>>>>  		return 1;
+> >>>>>>  	}
+> >>>>>>  
+> >>>>>> +	/* check whether kernel supports all features */
+> >>>>>> +	if (le32_to_cpu(raw_super->feature) & (~F2FS_ALL_FEATURES)) {
+> >>>>>> +		f2fs_msg(sb, KERN_INFO,
+> >>>>>> +			"Unsupported feature:%u: supported:%u",
+> >>>>>> +			le32_to_cpu(raw_super->feature),
+> >>>>>> +			F2FS_ALL_FEATURES);
+> >>>>>> +		return 1;
+> >>>>>> +	}
+> >>>>>> +
+> >>>>>>  	/* check CP/SIT/NAT/SSA/MAIN_AREA area boundary */
+> >>>>>>  	if (sanity_check_area_boundary(sbi, bh))
+> >>>>>>  		return 1;
+> >>>>>> -- 
+> >>>>>> 2.18.0.rc1
+> >>> .
+> >>>
+> >>
+> >>
+> >> _______________________________________________
+> >> Linux-f2fs-devel mailing list
+> >> Linux-f2fs-devel@lists.sourceforge.net
+> >> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> >> .
+> >>
+> > 
+> > 
+> > _______________________________________________
+> > Linux-f2fs-devel mailing list
+> > Linux-f2fs-devel@lists.sourceforge.net
+> > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> > .
+> > 
