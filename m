@@ -2,117 +2,95 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CF4C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0E2C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D615A21926
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:56:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B91uWi0p"
+	by mail.kernel.org (Postfix) with ESMTP id 8B51821926
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 22:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392525AbfGWW4R (ORCPT
+        id S2389513AbfGWW71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 18:56:17 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42269 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfGWW4R (ORCPT
+        Tue, 23 Jul 2019 18:59:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41975 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728418AbfGWW71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:56:17 -0400
-Received: by mail-io1-f67.google.com with SMTP id e20so55067200iob.9;
-        Tue, 23 Jul 2019 15:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=uN8sWFnMgUwQhVsWfzdxgk/YSjqdWKUBI/qD1iRb5SI=;
-        b=B91uWi0pz7pnGTkbsInU+RBKq/g5LBEM3mF6eMvV+0/E/rK9rdVzyu4sGh8jiqd2og
-         eA/qw/2cVK8PzA93ngIVXrFVfZ+NqRjVwEP7pz8ljEi0PIbLshrzgIpwx88QxLQwb+xy
-         vtYKDdt7WqPe/Bh2HthaTLqh6eJ394BAGMfDT9A4LgKAvFfrVQ+LgpcKDheCotjXysKT
-         iPhmMjLgX2TyjkVNfuUdal1ECe20GnUkCICHdlQZ/f5ddWve1AWkgkhJQBL9Qy6AJcSA
-         oMp2JhnGVBvGRpUgqRXrFef8d1rp7oY0wimQZ+Z5zr8uk2+BGpd1UnbpRa9qMfw29Rv3
-         tlaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=uN8sWFnMgUwQhVsWfzdxgk/YSjqdWKUBI/qD1iRb5SI=;
-        b=cIEzaN4BZvh+Qh6AdqWmkcTZL7iKBm+3WNrKhJw0u0CT6+fY8k4F6MHjgsGUgoRwt0
-         zo5yFjwlaEFFI4q1l4bNXfF+1CJei3RyztobQExw59cdBkrDk5SLoR5wx3Jqo2BWesxv
-         qC6PllNRaSheszzhxP/TrMXxral/Rv9zJFX5tAvviwHXypH9UOSCKMOiZtR0peXEsxBo
-         nDIUK7oR3U2MBAH9p/9n3KWPeJLloZOuWwK4PW8rUszgZnJPGzj6b8YBaIq1wt4SjFoF
-         HBIBtP+ZI4xxDIrn8z1EEnXzL1tdvlcLgXmzOW18aIpCcxOZpd3OceLUATKfo6ySexE4
-         4cxQ==
-X-Gm-Message-State: APjAAAVRNlBsv0c+W8r6W9m5+yXl3ePp4SlutwAJ4hovTxje6U1reJas
-        Pg+2o8ugLvAreQjI21g5mwTFW/65rqJB7vy8rUA=
-X-Google-Smtp-Source: APXvYqxBfw92BBe1j9zTk+R5FTp7j3ADLDtnopfxPlrkn4v1jzb7veb0SZtkW+ccyOMKKS08SSQFdQURvaGi87KvGvo=
-X-Received: by 2002:a6b:d81a:: with SMTP id y26mr69555168iob.126.1563922576001;
- Tue, 23 Jul 2019 15:56:16 -0700 (PDT)
+        Tue, 23 Jul 2019 18:59:27 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hq3kU-0007Uh-Nf; Wed, 24 Jul 2019 00:59:11 +0200
+Date:   Wed, 24 Jul 2019 00:59:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [5.2 REGRESSION] Generic vDSO breaks seccomp-enabled userspace
+ on i386
+In-Reply-To: <201907231437.DB20BEBD3@keescook>
+Message-ID: <alpine.DEB.2.21.1907240038001.27812@nanos.tec.linutronix.de>
+References: <20190719170343.GA13680@linux.intel.com> <19EF7AC8-609A-4E86-B45E-98DFE965DAAB@amacapital.net> <201907221012.41504DCD@keescook> <alpine.DEB.2.21.1907222027090.1659@nanos.tec.linutronix.de> <201907221135.2C2D262D8@keescook>
+ <CALCETrVnV8o_jqRDZua1V0s_fMYweP2J2GbwWA-cLxqb_PShog@mail.gmail.com> <201907221620.F31B9A082@keescook> <CALCETrWqu-S3rrg8kf6aqqkXg9Z+TFQHbUgpZEiUU+m8KRARqg@mail.gmail.com> <201907231437.DB20BEBD3@keescook>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190722030401.69563-1-skunberg.kelsey@gmail.com> <20190723185811.8548-1-skunberg.kelsey@gmail.com>
-In-Reply-To: <20190723185811.8548-1-skunberg.kelsey@gmail.com>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Tue, 23 Jul 2019 17:56:04 -0500
-Message-ID: <CABhMZUVAcJwJpN8BKZTTU7jUW6881KdBtoYs_3kSn+tDtOVqNw@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers: net: xgene: Remove acpi_has_method() calls
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
-        quan@os.amperecomputing.com, David Miller <davem@davemloft.net>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 1:59 PM Kelsey Skunberg
-<skunberg.kelsey@gmail.com> wrote:
->
-> acpi_evaluate_object will already return an error if the needed method
-> does not exist. Remove unnecessary acpi_has_method() calls and check the
-> returned acpi_status for failure instead.
+On Tue, 23 Jul 2019, Kees Cook wrote:
+> On Mon, Jul 22, 2019 at 04:47:36PM -0700, Andy Lutomirski wrote:
+> > I don't love this whole concept, but I also don't have a better idea.
+> 
+> How about we revert the vDSO change? :P
 
-> diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-> index 6453fc2ebb1f..5d637b46b2bf 100644
-> --- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-> +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-> @@ -437,6 +437,7 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
->  static int xgene_enet_reset(struct xgene_enet_pdata *p)
->  {
->         struct device *dev = &p->pdev->dev;
-> +       acpi_status status;
->
->         if (!xgene_ring_mgr_init(p))
->                 return -ENODEV;
-> @@ -460,14 +461,13 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
->                 }
->         } else {
->  #ifdef CONFIG_ACPI
-> -               if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_RST"))
-> -                       acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
-> -                                            "_RST", NULL, NULL);
-> -               else if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_INI"))
-> +               status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
-> +                                             "_RST", NULL, NULL);
-> +               if (ACPI_FAILURE(status)) {
->                         acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
->                                              "_INI", NULL, NULL);
-> +               }
->  #endif
-> -       }
+Sigh. Add more special case code to the VDSO again?
 
-Oops, I don't think you intended to remove that brace.
+> I keep coming back to using the vDSO return address as an indicator.
+> Most vDSO calls don't make syscalls, yes? So they're normally
+> unfilterable by seccomp.
+> 
+> What was the prior vDSO behavior?
 
-If you haven't found it already, CONFIG_COMPILE_TEST is useful for
-building things that wouldn't normally be buildable on your arch.
+The behaviour is pretty much the same as before:
 
->         if (!p->port_id) {
->                 xgene_enet_ecc_init(p);
+  If the requested clock id is supported by the VDSO and the platform has a
+  VDSO capable clocksource, everything is handled in user space.
+
+  If either of the conditions is false, fall back to a syscall.
+
+The implementation detail changed for 32bit (native and compat):
+
+. The original VDSO used sys_clock_gettime() as fallback, the new one uses
+  sys_clock_gettime64().
+
+The reason is that we need to support 2038 safe vdso_clock_gettime64() for
+32bit which requires to use sys_clock_gettime64() as fallback. So we use
+the same fallback for the non 2038 safe vdso_clock_gettime() variant as
+well to avoid having different implementations of the fallback code.
+
+And as we have sys_clock_gettime64() exposed for 32bit anyway you need to
+deal with that in seccomp independently of the VDSO. It does not make sense
+to treat sys_clock_gettime() differently than sys_clock_gettime64(). They
+both expose the same information, but the latter is y2038 safe.
+
+So changing vdso back to the original fallback for 32bit (native and
+compat) is just a temporary bandaid as seccomp needs to deal with the y2038
+safe variant anyway.
+
+Thanks,
+
+	tglx
+
+
