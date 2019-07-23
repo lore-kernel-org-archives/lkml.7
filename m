@@ -2,103 +2,129 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99391C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A57C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647F3229F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F135229ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gXAWs6d2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGJNkRZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392042AbfGWVYs (ORCPT
+        id S2392062AbfGWVYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:24:48 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:56492 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731769AbfGWVYr (ORCPT
+        Tue, 23 Jul 2019 17:24:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38066 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392047AbfGWVYw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:24:47 -0400
-Received: by mail-pl1-f202.google.com with SMTP id o6so22734065plk.23
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:24:47 -0700 (PDT)
+        Tue, 23 Jul 2019 17:24:52 -0400
+Received: by mail-io1-f68.google.com with SMTP id j6so9846925ioa.5;
+        Tue, 23 Jul 2019 14:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ds+yDlyVjybdin7f83dyTCd0MUOnW1rqJpaXINk50aY=;
-        b=gXAWs6d2vlg5BYWrnPRZwakEFntdJVkTe2aKhDwU216RDblqMWjy0Qs40H075C/NuS
-         kztEgi0juyk1ocSdIn6Mj3Uh5VsdGEuKaJMiqhLYTLC+hGPHfmILvhece/gb8Kn1ZSM8
-         sJcF/uITqnLsw8glV/BmivbZ0zgMPgYuxS9QZ3hjgC+Mxk5WVQS4aF7OTT/fs8IZOb4v
-         R3zc2ks9rcV3MaxCgiNa9cqUjMvOeQWgsytHTXv7THgoVmnvQhfH7mE4iytWW74xOHz2
-         Hj18LQIEP6jOmEPouijbybHC/RMmH08o3G5rhJ1F/Kpy4llOsgrP8K6hKiH0cweJnXZ+
-         IyXQ==
+        bh=M6w3AQT/kAXXnbql10OE6lR9hDAhCRnli8EPorWLJVk=;
+        b=QGJNkRZsxv5Zuf3BgPCZSqKQFZGj+62TufloKtPG2MZHXVGH1Gd0Lp6K2ETJIbCSjh
+         9H8asFqfqbKMBBxMrqWl9WTuBXgxsHM7Hvujxd7Mwzg0TCSP+fQqr1kIT1Sb984JAHC3
+         KFRtHdL8Nomx/M8Jrwx69IAiJJZKW1vawnwm6x6dcOqS/ZUdTMSZsXPw0d+5Z9j5hIlq
+         rVAmZv0JRn+cBmfh4L4vnMcFIHHYgRJg/C2jixIYFE5ZqVpGxI5UgWCGqmddrraX8EbC
+         V9YLC2jwBhDTpcvB8SfLT3PTMul+gIi/+9fKTr0YhWbOURJVhIsrLU0TaeW1+B7rgdxl
+         DK5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=ds+yDlyVjybdin7f83dyTCd0MUOnW1rqJpaXINk50aY=;
-        b=OxrIKr5P7AF3A2a/GnQXeUX91uqNjfAQatseeKHc48Tu+/FNzlhYr/PTaKUR23etaC
-         LR77Z/NRQPdvuG6OYSXQx86qn4CSoi4fB6OrpLbW3cx0ymdjNCrCpyaPKgIs2Q6yENT1
-         LA2hRlGtFghMe0gn2sJNUOVvB6HydW1nD/rP5RyAbyicdTa4jP7eNjos83zbEBSyRRHK
-         nGdmJI3Dys2QFIfNGCXRfFRbukyi9wPVZu/HCYqw0RqfeRceqblBXVYlsFvlVSI9utNk
-         QTtvnBoAC0DUz+M7ujdvb9C09Fm2qdnQt7bqmSBV8CMTgqJoj/XS6UoG9gAcDHSnNk47
-         RMWw==
-X-Gm-Message-State: APjAAAWLHjeeJUMDmlKGL8UasM4FK8g2KMxUpm4SBviZeVmuqQv4m27O
-        W+WkTT4SOCchNRTgGqnVYyQLqO+ZRmPsmLGP3Ns=
-X-Google-Smtp-Source: APXvYqxiSMNoXZNRJOiGmRiGNGuHdU6Za9rkxXjfGN35PlZJLxXSGmevxunC+0uwyuZWr4IwDRK4ZHAybRL+jF1pg+0=
-X-Received: by 2002:a65:6448:: with SMTP id s8mr78700016pgv.223.1563917086436;
- Tue, 23 Jul 2019 14:24:46 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 14:24:12 -0700
-In-Reply-To: <20190723212418.36379-1-ndesaulniers@google.com>
-Message-Id: <20190723212418.36379-3-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20190723212418.36379-1-ndesaulniers@google.com>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v3 0/2] Support kexec/kdump for clang built kernel
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     peterz@infradead.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
-        Nick Desaulniers <ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M6w3AQT/kAXXnbql10OE6lR9hDAhCRnli8EPorWLJVk=;
+        b=EWNNeV6YVAEmg8BNKePf1PykK2lt2ygssAsyVM1CRm/pZLnhRIb9EJHxWmtFcIS2g8
+         3RGw7KVr7s9HsbbsZb4iN8QAJr9xHFqltGF9Xg+ATDaMJmpGDK8KNLUzVsBtoLqsAGhF
+         KEQtRpqM4wadRzvYM47zsGc7sLPlbc9arE0oJmx7k1tMXlCnkyez/iDe49ckKo5OPdDW
+         R2VdXAEAxcUuwKVdRbtgelxeYNnYZdLUFzRavPJuhboDCEY74n7A7VH33bvHKOZfFCJF
+         4nXXR8Q/Kk+zJlK55sPq7nFG7Dc42ki4RNBIbjq+dQu40ZSCbQ/vOcZa9dLXGTWsfcwS
+         X4iw==
+X-Gm-Message-State: APjAAAU8L+l9FnHeDq4BUQmzfFYwoIistK6xf6bDHSA9RpRHUe6pLy+q
+        9FuH718zwYvYCz7FqO/0PTKjPCaMqZmmSm+BWSE=
+X-Google-Smtp-Source: APXvYqxKr4HupaYHi34Ne4j7ZwGE2Zn3T5z4Jpb3W+1WmUklRBx1IuSc0txOT2Cv/XB1evJIt72QfM/euePyWkorYTY=
+X-Received: by 2002:a05:6638:cf:: with SMTP id w15mr3101134jao.136.1563917090945;
+ Tue, 23 Jul 2019 14:24:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <156388617236.3608.2194886130557491278.stgit@buzz> <20190723130729.522976a1f075d748fc946ff6@linux-foundation.org>
+In-Reply-To: <20190723130729.522976a1f075d748fc946ff6@linux-foundation.org>
+From:   Konstantin Khlebnikov <koct9i@gmail.com>
+Date:   Wed, 24 Jul 2019 00:24:41 +0300
+Message-ID: <CALYGNiMw_9MKxfCxq9QsXi3PbwQMwKmLufQqUnhYdt8C+sR2rA@mail.gmail.com>
+Subject: Re: [PATCH] mm/backing-dev: show state of all bdi_writeback in debugfs
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Cgroups <cgroups@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Reuse the implementation of memcpy and memset instead of relying on
-__builtin_memcpy and __builtin_memset as it causes infinite recursion
-in Clang (at any opt level) or GCC at -O2.
-2. Don't reset KBUILD_CFLAGS, rather filter CONFIG_FUNCTION_TRACER,
-CONFIG_STACKPROTECTOR, and CONFIG_STACKPROTECTOR_STRONG flags via
-`CFLAGS_REMOVE_<file>.o'
+On Tue, Jul 23, 2019 at 11:07 PM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Tue, 23 Jul 2019 15:49:32 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+>
+> > Currently /sys/kernel/debug/bdi/$maj:$min/stats shows only root bdi wb.
+> > With CONFIG_CGROUP_WRITEBACK=y there is one for each memory cgroup.
+> >
+> > This patch shows here state of each bdi_writeback in form:
+> >
+> > <global state>
+> >
+> > Id: 1
+> > Cgroup: /
+> > <root wb state>
+> >
+> > Id: xxx
+> > Cgroup: /path
+> > <cgroup wb state>
+> >
+> > Id: yyy
+> > Cgroup: /path2
+> > <cgroup wb state>
+>
+> Why is this considered useful?  What are the use cases.  ie, why should
+> we add this to Linux?
+>
+> > mm/backing-dev.c |  106 +++++++++++++++++++++++++++++++++++++++++++++++-------
+> > 1 file changed, 93 insertions(+), 13 deletions(-)
+>
+> No documentation because it's debugfs, right?
+>
+> I'm struggling to understand why this is a good thing :(.  If it's
+> there and people use it then we should document it for them.  If it's
+> there and people don't use it then we should delete the code.
+>
 
-A good test of this series (besides boot testing a kexec kernel):
-* There should be no undefined symbols in arch/x86/purgatory/purgatory.ro:
-$ nm arch/x86/purgatory/purgatory.ro
-  particularly `warn`, `bcmp`, `__stack_chk_fail`, `memcpy` or `memset`.
-* `-pg`, `-fstack-protector`, `-fstack-protector-strong` should not be
-  added to the command line for the c source files under arch/x86/purgatory/
-  when compiling with CONFIG_FUNCTION_TRACER=y, CONFIG_STACKPROTECTOR=y,
-  and CONFIG_STACKPROTECTOR_STRONG=y.
+Well. Cgroup writeback has huge internal state:
+bdi_writeback for each pair (bdi, memory cgroup ) which refers to some
+blkio cgroup.
+Each of them has writeback rate estimation, bunch of counters for
+pages and flows and so on.
+All this rich state almost completely hidden and gives no clue when
+something goes wrong.
+Debugging such dynamic structure with gdb is a pain.
 
-V3 of: https://groups.google.com/forum/#!msg/clang-built-linux/GzThkAkZqqI/J727I6vpBwAJ
+Also all these features are artificially tied with cgroup2 interface
+so almost nobody use them right now.
 
-Nick Desaulniers (2):
-  x86/purgatory: do not use __builtin_memcpy and __builtin_memset
-  x86/purgatory: use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
+This patch extends legacy debug manhole to expose bit of actual state.
+Alternative is exactly removing this debugfs file.
 
- arch/x86/boot/string.c         |  7 +++++++
- arch/x86/purgatory/Makefile    | 29 ++++++++++++++++++++++++-----
- arch/x86/purgatory/purgatory.c |  6 ++++++
- arch/x86/purgatory/string.c    | 23 -----------------------
- 4 files changed, 37 insertions(+), 28 deletions(-)
- delete mode 100644 arch/x86/purgatory/string.c
-
--- 
-2.22.0.709.g102302147b-goog
-
+I'm using this debugfs interface for croups and find it very useful:
+https://lore.kernel.org/patchwork/patch/973846/
+but writeback has another dimension so needs own interface.
