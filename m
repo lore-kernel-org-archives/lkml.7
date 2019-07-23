@@ -2,241 +2,112 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDA3C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49549C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C31320823
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA6F20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 16:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lsIKRLV4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pu7QRiQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732693AbfGWQTR (ORCPT
+        id S2387923AbfGWQTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 12:19:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37761 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbfGWQTR (ORCPT
+        Tue, 23 Jul 2019 12:19:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44224 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbfGWQTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 12:19:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so19392346pfa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 09:19:17 -0700 (PDT)
+        Tue, 23 Jul 2019 12:19:20 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so19370723pfe.11;
+        Tue, 23 Jul 2019 09:19:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=k6qSq4o0syiIlSo9H20B/KXoTNHS9WcPVDD4fQ3Lgi0=;
-        b=lsIKRLV4x0ERjGK4IEH3OBK2zF5gYz64nv/JsEpmGJVJjFTs2JS1i99PbxjS8ybmYJ
-         Cgj+wg9J0U+N513/ZKtXrP6yYiC+XEcwu1v9YzgvesZpRLUQ5JFI2VqBRUEjYQyx0Wlu
-         sZ6bk1bWJJEDP2Mnh3Gd/u4xvpI4zn3BaxlRfmIpUSBrlBGEJ7DQcdQKs0GWiuDmXGu3
-         2O6ncl6Gjw3qO8XZrBT2R0GrNVk6T/JSonbbf1B7yGoO+iL27EA5p2b486R6pp7oktrU
-         L5SnBvdEYgWSju6yaP3af3iSuDLbJXgHG9zEVUxfIB7zVabcviwP+CvBf/nbn2inasie
-         GUjg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=utciOzF0KT/vzhyI5HhnvVFUYaN/yvk0fzwnCeqDMHU=;
+        b=pu7QRiQkyygYe3Hd3g9JGjCXsl/l3fvRDcrWf91F2tQlBdnh9Hr5jhkHHMAFuXaqzn
+         RdLOTYwBzJZK6szwSKTTz9iO+ePY8y+J15FzoSqmx3bgGJG7Zev2eYXD8KNY7JWJBJNW
+         Du9gEFuMoeE6e0KF/St0nRkTBSd3qEacrrYQGUeUeaZzNO5bsloqVmExtpAsFeZXqZwD
+         n9alyRGUzKUPBhSQr1/RsEC3ZaM1bNcTiQTkXVaXCeQbZhBZofroU2fxydsjyZFVBzQX
+         PesV4lu/tru8rLgiCXA5vwo/kTPMtFB4214C7z+enDSsaXlTdm4Dj7pMx0DtLoEZZj9k
+         7ljw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=k6qSq4o0syiIlSo9H20B/KXoTNHS9WcPVDD4fQ3Lgi0=;
-        b=bLDg1xGIQkv2JnugUNkvUDvLKXYmarqO6Qqn/d89zHp+Y1b2WCMWVIIq4uwKuUwCdE
-         YPw7OjCKLx0FesSF6NTaaTWiVls6JphGK65wOl2XbJanuur/5ix9dB6i+34WYwY4s0fy
-         vTwYdaKjnQh42lI3KeKPESY2MDkoj6MbImQGk7SQozrChfR/hlDz/9w+4b4qwjYXxUs8
-         AoQF7LQtNN8S4zWi/qVoNpiEC2ZLjGHKFkI17e98Pw8FBLExZEaDtItHnmrGsDVVSVgb
-         xdFWFbl0OmqfbJtszrw9lfl0nIGdT8/fUos8u4+TDMM/TOTQDyRipYRVMlpCay3ipcR5
-         8ILQ==
-X-Gm-Message-State: APjAAAXPptRbFqP3Ls4FN3GX/XXUkM56Bv5Nenjs9QWv6NONy4hKCkau
-        d2PuHfSsE7L/sdBp1PY8jiqdjHy1vFgsKH5qVLb+aw==
-X-Google-Smtp-Source: APXvYqzsqnUu1mGmxVsrC3tzWgaabrbpIQ0xS56aCUWixYIdYaRw1m16xFXnMJhOJkHmVM4h/SAIVwbw6ey/bu9wXLk=
-X-Received: by 2002:aa7:86c6:: with SMTP id h6mr6710764pfo.51.1563898756123;
- Tue, 23 Jul 2019 09:19:16 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=utciOzF0KT/vzhyI5HhnvVFUYaN/yvk0fzwnCeqDMHU=;
+        b=Ryq1844iB9EbZFzc9SHPIzNx/0d+azVw3DIEWp5ctyDco/6OCXTCEL79K3WSZNHXrG
+         yKO6P51RuTDQ9iXXb+blWaSwLOM9Gob2yhDsx8vUlr5+TuyvWyvrZvRhGxy03hOkpVti
+         iOvxGF5TwGZK/l2N5BTwIXLupDvThHwQRrQer5RC0D+RcWrOLU1nAi7eyM7V6pB6Ke6H
+         wQe4XSHEGOKgBuF2dxzwdG/J4OLwoWD30DuOBCMQC6t7KfeHvr7Wk1ycmNO24/UJHuMP
+         dNZ4mq4chbKixkSrL65wKtzHyMoLcn5fBisAztdyd62VK/X5pSPgQ3Z6jQgoHoZ+olE7
+         BpUQ==
+X-Gm-Message-State: APjAAAXysuDKqdTXO0csTBd0bOUbnCmLMmGAZtRN9Qz/CJsJaoSrGQ0c
+        bcYMi6NLu6PCdte1H6X4RsPT5RO7
+X-Google-Smtp-Source: APXvYqz461jCg84f3q8N4Y2fKQcIQbFIv/9hUWPgyG7IaTSpCabyw4mx15RPQH9nHBCk9k0//Y2b6g==
+X-Received: by 2002:a62:107:: with SMTP id 7mr6664662pfb.4.1563898760177;
+        Tue, 23 Jul 2019 09:19:20 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d129sm48889826pfc.168.2019.07.23.09.19.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 09:19:19 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 09:19:18 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Steffen Maier <maier@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-scsi <linux-scsi@vger.kernel.org>
+Subject: Re: Linux 5.3-rc1
+Message-ID: <20190723161918.GB9140@roeck-us.net>
+References: <CAHk-=wiVjkTqzP6OppBuLQZ+t1mpRQC4T+Ho4Wg2sBAapKd--Q@mail.gmail.com>
+ <20190722222126.GA27291@roeck-us.net>
+ <1563839144.2504.5.camel@HansenPartnership.com>
+ <4dc6ef77-afce-1c6d-add3-8df76332e672@roeck-us.net>
+ <1563859682.2504.17.camel@HansenPartnership.com>
+ <1e05670d-9e28-1b1d-249d-743c736e6d63@linux.ibm.com>
+ <1563895995.3609.10.camel@HansenPartnership.com>
 MIME-Version: 1.0
-References: <000000000000c3c7b6058e5a47af@google.com> <20190723161425.GA23641@gmail.com>
-In-Reply-To: <20190723161425.GA23641@gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 23 Jul 2019 18:19:04 +0200
-Message-ID: <CAAeHK+zMdTKg3kJgbJjsVKp_HFR5SeXLxUs1kV0bbXE-DDFizw@mail.gmail.com>
-Subject: Re: usb-fuzzer boot error: general protection fault in dma_direct_max_mapping_size
-To:     syzbot <syzbot+4efacf59126f1ae87000@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563895995.3609.10.camel@HansenPartnership.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 6:14 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Jul 23, 2019 at 07:48:05AM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    1154c0b0 wip
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1197774c600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b228fb19779df17d
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=4efacf59126f1ae87000
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+4efacf59126f1ae87000@syzkaller.appspotmail.com
-> >
-> > RPC: Registered udp transport module.
-> > RPC: Registered tcp transport module.
-> > RPC: Registered tcp NFSv4.1 backchannel transport module.
-> > pci 0000:00:00.0: Limiting direct PCI/PCI transfers
-> > PCI: CLS 0 bytes, default 64
-> > PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
-> > software IO TLB: mapped [mem 0xbbffd000-0xbfffd000] (64MB)
-> > RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl
-> > timer
-> > clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212735223b2,
-> > max_idle_ns: 440795277976 ns
-> > clocksource: Switched to clocksource tsc
-> > check: Scanning for low memory corruption every 60 seconds
-> > Initialise system trusted keyrings
-> > workingset: timestamp_bits=40 max_order=21 bucket_order=0
-> > NFS: Registering the id_resolver key type
-> > Key type id_resolver registered
-> > Key type id_legacy registered
-> > 9p: Installing v9fs 9p2000 file system support
-> > Key type asymmetric registered
-> > Asymmetric key parser 'x509' registered
-> > Block layer SCSI generic (bsg) driver version 0.4 loaded (major 247)
-> > io scheduler mq-deadline registered
-> > io scheduler kyber registered
-> > usbcore: registered new interface driver udlfb
-> > usbcore: registered new interface driver smscufx
-> > input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
-> > ACPI: Power Button [PWRF]
-> > input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
-> > ACPI: Sleep Button [SLPF]
-> > PCI Interrupt Link [LNKC] enabled at IRQ 11
-> > virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
-> > PCI Interrupt Link [LNKD] enabled at IRQ 10
-> > virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
-> > Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-> > 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-> > 00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
-> > 00:05: ttyS2 at I/O 0x3e8 (irq = 6, base_baud = 115200) is a 16550A
-> > 00:06: ttyS3 at I/O 0x2e8 (irq = 7, base_baud = 115200) is a 16550A
-> > Non-volatile memory driver v1.3
-> > Linux agpgart interface v0.103
-> > usbcore: registered new interface driver udl
-> > loop: module loaded
-> > usbcore: registered new interface driver rtsx_usb
-> > usbcore: registered new interface driver viperboard
-> > usbcore: registered new interface driver dln2
-> > usbcore: registered new interface driver pn533_usb
-> > usbcore: registered new interface driver port100
-> > usbcore: registered new interface driver nfcmrvl
-> > scsi host0: Virtio SCSI HBA
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] SMP KASAN
-> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc1+ #16
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > RIP: 0010:dma_addressing_limited /./include/linux/dma-mapping.h:692 [inline]
-> > RIP: 0010:dma_direct_max_mapping_size+0x73/0x19a /kernel/dma/direct.c:408
-> > Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 1e 01 00 00 48 8b 9d 38 03
-> > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85
-> > 06 01 00 00 48 8d bd 48 03 00 00 48 8b 1b 48 b8
-> > RSP: 0000:ffff8881da18f628 EFLAGS: 00010246
-> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff812d716c
-> > RDX: 0000000000000000 RSI: ffffffff812d7189 RDI: ffff8881d7428378
-> > RBP: ffff8881d7428040 R08: ffff8881da180000 R09: ffffed103ade30cb
-> > R10: ffffed103ade30ca R11: ffff8881d6f18657 R12: ffff8881d7428040
-> > R13: ffff8881d769e8b0 R14: 0000000000000200 R15: 0000000000000000
-> > FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 0000000006a21000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  dma_max_mapping_size+0xb5/0xf0 /kernel/dma/mapping.c:375
-> >  __scsi_init_queue+0x17e/0x510 /drivers/scsi/scsi_lib.c:1787
-> >  scsi_mq_alloc_queue+0xcb/0x170 /drivers/scsi/scsi_lib.c:1833
-> >  scsi_alloc_sdev+0x82e/0xc50 /drivers/scsi/scsi_scan.c:269
-> >  scsi_probe_and_add_lun+0x1ee5/0x2cd0 /drivers/scsi/scsi_scan.c:1078
-> >  __scsi_scan_target+0x273/0xc30 /drivers/scsi/scsi_scan.c:1562
-> >  scsi_scan_channel.part.0+0x126/0x1a0 /drivers/scsi/scsi_scan.c:1650
-> >  scsi_scan_channel /drivers/scsi/scsi_scan.c:1677 [inline]
-> >  scsi_scan_host_selected+0x2bb/0x3f0 /drivers/scsi/scsi_scan.c:1679
-> >  do_scsi_scan_host /drivers/scsi/scsi_scan.c:1817 [inline]
-> >  do_scsi_scan_host+0x1e8/0x260 /drivers/scsi/scsi_scan.c:1807
-> >  scsi_scan_host /drivers/scsi/scsi_scan.c:1847 [inline]
-> >  scsi_scan_host+0x37c/0x440 /drivers/scsi/scsi_scan.c:1835
-> >  virtscsi_probe+0x9b7/0xbb5 /drivers/scsi/virtio_scsi.c:847
-> >  virtio_dev_probe+0x463/0x710 /drivers/virtio/virtio.c:248
-> >  really_probe+0x281/0x650 /drivers/base/dd.c:548
-> >  driver_probe_device+0x101/0x1b0 /drivers/base/dd.c:709
-> >  device_driver_attach+0x108/0x140 /drivers/base/dd.c:983
-> >  __driver_attach+0xda/0x240 /drivers/base/dd.c:1060
-> >  bus_for_each_dev+0x14b/0x1d0 /drivers/base/bus.c:304
-> >  bus_add_driver+0x44e/0x5a0 /drivers/base/bus.c:645
-> >  driver_register+0x1c4/0x320 /drivers/base/driver.c:170
-> >  __write_once_size /./include/linux/compiler.h:226 [inline]
-> >  INIT_LIST_HEAD /./include/linux/list.h:28 [inline]
-> >  init+0xa1/0x115 /drivers/char/virtio_console.c:2251
-> >  do_one_initcall+0xf0/0x614 /init/main.c:939
-> >  do_initcall_level /init/main.c:1007 [inline]
-> >  do_initcalls /init/main.c:1015 [inline]
-> >  do_basic_setup /init/main.c:1032 [inline]
-> >  kernel_init_freeable+0x4a9/0x596 /init/main.c:1192
-> >  kernel_init+0xd/0x1bf /init/main.c:1110
-> >  ret_from_fork+0x24/0x30 /arch/x86/entry/entry_64.S:352
-> > Modules linked in:
-> > ---[ end trace 73ab592d53bc046f ]---
-> > RIP: 0010:dma_addressing_limited /./include/linux/dma-mapping.h:692 [inline]
-> > RIP: 0010:dma_direct_max_mapping_size+0x73/0x19a /kernel/dma/direct.c:408
-> > Code: df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 1e 01 00 00 48 8b 9d 38 03
-> > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85
-> > 06 01 00 00 48 8d bd 48 03 00 00 48 8b 1b 48 b8
-> > RSP: 0000:ffff8881da18f628 EFLAGS: 00010246
-> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff812d716c
-> > RDX: 0000000000000000 RSI: ffffffff812d7189 RDI: ffff8881d7428378
-> > RBP: ffff8881d7428040 R08: ffff8881da180000 R09: ffffed103ade30cb
-> > R10: ffffed103ade30ca R11: ffff8881d6f18657 R12: ffff8881d7428040
-> > R13: ffff8881d769e8b0 R14: 0000000000000200 R15: 0000000000000000
-> > FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 0000000006a21000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000c3c7b6058e5a47af%40google.com.
->
-> Seems there is a fix for this queued in the SCSI tree.
->
-> #syz fix: scsi: core: fix the dma_max_mapping_size call
+On Tue, Jul 23, 2019 at 08:33:15AM -0700, James Bottomley wrote:
+[ ... ]
+> 
+> Yes, I think so.  Can someone try this, or something like it.
+> 
+> Thanks,
+> 
+> James
+> 
+> ---
+> 
+> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> index 9381171c2fc0..4715671a1537 100644
+> --- a/drivers/scsi/scsi_lib.c
+> +++ b/drivers/scsi/scsi_lib.c
+> @@ -1793,7 +1793,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+>  	dma_set_seg_boundary(dev, shost->dma_boundary);
+>  
+>  	blk_queue_max_segment_size(q, shost->max_segment_size);
+> -	blk_queue_virt_boundary(q, shost->virt_boundary_mask);
+> +	if (shost->virt_boundary_mask)
+> +		blk_queue_virt_boundary(q, shost->virt_boundary_mask);
+>  	dma_set_max_seg_size(dev, queue_max_segment_size(q));
+>  
+>  	/*
 
-Great, thanks! Because of this bug USB fuzzing is currently broken.
+This fixes the problem for me.
 
->
-> Other threads:
->
-> https://marc.info/?l=linux-scsi&m=156378725427719&w=2
-> https://lkml.kernel.org/lkml/20190722163759.GA28686@codemonkey.org.uk/
-> https://lkml.kernel.org/lkml/CACVXFVMWM3xg6EEyoyNjkLPv=8+wQKiHj6erMS_gGX25f-Ot4g@mail.gmail.com/
->
-> - Eric
+Guenter
