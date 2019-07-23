@@ -2,90 +2,149 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D06C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98452C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69ECA218D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACAF218D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 21:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rRggj3sq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VqyK1OKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392075AbfGWV21 (ORCPT
+        id S2392086AbfGWV24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 17:28:27 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41467 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbfGWV20 (ORCPT
+        Tue, 23 Jul 2019 17:28:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37038 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728967AbfGWV2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 17:28:26 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so19779765pff.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 14:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GkrR7KYfNoDcAsYt1Gds+pf2LHdaFmbB4lpahf+T2Jw=;
-        b=rRggj3sqxFwgCm8YCh/vX3qfGKm5VRHubQNgfCYrbYx+7P5SMvmD64K0V5ZVN6YsDn
-         2+DzM2o70B26hCVEcR9DrviwigZ6nrSQq1TBWd9R225/QVL6NqFAniAV+25CkUMZP01d
-         u2LnYPnZMnbEZub2w98kUHNolyW7+g0oxX5In2CX2ZK5kWCIqCI8JRTP2zTcCT5bTAsk
-         bK+TlK2evbV8J5jTc+KJw+YdkZfaYkN5SUDIQ5u7+kqW9K7f2LLqvPHa0y35PtzMU/GA
-         Y54teCzp2hGNXhcwth8mh+8FLrvXGukyMpOwlnI8M//Bfey7qLHxVsTqFBImmA1GfSlz
-         v/GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GkrR7KYfNoDcAsYt1Gds+pf2LHdaFmbB4lpahf+T2Jw=;
-        b=MZ9H6m+w3FOYnH/Lw7nYX+YpCOmdgKVfhGcopEtTojgoOO26mUMFtdjQv9QDdK3NyU
-         QVDag8SJmcm8pSaWk8e9CuH+GvvutRVxlFz6mSWM95KlRDubsaIZ5XzGtO7k4PtWUIqv
-         FyIK8fQuv0pRzeT9DsNbxmXiJFd8kMKb/L09YI89pr7UrA5ObMDh0WFbH6B8we8mXleT
-         OeraXnCCvANO+s1IwJp7KTntwCTNtMD+kkrxhbjp8AVchrI2uXZclu0zR8YVAWdb2m2g
-         13kYRVADgj54cpLiLRb0wuzbGDRbwOU+2m6nlmVFgVwaw2aWSz/Ox59/1Z/LmL9p625C
-         wmfQ==
-X-Gm-Message-State: APjAAAUrtgyW7aNCaJDelrOW930b/+yYyRsBPbqF/D3SQTUki8JptUgO
-        o6no2TifaAlid8y3KXSaf3BD1vfL6KqFAP+m0+hLpw==
-X-Google-Smtp-Source: APXvYqyk35NJ1AMLcOio8BVcbDn442Y/nw305L+RX1QTpaRR6e6aBGPHKYXdZEBwQl12v829wWFaMtIrSL7Vg7eeBWY=
-X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr84880063pjs.73.1563917305632;
- Tue, 23 Jul 2019 14:28:25 -0700 (PDT)
+        Tue, 23 Jul 2019 17:28:55 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6NLO9Ur031514;
+        Tue, 23 Jul 2019 21:28:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=jXLXRJ/Y6JfH9vX4QoNP0NAjE2AgrDuly2eL+QibNhM=;
+ b=VqyK1OKp7TR230/YHVBc0GtEfo9JHhY1dZLbJ6VYPvkgkjnID5sJgWr5e+PClmv+dNau
+ xAJm6kFOUOaQwPnYrkrhWIKCG3qT0fYVS0C05oHn8V5dVB7+rZ6YdR3fGU8USIFnA/NX
+ O0a0IV1s2w3ljnfv04vltT0hfIVYfakFjPTAfJv5PhuOchItpFaAqWlCCHQkAnvZEJHv
+ B1BpbDZGw8TRRYT7e9M0HkhQRwjxN7I3JL2LPclkc93O/itlqfKkjoywx1s73P0RKeV7
+ 7wnhYM++zelSqD+3lkA6cCm30B0dtgUq2uU6HwFA+/4yJjNaAdY1VgeoG77AGyGeJflJ OQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2tx61bsbub-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 21:28:24 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6NLRpRf082842;
+        Tue, 23 Jul 2019 21:28:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2tx60xekek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 21:28:23 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6NLSJDo024157;
+        Tue, 23 Jul 2019 21:28:19 GMT
+Received: from dhcp-10-132-91-225.usdhcp.oraclecorp.com (/10.132.91.225)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Jul 2019 14:28:19 -0700
+Subject: Re: [PATCH] KVM: x86: init x2apic_enabled() once
+To:     luferry@163.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190723130608.26528-1-luferry@163.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <a86b536b-71ad-1112-9968-54136a9229d9@oracle.com>
+Date:   Tue, 23 Jul 2019 14:28:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-References: <20190722213250.238685-1-ndesaulniers@google.com>
- <20190722213250.238685-2-ndesaulniers@google.com> <CAKwvOdm3iyeJfuivhQJqXB9FfC0zHgrfgoN_qW4poEyfcw3C9A@mail.gmail.com>
- <CAMVonLjd3DoKQatdraG0t8X_F9Au-fA_vL2RSNfNPNbqvXWCDA@mail.gmail.com>
-In-Reply-To: <CAMVonLjd3DoKQatdraG0t8X_F9Au-fA_vL2RSNfNPNbqvXWCDA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 23 Jul 2019 14:28:14 -0700
-Message-ID: <CAKwvOdkJ2_E4e-mePb4JrQWqS7xYeKGKpcBr_VeGKaytuD_YrQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] x86/purgatory: use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
-To:     Vaibhav Rustagi <vaibhavrustagi@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190723130608.26528-1-luferry@163.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907230216
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907230216
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 3:59 PM Vaibhav Rustagi
-<vaibhavrustagi@google.com> wrote:
-> The changes suggested will cause undefined symbols while loading the new kernel.
-> On doing 'nm purgatory.ro', I found below undefined symbols:
->
-> U bmcp
-> U __stack_chk_fail
 
-Thanks for the report, a v3: https://lkml.org/lkml/2019/7/23/864
-(Tested v3 with defconfig, defconfig+CONFIG_FUNCTION_TRACER,
-+CONFIG_STACKPROTECTOR_STRONG, and allyesconfig)
--- 
-Thanks,
-~Nick Desaulniers
+
+On 07/23/2019 06:06 AM, luferry@163.com wrote:
+> From: luferry <luferry@163.com>
+>
+> x2apic_eanbled() costs about 200 cycles
+> when guest trigger halt pretty high, pi ops in hotpath
+>
+> Signed-off-by: luferry <luferry@163.com>
+> ---
+>   arch/x86/kvm/vmx/vmx.c | 10 +++++++---
+>   1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index d98eac371c0a..e17dbf011e47 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -186,6 +186,8 @@ static DEFINE_STATIC_KEY_FALSE(vmx_l1d_should_flush);
+>   static DEFINE_STATIC_KEY_FALSE(vmx_l1d_flush_cond);
+>   static DEFINE_MUTEX(vmx_l1d_flush_mutex);
+>   
+> +static int __read_mostly host_x2apic_enabled;
+> +
+>   /* Storage for pre module init parameter parsing */
+>   static enum vmx_l1d_flush_state __read_mostly vmentry_l1d_flush_param = VMENTER_L1D_FLUSH_AUTO;
+>   
+> @@ -1204,7 +1206,7 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
+>   
+>   		dest = cpu_physical_id(cpu);
+>   
+> -		if (x2apic_enabled())
+> +		if (host_x2apic_enabled)
+>   			new.ndst = dest;
+>   		else
+>   			new.ndst = (dest << 8) & 0xFF00;
+> @@ -7151,7 +7153,7 @@ static void __pi_post_block(struct kvm_vcpu *vcpu)
+>   
+>   		dest = cpu_physical_id(vcpu->cpu);
+>   
+> -		if (x2apic_enabled())
+> +		if (host_x2apic_enabled)
+>   			new.ndst = dest;
+>   		else
+>   			new.ndst = (dest << 8) & 0xFF00;
+> @@ -7221,7 +7223,7 @@ static int pi_pre_block(struct kvm_vcpu *vcpu)
+>   		 */
+>   		dest = cpu_physical_id(vcpu->pre_pcpu);
+>   
+> -		if (x2apic_enabled())
+> +		if (host_x2apic_enabled)
+>   			new.ndst = dest;
+>   		else
+>   			new.ndst = (dest << 8) & 0xFF00;
+> @@ -7804,6 +7806,8 @@ static int __init vmx_init(void)
+>   	}
+>   #endif
+>   
+> +	host_x2apic_enabled = x2apic_enabled();
+> +
+>   	r = kvm_init(&vmx_x86_ops, sizeof(struct vcpu_vmx),
+>   		     __alignof__(struct vcpu_vmx), THIS_MODULE);
+>   	if (r)
+
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
