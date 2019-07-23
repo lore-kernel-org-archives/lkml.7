@@ -2,180 +2,195 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90E5C76186
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BE6C76186
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F91620821
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:52:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zYaV2dx0"
+	by mail.kernel.org (Postfix) with ESMTP id 4892E218F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 18:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391579AbfGWSwD (ORCPT
+        id S2391587AbfGWSwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 14:52:03 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42030 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbfGWSwC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 14:52:02 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x1so29286124wrr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 11:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fyhJlYS/nmZVWKWvi27Hp7abC+DbsGqwswaGohdPOpA=;
-        b=zYaV2dx0GCGELJRDEgnEx66kKYH6fLEWGmcTfHxHp8NiO832NO1LV81qL8RIhK9Tsj
-         hAmNwACbpLQr/SARJZqkrV5Brs/mkIBkJ66SR8RQrdD3P8Rb74m8ALaG3ZvugP6HISMV
-         lVG8R8vkB1aqiPQy4ff57S+GbKMrdWCYRLA27pDhg2fyAUHppqyPmvyBX3EoRwzX4vea
-         nDktXIkOmtngTtXxPpPG4fWhlq3hNuDtaCSJjzwI/wh92oa9M7XzcbntymOu0moJLN7+
-         2UZTvjHbBH9fBJ04/M14wCNpciOtmbW2JiwZp1oPyB78/W1tEXGQG6PB73YGjqJBft9T
-         TwNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fyhJlYS/nmZVWKWvi27Hp7abC+DbsGqwswaGohdPOpA=;
-        b=K6hr38H+VVlttoLOEROFevn5K3CJIZxa27/au4sVaZUcE/4mmKDBF7z2RkI3VT+r1i
-         3JGI9emyys+OsRQBAVzJWzHDP3yTAL6zk9t4Z197G+Z1DdLcg6LBfm8IBvaj+LBOdyAz
-         D20JPzie0Vqw7ghhk/T0qSVIkr3UQ1oi3rP97+uH8Jc4qqyfpe7rtJMO1lMXo8nauIhp
-         mUvfuRnydhxOqLD04AK3FY/+urYYnMvqAX6kV5v8R68mp5KEW3Rao5BMSix2fapq5Qu3
-         IDTe9lLwpZF5u6CNoqWNGznhFJIunGYhKNaAtOP3w//KPiSvrPDmDUqURapXm/gRiBjJ
-         ixcQ==
-X-Gm-Message-State: APjAAAUsEUB9fi/GRvUvN6tgdcDNSaJ2GVeb81xHeILyfyL2BtGE+wU1
-        ZOJsmlT7aut5OrOLRIkdHJSojh7TL5nqTsFoUbfv4w==
-X-Google-Smtp-Source: APXvYqzlIepC9KXFaJ7DC2ZH9C3Jxw5UZ5QWzvCKIs/BFU+5pWBvVgbB6otUiss1YIbgTou6fEMr3+zplpwjb1jwh8w=
-X-Received: by 2002:a05:6000:145:: with SMTP id r5mr3390652wrx.208.1563907919536;
- Tue, 23 Jul 2019 11:51:59 -0700 (PDT)
+        Tue, 23 Jul 2019 14:52:55 -0400
+Received: from thoth.sbs.de ([192.35.17.2]:51911 "EHLO thoth.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbfGWSwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 14:52:54 -0400
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id x6NIqN15021719
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Jul 2019 20:52:23 +0200
+Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x6NIqLK4011734;
+        Tue, 23 Jul 2019 20:52:21 +0200
+Subject: Re: [PATCH] x86: Optimize load_mm_cr4 to load_mm_cr4_irqsoff
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+References: <0fbbcb64-5f26-4ffb-1bb9-4f5f48426893@siemens.com>
+Message-ID: <fe93bc72-74a0-ab39-9d42-9401609594ac@siemens.com>
+Date:   Tue, 23 Jul 2019 20:52:21 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-References: <1563497183-7114-1-git-send-email-fei.yang@intel.com> <CY4PR1201MB003708ADAD79BF4FD24D3445AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com>
-In-Reply-To: <CY4PR1201MB003708ADAD79BF4FD24D3445AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 23 Jul 2019 11:51:47 -0700
-Message-ID: <CALAqxLURCLHf3UJsMWKZUirDE9bWNYEhv-sKb01g7cTfCz5tOg@mail.gmail.com>
-Subject: Re: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated properly
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     "fei.yang@intel.com" <fei.yang@intel.com>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "andrzej.p@collabora.com" <andrzej.p@collabora.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0fbbcb64-5f26-4ffb-1bb9-4f5f48426893@siemens.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 6:12 PM Thinh Nguyen <Thinh.Nguyen@synopsys.com> wrote:
-> fei.yang@intel.com wrote:
-> > From: Fei Yang <fei.yang@intel.com>
-> >
-> > If scatter-gather operation is allowed, a large USB request is split into
-> > multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN bit
-> > except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
-> > Since only the last TRB has IOC set for the whole USB request, the
-> > dwc3_gadget_ep_reclaim_trb_sg() gets called only once after the last TRB
-> > completes and all the TRBs allocated for this request are supposed to be
-> > reclaimed. However that is not what the current code does.
-> >
-> > dwc3_gadget_ep_reclaim_trb_sg() is trying to reclaim all the TRBs in the
-> > following for-loop,
-> >       for_each_sg(sg, s, pending, i) {
-> >               trb = &dep->trb_pool[dep->trb_dequeue];
-> >
-> >                 if (trb->ctrl & DWC3_TRB_CTRL_HWO)
-> >                         break;
-> >
-> >                 req->sg = sg_next(s);
-> >                 req->num_pending_sgs--;
-> >
-> >                 ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
-> >                                 trb, event, status, chain);
-> >                 if (ret)
-> >                         break;
-> >         }
-> > but since the interrupt comes only after the last TRB completes, the
-> > event->status has DEPEVT_STATUS_IOC bit set, so that the for-loop ends for
-> > the first TRB due to dwc3_gadget_ep_reclaim_completed_trb() returns 1.
-> >       if (event->status & DEPEVT_STATUS_IOC)
-> >               return 1;
-> >
-> > This patch addresses the issue by checking each TRB in function
-> > dwc3_gadget_ep_reclaim_trb_sg() and maing sure the chained ones are properly
-> > reclaimed. dwc3_gadget_ep_reclaim_completed_trb() will return 1 Only for the
-> > last TRB.
-> >
-> > Signed-off-by: Fei Yang <fei.yang@intel.com>
-> > Cc: stable <stable@vger.kernel.org>
-> > ---
-> > v2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_reclaim_trb_sg()
-> >     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb().
-> > v3: Checking DWC3_TRB_CTRL_CHN bit for each TRB instead, and making sure that
-> >     dwc3_gadget_ep_reclaim_completed_trb() returns 1 only for the last TRB.
-> > ---
-> >  drivers/usb/dwc3/gadget.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index 173f532..88eed49 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -2394,7 +2394,7 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
-> >       if (event->status & DEPEVT_STATUS_SHORT && !chain)
-> >               return 1;
-> >
-> > -     if (event->status & DEPEVT_STATUS_IOC)
-> > +     if (event->status & DEPEVT_STATUS_IOC && !chain)
-> >               return 1;
-> >
-> >       return 0;
-> > @@ -2404,11 +2404,12 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
-> >               struct dwc3_request *req, const struct dwc3_event_depevt *event,
-> >               int status)
-> >  {
-> > -     struct dwc3_trb *trb = &dep->trb_pool[dep->trb_dequeue];
-> > +     struct dwc3_trb *trb;
-> >       struct scatterlist *sg = req->sg;
-> >       struct scatterlist *s;
-> >       unsigned int pending = req->num_pending_sgs;
-> >       unsigned int i;
-> > +     int chain = false;
-> >       int ret = 0;
-> >
-> >       for_each_sg(sg, s, pending, i) {
-> > @@ -2419,9 +2420,13 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
-> >
-> >               req->sg = sg_next(s);
-> >               req->num_pending_sgs--;
-> > +             if (trb->ctrl & DWC3_TRB_CTRL_CHN)
-> > +                     chain = true;
-> > +             else
-> > +                     chain = false;
-> >
-> >               ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
-> > -                             trb, event, status, true);
-> > +                             trb, event, status, chain);
-> >               if (ret)
-> >                       break;
-> >       }
->
-> There was already a fix a long time ago by Anurag. But it never made it
-> to the kernel mainline. You can check this out:
-> https://patchwork.kernel.org/patch/10640137/
+On 18.06.19 09:32, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
+> 
+> We only call load_mm_cr4 with interrupts disabled:
+>  - switch_mm_irqs_off
+>  - refresh_pce (on_each_cpu callback)
+> 
+> Thus, we can avoid disabling interrupts again in cr4_set/clear_bits.
+> 
+> Instead, provide cr4_set/clear_bits_irqsoffs and call those helpers from
+> load_mm_cr4_irqsoff. The renaming in combination with the checks
+> in __cr4_set shall ensure that any changes in the boundary conditions of
+> the invocations will be detected.
+> 
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> ---
+> 
+> Found while porting Xenomai with its virtualized interrupt
+> infrastructure to a newer kernel.
+> 
+>  arch/x86/events/core.c             |  2 +-
+>  arch/x86/include/asm/mmu_context.h |  8 ++++----
+>  arch/x86/include/asm/tlbflush.h    | 30 +++++++++++++++++++++++-------
+>  arch/x86/mm/tlb.c                  |  2 +-
+>  4 files changed, 29 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index f315425d8468..78a3fba28c62 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2161,7 +2161,7 @@ static int x86_pmu_event_init(struct perf_event *event)
+>  
+>  static void refresh_pce(void *ignored)
+>  {
+> -	load_mm_cr4(this_cpu_read(cpu_tlbstate.loaded_mm));
+> +	load_mm_cr4_irqsoff(this_cpu_read(cpu_tlbstate.loaded_mm));
+>  }
+>  
+>  static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+> diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+> index 9024236693d2..16ae821483c8 100644
+> --- a/arch/x86/include/asm/mmu_context.h
+> +++ b/arch/x86/include/asm/mmu_context.h
+> @@ -28,16 +28,16 @@ static inline void paravirt_activate_mm(struct mm_struct *prev,
+>  
+>  DECLARE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+>  
+> -static inline void load_mm_cr4(struct mm_struct *mm)
+> +static inline void load_mm_cr4_irqsoff(struct mm_struct *mm)
+>  {
+>  	if (static_branch_unlikely(&rdpmc_always_available_key) ||
+>  	    atomic_read(&mm->context.perf_rdpmc_allowed))
+> -		cr4_set_bits(X86_CR4_PCE);
+> +		cr4_set_bits_irqsoff(X86_CR4_PCE);
+>  	else
+> -		cr4_clear_bits(X86_CR4_PCE);
+> +		cr4_clear_bits_irqsoff(X86_CR4_PCE);
+>  }
+>  #else
+> -static inline void load_mm_cr4(struct mm_struct *mm) {}
+> +static inline void load_mm_cr4_irqsoff(struct mm_struct *mm) {}
+>  #endif
+>  
+>  #ifdef CONFIG_MODIFY_LDT_SYSCALL
+> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+> index dee375831962..6f66d841262d 100644
+> --- a/arch/x86/include/asm/tlbflush.h
+> +++ b/arch/x86/include/asm/tlbflush.h
+> @@ -290,26 +290,42 @@ static inline void __cr4_set(unsigned long cr4)
+>  }
+>  
+>  /* Set in this cpu's CR4. */
+> -static inline void cr4_set_bits(unsigned long mask)
+> +static inline void cr4_set_bits_irqsoff(unsigned long mask)
+>  {
+> -	unsigned long cr4, flags;
+> +	unsigned long cr4;
+>  
+> -	local_irq_save(flags);
+>  	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+>  	if ((cr4 | mask) != cr4)
+>  		__cr4_set(cr4 | mask);
+> -	local_irq_restore(flags);
+>  }
+>  
+>  /* Clear in this cpu's CR4. */
+> -static inline void cr4_clear_bits(unsigned long mask)
+> +static inline void cr4_clear_bits_irqsoff(unsigned long mask)
+>  {
+> -	unsigned long cr4, flags;
+> +	unsigned long cr4;
+>  
+> -	local_irq_save(flags);
+>  	cr4 = this_cpu_read(cpu_tlbstate.cr4);
+>  	if ((cr4 & ~mask) != cr4)
+>  		__cr4_set(cr4 & ~mask);
+> +}
+> +
+> +/* Set in this cpu's CR4. */
+> +static inline void cr4_set_bits(unsigned long mask)
+> +{
+> +	unsigned long flags;
+> +
+> +	local_irq_save(flags);
+> +	cr4_set_bits_irqsoff(mask);
+> +	local_irq_restore(flags);
+> +}
+> +
+> +/* Clear in this cpu's CR4. */
+> +static inline void cr4_clear_bits(unsigned long mask)
+> +{
+> +	unsigned long flags;
+> +
+> +	local_irq_save(flags);
+> +	cr4_clear_bits_irqsoff(mask);
+>  	local_irq_restore(flags);
+>  }
+>  
+> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+> index 91f6db92554c..8fc1eaa55b6e 100644
+> --- a/arch/x86/mm/tlb.c
+> +++ b/arch/x86/mm/tlb.c
+> @@ -440,7 +440,7 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+>  	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
+>  
+>  	if (next != real_prev) {
+> -		load_mm_cr4(next);
+> +		load_mm_cr4_irqsoff(next);
+>  		switch_ldt(real_prev, next);
+>  	}
+>  }
+> 
 
-So, back from a vacation last week, and just validated that both Fei's
-patch and a forward ported version of this patch Thinh pointed out
-both seem to resolve the usb stalls I've been seeing sinice 4.20 w/
-dwc3 hardware on both hikey960 and dragonboard 845c.
+Ping. I think the only remark of Dave was answered.
 
-Felipe: Does Anurag's patch above make more sense as a proper fix?
+Jan
 
-thanks
--john
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
