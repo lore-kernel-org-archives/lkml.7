@@ -2,117 +2,79 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40010C76190
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A7AC7618E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F471223BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CA22251A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 09:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387626AbfGWJH7 (ORCPT
+        id S2388781AbfGWJJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 05:07:59 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:33993 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfGWJH7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:07:59 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 89772200AE;
-        Tue, 23 Jul 2019 11:07:53 +0200 (CEST)
-Date:   Tue, 23 Jul 2019 11:07:52 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, linux-samsung-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Vincent Abriou <vincent.abriou@st.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dave Airlie <airlied@redhat.com>,
-        intel-gfx@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-tegra@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        linux-arm-msm@vger.kernel.org,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        linux-mediatek@lists.infradead.org, Jyri Sarha <jsarha@ti.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Paul <sean@poorly.run>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        amd-gfx@lists.freedesktop.org,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: Re: [PATCH v4 16/23] drm/mgag200: Provide ddc symlink in connector
- sysfs directory
-Message-ID: <20190723090752.GB787@ravnborg.org>
-References: <cover.1562843413.git.andrzej.p@collabora.com>
- <d32a6b1f0a3b79f1fbc8d0894080908526f6e61e.1562843413.git.andrzej.p@collabora.com>
+        Tue, 23 Jul 2019 05:09:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36958 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729427AbfGWJJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:09:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 890A3AF79;
+        Tue, 23 Jul 2019 09:09:09 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 3D87CE0E22; Tue, 23 Jul 2019 11:09:08 +0200 (CEST)
+Date:   Tue, 23 Jul 2019 11:09:08 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Thomas Haller <thaller@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 3/3] netlink: add validation of NLA_F_NESTED
+ flag
+Message-ID: <20190723090908.GA2204@unicorn.suse.cz>
+References: <cover.1556806084.git.mkubecek@suse.cz>
+ <6b6ead21c5d8436470b82ab40355f6bd7dbbf14b.1556806084.git.mkubecek@suse.cz>
+ <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d32a6b1f0a3b79f1fbc8d0894080908526f6e61e.1562843413.git.andrzej.p@collabora.com>
+In-Reply-To: <0fc58a4883f6656208b9250876e53d723919e342.camel@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=QX4gbG5DAAAA:8
-        a=akpas9ZDeQi6sww-pK0A:9 a=CjuIK1q_8ugA:10 a=AbAUZ8qAyYyZVLSsDulk:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej.
-
-On Thu, Jul 11, 2019 at 01:26:43PM +0200, Andrzej Pietrasiewicz wrote:
-> Use the ddc pointer provided by the generic connector.
+On Tue, Jul 23, 2019 at 10:57:54AM +0200, Thomas Haller wrote:
+> Does this flag and strict validation really provide any value?
+> Commonly a netlink message is a plain TLV blob, and the meaning
+> depends entirely on the policy.
 > 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
->  drivers/gpu/drm/mgag200/mgag200_mode.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+> What I mean is that for example
 > 
-> diff --git a/drivers/gpu/drm/mgag200/mgag200_mode.c b/drivers/gpu/drm/mgag200/mgag200_mode.c
-> index a25054015e8c..8fb9444b2142 100644
-> --- a/drivers/gpu/drm/mgag200/mgag200_mode.c
-> +++ b/drivers/gpu/drm/mgag200/mgag200_mode.c
-> @@ -1703,6 +1703,11 @@ static struct drm_connector *mga_vga_init(struct drm_device *dev)
->  		return NULL;
->  
->  	connector = &mga_connector->base;
-> +	mga_connector->i2c = mgag200_i2c_create(dev);
-> +	if (!mga_connector->i2c)
-> +		DRM_ERROR("failed to add ddc bus\n");
-> +
-> +	connector->ddc = &mga_connector->i2c->adapter;
->  
->  	drm_connector_init(dev, connector,
->  			   &mga_vga_connector_funcs, DRM_MODE_CONNECTOR_VGA);
-Like on other patch, assigning connector->ddc before
-drm_connector_init() looks wrong.
+>   NLA_PUT_U32 (msg, ATTR_IFINDEX, (uint32_t) ifindex)
+>   NLA_PUT_STRING (msg, ATTR_IFNAME, "net")
+> 
+> results in a 4 bytes payload that does not encode whether the data is
+> a number or a string.
+> 
+> Why is it valuable in this case to encode additional type information
+> inside the message, when it's commonly not done and also not
+> necessary?
 
-	Sam
+One big advantage of having nested attributes explicitly marked is that
+it allows parsers not aware of the semantics to recognize nested
+attributes and parse their inner structure.
+
+This is very important e.g. for debugging purposes as without the flag,
+wireshark can only recurse into nested attributes if it understands the
+protocol and knows they are nested, otherwise it displays them only as
+an opaque blob (which is what happens for most netlink based protocols).
+Another example is mnl_nlmsg_fprintf() function from libmnl which is
+also a valuable debugging aid but without NLA_F_NESTED flags it cannot
+show message structure properly.
+
+Michal Kubecek
