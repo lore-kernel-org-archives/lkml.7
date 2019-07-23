@@ -2,124 +2,99 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B50EC76194
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F0C76194
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC310218BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:43:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w2FX51Bo"
+	by mail.kernel.org (Postfix) with ESMTP id 372CF22511
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 07:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563867825;
+	bh=BgmHsAmIshLYPkLDnZFVhS1Nx/JPKepABG/ECHbDKPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ufuh4EV3vC8+rwU9wE4CgX0YzLDkUEQf3R7R3m6+r4renJxtZvPCLgldng7XhqBpF
+	 evb4gExqwAsTZ5elvDvwOTYByXhw3wHN6O0znM0QYjLZr0oyoFuW80Fiaoi3iKGVEZ
+	 34KQvFph+Qx3k31HFNBbDLI8FSpvtkF6CW59IQJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388469AbfGWHnN (ORCPT
+        id S2388488AbfGWHno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 03:43:13 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40364 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732983AbfGWHnM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 03:43:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m8so6477308lji.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 00:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=npbXQAsUfiZBLcbkpCR3x+7qby8hxGom1+tEjhLtF84=;
-        b=w2FX51BoqEBTS87kh8KgQ128Lnm4K7aScbKp7p7KG0RZvuFmQ5ZeRyaNckPGbvdFfd
-         8orXXAGJ+J4pQFnxBaEEcLCgF22+U7W9tc/Se+sTjW+wVQ+cOPmne1a6xgAVBwrxyiNh
-         TyzT6LtLmqQi2itKyV/WpgOyRuHQxcy1se2WY8AB/7q/Rf5go+whVPWnNJF7t+VWEMBd
-         pmuUhr5pgIWRD+HapcglpyXMp8CBvQlzcP+LVXe8O4I1jpUnUpCl39BNcbsU3tOVat/t
-         SQFR3NgezXOd3vPtIE3FCFrwJ8jp7bjOIR2zd0+zta18H2ppvKmMQYo682YAvS+adqMp
-         YIVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=npbXQAsUfiZBLcbkpCR3x+7qby8hxGom1+tEjhLtF84=;
-        b=UWnZyQideCb6Wbk8VaOkauHCFrLt8y8Dup8Bg106E52iInb0TqQ+9OTVDXsZaGFXS3
-         32Qyj5ESFrUxQnd1Lum8kGzi4GxJH5b/uCW+m+djIoe1FqgWJCg+MYzendtnPJdoI9C+
-         3ChuytDClTzsoTb0pG8Ba6HDbWUPRARBy4m7CkZlscQXDCE4jpcGlSnnPNM9dUWHI/23
-         gHm+0eRq60RXDdJXtc24hnNR+Gief/LLXq0uV9UdpwF5ov/1s0frZ6YnmBGVzlr4eVOc
-         O8f2Zow2UQe1s4NoTkPUwBkwczy/aGQrbMXm9Cq4zj3g5L6JujxSJH4UYwi1Aoux1MHG
-         xK1w==
-X-Gm-Message-State: APjAAAU9gVpAJUaTBiM41M1m5zMV5YcZrmKiDgxzuArFmGMe3UjBqYDR
-        bTN+Jl/fmAHG9iGqdPUC+SLwxaywWe4ZHYkgjLT76g==
-X-Google-Smtp-Source: APXvYqztHvJTCupc2FazH78NnbhNbFFXwlBZr0o8C796oaMUffxQHCWl5TXPmgAEdCLgwY6Sn/kLyvB5/v3zH9bxp3k=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr17161946ljm.180.1563867790559;
- Tue, 23 Jul 2019 00:43:10 -0700 (PDT)
+        Tue, 23 Jul 2019 03:43:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732983AbfGWHnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 03:43:43 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C66218BE;
+        Tue, 23 Jul 2019 07:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563867822;
+        bh=BgmHsAmIshLYPkLDnZFVhS1Nx/JPKepABG/ECHbDKPw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BSXRU+Q8/DdmUo7uC6DHEPWCD5tsmh9WXb/RdFZHJdJK1IZM5kS0+bhCA1IFcm/rt
+         rR1kAUPiolpPpBESUhvwILSD9bLh1sSf/F1d4I0VlTNlwgVOgHJ12zhv62iN/uw2M7
+         x9FPclzifpBxKF1168zr8Z0ZsfWmSN6tXlHuWJdY=
+Date:   Tue, 23 Jul 2019 10:43:39 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     oulijun@huawei.com, xavier.huwei@huawei.com, dledford@redhat.com,
+        jgg@ziepe.ca, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: Re: [PATCH] RDMA/hns: Fix build error for hip08
+Message-ID: <20190723074339.GJ5125@mtr-leonro.mtl.com>
+References: <20190723024908.11876-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <cover.1550768574.git.hns@goldelico.com> <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
-In-Reply-To: <32025b2a8ccc97cc01f8115ee962529eb5990f00.1550768574.git.hns@goldelico.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 23 Jul 2019 09:42:59 +0200
-Message-ID: <CACRpkdZ5Z9VY457Fywt6X=K5XONgiPVcwbwSkwL_U+GCqZ+u5g@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] iio: document bindings for mounting matrices
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Song Qiang <songqiang1304521@gmail.com>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        Martin Kelly <mkelly@xevo.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Gregor Boirie <gregor.boirie@parrot.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Samu Onkalo <samu.onkalo@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723024908.11876-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi H. Nikolaus,
-
-On Thu, Feb 21, 2019 at 6:03 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-
-> From: Linus Walleij <linus.walleij@linaro.org>
-
-It is fair for you to change authorship to yourself at this point.
-Just keeping my Signed-off-by is sufficient.
-
-> The mounting matrix for sensors was introduced in
-> commit dfc57732ad38 ("iio:core: mounting matrix support")
+On Tue, Jul 23, 2019 at 10:49:08AM +0800, YueHaibing wrote:
+> If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
+> but INFINIBAND_HNS is y, building fails:
 >
-> However the device tree bindings are very terse and since this is
-> a widely applicable property, we need a proper binding for it
-> that the other bindings can reference. This will also be useful
-> for other operating systems and sensor engineering at large.
->
-> I think all 3D sensors should support it, the current situation
-> is probably that the mounting information is confined in magic
-> userspace components rather than using the mounting matrix, which
-> is not good for portability and reuse.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Gregor Boirie <gregor.boirie@parrot.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Samu Onkalo <samu.onkalo@intel.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
+> hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
+> hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
 
-Did this patch fall off somewhere? I think it's really neat, even in this
-form it is great help for developers. If you want I can try picking up the
-comments and resend it.
+It means that you have a problem with header files of your hns3.
 
-Linus Walleij
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/infiniband/hw/hns/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+> index b59da5d..4371c80 100644
+> --- a/drivers/infiniband/hw/hns/Kconfig
+> +++ b/drivers/infiniband/hw/hns/Kconfig
+> @@ -23,7 +23,8 @@ config INFINIBAND_HNS_HIP06
+>
+>  config INFINIBAND_HNS_HIP08
+>  	bool "Hisilicon Hip08 Family RoCE support"
+> -	depends on INFINIBAND_HNS && PCI && HNS3
+> +	depends on INFINIBAND_HNS && (INFINIBAND_HNS = HNS3)
+
+This is wrong.
+
+> +	depends on PCI
+>  	---help---
+>  	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
+>  	  The RoCE engine is a PCI device.
+> --
+> 2.7.4
+>
+>
