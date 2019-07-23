@@ -2,123 +2,128 @@ Return-Path: <SRS0=aq1k=VU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1D5C7618B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E24C7618B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7ED2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A00E223A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Jul 2019 08:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6Enh0j7"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ffqKtykH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfGWIHX (ORCPT
+        id S1729348AbfGWIIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 04:07:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45019 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727375AbfGWIHX (ORCPT
+        Tue, 23 Jul 2019 04:08:44 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:3080 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727375AbfGWIIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 04:07:23 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so20272902plr.11;
-        Tue, 23 Jul 2019 01:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SmcqePyLoJfafXJo9wRS1ucEWseSMTg+J4NGkrBeJ2Q=;
-        b=D6Enh0j7M4s2hLVUEvLzBLpx/VNPQG8njwiAL9gv0mP/6QIdVjkkOLVkYs/4u2GHDA
-         Wst6nQeGEUZv1KorUW/tlAYTmEmd742o44p8TqsbH5g81NfeF3viBZqhkJfGRchxDtcI
-         oqWT2iJZlCXzfwlZprDJIxW6QAwsv5xAtfCVFnC1RV5fDCVSknHKTzFA0gqEI9bsP9ko
-         Z5oH5bpYZVTEGMVzYW5lLZam0i7EVNSf2cTV3fYGb3zNIpkldP/CAvLaCsWOINEn8Gwx
-         SBA7cwOCTxc/83F+ym4tfbQmC6lKDxqUXGTasVrldu+HzrHwt4SDWTkTz5rGFriep2ok
-         /jgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SmcqePyLoJfafXJo9wRS1ucEWseSMTg+J4NGkrBeJ2Q=;
-        b=OOdpGnZoXDEI3ZVIsPRyWVznu82whpJfBbmh2DE6gxZh0WkNTtQ79IIplNqQIpwa2l
-         +SSLoknT22ZjdhTJ4jaAWufhLE86mrUy7JWxHz1Cw8f8xEUvMTsucCRpEmLKFQj4Wufh
-         cZuhWi/XRdasuSK4LVRVFFu4b8z3o5zoFwJLZMzm4zk7ppDBFq1Gx+nnL0K7A7R4cFew
-         f0WlV0JD1XrLCxtaGLICntd8sIEwYbFVy+A2ka/PuhtC/xxZDugXaaeRjKIYg2XuE59T
-         O5xznw1IuEIx8fNhTBao12P/aVN6ooCeropNKi9zGrehfiOeWIz4iz9gRNIKX3Hqh/3H
-         60Uw==
-X-Gm-Message-State: APjAAAVKORc6bzIDVRrqb5XD4VcYY9EWJ/4PHYZKL9l37xbGz8TE24Jd
-        Yzl9Wt7UygvM8iuv0JiR9oQ=
-X-Google-Smtp-Source: APXvYqwfKMeKOiyYZCg3FMaWQWMfftf6NffcTc0jG5L82eCYYT4wrDNxfsY6ien9qxQ2e2FaVrgXwQ==
-X-Received: by 2002:a17:902:4283:: with SMTP id h3mr77244197pld.15.1563869242286;
-        Tue, 23 Jul 2019 01:07:22 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id z24sm71542800pfr.51.2019.07.23.01.07.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 01:07:21 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drivers: ata: Use dev_get_drvdata where possible
-Date:   Tue, 23 Jul 2019 16:06:40 +0800
-Message-Id: <20190723080639.18266-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 04:08:44 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6N87WFN014631;
+        Tue, 23 Jul 2019 10:08:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=AKxPpMAXwIcIBJsSDUaSrH2KFjcTDebR2UQK62XeNTI=;
+ b=ffqKtykHafNMPh5TWxQPVQuWC2I7ICVHmjwFXjHSX9qqaCMK+q/4ZW5Lk3FR6prWaaox
+ 8/CVaCA3yQLnUt9KM/XEw2BZFNRyEUvaCbDVgU66erqmJTiKUd2mwPU0bi9rDWVk9tzv
+ NfYT6vTWIWqB88RB/jvKdT0geA0dInDvxjMC8W7H9wXxa62vGaU9qDxfGSoRPKR8sZYW
+ xa8rIBqhlrABX4idNe6Yq3WTuKgm8MWhO9cjU/iLS5GGPFEbVeeg7QtcFIxmil6aaj0O
+ BE3+Eq3BWGsalZvNenPxF0GyaY2Wx63Id0Zp9Q9ZlIHsCjRNqDd1+wGIgakB6xqgGcLl SQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2tur39ge38-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 23 Jul 2019 10:08:38 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2E3F93A;
+        Tue, 23 Jul 2019 08:08:37 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 066C82514;
+        Tue, 23 Jul 2019 08:08:37 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Jul
+ 2019 10:08:37 +0200
+Received: from [10.48.0.167] (10.48.0.167) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Jul 2019 10:08:36
+ +0200
+Subject: Re: [PATCH] regulator: stm32-booster: Remove .min_uV and
+ .list_voltage for fixed regulator
+To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
+CC:     Liam Girdwood <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>
+References: <20190723014102.25103-1-axel.lin@ingics.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <d36c7925-1374-80e0-60e2-b08377be1f5f@st.com>
+Date:   Tue, 23 Jul 2019 10:07:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190723014102.25103-1-axel.lin@ingics.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.0.167]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+On 7/23/19 3:41 AM, Axel Lin wrote:
+> Setting .n_voltages = 1 and .fixed_uV is enough for fixed regulator,
+> remove the redundant .min_uV and .list_voltage settings.
+> 
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/ata/ahci.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Hi Axel,
 
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index f7652baa6337..58a981cdc83f 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -836,8 +836,7 @@ static void ahci_pci_disable_interrupts(struct ata_host *host)
- 
- static int ahci_pci_device_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct ata_host *host = pci_get_drvdata(pdev);
-+	struct ata_host *host = dev_get_drvdata(dev);
- 
- 	ahci_pci_disable_interrupts(host);
- 	return 0;
-@@ -845,8 +844,7 @@ static int ahci_pci_device_runtime_suspend(struct device *dev)
- 
- static int ahci_pci_device_runtime_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct ata_host *host = pci_get_drvdata(pdev);
-+	struct ata_host *host = dev_get_drvdata(dev);
- 	int rc;
- 
- 	rc = ahci_pci_reset_controller(host);
-@@ -859,12 +857,11 @@ static int ahci_pci_device_runtime_resume(struct device *dev)
- #ifdef CONFIG_PM_SLEEP
- static int ahci_pci_device_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct ata_host *host = pci_get_drvdata(pdev);
-+	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
- 
- 	if (hpriv->flags & AHCI_HFLAG_NO_SUSPEND) {
--		dev_err(&pdev->dev,
-+		dev_err(dev,
- 			"BIOS update required for suspend/resume\n");
- 		return -EIO;
- 	}
--- 
-2.20.1
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
+Thanks,
+Fabrice
+> ---
+>  drivers/regulator/stm32-booster.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/regulator/stm32-booster.c b/drivers/regulator/stm32-booster.c
+> index 2a897666c650..03f162ffd144 100644
+> --- a/drivers/regulator/stm32-booster.c
+> +++ b/drivers/regulator/stm32-booster.c
+> @@ -20,7 +20,6 @@
+>  #define STM32MP1_SYSCFG_EN_BOOSTER_MASK	BIT(8)
+>  
+>  static const struct regulator_ops stm32h7_booster_ops = {
+> -	.list_voltage	= regulator_list_voltage_linear,
+>  	.enable		= regulator_enable_regmap,
+>  	.disable	= regulator_disable_regmap,
+>  	.is_enabled	= regulator_is_enabled_regmap,
+> @@ -31,7 +30,6 @@ static const struct regulator_desc stm32h7_booster_desc = {
+>  	.supply_name = "vdda",
+>  	.n_voltages = 1,
+>  	.type = REGULATOR_VOLTAGE,
+> -	.min_uV = 3300000,
+>  	.fixed_uV = 3300000,
+>  	.ramp_delay = 66000, /* up to 50us to stabilize */
+>  	.ops = &stm32h7_booster_ops,
+> @@ -53,7 +51,6 @@ static int stm32mp1_booster_disable(struct regulator_dev *rdev)
+>  }
+>  
+>  static const struct regulator_ops stm32mp1_booster_ops = {
+> -	.list_voltage	= regulator_list_voltage_linear,
+>  	.enable		= stm32mp1_booster_enable,
+>  	.disable	= stm32mp1_booster_disable,
+>  	.is_enabled	= regulator_is_enabled_regmap,
+> @@ -64,7 +61,6 @@ static const struct regulator_desc stm32mp1_booster_desc = {
+>  	.supply_name = "vdda",
+>  	.n_voltages = 1,
+>  	.type = REGULATOR_VOLTAGE,
+> -	.min_uV = 3300000,
+>  	.fixed_uV = 3300000,
+>  	.ramp_delay = 66000,
+>  	.ops = &stm32mp1_booster_ops,
+> 
