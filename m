@@ -2,64 +2,57 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F20DC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89276C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720C822C7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F07022BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564038073;
-	bh=86HcYU9n0mFTGn6uNTIrrfgOLIWTZfG6iObg0q1mcx8=;
+	s=default; t=1564038076;
+	bh=fjKgVFMcK5w1eyT/mAWetn3wCytD8sHInZNTX6Y66tU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IimcN4siheGBsWiemwUtZ/L6QWY/GeMHZ7tHYvBe/1LLzWVhuAtt9Yg+g/cMYMJZc
-	 Y+uhWSGfvhlRL/REwJzqp6KGGou1AdKYkWBTKx07KAu1gdMncdvlwze4Wq55bdrmPs
-	 Ms/bWOitC49I2SKvwhP7ZYh8kwA/V03hxYOx/QxQ=
+	b=aQzIVHq5+E3OmGm6hGBQPzzL0ZE2jNgbqNH7X4KPFeF5JtzwAjE0uOMBbfZHyWvVg
+	 yjTPiaGOBI5VlAeBZSzhfFyhSBpcUrNZ6wUn2OldKpF/AFlHVfh7B/gsETg/M0mzLQ
+	 EbOz3BW9+5rp7SZSbjW3iSt6k0HF9TF4uM+rlGLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfGYHBM (ORCPT
+        id S2387718AbfGYHBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:01:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 03:01:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbfGYHBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:01:10 -0400
+        id S1725808AbfGYHBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 03:01:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 348012070B;
-        Thu, 25 Jul 2019 07:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E5C22ADA;
+        Thu, 25 Jul 2019 07:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564038069;
-        bh=86HcYU9n0mFTGn6uNTIrrfgOLIWTZfG6iObg0q1mcx8=;
+        s=default; t=1564038073;
+        bh=fjKgVFMcK5w1eyT/mAWetn3wCytD8sHInZNTX6Y66tU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cePPolY7UxQpBhZF3A4pxWoR4DEAj9TOgo09xWL4qYU0P1YcYfN0FIjWq6KD6MeaO
-         HT+URvLxe4C3Ehahsb7McKVQ/La4nnrZ6GrKOAxWHXxTYWMTEoKxUu4Z4zMOrgqu0o
-         a7yxCoeiIQjMb1U62hD02dWnSIKiR5ve66tamdiE=
+        b=OEVoZJpTByFDU9meO4RD4IOdTvUBonk0eWQ3zOPmsihwRmRTGLWb1teptSfi+lvOO
+         G8XTB8W3CSVae2/kzKHn5ShapvA2uuB6tLmK8zuqjqynmdPw0f6BrGZTgXIZX6ZPl+
+         2ZDD3XMOVT0JU2ys8frKCydWLgNvtaivwK0dV2Dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yi, Ammy" <ammy.yi@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.2 354/413] perf/x86/intel: Fix spurious NMI on fixed counter
-Date:   Wed, 24 Jul 2019 21:20:45 +0200
-Message-Id: <20190724191801.057976495@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 028/371] media: vpss: fix a potential NULL pointer dereference
+Date:   Wed, 24 Jul 2019 21:16:20 +0200
+Message-Id: <20190724191726.605678666@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -69,73 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+[ Upstream commit e08f0761234def47961d3252eac09ccedfe4c6a0 ]
 
-commit e4557c1a46b0d32746bd309e1941914b5a6912b4 upstream.
+In case ioremap fails, the fix returns -ENOMEM to avoid NULL
+pointer dereference.
 
-If a user first sample a PEBS event on a fixed counter, then sample a
-non-PEBS event on the same fixed counter on Icelake, it will trigger
-spurious NMI. For example:
-
-  perf record -e 'cycles:p' -a
-  perf record -e 'cycles' -a
-
-The error message for spurious NMI:
-
-  [June 21 15:38] Uhhuh. NMI received for unknown reason 30 on CPU 2.
-  [    +0.000000] Do you have a strange power saving mode enabled?
-  [    +0.000000] Dazed and confused, but trying to continue
-
-The bug was introduced by the following commit:
-
-  commit 6f55967ad9d9 ("perf/x86/intel: Fix race in intel_pmu_disable_event()")
-
-The commit moves the intel_pmu_pebs_disable() after intel_pmu_disable_fixed(),
-which returns immediately.  The related bit of PEBS_ENABLE MSR will never be
-cleared for the fixed counter. Then a non-PEBS event runs on the fixed counter,
-but the bit on PEBS_ENABLE is still set, which triggers spurious NMIs.
-
-Check and disable PEBS for fixed counters after intel_pmu_disable_fixed().
-
-Reported-by: Yi, Ammy <ammy.yi@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: 6f55967ad9d9 ("perf/x86/intel: Fix race in intel_pmu_disable_event()")
-Link: https://lkml.kernel.org/r/20190625142135.22112-1-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/media/platform/davinci/vpss.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2161,12 +2161,10 @@ static void intel_pmu_disable_event(stru
- 	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
- 	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index 19cf6853411e..89a86c19579b 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -518,6 +518,11 @@ static int __init vpss_init(void)
+ 		return -EBUSY;
  
--	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-+	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL))
- 		intel_pmu_disable_fixed(hwc);
--		return;
--	}
--
--	x86_pmu_disable_event(event);
-+	else
-+		x86_pmu_disable_event(event);
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
++	if (unlikely(!oper_cfg.vpss_regs_base2)) {
++		release_mem_region(VPSS_CLK_CTRL, 4);
++		return -ENOMEM;
++	}
++
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+ 		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
  
- 	/*
- 	 * Needs to be called after x86_pmu_disable_event,
+-- 
+2.20.1
+
 
 
