@@ -2,134 +2,184 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AB0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF817C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FEB20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="Ps3kbWjF"
+	by mail.kernel.org (Postfix) with ESMTP id 929F52083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563999119;
+	bh=Q9ILO/D091rKnyjvBUocEpW/ZTIH9aUPJHu9nA4RPUg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tA2HbFQAHXXa8TqOW0XTV3PCqTrvHjmF+t0xNRp81d93fD87lYxVOOOsuQlTnJ3Y9
+	 46VCJmZDxLzz2CJyPOObJTIPK8Yt/5+aXvURB+5p7jxIGH29VVHoc0QwmsDLf2VKPY
+	 jjnwt6B0fPrEpSSWmRuKOBvPtxez+xbq8T+CpqBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392641AbfGXULw (ORCPT
+        id S2392245AbfGXUL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:11:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42187 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392025AbfGXT5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay6so22435168plb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:57:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xWf1wqBywrzqDn4QoQmjv8h4FPdjfVbADD3ipadMdY0=;
-        b=Ps3kbWjF13UPogwWSsC0j1C1LHTomES8Modx8qFda13HSsS2jZ4gUjMhQQyjIctloQ
-         kr3kLXtMYRijIejm/ZHtQ4C3AqKPqY3ZHzBVoDk9iRt4R9cw06KEAYwmVxY3QZtIPjnq
-         y+EnI9kd6drKRqNsuWKiEzoO/K332RFgL3+iVCi6iBhhkIitIXXG2sg5J8vY2z+5gHC2
-         SFovx1V4uzeTYGC4PQ0ipuH3uTpIWDyVbHQw6GcPjb+ZSgRIpmH/Eo7AUWg0/vEUUIuR
-         Z87flKb7/uwvWhZWnxpSDZLnP2l+ZEp4A7ejy86spDsLIF9+9jWNQJ3ucUpLAUhnmW9s
-         DlSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xWf1wqBywrzqDn4QoQmjv8h4FPdjfVbADD3ipadMdY0=;
-        b=tYhrTWOZi1LAzVlO32JhockdflVmAT4fAfbnSMKlMeCdld144INCwzbqEx4VpxTq+o
-         SuCPBc/DI83IV/82msRHRFTDmBHoKUr22ayOW8gBtJ4LhOvXB5WyIc5uOligfZrsRC/n
-         TxC503A6n+rkllEuR9H5/hEq3RSZtunx/z8GjD98iLeIPpoJk8YWbD4v4kMaKwB0W21U
-         moTUkSckyyMiHFFxCi+1Zm8khrNOr4eUx/DncAHXBGtg1sx3fTGC6PyFTl/sSjr80eiG
-         KuvTJuErXbQm+4B+ug9xfn0fzEwrfe2LoMX/tRyctl+MyQhCLqo0vlWfoJdR3yORAEGJ
-         Gzww==
-X-Gm-Message-State: APjAAAXgSH0x68ekQWOpEd0f6tm1vkElnOPcrjfcQYPbJVSoqOlTcOFD
-        ZMUQIekAPp8UJRTQGtLfJpJI/PEV
-X-Google-Smtp-Source: APXvYqyOM0dv0KNnlpru4O+Ku92Xy82BvYB2ri/rGxGwsQ32yP0CJ/DGZq3sRmE9fDxjNQjCUf4tBQ==
-X-Received: by 2002:a17:902:830c:: with SMTP id bd12mr89230023plb.237.1563998253455;
-        Wed, 24 Jul 2019 12:57:33 -0700 (PDT)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.gmail.com with ESMTPSA id f88sm46307394pjg.5.2019.07.24.12.57.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 12:57:33 -0700 (PDT)
-From:   Mark Salyzyn <salyzyn@android.com>
+        Wed, 24 Jul 2019 16:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392007AbfGXT5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:57:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4796020665;
+        Wed, 24 Jul 2019 19:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563998250;
+        bh=Q9ILO/D091rKnyjvBUocEpW/ZTIH9aUPJHu9nA4RPUg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=up2iabAXhO9xysRYtaHv7A6e8aY6mvTdLQknoo8fF7UwtYemApquNxJ0E9JCgTCsL
+         C8DVTTzuS/DoZ/yPSMV3hZSlEEvqqNSckf+zofsr8xGgWDJucRvPyzXYMrYYiEtQGR
+         whG2wqxgGSRp87m9kOc/sy5W/Plb6AO+QU0Xwd50=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-unionfs@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v10 1/5] overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh
-Date:   Wed, 24 Jul 2019 12:57:12 -0700
-Message-Id: <20190724195719.218307-2-salyzyn@android.com>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-In-Reply-To: <20190724195719.218307-1-salyzyn@android.com>
-References: <20190724195719.218307-1-salyzyn@android.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Tang Junhui <tang.junhui.linux@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 257/371] bcache: Revert "bcache: fix high CPU occupancy during journal"
+Date:   Wed, 24 Jul 2019 21:20:09 +0200
+Message-Id: <20190724191743.890667838@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Assumption never checked, should fail if the mounter creds are not
-sufficient.
+From: Coly Li <colyli@suse.de>
 
-Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Smalley <sds@tycho.nsa.gov>
-Cc: linux-unionfs@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@android.com
+commit 249a5f6da57c28a903c75d81505d58ec8c10030d upstream.
+
+This reverts commit c4dc2497d50d9c6fb16aa0d07b6a14f3b2adb1e0.
+
+This patch enlarges a race between normal btree flush code path and
+flush_btree_write(), which causes deadlock when journal space is
+exhausted. Reverts this patch makes the race window from 128 btree
+nodes to only 1 btree nodes.
+
+Fixes: c4dc2497d50d ("bcache: fix high CPU occupancy during journal")
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Cc: Tang Junhui <tang.junhui.linux@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
-v10:
-- return NULL rather than ERR_PTR(-EPERM)
-- did _not_ add it ovl_can_decode_fh() because of changes since last
-  review, suspect needs to be added to ovl_lower_uuid_ok()?
+ drivers/md/bcache/bcache.h  |    2 -
+ drivers/md/bcache/journal.c |   47 ++++++++++++++------------------------------
+ drivers/md/bcache/util.h    |    2 -
+ 3 files changed, 15 insertions(+), 36 deletions(-)
 
-v8 + v9:
-- rebase
-
-v7:
-- This time for realz
-
-v6:
-- rebase
-
-v5:
-- dependency of "overlayfs: override_creds=off option bypass creator_cred"
----
- fs/overlayfs/namei.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-index e9717c2f7d45..9702f0d5309d 100644
---- a/fs/overlayfs/namei.c
-+++ b/fs/overlayfs/namei.c
-@@ -161,6 +161,9 @@ struct dentry *ovl_decode_real_fh(struct ovl_fh *fh, struct vfsmount *mnt,
- 	if (!uuid_equal(&fh->uuid, &mnt->mnt_sb->s_uuid))
- 		return NULL;
+--- a/drivers/md/bcache/bcache.h
++++ b/drivers/md/bcache/bcache.h
+@@ -726,8 +726,6 @@ struct cache_set {
  
-+	if (!capable(CAP_DAC_READ_SEARCH))
-+		return NULL;
-+
- 	bytes = (fh->len - offsetof(struct ovl_fh, fid));
- 	real = exportfs_decode_fh(mnt, (struct fid *)fh->fid,
- 				  bytes >> 2, (int)fh->type,
--- 
-2.22.0.657.g960e92d24f-goog
+ #define BUCKET_HASH_BITS	12
+ 	struct hlist_head	bucket_hash[1 << BUCKET_HASH_BITS];
+-
+-	DECLARE_HEAP(struct btree *, flush_btree);
+ };
+ 
+ struct bbio {
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -390,12 +390,6 @@ err:
+ }
+ 
+ /* Journalling */
+-#define journal_max_cmp(l, r) \
+-	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) < \
+-	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
+-#define journal_min_cmp(l, r) \
+-	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) > \
+-	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
+ 
+ static void btree_flush_write(struct cache_set *c)
+ {
+@@ -403,35 +397,25 @@ static void btree_flush_write(struct cac
+ 	 * Try to find the btree node with that references the oldest journal
+ 	 * entry, best is our current candidate and is locked if non NULL:
+ 	 */
+-	struct btree *b;
+-	int i;
++	struct btree *b, *best;
++	unsigned int i;
+ 
+ 	atomic_long_inc(&c->flush_write);
+-
+ retry:
+-	spin_lock(&c->journal.lock);
+-	if (heap_empty(&c->flush_btree)) {
+-		for_each_cached_btree(b, c, i)
+-			if (btree_current_write(b)->journal) {
+-				if (!heap_full(&c->flush_btree))
+-					heap_add(&c->flush_btree, b,
+-						 journal_max_cmp);
+-				else if (journal_max_cmp(b,
+-					 heap_peek(&c->flush_btree))) {
+-					c->flush_btree.data[0] = b;
+-					heap_sift(&c->flush_btree, 0,
+-						  journal_max_cmp);
+-				}
+-			}
+-
+-		for (i = c->flush_btree.used / 2 - 1; i >= 0; --i)
+-			heap_sift(&c->flush_btree, i, journal_min_cmp);
+-	}
++	best = NULL;
+ 
+-	b = NULL;
+-	heap_pop(&c->flush_btree, b, journal_min_cmp);
+-	spin_unlock(&c->journal.lock);
++	for_each_cached_btree(b, c, i)
++		if (btree_current_write(b)->journal) {
++			if (!best)
++				best = b;
++			else if (journal_pin_cmp(c,
++					btree_current_write(best)->journal,
++					btree_current_write(b)->journal)) {
++				best = b;
++			}
++		}
+ 
++	b = best;
+ 	if (b) {
+ 		mutex_lock(&b->write_lock);
+ 		if (!btree_current_write(b)->journal) {
+@@ -873,8 +857,7 @@ int bch_journal_alloc(struct cache_set *
+ 	j->w[0].c = c;
+ 	j->w[1].c = c;
+ 
+-	if (!(init_heap(&c->flush_btree, 128, GFP_KERNEL)) ||
+-	    !(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
++	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
+ 	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
+ 	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
+ 		return -ENOMEM;
+--- a/drivers/md/bcache/util.h
++++ b/drivers/md/bcache/util.h
+@@ -113,8 +113,6 @@ do {									\
+ 
+ #define heap_full(h)	((h)->used == (h)->size)
+ 
+-#define heap_empty(h)	((h)->used == 0)
+-
+ #define DECLARE_FIFO(type, name)					\
+ 	struct {							\
+ 		size_t front, back, size, mask;				\
+
 
