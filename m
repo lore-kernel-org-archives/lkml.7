@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAF1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5361C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A368B229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F6C22ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997099;
-	bh=3UM0H3o54o2bU8QO/8kPbV2jWRDQASUUuouwQuvsfk8=;
+	s=default; t=1563997108;
+	bh=8iN32L0qeQLNuko7HXQRfU7FMBzjxPBpOQu7uEFmhLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UJqINEjDIVpiLkMqWE6HlG6z/fr0lngVxxBeJTEQYwzfPNU1ghYK3IvFhwEigYMqo
-	 MVc/gvhkqTKhsTpdqPrCOf4FO+r4i4rtHYGqJTJzWVFzlb8zqMd9P6s6kPJmkq693N
-	 zsnCeljFCsu5yac4QvWMko2t2HXbWzQqky7wdzUA=
+	b=nnNlt7HXa1abyvLCyQIhrV5Ly6e1ZHCN45cFz1RT3TgGFRcbWJfkMD9NCu+3FzCyk
+	 xGIti9LwyNF2N/uv+xiIAvwxA7BodTA+TXMrvw4HmZiO9s3aR8Z33ftR7rFpwh/9oa
+	 tquKBv0w6eJ7du5KqP6daBPjOXUqnj0gI8BPMSCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389617AbfGXTiS (ORCPT
+        id S2389629AbfGXTiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:38:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38824 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:38:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389603AbfGXTiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:38:17 -0400
+        id S2388838AbfGXTiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:38:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D57DD20665;
-        Wed, 24 Jul 2019 19:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5320420665;
+        Wed, 24 Jul 2019 19:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997096;
-        bh=3UM0H3o54o2bU8QO/8kPbV2jWRDQASUUuouwQuvsfk8=;
+        s=default; t=1563997099;
+        bh=8iN32L0qeQLNuko7HXQRfU7FMBzjxPBpOQu7uEFmhLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gk4juqUWQ4nKn1yRlQGVfzyKPVsav1ZuiL5o5VbLGD6kUqpvhqphPIMe/9rjJfsFb
-         QMAVgCG23Goun14VwVmIjg85skKnevz7JBTDrsnZESTIFtx9JxmjtFRu19gPP4rZT9
-         cqriVsUFT8g3cE65mtCc//zizUxAdNy1V4Uh2tu0=
+        b=e5iksZy8a1Zh6mK2BqG2hrA9RrdwH2RJ/om4+oe24Dhcb8JLnDNOkUTHZwvXTFzGp
+         hk4Jav0goMELKbJBuTIPBn5CxYPEAyzmyRrefijoHBlGpIWNybXnKT9LU7QX/27fhO
+         3dXCiSi7HH2TCHOaQujFbuaPXYrCi8Jz7+ZKqBQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 319/413] ALSA: hda/hdmi - Fix i915 reverse port/pin mapping
-Date:   Wed, 24 Jul 2019 21:20:10 +0200
-Message-Id: <20190724191758.706791299@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.2 320/413] ceph: fix end offset in truncate_inode_pages_range call
+Date:   Wed, 24 Jul 2019 21:20:11 +0200
+Message-Id: <20190724191758.783806568@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,69 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Luis Henriques <lhenriques@suse.com>
 
-commit 3140aafb22edeab0cc41f15f53b12a118c0ac215 upstream.
+commit d31d07b97a5e76f41e00eb81dcca740e84aa7782 upstream.
 
-The recent fix for Icelake HDMI codec introduced the mapping from pin
-NID to the i915 gfx port number.  However, it forgot the reverse
-mapping from the port number to the pin NID that is used in the ELD
-notifier callback.  As a result, it's processed to a wrong widget and
-gives a warning like
-  snd_hda_codec_hdmi hdaudioC0D2: HDMI: pin nid 5 not registered
+Commit e450f4d1a5d6 ("ceph: pass inclusive lend parameter to
+filemap_write_and_wait_range()") fixed the end offset parameter used to
+call filemap_write_and_wait_range and invalidate_inode_pages2_range.
+Unfortunately it missed truncate_inode_pages_range, introducing a
+regression that is easily detected by xfstest generic/130.
 
-This patch corrects it with a proper reverse mapping function.
+The problem is that when doing direct IO it is possible that an extra page
+is truncated from the page cache when the end offset is page aligned.
+This can cause data loss if that page hasn't been sync'ed to the OSDs.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204133
-Fixes: b0d8bc50b9f2 ("ALSA: hda: hdmi - add Icelake support")
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+While there, change code to use PAGE_ALIGN macro instead.
+
+Cc: stable@vger.kernel.org
+Fixes: e450f4d1a5d6 ("ceph: pass inclusive lend parameter to filemap_write_and_wait_range()")
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ fs/ceph/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2525,18 +2525,32 @@ static int intel_pin2port(void *audio_pt
- 	return -1;
- }
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1007,7 +1007,7 @@ ceph_direct_read_write(struct kiocb *ioc
+ 			 * may block.
+ 			 */
+ 			truncate_inode_pages_range(inode->i_mapping, pos,
+-					(pos+len) | (PAGE_SIZE - 1));
++						   PAGE_ALIGN(pos + len) - 1);
  
-+static int intel_port2pin(struct hda_codec *codec, int port)
-+{
-+	struct hdmi_spec *spec = codec->spec;
-+
-+	if (!spec->port_num) {
-+		/* we assume only from port-B to port-D */
-+		if (port < 1 || port > 3)
-+			return 0;
-+		/* intel port is 1-based */
-+		return port + intel_base_nid(codec) - 1;
-+	}
-+
-+	if (port < 1 || port > spec->port_num)
-+		return 0;
-+	return spec->port_map[port - 1];
-+}
-+
- static void intel_pin_eld_notify(void *audio_ptr, int port, int pipe)
- {
- 	struct hda_codec *codec = audio_ptr;
- 	int pin_nid;
- 	int dev_id = pipe;
- 
--	/* we assume only from port-B to port-D */
--	if (port < 1 || port > 3)
-+	pin_nid = intel_port2pin(codec, port);
-+	if (!pin_nid)
- 		return;
--
--	pin_nid = port + intel_base_nid(codec) - 1; /* intel port is 1-based */
--
- 	/* skip notification during system suspend (but not in runtime PM);
- 	 * the state will be updated at resume
- 	 */
+ 			req->r_mtime = mtime;
+ 		}
 
 
