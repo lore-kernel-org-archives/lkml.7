@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D85C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFCBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74062214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C9F21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000005;
-	bh=+mBgDTHX626pF5vBCtD6RPqgeKtvu0Nlkai0i99PfMk=;
+	s=default; t=1564000013;
+	bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wlh5KAQN9vrgQa38+ikF6+kIm0qgaRv8wN0yrCt+seGLb16pQz5Zp5C/2eIIYqeDH
-	 F9BJ4QnRa0V7Kj1Qx9MQOxRJknvaGnt22ZExbKrwOY2kDC5TkWByaWxNLnwHYsRNZr
-	 uox2WJTHVlVyEz1hxGyFOyf+76gBbZaL+tMs7bqE=
+	b=C1SGoAMrl0WVXDJv6S/k7kgFJcdSOMTZHMHVudvq+1n4+gsc9M98+24FzAwSbooTb
+	 dUL4nHEcUcxCACBw3nZDPW6A70VK0Yr1MKF2XNVhJPRE4vI5ZtXlD3VwNXdI7QltyI
+	 QZZbLuPbdMWIewxFlsgeYZaOQAH/+qHM97BBCNoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbfGXTgx (ORCPT
+        id S2390085AbfGXU0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36642 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388478AbfGXTgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:48 -0400
+        id S2388522AbfGXTgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 817F8214AF;
-        Wed, 24 Jul 2019 19:36:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49800214AF;
+        Wed, 24 Jul 2019 19:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997008;
-        bh=+mBgDTHX626pF5vBCtD6RPqgeKtvu0Nlkai0i99PfMk=;
+        s=default; t=1563996994;
+        bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lRZM3P1G6S8k8d3gizVZ4Iyv9xu+pQdMe2ObHwFbw1MJE0XaS7M4bQ0g/cmE6ey8F
-         XIBsAsQGCJ8n8jclRATO+CKo5ML8uV17q4WJaIDIgBiEm6kRYRlk7AD2OvPdigMhPF
-         bl3ntI/YhQAC0KbZkVLEYJpJry+TzBvH23FJbmvc=
+        b=LUq2TF73W6A7a+3p5JH3nKDWF9/xMgPTslBXuZ365tVQdfy8Sc1J6Lu58/LCrpcwt
+         uw/iL/kw7Iq4TmHQOpuUPPdNYRbs6x9E6ZVgV2DTAk0yxP0oho4G5FVEI0RDzWunrk
+         JGNxOHRZvYlo+P1biamDICKg3NpSB11beatBhlAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.2 290/413] regulator: s2mps11: Fix ERR_PTR dereference on GPIO lookup failure
-Date:   Wed, 24 Jul 2019 21:19:41 +0200
-Message-Id: <20190724191756.978272502@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grant Hernandez <granthernandez@google.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.2 286/413] Input: gtco - bounds check collection indent level
+Date:   Wed, 24 Jul 2019 21:19:37 +0200
+Message-Id: <20190724191756.722423802@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,40 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Grant Hernandez <granthernandez@google.com>
 
-commit 70ca117b02f3b1c8830fe95e4e3dea2937038e11 upstream.
+commit 2a017fd82c5402b3c8df5e3d6e5165d9e6147dc1 upstream.
 
-If devm_gpiod_get_from_of_node() call returns ERR_PTR, it is assigned
-into an array of GPIO descriptors and used later because such error is
-not treated as critical thus it is not propagated back to the probe
-function.
+The GTCO tablet input driver configures itself from an HID report sent
+via USB during the initial enumeration process. Some debugging messages
+are generated during the parsing. A debugging message indentation
+counter is not bounds checked, leading to the ability for a specially
+crafted HID report to cause '-' and null bytes be written past the end
+of the indentation array. As long as the kernel has CONFIG_DYNAMIC_DEBUG
+enabled, this code will not be optimized out.  This was discovered
+during code review after a previous syzkaller bug was found in this
+driver.
 
-All code later expects that such GPIO descriptor is either a NULL or
-proper value.  This later might lead to dereference of ERR_PTR.
-
-Only devices with S2MPS14 flavor are affected (other do not control
-regulators with GPIOs).
-
-Fixes: 1c984942f0a4 ("regulator: s2mps11: Pass descriptor instead of GPIO number")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Grant Hernandez <granthernandez@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/s2mps11.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/tablet/gtco.c |   20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -826,6 +826,7 @@ static void s2mps14_pmic_dt_parse_ext_co
- 		else if (IS_ERR(gpio[reg])) {
- 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
- 				reg, rdata[reg].name);
-+			gpio[reg] = NULL;
- 			continue;
- 		}
- 		if (gpio[reg])
+--- a/drivers/input/tablet/gtco.c
++++ b/drivers/input/tablet/gtco.c
+@@ -78,6 +78,7 @@ Scott Hill shill@gtcocalcomp.com
+ 
+ /* Max size of a single report */
+ #define REPORT_MAX_SIZE       10
++#define MAX_COLLECTION_LEVELS  10
+ 
+ 
+ /* Bitmask whether pen is in range */
+@@ -223,8 +224,7 @@ static void parse_hid_report_descriptor(
+ 	char  maintype = 'x';
+ 	char  globtype[12];
+ 	int   indent = 0;
+-	char  indentstr[10] = "";
+-
++	char  indentstr[MAX_COLLECTION_LEVELS + 1] = { 0 };
+ 
+ 	dev_dbg(ddev, "======>>>>>>PARSE<<<<<<======\n");
+ 
+@@ -350,6 +350,13 @@ static void parse_hid_report_descriptor(
+ 			case TAG_MAIN_COL_START:
+ 				maintype = 'S';
+ 
++				if (indent == MAX_COLLECTION_LEVELS) {
++					dev_err(ddev, "Collection level %d would exceed limit of %d\n",
++						indent + 1,
++						MAX_COLLECTION_LEVELS);
++					break;
++				}
++
+ 				if (data == 0) {
+ 					dev_dbg(ddev, "======>>>>>> Physical\n");
+ 					strcpy(globtype, "Physical");
+@@ -369,8 +376,15 @@ static void parse_hid_report_descriptor(
+ 				break;
+ 
+ 			case TAG_MAIN_COL_END:
+-				dev_dbg(ddev, "<<<<<<======\n");
+ 				maintype = 'E';
++
++				if (indent == 0) {
++					dev_err(ddev, "Collection level already at zero\n");
++					break;
++				}
++
++				dev_dbg(ddev, "<<<<<<======\n");
++
+ 				indent--;
+ 				for (x = 0; x < indent; x++)
+ 					indentstr[x] = '-';
 
 
