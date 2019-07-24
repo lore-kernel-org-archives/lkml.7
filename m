@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C68C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CA1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A1C20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A090C22ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997584;
-	bh=NdZgxNvROlfz8nIhsadzb0D4z4Mn8dm2HzdGLTurW9s=;
+	s=default; t=1563997585;
+	bh=Ex8sdjT459ZaGTa7Tf/mq4wHaSFlpZiJDjcTXb9NDJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLp84L8Ypj3mYLhvSErT2Y2+iy+7lC3EinMBbK8vssJRqtjhReHkSDN1kVfyQJFPc
-	 hfyMe5lwkswGJgGW19HCoG25gfF3x2Ms7hEecbTygnxfWD4EP03C1ClAvC022r7wWy
-	 dy7Fit2vafmvZFOq1g24IOwPgVG/aTCbTF8CeyuM=
+	b=TApt11ee6y4545omtr9F5z9j2mkI/ssVeCXS8UafdzmflsYW3uDTHlUH6e1LfbtYJ
+	 6Pe1jSwd0EmM39HU2mwfhPyxqgsM2woLWfUOzw3VSqP5GxZEtOTJSL+BoWg4RllZ3p
+	 +lRa4g5crVdnvLt8qAu9+nYY/41IhWM8WS6FKGfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391055AbfGXTqW (ORCPT
+        id S2403745AbfGXTqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51504 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390774AbfGXTqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:18 -0400
+        id S2390797AbfGXTqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 349E92083B;
-        Wed, 24 Jul 2019 19:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A4021873;
+        Wed, 24 Jul 2019 19:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997577;
-        bh=NdZgxNvROlfz8nIhsadzb0D4z4Mn8dm2HzdGLTurW9s=;
+        s=default; t=1563997580;
+        bh=Ex8sdjT459ZaGTa7Tf/mq4wHaSFlpZiJDjcTXb9NDJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sE5TEIDVk94UAZJtbdADUTd+57Wq/bNstPNVwkO8YQ/eNb+oZOvCE7SWyRr+Z0W3V
-         E336tZlcs+smbsSou5TgPqzD95ZkVta+wJnsSE8EJTTYuwzWAAHJQ2z/DKtMBV4/gU
-         rkoUGygUV/O/JmUyIJ+vaLBWFL6bsigc/n8Xztyg=
+        b=prQpo2sSa7ygyKTyb2eQlsbeezfV8VnFSiUmG3rEIYvt2b1NQptqTLTd3DbtS4zx/
+         OvFTbzYMjVqbExJ4Yh8bOsI59Uj0QEUSyKL1fbh/LxPe4w1u7oCMDJT/FAuvylWDoK
+         5XE1pw+m+GMubTdgMdBC4hKPkrQQHVw0oPhmD0zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 034/371] net: stmmac: Prevent missing interrupts when running NAPI
-Date:   Wed, 24 Jul 2019 21:16:26 +0200
-Message-Id: <20190724191727.083180882@linuxfoundation.org>
+Subject: [PATCH 5.1 070/371] RAS/CEC: Fix pfn insertion
+Date:   Wed, 24 Jul 2019 21:17:02 +0200
+Message-Id: <20190724191730.163953895@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,40 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a976ca79e23f13bff79c14e7266cea4a0ea51e67 ]
+[ Upstream commit 6d8e294bf5f0e85c34e8b14b064e2965f53f38b0 ]
 
-When we trigger NAPI we are disabling interrupts but in case we receive
-or send a packet in the meantime, as interrupts are disabled, we will
-miss this event.
+When inserting random PFNs for debugging the CEC through
+(debugfs)/ras/cec/pfn, depending on the return value of pfn_set(),
+multiple values get inserted per a single write.
 
-Trigger both NAPI instances (RX and TX) when at least one event happens
-so that we don't miss any interrupts.
+That is because simple_attr_write() interprets a retval of 0 as
+success and claims the whole input. However, pfn_set() returns the
+cec_add_elem() value, which, if > 0 and smaller than the whole input
+length, makes glibc continue issuing the write syscall until there's
+input left:
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  pfn_set
+  simple_attr_write
+  debugfs_attr_write
+  full_proxy_write
+  vfs_write
+  ksys_write
+  do_syscall_64
+  entry_SYSCALL_64_after_hwframe
+
+leading to those repeated calls.
+
+Return 0 to fix that.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/ras/cec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index a634054dcb11..f3735d0458eb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2058,6 +2058,9 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
- 						 &priv->xstats, chan);
- 	struct stmmac_channel *ch = &priv->channel[chan];
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index f85d6b7a1984..5d2b2c02cbbe 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -369,7 +369,9 @@ static int pfn_set(void *data, u64 val)
+ {
+ 	*(u64 *)data = val;
  
-+	if (status)
-+		status |= handle_rx | handle_tx;
+-	return cec_add_elem(val);
++	cec_add_elem(val);
 +
- 	if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
- 		stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
- 		napi_schedule_irqoff(&ch->rx_napi);
++	return 0;
+ }
+ 
+ DEFINE_DEBUGFS_ATTRIBUTE(pfn_ops, u64_get, pfn_set, "0x%llx\n");
 -- 
 2.20.1
 
