@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDB5C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22FDC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8754221880
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C653D22BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033469;
-	bh=AqHiGBYn3HleXsZMlRknDwFCCAMU0XQioeXh1aikw0Q=;
+	s=default; t=1564033472;
+	bh=jCXGdMDV83SSi0RMcl/cTH0AX2saeysAkpPWqNnn6r8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJjjxW9NFOqs/GU00UviKuDE00pfn8J3lxSq37AZb97f94VtMLVBdMp+ptrkGUjsR
-	 0wJc3bY/0NvHo/CUVo1NpDXrqo4S0AkkLTDGTuJJF7oUMw4Y6sw7HjAGW7K9/T2lOL
-	 ZLmLwId79i5Snqk/O0nkV0eDjSvuwcQupw1snxFg=
+	b=xvkpcOKi+nWxltiUJsGmaAP7QvzelIWgHNzl6xjwkpnq5aZkQ9fVbDb732xBWry38
+	 PNHsh56t0MaiRvprOa6GqX7Dvn0uUurNOn3jbdsRWo9iqP4GoWTk+hQJnRxk/Cte53
+	 UYC8JIGOKiyhwC+oaBaazMX/9xC7wozBHzyALO3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404934AbfGYFo2 (ORCPT
+        id S2404951AbfGYFob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:44:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391253AbfGYFoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:44:25 -0400
+        id S2404929AbfGYFo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:44:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64A6922BF5;
-        Thu, 25 Jul 2019 05:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DABC922CB9;
+        Thu, 25 Jul 2019 05:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033464;
-        bh=AqHiGBYn3HleXsZMlRknDwFCCAMU0XQioeXh1aikw0Q=;
+        s=default; t=1564033468;
+        bh=jCXGdMDV83SSi0RMcl/cTH0AX2saeysAkpPWqNnn6r8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W+tHN0OYoeQ/COtqsP5NV5jXluXvpIur1JliTgCrJUw45qaK8Pf3SQouL1T5hdxPe
-         ON12kefUdrzhH0htONc4UY1VzbDBNQAx/ZjqNFdSig9k8g+A1toH6m8fJhUU6zllHK
-         OSA3DkmVPSzDrgNZvyfPV15ue0c7j1gvvrzIGtD4=
+        b=k3WrnGiGtvaUAwOC3KUpR21xWv9ej4enjhCXxd2f+OyOr6/J9dT8HUcRwPFEYSRg/
+         Q/+yIb5m0b68cJTPBzBw3IAs76/qNA6nMXLQrjnljzv/tF5W03eHgfnNU0y1XN4zqr
+         qAItYelQZ4EyqcPZlDkWdc3vYU9VlAdUz0BKIrzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 210/271] media: coda: Remove unbalanced and unneeded mutex unlock
-Date:   Wed, 24 Jul 2019 21:21:19 +0200
-Message-Id: <20190724191713.071665484@linuxfoundation.org>
+        stable@vger.kernel.org, Masato Suzuki <masato.suzuki@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 219/271] dm zoned: fix zone state management race
+Date:   Wed, 24 Jul 2019 21:21:28 +0200
+Message-Id: <20190724191713.875553013@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,36 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit 766b9b168f6c75c350dd87c3e0bc6a9b322f0013 upstream.
+commit 3b8cafdd5436f9298b3bf6eb831df5eef5ee82b6 upstream.
 
-The mutex unlock in the threaded interrupt handler is not paired
-with any mutex lock. Remove it.
+dm-zoned uses the zone flag DMZ_ACTIVE to indicate that a zone of the
+backend device is being actively read or written and so cannot be
+reclaimed. This flag is set as long as the zone atomic reference
+counter is not 0. When this atomic is decremented and reaches 0 (e.g.
+on BIO completion), the active flag is cleared and set again whenever
+the zone is reused and BIO issued with the atomic counter incremented.
+These 2 operations (atomic inc/dec and flag set/clear) are however not
+always executed atomically under the target metadata mutex lock and
+this causes the warning:
 
-This bug has been here for a really long time, so it applies
-to any stable repo.
+WARN_ON(!test_bit(DMZ_ACTIVE, &zone->flags));
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+in dmz_deactivate_zone() to be displayed. This problem is regularly
+triggered with xfstests generic/209, generic/300, generic/451 and
+xfs/077 with XFS being used as the file system on the dm-zoned target
+device. Similarly, xfstests ext4/303, ext4/304, generic/209 and
+generic/300 trigger the warning with ext4 use.
+
+This problem can be easily fixed by simply removing the DMZ_ACTIVE flag
+and managing the "ACTIVE" state by directly looking at the reference
+counter value. To do so, the functions dmz_activate_zone() and
+dmz_deactivate_zone() are changed to inline functions respectively
+calling atomic_inc() and atomic_dec(), while the dmz_is_active() macro
+is changed to an inline function calling atomic_read().
+
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
 Cc: stable@vger.kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Masato Suzuki <masato.suzuki@wdc.com>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/coda/coda-bit.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/md/dm-zoned-metadata.c |   24 ------------------------
+ drivers/md/dm-zoned.h          |   28 ++++++++++++++++++++++++----
+ 2 files changed, 24 insertions(+), 28 deletions(-)
 
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -2309,7 +2309,6 @@ irqreturn_t coda_irq_handler(int irq, vo
- 	if (ctx == NULL) {
- 		v4l2_err(&dev->v4l2_dev,
- 			 "Instance released before the end of transaction\n");
--		mutex_unlock(&dev->coda_mutex);
- 		return IRQ_HANDLED;
- 	}
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1594,30 +1594,6 @@ struct dm_zone *dmz_get_zone_for_reclaim
+ }
  
+ /*
+- * Activate a zone (increment its reference count).
+- */
+-void dmz_activate_zone(struct dm_zone *zone)
+-{
+-	set_bit(DMZ_ACTIVE, &zone->flags);
+-	atomic_inc(&zone->refcount);
+-}
+-
+-/*
+- * Deactivate a zone. This decrement the zone reference counter
+- * and clears the active state of the zone once the count reaches 0,
+- * indicating that all BIOs to the zone have completed. Returns
+- * true if the zone was deactivated.
+- */
+-void dmz_deactivate_zone(struct dm_zone *zone)
+-{
+-	if (atomic_dec_and_test(&zone->refcount)) {
+-		WARN_ON(!test_bit(DMZ_ACTIVE, &zone->flags));
+-		clear_bit_unlock(DMZ_ACTIVE, &zone->flags);
+-		smp_mb__after_atomic();
+-	}
+-}
+-
+-/*
+  * Get the zone mapping a chunk, if the chunk is mapped already.
+  * If no mapping exist and the operation is WRITE, a zone is
+  * allocated and used to map the chunk.
+--- a/drivers/md/dm-zoned.h
++++ b/drivers/md/dm-zoned.h
+@@ -115,7 +115,6 @@ enum {
+ 	DMZ_BUF,
+ 
+ 	/* Zone internal state */
+-	DMZ_ACTIVE,
+ 	DMZ_RECLAIM,
+ 	DMZ_SEQ_WRITE_ERR,
+ };
+@@ -128,7 +127,6 @@ enum {
+ #define dmz_is_empty(z)		((z)->wp_block == 0)
+ #define dmz_is_offline(z)	test_bit(DMZ_OFFLINE, &(z)->flags)
+ #define dmz_is_readonly(z)	test_bit(DMZ_READ_ONLY, &(z)->flags)
+-#define dmz_is_active(z)	test_bit(DMZ_ACTIVE, &(z)->flags)
+ #define dmz_in_reclaim(z)	test_bit(DMZ_RECLAIM, &(z)->flags)
+ #define dmz_seq_write_err(z)	test_bit(DMZ_SEQ_WRITE_ERR, &(z)->flags)
+ 
+@@ -188,8 +186,30 @@ void dmz_unmap_zone(struct dmz_metadata
+ unsigned int dmz_nr_rnd_zones(struct dmz_metadata *zmd);
+ unsigned int dmz_nr_unmap_rnd_zones(struct dmz_metadata *zmd);
+ 
+-void dmz_activate_zone(struct dm_zone *zone);
+-void dmz_deactivate_zone(struct dm_zone *zone);
++/*
++ * Activate a zone (increment its reference count).
++ */
++static inline void dmz_activate_zone(struct dm_zone *zone)
++{
++	atomic_inc(&zone->refcount);
++}
++
++/*
++ * Deactivate a zone. This decrement the zone reference counter
++ * indicating that all BIOs to the zone have completed when the count is 0.
++ */
++static inline void dmz_deactivate_zone(struct dm_zone *zone)
++{
++	atomic_dec(&zone->refcount);
++}
++
++/*
++ * Test if a zone is active, that is, has a refcount > 0.
++ */
++static inline bool dmz_is_active(struct dm_zone *zone)
++{
++	return atomic_read(&zone->refcount);
++}
+ 
+ int dmz_lock_zone_reclaim(struct dm_zone *zone);
+ void dmz_unlock_zone_reclaim(struct dm_zone *zone);
 
 
