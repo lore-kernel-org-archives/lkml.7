@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2121CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE7FC761A8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7C220657
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E29920657
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033826;
-	bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
+	s=default; t=1564033828;
+	bh=7qHMARGZqYN8XVCRyjerYdEwNpm0JOUaZFtCVUzQbSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vseD81faNObooqJds+IogvL0+HBwTr6giDMcSu9fS+fRPuIxI5K8pHOHmmtRSQZBO
-	 lusTehZMDrDX5wB/2N2eyN6giakOzQ03y55ZkkUwfnQAgCHgKwRICtgWwl697nRs8A
-	 UJX8K8aDgoReMi0GXzw/odBH1fQoVBSx88SqaMTk=
+	b=ngYAJ8GbVt0K/lffkiBxWLx8F9gqi1/vIShyswmblysO3A/T5dqw5p/2bCK8OD+Qd
+	 m3ZWgDZbxrMopIZj3UDLLSbOH0dM2vw3TTXBR5b9ySjfMOjy5N59fA2Gb2tHNW4GK/
+	 xKhjXixuOXRjWpMtt8qr26/ETG8mZs4Xq0nqKTdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfGYFuY (ORCPT
+        id S2390985AbfGYFnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58034 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404865AbfGYFnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:43:04 -0400
+        id S2390967AbfGYFmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7670B21850;
-        Thu, 25 Jul 2019 05:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE2B721880;
+        Thu, 25 Jul 2019 05:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033384;
-        bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
+        s=default; t=1564033372;
+        bh=7qHMARGZqYN8XVCRyjerYdEwNpm0JOUaZFtCVUzQbSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ldxotr/H4t9mBA7PRPwRpAuZEI9ag9RvTrdWKkgNicVMX0NUGwl965/5YYWyK+Odf
-         UKKIgwSMCrjpIWo+ItDl24E4Imo3OWFX+/sRix91M553UWZLgcu/6T1sxfbu6LMIvI
-         lXT1QMSIWwfpwc2JRRszsWuaUXLTpkycr4Reet6Q=
+        b=avWUmPqnNlJdR+Mo99DcdRo23WgUiA48JlHCj32LaCmjJRbPQwp9hgSSZh5Xaw7dy
+         OLyxfkw6wWtBepaWqa7VgGrzGUdpNFhXmHF2thrKyJ1nAK8Ow6ex/4RZK+DJf13K3O
+         yK44zOY83MleuA/ud7d5S3Oje0yAc5M0cJeemoqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grant Hernandez <granthernandez@google.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 189/271] Input: gtco - bounds check collection indent level
-Date:   Wed, 24 Jul 2019 21:20:58 +0200
-Message-Id: <20190724191711.317742016@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 168/271] scsi: core: Fix race on creating sense cache
+Date:   Wed, 24 Jul 2019 21:20:37 +0200
+Message-Id: <20190724191709.569951829@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,79 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grant Hernandez <granthernandez@google.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit 2a017fd82c5402b3c8df5e3d6e5165d9e6147dc1 upstream.
+commit f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc upstream.
 
-The GTCO tablet input driver configures itself from an HID report sent
-via USB during the initial enumeration process. Some debugging messages
-are generated during the parsing. A debugging message indentation
-counter is not bounds checked, leading to the ability for a specially
-crafted HID report to cause '-' and null bytes be written past the end
-of the indentation array. As long as the kernel has CONFIG_DYNAMIC_DEBUG
-enabled, this code will not be optimized out.  This was discovered
-during code review after a previous syzkaller bug was found in this
-driver.
+When scsi_init_sense_cache(host) is called concurrently from different
+hosts, each code path may find that no cache has been created and
+allocate a new one. The lack of locking can lead to potentially
+overriding a cache allocated by a different host.
 
-Signed-off-by: Grant Hernandez <granthernandez@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fix the issue by moving 'mutex_lock(&scsi_sense_cache_mutex)' before
+scsi_select_sense_cache().
+
+Fixes: 0a6ac4ee7c21 ("scsi: respect unchecked_isa_dma for blk-mq")
+Cc: Stable <stable@vger.kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/gtco.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/scsi/scsi_lib.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/input/tablet/gtco.c
-+++ b/drivers/input/tablet/gtco.c
-@@ -78,6 +78,7 @@ Scott Hill shill@gtcocalcomp.com
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -71,11 +71,11 @@ int scsi_init_sense_cache(struct Scsi_Ho
+ 	struct kmem_cache *cache;
+ 	int ret = 0;
  
- /* Max size of a single report */
- #define REPORT_MAX_SIZE       10
-+#define MAX_COLLECTION_LEVELS  10
++	mutex_lock(&scsi_sense_cache_mutex);
+ 	cache = scsi_select_sense_cache(shost->unchecked_isa_dma);
+ 	if (cache)
+-		return 0;
++		goto exit;
  
- 
- /* Bitmask whether pen is in range */
-@@ -223,8 +224,7 @@ static void parse_hid_report_descriptor(
- 	char  maintype = 'x';
- 	char  globtype[12];
- 	int   indent = 0;
--	char  indentstr[10] = "";
+-	mutex_lock(&scsi_sense_cache_mutex);
+ 	if (shost->unchecked_isa_dma) {
+ 		scsi_sense_isadma_cache =
+ 			kmem_cache_create("scsi_sense_cache(DMA)",
+@@ -91,7 +91,7 @@ int scsi_init_sense_cache(struct Scsi_Ho
+ 		if (!scsi_sense_cache)
+ 			ret = -ENOMEM;
+ 	}
 -
-+	char  indentstr[MAX_COLLECTION_LEVELS + 1] = { 0 };
- 
- 	dev_dbg(ddev, "======>>>>>>PARSE<<<<<<======\n");
- 
-@@ -350,6 +350,13 @@ static void parse_hid_report_descriptor(
- 			case TAG_MAIN_COL_START:
- 				maintype = 'S';
- 
-+				if (indent == MAX_COLLECTION_LEVELS) {
-+					dev_err(ddev, "Collection level %d would exceed limit of %d\n",
-+						indent + 1,
-+						MAX_COLLECTION_LEVELS);
-+					break;
-+				}
-+
- 				if (data == 0) {
- 					dev_dbg(ddev, "======>>>>>> Physical\n");
- 					strcpy(globtype, "Physical");
-@@ -369,8 +376,15 @@ static void parse_hid_report_descriptor(
- 				break;
- 
- 			case TAG_MAIN_COL_END:
--				dev_dbg(ddev, "<<<<<<======\n");
- 				maintype = 'E';
-+
-+				if (indent == 0) {
-+					dev_err(ddev, "Collection level already at zero\n");
-+					break;
-+				}
-+
-+				dev_dbg(ddev, "<<<<<<======\n");
-+
- 				indent--;
- 				for (x = 0; x < indent; x++)
- 					indentstr[x] = '-';
++ exit:
+ 	mutex_unlock(&scsi_sense_cache_mutex);
+ 	return ret;
+ }
 
 
