@@ -2,95 +2,102 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12155C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5619C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC4422ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dpWg9Xr6"
+	by mail.kernel.org (Postfix) with ESMTP id A507122ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfGXOLn (ORCPT
+        id S2387504AbfGXOMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:11:43 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34983 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbfGXOLn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:11:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s1so14996602pgr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:cc:from:user-agent:date;
-        bh=yf08E+49qJAyoxiq4Pp3i3pHItoQTgkz38vEqql7VE0=;
-        b=dpWg9Xr6L0D7Z/Ku2YJ42eQE4yvd1e82KQHr2lLRD4ftXtEpX04IVbpT+HH9YHiRTf
-         gmMxS12NNdYsm8KVCb9Gb6fwt6N01iADdocH93+17UiKD01ObzlsdYaBock1ojwXxx2Q
-         uS1Q86VImSm1smN8OJMXJTvKKqz9V/NLqj9K8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
-         :user-agent:date;
-        bh=yf08E+49qJAyoxiq4Pp3i3pHItoQTgkz38vEqql7VE0=;
-        b=Bv/xIu5r9qjd4NHMgXKX4Y4HdwaQRmJQz15byUNIkoJloPimp7wua0KQsxaDCSKC95
-         13nP3yT4/uDKKSgIfptH9NONeia9/b/sBgObX2NTMdzqWk0O1vMFRWxlE54OYy2QRHhq
-         gXHRb5/sSxvIL+A6VK8wKgwNC2YOFKmj97hRx5+vP6oPS3cznYlpNEPGvhbBwJuqa3AU
-         iZ4w0iFz0H3vjSDV6hToSQiNO394Qx9zyqO5k2WOTWQOm9QQzsfswgfq7qns3q/N5rN4
-         en2uo1tHQF+TgNj5VfoOGXWqu1XuVb8RGvUEA1/H0Mn7pk3splvwjW6SrAeJUgh2lIxx
-         7Svw==
-X-Gm-Message-State: APjAAAXCdhEGZZeIStWT2Gmvd+7I8sAAuZO/BQDjHe2DAK0eqtvSluPR
-        VRk5ym2gESXzxFUOhFTYfufo3w==
-X-Google-Smtp-Source: APXvYqzexkRd5KbJ9v+zC2RclMHc1mgtJ7nJ19cyNya96Y2QMzMnyKVcrwRGhsiI6ZW5BlT/SegIgw==
-X-Received: by 2002:a63:c64b:: with SMTP id x11mr81481881pgg.319.1563977502745;
-        Wed, 24 Jul 2019 07:11:42 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id l6sm46519081pga.72.2019.07.24.07.11.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 07:11:42 -0700 (PDT)
-Message-ID: <5d38671e.1c69fb81.1f6f4.a5a1@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 24 Jul 2019 10:12:41 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58270 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfGXOMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:12:41 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8C038DD57E4095B86D96;
+        Wed, 24 Jul 2019 22:12:34 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 22:12:25 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
+        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
+        <wright.feng@cypress.com>, <kvalo@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <brcm80211-dev-list@cypress.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] brcmfmac: remove set but not used variable 'dtim_period'
+Date:   Wed, 24 Jul 2019 22:12:01 +0800
+Message-ID: <20190724141201.59640-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190724044906.12007-5-vkoul@kernel.org>
-References: <20190724044906.12007-1-vkoul@kernel.org> <20190724044906.12007-5-vkoul@kernel.org>
-Subject: Re: [PATCH v2 4/5] arm64: dts: qcom: sdm845: remove macro from unit name
-To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 24 Jul 2019 07:11:41 -0700
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-07-23 21:49:05)
-> Unit name is supposed to be a number, using a macro with hex value is
-> not recommended, so add the value in unit name.
->=20
-> arch/arm64/boot/dts/qcom/pm8998.dtsi:81.18-84.6: Warning (unit_address_fo=
-rmat): /soc/spmi@c440000/pmic@0/adc@3100/adc-chan@0x06: unit name should no=
-t have leading "0x"
-> arch/arm64/boot/dts/qcom/pm8998.dtsi:81.18-84.6: Warning (unit_address_fo=
-rmat): /soc/spmi@c440000/pmic@0/adc@3100/adc-chan@0x06: unit name should no=
-t have leading 0s
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function brcmf_update_bss_info:
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:2962:5: warning: variable dtim_period set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function brcmf_update_bss_info:
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:2961:6: warning: variable beacon_interval set but not used [-Wunused-but-set-variable]
+
+They are never used so can be removed.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index b6d0df3..ec17f7f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -2958,8 +2958,6 @@ static s32 brcmf_update_bss_info(struct brcmf_cfg80211_info *cfg,
+ 	struct brcmf_pub *drvr = cfg->pub;
+ 	struct brcmf_bss_info_le *bi;
+ 	const struct brcmf_tlv *tim;
+-	u16 beacon_interval;
+-	u8 dtim_period;
+ 	size_t ie_len;
+ 	u8 *ie;
+ 	s32 err = 0;
+@@ -2983,12 +2981,9 @@ static s32 brcmf_update_bss_info(struct brcmf_cfg80211_info *cfg,
+ 
+ 	ie = ((u8 *)bi) + le16_to_cpu(bi->ie_offset);
+ 	ie_len = le32_to_cpu(bi->ie_length);
+-	beacon_interval = le16_to_cpu(bi->beacon_period);
+ 
+ 	tim = brcmf_parse_tlvs(ie, ie_len, WLAN_EID_TIM);
+-	if (tim)
+-		dtim_period = tim->data[1];
+-	else {
++	if (!tim) {
+ 		/*
+ 		* active scan was done so we could not get dtim
+ 		* information out of probe response.
+@@ -3000,7 +2995,6 @@ static s32 brcmf_update_bss_info(struct brcmf_cfg80211_info *cfg,
+ 			bphy_err(drvr, "wl dtim_assoc failed (%d)\n", err);
+ 			goto update_bss_info_out;
+ 		}
+-		dtim_period = (u8)var;
+ 	}
+ 
+ update_bss_info_out:
+-- 
+2.7.4
+
 
