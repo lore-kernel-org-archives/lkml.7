@@ -2,154 +2,186 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869F5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD8CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB2821841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563994362;
-	bh=x+GzCZo8UTDOlovmXTV+B736Nvu1DiHgXhK/fyppo30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I/H2zADT5NTaBuq57IZ3PYVmQDSstFnI9REgas2SfyNm4SmtM4AInNZegMgLQP4vq
-	 IVUvojNPRIGBbGTe04XloJ01vljdbrq+duKgz79unGw7jV2YPyktTfBLyIJ7+wWv83
-	 rKB2cvyO7Tnlk15X69y8PzyTrAYctW+M9xx+4O2o=
+	by mail.kernel.org (Postfix) with ESMTP id 333C621841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:53:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="U/B4/BsH";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="m/tM6G9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbfGXSwl convert rfc822-to-8bit (ORCPT
+        id S1728570AbfGXSxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:52:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37810 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfGXSwk (ORCPT
+        Wed, 24 Jul 2019 14:53:02 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36770 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726179AbfGXSxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:52:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so42524383wme.2;
-        Wed, 24 Jul 2019 11:52:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3hQEInE7wPS7npsqDdyReFD8+DVG0G6gksarFiD+BUE=;
-        b=p1QXjmSjibShYD8ZOl1TAGs1sAhM/9Y59m8s4PH/SNL0JLri/rNK6Ro6goiffhHlxA
-         2WI7eVxfIJoCI8ZAQIluAteADtY9YRzlyOIaEz+c+1ekoDTtPb2dvn0gYiWMl1aE8qJ3
-         eHnMEI3rjh/pZ3dKWzDBA8nfIF+wFFWxtgOJDAuREd2L4EYW8xGpSGxRUp8bO2XnJChJ
-         vJ0lq7leBZu15G1ecw7uDvbuwY83/J9Z+i7BmVl0ifcWb7Z7UAcNIfBHrS55gEZkGx2U
-         BqyIdDlrz3Xin5KC1U7TrEckWQ/Dw9hSHUPkqlqtTKfCMuNldTNlPnsdPrszjHKQi7YG
-         DjIg==
-X-Gm-Message-State: APjAAAUrbaHUuQcrFfPwL8KrSqmBYOybatflkWMpXNYOk9cnfgustWwj
-        pDTtr0zCbU1KSsCfei1cTbA=
-X-Google-Smtp-Source: APXvYqybZTUdLFKKpdj8xlUt1rpHKS6FMa+wFWKprezrQieSHRxtcvXpOkuvDUOeXbkAfzPmH5YXgQ==
-X-Received: by 2002:a05:600c:10ce:: with SMTP id l14mr73562275wmd.118.1563994357830;
-        Wed, 24 Jul 2019 11:52:37 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.239])
-        by smtp.googlemail.com with ESMTPSA id w24sm37230033wmc.30.2019.07.24.11.52.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 11:52:36 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 20:52:34 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, m.szyprowski@samsung.com
-Subject: Re: [RFC PATCH 11/11] drm: exynos: mixer: Add interconnect support
-Message-ID: <20190724185234.GB14346@kozik-lap>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122029eucas1p2915f536d9ef43a7bd043a878a553439f@eucas1p2.samsung.com>
- <20190723122016.30279-12-a.swigon@partner.samsung.com>
+        Wed, 24 Jul 2019 14:53:01 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6OInMH8026088;
+        Wed, 24 Jul 2019 11:52:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=aa1yNHhGub2q5giAEw5YCf3oqlsTy4a2Ha1OCMwoAtU=;
+ b=U/B4/BsH+TbZIGHSloph0x+gn8OgEk83PznMCUXCgDhWTQZP1gkOAEGOGsEPm/OFPXRd
+ gtItcoxCEjzA+QiVal1XBJs4hJhRlHGXADi3FoZNALgZwMN0PMfwIM8MGou+651MCbcE
+ nQeS5OsYSh2ggskGMmQpFDGbR5yemRzqOcI= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2txr5nh805-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jul 2019 11:52:22 -0700
+Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 24 Jul 2019 11:52:21 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 24 Jul 2019 11:52:20 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 24 Jul 2019 11:52:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N1VOVF1/xToYqtmwjQr1BbNSIbOR6k//XqrYIrUKeM9OfXuuuMtwaCp2pxnTS5YIcHtna7v+dDk3BH7Yyr6K+2XQZM+rca7RDzkeZPt7kib83xcIm3HihOj4ETMOd5zrDoRu90cDu1OIN2xvzyVHM/XgD2ZH3oc237xele5LKBaigWdgd4RcffvJjn62DviU4oAb2+ev0EFjlzp1LtzcPZ78/+FUfvaRa+TrkM9CiPUtwWKAuZngUg2m3/itcY55vGjidHgo7KphVMCKkBe62FEwD8EzRe9m/Rc5Kp+VQH4VRnXL7eniU4jVpdug33mb85l9XiTySMV314Nxl12qSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aa1yNHhGub2q5giAEw5YCf3oqlsTy4a2Ha1OCMwoAtU=;
+ b=hBngRUTrvnD3mIhTR+VxeCxP3qAqkKnBcj9fAxBPvTJzCk1XHpRr29FXsvQ8HH+B8EdHFgKqSx1etH24Y5Juaa8gmKYBqu+esOECor213w14JbbiZBY38SK86S1KV58Gw1F2Yfq+WftmCamnKGxw2gKOxJ+IWqEE4baw5iszJUDF0nkHxRm5Z/R11ds8mf3bjfTgqaox0Iq9TWNS0aO+29VoMnPvEaVGAG3otRlZr/IqNJcA2cWXk2y2iO2kjR0CJNbEJF48sy6k3vcoWQA7lvIKSRmOdHSJAg9bIUO4N6kX2KTSHvNBtlWY69oiVSSgdS3mI0UEf4iur6xy1eC8eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
+ header.d=fb.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aa1yNHhGub2q5giAEw5YCf3oqlsTy4a2Ha1OCMwoAtU=;
+ b=m/tM6G9W32ZbdAMbknK1hPp8rYtAhFTNX8j8R/Euqzem/EmEgbeG4PGP8vIXNMELhc/u0jbf5dZW+2C3rgwcwiyJ3S57qnqHchHnsACOIaOLrGaYfOFsm/sfOD3rdqPMELIZf1ZeexGDoreGK1B3/OJdl45nnqxXpHEtdPBLqk4=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1789.namprd15.prod.outlook.com (10.174.96.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2115.10; Wed, 24 Jul 2019 18:52:20 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::4066:b41c:4397:27b7]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::4066:b41c:4397:27b7%7]) with mapi id 15.20.2094.013; Wed, 24 Jul 2019
+ 18:52:19 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+CC:     lkml <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Kernel Team" <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>
+Subject: Re: [PATCH v8 2/4] uprobe: use original page when all uprobes are
+ removed
+Thread-Topic: [PATCH v8 2/4] uprobe: use original page when all uprobes are
+ removed
+Thread-Index: AQHVQfsnepoAlMhPK0qmuIU0gpphb6bZpE2AgAB5kgA=
+Date:   Wed, 24 Jul 2019 18:52:19 +0000
+Message-ID: <BCE000B2-3F72-4148-A75C-738274917282@fb.com>
+References: <20190724083600.832091-1-songliubraving@fb.com>
+ <20190724083600.832091-3-songliubraving@fb.com>
+ <20190724113711.GE21599@redhat.com>
+In-Reply-To: <20190724113711.GE21599@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::1:856f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6f3fbdb3-69ad-42f9-8813-08d710680e4a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1789;
+x-ms-traffictypediagnostic: MWHPR15MB1789:
+x-microsoft-antispam-prvs: <MWHPR15MB17893F0D7DB172E16EAABA0FB3C60@MWHPR15MB1789.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:605;
+x-forefront-prvs: 0108A997B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(136003)(396003)(376002)(39860400002)(199004)(189003)(71200400001)(71190400001)(36756003)(5660300002)(14444005)(256004)(57306001)(76116006)(66476007)(66946007)(66446008)(66556008)(64756008)(6116002)(33656002)(6506007)(53546011)(229853002)(102836004)(6916009)(186003)(6246003)(54906003)(316002)(4326008)(76176011)(99286004)(14454004)(6486002)(6436002)(25786009)(11346002)(2616005)(446003)(8676002)(6512007)(7736002)(86362001)(68736007)(81156014)(81166006)(8936002)(46003)(476003)(305945005)(478600001)(50226002)(486006)(53936002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1789;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: RZX72aB+99LXHP1bXefZKENqiHQ2YcvdUIqmL6a12NlCiFuAjEKTgoLadlF1kNbIC4ywIXgWxoBT0TIDWbaZZofomrU44V+V3dvuzYZlvgblaTYZ78lsMeZP88ulbBKssmTlcz3W5x6zjXFzFAkrXItKQn70edH25yJ9IDr15a6NCimj3/bfag8EehArsS357dlyHi1kz+g7rnq5Z80Zc9SfNzTk+9kehA+K1yBGnIKhERhnO7QQMs5IaYRSZQL38mt3x2Bo1VMWM+2UMalW9GTxNHThS9ge5nAyzQxP7CDj7uIWZtCntUP6xMjJAJqoFS8ff2E9FYruHrEK4MAElpZgQjLSHrEBXlRzjYmokMSDCqAJ5M5uv3hYMXvXHNOsBU7LmsXVs1hC/Rk5quRhicsit0LHHk8j0ddFpn1ol1Q=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BED125F3441AB64F9DAE1BC94B08C78C@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190723122016.30279-12-a.swigon@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f3fbdb3-69ad-42f9-8813-08d710680e4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 18:52:19.1547
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1789
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907240200
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:20:16PM +0200, Artur Świgoń wrote:
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
-> 
-> This patch adds interconnect support to exynos-mixer. Please note that the
-> mixer works the same as before when CONFIG_INTERCONNECT is 'n'.
-> 
-> Co-developed-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_mixer.c | 68 +++++++++++++++++++++++++--
->  1 file changed, 63 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
-> index 7b24338fad3c..fb763854b300 100644
-> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
-> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-> @@ -13,6 +13,7 @@
->  #include <linux/component.h>
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/interconnect.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
-> @@ -97,6 +98,7 @@ struct mixer_context {
->  	struct exynos_drm_crtc	*crtc;
->  	struct exynos_drm_plane	planes[MIXER_WIN_NR];
->  	unsigned long		flags;
-> +	struct icc_path		*soc_path;
->  
->  	int			irq;
->  	void __iomem		*mixer_regs;
-> @@ -931,6 +933,37 @@ static void mixer_disable_vblank(struct exynos_drm_crtc *crtc)
->  	mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
->  }
->  
-> +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
-> +{
-> +	struct drm_display_mode *mode = &crtc->base.state->adjusted_mode;
-> +	struct mixer_context *ctx = crtc->ctx;
-> +	unsigned long bw, bandwidth = 0;
-> +	int i, j, sub;
-> +
 
-Early exit if !ctx->soc_path, no need to figure out the bandwidth.
-Optionally check it before calling mixer_set_memory_bandwidth() - should
-not hurt readability.
 
-> +	for (i = 0; i < MIXER_WIN_NR; i++) {
-> +		struct drm_plane *plane = &ctx->planes[i].base;
-> +		const struct drm_format_info *format;
-> +
-> +		if (plane->state && plane->state->crtc && plane->state->fb) {
-> +			format = plane->state->fb->format;
-> +			bw = mode->hdisplay * mode->vdisplay *
-> +							drm_mode_vrefresh(mode);
-> +			if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-> +				bw /= 2;
-> +			for (j = 0; j < format->num_planes; j++) {
-> +				sub = j ? (format->vsub * format->hsub) : 1;
-> +				bandwidth += format->cpp[j] * bw / sub;
-> +			}
-> +		}
-> +	}
-> +
-> +	/* add 20% safety margin */
-> +	bandwidth = 5UL * bandwidth / 4;
-> +
-> +	pr_info("exynos-mixer: safe bandwidth %ld Bps\n", bandwidth);
+> On Jul 24, 2019, at 4:37 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+>=20
+> On 07/24, Song Liu wrote:
+>>=20
+>> 	lock_page(old_page);
+>> @@ -177,15 +180,24 @@ static int __replace_page(struct vm_area_struct *v=
+ma, unsigned long addr,
+>> 	mmu_notifier_invalidate_range_start(&range);
+>> 	err =3D -EAGAIN;
+>> 	if (!page_vma_mapped_walk(&pvmw)) {
+>> -		mem_cgroup_cancel_charge(new_page, memcg, false);
+>> +		if (!orig)
+>> +			mem_cgroup_cancel_charge(new_page, memcg, false);
+>> 		goto unlock;
+>> 	}
+>> 	VM_BUG_ON_PAGE(addr !=3D pvmw.address, old_page);
+>>=20
+>> 	get_page(new_page);
+>> -	page_add_new_anon_rmap(new_page, vma, addr, false);
+>> -	mem_cgroup_commit_charge(new_page, memcg, false, false);
+>> -	lru_cache_add_active_or_unevictable(new_page, vma);
+>> +	if (orig) {
+>> +		lock_page(new_page);  /* for page_add_file_rmap() */
+>> +		page_add_file_rmap(new_page, false);
+>=20
+>=20
+> Shouldn't we re-check new_page->mapping after lock_page() ? Or we can't
+> race with truncate?
 
-dev_dbg()
+We can't race with truncate, because the file is open as binary and=20
+protected with DENYWRITE (ETXTBSY).=20
 
-Best regards,
-Krzysztof
+>=20
+>=20
+> and I am worried this code can try to lock the same page twice...
+> Say, the probed application does MADV_DONTNEED and then writes "int3"
+> into vma->vm_file at the same address to fool verify_opcode().
+>=20
 
+Do you mean the case where old_page =3D=3D new_page? I think this won't=20
+happen, because in uprobe_write_opcode() we only do orig_page for=20
+!is_register case.=20
+
+Thanks,
+Song
 
