@@ -2,122 +2,210 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431AAC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E172EC76194
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CBF227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGSRuqNw"
+	by mail.kernel.org (Postfix) with ESMTP id B9413229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfGXGGs (ORCPT
+        id S1726360AbfGXGHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:06:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43045 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfGXGGq (ORCPT
+        Wed, 24 Jul 2019 02:07:50 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:46337 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfGXGHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:06:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id 4so14574395pld.10;
-        Tue, 23 Jul 2019 23:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3nezsYKelUkWXu/WuGZ4bisaP+vEJX1eIGb2BGpr5fM=;
-        b=KGSRuqNwdw3I5D6WthFGXLlumNPsFAdIb9aHb13ZA1o7zMKRfMt8T25tR2bR4KgOxN
-         RWIFoK0UR6eel68uSKRYdtskX4E4J/kaPBAJlaGXQZoPBJgbthKSCx9/KQfanKt0qm/l
-         JjrdPWSo3bveOsvv5V7CkEtJ5Ndr+1OqW+6yvWxD2zwBvkg+kfLpEuTqp41xzNBQnI26
-         Ab41Bt6iIizdz32iX6MEUZFYzEKGQ23ESOFwaW1HTobW1gGRV/DSqCvSdczN2/iQiVNQ
-         JMgVRHXTfTxIWVuqfK15xpODn7pbuhrHgPgSwtcNMsjNhV2HKAyFVg4aOcszcPMEL+KO
-         EwyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3nezsYKelUkWXu/WuGZ4bisaP+vEJX1eIGb2BGpr5fM=;
-        b=qi5K2p3e0z3NscwXRPtbhq9C8Uz39Q377Xys/7rVf4DP6Erumm27K3sJcfV0egtfzI
-         2/+QN5dDzx4deXvzV4dbMnhJFmBq6VwAMbzqoFivcW3KW23lFGTbiD7oQCHt6Mkq5afO
-         1Jeg5qn23e6+ctW1D+U0I4PYanYikbtl6W7Y/J10ujj+09P0mg17nnfLxiK0YM6ZtX19
-         SVHzx8SYvC9pY4NPOeCXCmtexiSL/zknK3m5P89CnbZBKPA1dsgx77upi0qBZ1hPJNxr
-         33l5Yr+ZijGMIN/ukCpFrxVkFX0xP5k/wL5KJ5xfOiHbMXFw0sJ42986YiUCtwE3OM//
-         Cg/w==
-X-Gm-Message-State: APjAAAXCgLV1jj3ytrGlqA5TtU4N27C044sYQpyBB9wh19pHVno3W50g
-        CaWjE2ntQg134Xs8A4cLgek=
-X-Google-Smtp-Source: APXvYqx3fYd3copU8UnUOGA9iWwp5fl7LA8+KIQrIpRsa/hnVcXh2VbFjrBdC6KRbdCg2antv58Pdg==
-X-Received: by 2002:a17:902:2983:: with SMTP id h3mr84740917plb.45.1563948405996;
-        Tue, 23 Jul 2019 23:06:45 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id z63sm11682896pfb.98.2019.07.23.23.06.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 23:06:45 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Guo-Fu Tseng <cooldavid@cooldavid.org>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH net-next v2 8/8] net: jme: Use dev_get_drvdata
-Date:   Wed, 24 Jul 2019 14:06:41 +0800
-Message-Id: <20190724060641.24334-1-hslester96@gmail.com>
+        Wed, 24 Jul 2019 02:07:50 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 389EFE0007;
+        Wed, 24 Jul 2019 06:07:43 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH REBASE v4 08/14] arm: Use generic mmap top-down layout and brk randomization
+Date:   Wed, 24 Jul 2019 01:58:44 -0400
+Message-Id: <20190724055850.6232-9-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
+References: <20190724055850.6232-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+arm uses a top-down mmap layout by default that exactly fits the generic
+functions, so get rid of arch specific code and use the generic version
+by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
+As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
+use the generic version of arch_randomize_brk since it also fits.
+Note that this commit also removes the possibility for arm to have elf
+randomization and no MMU: without MMU, the security added by randomization
+is worth nothing.
+Note that it is safe to remove STACK_RND_MASK since it matches the default
+value.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
 ---
-Changes in v2:
-  - Change pci_set_drvdata to dev_set_drvdata
-    to keep consistency.
+ arch/arm/Kconfig                 |  2 +-
+ arch/arm/include/asm/processor.h |  2 --
+ arch/arm/kernel/process.c        |  5 ---
+ arch/arm/mm/mmap.c               | 62 --------------------------------
+ 4 files changed, 1 insertion(+), 70 deletions(-)
 
- drivers/net/ethernet/jme.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
-index 0b668357db4d..6815bd18a477 100644
---- a/drivers/net/ethernet/jme.c
-+++ b/drivers/net/ethernet/jme.c
-@@ -3000,7 +3000,7 @@ jme_init_one(struct pci_dev *pdev,
- 	netdev->max_mtu = MAX_ETHERNET_JUMBO_PACKET_SIZE - ETH_HLEN;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 33b00579beff..81b08b027e4e 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -7,7 +7,6 @@ config ARM
+ 	select ARCH_HAS_BINFMT_FLAT
+ 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+-	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_KEEPINITRD
+ 	select ARCH_HAS_KCOV
+@@ -30,6 +29,7 @@ config ARM
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
++	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
+ 	select BUILDTIME_EXTABLE_SORT if MMU
+diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
+index 20c2f42454b8..614bf829e454 100644
+--- a/arch/arm/include/asm/processor.h
++++ b/arch/arm/include/asm/processor.h
+@@ -140,8 +140,6 @@ static inline void prefetchw(const void *ptr)
+ #endif
+ #endif
  
- 	SET_NETDEV_DEV(netdev, &pdev->dev);
--	pci_set_drvdata(pdev, netdev);
-+	dev_set_drvdata(&pdev->dev, netdev);
+-#define HAVE_ARCH_PICK_MMAP_LAYOUT
+-
+ #endif
  
- 	/*
- 	 * init adapter info
-@@ -3193,8 +3193,7 @@ jme_shutdown(struct pci_dev *pdev)
- static int
- jme_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct jme_adapter *jme = netdev_priv(netdev);
+ #endif /* __ASM_ARM_PROCESSOR_H */
+diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
+index f934a6739fc0..9485acc520a4 100644
+--- a/arch/arm/kernel/process.c
++++ b/arch/arm/kernel/process.c
+@@ -319,11 +319,6 @@ unsigned long get_wchan(struct task_struct *p)
+ 	return 0;
+ }
  
- 	if (!netif_running(netdev))
-@@ -3236,8 +3235,7 @@ jme_suspend(struct device *dev)
- static int
- jme_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct jme_adapter *jme = netdev_priv(netdev);
+-unsigned long arch_randomize_brk(struct mm_struct *mm)
+-{
+-	return randomize_page(mm->brk, 0x02000000);
+-}
+-
+ #ifdef CONFIG_MMU
+ #ifdef CONFIG_KUSER_HELPERS
+ /*
+diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+index 0b94b674aa91..b8d912ac9e61 100644
+--- a/arch/arm/mm/mmap.c
++++ b/arch/arm/mm/mmap.c
+@@ -17,43 +17,6 @@
+ 	((((addr)+SHMLBA-1)&~(SHMLBA-1)) +	\
+ 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
  
- 	if (!netif_running(netdev))
+-/* gap between mmap and stack */
+-#define MIN_GAP		(128*1024*1024UL)
+-#define MAX_GAP		((STACK_TOP)/6*5)
+-#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+-
+-static int mmap_is_legacy(struct rlimit *rlim_stack)
+-{
+-	if (current->personality & ADDR_COMPAT_LAYOUT)
+-		return 1;
+-
+-	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+-		return 1;
+-
+-	return sysctl_legacy_va_layout;
+-}
+-
+-static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+-{
+-	unsigned long gap = rlim_stack->rlim_cur;
+-	unsigned long pad = stack_guard_gap;
+-
+-	/* Account for stack randomization if necessary */
+-	if (current->flags & PF_RANDOMIZE)
+-		pad += (STACK_RND_MASK << PAGE_SHIFT);
+-
+-	/* Values close to RLIM_INFINITY can overflow. */
+-	if (gap + pad > gap)
+-		gap += pad;
+-
+-	if (gap < MIN_GAP)
+-		gap = MIN_GAP;
+-	else if (gap > MAX_GAP)
+-		gap = MAX_GAP;
+-
+-	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+-}
+-
+ /*
+  * We need to ensure that shared mappings are correctly aligned to
+  * avoid aliasing issues with VIPT caches.  We need to ensure that
+@@ -181,31 +144,6 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+ 	return addr;
+ }
+ 
+-unsigned long arch_mmap_rnd(void)
+-{
+-	unsigned long rnd;
+-
+-	rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+-
+-	return rnd << PAGE_SHIFT;
+-}
+-
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+-{
+-	unsigned long random_factor = 0UL;
+-
+-	if (current->flags & PF_RANDOMIZE)
+-		random_factor = arch_mmap_rnd();
+-
+-	if (mmap_is_legacy(rlim_stack)) {
+-		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+-		mm->get_unmapped_area = arch_get_unmapped_area;
+-	} else {
+-		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+-		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+-	}
+-}
+-
+ /*
+  * You really shouldn't be using read() or write() on /dev/mem.  This
+  * might go away in the future.
 -- 
 2.20.1
 
