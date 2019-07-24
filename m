@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA11C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1DCC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DD6206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3F1206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999601;
-	bh=K35cIH3EA1Ft8Qi7ysiiVtejwUxQ3ffPih0OJkln8yc=;
+	s=default; t=1563999605;
+	bh=Ac4+0kdxBm/sPaXK+zxCsEvKI3E60ZZYmePwII+BD2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y9Iqf1EIYFwZiv9iK/xL9MbEHb/1xTFi4DFsU1hy0ZWy9mdljvCgikZhCXc0Zb2qQ
-	 4gPqWxjNe0JyR7VioXN/gviY1u53m2bZ8v95hMWCmmLCCb7hcaKYTD3cADCXU7swtn
-	 Nvly1y9rKA7qjeo+vyljT0MrB5ijmIlHJlnOxKmc=
+	b=ZxN8KIqTe8JypeeMHnnm5FkgDxxTW8sfZLIguqZZez5HPWEPytQlT9bBdKW2bh3FU
+	 WQhwiCsiICnCaqN05fYEIxVfAmrj+Vxfyo3VV9yjDuTVaIyrkxyOCP57TwzJW5TwBJ
+	 69uO/m2B0sM4MMFknbHcdZ1VulEGtURMcXn8lMmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391221AbfGXTrT (ORCPT
+        id S2391837AbfGXUUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53478 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:20:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391174AbfGXTrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:47:03 -0400
+        id S2391213AbfGXTrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:47:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79A4921873;
-        Wed, 24 Jul 2019 19:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73946205C9;
+        Wed, 24 Jul 2019 19:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997623;
-        bh=K35cIH3EA1Ft8Qi7ysiiVtejwUxQ3ffPih0OJkln8yc=;
+        s=default; t=1563997636;
+        bh=Ac4+0kdxBm/sPaXK+zxCsEvKI3E60ZZYmePwII+BD2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7zMo4iT4hdqWX9v/dAw6NhY+dbhe917fQ75R6dbU1GTJUUEq2DW84LIyiBQufbqO
-         S+W15RK5ffM82yxYBf5LuIhZCUExfN0L4gv84j+BE1tkwC0BGrzAy3HNK7yo147kYm
-         07KmOq65fs2oZvTMfkvO6Q9qU2T4Lk/rrTtOxhcE=
+        b=EYx5GO4sbx4oiKUfNFsW7I1y63r+LgrBGSvk0jYMDPIg49LtBKqOsZseUUr03Ol17
+         xqSt4AxyjIM3JUPK2nsyO9H1PFAWvKwQG9appfqXXCvv6lFyMMCEx2snEItElrQWGe
+         9D3xGhDSGC7TTxg+4VrCkAca7eybMm52+htUzosw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 088/371] crypto: testmgr - add some more preemption points
-Date:   Wed, 24 Jul 2019 21:17:20 +0200
-Message-Id: <20190724191731.459718924@linuxfoundation.org>
+Subject: [PATCH 5.1 093/371] qed: iWARP - Fix tc for MPA ll2 connection
+Date:   Wed, 24 Jul 2019 21:17:25 +0200
+Message-Id: <20190724191731.827411154@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,74 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e63e1b0dd0003dc31f73d875907432be3a2abe5d ]
+[ Upstream commit cb94d52b93c74fe1f2595734fabeda9f8ae891ee ]
 
-Call cond_resched() after each fuzz test iteration.  This avoids stall
-warnings if fuzz_iterations is set very high for testing purposes.
+The driver needs to assign a lossless traffic class for the MPA ll2
+connection to ensure no packets are dropped when returning from the
+driver as they will never be re-transmitted by the peer.
 
-While we're at it, also call cond_resched() after finishing testing each
-test vector.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: ae3488ff37dc ("qed: Add ll2 connection for processing unaligned MPA packets")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/testmgr.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 8386038d67c7..51540dbee23b 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -1050,6 +1050,7 @@ static int test_hash_vec(const char *driver, const struct hash_testvec *vec,
- 						req, tsgl, hashstate);
- 			if (err)
- 				return err;
-+			cond_resched();
- 		}
- 	}
- #endif
-@@ -1105,6 +1106,7 @@ static int __alg_test_hash(const struct hash_testvec *vecs,
- 		err = test_hash_vec(driver, &vecs[i], i, req, tsgl, hashstate);
- 		if (err)
- 			goto out;
-+		cond_resched();
- 	}
- 	err = 0;
- out:
-@@ -1346,6 +1348,7 @@ static int test_aead_vec(const char *driver, int enc,
- 						&cfg, req, tsgls);
- 			if (err)
- 				return err;
-+			cond_resched();
- 		}
- 	}
- #endif
-@@ -1365,6 +1368,7 @@ static int test_aead(const char *driver, int enc,
- 				    tsgls);
- 		if (err)
- 			return err;
-+		cond_resched();
- 	}
- 	return 0;
- }
-@@ -1679,6 +1683,7 @@ static int test_skcipher_vec(const char *driver, int enc,
- 						    &cfg, req, tsgls);
- 			if (err)
- 				return err;
-+			cond_resched();
- 		}
- 	}
- #endif
-@@ -1698,6 +1703,7 @@ static int test_skcipher(const char *driver, int enc,
- 					tsgls);
- 		if (err)
- 			return err;
-+		cond_resched();
- 	}
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index ded556b7bab5..eeea8683d99b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -2708,6 +2708,8 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+ 	data.input.rx_num_desc = n_ooo_bufs * 2;
+ 	data.input.tx_num_desc = data.input.rx_num_desc;
+ 	data.input.tx_max_bds_per_packet = QED_IWARP_MAX_BDS_PER_FPDU;
++	data.input.tx_tc = PKT_LB_TC;
++	data.input.tx_dest = QED_LL2_TX_DEST_LB;
+ 	data.p_connection_handle = &iwarp_info->ll2_mpa_handle;
+ 	data.input.secondary_queue = true;
+ 	data.cbs = &cbs;
 -- 
 2.20.1
 
