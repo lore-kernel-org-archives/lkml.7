@@ -2,73 +2,54 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E05C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7ADC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864FF22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/1DcqJn"
+	by mail.kernel.org (Postfix) with ESMTP id CDD7722387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbfGXGIU (ORCPT
+        id S1726400AbfGXGIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:08:20 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44693 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfGXGIT (ORCPT
+        Wed, 24 Jul 2019 02:08:54 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:59115 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfGXGIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:08:19 -0400
-Received: by mail-io1-f65.google.com with SMTP id s7so86973792iob.11;
-        Tue, 23 Jul 2019 23:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YDk5LUlpe3ysfAT5OqSj5FwvlMLI+GX+8vcuIiOGrxI=;
-        b=D/1DcqJnqZhoAAisXhEa4TclRHbrKwelJKoQ/+ULJ8XvaRhtBy7OLVIpIW8rneITml
-         RzJOrhhksEKAtGgXLjDxC+aW/lsajC2Jo5hTObIcEAqaCJBWAJ1XhG0fHKvh9vFphDWf
-         zEFY2QAWTfUBADk6kPsI7CPZFfM3FjrZev+y4/DwwKLzeUgMOYJQJB4uXerKlSX2U854
-         2ForQ6vtgqXpCnXRqOx+eDVnQnplf9oA89ZYiuVX5T7w6E31x+t7RcTLKQrjrZBbIw8u
-         GY3gFTTe7zfmx/Sno4B8rdpDvcfZ0pkOCvvGKowPvDtITBv8doG8SvBCbXoommQlCU7d
-         GYKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YDk5LUlpe3ysfAT5OqSj5FwvlMLI+GX+8vcuIiOGrxI=;
-        b=hH0tGeJAjiZrTxoPz0F7VSvxVCw97YaQPUd04Aj1ygSr+6zuv2IaRMSaegOb4AwA4h
-         8M5DRtgnfis5Cnn25HisiTl+x+9uRvPd2PDg8HdmGRIzcGPxEIiAIMs61e4FRPpzGfn4
-         2aIgsKfxHox/H7S1xodAxmT/p4Q1jGdj+oKblEo3FMGsebB/SHeHjEkbKF3mxy7M8Anr
-         5mtLv45ioN9lGkhplRnfaYaYlBtXDFxKebTTdcFQ6fcbNm1NYJfZ8iR2Er3BahPpfS6F
-         qRZ4tKvd+f9HkpOUTvyiPx1id//HHoE8FS6ySVaMFpbM1VKXlcGnKJXl6M89nF7DrA1e
-         2a6Q==
-X-Gm-Message-State: APjAAAWRb8oU0PwzvzGva4N5q1AySCf9cAJNvR02/CC4NcJTTWptGlAE
-        wHTSgMiGekbSVrBYFxnT8fU=
-X-Google-Smtp-Source: APXvYqyY2mboFz8cpwu4jM7KIEHCvEDvrl0oB8lS4KEtd1/it9Zo0Pc46OEwq3HAauajG1VvS72Xpw==
-X-Received: by 2002:a02:aa0d:: with SMTP id r13mr83123955jam.129.1563948498756;
-        Tue, 23 Jul 2019 23:08:18 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id z26sm45034296ioi.85.2019.07.23.23.08.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 23:08:18 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
-        quan@os.amperecomputing.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     skunberg.kelsey@gmail.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v3] drivers: net: xgene: Remove acpi_has_method() calls
-Date:   Wed, 24 Jul 2019 00:06:59 -0600
-Message-Id: <20190724060659.105292-1-skunberg.kelsey@gmail.com>
+        Wed, 24 Jul 2019 02:08:54 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 59E6560008;
+        Wed, 24 Jul 2019 06:08:48 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH REBASE v4 09/14] mips: Properly account for stack randomization and stack guard gap
+Date:   Wed, 24 Jul 2019 01:58:45 -0400
+Message-Id: <20190724055850.6232-10-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190723185811.8548-1-skunberg.kelsey@gmail.com>
-References: <20190723185811.8548-1-skunberg.kelsey@gmail.com>
+In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
+References: <20190724055850.6232-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,106 +57,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-acpi_evaluate_object will already return an error if the needed method
-does not exist. Remove unnecessary acpi_has_method() calls and check the
-returned acpi_status for failure instead.
+This commit takes care of stack randomization and stack guard gap when
+computing mmap base address and checks if the task asked for randomization.
+This fixes the problem uncovered and not fixed for arm here:
+https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Paul Burton <paul.burton@mips.com>
 ---
-Changes in v2:
-	- Fixed white space warnings and errors
+ arch/mips/mm/mmap.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Changes in v3:
-	- Resolved build errors caused by missing bracket
-
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    | 9 ++++-----
- drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 9 +++++----
- drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c | 9 ++++-----
- 3 files changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-index 61a465097cb8..79924efd4ab7 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
-@@ -694,6 +694,7 @@ bool xgene_ring_mgr_init(struct xgene_enet_pdata *p)
- static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
+index d79f2b432318..f5c778113384 100644
+--- a/arch/mips/mm/mmap.c
++++ b/arch/mips/mm/mmap.c
+@@ -21,8 +21,9 @@ unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
+ EXPORT_SYMBOL(shm_align_mask);
+ 
+ /* gap between mmap and stack */
+-#define MIN_GAP (128*1024*1024UL)
+-#define MAX_GAP ((TASK_SIZE)/6*5)
++#define MIN_GAP		(128*1024*1024UL)
++#define MAX_GAP		((TASK_SIZE)/6*5)
++#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+ 
+ static int mmap_is_legacy(struct rlimit *rlim_stack)
  {
- 	struct device *dev = &pdata->pdev->dev;
-+	acpi_status status;
- 
- 	if (!xgene_ring_mgr_init(pdata))
- 		return -ENODEV;
-@@ -712,11 +713,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- 		udelay(5);
- 	} else {
- #ifdef CONFIG_ACPI
--		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
--			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
--					     "_RST", NULL, NULL);
--		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
--					 "_INI")) {
-+		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
-+					      "_RST", NULL, NULL);
-+		if (ACPI_FAILURE(status)) {
- 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
- 					     "_INI", NULL, NULL);
- 		}
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-index 6453fc2ebb1f..3b3dc5b25b29 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
-@@ -437,6 +437,7 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
- static int xgene_enet_reset(struct xgene_enet_pdata *p)
+@@ -38,6 +39,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
  {
- 	struct device *dev = &p->pdev->dev;
-+	acpi_status status;
+ 	unsigned long gap = rlim_stack->rlim_cur;
++	unsigned long pad = stack_guard_gap;
++
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
++
++	/* Values close to RLIM_INFINITY can overflow. */
++	if (gap + pad > gap)
++		gap += pad;
  
- 	if (!xgene_ring_mgr_init(p))
- 		return -ENODEV;
-@@ -460,12 +461,12 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
- 		}
- 	} else {
- #ifdef CONFIG_ACPI
--		if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_RST"))
--			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
--					     "_RST", NULL, NULL);
--		else if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_INI"))
-+		status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
-+					      "_RST", NULL, NULL);
-+		if (ACPI_FAILURE(status)) {
- 			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
- 					     "_INI", NULL, NULL);
-+		}
- #endif
- 	}
- 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-index 133eb91c542e..78584089d76d 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
-@@ -380,6 +380,7 @@ static void xgene_xgmac_tx_disable(struct xgene_enet_pdata *pdata)
- static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- {
- 	struct device *dev = &pdata->pdev->dev;
-+	acpi_status status;
- 
- 	if (!xgene_ring_mgr_init(pdata))
- 		return -ENODEV;
-@@ -393,11 +394,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
- 		udelay(5);
- 	} else {
- #ifdef CONFIG_ACPI
--		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
--			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
--					     "_RST", NULL, NULL);
--		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
--					   "_INI")) {
-+		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
-+					      "_RST", NULL, NULL);
-+		if (ACPI_FAILURE(status)) {
- 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
- 					     "_INI", NULL, NULL);
- 		}
+ 	if (gap < MIN_GAP)
+ 		gap = MIN_GAP;
 -- 
 2.20.1
 
