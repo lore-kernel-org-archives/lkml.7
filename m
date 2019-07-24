@@ -2,290 +2,146 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BF6C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043CC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7545222387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 445D121743
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RrRNM4Ss"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SMLOGUG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfGXKV7 (ORCPT
+        id S1726828AbfGXKWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:21:59 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:24810 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfGXKV6 (ORCPT
+        Wed, 24 Jul 2019 06:22:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51451 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfGXKWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:21:58 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190724102154epoutp01809c9b36c134c3d1224f4adede63e81e~0ULZU2ERK0210002100epoutp01U
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:21:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190724102154epoutp01809c9b36c134c3d1224f4adede63e81e~0ULZU2ERK0210002100epoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563963714;
-        bh=fJ240QuJ4AWiZBDFAKIhCbblPL1WVUx6EYRobuxht4Q=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=RrRNM4Ss0ZKvII7yXlCXw2mYCY+MlKGOVF7IbHbzRUCPy0HVQWLsOD29lFH9q1/DY
-         XnzfPESI3RLHrwr71o2+pT70L5MmUzgbKb9sb6y1mjUNTNSHatIY+QrddzlUQMwPTe
-         bA4eXqzTU7GviTV5rP1sfYS5F1Lh6KkTOljt5Qqg=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20190724102153epcas1p41ee33c3d4484574076ca5c1dfe1fdb55~0ULYi-eAX3103531035epcas1p4B;
-        Wed, 24 Jul 2019 10:21:53 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 45trxC3SzmzMqYkb; Wed, 24 Jul
-        2019 10:21:51 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        38.1D.04160.F31383D5; Wed, 24 Jul 2019 19:21:51 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190724102150epcas1p3dedca2401c63bee9e76f9f874712ea50~0ULVQhhcD0054900549epcas1p3m;
-        Wed, 24 Jul 2019 10:21:50 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190724102150epsmtrp2f9f243fd504c9fe4f1f313d42646f4a9~0ULVO9DxM1535615356epsmtrp2_;
-        Wed, 24 Jul 2019 10:21:50 +0000 (GMT)
-X-AuditID: b6c32a38-b4bff70000001040-84-5d38313f5331
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D9.53.03706.E31383D5; Wed, 24 Jul 2019 19:21:50 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190724102149epsmtip2beb32fb3b843c89bf05516b7005f889c~0ULU_BLq40400504005epsmtip2P;
-        Wed, 24 Jul 2019 10:21:49 +0000 (GMT)
-Subject: Re: [PATCH v4 3/5] drivers: devfreq: events: extend events by type
- of counted data
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, kgene@kernel.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <15375017-2e82-7df8-344c-a9c41d61331c@samsung.com>
-Date:   Wed, 24 Jul 2019 19:24:53 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 24 Jul 2019 06:22:45 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x6OAMLAE490320
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 24 Jul 2019 03:22:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x6OAMLAE490320
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1563963741;
+        bh=Cb6E/AEJ31z78Bst6yAAp5yYD+unp+whSXcGVbkFmjM=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=SMLOGUG8Dx/WtB0K6FqYnkQE3FRgHrK+oURXYcyu8lnjRNPe9fctxkZ1NAdqPrpBV
+         rXtJcG3ToUdRMFvT8LiA4eSBQgT+b1n5khe+M5/GttWmabuAzIfC05MD84zRsPcsiu
+         7UnPc7ar7V4/MNBYOgPQc9zhq0hMZ03NNpkX2vGsqSaD5HYn1GTmeoNach+NwRmDtS
+         ZyhjuMQYIxvlIsuHGZmYegwgasqm/LvH/YM8pNPv+OHeEzE/mTtWo3g92Am1TC0093
+         /6G9Supfn4JOlo3lKU5M2ylbMUfpbvy/BqvEB7M695uNOrlFE2EIxZ4focf+ZRewQg
+         OYqvNVpstrOAA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x6OAMKlm490317;
+        Wed, 24 Jul 2019 03:22:20 -0700
+Date:   Wed, 24 Jul 2019 03:22:20 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Matt Mullins <tipbot@zytor.com>
+Message-ID: <tip-b8f70953c1251d8b16276995816a95639f598e70@git.kernel.org>
+Cc:     mmullins@fb.com, mingo@kernel.org, peterz@infradead.org,
+        hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org
+Reply-To: tglx@linutronix.de, hpa@zytor.com, mmullins@fb.com,
+          mingo@kernel.org, peterz@infradead.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <20190724042058.24506-1-mmullins@fb.com>
+References: <20190724042058.24506-1-mmullins@fb.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/entry/32: Pass cr2 to do_async_page_fault()
+Git-Commit-ID: b8f70953c1251d8b16276995816a95639f598e70
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <37af143f-a585-a28a-a36f-2ed25c5b6d3b@partner.samsung.com>
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxzeubf39sLW7azq/EkWLdcshmYgl9JybMAtmXNNRhSzLDFmDbtr
-        b4DQV3oL6pwTNMjL4RYzxU5xibIM5oMV5oNZiaVxsgXKIGPzUULEPwgqOruh2Vxi27Nl/Pd9
-        3/l++c53HgKrv8FnCVWegOL3yC6Rz9ScHczJy31NIvb85idAvm0/w5Fj0RGO7J++w5JYrEdL
-        hnff1ZLrdS+T0PQER8b7j/Ak8UkUkfbYJYacisa1pPPXnxlyo/5rnjSEo1oyeLeRI/NXb6HX
-        se1kx0lkuxCMa22h7mbe1ntil+3y3EXG1tbXjWyJ0PIy7Zbq4kpFdip+g+JxeJ1VnooS8e13
-        yt8oN1vypVxpDSkSDR7ZrZSI60rLctdXuZJ7Fw21sqsmKZXJqiquXlvs99YEFEOlVw2UiIrP
-        6fKt8eWpslut8VTkObxuq5SfX2BOGt+vrrza2sv5Ol7dNvzgHFeHDoktKEMAXAiJ2UmmBWUK
-        enweQWJilqPkIYJ/euKIknkEjV/Vsy1ISI+MxTZTPYzg8/oeDSX3Edzcd4BJmRZhO+z9xpLS
-        F+NhBFO7z/IpwuIEgqGpCS4VzmMjDMz8xqfwCzgbfnk8jVJYh9dCJB5JezT4FQh3tqQ9S/Bm
-        eDg1yFHPizB0+LYmhTPwW3D6Xk/aw+KlcP32MYbiFbDnuy/YVDDgK1qoj4a1tPU6+HE2hChe
-        BLM/9P2rZ0FiLsxTvAO6hqI8HW5C0DcwytEFEwx00poszoEz/aupnA0X/j6KaPDzMPfnPo4e
-        lw6a9uqpZSWMT8UZipfB8cZm/lMkBhfUCS6oEFxQIfh/2JdI041eUnyqu0JRJV/hwusOofTD
-        NpLz6OJIaQRhAYnP6QzPFNn1nFyrbndHEAisuFi3qc5i1+uc8vYPFb+33F/jUtQIMidP+zM2
-        a4nDm/wmnkC5ZC4wmUykULKYJUlcqut4kmPX4wo5oFQrik/x/zfHCBlZdch8s71pp+mjySBX
-        mo0L3j1IjNiyjQjzo3nWvkOTzKhzxZGJtpGA/BdsrX2vd2x68JpxVaNi3WTNbL3W9Wjk2X7d
-        6fVFd9zFjtatx3PedOBd51Y1eOLLY9/P7Lg/Fr8lVjWIkmD2Zo5b9/y0fyb0Mfxx8PeNXVcO
-        qG2BDTuHTnwgatRKWTKyflV+CrT0vvbuAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsWy7bCSvK6doUWswZF/7BYbZ6xntZh/5Byr
-        Rf/j18wW589vYLc42/SG3eJWg4zFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26x9PpFJovb
-        jSvYLFr3HmG3OPymndXi24lHjA4CHmvmrWH02DnrLrvHplWdbB6bl9R7HHy3h8mjb8sqRo/P
-        m+QC2KO4bFJSczLLUov07RK4Mk50b2YtmKdTcfbDdtYGxulKXYwcHBICJhKXzkd0MXJxCAns
-        ZpS4s7yBuYuREyguKTHt4lFmiBphicOHiyFq3jJKHDl+gR2kRlggVqLp0mVWkISIwFlGiUWT
-        FrCDOMwCnxklpq+5zAzR0sYkMa31MAtIC5uAlsT+FzfYQGx+AUWJqz8eM4LYvAJ2EofuHmIF
-        sVkEVCX2Lu0CqxEViJA4vGMWVI2gxMmZT8DmcAq4S6x7uwGshllAXeLPvEvMELa4xK0n85kg
-        bHmJ5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yf
-        u4kRHLtamjsYLy+JP8QowMGoxMOrwGAeK8SaWFZcmXuIUYKDWUmEN7DBLFaINyWxsiq1KD++
-        qDQntfgQozQHi5I479O8Y5FCAumJJanZqakFqUUwWSYOTqkGxnpe/4KZ/d3xG0wSV62TWjHl
-        dlb5zm//XqRPfck50fIC675Pbzt07nWJmnzZGapf+GGewK858q91H+QkSVxarJT/SzT7Y6jC
-        rZuLdonNXhLhpzXvl5+bxWtp65uLfzOenXFZ1UD6XO3+4MINV5Z27lpquceqm0W6cutDjfzO
-        34f/Lax0fe355LkSS3FGoqEWc1FxIgCr0Is22QIAAA==
-X-CMS-MailID: 20190724102150epcas1p3dedca2401c63bee9e76f9f874712ea50
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190605091303eucas1p27177d349e0f2bd37bf582dbd7266321a
-References: <20190605091236.24263-1-l.luba@partner.samsung.com>
-        <CGME20190605091303eucas1p27177d349e0f2bd37bf582dbd7266321a@eucas1p2.samsung.com>
-        <20190605091236.24263-4-l.luba@partner.samsung.com>
-        <37af143f-a585-a28a-a36f-2ed25c5b6d3b@partner.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukasz,
+Commit-ID:  b8f70953c1251d8b16276995816a95639f598e70
+Gitweb:     https://git.kernel.org/tip/b8f70953c1251d8b16276995816a95639f598e70
+Author:     Matt Mullins <mmullins@fb.com>
+AuthorDate: Tue, 23 Jul 2019 21:20:58 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 24 Jul 2019 12:17:39 +0200
 
-On 19. 7. 24. 오후 7:15, Lukasz Luba wrote:
-> Hi Chanwoo,
-> 
-> Could you have a look a this patch, please?
-> This patch has been rewritten accorifing to your suggestion.
-> Krzysztof tried to apply 5/5 DT patch on his current branch,
-> but it is missing earlier stuff.
-> The other patches have needed ACKs so could go through devfreq tree
-> probably, but this one left.
+x86/entry/32: Pass cr2 to do_async_page_fault()
 
-Sorry for the late reply. It looks good to me.
+Commit a0d14b8909de ("x86/mm, tracing: Fix CR2 corruption") added the
+address parameter to do_async_page_fault(), but does not pass it from the
+32-bit entry point.  To plumb it through, factor-out
+common_exception_read_cr2 in the same fashion as common_exception, and uses
+it from both page_fault and async_page_fault.
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+For a 32-bit KVM guest, this fixes:
 
-> 
-> Regards,
-> Lukasz
-> 
-> On 6/5/19 11:12 AM, Lukasz Luba wrote:
->> This patch adds posibility to choose what type of data should be counted
->> by the PPMU counter. Now the type comes from DT where the event has been
->> defined. When there is no 'event-data-type' the default value is used,
->> which is 'read+write data in bytes'.
->> It is needed when you want to know not only read+write data bytes but
->> i.e. only write data in byte, or number of read requests, etc.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   drivers/devfreq/event/exynos-ppmu.c | 60 ++++++++++++++++++++---------
->>   include/linux/devfreq-event.h       |  6 +++
->>   2 files changed, 47 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
->> index 17f3c86a6f00..12f637320e9e 100644
->> --- a/drivers/devfreq/event/exynos-ppmu.c
->> +++ b/drivers/devfreq/event/exynos-ppmu.c
->> @@ -161,9 +161,9 @@ static int exynos_ppmu_set_event(struct devfreq_event_dev *edev)
->>   	if (ret < 0)
->>   		return ret;
->>   
->> -	/* Set the event of Read/Write data count  */
->> +	/* Set the event of proper data type monitoring */
->>   	ret = regmap_write(info->regmap, PPMU_BEVTxSEL(id),
->> -				PPMU_RO_DATA_CNT | PPMU_WO_DATA_CNT);
->> +			   edev->desc->data_type);
->>   	if (ret < 0)
->>   		return ret;
->>   
->> @@ -375,23 +375,11 @@ static int exynos_ppmu_v2_set_event(struct devfreq_event_dev *edev)
->>   	if (ret < 0)
->>   		return ret;
->>   
->> -	/* Set the event of Read/Write data count  */
->> -	switch (id) {
->> -	case PPMU_PMNCNT0:
->> -	case PPMU_PMNCNT1:
->> -	case PPMU_PMNCNT2:
->> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
->> -				PPMU_V2_RO_DATA_CNT | PPMU_V2_WO_DATA_CNT);
->> -		if (ret < 0)
->> -			return ret;
->> -		break;
->> -	case PPMU_PMNCNT3:
->> -		ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
->> -				PPMU_V2_EVT3_RW_DATA_CNT);
->> -		if (ret < 0)
->> -			return ret;
->> -		break;
->> -	}
->> +	/* Set the event of proper data type monitoring */
->> +	ret = regmap_write(info->regmap, PPMU_V2_CH_EVx_TYPE(id),
->> +			   edev->desc->data_type);
->> +	if (ret < 0)
->> +		return ret;
->>   
->>   	/* Reset cycle counter/performance counter and enable PPMU */
->>   	ret = regmap_read(info->regmap, PPMU_V2_PMNC, &pmnc);
->> @@ -507,6 +495,7 @@ static int of_get_devfreq_events(struct device_node *np,
->>   	struct device_node *events_np, *node;
->>   	int i, j, count;
->>   	const struct of_device_id *of_id;
->> +	int ret;
->>   
->>   	events_np = of_get_child_by_name(np, "events");
->>   	if (!events_np) {
->> @@ -556,6 +545,39 @@ static int of_get_devfreq_events(struct device_node *np,
->>   		desc[j].driver_data = info;
->>   
->>   		of_property_read_string(node, "event-name", &desc[j].name);
->> +		ret = of_property_read_u32(node, "event-data-type",
->> +					   &desc[j].data_type);
->> +		if (ret) {
->> +			/* Set the event of proper data type counting.
->> +			 * Check if the data type has been defined in DT,
->> +			 * use default if not.
->> +			 */
->> +			if (info->ppmu_type == EXYNOS_TYPE_PPMU_V2) {
->> +				struct devfreq_event_dev edev;
->> +				int id;
->> +				/* Not all registers take the same value for
->> +				 * read+write data count.
->> +				 */
->> +				edev.desc = &desc[j];
->> +				id = exynos_ppmu_find_ppmu_id(&edev);
->> +
->> +				switch (id) {
->> +				case PPMU_PMNCNT0:
->> +				case PPMU_PMNCNT1:
->> +				case PPMU_PMNCNT2:
->> +					desc[j].data_type = PPMU_V2_RO_DATA_CNT
->> +						| PPMU_V2_WO_DATA_CNT;
->> +					break;
->> +				case PPMU_PMNCNT3:
->> +					desc[j].data_type =
->> +						PPMU_V2_EVT3_RW_DATA_CNT;
->> +					break;
->> +				}
->> +			} else {
->> +				desc[j].data_type = PPMU_RO_DATA_CNT |
->> +					PPMU_WO_DATA_CNT;
->> +			}
->> +		}
->>   
->>   		j++;
->>   	}
->> diff --git a/include/linux/devfreq-event.h b/include/linux/devfreq-event.h
->> index 4db00b02ca3f..cc160b1274c0 100644
->> --- a/include/linux/devfreq-event.h
->> +++ b/include/linux/devfreq-event.h
->> @@ -81,14 +81,20 @@ struct devfreq_event_ops {
->>    * struct devfreq_event_desc - the descriptor of devfreq-event device
->>    *
->>    * @name	: the name of devfreq-event device.
->> + * @data_type	: the data type which is going to be counted in the register.
->>    * @driver_data	: the private data for devfreq-event driver.
->>    * @ops		: the operation to control devfreq-event device.
->>    *
->>    * Each devfreq-event device is described with a this structure.
->>    * This structure contains the various data for devfreq-event device.
->> + * The data_type describes what is going to be counted in the register.
->> + * It might choose to count e.g. read requests, write data in bytes, etc.
->> + * The full supported list of types is present in specyfic header in:
->> + * include/dt-bindings/pmu/.
->>    */
->>   struct devfreq_event_desc {
->>   	const char *name;
->> +	u32 data_type;
->>   	void *driver_data;
->>   
->>   	const struct devfreq_event_ops *ops;
->>
-> 
-> 
+  Run /sbin/init as init process
+  Starting init: /sbin/init exists but couldn't execute it (error -14)
 
+Fixes: a0d14b8909de ("x86/mm, tracing: Fix CR2 corruption")
+Signed-off-by: Matt Mullins <mmullins@fb.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190724042058.24506-1-mmullins@fb.com
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+---
+ arch/x86/entry/entry_32.S | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 2bb986f305ac..4f86928246e7 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1443,8 +1443,12 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vector, HYPERV_STIMER0_VECTOR,
+ 
+ ENTRY(page_fault)
+ 	ASM_CLAC
+-	pushl	$0; /* %gs's slot on the stack */
++	pushl	$do_page_fault
++	jmp	common_exception_read_cr2
++END(page_fault)
+ 
++common_exception_read_cr2:
++	/* the function address is in %gs's slot on the stack */
+ 	SAVE_ALL switch_stacks=1 skip_gs=1
+ 
+ 	ENCODE_FRAME_POINTER
+@@ -1452,6 +1456,7 @@ ENTRY(page_fault)
+ 
+ 	/* fixup %gs */
+ 	GS_TO_REG %ecx
++	movl	PT_GS(%esp), %edi
+ 	REG_TO_PTGS %ecx
+ 	SET_KERNEL_GS %ecx
+ 
+@@ -1463,9 +1468,9 @@ ENTRY(page_fault)
+ 
+ 	TRACE_IRQS_OFF
+ 	movl	%esp, %eax			# pt_regs pointer
+-	call	do_page_fault
++	CALL_NOSPEC %edi
+ 	jmp	ret_from_exception
+-END(page_fault)
++END(common_exception_read_cr2)
+ 
+ common_exception:
+ 	/* the function address is in %gs's slot on the stack */
+@@ -1595,7 +1600,7 @@ END(general_protection)
+ ENTRY(async_page_fault)
+ 	ASM_CLAC
+ 	pushl	$do_async_page_fault
+-	jmp	common_exception
++	jmp	common_exception_read_cr2
+ END(async_page_fault)
+ #endif
+ 
