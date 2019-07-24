@@ -2,86 +2,232 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0345EC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5598C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB732227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6F522387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfGXGMk (ORCPT
+        id S1726333AbfGXGNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:12:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2711 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725945AbfGXGMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:12:39 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DB0DDD7CEC6E4F93575F;
-        Wed, 24 Jul 2019 14:12:36 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 14:12:26 +0800
-Subject: Re: [PATCH v2] RDMA/hns: Fix build error for hip08
-To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
-        <dledford@redhat.com>, <jgg@ziepe.ca>, <leon@kernel.org>
-References: <20190723024908.11876-1-yuehaibing@huawei.com>
- <20190724034016.15048-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <a022a386-85cc-aa92-2f50-1b61070d4d2e@huawei.com>
-Date:   Wed, 24 Jul 2019 14:12:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 24 Jul 2019 02:13:17 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44525 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfGXGNQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:13:16 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 4285B20005;
+        Wed, 24 Jul 2019 06:13:08 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH REBASE v4 13/14] mips: Use generic mmap top-down layout and brk randomization
+Date:   Wed, 24 Jul 2019 01:58:49 -0400
+Message-Id: <20190724055850.6232-14-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
+References: <20190724055850.6232-1-alex@ghiti.fr>
 MIME-Version: 1.0
-In-Reply-To: <20190724034016.15048-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+mips uses a top-down layout by default that exactly fits the generic
+functions, so get rid of arch specific code and use the generic version
+by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
+As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
+use the generic version of arch_randomize_brk since it also fits.
+Note that this commit also removes the possibility for mips to have elf
+randomization and no MMU: without MMU, the security added by randomization
+is worth nothing.
 
-Pls drop this, this cannot fix the issue.
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+ arch/mips/Kconfig                 |  2 +-
+ arch/mips/include/asm/processor.h |  5 --
+ arch/mips/mm/mmap.c               | 96 -------------------------------
+ 3 files changed, 1 insertion(+), 102 deletions(-)
 
-On 2019/7/24 11:40, YueHaibing wrote:
-> If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
-> but INFINIBAND_HNS is y, building fails:
-> 
-> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
-> hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
-> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
-> hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Suggested-by: Leon Romanovsky <leon@kernel.org>
-> Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: select HNS3 to fix this
-> ---
->  drivers/infiniband/hw/hns/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
-> index 8bf847b..b9dfac0 100644
-> --- a/drivers/infiniband/hw/hns/Kconfig
-> +++ b/drivers/infiniband/hw/hns/Kconfig
-> @@ -22,7 +22,8 @@ config INFINIBAND_HNS_HIP06
->  
->  config INFINIBAND_HNS_HIP08
->  	bool "Hisilicon Hip08 Family RoCE support"
-> -	depends on INFINIBAND_HNS && PCI && HNS3
-> +	depends on INFINIBAND_HNS && PCI
-> +	select HNS3
->  	---help---
->  	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
->  	  The RoCE engine is a PCI device.
-> 
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d50fafd7bf3a..4e85d7d2cf1a 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -5,7 +5,6 @@ config MIPS
+ 	select ARCH_32BIT_OFF_T if !64BIT
+ 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
+ 	select ARCH_CLOCKSOURCE_DATA
+-	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+ 	select ARCH_SUPPORTS_UPROBES
+@@ -13,6 +12,7 @@ config MIPS
+ 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
++	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select BUILDTIME_EXTABLE_SORT
+ 	select CLONE_BACKWARDS
+diff --git a/arch/mips/include/asm/processor.h b/arch/mips/include/asm/processor.h
+index aca909bd7841..fba18d4a9190 100644
+--- a/arch/mips/include/asm/processor.h
++++ b/arch/mips/include/asm/processor.h
+@@ -29,11 +29,6 @@
+ 
+ extern unsigned int vced_count, vcei_count;
+ 
+-/*
+- * MIPS does have an arch_pick_mmap_layout()
+- */
+-#define HAVE_ARCH_PICK_MMAP_LAYOUT 1
+-
+ #ifdef CONFIG_32BIT
+ #ifdef CONFIG_KVM_GUEST
+ /* User space process size is limited to 1GB in KVM Guest Mode */
+diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
+index d4eafbb82789..00fe90c6db3e 100644
+--- a/arch/mips/mm/mmap.c
++++ b/arch/mips/mm/mmap.c
+@@ -16,49 +16,10 @@
+ #include <linux/random.h>
+ #include <linux/sched/signal.h>
+ #include <linux/sched/mm.h>
+-#include <linux/sizes.h>
+-#include <linux/compat.h>
+ 
+ unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
+ EXPORT_SYMBOL(shm_align_mask);
+ 
+-/* gap between mmap and stack */
+-#define MIN_GAP		(128*1024*1024UL)
+-#define MAX_GAP		((STACK_TOP)/6*5)
+-#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+-
+-static int mmap_is_legacy(struct rlimit *rlim_stack)
+-{
+-	if (current->personality & ADDR_COMPAT_LAYOUT)
+-		return 1;
+-
+-	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+-		return 1;
+-
+-	return sysctl_legacy_va_layout;
+-}
+-
+-static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+-{
+-	unsigned long gap = rlim_stack->rlim_cur;
+-	unsigned long pad = stack_guard_gap;
+-
+-	/* Account for stack randomization if necessary */
+-	if (current->flags & PF_RANDOMIZE)
+-		pad += (STACK_RND_MASK << PAGE_SHIFT);
+-
+-	/* Values close to RLIM_INFINITY can overflow. */
+-	if (gap + pad > gap)
+-		gap += pad;
+-
+-	if (gap < MIN_GAP)
+-		gap = MIN_GAP;
+-	else if (gap > MAX_GAP)
+-		gap = MAX_GAP;
+-
+-	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+-}
+-
+ #define COLOUR_ALIGN(addr, pgoff)				\
+ 	((((addr) + shm_align_mask) & ~shm_align_mask) +	\
+ 	 (((pgoff) << PAGE_SHIFT) & shm_align_mask))
+@@ -156,63 +117,6 @@ unsigned long arch_get_unmapped_area_topdown(struct file *filp,
+ 			addr0, len, pgoff, flags, DOWN);
+ }
+ 
+-unsigned long arch_mmap_rnd(void)
+-{
+-	unsigned long rnd;
+-
+-#ifdef CONFIG_COMPAT
+-	if (TASK_IS_32BIT_ADDR)
+-		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
+-	else
+-#endif /* CONFIG_COMPAT */
+-		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
+-
+-	return rnd << PAGE_SHIFT;
+-}
+-
+-void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+-{
+-	unsigned long random_factor = 0UL;
+-
+-	if (current->flags & PF_RANDOMIZE)
+-		random_factor = arch_mmap_rnd();
+-
+-	if (mmap_is_legacy(rlim_stack)) {
+-		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+-		mm->get_unmapped_area = arch_get_unmapped_area;
+-	} else {
+-		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+-		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+-	}
+-}
+-
+-static inline unsigned long brk_rnd(void)
+-{
+-	unsigned long rnd = get_random_long();
+-
+-	rnd = rnd << PAGE_SHIFT;
+-	/* 32MB for 32bit, 1GB for 64bit */
+-	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
+-		rnd = rnd & SZ_32M;
+-	else
+-		rnd = rnd & SZ_1G;
+-
+-	return rnd;
+-}
+-
+-unsigned long arch_randomize_brk(struct mm_struct *mm)
+-{
+-	unsigned long base = mm->brk;
+-	unsigned long ret;
+-
+-	ret = PAGE_ALIGN(base + brk_rnd());
+-
+-	if (ret < mm->brk)
+-		return mm->brk;
+-
+-	return ret;
+-}
+-
+ bool __virt_addr_valid(const volatile void *kaddr)
+ {
+ 	unsigned long vaddr = (unsigned long)kaddr;
+-- 
+2.20.1
 
