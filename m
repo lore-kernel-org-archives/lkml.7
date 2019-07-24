@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2332BC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ECBC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB7C217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE4B229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997182;
-	bh=3Cw7wmrxI0vPXcZeOl+alUhNYLWkew2XmGOFUWbkJdM=;
+	s=default; t=1563997185;
+	bh=K99YGqzcYsRpCLhamngDaWBaSL9BRD0VjzWdGyWWLWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H6TKGT/4sYGX4us62+SdMOFEvQ4hV39HlTewsJdV1HvP8IcREX/tHar01n1fEtC2X
-	 tRWmi75oRQriNddqezbUxpDpdr6wQMBLCKuxRd9LptTyIk0qlH31WH3eNGobaNx6BT
-	 YWEDKzMK7o2KgzIL34Jg8OCDUrAk/QIxAd8PZk8Q=
+	b=kBtILT0uCle58e0th5EIVXJOTF7z1LEORtRcFd604y7hVSOWgoFNO7FAwFNfNbR4G
+	 eEZkrNtf2xBWrCG8lOJmhElIjxEkg07f+4+6u4dggi9FLkAby5ccwcJ4DquVHEEoQc
+	 oLSqZ+VtuVuzdlaZCvb8EdR9nRf8ONBMKdaMZCw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbfGXTjk (ORCPT
+        id S2389687AbfGXTjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40686 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:39:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389961AbfGXTjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:39:36 -0400
+        id S2389652AbfGXTjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:39:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83176229F4;
-        Wed, 24 Jul 2019 19:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205E520665;
+        Wed, 24 Jul 2019 19:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997175;
-        bh=3Cw7wmrxI0vPXcZeOl+alUhNYLWkew2XmGOFUWbkJdM=;
+        s=default; t=1563997178;
+        bh=K99YGqzcYsRpCLhamngDaWBaSL9BRD0VjzWdGyWWLWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hiw1JFjdhdJTIiIw9k/BB0CFswECh8obgENmK/A4uZtCqOs0gotdN5gXppC8aHwOH
-         42PEvZpn9cCh7w4uiZTH0Rn0mTbXsBzWXqUxDjRqEbMsNnm3jHCNcwuf8reHEgkulz
-         ZdDO+59C9R/uOzEONgpHRsvcpN6U/H0bvMIGySX8=
+        b=VHLnPCCWYPd4o7X5dBgvz6fW0tKlfsDLHv9b0adOd40166OfK1RoRB3gjx4Ebm+lE
+         GvAbBcHetKpSKxFs9TKbkMXEdxlL90BJNp4pJH3oOwN2RJ37vcoh3zDM+gxHaLbT2Z
+         EzlDkpCGqUaM1OWQFiKMkmy2rMdp2Q+uA5ssmHpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.2 295/413] iwlwifi: pcie: dont service an interrupt that was masked
-Date:   Wed, 24 Jul 2019 21:19:46 +0200
-Message-Id: <20190724191757.215495817@linuxfoundation.org>
+        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.2 341/413] signal: Correct namespace fixups of si_pid and si_uid
+Date:   Wed, 24 Jul 2019 21:20:32 +0200
+Message-Id: <20190724191800.223326080@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,72 +58,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-commit 3b57a10ca14c619707398dc58fe5ece18c95b20b upstream.
+commit 7a0cf094944e2540758b7f957eb6846d5126f535 upstream.
 
-Sometimes the register status can include interrupts that
-were masked. We can, for example, get the RF-Kill bit set
-in the interrupt status register although this interrupt
-was masked. Then if we get the ALIVE interrupt (for example)
-that was not masked, we need to *not* service the RF-Kill
-interrupt.
-Fix this in the MSI-X interrupt handler.
+The function send_signal was split from __send_signal so that it would
+be possible to bypass the namespace logic based upon current[1].  As it
+turns out the si_pid and the si_uid fixup are both inappropriate in
+the case of kill_pid_usb_asyncio so move that logic into send_signal.
 
+It is difficult to arrange but possible for a signal with an si_code
+of SI_TIMER or SI_SIGIO to be sent across namespace boundaries.  In
+which case tests for when it is ok to change si_pid and si_uid based
+on SI_FROMUSER are incorrect.  Replace the use of SI_FROMUSER with a
+new test has_si_pid_and_used based on siginfo_layout.
+
+Now that the uid fixup is no longer present after expanding
+SEND_SIG_NOINFO properly calculate the si_uid that the target
+task needs to read.
+
+[1] 7978b567d315 ("signals: add from_ancestor_ns parameter to send_signal()")
 Cc: stable@vger.kernel.org
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: 6588c1e3ff01 ("signals: SI_USER: Masquerade si_pid when crossing pid ns boundary")
+Fixes: 6b550f949594 ("user namespace: make signal.c respect user namespaces")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c |   27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+ kernel/signal.c |   67 +++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 40 insertions(+), 27 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -2108,10 +2108,18 @@ irqreturn_t iwl_pcie_irq_msix_handler(in
- 		return IRQ_NONE;
- 	}
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1057,27 +1057,6 @@ static inline bool legacy_queue(struct s
+ 	return (sig < SIGRTMIN) && sigismember(&signals->signal, sig);
+ }
  
--	if (iwl_have_debug_level(IWL_DL_ISR))
--		IWL_DEBUG_ISR(trans, "ISR inta_fh 0x%08x, enabled 0x%08x\n",
--			      inta_fh,
-+	if (iwl_have_debug_level(IWL_DL_ISR)) {
-+		IWL_DEBUG_ISR(trans,
-+			      "ISR inta_fh 0x%08x, enabled (sw) 0x%08x (hw) 0x%08x\n",
-+			      inta_fh, trans_pcie->fh_mask,
- 			      iwl_read32(trans, CSR_MSIX_FH_INT_MASK_AD));
-+		if (inta_fh & ~trans_pcie->fh_mask)
-+			IWL_DEBUG_ISR(trans,
-+				      "We got a masked interrupt (0x%08x)\n",
-+				      inta_fh & ~trans_pcie->fh_mask);
+-#ifdef CONFIG_USER_NS
+-static inline void userns_fixup_signal_uid(struct kernel_siginfo *info, struct task_struct *t)
+-{
+-	if (current_user_ns() == task_cred_xxx(t, user_ns))
+-		return;
+-
+-	if (SI_FROMKERNEL(info))
+-		return;
+-
+-	rcu_read_lock();
+-	info->si_uid = from_kuid_munged(task_cred_xxx(t, user_ns),
+-					make_kuid(current_user_ns(), info->si_uid));
+-	rcu_read_unlock();
+-}
+-#else
+-static inline void userns_fixup_signal_uid(struct kernel_siginfo *info, struct task_struct *t)
+-{
+-	return;
+-}
+-#endif
+-
+ static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
+ 			enum pid_type type, int from_ancestor_ns)
+ {
+@@ -1135,7 +1114,11 @@ static int __send_signal(int sig, struct
+ 			q->info.si_code = SI_USER;
+ 			q->info.si_pid = task_tgid_nr_ns(current,
+ 							task_active_pid_ns(t));
+-			q->info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
++			rcu_read_lock();
++			q->info.si_uid =
++				from_kuid_munged(task_cred_xxx(t, user_ns),
++						 current_uid());
++			rcu_read_unlock();
+ 			break;
+ 		case (unsigned long) SEND_SIG_PRIV:
+ 			clear_siginfo(&q->info);
+@@ -1147,13 +1130,8 @@ static int __send_signal(int sig, struct
+ 			break;
+ 		default:
+ 			copy_siginfo(&q->info, info);
+-			if (from_ancestor_ns)
+-				q->info.si_pid = 0;
+ 			break;
+ 		}
+-
+-		userns_fixup_signal_uid(&q->info, t);
+-
+ 	} else if (!is_si_special(info)) {
+ 		if (sig >= SIGRTMIN && info->si_code != SI_USER) {
+ 			/*
+@@ -1197,6 +1175,28 @@ ret:
+ 	return ret;
+ }
+ 
++static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
++{
++	bool ret = false;
++	switch (siginfo_layout(info->si_signo, info->si_code)) {
++	case SIL_KILL:
++	case SIL_CHLD:
++	case SIL_RT:
++		ret = true;
++		break;
++	case SIL_TIMER:
++	case SIL_POLL:
++	case SIL_FAULT:
++	case SIL_FAULT_MCEERR:
++	case SIL_FAULT_BNDERR:
++	case SIL_FAULT_PKUERR:
++	case SIL_SYS:
++		ret = false;
++		break;
 +	}
++	return ret;
++}
 +
-+	inta_fh &= trans_pcie->fh_mask;
+ static int send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
+ 			enum pid_type type)
+ {
+@@ -1206,7 +1206,20 @@ static int send_signal(int sig, struct k
+ 	from_ancestor_ns = si_fromuser(info) &&
+ 			   !task_pid_nr_ns(current, task_active_pid_ns(t));
+ #endif
++	if (!is_si_special(info) && has_si_pid_and_uid(info)) {
++		struct user_namespace *t_user_ns;
++
++		rcu_read_lock();
++		t_user_ns = task_cred_xxx(t, user_ns);
++		if (current_user_ns() != t_user_ns) {
++			kuid_t uid = make_kuid(current_user_ns(), info->si_uid);
++			info->si_uid = from_kuid_munged(t_user_ns, uid);
++		}
++		rcu_read_unlock();
  
- 	if ((trans_pcie->shared_vec_mask & IWL_SHARED_IRQ_NON_RX) &&
- 	    inta_fh & MSIX_FH_INT_CAUSES_Q0) {
-@@ -2151,11 +2159,18 @@ irqreturn_t iwl_pcie_irq_msix_handler(in
- 	}
- 
- 	/* After checking FH register check HW register */
--	if (iwl_have_debug_level(IWL_DL_ISR))
-+	if (iwl_have_debug_level(IWL_DL_ISR)) {
- 		IWL_DEBUG_ISR(trans,
--			      "ISR inta_hw 0x%08x, enabled 0x%08x\n",
--			      inta_hw,
-+			      "ISR inta_hw 0x%08x, enabled (sw) 0x%08x (hw) 0x%08x\n",
-+			      inta_hw, trans_pcie->hw_mask,
- 			      iwl_read32(trans, CSR_MSIX_HW_INT_MASK_AD));
-+		if (inta_hw & ~trans_pcie->hw_mask)
-+			IWL_DEBUG_ISR(trans,
-+				      "We got a masked interrupt 0x%08x\n",
-+				      inta_hw & ~trans_pcie->hw_mask);
++		if (!task_pid_nr_ns(current, task_active_pid_ns(t)))
++			info->si_pid = 0;
 +	}
-+
-+	inta_hw &= trans_pcie->hw_mask;
+ 	return __send_signal(sig, info, t, type, from_ancestor_ns);
+ }
  
- 	/* Alive notification via Rx interrupt will do the real work */
- 	if (inta_hw & MSIX_HW_INT_CAUSES_REG_ALIVE) {
 
 
