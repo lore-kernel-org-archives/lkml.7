@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA38AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B82FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C9F2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59450229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997411;
-	bh=W8I/0sEJvvMpi4Y8zI8egnQo6HPoOJCWtCwvazHA5E0=;
+	s=default; t=1563997414;
+	bh=x0Otm5+B2/Do0stGHsY8H0ODRlpvuVqoHO8j47jB2O4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Sc+nWLpEZQCDUkUUc3x/NhlNcyfLFde3455M5B4rYytZJ591FChRKpvWGWiOcvlH
-	 SWvOV+0W7F7qBk/tR34g8e8MwWUqB0HYLm+U5C47guSuj508Y6rSPGB10nTJkPRUCG
-	 foBo35HbM6lqYGtF110lgdzQXA/jzUG9seBdc/is=
+	b=sngADNh1qR+FLgDpIukffbCTg85OxWRAEpFFucT+P9BpgPOQBf1rblQr5ixGCPsTy
+	 mcQpDqVgKnBl6VUPhqLRxMPtTPnFbSnaOGz5IZEGs48BshLjDulk7tkFMKdjjf77F5
+	 l+0y/u7vXar9pG/jpzY9Cn0pqP0Dbk5B05hMHaTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390559AbfGXTn0 (ORCPT
+        id S2390536AbfGXTnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45606 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390073AbfGXTnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:24 -0400
+        id S2390517AbfGXTnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E65922BE9;
-        Wed, 24 Jul 2019 19:43:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A48522ADF;
+        Wed, 24 Jul 2019 19:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997403;
-        bh=W8I/0sEJvvMpi4Y8zI8egnQo6HPoOJCWtCwvazHA5E0=;
+        s=default; t=1563997398;
+        bh=x0Otm5+B2/Do0stGHsY8H0ODRlpvuVqoHO8j47jB2O4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fpy23tybGROEXUwmyAKtEJOg1A2Cyn64BR25Z4/LCK1y41xw5Vb8Igzj1ATiSRHQ3
-         ftEcxdEmLgtZfZ0aXkdCiJfffNCB2gccbY9/LTFpRKj8D5ZopGzaKewyHPWagSqnrw
-         fd4UUzoC/faMg6whwFnu6AuoeoR8zAVHTPDCzRkU=
+        b=GZqmSOlM+oXoPVRN3u2MvZZljhQprkaDCZ/Gg8gxdhweEIimnibEPYqwMrk8yLWxl
+         y3b/LstcEAqbm25CXhzkYm46sul6nTJ3EggAlPAlkw3rIszQAhG+lVY3NQlXDWIcDn
+         iZva7NJ7Kydn/VKgG0jFBRfT6kvEERgwBNyS/Epk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 012/371] spi: rockchip: turn down tx dma bursts
-Date:   Wed, 24 Jul 2019 21:16:04 +0200
-Message-Id: <20190724191725.426507132@linuxfoundation.org>
+Subject: [PATCH 5.1 010/371] wil6210: fix potential out-of-bounds read
+Date:   Wed, 24 Jul 2019 21:16:02 +0200
+Message-Id: <20190724191725.268190092@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,56 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 47300728fb213486a830565d2af49da967c9d16a ]
+[ Upstream commit bfabdd6997323adbedccb13a3fed1967fb8cf8f5 ]
 
-This fixes tx and bi-directional dma transfers on rk3399-gru-kevin.
+Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
 
-It seems the SPI fifo must have room for 2 bursts when the dma_tx_req
-signal is generated or it might skip some words. This in turn makes
-the rx dma channel never complete for bi-directional transfers.
+enum gro_result {
+        GRO_MERGED,
+        GRO_MERGED_FREE,
+        GRO_HELD,
+        GRO_NORMAL,
+        GRO_DROP,
+        GRO_CONSUMED,
+};
+typedef enum gro_result gro_result_t;
 
-Fix it by setting tx burst length to fifo_len / 4 and the dma
-watermark to fifo_len / 2.
+In case *rc* evaluates to 5, we end up having an out-of-bounds read
+at drivers/net/wireless/ath/wil6210/txrx.c:821:
 
-However the rk3399 TRM says (sic):
-"DMAC support incrementing-address burst and fixed-address burst. But in
-the case of access SPI and UART at byte or halfword size, DMAC only
-support fixed-address burst and the address must be aligned to word."
+	wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
+		     len, gro_res_str[rc]);
 
-So this relies on fifo_len being a multiple of 16 such that the
-burst length (= fifo_len / 4) is a multiple of 4 and the addresses
-will be word-aligned.
+Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
 
-Fixes: dcfc861d24ec ("spi: rockchip: adjust dma watermark and burstlen")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
+Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-rockchip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/wil6210/txrx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 3912526ead66..19f6a76f1c07 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -425,7 +425,7 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs,
- 			.direction = DMA_MEM_TO_DEV,
- 			.dst_addr = rs->dma_addr_tx,
- 			.dst_addr_width = rs->n_bytes,
--			.dst_maxburst = rs->fifo_len / 2,
-+			.dst_maxburst = rs->fifo_len / 4,
- 		};
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index 4ccfd1404458..d74837cce67f 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -750,6 +750,7 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
+ 		[GRO_HELD]		= "GRO_HELD",
+ 		[GRO_NORMAL]		= "GRO_NORMAL",
+ 		[GRO_DROP]		= "GRO_DROP",
++		[GRO_CONSUMED]		= "GRO_CONSUMED",
+ 	};
  
- 		dmaengine_slave_config(master->dma_tx, &txconf);
-@@ -526,7 +526,7 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
- 	else
- 		writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_RXFTLR);
- 
--	writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_DMATDLR);
-+	writel_relaxed(rs->fifo_len / 2, rs->regs + ROCKCHIP_SPI_DMATDLR);
- 	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_DMARDLR);
- 	writel_relaxed(dmacr, rs->regs + ROCKCHIP_SPI_DMACR);
- 
+ 	wil->txrx_ops.get_netif_rx_params(skb, &cid, &security);
 -- 
 2.20.1
 
