@@ -2,130 +2,113 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FD8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4819C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A78920693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999450;
-	bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rm17Fs3HiKpPM2bhl1w0CclRYv0kr17CQ0zeNJaiMDUP6uZIOEf+YChv9KXEXt3Da
-	 SZqZpYWuLADwufN+OMjVcuHfbmUD2sxBKqxpXN8T4No2P62a4f929jZ1cytFwIIrbE
-	 URasUhEbCEuvkh1TgRNhjdZnyYuQe/IlQIZBXO5o=
+	by mail.kernel.org (Postfix) with ESMTP id 77B9E20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ndoC/wHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfGXTuK (ORCPT
+        id S1728743AbfGXURa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391517AbfGXTuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6104E205C9;
-        Wed, 24 Jul 2019 19:50:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997800;
-        bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGv468M+qcgmSi35vMBMkrjsO1jleCg41/b3PbN5FZBlM7QZnvODA+fJIcc2UUi4p
-         so82k5hGQuzj3fDEKUpgyIZNBmpRzwS8TLKoa9Is7tyv/DtjUJXngEBcy3kmo8+wii
-         0dfdISPrC9Ys0llJ8f6mI9ygYcwjjd7NXTQT7RwA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 147/371] ath10k: fix fw crash by moving chip reset after napi disabled
-Date:   Wed, 24 Jul 2019 21:18:19 +0200
-Message-Id: <20190724191736.199080212@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:17:30 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3155 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbfGXTuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d38b6730000>; Wed, 24 Jul 2019 12:50:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 24 Jul 2019 12:50:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 24 Jul 2019 12:50:10 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 19:50:10 +0000
+Subject: Re: [PATCH 2/2] mm/hmm: make full use of walk_page_range()
+To:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <20190723233016.26403-1-rcampbell@nvidia.com>
+ <20190723233016.26403-3-rcampbell@nvidia.com> <20190724065146.GA2061@lst.de>
+ <20190724115338.GA30264@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <098df586-0713-1aaa-e546-5dc39ec30341@nvidia.com>
+Date:   Wed, 24 Jul 2019 12:50:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190724115338.GA30264@mellanox.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563997811; bh=o1DvH7PppcliFCYzQ16HV/ZAX4qVLsHxUniBpxQa/jY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ndoC/wHwyfVcpAyH7LNSBQ5MX2jPUvphaKjtuXWIn8VrEDengx2WT/DuMJm+WRXZ3
+         PiR4+0PG/Pz7ee56d8OyGQsZxJrZ5A2V7MZNvqZFis7ml6ohw5wa2st0Jos9Y5kzNg
+         g7l59/dvj6EoVy3z/aqFWJkaHBONxVgSCLNiVzM1kbOQVnxb90IhOdJwRwq7tIF3Nz
+         VTUbGNfNBtyYlE2MTJQqJo5UKSiGbulBDq2IqNDlhVCGvx3Zaw1r9V4fRXoJzXuuX4
+         XQ0Dj9tUsa6iuS/8rbbUIOWUSVWpCP9NT4pEBjYNLvTsPg7WnHGyQ1yAE8U20LnIxq
+         qc3g1j1fB5DSg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 08d80e4cd27ba19f9bee9e5f788f9a9fc440a22f ]
 
-On SMP platform, when continuously running wifi up/down, the napi
-poll can be scheduled during chip reset, which will call
-ath10k_pci_has_fw_crashed() to check the fw status. But in the reset
-period, the value from FW_INDICATOR_ADDRESS register will return
-0xdeadbeef, which also be treated as fw crash. Fix the issue by
-moving chip reset after napi disabled.
+On 7/24/19 4:53 AM, Jason Gunthorpe wrote:
+> On Wed, Jul 24, 2019 at 08:51:46AM +0200, Christoph Hellwig wrote:
+>> On Tue, Jul 23, 2019 at 04:30:16PM -0700, Ralph Campbell wrote:
+>>> hmm_range_snapshot() and hmm_range_fault() both call find_vma() and
+>>> walk_page_range() in a loop. This is unnecessary duplication since
+>>> walk_page_range() calls find_vma() in a loop already.
+>>> Simplify hmm_range_snapshot() and hmm_range_fault() by defining a
+>>> walk_test() callback function to filter unhandled vmas.
+>>
+>> I like the approach a lot!
+>>
+>> But we really need to sort out the duplication between hmm_range_fault
+>> and hmm_range_snapshot first, as they are basically the same code.  I
+>> have patches here:
+>>
+>> http://git.infradead.org/users/hch/misc.git/commitdiff/a34ccd30ee8a8a3111d9e91711c12901ed7dea74
+>>
+>> http://git.infradead.org/users/hch/misc.git/commitdiff/81f442ebac7170815af7770a1efa9c4ab662137e
+> 
+> Yeah, that is a straightforward improvement, maybe Ralph should grab
+> these two as part of his series?
 
-ath10k_pci 0000:01:00.0: firmware crashed! (guid 73b30611-5b1e-4bdd-90b4-64c81eb947b6)
-ath10k_pci 0000:01:00.0: qca9984/qca9994 hw1.0 target 0x01000000 chip_id 0x00000000 sub 168c:cafe
-ath10k_pci 0000:01:00.0: htt-ver 2.2 wmi-op 6 htt-op 4 cal otp max-sta 512 raw 0 hwcrypto 1
-ath10k_pci 0000:01:00.0: failed to get memcpy hi address for firmware address 4: -16
-ath10k_pci 0000:01:00.0: failed to read firmware dump area: -16
-ath10k_pci 0000:01:00.0: Copy Engine register dump:
-ath10k_pci 0000:01:00.0: [00]: 0x0004a000   0   0   0   0
-ath10k_pci 0000:01:00.0: [01]: 0x0004a400   0   0   0   0
-ath10k_pci 0000:01:00.0: [02]: 0x0004a800   0   0   0   0
-ath10k_pci 0000:01:00.0: [03]: 0x0004ac00   0   0   0   0
-ath10k_pci 0000:01:00.0: [04]: 0x0004b000   0   0   0   0
-ath10k_pci 0000:01:00.0: [05]: 0x0004b400   0   0   0   0
-ath10k_pci 0000:01:00.0: [06]: 0x0004b800   0   0   0   0
-ath10k_pci 0000:01:00.0: [07]: 0x0004bc00   1   0   1   0
-ath10k_pci 0000:01:00.0: [08]: 0x0004c000   0   0   0   0
-ath10k_pci 0000:01:00.0: [09]: 0x0004c400   0   0   0   0
-ath10k_pci 0000:01:00.0: [10]: 0x0004c800   0   0   0   0
-ath10k_pci 0000:01:00.0: [11]: 0x0004cc00   0   0   0   0
+Sure, no problem.
+I'll add them in v2 when I fix the other issues in the series.
 
-Tested HW: QCA9984,QCA9887,WCN3990
-
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 2c27f407a851..6e5f7ae00253 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -2059,6 +2059,11 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 
- 	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot hif stop\n");
- 
-+	ath10k_pci_irq_disable(ar);
-+	ath10k_pci_irq_sync(ar);
-+	napi_synchronize(&ar->napi);
-+	napi_disable(&ar->napi);
-+
- 	/* Most likely the device has HTT Rx ring configured. The only way to
- 	 * prevent the device from accessing (and possible corrupting) host
- 	 * memory is to reset the chip now.
-@@ -2072,10 +2077,6 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 	 */
- 	ath10k_pci_safe_chip_reset(ar);
- 
--	ath10k_pci_irq_disable(ar);
--	ath10k_pci_irq_sync(ar);
--	napi_synchronize(&ar->napi);
--	napi_disable(&ar->napi);
- 	ath10k_pci_flush(ar);
- 
- 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
--- 
-2.20.1
-
-
-
+>> That being said we don't really have any users for the snapshot mode
+>> or non-blocking faults, and I don't see any in the immediate pipeline
+>> either.
+> 
+> If this code was production ready I'd use it in ODP right away.
+> 
+> When we first create a ODP MR we'd want to snapshot to pre-load the
+> NIC tables with something other than page fault, but not fault
+> anything.
+> 
+> This would be a big performance improvement for ODP.
+> 
+> Jason
+> 
