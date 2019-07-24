@@ -2,54 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A67C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79253C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87120206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EDE206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000381;
-	bh=tATeCKl18O/RAtTrvdgPcVJ3FeSPQJtmVX0ky60oq+c=;
+	s=default; t=1564000386;
+	bh=z5zbDP/5A8gvnmdZIICf7EPPYgwoz6x1I01CY1sSJgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SODGDZVuGTv2FYZudbiLmAGuPMx3YbmkkroE0a9H6RqcoTckKBf8c+GgZBQPnerFJ
-	 Ta85DmV4WRELtc+veqw+qVSZcLZx3Ji4vwH0fauk2GsSiqxbaGLGniNQ27knyPVVrF
-	 62KZWIUSnE6NZSVQ1VWtP/cR+IEpkVyvSV7fX8bs=
+	b=1t/mVg0vQkdzefFwjuPN3WLWRvb3tb7iG7hQkffkdmochjz5RRsvnkhcqMRt9Xj5N
+	 i5XoyuFiFNLcBt6bx9sRwVwigP+svPiTmgnCdtFnj2r0qp0OJl6X/RTCMTDEypytAy
+	 6x2FfNr37H9cEIYaEzPhepv4m9hXfnK4uRdzHqVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388312AbfGXUdA (ORCPT
+        id S2388482AbfGXUdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46606 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:33:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388303AbfGXT2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:24 -0400
+        id S1727408AbfGXT2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80796218EA;
-        Wed, 24 Jul 2019 19:28:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D280229F3;
+        Wed, 24 Jul 2019 19:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996503;
-        bh=tATeCKl18O/RAtTrvdgPcVJ3FeSPQJtmVX0ky60oq+c=;
+        s=default; t=1563996497;
+        bh=z5zbDP/5A8gvnmdZIICf7EPPYgwoz6x1I01CY1sSJgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DdXgMuCzwXO+6gnaPGiO2hXO+JH8xQ09bVWkNQsgKPxH4KkfUQajSMP5/7mevImS7
-         4ApQr1Xhhcy//RD9aQECnjlsMu0mWSTpY1pVJ1r1/d98ARROiNEXs/FLXIoQgJH/39
-         87aLXjk1X+AigML0ltU053hH/uCQ3bKATp5fGpPg=
+        b=xiE4Oanvojv3uqD1sO7yEnKuWIbjpRXslr3+kWrDmIqYxkBr6T9x6RiQYs6eV9SVl
+         0sX3pWb734nseUt+5FhlIkLwG7r22IRbcNHPuvGIdU6s8LEvSiSqO5c6w2cM4RdIlB
+         vC25xhJrnZxGFSdkMopvduUqj7AJW65vCQpD+ERs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mitch Williams <mitch.a.williams@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 117/413] iavf: allow null RX descriptors
-Date:   Wed, 24 Jul 2019 21:16:48 +0200
-Message-Id: <20190724191743.654189161@linuxfoundation.org>
+Subject: [PATCH 5.2 115/413] perf evsel: Make perf_evsel__name() accept a NULL argument
+Date:   Wed, 24 Jul 2019 21:16:46 +0200
+Message-Id: <20190724191743.538219473@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,102 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit efa14c3985828da3163f5372137cb64d992b0f79 ]
+[ Upstream commit fdbdd7e8580eac9bdafa532746c865644d125e34 ]
 
-In some circumstances, the hardware can hand us a null receive
-descriptor, with no data attached but otherwise valid. Unfortunately,
-the driver was ill-equipped to handle such an event, and would stop
-processing packets at that point.
+In which case it simply returns "unknown", like when it can't figure out
+the evsel->name value.
 
-To fix this, use the Descriptor Done bit instead of the size to
-determine whether or not a descriptor is ready to be processed. Add some
-checks to allow for unused buffers.
+This makes this code more robust and fixes a problem in 'perf trace'
+where a NULL evsel was being passed to a routine that only used the
+evsel for printing its name when a invalid syscall id was passed.
 
-Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Reported-by: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-f30ztaasku3z935cn3ak3h53@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/iavf/iavf_txrx.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ tools/perf/util/evsel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.c b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-index 06d1509d57f7..c97b9ecf026a 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-@@ -1236,6 +1236,9 @@ static void iavf_add_rx_frag(struct iavf_ring *rx_ring,
- 	unsigned int truesize = SKB_DATA_ALIGN(size + iavf_rx_offset(rx_ring));
- #endif
- 
-+	if (!size)
-+		return;
-+
- 	skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags, rx_buffer->page,
- 			rx_buffer->page_offset, size, truesize);
- 
-@@ -1260,6 +1263,9 @@ static struct iavf_rx_buffer *iavf_get_rx_buffer(struct iavf_ring *rx_ring,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4a5947625c5c..2c46f9aa416c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -589,6 +589,9 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
  {
- 	struct iavf_rx_buffer *rx_buffer;
+ 	char bf[128];
  
-+	if (!size)
-+		return NULL;
++	if (!evsel)
++		goto out_unknown;
 +
- 	rx_buffer = &rx_ring->rx_bi[rx_ring->next_to_clean];
- 	prefetchw(rx_buffer->page);
+ 	if (evsel->name)
+ 		return evsel->name;
  
-@@ -1299,6 +1305,8 @@ static struct sk_buff *iavf_construct_skb(struct iavf_ring *rx_ring,
- 	unsigned int headlen;
- 	struct sk_buff *skb;
+@@ -628,7 +631,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
  
-+	if (!rx_buffer)
-+		return NULL;
- 	/* prefetch first cache line of first page */
- 	prefetch(va);
- #if L1_CACHE_BYTES < 128
-@@ -1363,6 +1371,8 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
- #endif
- 	struct sk_buff *skb;
+ 	evsel->name = strdup(bf);
  
-+	if (!rx_buffer)
-+		return NULL;
- 	/* prefetch first cache line of first page */
- 	prefetch(va);
- #if L1_CACHE_BYTES < 128
-@@ -1398,6 +1408,9 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
- static void iavf_put_rx_buffer(struct iavf_ring *rx_ring,
- 			       struct iavf_rx_buffer *rx_buffer)
- {
-+	if (!rx_buffer)
-+		return;
-+
- 	if (iavf_can_reuse_rx_page(rx_buffer)) {
- 		/* hand second half of page back to the ring */
- 		iavf_reuse_rx_page(rx_ring, rx_buffer);
-@@ -1496,11 +1509,12 @@ static int iavf_clean_rx_irq(struct iavf_ring *rx_ring, int budget)
- 		 * verified the descriptor has been written back.
- 		 */
- 		dma_rmb();
-+#define IAVF_RXD_DD BIT(IAVF_RX_DESC_STATUS_DD_SHIFT)
-+		if (!iavf_test_staterr(rx_desc, IAVF_RXD_DD))
-+			break;
+-	return evsel->name ?: "unknown";
++	if (evsel->name)
++		return evsel->name;
++out_unknown:
++	return "unknown";
+ }
  
- 		size = (qword & IAVF_RXD_QW1_LENGTH_PBUF_MASK) >>
- 		       IAVF_RXD_QW1_LENGTH_PBUF_SHIFT;
--		if (!size)
--			break;
- 
- 		iavf_trace(clean_rx_irq, rx_ring, rx_desc, skb);
- 		rx_buffer = iavf_get_rx_buffer(rx_ring, size);
-@@ -1516,7 +1530,8 @@ static int iavf_clean_rx_irq(struct iavf_ring *rx_ring, int budget)
- 		/* exit if we failed to retrieve a buffer */
- 		if (!skb) {
- 			rx_ring->rx_stats.alloc_buff_failed++;
--			rx_buffer->pagecnt_bias++;
-+			if (rx_buffer)
-+				rx_buffer->pagecnt_bias++;
- 			break;
- 		}
- 
+ const char *perf_evsel__group_name(struct perf_evsel *evsel)
 -- 
 2.20.1
 
