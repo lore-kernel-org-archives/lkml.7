@@ -2,135 +2,118 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD30DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A21C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EDF2190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:24:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4rBK7kYk"
+	by mail.kernel.org (Postfix) with ESMTP id 8F30D2190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387531AbfGXSYl (ORCPT
+        id S2387554AbfGXSZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:24:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40492 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387480AbfGXSYk (ORCPT
+        Wed, 24 Jul 2019 14:25:26 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46677 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387480AbfGXSZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:24:40 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OIOEQ6084431;
-        Wed, 24 Jul 2019 18:24:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=F3bCNko/rlePxa3FH2qI7hAkpjKGdcXc+ZaXjXWxwWs=;
- b=4rBK7kYk81nIlg+q6ud+iGNCmIEvwySL4JpAGr5Kd6GCcPqEvkp4UpknCHXhCMv5AxV1
- WDbzijod6es/JLIdMfu3FRoHeey8drmLBnc5H0V6B1zkrwOstFmIiTpJvQJbkGRXXMZp
- f9k2X5Dt/UbqAJioyixCLfmGHYkgrbe+vUpD9UenMNBsWxSCI+9qT9ooULHlPjhe5dqw
- 1K4qYCmcwCiWImUe6iMzGzBg17g6cWqiGTAZWUaa4xI9++WKZKyYKBlMFvVEM267mh3I
- DkvAS1OuOu0LVNuArAHvmbYFKpbWI+urqDSZiKXMVeccExMcOY/IsJ8qw9LiMBgJMqX4 AA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2tx61by5eg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 18:24:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OICkCE099366;
-        Wed, 24 Jul 2019 18:24:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2tx60xvpar-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 18:24:14 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6OIOBW1013593;
-        Wed, 24 Jul 2019 18:24:11 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jul 2019 11:24:11 -0700
-Subject: Re: [PATCH] mm/rmap.c: remove set but not used variable 'cstart'
-To:     YueHaibing <yuehaibing@huawei.com>, akpm@linux-foundation.org,
-        jglisse@redhat.com, kirill.shutemov@linux.intel.com,
-        rcampbell@nvidia.com, ktkhai@virtuozzo.com,
-        colin.king@canonical.com
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190724141453.38536-1-yuehaibing@huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <10d2821c-cc56-961b-8f43-ae9097ed0621@oracle.com>
-Date:   Wed, 24 Jul 2019 11:24:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 24 Jul 2019 14:25:26 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h21so46410262qtn.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:25:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/8SpAXACt/H0ZjS+gW4ox0Hhxo1Ofk7o0k1709Jn7z0=;
+        b=PHwUigojGTITdp4CfOJsh3lXSNr6mbNszISJeROMNqCsVjRob6TzwSghkYBtSvE/7g
+         1aJ+LNW7pjgEAF8ZazGeB6Hu8vALnN0TFSoqzOtA+97TFO6vxIjVvq3pBWvzw4pDbe5Q
+         5Bk7BJ++FwnuelW0YKLFijm4HEDoLjiG3Ux6BbSP/S7wM+vdjeFj7aFYFbkknbEGvmM9
+         2yTxhtbTjAhqHfiSjgXhQZAqrqudDC1aH08op3x+SfCjKjy7uoXA8X0DdMktt8NowpF9
+         Aw2hIH50ZpC5My8DmUYKj5LPxDJayV8Wq5IgxWJODfXCkitQ6E3vYXuIz23PeOQqAS+0
+         4ElA==
+X-Gm-Message-State: APjAAAUjOmA5dWLf3ksZf6S5ZkUVLBHYb4o3HkCaIYq6uE7tWXsR/kwm
+        DLguhRK6nLNbXvIl/bPlsh8CHA==
+X-Google-Smtp-Source: APXvYqxChd/0aII9lYKOFDT2kMgtEOZZfG9pHDvB+TKQrkk+gyvE7N4AF8TKeYtvP4hnErvwYvbJPQ==
+X-Received: by 2002:ac8:74cb:: with SMTP id j11mr54557383qtr.67.1563992725087;
+        Wed, 24 Jul 2019 11:25:25 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id z19sm22080696qkg.28.2019.07.24.11.25.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 11:25:24 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 14:25:15 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+Subject: Re: WARNING in __mmdrop
+Message-ID: <20190724142417-mutt-send-email-mst@kernel.org>
+References: <20190723010156-mutt-send-email-mst@kernel.org>
+ <124be1a2-1c53-8e65-0f06-ee2294710822@redhat.com>
+ <20190723032800-mutt-send-email-mst@kernel.org>
+ <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
+ <20190723062221-mutt-send-email-mst@kernel.org>
+ <9baa4214-67fd-7ad2-cbad-aadf90bbfc20@redhat.com>
+ <20190723110219-mutt-send-email-mst@kernel.org>
+ <e0c91b89-d1e8-9831-00fe-23fe92d79fa2@redhat.com>
+ <20190724040238-mutt-send-email-mst@kernel.org>
+ <20190724165317.GD28493@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <20190724141453.38536-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240195
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724165317.GD28493@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/19 7:14 AM, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On Wed, Jul 24, 2019 at 01:53:17PM -0300, Jason Gunthorpe wrote:
+> On Wed, Jul 24, 2019 at 04:05:17AM -0400, Michael S. Tsirkin wrote:
+> > On Wed, Jul 24, 2019 at 10:17:14AM +0800, Jason Wang wrote:
+> > > So even PTE is read speculatively before reading invalidate_count (only in
+> > > the case of invalidate_count is zero). The spinlock has guaranteed that we
+> > > won't read any stale PTEs.
+> > 
+> > I'm sorry I just do not get the argument.
+> > If you want to order two reads you need an smp_rmb
+> > or stronger between them executed on the same CPU.
 > 
-> mm/rmap.c: In function page_mkclean_one:
-> mm/rmap.c:906:17: warning: variable cstart set but not used [-Wunused-but-set-variable]
+> No, that is only for unlocked algorithms.
 > 
-> It is not used any more since
-> commit cdb07bdea28e ("mm/rmap.c: remove redundant variable cend")
+> In this case the spinlock provides all the 'or stronger' ordering
+> required.
+> 
+> For invalidate_count going 0->1 the spin_lock ensures that any
+> following PTE update during invalidation does not order before the
+> spin_lock()
+> 
+> While holding the lock and observing 1 in invalidate_count the PTE
+> values might be changing, but are ignored. C's rules about sequencing
+> make this safe.
+> 
+> For invalidate_count going 1->0 the spin_unlock ensures that any
+> preceeding PTE update during invalidation does not order after the
+> spin_unlock
+> 
+> While holding the lock and observing 0 in invalidating_count the PTE
+> values cannot be changing.
+> 
+> Jason
 
-It appears Commit 0f10851ea475 ("mm/mmu_notifier: avoid double notification
-when it is useless") is what removed the use of cstart and cend.  And, they
-should have been removed then.
+Oh right. So prefetch holds the spinlock the whole time.
+Sorry about the noise.
 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 -- 
-Mike Kravetz
-
-> ---
->  mm/rmap.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index ec1af8b..40e4def 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -903,10 +903,9 @@ static bool page_mkclean_one(struct page *page, struct vm_area_struct *vma,
->  	mmu_notifier_invalidate_range_start(&range);
->  
->  	while (page_vma_mapped_walk(&pvmw)) {
-> -		unsigned long cstart;
->  		int ret = 0;
->  
-> -		cstart = address = pvmw.address;
-> +		address = pvmw.address;
->  		if (pvmw.pte) {
->  			pte_t entry;
->  			pte_t *pte = pvmw.pte;
-> @@ -933,7 +932,6 @@ static bool page_mkclean_one(struct page *page, struct vm_area_struct *vma,
->  			entry = pmd_wrprotect(entry);
->  			entry = pmd_mkclean(entry);
->  			set_pmd_at(vma->vm_mm, address, pmd, entry);
-> -			cstart &= PMD_MASK;
->  			ret = 1;
->  #else
->  			/* unexpected pmd-mapped page? */
-> 
+MST
