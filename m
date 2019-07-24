@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB44C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD42C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A30205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B4121873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997646;
-	bh=lXXnpOqxF3yooX1d6MJK2g5s/7yolpgObylZ1e7N5BY=;
+	s=default; t=1563997650;
+	bh=I5M5n/oVA0hib1J6oDVxP5V0BH2K4pTfdVCdQbaijgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBZqIyJ6/dWZtht8h1qsGY6nDKIgCNIPO2HL9hniwELq+0UrgHpLZ2irrAGC6doJI
-	 1j+1wkf//FjQNSXzAIpu3nXm83JXjHEAdMKjiU2xOt2IoO0p6tI9pkjv32xUg4Z6vW
-	 dMjrK7J4PUipwJ6X/96982eZ3tFal73uUxXmku7M=
+	b=RnPnjpirb10NDwNeGb5S+TbgTX8KTh+dKTeTYRJggwe8EKvGXRkAj4qDNZDi5UMSU
+	 Qo6qcCz5U4PWREsDswfS7SQ+/rk6NX41TXmLN1uoN/Y+SanUmtKNOCC1SSx0jOxeq0
+	 ci1aay0UPSGPwGqdyIFGEjh+4IEzRKI2Vo3nZuJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390752AbfGXTrZ (ORCPT
+        id S2391258AbfGXTr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54042 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403760AbfGXTrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:47:23 -0400
+        id S2391239AbfGXTr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:47:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8EDF21873;
-        Wed, 24 Jul 2019 19:47:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0898217D4;
+        Wed, 24 Jul 2019 19:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997642;
-        bh=lXXnpOqxF3yooX1d6MJK2g5s/7yolpgObylZ1e7N5BY=;
+        s=default; t=1563997645;
+        bh=I5M5n/oVA0hib1J6oDVxP5V0BH2K4pTfdVCdQbaijgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BtWLHIfaiIGbxt21x3pr2ghyVusUi0ReP55jROrBkPe4aSMiCUA3JDq3K+/9cg5E4
-         MhOxlvgLIviqH+6RTpVSxo+qw0T/CLqCJR8rVRblv0yJmbxicFjZD1GnRnE6XfYcc/
-         yPSqnwDkaS2XRDOJLSvt/orhukSwOKKJJBf17X70=
+        b=OXyoP2hoOZ28vHnJ+jlzOgfqIEHgy9EIR1C3Ip4MXGv4tz6BfMlp0Bl3O9sw/xAiM
+         LA+Z8Z7OEiA2yHeo+fn3p5Hm9075R8bybXlXAaezfso1CqJcBWzHhn+lVcD0LIJJ1w
+         eZuniv6IWRvELQ8O5G9DIdW98P0hwe3fcrPWfqbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 094/371] net: hns3: fix for dereferencing before null checking
-Date:   Wed, 24 Jul 2019 21:17:26 +0200
-Message-Id: <20190724191731.900065038@linuxfoundation.org>
+Subject: [PATCH 5.1 095/371] net: hns3: fix for skb leak when doing selftest
+Date:   Wed, 24 Jul 2019 21:17:27 +0200
+Message-Id: <20190724191731.979364920@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,14 +62,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 757188005f905664b0186b88cf26a7e844190a63 ]
+[ Upstream commit 8f9eed1a8791b83eb1c54c261d68424717e4111e ]
 
-The netdev is dereferenced before null checking in the function
-hns3_setup_tc.
+If hns3_nic_net_xmit does not return NETDEV_TX_BUSY when doing
+a loopback selftest, the skb is not freed in hns3_clean_tx_ring
+or hns3_nic_net_xmit, which causes skb not freed problem.
 
-This patch moves the dereferencing after the null checking.
+This patch fixes it by freeing skb when hns3_nic_net_xmit does
+not return NETDEV_TX_OK.
 
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
@@ -77,38 +79,29 @@ Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index cac17152157d..6afdd376bc03 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1497,12 +1497,12 @@ static void hns3_nic_get_stats64(struct net_device *netdev,
- static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- {
- 	struct tc_mqprio_qopt_offload *mqprio_qopt = type_data;
--	struct hnae3_handle *h = hns3_get_handle(netdev);
--	struct hnae3_knic_private_info *kinfo = &h->kinfo;
- 	u8 *prio_tc = mqprio_qopt->qopt.prio_tc_map;
-+	struct hnae3_knic_private_info *kinfo;
- 	u8 tc = mqprio_qopt->qopt.num_tc;
- 	u16 mode = mqprio_qopt->mode;
- 	u8 hw = mqprio_qopt->qopt.hw;
-+	struct hnae3_handle *h;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index ea94b5152963..cf20fa6768d7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -241,11 +241,13 @@ static int hns3_lp_run_test(struct net_device *ndev, enum hnae3_loop mode)
  
- 	if (!((hw == TC_MQPRIO_HW_OFFLOAD_TCS &&
- 	       mode == TC_MQPRIO_MODE_CHANNEL) || (!hw && tc == 0)))
-@@ -1514,6 +1514,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- 	if (!netdev)
- 		return -EINVAL;
- 
-+	h = hns3_get_handle(netdev);
-+	kinfo = &h->kinfo;
-+
- 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
- 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
- }
+ 		skb_get(skb);
+ 		tx_ret = hns3_nic_net_xmit(skb, ndev);
+-		if (tx_ret == NETDEV_TX_OK)
++		if (tx_ret == NETDEV_TX_OK) {
+ 			good_cnt++;
+-		else
++		} else {
++			kfree_skb(skb);
+ 			netdev_err(ndev, "hns3_lb_run_test xmit failed: %d\n",
+ 				   tx_ret);
++		}
+ 	}
+ 	if (good_cnt != HNS3_NIC_LB_TEST_PKT_NUM) {
+ 		ret_val = HNS3_NIC_LB_TEST_TX_CNT_ERR;
 -- 
 2.20.1
 
