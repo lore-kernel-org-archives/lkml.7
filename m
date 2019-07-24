@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76F9C76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1668C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE8D229FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2173229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996739;
-	bh=OMIEmC5y38l87lwjmF+MWWlsfb57JJMC0HeRUrSKT10=;
+	s=default; t=1563996742;
+	bh=b+VJZUq5RJQd3coOrPQ9j4fNfb9ALoRVXO3ikaJbDjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClcLGlpvB5g076gBxTV6SJ9sWbW0e+KQls6n2TkXA7sibtafs1k79e8bcxi6GUpfh
-	 YJlbj6EAIKQJdxkMJFiObdY4lq2oohDUTc7e3VH1k8YDrq0zBGKCGOhlq5xWlWHqqC
-	 EtAjs6+g3tP/OGmmFimxai3XJDic3MZBkQtWG+PM=
+	b=tYLR7mPSyqb576jPujNRyOlp/iLdFICXwhOHRXzbT2d5BYggOywwp6qlp/CNyewyb
+	 PWA290i1OHCnRExLOysFWM6o2jvkZPpuAxK/ny1P82g41ReANLjBsoGzLKqoyzuYo7
+	 Qe9SlgB2gevQFBk56cmcRbe++KO5pIgFn1QZgfxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfGXTcR (ORCPT
+        id S2388242AbfGXTcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53522 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388030AbfGXTcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:32:15 -0400
+        id S2388622AbfGXTcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:32:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E66AB2238C;
-        Wed, 24 Jul 2019 19:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CCBF229F3;
+        Wed, 24 Jul 2019 19:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996734;
-        bh=OMIEmC5y38l87lwjmF+MWWlsfb57JJMC0HeRUrSKT10=;
+        s=default; t=1563996737;
+        bh=b+VJZUq5RJQd3coOrPQ9j4fNfb9ALoRVXO3ikaJbDjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/f6w8Ovk3Lk7WtDXYCwVfrcKS2V5K1hxQAdtSNWBURU41VKTJgQHY7bllAo4o+N3
-         ZMVc+vfFXdLOSJILFsEG9D2Dnqy7o8ApZ6xik0e3yB+XnPTOaDQ6IGYbVsUQMKiqOc
-         0Z9oXJiRE72XoBZLXyULmzH7bWVkfrom5ymFGjxo=
+        b=wQw0CV5sLP398ZwtVbAH6K7akWwEjeyPrljHWHZi+njLpHgrrFs62fkADJp2326Jo
+         6hWY69iEHD0s/VYCU+cGYDMaXJ5m4kH0GnfdIXXxWkSq88o+/0gW8ACZDbMI0DVvIW
+         SeqEnTz+p0Ad6VEXcKdKS+y2UUsp03soocNX18u8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Winkowski <walan@marvell.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org, Vedang Patel <vedang.patel@intel.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 197/413] net: mvpp2: prs: Dont override the sign bit in SRAM parser shift
-Date:   Wed, 24 Jul 2019 21:18:08 +0200
-Message-Id: <20190724191748.692416049@linuxfoundation.org>
+Subject: [PATCH 5.2 198/413] igb: clear out skb->tstamp after reading the txtime
+Date:   Wed, 24 Jul 2019 21:18:09 +0200
+Message-Id: <20190724191748.748535878@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,44 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ec3ede559956f8ad58db7b57d25ac724bab69e9 ]
+[ Upstream commit 1e08511d5d01884a3c9070afd52a47799312074a ]
 
-The Header Parser allows identifying various fields in the packet
-headers, used for various kind of filtering and classification
-steps.
+If a packet which is utilizing the launchtime feature (via SO_TXTIME socket
+option) also requests the hardware transmit timestamp, the hardware
+timestamp is not delivered to the userspace. This is because the value in
+skb->tstamp is mistaken as the software timestamp.
 
-This is a re-entrant process, where the offset in the packet header
-depends on the previous lookup results. This offset is represented in
-the SRAM results of the TCAM, as a shift to be operated.
+Applications, like ptp4l, request a hardware timestamp by setting the
+SOF_TIMESTAMPING_TX_HARDWARE socket option. Whenever a new timestamp is
+detected by the driver (this work is done in igb_ptp_tx_work() which calls
+igb_ptp_tx_hwtstamps() in igb_ptp.c[1]), it will queue the timestamp in the
+ERR_QUEUE for the userspace to read. When the userspace is ready, it will
+issue a recvmsg() call to collect this timestamp.  The problem is in this
+recvmsg() call. If the skb->tstamp is not cleared out, it will be
+interpreted as a software timestamp and the hardware tx timestamp will not
+be successfully sent to the userspace. Look at skb_is_swtx_tstamp() and the
+callee function __sock_recv_timestamp() in net/socket.c for more details.
 
-This shift can be negative in some cases, such as in IPv6 parsing.
-
-This commit prevents overriding the sign bit when setting the shift
-value, which could cause instabilities when parsing IPv6 flows.
-
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Suggested-by: Alan Winkowski <walan@marvell.com>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Signed-off-by: Vedang Patel <vedang.patel@intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-index ae2240074d8e..5692c6087bbb 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-@@ -312,7 +312,8 @@ static void mvpp2_prs_sram_shift_set(struct mvpp2_prs_entry *pe, int shift,
- 	}
- 
- 	/* Set value */
--	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] = shift & MVPP2_PRS_SRAM_SHIFT_MASK;
-+	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] |=
-+		shift & MVPP2_PRS_SRAM_SHIFT_MASK;
- 
- 	/* Reset and set operation */
- 	mvpp2_prs_sram_bits_clear(pe, MVPP2_PRS_SRAM_OP_SEL_SHIFT_OFFS,
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 39f33afc479c..005c1693efc8 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -5687,6 +5687,7 @@ static void igb_tx_ctxtdesc(struct igb_ring *tx_ring,
+ 	 */
+ 	if (tx_ring->launchtime_enable) {
+ 		ts = ns_to_timespec64(first->skb->tstamp);
++		first->skb->tstamp = 0;
+ 		context_desc->seqnum_seed = cpu_to_le32(ts.tv_nsec / 32);
+ 	} else {
+ 		context_desc->seqnum_seed = 0;
 -- 
 2.20.1
 
