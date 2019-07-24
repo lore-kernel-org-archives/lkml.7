@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96247C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904F8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6908F21880
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68FAB21880
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOSQOn4/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="es+L+os4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388613AbfGXXja (ORCPT
+        id S2388735AbfGXXje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:39:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40409 "EHLO
+        Wed, 24 Jul 2019 19:39:34 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35806 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729765AbfGXXjY (ORCPT
+        with ESMTP id S2388357AbfGXXj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:39:24 -0400
-Received: by mail-io1-f68.google.com with SMTP id h6so6750625iom.7;
-        Wed, 24 Jul 2019 16:39:23 -0700 (PDT)
+        Wed, 24 Jul 2019 19:39:27 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so93359096ioo.2;
+        Wed, 24 Jul 2019 16:39:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=N/20K4zPt1+GF4yWXbg6ZLq7eeYH//zGfwHqy2zNVYY=;
-        b=aOSQOn4/VbZarbVQ9TBvC/kLlR9+ig17cPc19RZAgY3ju3h9sU2E9bCLMF9aVWwhWX
-         UCzDzKlfI/OLyBk29DvOA8QBmlZaBPsDSywTtd0N7XdGNezYXHh0qxRt8X5thTF+hAFs
-         1k0ytUq94dd7vMi8LOFdpKiPPDUKw8U0WhMd3yERILd44+lb5vAwhd71JUbbn+8zeRoL
-         vnkxsv5lLgZTQMMdliCNg/VFTX/WnmnadTsA7SGMNu/l1YoxJtOticz1d6+QM0xJz7hD
-         4omTIi6ZluqqS0r+iN7mH2uV8ZezaUvyz/sri2cg4mqn8mfMxMMKoB3KF6lqXjP/PgU/
-         68uA==
+        bh=95RnMuH9NZpUhiSkY13+rMKWH0ZloCzPp9W168L3YRE=;
+        b=es+L+os4CRFmEFLfuoxD6vOAhMY+SoXD2dkVv3t4i4waqyfEEMl+Xc67my6gFWi09K
+         Y2DtfsH4CWWCdySWbvbpDJ9y+njJ6vXKaB1/c9TdXjqCv4yb95dJp98UIqLiVoAmek9H
+         ORnRQBrcPOjMxyxsZOvyXGmR7Fa8JMwv/PScV2XllBFIYbHW8RLVjPEmYagXb1gs+YB2
+         jp+y1InuQjpuyp22PeA8mTEhWEl+WctgKMX+SUzWU0NbgvIKYTA5i5m4V72ewqLU5Hst
+         FhVt7BJzcTBA0UQcZp92b6dgDYdmOt45v4OZsDkqm17pgfR4cs2cftIsXpweICi44J8i
+         0S4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=N/20K4zPt1+GF4yWXbg6ZLq7eeYH//zGfwHqy2zNVYY=;
-        b=ODTgvtVFfbD9y6zTyeA0fYbc7wsSFLBn69DCIL4NQi0WyiB03TMpmlmH2bWhaBfV0k
-         0/6y9Rlqm162oDYXCColSJe9RGsJt4+aGxuSTM8PKt7IHsbNPxaqGu0/zXYlADip2y8F
-         XwPyBKCkoB3VuwWkaGzabt/daC21caeQrflJ9lVOrPJAJ+QbFfq/Oj3gtZg5rFLr7BNm
-         JGouOgzyhtOgRuAqWqJh1iq8dqjSZ6aGNTQTWKncNYa+AJlcLndXqW/tpiEf/GcQ6CP7
-         PnrJ+qAjTEF+WUqQd8wcyL6Ds8aoKdnKQJN14MbpgqW+ab+X7Ld1GTWkuA6ZRS4ZkMI2
-         cfvQ==
-X-Gm-Message-State: APjAAAUI+Lj0UT/Ze1kgz2/wC7oHKnQpElhtCOYBDRlPwMaf4pnQE2bu
-        ag02utZ2IoSigHvZfesdCzA=
-X-Google-Smtp-Source: APXvYqzoL1m6fVY1SNoOjtTWL3LkMluHBuASVZZEdYjFzU72/k3CbDeS86JH/4wcaom/JIvCCwL7Qw==
-X-Received: by 2002:a6b:ed01:: with SMTP id n1mr78293304iog.255.1564011563412;
-        Wed, 24 Jul 2019 16:39:23 -0700 (PDT)
+        bh=95RnMuH9NZpUhiSkY13+rMKWH0ZloCzPp9W168L3YRE=;
+        b=S8wSBz+s/kGabGLATPyudKdJwV/cgQKpJ6VciOYUiEt5vhnFihbos5MzOVLDJxaPlA
+         elMDR6SbSyejnw7s3ihONSkl8ioFm8P2vql53cuZITdJGFap8zrEU8BWuFYJt4OIWE96
+         pjwbFzjhjBt6FRE23vnWleg7lSpSRMMzVB5bBMJ1a0t2O9qOEJwoQEH/E/LFSYxxZ3U4
+         ky1b21wrFAQ789qUYfp+tkUX96b9W26BHtdTdnCV3ZVuYuueEbBjNO4bX1wrcS2vv4DL
+         wyJCeCQ2ZPlffNyscZsEn1uOPflXB4X58Vs6BnlJK0quqCDVWVl4aznHz58DFNF2oLLn
+         /vpQ==
+X-Gm-Message-State: APjAAAW7uCFhLx865o0Vx8h/Jpsv86sp/qy+gTvaPXxvoaS0syhq0YnK
+        TF0z73zKabQI2Z244p4aNlQ=
+X-Google-Smtp-Source: APXvYqzGKtiG9iaWb2B4WyrjpjrrOecz14NRtWR2FJfxv4zmwKffdnApTxKY1Nr7UXrBZPwO/S218Q==
+X-Received: by 2002:a6b:7909:: with SMTP id i9mr47728241iop.8.1564011566663;
+        Wed, 24 Jul 2019 16:39:26 -0700 (PDT)
 Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id b14sm51612959iod.33.2019.07.24.16.39.21
+        by smtp.gmail.com with ESMTPSA id b14sm51612959iod.33.2019.07.24.16.39.25
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 16:39:22 -0700 (PDT)
+        Wed, 24 Jul 2019 16:39:26 -0700 (PDT)
 From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
 To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     skunberg.kelsey@gmail.com,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org
-Subject: [PATCH v2 03/11] PCI: Move *_host_bridge_device() declarations to drivers/pci.pci.h
-Date:   Wed, 24 Jul 2019 17:38:40 -0600
-Message-Id: <20190724233848.73327-4-skunberg.kelsey@gmail.com>
+Subject: [PATCH v2 05/11] PCI: Move pci_hotplug_*_size declarations to drivers/pci/pci.h
+Date:   Wed, 24 Jul 2019 17:38:42 -0600
+Message-Id: <20190724233848.73327-6-skunberg.kelsey@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190724233848.73327-1-skunberg.kelsey@gmail.com>
 References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
@@ -77,44 +77,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci_get_host_bridge_device() and pci_put_host_bridge_device() are only
-called within drivers/pci/pci.h. Since declarations do not need to be
-visible to the rest of the kernel, move to drives/pci/pci.h.
+pci_hotplug_*_size declarations are only called within drivers/pci/pci/.
+Since declarations do not need to be seen by the rest of the kernel, move
+to drivers/pci/pci.h.
 
 Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
  drivers/pci/pci.h   | 3 +++
- include/linux/pci.h | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/linux/pci.h | 4 ----
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index ad1fe54ab8ee..f41dde136648 100644
+index 0eb0fb7ad353..9391330805e9 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -105,6 +105,9 @@ void pci_free_cap_save_buffers(struct pci_dev *dev);
- bool pci_bridge_d3_possible(struct pci_dev *dev);
- void pci_bridge_d3_update(struct pci_dev *dev);
+@@ -211,6 +211,9 @@ extern const struct attribute_group *pcibus_groups[];
+ extern const struct device_type pci_dev_type;
+ extern const struct attribute_group *pci_bus_groups[];
  
-+struct device *pci_get_host_bridge_device(struct pci_dev *dev);
-+void pci_put_host_bridge_device(struct device *dev);
-+
- static inline void pci_wakeup_event(struct pci_dev *dev)
- {
- 	/* Wait 100 ms before the system can be put into a sleep state. */
++extern unsigned long pci_hotplug_io_size;
++extern unsigned long pci_hotplug_mem_size;
++extern unsigned long pci_hotplug_bus_size;
+ 
+ /**
+  * pci_match_one_device - Tell if a PCI device structure has a matching
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index e1f784de459f..cd49427e198e 100644
+index d1944e3e7eb2..9c9554906659 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -644,9 +644,6 @@ static inline struct pci_dev *pci_upstream_bridge(struct pci_dev *dev)
- 	return dev->bus->self;
- }
+@@ -2015,10 +2015,6 @@ extern unsigned long pci_cardbus_mem_size;
+ extern u8 pci_dfl_cache_line_size;
+ extern u8 pci_cache_line_size;
  
--struct device *pci_get_host_bridge_device(struct pci_dev *dev);
--void pci_put_host_bridge_device(struct device *dev);
+-extern unsigned long pci_hotplug_io_size;
+-extern unsigned long pci_hotplug_mem_size;
+-extern unsigned long pci_hotplug_bus_size;
 -
- #ifdef CONFIG_PCI_MSI
- static inline bool pci_dev_msi_enabled(struct pci_dev *pci_dev)
- {
+ /* Architecture-specific versions may override these (weak) */
+ void pcibios_disable_device(struct pci_dev *dev);
+ void pcibios_set_master(struct pci_dev *dev);
 -- 
 2.20.1
 
