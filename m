@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B767C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4A2C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F4422C7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B9622BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033207;
-	bh=2SuPtkwPkO4qr1b97i+rzqWm8BJ7svTIjfYhjq5vB+M=;
+	s=default; t=1564033213;
+	bh=ecra6NhndktQb1ABtB6XprMkB2KL9fmxi/wiwOzJF8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YoS/CyIJIV79pCWn/QXg/a20FTyPWO/oAwGbRm5r5gGT0LjQ+R5Ur39AWrzGK7kA6
-	 rpFpqIyNcykKKE0/Cbv9kTvR9Wm1o/VBb2pflnHA0+ebrPlCSfys+O+fAjQYAnRnlz
-	 xREAl0eM87rhFGdnDH82+upf7TpDDSZOmtbsyqp8=
+	b=YzQrQzQ8xRRvuRa1nGhulemjTffnnU936PyDtd64OmIKjtQv/UaLy4oYkzrSNF5cI
+	 i2ypgqh6eA2d+0avic6yuDgwK4Nu2kQyxDMWjOzgxI3DiZqDs/qC74H3sAdU+yTx8G
+	 JzRk701qF9AwSl8IJJ+7pAt4fEk+zqpIVMW/TGEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404283AbfGYFkF (ORCPT
+        id S2404304AbfGYFkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:40:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404241AbfGYFj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:59 -0400
+        id S2404285AbfGYFkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:40:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B155E22BEF;
-        Thu, 25 Jul 2019 05:39:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1783922C7D;
+        Thu, 25 Jul 2019 05:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033199;
-        bh=2SuPtkwPkO4qr1b97i+rzqWm8BJ7svTIjfYhjq5vB+M=;
+        s=default; t=1564033207;
+        bh=ecra6NhndktQb1ABtB6XprMkB2KL9fmxi/wiwOzJF8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eFIuo+42wXpqauJqajL3D6jm3weUdM7ZmrZ/2xrlQPqxTksIW4HksC2KTN+vSvDfm
-         50uuOcVshjxcGAR6MhPPENPDL6z7I8JIPI/jrlfSLikWXLWh6b2cBNUA7f2VuY0mGh
-         GE4V87mGFUCQDsqHmMrjPE61/TlEEYr99elV6qYU=
+        b=S4CfKy6Ir/4+69EGMalCCapXCOHjePHXymLeYdHJjmAx/GLqeifukSnbkIj3aB5oN
+         G0sAlghhsMH3/BbcLx78fPDx3kMyWGeIkoIDKSMCwVisLj6yr8tOfI/dnSbRQt7Il4
+         WW8Kn1cancgkoxUjN9Yys0lhhosNA/lxQtGvSO4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Borislav Petkov <bp@suse.de>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
+        stable@vger.kernel.org, Ahmad Masri <amasri@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 086/271] EDAC/sysfs: Fix memory leak when creating a csrow object
-Date:   Wed, 24 Jul 2019 21:19:15 +0200
-Message-Id: <20190724191702.568005838@linuxfoundation.org>
+Subject: [PATCH 4.19 122/271] wil6210: drop old event after wmi_call timeout
+Date:   Wed, 24 Jul 2019 21:19:51 +0200
+Message-Id: <20190724191705.729673847@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,50 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 585fb3d93d32dbe89e718b85009f9c322cc554cd ]
+[ Upstream commit 1a276003111c0404f6bfeffe924c5a21f482428b ]
 
-In edac_create_csrow_object(), the reference to the object is not
-released when adding the device to the device hierarchy fails
-(device_add()). This may result in a memory leak.
+This change fixes a rare race condition of handling WMI events after
+wmi_call expires.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: https://lkml.kernel.org/r/1555554438-103953-1-git-send-email-bianpan2016@163.com
+wmi_recv_cmd immediately handles an event when reply_buf is defined and
+a wmi_call is waiting for the event.
+However, in case the wmi_call has already timed-out, there will be no
+waiting/running wmi_call and the event will be queued in WMI queue and
+will be handled later in wmi_event_handle.
+Meanwhile, a new similar wmi_call for the same command and event may
+be issued. In this case, when handling the queued event we got WARN_ON
+printed.
+
+Fixing this case as a valid timeout and drop the unexpected event.
+
+Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/wil6210/wmi.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 20374b8248f0..e50610b5bd06 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -404,6 +404,8 @@ static inline int nr_pages_per_csrow(struct csrow_info *csrow)
- static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 				    struct csrow_info *csrow, int index)
- {
-+	int err;
-+
- 	csrow->dev.type = &csrow_attr_type;
- 	csrow->dev.bus = mci->bus;
- 	csrow->dev.groups = csrow_dev_groups;
-@@ -416,7 +418,11 @@ static int edac_create_csrow_object(struct mem_ctl_info *mci,
- 	edac_dbg(0, "creating (virtual) csrow node %s\n",
- 		 dev_name(&csrow->dev));
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+index 6e3b3031f29b..2010f771478d 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -2816,7 +2816,18 @@ static void wmi_event_handle(struct wil6210_priv *wil,
+ 		/* check if someone waits for this event */
+ 		if (wil->reply_id && wil->reply_id == id &&
+ 		    wil->reply_mid == mid) {
+-			WARN_ON(wil->reply_buf);
++			if (wil->reply_buf) {
++				/* event received while wmi_call is waiting
++				 * with a buffer. Such event should be handled
++				 * in wmi_recv_cmd function. Handling the event
++				 * here means a previous wmi_call was timeout.
++				 * Drop the event and do not handle it.
++				 */
++				wil_err(wil,
++					"Old event (%d, %s) while wmi_call is waiting. Drop it and Continue waiting\n",
++					id, eventid2name(id));
++				return;
++			}
  
--	return device_add(&csrow->dev);
-+	err = device_add(&csrow->dev);
-+	if (err)
-+		put_device(&csrow->dev);
-+
-+	return err;
- }
- 
- /* Create a CSROW object under specifed edac_mc_device */
+ 			wmi_evt_call_handler(vif, id, evt_data,
+ 					     len - sizeof(*wmi));
 -- 
 2.20.1
 
