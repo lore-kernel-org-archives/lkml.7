@@ -2,71 +2,87 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BF4C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6093DC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6210229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4F7229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563950125;
+	bh=Pi+VKac//YeSaPe2w+Iospd+tpAQMymBglU3stnrNHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kuwmEDymrpUDPNC/VnXgLlEZimGvIpyDz7o2EQwgEq9eeO9YjAfLr+9zYeNl+TXO+
+	 7npcanyCMb4KdhD6CDUDv3Jjqv+HU+aNhsvfdA9/nCokeiBwraXVC7gwpwn5yrEpbR
+	 WCNMTKpKhf6JcR5Dq2aLrcI773OgFHzhvsdMa5MY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfGXGeJ (ORCPT
+        id S1726422AbfGXGfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:34:09 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:46164 "EHLO inva020.nxp.com"
+        Wed, 24 Jul 2019 02:35:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfGXGeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:34:08 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8121D1A0030;
-        Wed, 24 Jul 2019 08:34:06 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6FEDB1A00B0;
-        Wed, 24 Jul 2019 08:33:59 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 99CF7402D3;
-        Wed, 24 Jul 2019 14:33:50 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        abel.vesa@nxp.com, aisheng.dong@nxp.com, l.stach@pengutronix.de,
-        ping.bai@nxp.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] clk: imx: Remove unused function statement
-Date:   Wed, 24 Jul 2019 14:24:35 +0800
-Message-Id: <20190724062435.28074-1-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725900AbfGXGfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:35:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67554229ED;
+        Wed, 24 Jul 2019 06:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563950122;
+        bh=Pi+VKac//YeSaPe2w+Iospd+tpAQMymBglU3stnrNHs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IENQEMwTMB+Mw7Lh7xPyHgf5dE8Doq4/+aJujiWGsLEHA5WsZAV8QV3WYfSgHu8Mp
+         oxn2nUQXVGTq3Rzy2ihldV36K1eRZArX6pN4Isz55RT2+F9xj6m+dzjDUQ/vBngwPh
+         y5uvNDy/60OC9Rm3ipRRGkSe+1TP5yxYCrm7r6ao=
+Date:   Wed, 24 Jul 2019 08:35:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 2/3] treewide: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190724063520.GA21280@kroah.com>
+References: <20190723181624.203864-1-swboyd@chromium.org>
+ <20190723181624.203864-3-swboyd@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723181624.203864-3-swboyd@chromium.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+On Tue, Jul 23, 2019 at 11:16:23AM -0700, Stephen Boyd wrote:
+> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> index 9b2232908b65..40e4e8e03428 100644
+> --- a/sound/soc/sunxi/sun4i-i2s.c
+> +++ b/sound/soc/sunxi/sun4i-i2s.c
+> @@ -1088,7 +1088,6 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> -		dev_err(&pdev->dev, "Can't retrieve our interrupt\n");
+>  		return irq;
+>  	}
+>  
 
-imx_register_uart_clocks_hws() function is NOT implemented
-at all, remove it.
+Just one example here, but you really want to remove those { } now as
+well.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/clk/imx/clk.h | 1 -
- 1 file changed, 1 deletion(-)
+That's in this patch a lot, so as-is, I don't think this is ok, sorry.
 
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index 9995f2a..f7a389a 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -10,7 +10,6 @@ extern spinlock_t imx_ccm_lock;
- void imx_check_clocks(struct clk *clks[], unsigned int count);
- void imx_check_clk_hws(struct clk_hw *clks[], unsigned int count);
- void imx_register_uart_clocks(struct clk ** const clks[]);
--void imx_register_uart_clocks_hws(struct clk_hw ** const hws[]);
- void imx_mmdc_mask_handshake(void __iomem *ccm_base, unsigned int chn);
- void imx_unregister_clocks(struct clk *clks[], unsigned int count);
- 
--- 
-2.7.4
-
+greg k-h
