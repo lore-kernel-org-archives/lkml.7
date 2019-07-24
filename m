@@ -2,174 +2,94 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD273C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A890DC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B522421BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:52:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGvqCL4O"
+	by mail.kernel.org (Postfix) with ESMTP id 8596C21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfGXJwk (ORCPT
+        id S1726589AbfGXJw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:52:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37151 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfGXJwk (ORCPT
+        Wed, 24 Jul 2019 05:52:57 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49701 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfGXJw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:52:40 -0400
-Received: by mail-io1-f65.google.com with SMTP id q22so88246114iog.4;
-        Wed, 24 Jul 2019 02:52:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DhDzbuvFs0yJ/WUz3ukdt8uO4k/3AKV8qsjWlE0aKEw=;
-        b=SGvqCL4O1tDMyTtUF8VzsVIaleRAOFgk1B28yr96Tc5DkoDBmOCfKpb+8DoWOK/MrX
-         2D3N8WoY7chRvw1ox0YQgUQqnONnS6yXFvZAdnPH8u3VnvSIbpzzJWjXzHKMfgCzGy90
-         Ikf3cqKH73hhRrRiXIlELX/hkzMl6g8ZyiraOiMiFY1ELoTqUl6cQObs2IC8PxxVkObK
-         aWQF7OxsUJrsYaSNx4NsIbUmrMO0Z5iz6Yan+Wsf7OjG4e87Tlz+wka5UxTeg/6hajeb
-         Vt/ISV+jdgor/H1Sg1FLW5SZ9D6Q5TXu4MG5mHRGgirz3QzqaPNgRt7teGd54t14d4E/
-         ruvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DhDzbuvFs0yJ/WUz3ukdt8uO4k/3AKV8qsjWlE0aKEw=;
-        b=PxL1axhm0kNunLYTIZlaGGBHUnsufHcIjotDOoUKAGssa1SlxcxLpOxJsFlkiBCNiY
-         pe6b5ZcN30uuryD6AzAngeG5rAt7tD/bl2DJaZHph1yO2o2u2CENleULT7ebPkHmCz5Y
-         mg9c6wcW7RQ9oSDmPDyZCi02wV7ye5pzPiDcqoqzgBCzZXeF+T6NaNCn/C2hr/nb8zZC
-         EGDgdtfOxnIjyrhfUlaK+L6KAD3jtGkvoKLgs56Ro6HdWEQU/6jy3DTQIjhrkB62BPLg
-         qD9bQhVwhMdXx12Igm7e/Zdq0rAZ5qu018BayxihfN4vfMA3geGZ19XDJiEFktq2G0Ti
-         l/2g==
-X-Gm-Message-State: APjAAAWhg0EIT7KOU8RrxSEUSpvKNXrFQ9PmQfm4wx3ugkBZxBLBMIuH
-        iNTUGblqxgNs7twT7RQ7dKTKlvOqlerFTfwo7Bs=
-X-Google-Smtp-Source: APXvYqzWo9lCX65m/qQJPiWc2w2e8N/+FLhFIZ0DpQbgEIju2e27m5KvrfTquDsr7BpwzrPpgtrGq0LH0Cy0lwpS2eI=
-X-Received: by 2002:a5d:8497:: with SMTP id t23mr50409358iom.298.1563961959018;
- Wed, 24 Jul 2019 02:52:39 -0700 (PDT)
+        Wed, 24 Jul 2019 05:52:57 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id AADEF802C3; Wed, 24 Jul 2019 11:52:43 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 11:52:54 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     perex@perex.cz, tiwai@suse.com, gregkh@linuxfoundation.org,
+        allison@lohutok.net, tglx@linutronix.de,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sound: line6: sizeof (byte) is always 1, use that fact.
+Message-ID: <20190724095254.GA6727@amd>
 MIME-Version: 1.0
-References: <1560459027-5248-1-git-send-email-nayna@linux.ibm.com>
- <1560459027-5248-3-git-send-email-nayna@linux.ibm.com> <87o92910fg.fsf@concordia.ellerman.id.au>
- <6d2988c1-9b89-448b-4537-c3c6673b6dd1@linux.vnet.ibm.com>
-In-Reply-To: <6d2988c1-9b89-448b-4537-c3c6673b6dd1@linux.vnet.ibm.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Wed, 24 Jul 2019 19:52:28 +1000
-Message-ID: <CAOSf1CFHYv5VsBMEnNAqa7v7WakPfdpGpbENmG8chusm=hW21g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] powerpc: expose secure variables via sysfs
-To:     Nayna <nayna@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        linux-efi@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:35 AM Nayna <nayna@linux.vnet.ibm.com> wrote:
->
-> On 07/05/2019 02:05 AM, Michael Ellerman wrote:
-> > Hi Nayna,
->
-> Hi Michael, Oliver,
->
-> > Nayna Jain <nayna@linux.ibm.com> writes:
-> >> As part of PowerNV secure boot support, OS verification keys are stored
-> >> and controlled by OPAL as secure variables. These need to be exposed to
-> >> the userspace so that sysadmins can perform key management tasks.
-> >>
-> >> This patch adds the support to expose secure variables via a sysfs
-> >> interface It reuses the the existing efi defined hooks and backend in
-> >> order to maintain the compatibility with the userspace tools.
-> > Which tools? Can you include a log demonstrating how they're used, ie.
-> > so that I can test the sequence of commands.
-> >
-> >> Though it reuses a great deal of efi, POWER platforms do not use EFI.
-> >> A new config, POWER_SECVAR_SYSFS, is defined to enable this new sysfs
-> >> interface.
-> > Sorry I haven't been able to keep up with all the discussions, but I
-> > thought the consensus was that pretending to be EFI-like was a bad idea,
-> > because we don't have actual EFI and we're not implementing an entirely
-> > compatible scheme to EFI anyway.
 
-My read is the consensus was that pretending to be EFI is a bad idea
-unless we're going to behave like EFI.
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Greg suggested just putting the variables in sysfs, why does that not
-> > work? Matthew mentioned "complex semantics around variable deletion and
-> > immutability" but do we have to emulate those semantics on powerpc?
->
-> Sorry for the delay in the response.
->
-> Yes, I agree. The purpose of the v2 version of the patchset was to try
-> and quickly address Matthew's concerns. This version of the patchset:
 
-> * is based on Greg's suggestion to use sysfs
+sizeof (byte) is always 1, use that fact and make interesting code explicit.
 
-As far as I can tell Greg made that suggestion here:
+Signed-off-by: Pavel Machek <pavel@denx.de>
 
-https://lwn.net/ml/linux-fsdevel/20190603072916.GA7545@kroah.com/
+diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
+index ab2ec89..387c5c2 100644
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -342,7 +342,7 @@ int line6_read_data(struct usb_line6 *line6, unsigned a=
+ddress, void *data,
+ 	if (address > 0xffff || datalen > 0xff)
+ 		return -EINVAL;
+=20
+-	len =3D kmalloc(sizeof(*len), GFP_KERNEL);
++	len =3D kmalloc(1, GFP_KERNEL);
+ 	if (!len)
+ 		return -ENOMEM;
+=20
+@@ -418,7 +421,7 @@ int line6_write_data(struct usb_line6 *line6, unsigned =
+address, void *data,
+ 	if (address > 0xffff || datalen > 0xffff)
+ 		return -EINVAL;
+=20
+-	status =3D kmalloc(sizeof(*status), GFP_KERNEL);
++	status =3D kmalloc(1, GFP_KERNEL);
+ 	if (!status)
+ 		return -ENOMEM;
+=20
 
-Then walked back on that suggestion after Matthew pointed out that
-efivars is separate because of the immutability requirement and the
-odd update semantics:
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-https://lwn.net/ml/linux-fsdevel/20190605081301.GA23180@kroah.com/
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Considering the whole point of this is to present the same user-facing
-interface so shouldn't you be dealing with all the problems that
-interface creates?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> * is not using any EFI configs
-That's true, but...
+iEYEARECAAYFAl04KnYACgkQMOfwapXb+vIvPgCdEcgRySTDEvncHuH1EgY1sF2N
+rwMAoMGO7UVMzt/J19H3d1Huf9YsVeSF
+=2Y4Y
+-----END PGP SIGNATURE-----
 
-> * is not exposing secure variables via efivarfs
-> * is STILL using some of the existing EFI code, that is used by EFI to
-> expose its variables via sysfs, to avoid code duplication.
-
-We avoid some of the potential problems of selecting CONFIG_EFI and we
-gain a bunch of other potential problems since you've hacked the
-makefiles to build code that's normally CONFIG_EFI only.
-
-> * is using efivar hooks to expose secure variables for tool compatibility
-
-Here's the real problem. For compatibility with the existing userspace
-tooling, which expects UEFI,  you need to present the same interface
-with the same semantics. Trying to not use efivarfs means you've
-already lost since you no longer have the same interface. So how is
-this an improvement? I think the options here are to either:
-
-1) Come up with a new interface, implement it, and adapt the user
-tooling to deal with the new API.
-
-*or*
-
-2) Use efivarsfs and fix the based i-cant-believe-its-not-efi variable
-backend so it behaves *exactly* like the UEFI get/setVariable APIs.
-This means that you need to validate the update certificates at
-runtime. I don't think this is a huge strech since you're already
-implementing the validator.
-
-1) gives you the flexibility to change the key hierarchy and whatnot,
-while 2) means we've got less weird powerpc crap for users to deal
-with. I have no strong opinions about which you choose to do, but
-don't do this.
-
-Oliver
+--MGYHOYXEY6WxJCY8--
