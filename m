@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4946EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AFBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E17022ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3809021873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998400;
-	bh=/+pFugCSIqfhfErvc6YLgXqeyrlG/zIJSFs2/GxY+F4=;
+	s=default; t=1563998405;
+	bh=xilmhM1s39Rgg2xFd6VWYxpecgNCzNRyz+zbv/QPNh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dF9M9dgMRbucdK+rYG7fYd2gYrovxAfmoXng+ER31WnmW3+9Od0O/l1x32xExa/GN
-	 w+rm+EPq4rYfRmyJcdPT/UZZJ88NAJvySut1aIzIfwVYRraCrAo/+tHa7BZhrLlyVD
-	 54dl1nMsFGoZMDdqCH6jz6s+wnr3dh6E5zB1x8/E=
+	b=qXOkCbatyp5gVkwkETUQlrZCvxEAPgZw6zXhyQeWG82qjn7Gxcge3AxQMEnqmghgt
+	 iyMmFKcLlmzVR9YBhD9NNcsTu1NKVH0/Xoi18zovKQwUXKvprGCw0FJQmG4M7ceaXS
+	 j4oglOuQZFBf9ltoiDeZqdcA+0oTaYFoFB3moSU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392263AbfGXT77 (ORCPT
+        id S2392288AbfGXUAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47528 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392142AbfGXT74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:59:56 -0400
+        id S2392266AbfGXUAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:00:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB78022ADA;
-        Wed, 24 Jul 2019 19:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD2D621873;
+        Wed, 24 Jul 2019 19:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998395;
-        bh=/+pFugCSIqfhfErvc6YLgXqeyrlG/zIJSFs2/GxY+F4=;
+        s=default; t=1563998400;
+        bh=xilmhM1s39Rgg2xFd6VWYxpecgNCzNRyz+zbv/QPNh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QStOJCJok3xwb5E9TasOrJyNon8Bs83WkmfnyPMaV7Xf0p0zDMDOn9uc7pOy1go0A
-         uQRQwdWcA270BQki+i/Ij/sh6uJtgsagzl/FA0KAJ1RXs/c+JZJF2S8FoKz/E5A8o1
-         hn3NDN6/R+BBUyRadrZ2TECgPmSEAJtFuVCMFArs=
+        b=iVWj2wie8ysqIHtzIbEXmAULebSwiaBKbYWmA53SY3ub5U4F3VeFtPBaoAFI+KBQx
+         dLpAxpxANabzJ7TcWNSgUDM+FC+SQumGQ1aXSSqkY1zo8ZhGJJTBskPgI4mw2eLFbL
+         h+l98LfkIqSp+v8lqxO7gfGkbS/xfztZS6JcLJ5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.1 351/371] powerpc/watchpoint: Restore NV GPRs while returning from exception
-Date:   Wed, 24 Jul 2019 21:21:43 +0200
-Message-Id: <20190724191750.222689727@linuxfoundation.org>
+Subject: [PATCH 5.1 353/371] powerpc/powernv: Fix stale iommu table base after VFIO
+Date:   Wed, 24 Jul 2019 21:21:45 +0200
+Message-Id: <20190724191750.413986568@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,116 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-commit f474c28fbcbe42faca4eb415172c07d76adcb819 upstream.
+commit 5636427d087a55842c1a199dfb839e6545d30e5d upstream.
 
-powerpc hardware triggers watchpoint before executing the instruction.
-To make trigger-after-execute behavior, kernel emulates the
-instruction. If the instruction is 'load something into non-volatile
-register', exception handler should restore emulated register state
-while returning back, otherwise there will be register state
-corruption. eg, adding a watchpoint on a list can corrput the list:
+The powernv platform uses @dma_iommu_ops for non-bypass DMA. These ops
+need an iommu_table pointer which is stored in
+dev->archdata.iommu_table_base. It is initialized during
+pcibios_setup_device() which handles boot time devices. However when a
+device is taken from the system in order to pass it through, the
+default IOMMU table is destroyed but the pointer in a device is not
+updated; also when a device is returned back to the system, a new
+table pointer is not stored in dev->archdata.iommu_table_base either.
+So when a just returned device tries using IOMMU, it crashes on
+accessing stale iommu_table or its members.
 
-  # cat /proc/kallsyms | grep kthread_create_list
-  c00000000121c8b8 d kthread_create_list
+This calls set_iommu_table_base() when the default window is created.
+Note it used to be there before but was wrongly removed (see "fixes").
+It did not appear before as these days most devices simply use bypass.
 
-Add watchpoint on kthread_create_list->prev:
+This adds set_iommu_table_base(NULL) when a device is taken from the
+system to make it clear that IOMMU DMA cannot be used past that point.
 
-  # perf record -e mem:0xc00000000121c8c0
-
-Run some workload such that new kthread gets invoked. eg, I just
-logged out from console:
-
-  list_add corruption. next->prev should be prev (c000000001214e00), \
-	but was c00000000121c8b8. (next=c00000000121c8b8).
-  WARNING: CPU: 59 PID: 309 at lib/list_debug.c:25 __list_add_valid+0xb4/0xc0
-  CPU: 59 PID: 309 Comm: kworker/59:0 Kdump: loaded Not tainted 5.1.0-rc7+ #69
-  ...
-  NIP __list_add_valid+0xb4/0xc0
-  LR __list_add_valid+0xb0/0xc0
-  Call Trace:
-  __list_add_valid+0xb0/0xc0 (unreliable)
-  __kthread_create_on_node+0xe0/0x260
-  kthread_create_on_node+0x34/0x50
-  create_worker+0xe8/0x260
-  worker_thread+0x444/0x560
-  kthread+0x160/0x1a0
-  ret_from_kernel_thread+0x5c/0x70
-
-List corruption happened because it uses 'load into non-volatile
-register' instruction:
-
-Snippet from __kthread_create_on_node:
-
-  c000000000136be8:     addis   r29,r2,-19
-  c000000000136bec:     ld      r29,31424(r29)
-        if (!__list_add_valid(new, prev, next))
-  c000000000136bf0:     mr      r3,r30
-  c000000000136bf4:     mr      r5,r28
-  c000000000136bf8:     mr      r4,r29
-  c000000000136bfc:     bl      c00000000059a2f8 <__list_add_valid+0x8>
-
-Register state from WARN_ON():
-
-  GPR00: c00000000059a3a0 c000007ff23afb50 c000000001344e00 0000000000000075
-  GPR04: 0000000000000000 0000000000000000 0000001852af8bc1 0000000000000000
-  GPR08: 0000000000000001 0000000000000007 0000000000000006 00000000000004aa
-  GPR12: 0000000000000000 c000007ffffeb080 c000000000137038 c000005ff62aaa00
-  GPR16: 0000000000000000 0000000000000000 c000007fffbe7600 c000007fffbe7370
-  GPR20: c000007fffbe7320 c000007fffbe7300 c000000001373a00 0000000000000000
-  GPR24: fffffffffffffef7 c00000000012e320 c000007ff23afcb0 c000000000cb8628
-  GPR28: c00000000121c8b8 c000000001214e00 c000007fef5b17e8 c000007fef5b17c0
-
-Watchpoint hit at 0xc000000000136bec.
-
-  addis   r29,r2,-19
-   => r29 = 0xc000000001344e00 + (-19 << 16)
-   => r29 = 0xc000000001214e00
-
-  ld      r29,31424(r29)
-   => r29 = *(0xc000000001214e00 + 31424)
-   => r29 = *(0xc00000000121c8c0)
-
-0xc00000000121c8c0 is where we placed a watchpoint and thus this
-instruction was emulated by emulate_step. But because handle_dabr_fault
-did not restore emulated register state, r29 still contains stale
-value in above register state.
-
-Fixes: 5aae8a5370802 ("powerpc, hw_breakpoints: Implement hw_breakpoints for 64-bit server processors")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: stable@vger.kernel.org # 2.6.36+
+Fixes: c4e9d3c1e65a ("powerpc/powernv/pseries: Rework device adding to IOMMU groups")
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/exceptions-64s.S |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1738,7 +1738,7 @@ handle_page_fault:
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_page_fault
- 	cmpdi	r3,0
--	beq+	12f
-+	beq+	ret_from_except_lite
- 	bl	save_nvgprs
- 	mr	r5,r3
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
-@@ -1753,7 +1753,12 @@ handle_dabr_fault:
- 	ld      r5,_DSISR(r1)
- 	addi    r3,r1,STACK_FRAME_OVERHEAD
- 	bl      do_break
--12:	b       ret_from_except_lite
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2459,6 +2459,14 @@ static long pnv_pci_ioda2_setup_default_
+ 	if (!pnv_iommu_bypass_disabled)
+ 		pnv_pci_ioda2_set_bypass(pe, true);
+ 
 +	/*
-+	 * do_break() may have changed the NV GPRS while handling a breakpoint.
-+	 * If so, we need to restore them with their updated values. Don't use
-+	 * ret_from_except_lite here.
++	 * Set table base for the case of IOMMU DMA use. Usually this is done
++	 * from dma_dev_setup() which is not called when a device is returned
++	 * from VFIO so do it here.
 +	 */
-+	b       ret_from_except
++	if (pe->pdev)
++		set_iommu_table_base(&pe->pdev->dev, tbl);
++
+ 	return 0;
+ }
  
+@@ -2546,6 +2554,8 @@ static void pnv_ioda2_take_ownership(str
+ 	pnv_pci_ioda2_unset_window(&pe->table_group, 0);
+ 	if (pe->pbus)
+ 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
++	else if (pe->pdev)
++		set_iommu_table_base(&pe->pdev->dev, NULL);
+ 	iommu_tce_table_put(tbl);
+ }
  
- #ifdef CONFIG_PPC_BOOK3S_64
 
 
