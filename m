@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88B9C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A968EC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB3D22C7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EBD22C7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033301;
-	bh=UMjFdv0pAN4qfa6lMaz4weRI/u2D4aVqZjz25cfTr4Q=;
+	s=default; t=1564033305;
+	bh=OkAaxLeIQuKGDFrmUKUT5tRsvPPbMuA1sbHvQmko9rQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ie6OFrKNQgvwFFhR7C+Vgpir1v6xGriqZIHGR08JiPnhWHeIr0m0fEMdkkTFrME+Z
-	 2H3Xig6MO04ZYO0AU9Psu5iLeuOO2TfeEkasmaXzX2lQJ2HLSpl8f9rR71jUXycO87
-	 75rFSrbe/gDFnwgjxhz8MkdjZBRs1oeEFpr4CPW4=
+	b=AApkbWq+4jObPjnkMMHD50Z4SaXc6glfmITs3LYFl89sCjU8JVM7bGxoBI3Hq/kjD
+	 AM4dUQ8c/s3HgNzsRycKwkqqa50gtrVy/dtp9cCLajXd0MrITHJvqY2w7hCFe8GoGp
+	 k7V9beL1nkGkYUO13fzc8oT1MJM6lDdyqOE/FJjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404721AbfGYFlk (ORCPT
+        id S2404738AbfGYFlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56480 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404699AbfGYFli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:41:38 -0400
+        id S2404699AbfGYFlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:41:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A41B422C7D;
-        Thu, 25 Jul 2019 05:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 181D422BEB;
+        Thu, 25 Jul 2019 05:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033298;
-        bh=UMjFdv0pAN4qfa6lMaz4weRI/u2D4aVqZjz25cfTr4Q=;
+        s=default; t=1564033301;
+        bh=OkAaxLeIQuKGDFrmUKUT5tRsvPPbMuA1sbHvQmko9rQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=reSjXI02HGPzM1Gemc7DmJSqQtMVg/+J9Wctzyj6AE+avvXL3vbNr46hrmoDwYi83
-         rctpNt1A8oy3QVOCsjNgVoIxAlLhgruDq8gYTrXSKwO6fzkolAirByUpZRlbu8oLKM
-         K/xZ1szKL/szOAITSZaQJmAtBDbFsEN7mD4vOEnU=
+        b=leB76s70vRZYMsZOfPc4tfEIkru0W4LOZJbPl2ETNj6OEv0AWYjcenB2PZRhUipcF
+         z9ogQXNVgGfMlWDkq6XKJo8XrsBdTdF1rz1r2tIZe3dH1o1tPbJFST1QED2PDR4aV6
+         DisqCj/a/g8z+hl1pjPF/q5w1m9+nutQjc8NHYi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 159/271] iavf: fix dereference of null rx_buffer pointer
-Date:   Wed, 24 Jul 2019 21:20:28 +0200
-Message-Id: <20190724191708.823074164@linuxfoundation.org>
+Subject: [PATCH 4.19 160/271] floppy: fix div-by-zero in setup_format_params
+Date:   Wed, 24 Jul 2019 21:20:29 +0200
+Message-Id: <20190724191708.899798884@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,61 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9fe06a51287b2d41baef7ece94df34b5abf19b90 ]
+[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
 
-A recent commit efa14c3985828d ("iavf: allow null RX descriptors") added
-a null pointer sanity check on rx_buffer, however, rx_buffer is being
-dereferenced before that check, which implies a null pointer dereference
-bug can potentially occur.  Fix this by only dereferencing rx_buffer
-until after the null pointer check.
+This fixes a divide by zero error in the setup_format_params function of
+the floppy driver.
 
-Addresses-Coverity: ("Dereference before null check")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Two consecutive ioctls can trigger the bug: The first one should set the
+drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
+to become zero.  Next, the floppy format operation should be called.
+
+A floppy disk is not required to be inserted.  An unprivileged user
+could trigger the bug if the device is accessible.
+
+The patch checks F_SECT_PER_TRACK for a non-zero value in the
+set_geometry function.  The proper check should involve a reasonable
+upper limit for the .sect and .rate fields, but it could change the
+UAPI.
+
+The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
+cancels the formatting operation in case of zero.
+
+The bug was found by syzkaller.
+
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40evf/i40e_txrx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/block/floppy.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40evf/i40e_txrx.c b/drivers/net/ethernet/intel/i40evf/i40e_txrx.c
-index a9730711e257..b56d22b530a7 100644
---- a/drivers/net/ethernet/intel/i40evf/i40e_txrx.c
-+++ b/drivers/net/ethernet/intel/i40evf/i40e_txrx.c
-@@ -1291,7 +1291,7 @@ static struct sk_buff *i40e_construct_skb(struct i40e_ring *rx_ring,
- 					  struct i40e_rx_buffer *rx_buffer,
- 					  unsigned int size)
- {
--	void *va = page_address(rx_buffer->page) + rx_buffer->page_offset;
-+	void *va;
- #if (PAGE_SIZE < 8192)
- 	unsigned int truesize = i40e_rx_pg_size(rx_ring) / 2;
- #else
-@@ -1301,6 +1301,7 @@ static struct sk_buff *i40e_construct_skb(struct i40e_ring *rx_ring,
- 	struct sk_buff *skb;
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index a8de56f1936d..b1425b218606 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -2119,6 +2119,9 @@ static void setup_format_params(int track)
+ 	raw_cmd->kernel_data = floppy_track_buffer;
+ 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
  
- 	/* prefetch first cache line of first page */
-+	va = page_address(rx_buffer->page) + rx_buffer->page_offset;
- 	prefetch(va);
- #if L1_CACHE_BYTES < 128
- 	prefetch(va + L1_CACHE_BYTES);
-@@ -1355,7 +1356,7 @@ static struct sk_buff *i40e_build_skb(struct i40e_ring *rx_ring,
- 				      struct i40e_rx_buffer *rx_buffer,
- 				      unsigned int size)
- {
--	void *va = page_address(rx_buffer->page) + rx_buffer->page_offset;
-+	void *va;
- #if (PAGE_SIZE < 8192)
- 	unsigned int truesize = i40e_rx_pg_size(rx_ring) / 2;
- #else
-@@ -1365,6 +1366,7 @@ static struct sk_buff *i40e_build_skb(struct i40e_ring *rx_ring,
- 	struct sk_buff *skb;
++	if (!F_SECT_PER_TRACK)
++		return;
++
+ 	/* allow for about 30ms for data transport per track */
+ 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
  
- 	/* prefetch first cache line of first page */
-+	va = page_address(rx_buffer->page) + rx_buffer->page_offset;
- 	prefetch(va);
- #if L1_CACHE_BYTES < 128
- 	prefetch(va + L1_CACHE_BYTES);
+@@ -3243,6 +3246,8 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
+ 	/* sanity checking for parameters. */
+ 	if (g->sect <= 0 ||
+ 	    g->head <= 0 ||
++	    /* check for zero in F_SECT_PER_TRACK */
++	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
+ 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
+ 	    /* check if reserved bits are set */
+ 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
 -- 
 2.20.1
 
