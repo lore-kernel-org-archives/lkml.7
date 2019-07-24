@@ -2,436 +2,133 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EFAC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4AAC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077962189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UmW853Sm"
+	by mail.kernel.org (Postfix) with ESMTP id B79B22189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfGXVO2 (ORCPT
+        id S1728889AbfGXVOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:14:28 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42968 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727868AbfGXVO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:14:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so49362043otn.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 14:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=toD0+IbWe7oROYAV4KQZ3fPBvBGTw+vxAk94DklaQJU=;
-        b=UmW853SmyJJwlaFhE2REQrT7kuqxjg8L7RGjKhvHeM+Vu7J+SMiLrFMZcV2iHOuYG/
-         Xuf9A5VKAWr+jEy/9FrtH3c8/4krc4y8kP6grMucTNSh50zLdywUm9urfZRJzpvANxKc
-         ckyeBqF1vUJi/PLVrBC5tXSw6BCeiJqSiQ9qP8XmTwnyZUNiwovt5aqfS/33OiGTOZgc
-         3+cAPx4ybW/XGY3q2KnCTwsxk0lZvKNBnC8x6zgc/WfKnYMFO1McUS9WcJOakPpTRswd
-         BjRDHrcWVzYZVNk0xXBjMEouyWECEJTIONZJQZjFDQFpkYu5sUVdtbqUqPDE0ogD1eh8
-         opgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=toD0+IbWe7oROYAV4KQZ3fPBvBGTw+vxAk94DklaQJU=;
-        b=EkTmiWfsQ8RI3WdVIvubGckPmcJNRVH5SK3/2j5mXsKH5n8EJaU5Ae46DJXI/goDxR
-         0O5hhAh2KXmZwr9arw2TcKQV6DULzlWPllFtTIRptc+XoY2GdDpyYlxESuRf6pDHko3M
-         vtYVclPBCNS/ERgrtqIb5+1a2krjNMahW3W15HKrYeOIRLJnb6gfWCsT7KMMDX91ocdy
-         IcJSe8tt/Wui5QVNx6hRGPOpNzVSDqZ/H1dCuwAWV1Pqs8dMpAlEPClsgAedX5+uX+2f
-         ZL9gbkD5S7/ljZfqbdDSFBf9eLVD20gsWTkChtWCg8LHFzlVaWxrYXgag4fNLc2y1dyH
-         JzjA==
-X-Gm-Message-State: APjAAAVmwZIsoHPYKcMfgQ04pU7yyNm2bj6TnmJ6fXvYXlIaRaXq7XVP
-        oPESwlkSgtk7dWpGhwbfUlvtYlGTkJLZhbFmg1Q93A==
-X-Google-Smtp-Source: APXvYqxIWuOi2llca2VOt68uV/y4/pbAP8WyKUp0xraiSAdLu9HdH5zUgTRH7zlfZX8GV2+TtSRBdJvOJaDthm2BsdU=
-X-Received: by 2002:a9d:6d06:: with SMTP id o6mr11855577otp.225.1564002865898;
- Wed, 24 Jul 2019 14:14:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724014222.110767-1-saravanak@google.com> <20190724014222.110767-4-saravanak@google.com>
- <41434f8279c7004737e19fe2fbad8f14@codeaurora.org>
-In-Reply-To: <41434f8279c7004737e19fe2fbad8f14@codeaurora.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 24 Jul 2019 14:13:45 -0700
-Message-ID: <CAGETcx9dGuj3dTFoJxO2xDqdA83pU041HQhMeW2qN0jvmuwA3Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] OPP: Improve required-opps linking
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kernel-owner@vger.kernel.org
+        Wed, 24 Jul 2019 17:14:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47941 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727868AbfGXVOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:14:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 14:14:43 -0700
+X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
+   d="scan'208";a="253724062"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 14:14:43 -0700
+Message-ID: <d70c9d97571e8efd4c971eaa73d67fc50222e67d.camel@linux.intel.com>
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Wed, 24 Jul 2019 14:14:43 -0700
+In-Reply-To: <20190724164433-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724171050.7888.62199.stgit@localhost.localdomain>
+         <20190724150224-mutt-send-email-mst@kernel.org>
+         <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
+         <20190724164433-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-:
-On Wed, Jul 24, 2019 at 10:59 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Saravana,
->
-> Didn't get time to test v4 will
-> give it a spin tomorrow. Just
-> included some issues which should
-> still remain in v4.
+On Wed, 2019-07-24 at 16:46 -0400, Michael S. Tsirkin wrote:
+> On Wed, Jul 24, 2019 at 01:18:00PM -0700, Alexander Duyck wrote:
+> > On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
+> > > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > 
+> > > > Add support for what I am referring to as "bubble hinting". Basically the
+> > > > idea is to function very similar to how the balloon works in that we
+> > > > basically end up madvising the page as not being used. However we don't
+> > > > really need to bother with any deflate type logic since the page will be
+> > > > faulted back into the guest when it is read or written to.
+> > > > 
+> > > > This is meant to be a simplification of the existing balloon interface
+> > > > to use for providing hints to what memory needs to be freed. I am assuming
+> > > > this is safe to do as the deflate logic does not actually appear to do very
+> > > > much other than tracking what subpages have been released and which ones
+> > > > haven't.
+> > > > 
+> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > ---
+> > > >  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
+> > > >  include/hw/virtio/virtio-balloon.h              |    2 +
+> > > >  include/standard-headers/linux/virtio_balloon.h |    1 +
+> > > >  3 files changed, 42 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+> > > > index 2112874055fb..70c0004c0f88 100644
+> > > > --- a/hw/virtio/virtio-balloon.c
+> > > > +++ b/hw/virtio/virtio-balloon.c
+> > > > @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
+> > > >      balloon_stats_change_timer(s, 0);
+> > > >  }
+> > > >  
+> > > > +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+> > > > +{
+> > > > +    VirtQueueElement *elem;
+> > > > +
+> > > > +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
+> > > > +    	unsigned int i;
+> > > > +
+> > > > +        for (i = 0; i < elem->in_num; i++) {
+> > > > +            void *addr = elem->in_sg[i].iov_base;
+> > > > +            size_t size = elem->in_sg[i].iov_len;
+> > > > +            ram_addr_t ram_offset;
+> > > > +            size_t rb_page_size;
+> > > > +            RAMBlock *rb;
+> > > > +
+> > > > +            if (qemu_balloon_is_inhibited())
+> > > > +                continue;
+> > > > +
+> > > > +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
+> > > > +            rb_page_size = qemu_ram_pagesize(rb);
+> > > > +
+> > > > +            /* For now we will simply ignore unaligned memory regions */
+> > > > +            if ((ram_offset | size) & (rb_page_size - 1))
+> > > > +                continue;
+> > > > +
+> > > > +            ram_block_discard_range(rb, ram_offset, size);
+> > > 
+> > > I suspect this needs to do like the migration type of
+> > > hinting and get disabled if page poisoning is in effect.
+> > > Right?
+> > 
+> > Shouldn't something like that end up getting handled via
+> > qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
+> > like that would end up setting qemu_balloon_is_inhibited to true, if that
+> > isn't the case then I could add some additional conditions. I would do it
+> > in about the same spot as the qemu_balloon_is_inhibited check.
+> 
+> Well qemu_balloon_is_inhibited is for the regular ballooning,
+> mostly a work-around for limitations is host linux iommu
+> APIs when it's used with VFIO.
 
-Thanks.
+I understood that. However it also addresses the shared memory case as
+well if I recall correctly. Basically any case where us discarding the
+page could cause issues we should be causing that function to return true.
 
->
-> On 2019-07-24 07:12, Saravana Kannan wrote:
-> > Currently, the linking of required-opps fails silently if the
-> > destination OPP table hasn't been added before the source OPP table is
-> > added. This puts an unnecessary requirement that the destination table
-> > be added before the source table is added.
-> >
-> > In reality, the destination table is needed only when we try to
-> > translate from source OPP to destination OPP. So, instead of
-> > completely failing, retry linking the tables when the translation is
-> > attempted.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/core.c |  30 ++++++++++----
-> >  drivers/opp/of.c   | 101 ++++++++++++++++++++++++---------------------
-> >  drivers/opp/opp.h  |   5 +++
-> >  3 files changed, 80 insertions(+), 56 deletions(-)
-> >
-> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > index 5460b7da110e..01c71d145ec7 100644
-> > --- a/drivers/opp/core.c
-> > +++ b/drivers/opp/core.c
-> > @@ -706,6 +706,9 @@ static int _set_required_opps(struct device *dev,
-> >       if (!required_opp_tables)
-> >               return 0;
-> >
-> > +     if (!_of_lazy_link_required_tables(opp_table))
-> > +             return -EPROBE_DEFER;
-> > +
-> >       /* Single genpd case */
-> >       if (!genpd_virt_devs && required_opp_tables[0]->is_genpd) {
-> >               pstate = likely(opp) ? opp->required_opps[0]->pstate : 0;
-> > @@ -726,11 +729,16 @@ static int _set_required_opps(struct device *dev,
-> >       mutex_lock(&opp_table->genpd_virt_dev_lock);
-> >
-> >       for (i = 0; i < opp_table->required_opp_count; i++) {
-> > -             pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
-> > -
-> >               if (!genpd_virt_devs[i])
-> >                       continue;
-> >
-> > +             if (!opp->required_opps[i]) {
-> > +                     ret = -ENODEV;
-> > +                     break;
-> > +             }
-> > +
-> > +             pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
-> > +
-> >               ret = dev_pm_genpd_set_performance_state(genpd_virt_devs[i],
-> > pstate);
-> >               if (ret) {
-> >                       dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
-> > @@ -1906,8 +1914,11 @@ struct dev_pm_opp
-> > *dev_pm_opp_xlate_required_opp(struct opp_table *src_table,
-> >       if (!src_table || !dst_table || !src_opp)
-> >               return NULL;
-> >
-> > +     _of_lazy_link_required_tables(src_table);
-> > +
-> >       for (i = 0; i < src_table->required_opp_count; i++) {
-> > -             if (src_table->required_opp_tables[i]->np == dst_table->np)
-> > +             if (src_table->required_opp_tables[i]
-> > +                 && src_table->required_opp_tables[i]->np == dst_table->np)
-> >                       break;
-> >       }
-> >
-> > @@ -1970,6 +1981,8 @@ int dev_pm_opp_xlate_performance_state(struct
-> > opp_table *src_table,
-> >       if (!src_table->required_opp_count)
-> >               return pstate;
-> >
-> > +     _of_lazy_link_required_tables(src_table);
-> > +
-> >       for (i = 0; i < src_table->required_opp_count; i++) {
-> >               if (src_table->required_opp_tables[i]->np == dst_table->np)
-> >                       break;
-> > @@ -1985,15 +1998,16 @@ int dev_pm_opp_xlate_performance_state(struct
-> > opp_table *src_table,
-> >
-> >       list_for_each_entry(opp, &src_table->opp_list, node) {
-> >               if (opp->pstate == pstate) {
-> > -                     dest_pstate = opp->required_opps[i]->pstate;
-> > -                     goto unlock;
-> > +                     if (opp->required_opps[i])
-> > +                             dest_pstate = opp->required_opps[i]->pstate;
-> > +                     break;
-> >               }
-> >       }
-> >
-> > -     pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__,
-> > src_table,
-> > -            dst_table);
-> > +     if (dest_pstate < 0)
-> > +             pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__,
-> > +                    src_table, dst_table);
-> >
-> > -unlock:
-> >       mutex_unlock(&src_table->lock);
-> >
-> >       return dest_pstate;
-> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > index ff88eaf66b56..1f2860b2d6e5 100644
-> > --- a/drivers/opp/of.c
-> > +++ b/drivers/opp/of.c
-> > @@ -145,7 +145,7 @@ static void _opp_table_free_required_tables(struct
-> > opp_table *opp_table)
-> >
-> >       for (i = 0; i < opp_table->required_opp_count; i++) {
-> >               if (IS_ERR_OR_NULL(required_opp_tables[i]))
-> > -                     break;
-> > +                     continue;
-> >
-> >               dev_pm_opp_put_opp_table(required_opp_tables[i]);
-> >       }
-> > @@ -165,8 +165,8 @@ static void
-> > _opp_table_alloc_required_tables(struct opp_table *opp_table,
-> >                                            struct device_node *opp_np)
-> >  {
-> >       struct opp_table **required_opp_tables;
-> > -     struct device_node *required_np, *np;
-> > -     int count, i;
-> > +     struct device_node *np;
-> > +     int count;
-> >
-> >       /* Traversing the first OPP node is all we need */
-> >       np = of_get_next_available_child(opp_np, NULL);
-> > @@ -176,35 +176,65 @@ static void
-> > _opp_table_alloc_required_tables(struct opp_table *opp_table,
-> >       }
-> >
-> >       count = of_count_phandle_with_args(np, "required-opps", NULL);
-> > +     of_node_put(np);
-> >       if (!count)
->
-> should this be count <= 0 instead ?
-
-Looks like in the current implementation of
-of_count_phandle_with_args() returns 0 if the required-opps property
-doesn't exist. It can return errors only if the phandles are invalid
-(hopefully DTC would catch that) or if the "cells" param is listed by
-the DT node doesn't have it. The later is not a problem here since
-cells is NULL.
-
-But I think what you suggested would be safer if the other error cases
-aren't caught by the DTC. But this is existing code and I don't want
-to fix unrelated stuff in this patch.
-
-> > -             goto put_np;
-> > +             return;
-> >
-> >       required_opp_tables = kcalloc(count, sizeof(*required_opp_tables),
-> >                                     GFP_KERNEL);
-> >       if (!required_opp_tables)
-> > -             goto put_np;
-> > +             return;
-> >
-> >       opp_table->required_opp_tables = required_opp_tables;
-> >       opp_table->required_opp_count = count;
->
-> error values could be assigned to
-> unsigned int member required_opp_count
-
-That's assuming a ~4GB kernel malloc succeeds :) Still a valid point,
-but don't want to fix that in this patch series.
-
-> > +}
-> > +
-> > +/*
-> > + * Try to link all required tables and return true if all of them have
-> > been
-> > + * linked. Otherwise, return false.
-> > + */
-> > +bool _of_lazy_link_required_tables(struct opp_table *src)
-> > +{
-> > +     struct dev_pm_opp *src_opp, *tmp_opp;
-> > +     struct opp_table *req_table;
-> > +     struct device_node *req_np;
-> > +     int i, num_linked = 0;
-> >
-> > -     for (i = 0; i < count; i++) {
-> > -             required_np = of_parse_required_opp(np, i);
-> > -             if (!required_np)
-> > -                     goto free_required_tables;
-> > +     mutex_lock(&src->lock);
-> >
-> > -             required_opp_tables[i] = _find_table_of_opp_np(required_np);
-> > -             of_node_put(required_np);
-> > +     if (list_empty(&src->opp_list))
-> > +             goto out;
-> >
-> > -             if (IS_ERR(required_opp_tables[i]))
-> > -                     goto free_required_tables;
-> > -     }
-> > +     src_opp = list_first_entry(&src->opp_list, struct dev_pm_opp, node);
-> >
-> > -     goto put_np;
-> > +     for (i = 0; i < src->required_opp_count; i++) {
-> > +             if (src->required_opp_tables[i]) {
-> > +                     num_linked++;
-> > +                     continue;
-> > +             }
-> >
-> > -free_required_tables:
-> > -     _opp_table_free_required_tables(opp_table);
-> > -put_np:
-> > -     of_node_put(np);
-> > +             req_np = of_parse_required_opp(src_opp->np, i);
-> > +             if (!req_np)
-> > +                     continue;
-> > +
-> > +             req_table = _find_table_of_opp_np(req_np);
-> > +             of_node_put(req_np);
-> > +             if (!req_table)
->
-> should be IS_ERR instead since
-> req_table could be ERR_PTR(-ENODEV)
-
-Will fix in the next version.
-
->
-> > +                     continue;
-> > +
-> > +             src->required_opp_tables[i] = req_table;
-> > +             list_for_each_entry(tmp_opp, &src->opp_list, node) {
-> > +                     req_np = of_parse_required_opp(tmp_opp->np, i);
-> > +                     tmp_opp->required_opps[i] = _find_opp_of_np(req_table,
-> > +                                                                 req_np);
-> > +                     of_node_put(req_np);
-> > +             }
-> > +             num_linked++;
-> > +     }
-> > +
-> > +out:
-> > +     mutex_unlock(&src->lock);
-> > +     return num_linked == src->required_opp_count;
-> >  }
-> >
-> >  void _of_init_opp_table(struct opp_table *opp_table, struct device
-> > *dev,
-> > @@ -267,7 +297,7 @@ void _of_opp_free_required_opps(struct opp_table
-> > *opp_table,
-> >
-> >       for (i = 0; i < opp_table->required_opp_count; i++) {
-> >               if (!required_opps[i])
-> > -                     break;
-> > +                     continue;
-> >
-> >               /* Put the reference back */
-> >               dev_pm_opp_put(required_opps[i]);
-> > @@ -282,9 +312,7 @@ static int _of_opp_alloc_required_opps(struct
-> > opp_table *opp_table,
-> >                                      struct dev_pm_opp *opp)
-> >  {
-> >       struct dev_pm_opp **required_opps;
-> > -     struct opp_table *required_table;
-> > -     struct device_node *np;
-> > -     int i, ret, count = opp_table->required_opp_count;
-> > +     int count = opp_table->required_opp_count;
-> >
-> >       if (!count)
-> >               return 0;
-> > @@ -295,32 +323,7 @@ static int _of_opp_alloc_required_opps(struct
-> > opp_table *opp_table,
-> >
-> >       opp->required_opps = required_opps;
-> >
-> > -     for (i = 0; i < count; i++) {
-> > -             required_table = opp_table->required_opp_tables[i];
-> > -
-> > -             np = of_parse_required_opp(opp->np, i);
-> > -             if (unlikely(!np)) {
-> > -                     ret = -ENODEV;
-> > -                     goto free_required_opps;
-> > -             }
-> > -
-> > -             required_opps[i] = _find_opp_of_np(required_table, np);
-> > -             of_node_put(np);
-> > -
-> > -             if (!required_opps[i]) {
-> > -                     pr_err("%s: Unable to find required OPP node: %pOF (%d)\n",
-> > -                            __func__, opp->np, i);
-> > -                     ret = -ENODEV;
-> > -                     goto free_required_opps;
-> > -             }
-> > -     }
-> > -
-> >       return 0;
-> > -
-> > -free_required_opps:
-> > -     _of_opp_free_required_opps(opp_table, opp);
-> > -
-> > -     return ret;
-> >  }
-> >
-> >  static bool _opp_is_supported(struct device *dev, struct opp_table
-> > *opp_table,
-> > @@ -687,6 +690,8 @@ static int _of_add_opp_table_v2(struct device
-> > *dev, struct opp_table *opp_table)
-> >       if (pstate_count)
-> >               opp_table->genpd_performance_state = true;
-> >
-> > +     _of_lazy_link_required_tables(opp_table);
-> > +
-> >       opp_table->parsed_static_opps = true;
-> >
-> >       return 0;
-> > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> > index 01a500e2c40a..77e8394fd0fe 100644
-> > --- a/drivers/opp/opp.h
-> > +++ b/drivers/opp/opp.h
-> > @@ -223,12 +223,17 @@ void _put_opp_list_kref(struct opp_table
-> > *opp_table);
-> >  void _of_init_opp_table(struct opp_table *opp_table, struct device
-> > *dev, int index);
-> >  void _of_clear_opp_table(struct opp_table *opp_table);
-> >  struct opp_table *_managed_opp(struct device *dev, int index);
-> > +bool _of_lazy_link_required_tables(struct opp_table *src);
-> >  void _of_opp_free_required_opps(struct opp_table *opp_table,
-> >                               struct dev_pm_opp *opp);
-> >  #else
-> >  static inline void _of_init_opp_table(struct opp_table *opp_table,
-> > struct device *dev, int index) {}
-> >  static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
-> >  static inline struct opp_table *_managed_opp(struct device *dev, int
-> > index) { return NULL; }
-> > +bool _of_lazy_link_required_tables(struct opp_table *src)
->
-> should be static inline bool
-
-Thanks. Good catch.
-
->
-> > +{
-> > +     return true;
-> > +}
-> >  static inline void _of_opp_free_required_opps(struct opp_table
-> > *opp_table,
-> >                                             struct dev_pm_opp *opp) {}
-> >  #endif
->
-
-I'll send out a v5 series after Viresh takes a look at this and
-confirms this design is okay.
-
--Saravana
