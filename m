@@ -2,89 +2,79 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D961AC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11778C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C702070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563980187;
-	bh=OxXMwMrcLDY77gt4u/+s8XUR9YdokR3x8GzdU5X809w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AVxVmmYRjaAbqIylbM25nezcG1umPLrMx9DZnJ+95WKhxn5mzGFer5C6hJcIyUKB2
-	 reADu7XMQc2J2Pa1xFqY5HTGmYnl+V9nYF7M6VHfcMJaK+Jg7MHfl0LCB6nlTlea+7
-	 5KMeo6WEhIGe0YxMXH6XTu+31o9+NR0PYvZBmiys=
+	by mail.kernel.org (Postfix) with ESMTP id DB3A321655
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387494AbfGXO40 (ORCPT
+        id S2387541AbfGXO4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:56:26 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36121 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfGXO40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:56:26 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so90287382iom.3;
-        Wed, 24 Jul 2019 07:56:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3aE+MjGXqdyag2TVbnV9FXwm+spP+OBGssJslmm561I=;
-        b=SMW4Rl8PzGJkM9gZS7wjL6tkB3SPBP4IcjkeqB+WX5CoPzXTDhmEjH7wu8Mzjux0R2
-         hR1NPnjhWWjBBuRThP09CMA0nZ4A8D/IbXjbYhXUUhM2oWKFR/3CP7RSjKRwujqbLwJW
-         +bGvz8s+KJ5/MQDJyFKVpx36ekdeQvTLn52p8myJmz9lQedPhevpde7rxMDgs3CcPMfG
-         sGrHvBhPixUwWAkdZ2ObkTRwcDKe9p+WQ0ULiHTAC0HIye+Lq1OR8QEMZzu/b+y7ELa8
-         pwuhWYOCh+3HS7sJNB6DhSAJiI/BF/Q17k7qDfjT0J2PMs0Wi5fJSN5VWnI/l2C1caQM
-         Ddsg==
-X-Gm-Message-State: APjAAAUGmbp5s+aVk7MJuyA7wJuUcNkNWbHugLVWFFqy28yWUTxlf+G1
-        o78RuAnobnXXFTGvlaIdhA==
-X-Google-Smtp-Source: APXvYqxlveMV1sSzvivUTiDzl1Jd26ULb0CfbzN67a2r/0tk3STwV2602H4eUdIB7uxdvnryu0y5iw==
-X-Received: by 2002:a02:300b:: with SMTP id q11mr87478803jaq.54.1563980185089;
-        Wed, 24 Jul 2019 07:56:25 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id s15sm36464486ioe.88.2019.07.24.07.56.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 07:56:24 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 08:56:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
-        ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/13] dt-bindings: cpufreq: qcom-nvmem: Make speedbin
- related properties optional
-Message-ID: <20190724145623.GA9855@bogus>
-References: <20190705095726.21433-1-niklas.cassel@linaro.org>
- <20190705095726.21433-4-niklas.cassel@linaro.org>
+        Wed, 24 Jul 2019 10:56:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46450 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387502AbfGXO4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:56:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 14E18ACCA;
+        Wed, 24 Jul 2019 14:56:49 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 3261DDA808; Wed, 24 Jul 2019 16:57:26 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 16:57:26 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Andrea Gelmini <andrea.gelmini@gelma.net>,
+        Qu Wenruo <wqu@suse.com>, Liu Bo <bo.liu@linux.alibaba.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: reduce stack usage for
+ btrfsic_process_written_block
+Message-ID: <20190724145726.GP2868@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Arnd Bergmann <arnd@arndb.de>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Andrea Gelmini <andrea.gelmini@gelma.net>, Qu Wenruo <wqu@suse.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190708124019.3374246-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190705095726.21433-4-niklas.cassel@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190708124019.3374246-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  5 Jul 2019 11:57:14 +0200, Niklas Cassel wrote:
-> Not all Qualcomm platforms need to care about the speedbin efuse,
-> nor the value blown into the speedbin efuse.
-> Therefore, make the nvmem-cells and opp-supported-hw properties
-> optional.
+On Mon, Jul 08, 2019 at 02:40:09PM +0200, Arnd Bergmann wrote:
+> btrfsic_process_written_block() cals btrfsic_process_metablock(),
+> which has a fairly large stack usage due to the btrfsic_stack_frame
+> variable. It also calls btrfsic_test_for_metadata(), which now
+> needs several hundreds of bytes for its SHASH_DESC_ON_STACK().
 > 
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> ---
->  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> In some configurations, we end up with both functions on the
+> same stack, and gcc warns about the excessive stack usage that
+> might cause the available stack space to run out:
 > 
+> fs/btrfs/check-integrity.c:1743:13: error: stack frame size of 1152 bytes in function 'btrfsic_process_written_block' [-Werror,-Wframe-larger-than=]
+> 
+> Marking both child functions as noinline_for_stack helps because
+> this guarantees that the large variables are not on the same
+> stack frame.
+> 
+> Fixes: d5178578bcd4 ("btrfs: directly call into crypto framework for checksumming")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Added to misc-next, thanks.
