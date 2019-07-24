@@ -2,188 +2,176 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A78C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7D7C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E3E229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:48:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="McxbtvD2";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Tml0Y6JK"
+	by mail.kernel.org (Postfix) with ESMTP id 088CD229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:51:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563965486;
+	bh=WM+fscYo1bqfJi2bJEoVhI4xfS6Xuq0YCL9CJeqsjeQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jRIgMPJhECMZffumURLMzuXgUEmipiigB49FBg7UJJqsDSleg0Dn3mg7FiKCuHGOk
+	 QLC+2iU/Ot4wqu1Q2X20pAbWWPhfiKb+zJtcPOlkGPaGofqgtGBekWizA9PS/bQj18
+	 H5p+CA4tj8zzAMkGmajiUPe4j9ob7TTK1pWOIvi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfGXKsB (ORCPT
+        id S1727326AbfGXKvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:48:01 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:44896 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726087AbfGXKsA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:48:00 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 24 Jul 2019 06:51:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfGXKvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:51:24 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A7DE1C0177;
-        Wed, 24 Jul 2019 10:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1563965280; bh=8SCncZ9d0yiM5NxICKBEFxskB53j5pekm3OWkUQP4mY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=McxbtvD29OSnEo3zx9zYdppC5MzXDRbWdCboPO09tXjN7QBRRl/1zyHc/tQOXNYiv
-         6c39NKkRl9JcUgBgYo5m0fDh5OM9h1I4gUb1Qzw3AzDmutDV7ah8phWZnsnjB5v8gU
-         LT7WIJqX5otLF8OnXoXgcd+f/6wriX23uqKHTAOeCz2F6ecE3u5SpOIXVNmWGUpMYR
-         FI8w0nPzvkxHg4iQjB6bgZhkRRxgFGSfsTYCrDaLKPNBxL8bvjOuBmwrbQ9ieKQ04z
-         3aX0D7joecOCzcKhyqVsIA34Tv7aGeLcAC/E7ne1dnnapS4N5ZyqiKwlVhxoIGrpXR
-         ibOw9pXfsMf2g==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id E57FCA0093;
-        Wed, 24 Jul 2019 10:47:50 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 24 Jul 2019 03:47:34 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 24 Jul 2019 03:47:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N49R/gClEBq8JBOhkgcIeQ15PNwOhZlAqNw6RNTGRw8DzWzAGU2LXRQ2HBaAwVhfVUgj4+vWyCt/jBU/8Lsg0tBGOliy4gy3S5MeOp0IIv4A42LubddoEr/wgFtR25KO40yt66Kr1BbSHtQx/d1RUGg3A6ZBHAwAXKEqbzoWXx7SmBKdnCiwj0e4o08lZVA7Wdv2mdB2zcDUD4BZrepsk0SGg9mM5UluWn4F+RTfzqTDZBJIkQRKQcslzaWcVF325ov3rfayKxpcsGdtP+L5pWn3eUX6M4nbjI3k3TLjox1Ro/MiSMBII3ShCLn2VDtlllEvi6qXFF74aUocNZuSoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FbO3+YOLwp+tDFcvoIHmi4IhGiqpgnG+7rXrGB9yos8=;
- b=TOA8Nk0ui2RgMdG2Ajxh05vaC9WPIPvNCPSRPCD4yDHRynDvaxzg6i00j15a1bgX+nNzZ3eAZYq9UNWaUmOlcX+xfuxMhmwR2lTX0PigRDhNpUK4b1rAOXb23I8UsesBvIjTR4OAoqLT+AF/qODljyRsH8mCU/tTQ8or+zf0zUR2MFxCa8SiO0+4npHJP5AE+N2A6f90bj4ICoqxFhm3AdkAuJjXDWVBff5W4IadZmPcYNaXJeny6OfKGH+6tl9v2dyRQ3XryYbdgJnzBg8xIsXToUSKG2sbOGdBCTWd+OulczJi3q65HfY55kAsFt3hWN9pkQdOvVEi4UTxxprubg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=synopsys.com;dmarc=pass action=none
- header.from=synopsys.com;dkim=pass header.d=synopsys.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FbO3+YOLwp+tDFcvoIHmi4IhGiqpgnG+7rXrGB9yos8=;
- b=Tml0Y6JKvYeiCHDJ3hsNLHZEkfklcOMdmVKTfCYQGjquIZ8SvmTMYc0bHud9CLJrVxxkszjDyuy/2L3V38ZxRC8sbwIJ0NnHH4390uayZKqK2H+d/x6fBfGdrGszBUiIobtGHSbBC3SP0rVyDFeuWFOwX1KKgwHKG5/RReV0KpY=
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
- CY4PR1201MB2501.namprd12.prod.outlook.com (10.172.117.135) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.14; Wed, 24 Jul 2019 10:47:31 +0000
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::1c8d:9b3c:7538:477b]) by CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::1c8d:9b3c:7538:477b%4]) with mapi id 15.20.2094.017; Wed, 24 Jul 2019
- 10:47:31 +0000
-From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-To:     Mischa Jonker <Mischa.Jonker@synopsys.com>
-CC:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 1/2] ARCv2: IDU-intc: Add support for edge-triggered
- interrupts
-Thread-Topic: [PATCH 1/2] ARCv2: IDU-intc: Add support for edge-triggered
- interrupts
-Thread-Index: AQHVQUE0HZQCxaDVMkWPRiR2w9FjAabZlNWA
-Date:   Wed, 24 Jul 2019 10:47:31 +0000
-Message-ID: <CY4PR1201MB0120EDD4173511912A9FC99EA1C60@CY4PR1201MB0120.namprd12.prod.outlook.com>
-References: <20190723102606.309089-1-mischa.jonker@synopsys.com>
-In-Reply-To: <20190723102606.309089-1-mischa.jonker@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abrodkin@synopsys.com; 
-x-originating-ip: [91.237.150.126]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f2b40524-c757-4e1e-dd6d-08d71024547d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR1201MB2501;
-x-ms-traffictypediagnostic: CY4PR1201MB2501:
-x-microsoft-antispam-prvs: <CY4PR1201MB250163EB51C8B7210AE94F4CA1C60@CY4PR1201MB2501.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0108A997B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(136003)(396003)(39860400002)(346002)(376002)(366004)(199004)(189003)(13464003)(66476007)(74316002)(53936002)(6246003)(76176011)(25786009)(478600001)(305945005)(4326008)(14454004)(33656002)(68736007)(229853002)(186003)(7736002)(6506007)(102836004)(2906002)(26005)(256004)(486006)(55016002)(6862004)(53546011)(446003)(7696005)(14444005)(11346002)(9686003)(476003)(81156014)(3846002)(66066001)(6116002)(52536014)(76116006)(6436002)(71190400001)(6636002)(8936002)(316002)(86362001)(54906003)(99286004)(66946007)(66446008)(8676002)(66556008)(64756008)(5660300002)(71200400001)(81166006)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB2501;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wn+2RXjXVsmx1Ee4AIl+t6GTrEcy0D5OlqsebUzY4Odolv4E2N5vTql7rjhUeQdaneiveTQe9gRxVkGrsaeQRxb1fJgEH6c1lfk/BJBjPXBEV3PBT7STkmMwjUO6b5qG+U087NSUZbdQGQF4dvyeAEWb/kJr9X3T4zdG9l0xWF42RdKbyVSJqhjDTDz9VBhVCu4KCLWil+RTkoAmyKwm8AqP1g/nZ7E8FwR5403ERec0O3s2YO4HsG27DUy3n5X8xW+mWU/lGM7NXbgRxqutSFAm3zqn1jyAnjC3CSkswcTtQuJ/gucd9ncnwCVRUCLAp2sFBc5EHbWIhQvZiWPYZUcSMKLy/bseoXmkXkdceMrGAKy9G4s0yjDKeKiDPXUAXBjTAdpko+3cmKMzRndF14Y3yucWAtUbT1LP1HAMiNc=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C0B4229ED;
+        Wed, 24 Jul 2019 10:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563965483;
+        bh=WM+fscYo1bqfJi2bJEoVhI4xfS6Xuq0YCL9CJeqsjeQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E8/sdrxglJ6P9i4L4AFnheuK8F34oHAqeZAxjE9/ywra0lH0UJDFt76V5Q7zAhyoo
+         THDmcRxl8fvPWETShgPgdpQBEgTqCQp9QoKNRCKIFRGHpA+Ytg1CkfChHBZ2djurj6
+         ysGCImQlwMiYq/0GEyg2CuJIgv6DtX5PaV3JAtIo=
+Date:   Wed, 24 Jul 2019 11:51:17 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        aarch64-laptops@lists.linaro.org,
+        Rob Clark <robdclark@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Joe Perches <joe@perches.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2] iommu: add support for drivers that manage iommu
+ explicitly
+Message-ID: <20190724105116.fwhnbfuglbbojjzu@willie-the-truck>
+References: <20190702202631.32148-2-robdclark@gmail.com>
+ <20190710182844.25032-1-robdclark@gmail.com>
+ <20190722142833.GB12009@8bytes.org>
+ <CAF6AEGvJc2RK3GkpcXiVKsuTX81D3oahnu=qWJ9LFst1eT3tMg@mail.gmail.com>
+ <20190722154803.GG12009@8bytes.org>
+ <CAF6AEGvWf3ZOrbyyWjORuOVEPOcPr+JSEO78aYjhL-GVhDZnTg@mail.gmail.com>
+ <20190723153822.gm4ossn43nvqbyak@willie-the-truck>
+ <CAF6AEGtL6gqtbmtksf7zCSGrFOEj0ynq-2nwvizLLiS0FTwHpg@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2b40524-c757-4e1e-dd6d-08d71024547d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 10:47:31.6227
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: abrodkin@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2501
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGtL6gqtbmtksf7zCSGrFOEj0ynq-2nwvizLLiS0FTwHpg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mischa,
+On Tue, Jul 23, 2019 at 10:40:55AM -0700, Rob Clark wrote:
+> On Tue, Jul 23, 2019 at 8:38 AM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Mon, Jul 22, 2019 at 09:23:48AM -0700, Rob Clark wrote:
+> > > On Mon, Jul 22, 2019 at 8:48 AM Joerg Roedel <joro@8bytes.org> wrote:
+> > > >
+> > > > On Mon, Jul 22, 2019 at 08:41:34AM -0700, Rob Clark wrote:
+> > > > > It is set by the driver:
+> > > > >
+> > > > > https://patchwork.freedesktop.org/patch/315291/
+> > > > >
+> > > > > (This doesn't really belong in devicetree, since it isn't a
+> > > > > description of the hardware, so the driver is really the only place to
+> > > > > set this.. which is fine because it is about a detail of how the
+> > > > > driver works.)
+> > > >
+> > > > It is more a detail about how the firmware works. IIUC the problem is
+> > > > that the firmware initializes the context mappings for the GPU and the
+> > > > OS doesn't know anything about that and just overwrites them, causing
+> > > > the firmware GPU driver to fail badly.
+> > > >
+> > > > So I think it is the task of the firmware to tell the OS not to touch
+> > > > the devices mappings until the OS device driver takes over. On x86 there
+> > > > is something similar with the RMRR/unity-map tables from the firmware.
+> > > >
+> > >
+> > > Bjorn had a patchset[1] to inherit the config from firmware/bootloader
+> > > when arm-smmu is probed which handles that part of the problem.  My
+> > > patch is intended to be used on top of his patchset.  This seems to me
+> > > like the best solution, if we don't have control over the firmware.
+> >
+> > Hmm, but the feedback from Robin on the thread you cite was that this should
+> > be generalised to look more like RMRR, so there seems to be a clear message
+> > here.
+> >
+> 
+> Perhaps it is a lack of creativity, or lack of familiarity w/ iommu vs
+> virtualization, but I'm not quite seeing how RMRR would help.. in
+> particular when dealing with both DT and ACPI cases.
 
-> -----Original Message-----
-> From: Mischa Jonker <mischa.jonker@synopsys.com>
-> Sent: Tuesday, July 23, 2019 1:26 PM
-> To: Vineet Gupta <vgupta@synopsys.com>; Alexey Brodkin <abrodkin@synopsys=
-.com>;
-> kstewart@linuxfoundation.org; tglx@linutronix.de; robh+dt@kernel.org; lin=
-ux-snps-
-> arc@lists.infradead.org; linux-kernel@vger.kernel.org; devicetree@vger.ke=
-rnel.org
-> Cc: Mischa Jonker <mischa.jonker@synopsys.com>
-> Subject: [PATCH 1/2] ARCv2: IDU-intc: Add support for edge-triggered inte=
-rrupts
->=20
-> This adds support for an optional extra interrupt cell to specify edge
-> vs level triggered. It is backward compatible with dts files with only
-> one cell, and will default to level-triggered in such a case.
+Well, I suppose we'd have something for DT and something for ACPI and we'd
+try to make them look similar enough that we don't need lots of divergent
+code in the kernel. The RMRR-like description would describe that, for a
+particular device, a specific virt:phys mapping needs to exist in the
+small window between initialising the SMMU and re-initialising the device
+(GPU).
 
-In general LGTM. Still a couple of comments.
+I would prefer this to be framebuffer-specific, since we're already in
+flagrant violation of the arm64 boot requirements wrt ongoing DMA and making
+this too general could lead to all sorts of brain damage. That would
+probably also allow us to limit the flexibility, by mandating things like
+alignment and memory attributes.
 
-It might be useful to explain changes
-made to idu_irq_set_affinity() as it's not immediately clear what affinity
-has to do with IRQ modes (in theory it should be orthogonal).
+Having said that, I just realised I'm still a bit confused about the
+problem: why does the bootloader require SMMU translation for the GPU at
+all? If we could limit this whole thing to be identity-mapped/bypassed,
+then all we need is a per-device flag in the firmware to indicate that the
+SMMU should be initialised to allow passthrough for transactions originating
+from that device.
 
-But what happens we're actually fixing previously implemented short-cut
-when instead of a separately set IRQ mode we were doing it together with
-setup of distribution since it's done with the same one command
-(anyways we relied on the one and only IRQ type being supported).
+> So I kinda prefer, when possible, if arm-smmu can figure out what is going
+> on by looking at the hw state at boot (since that approach would work
+> equally well for DT and ACPI).
 
-And now we have a proper implementation with separated setup of IRQ mode an=
-d
-affinity.
+That's not going to fly.
 
->  static int
->  idu_irq_set_affinity(struct irq_data *data, const struct cpumask *cpumas=
-k,
->  		     bool force)
-> @@ -263,13 +285,32 @@ idu_irq_set_affinity(struct irq_data *data, const s=
-truct cpumask *cpumask,
->  	else
->  		distribution_mode =3D IDU_M_DISTRI_RR;
->=20
-> -	idu_set_mode(data->hwirq, IDU_M_TRIG_LEVEL, distribution_mode);
-> +	idu_set_mode(data->hwirq, false, 0, true, distribution_mode);
->=20
->  	raw_spin_unlock_irqrestore(&mcip_lock, flags);
->=20
->  	return IRQ_SET_MASK_OK;
->  }
->=20
-> +static int idu_irq_set_type(struct irq_data *data, u32 type)
-> +{
-> +	unsigned long flags;
-> +
-> +	if (type & ~(IRQ_TYPE_EDGE_RISING | IRQ_TYPE_LEVEL_HIGH))
-> +		return -EINVAL;
+Forcing Linux to infer the state of the system by effectively parsing the
+hardware configuration directly is fragile, error-prone and may not even be
+possible in the general case. Worse, if this goes wrong, the symptoms are
+very likely to be undiagnosable memory corruption, which is pretty awful in
+my opinion.
 
-Maybe add an explanation why only these types are supported?
+Not only would you need separate parsing code for every IOMMU out there,
+but you'd also need to make Linux aware of device aspects that it otherwise
+doesn't care about, just in case the firmware decided to use them.
+Furthermore, running an older kernel on newer hardware (which may have some
+extensions), could cause the parsing to silently ignore parts of the device
+that indicate memory regions which are in use. On top of that, there made be
+device-global state that we are unable to reconfigure and that affect
+devices other than the ones in question.
 
--Alexey
+So no, I'm very much against this approach and the solution absolutely needs
+to come in the form of a more abstract description from firmware.
+
+> I *think* (but need to confirm if Bjorn hasn't already) that the
+> memory for the pagetables that firmware/bootloader sets up is already
+> removed from the memory map efi passes to kernel, so we don't need to
+> worry about kernel stomping in-use pagetables.
+
+It's precisely this sort of fragility that makes me nervous about this whole
+approach.
+
+Will
