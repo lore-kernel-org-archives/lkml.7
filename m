@@ -2,171 +2,124 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE994C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27427C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C05217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FF0217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klbseCMC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hqv8AC23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387434AbfGXO2y (ORCPT
+        id S2387475AbfGXO3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:28:54 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44942 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXO2y (ORCPT
+        Wed, 24 Jul 2019 10:29:00 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33856 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfGXO27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:28:54 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k18so44697824ljc.11;
-        Wed, 24 Jul 2019 07:28:52 -0700 (PDT)
+        Wed, 24 Jul 2019 10:28:59 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l12so35173178oil.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a8adFHytHBTsJftWOAZexTFr5WjQ4+eUKt3ZlK8cE/Y=;
-        b=klbseCMCkn55eIImdEW1DX/nC888w41MonWoWNZdmbsu+Xc8JOxrl5yE2W71Tv65o+
-         2BPSm/oN9PHr0w+MjelFN+TBWC8jjH+1yFn18bfVnCZMnQsHvHMzuJfaCtigjYVCmd13
-         X0i5zWVC9xhSjEmEFsW0aWcR5b4hs0pAvHsnWf6ElJoZMkTjS1xUDRpmjb5BkrCOCPYu
-         6MwTSQultvbfWthAa7fZmSP7YOYx3EufLper+mcE0aGJponeyVlGJQH64jCniOqbe3hb
-         ML5m6yVvC16Xs9VOXIWZwxkyJEVMSM7f+FGrS9O60h0pyYJ71fFWc24l3ZDa4+VIFbs7
-         sUWQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=07WBpiUlOYIZ7+P49JY1jjRjsEVdVyLwuxczlg4O6CI=;
+        b=Hqv8AC23ggzMBGj+XNz87q/bwhtAZqBW9K01CFg1Ke4/U1wAGhKmppexKCc4EGZOyl
+         KrTl6bgaWESUyaEOsfnVY1iFH3FefGe2ETp/hGkkAdl3KKTge7AhOe+NAXu6IwCsvfR6
+         beRC9TM/51Cg2MPPRud6dSvT0IKTOFQha/L7UIs1hoB7whP7edTHVyTP6mVie6n/R6Kh
+         YA+NmOmL5PyVoli5LE8MRCrmBDkOjgYnZcy5rHDoGoc9grpRKF8HOLj5QGncs2JshFZo
+         m9vTH0j8dZ47bJeb/1sn59Q6cmVatCE7m+8hwbuPCkLIyKRIVTtoGquFd4SZtWThYaMF
+         223w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a8adFHytHBTsJftWOAZexTFr5WjQ4+eUKt3ZlK8cE/Y=;
-        b=IPeLkoF927Ze97W5i3q3cff3a2yP3Ded5RcTTbLc981TZAK0FLon/ARmbKSD7iI38A
-         C+coxjdQWRKGPaZMXNtCL41zJyRbWliG2V0AADFJLFhpx6mUbqocAUSc9Fig34aYAk6d
-         dfO7lFXk+7422s4R5Gf0LdyB1kEp+QWaFlpvNev9PnlRql+rqXx1vzmKXFlMgIIQZ+w0
-         fwjlawacPkH8xf2AABduh2vwqHVtDiErMZbbMFdp+MOkzOn7kI445GpD1p87A8EPYs2X
-         FJYuyDc38OUN5NUkm6HxZDoDwMXUziKFadKdKKCUoPC2PKYFhzI9DWZqU7US05WkrV+F
-         NenA==
-X-Gm-Message-State: APjAAAUCe9xXeeEZxBfj7tquooAhdd5UaeLxGhf6eqC36ax0MFLA0qiY
-        T2rvNb8mM6EUR/sdcxW22JM=
-X-Google-Smtp-Source: APXvYqzYVIyHbPQXFWnL98erzAUeU8oyIbBaN4a7OiAXSepJRjVkXKAD4PtiNbFuP/Z4sy6b4cdsjA==
-X-Received: by 2002:a2e:b003:: with SMTP id y3mr43747276ljk.72.1563978531475;
-        Wed, 24 Jul 2019 07:28:51 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
-        by smtp.googlemail.com with ESMTPSA id j11sm7098446lfm.29.2019.07.24.07.28.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 07:28:50 -0700 (PDT)
-Subject: Re: [PATCH] media: staging: ipu3: Enable IOVA API only when IOMMU
- support is enabled
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Yuehaibing <yuehaibing@huawei.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, hverkuil-cisco@xs4all.nl,
-        mchehab@kernel.org, yong.zhi@intel.com
-References: <20190722134749.21580-1-yuehaibing@huawei.com>
- <20190724103027.GD21370@paasikivi.fi.intel.com>
- <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
- <0c08bdae-facc-0f28-0e58-17a65172587a@huawei.com>
- <491dbca1-8a58-b26e-cf56-a1a419da288f@gmail.com>
- <eaf521ff-7dc6-70ae-0473-9c994def602b@arm.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dc354ede-5963-cd7f-ee53-f3df3061d39a@gmail.com>
-Date:   Wed, 24 Jul 2019 17:28:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=07WBpiUlOYIZ7+P49JY1jjRjsEVdVyLwuxczlg4O6CI=;
+        b=grhb9+0OWlF0kXIYluY7fgyDjE2p0ynrF3df6xvDFcbs/2J00rBjD8bD9HptSa602R
+         I/ye4x7ZttvTKL2d+myHHNBavTD/APiJ5rQTFDHnhd1QxSPkoAsI3rfJQAyMlaNiCX8b
+         8jyBdkyN1di9yNNlGEwW1O0IbvflzhNkg8GUm6ckG0hj/TEmCQkwbV2W1NaU0ZgFAuh7
+         RNsrgwXmrZpuGhW/d3GJwnWOeWl/LhWd/Goa2dqN/6mCL1ohZKkR/zjysgFQiLUKW5II
+         2iEkZoEumN7K5IMrsid7NvnD1YDOjGhkcWTC6HNrgKGH2Rrx2CxUE+OX3S2lfq+OrQbE
+         Ytrw==
+X-Gm-Message-State: APjAAAX09bHtECVvZec0j4ZC7zHDa9poI6bcAf/nxwefW4+lPHWR3XAJ
+        44HVAar4QYEgaPOYTW4Fcw6RaSHB4ehKX+0hYl8sPA==
+X-Google-Smtp-Source: APXvYqzqMTdf8CPoruUPhw4URkBpdrabgibucjn8aLFByJaBJKYxxZjQtyWMUVa0kX6ewYeRZEUPdgw0udWGwYfMCyA=
+X-Received: by 2002:aca:3dd7:: with SMTP id k206mr37007062oia.47.1563978537976;
+ Wed, 24 Jul 2019 07:28:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <eaf521ff-7dc6-70ae-0473-9c994def602b@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190722113151.1584-1-nitin.r.gote@intel.com> <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
+ <CAG48ez3zRoB7awMdb-koKYJyfP9WifTLevxLxLHioLhH=itZ-A@mail.gmail.com> <201907231516.11DB47AA@keescook>
+In-Reply-To: <201907231516.11DB47AA@keescook>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 24 Jul 2019 16:28:31 +0200
+Message-ID: <CAG48ez2eXJwE+vS2_ahR9Vuc3qD8O4CDZ5Lh6DcrrOq+7VKOYQ@mail.gmail.com>
+Subject: Re: [PATCH] selinux: convert struct sidtab count to refcount_t
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        NitinGote <nitin.r.gote@intel.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.07.2019 17:23, Robin Murphy пишет:
-> On 24/07/2019 15:09, Dmitry Osipenko wrote:
->> 24.07.2019 17:03, Yuehaibing пишет:
->>> On 2019/7/24 21:49, Robin Murphy wrote:
->>>> On 24/07/2019 11:30, Sakari Ailus wrote:
->>>>> Hi Yue,
->>>>>
->>>>> On Mon, Jul 22, 2019 at 09:47:49PM +0800, YueHaibing wrote:
->>>>>> If IOMMU_SUPPORT is not set, ipu3 driver may select IOMMU_IOVA to m.
->>>>>> But for many drivers, they use "select IOMMU_IOVA if IOMMU_SUPPORT"
->>>>>> in the Kconfig, for example, CONFIG_TEGRA_VDE is set to y but
->>>>>> IOMMU_IOVA
->>>>>> is m, then the building fails like this:
->>>>>>
->>>>>> drivers/staging/media/tegra-vde/iommu.o: In function
->>>>>> `tegra_vde_iommu_map':
->>>>>> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
->>>>>> iommu.c:(.text+0x56): undefined reference to `__free_iova'
->>>>>>
->>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>>>> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top
->>>>>> level pci device driver")
->>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>>> ---
->>>>>>    drivers/staging/media/ipu3/Kconfig | 2 +-
->>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/staging/media/ipu3/Kconfig
->>>>>> b/drivers/staging/media/ipu3/Kconfig
->>>>>> index 4b51c67..b7df18f 100644
->>>>>> --- a/drivers/staging/media/ipu3/Kconfig
->>>>>> +++ b/drivers/staging/media/ipu3/Kconfig
->>>>>> @@ -4,7 +4,7 @@ config VIDEO_IPU3_IMGU
->>>>>>        depends on PCI && VIDEO_V4L2
->>>>>>        depends on MEDIA_CONTROLLER && VIDEO_V4L2_SUBDEV_API
->>>>>>        depends on X86
->>>>>> -    select IOMMU_IOVA
->>>>>> +    select IOMMU_IOVA if IOMMU_SUPPORT
->>>>>
->>>>> This doesn't seem right: the ipu3-cio2 driver needs IOMMU_IOVA
->>>>> independently of IOMMU_SUPPORT.
->>>>>
->>>>> Looking at tegra-vde, it seems to depend on IOMMU_SUPPORT but
->>>>> that's not
->>>>> declared in its Kconfig entry. I wonder if adding that would be the
->>>>> right
->>>>> way to fix this.
->>>>>
->>>>> Cc'ing the IOMMU list.
->> IOMMU_SUPPORT is optional for the Tegra-VDE driver.
->>
->>>> Right, I also had the impression that we'd made the IOVA library
->>>> completely standalone. And what does the IPU3 driver's Kconfig have
->>>> to do with some *other* driver failing to link anyway?
->>
->> I can see it failing if IPU3 is compiled as a loadable module, while
->> Tegra-VDE is a built-in driver. Hence IOVA lib should be also a kernel
->> module and thus the IOVA symbols will be missing during of linkage of
->> the VDE driver.
->>
->>> Oh, I misunderstand that IOMMU_IOVA is depend on IOMMU_SUPPORT, thank
->>> you for clarification.
->>>
->>> I will try to fix this in tegra-vde.
->>
->> Probably IOVA could be selected independently of IOMMU_SUPPORT, but IOVA
->> library isn't needed for the VDE driver if IOMMU_SUPPORT is disabled.
-> 
-> Oh, I think I get the problem now - tegra-vde/iommu.c is built
-> unconditionally and relies on the static inline stubs for IOMMU and IOVA
-> calls if !IOMMU_SUPPORT, but in a compile-test config where IOVA=m for
-> other reasons, it then picks up the real declarations from linux/iova.h
-> instead of the stubs, and things go downhill from there. So there is a
-> real issue, but indeed it's Tegra-VDE which needs to be restructured to
-> cope with such configurations, and not IPU3's (or anyone else who may
-> select IOVA=m in future) job to work around it.
+On Wed, Jul 24, 2019 at 12:17 AM Kees Cook <keescook@chromium.org> wrote:
+> On Tue, Jul 23, 2019 at 04:53:47PM +0200, Jann Horn wrote:
+> > On Mon, Jul 22, 2019 at 3:44 PM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > > On Mon, Jul 22, 2019 at 1:35 PM NitinGote <nitin.r.gote@intel.com> wrote:
+> > > > refcount_t type and corresponding API should be
+> > > > used instead of atomic_t when the variable is used as
+> > > > a reference counter. This allows to avoid accidental
+> > > > refcounter overflows that might lead to use-after-free
+> > > > situations.
+> > > >
+> > > > Signed-off-by: NitinGote <nitin.r.gote@intel.com>
+> > >
+> > > Nack.
+> > >
+> > > The 'count' variable is not used as a reference counter here. It
+> > > tracks the number of entries in sidtab, which is a very specific
+> > > lookup table that can only grow (the count never decreases). I only
+> > > made it atomic because the variable is read outside of the sidtab's
+> > > spin lock and thus the reads and writes to it need to be guaranteed to
+> > > be atomic. The counter is only updated under the spin lock, so
+> > > insertions do not race with each other.
+> >
+> > Probably shouldn't even be atomic_t... quoting Documentation/atomic_t.txt:
+> >
+> > | SEMANTICS
+> > | ---------
+> > |
+> > | Non-RMW ops:
+> > |
+> > | The non-RMW ops are (typically) regular LOADs and STOREs and are canonically
+> > | implemented using READ_ONCE(), WRITE_ONCE(), smp_load_acquire() and
+> > | smp_store_release() respectively. Therefore, if you find yourself only using
+> > | the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
+> > | and are doing it wrong.
+> >
+> > So I think what you actually want here is a plain "int count", and then:
+> >  - for unlocked reads, either READ_ONCE()+smp_rmb() or smp_load_acquire()
+> >  - for writes, either smp_wmb()+WRITE_ONCE() or smp_store_release()
+> >
+> > smp_load_acquire() and smp_store_release() are probably the nicest
+> > here, since they are semantically clearer than smp_rmb()/smp_wmb().
+>
+> Perhaps we need a "statistics" counter type for these kinds of counters?
+> "counter_t"? I bet there are a lot of atomic_t uses that are just trying
+> to be counters. (likely most of atomic_t that isn't now refcount_t ...)
 
-I guess it could be:
-
-	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
-
-as a workaround.
+This isn't a statistics counter though; this thing needs ordered
+memory accesses, which you wouldn't need for statistics.
