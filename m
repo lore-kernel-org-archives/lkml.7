@@ -6,110 +6,91 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C29C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97C6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455EE2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1CA72189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfGXWC5 (ORCPT
+        id S2387553AbfGXWD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:02:57 -0400
-Received: from mga03.intel.com ([134.134.136.65]:45850 "EHLO mga03.intel.com"
+        Wed, 24 Jul 2019 18:03:57 -0400
+Received: from mga01.intel.com ([192.55.52.88]:50964 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbfGXWC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:02:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727041AbfGXWD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 18:03:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 15:02:56 -0700
-X-ExtLoop1: 1
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 15:03:56 -0700
 X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
-   d="asc'?scan'208";a="181258921"
-Received: from jtkirshe-desk1.jf.intel.com ([134.134.177.96])
-  by orsmga002.jf.intel.com with ESMTP; 24 Jul 2019 15:02:56 -0700
-Message-ID: <fabcf55573fc09b49eacdb7cb625863df3596b06.camel@intel.com>
-Subject: Re: [PATCH -next] net/ixgbevf: fix a compilation error of skb_frag_t
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Reply-To: jeffrey.t.kirsher@intel.com
-To:     Qian Cai <cai@lca.pw>, willy@infradead.org
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 24 Jul 2019 15:02:48 -0700
-In-Reply-To: <1563975157-30691-1-git-send-email-cai@lca.pw>
-References: <1563975157-30691-1-git-send-email-cai@lca.pw>
-Organization: Intel
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-pbYDAA7WOEFmJEH4Imqn"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+   d="scan'208";a="175019406"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 15:03:56 -0700
+Message-ID: <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com
+Date:   Wed, 24 Jul 2019 15:03:56 -0700
+In-Reply-To: <20190724173403-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724171050.7888.62199.stgit@localhost.localdomain>
+         <20190724173403-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-07-24 at 17:38 -0400, Michael S. Tsirkin wrote:
+> On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > Add support for what I am referring to as "bubble hinting". Basically the
+> > idea is to function very similar to how the balloon works in that we
+> > basically end up madvising the page as not being used. However we don't
+> > really need to bother with any deflate type logic since the page will be
+> > faulted back into the guest when it is read or written to.
+> > 
+> > This is meant to be a simplification of the existing balloon interface
+> > to use for providing hints to what memory needs to be freed. I am assuming
+> > this is safe to do as the deflate logic does not actually appear to do very
+> > much other than tracking what subpages have been released and which ones
+> > haven't.
+> > 
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> BTW I wonder about migration here.  When we migrate we lose all hints
+> right?  Well destination could be smarter, detect that page is full of
+> 0s and just map a zero page. Then we don't need a hint as such - but I
+> don't think it's done like that ATM.
 
---=-pbYDAA7WOEFmJEH4Imqn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I was wondering about that a bit myself. If you migrate with a balloon
+active what currently happens with the pages in the balloon? Do you
+actually migrate them, or do you ignore them and just assume a zero page?
+I'm just reusing the ram_block_discard_range logic that was being used for
+the balloon inflation so I would assume the behavior would be the same.
 
-On Wed, 2019-07-24 at 09:32 -0400, Qian Cai wrote:
-> The linux-next commit "net: Rename skb_frag_t size to bv_len" [1]
-> introduced a compilation error on powerpc as it forgot to rename
-> "size"
-> to "bv_len" for ixgbevf.
->=20
-> [1]=20
-> https://lore.kernel.org/netdev/20190723030831.11879-1-willy@infradead.org=
-/T/#md052f1c7de965ccd1bdcb6f92e1990a52298eac5
->=20
-> In file included from ./include/linux/cache.h:5,
->                  from ./include/linux/printk.h:9,
->                  from ./include/linux/kernel.h:15,
->                  from ./include/linux/list.h:9,
->                  from ./include/linux/module.h:9,
->                  from
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c:12:
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c: In function
-> 'ixgbevf_xmit_frame_ring':
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c:4138:51: error:
-> 'skb_frag_t' {aka 'struct bio_vec'} has no member named 'size'
->    count +=3D TXD_USE_COUNT(skb_shinfo(skb)->frags[f].size);
->                                                    ^
-> ./include/uapi/linux/kernel.h:13:40: note: in definition of macro
-> '__KERNEL_DIV_ROUND_UP'
->  #define __KERNEL_DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
->                                         ^
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c:4138:12: note: in
-> expansion of macro 'TXD_USE_COUNT'
->    count +=3D TXD_USE_COUNT(skb_shinfo(skb)->frags[f].size);
->=20
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> I also wonder about interaction with deflate.  ATM deflate will add
+> pages to the free list, then balloon will come right back and report
+> them as free.
 
-Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-
---=-pbYDAA7WOEFmJEH4Imqn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl041YgACgkQ5W/vlVpL
-7c6ETw//Z5SxxG4VI74sOLbJK41JH57EfCLR88CEkf1osB53luH8DjIFYMvjWBhI
-U96TpuH4/SBhHZvRub/9Qk18ezkumYZ5K8hgmp0Z6uDwimH+QemyyMU2fOunAZJH
-NTuZU2vglig0NZR9OTxqs+WC8xkJJQpXPPHqVfYTGcv/VVgvOSDJfqFEgUVF+puh
-5il0qCCbgSrPsFtnyu39k2KaS7bihRWNUkW8nZk0YKU4Z7BV/gwX85YwccPbWXGo
-HUaSmXzLArC7W03E4XM9GkcRSOM0F8lMJyGdW1bMtvjuZ/YxJwmQ+kaXlaE0yqM9
-L4n0XxA9QDz5VsihsQPtLzpMGQWeerRaqSWI7ovn7MMPuHmtCIrXny1BJ+YHr1hm
-JA1tYHFTwXKrdHgXPskBvFhNr60MIiOYvq4FHZ/vQpuP+Dt0epBmkqN6dauFGuXb
-oEmOjarfnRE8bvp7oUl/aBAPGxVX5luUK5FAhpKXkxuMyXaaVU9McwPH3g1ntoMQ
-ynQ8PytGSNTq4vDe1l5gA0SBh0hsL6lrgrUhK4xUbQujFJmOfajiBSqJbdsP9bwb
-u8b8BE6GPYFpGHN340f5hVqvPs1pBFUa6C1zglUb+RfJKwpJ+/la2m1oYaUonTO4
-eTusZIXpOysi43rm6t5lNkPsvBGv5jRc6+b8qMn7GtpoI+I4Dfo=
-=keuC
------END PGP SIGNATURE-----
-
---=-pbYDAA7WOEFmJEH4Imqn--
+I don't know how likely it is that somebody who is getting the free page
+reporting is likely to want to also use the balloon to take up memory.
+However hinting on a page that came out of deflate might make sense when
+you consider that the balloon operates on 4K pages and the hints are on 2M
+pages. You are likely going to lose track of it all anyway as you have to
+work to merge the 4K pages up to the higher order page.
 
