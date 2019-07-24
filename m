@@ -6,49 +6,48 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C4AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D0EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071A2229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E20620828
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563936053;
-	bh=u7Cvk6jVXMSAqvcWR0hk7Zxrt4Xl1PZUl8KaPJQEA/I=;
+	s=default; t=1563936085;
+	bh=4BJpVnz9NtoVGKEWXigcPY+GsDWEePca0cBXnvCEgkM=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Iluabki7N8OPq0cwP3O4oUIYK+nDbY5Bmszj3Kckhxh8vnvkcA/OnI59n+awO04a8
-	 G1SP1uOSmQN5I9N19gDdiAIN6OGNlndvloxw42DE8GVgG1QMhbq9uoABsuP9vDiDqF
-	 FyPtsUfQT20+gV2mjkcx5gtCg3UDwE7ndYxpyaik=
+	b=nsuWmxKUUcNGS/sOr2ZW1m9mINQ2Vdnrk8u7MKNDgUU75Ur8c9qhMZ70+QZXHjOyi
+	 5vN0+52dBL5jYO/nNd9wz14jVQB/nC75OSRUUtxi9IJRwNgr2TlKvSIrRQFG7xmR2b
+	 FBKV8YmTYadfZnL86TuIcctQL8158Nbm0ryexibY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfGXCkv (ORCPT
+        id S1726186AbfGXClY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45982 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 22:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfGXCkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:40:51 -0400
+        id S1725372AbfGXClY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:41:24 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC8221670;
-        Wed, 24 Jul 2019 02:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8BE22054F;
+        Wed, 24 Jul 2019 02:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563936050;
-        bh=u7Cvk6jVXMSAqvcWR0hk7Zxrt4Xl1PZUl8KaPJQEA/I=;
+        s=default; t=1563936082;
+        bh=4BJpVnz9NtoVGKEWXigcPY+GsDWEePca0cBXnvCEgkM=;
         h=Date:From:To:Cc:Subject:From;
-        b=iNRFe2zorSoa4JIguI6SlZX6QIJDREtPLTeE1n0RC/F7OF+tWdB81694/f5nmMLr9
-         5/J+a4klB+6SrQs7VJJim9wwMTTLBWYSlKHFhXwWs3ACF7b+JiW6buw3L6My8f9hjw
-         TUOTOahx8rx/8w1kTRoSnVFFaLNq4EVLLnSiYG48=
-Date:   Tue, 23 Jul 2019 19:40:49 -0700
+        b=LSLibIUYCFxOTNdFqOiV8bSMzshK13x3F9+125mPy6j0A4mjE+z/yh+eOQ0EfiaKr
+         +FDmwlluz8UAw4Z0GInpjFZJg7Rl3+aqsoWcQU+O3r11QkfB0wcWUhMrBvlG7AVYxp
+         7rKnZZ2CmRLgMGzf3GGn0KWN44wPsbshqVerSe2s=
+Date:   Tue, 23 Jul 2019 19:41:21 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>
+To:     linux-input@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 3 open syzbot bugs in "net/ax25" subsystem
-Message-ID: <20190724024049.GC643@sol.localdomain>
-Mail-Followup-To: linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
+Subject: Reminder: 3 open syzbot bugs in hid subsystem
+Message-ID: <20190724024121.GD643@sol.localdomain>
+Mail-Followup-To: linux-input@vger.kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -63,76 +62,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 3 of them as possibly being bugs in the "net/ax25" subsystem.  I've
-listed these reports below, sorted by an algorithm that tries to list first the
-reports most likely to be still valid, important, and actionable.
+marked 3 of them as possibly being bugs in the hid subsystem.  I've listed these
+reports below, sorted by an algorithm that tries to list first the reports most
+likely to be still valid, important, and actionable.
+
+Of these 3 bugs, 2 were seen in mainline in the last week.
 
 If you believe a bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed a bug to the "net/ax25" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
+If you believe I misattributed a bug to the hid subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
 
 Here are the bugs:
 
 --------------------------------------------------------------------------------
-Title:              general protection fault in ax25_send_frame
+Title:              KASAN: use-after-free Read in hidraw_ioctl
 Last occurred:      0 days ago
-Reported:           204 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=1cdd5b120f129364fc8e9b2b027826cf99fa696e
-Original thread:    https://lkml.kernel.org/lkml/0000000000009ea37c057e58d787@google.com/T/#u
+Reported:           0 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=c7e345ba243bc4476aae52a3354ccbd2a90e344e
+Original thread:    https://lkml.kernel.org/lkml/000000000000c07378058e589a29@google.com/T/#u
 
-Unfortunately, this bug does not have a reproducer.
+This bug has a C reproducer.
 
-No one replied to the original thread for this bug.
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in a hid USB driver.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e0b81535a27b8be39502@syzkaller.appspotmail.com
+    Reported-by: syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com
 
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000009ea37c057e58d787@google.com
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000c07378058e589a29@google.com
 
 --------------------------------------------------------------------------------
-Title:              KASAN: stack-out-of-bounds Write in ax25_getname
-Last occurred:      90 days ago
-Reported:           206 days ago
+Title:              KASAN: use-after-free Read in usbhid_power
+Last occurred:      0 days ago
+Reported:           0 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=36143971c5b9b0341ad4018313375a5a40cb52c8
+Original thread:    https://lkml.kernel.org/lkml/000000000000bb4247058e589a20@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in a hid USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ef5de9c4f99c4edb4e49@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000bb4247058e589a20@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in fsnotify_connector_destroy_workfn (2)
+Last occurred:      32 days ago
+Reported:           311 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=fb195f91dc044978c1b186f1288b1eff61edcc20
-Original thread:    https://lkml.kernel.org/lkml/000000000000ed4120057e2df0c6@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=d6011f00f49a2253c15a60ac102b2ea79e3ee8de
+Original thread:    https://lkml.kernel.org/lkml/0000000000006364200575dfc280@google.com/T/#u
 
 This bug has a syzkaller reproducer only.
 
-No one replied to the original thread for this bug.
+The original thread for this bug received 7 replies; the last was 301 days ago.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6a29097222b4d3b8617c@syzkaller.appspotmail.com
+    Reported-by: syzbot+6fb572170402d311dd39@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ed4120057e2df0c6@google.com
-
---------------------------------------------------------------------------------
-Title:              inconsistent lock state in ax25_std_heartbeat_expiry
-Last occurred:      122 days ago
-Reported:           120 days ago
-Branches:           net
-Dashboard link:     https://syzkaller.appspot.com/bug?id=9086a8eac930890b2730d6441093bd478e32913f
-Original thread:    https://lkml.kernel.org/lkml/0000000000001b07250584efbee3@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 2 replies; the last was 119 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e350b81e95a6a214da8a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001b07250584efbee3@google.com
+https://lkml.kernel.org/r/0000000000006364200575dfc280@google.com
 
