@@ -2,111 +2,161 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55640C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073C9C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0A921926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hppg7Ef3"
+	by mail.kernel.org (Postfix) with ESMTP id BD5E421926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563960936;
+	bh=u3fLxCqoYEzLtx7mnMt6QJnsljDN0DTqmQi0kpcJWX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iuG7WN2SxwtiZ8nWBtKtg1kxn10rKEHtNo71leMqFI2EtR2/e0JklQCDDRs+7ORyQ
+	 BSU6thIP/8JthnTu0TzIwPJ9Pfb/7to4YJqesqRFq4rpgb18CWBZAADrpuzqf/9bS6
+	 rthMeH5cTS0c2EEgtUZQ1oO2d1v6e0B0+EK3Gd8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfGXJfS (ORCPT
+        id S1726990AbfGXJff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:35:18 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34485 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfGXJfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:35:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so20660086pfo.1;
-        Wed, 24 Jul 2019 02:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RMdZENf34klfFRm97gWv/3oVVvhtQ9/kvSp7CedAKBE=;
-        b=hppg7Ef34MOf6m4sm9VwXNec86F5mOQj2J2ss65F/jwkHw1pHv46tX/7cRHxTcegZk
-         He5INWuFp85pPh/IeqYSthdegR8CcNpzxUHKlED5wUrxRaY6WKB2lIrcEWIWNWEZFU+W
-         aRHjmeBQs0OPRO0NNXUZ4VyozflJG+s/Is0LUAKNLIFNC0K3eArSmbOmrD8EbN/+E7PT
-         daN2iMZTg241BeBbeFB/ZnPRoYxpkcQyK5JCvR6JN1uKnNwjf1TupjJmi4ei6QkFz/sp
-         2+j66A6ZcOd4sv6TWIp3yq0e0tb2nLDp9tcQUILa4cUigxC6wETRf5ytN5gNpWqLFmSv
-         sFbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RMdZENf34klfFRm97gWv/3oVVvhtQ9/kvSp7CedAKBE=;
-        b=DicaIhDt4voCC/7zIWOU10q2J091l/+oYQPlTl0E5CF41oWZwsdRW+b2OLp0fbMpuJ
-         jUIo3GkVUZE5yA8iJOe5918ZbKolOv4RrapOm+0sPFUCFt2EMcVrbVaqlVOWqYYZBGXE
-         pVJm/Sdf0RcQ2WabsUOabalVNHiEWy2FlLTvr2jNNXnkamktgxHMrmhLjSRDpFvcUM5G
-         FMiuATfAoxj/UX7l1ROOFImjep6cXylBTBbPsMpnlfd8OqxyNSLovmo0nhmOwH7bMK4p
-         4NLWuNnOTskiWWMybEGzkfmOrngXPzjOSclsE4UJnffRLgea+kBlLlxaEiZ1m/PpJsgm
-         ACtQ==
-X-Gm-Message-State: APjAAAUPRFYk8oRGK+ytM60AyIt1YnmT+ZsY4VkN9d0TFLH6F6SJD+EU
-        jAOGw6IAyWYMdGzTRV5rvO0=
-X-Google-Smtp-Source: APXvYqxKZ4RHMHG+5q6pFR8zpsFxDWmUYA2anIVvMagFONXq3/Mn8XIDqlF0Q/oyuHHQkumb6EeQrg==
-X-Received: by 2002:a62:ac11:: with SMTP id v17mr10407107pfe.236.1563960917124;
-        Wed, 24 Jul 2019 02:35:17 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id 14sm44191863pfy.40.2019.07.24.02.35.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 02:35:16 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: key: af_key: Fix possible null-pointer dereferences in pfkey_send_policy_notify()
-Date:   Wed, 24 Jul 2019 17:35:09 +0800
-Message-Id: <20190724093509.1676-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Wed, 24 Jul 2019 05:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726351AbfGXJff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:35:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0181D21926;
+        Wed, 24 Jul 2019 09:35:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563960934;
+        bh=u3fLxCqoYEzLtx7mnMt6QJnsljDN0DTqmQi0kpcJWX4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YQdW87uTeCavnpBBnSMCkfEnRcNrQpRxKUB1Er6v2sYpRV1ZSQNph+QTf/uPjD9d0
+         62mNhwJ/2I+cgug0PoCy19/2IVEHZPNcRdxMe++yIpcz8SYuI/izE2mAme+DaBeFvp
+         ob34XC0cYxVn/S0MwoGpRJc89mToJZ/llvV6JfZE=
+Date:   Wed, 24 Jul 2019 11:35:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v3 01/12] fpga: dfl: fme: support 512bit data width PR
+Message-ID: <20190724093532.GB29532@kroah.com>
+References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
+ <1563857495-26692-2-git-send-email-hao.wu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563857495-26692-2-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In pfkey_send_policy_notify(), there is an if statement on line 3081 to
-check whether xp is NULL:
-    if (xp && xp->type != XFRM_POLICY_TYPE_MAIN)
+On Tue, Jul 23, 2019 at 12:51:24PM +0800, Wu Hao wrote:
+> In early partial reconfiguration private feature, it only
+> supports 32bit data width when writing data to hardware for
+> PR. 512bit data width PR support is an important optimization
+> for some specific solutions (e.g. XEON with FPGA integrated),
+> it allows driver to use AVX512 instruction to improve the
+> performance of partial reconfiguration. e.g. programming one
+> 100MB bitstream image via this 512bit data width PR hardware
+> only takes ~300ms, but 32bit revision requires ~3s per test
+> result.
+> 
+> Please note now this optimization is only done on revision 2
+> of this PR private feature which is only used in integrated
+> solution that AVX512 is always supported. This revision 2
+> hardware doesn't support 32bit PR.
+> 
+> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Acked-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> ---
+> v2: remove DRV/MODULE_VERSION modifications
+> ---
+>  drivers/fpga/dfl-fme-mgr.c | 110 ++++++++++++++++++++++++++++++++++++++-------
+>  drivers/fpga/dfl-fme-pr.c  |  43 +++++++++++-------
+>  drivers/fpga/dfl-fme.h     |   2 +
+>  drivers/fpga/dfl.h         |   5 +++
+>  4 files changed, 129 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-fme-mgr.c b/drivers/fpga/dfl-fme-mgr.c
+> index b3f7eee..46e17f0 100644
+> --- a/drivers/fpga/dfl-fme-mgr.c
+> +++ b/drivers/fpga/dfl-fme-mgr.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/fpga/fpga-mgr.h>
+>  
+> +#include "dfl.h"
+>  #include "dfl-fme-pr.h"
+>  
+>  /* FME Partial Reconfiguration Sub Feature Register Set */
+> @@ -30,6 +31,7 @@
+>  #define FME_PR_STS		0x10
+>  #define FME_PR_DATA		0x18
+>  #define FME_PR_ERR		0x20
+> +#define FME_PR_512_DATA		0x40 /* Data Register for 512bit datawidth PR */
+>  #define FME_PR_INTFC_ID_L	0xA8
+>  #define FME_PR_INTFC_ID_H	0xB0
+>  
+> @@ -67,8 +69,43 @@
+>  #define PR_WAIT_TIMEOUT   8000000
+>  #define PR_HOST_STATUS_IDLE	0
+>  
+> +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
+> +
+> +#include <linux/cpufeature.h>
+> +#include <asm/fpu/api.h>
+> +
+> +static inline int is_cpu_avx512_enabled(void)
+> +{
+> +	return cpu_feature_enabled(X86_FEATURE_AVX512F);
+> +}
 
-When xp is NULL, it is used by key_notify_policy() on line 3090:
-    key_notify_policy(xp, ...)
-        pfkey_xfrm_policy2msg_prep(xp) -- line 2211
-            pfkey_xfrm_policy2msg_size(xp) -- line 2046
-                for (i=0; i<xp->xfrm_nr; i++) -- line 2026
-                t = xp->xfrm_vec + i; -- line 2027
-    key_notify_policy(xp, ...)
-        xp_net(xp) -- line 2231
-            return read_pnet(&xp->xp_net); -- line 534
+That's a very arch specific function, why would a driver ever care about
+this?
 
-Thus, possible null-pointer dereferences may occur.
+> +
+> +static inline void copy512(const void *src, void __iomem *dst)
+> +{
+> +	kernel_fpu_begin();
+> +
+> +	asm volatile("vmovdqu64 (%0), %%zmm0;"
+> +		     "vmovntdq %%zmm0, (%1);"
+> +		     :
+> +		     : "r"(src), "r"(dst)
+> +		     : "memory");
+> +
+> +	kernel_fpu_end();
+> +}
 
-To fix these bugs, xp is checked before calling key_notify_policy().
+Shouldn't this be an arch-specific function somewhere?  Burying this in
+a random driver is not ok.  Please make this generic for all systems.
 
-These bugs are found by a static analysis tool STCheck written by us.
+> +#else
+> +static inline int is_cpu_avx512_enabled(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void copy512(const void *src, void __iomem *dst)
+> +{
+> +	WARN_ON_ONCE(1);
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- net/key/af_key.c | 2 ++
- 1 file changed, 2 insertions(+)
+Are you trying to get reports from syzbot?  :)
 
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index b67ed3a8486c..ced54144d5fd 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -3087,6 +3087,8 @@ static int pfkey_send_policy_notify(struct xfrm_policy *xp, int dir, const struc
- 	case XFRM_MSG_DELPOLICY:
- 	case XFRM_MSG_NEWPOLICY:
- 	case XFRM_MSG_UPDPOLICY:
-+		if (!xp)
-+			break;
- 		return key_notify_policy(xp, dir, c);
- 	case XFRM_MSG_FLUSHPOLICY:
- 		if (c->data.type != XFRM_POLICY_TYPE_MAIN)
--- 
-2.17.0
+Please fix this all up.
 
+greg k-h
