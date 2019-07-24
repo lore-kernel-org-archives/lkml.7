@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ACEC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F8DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BB020659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD82E22ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996584;
-	bh=2DEC+ycr/wGnBPp1D0XeMMkcHq/HhgHmZ/lIM1SAbgM=;
+	s=default; t=1563996587;
+	bh=hH3OD1I2+8UPX765o8lm5X+iCCRRXeoTuVL7zMeLBrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vyNrQYwXHdmqzlb8gWmmyEEtR9pTvUqVslq9ed2TbHetjQJMMlA9SO3APgXVT/rTj
-	 dZkr8o+e0Kh8l+mig+ab+1gj46yGYzdO3c3PJrXaicWwl4VqHFgp6sMOQZLvbPt24X
-	 uc/XU/wCTYNApNuXR2n8rA28V0mMZGuv7A4V86+A=
+	b=YIrAuc8s/DO0Z+dW2dpnD5Rq2PMvds53BtFXWV50hbdt4rkMfnpE2RqvLh/VhFwO+
+	 6cs1T3Nk7pdIa8CueAhrainCcs4Zu6clx3xHkw/gwqjRGlkvt5n7+jckMAmvCJWVCK
+	 mueFtKJj8TqOHQ9BkIKwMU3Ks3JlkR8ZalNtT+W0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbfGXT3n (ORCPT
+        id S1729364AbfGXT3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49130 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:29:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbfGXT3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:29:39 -0400
+        id S1729049AbfGXT3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:29:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FDDA21951;
-        Wed, 24 Jul 2019 19:29:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D651522ADA;
+        Wed, 24 Jul 2019 19:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996578;
-        bh=2DEC+ycr/wGnBPp1D0XeMMkcHq/HhgHmZ/lIM1SAbgM=;
+        s=default; t=1563996582;
+        bh=hH3OD1I2+8UPX765o8lm5X+iCCRRXeoTuVL7zMeLBrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dU3Oop7AgJJsQkWPNYTEGOTbBl1xlNtN3HwATFElSU+JUe9TltWUDIOX98tO6TVGl
-         4E6hBAsZaMliYWUt4OAbSjQvwMsO7dr5Cwp3qxu+h6zUA6+ZuL1pFMSoO5suv5Cflf
-         nI3coegF6U4+NNvxyJCAts32jO/N+6ABJGc3IL98=
+        b=QCzjq0eNZ4Y5OGJnX7DmtpEntzBmeK0VsC0WLXBgpVAPpJi2Ll3Szr6+7f6aIfeYo
+         xsg6TkKkZdfauB3wPcD1q45jHLw0qWApxNvqJkXLfKyWnbalmdGRZ3mjFfII9AV3uZ
+         r9mhrCCD/xFg46dxkGwoQUsK8kfLRLMvV0obLz3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 145/413] media: mt9m111: fix fw-node refactoring
-Date:   Wed, 24 Jul 2019 21:17:16 +0200
-Message-Id: <20190724191745.325875442@linuxfoundation.org>
+Subject: [PATCH 5.2 146/413] ASoC: soc-core: call snd_soc_unbind_card() under mutex_lock;
+Date:   Wed, 24 Jul 2019 21:17:17 +0200
+Message-Id: <20190724191745.389752092@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,46 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8d4e29a51a954b43e06d916772fa4f50b7e5bbd6 ]
+[ Upstream commit b545542a0b866f7975254e41c595836e9bc0ff2f ]
 
-In the patch refactoring the fw-node, the mt9m111 was broken for all
-platform_data based platforms, which were the first aim of this
-driver. Only the devicetree platform are still functional, probably
-because the testing was done on these.
+commit 34ac3c3eb8f0c07 ("ASoC: core: lock client_mutex while removing
+link components") added mutex_lock() at soc_remove_link_components().
 
-The result is that -EINVAL is systematically return for such platforms,
-what this patch fixes.
+Is is called from snd_soc_unbind_card()
 
-[Sakari Ailus: Rework this to resolve a merge conflict and use dev_fwnode]
+	snd_soc_unbind_card()
+=>		soc_remove_link_components()
+		soc_cleanup_card_resources()
+			soc_remove_dai_links()
+=>				soc_remove_link_components()
 
-Fixes: 98480d65c48c ("media: mt9m111: allow to setup pixclk polarity")
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+And, there are 2 way to call it.
+
+(1)
+	snd_soc_unregister_component()
+**		mutex_lock()
+			snd_soc_component_del_unlocked()
+=>				snd_soc_unbind_card()
+**		mutex_unlock()
+
+(2)
+	snd_soc_unregister_card()
+=>		snd_soc_unbind_card()
+
+(1) case is already using mutex_lock() when it calles
+snd_soc_unbind_card(), thus, we will get lockdep warning.
+
+commit 495f926c68ddb90 ("ASoC: core: Fix deadlock in
+snd_soc_instantiate_card()") tried to fixup it, but still not
+enough. We still have lockdep warning when we try unbind/bind.
+
+We need mutex_lock() under snd_soc_unregister_card()
+instead of snd_remove_link_components()/snd_soc_unbind_card().
+
+Fixes: 34ac3c3eb8f0c07 ("ASoC: core: lock client_mutex while removing link components")
+Fixes: 495f926c68ddb90 ("ASoC: core: Fix deadlock in snd_soc_instantiate_card()")
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9m111.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ sound/soc/soc-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index 362c3b93636e..5a642b5ad076 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -1245,9 +1245,11 @@ static int mt9m111_probe(struct i2c_client *client,
- 	if (!mt9m111)
- 		return -ENOMEM;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 41c0cfaf2db5..9138fcb15cd3 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2837,14 +2837,12 @@ static void snd_soc_unbind_card(struct snd_soc_card *card, bool unregister)
+ 		snd_soc_dapm_shutdown(card);
+ 		snd_soc_flush_all_delayed_work(card);
  
--	ret = mt9m111_probe_fw(client, mt9m111);
--	if (ret)
--		return ret;
-+	if (dev_fwnode(&client->dev)) {
-+		ret = mt9m111_probe_fw(client, mt9m111);
-+		if (ret)
-+			return ret;
-+	}
+-		mutex_lock(&client_mutex);
+ 		/* remove all components used by DAI links on this card */
+ 		for_each_comp_order(order) {
+ 			for_each_card_rtds(card, rtd) {
+ 				soc_remove_link_components(card, rtd, order);
+ 			}
+ 		}
+-		mutex_unlock(&client_mutex);
  
- 	mt9m111->clk = v4l2_clk_get(&client->dev, "mclk");
- 	if (IS_ERR(mt9m111->clk))
+ 		soc_cleanup_card_resources(card);
+ 		if (!unregister)
+@@ -2863,7 +2861,9 @@ static void snd_soc_unbind_card(struct snd_soc_card *card, bool unregister)
+  */
+ int snd_soc_unregister_card(struct snd_soc_card *card)
+ {
++	mutex_lock(&client_mutex);
+ 	snd_soc_unbind_card(card, true);
++	mutex_unlock(&client_mutex);
+ 	dev_dbg(card->dev, "ASoC: Unregistered card '%s'\n", card->name);
+ 
+ 	return 0;
 -- 
 2.20.1
 
