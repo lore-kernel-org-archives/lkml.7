@@ -2,179 +2,149 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753B5C76190
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D01BC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46012227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563935697;
-	bh=de+IB35aJ8YXt1atbBHJSF8MOiOuDUmHPwZn8dakJCI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=U+r1aHG2H3t5tfFcQvXyyrj3K9ukY96Zr6oNPVpH8SmJH72Hu55O+TPvA0NLcEEHy
-	 q/04mt7ff5h6t4a2TeJfvt0QQ9csc8GXELQWSTYdrlA0LANd0+1HtmZEAfuVgUwDuV
-	 e/pL9kQWPGxG2QIKRXNmnN4kDyz/FqNEEoyTDvyg=
+	by mail.kernel.org (Postfix) with ESMTP id 522C2229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Cz9MJ9V9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfGXCez (ORCPT
+        id S1726230AbfGXCfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfGXCez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:34:55 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B9E4227BF;
-        Wed, 24 Jul 2019 02:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563935693;
-        bh=de+IB35aJ8YXt1atbBHJSF8MOiOuDUmHPwZn8dakJCI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CwiofahFiYRXaPs8PpUbS+6nIjlTYVIoMFgKFC6r22RxAsDs3JXrvoNeWWoVFgE9x
-         k5cj790rl+WwNq4LMJgjj1Z60x+u3Gqcccy+7l+q1Wmb2MEJUV/rk4dQuls60R5F3v
-         zwXkualeTbe/7KbPOnjQY0yHd3C2bMfW+d2nDMTo=
-Date:   Tue, 23 Jul 2019 19:34:52 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 4 open syzbot bugs in "net/rds" subsystem
-Message-ID: <20190724023452.GW643@sol.localdomain>
-Mail-Followup-To: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        Tue, 23 Jul 2019 22:35:40 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:50848 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfGXCfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:35:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563935738; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=draFdlraXbF2yZxrc6+caoj6pbMVA0y+5+kt1QtF/is=;
+        b=Cz9MJ9V95pov1/8gL6Fr9IeKoIjVmV0ci8C9fcDVhu1Nfri9rjaTdf4EiloCvEZp/+G7Zm
+        17wfLYcXh8COvXqTISYGdclvMHHR++/GvHYXnGDUcGXTYCgD/qdUipPan8QgUuHqJETQYR
+        pF/K9V2QVQzFB5+TGfb2y/nSeIos7CQ=
+Date:   Tue, 23 Jul 2019 22:35:25 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] mfd/syscon: Add device_node_to_regmap()
+To:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     od@zcrc.me, linux-kernel@vger.kernel.org
+Message-Id: <1563935725.1918.1@crapouillou.net>
+In-Reply-To: <20190723185535.20631-1-paul@crapouillou.net>
+References: <20190723185535.20631-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+Actually I'll make a revised version and merge it with a patchset that
+makes use of this feature.
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 4 of them as possibly being bugs in the "net/rds" subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
+-Paul
 
-Of these 4 bugs, 1 was seen in mainline in the last week.
 
-Of these 4 bugs, 1 was bisected to a commit from the following person:
 
-	Dennis Dalessandro <dennis.dalessandro@intel.com>
+Le mar. 23 juil. 2019 =E0 14:55, Paul Cercueil <paul@crapouillou.net> a=20
+=E9crit :
+> device_node_to_regmap() is exactly like syscon_node_to_regmap(), but=20
+> it
+> does not check that the node is compatible with "syscon".
+>=20
+> The rationale behind this, is that one device node with a standard
+> compatible string "foo,bar" can be covered by multiple drivers=20
+> sharing a
+> regmap, or by a single driver doing all the job without a regmap, but
+> these are implementation details which shouldn't reflect on the
+> devicetree.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/mfd/syscon.c       | 14 ++++++++++----
+>  include/linux/mfd/syscon.h |  6 ++++++
+>  2 files changed, 16 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index b65e585fc8c6..3dcb56d4688d 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -51,9 +51,6 @@ static struct syscon *of_syscon_register(struct=20
+> device_node *np)
+>  	struct regmap_config syscon_config =3D syscon_regmap_config;
+>  	struct resource res;
+>=20
+> -	if (!of_device_is_compatible(np, "syscon"))
+> -		return ERR_PTR(-EINVAL);
+> -
+>  	syscon =3D kzalloc(sizeof(*syscon), GFP_KERNEL);
+>  	if (!syscon)
+>  		return ERR_PTR(-ENOMEM);
+> @@ -150,7 +147,7 @@ static struct syscon *of_syscon_register(struct=20
+> device_node *np)
+>  	return ERR_PTR(ret);
+>  }
+>=20
+> -struct regmap *syscon_node_to_regmap(struct device_node *np)
+> +struct regmap *device_node_to_regmap(struct device_node *np)
+>  {
+>  	struct syscon *entry, *syscon =3D NULL;
+>=20
+> @@ -172,6 +169,15 @@ struct regmap *syscon_node_to_regmap(struct=20
+> device_node *np)
+>=20
+>  	return syscon->regmap;
+>  }
+> +EXPORT_SYMBOL_GPL(device_node_to_regmap);
+> +
+> +struct regmap *syscon_node_to_regmap(struct device_node *np)
+> +{
+> +	if (!of_device_is_compatible(np, "syscon"))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	return device_node_to_regmap(np);
+> +}
+>  EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
+>=20
+>  struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
+> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+> index 8cfda0554381..112dc66262cc 100644
+> --- a/include/linux/mfd/syscon.h
+> +++ b/include/linux/mfd/syscon.h
+> @@ -17,12 +17,18 @@
+>  struct device_node;
+>=20
+>  #ifdef CONFIG_MFD_SYSCON
+> +extern struct regmap *device_node_to_regmap(struct device_node *np);
+>  extern struct regmap *syscon_node_to_regmap(struct device_node *np);
+>  extern struct regmap *syscon_regmap_lookup_by_compatible(const char=20
+> *s);
+>  extern struct regmap *syscon_regmap_lookup_by_phandle(
+>  					struct device_node *np,
+>  					const char *property);
+>  #else
+> +static inline struct regmap *device_node_to_regmap(struct=20
+> device_node *np)
+> +{
+> +	return ERR_PTR(-ENOTSUPP);
+> +}
+> +
+>  static inline struct regmap *syscon_node_to_regmap(struct=20
+> device_node *np)
+>  {
+>  	return ERR_PTR(-ENOTSUPP);
+> --
+> 2.21.0.593.g511ec345e18
+>=20
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the "net/rds" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              general protection fault in rds_recv_rcvbuf_delta
-Last occurred:      26 days ago
-Reported:           253 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e1d2492507fca6102dbce03c16b40a21130c8dbf
-Original thread:    https://lkml.kernel.org/lkml/000000000000445dd9057a7149f1@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit b534875d5ab348fb9193692589e2ee82ae768e3a
-	Author: Dennis Dalessandro <dennis.dalessandro@intel.com>
-	Date:   Wed Jan 6 18:02:59 2016 +0000
-
-	  IB/rdmavt: Add device specific info prints
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+4b4f8163c2e246df3c4c@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000445dd9057a7149f1@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in rds_send_probe
-Last occurred:      0 days ago
-Reported:           0 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=39b72114839a6dbd66c1d2104522698a813f9ae2
-Original thread:    https://lkml.kernel.org/lkml/000000000000ad1dfe058e5b89ab@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug has received 4 replies; the last was 3 hours
-ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+5134cdf021c4ed5aaa5f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread, which had activity only 3 hours ago.  For the git send-email command to
-use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
-instructions" at https://lkml.kernel.org/r/000000000000ad1dfe058e5b89ab@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in rds_cong_queue_updates (2)
-Last occurred:      112 days ago
-Reported:           365 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=6f435350bd496374955b3aeba9e313d16db4b30b
-Original thread:    https://lkml.kernel.org/lkml/000000000000cdb5450571adfe40@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 1 reply, 365 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+470ae97a39f16146af45@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000cdb5450571adfe40@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in rds_cong_queue_updates (2)
-Last occurred:      110 days ago
-Reported:           377 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=58c0193d54290dfe8266db64b482b0e796f0d611
-Original thread:    https://lkml.kernel.org/lkml/0000000000005274c40570be9f48@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 1 reply, 377 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0570fef57a5e020bdc87@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005274c40570be9f48@google.com
+=
 
