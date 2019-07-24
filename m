@@ -2,55 +2,61 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1DBC76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBC4C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555EA2075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DD92075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033710;
-	bh=zNQupbiFs9PvuXXguj8gzL9X5NiI7yxyqCdNkPocXbI=;
+	s=default; t=1564033722;
+	bh=2JuZ68chLQHkmtttpPeLALXBf11PAatz+Tf3pJxTQ94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UwNvNrB2cFbSeEVJCUhLdxcnXNpI9M5RtGRVc5X5g+WqWZ9vGRY/G5boyCD4BsZ3V
-	 0M0blGFmNMxdsfBskGKjOaDqXZD+YOgP7MXabJKs2nkruNv1eTVbVjts4dlaF6Um3Z
-	 inm77kfDGBIUGDVG88Bk42PiSbFUp/RSlnNghB1k=
+	b=tqet1B5RfHxJnuY5znTc0sOirSOJWSkxf7e2Gd2NNTFHOr9ek+kKuZHG/GZ1ld+Cc
+	 urT7hdyG0/8c5MSC+werTNZ7jKJCOwz2ICCMuWOyYaS9sIytJtIS57EmEsXStxmiDc
+	 wm1FdqJdlCnqFVatWumrBu6h5PLjPO7vuw09aOSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391364AbfGYFpz (ORCPT
+        id S1728584AbfGYFsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405272AbfGYFpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:45:51 -0400
+        id S2405187AbfGYFpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:45:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 967EA22BF3;
-        Thu, 25 Jul 2019 05:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F08421850;
+        Thu, 25 Jul 2019 05:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033551;
-        bh=zNQupbiFs9PvuXXguj8gzL9X5NiI7yxyqCdNkPocXbI=;
+        s=default; t=1564033534;
+        bh=2JuZ68chLQHkmtttpPeLALXBf11PAatz+Tf3pJxTQ94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjRTzcYFjyGRQWO1spRKUWzzyfnF0s1q/tDTqTXuyrsQZr+z6ctRokM1ZziodPNYD
-         7LbgmhkuxmwtdzPz/5AU+26UQAgy+unIEJPm+HT9OISlKVzXjCAlwdMX52rNnVdhOm
-         vycr7oRsCG+Gv8gpfPziBvYIADmsL3mwo+qwdgkU=
+        b=ZDde47BXKnXV06wKRDjPAOPZuBFJTIKJ6lV+FqYZTFLpbKKXJq7YXHUs+uoTC6EzH
+         bhN/8k2JEoPOWU/GfRYITEPscMdHkH/UG2VgA2n4OCCg1IETLXSFIz1ah2K0Nlv5Ke
+         /r/tROkdUhhvKFIyjtMYMKRnK3HPbd7O/0YoGNIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 246/271] xfs: dont ever put nlink > 0 inodes on the unlinked list
-Date:   Wed, 24 Jul 2019 21:21:55 +0200
-Message-Id: <20190724191716.273954390@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 240/271] coda: pass the host file in vma->vm_file on mmap
+Date:   Wed, 24 Jul 2019 21:21:49 +0200
+Message-Id: <20190724191715.741399883@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,112 +69,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit c4a6bf7f6cc7eb4cce120fb7eb1e1fb8b2d65e09 upstream.
+From: Jan Harkes <jaharkes@cs.cmu.edu>
 
-When XFS creates an O_TMPFILE file, the inode is created with nlink = 1,
-put on the unlinked list, and then the VFS sets nlink = 0 in d_tmpfile.
-If we crash before anything logs the inode (it's dirty incore but the
-vfs doesn't tell us it's dirty so we never log that change), the iunlink
-processing part of recovery will then explode with a pile of:
+commit 7fa0a1da3dadfd9216df7745a1331fdaa0940d1c upstream.
 
-XFS: Assertion failed: VFS_I(ip)->i_nlink == 0, file:
-fs/xfs/xfs_log_recover.c, line: 5072
+Patch series "Coda updates".
 
-Worse yet, since nlink is nonzero, the inodes also don't get cleaned up
-and they just leak until the next xfs_repair run.
+The following patch series is a collection of various fixes for Coda,
+most of which were collected from linux-fsdevel or linux-kernel but
+which have as yet not found their way upstream.
 
-Therefore, change xfs_iunlink to require that inodes being put on the
-unlinked list have nlink == 0, change the tmpfile callers to instantiate
-nodes that way, and set the nlink to 1 just prior to calling d_tmpfile.
-Fix the comment for xfs_iunlink while we're at it.
+This patch (of 22):
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Various file systems expect that vma->vm_file points at their own file
+handle, several use file_inode(vma->vm_file) to get at their inode or
+use vma->vm_file->private_data.  However the way Coda wrapped mmap on a
+host file broke this assumption, vm_file was still pointing at the Coda
+file and the host file systems would scribble over Coda's inode and
+private file data.
+
+This patch fixes the incorrect expectation and wraps vm_ops->open and
+vm_ops->close to allow Coda to track when the vm_area_struct is
+destroyed so we still release the reference on the Coda file handle at
+the right time.
+
+Link: http://lkml.kernel.org/r/0e850c6e59c0b147dc2dcd51a3af004c948c3697.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/xfs/xfs_inode.c | 16 ++++++----------
- fs/xfs/xfs_iops.c  | 13 +++++++++++--
- 2 files changed, 17 insertions(+), 12 deletions(-)
+ fs/coda/file.c |   70 +++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index ae07baa7bdbf..5ed84d6c7059 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1332,7 +1332,7 @@ xfs_create_tmpfile(
- 	if (error)
- 		goto out_trans_cancel;
+--- a/fs/coda/file.c
++++ b/fs/coda/file.c
+@@ -27,6 +27,13 @@
+ #include "coda_linux.h"
+ #include "coda_int.h"
  
--	error = xfs_dir_ialloc(&tp, dp, mode, 1, 0, prid, &ip);
-+	error = xfs_dir_ialloc(&tp, dp, mode, 0, 0, prid, &ip);
- 	if (error)
- 		goto out_trans_cancel;
- 
-@@ -1907,11 +1907,8 @@ xfs_inactive(
++struct coda_vm_ops {
++	atomic_t refcnt;
++	struct file *coda_file;
++	const struct vm_operations_struct *host_vm_ops;
++	struct vm_operations_struct vm_ops;
++};
++
+ static ssize_t
+ coda_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
+@@ -61,6 +68,34 @@ coda_file_write_iter(struct kiocb *iocb,
+ 	return ret;
  }
  
- /*
-- * This is called when the inode's link count goes to 0 or we are creating a
-- * tmpfile via O_TMPFILE. In the case of a tmpfile, @ignore_linkcount will be
-- * set to true as the link count is dropped to zero by the VFS after we've
-- * created the file successfully, so we have to add it to the unlinked list
-- * while the link count is non-zero.
-+ * This is called when the inode's link count has gone to 0 or we are creating
-+ * a tmpfile via O_TMPFILE.  The inode @ip must have nlink == 0.
-  *
-  * We place the on-disk inode on a list in the AGI.  It will be pulled from this
-  * list when the inode is freed.
-@@ -1931,6 +1928,7 @@ xfs_iunlink(
- 	int		offset;
- 	int		error;
++static void
++coda_vm_open(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	atomic_inc(&cvm_ops->refcnt);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->open)
++		cvm_ops->host_vm_ops->open(vma);
++}
++
++static void
++coda_vm_close(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->close)
++		cvm_ops->host_vm_ops->close(vma);
++
++	if (atomic_dec_and_test(&cvm_ops->refcnt)) {
++		vma->vm_ops = cvm_ops->host_vm_ops;
++		fput(cvm_ops->coda_file);
++		kfree(cvm_ops);
++	}
++}
++
+ static int
+ coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
+ {
+@@ -68,6 +103,8 @@ coda_file_mmap(struct file *coda_file, s
+ 	struct coda_inode_info *cii;
+ 	struct file *host_file;
+ 	struct inode *coda_inode, *host_inode;
++	struct coda_vm_ops *cvm_ops;
++	int ret;
  
-+	ASSERT(VFS_I(ip)->i_nlink == 0);
- 	ASSERT(VFS_I(ip)->i_mode != 0);
+ 	cfi = CODA_FTOC(coda_file);
+ 	BUG_ON(!cfi || cfi->cfi_magic != CODA_MAGIC);
+@@ -76,6 +113,13 @@ coda_file_mmap(struct file *coda_file, s
+ 	if (!host_file->f_op->mmap)
+ 		return -ENODEV;
  
- 	/*
-@@ -2837,11 +2835,9 @@ xfs_rename_alloc_whiteout(
++	if (WARN_ON(coda_file != vma->vm_file))
++		return -EIO;
++
++	cvm_ops = kmalloc(sizeof(struct coda_vm_ops), GFP_KERNEL);
++	if (!cvm_ops)
++		return -ENOMEM;
++
+ 	coda_inode = file_inode(coda_file);
+ 	host_inode = file_inode(host_file);
  
- 	/*
- 	 * Prepare the tmpfile inode as if it were created through the VFS.
--	 * Otherwise, the link increment paths will complain about nlink 0->1.
--	 * Drop the link count as done by d_tmpfile(), complete the inode setup
--	 * and flag it as linkable.
-+	 * Complete the inode setup and flag it as linkable.  nlink is already
-+	 * zero, so we can skip the drop_nlink.
- 	 */
--	drop_nlink(VFS_I(tmpfile));
- 	xfs_setup_iops(tmpfile);
- 	xfs_finish_inode_setup(tmpfile);
- 	VFS_I(tmpfile)->i_state |= I_LINKABLE;
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index f48ffd7a8d3e..1efef69a7f1c 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -191,9 +191,18 @@ xfs_generic_create(
+@@ -89,6 +133,7 @@ coda_file_mmap(struct file *coda_file, s
+ 	 * the container file on us! */
+ 	else if (coda_inode->i_mapping != host_inode->i_mapping) {
+ 		spin_unlock(&cii->c_lock);
++		kfree(cvm_ops);
+ 		return -EBUSY;
+ 	}
  
- 	xfs_setup_iops(ip);
+@@ -97,7 +142,29 @@ coda_file_mmap(struct file *coda_file, s
+ 	cfi->cfi_mapcount++;
+ 	spin_unlock(&cii->c_lock);
  
--	if (tmpfile)
-+	if (tmpfile) {
-+		/*
-+		 * The VFS requires that any inode fed to d_tmpfile must have
-+		 * nlink == 1 so that it can decrement the nlink in d_tmpfile.
-+		 * However, we created the temp file with nlink == 0 because
-+		 * we're not allowed to put an inode with nlink > 0 on the
-+		 * unlinked list.  Therefore we have to set nlink to 1 so that
-+		 * d_tmpfile can immediately set it back to zero.
+-	return call_mmap(host_file, vma);
++	vma->vm_file = get_file(host_file);
++	ret = call_mmap(vma->vm_file, vma);
++
++	if (ret) {
++		/* if call_mmap fails, our caller will put coda_file so we
++		 * should drop the reference to the host_file that we got.
 +		 */
-+		set_nlink(inode, 1);
- 		d_tmpfile(dentry, inode);
--	else
-+	} else
- 		d_instantiate(dentry, inode);
++		fput(host_file);
++		kfree(cvm_ops);
++	} else {
++		/* here we add redirects for the open/close vm_operations */
++		cvm_ops->host_vm_ops = vma->vm_ops;
++		if (vma->vm_ops)
++			cvm_ops->vm_ops = *vma->vm_ops;
++
++		cvm_ops->vm_ops.open = coda_vm_open;
++		cvm_ops->vm_ops.close = coda_vm_close;
++		cvm_ops->coda_file = coda_file;
++		atomic_set(&cvm_ops->refcnt, 1);
++
++		vma->vm_ops = &cvm_ops->vm_ops;
++	}
++	return ret;
+ }
  
- 	xfs_finish_inode_setup(ip);
--- 
-2.20.1
-
+ int coda_open(struct inode *coda_inode, struct file *coda_file)
+@@ -207,4 +274,3 @@ const struct file_operations coda_file_o
+ 	.fsync		= coda_fsync,
+ 	.splice_read	= generic_file_splice_read,
+ };
+-
 
 
