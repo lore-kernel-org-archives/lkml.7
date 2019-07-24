@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E394C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7DFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10080214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17489214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999861;
-	bh=BO3WXfvLTtB82+HMoOJxdimQms4+C4YlVbblqXAHaoU=;
+	s=default; t=1563999864;
+	bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3VOVn+4eMRyXmWPLLtrk8vE4UTTXCtbKhaAyuDJWLfn0GPUtFC1BBWE9spMaInQF
-	 XNWSyGDbooLQEDtXsG7kigjB3kJb6dPzugiJrpv5IgFOGvEFvx9ypXxm4bjWBEUxRk
-	 13R78q//sVsg3i3mzzqVyLnvM0KEoe7HM1/7KxM8=
+	b=SE8W+5+slc+dVCtWkeKfWl7+0eARRN+godbZv3E6nXzjoJXv/ySVQtIilA4ziw+nI
+	 uUrlo2baseLyrhsuafiE1/lGA0wUHXh0CGSTHWnI15TwwPN4IzrjglhIga8b+iyWVq
+	 EztbWngqrW2w0CIvYpas5FSj7dPpEMe8lNsE7Waw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390208AbfGXTle (ORCPT
+        id S2390776AbfGXUYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42924 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390199AbfGXTlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:41:31 -0400
+        id S2389941AbfGXTle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:41:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D56F229F3;
-        Wed, 24 Jul 2019 19:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BAC522ADB;
+        Wed, 24 Jul 2019 19:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997290;
-        bh=BO3WXfvLTtB82+HMoOJxdimQms4+C4YlVbblqXAHaoU=;
+        s=default; t=1563997292;
+        bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/IJWqWy1a9BWQJzjk5T9FVVGNlDpD4Q+HNWHWv0bYZftcBNuqlgP7743y8YFHYtk
-         eD+fr/P0YPK9/YgtMhhHl8pE/X5B7PRCWbma/fGoGR0+eQSNdW8BujIDL5F8fiYfSu
-         siQWEVSD1TIoca5h0BWpZZj87YwvPoDd1ruD9+8o=
+        b=i5Qrn3epvH6ZgaIWHp3bnx/n+Qe0dtyywuZmP9qUnZ/UKGecClSjjEO2/eJooJMas
+         OfczdAtEuf5+a+wIpy0WJkOBRR+8FTse4piiFiKI57+PghuNk7HU7C/7OObtAdqhYa
+         mqQskYYwFYWmbUj1iOAf+pKWRwzESe8EDCizI6dA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 5.2 383/413] gpu: ipu-v3: ipu-ic: Fix saturation bit offset in TPMEM
-Date:   Wed, 24 Jul 2019 21:21:14 +0200
-Message-Id: <20190724191802.459356008@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Marc Meledandri <m.meledandri@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: [PATCH 5.2 345/413] drm/nouveau/i2c: Enable i2c pads & busses during preinit
+Date:   Wed, 24 Jul 2019 21:20:36 +0200
+Message-Id: <20190724191800.514334946@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,36 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit 3d1f62c686acdedf5ed9642b763f3808d6a47d1e upstream.
+commit 7cb95eeea6706c790571042a06782e378b2561ea upstream.
 
-The saturation bit was being set at bit 9 in the second 32-bit word
-of the TPMEM CSC. This isn't correct, the saturation bit is bit 42,
-which is bit 10 of the second word.
+It turns out that while disabling i2c bus access from software when the
+GPU is suspended was a step in the right direction with:
 
-Fixes: 1aa8ea0d2bd5d ("gpu: ipu-v3: Add Image Converter unit")
+commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
+->fini()")
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+We also ended up accidentally breaking the vbios init scripts on some
+older Tesla GPUs, as apparently said scripts can actually use the i2c
+bus. Since these scripts are executed before initializing any
+subdevices, we end up failing to acquire access to the i2c bus which has
+left a number of cards with their fan controllers uninitialized. Luckily
+this doesn't break hardware - it just means the fan gets stuck at 100%.
+
+This also means that we've always been using our i2c busses before
+initializing them during the init scripts for older GPUs, we just didn't
+notice it until we started preventing them from being used until init.
+It's pretty impressive this never caused us any issues before!
+
+So, fix this by initializing our i2c pad and busses during subdev
+pre-init. We skip initializing aux busses during pre-init, as those are
+guaranteed to only ever be used by nouveau for DP aux transactions.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Tested-by: Marc Meledandri <m.meledandri@gmail.com>
+Fixes: 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after ->fini()")
 Cc: stable@vger.kernel.org
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/ipu-v3/ipu-ic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/gpu/ipu-v3/ipu-ic.c
-+++ b/drivers/gpu/ipu-v3/ipu-ic.c
-@@ -251,7 +251,7 @@ static int init_csc(struct ipu_ic *ic,
- 	writel(param, base++);
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
+@@ -185,6 +185,25 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev
+ }
  
- 	param = ((a[0] & 0x1fe0) >> 5) | (params->scale << 8) |
--		(params->sat << 9);
-+		(params->sat << 10);
- 	writel(param, base++);
- 
- 	param = ((a[1] & 0x1f) << 27) | ((c[0][1] & 0x1ff) << 18) |
+ static int
++nvkm_i2c_preinit(struct nvkm_subdev *subdev)
++{
++	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
++	struct nvkm_i2c_bus *bus;
++	struct nvkm_i2c_pad *pad;
++
++	/*
++	 * We init our i2c busses as early as possible, since they may be
++	 * needed by the vbios init scripts on some cards
++	 */
++	list_for_each_entry(pad, &i2c->pad, head)
++		nvkm_i2c_pad_init(pad);
++	list_for_each_entry(bus, &i2c->bus, head)
++		nvkm_i2c_bus_init(bus);
++
++	return 0;
++}
++
++static int
+ nvkm_i2c_init(struct nvkm_subdev *subdev)
+ {
+ 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
+@@ -238,6 +257,7 @@ nvkm_i2c_dtor(struct nvkm_subdev *subdev
+ static const struct nvkm_subdev_func
+ nvkm_i2c = {
+ 	.dtor = nvkm_i2c_dtor,
++	.preinit = nvkm_i2c_preinit,
+ 	.init = nvkm_i2c_init,
+ 	.fini = nvkm_i2c_fini,
+ 	.intr = nvkm_i2c_intr,
 
 
