@@ -2,304 +2,328 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF82C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A7EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B4E21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4732421926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ZnA7QKjx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7Qtd8QK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfGXRCz (ORCPT
+        id S2387744AbfGXRC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:02:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42892 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfGXRCy (ORCPT
+        Wed, 24 Jul 2019 13:02:57 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37291 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfGXRCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:02:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x1so32792600wrr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:02:52 -0700 (PDT)
+        Wed, 24 Jul 2019 13:02:55 -0400
+Received: by mail-io1-f66.google.com with SMTP id q22so91092916iog.4;
+        Wed, 24 Jul 2019 10:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xa1NsVFGv/xJPIO0X4IJ6zOPEp6fe9IF2hXjxaPByDM=;
-        b=ZnA7QKjx1Nj94L2MD0v8H1r0upuLZ8ncB4dDrGl2s54FmPYqfaJuMqGvPFLXWReTPZ
-         QsIzwrD+Abhwfcs7l/3HNd/Y8f99RjG8P2Xn94oyaMlpB9js/JuYbGZUH9SBCBFJT+JT
-         bibTCCVhewcCAil7qzMnNTa1+8Ia36mf6iQZRHLi5LsgQZWInNnGtkwrlEYkqasVOwRL
-         Obd7qSjNGWGIX9KEXoMblzrQzgH3Sb+853Py8oDgOSxpZ4sinDQKY8wr5IvkYyXs35jm
-         p+hlslRCCBHgQ/cD2cPnfigm2dDnj6l6rRdvxlIl6O4JmWaCToe4JCtIBGh9ZhZfwjjJ
-         7OSw==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=VeZ5bajO/AKYwVnzW540b0VQt3bRLs5FygnYd5RGmx0=;
+        b=Q7Qtd8QKtnQdZUVvZ/h7hYIDRDYc3G//tbW32a2/VqmgvDBnyqybVP+kflA3hRSvMQ
+         qMEw2TJzxUlXXk9ItRIswieNAk1Otro2G3nuDAagh7pkcG/hxQv+eHjKUhC7U3KEyfyy
+         qeeMGt9EPrLiZpuCI2y3FLRlWFd5OpGbbgxcvimfPCSGwfPXxQ74ACG/uEYfYYNX94qx
+         mBksrK2OJ0gwRCy2ZIyvrdRk7n/HU0cc4ybPG08fiBjbNPQE1oWe2r6r9MW5crP+Jtqw
+         gCjnLwdLFoG+QsfdOGxcmjORadYzhnTRlv4dCS+mgqzGQjRw8D66NqeEKdLy/pkq56kp
+         ICaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xa1NsVFGv/xJPIO0X4IJ6zOPEp6fe9IF2hXjxaPByDM=;
-        b=ak9VZ/sWsPsMCuxVk5rUzE6z5tLqz9isaz7nvSVD67Y9CZLa1nRHc2ZigkuXYEHHFK
-         sxAoIGNogtV2QQkOjjyQoniNQUXyU3+kLy1RS7cdRK2vblBnX18xwTK6iv/iC5GR0mZT
-         s9+1nNeapp4agQwUBNby08MsUNvqeMRTAyICADZ1ErWbgaeCxkS2NyecgUbROK3/Esvk
-         vuB85lCry007A1JqpAMJNgKA4WgOzC+QvX2N8ItmuSG0hZXeS0rOh3FMAA3aLm9cCyRN
-         X7aYeWwQD9RY9uIrwJ4I54qzdFxFfsY8KjiUdXBC4xJzOJmNRyPPM915k6B+iGdLlZBC
-         dFJw==
-X-Gm-Message-State: APjAAAXIVFV7Axzz7R31QG2Q9AKKdnvzYsk+q9XgMWk7gtfU1LHeAwxM
-        UJjm9sQAq5diqVAHhxuCajZSNCG6inXi21PSeypiA1vjEv50w2jDQYA56DKmExfvd3zbhMs+EyD
-        0TGyZMZf04BTeLPaS0AFg0lJrUaBYsm+qFymiShnENxETv9kcnEP9Q+7hn+6iUOBMA2Gck7in1u
-        0GgSctbvx9yTNGdTaftsmoHYP4NkAYkBvg+7gJE3w=
-X-Google-Smtp-Source: APXvYqw6eRkGSuqhH3NK7HbDeM6wI4vyBoZ3jV624hq6Ly6BW+HRAwJR9DzcwAM2arpbBEyuqf5RYg==
-X-Received: by 2002:adf:fe09:: with SMTP id n9mr93333801wrr.41.1563987771295;
-        Wed, 24 Jul 2019 10:02:51 -0700 (PDT)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id j10sm80605867wrd.26.2019.07.24.10.02.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 10:02:50 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] hung_task: Allow printing warnings every check interval
-Date:   Wed, 24 Jul 2019 18:02:49 +0100
-Message-Id: <20190724170249.9644-1-dima@arista.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=VeZ5bajO/AKYwVnzW540b0VQt3bRLs5FygnYd5RGmx0=;
+        b=U0hoxgjZ/O3vstZClnbN+MhlJ0PnH40jXJcUtvd++dyNW7L4m9L9FvOVWPXKRnM2/E
+         TV5XTmS6t0cm/7u77D4lYQ7yyKBiDsFg/JmfRnTNnay9i6yEn/rpIdDHhVlL8USimR/D
+         b9Df+WvCuKsuBAODG48xDP2STwKqEwsb9N2YSzLEDp2idTOdvazmu5F194W+U8JP6CDX
+         qFKCf2QKOiyBP/aMLs4/+5SLoLpBPYPJKooWw9o8vusfsBtBe2ckbaWD3hwQc/WFiJC7
+         Ha6AEzhKGeAYFyFkChLWe3A41sPA6zOiWIRxF+pPLoXWYRHeXvau9hvZjvl5TKH1cmA8
+         ea4g==
+X-Gm-Message-State: APjAAAUIRxlBBuDZDKanEIWusF/wCf9Kg/0LT1W30YXTqA7F1deYAI7u
+        obELmEuu57iVxGHaORcHgNA=
+X-Google-Smtp-Source: APXvYqwcgXA0Ie0L+IDNnlc04ZvDr22nrMcaKVYfkLIQngt2mRFE3aSw5bYGcnM2PggW1eMnB1Rm+g==
+X-Received: by 2002:a02:13c3:: with SMTP id 186mr84555363jaz.30.1563987774830;
+        Wed, 24 Jul 2019 10:02:54 -0700 (PDT)
+Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
+        by smtp.gmail.com with ESMTPSA id b14sm50259209iod.33.2019.07.24.10.02.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 10:02:54 -0700 (PDT)
+Subject: [PATCH v2 3/5] mm: Use zone and order instead of free area in
+ free_list manipulators
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Date:   Wed, 24 Jul 2019 10:00:45 -0700
+Message-ID: <20190724170045.6685.92452.stgit@localhost.localdomain>
+In-Reply-To: <20190724165158.6685.87228.stgit@localhost.localdomain>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
-X-CLOUD-SEC-AV-Sent: true
-X-Gm-Spam: 0
-X-Gm-Phishy: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hung task detector has one timeout and has two associated actions on it:
-- issuing warnings with names and stacks of blocked tasks
-- panic()
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-We want switches to panic (and reboot) if there's a task
-in uninterruptible sleep for some minutes - at that moment something
-ugly has happened and the box needs a reboot.
-But we also want to detect conditions that are "out of range"
-or approaching the point of failure. Under such conditions we want
-to issue an "early warning" of an impending failure, minutes before
-the switch is going to panic.
+In order to enable the use of the zone from the list manipulator functions
+I will need access to the zone pointer. As it turns out most of the
+accessors were always just being directly passed &zone->free_area[order]
+anyway so it would make sense to just fold that into the function itself
+and pass the zone and order as arguments instead of the free area.
 
-Those "early warnings" serve a purpose while monitoring the network
-infrastructure. Those are also valuable on post-mortem analysis, when
-the logs from userspace applications aren't enough.
-Furthermore, we have a test pool of long-running duts that are
-constantly under close to real-world load for weeks. And such early
-warnings allowed to figure out some bottle necks without much engineer
-work intervention.
+In order to be able to reference the zone we need to move the declaration
+of the functions down so that we have the zone defined before we define the
+list manipulation functions.
 
-There are also not yet upstream patches for other kinds of "early
-warnings" as prints whenever a mutex/semaphore is released after being
-held for long time, but those patches are much more intricate and have
-their runtime cost.
-
-It seems rather easy to add printing tasks and their stacks for
-notification and debugging purposes into hung task detector without
-complicating the code or major cost (prints are with KERN_INFO loglevel
-and so don't go on console, only into dmesg log).
-
-Since commit a2e514453861 ("kernel/hung_task.c: allow to set checking
-interval separately from timeout") it's possible to set checking
-interval for hung task detector with `hung_task_check_interval_secs`.
-
-Provide `hung_task_interval_warnings` sysctl that allows printing
-hung tasks every detection interval. It's not ratelimited, so the root
-should be cautious configuring it.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Vasiliy Khoruzhick <vasilykh@arista.com>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 ---
- Documentation/admin-guide/sysctl/kernel.rst | 20 ++++++++-
- include/linux/sched/sysctl.h                |  1 +
- kernel/hung_task.c                          | 50 ++++++++++++++-------
- kernel/sysctl.c                             |  8 ++++
- 4 files changed, 62 insertions(+), 17 deletions(-)
+ include/linux/mmzone.h |   70 ++++++++++++++++++++++++++----------------------
+ mm/page_alloc.c        |   30 ++++++++-------------
+ 2 files changed, 49 insertions(+), 51 deletions(-)
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 032c7cd3cede..2e36620ec1e4 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -45,6 +45,7 @@ show up in /proc/sys/kernel:
- - hung_task_timeout_secs
- - hung_task_check_interval_secs
- - hung_task_warnings
-+- hung_task_interval_warnings
- - hyperv_record_panic_msg
- - kexec_load_disabled
- - kptr_restrict
-@@ -383,14 +384,29 @@ Possible values to set are in range {0..LONG_MAX/HZ}.
- hung_task_warnings:
- ===================
- 
--The maximum number of warnings to report. During a check interval
--if a hung task is detected, this value is decreased by 1.
-+The maximum number of warnings to report. If after timeout a hung
-+task is present, this value is decreased by 1 every check interval,
-+producing a warning.
- When this value reaches 0, no more warnings will be reported.
- This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
- 
- -1: report an infinite number of warnings.
- 
- 
-+hung_task_interval_warnings:
-+===================
-+
-+The same as hung_task_warnings, but set the number of interval
-+warnings to be issued about detected hung tasks during check
-+interval. That will produce warnings *before* the timeout happens.
-+If a hung task is detected during check interval, this value is
-+decreased by 1. When this value reaches 0, only timeout warnings
-+will be reported.
-+This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
-+
-+-1: report an infinite number of check interval warnings.
-+
-+
- hyperv_record_panic_msg:
- ========================
- 
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index d4f6215ee03f..89f55e914673 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -12,6 +12,7 @@ extern unsigned int  sysctl_hung_task_panic;
- extern unsigned long sysctl_hung_task_timeout_secs;
- extern unsigned long sysctl_hung_task_check_interval_secs;
- extern int sysctl_hung_task_warnings;
-+extern int sysctl_hung_task_interval_warnings;
- extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
- 					 void __user *buffer,
- 					 size_t *lenp, loff_t *ppos);
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 14a625c16cb3..cd971eef8226 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -49,6 +49,7 @@ unsigned long __read_mostly sysctl_hung_task_timeout_secs = CONFIG_DEFAULT_HUNG_
- unsigned long __read_mostly sysctl_hung_task_check_interval_secs;
- 
- int __read_mostly sysctl_hung_task_warnings = 10;
-+int __read_mostly sysctl_hung_task_interval_warnings;
- 
- static int __read_mostly did_panic;
- static bool hung_task_show_lock;
-@@ -85,6 +86,34 @@ static struct notifier_block panic_block = {
- 	.notifier_call = hung_task_panic,
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 738e9c758135..f0c68b6b6154 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -100,29 +100,6 @@ struct free_area {
+ 	unsigned long		nr_free;
  };
  
-+static void hung_task_warning(struct task_struct *t, bool timeout)
+-/* Used for pages not on another list */
+-static inline void add_to_free_area(struct page *page, struct free_area *area,
+-			     int migratetype)
+-{
+-	list_add(&page->lru, &area->free_list[migratetype]);
+-	area->nr_free++;
+-}
+-
+-/* Used for pages not on another list */
+-static inline void add_to_free_area_tail(struct page *page, struct free_area *area,
+-				  int migratetype)
+-{
+-	list_add_tail(&page->lru, &area->free_list[migratetype]);
+-	area->nr_free++;
+-}
+-
+-/* Used for pages which are on another list */
+-static inline void move_to_free_area(struct page *page, struct free_area *area,
+-			     int migratetype)
+-{
+-	list_move(&page->lru, &area->free_list[migratetype]);
+-}
+-
+ static inline struct page *get_page_from_free_area(struct free_area *area,
+ 					    int migratetype)
+ {
+@@ -130,15 +107,6 @@ static inline struct page *get_page_from_free_area(struct free_area *area,
+ 					struct page, lru);
+ }
+ 
+-static inline void del_page_from_free_area(struct page *page,
+-		struct free_area *area)
+-{
+-	list_del(&page->lru);
+-	__ClearPageBuddy(page);
+-	set_page_private(page, 0);
+-	area->nr_free--;
+-}
+-
+ static inline bool free_area_empty(struct free_area *area, int migratetype)
+ {
+ 	return list_empty(&area->free_list[migratetype]);
+@@ -787,6 +755,44 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
+ 	return !pgdat->node_start_pfn && !pgdat->node_spanned_pages;
+ }
+ 
++/* Used for pages not on another list */
++static inline void add_to_free_list(struct page *page, struct zone *zone,
++				    unsigned int order, int migratetype)
 +{
-+	const char *loglevel = timeout ? KERN_ERR : KERN_INFO;
-+	const char *path;
-+	int *warnings;
++	struct free_area *area = &zone->free_area[order];
 +
-+	if (timeout) {
-+		warnings = &sysctl_hung_task_warnings;
-+		path = "hung_task_timeout_secs";
-+	} else {
-+		warnings = &sysctl_hung_task_interval_warnings;
-+		path = "hung_task_interval_secs";
-+	}
-+
-+	if (*warnings > 0)
-+		--*warnings;
-+
-+	printk("%sINFO: task %s:%d blocked for more than %ld seconds.\n",
-+	       loglevel, t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
-+	printk("%s      %s %s %.*s\n",
-+		loglevel, print_tainted(), init_utsname()->release,
-+		(int)strcspn(init_utsname()->version, " "),
-+		init_utsname()->version);
-+	printk("%s\"echo 0 > /proc/sys/kernel/%s\" disables this message.\n",
-+		loglevel, path);
-+	sched_show_task(t);
++	list_add(&page->lru, &area->free_list[migratetype]);
++	area->nr_free++;
 +}
 +
- static void check_hung_task(struct task_struct *t, unsigned long timeout)
- {
- 	unsigned long switch_count = t->nvcsw + t->nivcsw;
-@@ -109,6 +138,9 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 		t->last_switch_time = jiffies;
- 		return;
- 	}
-+	if (sysctl_hung_task_interval_warnings)
-+		hung_task_warning(t, false);
++/* Used for pages not on another list */
++static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
++					 unsigned int order, int migratetype)
++{
++	struct free_area *area = &zone->free_area[order];
 +
- 	if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
- 		return;
++	list_add_tail(&page->lru, &area->free_list[migratetype]);
++	area->nr_free++;
++}
++
++/* Used for pages which are on another list */
++static inline void move_to_free_list(struct page *page, struct zone *zone,
++				     unsigned int order, int migratetype)
++{
++	struct free_area *area = &zone->free_area[order];
++
++	list_move(&page->lru, &area->free_list[migratetype]);
++}
++
++static inline void del_page_from_free_list(struct page *page, struct zone *zone,
++					   unsigned int order)
++{
++	list_del(&page->lru);
++	__ClearPageBuddy(page);
++	set_page_private(page, 0);
++	zone->free_area[order].nr_free--;
++}
++
+ #include <linux/memory_hotplug.h>
  
-@@ -120,22 +152,10 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 		hung_task_call_panic = true;
+ void build_all_zonelists(pg_data_t *pgdat);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3d612a6b1771..9a73f69b37af 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -920,7 +920,6 @@ static inline void __free_one_page(struct page *page,
+ 	struct capture_control *capc = task_capc(zone);
+ 	unsigned long uninitialized_var(buddy_pfn);
+ 	unsigned long combined_pfn;
+-	struct free_area *area;
+ 	unsigned int max_order;
+ 	struct page *buddy;
+ 
+@@ -957,7 +956,7 @@ static inline void __free_one_page(struct page *page,
+ 		if (page_is_guard(buddy))
+ 			clear_page_guard(zone, buddy, order, migratetype);
+ 		else
+-			del_page_from_free_area(buddy, &zone->free_area[order]);
++			del_page_from_free_list(buddy, zone, order);
+ 		combined_pfn = buddy_pfn & pfn;
+ 		page = page + (combined_pfn - pfn);
+ 		pfn = combined_pfn;
+@@ -991,12 +990,11 @@ static inline void __free_one_page(struct page *page,
+ done_merging:
+ 	set_page_order(page, order);
+ 
+-	area = &zone->free_area[order];
+ 	if (is_shuffle_order(order) ? shuffle_add_to_tail() :
+ 	    buddy_merge_likely(pfn, buddy_pfn, page, order))
+-		add_to_free_area_tail(page, area, migratetype);
++		add_to_free_list_tail(page, zone, order, migratetype);
+ 	else
+-		add_to_free_area(page, area, migratetype);
++		add_to_free_list(page, zone, order, migratetype);
+ }
+ 
+ /*
+@@ -2000,13 +1998,11 @@ void __init init_cma_reserved_pageblock(struct page *page)
+  * -- nyc
+  */
+ static inline void expand(struct zone *zone, struct page *page,
+-	int low, int high, struct free_area *area,
+-	int migratetype)
++	int low, int high, int migratetype)
+ {
+ 	unsigned long size = 1 << high;
+ 
+ 	while (high > low) {
+-		area--;
+ 		high--;
+ 		size >>= 1;
+ 		VM_BUG_ON_PAGE(bad_range(zone, &page[size]), &page[size]);
+@@ -2020,7 +2016,7 @@ static inline void expand(struct zone *zone, struct page *page,
+ 		if (set_page_guard(zone, &page[size], high, migratetype))
+ 			continue;
+ 
+-		add_to_free_area(&page[size], area, migratetype);
++		add_to_free_list(&page[size], zone, high, migratetype);
+ 		set_page_order(&page[size], high);
  	}
- 
--	/*
--	 * Ok, the task did not get scheduled for more than 2 minutes,
--	 * complain:
--	 */
- 	if (sysctl_hung_task_warnings) {
--		if (sysctl_hung_task_warnings > 0)
--			sysctl_hung_task_warnings--;
--		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
--		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
--		pr_err("      %s %s %.*s\n",
--			print_tainted(), init_utsname()->release,
--			(int)strcspn(init_utsname()->version, " "),
--			init_utsname()->version);
--		pr_err("\"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\""
--			" disables this message.\n");
--		sched_show_task(t);
-+		/* Don't print warings twice */
-+		if (!sysctl_hung_task_interval_warnings)
-+			hung_task_warning(t, true);
- 		hung_task_show_lock = true;
+ }
+@@ -2178,8 +2174,8 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
+ 		page = get_page_from_free_area(area, migratetype);
+ 		if (!page)
+ 			continue;
+-		del_page_from_free_area(page, area);
+-		expand(zone, page, order, current_order, area, migratetype);
++		del_page_from_free_list(page, zone, current_order);
++		expand(zone, page, order, current_order, migratetype);
+ 		set_pcppage_migratetype(page, migratetype);
+ 		return page;
  	}
+@@ -2187,7 +2183,6 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
+ 	return NULL;
+ }
  
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 078950d9605b..f12888971d66 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1147,6 +1147,14 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= &neg_one,
- 	},
-+	{
-+		.procname	= "hung_task_interval_warnings",
-+		.data		= &sysctl_hung_task_interval_warnings,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= &neg_one,
-+	},
+-
+ /*
+  * This array describes the order lists are fallen back to when
+  * the free lists for the desirable migrate type are depleted
+@@ -2264,7 +2259,7 @@ static int move_freepages(struct zone *zone,
+ 		}
+ 
+ 		order = page_order(page);
+-		move_to_free_area(page, &zone->free_area[order], migratetype);
++		move_to_free_list(page, zone, order, migratetype);
+ 		page += 1 << order;
+ 		pages_moved += 1 << order;
+ 	}
+@@ -2380,7 +2375,6 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+ 		unsigned int alloc_flags, int start_type, bool whole_block)
+ {
+ 	unsigned int current_order = page_order(page);
+-	struct free_area *area;
+ 	int free_pages, movable_pages, alike_pages;
+ 	int old_block_type;
+ 
+@@ -2451,8 +2445,7 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
+ 	return;
+ 
+ single_page:
+-	area = &zone->free_area[current_order];
+-	move_to_free_area(page, area, start_type);
++	move_to_free_list(page, zone, current_order, start_type);
+ }
+ 
+ /*
+@@ -3123,7 +3116,6 @@ void split_page(struct page *page, unsigned int order)
+ 
+ int __isolate_free_page(struct page *page, unsigned int order)
+ {
+-	struct free_area *area = &page_zone(page)->free_area[order];
+ 	unsigned long watermark;
+ 	struct zone *zone;
+ 	int mt;
+@@ -3149,7 +3141,7 @@ int __isolate_free_page(struct page *page, unsigned int order)
+ 
+ 	/* Remove page from free list */
+ 
+-	del_page_from_free_area(page, area);
++	del_page_from_free_list(page, zone, order);
+ 
+ 	/*
+ 	 * Set the pageblock if the isolated page is at least half of a
+@@ -8560,7 +8552,7 @@ void zone_pcp_reset(struct zone *zone)
+ 		pr_info("remove from free list %lx %d %lx\n",
+ 			pfn, 1 << order, end_pfn);
  #endif
- #ifdef CONFIG_RT_MUTEXES
- 	{
--- 
-2.22.0
+-		del_page_from_free_area(page, &zone->free_area[order]);
++		del_page_from_free_list(page, zone, order);
+ 		for (i = 0; i < (1 << order); i++)
+ 			SetPageReserved((page+i));
+ 		pfn += (1 << order);
 
