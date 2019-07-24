@@ -2,81 +2,79 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93687C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107B2C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6021B20840
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD0F320840
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563989779;
-	bh=d7nNqV18awpTuMCSYyFZPGYjZfbUX/qv0GznMbL1eaQ=;
+	s=default; t=1563989796;
+	bh=ag1dKbSmqw/2zROILLckE3Fu28kpQIVO2VyNvEmZCSc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F+joZ2AImWIHbH8x70Rj58ny6awRNdlyjXrSnhnrESc4ZyoSreoVtWGB8Tgm3VWUB
-	 1qH6JMGl1j9oYqj4qN6mx82HgHFCy0WKL+hEKW25kdeTY5a8xjqwgJZzT0aqNIHXlx
-	 vq+IhiESAwIMKgjcO5V4/1V8Htawb/2o5pyQ8OMo=
+	b=0WJCMqJmOkOSOWGTmHSohuKaFaXy7ruCHxBbEz7k9wdNJryLp8tesoCAojxo+HnCg
+	 +UhxkYmlAaQmKNQqYsx0jUDQbfP5YVkg9znOnhpRqNCT74Mj/epHjuSWdSxp2qBoOL
+	 w4oe1ydvHH8HNIQp3MWJg3TYUN9/jLuiLfPLmsug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387787AbfGXRgS (ORCPT
+        id S2387797AbfGXRgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36930 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 13:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfGXRgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:36:17 -0400
+        id S1726323AbfGXRgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:36:35 -0400
 Received: from gmail.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD1420840;
-        Wed, 24 Jul 2019 17:36:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41B7220840;
+        Wed, 24 Jul 2019 17:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563989776;
-        bh=d7nNqV18awpTuMCSYyFZPGYjZfbUX/qv0GznMbL1eaQ=;
+        s=default; t=1563989794;
+        bh=ag1dKbSmqw/2zROILLckE3Fu28kpQIVO2VyNvEmZCSc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i+qd6LwQlmSBZ5Qz308qr5/fi9FieRsuq3dBrWPw/3pM4A3Zmop1JDejc8FxmaxaF
-         gDZN6HAXnNluAmXxUdluw1DbG+hFOB4oRmUzu19AJWBmzxjhGE9csHGUOyhoLBBo9Q
-         q+WC6XcDirlnpdLtr8MPdEggD2O2dy94NN9xeR04=
-Date:   Wed, 24 Jul 2019 10:36:14 -0700
+        b=zDE9hpKixKjZrOH1c2/JAj1Gz3YRu0AsdqOy2sJGpDMhtnA2srhCq4cES5Qc0YvPF
+         OZHXhTIwX/gj4lzkCIKwq/SQpBbYhiBz6vrhfsKDQ3FlfU+VdKk6RgvO/14V5e7T+f
+         pkXfejl+Qn6+A7jdJM5CuwAUtsn9izhqqIUwEPHM=
+Date:   Wed, 24 Jul 2019 10:36:32 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+5afa6eb0187aa0db10d0@syzkaller.appspotmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: net boot error: WARNING: workqueue cpumask: online intersect >
- possible intersect (2)
-Message-ID: <20190724173613.GC213255@gmail.com>
-Mail-Followup-To: syzbot <syzbot+5afa6eb0187aa0db10d0@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <00000000000078388a058e536fbd@google.com>
+To:     syzbot <syzbot+617bb3fa2faf71627289@syzkaller.appspotmail.com>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: upstream boot error: WARNING: workqueue cpumask: online
+ intersect > possible intersect
+Message-ID: <20190724173632.GD213255@gmail.com>
+Mail-Followup-To: syzbot <syzbot+617bb3fa2faf71627289@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <000000000000cbc503058e2c5177@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00000000000078388a058e536fbd@google.com>
+In-Reply-To: <000000000000cbc503058e2c5177@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 11:38:07PM -0700, syzbot wrote:
+On Sun, Jul 21, 2019 at 12:58:05AM -0700, syzbot wrote:
 > Hello,
 > 
 > syzbot found the following crash on:
 > 
-> HEAD commit:    12185dfe bonding: Force slave speed check after link state..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1299b07c600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9aec8cb13b5f7389
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5afa6eb0187aa0db10d0
+> HEAD commit:    f1a3b43c Merge branch 'for-linus' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1456d348600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=19dd7cf81d8c8469
+> dashboard link: https://syzkaller.appspot.com/bug?extid=617bb3fa2faf71627289
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 > 
 > Unfortunately, I don't have any reproducer for this crash yet.
 > 
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+5afa6eb0187aa0db10d0@syzkaller.appspotmail.com
+> Reported-by: syzbot+617bb3fa2faf71627289@syzkaller.appspotmail.com
 > 
 > smpboot: CPU0: Intel(R) Xeon(R) CPU @ 2.30GHz (family: 0x6, model: 0x3f,
 > stepping: 0x0)
@@ -98,7 +96,7 @@ On Mon, Jul 22, 2019 at 11:38:07PM -0700, syzbot wrote:
 > 19112604462750000 ns
 > futex hash table entries: 512 (order: 4, 65536 bytes, vmalloc)
 > xor: automatically using best checksumming function   avx
-> PM: RTC time: 23:29:51, date: 2019-07-22
+> PM: RTC time: 23:47:05, date: 2019-07-20
 > NET: Registered protocol family 16
 > audit: initializing netlink subsys (disabled)
 > cpuidle: using governor menu
@@ -109,20 +107,20 @@ On Mon, Jul 22, 2019 at 11:38:07PM -0700, syzbot wrote:
 > HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
 > HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
 > cryptd: max_cpu_qlen set to 1000
-> raid6: avx2x4   gen() 12501 MB/s
-> raid6: avx2x4   xor()  6221 MB/s
-> raid6: avx2x2   gen()  4903 MB/s
-> raid6: avx2x2   xor()  3850 MB/s
-> raid6: avx2x1   gen()  1521 MB/s
-> raid6: avx2x1   xor()  2163 MB/s
-> raid6: sse2x4   gen()  6232 MB/s
-> raid6: sse2x4   xor()  3408 MB/s
-> raid6: sse2x2   gen()  3865 MB/s
-> raid6: sse2x2   xor()  1956 MB/s
-> raid6: sse2x1   gen()  1278 MB/s
-> raid6: sse2x1   xor()   961 MB/s
-> raid6: using algorithm avx2x4 gen() 12501 MB/s
-> raid6: .... xor() 6221 MB/s, rmw enabled
+> raid6: avx2x4   gen() 12030 MB/s
+> raid6: avx2x4   xor()  6604 MB/s
+> raid6: avx2x2   gen()  7204 MB/s
+> raid6: avx2x2   xor()  3631 MB/s
+> raid6: avx2x1   gen()  3894 MB/s
+> raid6: avx2x1   xor()  1973 MB/s
+> raid6: sse2x4   gen()  5678 MB/s
+> raid6: sse2x4   xor()  3254 MB/s
+> raid6: sse2x2   gen()  3598 MB/s
+> raid6: sse2x2   xor()  1878 MB/s
+> raid6: sse2x1   gen()  1864 MB/s
+> raid6: sse2x1   xor()   986 MB/s
+> raid6: using algorithm avx2x4 gen() 12030 MB/s
+> raid6: .... xor() 6604 MB/s, rmw enabled
 > raid6: using avx2x2 recovery algorithm
 > ACPI: Added _OSI(Module Device)
 > ACPI: Added _OSI(Processor Device)
@@ -299,32 +297,89 @@ On Mon, Jul 22, 2019 at 11:38:07PM -0700, syzbot wrote:
 > Loading iSCSI transport class v2.0-870.
 > scsi host0: Virtio SCSI HBA
 > st: Version 20160209, fixed bufsize 32768, s/g segs 256
-> kobject: 'sd' (00000000e065d5f3): kobject_uevent_env
-> kobject: 'sd' (00000000e065d5f3): fill_kobj_path: path =
+> kobject: 'sd' (00000000b49c372c): kobject_uevent_env
+> kobject: 'sd' (00000000b49c372c): fill_kobj_path: path =
 > '/bus/scsi/drivers/sd'
-> kobject: 'sr' (00000000bcad56ad): kobject_add_internal: parent: 'drivers',
+> kobject: 'sr' (00000000a6862356): kobject_add_internal: parent: 'drivers',
 > set: 'drivers'
-> kobject: 'sr' (00000000bcad56ad): kobject_uevent_env
-> kobject: 'sr' (00000000bcad56ad): fill_kobj_path: path =
+> kobject: 'sr' (00000000a6862356): kobject_uevent_env
+> kobject: 'sr' (00000000a6862356): fill_kobj_path: path =
 > '/bus/scsi/drivers/sr'
-> kobject: 'scsi_generic' (0000000071c7cad3): kobject_add_internal: parent:
+> kobject: 'scsi_generic' (00000000d8a5b23f): kobject_add_internal: parent:
 > 'class', set: 'class'
-> kobject: 'scsi_generic' (0000000071c7cad3): kobject_uevent_env
-> kobject: 'scsi_generic' (0000000071c7cad3): fill_kobj_path: path =
+> kobject: 'scsi_generic' (00000000d8a5b23f): kobject_uevent_env
+> kobject: 'scsi_generic' (00000000d8a5b23f): fill_kobj_path: path =
 > '/class/scsi_generic'
-> kobject: 'nvme-wq' (000000003997c013): kobject_add_internal: parent:
+> kobject: 'nvme-wq' (000000007f0c1f5a): kobject_add_internal: parent:
 > 'workqueue', set: 'devices'
-> kobject: 'nvme-wq' (000000003997c013): kobject_uevent_env
-> kobject: 'nvme-wq' (000000003997c013): kobject_uevent_env: uevent_suppress
+> kobject: 'nvme-wq' (000000007f0c1f5a): kobject_uevent_env
+> kobject: 'nvme-wq' (000000007f0c1f5a): kobject_uevent_env: uevent_suppress
 > caused the event to drop!
-> kobject: 'nvme-wq' (000000003997c013): kobject_uevent_env
-> kobject: 'nvme-wq' (000000003997c013): fill_kobj_path: path =
+> kobject: 'nvme-wq' (000000007f0c1f5a): kobject_uevent_env
+> kobject: 'nvme-wq' (000000007f0c1f5a): fill_kobj_path: path =
 > '/devices/virtual/workqueue/nvme-wq'
-> kobject: 'nvme-reset-wq' (0000000085d6a1b9): kobject_add_internal: parent:
+> kobject: 'nvme-reset-wq' (0000000096836f26): kobject_add_internal: parent:
 > 'workqueue', set: 'devices'
-> kobject: 'nvme-reset-wq' (0000000085d6a1b9): kobject_uevent_env
-> kobject: 'nvme-reset-wq' (0000000085d6a1b9): kobject_uevent_env:
+> kobject: 'nvme-reset-wq' (0000000096836f26): kobject_uevent_env
+> kobject: 'nvme-reset-wq' (0000000096836f26): kobject_uevent_env:
 > uevent_suppress caused the event to drop!
+> kobject: 'nvme-reset-wq' (0000000096836f26): kobject_uevent_env
+> kobject: 'nvme-reset-wq' (0000000096836f26): fill_kobj_path: path =
+> '/devices/virtual/workqueue/nvme-reset-wq'
+> kobject: 'nvme-delete-wq' (000000003683ec6a): kobject_add_internal: parent:
+> 'workqueue', set: 'devices'
+> kobject: 'nvme-delete-wq' (000000003683ec6a): kobject_uevent_env
+> kobject: 'nvme-delete-wq' (000000003683ec6a): kobject_uevent_env:
+> uevent_suppress caused the event to drop!
+> kobject: 'nvme-delete-wq' (000000003683ec6a): kobject_uevent_env
+> kobject: 'nvme-delete-wq' (000000003683ec6a): fill_kobj_path: path =
+> '/devices/virtual/workqueue/nvme-delete-wq'
+> kobject: 'nvme' (00000000d89c8145): kobject_add_internal: parent: 'class',
+> set: 'class'
+> kobject: 'nvme' (00000000d89c8145): kobject_uevent_env
+> kobject: 'nvme' (00000000d89c8145): fill_kobj_path: path = '/class/nvme'
+> kobject: 'nvme-subsystem' (0000000043898737): kobject_add_internal: parent:
+> 'class', set: 'class'
+> kobject: 'nvme-subsystem' (0000000043898737): kobject_uevent_env
+> kobject: 'nvme-subsystem' (0000000043898737): fill_kobj_path: path =
+> '/class/nvme-subsystem'
+> kobject: 'nvme' (0000000036e1f73d): kobject_add_internal: parent: 'drivers',
+> set: 'drivers'
+> kobject: 'drivers' (00000000cb9e764c): kobject_add_internal: parent: 'nvme',
+> set: '<NULL>'
+> kobject: 'nvme' (0000000036e1f73d): kobject_uevent_env
+> kobject: 'nvme' (0000000036e1f73d): fill_kobj_path: path =
+> '/bus/pci/drivers/nvme'
+> kobject: 'ahci' (00000000928dd74b): kobject_add_internal: parent: 'drivers',
+> set: 'drivers'
+> kobject: 'drivers' (00000000b51b8ff3): kobject_add_internal: parent: 'ahci',
+> set: '<NULL>'
+> kobject: 'ahci' (00000000928dd74b): kobject_uevent_env
+> kobject: 'ahci' (00000000928dd74b): fill_kobj_path: path =
+> '/bus/pci/drivers/ahci'
+> kobject: 'ata_piix' (00000000810e7425): kobject_add_internal: parent:
+> 'drivers', set: 'drivers'
+> kobject: 'drivers' (00000000ad49f648): kobject_add_internal: parent:
+> 'ata_piix', set: '<NULL>'
+> kobject: 'ata_piix' (00000000810e7425): kobject_uevent_env
+> kobject: 'ata_piix' (00000000810e7425): fill_kobj_path: path =
+> '/bus/pci/drivers/ata_piix'
+> kobject: 'pata_amd' (00000000aa4ed36e): kobject_add_internal: parent:
+> 'drivers', set: 'drivers'
+> kobject: 'drivers' (000000007e085244): kobject_add_internal: parent:
+> 'pata_amd', set: '<NULL>'
+> kobject: 'pata_amd' (00000000aa4ed36e): kobject_uevent_env
+> kobject: 'pata_amd' (00000000aa4ed36e): fill_kobj_path: path =
+> '/bus/pci/drivers/pata_amd'
+> kobject: 'pata_oldpiix' (000000005d80b7b2): kobject_add_internal: parent:
+> 'drivers', set: 'drivers'
+> kobject: 'drivers' (000000008000d66e): kobject_add_internal: parent:
+> 'pata_oldpiix', set: '<NULL>'
+> kobject: 'pata_oldpiix' (000000005d80b7b2): kobject_uevent_env
+> kobject: 'pata_oldpiix' (000000005d80b7b2): fill_kobj_path: path =
+> '/bus/pci/drivers/pata_oldpiix'
+> kobject: 'pata_sch' (00000000bb97bce7): kobject_add_internal: parent:
+> 'drivers', set: 'drivers'
 > 
 > 
 > ---
@@ -338,6 +393,6 @@ On Mon, Jul 22, 2019 at 11:38:07PM -0700, syzbot wrote:
 > -- 
 > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000078388a058e536fbd%40google.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000cbc503058e2c5177%40google.com.
 
 #syz dup: linux-next boot error: WARNING: workqueue cpumask: online intersect > possible intersect
