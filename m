@@ -2,53 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84088C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD995C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CD920659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F700229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996591;
-	bh=rwpYAFFP66pvd1T+pqBLTPqnTByuUEyJCshjGZGVTyM=;
+	s=default; t=1563996596;
+	bh=1IhLdSTJ384CIEvJIEt8sq+hnX1k7Ne5k/kgyLm0Ezg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wX9kTgn1wxXbRaAA6gMfdttA265TkGgEV8aliLyY2jN8VfAPT0CAKisboryRWVu/e
-	 meOMOujwtnTYiaOKXNf3Hm3A8O/caVuDDvOT4jjmQK4hUEA4cwrNZ5IswcFtDE9qC8
-	 AzrfTYTLDlFVi/VfgRUdHNQPFRKyARn8ze1xSgMo=
+	b=AoqxfWXepRksQow9RxICaANTl11Mxt9iDTaxLXSba0EtUjvV5PDZfxWufE7GUZZ1M
+	 sm0us3vKvYP9RjB5BGh3v2g+8bBCO/Kfm5/NMzTc60I481grT3ySLQpsd1gjn31V3W
+	 hiAxg2jo0EzOw2uewDaZybbHrchzuaLPu3L1Klf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387855AbfGXT3u (ORCPT
+        id S2387990AbfGXT3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:29:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729049AbfGXT3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:29:48 -0400
+        id S2387978AbfGXT3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:29:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F70A20659;
-        Wed, 24 Jul 2019 19:29:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B008A229FA;
+        Wed, 24 Jul 2019 19:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996587;
-        bh=rwpYAFFP66pvd1T+pqBLTPqnTByuUEyJCshjGZGVTyM=;
+        s=default; t=1563996590;
+        bh=1IhLdSTJ384CIEvJIEt8sq+hnX1k7Ne5k/kgyLm0Ezg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUsh1C4JmvNDkHRLyZK/MRwSGdC7hLz890c6LprFz5nPdPz6K4QZqlGErm7D7+tJu
-         FGwMtEqsfGGKY+ctyHuoaYirqpCkHeUus1AwCGbSYcBDdR92eWGoTpwlI1nfK+27Vd
-         TcbwrMJ/4KsWjWdIKoOoRDhjAONOz8cv2hbiQf1Q=
+        b=X7FIN5LMjLLgKnwzNYEGEbv3aMOtYKLPfTuLuj7uN+dZRk+PpnpOW7xTxi1UTBbr+
+         3yo3UuCQWidP3fXaEtq90Zc4X2t3pXbeoTQtn173g5t4ndxBGsmdn0EcHDBFND/CFY
+         qk1hq7ePKi5vlSzh5KE3LxsC+k2Nl91wFhFwXerw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 148/413] media: coda: fix mpeg2 sequence number handling
-Date:   Wed, 24 Jul 2019 21:17:19 +0200
-Message-Id: <20190724191745.532716587@linuxfoundation.org>
+Subject: [PATCH 5.2 122/413] perf build: Handle slang being in /usr/include and in /usr/include/slang/
+Date:   Wed, 24 Jul 2019 21:16:53 +0200
+Message-Id: <20190724191743.928000697@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,44 +63,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 56d159a4ec6d8da7313aac6fcbb95d8fffe689ba ]
+[ Upstream commit 78d6ccce03e86de34c7000bcada493ed0679e350 ]
 
-Sequence number handling assumed that the BIT processor frame number
-starts counting at 1, but this is not true for the MPEG-2 decoder,
-which starts at 0. Fix the sequence counter offset detection to handle
-this.
+In some distros slang.h may be in a /usr/include 'slang' subdir, so use
+the if slang is not explicitely disabled (by using NO_SLANG=1) and its
+feature test for the common case (having /usr/include/slang.h) failed,
+use the results for the test that checks if it is in slang/slang.h.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Change the only file in perf that includes slang.h to use
+HAVE_SLANG_INCLUDE_SUBDIR and forget about this for good.
+
+On a rhel6 system now we have:
+
+  $ /tmp/build/perf/perf -vv | grep slang
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+  $ ldd /tmp/build/perf/perf | grep libslang
+  	libslang.so.2 => /usr/lib64/libslang.so.2 (0x00007fa2d5a8d000)
+  $ grep slang /tmp/build/perf/FEATURE-DUMP
+  feature-libslang=0
+  feature-libslang-include-subdir=1
+  $ cat /etc/redhat-release
+  CentOS release 6.10 (Final)
+  $
+
+While on fedora:29:
+
+  $ /tmp/build/perf/perf -vv | grep slang
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+  $ ldd /tmp/build/perf/perf | grep slang
+  	libslang.so.2 => /lib64/libslang.so.2 (0x00007f8eb11a7000)
+  $ grep slang /tmp/build/perf/FEATURE-DUMP
+  feature-libslang=1
+  feature-libslang-include-subdir=1
+  $
+  $ cat /etc/fedora-release
+  Fedora release 29 (Twenty Nine)
+  $
+
+The feature-libslang-include-subdir=1 line is because the 'gettid()'
+test was added to test-all.c as the new glibc has an implementation for
+that, so we soon should have it not failing, i.e. should be the common
+case soon. Perhaps I should move it out till it becomes the norm...
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 1955c8cf5e26 ("perf tools: Don't hardcode host include path for libslang")
+Link: https://lkml.kernel.org/n/tip-bkgtpsu3uit821fuwsdhj9gd@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/coda/coda-bit.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.config | 11 ++++++++---
+ tools/perf/ui/libslang.h   |  5 +++++
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index 976f6aa69f41..1eeed34f300d 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -1739,6 +1739,7 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
- 		v4l2_err(&dev->v4l2_dev, "CODA_COMMAND_SEQ_INIT timeout\n");
- 		return ret;
- 	}
-+	ctx->sequence_offset = ~0U;
- 	ctx->initialized = 1;
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 85fbcd265351..17b81bc403e4 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -637,9 +637,14 @@ endif
  
- 	/* Update kfifo out pointer from coda bitstream read pointer */
-@@ -2151,7 +2152,9 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		v4l2_err(&dev->v4l2_dev,
- 			 "decoded frame index out of range: %d\n", decoded_idx);
- 	} else {
--		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM) - 1;
-+		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM);
-+		if (ctx->sequence_offset == -1)
-+			ctx->sequence_offset = val;
- 		val -= ctx->sequence_offset;
- 		spin_lock(&ctx->buffer_meta_lock);
- 		if (!list_empty(&ctx->buffer_meta_list)) {
+ ifndef NO_SLANG
+   ifneq ($(feature-libslang), 1)
+-    msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
+-    NO_SLANG := 1
+-  else
++    ifneq ($(feature-libslang-include-subdir), 1)
++      msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
++      NO_SLANG := 1
++    else
++      CFLAGS += -DHAVE_SLANG_INCLUDE_SUBDIR
++    endif
++  endif
++  ifndef NO_SLANG
+     # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
+     CFLAGS += -I/usr/include/slang
+     CFLAGS += -DHAVE_SLANG_SUPPORT
+diff --git a/tools/perf/ui/libslang.h b/tools/perf/ui/libslang.h
+index c0686cda39a5..991e692b9b46 100644
+--- a/tools/perf/ui/libslang.h
++++ b/tools/perf/ui/libslang.h
+@@ -10,7 +10,12 @@
+ #ifndef HAVE_LONG_LONG
+ #define HAVE_LONG_LONG __GLIBC_HAVE_LONG_LONG
+ #endif
++
++#ifdef HAVE_SLANG_INCLUDE_SUBDIR
++#include <slang/slang.h>
++#else
+ #include <slang.h>
++#endif
+ 
+ #if SLANG_VERSION < 20104
+ #define slsmg_printf(msg, args...) \
 -- 
 2.20.1
 
