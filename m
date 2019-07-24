@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FEBC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB3AC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56CC1229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795872190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfGXLMd (ORCPT
+        id S1727492AbfGXLMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:12:33 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:45414 "EHLO
+        Wed, 24 Jul 2019 07:12:41 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:45452 "EHLO
         kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfGXLMc (ORCPT
+        with ESMTP id S1726622AbfGXLMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:12:32 -0400
+        Wed, 24 Jul 2019 07:12:41 -0400
 Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 1176C25BE45;
-        Wed, 24 Jul 2019 21:12:30 +1000 (AEST)
+        by kirsty.vergenet.net (Postfix) with ESMTPA id DCC9025BE43;
+        Wed, 24 Jul 2019 21:12:38 +1000 (AEST)
 Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id F34ACE22041; Wed, 24 Jul 2019 13:12:27 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 13:12:27 +0200
+        id E2DF5E22041; Wed, 24 Jul 2019 13:12:36 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 13:12:36 +0200
 From:   Simon Horman <horms@verge.net.au>
 To:     Magnus Damm <magnus.damm@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, geert+renesas@glider.be,
         daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org,
         robh+dt@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH 6/7] clocksource/drivers/sh_cmt: r8a7740 and sh73a0
- SoC-specific match
-Message-ID: <20190724111227.qaeq3d5mkeyvlkq3@verge.net.au>
+Subject: Re: [PATCH 1/7] dt-bindings: timer: renesas, cmt: Add CMT0234 to
+ sh73a0 and r8a7740
+Message-ID: <20190724111236.gkhs22rizwalpc63@verge.net.au>
 References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
- <156345032407.5307.16702422867507502597.sendpatchset@octo>
+ <156345025207.5307.17135263586186534810.sendpatchset@octo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156345032407.5307.16702422867507502597.sendpatchset@octo>
+In-Reply-To: <156345025207.5307.17135263586186534810.sendpatchset@octo>
 Organisation: Horms Solutions BV
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,44 +48,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 08:45:24PM +0900, Magnus Damm wrote:
+On Thu, Jul 18, 2019 at 08:44:12PM +0900, Magnus Damm wrote:
 > From: Magnus Damm <damm+renesas@opensource.se>
 > 
-> Add SoC-specific matching for CMT1 on r8a7740 and sh73a0.
+> Document the on-chip CMT devices included in r8a7740 and sh73a0.
 > 
-> This allows us to move away from the old DT bindings such as
->  - "renesas,cmt-48-sh73a0"
->  - "renesas,cmt-48-r8a7740"
->  - "renesas,cmt-48"
-> in favour for the now commonly used format "renesas,<soc>-<device>"
+> Included in this patch is DT binding documentation for 32-bit CMTs
+> CMT0, CMT2, CMT3 and CMT4. They all contain a single channel and are
+> quite similar however some minor differences still exist:
+>  - "Counter input clock" (clock input and on-device divider)
+>     One example is that RCLK 1/1 is supported by CMT2, CMT3 and CMT4.
+>  - "Wakeup request" (supported by CMT0 and CMT2)
+> 
+> Because of this one unique compat string per CMT device is selected.
 > 
 > Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-> ---
-> 
->  drivers/clocksource/sh_cmt.c |    8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> --- 0001/drivers/clocksource/sh_cmt.c
-> +++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:29:06.005414716 +0900
-> @@ -928,6 +928,14 @@ static const struct of_device_id sh_cmt_
->  		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
->  	},
->  	{
-> +		.compatible = "renesas,r8a7740-cmt1",
-> +		.data = &sh_cmt_info[SH_CMT_48BIT]
-
-Perhaps as a follow-up SH_CMT_48BIT could be renamed.
-
-> +	},
-> +	{
-> +		.compatible = "renesas,sh73a0-cmt1",
-> +		.data = &sh_cmt_info[SH_CMT_48BIT]
-> +	},
-> +	{
->  		.compatible = "renesas,rcar-gen2-cmt0",
->  		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
->  	},
-> 
