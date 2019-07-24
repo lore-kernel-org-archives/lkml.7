@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B654C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECDEC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3018221926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72C2E21926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xkgsa/Cl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSyicQVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfGXNSb (ORCPT
+        id S1728574AbfGXNSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:18:31 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46551 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbfGXNSa (ORCPT
+        Wed, 24 Jul 2019 09:18:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43149 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbfGXNSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:18:30 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k189so2189440pgk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 06:18:30 -0700 (PDT)
+        Wed, 24 Jul 2019 09:18:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so20955205pfg.10;
+        Wed, 24 Jul 2019 06:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=58NE73M0r5hjm0WUUevmLq8PxtOTnsid6fgLOJ13Opg=;
-        b=Xkgsa/CljPnpVUWG8yC4aP2YpnKxPeExw01tJFF5kLL1+7YSGWREw1ayN8ywjE6EdL
-         QdGIKJ3LvtIjcXkimtxCJMK4vboEeadsidsv59DuJ7I4OziTp42oi5AYSTmGJNpoAcoU
-         z2734i5l0O/rjiU22Q2Ej0gDDmWO92ozNMrYAQorBeEl3AXMhe1+5VN3sZdYwY7zBysi
-         9fWazRPxFZE/AvWXqu8OuevHTN2yrGzukwPNQSPczO0P6csFMkLBn1iA4HncDqQ7fvvr
-         WbF0rr1Uclbbnx4FAvzyXzymGJPx0ywdytB1tKFmfslNNbr4/U/Q1XNJYb1HJgn/P6hj
-         gPig==
+        bh=AQG2eHs7d/jEQNZdhaaQxZqRLlvGRTN9PHj+B+aWods=;
+        b=mSyicQVhuxp5RfTuWIlsi3I2S7iMekb4AMI28k+2m/G7MrUeYHu2V67tpE3drpIuQA
+         hhRDQ3mr7oHwEPhkPpy1r+GCKpDHm4x/XiKu9pFssgoi/MZ47unyvL5KAZysXsG6Wveo
+         cdm6A5suSH7efFMEd9ZimNUdGBr9hr0PQgjXwMqz3q11524QXS5ugOuCn3gO8l6gKBfY
+         Rj+cOR2oJfZZoyPTYEEXRRY+w5dV5rMP0krQXAatRetQVx/04r4Usm3DK6ImYhpFYwn2
+         c1WJxbKY8RKs0CUNe0ceZPpdBjQQGFhN5KDXblJwugkUAek1vBg7julg3a7Uxg9vPTKW
+         TuwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=58NE73M0r5hjm0WUUevmLq8PxtOTnsid6fgLOJ13Opg=;
-        b=jstF+RzJwLiDKOiv27fi599CFijYYnRYlcK8LP0igMjE6Dx4eLj+M7vvylifyAr+o7
-         Es4STWOmmiqM10oIVKSBSBGpelmSucdvKDdIazbR+5V71hQtqbhhpvbLBVP++h8+L5DZ
-         X21oGVCR0Rvh0+Ndd8w6iqddZF1APnT/fUcZ3s4yCdJpSePo5iMSNZrUz8UN2ZmY6n0R
-         tweIFTQQflovcp8zNjd5k3Fb4RvIgn9h3inVJb9AevEl7uCuHlB8Uf2VJvEmEVW5NJoH
-         z2XaO/EHrq6UEXMAFHusLLqawX16QXmj+LTwTSAlh5LeoJn+ma6ETWoAaGZktGkzDdbl
-         XOEQ==
-X-Gm-Message-State: APjAAAWY5dLGC2ysXPvG4qVp502ZyRvF8BPbZRi3kA+a/31egJmxborQ
-        yLY7VhaThA6pWWH5m6sFesrEHqSsdmY=
-X-Google-Smtp-Source: APXvYqxLjLCAiJdfFzVuAB48y4E2Afr1w30QjU45qFY1v6uOzGvMXeC1FfpxJW1obUqPz7XghLSebA==
-X-Received: by 2002:a17:90a:9488:: with SMTP id s8mr89946755pjo.2.1563974309961;
-        Wed, 24 Jul 2019 06:18:29 -0700 (PDT)
+        bh=AQG2eHs7d/jEQNZdhaaQxZqRLlvGRTN9PHj+B+aWods=;
+        b=nfsra4OtXclJNOHEIVI+t4dSsjeJfK9ACBXhrNvybjTWZsNhwrVO2TMYKIiWnDrjBs
+         j8egN4hDDX0xLhC9YP2lmB6174l+AP0QwLOVNJhJRYC+M2Qk3P9lRvMqb3m9lpAxdBSu
+         2hu4NnAOVVIKoWKK6RFi4W4Wuqceu5pb/ARlUeUtWhFURIpHRFp/GNyvFs9Hn472EsgG
+         q2VC5Qcl0BHkz/SgvNs1IgTA5XM5gRgGLfySNG/OuVPilREj2oNorRggZo2iiHX8AmH9
+         s3k32eMMQfaPw1zl/BPKLhP8rE2M1SIu7UUSt8l/OzEUZqCq8DHOEwoWtQqrVke9fJyL
+         YTfw==
+X-Gm-Message-State: APjAAAUrnOp9oHRUm3ZlUe03VUCXR3dV46F040bNUI6wkJB2Ia3WMMPZ
+        Zwby4Dff7DKMfLbZurexwqO3tsZXWQw=
+X-Google-Smtp-Source: APXvYqyc3HgDcn5q+48BQzPuIRU9pWJKo7NoNkXpidsgmu4rmMuhz1xWVUPWqzXtfkFFjtyFJrp6cg==
+X-Received: by 2002:a65:5043:: with SMTP id k3mr23620512pgo.406.1563974322551;
+        Wed, 24 Jul 2019 06:18:42 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id b3sm61106388pfp.65.2019.07.24.06.18.27
+        by smtp.gmail.com with ESMTPSA id p20sm72562330pgj.47.2019.07.24.06.18.40
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 06:18:29 -0700 (PDT)
+        Wed, 24 Jul 2019 06:18:41 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] tty: nozomi: Use dev_get_drvdata
-Date:   Wed, 24 Jul 2019 21:18:25 +0800
-Message-Id: <20190724131825.1875-1-hslester96@gmail.com>
+Subject: [PATCH] USB: core: hcd-pci: Use dev_get_drvdata where possible
+Date:   Wed, 24 Jul 2019 21:18:38 +0800
+Message-Id: <20190724131838.1931-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,31 +78,23 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/tty/nozomi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/hcd-pci.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/tty/nozomi.c b/drivers/tty/nozomi.c
-index 3214e22e79f3..ed99948f3b7f 100644
---- a/drivers/tty/nozomi.c
-+++ b/drivers/tty/nozomi.c
-@@ -1282,7 +1282,7 @@ static void nozomi_setup_private_data(struct nozomi *dc)
- static ssize_t card_type_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
--	const struct nozomi *dc = pci_get_drvdata(to_pci_dev(dev));
-+	const struct nozomi *dc = dev_get_drvdata(dev);
+diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
+index 03432467b05f..03bee698d7eb 100644
+--- a/drivers/usb/core/hcd-pci.c
++++ b/drivers/usb/core/hcd-pci.c
+@@ -407,8 +407,7 @@ static inline void powermac_set_asic(struct pci_dev *pci_dev, int enable)
  
- 	return sprintf(buf, "%d\n", dc->card_type);
- }
-@@ -1291,7 +1291,7 @@ static DEVICE_ATTR_RO(card_type);
- static ssize_t open_ttys_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
+ static int check_root_hub_suspended(struct device *dev)
  {
--	const struct nozomi *dc = pci_get_drvdata(to_pci_dev(dev));
-+	const struct nozomi *dc = dev_get_drvdata(dev);
+-	struct pci_dev		*pci_dev = to_pci_dev(dev);
+-	struct usb_hcd		*hcd = pci_get_drvdata(pci_dev);
++	struct usb_hcd		*hcd = dev_get_drvdata(dev);
  
- 	return sprintf(buf, "%u\n", dc->open_ttys);
- }
+ 	if (HCD_RH_RUNNING(hcd)) {
+ 		dev_warn(dev, "Root hub is not suspended\n");
 -- 
 2.20.1
 
