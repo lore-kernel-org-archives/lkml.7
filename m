@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FB1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2D5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC282147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE7622ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998472;
-	bh=CqM/3sez9hDpYLVaIcw1Q3PHotGioltshOsUtlzve/8=;
+	s=default; t=1563998474;
+	bh=kEHKA4EUTrNeERxwRQ+APkr3hFEhUC2gW5svMuPHzJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CFnp/A7a8XKuKn4KHg/YZwHL464H0e5moUcjdPqfASltBjNCgSsBJLU+cAMXRunWd
-	 ShjrFss+uvy6SUuQfHQ6MBil9NFEwWg67YXit1/YFQhpekba2+Wl8iBeO7pdCgQo6K
-	 Ph7E6ghx/AMtWFOn3apqOxtLK/nDOeqA7CQB7ZZY=
+	b=CgAZLzjpdraJ/BvLKOMmptpKd7kS7k8Tr0ga6DiJS5IYWD6qgpE3uBGbxvv56rHcL
+	 jifl+iT8zWgU6Tbx/n75bBeITc+QWuJUO/+72h2S2dlXp3CKnavoOg97gWSfUwXcO0
+	 NUpvNszUS/XSscQ2IMNTzZVeEDsFsW9c33p0LWiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405355AbfGXUBK (ORCPT
+        id S2405369AbfGXUBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49658 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391853AbfGXUBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:07 -0400
+        id S2405350AbfGXUBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B0F206BA;
-        Wed, 24 Jul 2019 20:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC535205C9;
+        Wed, 24 Jul 2019 20:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998466;
-        bh=CqM/3sez9hDpYLVaIcw1Q3PHotGioltshOsUtlzve/8=;
+        s=default; t=1563998469;
+        bh=kEHKA4EUTrNeERxwRQ+APkr3hFEhUC2gW5svMuPHzJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1PEk1Wlb73wMRPM5gNw34rOlPGRQe78bz/b4eIA9Mx/4WVVaIthe1dv59qe5R+wPC
-         dw0HXEfRAAm0bz36EKs8pGYLjWg27cdWIOyH62LqeEnybHe2NSfytjbZJuXjPxXN+6
-         dUaLbqPvBgpVr7pnLNgXgDJU7ZQy9kh6MR9htdL4=
+        b=vWBORWmwSPoDt54kkpUD+iTsDXiAPO254V3nTPGcYpxDdkUjG7W2PAlzfLCitT2dH
+         8vlhV6HqyWTpfmWX8RRBQQ0n6MNmlnperE6L3E0ycSef9B+m2ZOQLPCFfnjyO+r3D0
+         g0C2cmtw9eCrQz39BZu9d1lzlseyb2/syVzu7wpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 5.1 346/371] gpu: ipu-v3: ipu-ic: Fix saturation bit offset in TPMEM
-Date:   Wed, 24 Jul 2019 21:21:38 +0200
-Message-Id: <20190724191749.725185400@linuxfoundation.org>
+        stable@vger.kernel.org, Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.1 347/371] parisc: Ensure userspace privilege for ptraced processes in regset functions
+Date:   Wed, 24 Jul 2019 21:21:39 +0200
+Message-Id: <20190724191749.824479528@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,36 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Helge Deller <deller@gmx.de>
 
-commit 3d1f62c686acdedf5ed9642b763f3808d6a47d1e upstream.
+commit 34c32fc603311a72cb558e5e337555434f64c27b upstream.
 
-The saturation bit was being set at bit 9 in the second 32-bit word
-of the TPMEM CSC. This isn't correct, the saturation bit is bit 42,
-which is bit 10 of the second word.
+On parisc the privilege level of a process is stored in the lowest two bits of
+the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
+for the kernel and privilege level 3 for user-space. So userspace should not be
+allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
+level to e.g. 0 to try to gain kernel privileges.
 
-Fixes: 1aa8ea0d2bd5d ("gpu: ipu-v3: Add Image Converter unit")
+This patch prevents such modifications in the regset support functions by
+always setting the two lowest bits to one (which relates to privilege level 3
+for user-space) if IAOQ0 or IAOQ1 are modified via ptrace regset calls.
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Link: https://bugs.gentoo.org/481768
+Cc: <stable@vger.kernel.org> # v4.7+
+Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/ipu-v3/ipu-ic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/parisc/kernel/ptrace.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/ipu-v3/ipu-ic.c
-+++ b/drivers/gpu/ipu-v3/ipu-ic.c
-@@ -257,7 +257,7 @@ static int init_csc(struct ipu_ic *ic,
- 	writel(param, base++);
- 
- 	param = ((a[0] & 0x1fe0) >> 5) | (params->scale << 8) |
--		(params->sat << 9);
-+		(params->sat << 10);
- 	writel(param, base++);
- 
- 	param = ((a[1] & 0x1f) << 27) | ((c[0][1] & 0x1ff) << 18) |
+--- a/arch/parisc/kernel/ptrace.c
++++ b/arch/parisc/kernel/ptrace.c
+@@ -496,7 +496,8 @@ static void set_reg(struct pt_regs *regs
+ 			return;
+ 	case RI(iaoq[0]):
+ 	case RI(iaoq[1]):
+-			regs->iaoq[num - RI(iaoq[0])] = val;
++			/* set 2 lowest bits to ensure userspace privilege: */
++			regs->iaoq[num - RI(iaoq[0])] = val | 3;
+ 			return;
+ 	case RI(sar):	regs->sar = val;
+ 			return;
 
 
