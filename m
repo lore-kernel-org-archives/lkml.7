@@ -2,66 +2,70 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D84C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F97C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535E52238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8129E2253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="LZWjiZpB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UotzW2Kd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfGXA6G (ORCPT
+        id S1728061AbfGXBXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 20:58:06 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:32918 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfGXA6F (ORCPT
+        Tue, 23 Jul 2019 21:23:54 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39232 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfGXBXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 20:58:05 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r6so39617964qtt.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 17:58:05 -0700 (PDT)
+        Tue, 23 Jul 2019 21:23:53 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m10so45599588edv.6;
+        Tue, 23 Jul 2019 18:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=oASs8uYGKSbhcsk738Ru91K1IEqBMwZxngEg6++szx8=;
-        b=LZWjiZpBtpT2bEFO6EUMuDgmX2l5GA3NIJ7uhRtxRtT3kT6m1aQy24Gom1WLWTLBHA
-         mbcbb5Ghnk0kH0giCbvjnCrfq6kB90kehk6ZCl5JK1ziFAU4GF5MpzNG4SPvOpvvh1sY
-         Ys6q/OeoUSJeWet4ylOeMbmMZwPOdDdIlToKDwwGJXpY4dptVxFpCJK7HmfeQ5HwWZPS
-         oxN0l2xC3IekY9R0LacrU333l9Uq3pebzWhvTYqsotUQo6DpCHJ/+ndzf9qNZrtlwUyj
-         iu5HuManAbQJm2gAb2whlSgWtY1/95MCPv42FkL4j31Qob/lGVpX/9IdP7LZVWZMHaHB
-         fwMg==
+        bh=zuqsC8D078GkOiUiVJHaHgojUFKFIMsPVDPGEDjw6Gc=;
+        b=UotzW2Kd9m6siO8z3lHzaihgWCtUhzH7aiBLbvkRaqJ3vVk+Yga+MFmvICnBqcAkxP
+         rZAQ63GXEPIxiJ/UIfS8nFecL/2ESqdkOsHCuNAIhb2xKiPO9ohJ11JfKeD+umIYY8TG
+         p+Ruq7NtG/3OsmCsOjTqya3t1fHy/4BtLlW5UjNZmnr58kSM7TAStpsyjJFCodu0abPs
+         zHpxNbNeHCUw5TzBkbfzL5dZ6mIUns8v9D40TqUus//8M/QSUbXNFEX/JQicJdPCuHau
+         xs21m38+mBh5BfSut8Db4HX1BHbHV6J8rpX/WYuqt4NR6EzzpWTUr97z1+X3T1DWe5OD
+         i1YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oASs8uYGKSbhcsk738Ru91K1IEqBMwZxngEg6++szx8=;
-        b=B6FmdBKMNfxN98ynw3IeZXb9rQbWWuz/d7bXCJRhN/f6pF09/JtwmfE6ZmCESsnxXW
-         eY1HSftv6eMEX9MyinLMMgJ8WbBNiGizDL5SSVae/sa4NuuJl7rLxV7bSs1mwOWAK9Aq
-         1veeUpSwotlf3f1OtxIDxsQl6Yrmb8bN+r1W7rZEDd+dRXoWgZOIv74qIz3Giw9xyIgM
-         myF5JK5u2Xd72F7l+131PWVUF1RXJNVypQfjw2ROJy9lmMRcMkonk77HIVoJIZf1q1dr
-         NeQMDWaUc/O8JMYlvwOWORA4BAMgoT1hxjMX9SqGvGRORsSyq05luYpWgMVPtqxhHQ2v
-         WKnA==
-X-Gm-Message-State: APjAAAX3rxptBnoLIaKurAdmuE9dNjwMszKRxygkvprLr7wPS1uA4MoM
-        tU7/x7Mv86BP4qVFwOY8+/GyvsVP/omPtpfpr/U=
-X-Google-Smtp-Source: APXvYqwcNmsPPp8085fZAASKJZsAQ3t8jFnX8fmaYib9qDAxnfX0Wj0y2Rk0U2Q0i6+d7tHPu6gkO5twYW8ut9749Zs=
-X-Received: by 2002:ac8:2409:: with SMTP id c9mr55507527qtc.145.1563929884513;
- Tue, 23 Jul 2019 17:58:04 -0700 (PDT)
+        bh=zuqsC8D078GkOiUiVJHaHgojUFKFIMsPVDPGEDjw6Gc=;
+        b=K1u5OkhXV9v9HXa50ylTbjwhbo1O5zNAMb3q53AM6WBWYACzMdbr5t6r4fM0kxJh8B
+         TGgYRzTtAce0MQbfMZsIAAKUho7GP+q/UlN0TwyyB2LIGaOklFIpkoG0f+YfO7gE70kt
+         HAqvjH7XS3ZpbdCQ1DsMsueFPf1G/rYWNE4n7QJbOgpt7g41Wa0B3Mrcc1ircyPnCftz
+         nqwPBnDpqUD/XRvToRt/r3OaJ9DCseX8FIziIO2HLWz3xNC2Uv+V/9Y49Sl3Pl8xZcEi
+         V+bsv/iRZwXo3nyAe45ma6dOeNSHNSWY/peTyr32ZKKR1jKJ20oqE+CPG6MrQo65CmWZ
+         bksw==
+X-Gm-Message-State: APjAAAV7bbzBYwGyJZd9QK2G3/xCLlS5vKRZzBgrAPPQ0rZ7VKdVaLm4
+        e3hPTKfdeHHALiFvfGZhXNenIXNgtbho30lwAxk=
+X-Google-Smtp-Source: APXvYqwqR8mP9GiqwkFNK7mhlswfVp+zJyF0d6cdnRTmdrDcazdouyw5ok7tlT6CL1Pz9TotmJG7hXMlmosmnecHg2Q=
+X-Received: by 2002:a05:6402:896:: with SMTP id e22mr64968394edy.202.1563931431457;
+ Tue, 23 Jul 2019 18:23:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190711113517.26077-1-axel.lin@ingics.com> <20190723112647.GE5365@sirena.org.uk>
- <CAFRkauDSbmtGRnE0xvKOKxb=SWOA+03i60Wu-9KHYxh1qFuCEg@mail.gmail.com> <20190723163503.GL5365@sirena.org.uk>
-In-Reply-To: <20190723163503.GL5365@sirena.org.uk>
-From:   Axel Lin <axel.lin@ingics.com>
-Date:   Wed, 24 Jul 2019 08:57:53 +0800
-Message-ID: <CAFRkauBACWC1pcxJe9tJyK4vM2R2BSu2z9sej3GLket3niZg9w@mail.gmail.com>
-Subject: Re: [PATCH RFT] regulator: lp87565: Fix probe failure for "ti,lp87565"
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190723115014.18537-1-hslester96@gmail.com> <EE45BB6704246A4E914B70E8B61FB42A15C77041@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <EE45BB6704246A4E914B70E8B61FB42A15C77041@SHSMSX104.ccr.corp.intel.com>
+From:   Chuhong Yuan <hslester96@gmail.com>
+Date:   Wed, 24 Jul 2019 09:23:41 +0800
+Message-ID: <CANhBUQ1uODBgoiHk8nrMrtdJ2E-C70PgRJm7zLkWGoQDovKpzg@mail.gmail.com>
+Subject: Re: [PATCH] media: pci: Use dev_get_drvdata where possible
+To:     "Cao, Bingbu" <bingbu.cao@intel.com>
+Cc:     "Zhi, Yong" <yong.zhi@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Akihiro Tsukada <tskd08@gmail.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,37 +73,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2019=E5=B9=B47=E6=9C=8824=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:35=E5=AF=AB=E9=81=93=EF=BC=9A
+On Tue, Jul 23, 2019 at 10:39 PM Cao, Bingbu <bingbu.cao@intel.com> wrote:
 >
-> On Tue, Jul 23, 2019 at 08:28:35PM +0800, Axel Lin wrote:
-> > Mark Brown <broonie@kernel.org> =E6=96=BC 2019=E5=B9=B47=E6=9C=8823=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:26=E5=AF=AB=E9=81=93=EF=BC=9A
-> > > On Thu, Jul 11, 2019 at 07:35:17PM +0800, Axel Lin wrote:
 >
-> > > > The "ti,lp87565" compatible string is still in of_lp87565_match_tab=
-le,
-> > > > but current code will return -EINVAL because lp87565->dev_type is u=
-nknown.
-> > > > This was working in earlier kernel versions, so fix it.
 >
-> > > This doesn't seem to apply against current code, please check and
-> > > resend.
+> ________________________
+> BRs,
+> Bingbu Cao
 >
-> > I re-generate the patch but the new patch is exactly the same as this o=
-ne.
-> > It can be applied to both Linus and linux-next trees.
-> > Did I miss something?
 >
-> It's a fix so I was trying to apply it on my for-5.3 branch.
+> -----Original Message-----
+> From: Chuhong Yuan <hslester96@gmail.com>
+> Sent: Tuesday, July 23, 2019 7:50 PM
+> Cc: Zhi, Yong <yong.zhi@intel.com>; Sakari Ailus <sakari.ailus@linux.inte=
+l.com>; Cao, Bingbu <bingbu.cao@intel.com>; Mauro Carvalho Chehab <mchehab@=
+kernel.org>; Akihiro Tsukada <tskd08@gmail.com>; linux-media@vger.kernel.or=
+g; linux-kernel@vger.kernel.org; Chuhong Yuan <hslester96@gmail.com>
+> Subject: [PATCH] media: pci: Use dev_get_drvdata where possible
+>
+> Instead of using to_pci_dev + pci_get_drvdata, use dev_get_drvdata to mak=
+e code simpler.
+>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/media/pci/intel/ipu3/ipu3-cio2.c | 3 +--
+>  drivers/media/pci/pt1/pt1.c              | 6 ++----
+>  drivers/media/pci/pt3/pt3.c              | 6 ++----
+>  3 files changed, 5 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2.c b/drivers/media/pci=
+/intel/ipu3/ipu3-cio2.c
+> index c1d133e17e4b..50a34bcd4d14 100644
+> --- a/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+> +++ b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+> @@ -2000,8 +2000,7 @@ static int __maybe_unused cio2_suspend(struct devic=
+e *dev)
+>
+>  static int __maybe_unused cio2_resume(struct device *dev)  {
+> -       struct pci_dev *pci_dev =3D to_pci_dev(dev);
+> -       struct cio2_device *cio2 =3D pci_get_drvdata(pci_dev);
+> +       struct cio2_device *cio2 =3D dev_get_drvdata(dev);
+>
+> Thanks for your patch.
+> I think using pci_get_drvdata() here mainly make a pair with the pci_set_=
+drvdata() in probe.
 
-The commit f3f4363b1239 ("regulator: lp87565: Fix missing break in
-switch statement") from mfd tree has been merged to 5.3-rc1.
-So I'm wondering if the better approach is rebase for-5.3 branch to 5.3-rc1=
-.
-Then you can apply this patch without conflict.
+Thanks for your reply.
+I will change pci_set_drvdata() to dev_set_drvdata() in the next
+version to keep their consistency.
 
-Anyway, I will resend the patch against regulator tree for-5.3.
-
-Regards,
-Axel
+>
+>         int r =3D 0;
+>         struct cio2_queue *q =3D cio2->cur_queue;
+>
+> diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c in=
+dex e51c80bc4646..72b191cfeb54 100644
+> --- a/drivers/media/pci/pt1/pt1.c
+> +++ b/drivers/media/pci/pt1/pt1.c
+> @@ -1217,8 +1217,7 @@ static void pt1_i2c_init(struct pt1 *pt1)
+>
+>  static int pt1_suspend(struct device *dev)  {
+> -       struct pci_dev *pdev =3D to_pci_dev(dev);
+> -       struct pt1 *pt1 =3D pci_get_drvdata(pdev);
+> +       struct pt1 *pt1 =3D dev_get_drvdata(dev);
+>
+>         pt1_init_streams(pt1);
+>         pt1_disable_ram(pt1);
+> @@ -1230,8 +1229,7 @@ static int pt1_suspend(struct device *dev)
+>
+>  static int pt1_resume(struct device *dev)  {
+> -       struct pci_dev *pdev =3D to_pci_dev(dev);
+> -       struct pt1 *pt1 =3D pci_get_drvdata(pdev);
+> +       struct pt1 *pt1 =3D dev_get_drvdata(dev);
+>         int ret;
+>         int i;
+>
+> diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c in=
+dex 7a7afae4c84c..c0bc86793355 100644
+> --- a/drivers/media/pci/pt3/pt3.c
+> +++ b/drivers/media/pci/pt3/pt3.c
+> @@ -626,8 +626,7 @@ static void pt3_cleanup_adapter(struct pt3_board *pt3=
+, int index)
+>
+>  static int pt3_suspend(struct device *dev)  {
+> -       struct pci_dev *pdev =3D to_pci_dev(dev);
+> -       struct pt3_board *pt3 =3D pci_get_drvdata(pdev);
+> +       struct pt3_board *pt3 =3D dev_get_drvdata(dev);
+>         int i;
+>         struct pt3_adapter *adap;
+>
+> @@ -646,8 +645,7 @@ static int pt3_suspend(struct device *dev)
+>
+>  static int pt3_resume(struct device *dev)  {
+> -       struct pci_dev *pdev =3D to_pci_dev(dev);
+> -       struct pt3_board *pt3 =3D pci_get_drvdata(pdev);
+> +       struct pt3_board *pt3 =3D dev_get_drvdata(dev);
+>         int i, ret;
+>         struct pt3_adapter *adap;
+>
+> --
+> 2.20.1
+>
