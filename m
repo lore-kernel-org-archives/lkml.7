@@ -2,53 +2,61 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F016C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D3AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC6622AEC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E80022ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998074;
-	bh=lednPcTVqVhtLN1g1Rjm601tmhqmTC7Osfas59sjvOc=;
+	s=default; t=1563998076;
+	bh=3wEy0eQE3mYuym3yN5JDT7B+2H6vcXNHpCc7LbT+U4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BA027JPGdwfnuVOimk8fSjI0Qwl7CptD794jRFbr1m1g0fJbM+j92m5UQtSu7vFBI
-	 Bt8Tc5wpdHKb7CfMWKoYIm4H3mipicX5bCH2U8BS8wnHWJaC7Q2XnTTXx8+mIbzfwy
-	 qlgcGyN8jlFM+SoXFryl4/UBVI+ef7x+AUi8bFns=
+	b=qWgdEfIuN6SisZiT1PDXv030VlMm6rOjcOBzch7BO6kP6gTIuFVtRnRUkFtxE3JhD
+	 qau/VMfVJRjGgFDMIopn37STeFl7FRs+UkiWhR+icJ43g7RFBqzUaSbts9ptSQuVTa
+	 3HWhtwV8ulgTut12szqPqey59qvTwKJsnBF0yT6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404370AbfGXTyc (ORCPT
+        id S2404384AbfGXTyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37446 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:54:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404350AbfGXTy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:54:29 -0400
+        id S2404369AbfGXTyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:54:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 009582147A;
-        Wed, 24 Jul 2019 19:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CB0520665;
+        Wed, 24 Jul 2019 19:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998068;
-        bh=lednPcTVqVhtLN1g1Rjm601tmhqmTC7Osfas59sjvOc=;
+        s=default; t=1563998071;
+        bh=3wEy0eQE3mYuym3yN5JDT7B+2H6vcXNHpCc7LbT+U4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1GHI14UhJxtnfyN8YzyRyfz+x0zMT4cGndgohzlCYehuofDG1ZyN54zKCDHDEPLlg
-         dCRHS5TdaUkCbN9+1Nv6qToF7mtbTbyo9NCXhUEjLsoO1Qqv37/G4/GmFukP1y43ID
-         mLpzisyRoux/HEfVjQpnbABB69Y7cZanonKjpAJk=
+        b=zRdrdcWN5bhIpM3kGncs27jSSB/xwy7h+EsBjV0bz2BDaVi5fxg1e/CmjDnJmG1pO
+         GVNvO5/s2oRsoB5knTrtd5RC1khQ5X+KFkg4EYXSsDknCitFYV6+yDNni71E/9jzbK
+         EoX2wmX3ysMculsDHjRMtxFa3rpwbr151rRcxYgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.1 235/371] scsi: zfcp: fix request object use-after-free in send path causing wrong traces
-Date:   Wed, 24 Jul 2019 21:19:47 +0200
-Message-Id: <20190724191742.246326310@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 209/371] perf tests: Fix record+probe_libc_inet_pton.sh for powerpc64
+Date:   Wed, 24 Jul 2019 21:19:21 +0200
+Message-Id: <20190724191740.290737574@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,88 +69,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+[ Upstream commit bff5a556c149804de29347a88a884d25e4e4e3a2 ]
 
-commit 106d45f350c7cac876844dc685845cba4ffdb70b upstream.
+'probe libc's inet_pton & backtrace it with ping' testcase sometimes
+fails on powerpc because distro ping binary does not have symbol
+information and thus it prints "[unknown]" function name in the
+backtrace.
 
-When tracing instances where we open and close WKA ports, we also pass the
-request-ID of the respective FSF command.
+Accept "[unknown]" as valid function name for powerpc as well.
 
-But after successfully sending the FSF command we must not use the
-request-object anymore, as this might result in an use-after-free (see
-"zfcp: fix request object use-after-free in send path causing seqno
-errors" ).
+ # perf test -v "probe libc's inet_pton & backtrace it with ping"
 
-To fix this add a new variable that caches the request-ID before sending
-the request. This won't change during the hand-off to the FCP channel,
-and so it's safe to trace this cached request-ID later, instead of using
-the request object.
+Before:
 
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Fixes: d27a7cb91960 ("zfcp: trace on request for open and close of WKA port")
-Cc: <stable@vger.kernel.org> #2.6.38+
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  59: probe libc's inet_pton & backtrace it with ping       :
+  --- start ---
+  test child forked, pid 79695
+  ping 79718 [077] 96483.787025: probe_libc:inet_pton: (7fff83a754c8)
+  7fff83a754c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
+  7fff83a2b7a0 gaih_inet.constprop.7+0x1020
+  (/usr/lib64/power9/libc-2.28.so)
+  7fff83a2c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
+  1171830f4 [unknown] (/usr/bin/ping)
+  FAIL: expected backtrace entry
+  ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
+  got "1171830f4 [unknown] (/usr/bin/ping)"
+  test child finished with -1
+  ---- end ----
+  probe libc's inet_pton & backtrace it with ping: FAILED!
 
+After:
+
+  59: probe libc's inet_pton & backtrace it with ping       :
+  --- start ---
+  test child forked, pid 79085
+  ping 79108 [045] 96400.214177: probe_libc:inet_pton: (7fffbb9654c8)
+  7fffbb9654c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
+  7fffbb91b7a0 gaih_inet.constprop.7+0x1020
+  (/usr/lib64/power9/libc-2.28.so)
+  7fffbb91c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
+  132e830f4 [unknown] (/usr/bin/ping)
+  test child finished with 0
+  ---- end ----
+  probe libc's inet_pton & backtrace it with ping: Ok
+
+Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Reviewed-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sandipan Das <sandipan@linux.ibm.com>
+Fixes: 1632936480a5 ("perf tests: Fix record+probe_libc_inet_pton.sh without ping's debuginfo")
+Link: http://lkml.kernel.org/r/1561630614-3216-1-git-send-email-s1seetee@linux.vnet.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_fsf.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -1627,6 +1627,7 @@ int zfcp_fsf_open_wka_port(struct zfcp_f
- {
- 	struct zfcp_qdio *qdio = wka_port->adapter->qdio;
- 	struct zfcp_fsf_req *req;
-+	unsigned long req_id = 0;
- 	int retval = -EIO;
- 
- 	spin_lock_irq(&qdio->req_q_lock);
-@@ -1649,6 +1650,8 @@ int zfcp_fsf_open_wka_port(struct zfcp_f
- 	hton24(req->qtcb->bottom.support.d_id, wka_port->d_id);
- 	req->data = wka_port;
- 
-+	req_id = req->req_id;
-+
- 	zfcp_fsf_start_timer(req, ZFCP_FSF_REQUEST_TIMEOUT);
- 	retval = zfcp_fsf_req_send(req);
- 	if (retval)
-@@ -1657,7 +1660,7 @@ int zfcp_fsf_open_wka_port(struct zfcp_f
- out:
- 	spin_unlock_irq(&qdio->req_q_lock);
- 	if (!retval)
--		zfcp_dbf_rec_run_wka("fsowp_1", wka_port, req->req_id);
-+		zfcp_dbf_rec_run_wka("fsowp_1", wka_port, req_id);
- 	return retval;
- }
- 
-@@ -1683,6 +1686,7 @@ int zfcp_fsf_close_wka_port(struct zfcp_
- {
- 	struct zfcp_qdio *qdio = wka_port->adapter->qdio;
- 	struct zfcp_fsf_req *req;
-+	unsigned long req_id = 0;
- 	int retval = -EIO;
- 
- 	spin_lock_irq(&qdio->req_q_lock);
-@@ -1705,6 +1709,8 @@ int zfcp_fsf_close_wka_port(struct zfcp_
- 	req->data = wka_port;
- 	req->qtcb->header.port_handle = wka_port->handle;
- 
-+	req_id = req->req_id;
-+
- 	zfcp_fsf_start_timer(req, ZFCP_FSF_REQUEST_TIMEOUT);
- 	retval = zfcp_fsf_req_send(req);
- 	if (retval)
-@@ -1713,7 +1719,7 @@ int zfcp_fsf_close_wka_port(struct zfcp_
- out:
- 	spin_unlock_irq(&qdio->req_q_lock);
- 	if (!retval)
--		zfcp_dbf_rec_run_wka("fscwp_1", wka_port, req->req_id);
-+		zfcp_dbf_rec_run_wka("fscwp_1", wka_port, req_id);
- 	return retval;
- }
- 
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 61c9f8fc6fa1..58a99a292930 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -44,7 +44,7 @@ trace_libc_inet_pton_backtrace() {
+ 		eventattr='max-stack=4'
+ 		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+ 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
+-		echo ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
++		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
+ 	*)
+ 		eventattr='max-stack=3'
+-- 
+2.20.1
+
 
 
