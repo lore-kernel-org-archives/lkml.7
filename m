@@ -8,46 +8,48 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5B2C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C0C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8B720657
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E91E204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033875;
-	bh=n0MQC/8XsC7homZ2nSmclkxOg6rP27Bzh8F2sa/T2tI=;
+	s=default; t=1564033881;
+	bh=9g7CCjjavbfNXhLex0hZ7r+JBm+d9AM+T5LNW3TD2NM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IuTYIQx4QTdw6BCx6AYKi2yUPFreOlqRs0AQG+ZViUzuZz7WAer306ODiTmbhrHO
-	 elrJaAPu+OMBO2KQHpSK92eWpP/bAADAYy0lCa08lBAR429TWOslZjIH8YnnKz7zD0
-	 65PolOvf64MNaDEU5Ue1diujC3kJo3AnnU6QzofE=
+	b=uA8XN5e0WD5HtKwg8hh2ZdNqTibT3TdlNeCfNVOC5uX968NAwJ51tMDgbA6GP5AtY
+	 u146nC7ZQmMVyIECAOswOwz8EUmemmZ2Y4w1or/kMCnGYSMtvWUN46WrIVm/kLUgCh
+	 PfWHkMw/rRBqkGOiQ94S0f96wm+nu3QorBN/eIzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390773AbfGYFls (ORCPT
+        id S2404705AbfGYFlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:41:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56572 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404736AbfGYFlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:41:44 -0400
+        id S2404686AbfGYFlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:41:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C02622C7D;
-        Thu, 25 Jul 2019 05:41:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BD5122BF3;
+        Thu, 25 Jul 2019 05:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033304;
-        bh=n0MQC/8XsC7homZ2nSmclkxOg6rP27Bzh8F2sa/T2tI=;
+        s=default; t=1564033295;
+        bh=9g7CCjjavbfNXhLex0hZ7r+JBm+d9AM+T5LNW3TD2NM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YkObk3HUyyw+AS8cK5o41rINz6BgyHFVBVcNfhJbiucKtCgP68CnPacd9EHa0GotE
-         EfNWhkhyVOPqY89iqynLkKYZiCxMvZDcaW1txEcajqUUsLPzhTHuH8DSzX4B8FbSfs
-         KssShOBIMrVEJ+La9ZNxYuE/CMgcGMSObfLZiLjU=
+        b=COUtcW7z4ZzpJewpoICCof7kwNn4zhBTvr+6TjVORY5fzd7yBMSa5Mi4/tLji91E6
+         VBGkirfUTmLG2KxnF0fZaY5Z9lvfBbJjtWwJgqz6JpITgUuKAXYPCrheuhLxfoBxOG
+         vRFrcYyQ9Bzd6AYvqFR2WnlazqZdYxTiVUUCBa1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/271] bcache: check CACHE_SET_IO_DISABLE bit in bch_journal()
-Date:   Wed, 24 Jul 2019 21:19:54 +0200
-Message-Id: <20190724191705.986718330@linuxfoundation.org>
+        stable@vger.kernel.org, Josua Mayer <josua@solid-run.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 158/271] net: mvmdio: defer probe of orion-mdio if a clock is not ready
+Date:   Wed, 24 Jul 2019 21:20:27 +0200
+Message-Id: <20190724191708.744939917@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,41 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 383ff2183ad16a8842d1fbd9dd3e1cbd66813e64 ]
+[ Upstream commit 433a06d7d74e677c40b1148c70c48677ff62fb6b ]
 
-When too many I/O errors happen on cache set and CACHE_SET_IO_DISABLE
-bit is set, bch_journal() may continue to work because the journaling
-bkey might be still in write set yet. The caller of bch_journal() may
-believe the journal still work but the truth is in-memory journal write
-set won't be written into cache device any more. This behavior may
-introduce potential inconsistent metadata status.
+Defer probing of the orion-mdio interface when getting a clock returns
+EPROBE_DEFER. This avoids locking up the Armada 8k SoC when mdio is used
+before all clocks have been enabled.
 
-This patch checks CACHE_SET_IO_DISABLE bit at the head of bch_journal(),
-if the bit is set, bch_journal() returns NULL immediately to notice
-caller to know journal does not work.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/marvell/mvmdio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index f880e5eba8dd..8d4d63b51553 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -810,6 +810,10 @@ atomic_t *bch_journal(struct cache_set *c,
- 	struct journal_write *w;
- 	atomic_t *ret;
+diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
+index c5dac6bd2be4..903836e334d8 100644
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -321,6 +321,10 @@ static int orion_mdio_probe(struct platform_device *pdev)
  
-+	/* No journaling if CACHE_SET_IO_DISABLE set already */
-+	if (unlikely(test_bit(CACHE_SET_IO_DISABLE, &c->flags)))
-+		return NULL;
-+
- 	if (!CACHE_SYNC(&c->sb))
- 		return NULL;
+ 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
+ 		dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
++		if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto out_clk;
++		}
+ 		if (IS_ERR(dev->clk[i]))
+ 			break;
+ 		clk_prepare_enable(dev->clk[i]);
+@@ -362,6 +366,7 @@ static int orion_mdio_probe(struct platform_device *pdev)
+ 	if (dev->err_interrupt > 0)
+ 		writel(0, dev->regs + MVMDIO_ERR_INT_MASK);
  
++out_clk:
+ 	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
+ 		if (IS_ERR(dev->clk[i]))
+ 			break;
 -- 
 2.20.1
 
