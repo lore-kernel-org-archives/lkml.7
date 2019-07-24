@@ -2,151 +2,130 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30A9C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC68C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15DB229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1793218B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGXMvH (ORCPT
+        id S1727086AbfGXMx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:51:07 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43148 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725776AbfGXMvH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:51:07 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hqGjX-0007C6-5M; Wed, 24 Jul 2019 13:51:03 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hqGjW-0003X1-VM; Wed, 24 Jul 2019 13:51:02 +0100
-Message-ID: <0f96662a082d664137b59c99c35ec53502af0e2f.camel@decadent.org.uk>
-Subject: Linux 3.16.71
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, Jiri Slaby <jslaby@suse.cz>,
-        stable@vger.kernel.org
-Cc:     lwn@lwn.net
-Date:   Wed, 24 Jul 2019 13:51:02 +0100
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-0LS3j1Q5BMWzPz041AlG"
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+        Wed, 24 Jul 2019 08:53:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:38614 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbfGXMx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 08:53:28 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C139F200254;
+        Wed, 24 Jul 2019 14:53:25 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B2DDD200214;
+        Wed, 24 Jul 2019 14:53:25 +0200 (CEST)
+Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0857B205EE;
+        Wed, 24 Jul 2019 14:53:24 +0200 (CEST)
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Frank Li <Frank.li@nxp.com>
+Subject: [PATCH] perf/core: Fix creating kernel counters for PMUs that override event->cpu
+Date:   Wed, 24 Jul 2019 15:53:24 +0300
+Message-Id: <c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some hardware PMU drivers will override perf_event.cpu inside their
+event_init callback. This causes a lockdep splat when initialized through
+the kernel API:
 
---=-0LS3j1Q5BMWzPz041AlG
-Content-Type: multipart/mixed; boundary="=-8KywcB3WfJcNrADA1MEG"
+WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
+CPU: 0 PID: 250 Comm: systemd-udevd Not tainted 5.3.0-rc1-next-20190723-00024-g94e04593c88a #80
+Hardware name: FSL i.MX8MM EVK board (DT)
+pstate: 40000085 (nZcv daIf -PAN -UAO)
+pc : ctx_sched_out+0x78/0x208
+lr : ctx_sched_out+0x78/0x208
+sp : ffff0000127a3750
+x29: ffff0000127a3750 x28: 0000000000000000
+x27: ffff00001162bf20 x26: ffff000008cf3310
+x25: ffff0000127a3de0 x24: ffff0000115ff808
+x23: ffff7dffbff851b8 x22: 0000000000000004
+x21: ffff7dffbff851b0 x20: 0000000000000000
+x19: ffff7dffbffc51b0 x18: 0000000000000010
+x17: 0000000000000001 x16: 0000000000000007
+x15: 2e8ba2e8ba2e8ba3 x14: 0000000000005114
+x13: ffff0000117d5e30 x12: ffff000011898378
+x11: 0000000000000000 x10: ffff0000117d5000
+x9 : 0000000000000045 x8 : 0000000000000000
+x7 : ffff000010168194 x6 : ffff0000117d59d0
+x5 : 0000000000000001 x4 : ffff80007db56128
+x3 : ffff80007db56128 x2 : 0d9c118347a77600
+x1 : 0000000000000000 x0 : 0000000000000024
+Call trace:
+ ctx_sched_out+0x78/0x208
+ __perf_install_in_context+0x160/0x248
+ remote_function+0x58/0x68
+ generic_exec_single+0x100/0x180
+ smp_call_function_single+0x174/0x1b8
+ perf_install_in_context+0x178/0x188
+ perf_event_create_kernel_counter+0x118/0x160
 
+Fix by calling perf_install_in_context with event->cpu, just like
+perf_event_open
 
---=-8KywcB3WfJcNrADA1MEG
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+---
+I don't understand why PMUs outside the core are bound to a CPU anyway,
+all this patch does is attempt to satisfy the assumptions made by
+__perf_install_in_context and ctx_sched_out at init time so that lockdep
+no longer complains.
 
-I'm announcing the release of the 3.16.71 kernel.
+ctx_sched_out asserts ctx->lock which seems to be taken by
+__perf_install_in_context:
 
-All users of the 3.16 kernel series should upgrade.
+	struct perf_event_context *ctx = event->ctx;
+	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+	...
+	raw_spin_lock(&cpuctx->ctx.lock);
 
-The updated 3.16.y git tree can be found at:
-        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
-.git linux-3.16.y
-and can be browsed at the normal kernel.org git web browser:
-        https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.gi=
-t
+The lockdep warning happens when ctx != &cpuctx->ctx which can happen if
+__perf_install_in_context is called on a cpu other than event->cpu.
 
-The diff from 3.16.70 is attached to this message.
+Found while working on this patch:
+https://patchwork.kernel.org/patch/11056785/
 
-Ben.
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-------------
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 026a14541a38..0463c1151bae 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11272,11 +11272,11 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 	if (!exclusive_event_installable(event, ctx)) {
+ 		err = -EBUSY;
+ 		goto err_unlock;
+ 	}
+ 
+-	perf_install_in_context(ctx, event, cpu);
++	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
+ 	mutex_unlock(&ctx->mutex);
+ 
+ 	return event;
+ 
+-- 
+2.17.1
 
- Makefile        | 2 +-
- kernel/ptrace.c | 4 +---
- 2 files changed, 2 insertions(+), 4 deletions(-)
-
-Ben Hutchings (1):
-      Linux 3.16.71
-
-Jann Horn (1):
-      ptrace: Fix ->ptracer_cred handling for PTRACE_TRACEME
-
---=20
-Ben Hutchings
-compatible: Gracefully accepts erroneous data from any source
-
-
-
---=-8KywcB3WfJcNrADA1MEG
-Content-Type: text/x-diff; charset="UTF-8"; name="linux-3.16.71.patch"
-Content-Disposition: attachment; filename="linux-3.16.71.patch"
-Content-Transfer-Encoding: quoted-printable
-
-diff --git a/Makefile b/Makefile
-index 9e2a3acb26cf..c2c6a3580e8a 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,6 +1,6 @@
- VERSION =3D 3
- PATCHLEVEL =3D 16
--SUBLEVEL =3D 70
-+SUBLEVEL =3D 71
- EXTRAVERSION =3D
- NAME =3D Museum of Fishiegoodies
-=20
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index 694e650e962d..22beef3e2160 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -80,9 +80,7 @@ void __ptrace_link(struct task_struct *child, struct task=
-_struct *new_parent,
-  */
- static void ptrace_link(struct task_struct *child, struct task_struct *new=
-_parent)
- {
--	rcu_read_lock();
--	__ptrace_link(child, new_parent, __task_cred(new_parent));
--	rcu_read_unlock();
-+	__ptrace_link(child, new_parent, current_cred());
- }
-=20
- /**
-=0D
---=-8KywcB3WfJcNrADA1MEG--
-
---=-0LS3j1Q5BMWzPz041AlG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl04VDYACgkQ57/I7JWG
-EQmotw/+NRhlDG9wBun8zSv+THx66WJRVainNbWWZB5W40DnFr7yiITiuJLmFnay
-9I4b+TP3HKzUDz4zy8GJNAxd5b+N0eyfpvTPcVj78fPz1jp9NKMJb9utq2leyzQq
-Cg5+I2NycaCLVuf6OowiYsTKgryLVViJ6TJgHsXkfTHdEmZiBWpQ5qk1S6ROm7Sz
-TB8n1JxGjGAHp1f/mgz5i3XAjWtDeuCFT3OZjqrnOZ0nUFb37F658MiOcpazPu3p
-vWaluFbmgzmXtzqQB14jSxTx1jTtJqXz6XX51kkJ4r9B0rG724aZ+dlb66ngm0He
-3s+050vRMqfMkdtn5UShOmCAGFCiS2ntVSv/olYoWHkJ5Vb+BkJyDoVy1KPZxTHD
-8eGPxMPzluuEaNaHkosOFK6fxSJv6/0XfCmYuqBpdyNt7YETlNRlwDCAH5xgEU8I
-q3CuwEbgaA0BYrOS+Z0X2pmHkTfBrp9icfIxUka1AL3d+UJ3hrPecKSdSJEVXckG
-YPyJrhqQQINODWiEwTSFc8FSa85riQvaR0rWDdF6mES9JYOHgmkxEzobJnmzs3gr
-7CUg9yn/zz78PKbr8MpzFf1OxgUALlWvpZOfxBMuvQYJOxm9FJApqes4Ta+32JBd
-ywK6sm+mkkN+udpk7zN5H9Z4jKo+02IMxsQ6hE9cbxjtf4elTf8=
-=GKAq
------END PGP SIGNATURE-----
-
---=-0LS3j1Q5BMWzPz041AlG--
