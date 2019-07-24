@@ -2,752 +2,120 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACD1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09838C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B49321842
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6ABA21851
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tIdJ7NmW"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="wvwSNP7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388041AbfGXXba (ORCPT
+        id S1729736AbfGXXeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:31:30 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45679 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729196AbfGXXb3 (ORCPT
+        Wed, 24 Jul 2019 19:34:14 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38701 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728433AbfGXXeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:31:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o13so21963360pgp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:31:28 -0700 (PDT)
+        Wed, 24 Jul 2019 19:34:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so48704575wrr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:34:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3aT0xWPKwx9j25bSWm8e+6oJCrrpCLlu597vQAlJDBs=;
-        b=tIdJ7NmWXUvHErQYcNszRpHn79HTpTb5ocvhWbq2OOcn3jOMpERZd5YQovQdbXRV5M
-         d53x4GFyRCm37F0DAZRSadBhvL5hrqY5g0Guck6kNTLFjF3QPVBPCvoOt2YqvmJ3W+nm
-         yBvZ1Vhxc4FLjoyMUmqQ4PN3lbQhxqpKwHhHpIllnsH6V3+dFWNf+l2W8INTjAG9QuXq
-         MiQSegpZZbTv8hOsUgrw/qrTYFqar+h7Aex3H3+btRSnEMywYeFbWMOjy/GuZ8n2SsFi
-         ZF7BoFHBFYB1SsSmuRkuAWZHAEAe4p7LLu/fA6RRQnGx9xHeQWtBp3Kzl2T1zrdMoT/C
-         E9Mg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=gJesdbZbbF3sI0aCILTJoTvpe7qNeUt3yyP5yfvb9A8=;
+        b=wvwSNP7N1qONlRZmeQLBdvc6hHpKfdFRTRbDuKX/tLt5MZyQP+UArDZZAbhBrm5hi/
+         g6pPi6uMS8njINXsko9cPIQ0CqQX17nN7okDCUFCBLVo7kCsJl4Go4E0UPkD5TuYUfm7
+         ZHjDyRJEm51mTDJHgu9DImQL1+P3u8KlXxZ50+jozZLaAh9lYrH8Rfw/Y4fEuY6C/Fya
+         A2N32VO8ojHo5tQswIPwaFQkj9CgfaemSBFHxuTJMUViaNP8zUu2GwFEU28JP7q748+z
+         eFJpofCGFCLy5dy5d3gXoKoTOTEVEHNlNyJyuqlX5GI1Nb1KPfaX96ugaoanSvST2Ez1
+         setQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3aT0xWPKwx9j25bSWm8e+6oJCrrpCLlu597vQAlJDBs=;
-        b=UZ4MG3e8IItKuQgqVkxCmK61GOyLpmrQ7bLF6unM5B3UjseDZM2d42zU8aGZ5fpiGx
-         0/b+yRVgqOu15+tUiCCgor6qwrPewgAnAOgxBNm/220hQNnpf6mBqfjRBs+hoUbpc9B1
-         sNiz9vK7npfTDNu7DIyLBXMwjf0sMKely2QykrT4KvG5NFaelSPNJDXeIPjDImZWo6UW
-         ANHPvdQoGeLggWUQyl8L2dKVvsqD8glmahiQ9/M8bSIySc9iZmCd4YzLC3M2QRLp4JEE
-         I8U4Ggia86k2edfLkxUHZQ/9twge3A1V4GkgSGTK+r6gSNQOlRX32OcnZtwCQt/1bC1f
-         zDrg==
-X-Gm-Message-State: APjAAAXRJ7IAENePhO6ktHBsJUEhRtYUEh9xzIU259Fk2oQEzIV5mOwR
-        T9wMTSymhFq+8xUgS13yvhI=
-X-Google-Smtp-Source: APXvYqz6lZ8tairF7kG/M+oiR7xdVsAQ2HLdN2mu8roRZyhiSxQTDjhUEamVSPOcB+CD4YH3w8SjMA==
-X-Received: by 2002:a17:90a:2041:: with SMTP id n59mr86440763pjc.6.1564011088318;
-        Wed, 24 Jul 2019 16:31:28 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id e17sm38617789pgm.21.2019.07.24.16.31.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 16:31:28 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 16:32:12 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     broonie@kernel.org, festevam@gmail.com, perex@perex.cz,
-        tiwai@suse.com, Xiubo.Lee@gmail.com, timur@kernel.org,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        shengjiu.wang@nxp.com, angus@akkea.ca, kernel@pengutronix.de,
-        l.stach@pengutronix.de, viorel.suman@nxp.com
-Subject: Re: [PATCH 09/10] ASoC: fsl_sai: Add support for SAI new version
-Message-ID: <20190724233212.GD6859@Asurada-Nvidia.nvidia.com>
-References: <20190722124833.28757-1-daniel.baluta@nxp.com>
- <20190722124833.28757-10-daniel.baluta@nxp.com>
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=gJesdbZbbF3sI0aCILTJoTvpe7qNeUt3yyP5yfvb9A8=;
+        b=g8zombaxsOaruMBdWg/OP7XzNez9f2NphXWYq3puzOyKzpva4iFdUm0UUTwNGWUWAa
+         Xs5/c9ODUpuckYqqKsNJrLpJNMAcWsLyqw1I2bG7tZWPPsR2D+dTXpVin7F36RJ3+Bqu
+         4/MEhKPKopGMleSfludTd53Zhbe2nV+7RWPUx/Ta4lm5vbYe1m4wYx+SDSIIbQ/0EULC
+         DVhxuqUIqzunkdd9SCxUShVRaPacye5NqItemEl1+CW/LEal02jCtAzm0y8Ee8Iv17uq
+         Cmfl0KImL23irDa7ukc0mgu/31C3yzy2j4N9Cxw9CMSmpqSyD00YXYH6Te5x4r3n7bKU
+         /MqQ==
+X-Gm-Message-State: APjAAAXcB8ai+KgzZAUZVYSqNsI9/G2lo2WmITWo+jpy38XRk3fGEMWA
+        9GI4vM5MKdAA0sOhyP55l7E=
+X-Google-Smtp-Source: APXvYqwbu/1onZwQ2Smw+4QpNUT8HGel/X/7kSj1fzh1T6toHjGecjxKxhAC8wreUB59uHJiXbT28Q==
+X-Received: by 2002:adf:ec8e:: with SMTP id z14mr49218393wrn.269.1564011251851;
+        Wed, 24 Jul 2019 16:34:11 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id t140sm43179218wmt.0.2019.07.24.16.34.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 16:34:11 -0700 (PDT)
+Message-ID: <5d38eaf3.1c69fb81.f02b8.079f@mx.google.com>
+Date:   Wed, 24 Jul 2019 16:34:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190722124833.28757-10-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.1.19-372-g7da17d99564d
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-5.1.y
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+Subject: Re: [PATCH 5.1 000/371] 5.1.20-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 03:48:32PM +0300, Daniel Baluta wrote:
-> New IP version introduces Version ID and Parameter registers
-> and optionally added Timestamp feature.
-> 
-> VERID and PARAM registers are placed at the top of registers
-> address space and some registers are shifted according to
-> the following table:
-> 
-> Tx/Rx data registers and Tx/Rx FIFO registers keep their
-> addresses, all other registers are shifted by 8.
+stable-rc/linux-5.1.y boot: 137 boots: 2 failed, 134 passed with 1 offline =
+(v5.1.19-372-g7da17d99564d)
 
-Feels like Lucas's approach is neater. I saw that Register TMR
-at 0x60 is exceptional during your previous discussion. So can
-we apply an offset-cancellation for it exceptionally? I haven't
-checked all the registers so this would look okay to me as well
-if there are more than just Register TMR.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.1.y/kernel/v5.1.19-372-g7da17d99564d/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
+/kernel/v5.1.19-372-g7da17d99564d/
 
-Thanks
-Nicolin
+Tree: stable-rc
+Branch: linux-5.1.y
+Git Describe: v5.1.19-372-g7da17d99564d
+Git Commit: 7da17d99564d84f797e66a578ec5fb34f43fa58f
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 79 unique boards, 27 SoC families, 17 builds out of 209
 
-> SAI Memory map is described in chapter 13.10.4.1.1 I2S Memory map
-> of the Reference Manual [1].
-> 
-> In order to make as less changes as possible we attach an offset
-> to each register offset to each changed register definition. The
-> offset is read from each board private data.
-> 
-> [1]https://cache.nxp.com/secured/assets/documents/en/reference-manual/IMX8MDQLQRM.pdf?__gda__=1563728701_38bea7f0f726472cc675cb141b91bec7&fileExt=.pdf
-> 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  sound/soc/fsl/fsl_sai.c | 240 +++++++++++++++++++++++-----------------
->  sound/soc/fsl/fsl_sai.h |  41 +++----
->  2 files changed, 162 insertions(+), 119 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index 140014901fce..f2441b84877e 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -40,6 +40,7 @@ static const struct snd_pcm_hw_constraint_list fsl_sai_rate_constraints = {
->  static irqreturn_t fsl_sai_isr(int irq, void *devid)
->  {
->  	struct fsl_sai *sai = (struct fsl_sai *)devid;
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	struct device *dev = &sai->pdev->dev;
->  	u32 flags, xcsr, mask;
->  	bool irq_none = true;
-> @@ -52,7 +53,7 @@ static irqreturn_t fsl_sai_isr(int irq, void *devid)
->  	mask = (FSL_SAI_FLAGS >> FSL_SAI_CSR_xIE_SHIFT) << FSL_SAI_CSR_xF_SHIFT;
->  
->  	/* Tx IRQ */
-> -	regmap_read(sai->regmap, FSL_SAI_TCSR, &xcsr);
-> +	regmap_read(sai->regmap, FSL_SAI_TCSR(ofs), &xcsr);
->  	flags = xcsr & mask;
->  
->  	if (flags)
-> @@ -82,11 +83,11 @@ static irqreturn_t fsl_sai_isr(int irq, void *devid)
->  	xcsr &= ~FSL_SAI_CSR_xF_MASK;
->  
->  	if (flags)
-> -		regmap_write(sai->regmap, FSL_SAI_TCSR, flags | xcsr);
-> +		regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), flags | xcsr);
->  
->  irq_rx:
->  	/* Rx IRQ */
-> -	regmap_read(sai->regmap, FSL_SAI_RCSR, &xcsr);
-> +	regmap_read(sai->regmap, FSL_SAI_RCSR(ofs), &xcsr);
->  	flags = xcsr & mask;
->  
->  	if (flags)
-> @@ -116,7 +117,7 @@ static irqreturn_t fsl_sai_isr(int irq, void *devid)
->  	xcsr &= ~FSL_SAI_CSR_xF_MASK;
->  
->  	if (flags)
-> -		regmap_write(sai->regmap, FSL_SAI_RCSR, flags | xcsr);
-> +		regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), flags | xcsr);
->  
->  out:
->  	if (irq_none)
-> @@ -140,6 +141,7 @@ static int fsl_sai_set_dai_sysclk_tr(struct snd_soc_dai *cpu_dai,
->  		int clk_id, unsigned int freq, int fsl_dir)
->  {
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	bool tx = fsl_dir == FSL_FMT_TRANSMITTER;
->  	u32 val_cr2 = 0;
->  
-> @@ -160,7 +162,7 @@ static int fsl_sai_set_dai_sysclk_tr(struct snd_soc_dai *cpu_dai,
->  		return -EINVAL;
->  	}
->  
-> -	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx),
-> +	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx, ofs),
->  			   FSL_SAI_CR2_MSEL_MASK, val_cr2);
->  
->  	return 0;
-> @@ -193,6 +195,7 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
->  				unsigned int fmt, int fsl_dir)
->  {
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	bool tx = fsl_dir == FSL_FMT_TRANSMITTER;
->  	u32 val_cr2 = 0, val_cr4 = 0;
->  
-> @@ -287,9 +290,9 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
->  		return -EINVAL;
->  	}
->  
-> -	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx),
-> +	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx, ofs),
->  			   FSL_SAI_CR2_BCP | FSL_SAI_CR2_BCD_MSTR, val_cr2);
-> -	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-> +	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
->  			   FSL_SAI_CR4_MF | FSL_SAI_CR4_FSE |
->  			   FSL_SAI_CR4_FSP | FSL_SAI_CR4_FSD_MSTR, val_cr4);
->  
-> @@ -316,6 +319,7 @@ static int fsl_sai_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
->  static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
->  {
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(dai);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	unsigned long clk_rate;
->  	u32 savediv = 0, ratio, savesub = freq;
->  	u32 id;
-> @@ -378,17 +382,17 @@ static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
->  	 */
->  	if ((sai->synchronous[TX] && !sai->synchronous[RX]) ||
->  	    (!tx && !sai->synchronous[RX])) {
-> -		regmap_update_bits(sai->regmap, FSL_SAI_RCR2,
-> +		regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs),
->  				   FSL_SAI_CR2_MSEL_MASK,
->  				   FSL_SAI_CR2_MSEL(sai->mclk_id[tx]));
-> -		regmap_update_bits(sai->regmap, FSL_SAI_RCR2,
-> +		regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs),
->  				   FSL_SAI_CR2_DIV_MASK, savediv - 1);
->  	} else if ((sai->synchronous[RX] && !sai->synchronous[TX]) ||
->  		   (tx && !sai->synchronous[TX])) {
-> -		regmap_update_bits(sai->regmap, FSL_SAI_TCR2,
-> +		regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs),
->  				   FSL_SAI_CR2_MSEL_MASK,
->  				   FSL_SAI_CR2_MSEL(sai->mclk_id[tx]));
-> -		regmap_update_bits(sai->regmap, FSL_SAI_TCR2,
-> +		regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs),
->  				   FSL_SAI_CR2_DIV_MASK, savediv - 1);
->  	}
->  
-> @@ -403,6 +407,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
->  		struct snd_soc_dai *cpu_dai)
->  {
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->  	unsigned int channels = params_channels(params);
->  	u32 word_width = params_width(params);
-> @@ -455,19 +460,19 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
->  
->  	if (!sai->is_slave_mode) {
->  		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
-> -			regmap_update_bits(sai->regmap, FSL_SAI_TCR4,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_TCR4(ofs),
->  				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
->  				val_cr4);
-> -			regmap_update_bits(sai->regmap, FSL_SAI_TCR5,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_TCR5(ofs),
->  				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
->  				FSL_SAI_CR5_FBT_MASK, val_cr5);
->  			regmap_write(sai->regmap, FSL_SAI_TMR,
->  				~0UL - ((1 << channels) - 1));
->  		} else if (!sai->synchronous[RX] && sai->synchronous[TX] && tx) {
-> -			regmap_update_bits(sai->regmap, FSL_SAI_RCR4,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_RCR4(ofs),
->  				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
->  				val_cr4);
-> -			regmap_update_bits(sai->regmap, FSL_SAI_RCR5,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_RCR5(ofs),
->  				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
->  				FSL_SAI_CR5_FBT_MASK, val_cr5);
->  			regmap_write(sai->regmap, FSL_SAI_RMR,
-> @@ -475,26 +480,26 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
->  		}
->  	}
->  
-> -	switch (sai->soc_data->fcomb_mode[tx]) {
-> +	switch (sai->fcomb_mode[tx]) {
->  	case FSL_SAI_FCOMB_NONE:
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
->  				   FSL_SAI_CR4_FCOMB_SOFT |
->  				   FSL_SAI_CR4_FCOMB_SHIFT, 0);
->  		break;
->  	case FSL_SAI_FCOMB_SHIFT:
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
->  				   FSL_SAI_CR4_FCOMB_SOFT |
->  				   FSL_SAI_CR4_FCOMB_SHIFT,
->  				   FSL_SAI_CR4_FCOMB_SHIFT);
->  		break;
->  	case FSL_SAI_FCOMB_SOFT:
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
->  				   FSL_SAI_CR4_FCOMB_SOFT |
->  				   FSL_SAI_CR4_FCOMB_SHIFT,
->  				   FSL_SAI_CR4_FCOMB_SOFT);
->  		break;
->  	case FSL_SAI_FCOMB_BOTH:
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
->  				   FSL_SAI_CR4_FCOMB_SOFT |
->  				   FSL_SAI_CR4_FCOMB_SHIFT,
->  				   FSL_SAI_CR4_FCOMB_SOFT |
-> @@ -504,10 +509,10 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
->  		break;
->  	}
->  
-> -	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-> +	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
->  			   FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
->  			   val_cr4);
-> -	regmap_update_bits(sai->regmap, FSL_SAI_xCR5(tx),
-> +	regmap_update_bits(sai->regmap, FSL_SAI_xCR5(tx, ofs),
->  			   FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
->  			   FSL_SAI_CR5_FBT_MASK, val_cr5);
->  	regmap_write(sai->regmap, FSL_SAI_xMR(tx), ~0UL - ((1 << channels) - 1));
-> @@ -535,6 +540,8 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
->  		struct snd_soc_dai *cpu_dai)
->  {
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
-> +
->  	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->  	u32 xcsr, count = 100;
->  
-> @@ -543,9 +550,9 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
->  	 * Rx sync with Tx clocks: Clear SYNC for Tx, set it for Rx.
->  	 * Tx sync with Rx clocks: Clear SYNC for Rx, set it for Tx.
->  	 */
-> -	regmap_update_bits(sai->regmap, FSL_SAI_TCR2, FSL_SAI_CR2_SYNC,
-> -		           sai->synchronous[TX] ? FSL_SAI_CR2_SYNC : 0);
-> -	regmap_update_bits(sai->regmap, FSL_SAI_RCR2, FSL_SAI_CR2_SYNC,
-> +	regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs), FSL_SAI_CR2_SYNC,
-> +			   sai->synchronous[TX] ? FSL_SAI_CR2_SYNC : 0);
-> +	regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs), FSL_SAI_CR2_SYNC,
->  			   sai->synchronous[RX] ? FSL_SAI_CR2_SYNC : 0);
->  
->  	/*
-> @@ -556,43 +563,44 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
->  	case SNDRV_PCM_TRIGGER_START:
->  	case SNDRV_PCM_TRIGGER_RESUME:
->  	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
->  				   FSL_SAI_CSR_FRDE, FSL_SAI_CSR_FRDE);
->  
-> -		regmap_update_bits(sai->regmap, FSL_SAI_RCSR,
-> +		regmap_update_bits(sai->regmap, FSL_SAI_RCSR(ofs),
->  				   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
-> -		regmap_update_bits(sai->regmap, FSL_SAI_TCSR,
-> +		regmap_update_bits(sai->regmap, FSL_SAI_TCSR(ofs),
->  				   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
->  
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
->  				   FSL_SAI_CSR_xIE_MASK, FSL_SAI_FLAGS);
->  		break;
->  	case SNDRV_PCM_TRIGGER_STOP:
->  	case SNDRV_PCM_TRIGGER_SUSPEND:
->  	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
->  				   FSL_SAI_CSR_FRDE, 0);
-> -		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-> +		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
->  				   FSL_SAI_CSR_xIE_MASK, 0);
->  
->  		/* Check if the opposite FRDE is also disabled */
-> -		regmap_read(sai->regmap, FSL_SAI_xCSR(!tx), &xcsr);
-> +		regmap_read(sai->regmap, FSL_SAI_xCSR(!tx, ofs), &xcsr);
->  		if (!(xcsr & FSL_SAI_CSR_FRDE)) {
->  			/* Disable both directions and reset their FIFOs */
-> -			regmap_update_bits(sai->regmap, FSL_SAI_TCSR,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_TCSR(ofs),
->  					   FSL_SAI_CSR_TERE, 0);
-> -			regmap_update_bits(sai->regmap, FSL_SAI_RCSR,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_RCSR(ofs),
->  					   FSL_SAI_CSR_TERE, 0);
->  
->  			/* TERE will remain set till the end of current frame */
->  			do {
->  				udelay(10);
-> -				regmap_read(sai->regmap, FSL_SAI_xCSR(tx), &xcsr);
-> +				regmap_read(sai->regmap,
-> +					    FSL_SAI_xCSR(tx, ofs), &xcsr);
->  			} while (--count && xcsr & FSL_SAI_CSR_TERE);
->  
-> -			regmap_update_bits(sai->regmap, FSL_SAI_TCSR,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_TCSR(ofs),
->  					   FSL_SAI_CSR_FR, FSL_SAI_CSR_FR);
-> -			regmap_update_bits(sai->regmap, FSL_SAI_RCSR,
-> +			regmap_update_bits(sai->regmap, FSL_SAI_RCSR(ofs),
->  					   FSL_SAI_CSR_FR, FSL_SAI_CSR_FR);
->  
->  			/*
-> @@ -604,13 +612,13 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
->  			 */
->  			if (!sai->is_slave_mode) {
->  				/* Software Reset for both Tx and Rx */
-> -				regmap_write(sai->regmap,
-> -					     FSL_SAI_TCSR, FSL_SAI_CSR_SR);
-> -				regmap_write(sai->regmap,
-> -					     FSL_SAI_RCSR, FSL_SAI_CSR_SR);
-> +				regmap_write(sai->regmap, FSL_SAI_TCSR(ofs),
-> +					     FSL_SAI_CSR_SR);
-> +				regmap_write(sai->regmap, FSL_SAI_RCSR(ofs),
-> +					     FSL_SAI_CSR_SR);
->  				/* Clear SR bit to finish the reset */
-> -				regmap_write(sai->regmap, FSL_SAI_TCSR, 0);
-> -				regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
-> +				regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), 0);
-> +				regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), 0);
->  			}
->  		}
->  		break;
-> @@ -625,12 +633,13 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
->  		struct snd_soc_dai *cpu_dai)
->  {
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->  	int ret;
->  
-> -	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-> +	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
->  			   FSL_SAI_CR3_TRCE_MASK,
-> -			   FSL_SAI_CR3_TRCE(sai->soc_data->dl_mask[tx]);
-> +			   FSL_SAI_CR3_TRCE(sai->dl_mask[tx]));
->  
->  	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
->  			SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
-> @@ -642,9 +651,10 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
->  		struct snd_soc_dai *cpu_dai)
->  {
->  	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->  
-> -	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-> +	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
->  			   FSL_SAI_CR3_TRCE_MASK, 0);
->  }
->  
-> @@ -662,18 +672,20 @@ static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
->  static int fsl_sai_dai_probe(struct snd_soc_dai *cpu_dai)
->  {
->  	struct fsl_sai *sai = dev_get_drvdata(cpu_dai->dev);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  
->  	/* Software Reset for both Tx and Rx */
-> -	regmap_write(sai->regmap, FSL_SAI_TCSR, FSL_SAI_CSR_SR);
-> -	regmap_write(sai->regmap, FSL_SAI_RCSR, FSL_SAI_CSR_SR);
-> +	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), FSL_SAI_CSR_SR);
-> +	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), FSL_SAI_CSR_SR);
->  	/* Clear SR bit to finish the reset */
-> -	regmap_write(sai->regmap, FSL_SAI_TCSR, 0);
-> -	regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
-> +	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), 0);
-> +	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), 0);
->  
-> -	regmap_update_bits(sai->regmap, FSL_SAI_TCR1, FSL_SAI_CR1_RFW_MASK,
-> +	regmap_update_bits(sai->regmap, FSL_SAI_TCR1(ofs),
-> +			   FSL_SAI_CR1_RFW_MASK,
->  			   sai->soc_data->fifo_depth - FSL_SAI_MAXBURST_TX);
-> -	regmap_update_bits(sai->regmap, FSL_SAI_RCR1, FSL_SAI_CR1_RFW_MASK,
-> -			   FSL_SAI_MAXBURST_RX - 1);
-> +	regmap_update_bits(sai->regmap, FSL_SAI_RCR1(ofs),
-> +			   FSL_SAI_CR1_RFW_MASK, FSL_SAI_MAXBURST_RX - 1);
->  
->  	snd_soc_dai_init_dma_data(cpu_dai, &sai->dma_params_tx,
->  				&sai->dma_params_rx);
-> @@ -710,12 +722,12 @@ static const struct snd_soc_component_driver fsl_component = {
->  	.name           = "fsl-sai",
->  };
->  
-> -static struct reg_default fsl_sai_reg_defaults[] = {
-> -	{FSL_SAI_TCR1, 0},
-> -	{FSL_SAI_TCR2, 0},
-> -	{FSL_SAI_TCR3, 0},
-> -	{FSL_SAI_TCR4, 0},
-> -	{FSL_SAI_TCR5, 0},
-> +static struct reg_default fsl_sai_reg_defaults_ofs0[] = {
-> +	{FSL_SAI_TCR1(0), 0},
-> +	{FSL_SAI_TCR2(0), 0},
-> +	{FSL_SAI_TCR3(0), 0},
-> +	{FSL_SAI_TCR4(0), 0},
-> +	{FSL_SAI_TCR5(0), 0},
->  	{FSL_SAI_TDR0, 0},
->  	{FSL_SAI_TDR1, 0},
->  	{FSL_SAI_TDR2, 0},
-> @@ -724,24 +736,50 @@ static struct reg_default fsl_sai_reg_defaults[] = {
->  	{FSL_SAI_TDR5, 0},
->  	{FSL_SAI_TDR6, 0},
->  	{FSL_SAI_TDR7, 0},
-> -	{FSL_SAI_TMR,  0},
-> -	{FSL_SAI_RCR1, 0},
-> -	{FSL_SAI_RCR2, 0},
-> -	{FSL_SAI_RCR3, 0},
-> -	{FSL_SAI_RCR4, 0},
-> -	{FSL_SAI_RCR5, 0},
-> -	{FSL_SAI_RMR,  0},
-> +	{FSL_SAI_TMR, 0},
-> +	{FSL_SAI_RCR1(0), 0},
-> +	{FSL_SAI_RCR2(0), 0},
-> +	{FSL_SAI_RCR3(0), 0},
-> +	{FSL_SAI_RCR4(0), 0},
-> +	{FSL_SAI_RCR5(0), 0},
-> +	{FSL_SAI_RMR, 0},
-> +};
-> +
-> +static struct reg_default fsl_sai_reg_defaults_ofs8[] = {
-> +	{FSL_SAI_TCR1(8), 0},
-> +	{FSL_SAI_TCR2(8), 0},
-> +	{FSL_SAI_TCR3(8), 0},
-> +	{FSL_SAI_TCR4(8), 0},
-> +	{FSL_SAI_TCR5(8), 0},
-> +	{FSL_SAI_TDR0, 0},
-> +	{FSL_SAI_TDR1, 0},
-> +	{FSL_SAI_TDR2, 0},
-> +	{FSL_SAI_TDR3, 0},
-> +	{FSL_SAI_TDR4, 0},
-> +	{FSL_SAI_TDR5, 0},
-> +	{FSL_SAI_TDR6, 0},
-> +	{FSL_SAI_TDR7, 0},
-> +	{FSL_SAI_TMR, 0},
-> +	{FSL_SAI_RCR1(8), 0},
-> +	{FSL_SAI_RCR2(8), 0},
-> +	{FSL_SAI_RCR3(8), 0},
-> +	{FSL_SAI_RCR4(8), 0},
-> +	{FSL_SAI_RCR5(8), 0},
-> +	{FSL_SAI_RMR, 0},
->  };
->  
->  static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
->  {
-> +	struct fsl_sai *sai = dev_get_drvdata(dev);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
-> +
-> +	if (reg >= FSL_SAI_TCSR(ofs) && reg <= FSL_SAI_TCR5(ofs))
-> +		return true;
-> +
-> +	if (reg >= FSL_SAI_RCSR(ofs) && reg <= FSL_SAI_RCR5(ofs))
-> +		return true;
-> +
->  	switch (reg) {
-> -	case FSL_SAI_TCSR:
-> -	case FSL_SAI_TCR1:
-> -	case FSL_SAI_TCR2:
-> -	case FSL_SAI_TCR3:
-> -	case FSL_SAI_TCR4:
-> -	case FSL_SAI_TCR5:
->  	case FSL_SAI_TFR0:
->  	case FSL_SAI_TFR1:
->  	case FSL_SAI_TFR2:
-> @@ -751,12 +789,6 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
->  	case FSL_SAI_TFR6:
->  	case FSL_SAI_TFR7:
->  	case FSL_SAI_TMR:
-> -	case FSL_SAI_RCSR:
-> -	case FSL_SAI_RCR1:
-> -	case FSL_SAI_RCR2:
-> -	case FSL_SAI_RCR3:
-> -	case FSL_SAI_RCR4:
-> -	case FSL_SAI_RCR5:
->  	case FSL_SAI_RDR0:
->  	case FSL_SAI_RDR1:
->  	case FSL_SAI_RDR2:
-> @@ -782,9 +814,13 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
->  
->  static bool fsl_sai_volatile_reg(struct device *dev, unsigned int reg)
->  {
-> +	struct fsl_sai *sai = dev_get_drvdata(dev);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
-> +
-> +	if (reg == FSL_SAI_TCSR(ofs) || reg == FSL_SAI_RCSR(ofs))
-> +		return true;
-> +
->  	switch (reg) {
-> -	case FSL_SAI_TCSR:
-> -	case FSL_SAI_RCSR:
->  	case FSL_SAI_TFR0:
->  	case FSL_SAI_TFR1:
->  	case FSL_SAI_TFR2:
-> @@ -817,13 +853,16 @@ static bool fsl_sai_volatile_reg(struct device *dev, unsigned int reg)
->  
->  static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
->  {
-> +	struct fsl_sai *sai = dev_get_drvdata(dev);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
-> +
-> +	if (reg >= FSL_SAI_TCSR(ofs) && reg <= FSL_SAI_TCR5(ofs))
-> +		return true;
-> +
-> +	if (reg >= FSL_SAI_RCSR(ofs) && reg <= FSL_SAI_RCR5(ofs))
-> +		return true;
-> +
->  	switch (reg) {
-> -	case FSL_SAI_TCSR:
-> -	case FSL_SAI_TCR1:
-> -	case FSL_SAI_TCR2:
-> -	case FSL_SAI_TCR3:
-> -	case FSL_SAI_TCR4:
-> -	case FSL_SAI_TCR5:
->  	case FSL_SAI_TDR0:
->  	case FSL_SAI_TDR1:
->  	case FSL_SAI_TDR2:
-> @@ -833,12 +872,6 @@ static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
->  	case FSL_SAI_TDR6:
->  	case FSL_SAI_TDR7:
->  	case FSL_SAI_TMR:
-> -	case FSL_SAI_RCSR:
-> -	case FSL_SAI_RCR1:
-> -	case FSL_SAI_RCR2:
-> -	case FSL_SAI_RCR3:
-> -	case FSL_SAI_RCR4:
-> -	case FSL_SAI_RCR5:
->  	case FSL_SAI_RMR:
->  		return true;
->  	default:
-> @@ -846,14 +879,14 @@ static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
->  	}
->  }
->  
-> -static const struct regmap_config fsl_sai_regmap_config = {
-> +static struct regmap_config fsl_sai_regmap_config = {
->  	.reg_bits = 32,
->  	.reg_stride = 4,
->  	.val_bits = 32,
->  
->  	.max_register = FSL_SAI_RMR,
-> -	.reg_defaults = fsl_sai_reg_defaults,
-> -	.num_reg_defaults = ARRAY_SIZE(fsl_sai_reg_defaults),
-> +	.reg_defaults = fsl_sai_reg_defaults_ofs0,
-> +	.num_reg_defaults = ARRAY_SIZE(fsl_sai_reg_defaults_ofs0),
->  	.readable_reg = fsl_sai_readable_reg,
->  	.volatile_reg = fsl_sai_volatile_reg,
->  	.writeable_reg = fsl_sai_writeable_reg,
-> @@ -885,6 +918,12 @@ static int fsl_sai_probe(struct platform_device *pdev)
->  	if (IS_ERR(base))
->  		return PTR_ERR(base);
->  
-> +	if (sai->soc_data->reg_offset == 8) {
-> +		fsl_sai_regmap_config.reg_defaults = fsl_sai_reg_defaults_ofs8;
-> +		fsl_sai_regmap_config.num_reg_defaults =
-> +			ARRAY_SIZE(fsl_sai_reg_defaults_ofs8);
-> +	}
-> +
->  	sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
->  			"bus", base, &fsl_sai_regmap_config);
->  
-> @@ -1017,11 +1056,13 @@ static int fsl_sai_remove(struct platform_device *pdev)
->  static const struct fsl_sai_soc_data fsl_sai_vf610_data = {
->  	.use_imx_pcm = false,
->  	.fifo_depth = 32,
-> +	.reg_offset = 0,
->  };
->  
->  static const struct fsl_sai_soc_data fsl_sai_imx6sx_data = {
->  	.use_imx_pcm = true,
->  	.fifo_depth = 32,
-> +	.reg_offset = 0,
->  };
->  
->  static const struct of_device_id fsl_sai_ids[] = {
-> @@ -1054,6 +1095,7 @@ static int fsl_sai_runtime_suspend(struct device *dev)
->  static int fsl_sai_runtime_resume(struct device *dev)
->  {
->  	struct fsl_sai *sai = dev_get_drvdata(dev);
-> +	unsigned int ofs = sai->soc_data->reg_offset;
->  	int ret;
->  
->  	ret = clk_prepare_enable(sai->bus_clk);
-> @@ -1075,11 +1117,11 @@ static int fsl_sai_runtime_resume(struct device *dev)
->  	}
->  
->  	regcache_cache_only(sai->regmap, false);
-> -	regmap_write(sai->regmap, FSL_SAI_TCSR, FSL_SAI_CSR_SR);
-> -	regmap_write(sai->regmap, FSL_SAI_RCSR, FSL_SAI_CSR_SR);
-> +	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), FSL_SAI_CSR_SR);
-> +	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), FSL_SAI_CSR_SR);
->  	usleep_range(1000, 2000);
-> -	regmap_write(sai->regmap, FSL_SAI_TCSR, 0);
-> -	regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
-> +	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), 0);
-> +	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), 0);
->  
->  	ret = regcache_sync(sai->regmap);
->  	if (ret)
-> diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-> index abf140951187..d20f16cc2a80 100644
-> --- a/sound/soc/fsl/fsl_sai.h
-> +++ b/sound/soc/fsl/fsl_sai.h
-> @@ -14,12 +14,12 @@
->  			 SNDRV_PCM_FMTBIT_S32_LE)
->  
->  /* SAI Register Map Register */
-> -#define FSL_SAI_TCSR	0x00 /* SAI Transmit Control */
-> -#define FSL_SAI_TCR1	0x04 /* SAI Transmit Configuration 1 */
-> -#define FSL_SAI_TCR2	0x08 /* SAI Transmit Configuration 2 */
-> -#define FSL_SAI_TCR3	0x0c /* SAI Transmit Configuration 3 */
-> -#define FSL_SAI_TCR4	0x10 /* SAI Transmit Configuration 4 */
-> -#define FSL_SAI_TCR5	0x14 /* SAI Transmit Configuration 5 */
-> +#define FSL_SAI_TCSR(ofs)	(0x00 + ofs) /* SAI Transmit Control */
-> +#define FSL_SAI_TCR1(ofs)	(0x04 + ofs) /* SAI Transmit Configuration 1 */
-> +#define FSL_SAI_TCR2(ofs)	(0x08 + ofs) /* SAI Transmit Configuration 2 */
-> +#define FSL_SAI_TCR3(ofs)	(0x0c + ofs) /* SAI Transmit Configuration 3 */
-> +#define FSL_SAI_TCR4(ofs)	(0x10 + ofs) /* SAI Transmit Configuration 4 */
-> +#define FSL_SAI_TCR5(ofs)	(0x14 + ofs) /* SAI Transmit Configuration 5 */
->  #define FSL_SAI_TDR0	0x20 /* SAI Transmit Data 0 */
->  #define FSL_SAI_TDR1	0x24 /* SAI Transmit Data 1 */
->  #define FSL_SAI_TDR2	0x28 /* SAI Transmit Data 2 */
-> @@ -37,12 +37,12 @@
->  #define FSL_SAI_TFR6	0x58 /* SAI Transmit FIFO 6 */
->  #define FSL_SAI_TFR7	0x5C /* SAI Transmit FIFO 7 */
->  #define FSL_SAI_TMR	0x60 /* SAI Transmit Mask */
-> -#define FSL_SAI_RCSR	0x80 /* SAI Receive Control */
-> -#define FSL_SAI_RCR1	0x84 /* SAI Receive Configuration 1 */
-> -#define FSL_SAI_RCR2	0x88 /* SAI Receive Configuration 2 */
-> -#define FSL_SAI_RCR3	0x8c /* SAI Receive Configuration 3 */
-> -#define FSL_SAI_RCR4	0x90 /* SAI Receive Configuration 4 */
-> -#define FSL_SAI_RCR5	0x94 /* SAI Receive Configuration 5 */
-> +#define FSL_SAI_RCSR(ofs)	(0x80 + ofs) /* SAI Receive Control */
-> +#define FSL_SAI_RCR1(ofs)	(0x84 + ofs)/* SAI Receive Configuration 1 */
-> +#define FSL_SAI_RCR2(ofs)	(0x88 + ofs) /* SAI Receive Configuration 2 */
-> +#define FSL_SAI_RCR3(ofs)	(0x8c + ofs) /* SAI Receive Configuration 3 */
-> +#define FSL_SAI_RCR4(ofs)	(0x90 + ofs) /* SAI Receive Configuration 4 */
-> +#define FSL_SAI_RCR5(ofs)	(0x94 + ofs) /* SAI Receive Configuration 5 */
->  #define FSL_SAI_RDR0	0xa0 /* SAI Receive Data 0 */
->  #define FSL_SAI_RDR1	0xa4 /* SAI Receive Data 1 */
->  #define FSL_SAI_RDR2	0xa8 /* SAI Receive Data 2 */
-> @@ -61,14 +61,14 @@
->  #define FSL_SAI_RFR7	0xdc /* SAI Receive FIFO 7 */
->  #define FSL_SAI_RMR	0xe0 /* SAI Receive Mask */
->  
-> -#define FSL_SAI_xCSR(tx)	(tx ? FSL_SAI_TCSR : FSL_SAI_RCSR)
-> -#define FSL_SAI_xCR1(tx)	(tx ? FSL_SAI_TCR1 : FSL_SAI_RCR1)
-> -#define FSL_SAI_xCR2(tx)	(tx ? FSL_SAI_TCR2 : FSL_SAI_RCR2)
-> -#define FSL_SAI_xCR3(tx)	(tx ? FSL_SAI_TCR3 : FSL_SAI_RCR3)
-> -#define FSL_SAI_xCR4(tx)	(tx ? FSL_SAI_TCR4 : FSL_SAI_RCR4)
-> -#define FSL_SAI_xCR5(tx)	(tx ? FSL_SAI_TCR5 : FSL_SAI_RCR5)
-> -#define FSL_SAI_xDR(tx)		(tx ? FSL_SAI_TDR : FSL_SAI_RDR)
-> -#define FSL_SAI_xFR(tx)		(tx ? FSL_SAI_TFR : FSL_SAI_RFR)
-> +#define FSL_SAI_xCSR(tx, ofs)	(tx ? FSL_SAI_TCSR(ofs) : FSL_SAI_RCSR(ofs))
-> +#define FSL_SAI_xCR1(tx, ofs)	(tx ? FSL_SAI_TCR1(ofs) : FSL_SAI_RCR1(ofs))
-> +#define FSL_SAI_xCR2(tx, ofs)	(tx ? FSL_SAI_TCR2(ofs) : FSL_SAI_RCR2(ofs))
-> +#define FSL_SAI_xCR3(tx, ofs)	(tx ? FSL_SAI_TCR3(ofs) : FSL_SAI_RCR3(ofs))
-> +#define FSL_SAI_xCR4(tx, ofs)	(tx ? FSL_SAI_TCR4(ofs) : FSL_SAI_RCR4(ofs))
-> +#define FSL_SAI_xCR5(tx, ofs)	(tx ? FSL_SAI_TCR5(ofs) : FSL_SAI_RCR5(ofs))
-> +#define FSL_SAI_xDR(tx, ofs)	(tx ? FSL_SAI_TDR(ofs) : FSL_SAI_RDR(ofs))
-> +#define FSL_SAI_xFR(tx, ofs)	(tx ? FSL_SAI_TFR(ofs) : FSL_SAI_RFR(ofs))
->  #define FSL_SAI_xMR(tx)		(tx ? FSL_SAI_TMR : FSL_SAI_RMR)
->  
->  /* SAI Transmit/Receive Control Register */
-> @@ -166,6 +166,7 @@
->  struct fsl_sai_soc_data {
->  	bool use_imx_pcm;
->  	unsigned int fifo_depth;
-> +	unsigned int reg_offset;
->  };
->  
->  struct fsl_sai {
-> -- 
-> 2.17.1
-> 
+Boot Failures Detected:
+
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            bcm4708-smartrg-sr400ac: 1 failed lab
+
+arm64:
+    defconfig:
+        gcc-8:
+            meson-gxl-s905x-nexbox-a95x: 1 failed lab
+
+Offline Platforms:
+
+arm64:
+
+    defconfig:
+        gcc-8
+            meson-gxbb-odroidc2: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
