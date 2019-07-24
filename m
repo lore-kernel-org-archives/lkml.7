@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D81C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893D1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C71204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F409214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000118;
-	bh=ljmNt4eEh0NMz/9kDFZauAiMqHK2zYTuqsiRF2NsJVg=;
+	s=default; t=1564000132;
+	bh=cOw+J+1RVaTrWSrl4Y1WW/S9Q5B6zKEYVYIdDeOurZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avYiAN9wrQ9OWMWJtqhHNj8T+1MENYLaEhjiqLd3yBQ20KGc7q1pNyedSMDBR9eGE
-	 mNSLBB5W+3/orQ9/8B3owJdF2A4tHwgYMciTiVZqfioTiZKGYEz2u6DKvuVUi20ex5
-	 CdwkZ97bHbekv4Lr6gNga3qiBCBJx8o7Gg4yHH9c=
+	b=SEQzzSQeHh6KOT5o2HJ7QoYXBlYGlHUk0l+AyPB/BA+eg0QkpZh+jPB+LUvYnF9GL
+	 uaUNnH3pq1qdcuR3zEfkhc8TstE4h6bklw90ghucVJ8CM4rX7DM5lygd6yce2ga5t6
+	 frsFj7jVlhhEIjs24JZod5Ck+wDta1a3o0t+8Bs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfGXTeY (ORCPT
+        id S2389022AbfGXTeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:34:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389082AbfGXTeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:20 -0400
+        id S2388382AbfGXTdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:33:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AC0E229FA;
-        Wed, 24 Jul 2019 19:34:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F761229F4;
+        Wed, 24 Jul 2019 19:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996859;
-        bh=ljmNt4eEh0NMz/9kDFZauAiMqHK2zYTuqsiRF2NsJVg=;
+        s=default; t=1563996832;
+        bh=cOw+J+1RVaTrWSrl4Y1WW/S9Q5B6zKEYVYIdDeOurZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZWfiEYWm/BPjDmWTLkxuqXXSapkwchlNZs5LJrHB+Pqk2+nC7a/0ea4vgz2hmlK+I
-         FaLRkha9v3MJhcfypQzxd9uQvFEYXBgVHm7CR+FyB1Ua1JgZoX+gg+fCO+Kj5D2eg2
-         4+wYeAG7xIPQAJsfFsidh+VAc0AhrQUpTELJks/0=
+        b=UMey0TyIMZYBNhqpQpg3QJzkUl8rxVsREiObr1yh5bo9Tz8k/JQW9uwmMVZbozr7T
+         7xh/gMsATkDxgcAjeyV9cTUUzcUjiCDwKJ7SRHTlYilnpSu7UKsfsaR7DusCQIzwog
+         scNDQ9VQBBWCCzefm5XwGn9BpaHoePq/GI0lwiQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Shijith Thotton <sthotton@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 240/413] gtp: fix use-after-free in gtp_encap_destroy()
-Date:   Wed, 24 Jul 2019 21:18:51 +0200
-Message-Id: <20190724191752.522841774@linuxfoundation.org>
+Subject: [PATCH 5.2 232/413] genirq: Update irq stats from NMI handlers
+Date:   Wed, 24 Jul 2019 21:18:43 +0200
+Message-Id: <20190724191751.697842633@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,129 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1788b8569f5de27da09087fa3f6580d2aa04cc75 ]
+[ Upstream commit c09cb1293523dd786ae54a12fd88001542cba2f6 ]
 
-gtp_encap_destroy() is called twice.
-1. When interface is deleted.
-2. When udp socket is destroyed.
-either gtp->sk0 or gtp->sk1u could be freed by sock_put() in
-gtp_encap_destroy(). so, when gtp_encap_destroy() is called again,
-it would uses freed sk pointer.
+The NMI handlers handle_percpu_devid_fasteoi_nmi() and handle_fasteoi_nmi()
+do not update the interrupt counts. Due to that the NMI interrupt count
+does not show up correctly in /proc/interrupts.
 
-patch makes gtp_encap_destroy() to set either gtp->sk0 or gtp->sk1u to
-null. in addition, both gtp->sk0 and gtp->sk1u pointer are protected
-by rtnl_lock. so, rtnl_lock() is added.
+Add the statistics and treat the NMI handlers in the same way as per cpu
+interrupts and prevent them from updating irq_desc::tot_count as this might
+be corrupted due to concurrency.
 
-Test command:
-   gtp-link add gtp1 &
-   killall gtp-link
-   ip link del gtp1
+[ tglx: Massaged changelog ]
 
-Splat looks like:
-[   83.182767] BUG: KASAN: use-after-free in __lock_acquire+0x3a20/0x46a0
-[   83.184128] Read of size 8 at addr ffff8880cc7d5360 by task ip/1008
-[   83.185567] CPU: 1 PID: 1008 Comm: ip Not tainted 5.2.0-rc6+ #50
-[   83.188469] Call Trace:
-[ ... ]
-[   83.200126]  lock_acquire+0x141/0x380
-[   83.200575]  ? lock_sock_nested+0x3a/0xf0
-[   83.201069]  _raw_spin_lock_bh+0x38/0x70
-[   83.201551]  ? lock_sock_nested+0x3a/0xf0
-[   83.202044]  lock_sock_nested+0x3a/0xf0
-[   83.202520]  gtp_encap_destroy+0x18/0xe0 [gtp]
-[   83.203065]  gtp_encap_disable.isra.14+0x13/0x50 [gtp]
-[   83.203687]  gtp_dellink+0x56/0x170 [gtp]
-[   83.204190]  rtnl_delete_link+0xb4/0x100
-[ ... ]
-[   83.236513] Allocated by task 976:
-[   83.236925]  save_stack+0x19/0x80
-[   83.237332]  __kasan_kmalloc.constprop.3+0xa0/0xd0
-[   83.237894]  kmem_cache_alloc+0xd8/0x280
-[   83.238360]  sk_prot_alloc.isra.42+0x50/0x200
-[   83.238874]  sk_alloc+0x32/0x940
-[   83.239264]  inet_create+0x283/0xc20
-[   83.239684]  __sock_create+0x2dd/0x540
-[   83.240136]  __sys_socket+0xca/0x1a0
-[   83.240550]  __x64_sys_socket+0x6f/0xb0
-[   83.240998]  do_syscall_64+0x9c/0x450
-[   83.241466]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   83.242061]
-[   83.242249] Freed by task 0:
-[   83.242616]  save_stack+0x19/0x80
-[   83.243013]  __kasan_slab_free+0x111/0x150
-[   83.243498]  kmem_cache_free+0x89/0x250
-[   83.244444]  __sk_destruct+0x38f/0x5a0
-[   83.245366]  rcu_core+0x7e9/0x1c20
-[   83.245766]  __do_softirq+0x213/0x8fa
-
-Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2dcf1fbcad35 ("genirq: Provide NMI handlers")
+Signed-off-by: Shijith Thotton <sthotton@marvell.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1562313336-11888-1-git-send-email-sthotton@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ kernel/irq/chip.c    | 4 ++++
+ kernel/irq/irqdesc.c | 8 +++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index b770335c03c1..5615cdb7202c 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -285,13 +285,17 @@ static int gtp1u_udp_encap_recv(struct gtp_dev *gtp, struct sk_buff *skb)
- 	return gtp_rx(pctx, skb, hdrlen, gtp->role);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 3ff4a1260885..b76703b2c0af 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -754,6 +754,8 @@ void handle_fasteoi_nmi(struct irq_desc *desc)
+ 	unsigned int irq = irq_desc_get_irq(desc);
+ 	irqreturn_t res;
+ 
++	__kstat_incr_irqs_this_cpu(desc);
++
+ 	trace_irq_handler_entry(irq, action);
+ 	/*
+ 	 * NMIs cannot be shared, there is only one action.
+@@ -968,6 +970,8 @@ void handle_percpu_devid_fasteoi_nmi(struct irq_desc *desc)
+ 	unsigned int irq = irq_desc_get_irq(desc);
+ 	irqreturn_t res;
+ 
++	__kstat_incr_irqs_this_cpu(desc);
++
+ 	trace_irq_handler_entry(irq, action);
+ 	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
+ 	trace_irq_handler_exit(irq, action, res);
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index c52b737ab8e3..9149dde5a7b0 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -946,6 +946,11 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
+ 			*per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
  }
  
--static void gtp_encap_destroy(struct sock *sk)
-+static void __gtp_encap_destroy(struct sock *sk)
- {
- 	struct gtp_dev *gtp;
- 
- 	lock_sock(sk);
- 	gtp = sk->sk_user_data;
- 	if (gtp) {
-+		if (gtp->sk0 == sk)
-+			gtp->sk0 = NULL;
-+		else
-+			gtp->sk1u = NULL;
- 		udp_sk(sk)->encap_type = 0;
- 		rcu_assign_sk_user_data(sk, NULL);
- 		sock_put(sk);
-@@ -299,12 +303,19 @@ static void gtp_encap_destroy(struct sock *sk)
- 	release_sock(sk);
- }
- 
-+static void gtp_encap_destroy(struct sock *sk)
++static bool irq_is_nmi(struct irq_desc *desc)
 +{
-+	rtnl_lock();
-+	__gtp_encap_destroy(sk);
-+	rtnl_unlock();
++	return desc->istate & IRQS_NMI;
 +}
 +
- static void gtp_encap_disable_sock(struct sock *sk)
- {
- 	if (!sk)
- 		return;
+ /**
+  * kstat_irqs - Get the statistics for an interrupt
+  * @irq:	The interrupt number
+@@ -963,7 +968,8 @@ unsigned int kstat_irqs(unsigned int irq)
+ 	if (!desc || !desc->kstat_irqs)
+ 		return 0;
+ 	if (!irq_settings_is_per_cpu_devid(desc) &&
+-	    !irq_settings_is_per_cpu(desc))
++	    !irq_settings_is_per_cpu(desc) &&
++	    !irq_is_nmi(desc))
+ 	    return desc->tot_count;
  
--	gtp_encap_destroy(sk);
-+	__gtp_encap_destroy(sk);
- }
- 
- static void gtp_encap_disable(struct gtp_dev *gtp)
-@@ -1043,6 +1054,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
- 		return -EINVAL;
- 	}
- 
-+	rtnl_lock();
- 	rcu_read_lock();
- 
- 	gtp = gtp_find_dev(sock_net(skb->sk), info->attrs);
-@@ -1067,6 +1079,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
- 
- out_unlock:
- 	rcu_read_unlock();
-+	rtnl_unlock();
- 	return err;
- }
- 
+ 	for_each_possible_cpu(cpu)
 -- 
 2.20.1
 
