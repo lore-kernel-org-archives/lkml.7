@@ -8,101 +8,129 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF37C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A594CC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED276206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B250229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4L08l+w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbGLMcMI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfGXJnP (ORCPT
+        id S1727021AbfGXJnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:43:15 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41367 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfGXJnP (ORCPT
+        Wed, 24 Jul 2019 05:43:20 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34492 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfGXJnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:43:15 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so10600504pgg.8;
-        Wed, 24 Jul 2019 02:43:14 -0700 (PDT)
+        Wed, 24 Jul 2019 05:43:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so14722533pgc.1;
+        Wed, 24 Jul 2019 02:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iR/rCzIi399aRKhJN0gwqymimR1s0rrYFixqzZ944Cc=;
-        b=G4L08l+wMcbZdgsUmXCEsJdyn8PGqwrko5Wx6BSSo+NtApUJqete7vvQcxJaFqVG2/
-         /yWeRAwqd0zam4RYqhqQmV1uP3NGB757vb3ZjMVs3irXTdc+oGT+ogVEXVY324c/MTOK
-         g6ggFvSMVodXYU3NCV2EGyHVow5FOCkhZikXp+mz91fHl2tS2l650FyHsJPLpIr27QiH
-         2PUUgu8KJypFd12Pq72H48XImKkTxRqd1r2zMUY0AVZHVhj/174M+DH4bA5+xSXjuaBH
-         Au2GtRzHDbhrSz3hwaA8AT36Ux4D+e0O27pmv0BOo/+sF2FTMXflBOA7bsemf5l6u2eg
-         w3Pw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dfGfB3xwwf3iQZ8pUv1Cce8BeLxDLL9fV/CFtRrfuaU=;
+        b=TbGLMcMIOmm+LtHtnas4F9H/XOneNA7H5ua3fknsao5aQPVc7pNzn/HHb6FQZFQTex
+         419/Z8qJ6swsZgE6Bl0WzbCMIB9etUZPgjqOgQyt8m0S6jIrNYsd23gli3uwV8aHL1Gc
+         bW0iWhhi9Rz9wkn998rGGla8JsywPVNYKWm33aSaJujOzTnQ5yBZXHTnXIIt/CUakOq3
+         xgIPR0mTH4ZnguwR1hhZqVNh9umXepJa588iKGy2g2lTcO4LyOnfpNmuxteJx/HPCBqX
+         c+0gj6xb0FU2VZXa7uPmam9yVFRw10yCk+ZfdLuBGJHp3+aPV+0ugDi/ma1wJcN//3Jf
+         cY8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iR/rCzIi399aRKhJN0gwqymimR1s0rrYFixqzZ944Cc=;
-        b=PoBFddTebabCul3CFXgNM1M4PL21lepADvnxVSAow4vje8pSlA7or0Xg5KpYv4NU89
-         WWtXEo+ST5IcWhmtT33Mmo6pfGbbAJVts5LX73fd3LKX6qTU6MPFSVecoe8Lk0ShZLr0
-         Lr0NXD+KaxlzIHEPd3I73N2p/qmuQHI/DTEoxmlEBldfX+cxN77Q/gkEt2kL4g1lKMTx
-         3Ql1/ebKKUBkaavQUyM8/9fvG/IHSyLrFcmsmpnEvCVjNuE2ej+S3CB/6WsjCIfSC6+C
-         h20lSnHLBBF3LQPqqT1Tm861vS1sEmrw7R0Wxotnovdof5W+sJfT2cUgX6+u7UMQ6udt
-         /hfA==
-X-Gm-Message-State: APjAAAWPHPk7BYlxEQVeey3IltN2QgCMHkOy91PtqH9KWMWLXgiNKrpu
-        CZDYEU/ImSHvEAnDSADYEtNIjFeYdzo=
-X-Google-Smtp-Source: APXvYqxhzYr7NV2FggQ7OCSMgRgws55e+2f5hgDhCfoQ8LXK75v0BzE4vCZy2mERL0MWIjZSFYWABg==
-X-Received: by 2002:aa7:82da:: with SMTP id f26mr10488550pfn.82.1563961394272;
-        Wed, 24 Jul 2019 02:43:14 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id 22sm53099526pfu.179.2019.07.24.02.43.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 02:43:13 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     idryomov@gmail.com, jlayton@kernel.org, sage@redhat.com,
-        davem@davemloft.net
-Cc:     ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: ceph: Fix a possible null-pointer dereference in ceph_crypto_key_destroy()
-Date:   Wed, 24 Jul 2019 17:43:06 +0800
-Message-Id: <20190724094306.1866-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dfGfB3xwwf3iQZ8pUv1Cce8BeLxDLL9fV/CFtRrfuaU=;
+        b=IDB5L/l7G3lbDA5wFj+GooeL+o647nIlp5vPvzJzMCkfQdIZxDXdQ/x+6oN4KyfhmO
+         2qhiU0f6J0UAc4CulPnkYL4XzERrIyHVdVNZuxQAGVolPC6mRWcJrjZXpu2fkOPuyJrL
+         hMe/gy2OAHIh1Gj3pqG78Yr61/hLGo1U4SMLcnHF1PMhdivTLVXfVD0FqjHByoQkVC7H
+         8MwBPm2d66DTETe45a7Q+x5wCJhJl2Dq/0VZ8IeLe6Eym3pD6uzldyeCr4vGAonD2o8Y
+         DYBMQewk7nrxYcrplIs+Y/+cbzWfJSF90Xdy6C9i+yMB++JZvrf24rMRTPm6YqeTdM/9
+         8a5A==
+X-Gm-Message-State: APjAAAWNrNRgACsuyckA7+O7ZWcqRRP/fb8dBJjySKDVoneP5i1z6e2B
+        rhiJHWOGtuAOJDOGJqHJTJ3UDuz2Dyk=
+X-Google-Smtp-Source: APXvYqxoKsM5gyvJ5hPl4B1K+JyJhCr20cKUNHQXvVSTIIHVYMjxT2XeJLcsE7cvSoMk8shTsz+mZQ==
+X-Received: by 2002:a63:58c:: with SMTP id 134mr84192409pgf.106.1563961398634;
+        Wed, 24 Jul 2019 02:43:18 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id o3sm86318789pje.1.2019.07.24.02.43.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 24 Jul 2019 02:43:18 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] KVM: X86: Boost queue head vCPU to mitigate lock waiter preemption
+Date:   Wed, 24 Jul 2019 17:43:13 +0800
+Message-Id: <1563961393-10301-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In set_secret(), key->tfm is assigned to NULL on line 55, and then
-ceph_crypto_key_destroy(key) is executed.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-ceph_crypto_key_destroy(key)
-    crypto_free_sync_skcipher(key->tfm)
-        crypto_skcipher_tfm(tfm)
-            return &tfm->base;
+Commit 11752adb (locking/pvqspinlock: Implement hybrid PV queued/unfair locks)
+introduces hybrid PV queued/unfair locks 
+ - queued mode (no starvation)
+ - unfair mode (good performance on not heavily contended lock)
+The lock waiter goes into the unfair mode especially in VMs with over-commit
+vCPUs since increaing over-commitment increase the likehood that the queue 
+head vCPU may have been preempted and not actively spinning.
 
-Thus, a possible null-pointer dereference may occur.
+However, reschedule queue head vCPU timely to acquire the lock still can get 
+better performance than just depending on lock stealing in over-subscribe 
+scenario.
 
-To fix this bug, key->tfm is checked before calling
-crypto_free_sync_skcipher().
+Testing on 80 HT 2 socket Xeon Skylake server, with 80 vCPUs VM 80GB RAM:
+ebizzy -M
+             vanilla     boosting    improved
+ 1VM          23520        25040         6%
+ 2VM           8000        13600        70%
+ 3VM           3100         5400        74%
 
-This bug is found by a static analysis tool STCheck written by us.
+The lock holder vCPU yields to the queue head vCPU when unlock, to boost queue 
+head vCPU which is involuntary preemption or the one which is voluntary halt 
+due to fail to acquire the lock after a short spin in the guest.
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- net/ceph/crypto.c | 3 ++-
+ arch/x86/kvm/x86.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/ceph/crypto.c b/net/ceph/crypto.c
-index 5d6724cee38f..ac28463bcfd8 100644
---- a/net/ceph/crypto.c
-+++ b/net/ceph/crypto.c
-@@ -136,7 +136,8 @@ void ceph_crypto_key_destroy(struct ceph_crypto_key *key)
- 	if (key) {
- 		kfree(key->key);
- 		key->key = NULL;
--		crypto_free_sync_skcipher(key->tfm);
-+		if (key->tfm)
-+			crypto_free_sync_skcipher(key->tfm);
- 		key->tfm = NULL;
- 	}
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 01e18ca..c6d951c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7206,7 +7206,7 @@ static void kvm_sched_yield(struct kvm *kvm, unsigned long dest_id)
+ 
+ 	rcu_read_unlock();
+ 
+-	if (target)
++	if (target && READ_ONCE(target->ready))
+ 		kvm_vcpu_yield_to(target);
  }
+ 
+@@ -7246,6 +7246,7 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
+ 		break;
+ 	case KVM_HC_KICK_CPU:
+ 		kvm_pv_kick_cpu_op(vcpu->kvm, a0, a1);
++		kvm_sched_yield(vcpu->kvm, a1);
+ 		ret = 0;
+ 		break;
+ #ifdef CONFIG_X86_64
 -- 
-2.17.0
+2.7.4
 
