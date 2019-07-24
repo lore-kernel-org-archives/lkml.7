@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAC0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696BEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87E4229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACF821951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996473;
-	bh=lJlq3lmejJIth2s9ZVzlucz72ZzkaiL/4po95OD0SuU=;
+	s=default; t=1563996481;
+	bh=SA+G07viadBKMt3hQ1A3/CmvBLMCBOrDuYqhRjrokoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LDEiDgkfeodxHnVP4J9Dd0+HYJBb6PFE63APzI2VTokHXi/vuoMmHk5qWLpnwO7iO
-	 KsNFIM2jAb2RwlFZ4apK8XsN6fKaFt7lkqGC0pkylxFCxTZdfr+04wUnRIje4eYC5s
-	 MWbFy7HUJqGLL6XS/AhHgrVR81ABd63twp6//njM=
+	b=Mo0GiqRl+p5y5mQwMh61/p/x0pdTRvn2VmwFw8CoZjO+UG06iWgmM+Tv19R7s80q9
+	 S+CypIs+ihKDMazCEjMZ/3+Y+WeHqTReldvi1kcfXGgyt6M16BSKpH+jC+sclqQpl1
+	 593z3QVbpxZY4Vrn+fgUJXWafDNS13F/lfrI75JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfGXT1v (ORCPT
+        id S1728839AbfGXT2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45690 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388151AbfGXT1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:46 -0400
+        id S1727795AbfGXT17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F305218EA;
-        Wed, 24 Jul 2019 19:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2D620659;
+        Wed, 24 Jul 2019 19:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996465;
-        bh=lJlq3lmejJIth2s9ZVzlucz72ZzkaiL/4po95OD0SuU=;
+        s=default; t=1563996477;
+        bh=SA+G07viadBKMt3hQ1A3/CmvBLMCBOrDuYqhRjrokoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ViQVSYVM8NAcC/ITRdl+H8rH4gFCvhRKKQtbbrF7y5BHxJdi1jdn4hFsLxkqGb6zD
-         aQugKdfhgA5INtUnH/CVzNHKIgjq81YjG7EFQzPOuGqlAkOHxioePm1qqn3mpzpSiz
-         pxCBkedQB6flmh2NbTrJ3TBWjH3NklZwL5UttRAk=
+        b=n5vV+v6ORJUoRMiXiLwhnj0m17hWTPZOOlEBo72DcAAg/oVt/FTGXTsJ0xywSGrTG
+         w0L+z7TxNSrV2J6V2kRHY/CGxJs6pgEWZUAD99vJ4kqi6QnorgoVIZmnWzfheQw6aV
+         M1sG59N89LUAkknaMb9BByMA3aOSvKUK+9nxNjbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 105/413] block: null_blk: fix race condition for null_del_dev
-Date:   Wed, 24 Jul 2019 21:16:36 +0200
-Message-Id: <20190724191742.782495449@linuxfoundation.org>
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        qiuxu.zhuo@intel.com, rui.zhang@intel.com, tony.luck@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 109/413] perf/x86/intel: Add more Icelake CPUIDs
+Date:   Wed, 24 Jul 2019 21:16:40 +0200
+Message-Id: <20190724191743.118327550@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,88 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7602843fd873cae43a444b83b14dfdd114a9659c ]
+[ Upstream commit faaeff98666c24376cebd0b106504d05a36881d1 ]
 
-Dulicate call of null_del_dev() will trigger null pointer error like below.
-The reason is a race condition between nullb_device_power_store() and
-nullb_group_drop_item().
+Add new model number for Icelake desktop and server to perf.
 
-  CPU#0                         CPU#1
-  ----------------              -----------------
-  do_rmdir()
-   >configfs_rmdir()
-    >client_drop_item()
-     >nullb_group_drop_item()
-                                nullb_device_power_store()
-				>null_del_dev()
+The data source encoding for Icelake server is the same as Skylake
+server.
 
-      >test_and_clear_bit(NULLB_DEV_FL_UP
-       >null_del_dev()
-       ^^^^^
-       Duplicated null_dev_dev() triger null pointer error
-
-				>clear_bit(NULLB_DEV_FL_UP
-
-The fix could be keep the sequnce of clear NULLB_DEV_FL_UP and null_del_dev().
-
-[  698.613600] BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
-[  698.613608] #PF error: [normal kernel read fault]
-[  698.613611] PGD 0 P4D 0
-[  698.613619] Oops: 0000 [#1] SMP PTI
-[  698.613627] CPU: 3 PID: 6382 Comm: rmdir Not tainted 5.0.0+ #35
-[  698.613631] Hardware name: LENOVO 20LJS2EV08/20LJS2EV08, BIOS R0SET33W (1.17 ) 07/18/2018
-[  698.613644] RIP: 0010:null_del_dev+0xc/0x110 [null_blk]
-[  698.613649] Code: 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b eb 97 e8 47 bb 2a e8 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 54 53 <8b> 77 18 48 89 fb 4c 8b 27 48 c7 c7 40 57 1e c1 e8 bf c7 cb e8 48
-[  698.613654] RSP: 0018:ffffb887888bfde0 EFLAGS: 00010286
-[  698.613659] RAX: 0000000000000000 RBX: ffff9d436d92bc00 RCX: ffff9d43a9184681
-[  698.613663] RDX: ffffffffc11e5c30 RSI: 0000000068be6540 RDI: 0000000000000000
-[  698.613667] RBP: ffffb887888bfdf0 R08: 0000000000000001 R09: 0000000000000000
-[  698.613671] R10: ffffb887888bfdd8 R11: 0000000000000f16 R12: ffff9d436d92bc08
-[  698.613675] R13: ffff9d436d94e630 R14: ffffffffc11e5088 R15: ffffffffc11e5000
-[  698.613680] FS:  00007faa68be6540(0000) GS:ffff9d43d14c0000(0000) knlGS:0000000000000000
-[  698.613685] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  698.613689] CR2: 0000000000000018 CR3: 000000042f70c002 CR4: 00000000003606e0
-[  698.613693] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  698.613697] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  698.613700] Call Trace:
-[  698.613712]  nullb_group_drop_item+0x50/0x70 [null_blk]
-[  698.613722]  client_drop_item+0x29/0x40
-[  698.613728]  configfs_rmdir+0x1ed/0x300
-[  698.613738]  vfs_rmdir+0xb2/0x130
-[  698.613743]  do_rmdir+0x1c7/0x1e0
-[  698.613750]  __x64_sys_rmdir+0x17/0x20
-[  698.613759]  do_syscall_64+0x5a/0x110
-[  698.613768]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Bob Liu <bob.liu@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: qiuxu.zhuo@intel.com
+Cc: rui.zhang@intel.com
+Cc: tony.luck@intel.com
+Link: https://lkml.kernel.org/r/20190603134122.13853-2-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_main.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/x86/events/intel/core.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index 447d635c79a2..2a4f8bc4f930 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -327,11 +327,12 @@ static ssize_t nullb_device_power_store(struct config_item *item,
- 		set_bit(NULLB_DEV_FL_CONFIGURED, &dev->flags);
- 		dev->power = newp;
- 	} else if (dev->power && !newp) {
--		mutex_lock(&lock);
--		dev->power = newp;
--		null_del_dev(dev->nullb);
--		mutex_unlock(&lock);
--		clear_bit(NULLB_DEV_FL_UP, &dev->flags);
-+		if (test_and_clear_bit(NULLB_DEV_FL_UP, &dev->flags)) {
-+			mutex_lock(&lock);
-+			dev->power = newp;
-+			null_del_dev(dev->nullb);
-+			mutex_unlock(&lock);
-+		}
- 		clear_bit(NULLB_DEV_FL_CONFIGURED, &dev->flags);
- 	}
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a5436cee20b1..b6cae65aa7ef 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4439,6 +4439,7 @@ __init int intel_pmu_init(void)
+ 	struct event_constraint *c;
+ 	unsigned int unused;
+ 	struct extra_reg *er;
++	bool pmem = false;
+ 	int version, i;
+ 	char *name;
  
+@@ -4890,9 +4891,10 @@ __init int intel_pmu_init(void)
+ 		name = "knights-landing";
+ 		break;
+ 
++	case INTEL_FAM6_SKYLAKE_X:
++		pmem = true;
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+ 	case INTEL_FAM6_SKYLAKE_DESKTOP:
+-	case INTEL_FAM6_SKYLAKE_X:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+ 	case INTEL_FAM6_KABYLAKE_DESKTOP:
+ 		x86_add_quirk(intel_pebs_isolation_quirk);
+@@ -4925,8 +4927,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.cpu_events = hsw_events_attrs;
+ 		mem_attr = hsw_mem_events_attrs;
+ 		tsx_attr = hsw_tsx_events_attrs;
+-		intel_pmu_pebs_data_source_skl(
+-			boot_cpu_data.x86_model == INTEL_FAM6_SKYLAKE_X);
++		intel_pmu_pebs_data_source_skl(pmem);
+ 
+ 		if (boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
+ 			x86_pmu.flags |= PMU_FL_TFA;
+@@ -4940,7 +4941,11 @@ __init int intel_pmu_init(void)
+ 		name = "skylake";
+ 		break;
+ 
++	case INTEL_FAM6_ICELAKE_X:
++	case INTEL_FAM6_ICELAKE_XEON_D:
++		pmem = true;
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
++	case INTEL_FAM6_ICELAKE_DESKTOP:
+ 		x86_pmu.late_ack = true;
+ 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+ 		memcpy(hw_cache_extra_regs, skl_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
+@@ -4963,7 +4968,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.cpu_events = get_icl_events_attrs();
+ 		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
+ 		x86_pmu.lbr_pt_coexist = true;
+-		intel_pmu_pebs_data_source_skl(false);
++		intel_pmu_pebs_data_source_skl(pmem);
+ 		pr_cont("Icelake events, ");
+ 		name = "icelake";
+ 		break;
 -- 
 2.20.1
 
