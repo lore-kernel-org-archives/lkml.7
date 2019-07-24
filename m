@@ -2,124 +2,105 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93DAC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B41CC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A050822ADB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563978618;
-	bh=rIcPLNA+uDJDlrIUJ0agl7S6TInb6IGvxF9wZ4XeCak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M1UfRjHPLjVFTllUIQ0p5q+I70fkKIP2eHhzKB9iFpsEYaWjDy6MhfrbqO6dUMWXs
-	 fQ9n7kcQUWq006fI3EqM1AF7H/H/98TSUHemM0h6Vf0g6eMkGFh6MRnfixsuBhhbrW
-	 j+re8FzPnP5C3J5pmIlHKktXoxMrOEKie2lVsxD4=
+	by mail.kernel.org (Postfix) with ESMTP id D90DA21951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfGXOaR (ORCPT
+        id S1728180AbfGXOaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 10:30:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33864 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfGXOaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:30:17 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728151AbfGXOaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:30:22 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1131217F4;
-        Wed, 24 Jul 2019 14:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563978616;
-        bh=rIcPLNA+uDJDlrIUJ0agl7S6TInb6IGvxF9wZ4XeCak=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JsWkt6Hxlk0pDJcWDr/0H2LinxuM0ErbKnt4XMSSV4DtD4yrYej2z5KTId4Fy+mxz
-         r4DOpW4GiKfixBQtK+dlYRV4kfEoyYBJNwA9g4HggVqR3JoLImGHHk8y07T2mc5mAC
-         bXDKmMhx2THOQXYgs0lYeyaOrfNv7ML8ZB61tAzE=
-Date:   Wed, 24 Jul 2019 16:30:13 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        peterz@infradead.org
-Subject: Re: How to turn scheduler tick on for current nohz_full CPU?
-Message-ID: <20190724143012.GB1029@lenoir>
-References: <20190724115331.GA29059@linux.ibm.com>
- <20190724132257.GA1029@lenoir>
- <20190724135219.GY14271@linux.ibm.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id E9CCEC055673;
+        Wed, 24 Jul 2019 14:30:21 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-117-47.ams2.redhat.com [10.36.117.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE2B060A9F;
+        Wed, 24 Jul 2019 14:30:17 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in acpi_scan_init()
+Date:   Wed, 24 Jul 2019 16:30:17 +0200
+Message-Id: <20190724143017.12841-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724135219.GY14271@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 24 Jul 2019 14:30:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 06:52:19AM -0700, Paul E. McKenney wrote:
-> On Wed, Jul 24, 2019 at 03:22:59PM +0200, Frederic Weisbecker wrote:
-> > On Wed, Jul 24, 2019 at 04:53:31AM -0700, Paul E. McKenney wrote:
-> > > Hello!
-> > > 
-> > > One of the callback-invocation forward-progress issues turns out to
-> > > be nohz_full CPUs not turning their scheduling-clock interrupt back on
-> > > when running in kernel mode.  Given that callback floods can cause RCU's
-> > > callback-invocation loop to run for some time, it would be good for this
-> > > loop to re-enable this interrupt.  Of course, this problem applies to
-> > > pretty much any kernel code that might loop for an extended time period,
-> > > not just RCU.
-> > > 
-> > > I took a quick look at kernel/time/tick-sched.c and the closest thing
-> > > I found was tick_nohz_full_kick_cpu(), except that (1) it isn't clear
-> > > that this does much when invoked on the current CPU and (2) it doesn't
-> > > help in rcutorture TREE04.  In contrast, disabling NO_HZ_FULL and using
-> > > RCU_NOCB_CPU instead works quite well.
-> > > 
-> > > So what should I be calling instead of tick_nohz_full_kick_cpu() to
-> > > re-enable the current CPU's scheduling-clock interrupt?
-> > 
-> > Indeed, kernel code is assumed to be quick enough (between two extended grace
-> > periods) to avoid running the tick for RCU. But some long lasting kernel code
-> > may require to tick temporarily.
-> > 
-> > You can use tick_nohz_dep_set_cpu(cpu, TICK_DEP_MASK_RCU) with the
-> > following:
-> > 
-> > diff --git a/include/linux/tick.h b/include/linux/tick.h
-> > index f92a10b5e112..3f476e2a4bf7 100644
-> > --- a/include/linux/tick.h
-> > +++ b/include/linux/tick.h
-> > @@ -108,7 +108,8 @@ enum tick_dep_bits {
-> >  	TICK_DEP_BIT_POSIX_TIMER	= 0,
-> >  	TICK_DEP_BIT_PERF_EVENTS	= 1,
-> >  	TICK_DEP_BIT_SCHED		= 2,
-> > -	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3
-> > +	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
-> > +	TICK_DEP_BIT_RCU		= 4
-> >  };
-> >  
-> >  #define TICK_DEP_MASK_NONE		0
-> > @@ -116,6 +117,7 @@ enum tick_dep_bits {
-> >  #define TICK_DEP_MASK_PERF_EVENTS	(1 << TICK_DEP_BIT_PERF_EVENTS)
-> >  #define TICK_DEP_MASK_SCHED		(1 << TICK_DEP_BIT_SCHED)
-> >  #define TICK_DEP_MASK_CLOCK_UNSTABLE	(1 << TICK_DEP_BIT_CLOCK_UNSTABLE)
-> > +#define TICK_DEP_MASK_RCU		(1 << TICK_DEP_BIT_RCU)
-> >  
-> >  #ifdef CONFIG_NO_HZ_COMMON
-> >  extern bool tick_nohz_enabled;
-> 
-> I will give this a try, thank you!  (Testing will take a few days.)
+We end up calling __add_memory() without the device hotplug lock held.
+(I used a local patch to assert in __add_memory() that the
+ device_hotplug_lock is held - I might upstream that as well soon)
 
-Sure!
+[   26.771684]        create_memory_block_devices+0xa4/0x140
+[   26.772952]        add_memory_resource+0xde/0x200
+[   26.773987]        __add_memory+0x6e/0xa0
+[   26.775161]        acpi_memory_device_add+0x149/0x2b0
+[   26.776263]        acpi_bus_attach+0xf1/0x1f0
+[   26.777247]        acpi_bus_attach+0x66/0x1f0
+[   26.778268]        acpi_bus_attach+0x66/0x1f0
+[   26.779073]        acpi_bus_attach+0x66/0x1f0
+[   26.780143]        acpi_bus_scan+0x3e/0x90
+[   26.780844]        acpi_scan_init+0x109/0x257
+[   26.781638]        acpi_init+0x2ab/0x30d
+[   26.782248]        do_one_initcall+0x58/0x2cf
+[   26.783181]        kernel_init_freeable+0x1bd/0x247
+[   26.784345]        kernel_init+0x5/0xf1
+[   26.785314]        ret_from_fork+0x3a/0x50
 
-For the background: expect a self-IPI to fire which then restart the tick on IRQ exit.
-Once you're later done with the work, don't forget to remove the tick dependency:
+So perform the locking just like in acpi_device_hotplug().
 
-     tick_nohz_dep_clear_cpu(cpu, TICK_DEP_MASK_RCU);
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/acpi/scan.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 0e28270b0fd8..cbc9d64b48dd 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -2204,7 +2204,9 @@ int __init acpi_scan_init(void)
+ 	acpi_gpe_apply_masked_gpes();
+ 	acpi_update_all_gpes();
+ 
++	lock_device_hotplug();
+ 	mutex_lock(&acpi_scan_lock);
++
+ 	/*
+ 	 * Enumerate devices in the ACPI namespace.
+ 	 */
+@@ -2232,6 +2234,7 @@ int __init acpi_scan_init(void)
+ 
+  out:
+ 	mutex_unlock(&acpi_scan_lock);
++	unlock_device_hotplug();
+ 	return result;
+ }
+ 
+-- 
+2.21.0
 
-Thanks.
