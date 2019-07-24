@@ -6,48 +6,55 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFC7C41517
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08977C76194
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42684229F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CBE229F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563936612;
-	bh=xN+wRv1x3pibnAFVRxilNHFnNao5TC+4ihBg1DKbjIo=;
+	s=default; t=1563936671;
+	bh=58GvADylPQ9DbBziu9oSNZ/UR9579iHMOg2RDGDnwqw=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0dCxBIWyhCMVBLcrx8vjMRcjQ+Tiz+ZReHCpodxr61NdPpcGjH951I8rrqCmNELsK
-	 a7kIrHRGfShoXbBLXd65OU68WX43PS42886t+jtrw1oYt63PTDCYrXq8a4c03DarZr
-	 TiuzmR3I7gMngFDmz/eezuIepjbRDzoD4NM3BFWU=
+	b=pDDAeEs5Po4IhfaMsE6htU5aEIMB5N326FRdyMPbe5zF3REsJlC1k1J8tZNOBSKGQ
+	 DdY4DV88gRCDo7IZkpXXtmg0h4LXRpRSNIQuzN8psv10bF2zvW7er+TEYoHUmOOTes
+	 tfBbE/XdCjCP+BslXr4a9mmi6Y78Nlv8TBXHIn28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfGXCuL (ORCPT
+        id S1726319AbfGXCvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47366 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 22:51:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbfGXCuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:50:10 -0400
+        id S1725827AbfGXCvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:51:10 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ECBE229F3;
-        Wed, 24 Jul 2019 02:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C33229F3;
+        Wed, 24 Jul 2019 02:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563936609;
-        bh=xN+wRv1x3pibnAFVRxilNHFnNao5TC+4ihBg1DKbjIo=;
+        s=default; t=1563936669;
+        bh=58GvADylPQ9DbBziu9oSNZ/UR9579iHMOg2RDGDnwqw=;
         h=Date:From:To:Cc:Subject:From;
-        b=KR1HsgKkkb/WO2xAB8jk5f/PxCYQZ96KM8Kdd2L/yQRjlTGe52FA5i81AVR2fQyDC
-         1SAYwEj1F1H84pHrqTvTEMitdYwj7gqwJ3KKm82CXdyced9RcCPFF3RjSiY5v1bRSX
-         6E0cPbINAHtVD1N5nYtXU5W9eYuCIjCTTOZQPAYM=
-Date:   Tue, 23 Jul 2019 19:50:08 -0700
+        b=Ntaqi3vurk28SUcUUFpVXaq7Yq++lilbOtifesJz/yTBeeTOuSZC9uPoc6etauNQe
+         ZgcEojF97wEHJ+WQwv28c++Hf9Yb3fuJ8qBe5UpCnIYRqxmI1QN6Wl2Tqgw1VLRNx0
+         S8UVlwc9NqzndoUusjemaiR4JMtZaLQsNON9M/ng=
+Date:   Tue, 23 Jul 2019 19:51:07 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 1 open syzbot bug in rtc subsystem
-Message-ID: <20190724025008.GL643@sol.localdomain>
-Mail-Followup-To: linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Subject: Reminder: 1 open syzbot bug in "net/sunrpc" subsystem
+Message-ID: <20190724025107.GM643@sol.localdomain>
+Mail-Followup-To: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,34 +69,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 1 of them as possibly being a bug in the rtc subsystem.
+marked 1 of them as possibly being a bug in the "net/sunrpc" subsystem.
 
 If you believe this bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed this bug to the rtc subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
+If you believe I misattributed this bug to the "net/sunrpc" subsystem, please
+let me know, and if possible forward the report to the correct people or mailing
+list.
 
 Here is the bug:
 
 --------------------------------------------------------------------------------
-Title:              BUG: workqueue lockup (4)
-Last occurred:      40 days ago
-Reported:           289 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0041bf1423916e9ae458b08b760e269a33c14960
-Original thread:    https://lkml.kernel.org/lkml/0000000000005764090577a27486@google.com/T/#u
+Title:              linux-next test error: WARNING in remove_proc_entry
+Last occurred:      69 days ago
+Reported:           71 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0b23d0049d5af6699d68ff17e2db121569b78fd4
+Original thread:    https://lkml.kernel.org/lkml/00000000000055d6590588bf90bf@google.com/T/#u
 
-This bug has a C reproducer.
+Unfortunately, this bug does not have a reproducer.
 
-The original thread for this bug received 4 replies; the last was 42 days ago.
+No one has replied to the original thread for this bug yet.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+08116743f8ad6f9a6de7@syzkaller.appspotmail.com
+    Reported-by: syzbot+4887e9dd9042fae2a9c2@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005764090577a27486@google.com
+https://lkml.kernel.org/r/00000000000055d6590588bf90bf@google.com
 
