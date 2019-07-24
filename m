@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BAFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F521C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6AEA22ADF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460C621873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997310;
-	bh=cJGPPwvohhhVopNYChrAOsqs2ZfI/dVS+Y4AyOu40ss=;
+	s=default; t=1563997321;
+	bh=J9HdMSmkiQUZ4Qu2ZXSJWgTueX7RlrcvLmJnS4/xEEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FE4m08hgydCxWhv1taA1j2HRla8MMgnEhWkaFKM4dKDOnCHzAswga43ZJ+wAVT5ks
-	 JYhCURnos1s7LUJY+avZqpeFnqPXRGfVYsmdpgfmtiumzgZJWZ9aFQ2wmVewZslZWF
-	 EU/JPZMoRTeaw3Xihd5J9bR5eU/0CaEyG0z6jBWo=
+	b=v5cS73+xwdBcEMg4QLfg/fVroEjb1PL/+xiUqgVukfOKCkSF6q7evu2Cb3sPw9A3I
+	 Z1w0ojlGiyciH6315yIbD3tncq5Xe8nhOygn52mfhIpA5y8eARecpCwrMYeW5cwkzS
+	 AxlzfczH6DrHz+cdZvzhu28tdThhpgyI0RG+cfj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390258AbfGXTlt (ORCPT
+        id S2390306AbfGXTmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390226AbfGXTlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:41:42 -0400
+        id S2390281AbfGXTl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:41:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D5A5214AF;
-        Wed, 24 Jul 2019 19:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BF5121873;
+        Wed, 24 Jul 2019 19:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997301;
-        bh=cJGPPwvohhhVopNYChrAOsqs2ZfI/dVS+Y4AyOu40ss=;
+        s=default; t=1563997316;
+        bh=J9HdMSmkiQUZ4Qu2ZXSJWgTueX7RlrcvLmJnS4/xEEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gcpbOx15+tuIqoxF9GcalK+DhGjsO0MD48Ba/+V6C/BRJvWFRblY5HWd28bp3Cq3R
-         OEtiOvVKJS0ieh+39saIiM75sI0TefqsyrKNLATwyo1iiFUOOxz5PH0bz9OBktJZ0x
-         Yab5SE4FyQP7BfRm3YpzHeVZ8YQ7472sKUX8Eqe0=
+        b=FQZNcEuYRXWryVVMJFHB5kF7H7DOalrlIYH4d5GYPynxF1VcCWeqhH8ZRJn1mpjDK
+         gRMVfrLzM0hx+2ODe2IAdSR4SsTb0cEawxYtaEcjvOKL1rtkSC3qN4K31uvmzSDNWo
+         KjxzQOlQjoknijkqtvtzfUFZCsruetrCwZVcP7VQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 5.2 348/413] xen/events: fix binding user event channels to cpus
-Date:   Wed, 24 Jul 2019 21:20:39 +0200
-Message-Id: <20190724191800.730319300@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.2 395/413] mmc: sdhci-msm: fix mutex while in spinlock
+Date:   Wed, 24 Jul 2019 21:21:26 +0200
+Message-Id: <20190724191803.257024943@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,93 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-commit bce5963bcb4f9934faa52be323994511d59fd13c upstream.
+commit 5e6b6651d22de109ebf48ca00d0373bc2c0cc080 upstream.
 
-When binding an interdomain event channel to a vcpu via
-IOCTL_EVTCHN_BIND_INTERDOMAIN not only the event channel needs to be
-bound, but the affinity of the associated IRQi must be changed, too.
-Otherwise the IRQ and the event channel won't be moved to another vcpu
-in case the original vcpu they were bound to is going offline.
+mutexes can sleep and therefore should not be taken while holding a
+spinlock. move clk_get_rate (can sleep) outside the spinlock protected
+region.
 
-Cc: <stable@vger.kernel.org> # 4.13
-Fixes: c48f64ab472389df ("xen-evtchn: Bind dyn evtchn:qemu-dm interrupt to next online VCPU")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: 83736352e0ca ("mmc: sdhci-msm: Update DLL reset sequence")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/events/events_base.c |   12 ++++++++++--
- drivers/xen/evtchn.c             |    2 +-
- include/xen/events.h             |    3 ++-
- 3 files changed, 13 insertions(+), 4 deletions(-)
+ drivers/mmc/host/sdhci-msm.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -1294,7 +1294,7 @@ void rebind_evtchn_irq(int evtchn, int i
- }
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -575,11 +575,14 @@ static int msm_init_cm_dll(struct sdhci_
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+ 	int wait_cnt = 50;
+-	unsigned long flags;
++	unsigned long flags, xo_clk = 0;
+ 	u32 config;
+ 	const struct sdhci_msm_offset *msm_offset =
+ 					msm_host->offset;
  
- /* Rebind an evtchn so that it gets delivered to a specific cpu */
--int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu)
-+static int xen_rebind_evtchn_to_cpu(int evtchn, unsigned int tcpu)
- {
- 	struct evtchn_bind_vcpu bind_vcpu;
- 	int masked;
-@@ -1328,7 +1328,6 @@ int xen_rebind_evtchn_to_cpu(int evtchn,
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(xen_rebind_evtchn_to_cpu);
- 
- static int set_affinity_irq(struct irq_data *data, const struct cpumask *dest,
- 			    bool force)
-@@ -1342,6 +1341,15 @@ static int set_affinity_irq(struct irq_d
- 	return ret;
- }
- 
-+/* To be called with desc->lock held. */
-+int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu)
-+{
-+	struct irq_data *d = irq_desc_get_irq_data(desc);
++	if (msm_host->use_14lpp_dll_reset && !IS_ERR_OR_NULL(msm_host->xo_clk))
++		xo_clk = clk_get_rate(msm_host->xo_clk);
 +
-+	return set_affinity_irq(d, cpumask_of(tcpu), false);
-+}
-+EXPORT_SYMBOL_GPL(xen_set_affinity_evtchn);
-+
- static void enable_dynirq(struct irq_data *data)
- {
- 	int evtchn = evtchn_from_irq(data->irq);
---- a/drivers/xen/evtchn.c
-+++ b/drivers/xen/evtchn.c
-@@ -447,7 +447,7 @@ static void evtchn_bind_interdom_next_vc
- 	this_cpu_write(bind_last_selected_cpu, selected_cpu);
+ 	spin_lock_irqsave(&host->lock, flags);
  
- 	/* unmask expects irqs to be disabled */
--	xen_rebind_evtchn_to_cpu(evtchn, selected_cpu);
-+	xen_set_affinity_evtchn(desc, selected_cpu);
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
- }
+ 	/*
+@@ -627,10 +630,10 @@ static int msm_init_cm_dll(struct sdhci_
+ 		config &= CORE_FLL_CYCLE_CNT;
+ 		if (config)
+ 			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 8),
+-					clk_get_rate(msm_host->xo_clk));
++					xo_clk);
+ 		else
+ 			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 4),
+-					clk_get_rate(msm_host->xo_clk));
++					xo_clk);
  
---- a/include/xen/events.h
-+++ b/include/xen/events.h
-@@ -3,6 +3,7 @@
- #define _XEN_EVENTS_H
- 
- #include <linux/interrupt.h>
-+#include <linux/irq.h>
- #ifdef CONFIG_PCI_MSI
- #include <linux/msi.h>
- #endif
-@@ -59,7 +60,7 @@ void evtchn_put(unsigned int evtchn);
- 
- void xen_send_IPI_one(unsigned int cpu, enum ipi_vector vector);
- void rebind_evtchn_irq(int evtchn, int irq);
--int xen_rebind_evtchn_to_cpu(int evtchn, unsigned tcpu);
-+int xen_set_affinity_evtchn(struct irq_desc *desc, unsigned int tcpu);
- 
- static inline void notify_remote_via_evtchn(int port)
- {
+ 		config = readl_relaxed(host->ioaddr +
+ 				msm_offset->core_dll_config_2);
 
 
