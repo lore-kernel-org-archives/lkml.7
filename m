@@ -2,33 +2,33 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15244C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D8AC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21B7217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF132189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfGXI6f (ORCPT
+        id S1726828AbfGXI6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:58:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:41218 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725999AbfGXI6e (ORCPT
+        Wed, 24 Jul 2019 04:58:39 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:13746 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726207AbfGXI6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:58:34 -0400
-X-UUID: 70373fde55e24d0ca8f80ed2ec1609a4-20190724
-X-UUID: 70373fde55e24d0ca8f80ed2ec1609a4-20190724
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        Wed, 24 Jul 2019 04:58:36 -0400
+X-UUID: 72f2db9026f24c9cbbe2caf28079d657-20190724
+X-UUID: 72f2db9026f24c9cbbe2caf28079d657-20190724
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
         (envelope-from <ryder.lee@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1270313578; Wed, 24 Jul 2019 16:58:24 +0800
+        with ESMTP id 1323067817; Wed, 24 Jul 2019 16:58:25 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Wed, 24 Jul 2019 16:58:23 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -42,118 +42,84 @@ CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
         <linux-wireless@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v1 1/6] mt76: Add paragraphs to describe the config symbols fully
-Date:   Wed, 24 Jul 2019 16:58:15 +0800
-Message-ID: <d259e08a5f4c0f0f50f67d6cfc2a6258181e53d4.1563944758.git.ryder.lee@mediatek.com>
+Subject: [PATCH v1 3/6] mt76: mt7615: fix some checkpatch warnings
+Date:   Wed, 24 Jul 2019 16:58:17 +0800
+Message-ID: <e1119dd3042472ffb35f31d56b524110cecbaa0d.1563944758.git.ryder.lee@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <cover.1563944758.git.ryder.lee@mediatek.com>
 References: <cover.1563944758.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 3EC1AEFA5528E089390308B69032CB2782F5E543118D9F6DE644E92C68F758212000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the help text to fix a checkpatch warning:
+This fixes the following checkpatch warnings:
 
-WARNING: please write a paragraph that describes the config symbol fully
+WARNING: Improper SPDX comment style
+Fix blank lines.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/net/wireless/mediatek/mt76/mt7603/Kconfig |  6 ++++--
- drivers/net/wireless/mediatek/mt76/mt7615/Kconfig |  7 ++++++-
- drivers/net/wireless/mediatek/mt76/mt76x0/Kconfig | 12 ++++++++++--
- drivers/net/wireless/mediatek/mt76/mt76x2/Kconfig | 14 +++++++++++---
- 4 files changed, 31 insertions(+), 8 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c     | 5 +++--
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c     | 2 --
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/Kconfig b/drivers/net/wireless/mediatek/mt76/mt7603/Kconfig
-index e108bf881ca8..6a0080f1d91c 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/Kconfig
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/Kconfig
-@@ -5,6 +5,8 @@ config MT7603E
- 	depends on MAC80211
- 	depends on PCI
- 	help
--	  This adds support for MT7603E wireless PCIe devices and the WLAN core on
--	  MT7628/MT7688 SoC devices
-+	  This adds support for MT7603E wireless PCIe devices and the WLAN core
-+	  on MT7628/MT7688 SoC devices. This family supports IEEE 802.11n 2x2
-+	  to 300Mbps PHY rate
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
+index ed605fcc99f9..2618248946a1 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
  
-+	  To compile this driver as a module, choose M here.
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/Kconfig b/drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
-index 2ed47b309b6e..4cabba9aa2ea 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
-@@ -5,4 +5,9 @@ config MT7615E
- 	depends on MAC80211
- 	depends on PCI
- 	help
--	  This adds support for MT7615-based wireless PCIe devices.
-+	  This adds support for MT7615-based wireless PCIe devices,
-+	  which support concurrent dual-band operation at both 5GHz
-+	  and 2.4GHz, IEEE 802.11ac 4x4:4SS 1733Mbps PHY rate, wave2
-+	  MU-MIMO up to 4 users/group and 160MHz channels.
-+
-+	  To compile this driver as a module, choose M here.
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/Kconfig b/drivers/net/wireless/mediatek/mt76/mt76x0/Kconfig
-index 209d8abc49d5..7c88ed8b8f1e 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/Kconfig
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/Kconfig
-@@ -10,7 +10,11 @@ config MT76x0U
- 	depends on MAC80211
- 	depends on USB
- 	help
--	  This adds support for MT7610U-based wireless USB dongles.
-+	  This adds support for MT7610U-based wireless USB 2.0 dongles,
-+	  which comply with IEEE 802.11ac standards and support 1x1
-+	  433Mbps PHY rate.
-+
-+	  To compile this driver as a module, choose M here.
+ #include "mt7615.h"
  
- config MT76x0E
- 	tristate "MediaTek MT76x0E (PCIe) support"
-@@ -18,4 +22,8 @@ config MT76x0E
- 	depends on MAC80211
- 	depends on PCI
- 	help
--	  This adds support for MT7610/MT7630-based wireless PCIe devices.
-+	  This adds support for MT7610/MT7630-based wireless PCIe devices,
-+	  which comply with IEEE 802.11ac standards and support 1x1
-+	  433Mbps PHY rate.
-+
-+	  To compile this driver as a module, choose M here.
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/Kconfig b/drivers/net/wireless/mediatek/mt76/mt76x2/Kconfig
-index 1f69908f8373..5fd4973e32df 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/Kconfig
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/Kconfig
-@@ -8,8 +8,12 @@ config MT76x2E
- 	select MT76x2_COMMON
- 	depends on MAC80211
- 	depends on PCI
--	---help---
--	  This adds support for MT7612/MT7602/MT7662-based wireless PCIe devices.
-+	help
-+	  This adds support for MT7612/MT7602/MT7662-based wireless PCIe
-+	  devices, which comply with IEEE 802.11ac standards and support
-+	  2SS to 866Mbit/s PHY rate.
-+
-+	  To compile this driver as a module, choose M here.
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index b3e8ee06a783..8f9a2bb68ded 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -508,7 +508,6 @@ void mt7615_mac_set_rates(struct mt7615_dev *dev, struct mt7615_sta *sta,
  
- config MT76x2U
- 	tristate "MediaTek MT76x2U (USB) support"
-@@ -18,4 +22,8 @@ config MT76x2U
- 	depends on MAC80211
- 	depends on USB
- 	help
--	  This adds support for MT7612U-based wireless USB dongles.
-+	  This adds support for MT7612U-based wireless USB 3.0 dongles,
-+	  which comply with IEEE 802.11ac standards and support 2SS to
-+	  866Mbit/s PHY rate.
+ 			rates[i].idx--;
+ 		}
+-
+ 	}
+ 
+ 	val[0] = mt7615_mac_tx_rate_val(dev, &rates[0], stbc, &bw);
+@@ -586,6 +585,7 @@ void mt7615_mac_set_rates(struct mt7615_dev *dev, struct mt7615_sta *sta,
+ 	sta->rate_count = 2 * MT7615_RATE_RETRY * n_rates;
+ 	sta->wcid.tx_info |= MT_WCID_TX_INFO_SET;
+ }
 +
-+	  To compile this driver as a module, choose M here.
+ int mt7615_tx_prepare_skb(struct mt76_dev *mdev, void *txwi_ptr,
+ 			  enum mt76_txq_id qid, struct mt76_wcid *wcid,
+ 			  struct ieee80211_sta *sta,
+@@ -725,8 +725,9 @@ static bool mt7615_fill_txs(struct mt7615_dev *dev, struct mt7615_sta *sta,
+ 			sta->rate_probe = false;
+ 		}
+ 		spin_unlock_bh(&dev->mt76.lock);
+-	} else
++	} else {
+ 		info->status.rates[0] = rs->rates[first_idx / 2];
++	}
+ 	info->status.rates[0].count = 0;
+ 
+ 	for (i = 0, idx = first_idx; count && idx <= last_idx; idx++) {
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index e57b51290c61..5fd162be3654 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -1646,5 +1646,3 @@ int mt7615_mcu_set_rx_ba(struct mt7615_dev *dev,
+ 	return __mt76_mcu_send_msg(&dev->mt76, MCU_EXT_CMD_WTBL_UPDATE,
+ 				   &wtbl_req, sizeof(wtbl_req), true);
+ }
+-
+-
 -- 
 2.18.0
 
