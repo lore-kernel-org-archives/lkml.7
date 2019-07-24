@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE350C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012E8C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE16E21926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09D421926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="VxeftMgE"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="eZm9v1kA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfGXOsB (ORCPT
+        id S1728402AbfGXOsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:48:01 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33146 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfGXOsB (ORCPT
+        Wed, 24 Jul 2019 10:48:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34874 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbfGXOsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:48:01 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f20so12121413pgj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:48:00 -0700 (PDT)
+        Wed, 24 Jul 2019 10:48:10 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s1so15046026pgr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:48:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mBTl4EOXHZ71oG8dRPzQKN+4olExLO4T099FLNi+kAE=;
-        b=VxeftMgEfyaGpnYIggVLKpk5Jy6dCbINbsRb875Jknt+NYx4nXnox39mXMwRz1hznx
-         aNgyalVejrzh0SdQwZA1ehK5f2Ti/vwx2y+45Sgo3/vS7u1KaR57h8ilowcTEITJ7KK7
-         hhCCj3PRwvABi9Qn1vzWZD7noBehNAzjRoahnT2/EsgoTN/oG+BrAB5NOyT/Do/Ll2u6
-         cX6MyqUdnHW20LKy2/gwC3uBZN8mxe8/vw2p75JxjAuF0DUFbkrWCrGYmrbgPqJdY1Uq
-         iHkQNa+Z8mL11k24eKBmiLVmiZUmjCMDEV3Vma7fDNU/Kp6pk5PnFKGnOdWpVSlzfOqb
-         nhwA==
+        bh=RegEjd24fa0lKrqQTZKDeVdxQIecr5qsEykVp127hyg=;
+        b=eZm9v1kADJRR3b9PRi6MScfetcUJoTn+y9jo0gSRSpTIzDAzpQAgOunD17tTC98tqP
+         1l998+km/ba3faaMH6Ae9ZM4rwGChKNjNBru+Jb10AHdKgxf7G3/kA9RXLZ69tsf7bin
+         8NqmHhHBSyruOv7R9DIV5WwMBpMEPzPplmFM1eUif7YOmiwQz9Ac1J4rd1evOow+d2+N
+         vfQx1xNw4tJKOhLSAO66aSaGWOeFblN2zKgepyJJBkaYAufVTsaqzHbFchaoJXrOLfPm
+         RWVbcS0yksleo+Etyuz8aES39/HvUq5R9EG126rIF9GeLzD2dTiXQdXMBu6uganQHX3n
+         qCXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mBTl4EOXHZ71oG8dRPzQKN+4olExLO4T099FLNi+kAE=;
-        b=h8CqdqBvp2LyYNXCnRX8NION1CcEZJfSckjyBMiQiFjVHXFJk3dFyVqtbF+VXxhlnO
-         gedN4qDdiRjFtPgOCorc0Z7FAuJM7191vS5MTtcmRHpWcmlalp/7JJMyOLNhZ7YUbstx
-         67kGCzcuYV8hofL4bRDGQUooHksNHD5AYniahuyLN/00ll4B97OP1t/7bK/LejNR4Iyi
-         q1xAxVJMQAfTx9d68aqvEDfLWZkvDBB5G8NJjrhUlPRhTqLd/NcCiFsh0HI2hwpNmP9/
-         eGYyzaQo4I6gBZ2NMxHzwPAYBVOMUnnfdrhE3NxuYsJh6sFS3lHXM6Mm49999pshiSw5
-         5WTQ==
-X-Gm-Message-State: APjAAAXW10FZeE51tK27SHi+wNCQ713PKKn7fPIZ60L+mj8VjriL97Gt
-        dHlRuZ4yXcWtSV0OqR81bUGUzhJlRuw=
-X-Google-Smtp-Source: APXvYqz+Enq2/NcPy88WMMAnNrBgBpGN4SxupV5kpEOM4+HykjBi7Trcfsyp6kBKb/Ez904IoMQBXQ==
-X-Received: by 2002:a63:2004:: with SMTP id g4mr78265918pgg.97.1563979679360;
-        Wed, 24 Jul 2019 07:47:59 -0700 (PDT)
+        bh=RegEjd24fa0lKrqQTZKDeVdxQIecr5qsEykVp127hyg=;
+        b=pt7Ai0NpDZKqrlmj9zSELHQOlZ+mznwupIy23Pca0Nra3pgxAZMccHhIPcWdw8WYt2
+         q02Pic79hbgAjp0FodqhsrmO1aclYhz4HqwsbueSLMc810DIn9WzKqrDi+LruiY/OlHM
+         slBhRS4LrPbNyt5LrMpOhmOhUsw6WeiOv/nB7+Mvjcww0yjeNrTaU/iVC56ikzn8pSNN
+         Oce/zHMkntnJ29vFHdDbHK4HJvQX0RKqiFX2QlOSB9A4lZCsq+6i3JHEYqSWcVSY19To
+         52mePOrGMj7ngrvyOUprOWRsmZLP1KFFLoQA7NQgxKyJFs4hbylx34b5SCCioT2rMLIa
+         stHQ==
+X-Gm-Message-State: APjAAAVctNWZLtfemSnqZtp6AWohfkyC4EesRsexrpkH0aWruP3GWFOX
+        h3vXoX3cNsYypW6U6tvRPpvLFReDqBM=
+X-Google-Smtp-Source: APXvYqy658wMqfm1Z4iL53fOCDFmzETGRgIHQujh8zv72dV8L+zJXwfWHf+ZJNio075mFB67zNUBmw==
+X-Received: by 2002:a65:6102:: with SMTP id z2mr81045739pgu.391.1563979688845;
+        Wed, 24 Jul 2019 07:48:08 -0700 (PDT)
 Received: from localhost.localdomain ([172.58.27.54])
-        by smtp.gmail.com with ESMTPSA id g6sm41125644pgh.64.2019.07.24.07.47.51
+        by smtp.gmail.com with ESMTPSA id g6sm41125644pgh.64.2019.07.24.07.47.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 07:47:58 -0700 (PDT)
+        Wed, 24 Jul 2019 07:48:08 -0700 (PDT)
 From:   Christian Brauner <christian@brauner.io>
 To:     linux-kernel@vger.kernel.org, oleg@redhat.com
 Cc:     arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
@@ -64,12 +64,10 @@ Cc:     arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
         akpm@linux-foundation.org, cyphar@cyphar.com,
         torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
         kernel-team@android.com, Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org
-Subject: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
-Date:   Wed, 24 Jul 2019 16:46:50 +0200
-Message-Id: <20190724144651.28272-5-christian@brauner.io>
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: [PATCH 5/5] pidfd: add pidfd_wait tests
+Date:   Wed, 24 Jul 2019 16:46:51 +0200
+Message-Id: <20190724144651.28272-6-christian@brauner.io>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724144651.28272-1-christian@brauner.io>
 References: <20190724144651.28272-1-christian@brauner.io>
@@ -80,61 +78,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CLONE_WAIT_PID is set the newly created process will not be
-considered by process wait requests that wait generically on children
-such as:
-
-	syscall(__NR_wait4, -1, wstatus, options, rusage)
-	syscall(__NR_waitpid, -1, wstatus, options)
-	syscall(__NR_waitid, P_ALL, -1, siginfo, options, rusage)
-	syscall(__NR_waitid, P_PGID, -1, siginfo, options, rusage)
-	syscall(__NR_waitpid, -pid, wstatus, options)
-	syscall(__NR_wait4, -pid, wstatus, options, rusage)
-
-A process created with CLONE_WAIT_PID can only be waited upon with a
-focussed wait call. This ensures that processes can be reaped even if
-all file descriptors referring to it are closed.
-
-/* Usecases */
-This feature has been requested in discussions when I presented this
-work multiple times. Here are concrete use cases people have:
-1. Process managers that would like to use pidfd for all process
-   watching needs require this feature.
-   A process manager (e.g. PID 1) that needs to reap all children
-   assigned to it needs to invoke some form of waitall request as
-   outlined above.  This has to be done since the process manager might
-   not know about processes that got re-parented to it. Without
-   CLONE_WAIT_PID the process manager will end up reaping processes it
-   uses pidfds to watch for since they are crucial internal processes.
-2. Various libraries want to be able to fork off helper processes
-   internally that do not otherwise affect the program they are used in.
-   This is currently not possible.
-   However, if a process invokes a waitall request the internal
-   helper process of the library might get reaped, confusing the library
-   which expected it to reap it itself.
-   Careful programs will thus generally avoid waitall requests which is
-   inefficient.
-3. A general class of programs are ones that use event loops (e.g. GLib,
-   systemd, and LXC etc.). Such event loops currently call focused wait
-   requests iteratively on all processes they are configured to watch to
-   avoid waitall request pitfalls.
-   This is ugly and inefficient since it cannot be used to watch large
-   numbers of file descriptors without paying the O(n) cost on each
-   event loop iteration.
-
-/* Prior art */
-FreeBSD has a similar concept (cf. [1], [2]). They are currently doing
-it the other way around, i.e. by default all procdescs are not visible
-in waitall requests. Howver, originally, they allowed procdescs to
-appear in waitall and changed it later (cf. [1]).
-
-Currently, CLONE_WAIT_PID can only be used in conjunction with
-CLONE_PIDFD since the usecases above only make sense when used in
-combination with both.
-
-/* References */
-[1]: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=201054
-[2]: https://svnweb.freebsd.org/base/head/sys/kern/kern_exit.c
+Add tests for pidfd_wait() and CLONE_WAIT_PID:
+- test that pidfd_wait() syscall is supported
+- test that pidfd_wait() does not accept unknown flags
+- test that pidfd_wait() can wait on a pidfd
+- test that pidfd_wait() can wait on a pidfd and return struct rusage
+- test that pidfd_wait() can wait on a pidfd and return siginfo_t
+- test that pidfd_wait() works with WEXITED
+- test that pidfd_wait() works with WSTOPPED
+- test that pidfd_wait() works with WUNTRACED
+- test that pidfd_wait() works with WCONTINUED
+- test that pidfd_wait() works with WNOWAIT
+- test that pidfd_wait() works with WNOHANG
+- test that CLONE_WAIT_PID does not appear in waitid(P_ALL) requests
+- test that CLONE_WAIT_PID does not appear in waitid(P_PGID) requests
+- test that CLONE_WAIT_PID does not appear in wait4(-1) requests
+- test that CLONE_WAIT_PID does not appear in wait4(0) requests
+- test that CLONE_WAIT_PID does appear in waitid(P_PID) requests
+- test that CLONE_WAIT_PID does appear in wait4(pid) requests
 
 Signed-off-by: Christian Brauner <christian@brauner.io>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -142,99 +103,507 @@ Cc: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tejun Heo <tj@kernel.org>
 Cc: David Howells <dhowells@redhat.com>
 Cc: Jann Horn <jannh@google.com>
+Cc: Shuah Khan <shuah@kernel.org>
 Cc: Andy Lutomirsky <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Oleg Nesterov <oleg@redhat.com>
 Cc: Aleksa Sarai <cyphar@cyphar.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-api@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
 ---
- include/linux/sched.h      |  1 +
- include/uapi/linux/sched.h |  1 +
- kernel/exit.c              |  3 +++
- kernel/fork.c              | 11 ++++++++++-
- 4 files changed, 15 insertions(+), 1 deletion(-)
+ tools/testing/selftests/pidfd/pidfd.h      |  25 ++
+ tools/testing/selftests/pidfd/pidfd_test.c |  14 -
+ tools/testing/selftests/pidfd/pidfd_wait.c | 398 +++++++++++++++++++++
+ 3 files changed, 423 insertions(+), 14 deletions(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidfd_wait.c
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 8dc1811487f5..f0166f630a1a 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1468,6 +1468,7 @@ extern struct pid *cad_pid;
- #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with cpus_mask */
- #define PF_MCE_EARLY		0x08000000      /* Early kill for mce process policy */
- #define PF_MEMALLOC_NOCMA	0x10000000	/* All allocation request will have _GFP_MOVABLE cleared */
-+#define PF_WAIT_PID		0x20000000	/* This task will not appear in generic wait requests */
- #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
- #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
+diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
+index 8452e910463f..d56bca179b9e 100644
+--- a/tools/testing/selftests/pidfd/pidfd.h
++++ b/tools/testing/selftests/pidfd/pidfd.h
+@@ -16,6 +16,26 @@
  
-diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-index b3105ac1381a..ffb1cac18e4e 100644
---- a/include/uapi/linux/sched.h
-+++ b/include/uapi/linux/sched.h
-@@ -32,6 +32,7 @@
- #define CLONE_NEWPID		0x20000000	/* New pid namespace */
- #define CLONE_NEWNET		0x40000000	/* New network namespace */
- #define CLONE_IO		0x80000000	/* Clone io context */
-+#define CLONE_WAIT_PID		0x200000000ULL  /* set if process should not appear in generic wait requests */
+ #include "../kselftest.h"
  
++#ifndef CLONE_PIDFD
++#define CLONE_PIDFD 0x00001000
++#endif
++
++#ifndef CLONE_WAIT_PID
++#define CLONE_WAIT_PID 0x200000000ULL
++#endif
++
++#ifndef __NR_pidfd_open
++#define __NR_pidfd_open -1
++#endif
++
++#ifndef __NR_pidfd_send_signal
++#define __NR_pidfd_send_signal -1
++#endif
++
++#ifndef __NR_clone3
++#define __NR_clone3 -1
++#endif
++
  /*
-  * Arguments for the clone3 syscall
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 8086c76e1959..aa15de1108b2 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1019,6 +1019,9 @@ eligible_child(struct wait_opts *wo, bool ptrace, struct task_struct *p)
- 	if (!eligible_pid(wo, p))
- 		return 0;
+  * The kernel reserves 300 pids via RESERVED_PIDS in kernel/pid.c
+  * That means, when it wraps around any pid < 300 will be skipped.
+@@ -53,5 +73,10 @@ int wait_for_pid(pid_t pid)
+ 	return WEXITSTATUS(status);
+ }
  
-+	if ((p->flags & PF_WAIT_PID) && (wo->wo_type != PIDTYPE_PID))
-+		return 0;
++static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
++					unsigned int flags)
++{
++	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
++}
+ 
+ #endif /* __PIDFD_H */
+diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
+index 7eaa8a3de262..42e3eb494d72 100644
+--- a/tools/testing/selftests/pidfd/pidfd_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_test.c
+@@ -21,20 +21,12 @@
+ #include "pidfd.h"
+ #include "../kselftest.h"
+ 
+-#ifndef __NR_pidfd_send_signal
+-#define __NR_pidfd_send_signal -1
+-#endif
+-
+ #define str(s) _str(s)
+ #define _str(s) #s
+ #define CHILD_THREAD_MIN_WAIT 3 /* seconds */
+ 
+ #define MAX_EVENTS 5
+ 
+-#ifndef CLONE_PIDFD
+-#define CLONE_PIDFD 0x00001000
+-#endif
+-
+ static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
+ {
+ 	size_t stack_size = 1024;
+@@ -47,12 +39,6 @@ static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
+ #endif
+ }
+ 
+-static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
+-					unsigned int flags)
+-{
+-	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
+-}
+-
+ static int signal_received;
+ 
+ static void set_signal_received_on_sigusr1(int sig)
+diff --git a/tools/testing/selftests/pidfd/pidfd_wait.c b/tools/testing/selftests/pidfd/pidfd_wait.c
+new file mode 100644
+index 000000000000..fcbd10098067
+--- /dev/null
++++ b/tools/testing/selftests/pidfd/pidfd_wait.c
+@@ -0,0 +1,398 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
- 	/*
- 	 * Wait for all children (clone and not) if __WALL is set or
- 	 * if it is traced by us.
-diff --git a/kernel/fork.c b/kernel/fork.c
-index baaff6570517..a067f3876e2e 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1910,6 +1910,8 @@ static __latent_entropy struct task_struct *copy_process(
- 	delayacct_tsk_init(p);	/* Must remain after dup_task_struct() */
- 	p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE);
- 	p->flags |= PF_FORKNOEXEC;
-+	if (clone_flags & CLONE_WAIT_PID)
-+		p->flags |= PF_WAIT_PID;
- 	INIT_LIST_HEAD(&p->children);
- 	INIT_LIST_HEAD(&p->sibling);
- 	rcu_copy_process(p);
-@@ -2590,7 +2592,7 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
- 	 * All lower bits of the flag word are taken.
- 	 * Verify that no other unknown flags are passed along.
- 	 */
--	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
-+	if (kargs->flags & ~(CLONE_LEGACY_FLAGS | CLONE_WAIT_PID))
- 		return false;
- 
- 	/*
-@@ -2600,6 +2602,13 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
- 	if (kargs->flags & (CLONE_DETACHED | CSIGNAL))
- 		return false;
- 
-+	/*
-+	 * Currently only allow CLONE_WAIT_PID for processes created as
-+	 * pidfds until someone needs this feature for regular pids too.
-+	 */
-+	if ((kargs->flags & CLONE_WAIT_PID) && !(kargs->flags & CLONE_PIDFD))
-+		return false;
++#define _GNU_SOURCE
++#include <errno.h>
++#include <linux/sched.h>
++#include <linux/types.h>
++#include <signal.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sched.h>
++#include <string.h>
++#include <sys/resource.h>
++#include <sys/time.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <unistd.h>
 +
- 	if ((kargs->flags & (CLONE_THREAD | CLONE_PARENT)) &&
- 	    kargs->exit_signal)
- 		return false;
++#include "pidfd.h"
++#include "../kselftest.h"
++
++#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
++
++static pid_t sys_clone3(struct clone_args *args)
++{
++	return syscall(__NR_clone3, args, sizeof(struct clone_args));
++}
++
++static pid_t sys_pidfd_wait(int pidfd, int *wstatus, siginfo_t *info,
++			    struct rusage *ru, unsigned int states,
++			    unsigned int flags)
++{
++	return syscall(__NR_pidfd_wait, pidfd, wstatus, info, ru, states, flags);
++}
++
++static int test_pidfd_wait_syscall_support(void)
++{
++	int ret;
++	const char *test_name = "pidfd_wait check for support";
++
++	ret = sys_pidfd_wait(-EBADF, NULL, NULL, NULL, WEXITED, 0);
++	if (ret < 0 && errno == ENOSYS)
++		ksft_exit_skip("%s test: pidfd_wait() syscall not supported\n",
++			       test_name);
++
++	ksft_test_result_pass("%s test: Passed\n", test_name);
++	return 0;
++}
++
++static int test_pidfd_wait_simple(void)
++{
++	const char *test_name = "pidfd_wait simple";
++	int pidfd = -1, status = 0;
++	pid_t parent_tid = -1;
++	struct clone_args args = {
++		.parent_tid = ptr_to_u64(&parent_tid),
++		.pidfd = ptr_to_u64(&pidfd),
++		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
++		.exit_signal = SIGCHLD,
++	};
++	pid_t pid;
++
++	pid = sys_clone3(&args);
++	if (pid < 0)
++		ksft_exit_fail_msg("%s test: failed to create new process %s",
++				   test_name, strerror(errno));
++
++	if (pid == 0)
++		exit(EXIT_SUCCESS);
++
++	pid = sys_pidfd_wait(pidfd, NULL, NULL, NULL, -1, 0);
++	if (pid > 0)
++		ksft_exit_fail_msg(
++			"%s test: succeeded to wait on process with invalid flags passed",
++			test_name);
++
++	pid = sys_pidfd_wait(pidfd, NULL, NULL, NULL, 0, -1);
++	if (pid > 0)
++		ksft_exit_fail_msg(
++			"%s test: succeeded to wait on process with invalid flags passed",
++			test_name);
++
++	pid = sys_pidfd_wait(pidfd, NULL, NULL, NULL, 0, 0);
++	if (pid > 0)
++		ksft_exit_fail_msg(
++			"%s test: succeeded to wait on process with invalid flags passed",
++			test_name);
++
++	pid = sys_pidfd_wait(pidfd, NULL, NULL, NULL, WEXITED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++	close(pidfd);
++
++	pidfd = -1;
++	parent_tid = -1;
++	pid = sys_clone3(&args);
++	if (pid < 0)
++		ksft_exit_fail_msg("%s test: failed to create new process %s",
++				   test_name, strerror(errno));
++
++	if (pid == 0)
++		exit(EXIT_SUCCESS);
++
++	pid = sys_pidfd_wait(pidfd, &status, NULL, NULL, WEXITED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	if (!WIFEXITED(status) || WEXITSTATUS(status))
++		ksft_exit_fail_msg(
++			"%s test: unexpected status received after waiting on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++	close(pidfd);
++
++	pidfd = -1;
++	parent_tid = -1;
++	pid = sys_clone3(&args);
++	if (pid < 0)
++		ksft_exit_fail_msg("%s test: failed to create new process %s",
++				   test_name, strerror(errno));
++
++	if (pid == 0)
++		exit(EXIT_FAILURE);
++
++	pid = sys_pidfd_wait(pidfd, &status, NULL, NULL, WEXITED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	if (!WIFEXITED(status) || !WEXITSTATUS(status))
++		ksft_exit_fail_msg(
++			"%s test: unexpected status received after waiting on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++	close(pidfd);
++
++	ksft_test_result_pass("%s test: Passed\n", test_name);
++	return 0;
++}
++
++static int test_pidfd_wait_rusage(void)
++{
++	const char *test_name = "pidfd_wait rusage";
++	int pidfd = -1, status = 0;
++	pid_t parent_tid = -1;
++	struct clone_args args = {
++		.parent_tid = ptr_to_u64(&parent_tid),
++		.pidfd = ptr_to_u64(&pidfd),
++		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
++		.exit_signal = SIGCHLD,
++	};
++	pid_t pid;
++	struct rusage rusage = { 0 };
++
++	pid = sys_clone3(&args);
++	if (pid < 0)
++		ksft_exit_fail_msg("%s test: failed to create new process %s",
++				   test_name, strerror(errno));
++
++	if (pid == 0)
++		exit(EXIT_SUCCESS);
++
++	pid = sys_pidfd_wait(pidfd, &status, NULL, &rusage, WEXITED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	if (!WIFEXITED(status) || WEXITSTATUS(status))
++		ksft_exit_fail_msg(
++			"%s test: unexpected status received after waiting on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++	close(pidfd);
++
++	ksft_test_result_pass("%s test: Passed\n", test_name);
++	return 0;
++}
++
++static int test_pidfd_wait_siginfo(void)
++{
++	const char *test_name = "pidfd_wait siginfo";
++	int pidfd = -1, status = 0;
++	pid_t parent_tid = -1;
++	struct clone_args args = {
++		.parent_tid = ptr_to_u64(&parent_tid),
++		.pidfd = ptr_to_u64(&pidfd),
++		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
++		.exit_signal = SIGCHLD,
++	};
++	pid_t pid;
++	siginfo_t info = {
++		.si_signo = 0,
++	};
++
++	pid = sys_clone3(&args);
++	if (pid < 0)
++		ksft_exit_fail_msg("%s test: failed to create new process %s",
++				   test_name, strerror(errno));
++
++	if (pid == 0)
++		exit(EXIT_SUCCESS);
++
++	pid = sys_pidfd_wait(pidfd, &status, &info, NULL, WEXITED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	if (!WIFEXITED(status) || WEXITSTATUS(status))
++		ksft_exit_fail_msg(
++			"%s test: unexpected status received after waiting on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++	close(pidfd);
++
++	if (info.si_signo != SIGCHLD)
++		ksft_exit_fail_msg(
++			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s",
++			test_name, info.si_signo, parent_tid, pidfd,
++			strerror(errno));
++
++	if (info.si_code != CLD_EXITED)
++		ksft_exit_fail_msg(
++			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s",
++			test_name, info.si_code, parent_tid, pidfd,
++			strerror(errno));
++
++	ksft_test_result_pass("%s test: Passed\n", test_name);
++	return 0;
++}
++
++static int test_pidfd_wait_states(void)
++{
++	const char *test_name = "pidfd_wait states";
++	int pidfd = -1, status = 0;
++	pid_t parent_tid = -1;
++	struct clone_args args = {
++		.parent_tid = ptr_to_u64(&parent_tid),
++		.pidfd = ptr_to_u64(&pidfd),
++		.flags = CLONE_PIDFD | CLONE_PARENT_SETTID,
++		.exit_signal = SIGCHLD,
++	};
++	int ret;
++	pid_t pid;
++	siginfo_t info = {
++		.si_signo = 0,
++	};
++
++	pid = sys_clone3(&args);
++	if (pid < 0)
++		ksft_exit_fail_msg("%s test: failed to create new process %s",
++				   test_name, strerror(errno));
++
++	if (pid == 0) {
++		kill(getpid(), SIGSTOP);
++		kill(getpid(), SIGSTOP);
++		exit(EXIT_SUCCESS);
++	}
++
++	pid = sys_pidfd_wait(pidfd, &status, &info, NULL, WSTOPPED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	ret = sys_pidfd_send_signal(pidfd, SIGCONT, NULL, 0);
++	if (ret < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	pid = sys_pidfd_wait(pidfd, &status, &info, NULL, WCONTINUED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	pid = sys_pidfd_wait(pidfd, &status, &info, NULL, WUNTRACED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
++	if (ret < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	pid = sys_pidfd_wait(pidfd, &status, &info, NULL, WEXITED, 0);
++	if (pid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	close(pidfd);
++
++	ksft_test_result_pass("%s test: Passed\n", test_name);
++	return 0;
++}
++
++static int test_clone_wait_pid(void)
++{
++	const char *test_name = "CLONE_WAIT_PID";
++	int pidfd = -1, status = 0;
++	pid_t parent_tid = -1;
++	struct clone_args args = {
++		.parent_tid = ptr_to_u64(&parent_tid),
++		.pidfd = ptr_to_u64(&pidfd),
++		.flags = CLONE_PARENT_SETTID | CLONE_WAIT_PID,
++		.exit_signal = SIGCHLD,
++	};
++	int ret;
++	pid_t pid, rpid;
++
++	pid = sys_clone3(&args);
++	if (pid > 0)
++		ksft_exit_fail_msg(
++			"%s test: managed to create new process with CLONE_WAIT_PID but without CLONE_PIDFD",
++			test_name);
++
++	args.flags |= CLONE_PIDFD;
++	pid = sys_clone3(&args);
++	if (pid < 0)
++		ksft_exit_fail_msg("%s test: failed to create new process %s",
++				   test_name, strerror(errno));
++
++	if (pid == 0)
++		exit(EXIT_SUCCESS);
++
++	ret = syscall(__NR_waitid, P_ALL, -1, NULL, WEXITED, NULL);
++	if (ret == 0)
++		ksft_exit_fail_msg(
++			"%s test: managed to wait on process created with CLONE_PIDFD | CLONE_WAIT_PID with pid %d and pidfd %d through waitid(P_ALL) request",
++			test_name, parent_tid, pidfd);
++
++	ret = syscall(__NR_waitid, P_PGID, getpgid(0), NULL, WEXITED, NULL);
++	if (ret == 0)
++		ksft_exit_fail_msg(
++			"%s test: managed to wait on process created with CLONE_PIDFD | CLONE_WAIT_PID with pid %d and pidfd %d through waitid(P_PGID) request",
++			test_name, parent_tid, pidfd);
++
++	rpid = syscall(__NR_wait4, -1, NULL, 0, NULL);
++	if (rpid > 0)
++		ksft_exit_fail_msg(
++			"%s test: managed to wait on process created with CLONE_PIDFD | CLONE_WAIT_PID with pid %d and pidfd %d through wait4(-1) request",
++			test_name, parent_tid, pidfd);
++
++	rpid = syscall(__NR_wait4, 0, NULL, 0, NULL);
++	if (rpid > 0)
++		ksft_exit_fail_msg(
++			"%s test: managed to wait on process created with CLONE_PIDFD | CLONE_WAIT_PID with pid %d and pidfd %d through wait4(0) request",
++			test_name, parent_tid, pidfd);
++
++	ret = syscall(__NR_waitid, P_PID, pid, NULL, WEXITED | WNOWAIT | WNOHANG, NULL);
++	if (ret < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process created with CLONE_PIDFD | CLONE_WAIT_PID with pid %d and pidfd %d through waitid(P_PID) request: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	rpid = sys_pidfd_wait(pidfd, NULL, NULL, NULL, WEXITED, WNOWAIT | WNOHANG);
++	if (rpid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++
++	rpid = syscall(__NR_wait4, pid, &status, 0, NULL);
++	if (rpid < 0)
++		ksft_exit_fail_msg(
++			"%s test: failed to wait on process created with CLONE_PIDFD | CLONE_WAIT_PID with pid %d and pidfd %d through wait4(%d) request: %s",
++			test_name, parent_tid, pidfd, parent_tid, strerror(errno));
++
++	if (!WIFEXITED(status) || WEXITSTATUS(status))
++		ksft_exit_fail_msg(
++			"%s test: unexpected status received after waiting on process with pid %d and pidfd %d: %s",
++			test_name, parent_tid, pidfd, strerror(errno));
++	close(pidfd);
++
++	ksft_test_result_pass("%s test: Passed\n", test_name);
++	return 0;
++}
++
++int main(int argc, char **argv)
++{
++	ksft_print_header();
++	ksft_set_plan(6);
++
++	test_pidfd_wait_syscall_support();
++	test_pidfd_wait_simple();
++	test_pidfd_wait_rusage();
++	test_pidfd_wait_siginfo();
++	test_pidfd_wait_states();
++	test_clone_wait_pid();
++
++	return ksft_exit_pass();
++}
 -- 
 2.22.0
 
