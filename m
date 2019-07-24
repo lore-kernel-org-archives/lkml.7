@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428AAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90D0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15862214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9091222AEC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997074;
-	bh=2HnvleEuQXWEcpKX9BILP/+xkRxnVYQLF0R4G6X7+yo=;
+	s=default; t=1563997078;
+	bh=syFbf0UgcCFnGH1X+UvaiG84VD7cB2/7T3UzsCLEOIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeGNW4hHImVos/q5you5TgNdJdC8jTzjd9RfaN7ZAi9j1pFa1RBC0vZbyOuJPC2K/
-	 nuUJ/VVMW5yvRwLBfjHeFDY+Sm5QEzl0xhexeJYRnp6cnMeeBZNSmf6eldMDR3MHva
-	 LvIzV8qyZpmU3xYQVgwMHMNHpvuPtJ+DeQ4+gbj8=
+	b=x6Abfchchoh+rTCe4BE02ULJ3Tz0kIcA8FPDNtmjIe8gKl2Y52VVCUnvZCVk++DAo
+	 ic3mhQMVeMzlB6+iUDkCOi+1gY1rt+f2xob24qpW6uruzGdX93+fb9EO212v6RvTZd
+	 uJJOMFmoXMkVXbeFfj5q4KX1SJQf5eP1QFYkdZhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389536AbfGXThw (ORCPT
+        id S2388982AbfGXTh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38166 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388939AbfGXTht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:37:49 -0400
+        id S2389527AbfGXThw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:37:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D5020665;
-        Wed, 24 Jul 2019 19:37:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD6DE20665;
+        Wed, 24 Jul 2019 19:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997068;
-        bh=2HnvleEuQXWEcpKX9BILP/+xkRxnVYQLF0R4G6X7+yo=;
+        s=default; t=1563997071;
+        bh=syFbf0UgcCFnGH1X+UvaiG84VD7cB2/7T3UzsCLEOIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UY3rwoULXTC0+s2kh/1yFUHtwPxpqZVG5FGG5kcKvbdSGVBc0urZuG+UhygTfdn7c
-         n7MtjV3Mi5cx75w/Dip6IemMS/CTHHfZ3YDcwyKjrkIsi/gRlTJQa6yu/H0g3XhS+t
-         /FWdaw1Fkf8O3ZicnwAemLh4CpgD/mSRLUwWQnNY=
+        b=OPpN9RyR/z/MOqZjHAiSyrFL3kitDk5IOZUbUcenNz1kfNZy0FruGa7H4iSBNyPcu
+         rrQJ89OReTALHRAb2n/8fBZgio2XmSwO0yDlZ1+kTXx7gwvRFBdPLALsfuuUeKOh4Q
+         1qJC7fvcAIAzjLIi+u6f3/nT2ck6B/AfKGT1OPx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.2 311/413] ASoC: core: Adapt for debugfs API change
-Date:   Wed, 24 Jul 2019 21:20:02 +0200
-Message-Id: <20190724191758.010507754@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Soltys <soltys@ziu.info>,
+        Xiao Ni <xni@redhat.com>, Song Liu <songliubraving@fb.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 312/413] raid5-cache: Need to do start() part job after adding journal device
+Date:   Wed, 24 Jul 2019 21:20:03 +0200
+Message-Id: <20190724191758.103472484@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -58,66 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: Xiao Ni <xni@redhat.com>
 
-commit c2c928c93173f220955030e8440517b87ec7df92 upstream.
+commit d9771f5ec46c282d518b453c793635dbdc3a2a94 upstream.
 
-Back in ff9fb72bc07705c (debugfs: return error values, not NULL) the
-debugfs APIs were changed to return error pointers rather than NULL
-pointers on error, breaking the error checking in ASoC. Update the
-code to use IS_ERR() and log the codes that are returned as part of
-the error messages.
+commit d5d885fd514f ("md: introduce new personality funciton start()")
+splits the init job to two parts. The first part run() does the jobs that
+do not require the md threads. The second part start() does the jobs that
+require the md threads.
 
-Fixes: ff9fb72bc07705c (debugfs: return error values, not NULL)
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Now it just does run() in adding new journal device. It needs to do the
+second part start() too.
+
+Fixes: d5d885fd514f ("md: introduce new personality funciton start()")
+Cc: stable@vger.kernel.org #v4.9+
+Reported-by: Michal Soltys <soltys@ziu.info>
+Signed-off-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-core.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/md/raid5.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -158,9 +158,10 @@ static void soc_init_component_debugfs(s
- 				component->card->debugfs_card_root);
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7672,7 +7672,7 @@ abort:
+ static int raid5_add_disk(struct mddev *mddev, struct md_rdev *rdev)
+ {
+ 	struct r5conf *conf = mddev->private;
+-	int err = -EEXIST;
++	int ret, err = -EEXIST;
+ 	int disk;
+ 	struct disk_info *p;
+ 	int first = 0;
+@@ -7687,7 +7687,14 @@ static int raid5_add_disk(struct mddev *
+ 		 * The array is in readonly mode if journal is missing, so no
+ 		 * write requests running. We should be safe
+ 		 */
+-		log_init(conf, rdev, false);
++		ret = log_init(conf, rdev, false);
++		if (ret)
++			return ret;
++
++		ret = r5l_start(conf->log);
++		if (ret)
++			return ret;
++
+ 		return 0;
  	}
- 
--	if (!component->debugfs_root) {
-+	if (IS_ERR(component->debugfs_root)) {
- 		dev_warn(component->dev,
--			"ASoC: Failed to create component debugfs directory\n");
-+			"ASoC: Failed to create component debugfs directory: %ld\n",
-+			PTR_ERR(component->debugfs_root));
- 		return;
- 	}
- 
-@@ -212,18 +213,21 @@ static void soc_init_card_debugfs(struct
- 
- 	card->debugfs_card_root = debugfs_create_dir(card->name,
- 						     snd_soc_debugfs_root);
--	if (!card->debugfs_card_root) {
-+	if (IS_ERR(card->debugfs_card_root)) {
- 		dev_warn(card->dev,
--			 "ASoC: Failed to create card debugfs directory\n");
-+			 "ASoC: Failed to create card debugfs directory: %ld\n",
-+			 PTR_ERR(card->debugfs_card_root));
-+		card->debugfs_card_root = NULL;
- 		return;
- 	}
- 
- 	card->debugfs_pop_time = debugfs_create_u32("dapm_pop_time", 0644,
- 						    card->debugfs_card_root,
- 						    &card->pop_time);
--	if (!card->debugfs_pop_time)
-+	if (IS_ERR(card->debugfs_pop_time))
- 		dev_warn(card->dev,
--			 "ASoC: Failed to create pop time debugfs file\n");
-+			 "ASoC: Failed to create pop time debugfs file: %ld\n",
-+			 PTR_ERR(card->debugfs_pop_time));
- }
- 
- static void soc_cleanup_card_debugfs(struct snd_soc_card *card)
+ 	if (mddev->recovery_disabled == conf->recovery_disabled)
 
 
