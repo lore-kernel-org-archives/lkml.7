@@ -2,108 +2,103 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0287C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4ACC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A3F2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563986881;
-	bh=1Z5O9rosp5BF1AWiD0KYqAhbiYJQLhdA2VzAcbTK51k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0MAFiYaLqu1EO7jkof6CU4f6rG6hQ4uyt0OpuAiT00VhxS7Q/iaNaLsCv9SY0eivg
-	 ShCGkVq6JPT951LDraZCo5dcYYsZKIWKMqIkZy2/Tfv1WlvAM97jOOV3Q9ThgoRI2C
-	 44JQhMVhTBmdG/rKuMlfjDlzn1SVEHpRgDzdlErk=
+	by mail.kernel.org (Postfix) with ESMTP id 9223921926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:48:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="uaGBcyfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387713AbfGXQsA (ORCPT
+        id S2387725AbfGXQsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:48:00 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39117 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfGXQr7 (ORCPT
+        Wed, 24 Jul 2019 12:48:24 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40445 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387551AbfGXQsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:47:59 -0400
-Received: by mail-io1-f67.google.com with SMTP id f4so91034448ioh.6;
-        Wed, 24 Jul 2019 09:47:59 -0700 (PDT)
+        Wed, 24 Jul 2019 12:48:24 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so22183729pla.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gRKAY+MZWKaqd0CuoSyZlDBPmUfGcGm8988bda4hVss=;
+        b=uaGBcyfDCm3TTg2hgJyfh2501WHhM6A8JDweTlaQFVUGuJ6Ekd9vkgtWwjLp2xuYbs
+         w31WEox/uK++rZpnzcVXYQC3Z58XUOEv1IySt81cZPSUZMQcF3MXA+8A4fs7oub651dj
+         FplFBDvJ3JJ/RWNd/FCP9VaI9K9cAUJFyXu/w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NaGPAivB1MBv9O5lVWBShae32bWUUsQkrf58j6a6XWY=;
-        b=gX1m7rA7wbPHnvd7/XqCaN/dXfTsUeaBwMPQaLAd5IyKnv/v1tZ0La18S3JU0EkNSi
-         Tk7NaZuk6gE7gfDJezU8b21I0vA13APrC5fSNAnh3mU2cG8I4zalK/5YQj2dXi96gEpV
-         U90ggHDLs3drk5nD/dSk2bvvcZ+9lMUEzui/ipA2jwvDTR+BngV+A+g3zxgO56Qm+YFN
-         zflPBHGWVt08mgJwsNuPocWFbJwUs/IuNIGTzjkSvFZ4ncZIqxxlR8r9wVSpTMszcXm4
-         y7F5KO5A7BNjC+T60kFiyQeDbZdeEqq6xxc/1lLudvJ5y92+xg3QerrLrwQBQfjykgCZ
-         t0iA==
-X-Gm-Message-State: APjAAAUVAiJCFX9YED5FxG/0ontDsffq+BTJGL3/nUqYJ+Rof5JVbUGD
-        YFCD8aUfjTRJ3RIA6GPEFg==
-X-Google-Smtp-Source: APXvYqwYAKj9Y6Xo4kgnFhQ30skobcWvL/jM5t0oA7OfBXz+vNRCAT4o/ffCCGaz6bY311xkT9x01Q==
-X-Received: by 2002:a5e:8f08:: with SMTP id c8mr77188637iok.52.1563986878841;
-        Wed, 24 Jul 2019 09:47:58 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id m20sm44390636ioh.4.2019.07.24.09.47.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gRKAY+MZWKaqd0CuoSyZlDBPmUfGcGm8988bda4hVss=;
+        b=YUi4DX7mY0R4vcAnFUJ6t6GstQ0pvmYlY/4nfVnFRBk3F5Z6hRh1/OcbViQdzycGtP
+         5RMbhMzdUVnFAZA4U7ZIHCreB19XWhLUKneM0zaXGkRraIyNpc7fAAKULLOvPKIf2QaL
+         FiWS86cRt5L5tIA6afQWopEIr0IALtKcN2k6NHLzWjOuLP6Z8SpRKfLWkFFmp1KJfme/
+         y8PGHvUm/lzAyq2N0DrxfEBOx4mdsIK50oHQH9eQ1K5UkUy2UYSafT5z6w5yIZE6RcwF
+         HJN2Th+96h2ajg1G7r+QO2JgpYKsDlLorJ5+n1Bl1AJFYbROaiN18rn6E1r8nNemxTDO
+         HqmA==
+X-Gm-Message-State: APjAAAXhozIipbbYsAuIKv2w8669B7sldkRqob8uv8bBqqXQOgb2xsq7
+        s/9xMSW25lnQWHGxv4FvcnL+ZjsQ
+X-Google-Smtp-Source: APXvYqxmKuaKat7f823FoVvgzFEjTDwsr672WnIYsS6sAhsU7sn7o+WU6yHFNUJVOZCVzd6xfNA0mA==
+X-Received: by 2002:a17:902:9689:: with SMTP id n9mr87959674plp.241.1563986902928;
+        Wed, 24 Jul 2019 09:48:22 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v7sm4148876pff.87.2019.07.24.09.48.21
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 09:47:58 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 10:47:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        daniel.thompson@linaro.org, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
- property
-Message-ID: <20190724164757.GA3723@bogus>
-References: <20190708103547.23528-1-jjhiblot@ti.com>
- <20190708103547.23528-3-jjhiblot@ti.com>
+        Wed, 24 Jul 2019 09:48:22 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian@brauner.io>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH] pidfd: Add warning if exit_state is 0 during notification
+Date:   Wed, 24 Jul 2019 12:48:16 -0400
+Message-Id: <20190724164816.201099-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708103547.23528-3-jjhiblot@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
-> Most of the LEDs are powered by a voltage/current regulator. describing in
-> the device-tree makes it possible for the LED core to enable/disable it
-> when needed.
-> 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> ---
->  Documentation/devicetree/bindings/leds/common.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 70876ac11367..e093a2b7eb90 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -61,6 +61,11 @@ Optional properties for child nodes:
->  - panic-indicator : This property specifies that the LED should be used,
->  		    if at all possible, as a panic indicator.
->  
-> +- power-supply : A voltage/current regulator used to to power the LED. When a
-> +		 LED is turned off, the LED core disable its regulator. The
-> +		 same regulator can power many LED (or other) devices. It is
-> +		 turned off only when all of its users disabled it.
+Previously a condition got missed where the pidfd waiters are awakened
+before the exit_state gets set. This can result in a missed notification
+[1] and the polling thread waiting forever.
 
-Not sure this should be common. It wouldn't apply to cases where we have 
-an LED controller parent nor gpio and pwm LEDs and those are most cases.
+It is fixed now, however it would be nice to avoid this kind of issue
+going unnoticed in the future. So just add a warning to catch it in the
+future.
 
-Perhaps what makes sense here is an regulator-led binding.
+[1] https://lore.kernel.org/lkml/20190717172100.261204-1-joel@joelfernandes.org/
 
-> +
->  - trigger-sources : List of devices which should be used as a source triggering
->  		    this LED activity. Some LEDs can be related to a specific
->  		    device and should somehow indicate its state. E.g. USB 2.0
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/signal.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 91b789dd6e72..349f5a67f100 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1885,6 +1885,7 @@ static void do_notify_pidfd(struct task_struct *task)
+ {
+ 	struct pid *pid;
+ 
++	WARN_ON(task->exit_state == 0);
+ 	pid = task_pid(task);
+ 	wake_up_all(&pid->wait_pidfd);
+ }
+-- 
+2.22.0.657.g960e92d24f-goog
+
