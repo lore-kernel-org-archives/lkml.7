@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC32CC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CE6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CE1204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC28204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000275;
-	bh=rxnY3wrfDDLzY2Euytksiym4+Ent8PQJYLcAuC5pEYg=;
+	s=default; t=1564000282;
+	bh=LIJGF+UuwXoc24xOqPrYVuQP8Bd1KAdghCvRIVquvws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knIZJAMdoCFKGZxDf5T69uIqtg9tWwuqlq85BonIaz7TwM95bU0ZaCe2RyEisY10d
-	 xE/SSZiAqhnaUs3r4r9udCfggBj8ruuDJPSw+QMccVa58NMs7zT566fTWRlsNmTd3J
-	 vsY/WEtT2ZyBkh+YTSSPca8qv8/AqYVo85ZpzcGU=
+	b=WI/WBY87LVKGBlYGNBuWVUooni9GgXFGTlq47/uA/+xCQu5rhZiG+mk1GpCy5olRo
+	 6a0ImP9P39OjiksyZXoDYFUgLYYlKfz5shelvVlPewNvDs64lfpPr2QYV30tmu1iI6
+	 qfK7t5UlE4kDS5MtpWyJDAV2vE9ItCa9gtG/WcLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfGXUbO (ORCPT
+        id S1729074AbfGXUbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51448 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388442AbfGXTa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:59 -0400
+        id S2388383AbfGXTam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23239218EA;
-        Wed, 24 Jul 2019 19:30:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D98621951;
+        Wed, 24 Jul 2019 19:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996658;
-        bh=rxnY3wrfDDLzY2Euytksiym4+Ent8PQJYLcAuC5pEYg=;
+        s=default; t=1563996641;
+        bh=LIJGF+UuwXoc24xOqPrYVuQP8Bd1KAdghCvRIVquvws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RNTwYvELR2+v4eqHBz/e24hIWD+JQ76UxtSU6TJRSsuuDhpkFnPXY04En3MFcqsGR
-         xBl5jWtIfkQdOJvkJ7HfH76332v32iWguhJ0i1yL+OUox7YJ5X5UkYGzk1BjLVKjfO
-         ub436rzcLMX8uUvdXP0/j6BopIa4124jhHvb5U3w=
+        b=cXnGF6b7kAGfycFJ+kUcxcWP5+OoGxIJuw6RIKSsq1mTnT3sJsFHE9MI/MtG9FDzX
+         iyHALcyU5aYYuTVKFs5onJJ2QPwxmtpI7Oj6OKwTObTzsBMxxXjqJUQOori9Ku3r/W
+         uSaBoNcmtIwoBCC3VOuDQZ/SIb6x49zzJ72RXwes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 173/413] rslib: Fix decoding of shortened codes
-Date:   Wed, 24 Jul 2019 21:17:44 +0200
-Message-Id: <20190724191747.314463325@linuxfoundation.org>
+        stable@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 126/413] blk-iolatency: only account submitted bios
+Date:   Wed, 24 Jul 2019 21:16:57 +0200
+Message-Id: <20190724191744.147311482@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,42 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2034a42d1747fc1e1eeef2c6f1789c4d0762cb9c ]
+[ Upstream commit a3fb01ba5af066521f3f3421839e501bb2c71805 ]
 
-The decoding of shortenend codes is broken. It only works as expected if
-there are no erasures.
+As is, iolatency recognizes done_bio and cleanup as ending paths. If a
+request is marked REQ_NOWAIT and fails to get a request, the bio is
+cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
+This results in underflowing the inflight counter. Fix this by only
+accounting bios that were actually submitted.
 
-When decoding with erasures, Lambda (the error and erasure locator
-polynomial) is initialized from the given erasure positions. The pad
-parameter is not accounted for by the initialisation code, and hence
-Lambda is initialized from incorrect erasure positions.
-
-The fix is to adjust the erasure positions by the supplied pad.
-
-Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-3-ferdinand.blomqvist@gmail.com
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/reed_solomon/decode_rs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/blk-iolatency.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 1db74eb098d0..3313bf944ff1 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -99,9 +99,9 @@
- 	if (no_eras > 0) {
- 		/* Init lambda to be the erasure locator polynomial */
- 		lambda[1] = alpha_to[rs_modnn(rs,
--					      prim * (nn - 1 - eras_pos[0]))];
-+					prim * (nn - 1 - (eras_pos[0] + pad)))];
- 		for (i = 1; i < no_eras; i++) {
--			u = rs_modnn(rs, prim * (nn - 1 - eras_pos[i]));
-+			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
- 			for (j = i + 1; j > 0; j--) {
- 				tmp = index_of[lambda[j - 1]];
- 				if (tmp != nn) {
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index d22e61bced86..c91b84bb9d0a 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -600,6 +600,10 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
+ 		return;
+ 
++	/* We didn't actually submit this bio, don't account it. */
++	if (bio->bi_status == BLK_STS_AGAIN)
++		return;
++
+ 	iolat = blkg_to_lat(bio->bi_blkg);
+ 	if (!iolat)
+ 		return;
 -- 
 2.20.1
 
