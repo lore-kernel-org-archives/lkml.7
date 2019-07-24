@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C654C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6C9C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33AA4218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926C5218EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996196;
-	bh=w7nWYzjqEuQ8ULKO5ztdyA3UpMxJqPyn49Fi+kuKWD0=;
+	s=default; t=1563996199;
+	bh=k7obKKqlAkIYwKC6eR3tddu+08+X5r047EbyTzv6Ksg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLnsr/e4H5rqJ0AaJ9v5uWJ8pYwt88uHbCwl7yDvZF6ihU9MUPrpp+tMml7bsM1qJ
-	 hYcwSyB8gOBA7Oezcs7R2LoFQAV/Ks3k1Nzr4Q4UW6Sqi6VQ/Tb1yyhxBJ05ns3wvM
-	 XrH56vcCrm4vC+4VDOJ7czYMAo9Kky25mBbXYMWc=
+	b=a4zOSWPqDRw1eiseaNc7hTxO8uIjqYcMdMD8jc9JjFYthOhvyoDQkDpQmrdWjYMTf
+	 0QtrEPNdWaP/8urUIRN3VYr2zBvPVfUoxWj8hduI+K/c/T1BoEWdBo10nOIIr5GjGY
+	 IvNN4GQgZjt6xLO+OoLvUnf6cLGJdMDamu4Bkq5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfGXTXO (ORCPT
+        id S2387750AbfGXTXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:23:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38758 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbfGXTXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:23:12 -0400
+        id S1728558AbfGXTXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:23:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEEDF218EA;
-        Wed, 24 Jul 2019 19:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F575218EA;
+        Wed, 24 Jul 2019 19:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996191;
-        bh=w7nWYzjqEuQ8ULKO5ztdyA3UpMxJqPyn49Fi+kuKWD0=;
+        s=default; t=1563996193;
+        bh=k7obKKqlAkIYwKC6eR3tddu+08+X5r047EbyTzv6Ksg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2dQgXWoZ+Cpy0NAJewszFw+WTU/Vs/e9lv8ONwcnC9q/KyFqoELXfP73IU1xxV2NK
-         VX8xkrB/tAv2NS06M5QVeGbDucGrUg/Q+dkYZtqg2fAREctGY6txGJtWg2IvpLnrP1
-         QT75PiiqBX6KF9EQVqzWZqHWTWdQN8qQBvljgIY0=
+        b=aGp2iKCt73pbwa1aTFAlngoseXzDaAvIdSz5YcQ4bfwM6+PgWm1M5vA90f7SCCAuI
+         dmDhT1ZcaSnX9Xe88BWJvFXWFUXeVP/BNgcJLj1cfAIJjFMF71K6soU6VJhIBy1aZL
+         ijNB+lTKsYbYtFjd8kg842Ou+yWWQSNz4dAvDcJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
+        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
+        Anilkumar Kolli <akolli@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 013/413] wil6210: fix spurious interrupts in 3-msi
-Date:   Wed, 24 Jul 2019 21:15:04 +0200
-Message-Id: <20190724191736.334598854@linuxfoundation.org>
+Subject: [PATCH 5.2 014/413] ath: DFS JP domain W56 fixed pulse type 3 RADAR detection
+Date:   Wed, 24 Jul 2019 21:15:05 +0200
+Message-Id: <20190724191736.427122511@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,178 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e10b0eddd5235aa5aef4e40b970e34e735611a80 ]
+[ Upstream commit d8792393a783158cbb2c39939cb897dc5e5299b6 ]
 
-Interrupt is set in ICM (ICR & ~IMV) rising trigger.
-As the driver masks the IRQ after clearing it, there can
-be a race where an additional spurious interrupt is triggered
-when the driver unmask the IRQ.
-This can happen in case HW triggers an interrupt after the clear
-and before the mask.
+Increase pulse width range from 1-2usec to 0-4usec.
+During data traffic HW occasionally fails detecting radar pulses,
+so that SW cannot get enough radar reports to achieve the success rate.
 
-To prevent the second spurious interrupt the driver needs to mask the
-IRQ before reading and clearing it.
+Tested ath10k hw and fw:
+	* QCA9888(10.4-3.5.1-00052)
+	* QCA4019(10.4-3.2.1.1-00017)
+	* QCA9984(10.4-3.6-00104)
+	* QCA988X(10.2.4-1.0-00041)
 
-Signed-off-by: Maya Erez <merez@codeaurora.org>
+Tested ath9k hw: AR9300
+
+Tested-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/interrupt.c | 65 ++++++++++++--------
- 1 file changed, 40 insertions(+), 25 deletions(-)
+ drivers/net/wireless/ath/dfs_pattern_detector.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/interrupt.c b/drivers/net/wireless/ath/wil6210/interrupt.c
-index e41ba24011d8..b00a13d6d530 100644
---- a/drivers/net/wireless/ath/wil6210/interrupt.c
-+++ b/drivers/net/wireless/ath/wil6210/interrupt.c
-@@ -296,21 +296,24 @@ void wil_configure_interrupt_moderation(struct wil6210_priv *wil)
- static irqreturn_t wil6210_irq_rx(int irq, void *cookie)
- {
- 	struct wil6210_priv *wil = cookie;
--	u32 isr = wil_ioread32_and_clear(wil->csr +
--					 HOSTADDR(RGF_DMA_EP_RX_ICR) +
--					 offsetof(struct RGF_ICR, ICR));
-+	u32 isr;
- 	bool need_unmask = true;
- 
-+	wil6210_mask_irq_rx(wil);
-+
-+	isr = wil_ioread32_and_clear(wil->csr +
-+				     HOSTADDR(RGF_DMA_EP_RX_ICR) +
-+				     offsetof(struct RGF_ICR, ICR));
-+
- 	trace_wil6210_irq_rx(isr);
- 	wil_dbg_irq(wil, "ISR RX 0x%08x\n", isr);
- 
- 	if (unlikely(!isr)) {
- 		wil_err_ratelimited(wil, "spurious IRQ: RX\n");
-+		wil6210_unmask_irq_rx(wil);
- 		return IRQ_NONE;
- 	}
- 
--	wil6210_mask_irq_rx(wil);
--
- 	/* RX_DONE and RX_HTRSH interrupts are the same if interrupt
- 	 * moderation is not used. Interrupt moderation may cause RX
- 	 * buffer overflow while RX_DONE is delayed. The required
-@@ -355,21 +358,24 @@ static irqreturn_t wil6210_irq_rx(int irq, void *cookie)
- static irqreturn_t wil6210_irq_rx_edma(int irq, void *cookie)
- {
- 	struct wil6210_priv *wil = cookie;
--	u32 isr = wil_ioread32_and_clear(wil->csr +
--					 HOSTADDR(RGF_INT_GEN_RX_ICR) +
--					 offsetof(struct RGF_ICR, ICR));
-+	u32 isr;
- 	bool need_unmask = true;
- 
-+	wil6210_mask_irq_rx_edma(wil);
-+
-+	isr = wil_ioread32_and_clear(wil->csr +
-+				     HOSTADDR(RGF_INT_GEN_RX_ICR) +
-+				     offsetof(struct RGF_ICR, ICR));
-+
- 	trace_wil6210_irq_rx(isr);
- 	wil_dbg_irq(wil, "ISR RX 0x%08x\n", isr);
- 
- 	if (unlikely(!isr)) {
- 		wil_err(wil, "spurious IRQ: RX\n");
-+		wil6210_unmask_irq_rx_edma(wil);
- 		return IRQ_NONE;
- 	}
- 
--	wil6210_mask_irq_rx_edma(wil);
--
- 	if (likely(isr & BIT_RX_STATUS_IRQ)) {
- 		wil_dbg_irq(wil, "RX status ring\n");
- 		isr &= ~BIT_RX_STATUS_IRQ;
-@@ -403,21 +409,24 @@ static irqreturn_t wil6210_irq_rx_edma(int irq, void *cookie)
- static irqreturn_t wil6210_irq_tx_edma(int irq, void *cookie)
- {
- 	struct wil6210_priv *wil = cookie;
--	u32 isr = wil_ioread32_and_clear(wil->csr +
--					 HOSTADDR(RGF_INT_GEN_TX_ICR) +
--					 offsetof(struct RGF_ICR, ICR));
-+	u32 isr;
- 	bool need_unmask = true;
- 
-+	wil6210_mask_irq_tx_edma(wil);
-+
-+	isr = wil_ioread32_and_clear(wil->csr +
-+				     HOSTADDR(RGF_INT_GEN_TX_ICR) +
-+				     offsetof(struct RGF_ICR, ICR));
-+
- 	trace_wil6210_irq_tx(isr);
- 	wil_dbg_irq(wil, "ISR TX 0x%08x\n", isr);
- 
- 	if (unlikely(!isr)) {
- 		wil_err(wil, "spurious IRQ: TX\n");
-+		wil6210_unmask_irq_tx_edma(wil);
- 		return IRQ_NONE;
- 	}
- 
--	wil6210_mask_irq_tx_edma(wil);
--
- 	if (likely(isr & BIT_TX_STATUS_IRQ)) {
- 		wil_dbg_irq(wil, "TX status ring\n");
- 		isr &= ~BIT_TX_STATUS_IRQ;
-@@ -446,21 +455,24 @@ static irqreturn_t wil6210_irq_tx_edma(int irq, void *cookie)
- static irqreturn_t wil6210_irq_tx(int irq, void *cookie)
- {
- 	struct wil6210_priv *wil = cookie;
--	u32 isr = wil_ioread32_and_clear(wil->csr +
--					 HOSTADDR(RGF_DMA_EP_TX_ICR) +
--					 offsetof(struct RGF_ICR, ICR));
-+	u32 isr;
- 	bool need_unmask = true;
- 
-+	wil6210_mask_irq_tx(wil);
-+
-+	isr = wil_ioread32_and_clear(wil->csr +
-+				     HOSTADDR(RGF_DMA_EP_TX_ICR) +
-+				     offsetof(struct RGF_ICR, ICR));
-+
- 	trace_wil6210_irq_tx(isr);
- 	wil_dbg_irq(wil, "ISR TX 0x%08x\n", isr);
- 
- 	if (unlikely(!isr)) {
- 		wil_err_ratelimited(wil, "spurious IRQ: TX\n");
-+		wil6210_unmask_irq_tx(wil);
- 		return IRQ_NONE;
- 	}
- 
--	wil6210_mask_irq_tx(wil);
--
- 	if (likely(isr & BIT_DMA_EP_TX_ICR_TX_DONE)) {
- 		wil_dbg_irq(wil, "TX done\n");
- 		isr &= ~BIT_DMA_EP_TX_ICR_TX_DONE;
-@@ -532,20 +544,23 @@ static bool wil_validate_mbox_regs(struct wil6210_priv *wil)
- static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
- {
- 	struct wil6210_priv *wil = cookie;
--	u32 isr = wil_ioread32_and_clear(wil->csr +
--					 HOSTADDR(RGF_DMA_EP_MISC_ICR) +
--					 offsetof(struct RGF_ICR, ICR));
-+	u32 isr;
-+
-+	wil6210_mask_irq_misc(wil, false);
-+
-+	isr = wil_ioread32_and_clear(wil->csr +
-+				     HOSTADDR(RGF_DMA_EP_MISC_ICR) +
-+				     offsetof(struct RGF_ICR, ICR));
- 
- 	trace_wil6210_irq_misc(isr);
- 	wil_dbg_irq(wil, "ISR MISC 0x%08x\n", isr);
- 
- 	if (!isr) {
- 		wil_err(wil, "spurious IRQ: MISC\n");
-+		wil6210_unmask_irq_misc(wil, false);
- 		return IRQ_NONE;
- 	}
- 
--	wil6210_mask_irq_misc(wil, false);
--
- 	if (isr & ISR_MISC_FW_ERROR) {
- 		u32 fw_assert_code = wil_r(wil, wil->rgf_fw_assert_code_addr);
- 		u32 ucode_assert_code =
+diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
+index d52b31b45df7..a274eb0d1968 100644
+--- a/drivers/net/wireless/ath/dfs_pattern_detector.c
++++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
+@@ -111,7 +111,7 @@ static const struct radar_detector_specs jp_radar_ref_types[] = {
+ 	JP_PATTERN(0, 0, 1, 1428, 1428, 1, 18, 29, false),
+ 	JP_PATTERN(1, 2, 3, 3846, 3846, 1, 18, 29, false),
+ 	JP_PATTERN(2, 0, 1, 1388, 1388, 1, 18, 50, false),
+-	JP_PATTERN(3, 1, 2, 4000, 4000, 1, 18, 50, false),
++	JP_PATTERN(3, 0, 4, 4000, 4000, 1, 18, 50, false),
+ 	JP_PATTERN(4, 0, 5, 150, 230, 1, 23, 50, false),
+ 	JP_PATTERN(5, 6, 10, 200, 500, 1, 16, 50, false),
+ 	JP_PATTERN(6, 11, 20, 200, 500, 1, 12, 50, false),
 -- 
 2.20.1
 
