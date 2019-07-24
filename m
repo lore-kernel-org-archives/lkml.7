@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B64C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239EDC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3A5218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC66221951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996252;
-	bh=Kdb2esTfhVVGQeQlYtgqPeYU5C6rZUsNpOO0RND6b6I=;
+	s=default; t=1563996256;
+	bh=z2tDvDZ1wSCfjB31V79vAvatC0HzUue8IWw2Z5RYXzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aaq7m26nfEugB0/QhIAesiJYmKluoH7hJUsvCc62QV1q41BLHeFEaAeutAz8dx2yG
-	 nFa9tK6oqGDXZxbSQ7uUgi9HCqN5iJlMDzuK+l3cN9YFGXFwHBpulpEhnsQL3RRxMW
-	 /6WswCoD5+vZkSJiFIZBtwBm+Nb7r59aM7qGiq5c=
+	b=PNDdxIkgJkgqWdFWyFFo+ZarReWZmXGXMcJhRf3jn7AUetr+p4jPXjXZHSEAfPA8m
+	 PUBu3Nsul0g6ppT+4SFIHyVR/V5mQL/c9FRMrwhS9XtmczM4CIBeD93ZWHxHuugMqE
+	 8wGdI2hDipaRJvLCbVQLhH180GuD2W1iwLjAmHWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387921AbfGXTYL (ORCPT
+        id S2387941AbfGXTYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbfGXTYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:08 -0400
+        id S2387916AbfGXTYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DB10218F0;
-        Wed, 24 Jul 2019 19:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAB4622387;
+        Wed, 24 Jul 2019 19:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996247;
-        bh=Kdb2esTfhVVGQeQlYtgqPeYU5C6rZUsNpOO0RND6b6I=;
+        s=default; t=1563996250;
+        bh=z2tDvDZ1wSCfjB31V79vAvatC0HzUue8IWw2Z5RYXzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gnh0quhpEz7Z+f749+YCp1Ki+LPjfdC8rntfQ0Bnnm1NUQ+tgdN5af/U3ZLt8LkjA
-         FDrT7J9en9pB/DFpNBQzS+wcT5r1H99nkz3iEloKJWRBMowBsgFDeEjqlHwNbBrZJq
-         OY0MFNL7iug7q83bknKEYiFfY6YwoDamJWu4ZHwk=
+        b=FOUfXS60WsPhZmEg2VEZE/n6Hh+6xP77yQbIC+sa2ggDTX732RwqvdpbecQY7Q2wu
+         ink5jqgrE1dLg4M5NAZkzeUZ+V46RTG2Du6SVPoun/9JyHKiFbajkSVo3Oo0Cg9MSq
+         l0X4/OBbuhotvYmEcl6gbabsCq6WFppOXAxeUITA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        stable@vger.kernel.org,
+        Miguel Catalan Cid <miguel.catalan@i2cat.net>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 030/413] net: stmmac: dwmac4/5: Clear unused address entries
-Date:   Wed, 24 Jul 2019 21:15:21 +0200
-Message-Id: <20190724191737.673962550@linuxfoundation.org>
+Subject: [PATCH 5.2 004/413] ath9k: Dont trust TX status TID number when reporting airtime
+Date:   Wed, 24 Jul 2019 21:14:55 +0200
+Message-Id: <20190724191735.486183261@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,51 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
+[ Upstream commit 389b72e58259336c2d56d58b660b79cf4b9e0dcb ]
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+As already noted a comment in ath_tx_complete_aggr(), the hardware will
+occasionally send a TX status with the wrong tid number. If we trust the
+value, airtime usage will be reported to the wrong AC, which can cause the
+deficit on that AC to become very low, blocking subsequent attempts to
+transmit.
 
-Found out while running stmmac selftests.
+To fix this, account airtime usage to the TID number from the original skb,
+instead of the one in the hardware TX status report.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Miguel Catalan Cid <miguel.catalan@i2cat.net>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath9k/xmit.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 99d772517242..206170d0bf81 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -443,14 +443,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		 * are required
- 		 */
- 		value |= GMAC_PACKET_FILTER_PR;
--	} else if (!netdev_uc_empty(dev)) {
--		int reg = 1;
-+	} else {
- 		struct netdev_hw_addr *ha;
-+		int reg = 1;
- 
- 		netdev_for_each_uc_addr(ha, dev) {
- 			dwmac4_set_umac_addr(hw, ha->addr, reg);
- 			reg++;
- 		}
-+
-+		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
+diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
+index b17e1ca40995..3be0aeedb9b5 100644
+--- a/drivers/net/wireless/ath/ath9k/xmit.c
++++ b/drivers/net/wireless/ath/ath9k/xmit.c
+@@ -668,7 +668,8 @@ static bool bf_is_ampdu_not_probing(struct ath_buf *bf)
+ static void ath_tx_count_airtime(struct ath_softc *sc,
+ 				 struct ieee80211_sta *sta,
+ 				 struct ath_buf *bf,
+-				 struct ath_tx_status *ts)
++				 struct ath_tx_status *ts,
++				 u8 tid)
+ {
+ 	u32 airtime = 0;
+ 	int i;
+@@ -679,7 +680,7 @@ static void ath_tx_count_airtime(struct ath_softc *sc,
+ 		airtime += rate_dur * bf->rates[i].count;
  	}
  
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
+-	ieee80211_sta_register_airtime(sta, ts->tid, airtime, 0);
++	ieee80211_sta_register_airtime(sta, tid, airtime, 0);
+ }
+ 
+ static void ath_tx_process_buffer(struct ath_softc *sc, struct ath_txq *txq,
+@@ -709,7 +710,7 @@ static void ath_tx_process_buffer(struct ath_softc *sc, struct ath_txq *txq,
+ 	if (sta) {
+ 		struct ath_node *an = (struct ath_node *)sta->drv_priv;
+ 		tid = ath_get_skb_tid(sc, an, bf->bf_mpdu);
+-		ath_tx_count_airtime(sc, sta, bf, ts);
++		ath_tx_count_airtime(sc, sta, bf, ts, tid->tidno);
+ 		if (ts->ts_status & (ATH9K_TXERR_FILT | ATH9K_TXERR_XRETRY))
+ 			tid->clear_ps_filter = true;
+ 	}
 -- 
 2.20.1
 
