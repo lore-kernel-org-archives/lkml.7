@@ -2,66 +2,105 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CADC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD81C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65F82253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E026227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfGXDJK (ORCPT
+        id S1726371AbfGXDKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:09:10 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58569 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfGXDJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:09:10 -0400
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x6O392Oa034697;
-        Wed, 24 Jul 2019 12:09:02 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
- Wed, 24 Jul 2019 12:09:02 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x6O392fX034691
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 24 Jul 2019 12:09:02 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kexec: Bail out upon SIGKILL when allocating memory.
-To:     Eric Biederman <ebiederm@xmission.com>
-References: <000000000000a861f6058b2699e0@google.com>
- <000000000000c0103a058b2ba0ec@google.com>
- <993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp>
- <20190724025422.GQ643@sol.localdomain>
-Cc:     syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <21e9b463-7a10-4168-f08c-33653ea32767@i-love.sakura.ne.jp>
-Date:   Wed, 24 Jul 2019 12:09:05 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 Jul 2019 23:10:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2709 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbfGXDKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:10:14 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CF1FEE77B2783C2E79F0;
+        Wed, 24 Jul 2019 11:10:11 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 11:10:05 +0800
+Subject: Re: [PATCH] RDMA/hns: Fix build error for hip08
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+References: <20190723024908.11876-1-yuehaibing@huawei.com>
+ <20190723074339.GJ5125@mtr-leonro.mtl.com> <20190723123402.GA15357@ziepe.ca>
+ <20190723133540.GM5125@mtr-leonro.mtl.com> <20190723133739.GC15357@ziepe.ca>
+CC:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
+        <dledford@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <75865ec7-443e-f65a-2221-8fbc57fedb6b@huawei.com>
+Date:   Wed, 24 Jul 2019 11:10:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190724025422.GQ643@sol.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190723133739.GC15357@ziepe.ca>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/07/24 11:54, Eric Biggers wrote:
+On 2019/7/23 21:37, Jason Gunthorpe wrote:
+> On Tue, Jul 23, 2019 at 04:35:40PM +0300, Leon Romanovsky wrote:
+>> On Tue, Jul 23, 2019 at 09:34:02AM -0300, Jason Gunthorpe wrote:
+>>> On Tue, Jul 23, 2019 at 10:43:39AM +0300, Leon Romanovsky wrote:
+>>>> On Tue, Jul 23, 2019 at 10:49:08AM +0800, YueHaibing wrote:
+>>>>> If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
+>>>>> but INFINIBAND_HNS is y, building fails:
+>>>>>
+>>>>> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
+>>>>> hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
+>>>>> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
+>>>>> hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
+>>>>
+>>>> It means that you have a problem with header files of your hns3.
+>>>>
+>>>>>
+>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>>> Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
+>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>  drivers/infiniband/hw/hns/Kconfig | 3 ++-
+>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+>>>>> index b59da5d..4371c80 100644
+>>>>> +++ b/drivers/infiniband/hw/hns/Kconfig
+>>>>> @@ -23,7 +23,8 @@ config INFINIBAND_HNS_HIP06
+>>>>>
+>>>>>  config INFINIBAND_HNS_HIP08
+>>>>>  	bool "Hisilicon Hip08 Family RoCE support"
+>>>>> -	depends on INFINIBAND_HNS && PCI && HNS3
+>>>>> +	depends on INFINIBAND_HNS && (INFINIBAND_HNS = HNS3)
+>>>>
+>>>> This is wrong.
+>>>
+>>> It is tricky. It is asserting that the IB side is built as a module if
+>>> the ethernet side is a module..
+>>>
+>>> It is kind of a weird pattern as the module config is INFINIBAND_HNS
+>>> and these others are just bool opens what to include, but I think it
+>>> is OK..
+>>
+>> select ???
 > 
-> What happened to this patch?  This bug is still occurring.
+> select doesn't influence module or not any different from depeends
 
-Andrew Morton added this patch to the -mm tree.
-Should appear in the linux-next tree in a few days.
+Ok, it seems select is a better solution, it allows HNS3 is y while INFINIBAND_HNS is m,
 
-https://marc.info/?l=linux-mm-commits&m=156391134729795&w=2
+Will send v2, Thanks!
+
+> 
+> Jason
+> 
+> .
+> 
+
