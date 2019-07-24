@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DA2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141F2C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0454214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF972214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997870;
-	bh=ndzLM6M8u3qe2hiuEhJuqUhrKW/gwDN8XSWkEotxou4=;
+	s=default; t=1563997875;
+	bh=sksUJj/Y4pKj85aD+oWGf8w6imOk2rtUq6E3+Yxf3zA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yHzFXzFhzJjVZM2DlpHJ8OaCMhhbm9c8qg8MT6ssE9ghqeRpBPP23pBwnu4CHKEZm
-	 gUEAPGF/8YarvdBcmuiwzqWVXHoGKmjWtUVIFeao5vYMuEsKyjgju+ec67JIazMwPI
-	 XgDv9BaysBS5S39ob85qVri8iVoVIVhY4xhdbyfI=
+	b=KbJvkk0m68A+dCJKycL/KjXGtpihllIudH8HnOEDq76TgUe0oisUx4y6Za3X5EVLz
+	 Ja3quMezJvL1d36q6cWhdAB44EELtsxhGk+Ktwz3ev6wU9Ik4FKiG7+AUqoQaS0+lC
+	 5sykEFJQrBPvbVo0cr7dXQeM+Z4vkb3gBZM179Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391614AbfGXTvI (ORCPT
+        id S2391638AbfGXTvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60082 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:51:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391040AbfGXTvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:02 -0400
+        id S2391615AbfGXTvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:51:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBDAD21873;
-        Wed, 24 Jul 2019 19:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F77722ADF;
+        Wed, 24 Jul 2019 19:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997860;
-        bh=ndzLM6M8u3qe2hiuEhJuqUhrKW/gwDN8XSWkEotxou4=;
+        s=default; t=1563997868;
+        bh=sksUJj/Y4pKj85aD+oWGf8w6imOk2rtUq6E3+Yxf3zA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Tg8sD/JKgws53fiIQC+X5CnPh6G/H5/fngSyCjRrBM052+3LbhhlIj4ROHuGdpYB
-         FTzGcbx2lQZYB1Aqfs7Ljm2PMeOcnnk7iiFTCo8cDYsB0viEK5OXU4HHntHnoshipG
-         joLx8zTISTPFyu7gfrPSk3FaoRhACmWl+BmXj7R0=
+        b=De+YnaixOskX08MKO9ezrmtcsJtAa6T6kwqfHW8wgf55LHtUAAYTocVX2lNYvUHoB
+         s5Ti/FOCgAVUFmBt24si0drSL6/gAZ+N08GKFaiO/t90kfxlfmml/AH26x2nQp9DV7
+         /N8hwV2RqOKfltf9Svr4szltRMzuldVchSpsDHi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 126/371] ipsec: select crypto ciphers for xfrm_algo
-Date:   Wed, 24 Jul 2019 21:17:58 +0200
-Message-Id: <20190724191734.360978628@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 172/371] bcache: fix potential deadlock in cached_def_free()
+Date:   Wed, 24 Jul 2019 21:18:44 +0200
+Message-Id: <20190724191738.204250193@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,41 +59,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 597179b0ba550bd83fab1a9d57c42a9343c58514 ]
+[ Upstream commit 7e865eba00a3df2dc8c4746173a8ca1c1c7f042e ]
 
-kernelci.org reports failed builds on arc because of what looks
-like an old missed 'select' statement:
+When enable lockdep and reboot system with a writeback mode bcache
+device, the following potential deadlock warning is reported by lockdep
+engine.
 
-net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
-xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
+[  101.536569][  T401] kworker/2:2/401 is trying to acquire lock:
+[  101.538575][  T401] 00000000bbf6e6c7 ((wq_completion)bcache_writeback_wq){+.+.}, at: flush_workqueue+0x87/0x4c0
+[  101.542054][  T401]
+[  101.542054][  T401] but task is already holding lock:
+[  101.544587][  T401] 00000000f5f305b3 ((work_completion)(&cl->work)#2){+.+.}, at: process_one_work+0x21e/0x640
+[  101.548386][  T401]
+[  101.548386][  T401] which lock already depends on the new lock.
+[  101.548386][  T401]
+[  101.551874][  T401]
+[  101.551874][  T401] the existing dependency chain (in reverse order) is:
+[  101.555000][  T401]
+[  101.555000][  T401] -> #1 ((work_completion)(&cl->work)#2){+.+.}:
+[  101.557860][  T401]        process_one_work+0x277/0x640
+[  101.559661][  T401]        worker_thread+0x39/0x3f0
+[  101.561340][  T401]        kthread+0x125/0x140
+[  101.562963][  T401]        ret_from_fork+0x3a/0x50
+[  101.564718][  T401]
+[  101.564718][  T401] -> #0 ((wq_completion)bcache_writeback_wq){+.+.}:
+[  101.567701][  T401]        lock_acquire+0xb4/0x1c0
+[  101.569651][  T401]        flush_workqueue+0xae/0x4c0
+[  101.571494][  T401]        drain_workqueue+0xa9/0x180
+[  101.573234][  T401]        destroy_workqueue+0x17/0x250
+[  101.575109][  T401]        cached_dev_free+0x44/0x120 [bcache]
+[  101.577304][  T401]        process_one_work+0x2a4/0x640
+[  101.579357][  T401]        worker_thread+0x39/0x3f0
+[  101.581055][  T401]        kthread+0x125/0x140
+[  101.582709][  T401]        ret_from_fork+0x3a/0x50
+[  101.584592][  T401]
+[  101.584592][  T401] other info that might help us debug this:
+[  101.584592][  T401]
+[  101.588355][  T401]  Possible unsafe locking scenario:
+[  101.588355][  T401]
+[  101.590974][  T401]        CPU0                    CPU1
+[  101.592889][  T401]        ----                    ----
+[  101.594743][  T401]   lock((work_completion)(&cl->work)#2);
+[  101.596785][  T401]                                lock((wq_completion)bcache_writeback_wq);
+[  101.600072][  T401]                                lock((work_completion)(&cl->work)#2);
+[  101.602971][  T401]   lock((wq_completion)bcache_writeback_wq);
+[  101.605255][  T401]
+[  101.605255][  T401]  *** DEADLOCK ***
+[  101.605255][  T401]
+[  101.608310][  T401] 2 locks held by kworker/2:2/401:
+[  101.610208][  T401]  #0: 00000000cf2c7d17 ((wq_completion)events){+.+.}, at: process_one_work+0x21e/0x640
+[  101.613709][  T401]  #1: 00000000f5f305b3 ((work_completion)(&cl->work)#2){+.+.}, at: process_one_work+0x21e/0x640
+[  101.617480][  T401]
+[  101.617480][  T401] stack backtrace:
+[  101.619539][  T401] CPU: 2 PID: 401 Comm: kworker/2:2 Tainted: G        W         5.2.0-rc4-lp151.20-default+ #1
+[  101.623225][  T401] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[  101.627210][  T401] Workqueue: events cached_dev_free [bcache]
+[  101.629239][  T401] Call Trace:
+[  101.630360][  T401]  dump_stack+0x85/0xcb
+[  101.631777][  T401]  print_circular_bug+0x19a/0x1f0
+[  101.633485][  T401]  __lock_acquire+0x16cd/0x1850
+[  101.635184][  T401]  ? __lock_acquire+0x6a8/0x1850
+[  101.636863][  T401]  ? lock_acquire+0xb4/0x1c0
+[  101.638421][  T401]  ? find_held_lock+0x34/0xa0
+[  101.640015][  T401]  lock_acquire+0xb4/0x1c0
+[  101.641513][  T401]  ? flush_workqueue+0x87/0x4c0
+[  101.643248][  T401]  flush_workqueue+0xae/0x4c0
+[  101.644832][  T401]  ? flush_workqueue+0x87/0x4c0
+[  101.646476][  T401]  ? drain_workqueue+0xa9/0x180
+[  101.648303][  T401]  drain_workqueue+0xa9/0x180
+[  101.649867][  T401]  destroy_workqueue+0x17/0x250
+[  101.651503][  T401]  cached_dev_free+0x44/0x120 [bcache]
+[  101.653328][  T401]  process_one_work+0x2a4/0x640
+[  101.655029][  T401]  worker_thread+0x39/0x3f0
+[  101.656693][  T401]  ? process_one_work+0x640/0x640
+[  101.658501][  T401]  kthread+0x125/0x140
+[  101.660012][  T401]  ? kthread_create_worker_on_cpu+0x70/0x70
+[  101.661985][  T401]  ret_from_fork+0x3a/0x50
+[  101.691318][  T401] bcache: bcache_device_free() bcache0 stopped
 
-I don't see this in randconfig builds on other architectures, but
-it's fairly clear we want to select the hash code for it, like we
-do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
-is also required even though it has not popped up in build tests.
+Here is how the above potential deadlock may happen in reboot/shutdown
+code path,
+1) bcache_reboot() is called firstly in the reboot/shutdown code path,
+   then in bcache_reboot(), bcache_device_stop() is called.
+2) bcache_device_stop() sets BCACHE_DEV_CLOSING on d->falgs, then call
+   closure_queue(&d->cl) to invoke cached_dev_flush(). And in turn
+   cached_dev_flush() calls cached_dev_free() via closure_at()
+3) In cached_dev_free(), after stopped writebach kthread
+   dc->writeback_thread, the kwork dc->writeback_write_wq is stopping by
+   destroy_workqueue().
+4) Inside destroy_workqueue(), drain_workqueue() is called. Inside
+   drain_workqueue(), flush_workqueue() is called. Then wq->lockdep_map
+   is acquired by lock_map_acquire() in flush_workqueue(). After the
+   lock acquired the rest part of flush_workqueue() just wait for the
+   workqueue to complete.
+5) Now we look back at writeback thread routine bch_writeback_thread(),
+   in the main while-loop, write_dirty() is called via continue_at() in
+   read_dirty_submit(), which is called via continue_at() in while-loop
+   level called function read_dirty(). Inside write_dirty() it may be
+   re-called on workqueeu dc->writeback_write_wq via continue_at().
+   It means when the writeback kthread is stopped in cached_dev_free()
+   there might be still one kworker queued on dc->writeback_write_wq
+   to execute write_dirty() again.
+6) Now this kworker is scheduled on dc->writeback_write_wq to run by
+   process_one_work() (which is called by worker_thread()). Before
+   calling the kwork routine, wq->lockdep_map is acquired.
+7) But wq->lockdep_map is acquired already in step 4), so a A-A lock
+   (lockdep terminology) scenario happens.
 
-Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Indeed on multiple cores syatem, the above deadlock is very rare to
+happen, just as the code comments in process_one_work() says,
+2263     * AFAICT there is no possible deadlock scenario between the
+2264     * flush_work() and complete() primitives (except for
+	   single-threaded
+2265     * workqueues), so hiding them isn't a problem.
+
+But it is still good to fix such lockdep warning, even no one running
+bcache on single core system.
+
+The fix is simple. This patch solves the above potential deadlock by,
+- Do not destroy workqueue dc->writeback_write_wq in cached_dev_free().
+- Flush and destroy dc->writeback_write_wq in writebach kthread routine
+  bch_writeback_thread(), where after quit the thread main while-loop
+  and before cached_dev_put() is called.
+
+By this fix, dc->writeback_write_wq will be stopped and destroy before
+the writeback kthread stopped, so the chance for a A-A locking on
+wq->lockdep_map is disappeared, such A-A deadlock won't happen
+any more.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/bcache/super.c     | 2 --
+ drivers/md/bcache/writeback.c | 4 ++++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
-index 5d43aaa17027..831668ee8229 100644
---- a/net/xfrm/Kconfig
-+++ b/net/xfrm/Kconfig
-@@ -14,6 +14,8 @@ config XFRM_ALGO
- 	tristate
- 	select XFRM
- 	select CRYPTO
-+	select CRYPTO_HASH
-+	select CRYPTO_BLKCIPHER
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index dd36e3dfd00f..91252107b10c 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1191,8 +1191,6 @@ static void cached_dev_free(struct closure *cl)
  
- config XFRM_USER
- 	tristate "Transformation user configuration interface"
+ 	if (!IS_ERR_OR_NULL(dc->writeback_thread))
+ 		kthread_stop(dc->writeback_thread);
+-	if (dc->writeback_write_wq)
+-		destroy_workqueue(dc->writeback_write_wq);
+ 	if (!IS_ERR_OR_NULL(dc->status_update_thread))
+ 		kthread_stop(dc->status_update_thread);
+ 
+diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
+index 73f0efac2b9f..df0f4e5a051a 100644
+--- a/drivers/md/bcache/writeback.c
++++ b/drivers/md/bcache/writeback.c
+@@ -735,6 +735,10 @@ static int bch_writeback_thread(void *arg)
+ 		}
+ 	}
+ 
++	if (dc->writeback_write_wq) {
++		flush_workqueue(dc->writeback_write_wq);
++		destroy_workqueue(dc->writeback_write_wq);
++	}
+ 	cached_dev_put(dc);
+ 	wait_for_kthread_stop();
+ 
 -- 
 2.20.1
 
