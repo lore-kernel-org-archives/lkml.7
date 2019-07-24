@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B384C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF7EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6775A206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BDC206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998687;
-	bh=dkRZBDZPap36RShbRBG/Q4a5iAVbQAwRTZqiZMgSREg=;
+	s=default; t=1563998697;
+	bh=um3WD5KN4MwftmoddejpnKQw5fPOPyDaTA7BAfh3TiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wpt5al9ft9bxelegYYHB5MB/fpUzG0ZHLEQwHUUKlHGUVhKBU+IGoPTNAJQ02pgpT
-	 t/B1y5gY8TEZwvEDfuPezs48WjfdNuX0tIC1XKpdoXqYM21O5hCDyflu5Qx9+jyxyh
-	 V2xFoH2piQwbibF1ok9E2V1u7dhxFj50Ma3GJf8k=
+	b=n2YA2NW8vwkfD2GdUfIIUQLTYNUV0J5hdNkCKAvnBaBg3SagVdhgTJcvulD4ZgRN2
+	 b6xB/aMTAvgcKMaZWoXDM9XQrPFIANuDiE0hkeuoyo5++ZSkEvag14doGaenMNTHok
+	 9zflRv0rmK0oP4HE5QdVaHLA96T3RwQPV91R17vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405226AbfGXUEq (ORCPT
+        id S2405727AbfGXUEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:04:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392567AbfGXUEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:04:36 -0400
+        id S2405522AbfGXUEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:04:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F19E205C9;
-        Wed, 24 Jul 2019 20:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 752A1206BA;
+        Wed, 24 Jul 2019 20:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998676;
-        bh=dkRZBDZPap36RShbRBG/Q4a5iAVbQAwRTZqiZMgSREg=;
+        s=default; t=1563998692;
+        bh=um3WD5KN4MwftmoddejpnKQw5fPOPyDaTA7BAfh3TiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SMlJuFWQol/q/xfP4ke5Q8DLjuv4rf8Pde81gQbtMsqo+yYJhcKP2q13K02p44lyE
-         4aLgRUbXvQSfoCoZ0QkHHFNb3hz8O+2UxdFt+vaFCNQqwlM7nWLIbYl4WB5cPyVG97
-         s846z7JqYVayOhMJ0mCna3yJy3oZtWF7xt3IPjYw=
+        b=AG+CSgy2SCKgeq47nzHW5Eq9spZA4Zi3hoOB9mLaYDVj5WzAYp7Wx1mIMW++6ERAU
+         I1RLMlR4OI35R4DjJaMV8EAmp6TcsW3JQguLqNaAzglcoEFezdsL1iMJJtP8hCbdSZ
+         xfhG0OZZ9aS8ZhcJHXY4ejqidujME2MJAkv35qDI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/271] xfrm: fix sa selector validation
-Date:   Wed, 24 Jul 2019 21:19:04 +0200
-Message-Id: <20190724191701.610520399@linuxfoundation.org>
+Subject: [PATCH 4.19 043/271] arm64: mm: make CONFIG_ZONE_DMA32 configurable
+Date:   Wed, 24 Jul 2019 21:18:32 +0200
+Message-Id: <20190724191658.856919930@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,40 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
+[ Upstream commit 0c1f14ed12262f45a3af1d588e4d7bd12438b8f5 ]
 
-After commit b38ff4075a80, the following command does not work anymore:
-$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
-  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
-  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
+This change makes CONFIG_ZONE_DMA32 defuly y and allows users
+to overwrite it only when CONFIG_EXPERT=y.
 
-In fact, the selector is not mandatory, allow the user to provide an empty
-selector.
+For the SoCs that do not need CONFIG_ZONE_DMA32, this is the
+first step to manage all available memory by a single
+zone(normal zone) to reduce the overhead of multiple zones.
 
-Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
-CC: Anirudh Gupta <anirudh.gupta@sophos.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+The change also fixes a build error when CONFIG_NUMA=y and
+CONFIG_ZONE_DMA32=n.
+
+arch/arm64/mm/init.c:195:17: error: use of undeclared identifier 'ZONE_DMA32'
+                max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
+
+Change since v1:
+1. only expose CONFIG_ZONE_DMA32 when CONFIG_EXPERT=y
+2. remove redundant IS_ENABLED(CONFIG_ZONE_DMA32)
+
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/Kconfig   | 3 ++-
+ arch/arm64/mm/init.c | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index d80d54e663c0..1484bc99a537 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -166,6 +166,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
- 	}
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 8790a29d0af4..e3ebece79617 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -251,7 +251,8 @@ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
  
- 	switch (p->sel.family) {
-+	case AF_UNSPEC:
-+		break;
-+
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+ config ZONE_DMA32
+-	def_bool y
++	bool "Support DMA32 zone" if EXPERT
++	default y
+ 
+ config HAVE_GENERIC_GUP
+ 	def_bool y
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 774c3e17c798..29d2f425806e 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -233,8 +233,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
+ 
+-	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-		max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
++#ifdef CONFIG_ZONE_DMA32
++	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
++#endif
+ 	max_zone_pfns[ZONE_NORMAL] = max;
+ 
+ 	free_area_init_nodes(max_zone_pfns);
 -- 
 2.20.1
 
