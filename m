@@ -2,240 +2,128 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED71C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003B5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9026D21926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06C521926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563989847;
-	bh=CoUiERLHZxnSU81JTfU1X+t9+HsHukjllHZZ384/Ye8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tdqGJFT/L++BejfvMOSb87kmluoLfjuRsULo1POIDyaXwwo9mqyGxC0Ma1jz/eL7p
-	 X+r/bU3gqErq3qOsuhRv2dQ6uFNmpXQPGjs6Lad3krHY0lfhQCBWjiGtKPq8kUi1Ra
-	 ip5LRgrbaRhRAEOj6wJoNOLN77NpbhNtBz08eOno=
+	s=default; t=1563989876;
+	bh=tUbjma6wnK8/sAbaZn8K00CEeOWMSwub3fWq32Z6ysA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2rbgnihTz4V6zsbAtkQhe4FLrWVidthSzfl7lgpMHeFDTGW+wcDkQahcE6aScg0A6
+	 o8B0WO8LVRz8bp4KEDxkttCRNt0QyHtVkHT8EpwgjYPUkyQYN8lkMLLfqa3amEqkbv
+	 7gfebJJflJt3FU7IK24UdYT6kGCISibG9aLBLrQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfGXRh0 (ORCPT
+        id S2387800AbfGXRhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:37:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37958 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfGXRh0 (ORCPT
+        Wed, 24 Jul 2019 13:37:55 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34185 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbfGXRhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:37:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f5so12750591pgu.5;
-        Wed, 24 Jul 2019 10:37:25 -0700 (PDT)
+        Wed, 24 Jul 2019 13:37:55 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p17so45322933ljg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:37:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cHxf1kTdWDT0gUqEm0BhBo9+91LG1FL8yrCj/eDjN5Q=;
-        b=ZFjj/SoOb4H/1IrlfjFztvbIO1Bsh8BYcN0SwpbOE0BRo+gHZCy74Y5vkvBaDeJHoi
-         UhuC8apPTWl9jCTNHFDLqLY9O5jg925z0nTsXAFcaK4NUHgb54HHKIcT126TPO8kzPWV
-         4YxeqDr374ZiyQLQ4TSijs58a7dlf3cMbZYfIRfzOT7uC1mps8qnerrY+JgHaZq5QVAN
-         krgdsbOeSTxS0CpNRbR7Cc9Uxew1ohLZY23j4JVimyBi+qee7oQI46TYuoymFlZn9E/b
-         sCmix2SVuOSy3t+rUc1T6KdV74Mzxcy5kREmM++gtDZqR38wvgoQe89Q8oCRN6Y30jPN
-         TrOw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HHWcMU5Vdp2RzMeARQZwXgD9/0N7iPyalNjDDuAMZL0=;
+        b=SbHSIb4uHTOyzVxpD/Qq/cOAkqA69PjiJ0SQszdK9GQ98snpnSWwFTpob3Yq1Z1yLR
+         aae8Jprm9a/rPT6zRqYrIcAnPFR6xdNtyvTjIWZQmV8Q5oF4DIzZO1qadBBHOiNU57pC
+         IAfGdcRk+5unMEIhEVPbzA5TfmURWmXgvrIAE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cHxf1kTdWDT0gUqEm0BhBo9+91LG1FL8yrCj/eDjN5Q=;
-        b=FwHoY9vVSSwH7mmmHvmg2aoZsVUq8b8RatAvbYE5g9eTdM7uo+d2XjZvllcYvkgsFM
-         A8NBdTwTmpkyTSnfU+oLJGXKDDb4T3y6JilAwPF2FzKpqsHMuJ8Gdz041AGgc3r3SG3y
-         Ajd7AAtG0XuTeR1LQnM8W8YrgHDF7jdnlG7jYTSsDK7yLObj5TJ7jm/EL5SmdC02n71i
-         WAqgvZXKwdbsyQmbIvFn0VBPjPkNk+6ubaXp0IhU7FY4Jhi/lF+7sZrs+MPGAC6O27SD
-         FtR69+6MG++2GWnMx0iJIv4nRkM7pJom8gAQYTfLyhjdXLPHIbYj04oWFgk6lwMUTMfS
-         v41Q==
-X-Gm-Message-State: APjAAAUWVR0wtzWUHVm/wtMd5Y931FlhVaHhvOkzEXuP2f7QAIGGLb8Q
-        /hKk+iXEQnhhpQMHySzLI0Q=
-X-Google-Smtp-Source: APXvYqwROvBNdwR2JGWp0IvGhoGV0WlnB62tVM2PJk7IS+1rw1bl5XAJaH9t3EgBH+R+/lh4emQQpw==
-X-Received: by 2002:a63:d301:: with SMTP id b1mr74847311pgg.379.1563989844842;
-        Wed, 24 Jul 2019 10:37:24 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:c91a])
-        by smtp.gmail.com with ESMTPSA id f19sm65642862pfk.180.2019.07.24.10.37.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 10:37:24 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 10:37:22 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH RESEND 1/2] blkcg: rename blkcg->cgwb_refcnt to ->online_pin
- and always use it
-Message-ID: <20190724173722.GA569612@devbig004.ftw2.facebook.com>
-References: <20190724173517.GA559934@devbig004.ftw2.facebook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HHWcMU5Vdp2RzMeARQZwXgD9/0N7iPyalNjDDuAMZL0=;
+        b=qCpRShjV1VoSs8EYBlGgAi7JfvrvrfziqfusUAZ0m2PGR2gr8ZvNeH6uqbCilNh0ze
+         Gcq6ls/day/6qY2Xc7eHcH3a1jravZlsISwb31MFK5vpU7ONy+I9DdMoMeUosBVtFK2M
+         wc1EAbrN2Wd9hRDvBegr7+QYrsd3vkZUI0cvDNSqUhPusgdld0s29BdnAbb9QIL2+QwE
+         HCLSjPD34r3jIHfM+TIcXkQGxdL/HD9TJXR4V90WJOJ5+ApLxhNOJ1b00RRi8ey9uO0B
+         UvsxRIqp9tDb/mBzz2K9pDWWIEltV+MYO+T4LmS7IhVZFlI8sr2yGRSoYZ7KaCwULrHF
+         R5OA==
+X-Gm-Message-State: APjAAAV/FUSz/hP4nUdJ46xS0yHo75GbJwl9witP8KA+ToL3vVsSDzUh
+        Rt5zcybNxrlJ8wJlhCk3uiLTY+M7ntw=
+X-Google-Smtp-Source: APXvYqzzpVKgkl0Aw4gAVUh1DFlYldstDxnVPXvAmxjHy5cp/p4tQ2561rZNYTaja/GTPWDppnFp4Q==
+X-Received: by 2002:a2e:9155:: with SMTP id q21mr42725990ljg.198.1563989871636;
+        Wed, 24 Jul 2019 10:37:51 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id v2sm7113999lfi.3.2019.07.24.10.37.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 10:37:50 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id v24so45389481ljg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:37:50 -0700 (PDT)
+X-Received: by 2002:a2e:9192:: with SMTP id f18mr13840192ljg.52.1563989869832;
+ Wed, 24 Jul 2019 10:37:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724173517.GA559934@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190724144651.28272-1-christian@brauner.io> <20190724144651.28272-2-christian@brauner.io>
+In-Reply-To: <20190724144651.28272-2-christian@brauner.io>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 24 Jul 2019 10:37:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjOLjnZdZBSDwNbaWp3uGLGQkgxe-2HmNG5gE4TLbED_w@mail.gmail.com>
+Message-ID: <CAHk-=wjOLjnZdZBSDwNbaWp3uGLGQkgxe-2HmNG5gE4TLbED_w@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/5] exit: kill struct waitid_info
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blkcg->cgwb_refcnt is used to delay blkcg offlining so that blkgs
-don't get offlined while there are active cgwbs on them.  However, it
-ends up making offlining unordered sometimes causing parents to be
-offlined before children.
+On Wed, Jul 24, 2019 at 7:47 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> The code here uses a struct waitid_info to catch basic information about
+> process exit including the pid, uid, status, and signal that caused the
+> process to exit. This information is then stuffed into a struct siginfo
+> for the waitid() syscall. That seems like an odd thing to do. We can
+> just pass down a siginfo_t struct directly which let's us cleanup and
+> simplify the whole code quite a bit.
 
-To fix it, we want child blkcgs to pin the parents' online states
-turning the refcnt into a more generic online pinning mechanism.
+Ack. Except I'd like the commit message to explain where this comes
+from instead of that "That seems like an odd thing to do".
 
-In prepartion,
+The _original_ reason for "struct waitid_info" was that "siginfo_t" is
+huge because of all the insane padding that various architectures do.
 
-* blkcg->cgwb_refcnt -> blkcg->online_pin
-* blkcg_cgwb_get/put() -> blkcg_pin/unpin_online()
-* Take them out of CONFIG_CGROUP_WRITEBACK
+So it was introduced by commit 67d7ddded322 ("waitid(2): leave copyout
+of siginfo to syscall itself") very much to avoid stack usage issues.
+And I quote:
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
-(Resending cuz somehow I cleared To: line before sending)
+    collect the information needed for siginfo into
+    a small structure (waitid_info)
 
-Hello,
+simply because "sigset_t" was big.
 
-The asynchronous blkcg offlining can break offline ordering.  This
-doesn't affect any of in-kernel users but it broke an assumption that
-the pending io.cost controller was making and is generally nasty.
-These two patches fix the offlining ordering by making children pin
-parents.
+But that size came from the explicit "pad it out to 128 bytes for
+future expansion that will never happen", and the kernel using the
+same exact sigset_t that was exposed to user space.
 
-Thanks.
+Then in commit 4ce5f9c9e754 ("signal: Use a smaller struct siginfo in
+the kernel") we got rid of the insane padding for in-kernel use,
+exactly because it causes issues like this.
 
- block/blk-cgroup.c         |    6 +++---
- include/linux/blk-cgroup.h |   39 +++++++++++++--------------------------
- mm/backing-dev.c           |    6 +++---
- 3 files changed, 19 insertions(+), 32 deletions(-)
+End result: that "struct waitid_info" no longer makes sense. It's not
+appreciably smaller than kernel_siginfo_t is today, but it made sense
+at the time.
 
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1035,8 +1035,8 @@ static void blkcg_css_offline(struct cgr
- 	/* this prevents anyone from attaching or migrating to this blkcg */
- 	wb_blkcg_offline(blkcg);
- 
--	/* put the base cgwb reference allowing step 2 to be triggered */
--	blkcg_cgwb_put(blkcg);
-+	/* put the base online pin allowing step 2 to be triggered */
-+	blkcg_unpin_online(blkcg);
- }
- 
- /**
-@@ -1135,11 +1135,11 @@ blkcg_css_alloc(struct cgroup_subsys_sta
- 	}
- 
- 	spin_lock_init(&blkcg->lock);
-+	refcount_set(&blkcg->online_pin, 1);
- 	INIT_RADIX_TREE(&blkcg->blkg_tree, GFP_NOWAIT | __GFP_NOWARN);
- 	INIT_HLIST_HEAD(&blkcg->blkg_list);
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	INIT_LIST_HEAD(&blkcg->cgwb_list);
--	refcount_set(&blkcg->cgwb_refcnt, 1);
- #endif
- 	list_add_tail(&blkcg->all_blkcgs_node, &all_blkcgs);
- 
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -47,6 +47,7 @@ struct blkcg_gq;
- struct blkcg {
- 	struct cgroup_subsys_state	css;
- 	spinlock_t			lock;
-+	refcount_t			online_pin;
- 
- 	struct radix_tree_root		blkg_tree;
- 	struct blkcg_gq	__rcu		*blkg_hint;
-@@ -57,7 +58,6 @@ struct blkcg {
- 	struct list_head		all_blkcgs_node;
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	struct list_head		cgwb_list;
--	refcount_t			cgwb_refcnt;
- #endif
- };
- 
-@@ -431,47 +431,34 @@ static inline struct blkcg *cpd_to_blkcg
- 
- extern void blkcg_destroy_blkgs(struct blkcg *blkcg);
- 
--#ifdef CONFIG_CGROUP_WRITEBACK
--
- /**
-- * blkcg_cgwb_get - get a reference for blkcg->cgwb_list
-+ * blkcg_pin_online - pin online state
-  * @blkcg: blkcg of interest
-  *
-- * This is used to track the number of active wb's related to a blkcg.
-+ * While pinned, a blkcg is kept online.  This is primarily used to
-+ * impedance-match blkg and cgwb lifetimes so that blkg doesn't go offline
-+ * while an associated cgwb is still active.
-  */
--static inline void blkcg_cgwb_get(struct blkcg *blkcg)
-+static inline void blkcg_pin_online(struct blkcg *blkcg)
- {
--	refcount_inc(&blkcg->cgwb_refcnt);
-+	refcount_inc(&blkcg->online_pin);
- }
- 
- /**
-- * blkcg_cgwb_put - put a reference for @blkcg->cgwb_list
-+ * blkcg_unpin_online - unpin online state
-  * @blkcg: blkcg of interest
-  *
-- * This is used to track the number of active wb's related to a blkcg.
-- * When this count goes to zero, all active wb has finished so the
-+ * This is primarily used to impedance-match blkg and cgwb lifetimes so
-+ * that blkg doesn't go offline while an associated cgwb is still active.
-+ * When this count goes to zero, all active cgwbs have finished so the
-  * blkcg can continue destruction by calling blkcg_destroy_blkgs().
-- * This work may occur in cgwb_release_workfn() on the cgwb_release
-- * workqueue.
-  */
--static inline void blkcg_cgwb_put(struct blkcg *blkcg)
-+static inline void blkcg_unpin_online(struct blkcg *blkcg)
- {
--	if (refcount_dec_and_test(&blkcg->cgwb_refcnt))
-+	if (refcount_dec_and_test(&blkcg->online_pin))
- 		blkcg_destroy_blkgs(blkcg);
- }
- 
--#else
--
--static inline void blkcg_cgwb_get(struct blkcg *blkcg) { }
--
--static inline void blkcg_cgwb_put(struct blkcg *blkcg)
--{
--	/* wb isn't being accounted, so trigger destruction right away */
--	blkcg_destroy_blkgs(blkcg);
--}
--
--#endif
--
- /**
-  * blkg_path - format cgroup path of blkg
-  * @blkg: blkg of interest
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -487,8 +487,8 @@ static void cgwb_release_workfn(struct w
- 	css_put(wb->blkcg_css);
- 	mutex_unlock(&wb->bdi->cgwb_release_mutex);
- 
--	/* triggers blkg destruction if cgwb_refcnt becomes zero */
--	blkcg_cgwb_put(blkcg);
-+	/* triggers blkg destruction if no online users left */
-+	blkcg_unpin_online(blkcg);
- 
- 	fprop_local_destroy_percpu(&wb->memcg_completions);
- 	percpu_ref_exit(&wb->refcnt);
-@@ -588,7 +588,7 @@ static int cgwb_create(struct backing_de
- 			list_add_tail_rcu(&wb->bdi_node, &bdi->wb_list);
- 			list_add(&wb->memcg_node, memcg_cgwb_list);
- 			list_add(&wb->blkcg_node, blkcg_cgwb_list);
--			blkcg_cgwb_get(blkcg);
-+			blkcg_pin_online(blkcg);
- 			css_get(memcg_css);
- 			css_get(blkcg_css);
- 		}
+                 Linus
