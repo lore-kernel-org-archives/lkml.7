@@ -7,60 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD920C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B9FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83ADA214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6649221873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997205;
-	bh=TNEN4tVBwGc9X/GvLocj6+6uJ4UjN+WohHICA3NLRh8=;
+	s=default; t=1563997213;
+	bh=eVvG9VZLB22zQCc4vbFJLQoEix3cpxYMAt2ee8z/IeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnDgp5w2li1Z4xQI0/fIRt5xVNDNXhnNuMeofXmAkE4AJrhpBTHeZzWFcfKZUntMI
-	 IpuN6VM3McORy3EKgbzZHXqLfZei9kFLxfdXkz1LOHx4g+J3OpW+U4Smi5R6ANfpgk
-	 Ne4GgBGOep7GnMCVX2SL/O+YtqGRs4ZgjNWBDa98=
+	b=mu5uOwAwj7r4ik6MBfYPGgHEIE1g3MLD+r/QqYA6P+Ktn9u3WBO7whXb79YzGtMhe
+	 47+sB0qgAlGrZ8a7iNrYtD36c31L7mMQsw/RERhVyzMVI4VFd4aFQhZgH5L5uOGnyU
+	 Xooe0ZXOhyjINIBIBdceKadL7ZrBvdufz1+f59xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389747AbfGXTkD (ORCPT
+        id S2389978AbfGXTkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41124 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:40:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389701AbfGXTj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:39:59 -0400
+        id S2389737AbfGXTkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:40:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DEA21873;
-        Wed, 24 Jul 2019 19:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA5CE229F3;
+        Wed, 24 Jul 2019 19:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997198;
-        bh=TNEN4tVBwGc9X/GvLocj6+6uJ4UjN+WohHICA3NLRh8=;
+        s=default; t=1563997201;
+        bh=eVvG9VZLB22zQCc4vbFJLQoEix3cpxYMAt2ee8z/IeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FResXJoIdaVWaaca8NVIh5oEmg8giwEiAdba1JsnrmDjd7tGf4q8FDCrzvqzYQ5cF
-         RxJiCnARm+QRYjwnvqsUsucqE3sQTQK3plvZe/2T9KN8eEYXCOBLDNpI+oFbgehO/P
-         YDTdW19Hv2cJueFAWp5fQtcOAg5f6FNPsxXEe4bQ=
+        b=txqCb9mJMHS3HZBLRi95QWgwSW9/fmeFGQbkrN7FpVQaHOEBoaVRKU0WZ58ZnJ6da
+         hiv2V7dRpxHJNjFZsv5a/4oMciIHo8mXm0wCjlW4wRSG7lcEhjKv88yUXO4EKteFKB
+         xf5ZNUXoIuiiJqrXlqsbpmt8IUth6x/Axu5nCmb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, Gary Hook <Gary.Hook@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Liska <mliska@suse.cz>,
-        Namhyung Kim <namhyung@kernel.org>, Pu Wen <puwen@hygon.cn>,
-        Stephane Eranian <eranian@google.com>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.2 356/413] perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs
-Date:   Wed, 24 Jul 2019 21:20:47 +0200
-Message-Id: <20190724191801.160909662@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 357/413] x86/stacktrace: Prevent infinite loop in arch_stack_walk_user()
+Date:   Wed, 24 Jul 2019 21:20:48 +0200
+Message-Id: <20190724191801.208485964@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -73,68 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-commit 2f217d58a8a086d3399fecce39fb358848e799c4 upstream.
+commit cbf5b73d162b22e044fe0b7d51dcaa33be065253 upstream.
 
-Fill in the L3 performance event select register ThreadMask
-bitfield, to enable per hardware thread accounting.
+arch_stack_walk_user() checks `if (fp == frame.next_fp)` to prevent a
+infinite loop by self reference but it's not enogh for circular reference.
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Gary Hook <Gary.Hook@amd.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Martin Liska <mliska@suse.cz>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/20190628215906.4276-2-kim.phillips@amd.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Once a lack of return address is found, there is no point to continue the
+loop, so break out.
+
+Fixes: 02b67518e2b1 ("tracing: add support for userspace stacktraces in tracing/iter_ctrl")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lkml.kernel.org/r/20190711023501.963-1-devel@etsukata.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/amd/uncore.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ arch/x86/kernel/stacktrace.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -202,15 +202,22 @@ static int amd_uncore_event_init(struct
- 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx = -1;
- 
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
- 	/*
- 	 * SliceMask and ThreadMask need to be set for certain L3 events in
- 	 * Family 17h. For other events, the two fields do not affect the count.
- 	 */
--	if (l3_mask && is_llc_event(event))
--		hwc->config |= (AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK);
-+	if (l3_mask && is_llc_event(event)) {
-+		int thread = 2 * (cpu_data(event->cpu).cpu_core_id % 4);
- 
--	if (event->cpu < 0)
--		return -EINVAL;
-+		if (smp_num_siblings > 1)
-+			thread += cpu_data(event->cpu).apicid & 1;
-+
-+		hwc->config |= (1ULL << (AMD64_L3_THREAD_SHIFT + thread) &
-+				AMD64_L3_THREAD_MASK) | AMD64_L3_SLICE_MASK;
-+	}
- 
- 	uncore = event_to_amd_uncore(event);
- 	if (!uncore)
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -129,11 +129,9 @@ void arch_stack_walk_user(stack_trace_co
+ 			break;
+ 		if ((unsigned long)fp < regs->sp)
+ 			break;
+-		if (frame.ret_addr) {
+-			if (!consume_entry(cookie, frame.ret_addr, false))
+-				return;
+-		}
+-		if (fp == frame.next_fp)
++		if (!frame.ret_addr)
++			break;
++		if (!consume_entry(cookie, frame.ret_addr, false))
+ 			break;
+ 		fp = frame.next_fp;
+ 	}
 
 
