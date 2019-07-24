@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1875C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EFFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7542A21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082E121734
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000643;
-	bh=bRicMM1vr8NVGXlwayavMoeOg8/keyWSP4QV+K4M610=;
+	s=default; t=1564000650;
+	bh=mA08bsIa9qUiClBl4/jMHshkn1vB+VWZ6+iulIql+V4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eaSsSV1OvRupNkkJv9HP5pJiekOc7LDAN9G4l1b1pC6vzIPgf9cFgVQflluM4CSNY
-	 POicrXJJFgpOh1BgPpaJASkMDHHYdH8wBY2GY2u3FI8bLWHys55PClmbd6NZHaXCZe
-	 azMpErD2Kp5/D+rUhzNBSNO/6Y1HG0G/3jnUQdsE=
+	b=GNVYA9PlV8oVespdY458gR5XV7SfYbgsdUUSIJuuRUqnnI/oYxM0QjvKQETor+YRr
+	 uacuOluV2mRnOeX/3nZFaw5czKXq23bUGEBrK12SM/ucWebvZccI2zLMUXZjdq/WfK
+	 J0zfSn+Mwgr84GP/t5HE1R+rEBIa3wiCqJk1yilI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390996AbfGXUhW (ORCPT
+        id S1728738AbfGXTXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387884AbfGXTXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:23:54 -0400
+        id S2387821AbfGXTXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:23:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27B4D22AEC;
-        Wed, 24 Jul 2019 19:23:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 401AC218EA;
+        Wed, 24 Jul 2019 19:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996233;
-        bh=bRicMM1vr8NVGXlwayavMoeOg8/keyWSP4QV+K4M610=;
+        s=default; t=1563996212;
+        bh=mA08bsIa9qUiClBl4/jMHshkn1vB+VWZ6+iulIql+V4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9OLhjW8x5/LoJNi4E5chWvqFodVqZSkyMS4yEDX0tNXQkhM97/0Y/i6EqCdduTXS
-         r13t4dXlnpaR9w1f04LkGcio1+RXDoV2XxJMa01FhCypMZq/lxRvg2omR/CFYmi/+A
-         zqq/C3v59MdPbkSzkemRrJq+tBgZISj+4nidOyfo=
+        b=XyBGNvSCLqmC6i8BySiOmo5ToAUqFSxHjqIcc4nuLVf1lq4+T3YVF93f//21dnWsE
+         eMauzLSNIrbnDDSfb02UvrNCoCZwaoNzdCyn895EFRrwgIt/9Nbmw1+QDkCfwh12u+
+         PaK9lOGwybtaDbqIxGWKC07GX5Fpnpjr/R1fFeGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Alagu Sankar <alagusankar@silex-india.com>,
+        Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 026/413] ice: Gracefully handle reset failure in ice_alloc_vfs()
-Date:   Wed, 24 Jul 2019 21:15:17 +0200
-Message-Id: <20190724191737.336085579@linuxfoundation.org>
+Subject: [PATCH 5.2 002/413] ath10k: htt: dont use txdone_fifo with SDIO
+Date:   Wed, 24 Jul 2019 21:14:53 +0200
+Message-Id: <20190724191735.308530477@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,60 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 72f9c2039859e6303550f202d6cc6b8d8af0178c ]
+[ Upstream commit e2a6b711282a371c5153239e0468a48254f17ca6 ]
 
-Currently if ice_reset_all_vfs() fails in ice_alloc_vfs() we fail to
-free some resources, reset variables, and return an error value.
-Fix this by adding another unroll case to free the pf->vf array, set
-the pf->num_alloc_vfs to 0, and return an error code.
+HTT High Latency (ATH10K_DEV_TYPE_HL) does not use txdone_fifo at all, we don't
+even initialise it by skipping ath10k_htt_tx_alloc_buf() in
+ath10k_htt_tx_start(). Because of this using QCA6174 SDIO
+ath10k_htt_rx_tx_compl_ind() will crash when it accesses unitialised
+txdone_fifo. So skip txdone_fifo when using High Latency mode.
 
-Without this, if ice_reset_all_vfs() fails in ice_alloc_vfs() we will
-not be able to do SRIOV without hard rebooting the system because
-rmmod'ing the driver does not work.
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00007-QCARMSWP-1.
 
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Co-developed-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Alagu Sankar <alagusankar@silex-india.com>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/htt_rx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-index a805cbdd69be..81ea77978355 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-@@ -1134,7 +1134,7 @@ static int ice_alloc_vfs(struct ice_pf *pf, u16 num_alloc_vfs)
- 			   GFP_KERNEL);
- 	if (!vfs) {
- 		ret = -ENOMEM;
--		goto err_unroll_sriov;
-+		goto err_pci_disable_sriov;
- 	}
- 	pf->vf = vfs;
- 
-@@ -1154,12 +1154,19 @@ static int ice_alloc_vfs(struct ice_pf *pf, u16 num_alloc_vfs)
- 	pf->num_alloc_vfs = num_alloc_vfs;
- 
- 	/* VF resources get allocated during reset */
--	if (!ice_reset_all_vfs(pf, true))
-+	if (!ice_reset_all_vfs(pf, true)) {
-+		ret = -EIO;
- 		goto err_unroll_sriov;
-+	}
- 
- 	goto err_unroll_intr;
- 
- err_unroll_sriov:
-+	pf->vf = NULL;
-+	devm_kfree(&pf->pdev->dev, vfs);
-+	vfs = NULL;
-+	pf->num_alloc_vfs = 0;
-+err_pci_disable_sriov:
- 	pci_disable_sriov(pf->pdev);
- err_unroll_intr:
- 	/* rearm interrupts here */
+diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
+index 1acc622d2183..f22840bbc389 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_rx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
+@@ -2277,7 +2277,9 @@ static void ath10k_htt_rx_tx_compl_ind(struct ath10k *ar,
+ 		 *  Note that with only one concurrent reader and one concurrent
+ 		 *  writer, you don't need extra locking to use these macro.
+ 		 */
+-		if (!kfifo_put(&htt->txdone_fifo, tx_done)) {
++		if (ar->bus_param.dev_type == ATH10K_DEV_TYPE_HL) {
++			ath10k_txrx_tx_unref(htt, &tx_done);
++		} else if (!kfifo_put(&htt->txdone_fifo, tx_done)) {
+ 			ath10k_warn(ar, "txdone fifo overrun, msdu_id %d status %d\n",
+ 				    tx_done.msdu_id, tx_done.status);
+ 			ath10k_txrx_tx_unref(htt, &tx_done);
 -- 
 2.20.1
 
