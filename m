@@ -2,170 +2,117 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D63EC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAD5C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5239721951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B623921951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsTHX61J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaddU6+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfGXPmH (ORCPT
+        id S1728471AbfGXPow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:42:07 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40815 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfGXPmH (ORCPT
+        Wed, 24 Jul 2019 11:44:52 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36092 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbfGXPow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:42:07 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a15so45910591qtn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 08:42:06 -0700 (PDT)
+        Wed, 24 Jul 2019 11:44:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so21428833pgm.3;
+        Wed, 24 Jul 2019 08:44:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=vVyZTG8u3gaswKVijwL4UC2Gmmd6ViElRBT/CwEJHWs=;
-        b=CsTHX61J1VqWOm3LtgLKci72XeuqSHm8DYkKn5FmDP52JsYVg46ssWOeh9wxkcOxuR
-         zHkb2aAMqj05AaQx7CESFPDQodufHgtNcj2q2+nZfE+/fjwzEaurp0WBFNm7ul1BtuOx
-         f3Umyq+5xRWvJ528Cm2bbcrESz7bDtOwYmLPwuTEcFIXKZbaVbV35yZgA3Cj1nSfxhW/
-         Wjt4sLWO0rTLvcMQsNRl9n8ZnjoLI93jhOq8qmfQc/VmnvzYBjDXa1Q9z91vGXm4cJAW
-         QHWASdQZwumQ1r1GhFJntNtDQDKp0Oue9xHTYSMfqqvVJK2H0dK+HhosnrA7e3jABxi5
-         8Q9g==
+        bh=BZV2OjLCkki70WlOWWuVHAiyKZZrtSyMSuszIqWROFY=;
+        b=jaddU6+Yp5ArGjc1K6ididv1JsBAZI3vN8s9mDlCMC/bTf4+jjkSGRP0+MRXmnxske
+         ZKY6SIATaqdwXPK4WQes3MiQWbf/ls795lr1cKKYne1hbyYTn9Thl7r9oSWZEhFZJuLc
+         zo8X078KoAI0ArmvaF2+JLSe9izSX7A2gWuF5x/O1ZKjDmBWNNU8Xp8gH6q489Dxzo6c
+         uIs3CK2OgV0ef8m9zcavQ49nTZuuT7MJymEokMZU0Xnkezeew0Hx4jVV7WhnPQKtYqkQ
+         aptPOW4yl0/0w5zrJBAh0df9SbbH1+M1jahOfNe2jXWDo58C3OENeDP2E5IH8oTmERuu
+         y/5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vVyZTG8u3gaswKVijwL4UC2Gmmd6ViElRBT/CwEJHWs=;
-        b=F9fBf3nur6gF7y4d5yz0/PKVqgytdMU44uq790iJNwibKzV5br6pHdLw2yZ/DsNc8V
-         UpGlecg3fVnabK7IKWtcDR4xn+2myiVhIDK/mMl5cTBdsXeAAWjHXa6aKGzCwjNMTtma
-         W+9a+Eusb33N+WBa30Yn7AWjD3Kr5QMw8AYC5EBdh2pkmx6OTp+oIBqO2WXAJQK5Ofgr
-         cI2K/AqqrtfWFAgcLHC6o0sG4uHtdjFXO8SJWl6C2NF/Pf0z/IVrnpoTIobws7UewuOt
-         rf9B+9CHrg4sLrvtkUxBrBX3tnYuEf0eLD+rKZPYxRvAc6FTsI4VaChjBj7UXDFbbJQu
-         VRMg==
-X-Gm-Message-State: APjAAAXxYoeorFyEWpf4Hq6+vzaj5G5Qq+gcMFxFomGWJWYQhOZnUmwB
-        +U0QcELhbodzDIcSN+Ht+pg=
-X-Google-Smtp-Source: APXvYqwTr7SlrxkT6/pdY7vyb/4oZLjuZrnx8/WncwtFgKWL/QU18AgmouXt+jIc1vPsxbyRsDobVg==
-X-Received: by 2002:a0c:bd1f:: with SMTP id m31mr59859553qvg.54.1563982926018;
-        Wed, 24 Jul 2019 08:42:06 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id q3sm20872509qkq.133.2019.07.24.08.42.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 08:42:05 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 77A0740340; Wed, 24 Jul 2019 12:42:02 -0300 (-03)
-Date:   Wed, 24 Jul 2019 12:42:02 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH 47/79] libperf: Add perf_evlist__for_each_evsel macro
-Message-ID: <20190724154202.GD5727@kernel.org>
-References: <20190721112506.12306-1-jolsa@kernel.org>
- <20190721112506.12306-48-jolsa@kernel.org>
+        bh=BZV2OjLCkki70WlOWWuVHAiyKZZrtSyMSuszIqWROFY=;
+        b=EtqTUgug/CgyF7eKYCCWj5KkaZKZSRTtAP36/fxrQ7AkxOmB8sp6OZyXB5TOChWNaP
+         o92MWy4zp29JFRKjCNA7kSYcg+jFG9M4DCNMFIr2lbhGLno8hHuPzbCU0rDXW+PRMsfF
+         MhON2Io7L0IZRTWin93SsWaCb4PJY998E/S8APOk/9pkz7CBBRjnVFwf6LFJEx0V26Di
+         Dq39P1AytV0G2iBxZAfSKooy/ofRc4xLwFGtafQbA2omKFPduunyTTe8T6i+K8pVq1nq
+         2Tpuj+pb20T8IY1l0NBI4ko93myx+aGs09syA3v9+HuLsOMqZwo/wpLO/r60dM4a1wb7
+         YOEA==
+X-Gm-Message-State: APjAAAVjyYpygInAGmQxtjEqT2njCBnSR/4JueijO1tfisDBN0sN554u
+        +rcwH/f5dO4r1+PNyu5HRWht4uaO
+X-Google-Smtp-Source: APXvYqwH3Y/wUMv1LE+IPpYLYtjyg7bFZSFpQ19tltDJMe4iz25Aox+JJwL3ntXl4Spx0QXc7qmSCQ==
+X-Received: by 2002:a17:90a:d58c:: with SMTP id v12mr86698269pju.7.1563983091046;
+        Wed, 24 Jul 2019 08:44:51 -0700 (PDT)
+Received: from gmail.com ([66.170.99.2])
+        by smtp.gmail.com with ESMTPSA id a3sm55566210pje.3.2019.07.24.08.44.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 08:44:50 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 08:44:46 -0700
+From:   William Tu <u9012063@gmail.com>
+To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ip6_gre: reload ipv6h in prepare_ip6gre_xmit_ipv6
+Message-ID: <20190724154446.GA13067@gmail.com>
+References: <1563969642-11843-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190721112506.12306-48-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <1563969642-11843-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, Jul 21, 2019 at 01:24:34PM +0200, Jiri Olsa escreveu:
-> Adding perf_evlist__for_each_evsel macro to iterate
-> perf_evsel objects in evlist.
+On Wed, Jul 24, 2019 at 08:00:42PM +0800, Haishuang Yan wrote:
+> Since ip6_tnl_parse_tlv_enc_lim() can call pskb_may_pull()
+> which may change skb->data, so we need to re-load ipv6h at
+> the right place.
 > 
-> Adding perf_evlist__next function to do that.
+> Fixes: 898b29798e36 ("ip6_gre: Refactor ip6gre xmit codes")
+> Cc: William Tu <u9012063@gmail.com>
+> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-Replaced the above line in the cset commit log with:
+LGTM, thanks for the fix
+Acked-by: William Tu <u9012063@gmail.com>
 
-    Introduce the perf_evlist__next() function to do that without exposing
-    'struct perf_evlist' internals.
-
- 
-> Link: http://lkml.kernel.org/n/tip-usi0zxyxmai1ld94nrbum43i@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/perf/lib/evlist.c              | 20 ++++++++++++++++++++
->  tools/perf/lib/include/perf/evlist.h |  7 +++++++
->  tools/perf/lib/libperf.map           |  1 +
->  3 files changed, 28 insertions(+)
+>  net/ipv6/ip6_gre.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-> index 0517deb4cb1c..8c26ebf290f0 100644
-> --- a/tools/perf/lib/evlist.c
-> +++ b/tools/perf/lib/evlist.c
-> @@ -34,3 +34,23 @@ struct perf_evlist *perf_evlist__new(void)
+> diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
+> index c2049c7..dd2d0b96 100644
+> --- a/net/ipv6/ip6_gre.c
+> +++ b/net/ipv6/ip6_gre.c
+> @@ -660,12 +660,13 @@ static int prepare_ip6gre_xmit_ipv6(struct sk_buff *skb,
+>  				    struct flowi6 *fl6, __u8 *dsfield,
+>  				    int *encap_limit)
+>  {
+> -	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
+> +	struct ipv6hdr *ipv6h;
+>  	struct ip6_tnl *t = netdev_priv(dev);
+>  	__u16 offset;
 >  
->  	return evlist;
->  }
-> +
-> +struct perf_evsel*
-> +perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
-> +{
-> +	struct perf_evsel *next;
-> +
-> +	if (!prev) {
-> +		next = list_first_entry(&evlist->entries,
-> +					struct perf_evsel,
-> +					node);
-> +	} else {
-> +		next = list_next_entry(prev, node);
-> +	}
-> +
-> +	/* Empty list is noticed here so don't need checking on entry. */
-> +	if (&next->node == &evlist->entries)
-> +		return NULL;
-> +
-> +	return next;
-> +}
-> diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-> index 7255a60869a1..5092b622935b 100644
-> --- a/tools/perf/lib/include/perf/evlist.h
-> +++ b/tools/perf/lib/include/perf/evlist.h
-> @@ -13,5 +13,12 @@ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
->  LIBPERF_API void perf_evlist__remove(struct perf_evlist *evlist,
->  				     struct perf_evsel *evsel);
->  LIBPERF_API struct perf_evlist *perf_evlist__new(void);
-> +LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
-> +						 struct perf_evsel *evsel);
-> +
-> +#define perf_evlist__for_each_evsel(evlist, pos)	\
-> +	for ((pos) = perf_evlist__next((evlist), NULL);	\
-> +	     (pos) != NULL;				\
-> +	     (pos) = perf_evlist__next((evlist), (pos)))
+>  	offset = ip6_tnl_parse_tlv_enc_lim(skb, skb_network_header(skb));
+>  	/* ip6_tnl_parse_tlv_enc_lim() might have reallocated skb->head */
+> +	ipv6h = ipv6_hdr(skb);
 >  
->  #endif /* __LIBPERF_EVLIST_H */
-> diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-> index e3eac9b60726..c0968226f7b6 100644
-> --- a/tools/perf/lib/libperf.map
-> +++ b/tools/perf/lib/libperf.map
-> @@ -17,6 +17,7 @@ LIBPERF_0.0.1 {
->  		perf_evlist__init;
->  		perf_evlist__add;
->  		perf_evlist__remove;
-> +		perf_evlist__next;
->  	local:
->  		*;
->  };
+>  	if (offset > 0) {
+>  		struct ipv6_tlv_tnl_enc_lim *tel;
 > -- 
-> 2.21.0
-
--- 
-
-- Arnaldo
+> 1.8.3.1
+> 
+> 
+> 
