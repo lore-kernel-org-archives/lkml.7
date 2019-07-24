@@ -2,176 +2,111 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34639C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ECCC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1338121951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B53821951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563982021;
+	bh=tgZgibAvOJj7OsZQBgZRqFmhxM0y+UpkmxaQ2hVp1Jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ae9wPD8W6I8GTzlqDgTctfHZl8r7yImlmu9liirxRnZusq676IUeq6SpehZRu/BvH
+	 oqjPdiOKwvwpTY9QB7u/+TTz6XGBLV/V4JSX7WS1yRnFbxbr86r2pCvaOz1LnOmghc
+	 cXNg1NVfhikvMeR+tGPZoZEsF+20NwLkapW1UyNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfGXPZ6 (ORCPT
+        id S1728386AbfGXP1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:25:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44320 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXPZ6 (ORCPT
+        Wed, 24 Jul 2019 11:27:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36602 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfGXP07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:25:58 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hqJ9N-0003tH-QL; Wed, 24 Jul 2019 17:25:53 +0200
-Date:   Wed, 24 Jul 2019 17:25:52 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-cc:     x86@kernel.org, Nadav Amit <namit@vmware.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [patch V4 13/25] x86/hotplug: Silence APIC and NMI when CPU is
- dead
-In-Reply-To: <20190722105220.000867773@linutronix.de>
-Message-ID: <alpine.DEB.2.21.1907241723290.1791@nanos.tec.linutronix.de>
-References: <20190722104705.550071814@linutronix.de> <20190722105220.000867773@linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 24 Jul 2019 11:26:59 -0400
+Received: by mail-io1-f67.google.com with SMTP id o9so90519416iom.3;
+        Wed, 24 Jul 2019 08:26:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3pDFUgVV3AzO747g/R1qutUAuLnJGEUD5MXGKcmRXCQ=;
+        b=EAc153ZgiuZkJetsVVoLbxnW/pOgGWTrsX32xsN7oNaL5ORLWBMjIDkmGxvEAVPt1l
+         XB4Wy6swLPkn/4U99rTT2P7tZF1WWkbUkNjBeRxZY7aMDGk4R7KHuws19wYH/MJMy2Tt
+         x8U+BLs+yXNys5k8VREsRUlWmja3nQO/uE7MgltRvs1m2IFIZhiqeXUmm3lDMnJbufN2
+         jQAPGyW93INtE3laYP4A0ljnL4rs+DcTA0sLEL3xRob3PF69CY/l1yEcJzRzzSLk2viM
+         YgtGnMhROH7hX8kPRRtIpJAILDLZ2wn7/4zVLqKc61KZn9cYjIiYTY8xYlaJtjr0pxSM
+         kL7w==
+X-Gm-Message-State: APjAAAU1CsDsZ8ao0l6pPzVFJ5CRpqEqqBwKFZ9J9RTMhBr6rkowL5QG
+        BK27g0+z9paKJ4bPojNkWjN3chA=
+X-Google-Smtp-Source: APXvYqyjYTxl+fWY/wVpycSkzeXpA0EkAIzEOM0ykFzfmrDkAfA42dR6m3nn1rJEdvDtDN8wtaJm2g==
+X-Received: by 2002:a02:5185:: with SMTP id s127mr15626392jaa.44.1563982018545;
+        Wed, 24 Jul 2019 08:26:58 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id r24sm33807658ioc.76.2019.07.24.08.26.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 08:26:57 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 09:26:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
+        ulf.hansson@linaro.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/13] dt-bindings: cpufreq: qcom-nvmem: Support pstates
+ provided by a power domain
+Message-ID: <20190724152656.GA10017@bogus>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-6-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705095726.21433-6-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to support IPI/NMI broadcasting via the shorthand mechanism side
-effects of shorthands need to be mitigated:
+On Fri, Jul 05, 2019 at 11:57:16AM +0200, Niklas Cassel wrote:
+> Some Qualcomm SoCs have support for Core Power Reduction (CPR).
+> On these platforms, we need to attach to the power domain provider
+> providing the performance states, so that the leaky device (the CPU)
+> can configure the performance states (which represent different
+> CPU clock frequencies).
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+>  .../bindings/opp/qcom-nvmem-cpufreq.txt       | 111 ++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> index c5ea8b90e35d..e19a95318e98 100644
+> --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> @@ -23,6 +23,15 @@ In 'operating-points-v2' table:
+>  
+>  Optional properties:
+>  --------------------
+> +In 'cpus' nodes:
 
- Shorthand IPIs and NMIs hit all CPUs including unplugged CPUs
+In 'cpus' node or 'cpu' nodes?
 
-Neither of those can be handled on unplugged CPUs for obvious reasons.
-
-It would be trivial to just fully disable the APIC via the enable bit in
-MSR_APICBASE. But that's not possible because clearing that bit on systems
-based on the 3 wire APIC bus would require a hardware reset to bring it
-back as the APIC would lose track of bus arbitration. On systems with FSB
-delivery APICBASE could be disabled, but it has to be guaranteed that no
-interrupt is sent to the APIC while in that state and it's not clear from
-the SDM whether it still responds to INIT/SIPI messages.
-
-Therefore stay on the safe side and switch the APIC into soft disabled mode
-so it won't deliver any regular vector to the CPU.
-
-NMIs are still propagated to the 'dead' CPUs. To mitigate that add a check
-for the CPU being offline on early nmi entry and if so bail.
-
-Note, this cannot use the stop/restart_nmi() magic which is used in the
-alternatives code. A dead CPU cannot invoke nmi_enter() or anything else
-due to RCU and other reasons.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V4: Use cpu_is_offline() instead of an extra per CPU variable - suggested
-    by PeterZ.
----
- arch/x86/include/asm/apic.h |    1 +
- arch/x86/kernel/apic/apic.c |   35 ++++++++++++++++++++++++-----------
- arch/x86/kernel/nmi.c       |    3 +++
- arch/x86/kernel/smpboot.c   |    7 ++++++-
- 4 files changed, 34 insertions(+), 12 deletions(-)
-
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -136,6 +136,7 @@ extern int lapic_get_maxlvt(void);
- extern void clear_local_APIC(void);
- extern void disconnect_bsp_APIC(int virt_wire_setup);
- extern void disable_local_APIC(void);
-+extern void apic_soft_disable(void);
- extern void lapic_shutdown(void);
- extern void sync_Arb_IDs(void);
- extern void init_bsp_APIC(void);
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1182,25 +1182,38 @@ void clear_local_APIC(void)
- }
- 
- /**
-- * disable_local_APIC - clear and disable the local APIC
-+ * apic_soft_disable - Clears and software disables the local APIC on hotplug
-+ *
-+ * Contrary to disable_local_APIC() this does not touch the enable bit in
-+ * MSR_IA32_APICBASE. Clearing that bit on systems based on the 3 wire APIC
-+ * bus would require a hardware reset as the APIC would lose track of bus
-+ * arbitration. On systems with FSB delivery APICBASE could be disabled,
-+ * but it has to be guaranteed that no interrupt is sent to the APIC while
-+ * in that state and it's not clear from the SDM whether it still responds
-+ * to INIT/SIPI messages. Stay on the safe side and use software disable.
-  */
--void disable_local_APIC(void)
-+void apic_soft_disable(void)
- {
--	unsigned int value;
--
--	/* APIC hasn't been mapped yet */
--	if (!x2apic_mode && !apic_phys)
--		return;
-+	u32 value;
- 
- 	clear_local_APIC();
- 
--	/*
--	 * Disable APIC (implies clearing of registers
--	 * for 82489DX!).
--	 */
-+	/* Soft disable APIC (implies clearing of registers for 82489DX!). */
- 	value = apic_read(APIC_SPIV);
- 	value &= ~APIC_SPIV_APIC_ENABLED;
- 	apic_write(APIC_SPIV, value);
-+}
-+
-+/**
-+ * disable_local_APIC - clear and disable the local APIC
-+ */
-+void disable_local_APIC(void)
-+{
-+	/* APIC hasn't been mapped yet */
-+	if (!x2apic_mode && !apic_phys)
-+		return;
-+
-+	apic_soft_disable();
- 
- #ifdef CONFIG_X86_32
- 	/*
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -512,6 +512,9 @@ NOKPROBE_SYMBOL(is_debug_stack);
- dotraplinkage notrace void
- do_nmi(struct pt_regs *regs, long error_code)
- {
-+	if (IS_ENABLED(CONFIG_SMP) && cpu_is_offline(smp_processor_id()))
-+		return;
-+
- 	if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
- 		this_cpu_write(nmi_state, NMI_LATCHED);
- 		return;
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1596,7 +1596,12 @@ int native_cpu_disable(void)
- 	if (ret)
- 		return ret;
- 
--	clear_local_APIC();
-+	/*
-+	 * Disable the local APIC. Otherwise IPI broadcasts will reach
-+	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
-+	 * messages.
-+	 */
-+	apic_soft_disable();
- 	cpu_disable_common();
- 
- 	return 0;
+> +- power-domains: A phandle pointing to the PM domain specifier which provides
+> +		the performance states available for active state management.
+> +		Please refer to the power-domains bindings
+> +		Documentation/devicetree/bindings/power/power_domain.txt
+> +		and also examples below.
+> +- power-domain-names: Should be
+> +	- 'cpr' for qcs404.
+> +
+>  In 'operating-points-v2' table:
+>  - nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+>  		efuse registers that has information about the
