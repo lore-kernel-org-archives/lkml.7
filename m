@@ -2,103 +2,100 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBC8C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5186CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8FF22ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996705;
-	bh=CqXxNtD2vspp+3QgYdEnCTTV27NiT+7gb4tIhi/978E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jozi1XxmTCmX07rCjGbxDAqXb0ArWD3b0qUERiy5Ojm3JfpAky75WvZjDb3TUxfnH
-	 QRO2bWb0C97hCfaa3sVNw2A7FlvX39vkRX4CL/aToLDoCtdiuOLl5Rxvc2S910zluL
-	 OtNyja7cMJdVA3w8VrlFvbRSJCALSzQuv6eu+grA=
+	by mail.kernel.org (Postfix) with ESMTP id 23DB32238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IW0iJnlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388524AbfGXTbo (ORCPT
+        id S2388549AbfGXTbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Jul 2019 15:31:49 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43772 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbfGXTbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 15:31:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388508AbfGXTbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B20229F4;
-        Wed, 24 Jul 2019 19:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996699;
-        bh=CqXxNtD2vspp+3QgYdEnCTTV27NiT+7gb4tIhi/978E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHSn6HCJ+QcTyPvb8QRnk+NgnVkcnUcVHChikb4S5A7AQTMjjG2N3egf1PNwuCSjP
-         Dc+dyJClkyFQtQ9aDLe58UyLBkQf55I/bNE1eIj0MpA6cZmcnHCplagL3NB/epuQeh
-         DTp/fUvyySLP9wMwzBogFAHbjyFPUMZHvl+r/Xq0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 186/413] bcache: fix return value error in bch_journal_read()
-Date:   Wed, 24 Jul 2019 21:17:57 +0200
-Message-Id: <20190724191748.036726271@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-qt1-f195.google.com with SMTP id w17so2351698qto.10;
+        Wed, 24 Jul 2019 12:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KEYXRfxDMQpSRlqGw7giHzXrwzZ2wZjC978EK9xyRN8=;
+        b=IW0iJnlwU+6BMKYqPwgjATPX6yxEn+xYUz4mTlOK++buj0vNE9wEj6n7Yrt8oo04S5
+         wPVopwjUos7Dz7G140Un3YHFfOXH8Ap1fzGPJUtNa0kN5lVN+RmsqrazCesSUiOIIoYL
+         dzUy6IzCmseJagRl6IzaRYnXoSAEMwTWaOPZjcqisMcDdLEXfQ6vwXXomW93jCj1DxZq
+         O+s0DuJviB9cM7gwsrLIPGprb2xwxVDHXBhG4C+rxZ6y+qIHLN/fxxW3NrJ9jBA4S9eL
+         EHzPKYi+YHlyBWQ/XEJSghTqoI3fv7lwjxz9eUlhMrtJk/UR9I1p7rply/d0STOXjWz0
+         FRbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KEYXRfxDMQpSRlqGw7giHzXrwzZ2wZjC978EK9xyRN8=;
+        b=Efx3oxCpqjwmEWwTq3OSORHZXexJorHBMaeQt+KYm9b+At2mXauoabaJ4pQeW4Xoqq
+         QfvEeVzIyVPEVwe0JYG2AyMUwO1Wk8c56vwXxNRitWruQsY8VSBTwGNuefnbkxBNE+6w
+         5hblUBHCInwoceUUN3uAJg+rYHGZ84/TOutJ8b80TVOLD+zQm3kDhSL5HHOZ1GD/4tDg
+         rK7OK05jm8J/C1TJOyXk22O2UJGRMqvyta6tTDdp/moLIsbEs8TpjGbRXLq+5wKPAyE7
+         Er0bYXqOmvCypTGfPepryjcrWCeYuGTyWFQqqoaowZE7QNTSRZkHXzYfiH5ZjKyhRFRB
+         NIWQ==
+X-Gm-Message-State: APjAAAW+yw+Shn1Opd7JUY/oVMKJU3iOfJDtE0CCd9f0l8jor+IXH0cp
+        gDRKSfKA/6I032AFyXCvZLEPTzTcf5H0w81B0KEd
+X-Google-Smtp-Source: APXvYqxGbYe1CZBM/SrFvkzjBSGjnnbVZJe2Zqf9jXR0AbM4K+io5m5Hz53gzDF9ngRUORUDeMHA3BNJtGpu9i8++QU=
+X-Received: by 2002:ac8:3908:: with SMTP id s8mr13764090qtb.224.1563996703415;
+ Wed, 24 Jul 2019 12:31:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190724130252.7c29bba9@canb.auug.org.au>
+In-Reply-To: <20190724130252.7c29bba9@canb.auug.org.au>
+From:   Rob Herring <robherring2@gmail.com>
+Date:   Wed, 24 Jul 2019 13:31:30 -0600
+Message-ID: <CAL_JsqKoAG9iu7CfuivtfDXE5Opf8sq8=tRPPWQGT4FPOxiyhw@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the devicetree tree with Linus' tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0ae49cb7aa005ed18fe8f4d6ccf73019b78ac7b2 ]
+On Tue, Jul 23, 2019 at 9:02 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the devicetree tree got a conflict in:
+>
+>   Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+>
+> between commit:
+>
+>   355fb0e54e85 ("dt-bindings: input: sun4i-lradc-keys: Add A64 compatible")
+>
+> from Linus' tree and commit:
+>
+>   3f587b3b77b9 ("dt-bindings: input: Convert Allwinner LRADC to a schema")
+>
+> from the devicetree tree.
+>
+> I fixed it up (I removed the file - the additions from the former
+> have been incorporated into the latter) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-When everything is OK in bch_journal_read(), finally the return value
-is returned by,
-	return ret;
-which assumes ret will be 0 here. This assumption is wrong when all
-journal buckets as are full and filled with valid journal entries. In
-such cache the last location referencess read_bucket() sets 'ret' to
-1, which means new jset added into jset list. The jset list is list
-'journal' in caller run_cache_set().
+I've updated my for-next branch to 5.3-rc1, so this should be resolved now.
 
-Return 1 to run_cache_set() means something wrong and the cache set
-won't start, but indeed everything is OK.
-
-This patch changes the line at end of bch_journal_read() to directly
-return 0 since everything if verything is good. Then a bogus error
-is fixed.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/bcache/journal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 12dae9348147..4e5fc05720fc 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -268,7 +268,7 @@ int bch_journal_read(struct cache_set *c, struct list_head *list)
- 					    struct journal_replay,
- 					    list)->j.seq;
- 
--	return ret;
-+	return 0;
- #undef read_bucket
- }
- 
--- 
-2.20.1
-
-
-
+Rob
