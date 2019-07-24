@@ -2,228 +2,182 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F92C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B958C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A54E21911
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:29:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="yclmgoCE"
+	by mail.kernel.org (Postfix) with ESMTP id 3071821911
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388153AbfGXV3t (ORCPT
+        id S1728918AbfGXVcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:29:49 -0400
-Received: from vern.gendns.com ([98.142.107.122]:58406 "EHLO vern.gendns.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfGXV3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:29:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:
-        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FK7kA+WWZ4kZ6RCye8o+1VU69VmtjkxSH/+NyFwhvnU=; b=yclmgoCE+WA4mh0m1r5KDmCubB
-        ixiZz59c16yhdmmn55Tbg7ZpcuFz+ixYvC72VvJ3phAzwM5spCWhtInI+BhEiHYuHh1MKOgNoVDRW
-        OnulIuqysIYeysYlfQjsbSv1cnmFNAd/Zu624BiQVjubI87pC8j1pYCxt1C5FQV93cUMv2vG8Wn/4
-        15EpQPglDDH+11MdLJzvIV1Yx0Nbtng1uVO7Oxg92IUHQw/sIwajDLVlWVo+e4SGNdZ8aKv3/P2ju
-        WvEleaSenwIgcPiH1beZm1BXUiS75XV9HzF7d+ZG0w9+MUd3AQH4hU2PYE6WZl8/0ga1K9yi4gHA4
-        ghBxQbMw==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:40080 helo=freyr.lechnology.com)
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <david@lechnology.com>)
-        id 1hqOpT-00EGFs-Bp; Wed, 24 Jul 2019 17:29:43 -0400
-From:   David Lechner <david@lechnology.com>
-To:     linux-omap@vger.kernel.org
-Cc:     David Lechner <david@lechnology.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: [PATCH] ARM: dts: am335x-boneblue: Use of am335x-osd335x-common.dtsi
-Date:   Wed, 24 Jul 2019 16:26:16 -0500
-Message-Id: <20190724212616.17945-1-david@lechnology.com>
-X-Mailer: git-send-email 2.17.1
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Wed, 24 Jul 2019 17:32:17 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42496 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGXVcR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:32:17 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h18so47027296qtm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 14:32:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ai5coBa0SEbsnkfCobaB/l8UgFxaRhE6zMbrvqUmDKQ=;
+        b=UYG2HakKCkkN0HlrX8wbrBgoVDnsOIoSE3tIXoeSXQvghlxzfwNs4o/iM2aBaddwo7
+         oMIz21NdQa3cj//DDGS4GvDieS2E89n2wnpXr1dIRChaiSNX2m5/SUlPLLTEfgGYtZT7
+         nUNYPbtOGgrmtk2LpUUZwvsr4YeiurQyLKoQtu5/BwIY3evRE2nJF+n4YvwG3dVh3GkA
+         lIggMjCu1gfrIgN4GGhusxsegJdACQOH/+uuIhyiJ/KZyIt5/tUxN/s7pqo4q8Sz/JJY
+         F3pTIStK+PRMha+GOdWWCUlhbbwDOn79OA65d59dUu2VgEJbP50B8ZrgBzQAolAwSs+c
+         K0xg==
+X-Gm-Message-State: APjAAAVy778mXh4DrPGd916GF/z8DmtW4Sxt+VnP7sRhYHMO0aSIeqb+
+        cIIbuzPDpFQVynkYw+Z+KgVYVA==
+X-Google-Smtp-Source: APXvYqyH0YRHgL6uAQpFcl1HZau/89CK88ahnBR6ktX2vEame2RO+xp6GtK5MlfC7dIethbqH316WQ==
+X-Received: by 2002:ac8:2aaa:: with SMTP id b39mr60096621qta.24.1564003936443;
+        Wed, 24 Jul 2019 14:32:16 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id b13sm29314624qtk.55.2019.07.24.14.32.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 14:32:15 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 17:32:07 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
+Message-ID: <20190724154840-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
+ <f7578309-dd36-bda0-6a30-34a6df21faca@redhat.com>
+ <20190724153003-mutt-send-email-mst@kernel.org>
+ <b3279b70-7a64-a456-cbfa-2a5ec3e9468e@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3279b70-7a64-a456-cbfa-2a5ec3e9468e@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes use of the am335x-osd335x-common.dtsi file that contains the
-common device tree components for Octavo Systems AM335x System-in-
-Package that is used on the BeagleBone Blue.
+On Wed, Jul 24, 2019 at 09:47:24PM +0200, David Hildenbrand wrote:
+> On 24.07.19 21:31, Michael S. Tsirkin wrote:
+> > On Wed, Jul 24, 2019 at 08:41:33PM +0200, David Hildenbrand wrote:
+> >> On 24.07.19 20:40, Nitesh Narayan Lal wrote:
+> >>>
+> >>> On 7/24/19 12:54 PM, Alexander Duyck wrote:
+> >>>> This series provides an asynchronous means of hinting to a hypervisor
+> >>>> that a guest page is no longer in use and can have the data associated
+> >>>> with it dropped. To do this I have implemented functionality that allows
+> >>>> for what I am referring to as page hinting
+> >>>>
+> >>>> The functionality for this is fairly simple. When enabled it will allocate
+> >>>> statistics to track the number of hinted pages in a given free area. When
+> >>>> the number of free pages exceeds this value plus a high water value,
+> >>>> currently 32,
+> >>> Shouldn't we configure this to a lower number such as 16?
+> >>>>  it will begin performing page hinting which consists of
+> >>>> pulling pages off of free list and placing them into a scatter list. The
+> >>>> scatterlist is then given to the page hinting device and it will perform
+> >>>> the required action to make the pages "hinted", in the case of
+> >>>> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> >>>> and as such they are forced out of the guest. After this they are placed
+> >>>> back on the free list, and an additional bit is added if they are not
+> >>>> merged indicating that they are a hinted buddy page instead of a standard
+> >>>> buddy page. The cycle then repeats with additional non-hinted pages being
+> >>>> pulled until the free areas all consist of hinted pages.
+> >>>>
+> >>>> I am leaving a number of things hard-coded such as limiting the lowest
+> >>>> order processed to PAGEBLOCK_ORDER,
+> >>> Have you considered making this option configurable at the compile time?
+> >>>>  and have left it up to the guest to
+> >>>> determine what the limit is on how many pages it wants to allocate to
+> >>>> process the hints.
+> >>> It might make sense to set the number of pages to be hinted at a time from the
+> >>> hypervisor.
+> >>>>
+> >>>> My primary testing has just been to verify the memory is being freed after
+> >>>> allocation by running memhog 79g on a 80g guest and watching the total
+> >>>> free memory via /proc/meminfo on the host. With this I have verified most
+> >>>> of the memory is freed after each iteration. As far as performance I have
+> >>>> been mainly focusing on the will-it-scale/page_fault1 test running with
+> >>>> 16 vcpus. With that I have seen at most a 2% difference between the base
+> >>>> kernel without these patches and the patches with virtio-balloon disabled.
+> >>>> With the patches and virtio-balloon enabled with hinting the results
+> >>>> largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
+> >>>> drop in performance as I approached 16 threads,
+> >>> I think this is acceptable.
+> >>>>  however on the the lastest
+> >>>> linux-next kernel I saw roughly a 4% to 5% improvement in performance for
+> >>>> all tests with 8 or more threads. 
+> >>> Do you mean that with your patches the will-it-scale/page_fault1 numbers were
+> >>> better by 4-5% over an unmodified kernel?
+> >>>> I believe the difference seen is due to
+> >>>> the overhead for faulting pages back into the guest and zeroing of memory.
+> >>> It may also make sense to test these patches with netperf to observe how much
+> >>> performance drop it is introducing.
+> >>>> Patch 4 is a bit on the large side at about 600 lines of change, however
+> >>>> I really didn't see a good way to break it up since each piece feeds into
+> >>>> the next. So I couldn't add the statistics by themselves as it didn't
+> >>>> really make sense to add them without something that will either read or
+> >>>> increment/decrement them, or add the Hinted state without something that
+> >>>> would set/unset it. As such I just ended up adding the entire thing as
+> >>>> one patch. It makes it a bit bigger but avoids the issues in the previous
+> >>>> set where I was referencing things before they had been added.
+> >>>>
+> >>>> Changes from the RFC:
+> >>>> https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
+> >>>> Moved aeration requested flag out of aerator and into zone->flags.
+> >>>> Moved bounary out of free_area and into local variables for aeration.
+> >>>> Moved aeration cycle out of interrupt and into workqueue.
+> >>>> Left nr_free as total pages instead of splitting it between raw and aerated.
+> >>>> Combined size and physical address values in virtio ring into one 64b value.
+> >>>>
+> >>>> Changes from v1:
+> >>>> https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
+> >>>> Dropped "waste page treatment" in favor of "page hinting"
+> >>> We may still have to try and find a better name for virtio-balloon side changes.
+> >>> As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
+> >>
+> >> We should have named that free page reporting, but that train already
+> >> has left.
+> > 
+> > I think VIRTIO_BALLOON_F_FREE_PAGE_HINT is different and arguably
+> > actually does provide hints.
+> 
+> I guess it depends on the point of view (e.g., getting all free pages
+> feels more like a report). But I could also live with using the term
+> reporting in this context.
+> 
+> We could go ahead and name it all "page reporting", would also work for me.
 
-This has two minor side-effects:
-1. pinmux_i2c0_pins is renamed to pinmux-i2c0-pins
-2. the 1MHz cpufreq operating point is enabled
+So there are actually three differences between the machanisms:
+1. VIRTIO_BALLOON_F_FREE_PAGE_HINT sometimes reports pages which might no
+   longer be on the free list (with subtle limitations which sometimes
+   still allow hypervisor to discard the pages)
+2. VIRTIO_BALLOON_F_FREE_PAGE_HINT starts reporting when requested by
+   host
+3. VIRTIO_BALLOON_F_FREE_PAGE_HINT is not incremental: each request
+   by host reports all free memory
 
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: David Lechner <david@lechnology.com>
----
- arch/arm/boot/dts/am335x-boneblue.dts | 92 +--------------------------
- 1 file changed, 2 insertions(+), 90 deletions(-)
+By comparison, the proposed patches:
+- always report only actually free pages
+- report at a random time
+- report incrementally
 
-diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index 0257576d5d16..2f6652ef9a15 100644
---- a/arch/arm/boot/dts/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/am335x-boneblue.dts
-@@ -5,23 +5,13 @@
- /dts-v1/;
- 
- #include "am33xx.dtsi"
-+#include "am335x-osd335x-common.dtsi"
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "TI AM335x BeagleBone Blue";
- 	compatible = "ti,am335x-bone-blue", "ti,am33xx";
- 
--	cpus {
--		cpu@0 {
--			cpu0-supply = <&dcdc2_reg>;
--		};
--	};
--
--	memory@80000000 {
--		device_type = "memory";
--		reg = <0x80000000 0x20000000>; /* 512 MB */
--	};
--
- 	chosen {
- 		stdout-path = &uart0;
- 	};
-@@ -142,13 +132,6 @@
- 		>;
- 	};
- 
--	i2c0_pins: pinmux_i2c0_pins {
--		pinctrl-single,pins = <
--			AM33XX_PADCONF(AM335X_PIN_I2C0_SDA, PIN_INPUT_PULLUP, MUX_MODE0)	/* (C17) I2C0_SDA.I2C0_SDA */
--			AM33XX_PADCONF(AM335X_PIN_I2C0_SCL, PIN_INPUT_PULLUP, MUX_MODE0)	/* (C16) I2C0_SCL.I2C0_SCL */
--		>;
--	};
--
- 	i2c2_pins: pinmux_i2c2_pins {
- 		pinctrl-single,pins = <
- 			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
-@@ -328,16 +311,6 @@
- };
- 
- &i2c0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins>;
--
--	status = "okay";
--	clock-frequency = <400000>;
--
--	tps: tps@24 {
--		reg = <0x24>;
--	};
--
- 	baseboard_eeprom: baseboard_eeprom@50 {
- 		compatible = "atmel,24c256";
- 		reg = <0x50>;
-@@ -381,66 +354,13 @@
- /include/ "tps65217.dtsi"
- 
- &tps {
--	interrupts = <7>; /* NMI */
--	interrupt-parent = <&intc>;
-+	/delete-property/ ti,pmic-shutdown-controller;
- 
- 	charger {
- 		interrupts = <0>, <1>;
- 		interrupt-names = "USB", "AC";
- 		status = "okay";
- 	};
--
--	pwrbutton {
--		interrupts = <2>;
--		status = "okay";
--	};
--
--	regulators {
--		dcdc1_reg: regulator@0 {
--			regulator-name = "vdds_dpr";
--			regulator-always-on;
--		};
--
--		dcdc2_reg: regulator@1 {
--			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
--			regulator-name = "vdd_mpu";
--			regulator-min-microvolt = <925000>;
--			regulator-max-microvolt = <1351500>;
--			regulator-boot-on;
--			regulator-always-on;
--		};
--
--		dcdc3_reg: regulator@2 {
--			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
--			regulator-name = "vdd_core";
--			regulator-min-microvolt = <925000>;
--			regulator-max-microvolt = <1150000>;
--			regulator-boot-on;
--			regulator-always-on;
--		};
--
--		ldo1_reg: regulator@3 {
--			regulator-name = "vio,vrtc,vdds";
--			regulator-always-on;
--		};
--
--		ldo2_reg: regulator@4 {
--			regulator-name = "vdd_3v3aux";
--			regulator-always-on;
--		};
--
--		ldo3_reg: regulator@5 {
--			regulator-name = "vdd_1v8";
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--			regulator-always-on;
--		};
--
--		ldo4_reg: regulator@6 {
--			regulator-name = "vdd_3v3a";
--			regulator-always-on;
--		};
--	};
- };
- 
- &mmc1 {
-@@ -502,14 +422,6 @@
- 	};
- };
- 
--&aes {
--	status = "okay";
--};
--
--&sham {
--	status = "okay";
--};
--
- &rtc {
- 	system-power-controller;
- 	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
--- 
-2.17.1
 
+> -- 
+> 
+> Thanks,
+> 
+> David / dhildenb
