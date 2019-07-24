@@ -2,53 +2,54 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E527C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D571AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E157214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60BE214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000069;
-	bh=BX83SWqxlR2Q+6R81dSPYHiAW4Em1qQCcn0O2SZTYd4=;
+	s=default; t=1564000073;
+	bh=4g3R6gamTRzQOqVc+zMXK0Qvwcpv4izx9jeryaWRd/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g0pcIbxH2d7GVg8Kq+S4i0uaOJ0AFrWG5CCjNQn1t6lhkM0cYFDgbHMAl6LA0f6ce
-	 YYoHhKCnawkSohVR6miljGRlnt/tlNsJS+dNUYNVTqaY64QCoTF12zbj5MsmzzgLC4
-	 utK43yIPWT6yGqklL4P6Rgdh4gtK33s+61uZ+dHg=
+	b=Kv+vDXkfU7zKPhSEMGDW7U9ktr3WseDeZZDQ4g5ewVjD/qplMeEZtNTZx4DSus6o+
+	 c3WnrtiHzSKnmg1gDOP7wb5YyKthVC3+760+fegZDYh3FNkYNYCagixpJCpRvfVYZM
+	 KeMP21k1gzJt2MI96eTOOE63gCV3LY7e5nTr4/m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389204AbfGXTf1 (ORCPT
+        id S2389962AbfGXU1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55148 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388852AbfGXTdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:33:21 -0400
+        id S2389201AbfGXTf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D11EB2238C;
-        Wed, 24 Jul 2019 19:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C47B421951;
+        Wed, 24 Jul 2019 19:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996801;
-        bh=BX83SWqxlR2Q+6R81dSPYHiAW4Em1qQCcn0O2SZTYd4=;
+        s=default; t=1563996925;
+        bh=4g3R6gamTRzQOqVc+zMXK0Qvwcpv4izx9jeryaWRd/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ccY/z40trOJcEW9f/2NisRoevm6uzfECEqID6IF+4IMwuTnFsEO9N9IBr42da7Mr8
-         HEuAsj2gjbo+vaFokKjkLvm3hrGDQq2mcGemdWYuNzPBAiYMPfSoKMWsVJgCu28FUI
-         OQOjdwMmFT8R/YVUhrIV9P6jxMGIx9zxn/e9DdtY=
+        b=BtfoiRHJnAizXLZuButMETl0kn7uqbo9V+E4sI2z7iT7Shh815LUz9gSgKhq1WAFp
+         E+GAB8tF4Sl/XHwKwqMEsY9Gc8tZrSd66QOhW5Jjpb+B60z/6K6thYJY2Efovlt+Ne
+         aORVxJVx0VhKhzcQIqGpMKJtmL/TLA5G91zshUhw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 222/413] gpiolib: Fix references to gpiod_[gs]et_*value_cansleep() variants
-Date:   Wed, 24 Jul 2019 21:18:33 +0200
-Message-Id: <20190724191750.708775987@linuxfoundation.org>
+        stable@vger.kernel.org, Horia Geanta <horia.geanta@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.2 264/413] crypto: caam - limit output IV to CBC to work around CTR mode DMA issue
+Date:   Wed, 24 Jul 2019 21:19:15 +0200
+Message-Id: <20190724191755.063425339@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,66 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3285170f28a850638794cdfe712eb6d93e51e706 ]
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-Commit 372e722ea4dd4ca1 ("gpiolib: use descriptors internally") renamed
-the functions to use a "gpiod" prefix, and commit 79a9becda8940deb
-("gpiolib: export descriptor-based GPIO interface") introduced the "raw"
-variants, but both changes forgot to update the comments.
+commit ed527b13d800dd515a9e6c582f0a73eca65b2e1b upstream.
 
-Readd a similar reference to gpiod_set_value(), which was accidentally
-removed by commit 1e77fc82110ac36f ("gpio: Add missing open drain/source
-handling to gpiod_set_value_cansleep()").
+The CAAM driver currently violates an undocumented and slightly
+controversial requirement imposed by the crypto stack that a buffer
+referred to by the request structure via its virtual address may not
+be modified while any scatterlists passed via the same request
+structure are mapped for inbound DMA.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20190701142738.25219-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This may result in errors like
+
+  alg: aead: decryption failed on test 1 for gcm_base(ctr-aes-caam,ghash-generic): ret=74
+  alg: aead: Failed to load transform for gcm(aes): -2
+
+on non-cache coherent systems, due to the fact that the GCM driver
+passes an IV buffer by virtual address which shares a cacheline with
+the auth_tag buffer passed via a scatterlist, resulting in corruption
+of the auth_tag when the IV is updated while the DMA mapping is live.
+
+Since the IV that is returned to the caller is only valid for CBC mode,
+and given that the in-kernel users of CBC (such as CTS) don't trigger the
+same issue as the GCM driver, let's just disable the output IV generation
+for all modes except CBC for the time being.
+
+Fixes: 854b06f76879 ("crypto: caam - properly set IV after {en,de}crypt")
+Cc: Horia Geanta <horia.geanta@nxp.com>
+Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reported-by: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpio/gpiolib.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/crypto/caam/caamalg.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index be1d1d2f8aaa..bb3104d2eb0c 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3025,7 +3025,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- int gpiod_get_raw_value(const struct gpio_desc *desc)
- {
- 	VALIDATE_DESC(desc);
--	/* Should be using gpio_get_value_cansleep() */
-+	/* Should be using gpiod_get_raw_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	return gpiod_get_raw_value_commit(desc);
- }
-@@ -3046,7 +3046,7 @@ int gpiod_get_value(const struct gpio_desc *desc)
- 	int value;
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -999,6 +999,7 @@ static void skcipher_encrypt_done(struct
+ 	struct skcipher_request *req = context;
+ 	struct skcipher_edesc *edesc;
+ 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
++	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+ 	int ivsize = crypto_skcipher_ivsize(skcipher);
  
- 	VALIDATE_DESC(desc);
--	/* Should be using gpio_get_value_cansleep() */
-+	/* Should be using gpiod_get_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
+ #ifdef DEBUG
+@@ -1023,9 +1024,9 @@ static void skcipher_encrypt_done(struct
  
- 	value = gpiod_get_raw_value_commit(desc);
-@@ -3317,7 +3317,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- void gpiod_set_raw_value(struct gpio_desc *desc, int value)
- {
- 	VALIDATE_DESC_VOID(desc);
--	/* Should be using gpiod_set_value_cansleep() */
-+	/* Should be using gpiod_set_raw_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	gpiod_set_raw_value_commit(desc, value);
- }
-@@ -3358,6 +3358,7 @@ static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
- void gpiod_set_value(struct gpio_desc *desc, int value)
- {
- 	VALIDATE_DESC_VOID(desc);
-+	/* Should be using gpiod_set_value_cansleep() */
- 	WARN_ON(desc->gdev->chip->can_sleep);
- 	gpiod_set_value_nocheck(desc, value);
- }
--- 
-2.20.1
-
+ 	/*
+ 	 * The crypto API expects us to set the IV (req->iv) to the last
+-	 * ciphertext block. This is used e.g. by the CTS mode.
++	 * ciphertext block when running in CBC mode.
+ 	 */
+-	if (ivsize)
++	if ((ctx->cdata.algtype & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
+ 		scatterwalk_map_and_copy(req->iv, req->dst, req->cryptlen -
+ 					 ivsize, ivsize, 0);
+ 
+@@ -1843,9 +1844,9 @@ static int skcipher_decrypt(struct skcip
+ 
+ 	/*
+ 	 * The crypto API expects us to set the IV (req->iv) to the last
+-	 * ciphertext block.
++	 * ciphertext block when running in CBC mode.
+ 	 */
+-	if (ivsize)
++	if ((ctx->cdata.algtype & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
+ 		scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
+ 					 ivsize, ivsize, 0);
+ 
 
 
