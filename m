@@ -2,89 +2,98 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00787C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D015C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F30F2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:18:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V0hHpFzh"
+	by mail.kernel.org (Postfix) with ESMTP id 4338E21911
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbfGXVSO (ORCPT
+        id S1728814AbfGXVWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:18:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34167 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfGXVSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:18:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45v7VV2NDJz9s4Y;
-        Thu, 25 Jul 2019 07:18:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564003091;
-        bh=ZlrI6QWEkVk+jpf0/CEmKaDNIZ69mnNqNbr14CHhqng=;
-        h=Date:From:To:Cc:Subject:From;
-        b=V0hHpFzhze4oGwu7Htn6DCkrEhZF/gMBLiLqoBKZJINfwk5VbXdjkH3FGGtgxYHlk
-         mMuvKZLwtjtfpN6TXtLe4tOJwKdTsaAqXk8lge7zexGcdwmUPTZShpGr2gycha7vyB
-         ax8tMdygCfqhSj0dS1YDff9xmIRndkJz7WHiwVkaPOGt3YkQK/1RYoiu7dANcNFHup
-         58dYCDdF2iJZMUsotsoqhRiAp0A1G4gT99sUD9uPzbRSoJYC7uhcAZ2kJX+GgB5eMI
-         onJRuZX6Na+vioFOSlwypRsJZN47zpXdF1WMZ9PvHorj/1VKYn5iCv6blEBCmvS+Rf
-         ATyePvl0rloew==
-Date:   Thu, 25 Jul 2019 07:18:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Phil Sutter <phil@nwl.cc>
-Subject: linux-next: Signed-off-by missing for commit in the netfilter tree
-Message-ID: <20190725071803.6beb44f9@canb.auug.org.au>
+        Wed, 24 Jul 2019 17:22:12 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:51458 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbfGXVWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:22:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 13DD06089339;
+        Wed, 24 Jul 2019 23:22:09 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id rU2TxR2z4FAv; Wed, 24 Jul 2019 23:22:08 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id C11CA6089354;
+        Wed, 24 Jul 2019 23:22:08 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4gLqFIRnLWU7; Wed, 24 Jul 2019 23:22:08 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 9A8E06089339;
+        Wed, 24 Jul 2019 23:22:08 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 23:22:08 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-crypto@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     horia.geanta@nxp.com, aymen.sghaier@nxp.com,
+        david <david@sigma-star.at>
+Message-ID: <839258138.49105.1564003328543.JavaMail.zimbra@nod.at>
+Subject: Backlog support for CAAM?
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/myjbYSr/EfRoQ1LLFBsAGba";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Index: BRBzCkuiRpn89WxIsrxtpCssT2oQQg==
+Thread-Topic: Backlog support for CAAM?
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/myjbYSr/EfRoQ1LLFBsAGba
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi!
 
-Hi all,
+Recently I had the pleasure to debug a lockup on a imx6 based platform.
+It turned out that the lockup was caused by the CAAM driver because it
+just returns -EBUSY upon a full job ring.
 
-Commit
+Then I found commits:
+0618764cb25f ("dm crypt: fix deadlock when async crypto algorithm returns -EBUSY")
+c0403ec0bb5a ("Revert "dm crypt: fix deadlock when async crypto algorithm returns -EBUSY"")
 
-  5f5ff5ca2e18 ("netfilter: nf_tables: Make nft_meta expression more robust=
-")
+Is there a reason why the driver has still no proper backlog support?
 
-is missing a Signed-off-by from its author.
+If it is just a matter of -ENOPATCH, I have some cycles left an can help.
+But before working on this topic I'd like to figure what the current state
+or plans are. :-)
 
---=20
-Cheers,
-Stephen Rothwell
+So far I work around the issue with disgusting hacks like this one:
 
---Sig_/myjbYSr/EfRoQ1LLFBsAGba
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--- a/drivers/crypto/caam/jr.c
++++ b/drivers/crypto/caam/jr.c
+@@ -339,6 +339,7 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
+                return -EIO;
+        }
+ 
++again:
+        spin_lock_bh(&jrp->inplock);
+ 
+        head = jrp->head;
+@@ -347,8 +348,8 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
+        if (!rd_reg32(&jrp->rregs->inpring_avail) ||
+            CIRC_SPACE(head, tail, JOBR_DEPTH) <= 0) {
+                spin_unlock_bh(&jrp->inplock);
+-               dma_unmap_single(dev, desc_dma, desc_size, DMA_TO_DEVICE);
+-               return -EBUSY;
++               msleep(100);
++               goto again;
+        }
+ 
+        head_entry = &jrp->entinfo[head];
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl04ywsACgkQAVBC80lX
-0GxZGAf/UUOEi8K2f2YAehwZpxFFt9+M1OitxZVyr4HLAvttAT5uYVbRytRlqmkS
-cChx6PqCD9/ExbeUIjubSHXkt5Y8z2spIQ18SpFjRZsmajz7m7t3Fp/WWAsBOLtT
-QQkG6HxKv7yGhN4DDTirJ2bd2l/u9yxDbju/OxDoXGyssQuPjVJBiCYweHev6+zS
-7T6Oe1yeqYExjyL8Vzj8/agxAuRyJRVNYzJUuFS9/UN+6k3043dY2rnsr9GFtkF9
-kfZphzNM5O/YtjFHFFsquQT8PlIbCSr+8ES3Q8e/msQCHv3PwKlj67FazOHMtG0w
-vK+/ovxdnAQQ3982Q5UjRZzppuHKcg==
-=7TJs
------END PGP SIGNATURE-----
-
---Sig_/myjbYSr/EfRoQ1LLFBsAGba--
+Thanks,
+//richard
