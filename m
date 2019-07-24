@@ -2,194 +2,119 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BA4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64EE32238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9C1229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563996293;
+	bh=1F+0XY+ztXYdXEEVAy8XEkQ3xsmcE7ZIgZi78ZGy+DM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GCY3E+sfZtq0ZJ3sKMjbRm1mwqh3/2CBBQ+YChOY4c3C6oUBBQGbeBpUYwSnW1l5D
+	 N5THXtHHUsI9uqw9V5HCaH/YqkCTUKK2ktwClneo1I2NNCU5HqEUtcwXmK5otL8QHy
+	 YhOrvNQPFJ8EaHTRJXHV/SLmbo7wQx4ibZv1/yXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387982AbfGXTYs (ORCPT
+        id S2387999AbfGXTYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:48 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40171 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387551AbfGXTYo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s145so34624703qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:24:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6wfpg22kkBGQSGagL3FHOCSJzZUomxdfgUX443/VLoE=;
-        b=c5nMOTVW0zL64A8i8hpz6SfSI8If5z42EAC6X2ZtOOeIG0WKMZvs5etsCTpchk6CFc
-         1yrz9mJ9cYFMg1gnWfELTjUNt4QdhtQfKOUE8W7BPia4m4L0uXZzeHIp/L93OHIfx5+s
-         wvrFP9vGXDkF9Alu1/xeRHOmCuKChHrzTXdDCIVJN9KO2mvc446Cdgat6A+/kCd6zPs/
-         FXECLYjasl0GJbPi7VtzbA42O6W4/XS8XH/OqOEiKo4q6T8y7+ooZZ7fG8RuVAMCrzHx
-         OljhOmeZGFN7GrhbQqE499lpHVz2sxmbKW/awt22WSrbqi7qosPHrOyXxX1os+b1LGw6
-         470g==
-X-Gm-Message-State: APjAAAWbpcpr7nfeYSWxUOVbEpqrcqA5+SFTVlQ+e24RcD4RGi9zF916
-        2JFfsZiQIOmtyoZZ8yqa+4W6IQ==
-X-Google-Smtp-Source: APXvYqy77kkB2RpSxBnWenjZ0UwyhE7LKJGBKOCJhGTtIhJgVV+u7LlioVLo64z1RecpigW2GqU0Mw==
-X-Received: by 2002:a37:ac19:: with SMTP id e25mr56019402qkm.155.1563996283591;
-        Wed, 24 Jul 2019 12:24:43 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id j6sm3007749qtl.85.2019.07.24.12.24.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 12:24:42 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 15:24:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
-Message-ID: <20190724151855-mutt-send-email-mst@kernel.org>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
+        Wed, 24 Jul 2019 15:24:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387974AbfGXTYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EDB921951;
+        Wed, 24 Jul 2019 19:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996285;
+        bh=1F+0XY+ztXYdXEEVAy8XEkQ3xsmcE7ZIgZi78ZGy+DM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a1OYE2fOOkReRyN1sABHtW+VtSgH/m0V79xknCqY86N1qRKf/Q7KL9NNV4DI6bHAS
+         blT7innxfHhu7T/k5lexcGf5EKTbqatcssz0ElmnyFauJIg2OPVbmC9UYWupWNoSpf
+         qUXQSo7t5cHRHJ1KqHgnWwaQwSrxEPlmvV5+h2uI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 045/413] perf annotate TUI browser: Do not use member from variable within its own initialization
+Date:   Wed, 24 Jul 2019 21:15:36 +0200
+Message-Id: <20190724191738.786389506@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 02:40:02PM -0400, Nitesh Narayan Lal wrote:
-> 
-> On 7/24/19 12:54 PM, Alexander Duyck wrote:
-> > This series provides an asynchronous means of hinting to a hypervisor
-> > that a guest page is no longer in use and can have the data associated
-> > with it dropped. To do this I have implemented functionality that allows
-> > for what I am referring to as page hinting
-> >
-> > The functionality for this is fairly simple. When enabled it will allocate
-> > statistics to track the number of hinted pages in a given free area. When
-> > the number of free pages exceeds this value plus a high water value,
-> > currently 32,
-> Shouldn't we configure this to a lower number such as 16?
-> >  it will begin performing page hinting which consists of
-> > pulling pages off of free list and placing them into a scatter list. The
-> > scatterlist is then given to the page hinting device and it will perform
-> > the required action to make the pages "hinted", in the case of
-> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > and as such they are forced out of the guest. After this they are placed
-> > back on the free list, and an additional bit is added if they are not
-> > merged indicating that they are a hinted buddy page instead of a standard
-> > buddy page. The cycle then repeats with additional non-hinted pages being
-> > pulled until the free areas all consist of hinted pages.
-> >
-> > I am leaving a number of things hard-coded such as limiting the lowest
-> > order processed to PAGEBLOCK_ORDER,
-> Have you considered making this option configurable at the compile time?
-> >  and have left it up to the guest to
-> > determine what the limit is on how many pages it wants to allocate to
-> > process the hints.
-> It might make sense to set the number of pages to be hinted at a time from the
-> hypervisor.
-> >
-> > My primary testing has just been to verify the memory is being freed after
-> > allocation by running memhog 79g on a 80g guest and watching the total
-> > free memory via /proc/meminfo on the host. With this I have verified most
-> > of the memory is freed after each iteration. As far as performance I have
-> > been mainly focusing on the will-it-scale/page_fault1 test running with
-> > 16 vcpus. With that I have seen at most a 2% difference between the base
-> > kernel without these patches and the patches with virtio-balloon disabled.
-> > With the patches and virtio-balloon enabled with hinting the results
-> > largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
-> > drop in performance as I approached 16 threads,
-> I think this is acceptable.
-> >  however on the the lastest
-> > linux-next kernel I saw roughly a 4% to 5% improvement in performance for
-> > all tests with 8 or more threads. 
-> Do you mean that with your patches the will-it-scale/page_fault1 numbers were
-> better by 4-5% over an unmodified kernel?
-> > I believe the difference seen is due to
-> > the overhead for faulting pages back into the guest and zeroing of memory.
-> It may also make sense to test these patches with netperf to observe how much
-> performance drop it is introducing.
-> > Patch 4 is a bit on the large side at about 600 lines of change, however
-> > I really didn't see a good way to break it up since each piece feeds into
-> > the next. So I couldn't add the statistics by themselves as it didn't
-> > really make sense to add them without something that will either read or
-> > increment/decrement them, or add the Hinted state without something that
-> > would set/unset it. As such I just ended up adding the entire thing as
-> > one patch. It makes it a bit bigger but avoids the issues in the previous
-> > set where I was referencing things before they had been added.
-> >
-> > Changes from the RFC:
-> > https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> > Moved aeration requested flag out of aerator and into zone->flags.
-> > Moved bounary out of free_area and into local variables for aeration.
-> > Moved aeration cycle out of interrupt and into workqueue.
-> > Left nr_free as total pages instead of splitting it between raw and aerated.
-> > Combined size and physical address values in virtio ring into one 64b value.
-> >
-> > Changes from v1:
-> > https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> > Dropped "waste page treatment" in favor of "page hinting"
-> We may still have to try and find a better name for virtio-balloon side changes.
-> As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
+[ Upstream commit da2019633f0b5c105ce658aada333422d8cb28fe ]
 
-Right. In fact I'm not sure why should these be called hints at all.
-VIRTIO_BALLOON_F_FREE_PAGE_HINT is a hint because pages might no
-longer be free by the time they are reported.
+Some compilers will complain when using a member of a struct to
+initialize another member, in the same struct initialization.
 
-I think of this one as a free page reporting capability.
-I don't really mind how are internal kernel functions called,
-but I think for virtio uapi things that's a better name.
+For instance:
+
+  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
+  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
+
+Produce:
+
+  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+                                              (!ops.current_entry ||
+                                                ^~~
+  1 error generated.
+
+So use an extra variable, initialized just before that struct, to have
+the value used in the expressions used to init two of the struct
+members.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
+Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/ui/browsers/annotate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 98d934a36d86..b0d089a95dac 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
+ 	struct annotation *notes = browser__annotation(browser);
+ 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
++	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
+ 	struct annotation_write_ops ops = {
+ 		.first_line		 = row == 0,
+-		.current_entry		 = ui_browser__is_current_entry(browser, row),
++		.current_entry		 = is_current_entry,
+ 		.change_color		 = (!notes->options->hide_src_code &&
+-					    (!ops.current_entry ||
++					    (!is_current_entry ||
+ 					     (browser->use_navkeypressed &&
+ 					      !browser->navkeypressed))),
+ 		.width			 = browser->width,
+-- 
+2.20.1
 
 
 
-
-> > Renamed files and functions from "aeration" to "page_hinting"
-> > Moved from page->lru list to scatterlist
-> > Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
-> > Virtio now uses scatterlist directly instead of intermedate array
-> > Moved stats out of free_area, now in seperate area and pointed to from zone
-> > Merged patch 5 into patch 4 to improve reviewability
-> > Updated various code comments throughout
-> >
-> > ---
-> >
-> > Alexander Duyck (5):
-> >       mm: Adjust shuffle code to allow for future coalescing
-> >       mm: Move set/get_pcppage_migratetype to mmzone.h
-> >       mm: Use zone and order instead of free area in free_list manipulators
-> >       mm: Introduce Hinted pages
-> >       virtio-balloon: Add support for providing page hints to host
-> >
-> >
-> >  drivers/virtio/Kconfig              |    1 
-> >  drivers/virtio/virtio_balloon.c     |   47 ++++++
-> >  include/linux/mmzone.h              |  116 ++++++++------
-> >  include/linux/page-flags.h          |    8 +
-> >  include/linux/page_hinting.h        |  139 ++++++++++++++++
-> >  include/uapi/linux/virtio_balloon.h |    1 
-> >  mm/Kconfig                          |    5 +
-> >  mm/Makefile                         |    1 
-> >  mm/internal.h                       |   18 ++
-> >  mm/memory_hotplug.c                 |    1 
-> >  mm/page_alloc.c                     |  238 ++++++++++++++++++++--------
-> >  mm/page_hinting.c                   |  298 +++++++++++++++++++++++++++++++++++
-> >  mm/shuffle.c                        |   24 ---
-> >  mm/shuffle.h                        |   32 ++++
-> >  14 files changed, 796 insertions(+), 133 deletions(-)
-> >  create mode 100644 include/linux/page_hinting.h
-> >  create mode 100644 mm/page_hinting.c
-> >
-> > --
-> -- 
-> Thanks
-> Nitesh
