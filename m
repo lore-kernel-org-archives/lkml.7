@@ -2,116 +2,153 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E73DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFC3C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C22217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000950;
-	bh=/dd4eOo7PVj7RZhXqZlqs3fTqfeWmTXh7MYnpQFFKds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ag8XSWuT4DrYuk4MfbsPTMmUKfpbS0GhNRq5oL4PSNjGxXN7PgL88xP/+v1HEJ6+R
-	 4Ms3SfOls5h08oN+no0mB1j+/WQTiMK30QIY7F464LOAB/FufrXSI5yEaMYry8nfeQ
-	 J+4NYewwCbu5EGxf5TQY58F9d0hcJZuSSGy9H4qw=
+	by mail.kernel.org (Postfix) with ESMTP id 3854B21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfGXUm2 (ORCPT
+        id S1728778AbfGXUmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:42:28 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35605 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfGXUmZ (ORCPT
+        Wed, 24 Jul 2019 16:42:39 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35272 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfGXUmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:42:25 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so92529941ioo.2;
-        Wed, 24 Jul 2019 13:42:24 -0700 (PDT)
+        Wed, 24 Jul 2019 16:42:38 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so46930848qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:42:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AQ+XNg3mKrfw1Dey6tLDfZ0Xozax/S6VlSKKVITqYxE=;
-        b=W1bK2ybHVLAsDIDxzXtP4lvwwEfRu4GItHcfnUkecJTn6o/i5HFWlN71w/3e5FBGRm
-         1b7FWMd4Z6UleapARAzi7pjwS2uwbkVVQXMW+fDbrY4BwDNZydH8+gk7dllKdsnie3K+
-         x5VvFj/kbxgZIuBHeYM7iKyk6CjvmPlT4MfhxgrkU/4sHREmygFAehfHqA7NWZpuhyoK
-         VCieIxIYnkpTNfYNAPI0qztUUa61P9aFK7A/lOgXlN1R03HyswQNBUKsIuPFy2T9pM0e
-         NPXJE0YN18wMQ5bRJjP65y7rccFchiCno3LEyUDg62P6oJz/pvPklLn9jhEUVvSXeeTP
-         1j+Q==
-X-Gm-Message-State: APjAAAV/RCFLidRigWjNoUfuneKMwh9eyTNoMT/T5md8pZJGwjseSmH6
-        JIAGcFMV/54nUEhGjSX81T1VTU8=
-X-Google-Smtp-Source: APXvYqxERI4TICWkUHvGJaze2V775PQlWBtoSbvl2z376iV55nDG8Nfoy+6l673Jsjr2IVXUL9H9NA==
-X-Received: by 2002:a02:c6a9:: with SMTP id o9mr31087012jan.90.1564000943817;
-        Wed, 24 Jul 2019 13:42:23 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id r24sm34314514ioc.76.2019.07.24.13.42.22
+         :mime-version:content-disposition:in-reply-to;
+        bh=0oDsp6PabiGgGzFV5AXKWcbAmWPliOqgciTu5AmtKko=;
+        b=h/UOMUNeTfWDt72v/HdX8MLXqGLd0Cl4AaweMzPAnFtIyavgaWrrUW+sTvaNrL6fF5
+         Y+zEJbSw9WW6TlzGhqZYFlMCgqVGQpoGvVqJU3ZVmIqzEDop7T14mm+ij3ohubJrMlA1
+         HXmH6VUTNcw4JKG7gtVXp7wCSpYUd6KCoxSeWrsAaaXFuYd49pX6GAaqXoLXoJpKRiwU
+         y5Y6lt/DLm7aXiuiAk06uAK2DbcyVwQKntc7wdNtj4LlkmWlZpDQcnohPObPltM815VU
+         XYxVTSZpAG+s9K2uPAAzSxTPDmWYrhegh3u2nYvfpdCqcYqd5NQJ2ffJSX/vKRxbJgMN
+         B5mg==
+X-Gm-Message-State: APjAAAXYcCjYqX977EvkSz1cB8ar6J7NI5C6az+S8GPU9ivkkss7uvCu
+        +dXSAk5lr++1/G7GAHjax2TCXw==
+X-Google-Smtp-Source: APXvYqy1xyF8m0D0XrDjgh1Az86AClKVYNEKuVVVwKydA8wHTr4Opr/E4uUxsrcRi8Vs/vksPRXBLQ==
+X-Received: by 2002:ac8:5315:: with SMTP id t21mr59263152qtn.229.1564000957709;
+        Wed, 24 Jul 2019 13:42:37 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id r14sm22913246qke.47.2019.07.24.13.42.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:42:23 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:42:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ran Wang <ran.wang_1@nxp.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
-Message-ID: <20190724204222.GA1234@bogus>
-References: <20190712064206.48249-1-ran.wang_1@nxp.com>
+        Wed, 24 Jul 2019 13:42:36 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 16:42:29 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+Message-ID: <20190724164023-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724171050.7888.62199.stgit@localhost.localdomain>
+ <20190724150224-mutt-send-email-mst@kernel.org>
+ <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
+ <ee5387b1-89af-daf4-8492-8139216c6dcf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712064206.48249-1-ran.wang_1@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ee5387b1-89af-daf4-8492-8139216c6dcf@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 02:42:05PM +0800, Ran Wang wrote:
-> Some Layerscape paltforms (such as LS1088A, LS2088A, etc) encounter USB
-> detect failues when adding dma-coherent to DWC3 node. This is because the
-> HW default cache type configuration of those SoC are not right, need to
-> be updated in DTS.
+On Wed, Jul 24, 2019 at 04:29:27PM -0400, Nitesh Narayan Lal wrote:
 > 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
-> Change in v2:
-> 	- New file.
-> 
->  Documentation/devicetree/bindings/usb/dwc3.txt | 43 ++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 8e5265e..7bc1cef 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -110,6 +110,43 @@ Optional properties:
->   - in addition all properties from usb-xhci.txt from the current directory are
->     supported as well
->  
-> +* Cache type nodes (optional)
-> +
-> +The Cache type node is used to tell how to configure cache type on 4 different
-> +transfer types: Data Read, Desc Read, Data Write and Desc write. For each
-> +treasfer type, controller has a 4-bit register field to enable different cache
-> +type. Quoted from DWC3 data book Table 6-5 Cache Type Bit Assignments:
-> +----------------------------------------------------------------
-> +MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
-> +----------------------------------------------------------------
-> +AHB      |Cacheable     |Bufferable   |Privilegge |Data
-> +AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
-> +AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
-> +AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
-> +Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
-> +----------------------------------------------------------------
-> +Note: The AHB, AXI3, AXI4, and PCIe busses use different names for certain
-> +signals, which have the same meaning:
-> +  Bufferable = Posted
-> +  Cacheable = Modifiable = Snoop (negation of No Snoop)
+> On 7/24/19 4:18 PM, Alexander Duyck wrote:
+> > On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
+> >> On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> >>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >>>
+> >>> Add support for what I am referring to as "bubble hinting". Basically the
+> >>> idea is to function very similar to how the balloon works in that we
+> >>> basically end up madvising the page as not being used. However we don't
+> >>> really need to bother with any deflate type logic since the page will be
+> >>> faulted back into the guest when it is read or written to.
+> >>>
+> >>> This is meant to be a simplification of the existing balloon interface
+> >>> to use for providing hints to what memory needs to be freed. I am assuming
+> >>> this is safe to do as the deflate logic does not actually appear to do very
+> >>> much other than tracking what subpages have been released and which ones
+> >>> haven't.
+> >>>
+> >>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >>> ---
+> >>>  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
+> >>>  include/hw/virtio/virtio-balloon.h              |    2 +
+> >>>  include/standard-headers/linux/virtio_balloon.h |    1 +
+> >>>  3 files changed, 42 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+> >>> index 2112874055fb..70c0004c0f88 100644
+> >>> --- a/hw/virtio/virtio-balloon.c
+> >>> +++ b/hw/virtio/virtio-balloon.c
+> >>> @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
+> >>>      balloon_stats_change_timer(s, 0);
+> >>>  }
+> >>>  
+> >>> +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+> >>> +{
+> >>> +    VirtQueueElement *elem;
+> >>> +
+> >>> +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
+> >>> +    	unsigned int i;
+> >>> +
+> >>> +        for (i = 0; i < elem->in_num; i++) {
+> >>> +            void *addr = elem->in_sg[i].iov_base;
+> >>> +            size_t size = elem->in_sg[i].iov_len;
+> >>> +            ram_addr_t ram_offset;
+> >>> +            size_t rb_page_size;
+> >>> +            RAMBlock *rb;
+> >>> +
+> >>> +            if (qemu_balloon_is_inhibited())
+> >>> +                continue;
+> >>> +
+> >>> +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
+> >>> +            rb_page_size = qemu_ram_pagesize(rb);
+> >>> +
+> >>> +            /* For now we will simply ignore unaligned memory regions */
+> >>> +            if ((ram_offset | size) & (rb_page_size - 1))
+> >>> +                continue;
+> >>> +
+> >>> +            ram_block_discard_range(rb, ram_offset, size);
+> >> I suspect this needs to do like the migration type of
+> >> hinting and get disabled if page poisoning is in effect.
+> >> Right?
+> > Shouldn't something like that end up getting handled via
+> > qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
+> > like that would end up setting qemu_balloon_is_inhibited to true, if that
+> > isn't the case then I could add some additional conditions. I would do it
+> > in about the same spot as the qemu_balloon_is_inhibited check.
+> I don't think qemu_balloon_is_inhibited() will take care of the page poisoning
+> situations.
+> If I am not wrong we may have to look to extend VIRTIO_BALLOON_F_PAGE_POISON
+> support as per Michael's suggestion.
 
-This should all be implied from the SoC specific compatible strings. 
 
-Rob
+BTW upstream qemu seems to ignore VIRTIO_BALLOON_F_PAGE_POISON ATM.
+Which is probably a bug.
+Wei, could you take a look pls?
+
+> >
+> >
+> -- 
+> Thanks
+> Nitesh
