@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30489C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2BAC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0184D206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77CD206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999665;
-	bh=OIVXwS+9TKqu37YILl0lRlx1HwLymD0o7YMXtu2Wyg4=;
+	s=default; t=1563999669;
+	bh=U0o0C1aPAvOjwdQ7vLkMsrXoC/6GvrrOfuqwkwg7ouQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXPTN3dTqTEFdpwfEk6HnK6V+4OegvJnrId2SYMI3I8fH1AoYo0CVQyxT93cUrF5V
-	 6SMUkdH58aoVYfUWMunNw/26lDm00tSnGJryrVMrMoPUrbdhZPLU84+amnDtTY1Owf
-	 bj5xdEhGx0hLwwx6bz5N0fJNRgign+pu2yukfUjc=
+	b=ME2bfcTKFIP+J+rmsUzPXlxrImtkxnzIieECgogVW/r7Ii7cL+i2PA6e05Sk9H0dg
+	 izfVTd1LB6Ue3DA95UUitX0eyV0U4ctQIpZwcEZW4JYPje5EJD0bOuOKGwzqmSo23T
+	 e1jCtiFGNNVHXVZMTLaoLVj7ccSVmG3G7E6qhI58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391547AbfGXUVD (ORCPT
+        id S2391016AbfGXTpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:21:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49756 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390710AbfGXTph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:45:37 -0400
+        id S2390639AbfGXTna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 697C022ADA;
-        Wed, 24 Jul 2019 19:45:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5AEB2083B;
+        Wed, 24 Jul 2019 19:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997535;
-        bh=OIVXwS+9TKqu37YILl0lRlx1HwLymD0o7YMXtu2Wyg4=;
+        s=default; t=1563997409;
+        bh=U0o0C1aPAvOjwdQ7vLkMsrXoC/6GvrrOfuqwkwg7ouQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iyb4oeQauNACeexSK+DB3wEMQvOPfk7txFZSHozcrI3ymvWSrzAgMJwFJl0piIMy9
-         pBKBEc4etxvvDFAaa2e6k5XclKvdTgzhFjWBrDti+DoBiGeY/0ZnhdzILJaehG1nCU
-         5CiL7+sWncEuSJmyZ4MEIR2i3YcRCwdAx+8kvUFI=
+        b=BocpPY/hwziQSb7PqBXSyGjNMqEzOu7jwpXZ2IJhsh/K76vb+1uf5Vs1r9gKsntHd
+         IwbazYT1oWwrRiJsRJv5UJcn8gEoMfEQtVF20e3Vi8etzpE4/IQcakY/Khw7yNS1tA
+         PrruL/1FfP7GcHP9aUXpU2RDo2XJ5gLFhFvVlT1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 057/371] net: hns3: add a check to pointer in error_detected and slot_reset
-Date:   Wed, 24 Jul 2019 21:16:49 +0200
-Message-Id: <20190724191729.133382704@linuxfoundation.org>
+Subject: [PATCH 5.1 014/371] ath10k: Fix the wrong value of enums for wmi tlv stats id
+Date:   Wed, 24 Jul 2019 21:16:06 +0200
+Message-Id: <20190724191725.567381815@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,51 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 661262bc3e0ecc9a1aed39c6b2a99766da2c22e2 ]
+[ Upstream commit 9280f4fc06f44d0b4dc9e831f72d97b3d7cd35d3 ]
 
-If we add a VF without loading hclgevf.ko and then there is a RAS error
-occurs, PCIe AER will call error_detected and slot_reset of all functions,
-and will get a NULL pointer when we check ad_dev->ops->handle_hw_ras_error.
-This will cause a call trace and failures on handling of follow-up RAS
-errors.
+The enum value for WMI_TLV_STAT_PDEV, WMI_TLV_STAT_VDEV
+and WMI_TLV_STAT_PEER is wrong, due to which the vdev stats
+are not received from firmware in wmi_update_stats event.
 
-This patch check ae_dev and ad_dev->ops at first to solve above issues.
+Fix the enum values for above stats to receive all stats
+from firmware in WMI_TLV_UPDATE_STATS_EVENTID.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
+
+Fixes: f40a307eb92c ("ath10k: Fill rx duration for each peer in fw_stats for WCN3990)
+Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 5e41ed4954f9..cac17152157d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1847,9 +1847,9 @@ static pci_ers_result_t hns3_error_detected(struct pci_dev *pdev,
- 	if (state == pci_channel_io_perm_failure)
- 		return PCI_ERS_RESULT_DISCONNECT;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
+index e1c40bb69932..12f57f9adbba 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.h
++++ b/drivers/net/wireless/ath/ath10k/wmi.h
+@@ -4535,9 +4535,10 @@ enum wmi_10_4_stats_id {
+ };
  
--	if (!ae_dev) {
-+	if (!ae_dev || !ae_dev->ops) {
- 		dev_err(&pdev->dev,
--			"Can't recover - error happened during device init\n");
-+			"Can't recover - error happened before device initialized\n");
- 		return PCI_ERS_RESULT_NONE;
- 	}
+ enum wmi_tlv_stats_id {
+-	WMI_TLV_STAT_PDEV	= BIT(0),
+-	WMI_TLV_STAT_VDEV	= BIT(1),
+-	WMI_TLV_STAT_PEER	= BIT(2),
++	WMI_TLV_STAT_PEER	= BIT(0),
++	WMI_TLV_STAT_AP		= BIT(1),
++	WMI_TLV_STAT_PDEV	= BIT(2),
++	WMI_TLV_STAT_VDEV	= BIT(3),
+ 	WMI_TLV_STAT_PEER_EXTD  = BIT(10),
+ };
  
-@@ -1868,6 +1868,9 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
- 
- 	dev_info(dev, "requesting reset due to PCI error\n");
- 
-+	if (!ae_dev || !ae_dev->ops)
-+		return PCI_ERS_RESULT_NONE;
-+
- 	/* request the reset */
- 	if (ae_dev->ops->reset_event) {
- 		if (!ae_dev->override_pci_need_reset)
 -- 
 2.20.1
 
