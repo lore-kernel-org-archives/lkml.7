@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C200C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C89C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB1220840
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FAB20840
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dLXgI2KT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="A1fXERR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfGXRQ5 (ORCPT
+        id S1728446AbfGXRRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:16:57 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:49294 "EHLO
+        Wed, 24 Jul 2019 13:17:12 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49406 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbfGXRQx (ORCPT
+        with ESMTP id S1726099AbfGXRRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:16:53 -0400
+        Wed, 24 Jul 2019 13:17:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563988608; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1563988622; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mx/x29D45PRxNeKk9gJ9mj0iPCbySvHLXuDUqXmpPvY=;
-        b=dLXgI2KTKmDZ1UX/4X9xSH3Aci4eLNIn+86H2RuFxbsYquL3OKbEqSSWTomeiepP5xietY
-        ypZUUo4Dwr75/+R9Fl+JqcFaHgqQs300V6id1fL8VC9JyCNe9MQ0yQge42a5JgBsgJgS+u
-        Exng8EEPstbaHEKapzbNiggF7ZwYx14=
+        bh=ouKyZRBANVvVeb+E10WPq+fhH0xvPbCbpSjQO3DKpuY=;
+        b=A1fXERR1/RwN1YWERV81eQVZ8Yshsr5KFKj/Ke9IwpdMkHluaiqXelK2PvtGxPQsTQ55p+
+        iDCpxKPG/vTj4he6C5GGAGPEERnQBm9lHM5kmSgL8o5RbEXYmLYpeqJqWBxjgQgbUfLcDW
+        lKMyceTXyI6T30kIDBJZ6mmoR7djRTc=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -52,11 +52,10 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, od@zcrc.me,
         Mathieu Malaterre <malat@debian.org>,
         Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh@kernel.org>,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v15 03/13] dt-bindings: Add doc for the Ingenic TCU drivers
-Date:   Wed, 24 Jul 2019 13:16:05 -0400
-Message-Id: <20190724171615.20774-4-paul@crapouillou.net>
+Subject: [PATCH v15 05/13] clk: ingenic: Add driver for the TCU clocks
+Date:   Wed, 24 Jul 2019 13:16:07 -0400
+Message-Id: <20190724171615.20774-6-paul@crapouillou.net>
 In-Reply-To: <20190724171615.20774-1-paul@crapouillou.net>
 References: <20190724171615.20774-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -66,262 +65,551 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation about how to properly use the Ingenic TCU
-(Timer/Counter Unit) drivers from devicetree.
+Add driver to support the clocks provided by the Timer/Counter Unit
+(TCU) of the JZ47xx SoCs from Ingenic.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-    v4: New patch in this series. Corresponds to V2 patches 3-4-5 with
-     added content.
-    
-    v5:
-     - Edited PWM/watchdog DT bindings documentation to point to the new
-       document.
-     - Moved main document to
-       Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-     - Updated documentation to reflect the new devicetree bindings.
-    
-    v6:
-     - Removed PWM/watchdog documentation files as asked by upstream
-     - Removed doc about properties that should be implicit
-     - Removed doc about ingenic,timer-channel /
-       ingenic,clocksource-channel as they are gone
-     - Fix WDT clock name in the binding doc
-     - Fix lengths of register areas in watchdog/pwm nodes
-    
-    v7: No change
-    
-    v8:
-     - Fix address of the PWM node
-     - Added doc about system timer and clocksource children nodes
-    
-    v9:
-     - Remove doc about system timer and clocksource children
-       nodes...
-     - Add doc about ingenic,pwm-channels-mask property
-    
-    v10: No change
-    
-    v11: Fix info about default value of ingenic,pwm-channels-mask
-    
-    v12: Drop sub-nodes for now; they will be introduced in a follow-up
-         patchset.
+    v12: New patch
     
     v13:
-     - Revert back to v11. Turns out it was okay.
-     - Remove 'interrupt-parent' of the list of required properties.
+     - Don't enable/disable the TCU clock on demand. Enable it in the probe
+       and call it a day.
+     - Register suspend callbacks to gate/ungate the TCU clock on
+       suspend/resume.
+     - Use pr_fmt and pr_crit instead of custom TCU_ERR() macro
+     - Remove useless dependency on COMMON_CLK in Kconfig
+     - Remove registration of clkdev
     
-    v14: No change
+    v14: Change %i to %d
     
-    v15: Add "simple-mfd" compatible string
+    v15:
+     - Use CLK_OF_DECLARE_DRIVER macro since we use "simple-mfd"
+     - Use device_node_to_regmap()
 
- .../bindings/pwm/ingenic,jz47xx-pwm.txt       |  22 ---
- .../devicetree/bindings/timer/ingenic,tcu.txt | 137 ++++++++++++++++++
- .../bindings/watchdog/ingenic,jz4740-wdt.txt  |  17 ---
- 3 files changed, 137 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
+ drivers/clk/ingenic/Kconfig  |  10 +-
+ drivers/clk/ingenic/Makefile |   1 +
+ drivers/clk/ingenic/tcu.c    | 474 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 484 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/ingenic/tcu.c
 
-diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-deleted file mode 100644
-index 493bec80d59b..000000000000
---- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Ingenic JZ47xx PWM Controller
--=============================
--
--Required properties:
--- compatible: Should be "ingenic,jz4740-pwm"
--- #pwm-cells: Should be 3. See pwm.txt in this directory for a description
--  of the cells format.
--- clocks : phandle to the external clock.
--- clock-names : Should be "ext".
--
--
--Example:
--
--	pwm: pwm@10002000 {
--		compatible = "ingenic,jz4740-pwm";
--		reg = <0x10002000 0x1000>;
--
--		#pwm-cells = <3>;
--
--		clocks = <&ext>;
--		clock-names = "ext";
--	};
-diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+index fe8db93cf21a..1cb489959a99 100644
+--- a/drivers/clk/ingenic/Kconfig
++++ b/drivers/clk/ingenic/Kconfig
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-menu "Ingenic JZ47xx CGU drivers"
++menu "Ingenic SoCs drivers"
+ 	depends on MIPS
+ 
+ config INGENIC_CGU_COMMON
+@@ -45,4 +45,12 @@ config INGENIC_CGU_JZ4780
+ 
+ 	  If building for a JZ4780 SoC, you want to say Y here.
+ 
++config INGENIC_TCU_CLK
++	bool "Ingenic JZ47xx TCU clocks driver"
++	default MACH_INGENIC
++	select MFD_SYSCON
++	help
++	  Support the clocks of the Timer/Counter Unit (TCU) of the Ingenic
++	  JZ47xx SoCs.
++
+ endmenu
+diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
+index 250570a809d3..097220b05131 100644
+--- a/drivers/clk/ingenic/Makefile
++++ b/drivers/clk/ingenic/Makefile
+@@ -4,3 +4,4 @@ obj-$(CONFIG_INGENIC_CGU_JZ4740)	+= jz4740-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+= jz4725b-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
+ obj-$(CONFIG_INGENIC_CGU_JZ4780)	+= jz4780-cgu.o
++obj-$(CONFIG_INGENIC_TCU_CLK)		+= tcu.o
+diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
 new file mode 100644
-index 000000000000..5a4b9ddd9470
+index 000000000000..a1a5f9cb439e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-@@ -0,0 +1,137 @@
-+Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
-+==========================================================
++++ b/drivers/clk/ingenic/tcu.c
+@@ -0,0 +1,474 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * JZ47xx SoCs TCU clocks driver
++ * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
++ */
 +
-+For a description of the TCU hardware and drivers, have a look at
-+Documentation/mips/ingenic-tcu.txt.
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/clockchips.h>
++#include <linux/mfd/ingenic-tcu.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/syscore_ops.h>
 +
-+Required properties:
-+
-+- compatible: Must be one of:
-+  * ingenic,jz4740-tcu
-+  * ingenic,jz4725b-tcu
-+  * ingenic,jz4770-tcu
-+  followed by "simple-mfd".
-+- reg: Should be the offset/length value corresponding to the TCU registers
-+- clocks: List of phandle & clock specifiers for clocks external to the TCU.
-+  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu" clock
-+  should be provided if the SoC has it.
-+- clock-names: List of name strings for the external clocks.
-+- #clock-cells: Should be <1>;
-+  Clock consumers specify this argument to identify a clock. The valid values
-+  may be found in <dt-bindings/clock/ingenic,tcu.h>.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value should be 1.
-+- interrupts : Specifies the interrupt the controller is connected to.
-+
-+Optional properties:
-+
-+- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for PWM use.
-+  Default value is 0xfc.
-+
-+
-+Children nodes
-+==========================================================
-+
-+
-+PWM node:
-+---------
-+
-+Required properties:
-+
-+- compatible: Must be one of:
-+  * ingenic,jz4740-pwm
-+  * ingenic,jz4725b-pwm
-+- #pwm-cells: Should be 3. See ../pwm/pwm.txt for a description of the cell
-+  format.
-+- clocks: List of phandle & clock specifiers for the TCU clocks.
-+- clock-names: List of name strings for the TCU clocks.
-+
-+
-+Watchdog node:
-+--------------
-+
-+Required properties:
-+
-+- compatible: Must be "ingenic,jz4740-watchdog"
-+- clocks: phandle to the WDT clock
-+- clock-names: should be "wdt"
-+
-+
-+OS Timer node:
-+---------
-+
-+Required properties:
-+
-+- compatible: Must be one of:
-+  * ingenic,jz4725b-ost
-+  * ingenic,jz4770-ost
-+- clocks: phandle to the OST clock
-+- clock-names: should be "ost"
-+- interrupts : Specifies the interrupt the OST is connected to.
-+
-+
-+Example
-+==========================================================
-+
-+#include <dt-bindings/clock/jz4770-cgu.h>
 +#include <dt-bindings/clock/ingenic,tcu.h>
 +
-+/ {
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu", "simple-mfd";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
++/* 8 channels max + watchdog + OST */
++#define TCU_CLK_COUNT	10
 +
-+		#clock-cells = <1>;
++#undef pr_fmt
++#define pr_fmt(fmt) "ingenic-tcu-clk: " fmt
 +
-+		clocks = <&cgu JZ4770_CLK_RTC
-+			  &cgu JZ4770_CLK_EXT
-+			  &cgu JZ4770_CLK_PCLK>;
-+		clock-names = "rtc", "ext", "pclk";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4740-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
-+
-+		pwm: pwm@40 {
-+			compatible = "ingenic,jz4740-pwm";
-+			reg = <0x40 0x80>;
-+
-+			#pwm-cells = <3>;
-+
-+			clocks = <&tcu TCU_CLK_TIMER0
-+				  &tcu TCU_CLK_TIMER1
-+				  &tcu TCU_CLK_TIMER2
-+				  &tcu TCU_CLK_TIMER3
-+				  &tcu TCU_CLK_TIMER4
-+				  &tcu TCU_CLK_TIMER5
-+				  &tcu TCU_CLK_TIMER6
-+				  &tcu TCU_CLK_TIMER7>;
-+			clock-names = "timer0", "timer1", "timer2", "timer3",
-+				      "timer4", "timer5", "timer6", "timer7";
-+		};
-+
-+		ost: timer@e0 {
-+			compatible = "ingenic,jz4770-ost";
-+			reg = <0xe0 0x20>;
-+
-+			clocks = <&tcu TCU_CLK_OST>;
-+			clock-names = "ost";
-+
-+			interrupts = <15>;
-+		};
-+	};
++enum tcu_clk_parent {
++	TCU_PARENT_PCLK,
++	TCU_PARENT_RTC,
++	TCU_PARENT_EXT,
 +};
-diff --git a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt b/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-deleted file mode 100644
-index ce1cb72d5345..000000000000
---- a/Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Ingenic Watchdog Timer (WDT) Controller for JZ4740 & JZ4780
--
--Required properties:
--compatible: "ingenic,jz4740-watchdog" or "ingenic,jz4780-watchdog"
--reg: Register address and length for watchdog registers
--clocks: phandle to the RTC clock
--clock-names: should be "rtc"
--
--Example:
--
--watchdog: jz4740-watchdog@10002000 {
--	compatible = "ingenic,jz4740-watchdog";
--	reg = <0x10002000 0x10>;
--
--	clocks = <&cgu JZ4740_CLK_RTC>;
--	clock-names = "rtc";
--};
++
++struct ingenic_soc_info {
++	unsigned int num_channels;
++	bool has_ost;
++	bool has_tcu_clk;
++};
++
++struct ingenic_tcu_clk_info {
++	struct clk_init_data init_data;
++	u8 gate_bit;
++	u8 tcsr_reg;
++};
++
++struct ingenic_tcu_clk {
++	struct clk_hw hw;
++	unsigned int idx;
++	struct ingenic_tcu *tcu;
++	const struct ingenic_tcu_clk_info *info;
++};
++
++struct ingenic_tcu {
++	const struct ingenic_soc_info *soc_info;
++	struct regmap *map;
++	struct clk *clk;
++
++	struct clk_hw_onecell_data *clocks;
++};
++
++static struct ingenic_tcu *ingenic_tcu;
++
++static inline struct ingenic_tcu_clk *to_tcu_clk(struct clk_hw *hw)
++{
++	return container_of(hw, struct ingenic_tcu_clk, hw);
++}
++
++static int ingenic_tcu_enable(struct clk_hw *hw)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	struct ingenic_tcu *tcu = tcu_clk->tcu;
++
++	regmap_write(tcu->map, TCU_REG_TSCR, BIT(info->gate_bit));
++
++	return 0;
++}
++
++static void ingenic_tcu_disable(struct clk_hw *hw)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	struct ingenic_tcu *tcu = tcu_clk->tcu;
++
++	regmap_write(tcu->map, TCU_REG_TSSR, BIT(info->gate_bit));
++}
++
++static int ingenic_tcu_is_enabled(struct clk_hw *hw)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	unsigned int value;
++
++	regmap_read(tcu_clk->tcu->map, TCU_REG_TSR, &value);
++
++	return !(value & BIT(info->gate_bit));
++}
++
++static bool ingenic_tcu_enable_regs(struct clk_hw *hw)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	struct ingenic_tcu *tcu = tcu_clk->tcu;
++	bool enabled = false;
++
++	/*
++	 * If the SoC has no global TCU clock, we must ungate the channel's
++	 * clock to be able to access its registers.
++	 * If we have a TCU clock, it will be enabled automatically as it has
++	 * been attached to the regmap.
++	 */
++	if (!tcu->clk) {
++		enabled = !!ingenic_tcu_is_enabled(hw);
++		regmap_write(tcu->map, TCU_REG_TSCR, BIT(info->gate_bit));
++	}
++
++	return enabled;
++}
++
++static void ingenic_tcu_disable_regs(struct clk_hw *hw)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	struct ingenic_tcu *tcu = tcu_clk->tcu;
++
++	if (!tcu->clk)
++		regmap_write(tcu->map, TCU_REG_TSSR, BIT(info->gate_bit));
++}
++
++static u8 ingenic_tcu_get_parent(struct clk_hw *hw)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	unsigned int val = 0;
++	int ret;
++
++	ret = regmap_read(tcu_clk->tcu->map, info->tcsr_reg, &val);
++	WARN_ONCE(ret < 0, "Unable to read TCSR %d", tcu_clk->idx);
++
++	return ffs(val & TCU_TCSR_PARENT_CLOCK_MASK) - 1;
++}
++
++static int ingenic_tcu_set_parent(struct clk_hw *hw, u8 idx)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	bool was_enabled;
++	int ret;
++
++	was_enabled = ingenic_tcu_enable_regs(hw);
++
++	ret = regmap_update_bits(tcu_clk->tcu->map, info->tcsr_reg,
++				 TCU_TCSR_PARENT_CLOCK_MASK, BIT(idx));
++	WARN_ONCE(ret < 0, "Unable to update TCSR %d", tcu_clk->idx);
++
++	if (!was_enabled)
++		ingenic_tcu_disable_regs(hw);
++
++	return 0;
++}
++
++static unsigned long ingenic_tcu_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	unsigned int prescale;
++	int ret;
++
++	ret = regmap_read(tcu_clk->tcu->map, info->tcsr_reg, &prescale);
++	WARN_ONCE(ret < 0, "Unable to read TCSR %d", tcu_clk->idx);
++
++	prescale = (prescale & TCU_TCSR_PRESCALE_MASK) >> TCU_TCSR_PRESCALE_LSB;
++
++	return parent_rate >> (prescale * 2);
++}
++
++static u8 ingenic_tcu_get_prescale(unsigned long rate, unsigned long req_rate)
++{
++	u8 prescale;
++
++	for (prescale = 0; prescale < 5; prescale++)
++		if ((rate >> (prescale * 2)) <= req_rate)
++			return prescale;
++
++	return 5; /* /1024 divider */
++}
++
++static long ingenic_tcu_round_rate(struct clk_hw *hw, unsigned long req_rate,
++		unsigned long *parent_rate)
++{
++	unsigned long rate = *parent_rate;
++	u8 prescale;
++
++	if (req_rate > rate)
++		return -EINVAL;
++
++	prescale = ingenic_tcu_get_prescale(rate, req_rate);
++
++	return rate >> (prescale * 2);
++}
++
++static int ingenic_tcu_set_rate(struct clk_hw *hw, unsigned long req_rate,
++		unsigned long parent_rate)
++{
++	struct ingenic_tcu_clk *tcu_clk = to_tcu_clk(hw);
++	const struct ingenic_tcu_clk_info *info = tcu_clk->info;
++	u8 prescale = ingenic_tcu_get_prescale(parent_rate, req_rate);
++	bool was_enabled;
++	int ret;
++
++	was_enabled = ingenic_tcu_enable_regs(hw);
++
++	ret = regmap_update_bits(tcu_clk->tcu->map, info->tcsr_reg,
++				 TCU_TCSR_PRESCALE_MASK,
++				 prescale << TCU_TCSR_PRESCALE_LSB);
++	WARN_ONCE(ret < 0, "Unable to update TCSR %d", tcu_clk->idx);
++
++	if (!was_enabled)
++		ingenic_tcu_disable_regs(hw);
++
++	return 0;
++}
++
++static const struct clk_ops ingenic_tcu_clk_ops = {
++	.get_parent	= ingenic_tcu_get_parent,
++	.set_parent	= ingenic_tcu_set_parent,
++
++	.recalc_rate	= ingenic_tcu_recalc_rate,
++	.round_rate	= ingenic_tcu_round_rate,
++	.set_rate	= ingenic_tcu_set_rate,
++
++	.enable		= ingenic_tcu_enable,
++	.disable	= ingenic_tcu_disable,
++	.is_enabled	= ingenic_tcu_is_enabled,
++};
++
++static const char * const ingenic_tcu_timer_parents[] = {
++	[TCU_PARENT_PCLK] = "pclk",
++	[TCU_PARENT_RTC]  = "rtc",
++	[TCU_PARENT_EXT]  = "ext",
++};
++
++#define DEF_TIMER(_name, _gate_bit, _tcsr)				\
++	{								\
++		.init_data = {						\
++			.name = _name,					\
++			.parent_names = ingenic_tcu_timer_parents,	\
++			.num_parents = ARRAY_SIZE(ingenic_tcu_timer_parents),\
++			.ops = &ingenic_tcu_clk_ops,			\
++			.flags = CLK_SET_RATE_UNGATE,			\
++		},							\
++		.gate_bit = _gate_bit,					\
++		.tcsr_reg = _tcsr,					\
++	}
++static const struct ingenic_tcu_clk_info ingenic_tcu_clk_info[] = {
++	[TCU_CLK_TIMER0] = DEF_TIMER("timer0", 0, TCU_REG_TCSRc(0)),
++	[TCU_CLK_TIMER1] = DEF_TIMER("timer1", 1, TCU_REG_TCSRc(1)),
++	[TCU_CLK_TIMER2] = DEF_TIMER("timer2", 2, TCU_REG_TCSRc(2)),
++	[TCU_CLK_TIMER3] = DEF_TIMER("timer3", 3, TCU_REG_TCSRc(3)),
++	[TCU_CLK_TIMER4] = DEF_TIMER("timer4", 4, TCU_REG_TCSRc(4)),
++	[TCU_CLK_TIMER5] = DEF_TIMER("timer5", 5, TCU_REG_TCSRc(5)),
++	[TCU_CLK_TIMER6] = DEF_TIMER("timer6", 6, TCU_REG_TCSRc(6)),
++	[TCU_CLK_TIMER7] = DEF_TIMER("timer7", 7, TCU_REG_TCSRc(7)),
++};
++
++static const struct ingenic_tcu_clk_info ingenic_tcu_watchdog_clk_info =
++					 DEF_TIMER("wdt", 16, TCU_REG_WDT_TCSR);
++static const struct ingenic_tcu_clk_info ingenic_tcu_ost_clk_info =
++					 DEF_TIMER("ost", 15, TCU_REG_OST_TCSR);
++#undef DEF_TIMER
++
++static int __init ingenic_tcu_register_clock(struct ingenic_tcu *tcu,
++			unsigned int idx, enum tcu_clk_parent parent,
++			const struct ingenic_tcu_clk_info *info,
++			struct clk_hw_onecell_data *clocks)
++{
++	struct ingenic_tcu_clk *tcu_clk;
++	int err;
++
++	tcu_clk = kzalloc(sizeof(*tcu_clk), GFP_KERNEL);
++	if (!tcu_clk)
++		return -ENOMEM;
++
++	tcu_clk->hw.init = &info->init_data;
++	tcu_clk->idx = idx;
++	tcu_clk->info = info;
++	tcu_clk->tcu = tcu;
++
++	/* Reset channel and clock divider, set default parent */
++	ingenic_tcu_enable_regs(&tcu_clk->hw);
++	regmap_update_bits(tcu->map, info->tcsr_reg, 0xffff, BIT(parent));
++	ingenic_tcu_disable_regs(&tcu_clk->hw);
++
++	err = clk_hw_register(NULL, &tcu_clk->hw);
++	if (err) {
++		kfree(tcu_clk);
++		return err;
++	}
++
++	clocks->hws[idx] = &tcu_clk->hw;
++
++	return 0;
++}
++
++static const struct ingenic_soc_info jz4740_soc_info = {
++	.num_channels = 8,
++	.has_ost = false,
++	.has_tcu_clk = true,
++};
++
++static const struct ingenic_soc_info jz4725b_soc_info = {
++	.num_channels = 6,
++	.has_ost = true,
++	.has_tcu_clk = true,
++};
++
++static const struct ingenic_soc_info jz4770_soc_info = {
++	.num_channels = 8,
++	.has_ost = true,
++	.has_tcu_clk = false,
++};
++
++static const struct of_device_id ingenic_tcu_of_match[] __initconst = {
++	{ .compatible = "ingenic,jz4740-tcu", .data = &jz4740_soc_info, },
++	{ .compatible = "ingenic,jz4725b-tcu", .data = &jz4725b_soc_info, },
++	{ .compatible = "ingenic,jz4770-tcu", .data = &jz4770_soc_info, },
++	{ /* sentinel */ }
++};
++
++static int __init ingenic_tcu_probe(struct device_node *np)
++{
++	const struct of_device_id *id = of_match_node(ingenic_tcu_of_match, np);
++	struct ingenic_tcu *tcu;
++	struct regmap *map;
++	unsigned int i;
++	int ret;
++
++	map = device_node_to_regmap(np);
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++
++	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
++	if (!tcu)
++		return -ENOMEM;
++
++	tcu->map = map;
++	tcu->soc_info = id->data;
++
++	if (tcu->soc_info->has_tcu_clk) {
++		tcu->clk = of_clk_get_by_name(np, "tcu");
++		if (IS_ERR(tcu->clk)) {
++			ret = PTR_ERR(tcu->clk);
++			pr_crit("Cannot get TCU clock\n");
++			goto err_free_tcu;
++		}
++
++		ret = clk_prepare_enable(tcu->clk);
++		if (ret) {
++			pr_crit("Unable to enable TCU clock\n");
++			goto err_put_clk;
++		}
++	}
++
++	tcu->clocks = kzalloc(sizeof(*tcu->clocks) +
++			      sizeof(*tcu->clocks->hws) * TCU_CLK_COUNT,
++			      GFP_KERNEL);
++	if (!tcu->clocks) {
++		ret = -ENOMEM;
++		goto err_clk_disable;
++	}
++
++	tcu->clocks->num = TCU_CLK_COUNT;
++
++	for (i = 0; i < tcu->soc_info->num_channels; i++) {
++		ret = ingenic_tcu_register_clock(tcu, i, TCU_PARENT_EXT,
++						 &ingenic_tcu_clk_info[i],
++						 tcu->clocks);
++		if (ret) {
++			pr_crit("cannot register clock %d\n", i);
++			goto err_unregister_timer_clocks;
++		}
++	}
++
++	/*
++	 * We set EXT as the default parent clock for all the TCU clocks
++	 * except for the watchdog one, where we set the RTC clock as the
++	 * parent. Since the EXT and PCLK are much faster than the RTC clock,
++	 * the watchdog would kick after a maximum time of 5s, and we might
++	 * want a slower kicking time.
++	 */
++	ret = ingenic_tcu_register_clock(tcu, TCU_CLK_WDT, TCU_PARENT_RTC,
++					 &ingenic_tcu_watchdog_clk_info,
++					 tcu->clocks);
++	if (ret) {
++		pr_crit("cannot register watchdog clock\n");
++		goto err_unregister_timer_clocks;
++	}
++
++	if (tcu->soc_info->has_ost) {
++		ret = ingenic_tcu_register_clock(tcu, TCU_CLK_OST,
++						 TCU_PARENT_EXT,
++						 &ingenic_tcu_ost_clk_info,
++						 tcu->clocks);
++		if (ret) {
++			pr_crit("cannot register ost clock\n");
++			goto err_unregister_watchdog_clock;
++		}
++	}
++
++	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, tcu->clocks);
++	if (ret) {
++		pr_crit("cannot add OF clock provider\n");
++		goto err_unregister_ost_clock;
++	}
++
++	ingenic_tcu = tcu;
++
++	return 0;
++
++err_unregister_ost_clock:
++	if (tcu->soc_info->has_ost)
++		clk_hw_unregister(tcu->clocks->hws[i + 1]);
++err_unregister_watchdog_clock:
++	clk_hw_unregister(tcu->clocks->hws[i]);
++err_unregister_timer_clocks:
++	for (i = 0; i < tcu->clocks->num; i++)
++		if (tcu->clocks->hws[i])
++			clk_hw_unregister(tcu->clocks->hws[i]);
++	kfree(tcu->clocks);
++err_clk_disable:
++	if (tcu->soc_info->has_tcu_clk)
++		clk_disable_unprepare(tcu->clk);
++err_put_clk:
++	if (tcu->soc_info->has_tcu_clk)
++		clk_put(tcu->clk);
++err_free_tcu:
++	kfree(tcu);
++	return ret;
++}
++
++static int __maybe_unused tcu_pm_suspend(void)
++{
++	struct ingenic_tcu *tcu = ingenic_tcu;
++
++	if (tcu->clk)
++		clk_disable(tcu->clk);
++
++	return 0;
++}
++
++static void __maybe_unused tcu_pm_resume(void)
++{
++	struct ingenic_tcu *tcu = ingenic_tcu;
++
++	if (tcu->clk)
++		clk_enable(tcu->clk);
++}
++
++static struct syscore_ops __maybe_unused tcu_pm_ops = {
++	.suspend = tcu_pm_suspend,
++	.resume = tcu_pm_resume,
++};
++
++static void __init ingenic_tcu_init(struct device_node *np)
++{
++	int ret = ingenic_tcu_probe(np);
++
++	if (ret)
++		pr_crit("Failed to initialize TCU clocks: %d\n", ret);
++
++	if (IS_ENABLED(CONFIG_PM_SLEEP))
++		register_syscore_ops(&tcu_pm_ops);
++}
++
++CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-tcu", ingenic_tcu_init);
++CLK_OF_DECLARE_DRIVER(jz4725b_cgu, "ingenic,jz4725b-tcu", ingenic_tcu_init);
++CLK_OF_DECLARE_DRIVER(jz4770_cgu, "ingenic,jz4770-tcu", ingenic_tcu_init);
 -- 
 2.21.0.593.g511ec345e18
 
