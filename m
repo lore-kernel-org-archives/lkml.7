@@ -2,75 +2,133 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAED7C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200DFC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05C620644
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563942573;
-	bh=OveqHMIRxgy8l8c4DZ8hum0ETgBRoNfJPeUqSZ1Fi+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LbK6VOjZmDm20U+SRYPknmwbTIa/8ngTndqL8T4PDT9p41ZYN0+gdGt9F1d0BDluB
-	 9GtktiiXF0sws66q2ZuQcAvgzVRpKH316/zolVVAWtX2sG0Vi4C//VxDeluRlsyfNh
-	 SeEQyUR1HjgJctnRrkogbG0zty0x5iJP6h49M28c=
+	by mail.kernel.org (Postfix) with ESMTP id E956921841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Li1yuMA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfGXE3c (ORCPT
+        id S1726230AbfGXEe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfGXE3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:29:32 -0400
-Received: from localhost (unknown [171.76.105.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EC620644;
-        Wed, 24 Jul 2019 04:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563942571;
-        bh=OveqHMIRxgy8l8c4DZ8hum0ETgBRoNfJPeUqSZ1Fi+o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TIHxVbhL9n7YZj9KwDL3qZWrr6DwqlTPSe7Zi9lCtt/4LRTmz30FpeAFLpJMm0nU5
-         FT6ii6hR7fueEMKInQDdr36MPfhcy1edNbBsrjTvukxQEXVByH5hOSkuguknKjHOXP
-         +Mb/OpKndVGqSau0OA34Xeei+aRghng3vszIZM6g=
-Date:   Wed, 24 Jul 2019 09:58:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Cc:     agross@kernel.org, david.brown@linaro.org,
-        gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        bjorn.andersson@linaro.org
-Subject: Re: [PATCH v6 0/5] soc: qcom: Add SoC info driver
-Message-ID: <20190724042819.GG12733@vkoul-mobl.Dlink>
-References: <20190723223515.27839-1-vaishali.thakkar@linaro.org>
+        Wed, 24 Jul 2019 00:34:59 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:19691 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfGXEe6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 00:34:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d37dfee0000>; Tue, 23 Jul 2019 21:34:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 21:34:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 21:34:57 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 04:34:56 +0000
+Subject: Re: [PATCH 07/12] vhost-scsi: convert put_page() to put_user_page*()
+To:     <john.hubbard@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <ceph-devel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <samba-technical@lists.samba.org>,
+        <v9fs-developer@lists.sourceforge.net>,
+        <virtualization@lists.linux-foundation.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <20190724042518.14363-1-jhubbard@nvidia.com>
+ <20190724042518.14363-8-jhubbard@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <de40950e-0801-b830-4c48-56e84de0c82b@nvidia.com>
+Date:   Tue, 23 Jul 2019 21:34:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723223515.27839-1-vaishali.thakkar@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190724042518.14363-8-jhubbard@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563942895; bh=5ycCVDmY+zemv5AT9YYK21afucrRr/p3DH8wHXRCnZg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Li1yuMA+fDKyuz/M4SCCN59d7ctSse1jfSTWQ3iZlTsXSlRURMkhcccjz+NjkScvQ
+         OT79Q+110UzH6ATtOAZE9TFWQjw4BLnCG5aUr/CalDFE2cW6KgzaPkPaa2VXwXXnY7
+         5/pADAmNdIG6y4v4o+nIoM+vpWxQn4IxAHbuuW5oIOtDNzIl/y2OpjmtWUHEk+W1aZ
+         olqi7E7lxyXO7wuTmjE0Zl5xPzM6XAPVnnMYc1B16d5wLkxA+Bss3XKDZ67aQwvlKh
+         DZPWPt41q1dZKdSXT2fR0lvzoisF0pX9tRbjvzPB2h5VmCo5KF3WlKIvbrQsfpbBjq
+         ftxyscOjUOrMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-07-19, 04:05, Vaishali Thakkar wrote:
-> This patchset adds SoC info driver which can provide information
-> such as Chip ID, Chip family and serial number about Qualcomm SoCs
-> to user space via sysfs. Furthermore, it allows userspace to get
-> information about custom attributes and various image version
-> information via debugfs.
-> 
-> The patchset cleanly applies on top of v5.2-rc7.
+On 7/23/19 9:25 PM, john.hubbard@gmail.com wrote:
+> From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>=20
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page().
+>=20
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+>=20
+> Changes from J=C3=A9r=C3=B4me's original patch:
+>=20
+> * Changed a WARN_ON to a BUG_ON.
+>=20
 
-And on v5.3-rc1 :) and I have tested this on db845c, seems to work fine
-for me
+Clearly, the above commit log has it backwards (this is quite my night
+for typos).  Please read that as "changed a BUG_ON to a WARN_ON".
 
-Tested-by: Vinod Koul <vkoul@kernel.org>
+I'll correct the commit description in next iteration of this patchset.
 
--- 
-~Vinod
+...
+
+> +	/*
+> +	 * Here in all cases we should have an IOVEC which use GUP. If that is
+> +	 * not the case then we will wrongly call put_user_page() and the page
+> +	 * refcount will go wrong (this is in vhost_scsi_release_cmd())
+> +	 */
+> +	WARN_ON(!iov_iter_get_pages_use_gup(iter));
+> +
+...
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
