@@ -2,120 +2,150 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2F6C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44502C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16A722ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F4322ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DWU4WjGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387410AbfGXORC (ORCPT
+        id S1727235AbfGXORC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 24 Jul 2019 10:17:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16617 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbfGXORC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:17:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 07:17:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="169940375"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Jul 2019 07:17:01 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 24 Jul 2019 07:17:00 -0700
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.211]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.251]) with mapi id 14.03.0439.000;
- Wed, 24 Jul 2019 07:17:00 -0700
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     Qian Cai <cai@lca.pw>, Nick Desaulniers <ndesaulniers@google.com>
-CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "jkim@freebsd.org" <jkim@freebsd.org>, Len Brown <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Topic: [PATCH] acpica: fix -Wnull-pointer-arithmetic warnings
-Thread-Index: AQHVPFEYIycQ0k5IUUyXy4NqYzTqpqbP0wgAgAAvDoCACLPGAIABkXSA//+Ut6A=
-Date:   Wed, 24 Jul 2019 14:17:00 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B96618DB@ORSMSX110.amr.corp.intel.com>
-References: <20190717033807.1207-1-cai@lca.pw>
-         <CAKwvOdmPX2DsUawcA0SzaFacjz==ACcfD8yDsbaS4eP4Es=Wzw@mail.gmail.com>
-         <73A4565B-837B-4E13-8B72-63F69BF408E7@lca.pw>
-         <94F2FBAB4432B54E8AACC7DFDE6C92E3B9661869@ORSMSX110.amr.corp.intel.com>
- <1563975605.11067.8.camel@lca.pw>
-In-Reply-To: <1563975605.11067.8.camel@lca.pw>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjQzMDk3MjEtZGJkZi00NDhkLWE2NjYtNzY3MGNkODBkZDdhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVXE1WTNsUUNTQWJPbTRuU2NKTXJtaUFKQmhaN1NKcEtRcTluTGNpN0dmZW9QaUhKWFd3U2NHbTZJb0Z1WGUzZCJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34887 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbfGXORB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:17:01 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u14so21053293pfn.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iVEa+BrbD+ybsnA2U1ljAFs3yPdamhmoGuSiTUjWPJ4=;
+        b=DWU4WjGAtgl8VCFFOjc8wXQ0g23uMAUtJpd38Z3oaJgwn4NfatixOvhmdpOdL+fxhG
+         e0wlc3X1shT5Iq30jjbbWGUReEBT4OBXlYiiQUhWx2Q7uiFMfOEneT8NH6f9J2qp0V5H
+         uul5tf2SvUAF38K7907CwJA6dKexcEorDJsv/KoSqA3HSUAO6tsOMxjz0hFsJBWrp9kB
+         d53dWGlSvFswyl6j+n5LUh4qGYRvo3+KwFNfAV8S+2jUqD0GvKKHxnABV1FWZ1+b1OBh
+         oB2T3ZDN/Zfw5qlFjUWW5qYsM2z/YZXngByjiqcmIeT7gWGze9CMbYqnOAvNwjkoL4TA
+         mEew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iVEa+BrbD+ybsnA2U1ljAFs3yPdamhmoGuSiTUjWPJ4=;
+        b=g0R1nCRRh8N/m8EuqScKL19rTLsfD72tQlmDv2o/2BLaRBpNTO9JWX56+z/ICDzM1K
+         koGJJjrlFvm2SiuZ+TAFVvNbVeSMpabsOqXTXxAQGxjipCX8kWVXRdsuykDl35BZiIXj
+         X5NzcKkPWamA7E9ugcD69t//l+7CP4VyS5FhKwqC1pN4wUy6YrzbBbrASA0kVm1WLiWJ
+         xgaIEBM73XdTRlCszcLPFGU5ezdUpgTxJtDZrZutlUHvedjQcMWcthNntaTGwEhnplwL
+         esxffDtDya67q3Gx0e4tNDRRrpUOn36pz1Vk5s/6NnnkUDiS5GmSGH2WeYCnp11L44hZ
+         XZsw==
+X-Gm-Message-State: APjAAAXxJ0g6GlVhkcc7mUysqJFdUPZDePpWg1jDz03Vw5Sv8JVZ2Q9r
+        PQ1GRcehOwwSuT9PZxavLcCqQ+DIMMOfZOC8a1UrvQ==
+X-Google-Smtp-Source: APXvYqz2dMxGxnq2kAfIP49TpeG4FcaV+yTvRZ4CcUcR9QT0oeQ2GoQPtuki1B+xbKFnrASZfeBQUkyN7t1WRbfNCv8=
+X-Received: by 2002:aa7:86c6:: with SMTP id h6mr11779914pfo.51.1563977820600;
+ Wed, 24 Jul 2019 07:17:00 -0700 (PDT)
 MIME-Version: 1.0
+References: <cover.1563904656.git.andreyknvl@google.com> <CAAeHK+yc0D_nd7nTRsY4=qcSx+eQR0VLut3uXMf4NEiE-VpeCw@mail.gmail.com>
+ <20190724140212.qzvbcx5j2gi5lcoj@willie-the-truck>
+In-Reply-To: <20190724140212.qzvbcx5j2gi5lcoj@willie-the-truck>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 24 Jul 2019 16:16:49 +0200
+Message-ID: <CAAeHK+xXzdQHpVXL7f1T2Ef2P7GwFmDMSaBH4VG8fT3=c_OnjQ@mail.gmail.com>
+Subject: Re: [PATCH v19 00/15] arm64: untag user pointers passed to the kernel
+To:     Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Kostya Serebryany <kcc@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBRaWFuIENhaSBbbWFpbHRvOmNh
-aUBsY2EucHddIA0KU2VudDogV2VkbmVzZGF5LCBKdWx5IDI0LCAyMDE5IDY6NDAgQU0NClRvOiBN
-b29yZSwgUm9iZXJ0IDxyb2JlcnQubW9vcmVAaW50ZWwuY29tPjsgTmljayBEZXNhdWxuaWVycyA8
-bmRlc2F1bG5pZXJzQGdvb2dsZS5jb20+DQpDYzogV3lzb2NraSwgUmFmYWVsIEogPHJhZmFlbC5q
-Lnd5c29ja2lAaW50ZWwuY29tPjsgU2NobWF1c3MsIEVyaWsgPGVyaWsuc2NobWF1c3NAaW50ZWwu
-Y29tPjsgamtpbUBmcmVlYnNkLm9yZzsgTGVuIEJyb3duIDxsZW5iQGtlcm5lbC5vcmc+OyBsaW51
-eC1hY3BpQHZnZXIua2VybmVsLm9yZzsgZGV2ZWxAYWNwaWNhLm9yZzsgY2xhbmctYnVpbHQtbGlu
-dXggPGNsYW5nLWJ1aWx0LWxpbnV4QGdvb2dsZWdyb3Vwcy5jb20+OyBMS01MIDxsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnPg0KU3ViamVjdDogUmU6IFtQQVRDSF0gYWNwaWNhOiBmaXggLVdu
-dWxsLXBvaW50ZXItYXJpdGhtZXRpYyB3YXJuaW5ncw0KDQpPbiBUdWUsIDIwMTktMDctMjMgYXQg
-MjA6NDkgKzAwMDAsIE1vb3JlLCBSb2JlcnQgd3JvdGU6DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBR
-aWFuIENhaSA8Y2FpQGxjYS5wdz4NCj4gPiA+IC0tLQ0KPiA+ID4gaW5jbHVkZS9hY3BpL2FjdHlw
-ZXMuaCB8IDQgKystLQ0KPiA+ID4gMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBk
-ZWxldGlvbnMoLSkNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvYWNwaS9hY3R5
-cGVzLmggYi9pbmNsdWRlL2FjcGkvYWN0eXBlcy5oIGluZGV4DQo+ID4gPiBhZDY4OTJhMjQwMTUu
-LjI1YjRhMzJkYTE3NyAxMDA2NDQNCj4gPiA+IC0tLSBhL2luY2x1ZGUvYWNwaS9hY3R5cGVzLmgN
-Cj4gPiA+ICsrKyBiL2luY2x1ZGUvYWNwaS9hY3R5cGVzLmgNCj4gPiA+IEBAIC01MDAsMTMgKzUw
-MCwxMyBAQCB0eXBlZGVmIHU2NCBhY3BpX2ludGVnZXI7DQo+ID4gPiANCj4gPiA+ICNkZWZpbmUg
-QUNQSV9DQVNUX1BUUih0LCBwKcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgKCh0ICopIChhY3Bp
-X3VpbnRwdHJfdCkgDQo+ID4gPiAocCkpICNkZWZpbmUgQUNQSV9DQVNUX0lORElSRUNUX1BUUih0
-LCBwKcKgwqDCoMKgKCh0ICoqKSANCj4gPiA+IChhY3BpX3VpbnRwdHJfdCkgKHApKSAtI2RlZmlu
-ZSBBQ1BJX0FERF9QVFIodCwgYSwgYinCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDQo+ID4gPiBBQ1BJ
-X0NBU1RfUFRSICh0LCAoQUNQSV9DQVNUX1BUUiAodTgsIChhKSkgKyAoYWNwaV9zaXplKShiKSkp
-DQo+ID4gPiArI2RlZmluZSBBQ1BJX0FERF9QVFIodCwgYSwgYinCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgQUNQSV9DQVNUX1BUUiAodCwgKGEpICsNCj4gPiA+IChhY3BpX3NpemUpKGIpKQ0KPiANCj4g
-V2UgaGF2ZSBzb21lIHF1ZXN0aW9ucyBjb25jZXJuaW5nIHRoaXMgY2hhbmdlLiBJZiAoYSkgaXMg
-bm90IGNhc3QgdG8gYSANCj4gdTgsIHRoZSBhZGRpdGlvbiB3aWxsIGJlIGluIHdoYXRldmVyIHVu
-aXRzIGFyZSBhcHByb3ByaWF0ZSBmb3IgKGEpIA0KPiBpLmUuLCB0aGUgdHlwZSBvZiAoYSkuIEhv
-d2V2ZXIsIHdlIHdhbnQgQUNQSV9BRERfUFRSIChBbmQgDQo+IEFDUElfU1VCX1BUUikgdG8gc2lt
-cGx5IHBlcmZvcm0gYSBieXRlIGFkZGl0aW9uIG9yIHN1YnRyYWN0aW9uIC0gdGh1cyANCj4gdGhl
-IGNhc3QgdG8gdTguIEkgYmVsaWV2ZSB0aGF0IGlzIHRoZSBvcmlnaW5hbCB0aGlua2luZyBiZWhp
-bmQgdGhlIG1hY3Jvcy4NCg0KSSBwb3N0ZWQgYSB2MiBhIHdoaWxlIGFnbywgYW5kIHNob3VsZCBj
-bGVhciB0aGlzIGNvbmNlcm4uDQoNCk9LIHRoZW4gdGhpcyBjaGFuZ2Ugb25seSBhZmZlY3RzIEFD
-UElfVE9fUE9JTlRFUj8NCg0KKyNkZWZpbmUgQUNQSV9UT19QT0lOVEVSKGkpICAgICAgICAgICAg
-ICBBQ1BJX0NBU1RfUFRSICh2b2lkLCBpKQ0KDQoNCj4gDQo+ID4gPiAjZGVmaW5lIEFDUElfU1VC
-X1BUUih0LCBhLCBiKcKgwqDCoMKgwqDCoMKgwqDCoMKgwqBBQ1BJX0NBU1RfUFRSICh0LCANCj4g
-PiA+IChBQ1BJX0NBU1RfUFRSICh1OCwgKGEpKSAtIChhY3BpX3NpemUpKGIpKSkgI2RlZmluZSAN
-Cj4gPiA+IEFDUElfUFRSX0RJRkYoYSwgYinCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCgoYWNw
-aV9zaXplKSAoQUNQSV9DQVNUX1BUUiAodTgsDQo+ID4gPiAoYSkpIC0gQUNQSV9DQVNUX1BUUiAo
-dTgsIChiKSkpKQ0KPiA+ID4gDQo+ID4gPiAvKiBQb2ludGVyL0ludGVnZXIgdHlwZSBjb252ZXJz
-aW9ucyAqLw0KPiA+ID4gDQo+ID4gPiAtI2RlZmluZSBBQ1BJX1RPX1BPSU5URVIoaSnCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgQUNQSV9BRERfUFRSICh2b2lkLCAodm9pZCANCj4gPiA+ICop
-IDAsDQo+ID4gPiAoYWNwaV9zaXplKSAoaSkpDQo+ID4gPiArI2RlZmluZSBBQ1BJX1RPX1BPSU5U
-RVIoaSnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQUNQSV9BRERfUFRSICh2b2lkLCAwLA0K
-PiA+ID4gKGFjcGlfc2l6ZSkgKGkpKQ0KPiA+IA0KPiA+IElJVUMsIHRoZXNlIGFyZSBhZGRpbmcg
-YGlgIHRvIE5VTEwgKG9yICh2b2lkKikwKT8gWCArIDAgPT0gWCA/DQo+ID4gLS0NCj4gPiBUaGFu
-a3MsDQo+ID4gfk5pY2sgRGVzYXVsbmllcnMNCj4gDQo+IA0K
+On Wed, Jul 24, 2019 at 4:02 PM Will Deacon <will@kernel.org> wrote:
+>
+> Hi Andrey,
+>
+> On Tue, Jul 23, 2019 at 08:03:29PM +0200, Andrey Konovalov wrote:
+> > On Tue, Jul 23, 2019 at 7:59 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> > >
+> > > === Overview
+> > >
+> > > arm64 has a feature called Top Byte Ignore, which allows to embed pointer
+> > > tags into the top byte of each pointer. Userspace programs (such as
+> > > HWASan, a memory debugging tool [1]) might use this feature and pass
+> > > tagged user pointers to the kernel through syscalls or other interfaces.
+> > >
+> > > Right now the kernel is already able to handle user faults with tagged
+> > > pointers, due to these patches:
+> > >
+> > > 1. 81cddd65 ("arm64: traps: fix userspace cache maintenance emulation on a
+> > >              tagged pointer")
+> > > 2. 7dcd9dd8 ("arm64: hw_breakpoint: fix watchpoint matching for tagged
+> > >               pointers")
+> > > 3. 276e9327 ("arm64: entry: improve data abort handling of tagged
+> > >               pointers")
+> > >
+> > > This patchset extends tagged pointer support to syscall arguments.
+>
+> [...]
+>
+> > Do you think this is ready to be merged?
+> >
+> > Should this go through the mm or the arm tree?
+>
+> I would certainly prefer to take at least the arm64 bits via the arm64 tree
+> (i.e. patches 1, 2 and 15). We also need a Documentation patch describing
+> the new ABI.
+
+Sounds good! Should I post those patches together with the
+Documentation patches from Vincenzo as a separate patchset?
+
+Vincenzo, could you share the last version of the Documentation patches?
+
+Thanks!
+
+>
+> Will
