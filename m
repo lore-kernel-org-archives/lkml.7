@@ -2,108 +2,149 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8A4C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A854C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A7A2190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563990673;
-	bh=/+zREwEAtGmwxLbsUnbNo0Rx8PZv5erB81VI4+AdOfE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q8RDDnqs6RKWoA6rw69TK3I7DAJZTMBWNKP9rvJ/5Wh9rAYKzqG1SKi1ic6MkZlpu
-	 yWPDId3nYh5ARBcBZknrkbLrr14gfq30KCwxaHpYduF84TexC0nxBOhP4JNA8Yf8/t
-	 mS8cpMGfuUlLoc1jjNVxWrTX2zbPg5dtUClxNEHA=
+	by mail.kernel.org (Postfix) with ESMTP id 60EDF2190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:51:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lkP+47eS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfGXRvM (ORCPT
+        id S1727650AbfGXRvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:51:12 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42295 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfGXRvM (ORCPT
+        Wed, 24 Jul 2019 13:51:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38456 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfGXRvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:51:12 -0400
-Received: by mail-lf1-f66.google.com with SMTP id s19so32566348lfb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=95+Ojj8whLDzTQfSvFpUfZPQNS2ad16YlfE2wY3FNvs=;
-        b=Q1otmVXyrcOvARrNHCq3mme+hGOPc0EnMeptu7eG3VCcjT/HkP54TR+dyDnM4qL9d5
-         FonTz95jDa6pthaSmRyHWkpw1Tde3zEXeGdzrSTuS5RS8pvNtLbrl34+D57HnUjtTzDS
-         e7q295+fYzIVl3K0F+jR//YtMKvddGwPmrsD4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=95+Ojj8whLDzTQfSvFpUfZPQNS2ad16YlfE2wY3FNvs=;
-        b=UgrKL4R/VQVw9nGFsrPn/C7UaG2TM8LIcgjTDsyXKEjRfVLYQKmqvt2tV5sHnK5JB4
-         L9bMpRPbB2rprlb/3TTizddTvrC0UKEVpXmdrkpEys6aPP2E4ZxLHfTLM/9mYaawuguw
-         LMBOHAOtlriu4aznk3+YNn/iqbcDI0+ELoqhAP2PF2wL1Cu8Rozu83fQsP52Lu8s8Cff
-         KX75sGAsRSQdYJ9p3GRyH680otVF82bZsNMrnfTsWxnV7EHGru64xAEe3JcSyRYBQXW+
-         61gWyqMCU2Wy3J87CY3SF9qLP7nGT6iOk+vlWiqyN5EN13T8WqmqppAwNtay/n91mgFC
-         SU9g==
-X-Gm-Message-State: APjAAAVxIKC1WIba/Tyw4xXneoyIcyJulsSMrwojbmu+Z/7RwHG6KMGL
-        avhI0dSZDuEMRk816uFSFdP7L0cAsHE=
-X-Google-Smtp-Source: APXvYqxIxULzOvLISGIW3oZN0fdWm+avt+gNfmiMWg29+O9YNo7tDNgHfOaFNYqNBQDDRgRlcYmoMg==
-X-Received: by 2002:a19:c7ca:: with SMTP id x193mr37923518lff.151.1563990669551;
-        Wed, 24 Jul 2019 10:51:09 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id p5sm8697586ljb.91.2019.07.24.10.51.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 10:51:09 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id x25so45406839ljh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:51:09 -0700 (PDT)
-X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr44841672ljj.156.1563990354068;
- Wed, 24 Jul 2019 10:45:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724144651.28272-1-christian@brauner.io> <20190724144651.28272-3-christian@brauner.io>
-In-Reply-To: <20190724144651.28272-3-christian@brauner.io>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 24 Jul 2019 10:45:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whZPKzbPQftNGFB=iaSZGTSXNkhUASWF2V53MwB+A4zAQ@mail.gmail.com>
-Message-ID: <CAHk-=whZPKzbPQftNGFB=iaSZGTSXNkhUASWF2V53MwB+A4zAQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] pidfd: add pidfd_wait()
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Andrew Lutomirski <luto@kernel.org>,
+        Wed, 24 Jul 2019 13:51:42 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OHdfUU134750;
+        Wed, 24 Jul 2019 17:50:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=NX/s/A5OLVDNZD4fNK87u3UpZfdfRBOaB3nXPLcsPas=;
+ b=lkP+47eSi6lNelJK4kH8PvDDkmDI4KwgfHOhbC5Lp/E4hBF1MY44i5mbaW+evRfZPfVk
+ R0E2hYBeVSx9InL7HjrmIAPY9jsoPtf007rUUpbwwU4kMeu5SwrRL/OaqngDPPnDxpRy
+ AejMJlnkqk7kWLvjxvzRIKfTgu0PhLBMNO6svrheEboBLTglFaBcAp8E2cYbg0nGn284
+ JFJedRP7waYMAXMhlD29ywDn9b0RVde89rNmiQn3yImeq7Z8T8QNjtY/7dNVqr76HLnN
+ PdLeHUc6OyBQYDGzt2p6cj94UzzJYNWaB+pds0fvtZPlZ+ppJhobynJmlWoICT2GKsSF 4w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2tx61by15s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 17:50:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OHcEMc018710;
+        Wed, 24 Jul 2019 17:50:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2tx60xv7j9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 17:50:28 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6OHoPsb022353;
+        Wed, 24 Jul 2019 17:50:25 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jul 2019 10:50:25 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [RFC PATCH 1/3] mm, reclaim: make should_continue_reclaim perform dryrun detection
+Date:   Wed, 24 Jul 2019 10:50:12 -0700
+Message-Id: <20190724175014.9935-2-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190724175014.9935-1-mike.kravetz@oracle.com>
+References: <20190724175014.9935-1-mike.kravetz@oracle.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907240191
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907240191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 7:47 AM Christian Brauner <christian@brauner.io> wrote:
->
-> This adds the pidfd_wait() syscall.
+From: Hillf Danton <hdanton@sina.com>
 
-I despise this patch.
+Address the issue of should_continue_reclaim continuing true too often
+for __GFP_RETRY_MAYFAIL attempts when !nr_reclaimed and nr_scanned.
+This could happen during hugetlb page allocation causing stalls for
+minutes or hours.
 
-Why can't this just be a new P_PIDFD flag, and then use
-"waitid(P_PIDFD, pidfd, ...);"
+Restructure code so that false will be returned in this case even if
+there are plenty of inactive pages.
 
-Yes, yes, yes, I realize that "pidfd" is of type "int", and waitid()
-takes an argument of type pid_t, but it's the same type in the end,
-and it does seem like the whole *point* of "waitid()" is that
-"idtype_t idtype" which tells you what kind of ID you're passing it.
+Need better description from Hillf Danton
+Need SOB from Hillf Danton
+---
+ mm/vmscan.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-               Linus
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f4fd02ae233e..484b6b1a954e 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2673,18 +2673,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+ 			return false;
+ 	}
+ 
+-	/*
+-	 * If we have not reclaimed enough pages for compaction and the
+-	 * inactive lists are large enough, continue reclaiming
+-	 */
+-	pages_for_compaction = compact_gap(sc->order);
+-	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
+-	if (get_nr_swap_pages() > 0)
+-		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
+-	if (sc->nr_reclaimed < pages_for_compaction &&
+-			inactive_lru_pages > pages_for_compaction)
+-		return true;
+-
+ 	/* If compaction would go ahead or the allocation would succeed, stop */
+ 	for (z = 0; z <= sc->reclaim_idx; z++) {
+ 		struct zone *zone = &pgdat->node_zones[z];
+@@ -2700,7 +2688,21 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
+ 			;
+ 		}
+ 	}
+-	return true;
++
++	/*
++	 * If we have not reclaimed enough pages for compaction and the
++	 * inactive lists are large enough, continue reclaiming
++	 */
++	pages_for_compaction = compact_gap(sc->order);
++	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
++	if (get_nr_swap_pages() > 0)
++		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
++
++	return inactive_lru_pages > pages_for_compaction &&
++		/*
++		 * avoid dryrun with plenty of inactive pages
++		 */
++		nr_scanned && nr_reclaimed;
+ }
+ 
+ static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
+-- 
+2.20.1
+
