@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80139C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246FBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577FA229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2D822ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996969;
-	bh=lBoiH6Nx6mDWJdh3wOy4LLKoi9AR/6mcBcELQLb9lRA=;
+	s=default; t=1563996971;
+	bh=81FLMvKyIW+Hbj1AKRYsesglV37r+KO7iH97GzPiGqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fp/0bDAn8EbCo6yCgdlXTpiapPkoU9hSTMyfgvd4h1zsU42MTejb35wACYsi/iJMX
-	 ZOuYgfnsZyIc9Sj0VEpA+i6vQLClo1uiL6rnUKAlq95AiMNwpExGW/HAsq0gb5Sq3R
-	 5/miT5VAgQCzzByeCp1MZxlyG18mJcf0Ronq9rXQ=
+	b=o28nw2x7Gb96zWCksTx4xn2bEv1ZrmCnFP1gnBrgMyRCyhqVVVoQh5BE9syOUVOp5
+	 npYLobCGJl/FPGu2cIJcVcSu/jbq+wZGfvCtWk18oB9Lkq+LtUO7v/PfeV3MkVndNd
+	 tOd3bQ8PkOyJTfu5QCyp/i3/gZMfVu3604mYOvbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389273AbfGXTgH (ORCPT
+        id S2389283AbfGXTgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35380 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389243AbfGXTgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:04 -0400
+        id S2389270AbfGXTgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B17CF229F3;
-        Wed, 24 Jul 2019 19:36:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C0B020659;
+        Wed, 24 Jul 2019 19:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996963;
-        bh=lBoiH6Nx6mDWJdh3wOy4LLKoi9AR/6mcBcELQLb9lRA=;
+        s=default; t=1563996966;
+        bh=81FLMvKyIW+Hbj1AKRYsesglV37r+KO7iH97GzPiGqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qrgmE6oGc+vAIB/1oTCJq6bSTbs2/Onn3IbVWEVbGpkAEOwwvquIwf1CVCDcWZCUL
-         wMnMml/GDOSz+sh8PLRxtQ3sp+G8XVDuSoTNtchw+021HaV85nxfzpqFbpHLwLcY95
-         IBumj4WqrvhNEm8MVLNraVJYkmjPxmE2UnWRUW34=
+        b=bde1zSdBZZF+9xQj6Ez6QmUSGIMYsSUeAn4MSbcLx7Wr7K47T1/xSn8hXvtDdIGkk
+         heHSxNlbE0jKCOWYuT0jwxidOc8+0KfuZev7NUCyuqzeeumegIygWKH0y96U3lbsOT
+         OB7K96rMdmtC2tMpBRN+PWRHVgPsjq0STobLQL5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.2 276/413] cifs: fix crash in smb2_compound_op()/smb2_set_next_command()
-Date:   Wed, 24 Jul 2019 21:19:27 +0200
-Message-Id: <20190724191756.022155125@linuxfoundation.org>
+        stable@vger.kernel.org, "Paulo Alcantara (SUSE)" <paulo@paulo.ac>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilove@microsoft.com>
+Subject: [PATCH 5.2 277/413] cifs: Properly handle auto disabling of serverino option
+Date:   Wed, 24 Jul 2019 21:19:28 +0200
+Message-Id: <20190724191756.112025678@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,118 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Paulo Alcantara (SUSE) <paulo@paulo.ac>
 
-commit 88a92c913cef09e70b1744a8877d177aa6cb2189 upstream.
+commit 29fbeb7a908a60a5ae8c50fbe171cb8fdcef1980 upstream.
 
-RHBZ: 1722704
+Fix mount options comparison when serverino option is turned off later
+in cifs_autodisable_serverino() and thus avoiding mismatch of new cifs
+mounts.
 
-In low memory situations the various SMB2_*_init() functions can fail
-to allocate a request PDU and thus leave the request iovector as NULL.
-
-If we don't check the return code for failure we end up calling
-smb2_set_next_command() with a NULL iovector causing a crash when it tries
-to dereference it.
-
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paulo Alcantara (SUSE) <paulo@paulo.ac>
 Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilove@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2inode.c |   12 ++++++++++++
- fs/cifs/smb2ops.c   |   11 ++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ fs/cifs/cifs_fs_sb.h |    5 +++++
+ fs/cifs/connect.c    |    8 ++++++--
+ fs/cifs/misc.c       |    1 +
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smb2inode.c
-+++ b/fs/cifs/smb2inode.c
-@@ -120,6 +120,8 @@ smb2_compound_op(const unsigned int xid,
- 				SMB2_O_INFO_FILE, 0,
- 				sizeof(struct smb2_file_all_info) +
- 					  PATH_MAX * 2, 0, NULL);
-+		if (rc)
-+			goto finished;
- 		smb2_set_next_command(tcon, &rqst[num_rqst]);
- 		smb2_set_related(&rqst[num_rqst++]);
- 		trace_smb3_query_info_compound_enter(xid, ses->Suid, tcon->tid,
-@@ -147,6 +149,8 @@ smb2_compound_op(const unsigned int xid,
- 					COMPOUND_FID, current->tgid,
- 					FILE_DISPOSITION_INFORMATION,
- 					SMB2_O_INFO_FILE, 0, data, size);
-+		if (rc)
-+			goto finished;
- 		smb2_set_next_command(tcon, &rqst[num_rqst]);
- 		smb2_set_related(&rqst[num_rqst++]);
- 		trace_smb3_rmdir_enter(xid, ses->Suid, tcon->tid, full_path);
-@@ -163,6 +167,8 @@ smb2_compound_op(const unsigned int xid,
- 					COMPOUND_FID, current->tgid,
- 					FILE_END_OF_FILE_INFORMATION,
- 					SMB2_O_INFO_FILE, 0, data, size);
-+		if (rc)
-+			goto finished;
- 		smb2_set_next_command(tcon, &rqst[num_rqst]);
- 		smb2_set_related(&rqst[num_rqst++]);
- 		trace_smb3_set_eof_enter(xid, ses->Suid, tcon->tid, full_path);
-@@ -180,6 +186,8 @@ smb2_compound_op(const unsigned int xid,
- 					COMPOUND_FID, current->tgid,
- 					FILE_BASIC_INFORMATION,
- 					SMB2_O_INFO_FILE, 0, data, size);
-+		if (rc)
-+			goto finished;
- 		smb2_set_next_command(tcon, &rqst[num_rqst]);
- 		smb2_set_related(&rqst[num_rqst++]);
- 		trace_smb3_set_info_compound_enter(xid, ses->Suid, tcon->tid,
-@@ -206,6 +214,8 @@ smb2_compound_op(const unsigned int xid,
- 					COMPOUND_FID, current->tgid,
- 					FILE_RENAME_INFORMATION,
- 					SMB2_O_INFO_FILE, 0, data, size);
-+		if (rc)
-+			goto finished;
- 		smb2_set_next_command(tcon, &rqst[num_rqst]);
- 		smb2_set_related(&rqst[num_rqst++]);
- 		trace_smb3_rename_enter(xid, ses->Suid, tcon->tid, full_path);
-@@ -231,6 +241,8 @@ smb2_compound_op(const unsigned int xid,
- 					COMPOUND_FID, current->tgid,
- 					FILE_LINK_INFORMATION,
- 					SMB2_O_INFO_FILE, 0, data, size);
-+		if (rc)
-+			goto finished;
- 		smb2_set_next_command(tcon, &rqst[num_rqst]);
- 		smb2_set_related(&rqst[num_rqst++]);
- 		trace_smb3_hardlink_enter(xid, ses->Suid, tcon->tid, full_path);
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -2027,6 +2027,10 @@ smb2_set_related(struct smb_rqst *rqst)
- 	struct smb2_sync_hdr *shdr;
+--- a/fs/cifs/cifs_fs_sb.h
++++ b/fs/cifs/cifs_fs_sb.h
+@@ -83,5 +83,10 @@ struct cifs_sb_info {
+ 	 * failover properly.
+ 	 */
+ 	char *origin_fullpath; /* \\HOST\SHARE\[OPTIONAL PATH] */
++	/*
++	 * Indicate whether serverino option was turned off later
++	 * (cifs_autodisable_serverino) in order to match new mounts.
++	 */
++	bool mnt_cifs_serverino_autodisabled;
+ };
+ #endif				/* _CIFS_FS_SB_H */
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3460,12 +3460,16 @@ compare_mount_options(struct super_block
+ {
+ 	struct cifs_sb_info *old = CIFS_SB(sb);
+ 	struct cifs_sb_info *new = mnt_data->cifs_sb;
++	unsigned int oldflags = old->mnt_cifs_flags & CIFS_MOUNT_MASK;
++	unsigned int newflags = new->mnt_cifs_flags & CIFS_MOUNT_MASK;
  
- 	shdr = (struct smb2_sync_hdr *)(rqst->rq_iov[0].iov_base);
-+	if (shdr == NULL) {
-+		cifs_dbg(FYI, "shdr NULL in smb2_set_related\n");
-+		return;
-+	}
- 	shdr->Flags |= SMB2_FLAGS_RELATED_OPERATIONS;
- }
+ 	if ((sb->s_flags & CIFS_MS_MASK) != (mnt_data->flags & CIFS_MS_MASK))
+ 		return 0;
  
-@@ -2041,6 +2045,12 @@ smb2_set_next_command(struct cifs_tcon *
- 	unsigned long len = smb_rqst_len(server, rqst);
- 	int i, num_padding;
- 
-+	shdr = (struct smb2_sync_hdr *)(rqst->rq_iov[0].iov_base);
-+	if (shdr == NULL) {
-+		cifs_dbg(FYI, "shdr NULL in smb2_set_next_command\n");
-+		return;
-+	}
+-	if ((old->mnt_cifs_flags & CIFS_MOUNT_MASK) !=
+-	    (new->mnt_cifs_flags & CIFS_MOUNT_MASK))
++	if (old->mnt_cifs_serverino_autodisabled)
++		newflags &= ~CIFS_MOUNT_SERVER_INUM;
 +
- 	/* SMB headers in a compound are 8 byte aligned. */
++	if (oldflags != newflags)
+ 		return 0;
  
- 	/* No padding needed */
-@@ -2080,7 +2090,6 @@ smb2_set_next_command(struct cifs_tcon *
- 	}
+ 	/*
+--- a/fs/cifs/misc.c
++++ b/fs/cifs/misc.c
+@@ -539,6 +539,7 @@ cifs_autodisable_serverino(struct cifs_s
+ 			tcon = cifs_sb_master_tcon(cifs_sb);
  
-  finished:
--	shdr = (struct smb2_sync_hdr *)(rqst->rq_iov[0].iov_base);
- 	shdr->NextCommand = cpu_to_le32(len);
- }
- 
+ 		cifs_sb->mnt_cifs_flags &= ~CIFS_MOUNT_SERVER_INUM;
++		cifs_sb->mnt_cifs_serverino_autodisabled = true;
+ 		cifs_dbg(VFS, "Autodisabling the use of server inode numbers on %s.\n",
+ 			 tcon ? tcon->treeName : "new server");
+ 		cifs_dbg(VFS, "The server doesn't seem to support them properly or the files might be on different servers (DFS).\n");
 
 
