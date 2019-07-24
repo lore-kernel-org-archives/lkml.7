@@ -2,70 +2,121 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1F3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A94C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5AB1217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DA9217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:14:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWNkNy2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfGXSOh (ORCPT
+        id S1728130AbfGXSOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:14:37 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:49442 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfGXSOh (ORCPT
+        Wed, 24 Jul 2019 14:14:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42678 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbfGXSOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:14:37 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id F0DF3154086E4;
-        Wed, 24 Jul 2019 11:14:35 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 11:14:35 -0700 (PDT)
-Message-Id: <20190724.111435.1790922345411569346.davem@davemloft.net>
-To:     hslester96@gmail.com
-Cc:     klassert@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com,
-        rmody@marvell.com, michael.chan@broadcom.com,
-        siva.kallam@broadcom.com, prashant@broadcom.com,
-        GR-Linux-NIC-Dev@marvell.com, jeffrey.t.kirsher@intel.com,
-        cooldavid@cooldavid.org, intel-wired-lan@lists.osuosl.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/8] Use dev_get_drvdata where possible
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190724060512.23899-1-hslester96@gmail.com>
-References: <20190724060512.23899-1-hslester96@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 24 Jul 2019 11:14:36 -0700 (PDT)
+        Wed, 24 Jul 2019 14:14:53 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so48821400otn.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qBB4NIUezJfffKo6WArQqxSmCR6R1iK7nA9Imt65nrA=;
+        b=lWNkNy2HocdqrSPSjM86VbsoPLqsarjkWdpIa+rbyfMi2VVwhNVXgnmJbHOpO1W7FT
+         LQMzXGrgksgL9tGb50G9TiUwzlVWVbhzfAN6YgzYvj9m0yrQTGiGJQ6UBv0FRFiUeI0Y
+         0Pu6bKOZZAfkCCJlOZkDOX7Sot7v/XhX7gKi7M6McIRW/+SPegOlDe8lp/F2tcsjSooD
+         yoc081wlkW7WCUVG3wHzzrnhXOxIHoMB4QEeSlGWs5yVG93jDJsFjxlbNrryYK6ptn6i
+         6hV19p7RkJbrSN7B0r9AaIRRx/7XrpljhjtHs8tAhBqO1U4zdzM1POwxhMmkzWwsle0x
+         TalA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qBB4NIUezJfffKo6WArQqxSmCR6R1iK7nA9Imt65nrA=;
+        b=iVidYSagnqQN2NH5D17296fN3lg+ML+yJVvW2HrKlh/L24d6utGsp57JRjHyip58nX
+         fpoYI7lAMal91A51RRIBIqornmuRY6hX6Q5w4CYttUT3F+4vxqOWeh/xL2g2HL0LNWiA
+         Jy28CEqXd87Kozrb9OV27TAg2o1K9p+YlU2FLUhQTNiJADQ79pTiCc9GW1gjFfkYVc2y
+         P4tCnEpDenK2T7clFj8ulqGi6aoGsLbEe0K8MYCZ1jagkIoFJdiWPw5ICLicE5M4KWGC
+         KwwqA5VPt5qKnoAM4Ag8kEQKgrZjPW2rhQZEUxuR4usJHQJpwzV+LupP+Y709aLHDh/v
+         BpRg==
+X-Gm-Message-State: APjAAAXrZcfWSbeAWLhhaRUtkTPgujhiv/8awBM1+uvgRaZHPNfGnvku
+        PbFjHekioR0u9GdqEw/6qq9J3DABR6VTlno0z6TtEw==
+X-Google-Smtp-Source: APXvYqwHy5zLM+W8es+5EDo+pppJ0LUeZRmJbRYgUyIKhGpRl4E7tMR2+zkmduhMX/+diAhhSgIEktJcOUDM+vPLN9k=
+X-Received: by 2002:a05:6830:15cd:: with SMTP id j13mr44476599otr.110.1563992092278;
+ Wed, 24 Jul 2019 11:14:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190724144651.28272-1-christian@brauner.io> <20190724144651.28272-5-christian@brauner.io>
+In-Reply-To: <20190724144651.28272-5-christian@brauner.io>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 24 Jul 2019 20:14:26 +0200
+Message-ID: <CAG48ez3nuY__qvctoOnX7mQbjjP4chEs4K-OPxSQficiPLS18w@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
+To:     Christian Brauner <christian@brauner.io>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        kernel-team <kernel-team@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
-Date: Wed, 24 Jul 2019 14:05:12 +0800
+On Wed, Jul 24, 2019 at 4:48 PM Christian Brauner <christian@brauner.io> wrote:
+> If CLONE_WAIT_PID is set the newly created process will not be
+> considered by process wait requests that wait generically on children
+> such as:
+>
+>         syscall(__NR_wait4, -1, wstatus, options, rusage)
+>         syscall(__NR_waitpid, -1, wstatus, options)
+>         syscall(__NR_waitid, P_ALL, -1, siginfo, options, rusage)
+>         syscall(__NR_waitid, P_PGID, -1, siginfo, options, rusage)
+>         syscall(__NR_waitpid, -pid, wstatus, options)
+>         syscall(__NR_wait4, -pid, wstatus, options, rusage)
+>
+> A process created with CLONE_WAIT_PID can only be waited upon with a
+> focussed wait call. This ensures that processes can be reaped even if
+> all file descriptors referring to it are closed.
+[...]
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index baaff6570517..a067f3876e2e 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1910,6 +1910,8 @@ static __latent_entropy struct task_struct *copy_process(
+>         delayacct_tsk_init(p);  /* Must remain after dup_task_struct() */
+>         p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE);
+>         p->flags |= PF_FORKNOEXEC;
+> +       if (clone_flags & CLONE_WAIT_PID)
+> +               p->flags |= PF_WAIT_PID;
+>         INIT_LIST_HEAD(&p->children);
+>         INIT_LIST_HEAD(&p->sibling);
+>         rcu_copy_process(p);
 
-> These patches use dev_get_drvdata instead of
-> using to_pci_dev + pci_get_drvdata to make
-> code simpler where possible.
-> 
-> Changelog:
-> 
-> v1 -> v2:
-> - Change pci_set_drvdata to dev_set_drvdata
->   to keep consistency.
-
-Some of these patches were applied yesterday, weren't they?
-
-Please take that into consideration when you repost, especially
-when the maintainer(s) explicitly reply to your patches saying
-"Applied." or similar like I always do.
-
-Thanks.
+This means that if a process with PF_WAIT_PID forks, the child
+inherits the flag, right? That seems unintended? You might have to add
+something like "if (clone_flags & CLONE_THREAD == 0) p->flags &=
+~PF_WAIT_PID;" before this. (I think threads do have to inherit the
+flag so that the case where a non-leader thread of the child goes
+through execve and steals the leader's identity is handled properly.)
+Or you could cram it somewhere into signal_struct instead of on the
+task - that might be a more logical place for it?
