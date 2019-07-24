@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0A1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5D9C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BEA205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC587206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998212;
-	bh=dW9JTn8nEaaE0+3GmnwWqHXGXU+tjSb0jTUMRVNkOfo=;
+	s=default; t=1563998214;
+	bh=hHoy37aCFdmmPLY5kqzFHCwHE1tIq9qSaOS1bN6/aj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tw5HppkpvBZSSgt78Mj6Hz8eDWSuVJV2zhgRN91pl7kmJLYMOTvReEJOzgt+sSsfG
-	 VMQi/59MZh9VNiLmBXLbLH52cnUTk7oJ6yU9TngZWObHZDDWmC39t1LSsAnz/m+VzH
-	 0kmJwvX4uIgf3mm3CRIa3DirY3XsTG4/ysd7RO3w=
+	b=lxSJzHvTv2IvvHQ/HiWuOZNiagc+SyL7r8opIjdm1p6GVBkXbNSaCHNOPqvBNcnK8
+	 e4q2nlKd9tZDBVyOC0A3UEVnlslWn2fmQo3V80ZxQntpmuR1aJY0cXZTt3f8/GyCxY
+	 MRhgfTSycr8Yzd9dUkpb7cA5yZP4JHr18u1Xng5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391820AbfGXT4v (ORCPT
+        id S2404714AbfGXT4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:56:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41550 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404404AbfGXT4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:48 -0400
+        id S2404706AbfGXT4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0A3021873;
-        Wed, 24 Jul 2019 19:56:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F7CE205C9;
+        Wed, 24 Jul 2019 19:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998207;
-        bh=dW9JTn8nEaaE0+3GmnwWqHXGXU+tjSb0jTUMRVNkOfo=;
+        s=default; t=1563998204;
+        bh=hHoy37aCFdmmPLY5kqzFHCwHE1tIq9qSaOS1bN6/aj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQJwLEtYGm2dRoY6veUq8qgmRb0E4sCzfXEYWwyTucMLOeJZQMIducQa8qUscuCuV
-         dMOl74pPwU9ufDaEedhMpOXm+0UZ46LwoEHG6Q30lWOat8Sy1g7aB1frAsTVJ/BOSy
-         NCEK0shqXmOhcXaleOzluHiObrJeL714mrbMUndU=
+        b=Ou7vLlD71VDBIJv8Yhwze2L+FnylZlQr0RKt74y7XSEfbJseW2paaS5EPmqThWeN3
+         PND7C/lkapKeZbu5YqnSHfSYM9Nw9u2+qLHEppFBrd/ecKVbJyQnhythCXNPfN8M9z
+         1VysL8fR6GBXoqn/bctyiXrOvhtgxyTjjl198pGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 283/371] lib/scatterlist: Fix mapping iterator when sg->offset is greater than PAGE_SIZE
-Date:   Wed, 24 Jul 2019 21:20:35 +0200
-Message-Id: <20190724191745.573167231@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.1 282/371] SUNRPC: Ensure the bvecs are reset when we re-encode the RPC request
+Date:   Wed, 24 Jul 2019 21:20:34 +0200
+Message-Id: <20190724191745.495058345@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,57 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit aeb87246537a83c2aff482f3f34a2e0991e02cbc upstream.
+commit 75369089820473eac45e9ddd970081901a373c08 upstream.
 
-All mapping iterator logic is based on the assumption that sg->offset
-is always lower than PAGE_SIZE.
+The bvec tracks the list of pages, so if the number of pages changes
+due to a re-encode, we need to reset the bvec as well.
 
-But there are situations where sg->offset is such that the SG item
-is on the second page. In that case sg_copy_to_buffer() fails
-properly copying the data into the buffer. One of the reason is
-that the data will be outside the kmapped area used to access that
-data.
-
-This patch fixes the issue by adjusting the mapping iterator
-offset and pgoffset fields such that offset is always lower than
-PAGE_SIZE.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 4225fc8555a9 ("lib/scatterlist: use page iterator in the mapping iterator")
-Cc: stable@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 277e4ab7d530 ("SUNRPC: Simplify TCP receive code by switching...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.20+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/scatterlist.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/sunrpc/clnt.c     |    3 +--
+ net/sunrpc/xprt.c     |    2 ++
+ net/sunrpc/xprtsock.c |    1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -678,17 +678,18 @@ static bool sg_miter_get_next_page(struc
- {
- 	if (!miter->__remaining) {
- 		struct scatterlist *sg;
--		unsigned long pgoffset;
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -1767,6 +1767,7 @@ rpc_xdr_encode(struct rpc_task *task)
+ 	req->rq_snd_buf.head[0].iov_len = 0;
+ 	xdr_init_encode(&xdr, &req->rq_snd_buf,
+ 			req->rq_snd_buf.head[0].iov_base, req);
++	xdr_free_bvec(&req->rq_snd_buf);
+ 	if (rpc_encode_header(task, &xdr))
+ 		return;
  
- 		if (!__sg_page_iter_next(&miter->piter))
- 			return false;
- 
- 		sg = miter->piter.sg;
--		pgoffset = miter->piter.sg_pgoffset;
- 
--		miter->__offset = pgoffset ? 0 : sg->offset;
-+		miter->__offset = miter->piter.sg_pgoffset ? 0 : sg->offset;
-+		miter->piter.sg_pgoffset += miter->__offset >> PAGE_SHIFT;
-+		miter->__offset &= PAGE_SIZE - 1;
- 		miter->__remaining = sg->offset + sg->length -
--				(pgoffset << PAGE_SHIFT) - miter->__offset;
-+				     (miter->piter.sg_pgoffset << PAGE_SHIFT) -
-+				     miter->__offset;
- 		miter->__remaining = min_t(unsigned long, miter->__remaining,
- 					   PAGE_SIZE - miter->__offset);
+@@ -1799,8 +1800,6 @@ call_encode(struct rpc_task *task)
+ 			rpc_exit(task, task->tk_status);
+ 		}
+ 		return;
+-	} else {
+-		xprt_request_prepare(task->tk_rqstp);
  	}
+ 
+ 	/* Add task to reply queue before transmission to avoid races */
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -1006,6 +1006,8 @@ xprt_request_enqueue_receive(struct rpc_
+ 
+ 	if (!xprt_request_need_enqueue_receive(task, req))
+ 		return;
++
++	xprt_request_prepare(task->tk_rqstp);
+ 	spin_lock(&xprt->queue_lock);
+ 
+ 	/* Update the softirq receive buffer */
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -909,6 +909,7 @@ static int xs_nospace(struct rpc_rqst *r
+ static void
+ xs_stream_prepare_request(struct rpc_rqst *req)
+ {
++	xdr_free_bvec(&req->rq_rcv_buf);
+ 	req->rq_task->tk_status = xdr_alloc_bvec(&req->rq_rcv_buf, GFP_KERNEL);
+ }
+ 
 
 
