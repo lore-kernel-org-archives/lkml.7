@@ -2,155 +2,129 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03941C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29C7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE61A2238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E7E22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563995922;
+	bh=pMYQk+o/fu9IEH/RzuK9c4CZcXwAuqQc2Vag4URpoI8=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=L5KCaArkEP9OYY4N6Fg9nsOzWcBIijkIiUTaUTsLWW5HXuURgRyKBTwHtGplAoyJY
+	 AhV7nEHpXVMAvlXkLLjg8DrxeQyydIaoWfZltMsZ7DauCdu/rA6Xm4BOdOAIcirlU4
+	 Leig4nUQF2nU7Gx/ajCLW1LoShz0qzu15fkCbo+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbfGXTSe (ORCPT
+        id S1728944AbfGXTSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:18:34 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:38328 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728969AbfGXTSI (ORCPT
+        Wed, 24 Jul 2019 15:18:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34626 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726430AbfGXTSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:18:08 -0400
-Received: by mail-io1-f70.google.com with SMTP id h4so52227543iol.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:18:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=WTTYbLE73AWlaT+4DUpRkatPF3o10cRfnbNcZrdiW7k=;
-        b=V46gZjULwm1crmo+siCDLKPkvcMFpTlJt/ZOh2zw3F4YhIt4WNxVTq3FXxNIl7ofuv
-         0eoAF/5jnL4fxmtkIYLQnR8jmzeT/msEO3A+dXa1IiVO8wfJvBgSzFfGL8cEy4A/OyY0
-         uM8R4EeEXv6bkiS04KOcUtOTKz/vQNOMEtg9b+FUcQJ+bIK40Qn3takHQOjov6j6ENFm
-         gRW8iG2yJ5DdYyb3Ua9GSmqSAGHUnhmlbmKeCk9Ku5AzhGABWJviFjDfqNMxMDStUtgU
-         QwVKg4OZ6DRUTZmSbga9xBVpW+uX620CX4p9AZOGInvvuwhcShORHTh1UY4fJduq4yui
-         L3kQ==
-X-Gm-Message-State: APjAAAVZlu41GMyJnemqXdWYshoBXDI62Ji3PuiYmbDMwsZLaE2rf/gz
-        HhVE3BlWP+Md8hKo5hU48l6+/+XidTtV3RQIec15Ky5gENRY
-X-Google-Smtp-Source: APXvYqzfdGDIebjboIFMguNwKODZmojQT3sEkbs06YCmnVrHK53S2FZaVnW2oYYy9NsTU9Yqk2XE2ERshhGzs9H51ajBfjEKzgop
-MIME-Version: 1.0
-X-Received: by 2002:a6b:6d08:: with SMTP id a8mr69580148iod.191.1563995887803;
- Wed, 24 Jul 2019 12:18:07 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 12:18:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000052ad6b058e722ba4@google.com>
-Subject: memory leak in vq_meta_prefetch
-From:   syzbot <syzbot+a871c1e6ea00685e73d7@syzkaller.appspotmail.com>
-To:     alexandre.belloni@free-electrons.com, catalin.marinas@arm.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        nicolas.ferre@atmel.com, robh@kernel.org, sre@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 24 Jul 2019 15:18:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=zLOyjuMGLnZd3b5xW00mz+HMld+XrRBlTLTieGu4vyw=; b=tsNLOsuRwjgi
+        qNH52NAUZSpkDKc1q6m53Zz+mLddr7qhVvPMIQ/InszAffGBTrDIQQpnutj82V399SnYfj1S3xWRl
+        ICzdufECff83TpPEyc172roOAPgGj14PjXDNDtOm/zQMf/+4StjwhAvgNs5spWUGuWDOdHICCRT+q
+        oK4+Y=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hqMm5-00005G-78; Wed, 24 Jul 2019 19:18:05 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id ADA792742BAC; Wed, 24 Jul 2019 20:18:04 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     "Cc:"@sirena.org.uk, "Cc:"@sirena.org.uk,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: dw-pci: Use dev_get_drvdata" to the spi tree
+In-Reply-To: <20190724122331.21856-1-hslester96@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190724191804.ADA792742BAC@ypsilon.sirena.org.uk>
+Date:   Wed, 24 Jul 2019 20:18:04 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The patch
 
-syzbot found the following crash on:
+   spi: dw-pci: Use dev_get_drvdata
 
-HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15fffef4600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8de7d700ea5ac607
-dashboard link: https://syzkaller.appspot.com/bug?extid=a871c1e6ea00685e73d7
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127b0334600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12609e94600000
+has been applied to the spi tree at
 
-The bug was bisected to:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
-commit 0e5f7d0b39e1f184dc25e3adb580c79e85332167
-Author: Nicolas Ferre <nicolas.ferre@atmel.com>
-Date:   Wed Mar 16 13:19:49 2016 +0000
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-     ARM: dts: at91: shdwc binding: add new shutdown controller documentation
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16c6d53fa00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15c6d53fa00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11c6d53fa00000
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a871c1e6ea00685e73d7@syzkaller.appspotmail.com
-Fixes: 0e5f7d0b39e1 ("ARM: dts: at91: shdwc binding: add new shutdown  
-controller documentation")
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88811b327cc0 (size 32):
-   comm "vhost-7201", pid 7205, jiffies 4294952492 (age 19.700s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000009e106308>] kmemleak_alloc_recursive  
-/./include/linux/kmemleak.h:43 [inline]
-     [<000000009e106308>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-     [<000000009e106308>] slab_alloc /mm/slab.c:3319 [inline]
-     [<000000009e106308>] kmem_cache_alloc_trace+0x145/0x280 /mm/slab.c:3548
-     [<00000000ed2eec2d>] kmalloc /./include/linux/slab.h:552 [inline]
-     [<00000000ed2eec2d>] vhost_map_prefetch /drivers/vhost/vhost.c:877  
-[inline]
-     [<00000000ed2eec2d>] vhost_vq_map_prefetch /drivers/vhost/vhost.c:1838  
-[inline]
-     [<00000000ed2eec2d>] vq_meta_prefetch+0x18e/0x350  
-/drivers/vhost/vhost.c:1849
-     [<000000009d9c11b8>] handle_rx+0x9d/0xc00 /drivers/vhost/net.c:1128
-     [<000000008f883d86>] handle_rx_net+0x19/0x20 /drivers/vhost/net.c:1270
-     [<00000000577ffdd8>] vhost_worker+0xc6/0x120 /drivers/vhost/vhost.c:519
-     [<000000001201f3db>] kthread+0x13e/0x160 /kernel/kthread.c:255
-     [<00000000093cd85a>] ret_from_fork+0x1f/0x30  
-/arch/x86/entry/entry_64.S:352
+Thanks,
+Mark
 
-BUG: memory leak
-unreferenced object 0xffff88811b327cc0 (size 32):
-   comm "vhost-7201", pid 7205, jiffies 4294952492 (age 20.600s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000009e106308>] kmemleak_alloc_recursive  
-/./include/linux/kmemleak.h:43 [inline]
-     [<000000009e106308>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-     [<000000009e106308>] slab_alloc /mm/slab.c:3319 [inline]
-     [<000000009e106308>] kmem_cache_alloc_trace+0x145/0x280 /mm/slab.c:3548
-     [<00000000ed2eec2d>] kmalloc /./include/linux/slab.h:552 [inline]
-     [<00000000ed2eec2d>] vhost_map_prefetch /drivers/vhost/vhost.c:877  
-[inline]
-     [<00000000ed2eec2d>] vhost_vq_map_prefetch /drivers/vhost/vhost.c:1838  
-[inline]
-     [<00000000ed2eec2d>] vq_meta_prefetch+0x18e/0x350  
-/drivers/vhost/vhost.c:1849
-     [<000000009d9c11b8>] handle_rx+0x9d/0xc00 /drivers/vhost/net.c:1128
-     [<000000008f883d86>] handle_rx_net+0x19/0x20 /drivers/vhost/net.c:1270
-     [<00000000577ffdd8>] vhost_worker+0xc6/0x120 /drivers/vhost/vhost.c:519
-     [<000000001201f3db>] kthread+0x13e/0x160 /kernel/kthread.c:255
-     [<00000000093cd85a>] ret_from_fork+0x1f/0x30  
-/arch/x86/entry/entry_64.S:352
+From 2a3b6f7b02cd141c990c6f5aed41070b5b7f4a7d Mon Sep 17 00:00:00 2001
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Wed, 24 Jul 2019 20:23:31 +0800
+Subject: [PATCH] spi: dw-pci: Use dev_get_drvdata
 
+Instead of using to_pci_dev + pci_get_drvdata,
+use dev_get_drvdata to make code simpler.
 
-
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20190724122331.21856-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/spi/spi-dw-pci.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
+index 9651679ee7f7..c1e2401cace0 100644
+--- a/drivers/spi/spi-dw-pci.c
++++ b/drivers/spi/spi-dw-pci.c
+@@ -98,16 +98,14 @@ static void spi_pci_remove(struct pci_dev *pdev)
+ #ifdef CONFIG_PM_SLEEP
+ static int spi_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct dw_spi *dws = pci_get_drvdata(pdev);
++	struct dw_spi *dws = dev_get_drvdata(dev);
+ 
+ 	return dw_spi_suspend_host(dws);
+ }
+ 
+ static int spi_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct dw_spi *dws = pci_get_drvdata(pdev);
++	struct dw_spi *dws = dev_get_drvdata(dev);
+ 
+ 	return dw_spi_resume_host(dws);
+ }
+-- 
+2.20.1
+
