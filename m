@@ -2,180 +2,107 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CE8C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF37C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A364229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563961276;
-	bh=23XZBg4Nkt5YMAlbGVsTjJtCT1QBKJOW5dSh6Wmm15Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vIcLnhP4ouiWG+3E5XQuLEUv2CNXvx8kO6e2DJsQrZBq4hQaWcOZGutVj8JKHk45U
-	 /v9ZGyOeLwZdU2W52cywFNOsHjvpXIc/aTA8eWXxkvORTN2HDjNVSk5/EahTa3hvhf
-	 9lkhZUJAM69zFHU/IHNmYd5Vq9M+zjVLM/PcyFCU=
+	by mail.kernel.org (Postfix) with ESMTP id ED276206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4L08l+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfGXJlP (ORCPT
+        id S1726981AbfGXJnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfGXJlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:41:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9541229F3;
-        Wed, 24 Jul 2019 09:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563961273;
-        bh=23XZBg4Nkt5YMAlbGVsTjJtCT1QBKJOW5dSh6Wmm15Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1vxjMTHK3gk71mAJUTR7OcoObsi/UtVM02Z5FKpL/cu6zwicncqV+oFHETOq6uyyO
-         0snAbLmBrV9hzTH47CyOc95XAK04NJS87N2RFzjcw1us7fyNEwY2W0FyZtKn9nM8ak
-         8t+SMkZLNelhxWEVsI4RPvTpia3xPEGUi5Q5EZWI=
-Date:   Wed, 24 Jul 2019 11:41:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org,
-        Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v3 04/12] fpga: dfl: afu: add AFU state related sysfs
- interfaces
-Message-ID: <20190724094110.GD29532@kroah.com>
-References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
- <1563857495-26692-5-git-send-email-hao.wu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563857495-26692-5-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 24 Jul 2019 05:43:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41367 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfGXJnP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:43:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so10600504pgg.8;
+        Wed, 24 Jul 2019 02:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=iR/rCzIi399aRKhJN0gwqymimR1s0rrYFixqzZ944Cc=;
+        b=G4L08l+wMcbZdgsUmXCEsJdyn8PGqwrko5Wx6BSSo+NtApUJqete7vvQcxJaFqVG2/
+         /yWeRAwqd0zam4RYqhqQmV1uP3NGB757vb3ZjMVs3irXTdc+oGT+ogVEXVY324c/MTOK
+         g6ggFvSMVodXYU3NCV2EGyHVow5FOCkhZikXp+mz91fHl2tS2l650FyHsJPLpIr27QiH
+         2PUUgu8KJypFd12Pq72H48XImKkTxRqd1r2zMUY0AVZHVhj/174M+DH4bA5+xSXjuaBH
+         Au2GtRzHDbhrSz3hwaA8AT36Ux4D+e0O27pmv0BOo/+sF2FTMXflBOA7bsemf5l6u2eg
+         w3Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iR/rCzIi399aRKhJN0gwqymimR1s0rrYFixqzZ944Cc=;
+        b=PoBFddTebabCul3CFXgNM1M4PL21lepADvnxVSAow4vje8pSlA7or0Xg5KpYv4NU89
+         WWtXEo+ST5IcWhmtT33Mmo6pfGbbAJVts5LX73fd3LKX6qTU6MPFSVecoe8Lk0ShZLr0
+         Lr0NXD+KaxlzIHEPd3I73N2p/qmuQHI/DTEoxmlEBldfX+cxN77Q/gkEt2kL4g1lKMTx
+         3Ql1/ebKKUBkaavQUyM8/9fvG/IHSyLrFcmsmpnEvCVjNuE2ej+S3CB/6WsjCIfSC6+C
+         h20lSnHLBBF3LQPqqT1Tm861vS1sEmrw7R0Wxotnovdof5W+sJfT2cUgX6+u7UMQ6udt
+         /hfA==
+X-Gm-Message-State: APjAAAWPHPk7BYlxEQVeey3IltN2QgCMHkOy91PtqH9KWMWLXgiNKrpu
+        CZDYEU/ImSHvEAnDSADYEtNIjFeYdzo=
+X-Google-Smtp-Source: APXvYqxhzYr7NV2FggQ7OCSMgRgws55e+2f5hgDhCfoQ8LXK75v0BzE4vCZy2mERL0MWIjZSFYWABg==
+X-Received: by 2002:aa7:82da:: with SMTP id f26mr10488550pfn.82.1563961394272;
+        Wed, 24 Jul 2019 02:43:14 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id 22sm53099526pfu.179.2019.07.24.02.43.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 02:43:13 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     idryomov@gmail.com, jlayton@kernel.org, sage@redhat.com,
+        davem@davemloft.net
+Cc:     ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] net: ceph: Fix a possible null-pointer dereference in ceph_crypto_key_destroy()
+Date:   Wed, 24 Jul 2019 17:43:06 +0800
+Message-Id: <20190724094306.1866-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 12:51:27PM +0800, Wu Hao wrote:
-> This patch introduces more sysfs interfaces for Accelerated
-> Function Unit (AFU). These interfaces allow users to read
-> current AFU Power State (APx), read / clear AFU Power (APx)
-> events which are sticky to identify transient APx state,
-> and manage AFU's LTR (latency tolerance reporting).
-> 
-> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Acked-by: Alan Tull <atull@kernel.org>
-> Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> ---
-> v2: rebased, and remove DRV/MODULE_VERSION modifications
-> v3: update kernel version and date in sysfs doc
-> ---
->  Documentation/ABI/testing/sysfs-platform-dfl-port |  30 +++++
->  drivers/fpga/dfl-afu-main.c                       | 137 ++++++++++++++++++++++
->  drivers/fpga/dfl.h                                |  11 ++
->  3 files changed, 178 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-port b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> index 6a92dda..5961fb2 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-dfl-port
-> +++ b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> @@ -14,3 +14,33 @@ Description:	Read-only. User can program different PR bitstreams to FPGA
->  		Accelerator Function Unit (AFU) for different functions. It
->  		returns uuid which could be used to identify which PR bitstream
->  		is programmed in this AFU.
-> +
-> +What:		/sys/bus/platform/devices/dfl-port.0/power_state
-> +Date:		July 2019
-> +KernelVersion:	5.4
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It reports the APx (AFU Power) state, different APx
-> +		means different throttling level. When reading this file, it
-> +		returns "0" - Normal / "1" - AP1 / "2" - AP2 / "6" - AP6.
-> +
-> +What:		/sys/bus/platform/devices/dfl-port.0/ap1_event
-> +Date:		July 2019
-> +KernelVersion:	5.4
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-write. Read or set 1 to clear AP1 (AFU Power State 1)
-> +		event. It's used to indicate transient AP1 state.
+In set_secret(), key->tfm is assigned to NULL on line 55, and then
+ceph_crypto_key_destroy(key) is executed.
 
-So reading the value changes the state of the system?  That's almost
-always never a good idea.
+ceph_crypto_key_destroy(key)
+    crypto_free_sync_skcipher(key->tfm)
+        crypto_skcipher_tfm(tfm)
+            return &tfm->base;
 
-Force userspace to write the value to change something.  Otherwise all
-libraries that use sysfs will be accidentally changing the state of your
-system without you ever knowing it.
+Thus, a possible null-pointer dereference may occur.
 
+To fix this bug, key->tfm is checked before calling
+crypto_free_sync_skcipher().
 
+This bug is found by a static analysis tool STCheck written by us.
 
-> +
-> +What:		/sys/bus/platform/devices/dfl-port.0/ap2_event
-> +Date:		July 2019
-> +KernelVersion:	5.4
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-write. Read or set 1 to clear AP2 (AFU Power State 2)
-> +		event. It's used to indicate transient AP2 state.
-> +
-> +What:		/sys/bus/platform/devices/dfl-port.0/ltr
-> +Date:		July 2019
-> +KernelVersion:	5.4
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-write. Read and set AFU latency tolerance reporting value.
-> +		Set ltr to 1 if the AFU can tolerate latency >= 40us or set it
-> +		to 0 if it is latency sensitive.
-> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> index 68b4d08..cb3f73e 100644
-> --- a/drivers/fpga/dfl-afu-main.c
-> +++ b/drivers/fpga/dfl-afu-main.c
-> @@ -141,8 +141,145 @@ static int port_get_id(struct platform_device *pdev)
->  }
->  static DEVICE_ATTR_RO(id);
->  
-> +static ssize_t
-> +ltr_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> +	void __iomem *base;
-> +	u64 v;
-> +
-> +	base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_HEADER);
-> +
-> +	mutex_lock(&pdata->lock);
-> +	v = readq(base + PORT_HDR_CTRL);
-> +	mutex_unlock(&pdata->lock);
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ net/ceph/crypto.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Why do you need a lock to call readq()?  What are you protecting here?
+diff --git a/net/ceph/crypto.c b/net/ceph/crypto.c
+index 5d6724cee38f..ac28463bcfd8 100644
+--- a/net/ceph/crypto.c
++++ b/net/ceph/crypto.c
+@@ -136,7 +136,8 @@ void ceph_crypto_key_destroy(struct ceph_crypto_key *key)
+ 	if (key) {
+ 		kfree(key->key);
+ 		key->key = NULL;
+-		crypto_free_sync_skcipher(key->tfm);
++		if (key->tfm)
++			crypto_free_sync_skcipher(key->tfm);
+ 		key->tfm = NULL;
+ 	}
+ }
+-- 
+2.17.0
 
-
-> +
-> +	return sprintf(buf, "%x\n", (u8)FIELD_GET(PORT_CTRL_LATENCY, v));
-> +}
-> +
-> +static ssize_t
-> +ltr_store(struct device *dev, struct device_attribute *attr,
-> +	  const char *buf, size_t count)
-> +{
-> +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> +	void __iomem *base;
-> +	u8 ltr;
-> +	u64 v;
-> +
-> +	if (kstrtou8(buf, 0, &ltr) || ltr > 1)
-> +		return -EINVAL;
-
-Are you doing anything with this value?  If not, how about just using
-the sysfs boolean read function and if it is 1, then do the clearing?
-
-Same for all other show/store functions in here.
-
-thanks,
-
-greg k-h
