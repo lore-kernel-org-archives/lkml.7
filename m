@@ -2,54 +2,54 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D571AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C25AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60BE214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42222214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000073;
-	bh=4g3R6gamTRzQOqVc+zMXK0Qvwcpv4izx9jeryaWRd/k=;
+	s=default; t=1564000080;
+	bh=qAlaxnlGCc/tBpKvRf/hjFWEEe2Hk7thRw4cpq3e0RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kv+vDXkfU7zKPhSEMGDW7U9ktr3WseDeZZDQ4g5ewVjD/qplMeEZtNTZx4DSus6o+
-	 c3WnrtiHzSKnmg1gDOP7wb5YyKthVC3+760+fegZDYh3FNkYNYCagixpJCpRvfVYZM
-	 KeMP21k1gzJt2MI96eTOOE63gCV3LY7e5nTr4/m4=
+	b=sqJek36fc8OpADWfggR4sDoq7W+J74vi+j3xW6l+WHYykWeXLz5MpkTqXfSIbCdpK
+	 tCKMiVq7XRA0VUIrvu7DJolR6aYC6mjlkoPjwMYgQ2Tbkfqr9Yk00r+EVko3/MIdGS
+	 jjerpZvPUq1qI4++AkT4EfmuwrLSaC4syvzHUp7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389962AbfGXU1w (ORCPT
+        id S2388133AbfGXTfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60262 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:35:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389201AbfGXTf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:26 -0400
+        id S2389134AbfGXTfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C47B421951;
-        Wed, 24 Jul 2019 19:35:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58D4E20659;
+        Wed, 24 Jul 2019 19:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996925;
-        bh=4g3R6gamTRzQOqVc+zMXK0Qvwcpv4izx9jeryaWRd/k=;
+        s=default; t=1563996909;
+        bh=qAlaxnlGCc/tBpKvRf/hjFWEEe2Hk7thRw4cpq3e0RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BtfoiRHJnAizXLZuButMETl0kn7uqbo9V+E4sI2z7iT7Shh815LUz9gSgKhq1WAFp
-         E+GAB8tF4Sl/XHwKwqMEsY9Gc8tZrSd66QOhW5Jjpb+B60z/6K6thYJY2Efovlt+Ne
-         aORVxJVx0VhKhzcQIqGpMKJtmL/TLA5G91zshUhw=
+        b=afHQobgE/DII8gWnGjJ3iit3Pm+HRzSW963MOcSSA/+VBojFUcyz2kyOAHFc9A9Fs
+         co7SUFwusiog6GjD3lcJRms3Y41Yl+a9q1eifc8sO5+qd3vXqB2D7CwLw+wzbtQfmw
+         JfmbeaW7VqmZu27QV+CHBphaweE7KuPOCAJ4/ZCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Horia Geanta <horia.geanta@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 264/413] crypto: caam - limit output IV to CBC to work around CTR mode DMA issue
-Date:   Wed, 24 Jul 2019 21:19:15 +0200
-Message-Id: <20190724191755.063425339@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com,
+        Phong Tran <tranmanphong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 216/413] net: usb: asix: init MAC address buffers
+Date:   Wed, 24 Jul 2019 21:18:27 +0200
+Message-Id: <20190724191750.070561141@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,78 +62,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+[ Upstream commit 78226f6eaac80bf30256a33a4926c194ceefdf36 ]
 
-commit ed527b13d800dd515a9e6c582f0a73eca65b2e1b upstream.
+This is for fixing bug KMSAN: uninit-value in ax88772_bind
 
-The CAAM driver currently violates an undocumented and slightly
-controversial requirement imposed by the crypto stack that a buffer
-referred to by the request structure via its virtual address may not
-be modified while any scatterlists passed via the same request
-structure are mapped for inbound DMA.
+Tested by
+https://groups.google.com/d/msg/syzkaller-bugs/aFQurGotng4/eB_HlNhhCwAJ
 
-This may result in errors like
+Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
 
-  alg: aead: decryption failed on test 1 for gcm_base(ctr-aes-caam,ghash-generic): ret=74
-  alg: aead: Failed to load transform for gcm(aes): -2
+syzbot found the following crash on:
 
-on non-cache coherent systems, due to the fact that the GCM driver
-passes an IV buffer by virtual address which shares a cacheline with
-the auth_tag buffer passed via a scatterlist, resulting in corruption
-of the auth_tag when the IV is updated while the DMA mapping is live.
+HEAD commit:    f75e4cfe kmsan: use kmsan_handle_urb() in urb.c
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=136d720ea00000
+kernel config:
+https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link:
+https://syzkaller.appspot.com/bug?extid=8a3fc6674bbc3978ed4e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+syz repro:
+https://syzkaller.appspot.com/x/repro.syz?x=12788316a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120359aaa00000
 
-Since the IV that is returned to the caller is only valid for CBC mode,
-and given that the in-kernel users of CBC (such as CTS) don't trigger the
-same issue as the GCM driver, let's just disable the output IV generation
-for all modes except CBC for the time being.
+==================================================================
+BUG: KMSAN: uninit-value in is_valid_ether_addr
+include/linux/etherdevice.h:200 [inline]
+BUG: KMSAN: uninit-value in asix_set_netdev_dev_addr
+drivers/net/usb/asix_devices.c:73 [inline]
+BUG: KMSAN: uninit-value in ax88772_bind+0x93d/0x11e0
+drivers/net/usb/asix_devices.c:724
+CPU: 0 PID: 3348 Comm: kworker/0:2 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  is_valid_ether_addr include/linux/etherdevice.h:200 [inline]
+  asix_set_netdev_dev_addr drivers/net/usb/asix_devices.c:73 [inline]
+  ax88772_bind+0x93d/0x11e0 drivers/net/usb/asix_devices.c:724
+  usbnet_probe+0x10f5/0x3940 drivers/net/usb/usbnet.c:1728
+  usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+  really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+  driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x454/0x730 drivers/base/dd.c:844
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+  bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+  device_add+0x288d/0x30e0 drivers/base/core.c:2106
+  usb_new_device+0x23e5/0x2ff0 drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x48d1/0x7290 drivers/usb/core/hub.c:5432
+  process_one_work+0x1572/0x1f00 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x189c/0x2460 kernel/workqueue.c:2417
+  kthread+0x4b5/0x4f0 kernel/kthread.c:254
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-Fixes: 854b06f76879 ("crypto: caam - properly set IV after {en,de}crypt")
-Cc: Horia Geanta <horia.geanta@nxp.com>
-Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reported-by: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/caam/caamalg.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/usb/asix_devices.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -999,6 +999,7 @@ static void skcipher_encrypt_done(struct
- 	struct skcipher_request *req = context;
- 	struct skcipher_edesc *edesc;
- 	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
-+	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
- 	int ivsize = crypto_skcipher_ivsize(skcipher);
+diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
+index c9bc96310ed4..ef548beba684 100644
+--- a/drivers/net/usb/asix_devices.c
++++ b/drivers/net/usb/asix_devices.c
+@@ -226,7 +226,7 @@ static void asix_phy_reset(struct usbnet *dev, unsigned int reset_bits)
+ static int ax88172_bind(struct usbnet *dev, struct usb_interface *intf)
+ {
+ 	int ret = 0;
+-	u8 buf[ETH_ALEN];
++	u8 buf[ETH_ALEN] = {0};
+ 	int i;
+ 	unsigned long gpio_bits = dev->driver_info->data;
  
- #ifdef DEBUG
-@@ -1023,9 +1024,9 @@ static void skcipher_encrypt_done(struct
+@@ -677,7 +677,7 @@ static int asix_resume(struct usb_interface *intf)
+ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
+ {
+ 	int ret, i;
+-	u8 buf[ETH_ALEN], chipcode = 0;
++	u8 buf[ETH_ALEN] = {0}, chipcode = 0;
+ 	u32 phyid;
+ 	struct asix_common_private *priv;
  
- 	/*
- 	 * The crypto API expects us to set the IV (req->iv) to the last
--	 * ciphertext block. This is used e.g. by the CTS mode.
-+	 * ciphertext block when running in CBC mode.
- 	 */
--	if (ivsize)
-+	if ((ctx->cdata.algtype & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
- 		scatterwalk_map_and_copy(req->iv, req->dst, req->cryptlen -
- 					 ivsize, ivsize, 0);
+@@ -1061,7 +1061,7 @@ static const struct net_device_ops ax88178_netdev_ops = {
+ static int ax88178_bind(struct usbnet *dev, struct usb_interface *intf)
+ {
+ 	int ret;
+-	u8 buf[ETH_ALEN];
++	u8 buf[ETH_ALEN] = {0};
  
-@@ -1843,9 +1844,9 @@ static int skcipher_decrypt(struct skcip
+ 	usbnet_get_endpoints(dev,intf);
  
- 	/*
- 	 * The crypto API expects us to set the IV (req->iv) to the last
--	 * ciphertext block.
-+	 * ciphertext block when running in CBC mode.
- 	 */
--	if (ivsize)
-+	if ((ctx->cdata.algtype & OP_ALG_AAI_MASK) == OP_ALG_AAI_CBC)
- 		scatterwalk_map_and_copy(req->iv, req->src, req->cryptlen -
- 					 ivsize, ivsize, 0);
- 
+-- 
+2.20.1
+
 
 
