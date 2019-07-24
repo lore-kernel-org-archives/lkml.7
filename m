@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D125CC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C06C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75EF820665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC7B20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997825;
-	bh=nSw+SP6mMAHmdbZeMz0911fKNacDiGVoRtkmVqIsfXM=;
+	s=default; t=1563997828;
+	bh=irY/dWccFX2KVPQ9oMgP7zO70l+iXspQLX+KOQqOgGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fZESyy4ETQpPROkjEf3EsiNPrOx8wKzUJoCGMqdzQRMnj44kW9urd5P0fvSmLd+4Y
-	 VzGANxmzd6szyXD8xYo/K2os2jISxawFHoJFNJZgyrlL52QeRTZuOQGIdqeSfTkd/r
-	 xVAOaxdpSNzzwAeYDuT9nF4sqG+EIcfBQjrMNZeQ=
+	b=MZqAyoKvJxn8fhVRVjwQPolC33DUp/PpL0+u/vw2G+U8rQ21pU4lzcPn99DBocrqm
+	 Wf14Ni/9gEEBoYSsJtmJ6Lu+7BkS7xg6FN7O5TAVKfVR61JrijOFy5hAMqNG5+bI+a
+	 FaASgorB/8C89orSkhzxKJ9FroB97wC4XeaCTOHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403798AbfGXTuX (ORCPT
+        id S2391587AbfGXTu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbfGXTuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:18 -0400
+        id S2390910AbfGXTuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3C9120659;
-        Wed, 24 Jul 2019 19:50:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40DDB20665;
+        Wed, 24 Jul 2019 19:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997818;
-        bh=nSw+SP6mMAHmdbZeMz0911fKNacDiGVoRtkmVqIsfXM=;
+        s=default; t=1563997821;
+        bh=irY/dWccFX2KVPQ9oMgP7zO70l+iXspQLX+KOQqOgGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DkKNP8Hme5snPs+3Z5+hBZGc3P2ZjGkvy3G6LEfcr/Jrs8jRE2J6VIW/TNpOyrBVI
-         IkXLGT4gchvyXLySujT2oMMFkpM1GuV1w5szulDFsU4DYkoshVEviBji1drxT5cq3/
-         +aST3IQ/l4z3kAY32QpZUfbtogucdSguPEVDR5t0=
+        b=iaQ7oDTm3mTXjygYz4bXwDP38LiFI3qgJ2h4Dp++uWcwnPwEDeDgQ4P7hEKkFuNqa
+         VsshqwNLa9UPBuaI1jyEEngKc8SqUUvAY1aKBbvvkwEAKM7OH4rJhpVxdaN9q5iEj/
+         91M71N83utGS66X1WavoB4AOYT8AzTFwfYe+VEBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 153/371] clocksource/drivers/tegra: Restore base address before cleanup
-Date:   Wed, 24 Jul 2019 21:18:25 +0200
-Message-Id: <20190724191736.708663985@linuxfoundation.org>
+Subject: [PATCH 5.1 154/371] clocksource/drivers/exynos_mct: Increase priority over ARM arch timer
+Date:   Wed, 24 Jul 2019 21:18:26 +0200
+Message-Id: <20190724191736.786555207@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,35 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fc9babc2574691d3bbf0428f007b22261fed55c6 ]
+[ Upstream commit 6282edb72bed5324352522d732080d4c1b9dfed6 ]
 
-We're adjusting the timer's base for each per-CPU timer to point to the
-actual start of the timer since device-tree defines a compound registers
-range that includes all of the timers. In this case the original base
-need to be restore before calling iounmap to unmap the proper address.
+Exynos SoCs based on CA7/CA15 have 2 timer interfaces: custom Exynos MCT
+(Multi Core Timer) and standard ARM Architected Timers.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
+There are use cases, where both timer interfaces are used simultanously.
+One of such examples is using Exynos MCT for the main system timer and
+ARM Architected Timers for the KVM and virtualized guests (KVM requires
+arch timers).
+
+Exynos Multi-Core Timer driver (exynos_mct) must be however started
+before ARM Architected Timers (arch_timer), because they both share some
+common hardware blocks (global system counter) and turning on MCT is
+needed to get ARM Architected Timer working properly.
+
+To ensure selecting Exynos MCT as the main system timer, increase MCT
+timer rating. To ensure proper starting order of both timers during
+suspend/resume cycle, increase MCT hotplug priority over ARM Archictected
+Timers.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-tegra20.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clocksource/exynos_mct.c | 4 ++--
+ include/linux/cpuhotplug.h       | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index cc18bb135a17..84adfff59fb0 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -341,6 +341,8 @@ static int __init tegra_init_timer(struct device_node *np)
- 			irq_dispose_mapping(cpu_to->clkevt.irq);
- 		}
- 	}
-+
-+	to->of_base.base = timer_reg_base;
- out:
- 	timer_of_cleanup(to);
- 	return ret;
+diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
+index 34bd250d46c6..6aa10cbc1d59 100644
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -209,7 +209,7 @@ static void exynos4_frc_resume(struct clocksource *cs)
+ 
+ static struct clocksource mct_frc = {
+ 	.name		= "mct-frc",
+-	.rating		= 400,
++	.rating		= 450,	/* use value higher than ARM arch timer */
+ 	.read		= exynos4_frc_read,
+ 	.mask		= CLOCKSOURCE_MASK(32),
+ 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+@@ -464,7 +464,7 @@ static int exynos4_mct_starting_cpu(unsigned int cpu)
+ 	evt->set_state_oneshot_stopped = set_state_shutdown;
+ 	evt->tick_resume = set_state_shutdown;
+ 	evt->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
+-	evt->rating = 450;
++	evt->rating = 500;	/* use value higher than ARM arch timer */
+ 
+ 	exynos4_mct_write(TICK_BASE_CNT, mevt->base + MCT_L_TCNTB_OFFSET);
+ 
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index dec95654f3ae..04c4a478323b 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -116,10 +116,10 @@ enum cpuhp_state {
+ 	CPUHP_AP_PERF_ARM_ACPI_STARTING,
+ 	CPUHP_AP_PERF_ARM_STARTING,
+ 	CPUHP_AP_ARM_L2X0_STARTING,
++	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+ 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
+ 	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
+ 	CPUHP_AP_JCORE_TIMER_STARTING,
+-	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+ 	CPUHP_AP_ARM_TWD_STARTING,
+ 	CPUHP_AP_QCOM_TIMER_STARTING,
+ 	CPUHP_AP_TEGRA_TIMER_STARTING,
 -- 
 2.20.1
 
