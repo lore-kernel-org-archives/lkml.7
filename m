@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7856EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A463229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D0320659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996402;
-	bh=sz2ZYePl3x0TRaJajIi2pFcuuEW6vMkb+ikfHr5szMg=;
+	s=default; t=1563996405;
+	bh=kRG4d6d5TG/mBD8Z0zXw5vqsmv4xOfEV6e8qfpaQqGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=viz3BFGb3eKDmcm+9Xfj96/STyENk18PbCnGsLV6/VWauHaWEkPFxIrPHyHMKMr6v
-	 5ERYXwn+J9H6SS17YKr+GeZ+hvpJitsceVdd7omj0o5DJC3sSI1hqwmhwPvZEbzoBw
-	 HhYNl+AxfS0+87/5vPsjAUP+jtk8kk6N4ttdYDB8=
+	b=EwBlNr8XVXgE/cJPTc//Z58UwlHvNXZTzC6A6hlrYNboN9MtQ+Mqgwetsp0MqfOLA
+	 yDVvOgXa0B0M+wvKtsuD40g2NUcyG1TSjzwfuzlDK9HBt3cydA6lNfhA4wkHFnlMGk
+	 PRbyY4M17EtTYJX4T4e3wM2uLVxXZpX2IlGvEWA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfGXT0k (ORCPT
+        id S1727608AbfGXT0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:26:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:26:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388101AbfGXT0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:26:34 -0400
+        id S1729252AbfGXT0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:26:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E401B229F3;
-        Wed, 24 Jul 2019 19:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5850D2238C;
+        Wed, 24 Jul 2019 19:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996393;
-        bh=sz2ZYePl3x0TRaJajIi2pFcuuEW6vMkb+ikfHr5szMg=;
+        s=default; t=1563996399;
+        bh=kRG4d6d5TG/mBD8Z0zXw5vqsmv4xOfEV6e8qfpaQqGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QFOXLq4FjhZoR+3bR8kZgPv/ouyjX/in8sfpfMDgIvohj3GXCkYo7+jF4rkF1mFth
-         fQ6AZ9gcWkuSmWF78+b6T/E88ANevZ51heXZywM/hXTNxBFx5g+TMEsD6RTQgjmI35
-         6aeikknn0QQGQ2vBCiwYvyWaKz+17gmblhz+lTPM=
+        b=rQVcscQ2iJBTsHIbXAnazGKzoscxk6rol+Fie6a5EiY+vDzTGAfqqcJUiDKyDrvy1
+         T7l4F0oYrpQr+X+xMmAz8xg+xQt3klADFc76TCT+7kP7258x3mzCxx+i3ZNXnf/C/C
+         IkzvbbW7/nmqzm5MkUzlAa6URVJLlix3bekUNw5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 040/413] xfrm: Fix xfrm sel prefix length validation
-Date:   Wed, 24 Jul 2019 21:15:31 +0200
-Message-Id: <20190724191738.472275619@linuxfoundation.org>
+Subject: [PATCH 5.2 076/413] net: sfp: add mutex to prevent concurrent state checks
+Date:   Wed, 24 Jul 2019 21:16:07 +0200
+Message-Id: <20190724191740.547246074@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,54 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b38ff4075a80b4da5cb2202d7965332ca0efb213 ]
+[ Upstream commit 2158e856f56bb762ef90f3ec244d41a519826f75 ]
 
-Family of src/dst can be different from family of selector src/dst.
-Use xfrm selector family to validate address prefix length,
-while verifying new sa from userspace.
+sfp_check_state can potentially be called by both a threaded IRQ handler
+and delayed work. If it is concurrently called, it could result in
+incorrect state management. Add a st_mutex to protect the state - this
+lock gets taken outside of code that checks and handle state changes, and
+the existing sm_mutex nests inside of it.
 
-Validated patch with this command:
-ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
-reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
-0x1111016400000000000000000000000044440001 128 \
-sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
-
-Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
-Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/net/phy/sfp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 173477211e40..76ad7e201626 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -151,6 +151,22 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index 71812be0ac64..b6efd2d41dce 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -186,10 +186,11 @@ struct sfp {
+ 	struct gpio_desc *gpio[GPIO_MAX];
  
- 	err = -EINVAL;
- 	switch (p->family) {
-+	case AF_INET:
-+		break;
-+
-+	case AF_INET6:
-+#if IS_ENABLED(CONFIG_IPV6)
-+		break;
-+#else
-+		err = -EAFNOSUPPORT;
-+		goto out;
-+#endif
-+
-+	default:
-+		goto out;
-+	}
-+
-+	switch (p->sel.family) {
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+ 	bool attached;
++	struct mutex st_mutex;			/* Protects state */
+ 	unsigned int state;
+ 	struct delayed_work poll;
+ 	struct delayed_work timeout;
+-	struct mutex sm_mutex;
++	struct mutex sm_mutex;			/* Protects state machine */
+ 	unsigned char sm_mod_state;
+ 	unsigned char sm_dev_state;
+ 	unsigned short sm_state;
+@@ -1719,6 +1720,7 @@ static void sfp_check_state(struct sfp *sfp)
+ {
+ 	unsigned int state, i, changed;
+ 
++	mutex_lock(&sfp->st_mutex);
+ 	state = sfp_get_state(sfp);
+ 	changed = state ^ sfp->state;
+ 	changed &= SFP_F_PRESENT | SFP_F_LOS | SFP_F_TX_FAULT;
+@@ -1744,6 +1746,7 @@ static void sfp_check_state(struct sfp *sfp)
+ 		sfp_sm_event(sfp, state & SFP_F_LOS ?
+ 				SFP_E_LOS_HIGH : SFP_E_LOS_LOW);
+ 	rtnl_unlock();
++	mutex_unlock(&sfp->st_mutex);
+ }
+ 
+ static irqreturn_t sfp_irq(int irq, void *data)
+@@ -1774,6 +1777,7 @@ static struct sfp *sfp_alloc(struct device *dev)
+ 	sfp->dev = dev;
+ 
+ 	mutex_init(&sfp->sm_mutex);
++	mutex_init(&sfp->st_mutex);
+ 	INIT_DELAYED_WORK(&sfp->poll, sfp_poll);
+ 	INIT_DELAYED_WORK(&sfp->timeout, sfp_timeout);
+ 
 -- 
 2.20.1
 
