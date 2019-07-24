@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68F8C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D4EC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B030D22BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BC422C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033218;
-	bh=djMy0ZkF1cNdzzJkInuRNcFK9iveLhe5RDIiDs8gmkc=;
+	s=default; t=1564033222;
+	bh=3uSsuCn2bC+5Qh9r6pduaLyAIwG48pGXscbTNLwVHPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZDiy2Ux2uefUkUO9MPnb5tl//6l/mtSPjmdyKAAc/7YxRAUUqTB1ZCK7C0pYtxwo
-	 DedMQkVYpIxrP6DdrxYPspey7Mir8/1g3o+P33HpYBTd9Ij4UyC7BSLokY2+qBFHCS
-	 FnmcMew5isMWPy66C5v9eR7AJbbCMe4ptmUfWMro=
+	b=Ck20j+cBFKiF0lZAyluXkPeTd0XQsYkrBMwCa0h12ENR3QY47nfvzJO47symglGxq
+	 +uxS/IisAm/AyCHV/aSN+9d1/8VwIsyI8QAmTCWY7J9joRljStQRpqz3vYnhUn45Zs
+	 073RpFlPtE/At4UT204dxB63zTO/HTtx06QAH8LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404333AbfGYFkR (ORCPT
+        id S2404349AbfGYFkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:40:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404269AbfGYFkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:40:05 -0400
+        id S2404290AbfGYFkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:40:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0482F22C97;
-        Thu, 25 Jul 2019 05:40:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B448122BEF;
+        Thu, 25 Jul 2019 05:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033204;
-        bh=djMy0ZkF1cNdzzJkInuRNcFK9iveLhe5RDIiDs8gmkc=;
+        s=default; t=1564033210;
+        bh=3uSsuCn2bC+5Qh9r6pduaLyAIwG48pGXscbTNLwVHPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o56kGNCiHeAUCGrnkqOKdKyOhgHRiGhoK8e9h5/OEaWVT70ELg0kuQXhBDfAmUVo0
-         J5SghAuk3rHB7k+xgM8PjS11wmLeAA19h7iBMZdXiAayoxTDMWRTW2GIlMpiHxPlU3
-         9L96mfaP3DBWZdXMWg+NzRTN3YdtO7lV3YA1Tusg=
+        b=izzzv+BdPzXAqrLFMwqBNt34YETviqYuqXSLIZcAUwvNLjSTUHpYVHLfJpcp6nnYv
+         TWISXjIoBx33hTT0RL40lHco62hWOdY7dDoZpvkMq2KHq70Gh5hgVuC+PsVLxDQ/sl
+         vajno1JoL8wbYYN9PKGqm71Yt5rJBfvDbRppe+AI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
-        eranian@google.com, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/271] perf/x86/intel/uncore: Handle invalid event coding for free-running counter
-Date:   Wed, 24 Jul 2019 21:19:07 +0200
-Message-Id: <20190724191701.880558315@linuxfoundation.org>
+Subject: [PATCH 4.19 131/271] ath10k: destroy sdio workqueue while remove sdio module
+Date:   Wed, 24 Jul 2019 21:20:00 +0200
+Message-Id: <20190724191706.461853085@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0 ]
+[ Upstream commit 3ed39f8e747a7aafeec07bb244f2c3a1bdca5730 ]
 
-Counting with invalid event coding for free-running counter may cause
-OOPs, e.g. uncore_iio_free_running_0/event=1/.
+The workqueue need to flush and destory while remove sdio module,
+otherwise it will have thread which is not destory after remove
+sdio modules.
 
-Current code only validate the event with free-running event format,
-event=0xff,umask=0xXY. Non-free-running event format never be checked
-for the PMU with free-running counters.
+Tested with QCA6174 SDIO with firmware
+WLAN.RMH.4.4.1-00007-QCARMSWP-1.
 
-Add generic hw_config() to check and reject the invalid event coding
-for free-running PMU.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: acme@kernel.org
-Cc: eranian@google.com
-Fixes: 0f519f0352e3 ("perf/x86/intel/uncore: Support IIO free-running counters on SKX")
-Link: https://lkml.kernel.org/r/1556672028-119221-2-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/uncore.h       | 10 ++++++++++
- arch/x86/events/intel/uncore_snbep.c |  1 +
- 2 files changed, 11 insertions(+)
+ drivers/net/wireless/ath/ath10k/sdio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index cc6dd4f78158..42fa3974c421 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -402,6 +402,16 @@ static inline bool is_freerunning_event(struct perf_event *event)
- 	       (((cfg >> 8) & 0xff) >= UNCORE_FREERUNNING_UMASK_START);
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index cb527a21f1ac..686759b5613f 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -2073,6 +2073,9 @@ static void ath10k_sdio_remove(struct sdio_func *func)
+ 	cancel_work_sync(&ar_sdio->wr_async_work);
+ 	ath10k_core_unregister(ar);
+ 	ath10k_core_destroy(ar);
++
++	flush_workqueue(ar_sdio->workqueue);
++	destroy_workqueue(ar_sdio->workqueue);
  }
  
-+/* Check and reject invalid config */
-+static inline int uncore_freerunning_hw_config(struct intel_uncore_box *box,
-+					       struct perf_event *event)
-+{
-+	if (is_freerunning_event(event))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
- static inline void uncore_disable_box(struct intel_uncore_box *box)
- {
- 	if (box->pmu->type->ops->disable_box)
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10e04387f38..8e4e8e423839 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -3585,6 +3585,7 @@ static struct uncore_event_desc skx_uncore_iio_freerunning_events[] = {
- 
- static struct intel_uncore_ops skx_uncore_iio_freerunning_ops = {
- 	.read_counter		= uncore_msr_read_counter,
-+	.hw_config		= uncore_freerunning_hw_config,
- };
- 
- static struct attribute *skx_uncore_iio_freerunning_formats_attr[] = {
+ static const struct sdio_device_id ath10k_sdio_devices[] = {
 -- 
 2.20.1
 
