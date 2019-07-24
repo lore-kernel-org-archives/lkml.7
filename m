@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D33C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413D4C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C41921855
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF4D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998713;
-	bh=tXdCGhURHCttzoYgbZfmIfemOshdS4a/j9OQkEtUABs=;
+	s=default; t=1563998720;
+	bh=bYsA1hM4KbfAUhdnYF4lW5xsmIlyiMU7e9Rn3uGY43Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zQApqBiaEHAQYWIw9ilczMxuQHGGMpexeocST/AxTNvjpGs/kgjNf/Qvk9WY7oFSh
-	 GvlunBa7CzYg4/+7g2L8eKq/5ohObpT3VU0X8dmppHAzE3V07ny/NNqyfXzt3NpR9a
-	 x38NfUys/8FtaJDb03Xw3lJFOF9QxeBNePYND7zc=
+	b=pP40TCabu8T4Iwu9uab7nVrU6I7LGfjmMgpmW6eOxI4+/2XMSrfqs4MEIhO8yugGc
+	 eLFRfGhc+I8oSrK4HalzifdS0+m4MNTre8m3Fpb98Oz1EZeWFfp6KTQ/gxvHKt1kx0
+	 hLOzm+/GR2IEA8OPAQ2iRdhyXwUtzMf/eE3a5/1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392629AbfGXUFM (ORCPT
+        id S2392661AbfGXUFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405738AbfGXUFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:05:08 -0400
+        id S2392621AbfGXUFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:05:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CA6E2147A;
-        Wed, 24 Jul 2019 20:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48CBA20665;
+        Wed, 24 Jul 2019 20:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998707;
-        bh=tXdCGhURHCttzoYgbZfmIfemOshdS4a/j9OQkEtUABs=;
+        s=default; t=1563998710;
+        bh=bYsA1hM4KbfAUhdnYF4lW5xsmIlyiMU7e9Rn3uGY43Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=quHjvYh3o7whjpu5gqnYQWZ54WKRjwI8O3wdgYJ5qRajt9NBR0WEBJTjFyqsCGNkl
-         8QmussOSODgcOkWVB0nkvDqGT5AG9Be2QSJKanZPhhjDLCzbC7Tqgm2NeMb8ulKXyI
-         CBjS8jvSMvvEHx+KGmrXitG1Z6p8Y0f6z97bmiBA=
+        b=rVTlymAjieAdSYdhakS55ee6yKKeUufngtfNa0HryKvZ8heEYhEBOKgQnzJE4URJd
+         LPCYZpoQOS2f207BuoJl98Lz+olE3tvAMnGM/bNmKM2hNx++He2pbVUNopXEP8qC9j
+         u+zm2zt5ccryWcj+Z6UGwcPfl3QEol/F6FQ11Foo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/271] x86/atomic: Fix smp_mb__{before,after}_atomic()
-Date:   Wed, 24 Jul 2019 21:19:08 +0200
-Message-Id: <20190724191701.954991110@linuxfoundation.org>
+        stable@vger.kernel.org, Minwoo Im <minwoo.im.dev@gmail.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 088/271] nvme-pci: properly report state change failure in nvme_reset_work
+Date:   Wed, 24 Jul 2019 21:19:17 +0200
+Message-Id: <20190724191702.759910137@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,161 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 69d927bba39517d0980462efc051875b7f4db185 ]
+[ Upstream commit cee6c269b016ba89c62e34d6bccb103ee2c7de4f ]
 
-Recent probing at the Linux Kernel Memory Model uncovered a
-'surprise'. Strongly ordered architectures where the atomic RmW
-primitive implies full memory ordering and
-smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
-fail for:
+If the state change to NVME_CTRL_CONNECTING fails, the dmesg is going to
+be like:
 
-	*x = 1;
-	atomic_inc(u);
-	smp_mb__after_atomic();
-	r0 = *y;
+  [  293.689160] nvme nvme0: failed to mark controller CONNECTING
+  [  293.689160] nvme nvme0: Removing after probe failure status: 0
 
-Because, while the atomic_inc() implies memory order, it
-(surprisingly) does not provide a compiler barrier. This then allows
-the compiler to re-order like so:
+Even it prints the first line to indicate the situation, the second line
+is not proper because the status is 0 which means normally success of
+the previous operation.
 
-	atomic_inc(u);
-	*x = 1;
-	smp_mb__after_atomic();
-	r0 = *y;
+This patch makes it indicate the proper error value when it fails.
+  [   25.932367] nvme nvme0: failed to mark controller CONNECTING
+  [   25.932369] nvme nvme0: Removing after probe failure status: -16
 
-Which the CPU is then allowed to re-order (under TSO rules) like:
+This situation is able to be easily reproduced by:
+  root@target:~# rmmod nvme && modprobe nvme && rmmod nvme
 
-	atomic_inc(u);
-	r0 = *y;
-	*x = 1;
-
-And this very much was not intended. Therefore strengthen the atomic
-RmW ops to include a compiler barrier.
-
-NOTE: atomic_{or,and,xor} and the bitops already had the compiler
-barrier.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/atomic_t.txt         | 3 +++
- arch/x86/include/asm/atomic.h      | 8 ++++----
- arch/x86/include/asm/atomic64_64.h | 8 ++++----
- arch/x86/include/asm/barrier.h     | 4 ++--
- 4 files changed, 13 insertions(+), 10 deletions(-)
+ drivers/nvme/host/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index 913396ac5824..ed0d814df7e0 100644
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -177,6 +177,9 @@ These helper barriers exist because architectures have varying implicit
- ordering on their SMP atomic primitives. For example our TSO architectures
- provide full ordered atomics and these barriers are no-ops.
- 
-+NOTE: when the atomic RmW ops are fully ordered, they should also imply a
-+compiler barrier.
-+
- Thus:
- 
-   atomic_fetch_add();
-diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
-index ce84388e540c..d266a4066289 100644
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -54,7 +54,7 @@ static __always_inline void arch_atomic_add(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "addl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
- 
- /**
-@@ -68,7 +68,7 @@ static __always_inline void arch_atomic_sub(int i, atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
- 
- /**
-@@ -95,7 +95,7 @@ static __always_inline bool arch_atomic_sub_and_test(int i, atomic_t *v)
- static __always_inline void arch_atomic_inc(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_inc arch_atomic_inc
- 
-@@ -108,7 +108,7 @@ static __always_inline void arch_atomic_inc(atomic_t *v)
- static __always_inline void arch_atomic_dec(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_dec arch_atomic_dec
- 
-diff --git a/arch/x86/include/asm/atomic64_64.h b/arch/x86/include/asm/atomic64_64.h
-index 5f851d92eecd..55ca027f8c1c 100644
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -45,7 +45,7 @@ static __always_inline void arch_atomic64_add(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "addq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -59,7 +59,7 @@ static inline void arch_atomic64_sub(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -87,7 +87,7 @@ static __always_inline void arch_atomic64_inc(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_inc arch_atomic64_inc
- 
-@@ -101,7 +101,7 @@ static __always_inline void arch_atomic64_dec(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_dec arch_atomic64_dec
- 
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 14de0432d288..84f848c2541a 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -80,8 +80,8 @@ do {									\
- })
- 
- /* Atomic operations are already serializing on x86 */
--#define __smp_mb__before_atomic()	barrier()
--#define __smp_mb__after_atomic()	barrier()
-+#define __smp_mb__before_atomic()	do { } while (0)
-+#define __smp_mb__after_atomic()	do { } while (0)
- 
- #include <asm-generic/barrier.h>
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index c8eeecc58115..03e72e2f57f5 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2294,6 +2294,7 @@ static void nvme_reset_work(struct work_struct *work)
+ 	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
+ 		dev_warn(dev->ctrl.device,
+ 			"failed to mark controller CONNECTING\n");
++		result = -EBUSY;
+ 		goto out;
+ 	}
  
 -- 
 2.20.1
