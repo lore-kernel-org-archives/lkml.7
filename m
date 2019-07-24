@@ -2,73 +2,99 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5DDC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44947C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A719321850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C3221850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKSNuYim"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZAfomt8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfGXOnU (ORCPT
+        id S2387474AbfGXOqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:43:20 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]:33373 "EHLO
-        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfGXOnU (ORCPT
+        Wed, 24 Jul 2019 10:46:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51362 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfGXOqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:43:20 -0400
-Received: by mail-qt1-f172.google.com with SMTP id r6so41501045qtt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=hhwWMTyEvMH3Y8XcTDW/iVp/DTf0XVaB1tiSVtDZri8=;
-        b=iKSNuYim7mWdkT53o25ofN5wgS6aXiS6LNRhncAP4giCAwrEXPXh5utjUFMBM27RJP
-         9c6UJaRTQC+AmBmzYHXOs3lgRPprl8ihDXDsvSl8ntkB7m0Y21Is6HeUtsEbrdSTUuqE
-         8a3Pe84Gq6Z51VAQgOPNyO6zrsa/JhWhrKHFq6dJlxjSAQGOwK0ZxYQCkBLmzKdIAKnQ
-         /z6YuxTQO/oNYv+hgq20WQwCaR+aXDD7f/KNmTDsosYLvRN8PvslfZ3bs9e6U/DpBUX4
-         zTF1Jy1xsw/Neq3QPQO8iYbrFlS8WHInuB+/47R+jtYEAXqKoX0LaUnOkGl1VrSsF6Qg
-         qJqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=hhwWMTyEvMH3Y8XcTDW/iVp/DTf0XVaB1tiSVtDZri8=;
-        b=hbGWc5eYIEWRaAVySGABlwIuebCOLnrvUxEYP87Q00qgpuk4bu8/2S59vz22j6j0OB
-         pff53YjBfpSIhVB9Fr7o5j5zpmLcEBuk1knryPFx/8mX3JEBJsXXUexi8WcFeAWtdGYQ
-         QhwV7GHv3DQGA0iQG9sygQjuv5ksqjUPFsAiB5Dxw6brejHDTjyVPownaAAUxp0ne6gJ
-         82SKa3cz83XcmixSbBxMUp3tjDGRQAIJ6ysVfkIVf97KygJNCn4YS2LvI5kH1+6BZVnW
-         F4t7aRseXZreRorxfcr/QEaxMckssCCxLdXXaOUasI2vXW72IKBXpazZDSoD1LO85+s4
-         NmRQ==
-X-Gm-Message-State: APjAAAUocy7XOKZ/ZG1JGfjbUbwIjawttGTVdCGOeZg7o2UMrxDthjlq
-        CSv2/kIEBy0GpyThvwpPOOCptLkdRn+z63qaueyyEEbp
-X-Google-Smtp-Source: APXvYqy60lFAXsMJILlxHftSozBiF6+CPYctJIFODYfoi0TMCA88IlYB7fdKx4svIuZlStxD9s3YoJIFCviRt4zCbmc=
-X-Received: by 2002:ac8:540e:: with SMTP id b14mr52946592qtq.134.1563979399042;
- Wed, 24 Jul 2019 07:43:19 -0700 (PDT)
+        Wed, 24 Jul 2019 10:46:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RqHBWdJEojbFEMOHR/DJK74bidFUULY+xJTZc/lCv10=; b=ZAfomt8Um8SI+7YgXhUbnm3PY
+        RTXHQBkPZP43/E42xA+eQuJIa4WO4M8/2gRLN+JsHXKijRXoh4Sz25H3FeYmDzWhNAvGhID0qYBWS
+        hI53DddFv39a9Hg8h+6JphiV4sL2rakxmMgA645hzx5chjXUrBUZQsfG1IM6l8/hVdAPaSY4z9Opw
+        0E/mCCHVl+CzCUb+uDzwJ9clmefeXZBgMD1wCgpY39DyuCDMf8IMUCcc1qxDX/fsyUZMuvZcdlj3k
+        FrSQ6htBN27JBeZF4MuEJq/fG8NsW5M+Go0jP7Q/UjCA7bHszrQSH1SaAIjgWqLVDZ1xgqcIButxN
+        joinlt3ZQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqIWm-0002bd-OJ; Wed, 24 Jul 2019 14:46:00 +0000
+Subject: Re: [PATCH] selftests: mlxsw: Fix typo in qos_mc_aware.sh
+To:     Masanari Iida <standby24x7@gmail.com>, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, jiri@mellanox.com,
+        idosch@mellanox.com, linux-kselftest@vger.kernel.org
+References: <20190724141554.31723-1-standby24x7@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3a7ae37c-36b8-74bb-4537-c87cee8ea410@infradead.org>
+Date:   Wed, 24 Jul 2019 07:45:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-From:   Gilberto Nunes <gilberto.nunes32@gmail.com>
-Date:   Wed, 24 Jul 2019 11:42:42 -0300
-Message-ID: <CAOKSTBv5-1aNwOrhXp0GtK4ROx_NQ6fhCbrnj7PsNPp+NPAhMg@mail.gmail.com>
-Subject: How to disable amdgpu powerplay?
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190724141554.31723-1-standby24x7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi there
+On 7/24/19 7:15 AM, Masanari Iida wrote:
+> This patch fixes some spelling typo in qos_mc_aware.sh
+> 
+> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 
-I have a laptop AMD A12 with amdgpu.
-When I use kernel 5.X I have trouble with powerplay!
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-https://paste.ubuntu.com/p/YhbjnzYYYh/
+Thanks.
 
-Is there same kernel boot parameters to use in order to disable powerplay??
+> ---
+>  tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+> index 71231ad2dbfb..47315fe48d5a 100755
+> --- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+> +++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+> @@ -262,7 +262,7 @@ test_mc_aware()
+>  
+>  	stop_traffic
+>  
+> -	log_test "UC performace under MC overload"
+> +	log_test "UC performance under MC overload"
+>  
+>  	echo "UC-only throughput  $(humanize $ucth1)"
+>  	echo "UC+MC throughput    $(humanize $ucth2)"
+> @@ -316,7 +316,7 @@ test_uc_aware()
+>  
+>  	stop_traffic
+>  
+> -	log_test "MC performace under UC overload"
+> +	log_test "MC performance under UC overload"
+>  	echo "    ingress UC throughput $(humanize ${uc_ir})"
+>  	echo "    egress UC throughput  $(humanize ${uc_er})"
+>  	echo "    sent $attempts BC ARPs, got $passes responses"
+> 
 
-Thanks
+
+-- 
+~Randy
