@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F815C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4BEC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3583C22BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE65522BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033389;
-	bh=BXbGsXOa9VO8OWmm5pyho2tcOhg7BywU2TkvD1p7kPk=;
+	s=default; t=1564033392;
+	bh=vlTIogb9tzHAuBPAyMF4RNDmYm61QUR+7qMqccJAo1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGIM6IV/VjGW7qqsYhveMRECB2dxhXBGUq8+SvI21w23pC9EFnW75arol1z3sDjDU
-	 FTnkgdEDxL6CQVGWj0kYb1Fw4cECav1m2GZrR9A2IIFNw/vf7y3lGG7irjocVGjwF7
-	 DCTaZk/lO/5DqpVHASWqV/dZLARNBgZxL3MWSrIc=
+	b=RjM9INsOwaXps4bA9RCG5KEW3r3b1RSq3t4gOn3zu/hwLnz/6dZRmhVp9DmcO3Pgh
+	 6vyFv8ONYjKqJM0ob8UhzGG3tEP0CYgy+mLCUQYdZmICeBNXXsgMuXIOpeQaR3p3b6
+	 FyAfz4ZXkUvbUeKuu8CsX/dAJbtSPI7gajX9t06w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404880AbfGYFnI (ORCPT
+        id S2404899AbfGYFnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:43:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390984AbfGYFnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:43:01 -0400
+        id S2390992AbfGYFnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:43:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC94F21850;
-        Thu, 25 Jul 2019 05:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E46322CD1;
+        Thu, 25 Jul 2019 05:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033381;
-        bh=BXbGsXOa9VO8OWmm5pyho2tcOhg7BywU2TkvD1p7kPk=;
+        s=default; t=1564033386;
+        bh=vlTIogb9tzHAuBPAyMF4RNDmYm61QUR+7qMqccJAo1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJWmQpFs+l9IWFSmHy0I1fsbCWDB94TurRUDL725SxNnMRZ2qTsqojgxYaxHMTzLH
-         qTgqygAO/1Kr88OiRFe+ae/CuimzvOrAaFbJPQI3rEUzQvkxq9Fw/afa9A2e2SIeqX
-         ARo2EdGHIOGUunA7KGWnGQKUG/CIxveMkZKiQySI=
+        b=FfHrpTNjEBP/auz1S6VSMYnovzB7y6l9eYgJQoh+N4qMWMQqowTPsd9vmDsyMHOvy
+         jsAvYfpgFSp+GzXcteBo6Wu0f0l2bxKTMRmhL4l7LN20ODJuRUWBIC+RWyHTqROtpE
+         WKwAWcaE/YKYtvjm+BkT/ALTwbVn9fmXkiF8nE80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 188/271] bcache: destroy dc->writeback_write_wq if failed to create dc->writeback_thread
-Date:   Wed, 24 Jul 2019 21:20:57 +0200
-Message-Id: <20190724191711.234053950@linuxfoundation.org>
+        stable@vger.kernel.org, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 190/271] Input: alps - dont handle ALPS cs19 trackpoint-only device
+Date:   Wed, 24 Jul 2019 21:20:59 +0200
+Message-Id: <20190724191711.395880096@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -59,36 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit f54d801dda14942dbefa00541d10603015b7859c upstream.
+commit 7e4935ccc3236751e5fe4bd6846f86e46bb2e427 upstream.
 
-Commit 9baf30972b55 ("bcache: fix for gc and write-back race") added a
-new work queue dc->writeback_write_wq, but forgot to destroy it in the
-error condition when creating dc->writeback_thread failed.
+On a latest Lenovo laptop, the trackpoint and 3 buttons below it
+don't work at all, when we move the trackpoint or press those 3
+buttons, the kernel will print out:
+"Rejected trackstick packet from non DualPoint device"
 
-This patch destroys dc->writeback_write_wq if kthread_create() returns
-error pointer to dc->writeback_thread, then a memory leak is avoided.
+This device is identified as an alps touchpad but the packet has
+trackpoint format, so the alps.c drops the packet and prints out
+the message above.
 
-Fixes: 9baf30972b55 ("bcache: fix for gc and write-back race")
-Signed-off-by: Coly Li <colyli@suse.de>
+According to XiaoXiao's explanation, this device is named cs19 and
+is trackpoint-only device, its firmware is only for trackpoint, it
+is independent of touchpad and is a device completely different from
+DualPoint ones.
+
+To drive this device with mininal changes to the existing driver, we
+just let the alps driver not handle this device, then the trackpoint.c
+will be the driver of this device if the trackpoint driver is enabled.
+(if not, this device will fallback to a bare PS/2 device)
+
+With the trackpoint.c, this trackpoint and 3 buttons all work well,
+they have all features that the trackpoint should have, like
+scrolling-screen, drag-and-drop and frame-selection.
+
+Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/writeback.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/mouse/alps.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -807,6 +807,7 @@ int bch_cached_dev_writeback_start(struc
- 					      "bcache_writeback");
- 	if (IS_ERR(dc->writeback_thread)) {
- 		cached_dev_put(dc);
-+		destroy_workqueue(dc->writeback_write_wq);
- 		return PTR_ERR(dc->writeback_thread);
- 	}
+--- a/drivers/input/mouse/alps.c
++++ b/drivers/input/mouse/alps.c
+@@ -24,6 +24,7 @@
  
+ #include "psmouse.h"
+ #include "alps.h"
++#include "trackpoint.h"
+ 
+ /*
+  * Definitions for ALPS version 3 and 4 command mode protocol
+@@ -2864,6 +2865,23 @@ static const struct alps_protocol_info *
+ 	return NULL;
+ }
+ 
++static bool alps_is_cs19_trackpoint(struct psmouse *psmouse)
++{
++	u8 param[2] = { 0 };
++
++	if (ps2_command(&psmouse->ps2dev,
++			param, MAKE_PS2_CMD(0, 2, TP_READ_ID)))
++		return false;
++
++	/*
++	 * param[0] contains the trackpoint device variant_id while
++	 * param[1] contains the firmware_id. So far all alps
++	 * trackpoint-only devices have their variant_ids equal
++	 * TP_VARIANT_ALPS and their firmware_ids are in 0x20~0x2f range.
++	 */
++	return param[0] == TP_VARIANT_ALPS && (param[1] & 0x20);
++}
++
+ static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
+ {
+ 	const struct alps_protocol_info *protocol;
+@@ -3165,6 +3183,20 @@ int alps_detect(struct psmouse *psmouse,
+ 		return error;
+ 
+ 	/*
++	 * ALPS cs19 is a trackpoint-only device, and uses different
++	 * protocol than DualPoint ones, so we return -EINVAL here and let
++	 * trackpoint.c drive this device. If the trackpoint driver is not
++	 * enabled, the device will fall back to a bare PS/2 mouse.
++	 * If ps2_command() fails here, we depend on the immediately
++	 * followed psmouse_reset() to reset the device to normal state.
++	 */
++	if (alps_is_cs19_trackpoint(psmouse)) {
++		psmouse_dbg(psmouse,
++			    "ALPS CS19 trackpoint-only device detected, ignoring\n");
++		return -EINVAL;
++	}
++
++	/*
+ 	 * Reset the device to make sure it is fully operational:
+ 	 * on some laptops, like certain Dell Latitudes, we may
+ 	 * fail to properly detect presence of trackstick if device
 
 
