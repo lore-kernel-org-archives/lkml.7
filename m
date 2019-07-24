@@ -2,81 +2,79 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802F2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EED6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F17E2190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F162190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:52:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="WsI01r0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfGXWwk (ORCPT
+        id S1729616AbfGXWwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:52:40 -0400
-Received: from mga05.intel.com ([192.55.52.43]:53541 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfGXWwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:52:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 15:52:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
-   d="scan'208";a="175028915"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2019 15:52:39 -0700
-Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 24 Jul 2019 15:52:39 -0700
-Received: from orsmsx103.amr.corp.intel.com ([169.254.5.29]) by
- ORSMSX155.amr.corp.intel.com ([169.254.7.34]) with mapi id 14.03.0439.000;
- Wed, 24 Jul 2019 15:52:39 -0700
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-wired-lan] [PATCH v2] e1000e: Make speed detection on
- hotplugging cable more reliable
-Thread-Topic: [Intel-wired-lan] [PATCH v2] e1000e: Make speed detection on
- hotplugging cable more reliable
-Thread-Index: AQHVQnJ+Yzd19bMtS0elY63lZscBog==
-Date:   Wed, 24 Jul 2019 22:52:38 +0000
-Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B970D75A2@ORSMSX103.amr.corp.intel.com>
-References: <20190715084355.9962-1-kai.heng.feng@canonical.com>
- <20190715122555.11922-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20190715122555.11922-1-kai.heng.feng@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 24 Jul 2019 18:52:44 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38655 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfGXWwm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 18:52:42 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v186so36242060oie.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NS4u+eBseg0DbQA0MU2dSuty1nFLg/yD2ulnxgZWxpw=;
+        b=WsI01r0+8S0qHaiUGli9O6VA8G5EbT8wESR+QHOUxt+/JeNKOPhQaHmPMTMh8KeJhi
+         knfyeHmKxGpmpur/ltSGLunAHSSg6BCDIPy3rFyWNIOzGn6KeOBjFf0EWl/VovTwjw2Z
+         ZF8lTd/ZFvMgkJB+p8yHYfJm6eUvMH5ebX5U6dNhiA2NEsSOM47/uSHe0/CI8vqIrIy5
+         nzEgeRtmzAJl4ArzmC9enkYIQ7bvu4mXazcyXaOupfOvh1MFtfCZ8BS9ALKmFxbZDY2/
+         mtnlrYGHU8qf5gw0Pziar4dwHIBm8siMjy/LtAfsWqykl6JFTDPIFrc6TJvZvHVV6sf/
+         /5fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NS4u+eBseg0DbQA0MU2dSuty1nFLg/yD2ulnxgZWxpw=;
+        b=GORrCGpsGLVCNa9qUBBL6m1ApgDLPlW8HAMR6n3FkPLJ9cfrFzQbthe+UXrET64+lb
+         KJjjwu+euraXO8pEe6hDWJVgJktBzmixaQ7baTs39dF5M7tQWllJFBoUD+jVv2a108sk
+         7OWmsuqAOXf2c7JtD5EtgwlpBPGrU2RI7JzBY410XTC5drMYuh76VADzWqeu5rsV2CYu
+         Q+vc2uCfahWBD3oT2SayJHPFoa3Ln9NCZrCJJ0PpiZEQjqgXWmJN46fIkSIeX3O20SXs
+         kIcRo+4VBpufwYIdJXCNNGTK3EHKezEaJg51RLXx2UqbGC8ozP0ysKWwNN5DpQeFxJNY
+         Ij/Q==
+X-Gm-Message-State: APjAAAVEcaVUyW3ySLWnEV0ODYBkcugp2AlyjBnpmWx1D/2Dy832YaAT
+        lKD36fmuJBgK0MjhPZtuWdpMHE5FESEIj6mWD47Bpw==
+X-Google-Smtp-Source: APXvYqzSZInaKhuMFiPlmjU3dlvlT2OJR7ptIKglkJzXRv3bZsRsA+zEBuvwUDFgRbzKWlufzZxuvok65bNWe4q/BNE=
+X-Received: by 2002:aca:fc50:: with SMTP id a77mr40944549oii.0.1564008761619;
+ Wed, 24 Jul 2019 15:52:41 -0700 (PDT)
 MIME-Version: 1.0
+References: <1564007603-9655-1-git-send-email-jane.chu@oracle.com>
+In-Reply-To: <1564007603-9655-1-git-send-email-jane.chu@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 24 Jul 2019 15:52:30 -0700
+Message-ID: <CAPcyv4iqdbL+=boCciMTgUEn-GU1RQQmBJtNU9RHoV84XNMS+g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] mm/memory-failure: Poison read receives SIGKILL
+ instead of SIGBUS issue
+To:     Jane Chu <jane.chu@oracle.com>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA3LTE1IGF0IDIwOjI1ICswODAwLCBLYWktSGVuZyBGZW5nIHdyb3RlOgo+
-IEFmdGVyIGhvdHBsdWdnaW5nIGFuIDFHYnBzIGV0aGVybmV0IGNhYmxlIHdpdGggMUdicHMgbGlu
-ayBwYXJ0bmVyLCB0aGUKPiBNSUlfQk1TUiBtYXkgcmVwb3J0IDEwTWJwcywgcmVuZGVycyB0aGUg
-bmV0d29yayByYXRoZXIgc2xvdy4KPiAKPiBUaGUgaXNzdWUgaGFzIG11Y2ggbG93ZXIgZmFpbCBy
-YXRlIGFmdGVyIGNvbW1pdCA1OTY1M2U2NDk3ZDEgKCJlMTAwMGU6Cj4gTWFrZSB3YXRjaGRvZyB1
-c2UgZGVsYXllZCB3b3JrIiksIHdoaWNoIGVzc2VudGlhbGx5IGludHJvZHVjZXMgc29tZQo+IGRl
-bGF5IGJlZm9yZSBydW5uaW5nIHRoZSB3YXRjaGRvZyB0YXNrLgo+IAo+IEJ1dCB0aGVyZSdzIHN0
-aWxsIGEgY2hhbmNlIHRoYXQgdGhlIGhvdHBsdWdnaW5nIGV2ZW50IGFuZCB0aGUgcXVldWVkCj4g
-d2F0Y2hkb2cgdGFzayBnZXRzIHJ1biBhdCB0aGUgc2FtZSB0aW1lLCB0aGVuIHRoZSBvcmlnaW5h
-bCBpc3N1ZSBjYW4gYmUKPiBvYnNlcnZlZCBvbmNlIGFnYWluLgo+IAo+IFNvIGxldCdzIHVzZSBt
-b2RfZGVsYXllZF93b3JrKCkgdG8gYWRkIGEgZGV0ZXJtaW5pc3RpYyAxIHNlY29uZCBkZWxheQo+
-IGJlZm9yZSBydW5uaW5nIHdhdGNoZG9nIHRhc2ssIGFmdGVyIGFuIGludGVycnVwdC4KPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBLYWktSGVuZyBGZW5nIDxrYWkuaGVuZy5mZW5nQGNhbm9uaWNhbC5jb20+
-Cj4gLS0tCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2UxMDAwZS9uZXRkZXYuYyB8IDEy
-ICsrKysrKy0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0
-aW9ucygtKQoKVGVzdGVkLWJ5OiBBYXJvbiBCcm93biA8YWFyb24uZi5icm93bkBpbnRlbC5jb20+
-Cg==
+On Wed, Jul 24, 2019 at 3:35 PM Jane Chu <jane.chu@oracle.com> wrote:
+>
+> Changes in v2:
+>  - move 'tk' allocations internal to add_to_kill(), suggested by Dan;
+
+Oh, sorry if it wasn't clear, this should move to its own patch that
+only does the cleanup, and then the follow on fix patch becomes
+smaller and more straightforward.
