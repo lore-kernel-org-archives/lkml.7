@@ -2,149 +2,144 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D016C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B86C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21717218B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:09:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hhLM2iJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5833C218B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfGXKJK (ORCPT
+        id S1727310AbfGXKJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:09:10 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:50405 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbfGXKJJ (ORCPT
+        Wed, 24 Jul 2019 06:09:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53441 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfGXKJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:09:09 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190724100907euoutp0273cbd026116cca3e908f8ffb9c8f5a4e~0UAPUWpsa0666006660euoutp02D
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:09:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190724100907euoutp0273cbd026116cca3e908f8ffb9c8f5a4e~0UAPUWpsa0666006660euoutp02D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563962948;
-        bh=XetWQSqaXs6nRe3zf5etzeWMxZUCaNusJKBqu7npMnU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=hhLM2iJQPxFgojXY5kmm8dcM6yh+SMiJhK5fz3yF5sksiJEyxLbT+QqAcL6zdcNoz
-         4fp7cNdqd9cEtKCavVw6kPQdARRzbXlR/OvGH2nB3dKa1mUtQ6KTOjC8yeR0mA2Ol0
-         +xTB0NumOq2xZOAjf1pOG4L/W3VcZpx6GuIVletA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190724100907eucas1p29ef5c6bfbe6f34cc2b5508c641f07a0e~0UAOj5ott2173521735eucas1p2Z;
-        Wed, 24 Jul 2019 10:09:07 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 78.51.04325.24E283D5; Wed, 24
-        Jul 2019 11:09:06 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190724100906eucas1p27521c0ef99eda8954fb6462f1a3c40cb~0UANyeGHq1967719677eucas1p2N;
-        Wed, 24 Jul 2019 10:09:06 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190724100906eusmtrp21c36cade0f3a6312c1cb5944314ec5cf~0UANkMPD91736717367eusmtrp2H;
-        Wed, 24 Jul 2019 10:09:06 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-da-5d382e42ee22
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9A.57.04146.14E283D5; Wed, 24
-        Jul 2019 11:09:06 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190724100905eusmtip2dd6151f7506f21dbce67219eaad087da~0UAMxAXXg0828408284eusmtip2c;
-        Wed, 24 Jul 2019 10:09:05 +0000 (GMT)
-Subject: Re: [PATCH v4 5/5] DT: arm: exynos4412: add event data type which
- is monitored
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org,
-        willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <694617ed-5c02-40cc-2f27-82e8bb0ac6fe@partner.samsung.com>
-Date:   Wed, 24 Jul 2019 12:09:04 +0200
+        Wed, 24 Jul 2019 06:09:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id x15so41257159wmj.3;
+        Wed, 24 Jul 2019 03:09:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=IFe+jDxbDPAMh5mQn2e4hJUl3LINzr9GC6L5Ez1zNn0=;
+        b=i2p/M+LAeRvbUKD/68s1cgVD0YtEqDlKcBKcUOyC/tbJRQUhvvkKqYCfsSTAjPesLz
+         +gQ75RPq4quMzyB3yVhjrtKY8tXRFi9hbTIIwD4XGiSH5i3iP9lo+iYebcQBnKsk+wwc
+         NzGbxf90py4HBCmAMupj0N3ro/zBDn4uQ/wuc3KAWhHqB+fn++YjcO+luLtepCNRjzku
+         Cv3FIUldnZAAFytcBF89rpDJOV6lpOelKVujF2O0sLMDiE/W1/9ps7Ls1X/OSnftLQ+f
+         Z27Ppufku+RgxxEPmbTDUU6nHuTgHG89KUnZJJX7zQffHudGzGBZjP3yxcw9zfFY/UW7
+         4MKA==
+X-Gm-Message-State: APjAAAUKJ6WQhvt1pDQ6ED+w9uC8r0ftCN8ASDcHbinJuq177VAOZU7T
+        i8Ad0lvM9w5WQhgu6xnSSKFtgFYu
+X-Google-Smtp-Source: APXvYqwZZOAkqi9LeSfBkupGAm4lvglO0LKKV1ME5x1F2x4o1JGGT8stdCf+/ZjTACw/PDgrFu+zLQ==
+X-Received: by 2002:a1c:480a:: with SMTP id v10mr73284060wma.120.1563962947927;
+        Wed, 24 Jul 2019 03:09:07 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::ee2? ([2a0b:e7c0:0:107::ee2])
+        by smtp.gmail.com with ESMTPSA id c7sm39149158wro.70.2019.07.24.03.09.06
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 03:09:07 -0700 (PDT)
+Subject: Re: [PATCH] tty/isicom: remove redundant assignment to variable
+ word_count
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190723150314.14513-1-colin.king@canonical.com>
+From:   Jiri Slaby <jslaby@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <90da3a1d-ff0f-937b-d212-bb5428486768@suse.com>
+Date:   Wed, 24 Jul 2019 12:09:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190723175853.GA29195@kozik-lap>
-Content-Language: en-US
+In-Reply-To: <20190723150314.14513-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOKsWRmVeSWpSXmKPExsWy7djPc7pOehaxBpteG1tsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
-        uN24gs2ide8RdovDb9pZLb6deMToIOCxZt4aRo+ds+6ye2xa1cnmsXlJvUffllWMHp83yQWw
-        RXHZpKTmZJalFunbJXBltC+ZwFawgq3i1rFTzA2MzaxdjJwcEgImEqtWT2DqYuTiEBJYwSjR
-        t34VM4TzhVFi/+rlbBDOZ0aJoz83MMO07N9+mh3EFhJYzijRfE4Hwn7LKPGqhR/EFhaIlHh/
-        bz1YjYiApsT1v99ZQQYxC8xilrh2fRaQw8HBJqAnsWNVIYjJK+AmseewCojJIqAqsX65M0in
-        qECExOUtuxhBbF4BQYmTM5+wgNicAvoSC///A7OZBcQlbj2ZzwRhy0tsfzsH7H4JgUYOifkz
-        TzFCnOwicW5tKxOELSzx6vgWdghbRuL/zvlQ8WKJht6FUPU1Eo/750LVWEscPn4R7GJmoFfW
-        79KHCDtK7N2/nwkkLCHAJ3HjrSDECXwSk7ZNZ4YI80p0tAlBVGtIbOm5ALVITGL5mmnsExiV
-        ZiF5bBaSZ2YheWYWwt4FjCyrGMVTS4tz01OLjfNSy/WKE3OLS/PS9ZLzczcxApPb6X/Hv+5g
-        3Pcn6RCjAAejEg9vBZN5rBBrYllxZe4hRgkOZiUR3sAGs1gh3pTEyqrUovz4otKc1OJDjNIc
-        LErivNUMD6KFBNITS1KzU1MLUotgskwcnFINjPrbvqiZpkhtWqZkW5Sz9WmC2MRwc82y516n
-        fzUvibngNrOwKlWreGt6XuK9Nh+RGwfv+Qaurv9v6vHZqr708sEHWWpXzkr4LHCwmblmrmaC
-        /ucLcpdrKiM2+fc2MRteUrug7rfyaJ3i28jw4zIhh7dvaS1LWazaNv1991Tht7NenK+SNZLo
-        UmIpzkg01GIuKk4EAN4fLctqAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsVy+t/xe7pOehaxBvvOMlpsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BZnm96wW2x6fI3V4vKuOWwWn3uPMFrMOL+PyWLtkbvsFkuvX2Sy
-        uN24gs2ide8RdovDb9pZLb6deMToIOCxZt4aRo+ds+6ye2xa1cnmsXlJvUffllWMHp83yQWw
-        RenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehltC+Z
-        wFawgq3i1rFTzA2MzaxdjJwcEgImEvu3n2bvYuTiEBJYyijxuv8OG0RCTGLSvu3sELawxJ9r
-        XWwQRa8ZJU48XwuU4OAQFoiUOHkgE6RGREBT4vrf76wgNcwCs5glVh48wATR8I5R4tnq6cwg
-        DWwCehI7VhWCmLwCbhJ7DquAmCwCqhLrlzuDjBEViJDoa5sNdgKvgKDEyZlPWEBsTgF9iYX/
-        /4HZzAJmEvM2P2SGsMUlbj2ZzwRhy0tsfzuHeQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW5
-        6bnFhnrFibnFpXnpesn5uZsYgTG97djPzTsYL20MPsQowMGoxMNbwWQeK8SaWFZcmXuIUYKD
-        WUmEN7DBLFaINyWxsiq1KD++qDQntfgQoynQbxOZpUST84HpJq8k3tDU0NzC0tDc2NzYzEJJ
-        nLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6OOtYbRg8gtrc/zv15umr5x5Zak1DaOt/ahW869
-        PnTtf8PffJW4e9vrok+b1exk3cK1TZNrZU79dUXm7v2ya0RvWijHTRKQlnv5bE1Qt9eX28+W
-        T204NnfzyiN2fA0Nxo4valyF/v7x1WRnqlrOMult17rqniMnNvJY1dfvfPlPZC233TSOyweU
-        WIozEg21mIuKEwHH8dNt/wIAAA==
-X-CMS-MailID: 20190724100906eucas1p27521c0ef99eda8954fb6462f1a3c40cb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190605091305eucas1p136332cc3d1a299d90617bddcb365bee0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190605091305eucas1p136332cc3d1a299d90617bddcb365bee0
-References: <20190605091236.24263-1-l.luba@partner.samsung.com>
-        <CGME20190605091305eucas1p136332cc3d1a299d90617bddcb365bee0@eucas1p1.samsung.com>
-        <20190605091236.24263-6-l.luba@partner.samsung.com>
-        <20190723175853.GA29195@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On 23. 07. 19, 17:03, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable word_count is being assigned a value that is never read before
+> a return, the assignment is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-On 7/23/19 7:58 PM, Krzysztof Kozlowski wrote:
-> On Wed, Jun 05, 2019 at 11:12:36AM +0200, Lukasz Luba wrote:
->> The patch adds new field in the PPMU event which shows explicitly
->> what kind of data the event is monitoring. It is possible to change it
->> using defined values in exynos_ppmu.h file.
->>
->> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos4412-ppmu-common.dtsi | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
-> 
-> I tried to apply this... but prerequisites were not merged into
-> v5.3-rc1. This one will have to wait then till next release.
-Indeed, I will ask Chanwoo for ack for patch 4/5.
+Looks good, it predates git. Maybe the while loop wanted to use
+word_count originally.
 
-Regards,
-Lukasz
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+
+> ---
+>  drivers/tty/isicom.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Best regards,
-> Krzysztof
+> diff --git a/drivers/tty/isicom.c b/drivers/tty/isicom.c
+> index e04a43e89f6b..fc38f96475bf 100644
+> --- a/drivers/tty/isicom.c
+> +++ b/drivers/tty/isicom.c
+> @@ -553,7 +553,6 @@ static irqreturn_t isicom_interrupt(int irq, void *dev_id)
+>  
+>  	tty = tty_port_tty_get(&port->port);
+>  	if (tty == NULL) {
+> -		word_count = byte_count >> 1;
+>  		while (byte_count > 1) {
+>  			inw(base);
+>  			byte_count -= 2;
 > 
-> 
-> 
+
+
+-- 
+js
+suse labs
