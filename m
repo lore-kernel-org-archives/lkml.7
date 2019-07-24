@@ -2,59 +2,63 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C87C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B1DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CEC2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358722189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b2bsae63"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJwrufS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfGXWt7 (ORCPT
+        id S1729597AbfGXWuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:49:59 -0400
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:54946 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfGXWt7 (ORCPT
+        Wed, 24 Jul 2019 18:50:03 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:42738 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfGXWuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:49:59 -0400
-Received: by mail-ua1-f74.google.com with SMTP id c21so4949894uao.21
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:49:58 -0700 (PDT)
+        Wed, 24 Jul 2019 18:50:01 -0400
+Received: by mail-pf1-f202.google.com with SMTP id 21so29491564pfu.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Fw1C3R9hSasyzIXJTKVtbRAdTF9SVma4v9C5XlFKOn4=;
-        b=b2bsae63RuASUzg2AQusA3JyqxrpIjYnaeOjpr3pxHZPbr+hIn03dVK+6QWaRBfHPK
-         W+oUJIyIc8N3a4ISX2sh+mTCuq2YEWdIy6iT7M8mmbY17kLJMfJiJPx1rZZeaXuViFj6
-         ovilSncNgM5GrruY+Ayb9kScp2iCfPTpfKA4rCtdMdF/ugGF4uspobrE4XjE5CnTUGGg
-         Cp+60mvb2FwRpq6Uno0154Lj/Og4+YhFxiWQQvEameLfEFfnQQGHQ5HIvCQKHfK9Ewsp
-         SDFxsmszwGkP0AMHpLt8a2irpgcPVP6vjGTjDsERmsAlg+ip/7vTMIg0L+qC7BmRMeWN
-         XP5g==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=GB4nZVYWkx54T499tGW7LQ9xBxxyD8tkNT6QDgPsIdw=;
+        b=qJwrufS35GNRyXEA4GiCT7sI3nbMEajGqcx0nM/PxQz7F3h0qKEUCBhoLp4B071vIK
+         2ylNHen6c05PBxL+ThTJ6jeRLn9ELGca6EDaex1JP+RdJ+zC5gIWwydP5yN44RGO5c9r
+         nULwodbf7xHJkbKr66uawpzSWLNXZwjObpsEtTJROUkT067SD4gfuPHRhIliSPDHeacA
+         a1QeKOk1Yk+xDzPIXEHNvVOz1hxv5qN60VK1YtvlGG+yHyubKG32WB7ESu0yiky/a1Ua
+         EHwuvOIEIIgMwTNCX6FpjdMj1C/n8tcYYp9keT7AmwMeXfuBGzVErEIwE2b//fcNerx7
+         wYjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Fw1C3R9hSasyzIXJTKVtbRAdTF9SVma4v9C5XlFKOn4=;
-        b=UrsI1Go9iDFeqDVh9pcWFGMM84Yaj96Z8IDnzoo6P3+ngkQNW8EHfl4m3s8gAX+fW8
-         YXcWkWBSUdxo5+C8IpMIEqrrIBuafNP9bB3rrBmPzFqPNU9nVszZEpX7+dutYQpoRQOD
-         6J4V8l8f2ccAL8jgj/MeQGkLJbV52BVUmNvEuX/pKULNDFfe++/PNM+z/LuSoAmlh6ty
-         Nc0d4G+O+ajiCVzRODU9FbpPqyqQrq2mWGgRBlqtKpr2uKdBvae5CJ/YiYyqGfKKwJvu
-         bOjJkd50zoF9EpGobBVhCWykw8PVMB2OGDfaH5h1C7J3B7q5kZXCaJx8HoxZu8fDGFjt
-         kRMA==
-X-Gm-Message-State: APjAAAXgTjR9jhMCkIEhLVAkbBtngp8UDgZ+sPjpOT9mCkSJGvHUT8F2
-        BGShk5Nn16Ou3rlpD/KisgKXzVmT
-X-Google-Smtp-Source: APXvYqwZs2/0SU0N2Sm/CL0l7fjZm5niEN3hNW3PGTYwbQ1S2LcXZV96g8k74zDIWTQFR7c1gTBZv2EY
-X-Received: by 2002:a1f:7383:: with SMTP id o125mr34463923vkc.6.1564008597898;
- Wed, 24 Jul 2019 15:49:57 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 15:49:52 -0700
-Message-Id: <20190724224954.229540-1-nums@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=GB4nZVYWkx54T499tGW7LQ9xBxxyD8tkNT6QDgPsIdw=;
+        b=U/K6+GWkg9a71F97Lcd/D3a2oJZ4BbqZ+2tCz+x6iMaLxZdTSJm/XdhrN4lOV1JaUx
+         hKSfcnfg+oWwa+r+44nbgY8mXDkvaF8MiVfJLJa8RJzTar5Dgz5Xmezaa3cNgiliBDQY
+         j61yJOSUABxv+9U9xqDP+DyBtm6VTiU3pa0FzCI/gBuBSOw1FSrr+afZycSs54fl7BTg
+         HfW6KsN5Hy9sNdNQihg9AJVLGhUBpaTx6RA3oLyI3QYm63+3MTquvnODq3+UkcgZ2mbD
+         5HvJ7rfxbQizx6FVKMvyOVmtLOWE8/dZlSYMNoH/Lsv1G1cTlr0TH58q6MDnyDywRyE4
+         ueIg==
+X-Gm-Message-State: APjAAAVEHLAQJJmPSgOr3YOxbfoxGGLcNfE09f0oSRr/U4R8yGorhuiq
+        4qG/E8MBXkRP6/eCndCMiYOrZKK5
+X-Google-Smtp-Source: APXvYqxQ6wX0aAkyCpuXCZSxLubbYxjAgk0Kj5/3Zz2Ee5SBJulyugbbYzCrLoQ64PCzvzh9WINEIAMv
+X-Received: by 2002:a63:cb4f:: with SMTP id m15mr7868403pgi.100.1564008600166;
+ Wed, 24 Jul 2019 15:50:00 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 15:49:53 -0700
+In-Reply-To: <20190724224954.229540-1-nums@google.com>
+Message-Id: <20190724224954.229540-2-nums@google.com>
 Mime-Version: 1.0
+References: <20190724224954.229540-1-nums@google.com>
 X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [RFC][PATCH 0/2] Perf misaligned address fixes
+Subject: [RFC][PATCH 1/2] Fix event.c misaligned address error
 From:   Numfor Mbiziwo-Tiapo <nums@google.com>
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
@@ -67,31 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches are all errors found by running perf test with the
-ubsan (undefined behavior sanitizer version of perf).
+The ubsan (undefined behavior sanitizer) build of perf throws an
+error when the synthesize "Synthesize cpu map" function from
+perf test is run.
 
-They are solutions to misaligned address errors caught by ubsan
-but they would break compatibility between perf data files.
-
-To build perf with ubsan run:
+This can be reproduced by running (from the tip directory):
 make -C tools/perf USE_CLANG=1 EXTRA_CFLAGS="-fsanitize=undefined"
 
-Perf will throw errors that have been fixed in these patches
-that have not yet been merged:
+(see cover letter for why perf may not build)
 
-https://lore.kernel.org/patchwork/patch/1104065/
-https://lore.kernel.org/patchwork/patch/1104066/
+then running: tools/perf/perf test 44 -v
 
-Please feel free to leave comments. 
+This bug occurs because the cpu_map_data__synthesize function in
+event.c calls synthesize_mask, casting the 'data' variable
+(of type cpu_map_data*) to a cpu_map_mask*. Since struct
+cpu_map_data is 2 byte aligned and struct cpu_map_mask is 8 byte
+aligned this causes memory alignment issues.
 
-Numfor Mbiziwo-Tiapo (2):
-  Fix event.c misaligned address error
-  Fix evsel.c misaligned address errors
+This is fixed by adding 6 bytes of padding to the struct cpu_map_data,
+however, this will break compatibility between perf data files - a file
+written by an old perf wouldn't work with a perf with this patch due
+to event data alignment changing.
 
- tools/perf/util/event.h |  1 +
- tools/perf/util/evsel.c | 28 ++++++++++++++++------------
- 2 files changed, 17 insertions(+), 12 deletions(-)
+Comments?
 
+Not-Quite-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+---
+ tools/perf/util/event.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index eb95f3384958..82eaf06c2604 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -433,6 +433,7 @@ struct cpu_map_mask {
+ 
+ struct cpu_map_data {
+ 	u16	type;
++	u8 pad[6];
+ 	char	data[];
+ };
+ 
 -- 
 2.22.0.657.g960e92d24f-goog
 
