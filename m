@@ -2,122 +2,103 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25835C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65788C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D7821850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A96721850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563979323;
+	bh=TRtWU5E1r37i55jKNYc0TCw2JQ3luL6jpXOG+dX2+IU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oCJYZDElaYimHWZoYuVnChy9XqVyN3HcZoDKU7C7C3CbiOsJLjlXK+19nIVO00g56
+	 3jrBZZxggrHWMU2FFwvOsqxDSOzlosf5vQO2TLhOW5mYN3lexeN5Ij3oYNEA4bgnvl
+	 UMe+fIEO77XKL0LSctx8BvVxgH0h3mXFkDUUCsFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfGXOl7 (ORCPT
+        id S2387514AbfGXOmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:41:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41194 "EHLO inva021.nxp.com"
+        Wed, 24 Jul 2019 10:42:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbfGXOlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728233AbfGXOlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 10:41:46 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3F12120034A;
-        Wed, 24 Jul 2019 16:41:44 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 317D7200348;
-        Wed, 24 Jul 2019 16:41:44 +0200 (CEST)
-Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C0733205D8;
-        Wed, 24 Jul 2019 16:41:43 +0200 (CEST)
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v1 3/4] dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe endpoint
-Date:   Wed, 24 Jul 2019 17:41:40 +0300
-Message-Id: <1563979301-596-4-git-send-email-claudiu.manoil@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
-References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5BF922BF3;
+        Wed, 24 Jul 2019 14:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563979305;
+        bh=TRtWU5E1r37i55jKNYc0TCw2JQ3luL6jpXOG+dX2+IU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lgy8s5xgg8fDhdv+/4WKp00AmtS2aQqp8aRxNZ+sxzVYDjUUmAwoArGG5xWnRJKP/
+         ednK+UnVAtUIJm5PM11Qy/aaKnUrgfEu44ZyeLTzAvcocH1cyVRXhrQQK3/mfOCp6O
+         8AANZqpxu8TsStU5SVHqBvnC62QWpFyfRlzIm4dQ=
+Received: by mail-qk1-f177.google.com with SMTP id 201so33897184qkm.9;
+        Wed, 24 Jul 2019 07:41:45 -0700 (PDT)
+X-Gm-Message-State: APjAAAXM8smKn5nqXuaKdFBTj4wCKucIoyBwL6NHv2O84w2w+cNAn40u
+        MpIJzENAH6dQXKcImqoubV4BP9Q2eQtm7CUIVg==
+X-Google-Smtp-Source: APXvYqz/M912Dd6lOG1yOuf5yMiMHoEfa2RwVPeNyv1O7z5gz0FAig6V3+V0bVh11Zso2nw1+rCP0tnwMr914vN60fg=
+X-Received: by 2002:a37:a010:: with SMTP id j16mr55849178qke.152.1563979304746;
+ Wed, 24 Jul 2019 07:41:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190619055247.35771-1-Anson.Huang@nxp.com> <20190722015043.GP3738@dragon>
+In-Reply-To: <20190722015043.GP3738@dragon>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 24 Jul 2019 08:41:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKv39XdFABuRvxwiXg6qQpHSuykwgqTwsGw1g+D2wA1+w@mail.gmail.com>
+Message-ID: <CAL_JsqKv39XdFABuRvxwiXg6qQpHSuykwgqTwsGw1g+D2wA1+w@mail.gmail.com>
+Subject: Re: [PATCH V5 1/5] dt-bindings: imx: Add clock binding doc for i.MX8MN
+To:     Shawn Guo <shawnguo@kernel.org>, Anson Huang <Anson.Huang@nxp.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Olof Johansson <olof@lixom.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Bai Ping <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Peng Fan <peng.fan@nxp.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The on-chip PCIe root complex that integrates the ENETC ethernet
-controllers also integrates a PCIe enpoint for the MDIO controller
-provinding for cetralized control of the ENETC mdio bus.
-Add bindings for this "central" MDIO Integrated PCIe Endpoit.
+On Sun, Jul 21, 2019 at 7:51 PM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Wed, Jun 19, 2019 at 01:52:43PM +0800, Anson.Huang@nxp.com wrote:
+> > From: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > Add the clock binding doc for i.MX8MN.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> Applied all, thanks.
 
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
-v1 - none
+This breaks building of 'dt_binding_check'. Looks like there are tabs
+in the file which doesn't mix with YAML. Please fix.
 
- .../devicetree/bindings/net/fsl-enetc.txt     | 42 +++++++++++++++++--
- 1 file changed, 39 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/fsl-enetc.txt b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-index 25fc687419db..c090f6df7a39 100644
---- a/Documentation/devicetree/bindings/net/fsl-enetc.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-enetc.txt
-@@ -11,7 +11,9 @@ Required properties:
- 		  to parent node bindings.
- - compatible	: Should be "fsl,enetc".
- 
--1) The ENETC external port is connected to a MDIO configurable phy:
-+1. The ENETC external port is connected to a MDIO configurable phy
-+
-+1.1. Using the local ENETC Port MDIO interface
- 
- In this case, the ENETC node should include a "mdio" sub-node
- that in turn should contain the "ethernet-phy" node describing the
-@@ -47,8 +49,42 @@ Example:
- 		};
- 	};
- 
--2) The ENETC port is an internal port or has a fixed-link external
--connection:
-+1.2. Using the central MDIO PCIe enpoint device
-+
-+In this case, the mdio node should be defined as another PCIe
-+endpoint node, at the same level with the ENETC port nodes.
-+
-+Required properties:
-+
-+- reg		: Specifies PCIe Device Number and Function
-+		  Number of the ENETC endpoint device, according
-+		  to parent node bindings.
-+- compatible	: Should be "fsl,enetc-mdio".
-+
-+The remaining required mdio bus properties are standard, their bindings
-+already defined in Documentation/devicetree/bindings/net/mdio.txt.
-+
-+Example:
-+
-+	ethernet@0,0 {
-+		compatible = "fsl,enetc";
-+		reg = <0x000000 0 0 0 0>;
-+		phy-handle = <&sgmii_phy0>;
-+		phy-connection-type = "sgmii";
-+	};
-+
-+	mdio@0,3 {
-+		compatible = "fsl,enetc-mdio";
-+		reg = <0x000300 0 0 0 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		sgmii_phy0: ethernet-phy@2 {
-+			reg = <0x2>;
-+		};
-+	};
-+
-+2. The ENETC port is an internal port or has a fixed-link external
-+connection
- 
- In this case, the ENETC port node defines a fixed link connection,
- as specified by Documentation/devicetree/bindings/net/fixed-link.txt.
--- 
-2.17.1
-
+Rob
