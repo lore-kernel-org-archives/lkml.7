@@ -2,157 +2,138 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A245C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A496C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB072229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42215229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ufYYjVec"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Cs8P7ecj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nwxpTwkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfGXLOD (ORCPT
+        id S1727482AbfGXLOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:14:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39007 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfGXLOD (ORCPT
+        Wed, 24 Jul 2019 07:14:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57014 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfGXLOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:14:03 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u25so30883406wmc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 04:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7NyRu0tx3w+dLLQ6/dneDxJh1D9iVMTSGGH2CPUAo/c=;
-        b=ufYYjVec/kvhmg39Q3zq/jFjiLdLC9vtny5aJgVO4Lp225heuEYfYuddTPewKY68GB
-         GFd9hONJsyc/pjx7948e2iiOHpwjxBH1adsyByDlp2IVTXsmBc5J/T2Q13mP4Je306Ah
-         whztj9zZujrWsLF/GxRhou1EKUfVQDIs4rhTUix2oaCIlIXcFEK7YVAGTTNpgg1S3bcc
-         cTG22FbrfXPgn1yleXnMI4R3t7xJeEXNJ42G4rL0u1j+slO9cBA/AeIeUBd4PW1SQ3EE
-         GvXB6ePJhAsLZCprxL28nuwbJtvJZvpQlsOm/o+9bMvbOG8wD/nXyunAit68PGMWKZEh
-         CkoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7NyRu0tx3w+dLLQ6/dneDxJh1D9iVMTSGGH2CPUAo/c=;
-        b=E8jBvCn4MnCO7UaIYSqye13h26pxJ7Iaiji2EzVF5R6/OP2IwkaQlHt2w9dVJH3Nou
-         DMkz4i3vAvXas8BpOBzLtQzGj8WmQZWj7z0KxdnN1LLJmHUcpfTP+EfSODtpIHPGV2kT
-         /rlIfs8YXVexzF7rDiRqOjZu2F5DOtEXzf+SnkOn+Z9PWv0MxXTirEX8+alUpOlSmUqT
-         SuEicmLCLTxMGoXgMzGQ0LWogjCsh73csZ39UcmTrQus8DD+B9vwpKUuqcSz9LmntneB
-         f2YzGsJ9sdKNHP60qH6eY31E6zPx+EGXep3U1hSlCd+m1tB38anPitjsoNSfSrqCoTlV
-         JMLg==
-X-Gm-Message-State: APjAAAVZfI7AooioAIbY2c16iOypD2vi36qOy9TC7pfaHS7gwEKw14Ih
-        a7v6IKt5RJrYCrxJIXn6dQORpA==
-X-Google-Smtp-Source: APXvYqzfMApTQXYMpBScWR9bk4kJ2771Xs86B/GfU/9afdNHqXHh096SssyjdsJTlYUpAz1NrlsIJg==
-X-Received: by 2002:a1c:c742:: with SMTP id x63mr78332968wmf.0.1563966841429;
-        Wed, 24 Jul 2019 04:14:01 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id u13sm54703536wrq.62.2019.07.24.04.14.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 04:14:00 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 12:13:59 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 7/7] backlight: gpio: use a helper variable for
- &pdev->dev
-Message-ID: <20190724111359.c262dcwwikn3j7fu@holly.lan>
-References: <20190724082508.27617-1-brgl@bgdev.pl>
- <20190724082508.27617-8-brgl@bgdev.pl>
+        Wed, 24 Jul 2019 07:14:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 021706058E; Wed, 24 Jul 2019 11:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563966883;
+        bh=WNP4i+Xm1K+QKneKcjzQw8TLaJsuxelXCn8BDxP0KmE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=Cs8P7ecjL4qJAglKJWQFu89m2H/UTaMYu6NK0Y/pMEWyAohi5PmtVKTmtT/VkkQaZ
+         cPIgvBvqwG/f7duTlIPKTdWo5MhKougu1o3yCMRbcoU7d0y1FFNIhGghOZ1IaU1R//
+         9CdGSZ8c0FPy0Q1qtAWghzEGJuNLuMktaIeMUDbs=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 892B46030E;
+        Wed, 24 Jul 2019 11:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563966880;
+        bh=WNP4i+Xm1K+QKneKcjzQw8TLaJsuxelXCn8BDxP0KmE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=nwxpTwkKRsUFRsdwd8oWca0fKhpYtNdgckvbtR5XsbOdiF791fp6/T37Y8wOjdDAQ
+         Iq+bGMIQnwFIwZHVDV8dkehN/WsE3ylck1JHlxexpC/ygH0WHZdjTaOGT4ibwjkV6h
+         gzgZRM7YQ1bo+fkgUchmZdLFbE5/TJdkF4HiXm5s=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 892B46030E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724082508.27617-8-brgl@bgdev.pl>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
+ inverted IRQ
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190607172958.20745-1-erosca@de.adit-jv.com>
+References: <20190607172958.20745-1-erosca@de.adit-jv.com>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Spyridon Papageorgiou <spapageorgiou@de.adit-jv.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190724111443.021706058E@smtp.codeaurora.org>
+Date:   Wed, 24 Jul 2019 11:14:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:25:08AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Instead of dereferencing pdev each time, use a helper variable for
-> the associated device pointer.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> The wl1837mod datasheet [1] says about the WL_IRQ pin:
+> 
+>  ---8<---
+> SDIO available, interrupt out. Active high. [..]
+> Set to rising edge (active high) on powerup.
+>  ---8<---
+> 
+> That's the reason of seeing the interrupt configured as:
+>  - IRQ_TYPE_EDGE_RISING on HiKey 960/970
+>  - IRQ_TYPE_LEVEL_HIGH on a number of i.MX6 platforms
+> 
+> We assert that all those platforms have the WL_IRQ pin connected
+> to the SoC _directly_ (confirmed on HiKey 970 [2]).
+> 
+> That's not the case for R-Car Kingfisher extension target, which carries
+> a WL1837MODGIMOCT IC. There is an SN74LV1T04DBVR inverter present
+> between the WLAN_IRQ pin of the WL18* chip and the SoC, effectively
+> reversing the requirement quoted from [1]. IOW, in Kingfisher DTS
+> configuration we would need to use IRQ_TYPE_EDGE_FALLING or
+> IRQ_TYPE_LEVEL_LOW.
+> 
+> Unfortunately, v4.2-rc1 commit bd763482c82ea2 ("wl18xx: wlan_irq:
+> support platform dependent interrupt types") made a special case out
+> of these interrupt types. After this commit, it is impossible to provide
+> an IRQ configuration via DTS which would describe an inverter present
+> between the WL18* chip and the SoC, generating the need for workarounds
+> like [3].
+> 
+> Create a boolean OF property, called "invert-irq" to specify that
+> the WLAN_IRQ pin of WL18* is connected to the SoC via an inverter.
+> 
+> This solution has been successfully tested on R-Car H3ULCB-KF-M06 using
+> the DTS configuration [4] combined with the "invert-irq" property.
+> 
+> [1] http://www.ti.com/lit/ds/symlink/wl1837mod.pdf
+> [2] https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/
+> [3] https://github.com/CogentEmbedded/meta-rcar/blob/289fbd4f8354/meta-rcar-gen3-adas/recipes-kernel/linux/linux-renesas/0024-wl18xx-do-not-invert-IRQ-on-WLxxxx-side.patch
+> [4] https://patchwork.kernel.org/patch/10895879/
+>     ("arm64: dts: ulcb-kf: Add support for TI WL1837")
+> 
+> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-> ---
->  drivers/video/backlight/gpio_backlight.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-> index cd6a75bca9cc..7dc4f90d926b 100644
-> --- a/drivers/video/backlight/gpio_backlight.c
-> +++ b/drivers/video/backlight/gpio_backlight.c
-> @@ -54,29 +54,29 @@ static const struct backlight_ops gpio_backlight_ops = {
->  
->  static int gpio_backlight_probe(struct platform_device *pdev)
->  {
-> -	struct gpio_backlight_platform_data *pdata =
-> -		dev_get_platdata(&pdev->dev);
-> +	struct device *dev = &pdev->dev;
-> +	struct gpio_backlight_platform_data *pdata = dev_get_platdata(dev);
->  	struct backlight_properties props;
->  	struct backlight_device *bl;
->  	struct gpio_backlight *gbl;
->  	enum gpiod_flags flags;
->  	int ret, def_value;
->  
-> -	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
-> +	gbl = devm_kzalloc(dev, sizeof(*gbl), GFP_KERNEL);
->  	if (gbl == NULL)
->  		return -ENOMEM;
->  
->  	if (pdata)
->  		gbl->fbdev = pdata->fbdev;
->  
-> -	def_value = device_property_read_bool(&pdev->dev, "default-on");
-> +	def_value = device_property_read_bool(dev, "default-on");
->  	flags = def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
->  
-> -	gbl->gpiod = devm_gpiod_get(&pdev->dev, NULL, flags);
-> +	gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
->  	if (IS_ERR(gbl->gpiod)) {
->  		ret = PTR_ERR(gbl->gpiod);
->  		if (ret != -EPROBE_DEFER) {
-> -			dev_err(&pdev->dev,
-> +			dev_err(dev,
->  				"Error: The gpios parameter is missing or invalid.\n");
->  		}
->  		return ret;
-> @@ -85,11 +85,10 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  	memset(&props, 0, sizeof(props));
->  	props.type = BACKLIGHT_RAW;
->  	props.max_brightness = 1;
-> -	bl = devm_backlight_device_register(&pdev->dev, dev_name(&pdev->dev),
-> -					&pdev->dev, gbl, &gpio_backlight_ops,
-> -					&props);
-> +	bl = devm_backlight_device_register(dev, dev_name(dev), dev, gbl,
-> +					    &gpio_backlight_ops, &props);
->  	if (IS_ERR(bl)) {
-> -		dev_err(&pdev->dev, "failed to register backlight\n");
-> +		dev_err(dev, "failed to register backlight\n");
->  		return PTR_ERR(bl);
->  	}
->  
-> -- 
-> 2.21.0
-> 
+Based on the discussion I'm dropping this. Please resend once there's a
+conclusion.
+
+Patch set to Changes Requested.
+
+-- 
+https://patchwork.kernel.org/patch/10982491/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
