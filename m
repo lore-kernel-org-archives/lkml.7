@@ -2,87 +2,116 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15A0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28929C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2A922387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0074F21926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563994411;
-	bh=k1q2SMe+r76Pwfl5LKScFLF1hPjA8nL032dg1IeZuiY=;
+	s=default; t=1563994540;
+	bh=VDzwqFOhiJh4xMSVBeOvME1RCnGWO7EYQb2dPUri730=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aYA413cf4KLxjRWRznfsmNCHqEay+c53lcaglHdW/4iPi1V0RcfSPWuzwgCJ6IYE8
-	 X5jSfoe0FfwE9tNrq55YmWK7/c/CUewH+UNQe3KJBPW/pgAGRxk0cEqT1j9CviK5RX
-	 PzngL2mwgjSIrY6BaEVKEImvwNJP1LTs9gfoMnzA=
+	b=1OJOnqSlZINfVVA87OwIvcJt799T2l1mwHN/4VH13/UmD2EAIW4NDRENAtyPjerDI
+	 uqxzqOKlJkoNCIugQg5cl8nsWZ/052v0nsEURqTWEH9Ghwu+cZS2HaaNaLQxpHHxDg
+	 vwdkaxfhoTHI2pKlE6z4Ze8SRrpDz1HxYosrkZNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbfGXSxa convert rfc822-to-8bit (ORCPT
+        id S1728760AbfGXSzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:53:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40412 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728726AbfGXSx1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:53:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so42568232wmj.5;
-        Wed, 24 Jul 2019 11:53:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=2zNZEJTuzMPjlqBT9RJzY55tpYLVrNhwFI08koZCEQw=;
-        b=mH9+e+QbmGoMIJ9hUSENbpgdk/7beNrvdgyZZtO/QEsxFBjNIX7eBNTKzfJLVIuEdb
-         pgwXRH2wjpoDBrFe2ig8hNvZjEG0dy9bKqyaB7hoTAKkr3GEinUERzC2veRxDq13g63c
-         dJ+3zydLW416sczAgMijTzppv+Mle+Hx4veUOBtiKAU3BqCMb0RYJlqnB7K51DaBj7/L
-         Z0+JY/vpexisXzvjuzMNsTD3ztrkxxJk4HdDEbLkHi4ND2Kbh0b3cFGG3OKl31NoBhV8
-         ksQ8AOJy6apk8vzeyyYdiO06eBM2RWssqrq05/9wnO2dt67BRMgbWVT9ac+W1Iva7cub
-         xQXQ==
-X-Gm-Message-State: APjAAAUpGLbzlYOQSprSsmyGYG6zFNYsoMCTPuoCoPvwqfIFjehEJaSo
-        7W3jzXxJDjiMI9MT3ihN14Y=
-X-Google-Smtp-Source: APXvYqy0xTyUlF8khzfhL9sfMsBdP0ddDmFskR3W6aToym1NthS5JiFwI9kJq5H93SLqHuER2lIIBg==
-X-Received: by 2002:a05:600c:c4:: with SMTP id u4mr75602252wmm.96.1563994405214;
-        Wed, 24 Jul 2019 11:53:25 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.239])
-        by smtp.googlemail.com with ESMTPSA id a6sm34609206wmj.15.2019.07.24.11.53.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 11:53:24 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 20:53:22 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, m.szyprowski@samsung.com
-Subject: Re: [RFC PATCH 00/11] Simple QoS for exynos-bus driver using
- interconnect
-Message-ID: <20190724185322.GC14346@kozik-lap>
-References: <CGME20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5@eucas1p2.samsung.com>
- <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        Wed, 24 Jul 2019 14:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727902AbfGXSzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:55:38 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35FC421841;
+        Wed, 24 Jul 2019 18:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563994537;
+        bh=VDzwqFOhiJh4xMSVBeOvME1RCnGWO7EYQb2dPUri730=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zU6Sq1X/0gjhgFpf5zT2I4CbMcLHIt39ArDSGVGRT1uWsa5BftBXTWsPt/AdJd6P5
+         2FkfWHxrTdFC016LwuOyQKip4Fh2D9zpw+erxBlheqe7OZxBcCSv1yghaZZ/4e/Ebm
+         nM7BpfiyJV8JcsYDBnIiRXpmrvtszZFKPjsnkZ8g=
+Date:   Wed, 24 Jul 2019 13:55:35 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shannon Zhao <shenglong.zsl@alibaba-inc.com>
+Cc:     linux-kernel@vger.kernel.org, jnair@marvell.com,
+        linux-pci@vger.kernel.org, gduan@marvell.com
+Subject: Re: [PATCH] PCI: Add ACS quirk for Cavium ThunderX 2 root port
+ devices
+Message-ID: <20190724185535.GD203187@google.com>
+References: <1563541835-141011-1-git-send-email-shenglong.zsl@alibaba-inc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190723122016.30279-1-a.swigon@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1563541835-141011-1-git-send-email-shenglong.zsl@alibaba-inc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:20:05PM +0200, Artur Świgoń wrote:
-> The following patchset adds interconnect[1][2] framework support to the
-> exynos-bus devfreq driver. Extending the devfreq driver with interconnect
-> capabilities started as a response to the issue referenced in [3]. The
-> patches can be subdivided into four logical groups:
+See
+https://lkml.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com
+for incidental hints (subject, commit log, commit reference).  Your
+patch basically extends that commit, so the subject should be very
+similar.
 
-Nice work! Good to see proper solution :)
+On Fri, Jul 19, 2019 at 09:10:35PM +0800, Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao@linux.alibaba.com>
+> 
+> Like commit f2ddaf8(PCI: Apply Cavium ThunderX ACS quirk to more Root
+> Ports), it should apply ACS quirk to ThunderX 2 root port devices.
 
-Best regards,
-Krzysztof
+s/root port/Root Port/ to be consistent
 
+> Signed-off-by: Shannon Zhao <shannon.zhao@linux.alibaba.com>
+
+I suppose this should have the same stable tag as f2ddaf8dfd4a ("PCI:
+Apply Cavium ThunderX ACS quirk to more Root Ports") itself?
+
+> ---
+>  drivers/pci/quirks.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 28c64f8..ea7848b 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4224,10 +4224,12 @@ static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+>  	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+>  	 * bits of device ID are used to indicate which subdevice is used
+>  	 * within the SoC.
+> +	 * Effectively selects the ThunderX 2 root ports whose device ID
+> +	 * is 0xaf84.
+>  	 */
+>  	return (pci_is_pcie(dev) &&
+>  		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> -		((dev->device & 0xf800) == 0xa000));
+> +		((dev->device & 0xf800) == 0xa000 || dev->device == 0xaf84));
+
+I'm somewhat doubtful about this because previously we at least
+selected a whole class of ThunderX 1 devices:
+
+  ((dev->device & 0xf800) == 0xa000)
+
+while you're adding only a *single* ThunderX device.
+
+I don't want a constant trickle of adding new devices.  Can somebody
+from Cavium or Marvell provide a corresponding mask for ThunderX 2, or
+confirm that 0xaf84 is really the single device we expect to need
+here?
+
+>  }
+>  
+>  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+> -- 
+> 1.8.3.1
+> 
