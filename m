@@ -2,103 +2,85 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C1CC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CF9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F1921951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:32:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ricmnZGD"
+	by mail.kernel.org (Postfix) with ESMTP id B17A2229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbfGXIco (ORCPT
+        id S1726343AbfGXIcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:32:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36327 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXIco (ORCPT
+        Wed, 24 Jul 2019 04:32:53 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34593 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfGXIcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:32:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r7so20571562pfl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WCVd4lZUKuZfgNGTuLhW2SJHOFDTd7mo4CLEhXod6Ew=;
-        b=ricmnZGDz9JfEwgUfDZFDf3pka2I7nCAOOXn/MrqlAskyInBrUbaJmRVzLD1uLXc+S
-         LlTtXvfdaYicOwy7l44Qf/5QODHCbnytwgCwfpt7g2vNt5OIoPuv7ie+mrAsI7vTpMwT
-         RqLVpBsjiqFMra83a/2L20EIPRrP8zKZ3ae/z6+k/LF1OIUsVsHNLNGiRDU3zoF8tMT7
-         RvDMXCtgNy54ELCR2p2nhf6adFZNEvI12OzKdg3LAbDRIy3pWyxjWM7GlE8dcvT77qv2
-         8xRnBWCQzfbIu0xb/8AzfZGqUa5vUcv/fN3NYS5yeKa1gvNZP5u9HAZldSwLtNei+zey
-         /hnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WCVd4lZUKuZfgNGTuLhW2SJHOFDTd7mo4CLEhXod6Ew=;
-        b=QJZz74RhmbGBpZaBS0I+D6JpCXSRt+ZnMTYyoSArRXxE6L+KpmxPB7eHQCyKTjKGtT
-         6fX3ojX23L8BMhykslD8lp5G/ry1NwUwz0RcIQH2QpQTlCpll996ozJ3RajpG7/o8MEJ
-         Qq3Z1rjlF0EgPwm3cBkS1qTIMvtdOOQklbQ7kCMeNyjFcMrTOxznu6WoWrj84M5JNXxI
-         oFFmIGnbFfUOS1ODjNyX/kJqQWP872WhVcT/l3l+W1tUv6hMYwbO+J7XSDNMPcrAYUYz
-         FtajbYKsEp9/VG0lPA88yxrCIGaMeqsPmipuin3bfTtgEhoLwS0JPBZ3EEGgU3THP0/4
-         MzRA==
-X-Gm-Message-State: APjAAAUSZtf/4YvWAcIkuiFkI/p0fp9XnFNx9coRcjMV0jNS66TNL38E
-        JdSH14dwBB0pRXSwNZJIFUo=
-X-Google-Smtp-Source: APXvYqx0dENPrGC4mTXXKi4VugaJiHm6b+V3CtRjrlZQ4KhDbJjEO0bfu6rd0BVxdvGr/bEZUBABEw==
-X-Received: by 2002:a63:fd57:: with SMTP id m23mr13942751pgj.204.1563957163390;
-        Wed, 24 Jul 2019 01:32:43 -0700 (PDT)
-Received: from localhost.localdomain ([110.227.69.93])
-        by smtp.gmail.com with ESMTPSA id g4sm58654106pfo.93.2019.07.24.01.32.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 01:32:42 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] regulator: of: Add of_node_put() before return in function
-Date:   Wed, 24 Jul 2019 14:02:31 +0530
-Message-Id: <20190724083231.10276-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 24 Jul 2019 04:32:53 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hqChZ-0001Cp-C2; Wed, 24 Jul 2019 10:32:45 +0200
+Message-ID: <1563957164.2311.28.camel@pengutronix.de>
+Subject: Re: [Sound-open-firmware] [PATCH v2 1/5] ASoC: SOF: imx: Add i.MX8
+ HW support
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Daniel Baluta <daniel.baluta@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        sound-open-firmware@alsa-project.org
+Date:   Wed, 24 Jul 2019 10:32:44 +0200
+In-Reply-To: <CAEnQRZCuB2QKzz-08K0z+x+p0qCpqR_wDc=q2GChvJiw4E9hBA@mail.gmail.com>
+References: <20190723084104.12639-1-daniel.baluta@nxp.com>
+         <20190723084104.12639-2-daniel.baluta@nxp.com>
+         <a5d44d96-4d50-ee46-a6bf-3ce108b1994a@linux.intel.com>
+         <CAEnQRZCuB2QKzz-08K0z+x+p0qCpqR_wDc=q2GChvJiw4E9hBA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The local variable search in regulator_of_get_init_node takes the value
-returned by either of_get_child_by_name or of_node_get, both of which
-get a node. If this node is not put before returning, it could cause a
-memory leak. Hence put search before a mid-loop return statement.
-Issue found with Coccinelle.
+Hi Daniel,
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/regulator/of_regulator.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Am Mittwoch, den 24.07.2019, 09:54 +0300 schrieb Daniel Baluta:
+> On Tue, Jul 23, 2019 at 6:18 PM Pierre-Louis Bossart
+[...]
+> 
+> > Also are all the resources device-managed, I don't see a remove()?
+> 
+> Good catch for pm stuff. We mostly didn't care about remove because
+> drivers are always Y in our distribution.
 
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 397918ebba55..9112faa6a9a0 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -416,8 +416,10 @@ device_node *regulator_of_get_init_node(struct device *dev,
- 		if (!name)
- 			name = child->name;
- 
--		if (!strcmp(desc->of_match, name))
-+		if (!strcmp(desc->of_match, name)) {
-+			of_node_put(search);
- 			return of_node_get(child);
-+		}
- 	}
- 
- 	of_node_put(search);
--- 
-2.19.1
+Linux drivers need to be hotplug aware, even if they are not built as a
+module. You can test things by manually unbinding the driver from the
+device via sysfs.
 
+Regards,
+Lucas
