@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7219C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D82C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E7621873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D80214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997365;
-	bh=/zhBCj3h6caXg5rH3pT7ahpvIlBiUroBgdvUBDusOLI=;
+	s=default; t=1563997371;
+	bh=+lOX/j8rmFpbITJk8sqtfGSUAEVYNwcy0C/BvfZ8d78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4OwRKkdg5TetAkbxOnoGhgIaiHenxWTn++Llfkr9a9YPX2pK261r8HcJQZIzemQE
-	 yRt2sN9iGb1M58g6IPyzFIK6Rg+WRVzvSMjdUayW6GnEcRcqWkhtZx+jno3RPmFsxC
-	 t16P2W5zV6Zeu4F/upfoyV6P3RbCp5C915IeWPMs=
+	b=atRv0YaosKB21WATyjTgPtfpOCVwgy80uINjCyHffDWzZaosTBkdyOnh8izcPITsw
+	 oRQRZR01ZFWhdbJtFKi5ud7+1xM3Z5mHa0CtBllF5ANFxOwitdTMO+KHT4i/ZqJtnW
+	 f1zr+IJxZRdvH7dYVosJsNnGEqsRPCnlumlSYchM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390407AbfGXTmo (ORCPT
+        id S2388403AbfGXTmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390390AbfGXTmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:42:42 -0400
+        id S2388240AbfGXTms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:42:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCAEE20665;
-        Wed, 24 Jul 2019 19:42:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC9D21873;
+        Wed, 24 Jul 2019 19:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997361;
-        bh=/zhBCj3h6caXg5rH3pT7ahpvIlBiUroBgdvUBDusOLI=;
+        s=default; t=1563997367;
+        bh=+lOX/j8rmFpbITJk8sqtfGSUAEVYNwcy0C/BvfZ8d78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOPZ3g03PLkhy2XFEqwWC60mDRG/Tm2Jp4lq5lyC97F+ius3P8g+7lVr019zAYb3o
-         aQtBky+or0dl+daar6XoU09k+XNnseVH/+CuZV5r2WVIwXL2/MIdS2W3M9XKMKk3wi
-         GpaNhJ2TQq+z18zpIsmZS/f3EM6wXYbnlLuVpzNA=
+        b=ND+TGw9FdWgICiAupfV3+EuZwFdOH1czUw+Uk/AoiglPEZdfUYRWx34x/PJh7iIC9
+         b1qHq9XzvjwlSs5Y8hSpQgSkM890jgI4mhcVHsBJma1L6CYzhfr26//VpiXX7uc0Hp
+         1IwCl6wQF6/U1syPqI7WqOX46QZjMNVI4G0xXLnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Norbert Manthey <nmanthey@amazon.de>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.2 410/413] pstore: Fix double-free in pstore_mkfile() failure path
-Date:   Wed, 24 Jul 2019 21:21:41 +0200
-Message-Id: <20190724191803.854994213@linuxfoundation.org>
+        stable@vger.kernel.org, Zdenek Kabelac <zkabelac@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.2 412/413] dm thin metadata: check if in fail_io mode when setting needs_check
+Date:   Wed, 24 Jul 2019 21:21:43 +0200
+Message-Id: <20190724191803.972802548@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,73 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Norbert Manthey <nmanthey@amazon.de>
+From: Mike Snitzer <snitzer@redhat.com>
 
-commit 4c6d80e1144bdf48cae6b602ae30d41f3e5c76a9 upstream.
+commit 54fa16ee532705985e6c946da455856f18f63ee1 upstream.
 
-The pstore_mkfile() function is passed a pointer to a struct
-pstore_record. On success it consumes this 'record' pointer and
-references it from the created inode.
+Check if in fail_io mode at start of dm_pool_metadata_set_needs_check().
+Otherwise dm_pool_metadata_set_needs_check()'s superblock_lock() can
+crash in dm_bm_write_lock() while accessing the block manager object
+that was previously destroyed as part of a failed
+dm_pool_abort_metadata() that ultimately set fail_io to begin with.
 
-On failure, however, it may or may not free the record. There are even
-two different code paths which return -ENOMEM -- one of which does and
-the other doesn't free the record.
+Also, update DMERR() message to more accurately describe
+superblock_lock() failure.
 
-Make the behaviour deterministic by never consuming and freeing the
-record when returning failure, allowing the caller to do the cleanup
-consistently.
-
-Signed-off-by: Norbert Manthey <nmanthey@amazon.de>
-Link: https://lore.kernel.org/r/1562331960-26198-1-git-send-email-nmanthey@amazon.de
-Fixes: 83f70f0769ddd ("pstore: Do not duplicate record metadata")
-Fixes: 1dfff7dd67d1a ("pstore: Pass record contents instead of copying")
 Cc: stable@vger.kernel.org
-[kees: also move "private" allocation location, rename inode cleanup label]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Reported-by: Zdenek Kabelac <zkabelac@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/inode.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/md/dm-thin-metadata.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -318,22 +318,21 @@ int pstore_mkfile(struct dentry *root, s
- 		goto fail;
- 	inode->i_mode = S_IFREG | 0444;
- 	inode->i_fop = &pstore_file_operations;
--	private = kzalloc(sizeof(*private), GFP_KERNEL);
--	if (!private)
--		goto fail_alloc;
--	private->record = record;
--
- 	scnprintf(name, sizeof(name), "%s-%s-%llu%s",
- 			pstore_type_to_name(record->type),
- 			record->psi->name, record->id,
- 			record->compressed ? ".enc.z" : "");
+--- a/drivers/md/dm-thin-metadata.c
++++ b/drivers/md/dm-thin-metadata.c
+@@ -2046,16 +2046,19 @@ int dm_pool_register_metadata_threshold(
  
-+	private = kzalloc(sizeof(*private), GFP_KERNEL);
-+	if (!private)
-+		goto fail_inode;
+ int dm_pool_metadata_set_needs_check(struct dm_pool_metadata *pmd)
+ {
+-	int r;
++	int r = -EINVAL;
+ 	struct dm_block *sblock;
+ 	struct thin_disk_superblock *disk_super;
+ 
+ 	pmd_write_lock(pmd);
++	if (pmd->fail_io)
++		goto out;
 +
- 	dentry = d_alloc_name(root, name);
- 	if (!dentry)
- 		goto fail_private;
+ 	pmd->flags |= THIN_METADATA_NEEDS_CHECK_FLAG;
  
-+	private->record = record;
- 	inode->i_size = private->total_size = size;
--
- 	inode->i_private = private;
+ 	r = superblock_lock(pmd, &sblock);
+ 	if (r) {
+-		DMERR("couldn't read superblock");
++		DMERR("couldn't lock superblock");
+ 		goto out;
+ 	}
  
- 	if (record->time.tv_sec)
-@@ -349,7 +348,7 @@ int pstore_mkfile(struct dentry *root, s
- 
- fail_private:
- 	free_pstore_private(private);
--fail_alloc:
-+fail_inode:
- 	iput(inode);
- 
- fail:
 
 
