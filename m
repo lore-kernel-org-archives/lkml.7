@@ -2,127 +2,238 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE79C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34638C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E42217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kK94ypqr"
+	by mail.kernel.org (Postfix) with ESMTP id 07BB82083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563997425;
+	bh=w7nWYzjqEuQ8ULKO5ztdyA3UpMxJqPyn49Fi+kuKWD0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UAg/mZqZbULjZ7AxEuvIuD76b5b0Oi+gyWjoZtRhiUgjQH0JOz6ekpDSl1kvToG0n
+	 phzbbQM+RaTUUphBJBErBvk6U8J4xJQy9IsISSnvBnT6asXOoRNsGQpbwrLt5NnKFe
+	 eqc2qE3KPIUb9+qSm3YCsQvQ68HJHN0zC83oAJEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390231AbfGXTnk (ORCPT
+        id S2390564AbfGXTno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:40 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48892 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390213AbfGXTng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:36 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6OJgYP0083356;
-        Wed, 24 Jul 2019 14:42:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563997354;
-        bh=AJm71xiQOBjSdWSqksSb6orWtMZCBYh0pcNBwqXoWdQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kK94ypqr0C9M7sOcw1gFudGjaHNocKLuwvjvdo3NuKOzadWnHKCH0m5/wmXuq59Qi
-         SBk4QiMOx+PAaNg8HjZr/fXwwRu/6ahQMFsWaIeGrhb9aPi9n8yaPkpplOtVdVMdMZ
-         JAf3XTh2E9j1Fh6PGEVYqIQuBk7Se1H0btTuyF8U=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6OJgYke104572
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jul 2019 14:42:34 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Jul 2019 14:42:33 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Jul 2019 14:42:33 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6OJgXvZ096227;
-        Wed, 24 Jul 2019 14:42:33 -0500
-Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
- bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Marc Zyngier <marc.zyngier@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Tony Lindgren <tony@atomide.com>,
-        "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        David Lechner <david@lechnology.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-2-s-anna@ti.com> <20190724163419.GA29254@bogus>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <6871c381-9fc6-f6be-6386-f183fcc5546a@ti.com>
-Date:   Wed, 24 Jul 2019 14:42:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Jul 2019 15:43:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389783AbfGXTnm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12602083B;
+        Wed, 24 Jul 2019 19:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997421;
+        bh=w7nWYzjqEuQ8ULKO5ztdyA3UpMxJqPyn49Fi+kuKWD0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NYOjsqtn+KSN8IzOq49pxo/Bu8/sTdVCVPTdVH2nhcS3o2br/AJ52aCOfEbgA02WC
+         wrZd0X7fcbYZc0wzEDUHKfbaqEawqqr/NwZN7xYdpAlBkmc0h4Xxh+xH8Drh8OoBg5
+         R/Fna+SBh/Fs+40SM5ZzG6Ma+C6dZTt57eOh5sSk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 018/371] wil6210: fix spurious interrupts in 3-msi
+Date:   Wed, 24 Jul 2019 21:16:10 +0200
+Message-Id: <20190724191725.869975532@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190724163419.GA29254@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/19 11:34 AM, Rob Herring wrote:
-> On Sun, 7 Jul 2019 22:52:38 -0500, Suman Anna wrote:
->> The Programmable Real-Time Unit Subsystem (PRUSS) contains an interrupt
->> controller (INTC) that can handle various system input events and post
->> interrupts back to the device-level initiators. The INTC can support
->> upto 64 input events on most SoCs with individual control configuration
->> and hardware prioritization. These events are mapped onto 10 interrupt
->> lines through two levels of many-to-one mapping support. Different
->> interrupt lines are routed to the individual PRU cores or to the
->> host CPU or to other PRUSS instances.
->>
->> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
->> commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
->> a higher number of host interrupts (20 vs 10) and can handle an increased
->> number of input events (160 vs 64) from various SoC interrupt sources.
->>
->> Add the bindings document for these interrupt controllers on all the
->> applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
->> and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
->> architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
->> and J721E SoCs.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->> Prior version: https://patchwork.kernel.org/patch/10795771/
->>
->>  .../interrupt-controller/ti,pruss-intc.txt    | 92 +++++++++++++++++++
->>  1 file changed, 92 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+[ Upstream commit e10b0eddd5235aa5aef4e40b970e34e735611a80 ]
 
-Thanks Rob. I am going to submit a v2 with some minor reword changes
-based on couple of comments, but no addition or removal of properties.
-Should I be retaining your Reviewed-by for v2?
+Interrupt is set in ICM (ICR & ~IMV) rising trigger.
+As the driver masks the IRQ after clearing it, there can
+be a race where an additional spurious interrupt is triggered
+when the driver unmask the IRQ.
+This can happen in case HW triggers an interrupt after the clear
+and before the mask.
 
-regards
-Suman
+To prevent the second spurious interrupt the driver needs to mask the
+IRQ before reading and clearing it.
+
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/wil6210/interrupt.c | 65 ++++++++++++--------
+ 1 file changed, 40 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/wil6210/interrupt.c b/drivers/net/wireless/ath/wil6210/interrupt.c
+index e41ba24011d8..b00a13d6d530 100644
+--- a/drivers/net/wireless/ath/wil6210/interrupt.c
++++ b/drivers/net/wireless/ath/wil6210/interrupt.c
+@@ -296,21 +296,24 @@ void wil_configure_interrupt_moderation(struct wil6210_priv *wil)
+ static irqreturn_t wil6210_irq_rx(int irq, void *cookie)
+ {
+ 	struct wil6210_priv *wil = cookie;
+-	u32 isr = wil_ioread32_and_clear(wil->csr +
+-					 HOSTADDR(RGF_DMA_EP_RX_ICR) +
+-					 offsetof(struct RGF_ICR, ICR));
++	u32 isr;
+ 	bool need_unmask = true;
+ 
++	wil6210_mask_irq_rx(wil);
++
++	isr = wil_ioread32_and_clear(wil->csr +
++				     HOSTADDR(RGF_DMA_EP_RX_ICR) +
++				     offsetof(struct RGF_ICR, ICR));
++
+ 	trace_wil6210_irq_rx(isr);
+ 	wil_dbg_irq(wil, "ISR RX 0x%08x\n", isr);
+ 
+ 	if (unlikely(!isr)) {
+ 		wil_err_ratelimited(wil, "spurious IRQ: RX\n");
++		wil6210_unmask_irq_rx(wil);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	wil6210_mask_irq_rx(wil);
+-
+ 	/* RX_DONE and RX_HTRSH interrupts are the same if interrupt
+ 	 * moderation is not used. Interrupt moderation may cause RX
+ 	 * buffer overflow while RX_DONE is delayed. The required
+@@ -355,21 +358,24 @@ static irqreturn_t wil6210_irq_rx(int irq, void *cookie)
+ static irqreturn_t wil6210_irq_rx_edma(int irq, void *cookie)
+ {
+ 	struct wil6210_priv *wil = cookie;
+-	u32 isr = wil_ioread32_and_clear(wil->csr +
+-					 HOSTADDR(RGF_INT_GEN_RX_ICR) +
+-					 offsetof(struct RGF_ICR, ICR));
++	u32 isr;
+ 	bool need_unmask = true;
+ 
++	wil6210_mask_irq_rx_edma(wil);
++
++	isr = wil_ioread32_and_clear(wil->csr +
++				     HOSTADDR(RGF_INT_GEN_RX_ICR) +
++				     offsetof(struct RGF_ICR, ICR));
++
+ 	trace_wil6210_irq_rx(isr);
+ 	wil_dbg_irq(wil, "ISR RX 0x%08x\n", isr);
+ 
+ 	if (unlikely(!isr)) {
+ 		wil_err(wil, "spurious IRQ: RX\n");
++		wil6210_unmask_irq_rx_edma(wil);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	wil6210_mask_irq_rx_edma(wil);
+-
+ 	if (likely(isr & BIT_RX_STATUS_IRQ)) {
+ 		wil_dbg_irq(wil, "RX status ring\n");
+ 		isr &= ~BIT_RX_STATUS_IRQ;
+@@ -403,21 +409,24 @@ static irqreturn_t wil6210_irq_rx_edma(int irq, void *cookie)
+ static irqreturn_t wil6210_irq_tx_edma(int irq, void *cookie)
+ {
+ 	struct wil6210_priv *wil = cookie;
+-	u32 isr = wil_ioread32_and_clear(wil->csr +
+-					 HOSTADDR(RGF_INT_GEN_TX_ICR) +
+-					 offsetof(struct RGF_ICR, ICR));
++	u32 isr;
+ 	bool need_unmask = true;
+ 
++	wil6210_mask_irq_tx_edma(wil);
++
++	isr = wil_ioread32_and_clear(wil->csr +
++				     HOSTADDR(RGF_INT_GEN_TX_ICR) +
++				     offsetof(struct RGF_ICR, ICR));
++
+ 	trace_wil6210_irq_tx(isr);
+ 	wil_dbg_irq(wil, "ISR TX 0x%08x\n", isr);
+ 
+ 	if (unlikely(!isr)) {
+ 		wil_err(wil, "spurious IRQ: TX\n");
++		wil6210_unmask_irq_tx_edma(wil);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	wil6210_mask_irq_tx_edma(wil);
+-
+ 	if (likely(isr & BIT_TX_STATUS_IRQ)) {
+ 		wil_dbg_irq(wil, "TX status ring\n");
+ 		isr &= ~BIT_TX_STATUS_IRQ;
+@@ -446,21 +455,24 @@ static irqreturn_t wil6210_irq_tx_edma(int irq, void *cookie)
+ static irqreturn_t wil6210_irq_tx(int irq, void *cookie)
+ {
+ 	struct wil6210_priv *wil = cookie;
+-	u32 isr = wil_ioread32_and_clear(wil->csr +
+-					 HOSTADDR(RGF_DMA_EP_TX_ICR) +
+-					 offsetof(struct RGF_ICR, ICR));
++	u32 isr;
+ 	bool need_unmask = true;
+ 
++	wil6210_mask_irq_tx(wil);
++
++	isr = wil_ioread32_and_clear(wil->csr +
++				     HOSTADDR(RGF_DMA_EP_TX_ICR) +
++				     offsetof(struct RGF_ICR, ICR));
++
+ 	trace_wil6210_irq_tx(isr);
+ 	wil_dbg_irq(wil, "ISR TX 0x%08x\n", isr);
+ 
+ 	if (unlikely(!isr)) {
+ 		wil_err_ratelimited(wil, "spurious IRQ: TX\n");
++		wil6210_unmask_irq_tx(wil);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	wil6210_mask_irq_tx(wil);
+-
+ 	if (likely(isr & BIT_DMA_EP_TX_ICR_TX_DONE)) {
+ 		wil_dbg_irq(wil, "TX done\n");
+ 		isr &= ~BIT_DMA_EP_TX_ICR_TX_DONE;
+@@ -532,20 +544,23 @@ static bool wil_validate_mbox_regs(struct wil6210_priv *wil)
+ static irqreturn_t wil6210_irq_misc(int irq, void *cookie)
+ {
+ 	struct wil6210_priv *wil = cookie;
+-	u32 isr = wil_ioread32_and_clear(wil->csr +
+-					 HOSTADDR(RGF_DMA_EP_MISC_ICR) +
+-					 offsetof(struct RGF_ICR, ICR));
++	u32 isr;
++
++	wil6210_mask_irq_misc(wil, false);
++
++	isr = wil_ioread32_and_clear(wil->csr +
++				     HOSTADDR(RGF_DMA_EP_MISC_ICR) +
++				     offsetof(struct RGF_ICR, ICR));
+ 
+ 	trace_wil6210_irq_misc(isr);
+ 	wil_dbg_irq(wil, "ISR MISC 0x%08x\n", isr);
+ 
+ 	if (!isr) {
+ 		wil_err(wil, "spurious IRQ: MISC\n");
++		wil6210_unmask_irq_misc(wil, false);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	wil6210_mask_irq_misc(wil, false);
+-
+ 	if (isr & ISR_MISC_FW_ERROR) {
+ 		u32 fw_assert_code = wil_r(wil, wil->rgf_fw_assert_code_addr);
+ 		u32 ucode_assert_code =
+-- 
+2.20.1
+
 
 
