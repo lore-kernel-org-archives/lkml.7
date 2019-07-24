@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14AFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9818720659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090BF229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996637;
-	bh=zYbnSIlh1CYPwa/rYl08boDxb02DeloIueOXb7BDvdY=;
+	s=default; t=1563996642;
+	bh=eCYjIyDM/jcflqiRqencvb4jCEnsdmoqDhxKfRDM8Lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/OjTtm750jTVLoYQ9otn7L92sh16cuOKv2dCgXBkadhdbBLlwvEuiFz9nEvUpDwx
-	 J24CWtkVKw+x/d2asNU4WOjsFH8z/T+oY5RSvwHNOmsamxRMFMqKHqlVpII3BJVVi3
-	 8dvXEpCWiTmaSp50bZ8i9TguSy/YjdecGYsbnI1g=
+	b=J3zdzkzUacKXWcudwk+ANRSXrPd11uR+BMNLq/7wWvmckT+EZ2kRW6GXi7fuo6UP/
+	 Ku3cvxT9BzvllhM6u/OjvrWkdO/qfw05CdxbXUMNowSm3Dtp39J0wpP6eI+bjP2zxL
+	 VGUHCqiZS9piuZJ2ji4ztKoa7kJ/qrJ7pTV10D1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388387AbfGXTag (ORCPT
+        id S2387394AbfGXTak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388118AbfGXTad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:33 -0400
+        id S2388383AbfGXTah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADDDC22ADC;
-        Wed, 24 Jul 2019 19:30:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44A45229F3;
+        Wed, 24 Jul 2019 19:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996633;
-        bh=zYbnSIlh1CYPwa/rYl08boDxb02DeloIueOXb7BDvdY=;
+        s=default; t=1563996635;
+        bh=eCYjIyDM/jcflqiRqencvb4jCEnsdmoqDhxKfRDM8Lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0BF4vCP/s+WrRiKoNZTUeezvEjqo0LgwC7R3svXYIACZwKk5pt07MZovs850l2bK
-         kmu9Se/Bo50LlNA2hFcjAGLGsD3znyYiAYSjNwtcLvCfrrzbs8/hec4uC6cpFb5U1I
-         w2HIJGIXFABNCkLrru5cjIX1vSqKMga+jGX8godk=
+        b=aYo5m6hw93R4e2X8S3RH3YpjYnueSvxAXcQNMG8KYwzAmaOaI0wV36U/wk2gTNL8Y
+         ag1xkb26mxUa1ebo2IFeP5CL1adzh3vwW0KAL1bILBg3Nw/ALn4hEJ17+6GU8SHlaS
+         zYuL1WvzFy2FTIWnYo/jWV8J+hs0J3KY4tfdJkpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 162/413] ath10k: fix PCIE device wake up failed
-Date:   Wed, 24 Jul 2019 21:17:33 +0200
-Message-Id: <20190724191746.666996998@linuxfoundation.org>
+Subject: [PATCH 5.2 124/413] net: netsec: initialize tx ring on ndo_open
+Date:   Wed, 24 Jul 2019 21:16:55 +0200
+Message-Id: <20190724191744.034549270@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,47 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 011d4111c8c602ea829fa4917af1818eb0500a90 ]
+[ Upstream commit 39e3622edeffa63c2871153d8743c5825b139968 ]
 
-Observed PCIE device wake up failed after ~120 iterations of
-soft-reboot test. The error message is
-"ath10k_pci 0000:01:00.0: failed to wake up device : -110"
+Since we changed the Tx ring handling and now depends on bit31 to figure
+out the owner of the descriptor, we should initialize this every time
+the device goes down-up instead of doing it once on driver init. If the
+value is not correctly initialized the device won't have any available
+descriptors
 
-The call trace as below:
-ath10k_pci_probe -> ath10k_pci_force_wake -> ath10k_pci_wake_wait ->
-ath10k_pci_is_awake
+Changes since v1:
+- Typo fixes
 
-Once trigger the device to wake up, we will continuously check the RTC
-state until it returns RTC_STATE_V_ON or timeout.
-
-But for QCA99x0 chips, we use wrong value for RTC_STATE_V_ON.
-Occasionally, we get 0x7 on the fist read, we thought as a failure
-case, but actually is the right value, also verified with the spec.
-So fix the issue by changing RTC_STATE_V_ON from 0x5 to 0x7, passed
-~2000 iterations.
-
-Tested HW: QCA9984
-
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 35e07d234739 ("net: socionext: remove mmio reads on Tx")
+Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/socionext/netsec.c | 32 ++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/hw.c b/drivers/net/wireless/ath/ath10k/hw.c
-index ad082b7d7643..b242085c3c16 100644
---- a/drivers/net/wireless/ath/ath10k/hw.c
-+++ b/drivers/net/wireless/ath/ath10k/hw.c
-@@ -158,7 +158,7 @@ const struct ath10k_hw_values qca6174_values = {
- };
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index cba5881b2746..a10ef700f16d 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -1029,7 +1029,6 @@ static void netsec_free_dring(struct netsec_priv *priv, int id)
+ static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
+ {
+ 	struct netsec_desc_ring *dring = &priv->desc_ring[id];
+-	int i;
  
- const struct ath10k_hw_values qca99x0_values = {
--	.rtc_state_val_on		= 5,
-+	.rtc_state_val_on		= 7,
- 	.ce_count			= 12,
- 	.msi_assign_ce_max		= 12,
- 	.num_target_ce_config_wlan	= 10,
+ 	dring->vaddr = dma_alloc_coherent(priv->dev, DESC_SZ * DESC_NUM,
+ 					  &dring->desc_dma, GFP_KERNEL);
+@@ -1040,19 +1039,6 @@ static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
+ 	if (!dring->desc)
+ 		goto err;
+ 
+-	if (id == NETSEC_RING_TX) {
+-		for (i = 0; i < DESC_NUM; i++) {
+-			struct netsec_de *de;
+-
+-			de = dring->vaddr + (DESC_SZ * i);
+-			/* de->attr is not going to be accessed by the NIC
+-			 * until netsec_set_tx_de() is called.
+-			 * No need for a dma_wmb() here
+-			 */
+-			de->attr = 1U << NETSEC_TX_SHIFT_OWN_FIELD;
+-		}
+-	}
+-
+ 	return 0;
+ err:
+ 	netsec_free_dring(priv, id);
+@@ -1060,6 +1046,23 @@ static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
+ 	return -ENOMEM;
+ }
+ 
++static void netsec_setup_tx_dring(struct netsec_priv *priv)
++{
++	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_TX];
++	int i;
++
++	for (i = 0; i < DESC_NUM; i++) {
++		struct netsec_de *de;
++
++		de = dring->vaddr + (DESC_SZ * i);
++		/* de->attr is not going to be accessed by the NIC
++		 * until netsec_set_tx_de() is called.
++		 * No need for a dma_wmb() here
++		 */
++		de->attr = 1U << NETSEC_TX_SHIFT_OWN_FIELD;
++	}
++}
++
+ static int netsec_setup_rx_dring(struct netsec_priv *priv)
+ {
+ 	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_RX];
+@@ -1361,6 +1364,7 @@ static int netsec_netdev_open(struct net_device *ndev)
+ 
+ 	pm_runtime_get_sync(priv->dev);
+ 
++	netsec_setup_tx_dring(priv);
+ 	ret = netsec_setup_rx_dring(priv);
+ 	if (ret) {
+ 		netif_err(priv, probe, priv->ndev,
 -- 
 2.20.1
 
