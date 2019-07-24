@@ -2,113 +2,142 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969A1C41517
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5CAC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F6C2199C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8F721926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfGXNv3 (ORCPT
+        id S1728043AbfGXNxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:51:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:41254 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfGXNv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:51:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21F7B28;
-        Wed, 24 Jul 2019 06:51:28 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7116C3F71A;
-        Wed, 24 Jul 2019 06:51:26 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:51:24 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
-        phil@raspberrypi.org, stefan.wahren@i2se.com, f.fainelli@gmail.com,
-        mbrugger@suse.com, Jisheng.Zhang@synaptics.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 3/4] dma-direct: add dma_direct_min_mask
-Message-ID: <20190724135124.GA44864@arrakis.emea.arm.com>
-References: <20190717153135.15507-1-nsaenzjulienne@suse.de>
- <20190717153135.15507-4-nsaenzjulienne@suse.de>
- <20190718091526.GA25321@lst.de>
- <13dd1a4f33fcf814545f0d93f18429e853de9eaf.camel@suse.de>
- <58753252bd7964e3b9e9558b633bd325c4a898a1.camel@suse.de>
+        Wed, 24 Jul 2019 09:53:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726422AbfGXNxA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:53:00 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6ODj18W077184
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:52:58 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2txnrar229-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:52:46 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 24 Jul 2019 14:52:19 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 24 Jul 2019 14:52:16 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6ODqF0U48300358
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 13:52:15 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 163EFB2070;
+        Wed, 24 Jul 2019 13:52:15 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F338DB206A;
+        Wed, 24 Jul 2019 13:52:14 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.189.166])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Jul 2019 13:52:14 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 679C716C2E45; Wed, 24 Jul 2019 06:52:19 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 06:52:19 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        peterz@infradead.org
+Subject: Re: How to turn scheduler tick on for current nohz_full CPU?
+Reply-To: paulmck@linux.ibm.com
+References: <20190724115331.GA29059@linux.ibm.com>
+ <20190724132257.GA1029@lenoir>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58753252bd7964e3b9e9558b633bd325c4a898a1.camel@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190724132257.GA1029@lenoir>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19072413-0060-0000-0000-00000364DEB7
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011487; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01236781; UDB=6.00651888; IPR=6.01018148;
+ MB=3.00027870; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-24 13:52:18
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072413-0061-0000-0000-00004A462259
+Message-Id: <20190724135219.GY14271@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907240153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 03:08:52PM +0200, Nicolas Saenz Julienne wrote:
-> On Thu, 2019-07-18 at 13:18 +0200, Nicolas Saenz Julienne wrote:
-> > On Thu, 2019-07-18 at 11:15 +0200, Christoph Hellwig wrote:
-> > > On Wed, Jul 17, 2019 at 05:31:34PM +0200, Nicolas Saenz Julienne wrote:
-> > > > Historically devices with ZONE_DMA32 have been assumed to be able to
-> > > > address at least the lower 4GB of ram for DMA. This is still the defualt
-> > > > behavior yet the Raspberry Pi 4 is limited to the first GB of memory.
-> > > > This has been observed to trigger failures in dma_direct_supported() as
-> > > > the 'min_mask' isn't properly set.
-> > > > 
-> > > > We create 'dma_direct_min_mask' in order for the arch init code to be
-> > > > able to fine-tune dma direct's 'min_dma' mask.
-> > > 
-> > > Normally we use ZONE_DMA for that case.
+On Wed, Jul 24, 2019 at 03:22:59PM +0200, Frederic Weisbecker wrote:
+> On Wed, Jul 24, 2019 at 04:53:31AM -0700, Paul E. McKenney wrote:
+> > Hello!
 > > 
-> > Fair enough, I didn't think of that possibility.
+> > One of the callback-invocation forward-progress issues turns out to
+> > be nohz_full CPUs not turning their scheduling-clock interrupt back on
+> > when running in kernel mode.  Given that callback floods can cause RCU's
+> > callback-invocation loop to run for some time, it would be good for this
+> > loop to re-enable this interrupt.  Of course, this problem applies to
+> > pretty much any kernel code that might loop for an extended time period,
+> > not just RCU.
 > > 
-> > So would the arm64 maintainers be happy with something like this:
+> > I took a quick look at kernel/time/tick-sched.c and the closest thing
+> > I found was tick_nohz_full_kick_cpu(), except that (1) it isn't clear
+> > that this does much when invoked on the current CPU and (2) it doesn't
+> > help in rcutorture TREE04.  In contrast, disabling NO_HZ_FULL and using
+> > RCU_NOCB_CPU instead works quite well.
 > > 
-> > - ZONE_DMA: Follows standard definition, 16MB in size. ARCH_ZONE_DMA_BITS is
-> > 	    left as is.
-> > - ZONE_DMA32: Will honor the most constraining 'dma-ranges'. Which so far for
-> > 	      most devices is 4G, except for RPi4.
-> > - ZONE_NORMAL: The rest of the memory.
+> > So what should I be calling instead of tick_nohz_full_kick_cpu() to
+> > re-enable the current CPU's scheduling-clock interrupt?
 > 
-> Never mind this suggestion, I don't think it makes any sense. If anything arm64
-> seems to fit the ZONE_DMA usage pattern of arm and powerpc: where ZONE_DMA's
-> size is decided based on ram size and/or board configuration. It was actually
-> set-up like this until Christoph's ad67f5a6545f7 ("arm64: replace ZONE_DMA with
-> ZONE_DMA32").
+> Indeed, kernel code is assumed to be quick enough (between two extended grace
+> periods) to avoid running the tick for RCU. But some long lasting kernel code
+> may require to tick temporarily.
 > 
-> So the easy solution would be to simply revert that commit. On one hand I feel
-> it would be a step backwards as most 64 bit architectures have been moving to
-> use ZONE_DMA32. On the other, current ZONE_DMA32 usage seems to be heavily
-> rooted on having a 32 bit DMA mask*, which will no longer be the case on arm64
-> if we want to support the RPi 4.
+> You can use tick_nohz_dep_set_cpu(cpu, TICK_DEP_MASK_RCU) with the
+> following:
 > 
-> So the way I see it and lacking a better solution, the argument is stronger on
-> moving back arm64 to using ZONE_DMA. Any comments/opinions?
+> diff --git a/include/linux/tick.h b/include/linux/tick.h
+> index f92a10b5e112..3f476e2a4bf7 100644
+> --- a/include/linux/tick.h
+> +++ b/include/linux/tick.h
+> @@ -108,7 +108,8 @@ enum tick_dep_bits {
+>  	TICK_DEP_BIT_POSIX_TIMER	= 0,
+>  	TICK_DEP_BIT_PERF_EVENTS	= 1,
+>  	TICK_DEP_BIT_SCHED		= 2,
+> -	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3
+> +	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
+> +	TICK_DEP_BIT_RCU		= 4
+>  };
+>  
+>  #define TICK_DEP_MASK_NONE		0
+> @@ -116,6 +117,7 @@ enum tick_dep_bits {
+>  #define TICK_DEP_MASK_PERF_EVENTS	(1 << TICK_DEP_BIT_PERF_EVENTS)
+>  #define TICK_DEP_MASK_SCHED		(1 << TICK_DEP_BIT_SCHED)
+>  #define TICK_DEP_MASK_CLOCK_UNSTABLE	(1 << TICK_DEP_BIT_CLOCK_UNSTABLE)
+> +#define TICK_DEP_MASK_RCU		(1 << TICK_DEP_BIT_RCU)
+>  
+>  #ifdef CONFIG_NO_HZ_COMMON
+>  extern bool tick_nohz_enabled;
 
-As it was suggested in this or the previous thread, I'm not keen on
-limiting ZONE_DMA32 to the smalles RPi4 can cover, as the naming
-implies this zone should cover 32-bit devices that can deal with a full
-32-bit mask.
+I will give this a try, thank you!  (Testing will take a few days.)
 
-I think it may be better if we have both ZONE_DMA and ZONE_DMA32 on
-arm64. ZONE_DMA would be based on the smallest dma-ranges as described
-in the DT while DMA32 covers the first naturally aligned 4GB of RAM
-(unchanged). When a smaller ZONE_DMA is not needed, it could be expanded
-to cover what would normally be ZONE_DMA32 (or could we have ZONE_DMA as
-0-bytes? I don't think GFP_DMA can still allocate memory in this case).
+							Thanx, Paul
 
-We'd probably have to define ARCH_ZONE_DMA_BITS for arm64 to something
-smaller than 32-bit but sufficient to cover the known platforms like
-RPi4 (the current 24 is too small, so maybe 30). AFAICT,
-__dma_direct_optimal_gfp_mask() figures out whether GFP_DMA or GFP_DMA32
-should be passed.
-
--- 
-Catalin
