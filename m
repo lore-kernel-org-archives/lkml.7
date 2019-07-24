@@ -2,176 +2,181 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950F1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4CAC76194
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C3F229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563935342;
-	bh=YFxpVKPPNiGJYJlgqEl+OCUvAdR75SitDK1C9yX2N4E=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Tw/QkQhYeW50o0Dw/G8g/FUB5cBztzxz8buNVSZ775rKz/YgD+XlXkEHB7qKHr9fN
-	 Wag9W/6UuYQvumU0jQ6iMZa7eSY+tNdoMfYKISmYsblYT44tfv9FSsYU56Hsrbo1KL
-	 MkxN0MPM021RalTFORdnM5EhFN87DuekUbjKIM2c=
+	by mail.kernel.org (Postfix) with ESMTP id 96112229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WxtIuTUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfGXC3B (ORCPT
+        id S1727811AbfGXC3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 22:29:32 -0400
+Received: from ozlabs.org ([203.11.71.1]:48703 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfGXC3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:29:00 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725372AbfGXC3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:29:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AA7F20665;
-        Wed, 24 Jul 2019 02:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563935338;
-        bh=YFxpVKPPNiGJYJlgqEl+OCUvAdR75SitDK1C9yX2N4E=;
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45tfS84lGxz9s4Y;
+        Wed, 24 Jul 2019 12:29:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1563935368;
+        bh=KoKvKtBbDS7uwmpWuUeI/yYxUhlBQxlp+t/v0C2B1+s=;
         h=Date:From:To:Cc:Subject:From;
-        b=ge3ftlk8tlZKJEsyIiRUbQ3V3K/l5lBIFuic+E0pFY18TTerGpElPzA55JTwq2MCM
-         1x24kfJ/aHXJm2Nn+DoEiRG1cHZEep82fGfPkjrQBds+tqkAaowkiAowNEH7hkQuIZ
-         oQg2nc+1gaU81GlP9I5NtUrgzAU1NzS8LqG5QDzU=
-Date:   Tue, 23 Jul 2019 19:28:57 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-x25@vger.kernel.org, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 5 open syzbot bugs in "net/x25" subsystem
-Message-ID: <20190724022857.GQ643@sol.localdomain>
-Mail-Followup-To: linux-x25@vger.kernel.org, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        b=WxtIuTUEn1AsI+T/krwQ7Rfg95K0BWfPsuTKh3yExjUh8UeASFaR/AprIFCVfscUz
+         IF/Rpvf17SfomrMWGTer9/0IMTSJ6wD4O6qC/KB35Q97a2LpHbPtsaLZ+n+vWVta/w
+         nE5bJi1rfvJVlCjrMDPvSFP50VSHiViQUBlURveaGq86B5tn9RZfmluJ5Xh7lGhHf+
+         v0GdnoM8rbs38mNomNrZMWdbxk/gqA3NXP+HHEhc7TNoPDYMhvd28bXfOAWQOE7fCh
+         n+C1BPVFkEz2INumSm1BvTlbkKc+o0YsqefTvpeqDvNLfrDKiKDF7ESd/rQHamrdRk
+         tLIq3mch+Zm/Q==
+Date:   Wed, 24 Jul 2019 12:29:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the keys tree with the afs tree
+Message-ID: <20190724122928.2a27c6aa@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; boundary="Sig_/=8T79JeaYBWiZbzZSmn87Mx";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+--Sig_/=8T79JeaYBWiZbzZSmn87Mx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 5 of them as possibly being bugs in the "net/x25" subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
+Hi all,
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
+Today's linux-next merge of the keys tree got conflicts in:
 
-If you believe I misattributed a bug to the "net/x25" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
+  fs/afs/security.c
+  include/linux/key.h
 
-Here are the bugs:
+between commit:
 
---------------------------------------------------------------------------------
-Title:              KASAN: null-ptr-deref Read in x25_connect
-Last occurred:      0 days ago
-Reported:           42 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=5b0ecf0386f56be7fe7210a14d0f62df765c0c39
-Original thread:    https://lkml.kernel.org/lkml/0000000000007ce6f5058b0715ea@google.com/T/#u
+  dd05d852085f ("afs: Provide an RCU-capable key lookup")
 
-Unfortunately, this bug does not have a reproducer.
+from the afs tree and commit:
 
-The original thread for this bug has received 2 replies; the last was 42 days
-ago.
+  f802f2b3a991 ("keys: Replace uid/gid/perm permissions checking with an AC=
+L")
 
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+777a2aab6ffd397407b5@syzkaller.appspotmail.com
+from the keys tree.
 
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007ce6f5058b0715ea@google.com
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
---------------------------------------------------------------------------------
-Title:              general protection fault in x25_connect
-Last occurred:      23 days ago
-Reported:           42 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=65f107a71a1cb5637149cd163a2919dd622f0d30
-Original thread:    https://lkml.kernel.org/lkml/000000000000800bf0058b07151d@google.com/T/#u
+--=20
+Cheers,
+Stephen Rothwell
 
-Unfortunately, this bug does not have a reproducer.
+diff --cc fs/afs/security.c
+index ce9de1e6742b,8866703b2e6c..000000000000
+--- a/fs/afs/security.c
++++ b/fs/afs/security.c
+@@@ -27,37 -27,8 +27,37 @@@ struct key *afs_request_key(struct afs_
+  	_enter("{%x}", key_serial(cell->anonymous_key));
+ =20
+  	_debug("key %s", cell->anonymous_key->description);
+ -	key =3D request_key(&key_type_rxrpc, cell->anonymous_key->description,
+ -			  NULL, NULL);
+ +	key =3D request_key_net(&key_type_rxrpc, cell->anonymous_key->descriptio=
+n,
+- 			      cell->net->net, NULL);
+++			      cell->net->net, NULL, NULL);
+ +	if (IS_ERR(key)) {
+ +		if (PTR_ERR(key) !=3D -ENOKEY) {
+ +			_leave(" =3D %ld", PTR_ERR(key));
+ +			return key;
+ +		}
+ +
+ +		/* act as anonymous user */
+ +		_leave(" =3D {%x} [anon]", key_serial(cell->anonymous_key));
+ +		return key_get(cell->anonymous_key);
+ +	} else {
+ +		/* act as authorised user */
+ +		_leave(" =3D {%x} [auth]", key_serial(key));
+ +		return key;
+ +	}
+ +}
+ +
+ +/*
+ + * Get a key when pathwalk is in rcuwalk mode.
+ + */
+ +struct key *afs_request_key_rcu(struct afs_cell *cell)
+ +{
+ +	struct key *key;
+ +
+ +	_enter("{%x}", key_serial(cell->anonymous_key));
+ +
+ +	_debug("key %s", cell->anonymous_key->description);
+ +	key =3D request_key_net_rcu(&key_type_rxrpc,
+ +				  cell->anonymous_key->description,
+ +				  cell->net->net);
+  	if (IS_ERR(key)) {
+  		if (PTR_ERR(key) !=3D -ENOKEY) {
+  			_leave(" =3D %ld", PTR_ERR(key));
+diff --cc include/linux/key.h
+index bec10fbb2462,6fef6684501f..000000000000
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@@ -339,20 -340,8 +340,20 @@@ static inline struct key *request_key(s
+   * Furthermore, it then works as wait_for_key_construction() to wait for =
+the
+   * completion of keys undergoing construction with a non-interruptible wa=
+it.
+   */
+- #define request_key_net(type, description, net, callout_info) \
+- 	request_key_tag(type, description, net->key_domain, callout_info);
++ #define request_key_net(type, description, net, callout_info, acl)	\
++ 	request_key_tag(type, description, net->key_domain, callout_info, acl);
+ +
+ +/**
+ + * request_key_net_rcu - Request a key for a net namespace under RCU cond=
+itions
+ + * @type: Type of key.
+ + * @description: The searchable description of the key.
+ + * @net: The network namespace that is the key's domain of operation.
+ + *
+ + * As for request_key_rcu() except that only keys that operate the specif=
+ied
+ + * network namespace are used.
+ + */
+ +#define request_key_net_rcu(type, description, net) \
+ +	request_key_rcu(type, description, net->key_domain);
+  #endif /* CONFIG_NET */
+ =20
+  extern int wait_for_key_construction(struct key *key, bool intr);
 
-No one has replied to the original thread for this bug yet.
+--Sig_/=8T79JeaYBWiZbzZSmn87Mx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2fde26e61fda58e5f88b@syzkaller.appspotmail.com
+-----BEGIN PGP SIGNATURE-----
 
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000800bf0058b07151d@google.com
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl03wogACgkQAVBC80lX
+0Gyn6wf/c7oDvhwP8CsqBXBnBLj6VKAJyyfMGt4mHTvX9XtaKmKU9pog6hTaQPBm
+l+QE7uqU2kQt0u7QxWly/9nPUCHazRddLVNE31n99S1AUJz1NOIo+9pngjirFaYi
+pqXiIF0oRarz4RKGfWrWykVUjub5k2cpFQScdtRb89M5Ot+kYWzUpEQg7FMUq2Ge
+5/+YMBgHLfJtqvCcLSFZm3o18xur73O54F9ycYX5FaOyaTnLiIS2NCFer+64pZCB
+UPITJCGRAqDGRxvYO8CyzmulyFxWJ/4luzI1WWEFFWwnrIa9GzRLO8yfapmVd6V9
+ovwd5bPXJO+63XQmF5L07D04pn0ClA==
+=+15G
+-----END PGP SIGNATURE-----
 
---------------------------------------------------------------------------------
-Title:              general protection fault in refcount_sub_and_test_checked
-Last occurred:      59 days ago
-Reported:           113 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=909a75efeca0594a7dd4356d84f147891407cda8
-Original thread:    https://lkml.kernel.org/lkml/0000000000008424a205857b74ef@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+31b6a0f5d6d5c3b75948@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000008424a205857b74ef@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in x25_write_internal
-Last occurred:      154 days ago
-Reported:           202 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4f2fbe41c46efe42fad560f74913604ca8011d2d
-Original thread:    https://lkml.kernel.org/lkml/0000000000006ee231057e779375@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+426b913e690764e50c83@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006ee231057e779375@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: rcu detected stall in x25_connect
-Last occurred:      152 days ago
-Reported:           204 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=56a3e28b7cbfd2255f7b8c6483e7f7f9523a1a47
-Original thread:    https://lkml.kernel.org/lkml/0000000000009b5ae5057e4cd7d1@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+564c57b4bf1df3ce1c94@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000009b5ae5057e4cd7d1@google.com
-
+--Sig_/=8T79JeaYBWiZbzZSmn87Mx--
