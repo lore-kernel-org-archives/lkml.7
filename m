@@ -2,181 +2,196 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4CAC76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66597C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96112229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WxtIuTUE"
+	by mail.kernel.org (Postfix) with ESMTP id 2DF2B20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563935379;
+	bh=xyGI4uCYWEr2lO836/ICxA9AvTBNnIvsvCU3AJm+6ow=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=h3T0V0c9V+NKufQzYiEf4F11XkJ28J8OZj5wMN/rnUo7Cww9LPsoD0oNtY8DtmAvN
+	 SZVVfeCWwKd/YJOqbcVEwe1TYkD14gSG73jlUzoBqsOXK2FOGRzzogwOgkZnLloc8Z
+	 P7MhIiGkqA4EtVG4Gybg73c1ihzAymsdPOSU9qg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfGXC3c (ORCPT
+        id S2387564AbfGXC3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:29:32 -0400
-Received: from ozlabs.org ([203.11.71.1]:48703 "EHLO ozlabs.org"
+        Tue, 23 Jul 2019 22:29:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfGXC3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:29:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728381AbfGXC3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:29:33 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45tfS84lGxz9s4Y;
-        Wed, 24 Jul 2019 12:29:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1563935368;
-        bh=KoKvKtBbDS7uwmpWuUeI/yYxUhlBQxlp+t/v0C2B1+s=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B6FD20665;
+        Wed, 24 Jul 2019 02:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563935372;
+        bh=xyGI4uCYWEr2lO836/ICxA9AvTBNnIvsvCU3AJm+6ow=;
         h=Date:From:To:Cc:Subject:From;
-        b=WxtIuTUEn1AsI+T/krwQ7Rfg95K0BWfPsuTKh3yExjUh8UeASFaR/AprIFCVfscUz
-         IF/Rpvf17SfomrMWGTer9/0IMTSJ6wD4O6qC/KB35Q97a2LpHbPtsaLZ+n+vWVta/w
-         nE5bJi1rfvJVlCjrMDPvSFP50VSHiViQUBlURveaGq86B5tn9RZfmluJ5Xh7lGhHf+
-         v0GdnoM8rbs38mNomNrZMWdbxk/gqA3NXP+HHEhc7TNoPDYMhvd28bXfOAWQOE7fCh
-         n+C1BPVFkEz2INumSm1BvTlbkKc+o0YsqefTvpeqDvNLfrDKiKDF7ESd/rQHamrdRk
-         tLIq3mch+Zm/Q==
-Date:   Wed, 24 Jul 2019 12:29:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the keys tree with the afs tree
-Message-ID: <20190724122928.2a27c6aa@canb.auug.org.au>
+        b=siMBMDy9vo2/jHG7hKJgJJAIF63RyFm5VmvVvih+a/uIdcP8nC6sxn+s/R8bRDxPF
+         V0ZcIyiWwdZ6588JvXLI6kYcLdxcg3RNQ+33M/0NiISfDFNlWMon+r4oz18dS7xQ7m
+         W/shP0qUi5OExLMrQIK98gXpw2aA3rkCbl87m8IY=
+Date:   Tue, 23 Jul 2019 19:29:30 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 5 open syzbot bugs in "net/smc" subsystem
+Message-ID: <20190724022930.GR643@sol.localdomain>
+Mail-Followup-To: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=8T79JeaYBWiZbzZSmn87Mx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=8T79JeaYBWiZbzZSmn87Mx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-Hi all,
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 5 of them as possibly being bugs in the "net/smc" subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-Today's linux-next merge of the keys tree got conflicts in:
+Of these 5 bugs, 4 were seen in mainline in the last week.
 
-  fs/afs/security.c
-  include/linux/key.h
+Of these 5 bugs, 1 was bisected to a commit from the following person:
 
-between commit:
+	Ursula Braun <ubraun@linux.ibm.com>
 
-  dd05d852085f ("afs: Provide an RCU-capable key lookup")
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-from the afs tree and commit:
+If you believe I misattributed a bug to the "net/smc" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
 
-  f802f2b3a991 ("keys: Replace uid/gid/perm permissions checking with an AC=
-L")
+Here are the bugs:
 
-from the keys tree.
+--------------------------------------------------------------------------------
+Title:              WARNING in smc_unhash_sk (2)
+Last occurred:      0 days ago
+Reported:           101 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f650845a184aed6947c0dd0f4d99d561335a7c31
+Original thread:    https://lkml.kernel.org/lkml/000000000000ac48ed05866bbc2c@google.com/T/#u
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+This bug has a C reproducer.
 
---=20
-Cheers,
-Stephen Rothwell
+This bug was bisected to:
 
-diff --cc fs/afs/security.c
-index ce9de1e6742b,8866703b2e6c..000000000000
---- a/fs/afs/security.c
-+++ b/fs/afs/security.c
-@@@ -27,37 -27,8 +27,37 @@@ struct key *afs_request_key(struct afs_
-  	_enter("{%x}", key_serial(cell->anonymous_key));
- =20
-  	_debug("key %s", cell->anonymous_key->description);
- -	key =3D request_key(&key_type_rxrpc, cell->anonymous_key->description,
- -			  NULL, NULL);
- +	key =3D request_key_net(&key_type_rxrpc, cell->anonymous_key->descriptio=
-n,
-- 			      cell->net->net, NULL);
-++			      cell->net->net, NULL, NULL);
- +	if (IS_ERR(key)) {
- +		if (PTR_ERR(key) !=3D -ENOKEY) {
- +			_leave(" =3D %ld", PTR_ERR(key));
- +			return key;
- +		}
- +
- +		/* act as anonymous user */
- +		_leave(" =3D {%x} [anon]", key_serial(cell->anonymous_key));
- +		return key_get(cell->anonymous_key);
- +	} else {
- +		/* act as authorised user */
- +		_leave(" =3D {%x} [auth]", key_serial(key));
- +		return key;
- +	}
- +}
- +
- +/*
- + * Get a key when pathwalk is in rcuwalk mode.
- + */
- +struct key *afs_request_key_rcu(struct afs_cell *cell)
- +{
- +	struct key *key;
- +
- +	_enter("{%x}", key_serial(cell->anonymous_key));
- +
- +	_debug("key %s", cell->anonymous_key->description);
- +	key =3D request_key_net_rcu(&key_type_rxrpc,
- +				  cell->anonymous_key->description,
- +				  cell->net->net);
-  	if (IS_ERR(key)) {
-  		if (PTR_ERR(key) !=3D -ENOKEY) {
-  			_leave(" =3D %ld", PTR_ERR(key));
-diff --cc include/linux/key.h
-index bec10fbb2462,6fef6684501f..000000000000
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@@ -339,20 -340,8 +340,20 @@@ static inline struct key *request_key(s
-   * Furthermore, it then works as wait_for_key_construction() to wait for =
-the
-   * completion of keys undergoing construction with a non-interruptible wa=
-it.
-   */
-- #define request_key_net(type, description, net, callout_info) \
-- 	request_key_tag(type, description, net->key_domain, callout_info);
-+ #define request_key_net(type, description, net, callout_info, acl)	\
-+ 	request_key_tag(type, description, net->key_domain, callout_info, acl);
- +
- +/**
- + * request_key_net_rcu - Request a key for a net namespace under RCU cond=
-itions
- + * @type: Type of key.
- + * @description: The searchable description of the key.
- + * @net: The network namespace that is the key's domain of operation.
- + *
- + * As for request_key_rcu() except that only keys that operate the specif=
-ied
- + * network namespace are used.
- + */
- +#define request_key_net_rcu(type, description, net) \
- +	request_key_rcu(type, description, net->key_domain);
-  #endif /* CONFIG_NET */
- =20
-  extern int wait_for_key_construction(struct key *key, bool intr);
+	commit 50717a37db032ce783f50685a73bb2ac68471a5a
+	Author: Ursula Braun <ubraun@linux.ibm.com>
+	Date:   Fri Apr 12 10:57:23 2019 +0000
 
---Sig_/=8T79JeaYBWiZbzZSmn87Mx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+	  net/smc: nonblocking connect rework
 
------BEGIN PGP SIGNATURE-----
+No one replied to the original thread for this bug.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl03wogACgkQAVBC80lX
-0Gyn6wf/c7oDvhwP8CsqBXBnBLj6VKAJyyfMGt4mHTvX9XtaKmKU9pog6hTaQPBm
-l+QE7uqU2kQt0u7QxWly/9nPUCHazRddLVNE31n99S1AUJz1NOIo+9pngjirFaYi
-pqXiIF0oRarz4RKGfWrWykVUjub5k2cpFQScdtRb89M5Ot+kYWzUpEQg7FMUq2Ge
-5/+YMBgHLfJtqvCcLSFZm3o18xur73O54F9ycYX5FaOyaTnLiIS2NCFer+64pZCB
-UPITJCGRAqDGRxvYO8CyzmulyFxWJ/4luzI1WWEFFWwnrIa9GzRLO8yfapmVd6V9
-ovwd5bPXJO+63XQmF5L07D04pn0ClA==
-=+15G
------END PGP SIGNATURE-----
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com
 
---Sig_/=8T79JeaYBWiZbzZSmn87Mx--
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ac48ed05866bbc2c@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: ODEBUG bug in __sk_destruct
+Last occurred:      0 days ago
+Reported:           450 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=591666b46bf0d9e2fbb8dbb386982d12ba804648
+Original thread:    https://lkml.kernel.org/lkml/000000000000451f9d056aff4397@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+92209502e7aab127c75f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000451f9d056aff4397@google.com
+
+--------------------------------------------------------------------------------
+Title:              memory leak in new_inode_pseudo (2)
+Last occurred:      1 day ago
+Reported:           7 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=911dac8eb1de0c09979e8e0054cb6cbe198cd5bb
+Original thread:    https://lkml.kernel.org/lkml/000000000000111cbe058dc7754d@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e682cca30bc101a4d9d9@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000111cbe058dc7754d@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in debug_check_no_obj_freed
+Last occurred:      0 days ago
+Reported:           33 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=83687867d4a435fce7c6045b34425b1cfb3bf2d6
+Original thread:    https://lkml.kernel.org/lkml/00000000000090ae7a058bc12946@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000090ae7a058bc12946@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: workqueue leaked lock or atomic in smc_tx_work
+Last occurred:      27 days ago
+Reported:           29 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=dd71ec2acfdd198626ec8e914f70afc70cf35c72
+Original thread:    https://lkml.kernel.org/lkml/0000000000006a28b5058c0d7e17@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+8759e3927fd85a7c520a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000006a28b5058c0d7e17@google.com
+
