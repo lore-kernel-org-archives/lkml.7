@@ -2,54 +2,59 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434F7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585B6C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16790205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220A4205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998779;
-	bh=pL6OMb2gnp8J5st5Be6Rzwj0zSdNJEqzf9fAuW++eHY=;
+	s=default; t=1563998784;
+	bh=jqZTEZW2sYsyEtBKIkWIWFXkpDQSd/XWU6PFsFqOt6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4tqcB/QBAuB1NjVlIoxCydIh/6KDtdAovUHckVcBg3rfPifOwi327DHbjIIrwQtB
-	 8WX42tIx+USw6642i+gV6nab17KDTvzAwC9vwd6YzPXGJx4yyQBO/uFxzZ8cTb2HJ4
-	 YJYgmfzVBW9CILzfpfVrdJpltFlvteK4Lfi6z8tM=
+	b=t19nePN6LU1Nc8fdJ7P+ondXcaKw/cYjyOkPsr94N59VONLj9uzyoqrR2k3lOme4Q
+	 Juu7iuzA5Q0kagT+Er5HyUhP6B7npw1j3EzJ68pxBayMetYFmIS1lN7OcazLvPukki
+	 KKzTUOb3LBGtm5mXjQU0zfno/WCS0JAceBZFAcHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392788AbfGXUGR (ORCPT
+        id S2392699AbfGXUFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57264 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392714AbfGXUFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:05:38 -0400
+        id S2405818AbfGXUDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:03:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 999642147A;
-        Wed, 24 Jul 2019 20:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A56D5205C9;
+        Wed, 24 Jul 2019 20:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998737;
-        bh=pL6OMb2gnp8J5st5Be6Rzwj0zSdNJEqzf9fAuW++eHY=;
+        s=default; t=1563998610;
+        bh=jqZTEZW2sYsyEtBKIkWIWFXkpDQSd/XWU6PFsFqOt6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdrNpvK2pJAR3wZfQjGxaj19Y4zsBQXP2X6abmIlqkA4L8e9nPyH6+2l3RorjuYpQ
-         kkTlvsEmVE8AGZwULRDTycNJa9exaWq64jNFPhNPERIkxQ0X8JbGFXMh1StCSstwCX
-         VrOZA8+yynX/6EAUPv376GNS7UY3fe2GerD2uoTw=
+        b=EMbaIBGYdxcERgtkxmoJSZ1rTQPXDURoKhiQoEysRqiowiTjcylEBNHllhVVCApzg
+         JLwMNY60Do9fvPr9P7nSZi4JRqLElXSpMjQ52q9BvFPEb9lLGbyUTDnfssAhJ4kUQs
+         4F3vv2oYtkyQkDiRbK59UTs5AmA/50sapHglIkgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Huckleberry <nhuck@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        john.stultz@linaro.org, sboyd@kernel.org,
-        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 097/271] timer_list: Guard procfs specific code
-Date:   Wed, 24 Jul 2019 21:19:26 +0200
-Message-Id: <20190724191703.548063525@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 054/271] perf cs-etm: Properly set the value of old and head in snapshot mode
+Date:   Wed, 24 Jul 2019 21:18:43 +0200
+Message-Id: <20190724191659.776669335@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,87 +67,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9314773a91a1d3b36270085246a6715a326ff00 ]
+[ Upstream commit e45c48a9a4d20ebc7b639a62c3ef8f4b08007027 ]
 
-With CONFIG_PROC_FS=n the following warning is emitted:
+This patch adds the necessary intelligence to properly compute the value
+of 'old' and 'head' when operating in snapshot mode.  That way we can
+get the latest information in the AUX buffer and be compatible with the
+generic AUX ring buffer mechanic.
 
-kernel/time/timer_list.c:361:36: warning: unused variable
-'timer_list_sops' [-Wunused-const-variable]
-   static const struct seq_operations timer_list_sops = {
+Tester notes:
 
-Add #ifdef guard around procfs specific code.
+> Leo, have you had the chance to test/review this one? Suzuki?
 
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: john.stultz@linaro.org
-Cc: sboyd@kernel.org
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/534
-Link: https://lkml.kernel.org/r/20190614181604.112297-1-nhuck@google.com
+Sure.  I applied this patch on the perf/core branch (with latest
+commit 3e4fbf36c1e3 'perf augmented_raw_syscalls: Move reading
+filename to the loop') and passed testing with below steps:
+
+  # perf record -e cs_etm/@tmc_etr0/ -S -m,64 --per-thread ./sort &
+  [1] 19097
+  Bubble sorting array of 30000 elements
+
+  # kill -USR2 19097
+  # kill -USR2 19097
+  # kill -USR2 19097
+  [ perf record: Woken up 4 times to write data ]
+  [ perf record: Captured and wrote 0.753 MB perf.data ]
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190605161633.12245-1-mathieu.poirier@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/timer_list.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c | 127 +++++++++++++++++++++++++++++-
+ 1 file changed, 123 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-index d647dabdac97..07afcfe2a61b 100644
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -287,23 +287,6 @@ static inline void timer_list_header(struct seq_file *m, u64 now)
- 	SEQ_printf(m, "\n");
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 2f595cd73da6..16af6c3b1365 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -32,6 +32,8 @@ struct cs_etm_recording {
+ 	struct auxtrace_record	itr;
+ 	struct perf_pmu		*cs_etm_pmu;
+ 	struct perf_evlist	*evlist;
++	int			wrapped_cnt;
++	bool			*wrapped;
+ 	bool			snapshot_mode;
+ 	size_t			snapshot_size;
+ };
+@@ -495,16 +497,131 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+ 	return 0;
  }
  
--static int timer_list_show(struct seq_file *m, void *v)
--{
--	struct timer_list_iter *iter = v;
--
--	if (iter->cpu == -1 && !iter->second_pass)
--		timer_list_header(m, iter->now);
--	else if (!iter->second_pass)
--		print_cpu(m, iter->cpu, iter->now);
--#ifdef CONFIG_GENERIC_CLOCKEVENTS
--	else if (iter->cpu == -1 && iter->second_pass)
--		timer_list_show_tickdevices_header(m);
--	else
--		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
--#endif
--	return 0;
--}
--
- void sysrq_timer_list_show(void)
- {
- 	u64 now = ktime_to_ns(ktime_get());
-@@ -322,6 +305,24 @@ void sysrq_timer_list_show(void)
- 	return;
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static int timer_list_show(struct seq_file *m, void *v)
+-static int cs_etm_find_snapshot(struct auxtrace_record *itr __maybe_unused,
++static int cs_etm_alloc_wrapped_array(struct cs_etm_recording *ptr, int idx)
 +{
-+	struct timer_list_iter *iter = v;
++	bool *wrapped;
++	int cnt = ptr->wrapped_cnt;
 +
-+	if (iter->cpu == -1 && !iter->second_pass)
-+		timer_list_header(m, iter->now);
-+	else if (!iter->second_pass)
-+		print_cpu(m, iter->cpu, iter->now);
-+#ifdef CONFIG_GENERIC_CLOCKEVENTS
-+	else if (iter->cpu == -1 && iter->second_pass)
-+		timer_list_show_tickdevices_header(m);
-+	else
-+		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
-+#endif
++	/* Make @ptr->wrapped as big as @idx */
++	while (cnt <= idx)
++		cnt++;
++
++	/*
++	 * Free'ed in cs_etm_recording_free().  Using realloc() to avoid
++	 * cross compilation problems where the host's system supports
++	 * reallocarray() but not the target.
++	 */
++	wrapped = realloc(ptr->wrapped, cnt * sizeof(bool));
++	if (!wrapped)
++		return -ENOMEM;
++
++	wrapped[cnt - 1] = false;
++	ptr->wrapped_cnt = cnt;
++	ptr->wrapped = wrapped;
++
 +	return 0;
 +}
 +
- static void *move_iter(struct timer_list_iter *iter, loff_t offset)
++static bool cs_etm_buffer_has_wrapped(unsigned char *buffer,
++				      size_t buffer_size, u64 head)
++{
++	u64 i, watermark;
++	u64 *buf = (u64 *)buffer;
++	size_t buf_size = buffer_size;
++
++	/*
++	 * We want to look the very last 512 byte (chosen arbitrarily) in
++	 * the ring buffer.
++	 */
++	watermark = buf_size - 512;
++
++	/*
++	 * @head is continuously increasing - if its value is equal or greater
++	 * than the size of the ring buffer, it has wrapped around.
++	 */
++	if (head >= buffer_size)
++		return true;
++
++	/*
++	 * The value of @head is somewhere within the size of the ring buffer.
++	 * This can be that there hasn't been enough data to fill the ring
++	 * buffer yet or the trace time was so long that @head has numerically
++	 * wrapped around.  To find we need to check if we have data at the very
++	 * end of the ring buffer.  We can reliably do this because mmap'ed
++	 * pages are zeroed out and there is a fresh mapping with every new
++	 * session.
++	 */
++
++	/* @head is less than 512 byte from the end of the ring buffer */
++	if (head > watermark)
++		watermark = head;
++
++	/*
++	 * Speed things up by using 64 bit transactions (see "u64 *buf" above)
++	 */
++	watermark >>= 3;
++	buf_size >>= 3;
++
++	/*
++	 * If we find trace data at the end of the ring buffer, @head has
++	 * been there and has numerically wrapped around at least once.
++	 */
++	for (i = watermark; i < buf_size; i++)
++		if (buf[i])
++			return true;
++
++	return false;
++}
++
++static int cs_etm_find_snapshot(struct auxtrace_record *itr,
+ 				int idx, struct auxtrace_mmap *mm,
+-				unsigned char *data __maybe_unused,
++				unsigned char *data,
+ 				u64 *head, u64 *old)
  {
- 	for (; offset; offset--) {
-@@ -381,3 +382,4 @@ static int __init init_timer_list_procfs(void)
++	int err;
++	bool wrapped;
++	struct cs_etm_recording *ptr =
++			container_of(itr, struct cs_etm_recording, itr);
++
++	/*
++	 * Allocate memory to keep track of wrapping if this is the first
++	 * time we deal with this *mm.
++	 */
++	if (idx >= ptr->wrapped_cnt) {
++		err = cs_etm_alloc_wrapped_array(ptr, idx);
++		if (err)
++			return err;
++	}
++
++	/*
++	 * Check to see if *head has wrapped around.  If it hasn't only the
++	 * amount of data between *head and *old is snapshot'ed to avoid
++	 * bloating the perf.data file with zeros.  But as soon as *head has
++	 * wrapped around the entire size of the AUX ring buffer it taken.
++	 */
++	wrapped = ptr->wrapped[idx];
++	if (!wrapped && cs_etm_buffer_has_wrapped(data, mm->len, *head)) {
++		wrapped = true;
++		ptr->wrapped[idx] = true;
++	}
++
+ 	pr_debug3("%s: mmap index %d old head %zu new head %zu size %zu\n",
+ 		  __func__, idx, (size_t)*old, (size_t)*head, mm->len);
+ 
+-	*old = *head;
+-	*head += mm->len;
++	/* No wrap has occurred, we can just use *head and *old. */
++	if (!wrapped)
++		return 0;
++
++	/*
++	 * *head has wrapped around - adjust *head and *old to pickup the
++	 * entire content of the AUX buffer.
++	 */
++	if (*head >= mm->len) {
++		*old = *head - mm->len;
++	} else {
++		*head += mm->len;
++		*old = *head - mm->len;
++	}
+ 
  	return 0;
  }
- __initcall(init_timer_list_procfs);
-+#endif
+@@ -545,6 +662,8 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
+ {
+ 	struct cs_etm_recording *ptr =
+ 			container_of(itr, struct cs_etm_recording, itr);
++
++	zfree(&ptr->wrapped);
+ 	free(ptr);
+ }
+ 
 -- 
 2.20.1
 
