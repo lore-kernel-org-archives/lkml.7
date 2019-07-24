@@ -2,144 +2,65 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413E4C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B96CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1845121880
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+uv8qpF"
+	by mail.kernel.org (Postfix) with ESMTP id 272BF205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfGXWP5 (ORCPT
+        id S1729278AbfGXW0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:15:57 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36445 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfGXWP5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:15:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i21so46033965ljj.3;
-        Wed, 24 Jul 2019 15:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UBF6bNBt/PemNw217in5S9v8lFOv59SFC9xNcgdoU6Y=;
-        b=s+uv8qpFxE+t54WGQJxNv5PYL7LjIriR64oc1BJyj1009oNYg6lzg+rMYzQQOCEQ/4
-         QMO4FRyZCOuroPUbx/6MBgHUdMdnEQwtfxh2xCc2q4kRbiUdpUyvMegZrChhGGNgJUAy
-         Avf8nJfUygtP6hrUCLBQbNyAPWmEHblYOzgfDrxZOYT4sb7wUIbwDdogK+r6+C7bntd1
-         +4WqbjfwD6gUnOOpW6Dx9tKsZJRXETh89NSOLtFpz6P4uu6xdSRhH1vM8s0lTRrSfEjw
-         GorBm5VsmBWs/7Jx2ZCSLyDT5+kidDNLZJ2dWq9ruL3lc9uDai+Qh4U0qR+mrnSPTidp
-         qRfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UBF6bNBt/PemNw217in5S9v8lFOv59SFC9xNcgdoU6Y=;
-        b=fUGyCmD8sMc7BsJPqMr1azO6Hv/2CBZ0CGdOKUeys9APJZBHraNOk1H5mWgFieXks9
-         M9O8YAaS0WtjcoZISEEKTKHLd3dPAFF+M+Csq+/9w03roWcJeaOoJkRaGExL5aM+nGo8
-         J2RgQR+UWcuNre9PAoFPLZKZPoayfKc/qYnVEDJD5wdjCqyt404IFz+Zrn38E1SJ3Ilj
-         gLafZRl4rwCIizadG/5PabG7gs5ex1okVSZqjcl15up/9IjjaAPSvlw20ghgYQaQyx4r
-         yZFX7iQb24eDwlC9hKrRdk6L7Ay+jrlh4B/GqfAR5P6FL/Sfio9OWRCE3Vojw5TJ0gDT
-         6IIA==
-X-Gm-Message-State: APjAAAXPaesB7+s8PpzShWpa6Xr4H84lwzIKA8DoQJRLeqop+Vv4Xr9/
-        2yepAZmDetNvoW49A/X5K9/L8HnN+tUIBKnSJRs=
-X-Google-Smtp-Source: APXvYqwM9LPq8IoQDhPWPLNNHxpyCL3AuIe6TPRs7D3NajHezX5f401oHxVeqFYuSFlyCQnR0SrW8LZ2qREKv7Tmk+o=
-X-Received: by 2002:a2e:9a82:: with SMTP id p2mr45445949lji.64.1564006555385;
- Wed, 24 Jul 2019 15:15:55 -0700 (PDT)
+        Wed, 24 Jul 2019 18:26:20 -0400
+Received: from orbyte.nwl.cc ([151.80.46.58]:51970 "EHLO orbyte.nwl.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728027AbfGXW0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 18:26:19 -0400
+Received: from n0-1 by orbyte.nwl.cc with local (Exim 4.91)
+        (envelope-from <n0-1@orbyte.nwl.cc>)
+        id 1hqPi8-0003Jc-2l; Thu, 25 Jul 2019 00:26:12 +0200
+Date:   Thu, 25 Jul 2019 00:26:12 +0200
+From:   Phil Sutter <phil@nwl.cc>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the netfilter
+ tree
+Message-ID: <20190724222612.GD14469@orbyte.nwl.cc>
+Mail-Followup-To: Phil Sutter <phil@nwl.cc>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190725071803.6beb44f9@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190724165803.87470-1-brianvv@google.com> <CAPhsuW7PU1PP91e8vD2diwhBAwGJHWu6wAKOoBThT86f4r5OJw@mail.gmail.com>
-In-Reply-To: <CAPhsuW7PU1PP91e8vD2diwhBAwGJHWu6wAKOoBThT86f4r5OJw@mail.gmail.com>
-From:   Brian Vazquez <brianvv.kernel@gmail.com>
-Date:   Wed, 24 Jul 2019 15:15:44 -0700
-Message-ID: <CABCgpaU3xxX6CMMxD+1knApivtc2jLBHysDXw-0E9bQEL0qC3A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 0/6] bpf: add BPF_MAP_DUMP command to dump more
- than one entry per call
-To:     Song Liu <liu.song.a23@gmail.com>
-Cc:     Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725071803.6beb44f9@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:20 PM Song Liu <liu.song.a23@gmail.com> wrote:
->
-> On Wed, Jul 24, 2019 at 10:09 AM Brian Vazquez <brianvv@google.com> wrote:
-> >
-> > This introduces a new command to retrieve multiple number of entries
-> > from a bpf map.
-> >
-> > This new command can be executed from the existing BPF syscall as
-> > follows:
-> >
-> > err =  bpf(BPF_MAP_DUMP, union bpf_attr *attr, u32 size)
-> > using attr->dump.map_fd, attr->dump.prev_key, attr->dump.buf,
-> > attr->dump.buf_len
-> > returns zero or negative error, and populates buf and buf_len on
-> > succees
-> >
-> > This implementation is wrapping the existing bpf methods:
-> > map_get_next_key and map_lookup_elem
-> >
-> > Note that this implementation can be extended later to do dump and
-> > delete by extending map_lookup_and_delete_elem (currently it only works
-> > for bpf queue/stack maps) and either use a new flag in map_dump or a new
-> > command map_dump_and_delete.
-> >
-> > Results show that even with a 1-elem_size buffer, it runs ~40 faster
->
-> Why is the new command 40% faster with 1-elem_size buffer?
+Hi,
 
-The test is using a really simple map structure: uint64_t key,val.
-Which makes the lookup_elem logic faster since it doesn't spend too
-much time copying the value. My conclusion with the 40% was that this
-new implementation only needs 1 syscall per elem compare to the 2
-syscalls that we needed with previous implementation so in this
-particular case the number of ops that we are doing is almost halved.
-I did one experiment increasing the value_size (448*64B) and it was
-only 14% faster with 1-elem_size buffer.
+On Thu, Jul 25, 2019 at 07:18:03AM +1000, Stephen Rothwell wrote:
+> Commit
+> 
+>   5f5ff5ca2e18 ("netfilter: nf_tables: Make nft_meta expression more robust")
+> 
+> is missing a Signed-off-by from its author.
 
-> > than the current implementation, improvements of ~85% are reported when
-> > the buffer size is increased, although, after the buffer size is around
-> > 5% of the total number of entries there's no huge difference in
-> > increasing it.
-> >
-> > Tested:
-> > Tried different size buffers to handle case where the bulk is bigger, or
-> > the elements to retrieve are less than the existing ones, all runs read
-> > a map of 100K entries. Below are the results(in ns) from the different
-> > runs:
-> >
-> > buf_len_1:       69038725 entry-by-entry: 112384424 improvement
-> > 38.569134
-> > buf_len_2:       40897447 entry-by-entry: 111030546 improvement
-> > 63.165590
-> > buf_len_230:     13652714 entry-by-entry: 111694058 improvement
-> > 87.776687
-> > buf_len_5000:    13576271 entry-by-entry: 111101169 improvement
-> > 87.780263
-> > buf_len_73000:   14694343 entry-by-entry: 111740162 improvement
-> > 86.849542
-> > buf_len_100000:  13745969 entry-by-entry: 114151991 improvement
-> > 87.958187
-> > buf_len_234567:  14329834 entry-by-entry: 114427589 improvement
-> > 87.476941
->
-> It took me a while to figure out the meaning of 87.476941. It is probably
-> a good idea to say 87.5% instead.
+Argh, my SoB ended in the changelog I put below the commit message and
+hence was dropped during git-am. Thanks for the heads-up, Stephen!
 
-right, will change it in next version.
+Pablo, can we fix this somehow?
+
+Sorry for the mess, Phil
