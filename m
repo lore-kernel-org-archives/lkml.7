@@ -2,142 +2,120 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5CAC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90D2C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8F721926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A419221926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbfGXNxA (ORCPT
+        id S1728083AbfGXNxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:53:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51014 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726422AbfGXNxA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:53:00 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6ODj18W077184
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:52:58 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2txnrar229-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:52:46 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 24 Jul 2019 14:52:19 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Jul 2019 14:52:16 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6ODqF0U48300358
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 13:52:15 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 163EFB2070;
-        Wed, 24 Jul 2019 13:52:15 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F338DB206A;
-        Wed, 24 Jul 2019 13:52:14 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.189.166])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Jul 2019 13:52:14 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 679C716C2E45; Wed, 24 Jul 2019 06:52:19 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 06:52:19 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        peterz@infradead.org
-Subject: Re: How to turn scheduler tick on for current nohz_full CPU?
-Reply-To: paulmck@linux.ibm.com
-References: <20190724115331.GA29059@linux.ibm.com>
- <20190724132257.GA1029@lenoir>
+        Wed, 24 Jul 2019 09:53:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:41304 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbfGXNxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:53:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F72D28;
+        Wed, 24 Jul 2019 06:53:08 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 996793F71A;
+        Wed, 24 Jul 2019 06:53:05 -0700 (PDT)
+Subject: Re: [PATCH v9 11/21] mm: pagewalk: Add p4d_entry() and pgd_entry()
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-12-steven.price@arm.com>
+ <20190723101432.GC8085@lakrids.cambridge.arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <60ee20ef-62a3-5df1-6e24-24973b69be70@arm.com>
+Date:   Wed, 24 Jul 2019 14:53:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724132257.GA1029@lenoir>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19072413-0060-0000-0000-00000364DEB7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011487; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01236781; UDB=6.00651888; IPR=6.01018148;
- MB=3.00027870; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-24 13:52:18
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072413-0061-0000-0000-00004A462259
-Message-Id: <20190724135219.GY14271@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907240153
+In-Reply-To: <20190723101432.GC8085@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 03:22:59PM +0200, Frederic Weisbecker wrote:
-> On Wed, Jul 24, 2019 at 04:53:31AM -0700, Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > One of the callback-invocation forward-progress issues turns out to
-> > be nohz_full CPUs not turning their scheduling-clock interrupt back on
-> > when running in kernel mode.  Given that callback floods can cause RCU's
-> > callback-invocation loop to run for some time, it would be good for this
-> > loop to re-enable this interrupt.  Of course, this problem applies to
-> > pretty much any kernel code that might loop for an extended time period,
-> > not just RCU.
-> > 
-> > I took a quick look at kernel/time/tick-sched.c and the closest thing
-> > I found was tick_nohz_full_kick_cpu(), except that (1) it isn't clear
-> > that this does much when invoked on the current CPU and (2) it doesn't
-> > help in rcutorture TREE04.  In contrast, disabling NO_HZ_FULL and using
-> > RCU_NOCB_CPU instead works quite well.
-> > 
-> > So what should I be calling instead of tick_nohz_full_kick_cpu() to
-> > re-enable the current CPU's scheduling-clock interrupt?
+On 23/07/2019 11:14, Mark Rutland wrote:
+> On Mon, Jul 22, 2019 at 04:42:00PM +0100, Steven Price wrote:
+>> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+>> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+>> no users. We're about to add users so reintroduce them, along with
+>> p4d_entry() as we now have 5 levels of tables.
+>>
+>> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+>> PUD-sized transparent hugepages") already re-added pud_entry() but with
+>> different semantics to the other callbacks. Since there have never
+>> been upstream users of this, revert the semantics back to match the
+>> other callbacks. This means pud_entry() is called for all entries, not
+>> just transparent huge pages.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  include/linux/mm.h | 15 +++++++++------
+>>  mm/pagewalk.c      | 27 ++++++++++++++++-----------
+>>  2 files changed, 25 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 0334ca97c584..b22799129128 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -1432,15 +1432,14 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+>>  
+>>  /**
+>>   * mm_walk - callbacks for walk_page_range
+>> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
+>> - *	       this handler should only handle pud_trans_huge() puds.
+>> - *	       the pmd_entry or pte_entry callbacks will be used for
+>> - *	       regular PUDs.
+>> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
+>> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
+>> + * @p4d_entry: if set, called for each non-empty P4D entry
+>> + * @pud_entry: if set, called for each non-empty PUD entry
+>> + * @pmd_entry: if set, called for each non-empty PMD entry
 > 
-> Indeed, kernel code is assumed to be quick enough (between two extended grace
-> periods) to avoid running the tick for RCU. But some long lasting kernel code
-> may require to tick temporarily.
+> How are these expected to work with folding?
 > 
-> You can use tick_nohz_dep_set_cpu(cpu, TICK_DEP_MASK_RCU) with the
-> following:
+> For example, on arm64 with 64K pages and 42-bit VA, you can have 2-level
+> tables where the PGD is P4D, PUD, and PMD. IIUC we'd invoke the
+> callbacks for each of those levels where we found an entry in the pgd.
 > 
-> diff --git a/include/linux/tick.h b/include/linux/tick.h
-> index f92a10b5e112..3f476e2a4bf7 100644
-> --- a/include/linux/tick.h
-> +++ b/include/linux/tick.h
-> @@ -108,7 +108,8 @@ enum tick_dep_bits {
->  	TICK_DEP_BIT_POSIX_TIMER	= 0,
->  	TICK_DEP_BIT_PERF_EVENTS	= 1,
->  	TICK_DEP_BIT_SCHED		= 2,
-> -	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3
-> +	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
-> +	TICK_DEP_BIT_RCU		= 4
->  };
->  
->  #define TICK_DEP_MASK_NONE		0
-> @@ -116,6 +117,7 @@ enum tick_dep_bits {
->  #define TICK_DEP_MASK_PERF_EVENTS	(1 << TICK_DEP_BIT_PERF_EVENTS)
->  #define TICK_DEP_MASK_SCHED		(1 << TICK_DEP_BIT_SCHED)
->  #define TICK_DEP_MASK_CLOCK_UNSTABLE	(1 << TICK_DEP_BIT_CLOCK_UNSTABLE)
-> +#define TICK_DEP_MASK_RCU		(1 << TICK_DEP_BIT_RCU)
->  
->  #ifdef CONFIG_NO_HZ_COMMON
->  extern bool tick_nohz_enabled;
+> Either the callee handle that, or we should inhibit the callbacks when
+> levels are folded, and I think that needs to be explcitly stated either
+> way.
+> 
+> IIRC on x86 the p4d folding is dynamic depending on whether the HW
+> supports 5-level page tables. Maybe that implies the callee has to
+> handle that.
 
-I will give this a try, thank you!  (Testing will take a few days.)
+Yes, my assumption is that it has to be up to the callee to handle that
+because folding can be dynamic. I believe this also was how these
+callbacks work before they were removed. However I'll add a comment
+explaining that here as it's probably non-obvious.
 
-							Thanx, Paul
-
+Steve
