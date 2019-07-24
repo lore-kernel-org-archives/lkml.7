@@ -2,89 +2,138 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69C9C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E383AC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5B32084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564001306;
-	bh=OWw6WJ9GFzt1SjBYFMDIQ38+3nzbD1M3ctnDH4MxBDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zV3wJH2BNjjvR1rmDYPALFnpq1a5DRx0Ssp/OrqdKhHVrZt5bVK/3tXFPWi/EE08l
-	 qsKWZ0wx9qLKbxB4cmwwr2y/ZB07M1SsI2mwvjknLd99w4NhHBb1q5S8OjO+rcTtmW
-	 A/98SnCIrjICOqBA085lhRAfF9i4oVNk/P/viuvE=
+	by mail.kernel.org (Postfix) with ESMTP id B9FFB2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4Dj7QpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387782AbfGXUsZ (ORCPT
+        id S2387829AbfGXUto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:48:25 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36409 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfGXUsY (ORCPT
+        Wed, 24 Jul 2019 16:49:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38128 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfGXUto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:48:24 -0400
-Received: by mail-io1-f68.google.com with SMTP id o9so92603777iom.3;
-        Wed, 24 Jul 2019 13:48:24 -0700 (PDT)
+        Wed, 24 Jul 2019 16:49:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so21523887pfn.5;
+        Wed, 24 Jul 2019 13:49:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qbKIkUXIXrIytrczug4c72/hmec9O4Z30VHncYck5j0=;
+        b=P4Dj7QpEMF7iqI8Aa3kTdushdCQaM+toq1EVo24AvXPwTwXZgunQFxRMfSzG1SXnyE
+         k5h764QplEFYUDboUYQD4DFv8p9eFc/JZ19FLLhyHKdrgqYSFm1FSxJy2CYBdfQvQUz2
+         Dr29kwlq7w3wqLMD0ftXn6DxvwuKQPeRf0xRaC46mHHXylRSgq0xfXlt05PFbiDUDGTc
+         sLtDxUV10dbkU1nnxlOg5KjaMzVK5Jy4mXVa+aQeTq2YAdb1EMdP3pEt+vReSRRLkSRw
+         NUsEK0JiwmNsoKkPdsG53TpnCVBhSm14VxsBWsD2K9x1kRv3q1wDFAaaQArUf5Wwg3n9
+         Agqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IHAe9r8SwKR0SOE7feOFdveA8IT0SDk7uX1IR0X6Pa8=;
-        b=VKTL2mDmpsBNmsM1JMrLP2x6QIe3+uWnLOp5EzDvE6nhWDM8XNVOSx5ydDs1kFEYr8
-         whKx74qjmDlGAoYUpQX8+WzgOxujj5pgyDPMCIL9YbgBcaK06Z1ye77Ml3svtDYi4B6n
-         tHXxaFbxCMsoPhPU5gyFT18Q7e+yZJ77aSAs7qMitMdm8lV1LxTG7rgmVk8kbw0Dyfzv
-         uSPmnczzM5Gxc8YtRDSL/Fp8+jhjXdCNV8ZP19Vh0sFYShtuNSJjO6kH/Z5YuyzrUrFr
-         WOnEfGrzhylbFBEOwUPBLWQMkSC+CMtmgMgxr1SWT9Bgy9dTqCfc0uQT2B2XmsiMk6C8
-         VYww==
-X-Gm-Message-State: APjAAAXLMG8r4lCaVVD6DZz+y6D10X2ZfYsJdG3/7EjgJEHIWgFTkMGY
-        E65eh2lOa8AJuecZuHr9ug==
-X-Google-Smtp-Source: APXvYqyaS0TYvzjTPZIPuZme/uFk9QJ9Ap7J20wOVd2CKLqEYYi1duV0VS989NHcY60O65J0oEWMoQ==
-X-Received: by 2002:a6b:5a17:: with SMTP id o23mr73100927iob.41.1564001303913;
-        Wed, 24 Jul 2019 13:48:23 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id y5sm49459573ioc.86.2019.07.24.13.48.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:48:23 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:48:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/2] dt-bindings: bus: imx-weim: document optional burst
- clock mode
-Message-ID: <20190724204822.GA17166@bogus>
-References: <20190712204316.16783-1-TheSven73@gmail.com>
- <20190712204316.16783-2-TheSven73@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qbKIkUXIXrIytrczug4c72/hmec9O4Z30VHncYck5j0=;
+        b=JKvbdZUfacuCLjQG0MkdJEEC9VAYo/U1DHTCZhPbnLQxG6V7o9B75W1dut8kGOo0fo
+         oFcjdaXrzmxJlIRDZRdZs/KYroSV7YUY5GboiuauMR3qVcA800FQ0fs3XaJCUiyyyYG3
+         1KN7GZk8ZgnhQbaiwcBaJBuHlEqjIxr3hyHWJT0rhLD5Nu+8rQNKAeFI9z6H3L27+8iN
+         SfMZ+UYOkO1FzDQ3ph0+7Ny+HF46TxH24Qo7iLH1cUE142f7FVM/y7JjFjXIPe1u06e2
+         ykn4f9PvWkCMl8eV/ei+JY70nBaaErzBIUl2BMKtmnw+pbp8loAruO5LkteFDkVR2kSV
+         GOSw==
+X-Gm-Message-State: APjAAAX0iuXVmAS+HsCRTOqsD0pNjESxQW+L9b7IZbQ4FuVVb/bDLQ63
+        3rM/g10V/s15Jh1/HvhxIVlePFAqbhiyX9XWJnI=
+X-Google-Smtp-Source: APXvYqyiiXNMl4u63emYSupcBStxAultLjAIT4xIJ8f6+xqyLGhEr94UfVo/+QNj6ThewJnWA/M11ul6p5lnMKEDpH0=
+X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr86823936pjb.138.1564001383415;
+ Wed, 24 Jul 2019 13:49:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712204316.16783-2-TheSven73@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190724191735.096702571@linuxfoundation.org> <20190724191738.345725184@linuxfoundation.org>
+In-Reply-To: <20190724191738.345725184@linuxfoundation.org>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 24 Jul 2019 15:49:32 -0500
+Message-ID: <CAH2r5msp4h4+gR6MC0ciO7X9w8cTWh5DD_W1teWpxHfooc5tsA@mail.gmail.com>
+Subject: Re: [PATCH 5.2 038/413] signal/cifs: Fix cifs_put_tcp_session to call
+ send_sig instead of force_sig
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Jeff Layton <jlayton@poochiereds.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 16:43:16 -0400, Sven Van Asbroeck wrote:
-> An optional devicetree property was added to the imx-weim driver,
-> which if present instructs it to operate in burst clock mode.
-> Update the dt-bindings to reflect this.
-> 
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->  Documentation/devicetree/bindings/bus/imx-weim.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+Note that this patch causes a regression (removing cifs module fails,
+due to unmount leaking a thread with this change).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+We are testing a workaround to cifs.ko which would be needed if this
+patch were to be backported.
+
+On Wed, Jul 24, 2019 at 2:26 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> [ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
+>
+> The locking in force_sig_info is not prepared to deal with a task that
+> exits or execs (as sighand may change).  The is not a locking problem
+> in force_sig as force_sig is only built to handle synchronous
+> exceptions.
+>
+> Further the function force_sig_info changes the signal state if the
+> signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+> delivery of the signal.  The signal SIGKILL can not be ignored and can
+> not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+> delivered.
+>
+> So using force_sig rather than send_sig for SIGKILL is confusing
+> and pointless.
+>
+> Because it won't impact the sending of the signal and and because
+> using force_sig is wrong, replace force_sig with send_sig.
+>
+> Cc: Namjae Jeon <namjae.jeon@samsung.com>
+> Cc: Jeff Layton <jlayton@primarydata.com>
+> Cc: Steve French <smfrench@gmail.com>
+> Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
+> Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/cifs/connect.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> index 8dd6637a3cbb..714a359c7c8d 100644
+> --- a/fs/cifs/connect.c
+> +++ b/fs/cifs/connect.c
+> @@ -2631,7 +2631,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
+>
+>         task = xchg(&server->tsk, NULL);
+>         if (task)
+> -               force_sig(SIGKILL, task);
+> +               send_sig(SIGKILL, task, 1);
+>  }
+>
+>  static struct TCP_Server_Info *
+> --
+> 2.20.1
+>
+>
+>
+
+
+-- 
+Thanks,
+
+Steve
