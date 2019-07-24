@@ -2,129 +2,134 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29C7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13326C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E7E22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563995922;
-	bh=pMYQk+o/fu9IEH/RzuK9c4CZcXwAuqQc2Vag4URpoI8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=L5KCaArkEP9OYY4N6Fg9nsOzWcBIijkIiUTaUTsLWW5HXuURgRyKBTwHtGplAoyJY
-	 AhV7nEHpXVMAvlXkLLjg8DrxeQyydIaoWfZltMsZ7DauCdu/rA6Xm4BOdOAIcirlU4
-	 Leig4nUQF2nU7Gx/ajCLW1LoShz0qzu15fkCbo+4=
+	by mail.kernel.org (Postfix) with ESMTP id D96CC216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRCjPwpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbfGXTSl (ORCPT
+        id S1727520AbfGXTUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:18:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34626 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGXTSH (ORCPT
+        Wed, 24 Jul 2019 15:20:16 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44607 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfGXTUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:18:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=zLOyjuMGLnZd3b5xW00mz+HMld+XrRBlTLTieGu4vyw=; b=tsNLOsuRwjgi
-        qNH52NAUZSpkDKc1q6m53Zz+mLddr7qhVvPMIQ/InszAffGBTrDIQQpnutj82V399SnYfj1S3xWRl
-        ICzdufECff83TpPEyc172roOAPgGj14PjXDNDtOm/zQMf/+4StjwhAvgNs5spWUGuWDOdHICCRT+q
-        oK4+Y=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqMm5-00005G-78; Wed, 24 Jul 2019 19:18:05 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id ADA792742BAC; Wed, 24 Jul 2019 20:18:04 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     "Cc:"@sirena.org.uk, "Cc:"@sirena.org.uk,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: dw-pci: Use dev_get_drvdata" to the spi tree
-In-Reply-To: <20190724122331.21856-1-hslester96@gmail.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190724191804.ADA792742BAC@ypsilon.sirena.org.uk>
-Date:   Wed, 24 Jul 2019 20:18:04 +0100 (BST)
+        Wed, 24 Jul 2019 15:20:16 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d79so34572559qke.11;
+        Wed, 24 Jul 2019 12:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jf56Nz05DOfwnERFUQkN8u7zsx4IFXTKejoTcl/rv6g=;
+        b=kRCjPwpl3KV5JZ+jG9MW4RJlkRN421VxJjYbdreISYCOhxnOSwdD3ALzdA46vTmRly
+         b7nqIstNMJQ8CAU19gYGlCqHwmsvkmk1UjR7qooCEt4iAV10ShQ0azpC72pD39vNnuyw
+         5afkxEf2fctjRwkGzb7B1lKceftIqafcwVp1PR7d4PYfUGHL6zbknxbTJ1u+/fugQQQO
+         S2R41s1q5jD1aKjbRJZoPherbeKwf4gyxVXnNxa5E6CyqtACUL4DLzQP6rWZiJ5W+UiS
+         cdZ3IoAO7d2aR5yy0LtprKyxfFDvJvIoqAOBoX+h6zc0t3KdqN9/AXbhVBLEdJSakywZ
+         sYhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jf56Nz05DOfwnERFUQkN8u7zsx4IFXTKejoTcl/rv6g=;
+        b=nYv/2C/FAZbQ9UysrJ366yOSvWKuqog3yU3yb8IzEEGRVJ/WmYQrPvfaFchK4bn8Yp
+         l513bnQnyocfcLWOINoSXj58ViRT6AD7Z9eL6OXflRW5K4sbcFlACTQVZBovdYh+Ev9W
+         Mqco9WqPDRlf6qcjMO8clOEGxYjTGugvNzsa8DSUVpyjOxO3299b00WmdrWmC90xt//u
+         nKNMqvbb1xE6xPq1j0bfJTOfKaTclSTpmCBWa41XGTzUHyBesMb6m+WRa/YKZbgI5I8r
+         ttHvGD69XkTsMBsqcPVvPipO7cjC0uZGkqLW84kcDYbVOWAagl/OwMw7J4+1ntpQ2/JJ
+         1Uzw==
+X-Gm-Message-State: APjAAAUWbHeoaN8ovk49SU+bjjnSYY1BDZefEG7PxYfkT3hJnYgpJugn
+        QiI9XmQme882WyXYav7WZwWLjXTOcdTMH7Knbo8=
+X-Google-Smtp-Source: APXvYqzU4aF1odzauC1/uuwbOPhg53aT8eaLMEi5QIzUZ//jTHnOwWUL6n9AYED8ykJtlRJ2izUgfx4GAeL/H9YNj14=
+X-Received: by 2002:a37:a854:: with SMTP id r81mr56278918qke.378.1563996015218;
+ Wed, 24 Jul 2019 12:20:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190724165803.87470-1-brianvv@google.com>
+In-Reply-To: <20190724165803.87470-1-brianvv@google.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 24 Jul 2019 12:20:04 -0700
+Message-ID: <CAPhsuW7PU1PP91e8vD2diwhBAwGJHWu6wAKOoBThT86f4r5OJw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/6] bpf: add BPF_MAP_DUMP command to dump more
+ than one entry per call
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Wed, Jul 24, 2019 at 10:09 AM Brian Vazquez <brianvv@google.com> wrote:
+>
+> This introduces a new command to retrieve multiple number of entries
+> from a bpf map.
+>
+> This new command can be executed from the existing BPF syscall as
+> follows:
+>
+> err =  bpf(BPF_MAP_DUMP, union bpf_attr *attr, u32 size)
+> using attr->dump.map_fd, attr->dump.prev_key, attr->dump.buf,
+> attr->dump.buf_len
+> returns zero or negative error, and populates buf and buf_len on
+> succees
+>
+> This implementation is wrapping the existing bpf methods:
+> map_get_next_key and map_lookup_elem
+>
+> Note that this implementation can be extended later to do dump and
+> delete by extending map_lookup_and_delete_elem (currently it only works
+> for bpf queue/stack maps) and either use a new flag in map_dump or a new
+> command map_dump_and_delete.
+>
+> Results show that even with a 1-elem_size buffer, it runs ~40 faster
 
-   spi: dw-pci: Use dev_get_drvdata
+Why is the new command 40% faster with 1-elem_size buffer?
 
-has been applied to the spi tree at
+> than the current implementation, improvements of ~85% are reported when
+> the buffer size is increased, although, after the buffer size is around
+> 5% of the total number of entries there's no huge difference in
+> increasing it.
+>
+> Tested:
+> Tried different size buffers to handle case where the bulk is bigger, or
+> the elements to retrieve are less than the existing ones, all runs read
+> a map of 100K entries. Below are the results(in ns) from the different
+> runs:
+>
+> buf_len_1:       69038725 entry-by-entry: 112384424 improvement
+> 38.569134
+> buf_len_2:       40897447 entry-by-entry: 111030546 improvement
+> 63.165590
+> buf_len_230:     13652714 entry-by-entry: 111694058 improvement
+> 87.776687
+> buf_len_5000:    13576271 entry-by-entry: 111101169 improvement
+> 87.780263
+> buf_len_73000:   14694343 entry-by-entry: 111740162 improvement
+> 86.849542
+> buf_len_100000:  13745969 entry-by-entry: 114151991 improvement
+> 87.958187
+> buf_len_234567:  14329834 entry-by-entry: 114427589 improvement
+> 87.476941
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+It took me a while to figure out the meaning of 87.476941. It is probably
+a good idea to say 87.5% instead.
 
 Thanks,
-Mark
-
-From 2a3b6f7b02cd141c990c6f5aed41070b5b7f4a7d Mon Sep 17 00:00:00 2001
-From: Chuhong Yuan <hslester96@gmail.com>
-Date: Wed, 24 Jul 2019 20:23:31 +0800
-Subject: [PATCH] spi: dw-pci: Use dev_get_drvdata
-
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
-
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20190724122331.21856-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-dw-pci.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
-index 9651679ee7f7..c1e2401cace0 100644
---- a/drivers/spi/spi-dw-pci.c
-+++ b/drivers/spi/spi-dw-pci.c
-@@ -98,16 +98,14 @@ static void spi_pci_remove(struct pci_dev *pdev)
- #ifdef CONFIG_PM_SLEEP
- static int spi_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct dw_spi *dws = pci_get_drvdata(pdev);
-+	struct dw_spi *dws = dev_get_drvdata(dev);
- 
- 	return dw_spi_suspend_host(dws);
- }
- 
- static int spi_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct dw_spi *dws = pci_get_drvdata(pdev);
-+	struct dw_spi *dws = dev_get_drvdata(dev);
- 
- 	return dw_spi_resume_host(dws);
- }
--- 
-2.20.1
-
+Song
