@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A0AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E05AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1056C21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229EF22ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996533;
-	bh=S2yVBSm7lPNPpaNzZD2l8y2LHg6bt6MXEaEhLxtaK6o=;
+	s=default; t=1563996538;
+	bh=HbCgqF6bGb1VpavFzRsrl9BDL729eKpjMkUS1uh2Qt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0NgeFnRyFoPKQGg5WUGW3qb24PgPdW/Ti+FL7PYzyLzDg6IAJda3aZR8x2O9i8vJ2
-	 N4xX1myVgwGiE0GU2dWlaM8pF6zMb3C4oR4VP5vkXIZT3a1/+5UfU/uEy7Q8DgVmwL
-	 oOeVhY8CpI8D8QtI79xDNQS88r/Oo4FKLW2UlAXI=
+	b=USpLYDDdDf/zNsWzPOQMHrSnbiVMaEtHFWw7TDFzuA0/KRanGMcXyBBWqA6C13sA0
+	 rkTG4e5RbwVHfpvmQJLdzQvVzfPwMXLY7U8ZGTQVItNOArrIIUG/wr6W/T2+hS74tj
+	 nioyvtpRFBV7uGuQj2JCK++KtfE289LjhkjVCipE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfGXT2v (ORCPT
+        id S2387744AbfGXT24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:28:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728886AbfGXT2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:49 -0400
+        id S2387658AbfGXT2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E186F21951;
-        Wed, 24 Jul 2019 19:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11D4B21951;
+        Wed, 24 Jul 2019 19:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996528;
-        bh=S2yVBSm7lPNPpaNzZD2l8y2LHg6bt6MXEaEhLxtaK6o=;
+        s=default; t=1563996534;
+        bh=HbCgqF6bGb1VpavFzRsrl9BDL729eKpjMkUS1uh2Qt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ng9XNKvMyXMH2Uq5glv8CBqvz8L03FrYLbVnffSPIlShwtws4JsvP87hfnLzWOHZO
-         Yw4anL0ak+3WA6VgNohma8dmsa3/4hkgF+yUu5P2Ngh2xuLrcF0uzA8dJD94gsx/6D
-         BdT+bskqPfUV3onpTbeBS0SuMqE89+S2m41P8pwE=
+        b=yIGo9BXA+BhGjxWN2kTrRkHSDgU4tQefygU9fkyUVLn5l0yTrKPiKXel8DyQvFoUX
+         fjgOnf8kv07EaSeT9mgR7kl9a95xVg9Y+Mw0A0+O1Mue4G+gu1X/FzA5iRt6pmgsko
+         KjAL6NSg6y7tiXXPFheGlzlRLB/f+h6PrvFjS4tQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 129/413] EDAC/sysfs: Drop device references properly
-Date:   Wed, 24 Jul 2019 21:17:00 +0200
-Message-Id: <20190724191744.308716730@linuxfoundation.org>
+        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 131/413] nvme: fix possible io failures when removing multipathed ns
+Date:   Wed, 24 Jul 2019 21:17:02 +0200
+Message-Id: <20190724191744.423076284@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,57 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7adc05d2dc3af95e4e1534841d58f736262142cd ]
+[ Upstream commit 2181e455612a8db2761eabbf126640552a451e96 ]
 
-Do put_device() if device_add() fails.
+When a shared namespace is removed, we call blk_cleanup_queue()
+when the device can still be accessed as the current path and this can
+result in submission to a dying queue. Hence, direct_make_request()
+called by our mpath device may fail (propagating the failure to userspace).
+Instead, we want to failover this I/O to a different path if one exists.
+Thus, before we cleanup the request queue, we make sure that the device is
+cleared from the current path nor it can be selected again as such.
 
- [ bp: do device_del() for the successfully created devices in
-   edac_create_csrow_objects(), on the unwind path. ]
+Fix this by:
+- clear the ns from the head->list and synchronize rcu to make sure there is
+  no concurrent path search that restores it as the current path
+- clear the mpath current path in order to trigger a subsequent path search
+  and sync srcu to wait for any ongoing request submissions
+- safely continue to namespace removal and blk_cleanup_queue
 
-Signed-off-by: Greg KH <gregkh@linuxfoundation.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20190427214925.GE16338@kroah.com
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc_sysfs.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/nvme/host/core.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 464174685589..bf9273437e3f 100644
---- a/drivers/edac/edac_mc_sysfs.c
-+++ b/drivers/edac/edac_mc_sysfs.c
-@@ -443,7 +443,8 @@ static int edac_create_csrow_objects(struct mem_ctl_info *mci)
- 		csrow = mci->csrows[i];
- 		if (!nr_pages_per_csrow(csrow))
- 			continue;
--		put_device(&mci->csrows[i]->dev);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 120fb593d1da..22c68e3b71d5 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3344,6 +3344,14 @@ static void nvme_ns_remove(struct nvme_ns *ns)
+ 		return;
+ 
+ 	nvme_fault_inject_fini(ns);
 +
-+		device_del(&mci->csrows[i]->dev);
++	mutex_lock(&ns->ctrl->subsys->lock);
++	list_del_rcu(&ns->siblings);
++	mutex_unlock(&ns->ctrl->subsys->lock);
++	synchronize_rcu(); /* guarantee not available in head->list */
++	nvme_mpath_clear_current_path(ns);
++	synchronize_srcu(&ns->head->srcu); /* wait for concurrent submissions */
++
+ 	if (ns->disk && ns->disk->flags & GENHD_FL_UP) {
+ 		del_gendisk(ns->disk);
+ 		blk_cleanup_queue(ns->queue);
+@@ -3351,16 +3359,10 @@ static void nvme_ns_remove(struct nvme_ns *ns)
+ 			blk_integrity_unregister(ns->disk);
  	}
  
- 	return err;
-@@ -645,9 +646,11 @@ static int edac_create_dimm_object(struct mem_ctl_info *mci,
- 	dev_set_drvdata(&dimm->dev, dimm);
- 	pm_runtime_forbid(&mci->dev);
+-	mutex_lock(&ns->ctrl->subsys->lock);
+-	list_del_rcu(&ns->siblings);
+-	nvme_mpath_clear_current_path(ns);
+-	mutex_unlock(&ns->ctrl->subsys->lock);
+-
+ 	down_write(&ns->ctrl->namespaces_rwsem);
+ 	list_del_init(&ns->list);
+ 	up_write(&ns->ctrl->namespaces_rwsem);
  
--	err =  device_add(&dimm->dev);
-+	err = device_add(&dimm->dev);
-+	if (err)
-+		put_device(&dimm->dev);
- 
--	edac_dbg(0, "creating rank/dimm device %s\n", dev_name(&dimm->dev));
-+	edac_dbg(0, "created rank/dimm device %s\n", dev_name(&dimm->dev));
- 
- 	return err;
+-	synchronize_srcu(&ns->head->srcu);
+ 	nvme_mpath_check_last_path(ns);
+ 	nvme_put_ns(ns);
  }
-@@ -928,6 +931,7 @@ int edac_create_sysfs_mci_device(struct mem_ctl_info *mci,
- 	err = device_add(&mci->dev);
- 	if (err < 0) {
- 		edac_dbg(1, "failure: create device %s\n", dev_name(&mci->dev));
-+		put_device(&mci->dev);
- 		goto out;
- 	}
- 
 -- 
 2.20.1
 
