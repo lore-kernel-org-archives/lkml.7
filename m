@@ -2,104 +2,195 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83A0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8A8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B28622AEC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC7322AED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996270;
-	bh=U0o0C1aPAvOjwdQ7vLkMsrXoC/6GvrrOfuqwkwg7ouQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nUywB1/7h7BUjeNF7UCSmEz840UlBi2aTzOCi2xiOiBdphxJjaLMvJD6mX7lgf6yx
-	 x1ZAC9TzDU7jWs6kZj9zTYhKr7yDOIYsKb6KMl2hM+yMNYq8AArKqBzLngi0gTKFTG
-	 tcfKgePnfaBm/893TCuF7KQj6x8Dv6dDuNqGuks0=
+	s=default; t=1563996276;
+	bh=PpqXpKTFW4DTdTvVxGSXSjeBAVG2Y2g67kOcQGPRllY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zYd8NJEupya1i3wbYhuHmhCTbFXqP1vRyO0Y1ytRZVfhJzTJItiQ5zLZBhNlc0VxR
+	 ZF7JmNPoHn95h7CqKGNeEt4HpiF7BUv0yzJQ/rNX1Dp7d0OFWdwcogAg+AJdTUG7R/
+	 HdXOEjMCqz1y7IkyM7XPL6hSYM4hk1ofj8axCUwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfGXTY2 (ORCPT
+        id S1729089AbfGXTYf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbfGXTYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3625229F3;
-        Wed, 24 Jul 2019 19:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996264;
-        bh=U0o0C1aPAvOjwdQ7vLkMsrXoC/6GvrrOfuqwkwg7ouQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVNxH4ZkG+pTtRM2MBolC+VQ+IR4Fm2mK5YqKvYae57afcvU0mskh1BEjSCukh+f8
-         FuXCYKQA45oWNy2msaFhqbwYO83HPt9jMQNm9AQvMnsUIXBkQRyJuEqikJMlsmktLz
-         cDV7y6idriL5xjaNV7NQ4e/kDsItPzW7kOrd/eeA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 009/413] ath10k: Fix the wrong value of enums for wmi tlv stats id
-Date:   Wed, 24 Jul 2019 21:15:00 +0200
-Message-Id: <20190724191735.952245370@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 15:24:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33749 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfGXTYb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so48256611wru.0;
+        Wed, 24 Jul 2019 12:24:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lfXxMsdfj3/069jvw/iy7OsZv8+UN7ABTGl62C7QKYA=;
+        b=KLLLaPbbO8eBii32cX5LOLTw947XYtHea0krdZtddLVAbCJq3zgEvX7KZSrvFeFiOn
+         REt/zdFIOh9DOTYmmIClMDgVilFbTKEXSL/L+W7X+QJFQZHN3C8Qax/2lZgRAnnpCUBS
+         Ao8WrJ7/5BebbGC+jobo7W5z9cRz7nPWtvcgF3lY4e2q1388+BQf/y3u0HywZHa3JzEZ
+         Ik7k1prk7lnTrMdtp6EafMdwaaw2wAR8iMTcZLDEKctSAk19vGTDcjnkm5/sHLUorBdP
+         GIW2mSo3ZLDspEQK3ORYLHyotRCrUgXLmulfoC69xJ0vs9lpLMmdeL6bYs4nLJofaCeL
+         p2nA==
+X-Gm-Message-State: APjAAAU/RoLqKcXiSeqKQ3hwto3eCPPZ+KurFnauN7NUGGqGij+Tnc+M
+        1eoISvJ5U+izgM0EZxRwER8=
+X-Google-Smtp-Source: APXvYqxsoh43HV2OpAyo0WN3mesXUKeJis1EeqQpdnzoRNCOZlfiNYz32Xds+Ra9u+/5tu5G/kpe4w==
+X-Received: by 2002:adf:80e6:: with SMTP id 93mr51827758wrl.298.1563996269437;
+        Wed, 24 Jul 2019 12:24:29 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.239])
+        by smtp.googlemail.com with ESMTPSA id o6sm91244088wra.27.2019.07.24.12.24.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 12:24:28 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 21:24:26 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, m.szyprowski@samsung.com
+Subject: Re: [RFC PATCH 08/11] arm: dts: exynos: Add parents and
+ #interconnect-cells to Exynos4412
+Message-ID: <20190724192426.GJ14346@kozik-lap>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98@eucas1p2.samsung.com>
+ <20190723122016.30279-9-a.swigon@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190723122016.30279-9-a.swigon@partner.samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9280f4fc06f44d0b4dc9e831f72d97b3d7cd35d3 ]
+On Tue, Jul 23, 2019 at 02:20:13PM +0200, Artur Świgoń wrote:
+> This patch adds two fields tp the Exynos4412 DTS:
 
-The enum value for WMI_TLV_STAT_PDEV, WMI_TLV_STAT_VDEV
-and WMI_TLV_STAT_PEER is wrong, due to which the vdev stats
-are not received from firmware in wmi_update_stats event.
+tp->to
 
-Fix the enum values for above stats to receive all stats
-from firmware in WMI_TLV_UPDATE_STATS_EVENTID.
+>   - parent: to declare connections between nodes that are not in a
+>     parent-child relation in devfreq;
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
+Is it a standard property?
+The explanation needs some improvement... why are you adding parent to a
+devices which are not child-parent?
 
-Fixes: f40a307eb92c ("ath10k: Fill rx duration for each peer in fw_stats for WCN3990)
-Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/wmi.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Best regards,
+Krzysztof
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
-index e1c40bb69932..12f57f9adbba 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi.h
-@@ -4535,9 +4535,10 @@ enum wmi_10_4_stats_id {
- };
- 
- enum wmi_tlv_stats_id {
--	WMI_TLV_STAT_PDEV	= BIT(0),
--	WMI_TLV_STAT_VDEV	= BIT(1),
--	WMI_TLV_STAT_PEER	= BIT(2),
-+	WMI_TLV_STAT_PEER	= BIT(0),
-+	WMI_TLV_STAT_AP		= BIT(1),
-+	WMI_TLV_STAT_PDEV	= BIT(2),
-+	WMI_TLV_STAT_VDEV	= BIT(3),
- 	WMI_TLV_STAT_PEER_EXTD  = BIT(10),
- };
- 
--- 
-2.20.1
-
-
-
+>   - #interconnect-cells: required by the interconnect framework.
+> 
+> Please note that #interconnect-cells is always zero and node IDs are not
+> hardcoded anywhere.
+> 
+> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
+>  arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> index ea55f377d17c..bdd61ae86103 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> @@ -106,6 +106,7 @@
+>  &bus_leftbus {
+>  	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
+>  	vdd-supply = <&buck3_reg>;
+> +	parent = <&bus_dmc>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+> index d20db2dfe8e2..a70a671acacd 100644
+> --- a/arch/arm/boot/dts/exynos4412.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412.dtsi
+> @@ -390,6 +390,7 @@
+>  			clocks = <&clock CLK_DIV_DMC>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_dmc_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -398,6 +399,7 @@
+>  			clocks = <&clock CLK_DIV_ACP>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_acp_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -406,6 +408,7 @@
+>  			clocks = <&clock CLK_DIV_C2C>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_dmc_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -459,6 +462,7 @@
+>  			clocks = <&clock CLK_DIV_GDL>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_leftbus_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -467,6 +471,7 @@
+>  			clocks = <&clock CLK_DIV_GDR>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_leftbus_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -475,6 +480,7 @@
+>  			clocks = <&clock CLK_ACLK160>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_display_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -483,6 +489,7 @@
+>  			clocks = <&clock CLK_ACLK133>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_fsys_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -491,6 +498,7 @@
+>  			clocks = <&clock CLK_ACLK100>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_peri_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -499,6 +507,7 @@
+>  			clocks = <&clock CLK_SCLK_MFC>;
+>  			clock-names = "bus";
+>  			operating-points-v2 = <&bus_leftbus_opp_table>;
+> +			#interconnect-cells = <0>;
+>  			status = "disabled";
+>  		};
+>  
+> -- 
+> 2.17.1
+> 
