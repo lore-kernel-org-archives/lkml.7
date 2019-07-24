@@ -2,64 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361EDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0287C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E5621926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A3F2189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563986881;
+	bh=1Z5O9rosp5BF1AWiD0KYqAhbiYJQLhdA2VzAcbTK51k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0MAFiYaLqu1EO7jkof6CU4f6rG6hQ4uyt0OpuAiT00VhxS7Q/iaNaLsCv9SY0eivg
+	 ShCGkVq6JPT951LDraZCo5dcYYsZKIWKMqIkZy2/Tfv1WlvAM97jOOV3Q9ThgoRI2C
+	 44JQhMVhTBmdG/rKuMlfjDlzn1SVEHpRgDzdlErk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbfGXQqz (ORCPT
+        id S2387713AbfGXQsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387587AbfGXQqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:46:55 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E178E2189F;
-        Wed, 24 Jul 2019 16:46:53 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 12:46:52 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Matt Helsley <mhelsley@vmware.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 00/13] Cleanup recordmcount and begin objtool
- conversion
-Message-ID: <20190724124652.362a90d0@gandalf.local.home>
-In-Reply-To: <20190710171900.gzzitftdinkdx6ra@treble>
-References: <cover.1560285597.git.mhelsley@vmware.com>
-        <20190710130924.16aee549@gandalf.local.home>
-        <20190710171900.gzzitftdinkdx6ra@treble>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 24 Jul 2019 12:48:00 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39117 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGXQr7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:47:59 -0400
+Received: by mail-io1-f67.google.com with SMTP id f4so91034448ioh.6;
+        Wed, 24 Jul 2019 09:47:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NaGPAivB1MBv9O5lVWBShae32bWUUsQkrf58j6a6XWY=;
+        b=gX1m7rA7wbPHnvd7/XqCaN/dXfTsUeaBwMPQaLAd5IyKnv/v1tZ0La18S3JU0EkNSi
+         Tk7NaZuk6gE7gfDJezU8b21I0vA13APrC5fSNAnh3mU2cG8I4zalK/5YQj2dXi96gEpV
+         U90ggHDLs3drk5nD/dSk2bvvcZ+9lMUEzui/ipA2jwvDTR+BngV+A+g3zxgO56Qm+YFN
+         zflPBHGWVt08mgJwsNuPocWFbJwUs/IuNIGTzjkSvFZ4ncZIqxxlR8r9wVSpTMszcXm4
+         y7F5KO5A7BNjC+T60kFiyQeDbZdeEqq6xxc/1lLudvJ5y92+xg3QerrLrwQBQfjykgCZ
+         t0iA==
+X-Gm-Message-State: APjAAAUVAiJCFX9YED5FxG/0ontDsffq+BTJGL3/nUqYJ+Rof5JVbUGD
+        YFCD8aUfjTRJ3RIA6GPEFg==
+X-Google-Smtp-Source: APXvYqwYAKj9Y6Xo4kgnFhQ30skobcWvL/jM5t0oA7OfBXz+vNRCAT4o/ffCCGaz6bY311xkT9x01Q==
+X-Received: by 2002:a5e:8f08:: with SMTP id c8mr77188637iok.52.1563986878841;
+        Wed, 24 Jul 2019 09:47:58 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id m20sm44390636ioh.4.2019.07.24.09.47.57
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 09:47:58 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 10:47:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jean-Jacques Hiblot <jjhiblot@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
+        daniel.thompson@linaro.org, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: leds: document new "power-supply"
+ property
+Message-ID: <20190724164757.GA3723@bogus>
+References: <20190708103547.23528-1-jjhiblot@ti.com>
+ <20190708103547.23528-3-jjhiblot@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190708103547.23528-3-jjhiblot@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Jul 2019 12:19:00 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-
-> On Wed, Jul 10, 2019 at 01:09:24PM -0400, Steven Rostedt wrote:
-> > 
-> > Josh,
-> > 
-> > Can you have a look at these? I can apply them if you think they are OK.  
+On Mon, Jul 08, 2019 at 12:35:47PM +0200, Jean-Jacques Hiblot wrote:
+> Most of the LEDs are powered by a voltage/current regulator. describing in
+> the device-tree makes it possible for the LED core to enable/disable it
+> when needed.
 > 
-> Sorry for the delay.  I didn't forget about it, it's just been a hectic
-> month.  I plan to give it a proper review soon (in the next week or so).
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> ---
+>  Documentation/devicetree/bindings/leds/common.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 70876ac11367..e093a2b7eb90 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -61,6 +61,11 @@ Optional properties for child nodes:
+>  - panic-indicator : This property specifies that the LED should be used,
+>  		    if at all possible, as a panic indicator.
+>  
+> +- power-supply : A voltage/current regulator used to to power the LED. When a
+> +		 LED is turned off, the LED core disable its regulator. The
+> +		 same regulator can power many LED (or other) devices. It is
+> +		 turned off only when all of its users disabled it.
 
-Friendly reminder ;-)
+Not sure this should be common. It wouldn't apply to cases where we have 
+an LED controller parent nor gpio and pwm LEDs and those are most cases.
 
--- Steve
+Perhaps what makes sense here is an regulator-led binding.
+
+> +
+>  - trigger-sources : List of devices which should be used as a source triggering
+>  		    this LED activity. Some LEDs can be related to a specific
+>  		    device and should somehow indicate its state. E.g. USB 2.0
+> -- 
+> 2.17.1
+> 
