@@ -2,95 +2,111 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25915C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55640C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04D621926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563960843;
-	bh=3cSIO9EZDi3J13tYyRv3TfjK0zuvMILYluyj3HtRV7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DKr7xYwcQZu7JQoXPT0Quyai33APkTcyz6Zc222ciEjoVROLAOHCtPt15Qd2fO/sW
-	 bQ5Pu+KPdqFkugThfOUBHmhBME/YDiQbeuEQa1FlvXl+pQfYtU7Z4BXuJzd1NPiYYD
-	 O1FGV3WCZiqq0XWoH/Ps1ruGXKbB1UiyZLzryP40=
+	by mail.kernel.org (Postfix) with ESMTP id 1C0A921926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:35:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hppg7Ef3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfGXJeB (ORCPT
+        id S1726972AbfGXJfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfGXJeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:34:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAFB421926;
-        Wed, 24 Jul 2019 09:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563960840;
-        bh=3cSIO9EZDi3J13tYyRv3TfjK0zuvMILYluyj3HtRV7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R+lCRxoLNB76QsKlZeG7tXK7idALbdmsQiHPTlBdK8ON/1oNMKvuA6QEXrxEaCROc
-         0Gh5shjqnao27yA/FVidF5XwQLpjoCcpG967kMPkZQc3QCo5DmnlhrJYfYZPu+RTHO
-         trlrCDn2h8x9MqDb4AqRSE67jRlcFE6u4QVtSqtQ=
-Date:   Wed, 24 Jul 2019 11:33:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org,
-        Zhang Yi Z <yi.z.zhang@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v3 02/12] fpga: dfl: fme: add
- DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
-Message-ID: <20190724093357.GA29532@kroah.com>
-References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
- <1563857495-26692-3-git-send-email-hao.wu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563857495-26692-3-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 24 Jul 2019 05:35:18 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34485 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfGXJfR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:35:17 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so20660086pfo.1;
+        Wed, 24 Jul 2019 02:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RMdZENf34klfFRm97gWv/3oVVvhtQ9/kvSp7CedAKBE=;
+        b=hppg7Ef34MOf6m4sm9VwXNec86F5mOQj2J2ss65F/jwkHw1pHv46tX/7cRHxTcegZk
+         He5INWuFp85pPh/IeqYSthdegR8CcNpzxUHKlED5wUrxRaY6WKB2lIrcEWIWNWEZFU+W
+         aRHjmeBQs0OPRO0NNXUZ4VyozflJG+s/Is0LUAKNLIFNC0K3eArSmbOmrD8EbN/+E7PT
+         daN2iMZTg241BeBbeFB/ZnPRoYxpkcQyK5JCvR6JN1uKnNwjf1TupjJmi4ei6QkFz/sp
+         2+j66A6ZcOd4sv6TWIp3yq0e0tb2nLDp9tcQUILa4cUigxC6wETRf5ytN5gNpWqLFmSv
+         sFbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RMdZENf34klfFRm97gWv/3oVVvhtQ9/kvSp7CedAKBE=;
+        b=DicaIhDt4voCC/7zIWOU10q2J091l/+oYQPlTl0E5CF41oWZwsdRW+b2OLp0fbMpuJ
+         jUIo3GkVUZE5yA8iJOe5918ZbKolOv4RrapOm+0sPFUCFt2EMcVrbVaqlVOWqYYZBGXE
+         pVJm/Sdf0RcQ2WabsUOabalVNHiEWy2FlLTvr2jNNXnkamktgxHMrmhLjSRDpFvcUM5G
+         FMiuATfAoxj/UX7l1ROOFImjep6cXylBTBbPsMpnlfd8OqxyNSLovmo0nhmOwH7bMK4p
+         4NLWuNnOTskiWWMybEGzkfmOrngXPzjOSclsE4UJnffRLgea+kBlLlxaEiZ1m/PpJsgm
+         ACtQ==
+X-Gm-Message-State: APjAAAUPRFYk8oRGK+ytM60AyIt1YnmT+ZsY4VkN9d0TFLH6F6SJD+EU
+        jAOGw6IAyWYMdGzTRV5rvO0=
+X-Google-Smtp-Source: APXvYqxKZ4RHMHG+5q6pFR8zpsFxDWmUYA2anIVvMagFONXq3/Mn8XIDqlF0Q/oyuHHQkumb6EeQrg==
+X-Received: by 2002:a62:ac11:: with SMTP id v17mr10407107pfe.236.1563960917124;
+        Wed, 24 Jul 2019 02:35:17 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id 14sm44191863pfy.40.2019.07.24.02.35.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 02:35:16 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] net: key: af_key: Fix possible null-pointer dereferences in pfkey_send_policy_notify()
+Date:   Wed, 24 Jul 2019 17:35:09 +0800
+Message-Id: <20190724093509.1676-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 12:51:25PM +0800, Wu Hao wrote:
-> +/**
-> + * dfl_fpga_cdev_config_port - configure a port feature dev
-> + * @cdev: parent container device.
-> + * @port_id: id of the port feature device.
-> + * @release: release port or assign port back.
-> + *
-> + * This function allows user to release port platform device or assign it back.
-> + * e.g. to safely turn one port from PF into VF for PCI device SRIOV support,
-> + * release port platform device is one necessary step.
-> + */
-> +int dfl_fpga_cdev_config_port(struct dfl_fpga_cdev *cdev, int port_id,
-> +			      bool release)
-> +{
-> +	return release ? detach_port_dev(cdev, port_id) :
-> +			 attach_port_dev(cdev, port_id);
-> +}
-> +EXPORT_SYMBOL_GPL(dfl_fpga_cdev_config_port);
+In pfkey_send_policy_notify(), there is an if statement on line 3081 to
+check whether xp is NULL:
+    if (xp && xp->type != XFRM_POLICY_TYPE_MAIN)
 
-That's a horrible api.  Every time you see this call in code, you have
-to go and look up what "bool" means here.  There's no reason for it.
+When xp is NULL, it is used by key_notify_policy() on line 3090:
+    key_notify_policy(xp, ...)
+        pfkey_xfrm_policy2msg_prep(xp) -- line 2211
+            pfkey_xfrm_policy2msg_size(xp) -- line 2046
+                for (i=0; i<xp->xfrm_nr; i++) -- line 2026
+                t = xp->xfrm_vec + i; -- line 2027
+    key_notify_policy(xp, ...)
+        xp_net(xp) -- line 2231
+            return read_pnet(&xp->xp_net); -- line 534
 
-Just have 2 different functions, one that attaches a port, and one that
-detaches it.  That way when you read the code that calls this function,
-you know what it does instantly without having to go look up some api
-function somewhere else.
+Thus, possible null-pointer dereferences may occur.
 
-Write code for people to read first.  And you are saving nothing here by
-trying to do two different things in the same exact function.
+To fix these bugs, xp is checked before calling key_notify_policy().
 
-thanks,
+These bugs are found by a static analysis tool STCheck written by us.
 
-greg k-h
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ net/key/af_key.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index b67ed3a8486c..ced54144d5fd 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -3087,6 +3087,8 @@ static int pfkey_send_policy_notify(struct xfrm_policy *xp, int dir, const struc
+ 	case XFRM_MSG_DELPOLICY:
+ 	case XFRM_MSG_NEWPOLICY:
+ 	case XFRM_MSG_UPDPOLICY:
++		if (!xp)
++			break;
+ 		return key_notify_policy(xp, dir, c);
+ 	case XFRM_MSG_FLUSHPOLICY:
+ 		if (c->data.type != XFRM_POLICY_TYPE_MAIN)
+-- 
+2.17.0
+
