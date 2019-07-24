@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FB7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07089C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F33204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6EA2204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000027;
-	bh=OR9DaQIEQw3qnxF0j8VZbZv+NIuXumN8R7MCJwQNeYg=;
+	s=default; t=1564000042;
+	bh=MxbTrWEfclhDQ2aiyMg7D09m/ztBVxxhPyylCf+k+WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVO8rLBOERzbuD8n2PykGIRrOCdd4ajDohImNgyPnLPADyD6w771Ag0jQlqar8htn
-	 /4vw0H9Y7bhCukfRoyb6ROmIPBRPT/LqU79INoKoUwKpf/aI713cMvpEPlhR79yMqz
-	 rSaN9MBlR0eaQqEP0ycH7QAX9+5PDYxtcLbOJg10=
+	b=VPH2gA7Giai0SeeIKQYpJ416VD9p1nCVxxQyyGugIxtrziuiW0He/Woj3D1+7I10F
+	 oHNnjMeqtaK7NnSt16AsHWoslumwKBhk2RaQwjHeugWWHa9CyrvB2OR2Z/j/vC0n9z
+	 4tP/vSlKaeIzCui0jqrFBsvxBnjtP/PUlV4rfcKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388850AbfGXTgQ (ORCPT
+        id S2388911AbfGXTfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35836 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389289AbfGXTgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:13 -0400
+        id S2388392AbfGXTfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C50A229F3;
-        Wed, 24 Jul 2019 19:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08DAA20659;
+        Wed, 24 Jul 2019 19:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996971;
-        bh=OR9DaQIEQw3qnxF0j8VZbZv+NIuXumN8R7MCJwQNeYg=;
+        s=default; t=1563996945;
+        bh=MxbTrWEfclhDQ2aiyMg7D09m/ztBVxxhPyylCf+k+WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOA6/cgTVIS1yciJgCOt/qBTs+TpsIo2R3Vv/eim8PnmJ/VWqPqJzURXOFSZgT3Eb
-         pB79rosTu7HsoaWeXz91bOkmfM58U8m0iFmPx4PjgECDwK2M2ZyDwqePrU4K6Tuf7t
-         rrYGNKBh0YBOKedAUDvVgDOtLASNnVS/sSU/01rk=
+        b=cTPSqXZmzdRh2yvNpKV48IWqX0+OHUHjwVQoKH206EpDzoatyrz7W2V4kcEBN11aG
+         i15Ea02V6DUwzV7ijGnDo6xEzws5Swza9sbTPvjFPQhWAxemz0HLv2xZLm8WLGDuAa
+         FDE5NxRS5fICqXgXTTLZ6GgQO3tK9Tqil1Mp4Ffs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.2 279/413] CIFS: fix deadlock in cached root handling
-Date:   Wed, 24 Jul 2019 21:19:30 +0200
-Message-Id: <20190724191756.262519456@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.2 271/413] crypto: crypto4xx - block ciphers should only accept complete blocks
+Date:   Wed, 24 Jul 2019 21:19:22 +0200
+Message-Id: <20190724191755.607730272@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,91 +60,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Aptel <aaptel@suse.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 7e5a70ad88b1e6f6d9b934b2efb41afff496820f upstream.
+commit 0f7a81374060828280fcfdfbaa162cb559017f9f upstream.
 
-Prevent deadlock between open_shroot() and
-cifs_mark_open_files_invalid() by releasing the lock before entering
-SMB2_open, taking it again after and checking if we still need to use
-the result.
+The hardware automatically zero pads incomplete block ciphers
+blocks without raising any errors. This is a screw-up. This
+was noticed by CONFIG_CRYPTO_MANAGER_EXTRA_TESTS tests that
+sent a incomplete blocks and expect them to fail.
 
-Link: https://lore.kernel.org/linux-cifs/684ed01c-cbca-2716-bc28-b0a59a0f8521@prodrive-technologies.com/T/#u
-Fixes: 3d4ef9a15343 ("smb3: fix redundant opens on root")
-Signed-off-by: Aurelien Aptel <aaptel@suse.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+This fixes:
+cbc-aes-ppc4xx encryption unexpectedly succeeded on test vector
+"random: len=2409 klen=32"; expected_error=-22, cfg="random:
+may_sleep use_digest src_divs=[96.90%@+2295, 2.34%@+4066,
+0.32%@alignmask+12, 0.34%@+4087, 0.9%@alignmask+1787, 0.1%@+3767]
+iv_offset=6"
+
+ecb-aes-ppc4xx encryption unexpectedly succeeded on test vector
+"random: len=1011 klen=32"; expected_error=-22, cfg="random:
+may_sleep use_digest src_divs=[100.0%@alignmask+20]
+dst_divs=[3.12%@+3001, 96.88%@+4070]"
+
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: stable@vger.kernel.org [4.19, 5.0 and 5.1]
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |   46 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+ drivers/crypto/amcc/crypto4xx_alg.c  |   36 ++++++++++++++++++++++++-----------
+ drivers/crypto/amcc/crypto4xx_core.c |   16 +++++++--------
+ drivers/crypto/amcc/crypto4xx_core.h |   10 +++++----
+ 3 files changed, 39 insertions(+), 23 deletions(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -694,8 +694,51 @@ int open_shroot(unsigned int xid, struct
+--- a/drivers/crypto/amcc/crypto4xx_alg.c
++++ b/drivers/crypto/amcc/crypto4xx_alg.c
+@@ -67,12 +67,16 @@ static void set_dynamic_sa_command_1(str
+ }
  
- 	smb2_set_related(&rqst[1]);
+ static inline int crypto4xx_crypt(struct skcipher_request *req,
+-				  const unsigned int ivlen, bool decrypt)
++				  const unsigned int ivlen, bool decrypt,
++				  bool check_blocksize)
+ {
+ 	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(req);
+ 	struct crypto4xx_ctx *ctx = crypto_skcipher_ctx(cipher);
+ 	__le32 iv[AES_IV_SIZE];
  
-+	/*
-+	 * We do not hold the lock for the open because in case
-+	 * SMB2_open needs to reconnect, it will end up calling
-+	 * cifs_mark_open_files_invalid() which takes the lock again
-+	 * thus causing a deadlock
-+	 */
++	if (check_blocksize && !IS_ALIGNED(req->cryptlen, AES_BLOCK_SIZE))
++		return -EINVAL;
 +
-+	mutex_unlock(&tcon->crfid.fid_mutex);
- 	rc = compound_send_recv(xid, ses, flags, 2, rqst,
- 				resp_buftype, rsp_iov);
-+	mutex_lock(&tcon->crfid.fid_mutex);
-+
-+	/*
-+	 * Now we need to check again as the cached root might have
-+	 * been successfully re-opened from a concurrent process
-+	 */
-+
-+	if (tcon->crfid.is_valid) {
-+		/* work was already done */
-+
-+		/* stash fids for close() later */
-+		struct cifs_fid fid = {
-+			.persistent_fid = pfid->persistent_fid,
-+			.volatile_fid = pfid->volatile_fid,
-+		};
-+
-+		/*
-+		 * caller expects this func to set pfid to a valid
-+		 * cached root, so we copy the existing one and get a
-+		 * reference.
-+		 */
-+		memcpy(pfid, tcon->crfid.fid, sizeof(*pfid));
-+		kref_get(&tcon->crfid.refcount);
-+
-+		mutex_unlock(&tcon->crfid.fid_mutex);
-+
-+		if (rc == 0) {
-+			/* close extra handle outside of crit sec */
-+			SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
-+		}
-+		goto oshr_free;
-+	}
-+
-+	/* Cached root is still invalid, continue normaly */
-+
- 	if (rc)
- 		goto oshr_exit;
+ 	if (ivlen)
+ 		crypto4xx_memcpy_to_le32(iv, req->iv, ivlen);
  
-@@ -729,8 +772,9 @@ int open_shroot(unsigned int xid, struct
- 				(char *)&tcon->crfid.file_all_info))
- 		tcon->crfid.file_all_info_is_valid = 1;
+@@ -81,24 +85,34 @@ static inline int crypto4xx_crypt(struct
+ 		ctx->sa_len, 0, NULL);
+ }
  
-- oshr_exit:
-+oshr_exit:
- 	mutex_unlock(&tcon->crfid.fid_mutex);
-+oshr_free:
- 	SMB2_open_free(&rqst[0]);
- 	SMB2_query_info_free(&rqst[1]);
- 	free_rsp_buf(resp_buftype[0], rsp_iov[0].iov_base);
+-int crypto4xx_encrypt_noiv(struct skcipher_request *req)
++int crypto4xx_encrypt_noiv_block(struct skcipher_request *req)
++{
++	return crypto4xx_crypt(req, 0, false, true);
++}
++
++int crypto4xx_encrypt_iv_stream(struct skcipher_request *req)
++{
++	return crypto4xx_crypt(req, AES_IV_SIZE, false, false);
++}
++
++int crypto4xx_decrypt_noiv_block(struct skcipher_request *req)
+ {
+-	return crypto4xx_crypt(req, 0, false);
++	return crypto4xx_crypt(req, 0, true, true);
+ }
+ 
+-int crypto4xx_encrypt_iv(struct skcipher_request *req)
++int crypto4xx_decrypt_iv_stream(struct skcipher_request *req)
+ {
+-	return crypto4xx_crypt(req, AES_IV_SIZE, false);
++	return crypto4xx_crypt(req, AES_IV_SIZE, true, false);
+ }
+ 
+-int crypto4xx_decrypt_noiv(struct skcipher_request *req)
++int crypto4xx_encrypt_iv_block(struct skcipher_request *req)
+ {
+-	return crypto4xx_crypt(req, 0, true);
++	return crypto4xx_crypt(req, AES_IV_SIZE, false, true);
+ }
+ 
+-int crypto4xx_decrypt_iv(struct skcipher_request *req)
++int crypto4xx_decrypt_iv_block(struct skcipher_request *req)
+ {
+-	return crypto4xx_crypt(req, AES_IV_SIZE, true);
++	return crypto4xx_crypt(req, AES_IV_SIZE, true, true);
+ }
+ 
+ /**
+@@ -269,8 +283,8 @@ crypto4xx_ctr_crypt(struct skcipher_requ
+ 		return ret;
+ 	}
+ 
+-	return encrypt ? crypto4xx_encrypt_iv(req)
+-		       : crypto4xx_decrypt_iv(req);
++	return encrypt ? crypto4xx_encrypt_iv_stream(req)
++		       : crypto4xx_decrypt_iv_stream(req);
+ }
+ 
+ static int crypto4xx_sk_setup_fallback(struct crypto4xx_ctx *ctx,
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -1210,8 +1210,8 @@ static struct crypto4xx_alg_common crypt
+ 		.max_keysize = AES_MAX_KEY_SIZE,
+ 		.ivsize	= AES_IV_SIZE,
+ 		.setkey = crypto4xx_setkey_aes_cbc,
+-		.encrypt = crypto4xx_encrypt_iv,
+-		.decrypt = crypto4xx_decrypt_iv,
++		.encrypt = crypto4xx_encrypt_iv_block,
++		.decrypt = crypto4xx_decrypt_iv_block,
+ 		.init = crypto4xx_sk_init,
+ 		.exit = crypto4xx_sk_exit,
+ 	} },
+@@ -1230,8 +1230,8 @@ static struct crypto4xx_alg_common crypt
+ 		.max_keysize = AES_MAX_KEY_SIZE,
+ 		.ivsize	= AES_IV_SIZE,
+ 		.setkey	= crypto4xx_setkey_aes_cfb,
+-		.encrypt = crypto4xx_encrypt_iv,
+-		.decrypt = crypto4xx_decrypt_iv,
++		.encrypt = crypto4xx_encrypt_iv_stream,
++		.decrypt = crypto4xx_decrypt_iv_stream,
+ 		.init = crypto4xx_sk_init,
+ 		.exit = crypto4xx_sk_exit,
+ 	} },
+@@ -1290,8 +1290,8 @@ static struct crypto4xx_alg_common crypt
+ 		.min_keysize = AES_MIN_KEY_SIZE,
+ 		.max_keysize = AES_MAX_KEY_SIZE,
+ 		.setkey	= crypto4xx_setkey_aes_ecb,
+-		.encrypt = crypto4xx_encrypt_noiv,
+-		.decrypt = crypto4xx_decrypt_noiv,
++		.encrypt = crypto4xx_encrypt_noiv_block,
++		.decrypt = crypto4xx_decrypt_noiv_block,
+ 		.init = crypto4xx_sk_init,
+ 		.exit = crypto4xx_sk_exit,
+ 	} },
+@@ -1310,8 +1310,8 @@ static struct crypto4xx_alg_common crypt
+ 		.max_keysize = AES_MAX_KEY_SIZE,
+ 		.ivsize	= AES_IV_SIZE,
+ 		.setkey	= crypto4xx_setkey_aes_ofb,
+-		.encrypt = crypto4xx_encrypt_iv,
+-		.decrypt = crypto4xx_decrypt_iv,
++		.encrypt = crypto4xx_encrypt_iv_stream,
++		.decrypt = crypto4xx_decrypt_iv_stream,
+ 		.init = crypto4xx_sk_init,
+ 		.exit = crypto4xx_sk_exit,
+ 	} },
+--- a/drivers/crypto/amcc/crypto4xx_core.h
++++ b/drivers/crypto/amcc/crypto4xx_core.h
+@@ -173,10 +173,12 @@ int crypto4xx_setkey_rfc3686(struct cryp
+ 			     const u8 *key, unsigned int keylen);
+ int crypto4xx_encrypt_ctr(struct skcipher_request *req);
+ int crypto4xx_decrypt_ctr(struct skcipher_request *req);
+-int crypto4xx_encrypt_iv(struct skcipher_request *req);
+-int crypto4xx_decrypt_iv(struct skcipher_request *req);
+-int crypto4xx_encrypt_noiv(struct skcipher_request *req);
+-int crypto4xx_decrypt_noiv(struct skcipher_request *req);
++int crypto4xx_encrypt_iv_stream(struct skcipher_request *req);
++int crypto4xx_decrypt_iv_stream(struct skcipher_request *req);
++int crypto4xx_encrypt_iv_block(struct skcipher_request *req);
++int crypto4xx_decrypt_iv_block(struct skcipher_request *req);
++int crypto4xx_encrypt_noiv_block(struct skcipher_request *req);
++int crypto4xx_decrypt_noiv_block(struct skcipher_request *req);
+ int crypto4xx_rfc3686_encrypt(struct skcipher_request *req);
+ int crypto4xx_rfc3686_decrypt(struct skcipher_request *req);
+ int crypto4xx_sha1_alg_init(struct crypto_tfm *tfm);
 
 
