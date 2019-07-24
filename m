@@ -2,175 +2,130 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1765C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52151C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A304B21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF0021873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VOQcbBOV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfGXIIJ (ORCPT
+        id S1726220AbfGXIJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:08:09 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44159 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfGXIII (ORCPT
+        Wed, 24 Jul 2019 04:09:06 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39379 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfGXIJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:08:08 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d79so33079640qke.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:08:07 -0700 (PDT)
+        Wed, 24 Jul 2019 04:09:06 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l9so44577357qtu.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:09:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9Lpd+hOfQ/hSysjd4WRfKNMZK+VOhGnP5t1TFXShC7M=;
+        b=VOQcbBOVW81gEk6UYdrISLr70kaZw7smJ93fG1k88v2CiADBQEGhOjdDrUVccAJ53f
+         iis1zZNkYW8Ssai/XzSxFDoA/0X7+Xtv8H1HSftMVx+JHagoHr3iqjwcnloS+UJgjYdn
+         vay/OWRz4LA3IZIIEnhiINZfTnCvMW358OdlNW0G0+UcvmfM3NY4LS3/RAbYpyi720/6
+         /I0JoRE9RTyoGAKJa3jmDAuPx/4YAOfqSsOYNMNtYNyhXqIR0HG6vt0XrzuFptZWqyTY
+         HIb5bqcET3ZOyf+wJldrySHQcJOIxg4PPRWsNHswPosnAir5E6PMWMzbq0Jr7gLCAK4P
+         /LYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/MFYQFzENwHk5G46kOvOVKTzaxjp4jXpKM7WypPWBDc=;
-        b=mqdB7NW0fa1ijQ/STD6RyFM0Fe6/OQ6tuBneKRO1V0x1D7ev9xZw/oWxF4UjvsLr00
-         NKnnrRAuFGAJ6sGMM2fqKXg4jAp2yvoAe3FJ3uMlUi9DbT8NNVNNgfINg6PfvFvP3A6s
-         fgfZ9NAtScF81jooW0tk6VlS8puItPbG+VJpq4p2x6xtvIrf0I9sCRqyOy6xj0hZajNE
-         q7oP/x1YDVjiYUJIOtefa1KIrxBrFO1P9FSlJsKHnbjzWQK8LLIQ+wX0gOOgRhVGNvt3
-         /Ow2AyRMXwC5uVW2rKhTwv3i/iCQmpomxnyiI4thOVOHTd8xgwAwpIS2peDHn7zIvkAa
-         UhWA==
-X-Gm-Message-State: APjAAAUui6bt3UM81aw6YBw1i+nYQSoOvwWR6TMoFgEbwTncsmpUAC1d
-        FeLORqkyqrJtvkEnq5rHUN1z/Q==
-X-Google-Smtp-Source: APXvYqyqOJ7xj5WyBSGnSKw6r+fHzKSSQgggyWILPC/N5KbhyvrIGi3wpGDnO2q6i0xNWsrtSCd37A==
-X-Received: by 2002:a05:620a:31b:: with SMTP id s27mr17648521qkm.264.1563955687250;
-        Wed, 24 Jul 2019 01:08:07 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id t26sm23203051qtc.95.2019.07.24.01.07.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 01:08:06 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 04:07:55 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>, ceph-devel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, samba-technical@lists.samba.org,
-        v9fs-developer@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH 07/12] vhost-scsi: convert put_page() to put_user_page*()
-Message-ID: <20190724040745-mutt-send-email-mst@kernel.org>
-References: <20190724042518.14363-1-jhubbard@nvidia.com>
- <20190724042518.14363-8-jhubbard@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9Lpd+hOfQ/hSysjd4WRfKNMZK+VOhGnP5t1TFXShC7M=;
+        b=TLyW8yCbL8plylQ6qO1s1CA+S+n92fxSlk8fZXZ7vwiCzNzJOhw0nYQkAGCgnHhYqm
+         foNYspcWHBXqOpuW0rctr7Cj31x/gMV3UPLwGTzabj2PL2FVjHcNquo6TSdtiTVN3kW9
+         DRe452oUMAXQLyz7SQdeHBA29OFO+hlCseFjY5ErkxUfAp8bInUXA6F8jfLvnNAJ8BpS
+         oi/RiMt4HCNqGid8VkI+b3irkB8VaTUIPrQCGdREYphblBJWmiaY5CkfjVqh1FQdD37B
+         tS53qiCRSp5A530k1AmV3P8sOvnKNYsmeOn1tbbYJyHYAusUyaU9oyqBk4W1X/Q9QdxU
+         3jZw==
+X-Gm-Message-State: APjAAAXQ+zzlaL+d/hwE7TXFR3zLcO10FUs4dlCE/AYJLUHQDsxS3i+g
+        6393H7Dcr3x39U5sUj/mHLdjp3m/GsbuC2G+Ecvkiw==
+X-Google-Smtp-Source: APXvYqwhaR/vZAZ4Pspx2z7Xquj9JBXVTtZ3bp2S/aQJ83tPbQMPL0PZne0WPPs+ZPh0DWRYluwOZumHkN+9N+cgrXA=
+X-Received: by 2002:a0c:d003:: with SMTP id u3mr59212119qvg.112.1563955745710;
+ Wed, 24 Jul 2019 01:09:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190724042518.14363-8-jhubbard@nvidia.com>
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org> <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com> <20190724065958.GC16225@infradead.org>
+In-Reply-To: <20190724065958.GC16225@infradead.org>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Wed, 24 Jul 2019 10:08:54 +0200
+Message-ID: <CA+M3ks6yPTV4i=wEu41bHqMsn_VkYUj=y9BXGmgDgovnT9ESfA@mail.gmail.com>
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:25:13PM -0700, john.hubbard@gmail.com wrote:
-> From: Jérôme Glisse <jglisse@redhat.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Changes from Jérôme's original patch:
-> 
-> * Changed a WARN_ON to a BUG_ON.
-> 
-> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-block@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Johannes Thumshirn <jthumshirn@suse.de>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Boaz Harrosh <boaz@plexistor.com>
-> Cc: Miklos Szeredi <miklos@szeredi.hu>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Le mer. 24 juil. 2019 =C3=A0 09:00, Christoph Hellwig <hch@infradead.org> a=
+ =C3=A9crit :
+>
+> On Mon, Jul 22, 2019 at 10:04:06PM -0700, John Stultz wrote:
+> > Apologies, I'm not sure I'm understanding your suggestion here.
+> > dma_alloc_contiguous() does have some interesting optimizations
+> > (avoiding allocating single page from cma), though its focus on
+> > default area vs specific device area doesn't quite match up the usage
+> > model for dma heaps.  Instead of allocating memory for a single
+> > device, we want to be able to allow userland, for a given usage mode,
+> > to be able to allocate a dmabuf from a specific heap of memory which
+> > will satisfy the usage mode for that buffer pipeline (across multiple
+> > devices).
+> >
+> > Now, indeed, the system and cma heaps in this patchset are a bit
+> > simple/trivial (though useful with my devices that require contiguous
+> > buffers for the display driver), but more complex ION heaps have
+> > traditionally stayed out of tree in vendor code, in many cases making
+> > incompatible tweaks to the ION core dmabuf exporter logic.
+>
+> So what would the more complicated heaps be?
+>
+> > That's why
+> > dmabuf heaps is trying to destage ION in a way that allows heaps to
+> > implement their exporter logic themselves, so we can start pulling
+> > those more complicated heaps out of their vendor hidey-holes and get
+> > some proper upstream review.
+> >
+> > But I suspect I just am confused as to what your suggesting. Maybe
+> > could you expand a bit? Apologies for being a bit dense.
+>
+> My suggestion is to merge the system and CMA heaps.  CMA (at least
+> the system-wide CMA area) is really just an optimization to get
+> large contigous regions more easily.  We should make use of it as
+> transparent as possible, just like we do in the DMA code.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+CMA has made possible to get large regions of memories and to give some
+priority on device allocating pages on it. I don't think that possible
+with system
+heap so I suggest to keep CMA heap if we want to be able to port a maximum
+of applications on dma-buf-heap.
 
-> ---
->  drivers/vhost/scsi.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-> index a9caf1bc3c3e..282565ab5e3f 100644
-> --- a/drivers/vhost/scsi.c
-> +++ b/drivers/vhost/scsi.c
-> @@ -329,11 +329,11 @@ static void vhost_scsi_release_cmd(struct se_cmd *se_cmd)
->  
->  	if (tv_cmd->tvc_sgl_count) {
->  		for (i = 0; i < tv_cmd->tvc_sgl_count; i++)
-> -			put_page(sg_page(&tv_cmd->tvc_sgl[i]));
-> +			put_user_page(sg_page(&tv_cmd->tvc_sgl[i]));
->  	}
->  	if (tv_cmd->tvc_prot_sgl_count) {
->  		for (i = 0; i < tv_cmd->tvc_prot_sgl_count; i++)
-> -			put_page(sg_page(&tv_cmd->tvc_prot_sgl[i]));
-> +			put_user_page(sg_page(&tv_cmd->tvc_prot_sgl[i]));
->  	}
->  
->  	vhost_scsi_put_inflight(tv_cmd->inflight);
-> @@ -630,6 +630,13 @@ vhost_scsi_map_to_sgl(struct vhost_scsi_cmd *cmd,
->  	size_t offset;
->  	unsigned int npages = 0;
->  
-> +	/*
-> +	 * Here in all cases we should have an IOVEC which use GUP. If that is
-> +	 * not the case then we will wrongly call put_user_page() and the page
-> +	 * refcount will go wrong (this is in vhost_scsi_release_cmd())
-> +	 */
-> +	WARN_ON(!iov_iter_get_pages_use_gup(iter));
-> +
->  	bytes = iov_iter_get_pages(iter, pages, LONG_MAX,
->  				VHOST_SCSI_PREALLOC_UPAGES, &offset);
->  	/* No pages were pinned */
-> @@ -681,7 +688,7 @@ vhost_scsi_iov_to_sgl(struct vhost_scsi_cmd *cmd, bool write,
->  			while (p < sg) {
->  				struct page *page = sg_page(p++);
->  				if (page)
-> -					put_page(page);
-> +					put_user_page(page);
->  			}
->  			return ret;
->  		}
-> -- 
-> 2.22.0
+Benjamin
