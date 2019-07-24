@@ -2,152 +2,92 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4813DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FF9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5F421841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EA621841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHN1iP7z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnS9bv3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387724AbfGXRAn (ORCPT
+        id S1726902AbfGXRC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:00:43 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44956 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfGXRAl (ORCPT
+        Wed, 24 Jul 2019 13:02:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44848 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfGXRC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:00:41 -0400
-Received: by mail-io1-f68.google.com with SMTP id s7so90976712iob.11;
-        Wed, 24 Jul 2019 10:00:40 -0700 (PDT)
+        Wed, 24 Jul 2019 13:02:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so21531294pgl.11;
+        Wed, 24 Jul 2019 10:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=H5uePaAnfho3jP4O84y/TR/d85pMr1PHhHfJNr70LiM=;
-        b=kHN1iP7zA3FJ74YxjzC8lHyl0JgV6YH25zYfaGW5aYOffgySOf1QKp+KZSQHNEMZFn
-         GKh2kTELEzLGxrmnDZLQUmt0ykjoIDF3onJTscviyJA5ehSAC5J/5UW+6OaSP+iS5bu/
-         1xU8vU3Z2VYVFmXfnmjeHFfNhPttjVDYToOKq1rg678rqHxcm0f7g0tiQhJpl/xRi+Wd
-         hxAt6HjXkfC9jvuYIpfnwcVzdP5pFdL9Cf7F6GyLICGbk9RmPEUy6b4Qcp04eardBWx/
-         jknqRgy69k+O7wjc/qY01mpJ20yzKRb5wPGzFCtmmEbEQ6QD7AfuECV7TisOSvi+bo3l
-         Y7Yw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=XdfjyZYov5e+yFyCZFSdjA9ozf2so8hFh6lGGKUEDEA=;
+        b=HnS9bv3Ioyt94j0IXtTI344vge8EaVaV6iR43tbNyXlhm2NZzPWCS4LAZZeB7NYi3u
+         +Qy8/sPlcUerqwhHQdGvnVTp1in3kWgOfg6BzxAQclmb5u+8j7/O6SsmUyUHnJpIN5Se
+         aYGSpzNlOvfbKIaXCvbCfmyhVnDmJ5EX78zjbzShvZ+MK+2jVR54u1V5x1/tVKJOViYw
+         c/uPLaCim4zlh6GpBFgFqV3FN1Sv4IwS86WyjIeNUhkMs9+emHQW3Tr/4MP94p6y+8xC
+         gDQ6zzPA2w/DqvdxSvv29S+Ls4/8bupaYP0zm2dra33Au7Q2W25eFj+hrbNw4hYowP4A
+         u1Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=H5uePaAnfho3jP4O84y/TR/d85pMr1PHhHfJNr70LiM=;
-        b=Ouj7+48xLx8xxC/3hrv/3u8iPvVsXEERwc49aQESMcXao6pIjVEZaI20MS9qM5JRL8
-         tTNK3c8UpvQxyl4WSnReiVASL2r1hEDrm42yD8dYIQhntu+0e4k1IvPJmzs6KhyBway2
-         lxslRlR0TC7JRx+un1XZnGNS9YXmSrY+baV/xouNjmURJ+wi1RmIpUFRwyo6Q8AJ8S1C
-         s9szJUg5RtM2SDPymhw4mvNlTFhYNJDIO/T8vzZEh1i5npMDzhpWfVJHwxbUIK4HGChy
-         ebQuxolOP31ST3I8iehr/jVZYBtV/1leBCaOcP65EPcJonKJb9kAc2/EDJ6bGXVGNPuG
-         7UgA==
-X-Gm-Message-State: APjAAAXdIBFF2vN118kIC7Tmxc7edqz2fNABaBNCsdBp3guQXa47Hmv0
-        m7LjyM5rLXsBOSC2JzNjthM=
-X-Google-Smtp-Source: APXvYqx+6Zi+RypFO68n1WeSfP+QuoinYaHM4/PZrw3z9TvZURJv9ULbWB+7BvwlnKgD1QoYlHaN3g==
-X-Received: by 2002:a02:6d24:: with SMTP id m36mr87555505jac.87.1563987640301;
-        Wed, 24 Jul 2019 10:00:40 -0700 (PDT)
-Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
-        by smtp.gmail.com with ESMTPSA id b8sm38161917ioj.16.2019.07.24.10.00.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 10:00:39 -0700 (PDT)
-Subject: [PATCH v2 2/5] mm: Move set/get_pcppage_migratetype to mmzone.h
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Date:   Wed, 24 Jul 2019 09:58:30 -0700
-Message-ID: <20190724165830.6685.51110.stgit@localhost.localdomain>
-In-Reply-To: <20190724165158.6685.87228.stgit@localhost.localdomain>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=XdfjyZYov5e+yFyCZFSdjA9ozf2so8hFh6lGGKUEDEA=;
+        b=RaMY7XqQI7y44aYHz72+G7BZsdOd+fzK3+c/Ffd+UT73+VPWww/YliSI35PLNwOwLt
+         SR5HPRRxqF7HCFxADHWd2Ltyp/yHBTthxx3qo8ROW/vxfsmup+oHztqGncsqpDInSri3
+         fydhWJRqQGTQ/PU32U6cbdvVVj67bVaJZ2wudIiNrBqJvaZ04WZ4oFQYoycWb+56mZyA
+         f0SeEozocgNG8ifYgFhyfivtFubnItJwN9wMkVjxJ+2ivz40GdDd1CG+wKxcXI9a92wM
+         Ikm5UAbuX+reZRFCM2GftXbhfWjEzuP7VmbG1UhdvntBX7tC3C74KlXcIOfUpS/yXkzM
+         topQ==
+X-Gm-Message-State: APjAAAWSbKQZ9PtvPiNYn0WR9OLoBXeLFUCQ8bQy9ZdGgtZ8uAL7I8Rt
+        pcsjxWsZdtlmxOd9exIN+zpmAPYbyFS1aynitD8YmRwNsG4=
+X-Google-Smtp-Source: APXvYqyZVouTVE7j+s/aVmMN+YF1ttTVD2pQY1TtIfurMx0pXKz9VvHRAPtYXVAXlK587EtQYoZ26HMgFx0/o1N0Lxc=
+X-Received: by 2002:a63:5811:: with SMTP id m17mr11803696pgb.237.1563987745677;
+ Wed, 24 Jul 2019 10:02:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20190724014723.GJ643@sol.localdomain>
+In-Reply-To: <20190724014723.GJ643@sol.localdomain>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Wed, 24 Jul 2019 10:02:14 -0700
+Message-ID: <CAM_iQpWFjifODv+cWPSEk7RZ5xz8mg-oGuxkfTJMC7W-vPVwFA@mail.gmail.com>
+Subject: Re: Reminder: 13 open syzbot bugs in "net/netrom" subsystem
+To:     linux-hams <linux-hams@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Tue, Jul 23, 2019 at 6:47 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> [This email was generated by a script.  Let me know if you have any suggestions
+> to make it better, or if you want it re-generated with the latest status.]
+>
+> Of the currently open syzbot reports against the upstream kernel, I've manually
+> marked 13 of them as possibly being bugs in the "net/netrom" subsystem.  I've
+> listed these reports below, sorted by an algorithm that tries to list first the
+> reports most likely to be still valid, important, and actionable.
+>
+> Of these 13 bugs, 8 were seen in mainline in the last week.
+>
+> Of these 13 bugs, 4 were bisected to commits from the following person:
+>
+>         Cong Wang <xiyou.wangcong@gmail.com>
 
-In order to support page aeration it will be necessary to store and
-retrieve the migratetype of a page. To enable that I am moving the set and
-get operations for pcppage_migratetype into the mm/internal.h header so
-that they can be used outside of the page_alloc.c file.
+These 4 should be fixed by this pending patch:
+http://patchwork.ozlabs.org/patch/1135398/
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- mm/internal.h   |   18 ++++++++++++++++++
- mm/page_alloc.c |   18 ------------------
- 2 files changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index e32390802fd3..e432c7d5940d 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -549,6 +549,24 @@ static inline bool is_migrate_highatomic_page(struct page *page)
- 	return get_pageblock_migratetype(page) == MIGRATE_HIGHATOMIC;
- }
- 
-+/*
-+ * A cached value of the page's pageblock's migratetype, used when the page is
-+ * put on a pcplist. Used to avoid the pageblock migratetype lookup when
-+ * freeing from pcplists in most cases, at the cost of possibly becoming stale.
-+ * Also the migratetype set in the page does not necessarily match the pcplist
-+ * index, e.g. page might have MIGRATE_CMA set but be on a pcplist with any
-+ * other index - this ensures that it will be put on the correct CMA freelist.
-+ */
-+static inline int get_pcppage_migratetype(struct page *page)
-+{
-+	return page->index;
-+}
-+
-+static inline void set_pcppage_migratetype(struct page *page, int migratetype)
-+{
-+	page->index = migratetype;
-+}
-+
- void setup_zone_pageset(struct zone *zone);
- extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 1c4644b6cdc3..3d612a6b1771 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -185,24 +185,6 @@ static int __init early_init_on_free(char *buf)
- }
- early_param("init_on_free", early_init_on_free);
- 
--/*
-- * A cached value of the page's pageblock's migratetype, used when the page is
-- * put on a pcplist. Used to avoid the pageblock migratetype lookup when
-- * freeing from pcplists in most cases, at the cost of possibly becoming stale.
-- * Also the migratetype set in the page does not necessarily match the pcplist
-- * index, e.g. page might have MIGRATE_CMA set but be on a pcplist with any
-- * other index - this ensures that it will be put on the correct CMA freelist.
-- */
--static inline int get_pcppage_migratetype(struct page *page)
--{
--	return page->index;
--}
--
--static inline void set_pcppage_migratetype(struct page *page, int migratetype)
--{
--	page->index = migratetype;
--}
--
- #ifdef CONFIG_PM_SLEEP
- /*
-  * The following functions are used by the suspend/hibernate code to temporarily
-
+Thanks.
