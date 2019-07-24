@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC05C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769CBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBDC22ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B868205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997807;
-	bh=Fv1GO9PlmjTooBqbuFhXyMTElMJv3FrPLNhYlG03CHM=;
+	s=default; t=1563997815;
+	bh=2k7GC3BXcoINbX7M/tcqKNlBxhtLxVmgdf3pukCoyZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cftjs/aU+hKJQ9QoJog9zqFDOeGWBd58kp5KtlA3qqVq5ZF+pH6lOET5R600k/EAv
-	 xlHAx/XJloLxp0Rop+xAtEpJPYXAaNZ/ZKhndosMojAON/qT6VLa6JsTCsjGTyeS1H
-	 Tm8pIvUJNti0S2C05ysLI+MEr+7Dm9p0D/4WC70o=
+	b=KUDRj8HeTReuiH3363KcAJ9gqZK6x2el1nmUPis4aVZlhpAuWRGGULNbJhjC84hVu
+	 MXVeT+5OzDEyOO0Kp1pYYa1UABGYnbT+fuV2yqrmfYn+3Tlt1hmmYXig2jdEIpMu69
+	 LKTTSYs7QN+YMuoW+ytX8dnjO9Y1KqnpsR9QtyM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfGXTuG (ORCPT
+        id S2391329AbfGXTuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:50:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403826AbfGXTt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:49:58 -0400
+        id S1728840AbfGXTuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B964E22ADA;
-        Wed, 24 Jul 2019 19:49:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61FA20659;
+        Wed, 24 Jul 2019 19:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997798;
-        bh=Fv1GO9PlmjTooBqbuFhXyMTElMJv3FrPLNhYlG03CHM=;
+        s=default; t=1563997806;
+        bh=2k7GC3BXcoINbX7M/tcqKNlBxhtLxVmgdf3pukCoyZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TJ19pM9mvNx/P+WGvoBsoro4X6VPmo31BZV2RP9F8LrZsBL1r6TNibqSvUxmTexc0
-         /ASSjGPhjOiVONsCNEizduQYmm56GQG5dEByxJoHLXZNB29A3zTUFDLN+0rfnoSa6T
-         ugRrFhyFdS73q8ogadFbgEWUApOULalXDxQOWS58=
+        b=d9qk39OM9P3gstxUyD47qOa3jteWgronh2kAc8ysGXPXRosi9pAn+ZViMtbfrKZXo
+         PpfBFRA8n8zE/QnEmOxU8IUZvlNvymXZjaMaDNtPx2GNYdAunYm2tvj3oUm+fohwzn
+         Kw0WwJRLeM3dkt7mbJeXwAo7Y8SnpF0FTzMUJ1Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 120/371] nvme: fix possible io failures when removing multipathed ns
-Date:   Wed, 24 Jul 2019 21:17:52 +0200
-Message-Id: <20190724191733.868806918@linuxfoundation.org>
+        stable@vger.kernel.org, Kyle Meyer <kyle.meyer@hpe.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 149/371] perf tools: Increase MAX_NR_CPUS and MAX_CACHES
+Date:   Wed, 24 Jul 2019 21:18:21 +0200
+Message-Id: <20190724191736.377022216@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,67 +64,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2181e455612a8db2761eabbf126640552a451e96 ]
+[ Upstream commit 9f94c7f947e919c343b30f080285af53d0fa9902 ]
 
-When a shared namespace is removed, we call blk_cleanup_queue()
-when the device can still be accessed as the current path and this can
-result in submission to a dying queue. Hence, direct_make_request()
-called by our mpath device may fail (propagating the failure to userspace).
-Instead, we want to failover this I/O to a different path if one exists.
-Thus, before we cleanup the request queue, we make sure that the device is
-cleared from the current path nor it can be selected again as such.
+Attempting to profile 1024 or more CPUs with perf causes two errors:
 
-Fix this by:
-- clear the ns from the head->list and synchronize rcu to make sure there is
-  no concurrent path search that restores it as the current path
-- clear the mpath current path in order to trigger a subsequent path search
-  and sync srcu to wait for any ongoing request submissions
-- safely continue to namespace removal and blk_cleanup_queue
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  way too many cpu caches..
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
 
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+  perf report -C 1024
+  Error: failed to set  cpu bitmap
+  Requested CPU 1024 too large. Consider raising MAX_NR_CPUS
+
+  Increasing MAX_NR_CPUS from 1024 to 2048 and redefining MAX_CACHES as
+  MAX_NR_CPUS * 4 returns normal functionality to perf:
+
+  perf record -a
+  [ perf record: Woken up X times to write data ]
+  [ perf record: Captured and wrote X MB perf.data (X samples) ]
+
+  perf report -C 1024
+  ...
+
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ tools/perf/perf.h        | 2 +-
+ tools/perf/util/header.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 3a390b2c7540..cbbdd3dae5a1 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3341,6 +3341,14 @@ static void nvme_ns_remove(struct nvme_ns *ns)
- 		return;
- 
- 	nvme_fault_inject_fini(ns);
-+
-+	mutex_lock(&ns->ctrl->subsys->lock);
-+	list_del_rcu(&ns->siblings);
-+	mutex_unlock(&ns->ctrl->subsys->lock);
-+	synchronize_rcu(); /* guarantee not available in head->list */
-+	nvme_mpath_clear_current_path(ns);
-+	synchronize_srcu(&ns->head->srcu); /* wait for concurrent submissions */
-+
- 	if (ns->disk && ns->disk->flags & GENHD_FL_UP) {
- 		del_gendisk(ns->disk);
- 		blk_cleanup_queue(ns->queue);
-@@ -3348,16 +3356,10 @@ static void nvme_ns_remove(struct nvme_ns *ns)
- 			blk_integrity_unregister(ns->disk);
- 	}
- 
--	mutex_lock(&ns->ctrl->subsys->lock);
--	list_del_rcu(&ns->siblings);
--	nvme_mpath_clear_current_path(ns);
--	mutex_unlock(&ns->ctrl->subsys->lock);
--
- 	down_write(&ns->ctrl->namespaces_rwsem);
- 	list_del_init(&ns->list);
- 	up_write(&ns->ctrl->namespaces_rwsem);
- 
--	synchronize_srcu(&ns->head->srcu);
- 	nvme_mpath_check_last_path(ns);
- 	nvme_put_ns(ns);
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index c59743def8d3..b86ecc7afdd7 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -26,7 +26,7 @@ static inline unsigned long long rdclock(void)
  }
+ 
+ #ifndef MAX_NR_CPUS
+-#define MAX_NR_CPUS			1024
++#define MAX_NR_CPUS			2048
+ #endif
+ 
+ extern const char *input_name;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 682e3d524d3c..df608cfaa03c 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1100,7 +1100,7 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
+ 	return 0;
+ }
+ 
+-#define MAX_CACHES 2000
++#define MAX_CACHES (MAX_NR_CPUS * 4)
+ 
+ static int write_cache(struct feat_fd *ff,
+ 		       struct perf_evlist *evlist __maybe_unused)
 -- 
 2.20.1
 
