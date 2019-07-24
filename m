@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52665C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1474EC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164252238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D130F21951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996495;
-	bh=pOCUmSmq9JI+C32yE8DmJOiiIfpXoiolRStGBUkbEGo=;
+	s=default; t=1563996503;
+	bh=ZSl1scnxr/Ellro7+dGi0kPGRZ6BnpwAw0+kHm4KKkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1/kvPw7LNbLwAVS5FWBXDpHIJB175RgYzIuNKEACu1HBpX/5vH7yb4SNJfSz1gD3w
-	 Bg5xlxJn07eQlZiZb8s+CkOmGC4rWHSL8VNN9xZ+Np4yWrdhLYa7SlJ7CK7Hd+XjTo
-	 /orKSuAfdeEcPLbe7lyLmAUMvIBzi5ixxbILOKUQ=
+	b=EPGRKeANo8c5FG68SruBS6+EWg3ZG629GxNSvufin96VtXQwSzrcaTbYPnns5aOXN
+	 4CowSwX+dwRwKC+NuqInwafZ0E55BzCIcm+VChjs9SWMe1zKvUlTq+d3EJpGUb9Dp4
+	 kR6S6VhnfjWd8d2QcpIwM1DixZ2A/Xkrb85FtBEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfGXT2O (ORCPT
+        id S2388206AbfGXT2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46338 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387564AbfGXT2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:12 -0400
+        id S2387564AbfGXT2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E82121951;
-        Wed, 24 Jul 2019 19:28:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3C1F218EA;
+        Wed, 24 Jul 2019 19:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996490;
-        bh=pOCUmSmq9JI+C32yE8DmJOiiIfpXoiolRStGBUkbEGo=;
+        s=default; t=1563996494;
+        bh=ZSl1scnxr/Ellro7+dGi0kPGRZ6BnpwAw0+kHm4KKkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQHd3++iRnA42QVonmzy1MfqaoZn+AEoH7eSLvPiavikldzVSIrJXsz5Yjv98g+Wc
-         rkmhZH6CESn2TPe3m2a3nOP779HZxAdIVASXT+ybs+Tnti4TAVy8rlAl2IrX0JkziB
-         dxbtiGsSE/EzzWtRIxckyeUsRQCo4OeqK0eCwhtg=
+        b=fVDBkkmxtqzlEhy+7WQtWRToQDEgkYkMJ/wmvxE6oQBJfJSHyw2LzFhQLJcf+3JFT
+         cPAbahQAJS1dFygr8tJbmRTwTXMGu1zeJDGXxSf5Tfut8kLa8xwrGFxC56d9M2fm4e
+         UwQFZAxrxARSyNAcpPXEMPuXif1IjkgezfPlsZ4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 114/413] x86/atomic: Fix smp_mb__{before,after}_atomic()
-Date:   Wed, 24 Jul 2019 21:16:45 +0200
-Message-Id: <20190724191743.477040643@linuxfoundation.org>
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 079/413] perf cs-etm: Properly set the value of old and head in snapshot mode
+Date:   Wed, 24 Jul 2019 21:16:10 +0200
+Message-Id: <20190724191740.754985059@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,161 +67,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 69d927bba39517d0980462efc051875b7f4db185 ]
+[ Upstream commit e45c48a9a4d20ebc7b639a62c3ef8f4b08007027 ]
 
-Recent probing at the Linux Kernel Memory Model uncovered a
-'surprise'. Strongly ordered architectures where the atomic RmW
-primitive implies full memory ordering and
-smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
-fail for:
+This patch adds the necessary intelligence to properly compute the value
+of 'old' and 'head' when operating in snapshot mode.  That way we can
+get the latest information in the AUX buffer and be compatible with the
+generic AUX ring buffer mechanic.
 
-	*x = 1;
-	atomic_inc(u);
-	smp_mb__after_atomic();
-	r0 = *y;
+Tester notes:
 
-Because, while the atomic_inc() implies memory order, it
-(surprisingly) does not provide a compiler barrier. This then allows
-the compiler to re-order like so:
+> Leo, have you had the chance to test/review this one? Suzuki?
 
-	atomic_inc(u);
-	*x = 1;
-	smp_mb__after_atomic();
-	r0 = *y;
+Sure.  I applied this patch on the perf/core branch (with latest
+commit 3e4fbf36c1e3 'perf augmented_raw_syscalls: Move reading
+filename to the loop') and passed testing with below steps:
 
-Which the CPU is then allowed to re-order (under TSO rules) like:
+  # perf record -e cs_etm/@tmc_etr0/ -S -m,64 --per-thread ./sort &
+  [1] 19097
+  Bubble sorting array of 30000 elements
 
-	atomic_inc(u);
-	r0 = *y;
-	*x = 1;
+  # kill -USR2 19097
+  # kill -USR2 19097
+  # kill -USR2 19097
+  [ perf record: Woken up 4 times to write data ]
+  [ perf record: Captured and wrote 0.753 MB perf.data ]
 
-And this very much was not intended. Therefore strengthen the atomic
-RmW ops to include a compiler barrier.
-
-NOTE: atomic_{or,and,xor} and the bitops already had the compiler
-barrier.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190605161633.12245-1-mathieu.poirier@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/atomic_t.txt         | 3 +++
- arch/x86/include/asm/atomic.h      | 8 ++++----
- arch/x86/include/asm/atomic64_64.h | 8 ++++----
- arch/x86/include/asm/barrier.h     | 4 ++--
- 4 files changed, 13 insertions(+), 10 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c | 127 +++++++++++++++++++++++++++++-
+ 1 file changed, 123 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index dca3fb0554db..65bb09a29324 100644
---- a/Documentation/atomic_t.txt
-+++ b/Documentation/atomic_t.txt
-@@ -194,6 +194,9 @@ These helper barriers exist because architectures have varying implicit
- ordering on their SMP atomic primitives. For example our TSO architectures
- provide full ordered atomics and these barriers are no-ops.
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 911426721170..0a278bbcaba6 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -31,6 +31,8 @@ struct cs_etm_recording {
+ 	struct auxtrace_record	itr;
+ 	struct perf_pmu		*cs_etm_pmu;
+ 	struct perf_evlist	*evlist;
++	int			wrapped_cnt;
++	bool			*wrapped;
+ 	bool			snapshot_mode;
+ 	size_t			snapshot_size;
+ };
+@@ -536,16 +538,131 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
+ 	return 0;
+ }
  
-+NOTE: when the atomic RmW ops are fully ordered, they should also imply a
-+compiler barrier.
+-static int cs_etm_find_snapshot(struct auxtrace_record *itr __maybe_unused,
++static int cs_etm_alloc_wrapped_array(struct cs_etm_recording *ptr, int idx)
++{
++	bool *wrapped;
++	int cnt = ptr->wrapped_cnt;
 +
- Thus:
- 
-   atomic_fetch_add();
-diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
-index ea3d95275b43..115127c7ad28 100644
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -54,7 +54,7 @@ static __always_inline void arch_atomic_add(int i, atomic_t *v)
++	/* Make @ptr->wrapped as big as @idx */
++	while (cnt <= idx)
++		cnt++;
++
++	/*
++	 * Free'ed in cs_etm_recording_free().  Using realloc() to avoid
++	 * cross compilation problems where the host's system supports
++	 * reallocarray() but not the target.
++	 */
++	wrapped = realloc(ptr->wrapped, cnt * sizeof(bool));
++	if (!wrapped)
++		return -ENOMEM;
++
++	wrapped[cnt - 1] = false;
++	ptr->wrapped_cnt = cnt;
++	ptr->wrapped = wrapped;
++
++	return 0;
++}
++
++static bool cs_etm_buffer_has_wrapped(unsigned char *buffer,
++				      size_t buffer_size, u64 head)
++{
++	u64 i, watermark;
++	u64 *buf = (u64 *)buffer;
++	size_t buf_size = buffer_size;
++
++	/*
++	 * We want to look the very last 512 byte (chosen arbitrarily) in
++	 * the ring buffer.
++	 */
++	watermark = buf_size - 512;
++
++	/*
++	 * @head is continuously increasing - if its value is equal or greater
++	 * than the size of the ring buffer, it has wrapped around.
++	 */
++	if (head >= buffer_size)
++		return true;
++
++	/*
++	 * The value of @head is somewhere within the size of the ring buffer.
++	 * This can be that there hasn't been enough data to fill the ring
++	 * buffer yet or the trace time was so long that @head has numerically
++	 * wrapped around.  To find we need to check if we have data at the very
++	 * end of the ring buffer.  We can reliably do this because mmap'ed
++	 * pages are zeroed out and there is a fresh mapping with every new
++	 * session.
++	 */
++
++	/* @head is less than 512 byte from the end of the ring buffer */
++	if (head > watermark)
++		watermark = head;
++
++	/*
++	 * Speed things up by using 64 bit transactions (see "u64 *buf" above)
++	 */
++	watermark >>= 3;
++	buf_size >>= 3;
++
++	/*
++	 * If we find trace data at the end of the ring buffer, @head has
++	 * been there and has numerically wrapped around at least once.
++	 */
++	for (i = watermark; i < buf_size; i++)
++		if (buf[i])
++			return true;
++
++	return false;
++}
++
++static int cs_etm_find_snapshot(struct auxtrace_record *itr,
+ 				int idx, struct auxtrace_mmap *mm,
+-				unsigned char *data __maybe_unused,
++				unsigned char *data,
+ 				u64 *head, u64 *old)
  {
- 	asm volatile(LOCK_PREFIX "addl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
- }
++	int err;
++	bool wrapped;
++	struct cs_etm_recording *ptr =
++			container_of(itr, struct cs_etm_recording, itr);
++
++	/*
++	 * Allocate memory to keep track of wrapping if this is the first
++	 * time we deal with this *mm.
++	 */
++	if (idx >= ptr->wrapped_cnt) {
++		err = cs_etm_alloc_wrapped_array(ptr, idx);
++		if (err)
++			return err;
++	}
++
++	/*
++	 * Check to see if *head has wrapped around.  If it hasn't only the
++	 * amount of data between *head and *old is snapshot'ed to avoid
++	 * bloating the perf.data file with zeros.  But as soon as *head has
++	 * wrapped around the entire size of the AUX ring buffer it taken.
++	 */
++	wrapped = ptr->wrapped[idx];
++	if (!wrapped && cs_etm_buffer_has_wrapped(data, mm->len, *head)) {
++		wrapped = true;
++		ptr->wrapped[idx] = true;
++	}
++
+ 	pr_debug3("%s: mmap index %d old head %zu new head %zu size %zu\n",
+ 		  __func__, idx, (size_t)*old, (size_t)*head, mm->len);
  
- /**
-@@ -68,7 +68,7 @@ static __always_inline void arch_atomic_sub(int i, atomic_t *v)
+-	*old = *head;
+-	*head += mm->len;
++	/* No wrap has occurred, we can just use *head and *old. */
++	if (!wrapped)
++		return 0;
++
++	/*
++	 * *head has wrapped around - adjust *head and *old to pickup the
++	 * entire content of the AUX buffer.
++	 */
++	if (*head >= mm->len) {
++		*old = *head - mm->len;
++	} else {
++		*head += mm->len;
++		*old = *head - mm->len;
++	}
+ 
+ 	return 0;
+ }
+@@ -586,6 +703,8 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
  {
- 	asm volatile(LOCK_PREFIX "subl %1,%0"
- 		     : "+m" (v->counter)
--		     : "ir" (i));
-+		     : "ir" (i) : "memory");
+ 	struct cs_etm_recording *ptr =
+ 			container_of(itr, struct cs_etm_recording, itr);
++
++	zfree(&ptr->wrapped);
+ 	free(ptr);
  }
- 
- /**
-@@ -95,7 +95,7 @@ static __always_inline bool arch_atomic_sub_and_test(int i, atomic_t *v)
- static __always_inline void arch_atomic_inc(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_inc arch_atomic_inc
- 
-@@ -108,7 +108,7 @@ static __always_inline void arch_atomic_inc(atomic_t *v)
- static __always_inline void arch_atomic_dec(atomic_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decl %0"
--		     : "+m" (v->counter));
-+		     : "+m" (v->counter) :: "memory");
- }
- #define arch_atomic_dec arch_atomic_dec
- 
-diff --git a/arch/x86/include/asm/atomic64_64.h b/arch/x86/include/asm/atomic64_64.h
-index dadc20adba21..5e86c0d68ac1 100644
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -45,7 +45,7 @@ static __always_inline void arch_atomic64_add(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "addq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -59,7 +59,7 @@ static inline void arch_atomic64_sub(long i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subq %1,%0"
- 		     : "=m" (v->counter)
--		     : "er" (i), "m" (v->counter));
-+		     : "er" (i), "m" (v->counter) : "memory");
- }
- 
- /**
-@@ -87,7 +87,7 @@ static __always_inline void arch_atomic64_inc(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "incq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_inc arch_atomic64_inc
- 
-@@ -101,7 +101,7 @@ static __always_inline void arch_atomic64_dec(atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "decq %0"
- 		     : "=m" (v->counter)
--		     : "m" (v->counter));
-+		     : "m" (v->counter) : "memory");
- }
- #define arch_atomic64_dec arch_atomic64_dec
- 
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 14de0432d288..84f848c2541a 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -80,8 +80,8 @@ do {									\
- })
- 
- /* Atomic operations are already serializing on x86 */
--#define __smp_mb__before_atomic()	barrier()
--#define __smp_mb__after_atomic()	barrier()
-+#define __smp_mb__before_atomic()	do { } while (0)
-+#define __smp_mb__after_atomic()	do { } while (0)
- 
- #include <asm-generic/barrier.h>
  
 -- 
 2.20.1
