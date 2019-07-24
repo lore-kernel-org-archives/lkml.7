@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7463C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A005C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96217229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CA5229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996460;
-	bh=G/XVuCesdXq1fHz55fcAyE0FQZwiqcpuAxHc3Jf90E0=;
+	s=default; t=1563996465;
+	bh=Ac4+0kdxBm/sPaXK+zxCsEvKI3E60ZZYmePwII+BD2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+//wgEDEy4YeTZ4vvNJUINI/FwqDw+KrbTXOJd7lDoyjNBqKP3Cuyf+Cl8zmO2T2
-	 jNIQACvCHsHhLtJavkxjGIW+FilOZBjo01I2UB3zsimyokdrYwMaBWKO5mXYsyW7ow
-	 +fffBRL4jJnkq6QghWm0mc5PYvXYxJd5gxMBIs+w=
+	b=PpNo8vh8NNhVKahhVHNH0/OBDBGbiLx2RXJUT5OpD7z9SFKtbQhpnRq+YNzjWRovD
+	 ZFJlpUOOo0k2l059zKuF1qLHoM3WyHB4kQihe0dXcJRYjHzj/dJP9z7iO4saZBj211
+	 x0FafiL+RXJTQStM3lG1ifmPY4CT5Td0vITD/Gwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388139AbfGXT1j (ORCPT
+        id S1728574AbfGXT1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45408 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727195AbfGXT1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:35 -0400
+        id S1726856AbfGXT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63F36218EA;
-        Wed, 24 Jul 2019 19:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E811D2238C;
+        Wed, 24 Jul 2019 19:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996454;
-        bh=G/XVuCesdXq1fHz55fcAyE0FQZwiqcpuAxHc3Jf90E0=;
+        s=default; t=1563996452;
+        bh=Ac4+0kdxBm/sPaXK+zxCsEvKI3E60ZZYmePwII+BD2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQzSJ9VCd+cnPbdCo2x7RZC5dc9l6VxiRtvnrAgg451OuT3l/8vWSaK5I2qWm5sIy
-         2esqU/xTlsE6e/0P+FcEuPoe9kzInwcrPMSqmcRxmJSAARqCGjadc2iV8xohUrslHC
-         BcVM2T1t/QruOizVAz2y9NQ5PIknq01gMS1kKTlk=
+        b=H95PpRoISm5Xz7gi/3sfwu92vD2iKPcRGxbtT42rNyeV0c7p0QC8CrhVpXo/5Lmgs
+         trVZ+lv7lifu+3PP0PWpjcVzAb4HkzQ/5uVNxnvzgntOq2grjk7W7q9rUjqxudyarh
+         qstiV3dJpVleLbqOCafrnkOMidqXkGiVC7+rEYNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 102/413] net: hns3: fix for dereferencing before null checking
-Date:   Wed, 24 Jul 2019 21:16:33 +0200
-Message-Id: <20190724191742.502496346@linuxfoundation.org>
+Subject: [PATCH 5.2 101/413] qed: iWARP - Fix tc for MPA ll2 connection
+Date:   Wed, 24 Jul 2019 21:16:32 +0200
+Message-Id: <20190724191742.421925137@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,53 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 757188005f905664b0186b88cf26a7e844190a63 ]
+[ Upstream commit cb94d52b93c74fe1f2595734fabeda9f8ae891ee ]
 
-The netdev is dereferenced before null checking in the function
-hns3_setup_tc.
+The driver needs to assign a lossless traffic class for the MPA ll2
+connection to ensure no packets are dropped when returning from the
+driver as they will never be re-transmitted by the peer.
 
-This patch moves the dereferencing after the null checking.
-
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: ae3488ff37dc ("qed: Add ll2 connection for processing unaligned MPA packets")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 5611b990ac34..d18ad7b48a31 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1514,12 +1514,12 @@ static void hns3_nic_get_stats64(struct net_device *netdev,
- static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- {
- 	struct tc_mqprio_qopt_offload *mqprio_qopt = type_data;
--	struct hnae3_handle *h = hns3_get_handle(netdev);
--	struct hnae3_knic_private_info *kinfo = &h->kinfo;
- 	u8 *prio_tc = mqprio_qopt->qopt.prio_tc_map;
-+	struct hnae3_knic_private_info *kinfo;
- 	u8 tc = mqprio_qopt->qopt.num_tc;
- 	u16 mode = mqprio_qopt->mode;
- 	u8 hw = mqprio_qopt->qopt.hw;
-+	struct hnae3_handle *h;
- 
- 	if (!((hw == TC_MQPRIO_HW_OFFLOAD_TCS &&
- 	       mode == TC_MQPRIO_MODE_CHANNEL) || (!hw && tc == 0)))
-@@ -1531,6 +1531,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- 	if (!netdev)
- 		return -EINVAL;
- 
-+	h = hns3_get_handle(netdev);
-+	kinfo = &h->kinfo;
-+
- 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
- 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
- }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index ded556b7bab5..eeea8683d99b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -2708,6 +2708,8 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+ 	data.input.rx_num_desc = n_ooo_bufs * 2;
+ 	data.input.tx_num_desc = data.input.rx_num_desc;
+ 	data.input.tx_max_bds_per_packet = QED_IWARP_MAX_BDS_PER_FPDU;
++	data.input.tx_tc = PKT_LB_TC;
++	data.input.tx_dest = QED_LL2_TX_DEST_LB;
+ 	data.p_connection_handle = &iwarp_info->ll2_mpa_handle;
+ 	data.input.secondary_queue = true;
+ 	data.cbs = &cbs;
 -- 
 2.20.1
 
