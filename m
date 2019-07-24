@@ -2,113 +2,94 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6260C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A845DC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E8A22BF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4983122CB9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbfGXODt (ORCPT
+        id S1728415AbfGXOEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:03:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50252 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726622AbfGXODs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:03:48 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2CBBFA9AC7F18D8330B1;
-        Wed, 24 Jul 2019 22:03:32 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 22:03:27 +0800
-Subject: Re: [PATCH] media: staging: ipu3: Enable IOVA API only when IOMMU
- support is enabled
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-References: <20190722134749.21580-1-yuehaibing@huawei.com>
- <20190724103027.GD21370@paasikivi.fi.intel.com>
- <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
-CC:     <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <hverkuil-cisco@xs4all.nl>,
-        <digetx@gmail.com>, <mchehab@kernel.org>, <yong.zhi@intel.com>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <0c08bdae-facc-0f28-0e58-17a65172587a@huawei.com>
-Date:   Wed, 24 Jul 2019 22:03:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 24 Jul 2019 10:04:47 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24682 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbfGXOEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:04:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP; 24 Jul 2019 07:04:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
+   d="scan'208";a="345110232"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga005.jf.intel.com with ESMTP; 24 Jul 2019 07:04:44 -0700
+Date:   Wed, 24 Jul 2019 21:47:46 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Zhang Yi Z <yi.z.zhang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v3 02/12] fpga: dfl: fme: add
+ DFL_FPGA_FME_PORT_RELEASE/ASSIGN ioctl support.
+Message-ID: <20190724134746.GD8463@hao-dev>
+References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
+ <1563857495-26692-3-git-send-email-hao.wu@intel.com>
+ <20190724093357.GA29532@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724093357.GA29532@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/24 21:49, Robin Murphy wrote:
-> On 24/07/2019 11:30, Sakari Ailus wrote:
->> Hi Yue,
->>
->> On Mon, Jul 22, 2019 at 09:47:49PM +0800, YueHaibing wrote:
->>> If IOMMU_SUPPORT is not set, ipu3 driver may select IOMMU_IOVA to m.
->>> But for many drivers, they use "select IOMMU_IOVA if IOMMU_SUPPORT"
->>> in the Kconfig, for example, CONFIG_TEGRA_VDE is set to y but IOMMU_IOVA
->>> is m, then the building fails like this:
->>>
->>> drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
->>> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
->>> iommu.c:(.text+0x56): undefined reference to `__free_iova'
->>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>> ---
->>>   drivers/staging/media/ipu3/Kconfig | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/staging/media/ipu3/Kconfig b/drivers/staging/media/ipu3/Kconfig
->>> index 4b51c67..b7df18f 100644
->>> --- a/drivers/staging/media/ipu3/Kconfig
->>> +++ b/drivers/staging/media/ipu3/Kconfig
->>> @@ -4,7 +4,7 @@ config VIDEO_IPU3_IMGU
->>>       depends on PCI && VIDEO_V4L2
->>>       depends on MEDIA_CONTROLLER && VIDEO_V4L2_SUBDEV_API
->>>       depends on X86
->>> -    select IOMMU_IOVA
->>> +    select IOMMU_IOVA if IOMMU_SUPPORT
->>
->> This doesn't seem right: the ipu3-cio2 driver needs IOMMU_IOVA
->> independently of IOMMU_SUPPORT.
->>
->> Looking at tegra-vde, it seems to depend on IOMMU_SUPPORT but that's not
->> declared in its Kconfig entry. I wonder if adding that would be the right
->> way to fix this.
->>
->> Cc'ing the IOMMU list.
+On Wed, Jul 24, 2019 at 11:33:57AM +0200, Greg KH wrote:
+> On Tue, Jul 23, 2019 at 12:51:25PM +0800, Wu Hao wrote:
+> > +/**
+> > + * dfl_fpga_cdev_config_port - configure a port feature dev
+> > + * @cdev: parent container device.
+> > + * @port_id: id of the port feature device.
+> > + * @release: release port or assign port back.
+> > + *
+> > + * This function allows user to release port platform device or assign it back.
+> > + * e.g. to safely turn one port from PF into VF for PCI device SRIOV support,
+> > + * release port platform device is one necessary step.
+> > + */
+> > +int dfl_fpga_cdev_config_port(struct dfl_fpga_cdev *cdev, int port_id,
+> > +			      bool release)
+> > +{
+> > +	return release ? detach_port_dev(cdev, port_id) :
+> > +			 attach_port_dev(cdev, port_id);
+> > +}
+> > +EXPORT_SYMBOL_GPL(dfl_fpga_cdev_config_port);
 > 
-> Right, I also had the impression that we'd made the IOVA library completely standalone. And what does the IPU3 driver's Kconfig have to do with some *other* driver failing to link anyway?
+> That's a horrible api.  Every time you see this call in code, you have
+> to go and look up what "bool" means here.  There's no reason for it.
+> 
+> Just have 2 different functions, one that attaches a port, and one that
+> detaches it.  That way when you read the code that calls this function,
+> you know what it does instantly without having to go look up some api
+> function somewhere else.
+> 
+> Write code for people to read first.  And you are saving nothing here by
+> trying to do two different things in the same exact function.
 
-Oh, I misunderstand that IOMMU_IOVA is depend on IOMMU_SUPPORT, thank you for clarification.
+I see, you're right, it saves everybody's time on reading, very important.
+I will fix this and keep it in mind. Thank you.
 
-I will try to fix this in tegra-vde.
+Hao
 
 > 
-> Robin.
+> thanks,
 > 
->>
->>>       select VIDEOBUF2_DMA_SG
->>>       help
->>>         This is the Video4Linux2 driver for Intel IPU3 image processing unit,
->>
-> 
-> .
-> 
-
+> greg k-h
