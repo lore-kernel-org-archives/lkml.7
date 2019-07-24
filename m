@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9F5C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B91C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7769C20657
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97C520657
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033688;
-	bh=mpHAlu1g6ATP9dASfPwGMVpV6BfbTPl75zysN1qbgMI=;
+	s=default; t=1564033696;
+	bh=l2GgUcWotZtTGa/g0fbn9MHmnXq6w1je5UVn5OXKTA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGOQyXmDz1TXPpyA7poif+474AcscZCVHiCqabQL3AoSer53pA0udTSMIUMrufxKs
-	 1+2RJB+h8IMrmxzVVwux+8mjLn9cFQELHqt1sSgjYLS9exwW51DlEkLEYzn1dUgjEW
-	 N02eSieIWXEpmXshcqCMYsG7DZMnO9J5uP2IM/tM=
+	b=bwTT7WQEjHy4qpLna4Q5GG3E1CI449RPrRuSDfl2X5fsi1a09jqcxQvQRuWnoIiBC
+	 vGnugxZ0y6Vr7qcF7rsvwA6sTldUqypm3LwIyWngEwkcERpyjYjBb9iwF7p2J5fWOK
+	 HtIX94HV7xVuZyuG1AOfmYzrdaEeAtc59PPO+egI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbfGYFsH (ORCPT
+        id S2388125AbfGYFsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:48:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388125AbfGYFqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:46:39 -0400
+        id S2391425AbfGYFq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:46:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4C322C7D;
-        Thu, 25 Jul 2019 05:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36D620657;
+        Thu, 25 Jul 2019 05:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033598;
-        bh=mpHAlu1g6ATP9dASfPwGMVpV6BfbTPl75zysN1qbgMI=;
+        s=default; t=1564033586;
+        bh=l2GgUcWotZtTGa/g0fbn9MHmnXq6w1je5UVn5OXKTA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ujx9FsbXDx7yYKSBDq6D1qsuKEvRoJlptkFX2bHyn4cqDbxGpxh3L6HsuSBdXn4Hr
-         /yyQMYRUBGB2ZKRfLgXddwBjnzh+9WG8Dzmrl9TLbe2tIHfWw/dCOnm+s0kQa7VCe+
-         Rf55DZ4t037VTbTioA13vJT+jsvIzNTfTSbW8498=
+        b=DkIZYlmcd6Km8Q53l7PTo9LBiEjTSaqHAkMlcsKQOi1iSn2c1gexfxJ6o+6gz4Hrc
+         54DD1m0OZ1oa+F0mrfuEB2PSLUdg9BVvwzgq9HzrULZyl4Yp5zYxml+6uhTkArF1ZL
+         XK5wCChaomIV89kV3fGpbdDVkwz4+88B8H0lS2qk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Szymon Janc <szymon.janc@codecoup.pl>,
-        Maarten Fonville <maarten.fonville@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.19 264/271] Bluetooth: Add SMP workaround Microsoft Surface Precision Mouse bug
-Date:   Wed, 24 Jul 2019 21:22:13 +0200
-Message-Id: <20190724191717.836063480@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: [PATCH 4.19 218/271] padata: use smp_mb in padata_reorder to avoid orphaned padata jobs
+Date:   Wed, 24 Jul 2019 21:21:27 +0200
+Message-Id: <20190724191713.782742418@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,67 +65,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Szymon Janc <szymon.janc@codecoup.pl>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-commit 1d87b88ba26eabd4745e158ecfd87c93a9b51dc2 upstream.
+commit cf144f81a99d1a3928f90b0936accfd3f45c9a0a upstream.
 
-Microsoft Surface Precision Mouse provides bogus identity address when
-pairing. It connects with Static Random address but provides Public
-Address in SMP Identity Address Information PDU. Address has same
-value but type is different. Workaround this by dropping IRK if ID
-address discrepancy is detected.
+Testing padata with the tcrypt module on a 5.2 kernel...
 
-> HCI Event: LE Meta Event (0x3e) plen 19
-      LE Connection Complete (0x01)
-        Status: Success (0x00)
-        Handle: 75
-        Role: Master (0x00)
-        Peer address type: Random (0x01)
-        Peer address: E0:52:33:93:3B:21 (Static)
-        Connection interval: 50.00 msec (0x0028)
-        Connection latency: 0 (0x0000)
-        Supervision timeout: 420 msec (0x002a)
-        Master clock accuracy: 0x00
+    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
+    # modprobe tcrypt mode=211 sec=1
 
-....
+...produces this splat:
 
-> ACL Data RX: Handle 75 flags 0x02 dlen 12
-      SMP: Identity Address Information (0x09) len 7
-        Address type: Public (0x00)
-        Address: E0:52:33:93:3B:21
+    INFO: task modprobe:10075 blocked for more than 120 seconds.
+          Not tainted 5.2.0-base+ #16
+    modprobe        D    0 10075  10064 0x80004080
+    Call Trace:
+     ? __schedule+0x4dd/0x610
+     ? ring_buffer_unlock_commit+0x23/0x100
+     schedule+0x6c/0x90
+     schedule_timeout+0x3b/0x320
+     ? trace_buffer_unlock_commit_regs+0x4f/0x1f0
+     wait_for_common+0x160/0x1a0
+     ? wake_up_q+0x80/0x80
+     { crypto_wait_req }             # entries in braces added by hand
+     { do_one_aead_op }
+     { test_aead_jiffies }
+     test_aead_speed.constprop.17+0x681/0xf30 [tcrypt]
+     do_test+0x4053/0x6a2b [tcrypt]
+     ? 0xffffffffa00f4000
+     tcrypt_mod_init+0x50/0x1000 [tcrypt]
+     ...
 
-Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
-Tested-by: Maarten Fonville <maarten.fonville@gmail.com>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199461
-Cc: stable@vger.kernel.org
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+The second modprobe command never finishes because in padata_reorder,
+CPU0's load of reorder_objects is executed before the unlocking store in
+spin_unlock_bh(pd->lock), causing CPU0 to miss CPU1's increment:
+
+CPU0                                 CPU1
+
+padata_reorder                       padata_do_serial
+  LOAD reorder_objects  // 0
+                                       INC reorder_objects  // 1
+                                       padata_reorder
+                                         TRYLOCK pd->lock   // failed
+  UNLOCK pd->lock
+
+CPU0 deletes the timer before returning from padata_reorder and since no
+other job is submitted to padata, modprobe waits indefinitely.
+
+Add a pair of full barriers to guarantee proper ordering:
+
+CPU0                                 CPU1
+
+padata_reorder                       padata_do_serial
+  UNLOCK pd->lock
+  smp_mb()
+  LOAD reorder_objects
+                                       INC reorder_objects
+                                       smp_mb__after_atomic()
+                                       padata_reorder
+                                         TRYLOCK pd->lock
+
+smp_mb__after_atomic is needed so the read part of the trylock operation
+comes after the INC, as Andrea points out.   Thanks also to Andrea for
+help with writing a litmus test.
+
+Fixes: 16295bec6398 ("padata: Generic parallelization/serialization interface")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: <stable@vger.kernel.org>
+Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/smp.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ kernel/padata.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/net/bluetooth/smp.c
-+++ b/net/bluetooth/smp.c
-@@ -2580,6 +2580,19 @@ static int smp_cmd_ident_addr_info(struc
- 		goto distribute;
- 	}
- 
-+	/* Drop IRK if peer is using identity address during pairing but is
-+	 * providing different address as identity information.
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -267,7 +267,12 @@ static void padata_reorder(struct parall
+ 	 * The next object that needs serialization might have arrived to
+ 	 * the reorder queues in the meantime, we will be called again
+ 	 * from the timer function if no one else cares for it.
 +	 *
-+	 * Microsoft Surface Precision Mouse is known to have this bug.
-+	 */
-+	if (hci_is_identity_address(&hcon->dst, hcon->dst_type) &&
-+	    (bacmp(&info->bdaddr, &hcon->dst) ||
-+	     info->addr_type != hcon->dst_type)) {
-+		bt_dev_err(hcon->hdev,
-+			   "ignoring IRK with invalid identity address");
-+		goto distribute;
-+	}
-+
- 	bacpy(&smp->id_addr, &info->bdaddr);
- 	smp->id_addr_type = info->addr_type;
++	 * Ensure reorder_objects is read after pd->lock is dropped so we see
++	 * an increment from another task in padata_do_serial.  Pairs with
++	 * smp_mb__after_atomic in padata_do_serial.
+ 	 */
++	smp_mb();
+ 	if (atomic_read(&pd->reorder_objects)
+ 			&& !(pinst->flags & PADATA_RESET))
+ 		mod_timer(&pd->timer, jiffies + HZ);
+@@ -387,6 +392,13 @@ void padata_do_serial(struct padata_priv
+ 	list_add_tail(&padata->list, &pqueue->reorder.list);
+ 	spin_unlock(&pqueue->reorder.lock);
  
++	/*
++	 * Ensure the atomic_inc of reorder_objects above is ordered correctly
++	 * with the trylock of pd->lock in padata_reorder.  Pairs with smp_mb
++	 * in padata_reorder.
++	 */
++	smp_mb__after_atomic();
++
+ 	put_cpu();
+ 
+ 	/* If we're running on the wrong CPU, call padata_reorder() via a
 
 
