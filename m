@@ -2,201 +2,94 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542DEC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE10C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EEF204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000109;
-	bh=9aeB6NRZVdSP5RGshcwkg63BhAw+StrHy+O20RXgD+8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qED2ru9+tYBMMa0dyNZtsGfbBBjHp9Azloy4RnkfzRBkG9go3Zax+jjGK5AF/pQO4
-	 x0dls/1UiE/pjkbTYEhdYTA1i1Fntu357OZYgVqsZqnCAJWcyG7GqUb/SQYGbFaYdm
-	 Z2/0Aiwu+1DAtZsZrVxR8YrMQQdaBbjj6VtEpMgE=
+	by mail.kernel.org (Postfix) with ESMTP id 4FAFC214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQuSOeR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388744AbfGXTee (ORCPT
+        id S2389509AbfGXU2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbfGXTec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 678BB20659;
-        Wed, 24 Jul 2019 19:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996870;
-        bh=9aeB6NRZVdSP5RGshcwkg63BhAw+StrHy+O20RXgD+8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFhSbnlL+hBaQmabA5Odx06+P9naOC6+yZV+ENJPkkP65UJvb2rDxh0qgicVTQWAP
-         9y8cuSsGVkjE2GgSKWVHB8Lx8yK5vEIvMdeOZhdgHZc2JQ+SfGDDuN+PvwR0j3bid3
-         hLal4LGglm46USyHAfVJwK4HGzLltWNIBykG7p10=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 244/413] net: hns3: fix __QUEUE_STATE_STACK_XOFF not cleared issue
-Date:   Wed, 24 Jul 2019 21:18:55 +0200
-Message-Id: <20190724191752.917807392@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:28:32 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40273 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728165AbfGXTe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:34:29 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w10so21719703pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1fDn3AFXXm19Ake8tU5gjq3MWC1W7K5qFY0eF05b2Pc=;
+        b=MQuSOeR9mj5QCC1q4RsYGdjizf19viLBu8D0muFmywAqDmossyMthj1BsTRNG8GwDI
+         kxGHWNPIj3YJR1RWdDp7q+atj144Oxc6UttaYcUuFECwrQVyHnbjrs/T/hkRg6c2APan
+         pkPDkRAUv4DyfkYuDSYr8lqe07nJw1WycUm1GdzJKL+XhWhy3CedPhbfcC/oZWDJX96Z
+         HphILDBSrUAMcxlSt5OQJiUdyFQKoKLtjOWQJAoTJBz4RfW0sl5Uv3RrbHmNfO618yw6
+         QFFO1qg0PjZsg8UfzVFJexHRrSi+j6VzvJ1Lix3GIyXS5Q3uM/Ng9CEbCxPzAi2ZGMlp
+         fYMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1fDn3AFXXm19Ake8tU5gjq3MWC1W7K5qFY0eF05b2Pc=;
+        b=CPt01Uck5X5NupSF8dpzNy5eLxx1kY9AoK0EvFhqwVCJVPHQm67G6ThOre22FcD6sj
+         eRHxOjoDJI9PRB2kZ3y22pgCB0idH00pKW/bGjdr8GtVtZsQVFjtFkA9YG4/G5T/Unzd
+         3beCjwDV7u23t2yLcK0CI6a7UB9DB/kmHoQbmXazDUEx1kGmqVky60sckhb7eMBgj8I2
+         JX26pmnw7oYJ+nFDGh6grlZuQLzCz6SEODdBJy8I9PN2dZAhQoVqBf9+N551fW+yMgM6
+         Onlwe4Oo4xtb+IiGyHj43ISDtq4MN9krVonokETyg3bvQwAqj5Zg8X25OOoYhdeRdSL4
+         87Tg==
+X-Gm-Message-State: APjAAAVCtXhe8ih34a/OJ+NLjgqFucDKJS8O8BvdTPKT47XszDx695Hp
+        hi8+dCiyai10W34H6VQ0348=
+X-Google-Smtp-Source: APXvYqzWJWqJ5BleMO/Ei96DUKZpyyodxYvZ1d6IP5GguMosVsO0BWc/rWyOZUkMH7b44piPkNU3oA==
+X-Received: by 2002:a17:90a:cb15:: with SMTP id z21mr43431285pjt.87.1563996868963;
+        Wed, 24 Jul 2019 12:34:28 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
+        by smtp.gmail.com with ESMTPSA id v7sm4447177pff.87.2019.07.24.12.34.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 12:34:28 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 01:04:19 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     sivanich@sgi.com, arnd@arndb.de, jhubbard@nvidia.com,
+        ira.weiny@intel.com, jglisse@redhat.com,
+        gregkh@linuxfoundation.org, william.kucharski@oracle.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v2 3/3] sgi-gru: Use __get_user_pages_fast in
+ atomic_pte_lookup
+Message-ID: <20190724193418.GA19421@bharath12345-Inspiron-5559>
+References: <20190724160929.GA14052@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724160929.GA14052@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f96315f2f17e7b2580d2fec7c4d6a706a131d904 ]
+On Wed, Jul 24, 2019 at 09:09:29AM -0700, Christoph Hellwig wrote:
+> I think the atomic_pte_lookup / non_atomic_pte_lookup helpers
+> should simply go away.  Most of the setup code is common now and should
+> be in the caller where it can be shared.  Then just do a:
+> 
+> 	if (atomic) {
+> 		__get_user_pages_fast()
+> 	} else {
+> 		get_user_pages_fast();
+> 	}
+> 
+> and we actually have an easy to understand piece of code.
 
-When change MTU or other operations, which just calling .reset_notify
-to do HNAE3_DOWN_CLIENT and HNAE3_UP_CLIENT, then
-the netdev_tx_reset_queue() in the hns3_clear_all_ring() will be
-ignored. So the dev_watchdog() may misdiagnose a TX timeout.
-
-This patch separates netdev_tx_reset_queue() from
-hns3_clear_all_ring(), and unifies hns3_clear_all_ring() and
-hns3_force_clear_all_ring into one, since they are doing
-similar things.
-
-Fixes: 3a30964a2eef ("net: hns3: delay ring buffer clearing during reset")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 54 +++++++++----------
- 1 file changed, 26 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index e0d3e2f9801d..66b691b7221f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -27,8 +27,7 @@
- #define hns3_set_field(origin, shift, val)	((origin) |= ((val) << (shift)))
- #define hns3_tx_bd_count(S)	DIV_ROUND_UP(S, HNS3_MAX_BD_SIZE)
- 
--static void hns3_clear_all_ring(struct hnae3_handle *h);
--static void hns3_force_clear_all_ring(struct hnae3_handle *h);
-+static void hns3_clear_all_ring(struct hnae3_handle *h, bool force);
- static void hns3_remove_hw_addr(struct net_device *netdev);
- 
- static const char hns3_driver_name[] = "hns3";
-@@ -466,6 +465,20 @@ static int hns3_nic_net_open(struct net_device *netdev)
- 	return 0;
- }
- 
-+static void hns3_reset_tx_queue(struct hnae3_handle *h)
-+{
-+	struct net_device *ndev = h->kinfo.netdev;
-+	struct hns3_nic_priv *priv = netdev_priv(ndev);
-+	struct netdev_queue *dev_queue;
-+	u32 i;
-+
-+	for (i = 0; i < h->kinfo.num_tqps; i++) {
-+		dev_queue = netdev_get_tx_queue(ndev,
-+						priv->ring_data[i].queue_index);
-+		netdev_tx_reset_queue(dev_queue);
-+	}
-+}
-+
- static void hns3_nic_net_down(struct net_device *netdev)
- {
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
-@@ -496,7 +509,9 @@ static void hns3_nic_net_down(struct net_device *netdev)
- 	 * to disable the ring through firmware when downing the netdev.
- 	 */
- 	if (!hns3_nic_resetting(netdev))
--		hns3_clear_all_ring(priv->ae_handle);
-+		hns3_clear_all_ring(priv->ae_handle, false);
-+
-+	hns3_reset_tx_queue(priv->ae_handle);
- }
- 
- static int hns3_nic_net_stop(struct net_device *netdev)
-@@ -3888,7 +3903,7 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
- 
- 	hns3_del_all_fd_rules(netdev, true);
- 
--	hns3_force_clear_all_ring(handle);
-+	hns3_clear_all_ring(handle, true);
- 
- 	hns3_uninit_phy(netdev);
- 
-@@ -4060,43 +4075,26 @@ static void hns3_force_clear_rx_ring(struct hns3_enet_ring *ring)
- 	}
- }
- 
--static void hns3_force_clear_all_ring(struct hnae3_handle *h)
--{
--	struct net_device *ndev = h->kinfo.netdev;
--	struct hns3_nic_priv *priv = netdev_priv(ndev);
--	struct hns3_enet_ring *ring;
--	u32 i;
--
--	for (i = 0; i < h->kinfo.num_tqps; i++) {
--		ring = priv->ring_data[i].ring;
--		hns3_clear_tx_ring(ring);
--
--		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
--		hns3_force_clear_rx_ring(ring);
--	}
--}
--
--static void hns3_clear_all_ring(struct hnae3_handle *h)
-+static void hns3_clear_all_ring(struct hnae3_handle *h, bool force)
- {
- 	struct net_device *ndev = h->kinfo.netdev;
- 	struct hns3_nic_priv *priv = netdev_priv(ndev);
- 	u32 i;
- 
- 	for (i = 0; i < h->kinfo.num_tqps; i++) {
--		struct netdev_queue *dev_queue;
- 		struct hns3_enet_ring *ring;
- 
- 		ring = priv->ring_data[i].ring;
- 		hns3_clear_tx_ring(ring);
--		dev_queue = netdev_get_tx_queue(ndev,
--						priv->ring_data[i].queue_index);
--		netdev_tx_reset_queue(dev_queue);
- 
- 		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
- 		/* Continue to clear other rings even if clearing some
- 		 * rings failed.
- 		 */
--		hns3_clear_rx_ring(ring);
-+		if (force)
-+			hns3_force_clear_rx_ring(ring);
-+		else
-+			hns3_clear_rx_ring(ring);
- 	}
- }
- 
-@@ -4305,8 +4303,8 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
- 		return 0;
- 	}
- 
--	hns3_clear_all_ring(handle);
--	hns3_force_clear_all_ring(handle);
-+	hns3_clear_all_ring(handle, true);
-+	hns3_reset_tx_queue(priv->ae_handle);
- 
- 	hns3_nic_uninit_vector_data(priv);
- 
--- 
-2.20.1
-
-
-
+That makes sense. I ll do that and send v3. I ll probably cut down on a
+patch and try to fold all the changes into a single patch removing the
+*pte_lookup helpers.
