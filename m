@@ -2,114 +2,118 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CD8C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D304C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA03521911
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563986064;
-	bh=y3wbn5DZyk5ePvAGBeCifCShVGEBIaWPBwKrtZ9mcAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uQREKyrOywfnAANcX3SHZaFmkkOb8AL5RKiap3BBdGpq23BrLSXjzI45UvQK+/w5y
-	 J5Vr+aIKX09ZcUr67Qg04q3olBTsjtk+gjBixvGxA+Ius7LUf7vBhsYekXuLX4e+y2
-	 k9+Tu5zC2r5GzZZdg2ARi4YFXMBgrUF3loPULsKs=
+	by mail.kernel.org (Postfix) with ESMTP id 698FC21911
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387453AbfGXQeX (ORCPT
+        id S1727389AbfGXQgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:34:23 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42581 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfGXQeV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:34:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id e20so60547492iob.9;
-        Wed, 24 Jul 2019 09:34:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/PlH4vZ2Uin7/bl42iN+WjnHNv+woMCrYa8NnQ7gWTo=;
-        b=aHuZkcNuMGMHD5BigUYhgH0LoZx3tXMinOI0MDXWoUEVQS+3MsFvrST9rSLnUfSZzY
-         T15zbPoE0y4Z+DGcmGikEyDxSGiD/dscrBWBm/YgV2unlICq/TRvgjOvO7pqOaovF9Du
-         Fbp/rWiQRwz6/cbo/CcFiNfVP3usTNDZZcCvXZQjT5ibFrpW0k2JFqQKlN+wICrlJlWN
-         h7eTwcNMzZypO0UPU8jqMQqGu61Cvwj+t1jr3X5rT6cHstZHv2vGRCNRKdpFNn7cR0wx
-         TUwpcgMV8zjXcCKVQIP8C722Um3+8xGTlAIw+RT1Hp/nrx2qgbB9qeST/u1MTCMADdWy
-         EhXg==
-X-Gm-Message-State: APjAAAXzpVc/m6ne/IGjLgg7aw2VTWdapv7x+DqBpgh4P4zXVYCd/7Oy
-        QxtMTs6SaApJTSgkEJC7ug==
-X-Google-Smtp-Source: APXvYqzjl58aQwxUq65IuKOZ/HpEXrjN4r3zsKMfMya48Uu06RIYqPgzl9UQEH9sk+bryVsjmlT/zg==
-X-Received: by 2002:a02:29ce:: with SMTP id p197mr24690823jap.139.1563986060805;
-        Wed, 24 Jul 2019 09:34:20 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id l2sm33217795ioh.20.2019.07.24.09.34.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 09:34:19 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 10:34:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Wed, 24 Jul 2019 12:36:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:43732 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726316AbfGXQgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:36:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3690E28;
+        Wed, 24 Jul 2019 09:36:49 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C337C3F71F;
+        Wed, 24 Jul 2019 09:36:46 -0700 (PDT)
+Subject: Re: [PATCH v9 19/21] mm: Add generic ptdump
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Tony Lindgren <tony@atomide.com>,
-        "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        David Lechner <david@lechnology.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
- bindings
-Message-ID: <20190724163419.GA29254@bogus>
-References: <20190708035243.12170-1-s-anna@ti.com>
- <20190708035243.12170-2-s-anna@ti.com>
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-20-steven.price@arm.com>
+ <20190723095747.GB8085@lakrids.cambridge.arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <ee707646-0196-63bb-45cc-6b949ae9530e@arm.com>
+Date:   Wed, 24 Jul 2019 17:36:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708035243.12170-2-s-anna@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190723095747.GB8085@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jul 2019 22:52:38 -0500, Suman Anna wrote:
-> The Programmable Real-Time Unit Subsystem (PRUSS) contains an interrupt
-> controller (INTC) that can handle various system input events and post
-> interrupts back to the device-level initiators. The INTC can support
-> upto 64 input events on most SoCs with individual control configuration
-> and hardware prioritization. These events are mapped onto 10 interrupt
-> lines through two levels of many-to-one mapping support. Different
-> interrupt lines are routed to the individual PRU cores or to the
-> host CPU or to other PRUSS instances.
+On 23/07/2019 10:57, Mark Rutland wrote:
+> On Mon, Jul 22, 2019 at 04:42:08PM +0100, Steven Price wrote:
+>> Add a generic version of page table dumping that architectures can
+>> opt-in to
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
 > 
-> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
-> commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
-> a higher number of host interrupts (20 vs 10) and can handle an increased
-> number of input events (160 vs 64) from various SoC interrupt sources.
+> [...]
 > 
-> Add the bindings document for these interrupt controllers on all the
-> applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
-> and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
-> architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
-> and J721E SoCs.
+>> +#ifdef CONFIG_KASAN
+>> +/*
+>> + * This is an optimization for KASAN=y case. Since all kasan page tables
+>> + * eventually point to the kasan_early_shadow_page we could call note_page()
+>> + * right away without walking through lower level page tables. This saves
+>> + * us dozens of seconds (minutes for 5-level config) while checking for
+>> + * W+X mapping or reading kernel_page_tables debugfs file.
+>> + */
+>> +static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
+>> +				    unsigned long addr)
+>> +{
+>> +	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
+>> +#ifdef CONFIG_X86
+>> +	    (pgtable_l5_enabled() &&
+>> +			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
+>> +#endif
+>> +	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
+>> +		st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
+>> +		return true;
+>> +	}
+>> +	return false;
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> Prior version: https://patchwork.kernel.org/patch/10795771/
+> Having you tried this with CONFIG_DEBUG_VIRTUAL?
 > 
->  .../interrupt-controller/ti,pruss-intc.txt    | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
-> 
+> The kasan_early_shadow_pmd is a kernel object rather than a linear map
+> object, so you should use __pa_symbol for that.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks for pointing that out - it is indeed broken on arm64. This was
+moved from x86 where CONFIG_DEBUG_VIRTUAL doesn't seem to pick this up.
+There is actually a problem here that 'pt' might not be in the linear
+map (so __pa(pt) barfs on arm64 as well as kasan_early_shadow_p?d).
+
+It looks like having the comparisons of the form "pt ==
+lm_alias(kasan_early_shadow_p?d)" is probably best.
+
+> It's a bit horrid to have to test multiple levels in one function; can't
+> we check the relevant level inline in each of the test_p?d funcs?
+> 
+> They're optional anyway, so they only need to be defined for
+> CONFIG_KASAN.
+
+Good point - removing the test_p?d callbacks when !CONFIG_KASAN
+simplifies the code.
+
+Thanks,
+
+Steve
