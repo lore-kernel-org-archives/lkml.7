@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AF2C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79A9C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7CF22BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9304421880
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033666;
-	bh=MF8rD2QGHB9J0ZLkwA0r7YPIlLeoGOqpJ0E+xa3tB/E=;
+	s=default; t=1564033673;
+	bh=K8tCOehphzHY0IO/sbGLCbhffAbFe0XqUIVhEKI7KQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KbKG2Giescv48ya+0nN4ZwhmIb5vhvz6Aigj9s9Q86YIjRJEWhurVU45EDRVlPCfX
-	 eA/cD6DvsF5CganQioJBnj4Q7bdWoP3aWrkhhcFiAzFR1QZ/+9soB0YLdJPDlUL6p4
-	 JQrqBT090Qu/P53D8qHUPJRy6FO3/zSYGGMYwCxc=
+	b=2DjT8mTwbkZfpgykwluKBgOZhajS6ePRc9L+0S6yDtSWAykbwYpUYcRi5qn7R13wL
+	 /DCu5YpX60RSxsj0xk6TCEzD/dbkfQsXrh2awG4uQJEbBvwL+oLqogxnOai78ugoVl
+	 oKZWYIuZWMjFtSROWXZnsGhkVhNkjbs3KoFldINw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfGYFrG (ORCPT
+        id S2391585AbfGYFrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:47:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34924 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:47:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388335AbfGYFrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:47:02 -0400
+        id S2391484AbfGYFqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:46:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3D6A2075C;
-        Thu, 25 Jul 2019 05:47:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B95021880;
+        Thu, 25 Jul 2019 05:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033621;
-        bh=MF8rD2QGHB9J0ZLkwA0r7YPIlLeoGOqpJ0E+xa3tB/E=;
+        s=default; t=1564033613;
+        bh=K8tCOehphzHY0IO/sbGLCbhffAbFe0XqUIVhEKI7KQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oEFbouYZ5/+mXId0xw+7g/2eAPqPlqRNZh3mKCukktiDS4kzOsidEMKBkvzmDwkv9
-         1RMj5dfTqYIwvi24d/wqr6qOi6T24L55Of/cYVao+r6nf4G3EF95fw5/c8DX4Upj+s
-         meKhmv5EI4dp8c6O/5wWZwk/krJl5VoJaK+u8ISU=
+        b=eQ6kJ6sYcfwbUydHHwCqwLovQv1uC6S1/a5skoJV+C8gswmjHA+T+kpZGUbEi0RmK
+         hyzANOja7Wh7MSCPJOct2oW48EarGcl7ZsI71d/ng0ApfgqasjJgdxRHGGsJ10/i0S
+         uxgHPdZqO7w8A32cmBoDKv2jhIplJIChT3dRSsww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 255/271] powerpc/32s: fix suspend/resume when IBATs 4-7 are used
-Date:   Wed, 24 Jul 2019 21:22:04 +0200
-Message-Id: <20190724191717.064056341@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Josua Mayer <josua@solid-run.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 269/271] net: mvmdio: allow up to four clocks to be specified for orion-mdio
+Date:   Wed, 24 Jul 2019 21:22:18 +0200
+Message-Id: <20190724191718.302497674@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,249 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Josua Mayer <josua@solid-run.com>
 
-commit 6ecb78ef56e08d2119d337ae23cb951a640dc52d upstream.
+commit 4aabed699c400810981d3dda170f05fa4d782905 upstream.
 
-Previously, only IBAT1 and IBAT2 were used to map kernel linear mem.
-Since commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
-STRICT_KERNEL_RWX"), we may have all 8 BATs used for mapping
-kernel text. But the suspend/restore functions only save/restore
-BATs 0 to 3, and clears BATs 4 to 7.
+Allow up to four clocks to be specified and enabled for the orion-mdio
+interface, which are required by the Armada 8k and defined in
+armada-cp110.dtsi.
 
-Make suspend and restore functions respectively save and reload
-the 8 BATs on CPUs having MMU_FTR_USE_HIGH_BATS feature.
+Fixes a hang in probing the mvmdio driver that was encountered on the
+Clearfog GT 8K with all drivers built as modules, but also affects other
+boards such as the MacchiatoBIN.
 
-Reported-by: Andreas Schwab <schwab@linux-m68k.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 96cb43423822 ("net: mvmdio: allow up to three clocks to be specified for orion-mdio")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/swsusp_32.S         |   73 ++++++++++++++++++++++++++++----
- arch/powerpc/platforms/powermac/sleep.S |   68 +++++++++++++++++++++++++++--
- 2 files changed, 128 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/marvell/mvmdio.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/swsusp_32.S
-+++ b/arch/powerpc/kernel/swsusp_32.S
-@@ -25,11 +25,19 @@
- #define SL_IBAT2	0x48
- #define SL_DBAT3	0x50
- #define SL_IBAT3	0x58
--#define SL_TB		0x60
--#define SL_R2		0x68
--#define SL_CR		0x6c
--#define SL_LR		0x70
--#define SL_R12		0x74	/* r12 to r31 */
-+#define SL_DBAT4	0x60
-+#define SL_IBAT4	0x68
-+#define SL_DBAT5	0x70
-+#define SL_IBAT5	0x78
-+#define SL_DBAT6	0x80
-+#define SL_IBAT6	0x88
-+#define SL_DBAT7	0x90
-+#define SL_IBAT7	0x98
-+#define SL_TB		0xa0
-+#define SL_R2		0xa8
-+#define SL_CR		0xac
-+#define SL_LR		0xb0
-+#define SL_R12		0xb4	/* r12 to r31 */
- #define SL_SIZE		(SL_R12 + 80)
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -64,7 +64,7 @@
  
- 	.section .data
-@@ -114,6 +122,41 @@ _GLOBAL(swsusp_arch_suspend)
- 	mfibatl	r4,3
- 	stw	r4,SL_IBAT3+4(r11)
- 
-+BEGIN_MMU_FTR_SECTION
-+	mfspr	r4,SPRN_DBAT4U
-+	stw	r4,SL_DBAT4(r11)
-+	mfspr	r4,SPRN_DBAT4L
-+	stw	r4,SL_DBAT4+4(r11)
-+	mfspr	r4,SPRN_DBAT5U
-+	stw	r4,SL_DBAT5(r11)
-+	mfspr	r4,SPRN_DBAT5L
-+	stw	r4,SL_DBAT5+4(r11)
-+	mfspr	r4,SPRN_DBAT6U
-+	stw	r4,SL_DBAT6(r11)
-+	mfspr	r4,SPRN_DBAT6L
-+	stw	r4,SL_DBAT6+4(r11)
-+	mfspr	r4,SPRN_DBAT7U
-+	stw	r4,SL_DBAT7(r11)
-+	mfspr	r4,SPRN_DBAT7L
-+	stw	r4,SL_DBAT7+4(r11)
-+	mfspr	r4,SPRN_IBAT4U
-+	stw	r4,SL_IBAT4(r11)
-+	mfspr	r4,SPRN_IBAT4L
-+	stw	r4,SL_IBAT4+4(r11)
-+	mfspr	r4,SPRN_IBAT5U
-+	stw	r4,SL_IBAT5(r11)
-+	mfspr	r4,SPRN_IBAT5L
-+	stw	r4,SL_IBAT5+4(r11)
-+	mfspr	r4,SPRN_IBAT6U
-+	stw	r4,SL_IBAT6(r11)
-+	mfspr	r4,SPRN_IBAT6L
-+	stw	r4,SL_IBAT6+4(r11)
-+	mfspr	r4,SPRN_IBAT7U
-+	stw	r4,SL_IBAT7(r11)
-+	mfspr	r4,SPRN_IBAT7L
-+	stw	r4,SL_IBAT7+4(r11)
-+END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
-+
- #if  0
- 	/* Backup various CPU config stuffs */
- 	bl	__save_cpu_setup
-@@ -279,27 +322,41 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
- 	mtibatu	3,r4
- 	lwz	r4,SL_IBAT3+4(r11)
- 	mtibatl	3,r4
--#endif
--
- BEGIN_MMU_FTR_SECTION
--	li	r4,0
-+	lwz	r4,SL_DBAT4(r11)
- 	mtspr	SPRN_DBAT4U,r4
-+	lwz	r4,SL_DBAT4+4(r11)
- 	mtspr	SPRN_DBAT4L,r4
-+	lwz	r4,SL_DBAT5(r11)
- 	mtspr	SPRN_DBAT5U,r4
-+	lwz	r4,SL_DBAT5+4(r11)
- 	mtspr	SPRN_DBAT5L,r4
-+	lwz	r4,SL_DBAT6(r11)
- 	mtspr	SPRN_DBAT6U,r4
-+	lwz	r4,SL_DBAT6+4(r11)
- 	mtspr	SPRN_DBAT6L,r4
-+	lwz	r4,SL_DBAT7(r11)
- 	mtspr	SPRN_DBAT7U,r4
-+	lwz	r4,SL_DBAT7+4(r11)
- 	mtspr	SPRN_DBAT7L,r4
-+	lwz	r4,SL_IBAT4(r11)
- 	mtspr	SPRN_IBAT4U,r4
-+	lwz	r4,SL_IBAT4+4(r11)
- 	mtspr	SPRN_IBAT4L,r4
-+	lwz	r4,SL_IBAT5(r11)
- 	mtspr	SPRN_IBAT5U,r4
-+	lwz	r4,SL_IBAT5+4(r11)
- 	mtspr	SPRN_IBAT5L,r4
-+	lwz	r4,SL_IBAT6(r11)
- 	mtspr	SPRN_IBAT6U,r4
-+	lwz	r4,SL_IBAT6+4(r11)
- 	mtspr	SPRN_IBAT6L,r4
-+	lwz	r4,SL_IBAT7(r11)
- 	mtspr	SPRN_IBAT7U,r4
-+	lwz	r4,SL_IBAT7+4(r11)
- 	mtspr	SPRN_IBAT7L,r4
- END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
-+#endif
- 
- 	/* Flush all TLBs */
- 	lis	r4,0x1000
---- a/arch/powerpc/platforms/powermac/sleep.S
-+++ b/arch/powerpc/platforms/powermac/sleep.S
-@@ -38,10 +38,18 @@
- #define SL_IBAT2	0x48
- #define SL_DBAT3	0x50
- #define SL_IBAT3	0x58
--#define SL_TB		0x60
--#define SL_R2		0x68
--#define SL_CR		0x6c
--#define SL_R12		0x70	/* r12 to r31 */
-+#define SL_DBAT4	0x60
-+#define SL_IBAT4	0x68
-+#define SL_DBAT5	0x70
-+#define SL_IBAT5	0x78
-+#define SL_DBAT6	0x80
-+#define SL_IBAT6	0x88
-+#define SL_DBAT7	0x90
-+#define SL_IBAT7	0x98
-+#define SL_TB		0xa0
-+#define SL_R2		0xa8
-+#define SL_CR		0xac
-+#define SL_R12		0xb0	/* r12 to r31 */
- #define SL_SIZE		(SL_R12 + 80)
- 
- 	.section .text
-@@ -126,6 +134,41 @@ _GLOBAL(low_sleep_handler)
- 	mfibatl	r4,3
- 	stw	r4,SL_IBAT3+4(r1)
- 
-+BEGIN_MMU_FTR_SECTION
-+	mfspr	r4,SPRN_DBAT4U
-+	stw	r4,SL_DBAT4(r1)
-+	mfspr	r4,SPRN_DBAT4L
-+	stw	r4,SL_DBAT4+4(r1)
-+	mfspr	r4,SPRN_DBAT5U
-+	stw	r4,SL_DBAT5(r1)
-+	mfspr	r4,SPRN_DBAT5L
-+	stw	r4,SL_DBAT5+4(r1)
-+	mfspr	r4,SPRN_DBAT6U
-+	stw	r4,SL_DBAT6(r1)
-+	mfspr	r4,SPRN_DBAT6L
-+	stw	r4,SL_DBAT6+4(r1)
-+	mfspr	r4,SPRN_DBAT7U
-+	stw	r4,SL_DBAT7(r1)
-+	mfspr	r4,SPRN_DBAT7L
-+	stw	r4,SL_DBAT7+4(r1)
-+	mfspr	r4,SPRN_IBAT4U
-+	stw	r4,SL_IBAT4(r1)
-+	mfspr	r4,SPRN_IBAT4L
-+	stw	r4,SL_IBAT4+4(r1)
-+	mfspr	r4,SPRN_IBAT5U
-+	stw	r4,SL_IBAT5(r1)
-+	mfspr	r4,SPRN_IBAT5L
-+	stw	r4,SL_IBAT5+4(r1)
-+	mfspr	r4,SPRN_IBAT6U
-+	stw	r4,SL_IBAT6(r1)
-+	mfspr	r4,SPRN_IBAT6L
-+	stw	r4,SL_IBAT6+4(r1)
-+	mfspr	r4,SPRN_IBAT7U
-+	stw	r4,SL_IBAT7(r1)
-+	mfspr	r4,SPRN_IBAT7L
-+	stw	r4,SL_IBAT7+4(r1)
-+END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
-+
- 	/* Backup various CPU config stuffs */
- 	bl	__save_cpu_setup
- 
-@@ -326,22 +369,37 @@ grackle_wake_up:
- 	mtibatl	3,r4
- 
- BEGIN_MMU_FTR_SECTION
--	li	r4,0
-+	lwz	r4,SL_DBAT4(r1)
- 	mtspr	SPRN_DBAT4U,r4
-+	lwz	r4,SL_DBAT4+4(r1)
- 	mtspr	SPRN_DBAT4L,r4
-+	lwz	r4,SL_DBAT5(r1)
- 	mtspr	SPRN_DBAT5U,r4
-+	lwz	r4,SL_DBAT5+4(r1)
- 	mtspr	SPRN_DBAT5L,r4
-+	lwz	r4,SL_DBAT6(r1)
- 	mtspr	SPRN_DBAT6U,r4
-+	lwz	r4,SL_DBAT6+4(r1)
- 	mtspr	SPRN_DBAT6L,r4
-+	lwz	r4,SL_DBAT7(r1)
- 	mtspr	SPRN_DBAT7U,r4
-+	lwz	r4,SL_DBAT7+4(r1)
- 	mtspr	SPRN_DBAT7L,r4
-+	lwz	r4,SL_IBAT4(r1)
- 	mtspr	SPRN_IBAT4U,r4
-+	lwz	r4,SL_IBAT4+4(r1)
- 	mtspr	SPRN_IBAT4L,r4
-+	lwz	r4,SL_IBAT5(r1)
- 	mtspr	SPRN_IBAT5U,r4
-+	lwz	r4,SL_IBAT5+4(r1)
- 	mtspr	SPRN_IBAT5L,r4
-+	lwz	r4,SL_IBAT6(r1)
- 	mtspr	SPRN_IBAT6U,r4
-+	lwz	r4,SL_IBAT6+4(r1)
- 	mtspr	SPRN_IBAT6L,r4
-+	lwz	r4,SL_IBAT7(r1)
- 	mtspr	SPRN_IBAT7U,r4
-+	lwz	r4,SL_IBAT7+4(r1)
- 	mtspr	SPRN_IBAT7L,r4
- END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
- 
+ struct orion_mdio_dev {
+ 	void __iomem *regs;
+-	struct clk *clk[3];
++	struct clk *clk[4];
+ 	/*
+ 	 * If we have access to the error interrupt pin (which is
+ 	 * somewhat misnamed as it not only reflects internal errors
 
 
