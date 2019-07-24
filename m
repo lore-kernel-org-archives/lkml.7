@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AC0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0A1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB0A22ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BEA205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998206;
-	bh=4eUvF33BJGJmLIcTfsllVxlZ1WR6hcuXpNWqFJYb9Xg=;
+	s=default; t=1563998212;
+	bh=dW9JTn8nEaaE0+3GmnwWqHXGXU+tjSb0jTUMRVNkOfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=siPgtd+E63nPoLwYSIwLlrEs5nCJ7vTFid8IBZ8xwXd9vBVc01OHCNyDjUQiPQ2Kq
-	 thAyqTVZNMHDCTWKD+EZWqv+7Ql3hM1s8VLnpGJGX8+2VGGSuX9UObRYj6HSexHzZV
-	 16OfaKPNElKXhR4j3zgaCOS4RI5qNdYTadr4wfYU=
+	b=tw5HppkpvBZSSgt78Mj6Hz8eDWSuVJV2zhgRN91pl7kmJLYMOTvReEJOzgt+sSsfG
+	 VMQi/59MZh9VNiLmBXLbLH52cnUTk7oJ6yU9TngZWObHZDDWmC39t1LSsAnz/m+VzH
+	 0kmJwvX4uIgf3mm3CRIa3DirY3XsTG4/ysd7RO3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404704AbfGXT4o (ORCPT
+        id S2391820AbfGXT4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404404AbfGXT4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:43 -0400
+        id S2404404AbfGXT4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3CC422BEB;
-        Wed, 24 Jul 2019 19:56:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A3021873;
+        Wed, 24 Jul 2019 19:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998202;
-        bh=4eUvF33BJGJmLIcTfsllVxlZ1WR6hcuXpNWqFJYb9Xg=;
+        s=default; t=1563998207;
+        bh=dW9JTn8nEaaE0+3GmnwWqHXGXU+tjSb0jTUMRVNkOfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+LGyNgzhCmzr/SmrLfGitTEWkGXNGyqnhVZyqx0qqozbfO8BsrGHHkuQ+9mGFvGi
-         U7Edkm+apNXSDvh97Ep/E20dGBJVz/xwT+K+9/mD8PenmT45zPS+OEpz/JJoB1J6FJ
-         zoLrRCQeKwb2fVXg2C4q22PLaBZ320uC3brHAi90=
+        b=SQJwLEtYGm2dRoY6veUq8qgmRb0E4sCzfXEYWwyTucMLOeJZQMIducQa8qUscuCuV
+         dMOl74pPwU9ufDaEedhMpOXm+0UZ46LwoEHG6Q30lWOat8Sy1g7aB1frAsTVJ/BOSy
+         NCEK0shqXmOhcXaleOzluHiObrJeL714mrbMUndU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.1 281/371] pnfs: Fix a problem where we gratuitously start doing I/O through the MDS
-Date:   Wed, 24 Jul 2019 21:20:33 +0200
-Message-Id: <20190724191745.428451845@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.1 283/371] lib/scatterlist: Fix mapping iterator when sg->offset is greater than PAGE_SIZE
+Date:   Wed, 24 Jul 2019 21:20:35 +0200
+Message-Id: <20190724191745.573167231@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,33 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 58bbeab425c6c5e318f5b6ae31d351331ddfb34b upstream.
+commit aeb87246537a83c2aff482f3f34a2e0991e02cbc upstream.
 
-If the client has to stop in pnfs_update_layout() to wait for another
-layoutget to complete, it currently exits and defaults to I/O through
-the MDS if the layoutget was successful.
+All mapping iterator logic is based on the assumption that sg->offset
+is always lower than PAGE_SIZE.
 
-Fixes: d03360aaf5cc ("pNFS: Ensure we return the error if someone kills...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.20+
+But there are situations where sg->offset is such that the SG item
+is on the second page. In that case sg_copy_to_buffer() fails
+properly copying the data into the buffer. One of the reason is
+that the data will be outside the kmapped area used to access that
+data.
+
+This patch fixes the issue by adjusting the mapping iterator
+offset and pgoffset fields such that offset is always lower than
+PAGE_SIZE.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 4225fc8555a9 ("lib/scatterlist: use page iterator in the mapping iterator")
+Cc: stable@vger.kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pnfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/scatterlist.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1890,7 +1890,7 @@ lookup_again:
- 		spin_unlock(&ino->i_lock);
- 		lseg = ERR_PTR(wait_var_event_killable(&lo->plh_outstanding,
- 					!atomic_read(&lo->plh_outstanding)));
--		if (IS_ERR(lseg) || !list_empty(&lo->plh_segs))
-+		if (IS_ERR(lseg))
- 			goto out_put_layout_hdr;
- 		pnfs_put_layout_hdr(lo);
- 		goto lookup_again;
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -678,17 +678,18 @@ static bool sg_miter_get_next_page(struc
+ {
+ 	if (!miter->__remaining) {
+ 		struct scatterlist *sg;
+-		unsigned long pgoffset;
+ 
+ 		if (!__sg_page_iter_next(&miter->piter))
+ 			return false;
+ 
+ 		sg = miter->piter.sg;
+-		pgoffset = miter->piter.sg_pgoffset;
+ 
+-		miter->__offset = pgoffset ? 0 : sg->offset;
++		miter->__offset = miter->piter.sg_pgoffset ? 0 : sg->offset;
++		miter->piter.sg_pgoffset += miter->__offset >> PAGE_SHIFT;
++		miter->__offset &= PAGE_SIZE - 1;
+ 		miter->__remaining = sg->offset + sg->length -
+-				(pgoffset << PAGE_SHIFT) - miter->__offset;
++				     (miter->piter.sg_pgoffset << PAGE_SHIFT) -
++				     miter->__offset;
+ 		miter->__remaining = min_t(unsigned long, miter->__remaining,
+ 					   PAGE_SIZE - miter->__offset);
+ 	}
 
 
