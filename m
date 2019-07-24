@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC35C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D5CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862A320659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B2521951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996907;
-	bh=9XV6RrFeBCprK+8tRB0d3BlXwDhOM4YtCH/KQXnD/j4=;
+	s=default; t=1563996917;
+	bh=AP55X1PqztwacX+FE9hkkP/VFQux9rxqmPCX8qc+YsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSE5zqsMTy0fBQta8XHJORrTy5W6gXo/Jt5LS9Gx6QGZZr1fb3bnApl8SsjSXgeab
-	 ueRbbUYYcr3mJv+aOCtFxk1FXC/+Pj581qwOWm1X7WDOno2fbklw75L+iYYZpyeR85
-	 I7hjNAiGMXnC8raZ86bJPECUjN4gtQNmvzSKN1XI=
+	b=nNWVAftd3wUdw6YzuUEem1gtgnVFWlThiN46F99iBd8Josw1qfKy8CvD07ZvpcPUF
+	 YEqKRcqOgeG5nNos9W4b8gB153DyJ5196kSbxhqRYI88nCzWvL8ox9oKcKJMimJ5R5
+	 76fBwNTsH85/jg10L5zP5dJgVrQaPaDcsP/uzIAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389146AbfGXTfG (ORCPT
+        id S2389175AbfGXTfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58116 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:35:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389134AbfGXTfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:01 -0400
+        id S2389154AbfGXTfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0FA922BE8;
-        Wed, 24 Jul 2019 19:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9CE62238C;
+        Wed, 24 Jul 2019 19:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996900;
-        bh=9XV6RrFeBCprK+8tRB0d3BlXwDhOM4YtCH/KQXnD/j4=;
+        s=default; t=1563996912;
+        bh=AP55X1PqztwacX+FE9hkkP/VFQux9rxqmPCX8qc+YsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BIq6e7kVjYOnWEXTefsMWvoajDs1ZUHwIWD4ZilW4xGLunix9HpuFsnLa9DBqHG4M
-         373r6oWIZ6n2ASCHBc76FZ7QFu67OArg6s96LAn27zbu97kswi2TiRmavyLy5brSHP
-         blHexX6stUiZ4K0/cQqIk1CGuO504ULccD8ZrjKI=
+        b=pEIKaparyjUitXuevUX+PuIVzoivUROjpX7TgEoLv6UcGGIcC02GXVwUaDjb0kh0D
+         W9w17V4InVfvE/77Wlyd10RhJ0qSmhum+QVJSgCqTN7XeybGCfR05xJOI//I5DfIoB
+         rZP+EnTtdwBlR0h6wl7N1yPbbsNCNpHQLMSRfrzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 213/413] perf stat: Fix group lookup for metric group
-Date:   Wed, 24 Jul 2019 21:18:24 +0200
-Message-Id: <20190724191749.765374742@linuxfoundation.org>
+Subject: [PATCH 5.2 207/413] bnxt_en: Fix statistics context reservation logic for RDMA driver.
+Date:   Wed, 24 Jul 2019 21:18:18 +0200
+Message-Id: <20190724191749.324005847@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,122 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2f87f33f4226523df9c9cc28f9874ea02fcc3d3f ]
+[ Upstream commit d77b1ad8e87dc5a6cd0d9158b097a4817946ca3b ]
 
-The metric group code tries to find a group it added earlier in the
-evlist. Fix the lookup to handle groups with partially overlaps
-correctly. When a sub string match fails and we reset the match, we have
-to compare the first element again.
+The current logic assumes that the RDMA driver uses one statistics
+context adjacent to the ones used by the network driver.  This
+assumption is not true and the statistics context used by the
+RDMA driver is tied to its MSIX base vector.  This wrong assumption
+can cause RDMA driver failure after changing ethtool rings on the
+network side.  Fix the statistics reservation logic accordingly.
 
-I also renamed the find_evsel function to find_evsel_group to make its
-purpose clearer.
-
-With the earlier changes this fixes:
-
-Before:
-
-  % perf stat -M UPI,IPC sleep 1
-  ...
-         1,032,922      uops_retired.retire_slots #      1.1 UPI
-         1,896,096      inst_retired.any
-         1,896,096      inst_retired.any
-         1,177,254      cpu_clk_unhalted.thread
-
-After:
-
-  % perf stat -M UPI,IPC sleep 1
-  ...
-        1,013,193      uops_retired.retire_slots #      1.1 UPI
-           932,033      inst_retired.any
-           932,033      inst_retired.any          #      0.9 IPC
-         1,091,245      cpu_clk_unhalted.thread
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Fixes: b18f3e365019 ("perf stat: Support JSON metrics in perf stat")
-Link: http://lkml.kernel.org/r/20190624193711.35241-4-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 780baad44f0f ("bnxt_en: Reserve 1 stat_ctx for RDMA driver.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/metricgroup.c | 47 ++++++++++++++++++++++++++---------
- 1 file changed, 35 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 699e020737d9..fabdb6dde88e 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -85,26 +85,49 @@ struct egroup {
- 	const char *metric_expr;
- };
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index b9bc829aa9da..9090c79387c1 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -5508,7 +5508,16 @@ static int bnxt_cp_rings_in_use(struct bnxt *bp)
  
--static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
--				     const char **ids,
--				     int idnum,
--				     struct perf_evsel **metric_events)
-+static bool record_evsel(int *ind, struct perf_evsel **start,
-+			 int idnum,
-+			 struct perf_evsel **metric_events,
-+			 struct perf_evsel *ev)
-+{
-+	metric_events[*ind] = ev;
-+	if (*ind == 0)
-+		*start = ev;
-+	if (++*ind == idnum) {
-+		metric_events[*ind] = NULL;
-+		return true;
-+	}
-+	return false;
-+}
-+
-+static struct perf_evsel *find_evsel_group(struct perf_evlist *perf_evlist,
-+					   const char **ids,
-+					   int idnum,
-+					   struct perf_evsel **metric_events)
+ static int bnxt_get_func_stat_ctxs(struct bnxt *bp)
  {
- 	struct perf_evsel *ev, *start = NULL;
- 	int ind = 0;
+-	return bp->cp_nr_rings + bnxt_get_ulp_stat_ctxs(bp);
++	int ulp_stat = bnxt_get_ulp_stat_ctxs(bp);
++	int cp = bp->cp_nr_rings;
++
++	if (!ulp_stat)
++		return cp;
++
++	if (bnxt_nq_rings_in_use(bp) > cp + bnxt_get_ulp_msix_num(bp))
++		return bnxt_get_ulp_msix_base(bp) + ulp_stat;
++
++	return cp + ulp_stat;
+ }
  
- 	evlist__for_each_entry (perf_evlist, ev) {
-+		if (ev->collect_stat)
-+			continue;
- 		if (!strcmp(ev->name, ids[ind])) {
--			metric_events[ind] = ev;
--			if (ind == 0)
--				start = ev;
--			if (++ind == idnum) {
--				metric_events[ind] = NULL;
-+			if (record_evsel(&ind, &start, idnum,
-+					 metric_events, ev))
- 				return start;
--			}
- 		} else {
-+			/*
-+			 * We saw some other event that is not
-+			 * in our list of events. Discard
-+			 * the whole match and start again.
-+			 */
- 			ind = 0;
- 			start = NULL;
-+			if (!strcmp(ev->name, ids[ind])) {
-+				if (record_evsel(&ind, &start, idnum,
-+						 metric_events, ev))
-+					return start;
-+			}
- 		}
- 	}
- 	/*
-@@ -134,8 +157,8 @@ static int metricgroup__setup_events(struct list_head *groups,
- 			ret = -ENOMEM;
- 			break;
- 		}
--		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
--				   metric_events);
-+		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
-+					 metric_events);
- 		if (!evsel) {
- 			pr_debug("Cannot resolve %s: %s\n",
- 					eg->metric_name, eg->metric_expr);
+ static bool bnxt_need_reserve_rings(struct bnxt *bp)
+@@ -7477,11 +7486,7 @@ unsigned int bnxt_get_avail_cp_rings_for_en(struct bnxt *bp)
+ 
+ unsigned int bnxt_get_avail_stat_ctxs_for_en(struct bnxt *bp)
+ {
+-	unsigned int stat;
+-
+-	stat = bnxt_get_max_func_stat_ctxs(bp) - bnxt_get_ulp_stat_ctxs(bp);
+-	stat -= bp->cp_nr_rings;
+-	return stat;
++	return bnxt_get_max_func_stat_ctxs(bp) - bnxt_get_func_stat_ctxs(bp);
+ }
+ 
+ int bnxt_get_avail_msix(struct bnxt *bp, int num)
 -- 
 2.20.1
 
