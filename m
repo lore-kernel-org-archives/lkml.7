@@ -2,80 +2,102 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC59AC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56292C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A162222ADB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AA022ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:17:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+XNfrK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbfGXORs (ORCPT
+        id S1728088AbfGXOR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:17:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34516 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726287AbfGXORs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:17:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF428AE44;
-        Wed, 24 Jul 2019 14:17:46 +0000 (UTC)
-Message-ID: <1563977855.4670.8.camel@suse.com>
-Subject: Re: KASAN: use-after-free Read in usbhid_power
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+ef5de9c4f99c4edb4e49@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, syzkaller-bugs@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Date:   Wed, 24 Jul 2019 16:17:35 +0200
-In-Reply-To: <000000000000bb4247058e589a20@google.com>
-References: <000000000000bb4247058e589a20@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jul 2019 10:17:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45756 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfGXORz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:17:55 -0400
+Received: by mail-io1-f68.google.com with SMTP id g20so89896576ioc.12;
+        Wed, 24 Jul 2019 07:17:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=pl9nO+hunkGocGh4P+3+7RACb7n3AOCHKdRk3PRyj78=;
+        b=d+XNfrK6cC2Wn6gvabfhUWgJIeVpcGO/Uu6+pC4RCQJKyw8+NBSwGR+cTC1MJoLo9U
+         4Bvz3/JgJ93WJZHfxWtpb2r4Os/qZFoXxSYw3p6B+r0VnCJ5SjW7ijFZh9F9rIxVWChe
+         1YId1MFsU/1UthPqnat5tRtc6PS+q3PhlR2GoZC8hu/oMgMA8+5rwLD9B9YLZHqe1zrk
+         KEZfQasCdQdlIbaNNOXHSkTc3gPNsVq5Kc1MDosgLPKRBrKNBcHAEUwZIHHh/7gkQNg1
+         Ap20T3173w8lr1Au0OGiB7k0bVRE+A91zvqCi0Pm3+tsgrshgEtOcxHtklEsIWDwxsaV
+         BSuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=pl9nO+hunkGocGh4P+3+7RACb7n3AOCHKdRk3PRyj78=;
+        b=G800u9F601nF9E/sFWTFyBNQPRqPKJR1kOkB2/a39ntPq7KiAOWg+Hxz5ylH03dyEB
+         BNoT9kh1SH7AVyZnWZi1jSICIurkbk1GaqjcXUzvTDoiSmsz1Pjkyq+uA5agCFTpiVga
+         VRlgtXzrXhou7y73IUSkd54rvxuNGjaC049PH4/BgWlDMRls6BS7uwV5M15YiBsgiosG
+         curpwgTrE18Ip4gsusMZnSZeFlYOG+ACcnMJf5O8TKYumepAEOxrpqXbNIM/bIjkQjWr
+         wpOu10ctBzncgFe/9VntB7iEUMWCGWu1tGshqcSteibdMzDnHcs2y54lyq5HDcYRdVmo
+         8Z2A==
+X-Gm-Message-State: APjAAAU/THL7FxR7XxUluyxNv8Fm5W1hwxydvl74sBoJQSDCBY5T3aMC
+        Gyxq8hi6EFlvapfEWp+ixLg=
+X-Google-Smtp-Source: APXvYqz9OF+x2WTGlu/HH4W5NyZIEwxfrCRlfhLTUcbrr1zQuVHHj1E9ruPCRHw4aSTh73+cpex+cg==
+X-Received: by 2002:a02:6016:: with SMTP id i22mr60556184jac.56.1563977874678;
+        Wed, 24 Jul 2019 07:17:54 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id p25sm37377171iol.48.2019.07.24.07.17.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 07:17:53 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     kvalo@codeaurora.org
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        secalert@redhat.com, Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jakub Kicinski <kubakici@wp.pl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mt7601u: null check the allocation
+Date:   Wed, 24 Jul 2019 09:17:36 -0500
+Message-Id: <20190724141736.29994-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <87d0i00z4t.fsf@kamboji.qca.qualcomm.com>
+References: <87d0i00z4t.fsf@kamboji.qca.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 23.07.2019, 05:48 -0700 schrieb syzbot:
-> 
-> Freed by task 243:
->   save_stack+0x1b/0x80 /mm/kasan/common.c:71
->   set_track /mm/kasan/common.c:79 [inline]
->   __kasan_slab_free+0x130/0x180 /mm/kasan/common.c:451
->   slab_free_hook /mm/slub.c:1421 [inline]
->   slab_free_freelist_hook /mm/slub.c:1448 [inline]
->   slab_free /mm/slub.c:2994 [inline]
->   kfree+0xd7/0x280 /mm/slub.c:3949
->   skb_free_head+0x8b/0xa0 /net/core/skbuff.c:588
->   skb_release_data+0x41f/0x7c0 /net/core/skbuff.c:608
->   skb_release_all+0x46/0x60 /net/core/skbuff.c:662
->   __kfree_skb /net/core/skbuff.c:676 [inline]
->   consume_skb /net/core/skbuff.c:736 [inline]
->   consume_skb+0xc0/0x2f0 /net/core/skbuff.c:730
->   skb_free_datagram+0x16/0xf0 /net/core/datagram.c:328
->   netlink_recvmsg+0x65e/0xea0 /net/netlink/af_netlink.c:2001
->   sock_recvmsg_nosec /net/socket.c:877 [inline]
->   sock_recvmsg /net/socket.c:894 [inline]
->   sock_recvmsg+0xca/0x110 /net/socket.c:890
->   ___sys_recvmsg+0x271/0x5a0 /net/socket.c:2448
->   __sys_recvmsg+0xe9/0x1b0 /net/socket.c:2497
->   do_syscall_64+0xb7/0x560 /arch/x86/entry/common.c:301
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+devm_kzalloc may fail and return NULL. So the null check is needed.
 
-How reliable is this trace? It seems very likely to me that this bug
-is the same bug as
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/wireless/mediatek/mt7601u/init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-syzbot <syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com>
-KASAN: use-after-free Read in hidraw_ioctl
-
-which shows a race with disconnect() instead of some networking code,
-which I really cannot fathom.
-
-	Regards
-		Oliver
+diff --git a/drivers/net/wireless/mediatek/mt7601u/init.c b/drivers/net/wireless/mediatek/mt7601u/init.c
+index 9bfac9f1d47f..cada48800928 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/init.c
++++ b/drivers/net/wireless/mediatek/mt7601u/init.c
+@@ -557,6 +557,9 @@ mt76_init_sband_2g(struct mt7601u_dev *dev)
+ {
+ 	dev->sband_2g = devm_kzalloc(dev->dev, sizeof(*dev->sband_2g),
+ 				     GFP_KERNEL);
++	if (!dev->sband_2g)
++		return -ENOMEM;
++
+ 	dev->hw->wiphy->bands[NL80211_BAND_2GHZ] = dev->sband_2g;
+ 
+ 	WARN_ON(dev->ee->reg.start - 1 + dev->ee->reg.num >
+-- 
+2.17.1
 
