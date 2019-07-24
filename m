@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE48CC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D5EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D25822ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83FC22ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997137;
-	bh=1ISgymW0dhzU5kusBtoD+doCSuaV84R8I3wlBCcZM9Y=;
+	s=default; t=1563997140;
+	bh=BYgD140YwXZPbXuTbm/opODkBbWxfFqvPxTOrrDkIHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kE5ggRZKOdqE6DSKsOYNTfT5h9of4JqigYTjmNzgk2+GwY7XvluopKGk4sD28tqDT
-	 a3tiAI41BVnCtGx1TjK02cmMxYQtPtcIg7FCW8U264gSHIRA8vN8yn8hlYs3VNoDi/
-	 XSulkGMPd4Om+fQcOsDRpYAhO0pQ7VZ5g8OtwkQA=
+	b=hgOjlb0rRPtAT0zpEAXuf0sthdgI4i8sY2HLBk+nlnmKFmK8Oo2Yl7HGrclwMB/jL
+	 YiEPCH+f7/3Ges/Q02E7EprjeWbQDY8jXiCF1SLe1RA1H9Jv8TgDYcT2kPT/VFhtZV
+	 64eF5pDrhikRmqf4p+MrJ+z32TpPM7jR/RbfSuk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389337AbfGXTi4 (ORCPT
+        id S2389828AbfGXTi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:38:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39690 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:38:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388130AbfGXTiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:38:52 -0400
+        id S2389063AbfGXTi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:38:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F8F8214AF;
-        Wed, 24 Jul 2019 19:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE53229F4;
+        Wed, 24 Jul 2019 19:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997131;
-        bh=1ISgymW0dhzU5kusBtoD+doCSuaV84R8I3wlBCcZM9Y=;
+        s=default; t=1563997136;
+        bh=BYgD140YwXZPbXuTbm/opODkBbWxfFqvPxTOrrDkIHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bz5GxgP3W+varUlBf4X4yQAh+jkS+N2itZRhqFk6Z5Rk7b4W7H/cBTeuqkEchNCOF
-         VeVvpSvDXnqSGamPrI1yzCQs4u6mWaK0qdI26Q4BLq6vWGIEfkYtfLG1JixumTWvc4
-         wA/MNbBsKkxkcNdJFR38Yc4KklwKJ/YGOwsme2dw=
+        b=Tyv3O0fn8tOQAOT+TyaaSFXA122WlL8UYtKyWzQpxMaHxsjt17O/bgnwvtWlHWhmN
+         m2xaTcZ6gnUZ1aeRDpFhUNfm0nKdQalMyPvie1FwypQsbGwMegq8RrZVATwFIMLLZd
+         Tio0r5n9nVu+WRi0CHab642fcMOfUb0ZnBlQMiB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaoyao Li <xiaoyao.li@linux.intel.com>,
-        Tao Xu <tao3.xu@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH 5.2 330/413] KVM: VMX: check CPUID before allowing read/write of IA32_XSS
-Date:   Wed, 24 Jul 2019 21:20:21 +0200
-Message-Id: <20190724191759.454363598@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 332/413] KVM: PPC: Book3S HV: Signed extend decrementer value if not using large decrementer
+Date:   Wed, 24 Jul 2019 21:20:23 +0200
+Message-Id: <20190724191759.582493703@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,52 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 
-commit 4d763b168e9c5c366b05812c7bba7662e5ea3669 upstream.
+commit 869537709ebf1dc865e75c3fc97b23f8acf37c16 upstream.
 
-Raise #GP when guest read/write IA32_XSS, but the CPUID bits
-say that it shouldn't exist.
+On POWER9 the decrementer can operate in large decrementer mode where
+the decrementer is 56 bits and signed extended to 64 bits. When not
+operating in this mode the decrementer behaves as a 32 bit decrementer
+which is NOT signed extended (as on POWER8).
 
-Fixes: 203000993de5 (kvm: vmx: add MSR logic for XSAVES)
-Reported-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Reported-by: Tao Xu <tao3.xu@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Currently when reading a guest decrementer value we don't take into
+account whether the large decrementer is enabled or not, and this
+means the value will be incorrect when the guest is not using the
+large decrementer. Fix this by sign extending the value read when the
+guest isn't using the large decrementer.
+
+Fixes: 95a6432ce903 ("KVM: PPC: Book3S HV: Streamlined guest entry/exit path on P9 for radix guests")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/vmx.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1718,7 +1718,10 @@ static int vmx_get_msr(struct kvm_vcpu *
- 		return vmx_get_vmx_msr(&vmx->nested.msrs, msr_info->index,
- 				       &msr_info->data);
- 	case MSR_IA32_XSS:
--		if (!vmx_xsaves_supported())
-+		if (!vmx_xsaves_supported() ||
-+		    (!msr_info->host_initiated &&
-+		     !(guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
-+		       guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))))
- 			return 1;
- 		msr_info->data = vcpu->arch.ia32_xss;
- 		break;
-@@ -1933,7 +1936,10 @@ static int vmx_set_msr(struct kvm_vcpu *
- 			return 1;
- 		return vmx_set_vmx_msr(vcpu, msr_index, data);
- 	case MSR_IA32_XSS:
--		if (!vmx_xsaves_supported())
-+		if (!vmx_xsaves_supported() ||
-+		    (!msr_info->host_initiated &&
-+		     !(guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) &&
-+		       guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))))
- 			return 1;
- 		/*
- 		 * The only supported bit as of Skylake is bit 8, but
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -3603,6 +3603,8 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu
+ 
+ 	vcpu->arch.slb_max = 0;
+ 	dec = mfspr(SPRN_DEC);
++	if (!(lpcr & LPCR_LD)) /* Sign extend if not using large decrementer */
++		dec = (s32) dec;
+ 	tb = mftb();
+ 	vcpu->arch.dec_expires = dec + tb;
+ 	vcpu->cpu = -1;
 
 
