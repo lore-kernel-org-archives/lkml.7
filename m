@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778D6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC141C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E412218EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67FB218F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996209;
-	bh=Rt0PC1JgR9WJmXlATmn8jJ2a0PfbmV4aPKTVHN9V5S8=;
+	s=default; t=1563996215;
+	bh=E06qOU/TbsjBXHsCMeVvt2IuRjYwXwW1DtBuGYA5hP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhDM4aFNoAOEELhmKYQjjWLnRZt/YH2CKvgcEpsRHHK/g5bY82emhgLfZlChscbN9
-	 Nkf8Mn2LKaYMU2Zyag2yFLuwd38qjQbFA+FFeUA39oOzSTBauLQJ4JerJyqfkIQsU2
-	 tpv0dGDgZUyO3kji74jNzLSCTBXN0zh9O9pY+iKY=
+	b=eDv6BbwF3P+F4TpTsqgRiMtU1MlLZq7JDMw3+oj9VEJyzm5Y4hRG5JeZbwiTi015z
+	 uz1xsJCL9wepTGavQ/lJfZgMieOVghei1T1vjGuORnj2EGp0Xwg/zetjTjUFsX6Weq
+	 3QR2NMouH7XmnN5xUh2ZsDoNIR3MOMPgo2KKAJas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387806AbfGXTX1 (ORCPT
+        id S1727519AbfGXTXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39104 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbfGXTXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:23:24 -0400
+        id S2387790AbfGXTXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:23:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73447218EA;
-        Wed, 24 Jul 2019 19:23:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8869218EA;
+        Wed, 24 Jul 2019 19:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996203;
-        bh=Rt0PC1JgR9WJmXlATmn8jJ2a0PfbmV4aPKTVHN9V5S8=;
+        s=default; t=1563996210;
+        bh=E06qOU/TbsjBXHsCMeVvt2IuRjYwXwW1DtBuGYA5hP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBW1iMyxkdey0GbmgHnfbXvfuqzSi/mxCDDO5i6y5QZHI5OfcLFT00YhBSZ8O4Kig
-         UMqavreT790+IdleU/0A3pCglhmUv2Lcymw2lKfW7KDMg66FfNuXAsLYOfF7lilRQq
-         CsiuZpix6Cvi2PolLMj9Jewph6tPpXeQv/3zsZm8=
+        b=gErJVheWF2rePK+kbCtHqOUF/+MBO4lq+DprbZhmF47LMJ9aAClZSfZ07WsRgkvAQ
+         LilOJChVvkQFDXraDfNpSpTya1HRN9PoCQJdLRYIpBu133KA8jPfJFAJasL99M9lzI
+         r1ZzWUt0bQAH59nbWQ+5d659MP2PMtsbOnVtJ0DA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Daniel Gomez <dagmcr@gmail.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 017/413] batman-adv: fix for leaked TVLV handler.
-Date:   Wed, 24 Jul 2019 21:15:08 +0200
-Message-Id: <20190724191736.690298242@linuxfoundation.org>
+Subject: [PATCH 5.2 019/413] media: spi: IR LED: add missing of table registration
+Date:   Wed, 24 Jul 2019 21:15:10 +0200
+Message-Id: <20190724191736.832910462@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,35 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
+[ Upstream commit 24e4cf770371df6ad49ed873f21618d9878f64c8 ]
 
-A handler for BATADV_TVLV_ROAM was being registered when the
-translation-table was initialized, but not unregistered when the
-translation-table was freed.  Unregister it.
+MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+OF mathing mechanism and register it.
 
-Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
-Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Before this patch:
+modinfo drivers/media/rc/ir-spi.ko  | grep alias
+
+After this patch:
+modinfo drivers/media/rc/ir-spi.ko  | grep alias
+alias:          of:N*T*Cir-spi-ledC*
+alias:          of:N*T*Cir-spi-led
+
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/rc/ir-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index 1ddfd5e011ee..8a482c5ec67b 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -3813,6 +3813,8 @@ static void batadv_tt_purge(struct work_struct *work)
-  */
- void batadv_tt_free(struct batadv_priv *bat_priv)
- {
-+	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
-+
- 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
- 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+index 66334e8d63ba..c58f2d38a458 100644
+--- a/drivers/media/rc/ir-spi.c
++++ b/drivers/media/rc/ir-spi.c
+@@ -161,6 +161,7 @@ static const struct of_device_id ir_spi_of_match[] = {
+ 	{ .compatible = "ir-spi-led" },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, ir_spi_of_match);
  
+ static struct spi_driver ir_spi_driver = {
+ 	.probe = ir_spi_probe,
 -- 
 2.20.1
 
