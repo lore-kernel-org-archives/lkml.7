@@ -2,87 +2,88 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B977FC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C983C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822382190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="D9EZULmS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Rm5x9vsr"
+	by mail.kernel.org (Postfix) with ESMTP id 3DA5B22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfGXLgj (ORCPT
+        id S1727575AbfGXLhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:36:39 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41250 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727409AbfGXLgi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:36:38 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C7D7A60364; Wed, 24 Jul 2019 11:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968197;
-        bh=Ufe3beDRc5autfXs2AmNn6jFacIvLtRr7SRHOZm8Ag8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=D9EZULmSRU90YlnGibDqA8ttXc7JVsQ0xuZRj83+wGQtJSB0iyqY3qGEJbXU2WaP2
-         5GRz5PceSxFvsBkl2+gqDzs0y1nlLNPkbD0fcz/SeNnB3UAcaL9KA5+ZFZPU69Kpvp
-         WwWuHMLgZsQBlUQvbgrpeDi75vghW/ziQdC/ghAg=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 24 Jul 2019 07:37:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59446 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfGXLhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:37:14 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3BD8F60314;
-        Wed, 24 Jul 2019 11:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968197;
-        bh=Ufe3beDRc5autfXs2AmNn6jFacIvLtRr7SRHOZm8Ag8=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=Rm5x9vsrKKPGcWIWbm6e0iHhGfoJH2zUUF3pKrcj1M1uYsHUsYrwI7NFYj9/GQmlG
-         fOFJlqR3QN6tTOCFlD8+qlRA7RYxLBvgdXDuDq0Hpe53aoRnEiX1zlQ66w/UiHYkqZ
-         PDgsEy1ZSOgWlAmGAsQ6kWPfmxhmyqrZpOk9Sj8E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3BD8F60314
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 748FC30BD1B1;
+        Wed, 24 Jul 2019 11:37:14 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 53FB760BCE;
+        Wed, 24 Jul 2019 11:37:12 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 24 Jul 2019 13:37:14 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 13:37:11 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, matthew.wilcox@oracle.com,
+        kirill.shutemov@linux.intel.com, peterz@infradead.org,
+        rostedt@goodmis.org, kernel-team@fb.com,
+        william.kucharski@oracle.com
+Subject: Re: [PATCH v8 2/4] uprobe: use original page when all uprobes are
+ removed
+Message-ID: <20190724113711.GE21599@redhat.com>
+References: <20190724083600.832091-1-songliubraving@fb.com>
+ <20190724083600.832091-3-songliubraving@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] drivers: net: wireless: rsi: return explicit error values
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1561645802-1279-1-git-send-email-info@metux.net>
-References: <1561645802-1279-1-git-send-email-info@metux.net>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, amitkarwar@gmail.com,
-        siva8118@gmail.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190724113637.C7D7A60364@smtp.codeaurora.org>
-Date:   Wed, 24 Jul 2019 11:36:37 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724083600.832091-3-songliubraving@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 24 Jul 2019 11:37:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Enrico Weigelt, metux IT consult" <info@metux.net> wrote:
+On 07/24, Song Liu wrote:
+>
+>  	lock_page(old_page);
+> @@ -177,15 +180,24 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
+>  	mmu_notifier_invalidate_range_start(&range);
+>  	err = -EAGAIN;
+>  	if (!page_vma_mapped_walk(&pvmw)) {
+> -		mem_cgroup_cancel_charge(new_page, memcg, false);
+> +		if (!orig)
+> +			mem_cgroup_cancel_charge(new_page, memcg, false);
+>  		goto unlock;
+>  	}
+>  	VM_BUG_ON_PAGE(addr != pvmw.address, old_page);
+>  
+>  	get_page(new_page);
+> -	page_add_new_anon_rmap(new_page, vma, addr, false);
+> -	mem_cgroup_commit_charge(new_page, memcg, false, false);
+> -	lru_cache_add_active_or_unevictable(new_page, vma);
+> +	if (orig) {
+> +		lock_page(new_page);  /* for page_add_file_rmap() */
+> +		page_add_file_rmap(new_page, false);
 
-> From: Enrico Weigelt <info@metux.net>
-> 
-> Explicitly return constants instead of variable (and rely on
-> it to be explicitly initialized), if the value is supposed
-> to be fixed anyways. Align it with the rest of the driver,
-> which does it the same way.
-> 
-> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-I'll fix the title prefix to only have "rsi:", no need to have the full
-directory path there.
+Shouldn't we re-check new_page->mapping after lock_page() ? Or we can't
+race with truncate?
 
--- 
-https://patchwork.kernel.org/patch/11019801/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+and I am worried this code can try to lock the same page twice...
+Say, the probed application does MADV_DONTNEED and then writes "int3"
+into vma->vm_file at the same address to fool verify_opcode().
+
+Oleg.
 
