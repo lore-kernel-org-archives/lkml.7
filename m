@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EC0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6565FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD55214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FDF22ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997476;
-	bh=W7GWnlYEu15MiLQsnqFtJlzTw1zEyXiEJ2XFlF6/RrY=;
+	s=default; t=1563997479;
+	bh=9T1K/j99ownobVpfDjcO5E4ydlDMnfWqVQ6G1Al7pOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y5MB0DD0bKbiYUnAzMvQyvH+kYWxPbS1DE2bZ0foDNnUhjPgTsSpAywUE5+KkAINu
-	 z4kO+ap5QSOAHiBlc3sRaC5c4YOeg17t3soeDGOaX95oghOKX9fCJi8PAx+ZhddwsJ
-	 rCHy0b0MUtANE7AxcDS6Ny4um/okb/Lm032SVHvs=
+	b=FZffvC77RRY4ECLT0+tYEQ7mudvb5rkR+EANRm/vBdzvTQxsiSpw1c4BA+yZQp2nk
+	 QhQ7mYtttvjJ/IXesCjwSlzxusUPuiLOPpPdVF7R4g6wUJUExtiZ1xaAGpA6cCehnf
+	 mozmrfr6o73Dnu43DkeQyGpr/Cs1ZBA8XB30n/6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390818AbfGXTo3 (ORCPT
+        id S2390839AbfGXToh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:44:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:44:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390808AbfGXToY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:44:24 -0400
+        id S2390823AbfGXToc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:44:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420C3214AF;
-        Wed, 24 Jul 2019 19:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0AC2214AF;
+        Wed, 24 Jul 2019 19:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997462;
-        bh=W7GWnlYEu15MiLQsnqFtJlzTw1zEyXiEJ2XFlF6/RrY=;
+        s=default; t=1563997471;
+        bh=9T1K/j99ownobVpfDjcO5E4ydlDMnfWqVQ6G1Al7pOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4qzVS1t9j2Xk4Q0AcXj8FsHNJKfhBx6eQTllWqBzFPjRKsZsM3dV1cUhmSXTlJyL
-         zIWP1mV0ACpBj9ablaCUFf/AagHGSP2gdouTQrw85Nk9EyWIsgqqDIacXFK4z5cyHJ
-         1PAA9rQjPphJ1ZZIMrqFMtUSkmOd2WUZ/vjSiyQo=
+        b=NVVrdVZIUU1ahGRmQ/inBTpYyKhOVXo73d19Wr5sPX1C4rM0v3pSsFHpLDkILt3Ws
+         4Ja1GsIV+HnGISbuaYOXDSsC825XFuotMXwocU5mqyaSWwRC/woNzLtlFZL9GJ7iGq
+         MuvSjoQibbNphcC1VSsN84a58YYvlG5TBkb3Zkgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
+        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 005/371] dmaengine: imx-sdma: fix use-after-free on probe error path
-Date:   Wed, 24 Jul 2019 21:15:57 +0200
-Message-Id: <20190724191724.893916762@linuxfoundation.org>
+Subject: [PATCH 5.1 008/371] ath10k: fix incorrect multicast/broadcast rate setting
+Date:   Wed, 24 Jul 2019 21:16:00 +0200
+Message-Id: <20190724191725.125642341@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,105 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b8066c3deb9140fdf258417a51479b2aeaa7622 ]
+[ Upstream commit 93ee3d108fc77e19efeac3ec5aa7d5886711bfef ]
 
-If probe() fails anywhere beyond the point where
-sdma_get_firmware() is called, then a kernel oops may occur.
+Invalid rate code is sent to firmware when multicast rate value of 0 is
+sent to driver indicating disabled case, causing broken mesh path.
+so fix that.
 
-Problematic sequence of events:
-1. probe() calls sdma_get_firmware(), which schedules the
-   firmware callback to run when firmware becomes available,
-   using the sdma instance structure as the context
-2. probe() encounters an error, which deallocates the
-   sdma instance structure
-3. firmware becomes available, firmware callback is
-   called with deallocated sdma instance structure
-4. use after free - kernel oops !
+Tested on QCA9984 with firmware 10.4-3.6.1-00827
 
-Solution: only attempt to load firmware when we're certain
-that probe() will succeed. This guarantees that the firmware
-callback's context will remain valid.
+Sven tested on IPQ4019 with 10.4-3.5.3-00057 and QCA9888 with 10.4-3.5.3-00053
+(ath10k-firmware) and 10.4-3.6-00140 (linux-firmware 2018-12-16-211de167).
 
-Note that the remove() path is unaffected by this issue: the
-firmware loader will increment the driver module's use count,
-ensuring that the module cannot be unloaded while the
-firmware callback is pending or running.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
-[vkoul: fixed braces for if condition]
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: cd93b83ad92 ("ath10k: support for multicast rate control")
+Co-developed-by: Zhi Chen <zhichen@codeaurora.org>
+Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
+Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
+Tested-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 21 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 248c440c10f2..4ec84a633bd3 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -2096,27 +2096,6 @@ static int sdma_probe(struct platform_device *pdev)
- 	if (pdata && pdata->script_addrs)
- 		sdma_add_scripts(sdma, pdata->script_addrs);
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 9c703d287333..e8997e22ceec 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -5588,8 +5588,8 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+ 	struct cfg80211_chan_def def;
+ 	u32 vdev_param, pdev_param, slottime, preamble;
+ 	u16 bitrate, hw_value;
+-	u8 rate, basic_rate_idx;
+-	int rateidx, ret = 0, hw_rate_code;
++	u8 rate, basic_rate_idx, rateidx;
++	int ret = 0, hw_rate_code, mcast_rate;
+ 	enum nl80211_band band;
+ 	const struct ieee80211_supported_band *sband;
  
--	if (pdata) {
--		ret = sdma_get_firmware(sdma, pdata->fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
--	} else {
--		/*
--		 * Because that device tree does not encode ROM script address,
--		 * the RAM script in firmware is mandatory for device tree
--		 * probe, otherwise it fails.
--		 */
--		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
--					      &fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware name\n");
--		else {
--			ret = sdma_get_firmware(sdma, fw_name);
--			if (ret)
--				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
--		}
--	}
--
- 	sdma->dma_device.dev = &pdev->dev;
+@@ -5776,7 +5776,11 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+ 	if (changed & BSS_CHANGED_MCAST_RATE &&
+ 	    !ath10k_mac_vif_chan(arvif->vif, &def)) {
+ 		band = def.chan->band;
+-		rateidx = vif->bss_conf.mcast_rate[band] - 1;
++		mcast_rate = vif->bss_conf.mcast_rate[band];
++		if (mcast_rate > 0)
++			rateidx = mcast_rate - 1;
++		else
++			rateidx = ffs(vif->bss_conf.basic_rates) - 1;
  
- 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
-@@ -2161,6 +2140,33 @@ static int sdma_probe(struct platform_device *pdev)
- 		of_node_put(spba_bus);
- 	}
- 
-+	/*
-+	 * Kick off firmware loading as the very last step:
-+	 * attempt to load firmware only if we're not on the error path, because
-+	 * the firmware callback requires a fully functional and allocated sdma
-+	 * instance.
-+	 */
-+	if (pdata) {
-+		ret = sdma_get_firmware(sdma, pdata->fw_name);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
-+	} else {
-+		/*
-+		 * Because that device tree does not encode ROM script address,
-+		 * the RAM script in firmware is mandatory for device tree
-+		 * probe, otherwise it fails.
-+		 */
-+		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-+					      &fw_name);
-+		if (ret) {
-+			dev_warn(&pdev->dev, "failed to get firmware name\n");
-+		} else {
-+			ret = sdma_get_firmware(sdma, fw_name);
-+			if (ret)
-+				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
-+		}
-+	}
-+
- 	return 0;
- 
- err_register:
+ 		if (ar->phy_capability & WHAL_WLAN_11A_CAPABILITY)
+ 			rateidx += ATH10K_MAC_FIRST_OFDM_RATE_IDX;
 -- 
 2.20.1
 
