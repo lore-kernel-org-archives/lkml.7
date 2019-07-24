@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0CEC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050F7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5F4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD35214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997452;
-	bh=yzQR5qFdRmj/ohGCBqlXS4151JYe9WbzTKvOIg/rLbc=;
+	s=default; t=1563997455;
+	bh=iEVO7Mwyc+/zRoAVdOtOLYrlhRjUey94vRhKWeoQyZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQpu70gsKpCZ1qy6EZCwnNh+C7LGmAko7D6GMdA/bLHqfByAtGgJXIN4OETCA8NBB
-	 WJRmsxl0Wu3ZhHDxohIrUdgV6QLXewGdlXFSyNnNEJSyv9tDtGDru8BBt2fqlpLz6y
-	 VhtBEqWcF8ZqOjfgrQt5M/H1bVaKC6ziq4aY5WyE=
+	b=h6SgeO6tha/4Fxlx594nyxIC6Jv//Ve/kkCldbsNEom1T5on5McUHAxFqJBX/xmF3
+	 QmaqCheZFQT8VlDrVRMiu3z4sMa7Hm31ds5Dl32GoBenICiJKKt8VyuKJFjIly+f21
+	 2IycEo5ANYi6Cai0xhiLReYUZe01FoKYh22FCWh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390768AbfGXToL (ORCPT
+        id S2390779AbfGXToO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390739AbfGXToI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:44:08 -0400
+        id S2390320AbfGXToG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:44:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E0A6214AF;
-        Wed, 24 Jul 2019 19:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8221F214AF;
+        Wed, 24 Jul 2019 19:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997448;
-        bh=yzQR5qFdRmj/ohGCBqlXS4151JYe9WbzTKvOIg/rLbc=;
+        s=default; t=1563997446;
+        bh=iEVO7Mwyc+/zRoAVdOtOLYrlhRjUey94vRhKWeoQyZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4eHWht/YCr5eW6irCNYnCVxhOvJ5fO3MgDEMOGA9YR0Ss7mPlIaNQ8UZ3xjeyJjD
-         dCEvNxL+ATAdkPHmc6CfpgTtvlhwQKnxNeJfbXjL6MK9QsJB8Z5bdOjy2VZ9GdnODI
-         Nr/1s6gOLGiW8TbKRPm+nypwpaa7OwvH8GbW2SZk=
+        b=ZYvwzu/riL4cnSy4pITpsYXOo0AriGigCYvwpW/wfrUxk0LFFXUcGoLNUUst6JtTB
+         TBXy9aeQUSfLbneeuUjee247/TyJllyut3KBrV+MsIXIEuPz9AdbxZX2XL/cuuGbne
+         B684+8cD9XEwjZkbVtaCkezlzOeGxxnnneW0ymgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 027/371] media: marvell-ccic: fix DMA s/g desc number calculation
-Date:   Wed, 24 Jul 2019 21:16:19 +0200
-Message-Id: <20190724191726.533264129@linuxfoundation.org>
+Subject: [PATCH 5.1 026/371] media: ov7740: avoid invalid framesize setting
+Date:   Wed, 24 Jul 2019 21:16:18 +0200
+Message-Id: <20190724191726.462702834@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,62 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0c7aa32966dab0b8a7424e1b34c7f206817953ec ]
+[ Upstream commit 6e4ab830ac6d6a0d7cd7f87dc5d6536369bf24a8 ]
 
-The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-left dma_desc_nent unset. It previously contained the number of DMA
-descriptors as returned from dma_map_sg().
+If the requested framesize by VIDIOC_SUBDEV_S_FMT is larger than supported
+framesizes, it causes an out of bounds array access and the resulting
+framesize is unexpected.
 
-We can now (since the commit referred to above) obtain the same value from
-the sg_table and drop dma_desc_nent altogether.
+Avoid out of bounds array access and select the default framesize.
 
-Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
-driver, since that one doesn't do DMA.
-
-[mchehab+samsung@kernel.org: fix a checkpatch warning]
-
-Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Wenyou Yang <wenyou.yang@microchip.com>
+Cc: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov7740.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-index f1b301810260..0a6411b877e9 100644
---- a/drivers/media/platform/marvell-ccic/mcam-core.c
-+++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -200,7 +200,6 @@ struct mcam_vb_buffer {
- 	struct list_head queue;
- 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
- 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
--	int dma_desc_nent;		/* Number of mapped descriptors */
- };
+diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+index dfece91ce96b..8207e7cf9923 100644
+--- a/drivers/media/i2c/ov7740.c
++++ b/drivers/media/i2c/ov7740.c
+@@ -761,7 +761,11 @@ static int ov7740_try_fmt_internal(struct v4l2_subdev *sd,
  
- static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
-@@ -608,9 +607,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
- static void mcam_sg_next_buffer(struct mcam_camera *cam)
- {
- 	struct mcam_vb_buffer *buf;
-+	struct sg_table *sg_table;
+ 		fsize++;
+ 	}
+-
++	if (i >= ARRAY_SIZE(ov7740_framesizes)) {
++		fsize = &ov7740_framesizes[0];
++		fmt->width = fsize->width;
++		fmt->height = fsize->height;
++	}
+ 	if (ret_frmsize != NULL)
+ 		*ret_frmsize = fsize;
  
- 	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
- 	list_del_init(&buf->queue);
-+	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
- 	/*
- 	 * Very Bad Not Good Things happen if you don't clear
- 	 * C1_DESC_ENA before making any descriptor changes.
-@@ -618,7 +619,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
- 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
- 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
- 	mcam_reg_write(cam, REG_DESC_LEN_Y,
--			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
-+			sg_table->nents * sizeof(struct mcam_dma_desc));
- 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
- 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
- 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
 -- 
 2.20.1
 
