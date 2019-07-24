@@ -2,140 +2,192 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E030BC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FDFC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D3D229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2529E229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfGXKp3 (ORCPT
+        id S1727204AbfGXKrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:45:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:38730 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfGXKp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:45:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63678337;
-        Wed, 24 Jul 2019 03:45:28 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCB8D3F71F;
-        Wed, 24 Jul 2019 03:45:26 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 11:45:19 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Dan Rue <dan.rue@linaro.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 3/3] arm64: debug: Remove rcu_read_lock from debug
- exception
-Message-ID: <20190724104518.GA2624@lakrids.cambridge.arm.com>
-References: <156342860634.8565.14804606041960884732.stgit@devnote2>
- <156342863822.8565.7624877983728871995.stgit@devnote2>
- <20190718062215.GG14271@linux.ibm.com>
- <20190718092022.GA3625@blommer>
- <20190718233133.146065f668da6297e57e52ef@kernel.org>
- <20190719095958.GA19605@lakrids.cambridge.arm.com>
- <20190720165458.7333b65244312843c2ca6857@kernel.org>
+        Wed, 24 Jul 2019 06:47:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45410 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726087AbfGXKrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:47:03 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B6D1D7B848989C48A984;
+        Wed, 24 Jul 2019 18:47:00 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 18:46:56 +0800
+Subject: Re: [PATCH 4.4 stable net] net: tcp: Fix use-after-free in
+ tcp_write_xmit
+To:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190724091715.137033-1-maowenan@huawei.com>
+ <2e09f4d1-8a47-27e9-60f9-63d3b19a98ec@gmail.com>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <13ffa2fe-d064-9786-bc52-e4281d26ed1d@huawei.com>
+Date:   Wed, 24 Jul 2019 18:46:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190720165458.7333b65244312843c2ca6857@kernel.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <2e09f4d1-8a47-27e9-60f9-63d3b19a98ec@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 04:54:58PM +0900, Masami Hiramatsu wrote:
-> Hi Mark,
-> 
-> On Fri, 19 Jul 2019 10:59:59 +0100
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> > On Thu, Jul 18, 2019 at 11:31:33PM +0900, Masami Hiramatsu wrote:
-> > > On Thu, 18 Jul 2019 10:20:23 +0100
-> > > Mark Rutland <mark.rutland@arm.com> wrote:
-> > > 
-> > > > On Wed, Jul 17, 2019 at 11:22:15PM -0700, Paul E. McKenney wrote:
-> > > > > On Thu, Jul 18, 2019 at 02:43:58PM +0900, Masami Hiramatsu wrote:
-> > > > > > Remove rcu_read_lock()/rcu_read_unlock() from debug exception
-> > > > > > handlers since the software breakpoint can be hit on idle task.
-> > > > 
-> > > > Why precisely do we need to elide these? Are we seeing warnings today?
-> > > 
-> > > Yes, unfortunately, or fortunately. Naresh reported that warns when
-> > > ftracetest ran. I confirmed that happens if I probe on default_idle_call too.
-> > > 
-> > > /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events 
-> > > /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable 
-> > > /sys/kernel/debug/tracing # [  135.122237] 
-> > > [  135.125035] =============================
-> > > [  135.125310] WARNING: suspicious RCU usage
-> > > [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
-> > > [  135.125904] -----------------------------
-> > > [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
-> > > [  135.126839] 
-> > > [  135.126839] other info that might help us debug this:
-> > > [  135.126839] 
-> > > [  135.127410] 
-> > > [  135.127410] RCU used illegally from idle CPU!
-> > > [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
-> > > [  135.128114] RCU used illegally from extended quiescent state!
-> > > [  135.128555] 1 lock held by swapper/0/0:
-> > > [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
-> > > [  135.130499] 
-> > > [  135.130499] stack backtrace:
-> > > [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
-> > > [  135.131841] Hardware name: linux,dummy-virt (DT)
-> > > [  135.132224] Call trace:
-> > > [  135.132491]  dump_backtrace+0x0/0x140
-> > > [  135.132806]  show_stack+0x24/0x30
-> > > [  135.133133]  dump_stack+0xc4/0x10c
-> > > [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
-> > > [  135.134171]  call_break_hook+0x170/0x178
-> > > [  135.134486]  brk_handler+0x28/0x68
-> > > [  135.134792]  do_debug_exception+0x90/0x150
-> > > [  135.135051]  el1_dbg+0x18/0x8c
-> > > [  135.135260]  default_idle_call+0x0/0x44
-> > > [  135.135516]  cpu_startup_entry+0x2c/0x30
-> > > [  135.135815]  rest_init+0x1b0/0x280
-> > > [  135.136044]  arch_call_rest_init+0x14/0x1c
-> > > [  135.136305]  start_kernel+0x4d4/0x500
-> > > [  135.136597] 
-> > > 
-> > > > > The exception entry and exit use irq_enter() and irq_exit(), in this
-> > > > > case, correct?  Otherwise RCU will be ignoring this CPU.
-> > > > 
-> > > > This is missing today, which sounds like the underlying bug.
-> > > 
-> > > Agreed. I'm not so familier with how debug exception is handled on arm64,
-> > > would it be a kind of NMI or IRQ?
-> > 
-> > They're more like faults, in that they're synchronous exceptions.
-> > 
-> > Given that, I think using irq_enter() / irq_exit() would be surprising
-> > here, but perhaps they're misnamed.
-> > 
-> > What do other architectures do here? Having a kprobe on the critical
-> > path to idle doesn't sound specific to arm64, but perhaps it is (and we
-> > should rule it out).
-> 
-> On x86, it uses rcu_nmi_enter/exit() for kernel mode. For user mode,
-> we don't need to care since it must not be an idle task.
 
-Ok. IIUC, doing the same for arm64 would make sense.
 
-Thanks,
-Mark.
+On 2019/7/24 17:45, Eric Dumazet wrote:
+> 
+> 
+> On 7/24/19 11:17 AM, Mao Wenan wrote:
+>> There is one report about tcp_write_xmit use-after-free with version 4.4.136:
+>>
+>> BUG: KASAN: use-after-free in tcp_skb_pcount include/net/tcp.h:796 [inline]
+>> BUG: KASAN: use-after-free in tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
+>> BUG: KASAN: use-after-free in tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
+>> Read of size 2 at addr ffff8801d6fc87b0 by task syz-executor408/4195
+>>
+>> CPU: 0 PID: 4195 Comm: syz-executor408 Not tainted 4.4.136-gfb7e319 #59
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>>  0000000000000000 7d8f38ecc03be946 ffff8801d73b7710 ffffffff81e0edad
+>>  ffffea00075bf200 ffff8801d6fc87b0 0000000000000000 ffff8801d6fc87b0
+>>  dffffc0000000000 ffff8801d73b7748 ffffffff815159b6 ffff8801d6fc87b0
+>> Call Trace:
+>>  [<ffffffff81e0edad>] __dump_stack lib/dump_stack.c:15 [inline]
+>>  [<ffffffff81e0edad>] dump_stack+0xc1/0x124 lib/dump_stack.c:51
+>>  [<ffffffff815159b6>] print_address_description+0x6c/0x216 mm/kasan/report.c:252
+>>  [<ffffffff81515cd5>] kasan_report_error mm/kasan/report.c:351 [inline]
+>>  [<ffffffff81515cd5>] kasan_report.cold.7+0x175/0x2f7 mm/kasan/report.c:408
+>>  [<ffffffff814f9784>] __asan_report_load2_noabort+0x14/0x20 mm/kasan/report.c:427
+>>  [<ffffffff83286582>] tcp_skb_pcount include/net/tcp.h:796 [inline]
+>>  [<ffffffff83286582>] tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
+>>  [<ffffffff83286582>] tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
+>>  [<ffffffff83287a40>] __tcp_push_pending_frames+0xa0/0x290 net/ipv4/tcp_output.c:2307
+>>  [<ffffffff8328e966>] tcp_send_fin+0x176/0xab0 net/ipv4/tcp_output.c:2883
+>>  [<ffffffff8324c0d0>] tcp_close+0xca0/0xf70 net/ipv4/tcp.c:2112
+>>  [<ffffffff832f8d0f>] inet_release+0xff/0x1d0 net/ipv4/af_inet.c:435
+>>  [<ffffffff82f1a156>] sock_release+0x96/0x1c0 net/socket.c:586
+>>  [<ffffffff82f1a296>] sock_close+0x16/0x20 net/socket.c:1037
+>>  [<ffffffff81522da5>] __fput+0x235/0x6f0 fs/file_table.c:208
+>>  [<ffffffff815232e5>] ____fput+0x15/0x20 fs/file_table.c:244
+>>  [<ffffffff8118bd7f>] task_work_run+0x10f/0x190 kernel/task_work.c:115
+>>  [<ffffffff81135285>] exit_task_work include/linux/task_work.h:21 [inline]
+>>  [<ffffffff81135285>] do_exit+0x9e5/0x26b0 kernel/exit.c:759
+>>  [<ffffffff8113b1d1>] do_group_exit+0x111/0x330 kernel/exit.c:889
+>>  [<ffffffff8115e5cc>] get_signal+0x4ec/0x14b0 kernel/signal.c:2321
+>>  [<ffffffff8100e02b>] do_signal+0x8b/0x1d30 arch/x86/kernel/signal.c:712
+>>  [<ffffffff8100360a>] exit_to_usermode_loop+0x11a/0x160 arch/x86/entry/common.c:248
+>>  [<ffffffff81006535>] prepare_exit_to_usermode arch/x86/entry/common.c:283 [inline]
+>>  [<ffffffff81006535>] syscall_return_slowpath+0x1b5/0x1f0 arch/x86/entry/common.c:348
+>>  [<ffffffff838c29b5>] int_ret_from_sys_call+0x25/0xa3
+>>
+>> Allocated by task 4194:
+>>  [<ffffffff810341d6>] save_stack_trace+0x26/0x50 arch/x86/kernel/stacktrace.c:63
+>>  [<ffffffff814f8873>] save_stack+0x43/0xd0 mm/kasan/kasan.c:512
+>>  [<ffffffff814f8b57>] set_track mm/kasan/kasan.c:524 [inline]
+>>  [<ffffffff814f8b57>] kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:616
+>>  [<ffffffff814f9122>] kasan_slab_alloc+0x12/0x20 mm/kasan/kasan.c:554
+>>  [<ffffffff814f4c1e>] slab_post_alloc_hook mm/slub.c:1349 [inline]
+>>  [<ffffffff814f4c1e>] slab_alloc_node mm/slub.c:2615 [inline]
+>>  [<ffffffff814f4c1e>] slab_alloc mm/slub.c:2623 [inline]
+>>  [<ffffffff814f4c1e>] kmem_cache_alloc+0xbe/0x2a0 mm/slub.c:2628
+>>  [<ffffffff82f380a6>] kmem_cache_alloc_node include/linux/slab.h:350 [inline]
+>>  [<ffffffff82f380a6>] __alloc_skb+0xe6/0x600 net/core/skbuff.c:218
+>>  [<ffffffff832466c3>] alloc_skb_fclone include/linux/skbuff.h:856 [inline]
+>>  [<ffffffff832466c3>] sk_stream_alloc_skb+0xa3/0x5d0 net/ipv4/tcp.c:833
+>>  [<ffffffff83249164>] tcp_sendmsg+0xd34/0x2b00 net/ipv4/tcp.c:1178
+>>  [<ffffffff83300ef3>] inet_sendmsg+0x203/0x4d0 net/ipv4/af_inet.c:755
+>>  [<ffffffff82f1e1fc>] sock_sendmsg_nosec net/socket.c:625 [inline]
+>>  [<ffffffff82f1e1fc>] sock_sendmsg+0xcc/0x110 net/socket.c:635
+>>  [<ffffffff82f1eedc>] SYSC_sendto+0x21c/0x370 net/socket.c:1665
+>>  [<ffffffff82f21560>] SyS_sendto+0x40/0x50 net/socket.c:1633
+>>  [<ffffffff838c2825>] entry_SYSCALL_64_fastpath+0x22/0x9e
+>>
+>> Freed by task 4194:
+>>  [<ffffffff810341d6>] save_stack_trace+0x26/0x50 arch/x86/kernel/stacktrace.c:63
+>>  [<ffffffff814f8873>] save_stack+0x43/0xd0 mm/kasan/kasan.c:512
+>>  [<ffffffff814f91a2>] set_track mm/kasan/kasan.c:524 [inline]
+>>  [<ffffffff814f91a2>] kasan_slab_free+0x72/0xc0 mm/kasan/kasan.c:589
+>>  [<ffffffff814f632e>] slab_free_hook mm/slub.c:1383 [inline]
+>>  [<ffffffff814f632e>] slab_free_freelist_hook mm/slub.c:1405 [inline]
+>>  [<ffffffff814f632e>] slab_free mm/slub.c:2859 [inline]
+>>  [<ffffffff814f632e>] kmem_cache_free+0xbe/0x340 mm/slub.c:2881
+>>  [<ffffffff82f3527f>] kfree_skbmem+0xcf/0x100 net/core/skbuff.c:635
+>>  [<ffffffff82f372fd>] __kfree_skb+0x1d/0x20 net/core/skbuff.c:676
+>>  [<ffffffff83288834>] sk_wmem_free_skb include/net/sock.h:1447 [inline]
+>>  [<ffffffff83288834>] tcp_write_queue_purge include/net/tcp.h:1460 [inline]
+>>  [<ffffffff83288834>] tcp_connect_init net/ipv4/tcp_output.c:3122 [inline]
+>>  [<ffffffff83288834>] tcp_connect+0xb24/0x30c0 net/ipv4/tcp_output.c:3261
+>>  [<ffffffff8329b991>] tcp_v4_connect+0xf31/0x1890 net/ipv4/tcp_ipv4.c:246
+>>  [<ffffffff832f9ca9>] __inet_stream_connect+0x2a9/0xc30 net/ipv4/af_inet.c:615
+>>  [<ffffffff832fa685>] inet_stream_connect+0x55/0xa0 net/ipv4/af_inet.c:676
+>>  [<ffffffff82f1eb78>] SYSC_connect+0x1b8/0x300 net/socket.c:1557
+>>  [<ffffffff82f214b4>] SyS_connect+0x24/0x30 net/socket.c:1538
+>>  [<ffffffff838c2825>] entry_SYSCALL_64_fastpath+0x22/0x9e
+>>
+>> Syzkaller reproducer():
+>> r0 = socket$packet(0x11, 0x3, 0x300)
+>> r1 = socket$inet_tcp(0x2, 0x1, 0x0)
+>> bind$inet(r1, &(0x7f0000000300)={0x2, 0x4e21, @multicast1}, 0x10)
+>> connect$inet(r1, &(0x7f0000000140)={0x2, 0x1000004e21, @loopback}, 0x10)
+>> recvmmsg(r1, &(0x7f0000001e40)=[{{0x0, 0x0, &(0x7f0000000100)=[{&(0x7f00000005c0)=""/88, 0x58}], 0x1}}], 0x1, 0x40000000, 0x0)
+>> sendto$inet(r1, &(0x7f0000000000)="e2f7ad5b661c761edf", 0x9, 0x8080, 0x0, 0x0)
+>> r2 = fcntl$dupfd(r1, 0x0, r0)
+>> connect$unix(r2, &(0x7f00000001c0)=@file={0x0, './file0\x00'}, 0x6e)
+>>
+>> C repro link: https://syzkaller.appspot.com/text?tag=ReproC&x=14db474f800000
+>>
+>> This is because when tcp_connect_init call tcp_write_queue_purge, it will
+>> kfree all the skb in the write_queue, but the sk->sk_send_head forget to set NULL,
+>> then tcp_write_xmit try to send skb, which has freed in tcp_write_queue_purge, UAF happens.
+>>
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> ---
+>>  include/net/tcp.h | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/include/net/tcp.h b/include/net/tcp.h
+>> index bf8a0dae977a..8f8aace28cf8 100644
+>> --- a/include/net/tcp.h
+>> +++ b/include/net/tcp.h
+>> @@ -1457,6 +1457,7 @@ static inline void tcp_write_queue_purge(struct sock *sk)
+>>  
+>>  	while ((skb = __skb_dequeue(&sk->sk_write_queue)) != NULL)
+>>  		sk_wmem_free_skb(sk, skb);
+>> +	sk->sk_send_head = NULL;
+>>  	sk_mem_reclaim(sk);
+>>  	tcp_clear_all_retrans_hints(tcp_sk(sk));
+>>  	inet_csk(sk)->icsk_backoff = 0;
+>>
+> 
+> This is strange, because tcp_init_send_head() is called from tcp_disconnect()
+> which is the syzkaller way to trigger this kind of bugs.
+> 
+
+syzkaller reproduce program duplicate one socket that have multiple skb in write queue,
+and new socket have purged skb but original socket still try to send skb. In this program,
+it does not call tcp_disconnect?
+
+> 
+> I suspect there is another root cause.
+> 
+> 
+> 
+> .
+> 
+
