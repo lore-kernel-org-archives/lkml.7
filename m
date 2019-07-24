@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8255C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6203C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7E622387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E10722387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996245;
-	bh=Ii1euPYbWfRkA0/IiLxq62q322Ax1cGkDB0EdrZnnjQ=;
+	s=default; t=1563996248;
+	bh=9T1K/j99ownobVpfDjcO5E4ydlDMnfWqVQ6G1Al7pOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWAzC3pqoM7ZWDgnxxw57YASRj0hkt/K9V78IivGf6tvKPorrARta+JTLR/6BfPSA
-	 7Eos95xcRneo+Fb3PBr7yqG4Qgb9MV2ZloLhFF58sNO8v09G8VSE6tx3QvVObGBaaI
-	 hhuiiZ+OrWsP48lNMpyanuYtaKINtKSoQKEw7I9I=
+	b=mIIvNr3JERFUdBTMDr9K0XKLWpFNK/P4709EHNn4EptphYVouI1OAwSw9GFcXqd4A
+	 8nx332S7cF7raIlPluIzajq7tuL/XAfupigKwt1N08GhwK8nBXMHB2xtRKeLEflQdD
+	 M12x3Z9XulEyPBjOrofmCjvhnDV7A1FWliYmabTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbfGXTYE (ORCPT
+        id S1728968AbfGXTYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:24:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387906AbfGXTX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:23:59 -0400
+        id S1728933AbfGXTYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 557D922ADC;
-        Wed, 24 Jul 2019 19:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB5ED218F0;
+        Wed, 24 Jul 2019 19:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996238;
-        bh=Ii1euPYbWfRkA0/IiLxq62q322Ax1cGkDB0EdrZnnjQ=;
+        s=default; t=1563996244;
+        bh=9T1K/j99ownobVpfDjcO5E4ydlDMnfWqVQ6G1Al7pOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4PAbtFYZ8droIc3ZUT5T7edDI0/3wRstnZGilAvJZk++mneKu+yiJUDTr0tOSjwc
-         n8frGnRtqlnpz9Y6OnbLimcQ9D+oK3k6lInEj3Ix6SkA677psdxy5ZlYeUfA24/l/W
-         DhP4BunG/tWFsccO3qYFqgtrIvEmDhD3IM5eirc0=
+        b=2qlhOM1dRsp2/rnvb9o7lvwXlsYxQPyZymF9FwmCRO0c9TbZJ0MA9/eNRNXDyamGv
+         2wYje+NgK4nfj6wZlHeYPFbXBOgWCtBnKInZCjd15Fj5jRV3MubV2fMWzCguOu8JNT
+         av9m8z6nNA4Zgxlj3pP9UudhWx6nwmGIuyIDDmzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
+        Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 028/413] crypto: caam - avoid S/G table fetching for AEAD zero-length output
-Date:   Wed, 24 Jul 2019 21:15:19 +0200
-Message-Id: <20190724191737.504594022@linuxfoundation.org>
+Subject: [PATCH 5.2 003/413] ath10k: fix incorrect multicast/broadcast rate setting
+Date:   Wed, 24 Jul 2019 21:14:54 +0200
+Message-Id: <20190724191735.392212794@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,132 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dcd9c76e5a183af4f793beb5141efcd260b8d09f ]
+[ Upstream commit 93ee3d108fc77e19efeac3ec5aa7d5886711bfef ]
 
-When enabling IOMMU support, the following issue becomes visible
-in the AEAD zero-length case.
+Invalid rate code is sent to firmware when multicast rate value of 0 is
+sent to driver indicating disabled case, causing broken mesh path.
+so fix that.
 
-Even though the output sequence length is set to zero, the crypto engine
-tries to prefetch 4 S/G table entries (since SGF bit is set
-in SEQ OUT PTR command - which is either generated in SW in case of
-caam/jr or in HW in case of caam/qi, caam/qi2).
-The DMA read operation will trigger an IOMMU fault since the address in
-the SEQ OUT PTR is "dummy" (set to zero / not obtained via DMA API
-mapping).
+Tested on QCA9984 with firmware 10.4-3.6.1-00827
 
-1. In case of caam/jr, avoid the IOMMU fault by clearing the SGF bit
-in SEQ OUT PTR command.
+Sven tested on IPQ4019 with 10.4-3.5.3-00057 and QCA9888 with 10.4-3.5.3-00053
+(ath10k-firmware) and 10.4-3.6-00140 (linux-firmware 2018-12-16-211de167).
 
-2. In case of caam/qi - setting address, bpid, length to zero for output
-entry in the compound frame has a special meaning (cf. CAAM RM):
-"Output frame = Unspecified, Input address = Y. A unspecified frame is
-indicated by an unused SGT entry (an entry in which the Address, Length,
-and BPID fields are all zero). SEC obtains output buffers from BMan as
-prescribed by the preheader."
-
-Since no output buffers are needed, modify the preheader by setting
-(ABS = 1, ADDBUF = 0):
--"ABS = 1 means obtain the number of buffers in ADDBUF (0 or 1) from
-the pool POOL ID"
--ADDBUF: "If ABS is set, ADD BUF specifies whether to allocate
-a buffer or not"
-
-3. In case of caam/qi2, since engine:
--does not support FLE[FMT]=2'b11 ("unused" entry) mentioned in DPAA2 RM
--requires output entry to be present, even if not used
-the solution chosen is to leave output frame list entry zeroized.
-
-Fixes: 763069ba49d3 ("crypto: caam - handle zero-length AEAD output")
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: cd93b83ad92 ("ath10k: support for multicast rate control")
+Co-developed-by: Zhi Chen <zhichen@codeaurora.org>
+Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
+Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
+Tested-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/caam/caamalg.c     | 1 +
- drivers/crypto/caam/caamalg_qi.c  | 2 +-
- drivers/crypto/caam/caamalg_qi2.c | 9 +++++++++
- drivers/crypto/caam/qi.c          | 3 +++
- 4 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index c0ece44f303b..df416e6c1468 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -1106,6 +1106,7 @@ static void init_aead_job(struct aead_request *req,
- 	if (unlikely(req->src != req->dst)) {
- 		if (!edesc->mapped_dst_nents) {
- 			dst_dma = 0;
-+			out_options = 0;
- 		} else if (edesc->mapped_dst_nents == 1) {
- 			dst_dma = sg_dma_address(req->dst);
- 			out_options = 0;
-diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
-index d290d6b41825..116cbc81fa8d 100644
---- a/drivers/crypto/caam/caamalg_qi.c
-+++ b/drivers/crypto/caam/caamalg_qi.c
-@@ -1109,7 +1109,7 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 			dma_to_qm_sg_one_ext(&fd_sgt[0], qm_sg_dma +
- 					     (1 + !!ivsize) * sizeof(*sg_table),
- 					     out_len, 0);
--	} else if (mapped_dst_nents == 1) {
-+	} else if (mapped_dst_nents <= 1) {
- 		dma_to_qm_sg_one(&fd_sgt[0], sg_dma_address(req->dst), out_len,
- 				 0);
- 	} else {
-diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
-index 2b2980a8a9b9..b949944c8e55 100644
---- a/drivers/crypto/caam/caamalg_qi2.c
-+++ b/drivers/crypto/caam/caamalg_qi2.c
-@@ -559,6 +559,14 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 			dpaa2_fl_set_addr(out_fle, qm_sg_dma +
- 					  (1 + !!ivsize) * sizeof(*sg_table));
- 		}
-+	} else if (!mapped_dst_nents) {
-+		/*
-+		 * crypto engine requires the output entry to be present when
-+		 * "frame list" FD is used.
-+		 * Since engine does not support FMT=2'b11 (unused entry type),
-+		 * leaving out_fle zeroized is the best option.
-+		 */
-+		goto skip_out_fle;
- 	} else if (mapped_dst_nents == 1) {
- 		dpaa2_fl_set_format(out_fle, dpaa2_fl_single);
- 		dpaa2_fl_set_addr(out_fle, sg_dma_address(req->dst));
-@@ -570,6 +578,7 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 9c703d287333..e8997e22ceec 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -5588,8 +5588,8 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+ 	struct cfg80211_chan_def def;
+ 	u32 vdev_param, pdev_param, slottime, preamble;
+ 	u16 bitrate, hw_value;
+-	u8 rate, basic_rate_idx;
+-	int rateidx, ret = 0, hw_rate_code;
++	u8 rate, basic_rate_idx, rateidx;
++	int ret = 0, hw_rate_code, mcast_rate;
+ 	enum nl80211_band band;
+ 	const struct ieee80211_supported_band *sband;
  
- 	dpaa2_fl_set_len(out_fle, out_len);
+@@ -5776,7 +5776,11 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+ 	if (changed & BSS_CHANGED_MCAST_RATE &&
+ 	    !ath10k_mac_vif_chan(arvif->vif, &def)) {
+ 		band = def.chan->band;
+-		rateidx = vif->bss_conf.mcast_rate[band] - 1;
++		mcast_rate = vif->bss_conf.mcast_rate[band];
++		if (mcast_rate > 0)
++			rateidx = mcast_rate - 1;
++		else
++			rateidx = ffs(vif->bss_conf.basic_rates) - 1;
  
-+skip_out_fle:
- 	return edesc;
- }
- 
-diff --git a/drivers/crypto/caam/qi.c b/drivers/crypto/caam/qi.c
-index 9f08f84cca59..2d9b0485141f 100644
---- a/drivers/crypto/caam/qi.c
-+++ b/drivers/crypto/caam/qi.c
-@@ -18,6 +18,7 @@
- #include "desc_constr.h"
- 
- #define PREHDR_RSLS_SHIFT	31
-+#define PREHDR_ABS		BIT(25)
- 
- /*
-  * Use a reasonable backlog of frames (per CPU) as congestion threshold,
-@@ -346,6 +347,7 @@ int caam_drv_ctx_update(struct caam_drv_ctx *drv_ctx, u32 *sh_desc)
- 	 */
- 	drv_ctx->prehdr[0] = cpu_to_caam32((1 << PREHDR_RSLS_SHIFT) |
- 					   num_words);
-+	drv_ctx->prehdr[1] = cpu_to_caam32(PREHDR_ABS);
- 	memcpy(drv_ctx->sh_desc, sh_desc, desc_bytes(sh_desc));
- 	dma_sync_single_for_device(qidev, drv_ctx->context_a,
- 				   sizeof(drv_ctx->sh_desc) +
-@@ -401,6 +403,7 @@ struct caam_drv_ctx *caam_drv_ctx_init(struct device *qidev,
- 	 */
- 	drv_ctx->prehdr[0] = cpu_to_caam32((1 << PREHDR_RSLS_SHIFT) |
- 					   num_words);
-+	drv_ctx->prehdr[1] = cpu_to_caam32(PREHDR_ABS);
- 	memcpy(drv_ctx->sh_desc, sh_desc, desc_bytes(sh_desc));
- 	size = sizeof(drv_ctx->prehdr) + sizeof(drv_ctx->sh_desc);
- 	hwdesc = dma_map_single(qidev, drv_ctx->prehdr, size,
+ 		if (ar->phy_capability & WHAL_WLAN_11A_CAPABILITY)
+ 			rateidx += ATH10K_MAC_FIRST_OFDM_RATE_IDX;
 -- 
 2.20.1
 
