@@ -2,51 +2,123 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEDCC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D17C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD1A229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7320D229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfGXKDD (ORCPT
+        id S1727218AbfGXKDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:03:03 -0400
-Received: from verein.lst.de ([213.95.11.211]:49516 "EHLO verein.lst.de"
+        Wed, 24 Jul 2019 06:03:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:38126 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfGXKDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:03:02 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5003468B20; Wed, 24 Jul 2019 12:03:01 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 12:03:01 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     Christoph Hellwig <hch@lst.de>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: 5.3-rc1 BUGS in dma_addressing_limited
-Message-ID: <20190724100301.GA5390@lst.de>
-References: <cda1952f-0265-e055-a3ce-237c59069a3f@suse.com>
+        id S1726070AbfGXKDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:03:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EBAD337;
+        Wed, 24 Jul 2019 03:03:15 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A29953F71F;
+        Wed, 24 Jul 2019 03:03:13 -0700 (PDT)
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Introducing support for Page
+ Pool
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Lars Persson <lists@bofh.nu>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <cover.1562149883.git.joabreu@synopsys.com>
+ <1b254bb7fc6044c5e6e2fdd9e00088d1d13a808b.1562149883.git.joabreu@synopsys.com>
+ <29dcc161-f7c8-026e-c3cc-5adb04df128c@nvidia.com>
+ <BN8PR12MB32661E919A8DEBC7095BAA12D3C80@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190722101830.GA24948@apalos>
+ <CADnJP=thexf2sWcVVOLWw14rpteEj0RrfDdY8ER90MpbNN4-oA@mail.gmail.com>
+ <BN8PR12MB326661846D53AAEE315A7434D3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <11557fe0-0cba-cb49-0fb6-ad24792d4a53@nvidia.com>
+ <BN8PR12MB3266664ECA192E02C06061EED3C40@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <BYAPR12MB3269A725AFDDA21E92946558D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <ab14f31f-2045-b1be-d31f-2a81b8527dac@nvidia.com>
+ <BYAPR12MB32692AF2BA127C5DA5B74804D3C70@BYAPR12MB3269.namprd12.prod.outlook.com>
+ <6c769226-bdd9-6fe0-b96b-5a0d800fed24@arm.com>
+ <8756d681-e167-fe4a-c6f0-47ae2dcbb100@nvidia.com>
+ <3255edfa-4465-204b-4751-8d40c8fb1382@arm.com>
+ <ae11deb4-abec-f0f9-312d-b11d72bc74cd@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <bdfe91d0-96a4-91d3-3955-66933c319462@arm.com>
+Date:   Wed, 24 Jul 2019 11:03:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cda1952f-0265-e055-a3ce-237c59069a3f@suse.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <ae11deb4-abec-f0f9-312d-b11d72bc74cd@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:43:13AM +0300, Nikolay Borisov wrote:
-> Hello Christoph, 
+On 23/07/2019 22:39, Jon Hunter wrote:
 > 
-> 5.3-rc1 crashes for me when run in qemu with scsi disks. 
-> Quick investigation shows that the following triggers a BUG_ON: 
+> On 23/07/2019 14:19, Robin Murphy wrote:
+> 
+> ...
+> 
+>>>> Do you know if the SMMU interrupts are working correctly? If not, it's
+>>>> possible that an incorrect address or mapping direction could lead to
+>>>> the DMA transaction just being silently terminated without any fault
+>>>> indication, which generally presents as inexplicable weirdness (I've
+>>>> certainly seen that on another platform with the mix of an unsupported
+>>>> interrupt controller and an 'imperfect' ethernet driver).
+>>>
+>>> If I simply remove the iommu node for the ethernet controller, then I
+>>> see lots of ...
+>>>
+>>> [    6.296121] arm-smmu 12000000.iommu: Unexpected global fault, this
+>>> could be serious
+>>> [    6.296125] arm-smmu 12000000.iommu:         GFSR 0x00000002,
+>>> GFSYNR0 0x00000000, GFSYNR1 0x00000014, GFSYNR2 0x00000000
+>>>
+>>> So I assume that this is triggering the SMMU interrupt correctly.
+>>
+>> According to tegra186.dtsi it appears you're using the MMU-500 combined
+>> interrupt, so if global faults are being delivered then context faults
+>> *should* also, but I'd be inclined to try a quick hack of the relevant
+>> stmmac_desc_ops::set_addr callback to write some bogus unmapped address
+>> just to make sure arm_smmu_context_fault() then screams as expected, and
+>> we're not missing anything else.
+> 
+> I hacked the driver and forced the address to zero for a test and
+> in doing so I see ...
+> 
+> [   10.440072] arm-smmu 12000000.iommu: Unhandled context fault: fsr=0x402, iova=0x00000000, fsynr=0x1c0011, cbfrsynra=0x14, cb=0
+> 
+> So looks like the interrupts are working AFAICT.
 
-I've queued up the fix here:
+OK, that's good, thanks for confirming. Unfortunately that now leaves us 
+with the challenge of figuring out how things are managing to go wrong 
+*without* ever faulting... :)
 
-http://git.infradead.org/users/hch/dma-mapping.git/commitdiff/06532750010e06dd4b6d69983773677df7fc5291
+I wonder if we can provoke the failure on non-IOMMU platforms with 
+"swiotlb=force" - I have a few boxes I could potentially test that on, 
+but sadly forgot my plan to bring one with me this morning.
 
-it will be on the way to Linus soon, I just wanted to give it a cycle
-in linux-next.
+Robin.
