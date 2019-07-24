@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F1DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A23EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0B020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6B4217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997067;
-	bh=kkdb9rpIpqLfoQlsjJfFqsf8rrboPnAdP2Hxt735zmk=;
+	s=default; t=1563997069;
+	bh=/K8p8bk94uWfx74QDvrAiJkViwJ0FKebaIXNiDp2qYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TI7qUcWdwR+/3N2EyogTU2x0w1sZxvo3aa3ajBRrWB3UUk2/YQ4iaLhfiEU/yV4OV
-	 tFoi5pBYQ/FF7fSUG1OTOghS3f/1J+ntBxzvmX4ItrejZElZo73m54YEbm8eLjk8eQ
-	 p1TQ8MY8jxcs46qhZ3Uo0pG7RPcLHteCyuHkIhQ0=
+	b=ThSA7bBi0+joBDGCRv/ewysWKORpVtQAZL8dj2xkoyASmHHum5IR+LdOc6t2AU6fS
+	 ZniPtKN/czJvNOsVly+STi4KXFrmps9Wj1RKooy1mvDmbYk4KNdCzJ8NQM8sihfwBB
+	 VGoK0uWr5PG+mqnCEJgX+ocB7MLdFWj+af9ZXPXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbfGXThp (ORCPT
+        id S2389521AbfGXThs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37922 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:37:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389508AbfGXThk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:37:40 -0400
+        id S2389512AbfGXThp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:37:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36AC920665;
-        Wed, 24 Jul 2019 19:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A260F20665;
+        Wed, 24 Jul 2019 19:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997059;
-        bh=kkdb9rpIpqLfoQlsjJfFqsf8rrboPnAdP2Hxt735zmk=;
+        s=default; t=1563997065;
+        bh=/K8p8bk94uWfx74QDvrAiJkViwJ0FKebaIXNiDp2qYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HgfGfvH/rLN2tnre85Cv93LOKbGP0bluzQBS5E76/jU6fDVJmQegCVzuJxuicva+f
-         eQKq26GThp8wfHlY9HZ/k7JJZncLTk4J4VnsNuOoDW2P6O9z6xMDQNM0625daRcGD+
-         DEj1+RxWTrWenLcpU61UyXWjlANM7PhAnxxlHYHs=
+        b=ytGCzFmOzk1dIMLbDCKgKPY7BuGH2/3eQqNDFhNpmQE7m+8hHdm2zDo48jVn6GLaP
+         5fz7DANSiS2NTuolOd7SUDPGlMBPK0WYuUxK62NwF+St/Y5arth2CKHJNQ3eEKdvf5
+         sdrnZ4sOca0y0qUd67m36ZWSGIeNJJxOJ3YHDei0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.2 308/413] SUNRPC: Ensure the bvecs are reset when we re-encode the RPC request
-Date:   Wed, 24 Jul 2019 21:19:59 +0200
-Message-Id: <20190724191757.796535775@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.2 310/413] ASoC: dapm: Adapt for debugfs API change
+Date:   Wed, 24 Jul 2019 21:20:01 +0200
+Message-Id: <20190724191757.934708464@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,63 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Mark Brown <broonie@kernel.org>
 
-commit 75369089820473eac45e9ddd970081901a373c08 upstream.
+commit ceaea851b9ea75f9ea2bbefb53ff0d4b27cd5a6e upstream.
 
-The bvec tracks the list of pages, so if the number of pages changes
-due to a re-encode, we need to reset the bvec as well.
+Back in ff9fb72bc07705c (debugfs: return error values, not NULL) the
+debugfs APIs were changed to return error pointers rather than NULL
+pointers on error, breaking the error checking in ASoC. Update the
+code to use IS_ERR() and log the codes that are returned as part of
+the error messages.
 
-Fixes: 277e4ab7d530 ("SUNRPC: Simplify TCP receive code by switching...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.20+
+Fixes: ff9fb72bc07705c (debugfs: return error values, not NULL)
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/clnt.c     |    3 +--
- net/sunrpc/xprt.c     |    2 ++
- net/sunrpc/xprtsock.c |    1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/soc-dapm.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1788,6 +1788,7 @@ rpc_xdr_encode(struct rpc_task *task)
- 	req->rq_snd_buf.head[0].iov_len = 0;
- 	xdr_init_encode(&xdr, &req->rq_snd_buf,
- 			req->rq_snd_buf.head[0].iov_base, req);
-+	xdr_free_bvec(&req->rq_snd_buf);
- 	if (rpc_encode_header(task, &xdr))
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -2155,23 +2155,25 @@ void snd_soc_dapm_debugfs_init(struct sn
+ {
+ 	struct dentry *d;
+ 
+-	if (!parent)
++	if (!parent || IS_ERR(parent))
  		return;
  
-@@ -1827,8 +1828,6 @@ call_encode(struct rpc_task *task)
- 			rpc_call_rpcerror(task, task->tk_status);
- 		}
+ 	dapm->debugfs_dapm = debugfs_create_dir("dapm", parent);
+ 
+-	if (!dapm->debugfs_dapm) {
++	if (IS_ERR(dapm->debugfs_dapm)) {
+ 		dev_warn(dapm->dev,
+-		       "ASoC: Failed to create DAPM debugfs directory\n");
++			 "ASoC: Failed to create DAPM debugfs directory %ld\n",
++			 PTR_ERR(dapm->debugfs_dapm));
  		return;
--	} else {
--		xprt_request_prepare(task->tk_rqstp);
  	}
  
- 	/* Add task to reply queue before transmission to avoid races */
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1013,6 +1013,8 @@ xprt_request_enqueue_receive(struct rpc_
- 
- 	if (!xprt_request_need_enqueue_receive(task, req))
- 		return;
-+
-+	xprt_request_prepare(task->tk_rqstp);
- 	spin_lock(&xprt->queue_lock);
- 
- 	/* Update the softirq receive buffer */
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -909,6 +909,7 @@ static int xs_nospace(struct rpc_rqst *r
- static void
- xs_stream_prepare_request(struct rpc_rqst *req)
- {
-+	xdr_free_bvec(&req->rq_rcv_buf);
- 	req->rq_task->tk_status = xdr_alloc_bvec(&req->rq_rcv_buf, GFP_KERNEL);
+ 	d = debugfs_create_file("bias_level", 0444,
+ 				dapm->debugfs_dapm, dapm,
+ 				&dapm_bias_fops);
+-	if (!d)
++	if (IS_ERR(d))
+ 		dev_warn(dapm->dev,
+-			 "ASoC: Failed to create bias level debugfs file\n");
++			 "ASoC: Failed to create bias level debugfs file: %ld\n",
++			 PTR_ERR(d));
  }
  
+ static void dapm_debugfs_add_widget(struct snd_soc_dapm_widget *w)
+@@ -2185,10 +2187,10 @@ static void dapm_debugfs_add_widget(stru
+ 	d = debugfs_create_file(w->name, 0444,
+ 				dapm->debugfs_dapm, w,
+ 				&dapm_widget_power_fops);
+-	if (!d)
++	if (IS_ERR(d))
+ 		dev_warn(w->dapm->dev,
+-			"ASoC: Failed to create %s debugfs file\n",
+-			w->name);
++			 "ASoC: Failed to create %s debugfs file: %ld\n",
++			 w->name, PTR_ERR(d));
+ }
+ 
+ static void dapm_debugfs_cleanup(struct snd_soc_dapm_context *dapm)
 
 
