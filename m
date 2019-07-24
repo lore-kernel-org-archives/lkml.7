@@ -2,97 +2,104 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C56C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5791DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 112A9229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/UPHHu/"
+	by mail.kernel.org (Postfix) with ESMTP id 2BD48229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563996351;
+	bh=fw0wvUTuomp5nvFm8q/m7DfHxdR4geJp3N56qtnQP8c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kGAYwPGpP8DHRKkJghglJ2H3RKZwDeEFHtJBbbN7iFvxiMIHQrWfwnSlCAMqB5ely
+	 YyNsFcF9bl+ukc0dVk2S5bXDY4UpH8zoNamtJ2wWeV6VXuaPGxbsNy8MmY9MV5+sf0
+	 E7DZxw8vTIwFxPaPxOlkdhkrqFJoGLvObA6ifYbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbfGXTZq (ORCPT
+        id S1727466AbfGXTZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:25:46 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43303 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388043AbfGXTZh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c19so32727182lfm.10;
-        Wed, 24 Jul 2019 12:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=62j7+wSkhUHI/uSOEbsFJlruhr6Za1QWHbaqDgoEVtQ=;
-        b=D/UPHHu/fRcxCNNCrIdrC/33dxO3nj5swxlbIsELJLpjb2uo7H37kp4yGQ5uAHGGtj
-         wLpgAFUMrHa1mZmTO4lu9Bh8EKH50d3EFZ7EjCX3SPIZRUaENr4lQFPThmYTI4fjVwDQ
-         iUE6dcIf/SXrAt9dwzL2DSdMsaVQp4eGs87+rxz1XpaW/abr+DOHGmb+eqv6kzEl8b8O
-         TZwRvz7aAnrDiwX6CHPs0ZhUq4/TzvEKUgH7dqL4Z+JGLo80HvGUBKVl3kJ0ANKU90jr
-         dCL7t8ONpYxKjBd9RuQ9pEFnfomu0WBuKrBZIfDyXXLV/X5254HidEocWQ2+IbuO1ZA6
-         eYFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=62j7+wSkhUHI/uSOEbsFJlruhr6Za1QWHbaqDgoEVtQ=;
-        b=A7kIPOXssOwQoHaO06HPM+jk9HywL73bV1z1nHwS11czdNjX0kfQwwhSSvFGhrD2l1
-         2PgDs08d4Jc9XKWDnACaekbGlchVlR5TwYjgYQK/RJc2VY4ujc6UCVqMUfrFx7w9vS31
-         ufpZmafIvp7baUgZIRj3UK2ZqLQYXsc3p8MqSUQObgP5ka6n0E83bE8bH8R0f1nmG0f2
-         l9psNMpWK9qKzvBxWiodaaa5xixhskykOe646Cg4WK1G3gxPALlr7xco5gZ2TL8S11Zg
-         nJtCiSAZiLK0uG/MdKj2Uw7Cbyn/QY/Bqt/FUjzNDKAVbj7IXdPOL7+GoY5XBApkOZfb
-         COHQ==
-X-Gm-Message-State: APjAAAXHRY1NXkRc6jskE3L9+GUYhJDA9d6HD4YsVJy7aTTIMe5QqJkY
-        33BGJiypb45e8cpmjK7nMPc=
-X-Google-Smtp-Source: APXvYqw7B3oyjIfw1cKuffGMQUDFrbiFo4davqC0Fk4UMrvpLwisAi0F3pd6A8VSflQTS2vwH4V40Q==
-X-Received: by 2002:a19:6e41:: with SMTP id q1mr28989439lfk.20.1563996334490;
-        Wed, 24 Jul 2019 12:25:34 -0700 (PDT)
-Received: from localhost ([188.170.223.67])
-        by smtp.gmail.com with ESMTPSA id k27sm8003487lfm.90.2019.07.24.12.25.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 12:25:33 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 22:25:28 +0300
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: elantech - mark expected switch fall-through
-Message-ID: <20190724192528.GA6859@penguin>
-References: <20190724175202.GA9583@embeddedor>
+        Wed, 24 Jul 2019 15:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727043AbfGXTZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:25:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DADB218F0;
+        Wed, 24 Jul 2019 19:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996342;
+        bh=fw0wvUTuomp5nvFm8q/m7DfHxdR4geJp3N56qtnQP8c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=F7WElPsFgDXOHr4SrZCKz9uwpjYaJU6PunAmIJo8+w8O4TMwMKObAEwLwNJpz77o1
+         6OBfExIEc04QEVfgjJBMEr9hjqF+oNmup0a10qNGJ3unHhKkNRafmgjNTWvyTOCHty
+         a01rYLSuj5aAnA80SRXNaYPNImrXdFFC7ZeDE2i0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Weihang Li <liweihang@hisilicon.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 062/413] net: hns3: set ops to null when unregister ad_dev
+Date:   Wed, 24 Jul 2019 21:15:53 +0200
+Message-Id: <20190724191739.696773486@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724175202.GA9583@embeddedor>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+[ Upstream commit 594a81b39525f0a17e92c2e0b167ae1400650380 ]
 
-On Wed, Jul 24, 2019 at 12:52:02PM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warning:
-> 
-> drivers/input/mouse/elantech.c: In function 'elantech_use_host_notify':
-> drivers/input/mouse/elantech.c:1843:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (dmi_get_bios_year() >= 2018)
->       ^
-> drivers/input/mouse/elantech.c:1845:2: note: here
->   default:
->   ^~~~~~~
+The hclge/hclgevf and hns3 module can be unloaded independently,
+when hclge/hclgevf unloaded firstly, the ops of ae_dev should
+be set to NULL, otherwise it will cause an use-after-free problem.
 
-Thank you for the patch but I already pushed out similar patch.
+Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks.
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index fa8b8506b120..738e01393b68 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -251,6 +251,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
+ 
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
+ 	}
+ 
+ 	list_del(&ae_algo->node);
+@@ -351,6 +352,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
++		ae_dev->ops = NULL;
+ 	}
+ 
+ 	list_del(&ae_dev->node);
 -- 
-Dmitry
+2.20.1
+
+
+
