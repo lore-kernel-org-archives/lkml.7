@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBDCC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5775C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92FD2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2C12083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999330;
-	bh=orXWRKi23+doYAm/aUIa5cUQ8AntowNvjpxvHo18py4=;
+	s=default; t=1563999334;
+	bh=PeL33vqeAPwBtGHId64br16FHlxvtZWSmnLlP0/Kbq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJWgAU/A+InS8TKnSCfiSE5ND2W6hFWhQd+2Yuz8OYQW+5mloblVEXPKxDXq/Ht3/
-	 jyRNevQdOoJ4EJm3i3YF6tvZzPGbbjzYtBmaK7bFHJ142pSJOk9M8Hpb5QDCxJll5W
-	 YgAFNBU6dSABXrKGZscAmQZvZNP6o6kjP8jpxfeY=
+	b=fQ2qZ94oy567sUyQ+9cBHFJOGoG+6j8hCV3WEIZdAxzKByRhsdlj5Ei74wWvTVopH
+	 qEWxgFjX1c9UIfkEztHr606btVDOaBV+XoIvqyfbQBMfVvPZNq1AYuebfJdeZ2N/qa
+	 Ij3Qc/EGBRBj/d6Epdvn21nnOfcLBdM/X3nyakns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404267AbfGXTyA (ORCPT
+        id S2404222AbfGXTxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387824AbfGXTxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:53:54 -0400
+        id S2391851AbfGXTxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:53:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A09CA22ADA;
-        Wed, 24 Jul 2019 19:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 018A221873;
+        Wed, 24 Jul 2019 19:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998034;
-        bh=orXWRKi23+doYAm/aUIa5cUQ8AntowNvjpxvHo18py4=;
+        s=default; t=1563998021;
+        bh=PeL33vqeAPwBtGHId64br16FHlxvtZWSmnLlP0/Kbq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jGK7+G9ATTqDc0P+a2vAV1gdw8WYdK+1YHsOVjgd5axabWX+ljidCM5zp/FpKBAxq
-         I1kCoj8z1daU2nfvCVMapChSsOYHlQ+nuxuryiZ/0zr/PwRHAa9Pte741SIUQHx2Jk
-         W+SfUhNGso8hu2c8gm0XWc3vqossYZf5IZWsewPg=
+        b=t3tQIxg9HildtcrkT48bZuxhPjBBW3KOrbgw2moZ7lWy11T0x7gjsACZ7PPvhTijg
+         TdCvqMKD2+WQQDIm0+C67XF0ijgZ/ttmGzqlOLZqNmVUsK9Krwh1M4KhgVCk6zzCps
+         jmzVrZXSr1g7PGQUJ6mMXYD3JTokpSns5v6i3CFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
-        Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 224/371] floppy: fix div-by-zero in setup_format_params
-Date:   Wed, 24 Jul 2019 21:19:36 +0200
-Message-Id: <20190724191741.372895498@linuxfoundation.org>
+Subject: [PATCH 5.1 220/371] net: hns3: fix __QUEUE_STATE_STACK_XOFF not cleared issue
+Date:   Wed, 24 Jul 2019 21:19:32 +0200
+Message-Id: <20190724191741.110084253@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,59 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
+[ Upstream commit f96315f2f17e7b2580d2fec7c4d6a706a131d904 ]
 
-This fixes a divide by zero error in the setup_format_params function of
-the floppy driver.
+When change MTU or other operations, which just calling .reset_notify
+to do HNAE3_DOWN_CLIENT and HNAE3_UP_CLIENT, then
+the netdev_tx_reset_queue() in the hns3_clear_all_ring() will be
+ignored. So the dev_watchdog() may misdiagnose a TX timeout.
 
-Two consecutive ioctls can trigger the bug: The first one should set the
-drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
-to become zero.  Next, the floppy format operation should be called.
+This patch separates netdev_tx_reset_queue() from
+hns3_clear_all_ring(), and unifies hns3_clear_all_ring() and
+hns3_force_clear_all_ring into one, since they are doing
+similar things.
 
-A floppy disk is not required to be inserted.  An unprivileged user
-could trigger the bug if the device is accessible.
-
-The patch checks F_SECT_PER_TRACK for a non-zero value in the
-set_geometry function.  The proper check should involve a reasonable
-upper limit for the .sect and .rate fields, but it could change the
-UAPI.
-
-The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
-cancels the formatting operation in case of zero.
-
-The bug was found by syzkaller.
-
-Signed-off-by: Denis Efremov <efremov@ispras.ru>
-Tested-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3a30964a2eef ("net: hns3: delay ring buffer clearing during reset")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 54 +++++++++----------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 95f608d1a098..e2f742e17683 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2119,6 +2119,9 @@ static void setup_format_params(int track)
- 	raw_cmd->kernel_data = floppy_track_buffer;
- 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 7e7c10513d2c..ecf6ad5bdc2d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -27,8 +27,7 @@
+ #define hns3_set_field(origin, shift, val)	((origin) |= ((val) << (shift)))
+ #define hns3_tx_bd_count(S)	DIV_ROUND_UP(S, HNS3_MAX_BD_SIZE)
  
-+	if (!F_SECT_PER_TRACK)
-+		return;
+-static void hns3_clear_all_ring(struct hnae3_handle *h);
+-static void hns3_force_clear_all_ring(struct hnae3_handle *h);
++static void hns3_clear_all_ring(struct hnae3_handle *h, bool force);
+ static void hns3_remove_hw_addr(struct net_device *netdev);
+ 
+ static const char hns3_driver_name[] = "hns3";
+@@ -459,6 +458,20 @@ static int hns3_nic_net_open(struct net_device *netdev)
+ 	return 0;
+ }
+ 
++static void hns3_reset_tx_queue(struct hnae3_handle *h)
++{
++	struct net_device *ndev = h->kinfo.netdev;
++	struct hns3_nic_priv *priv = netdev_priv(ndev);
++	struct netdev_queue *dev_queue;
++	u32 i;
 +
- 	/* allow for about 30ms for data transport per track */
- 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
++	for (i = 0; i < h->kinfo.num_tqps; i++) {
++		dev_queue = netdev_get_tx_queue(ndev,
++						priv->ring_data[i].queue_index);
++		netdev_tx_reset_queue(dev_queue);
++	}
++}
++
+ static void hns3_nic_net_down(struct net_device *netdev)
+ {
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+@@ -489,7 +502,9 @@ static void hns3_nic_net_down(struct net_device *netdev)
+ 	 * to disable the ring through firmware when downing the netdev.
+ 	 */
+ 	if (!hns3_nic_resetting(netdev))
+-		hns3_clear_all_ring(priv->ae_handle);
++		hns3_clear_all_ring(priv->ae_handle, false);
++
++	hns3_reset_tx_queue(priv->ae_handle);
+ }
  
-@@ -3231,6 +3234,8 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
- 	/* sanity checking for parameters. */
- 	if (g->sect <= 0 ||
- 	    g->head <= 0 ||
-+	    /* check for zero in F_SECT_PER_TRACK */
-+	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
- 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
- 	    /* check if reserved bits are set */
- 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
+ static int hns3_nic_net_stop(struct net_device *netdev)
+@@ -3742,7 +3757,7 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
+ 
+ 	hns3_del_all_fd_rules(netdev, true);
+ 
+-	hns3_force_clear_all_ring(handle);
++	hns3_clear_all_ring(handle, true);
+ 
+ 	hns3_uninit_phy(netdev);
+ 
+@@ -3914,43 +3929,26 @@ static void hns3_force_clear_rx_ring(struct hns3_enet_ring *ring)
+ 	}
+ }
+ 
+-static void hns3_force_clear_all_ring(struct hnae3_handle *h)
+-{
+-	struct net_device *ndev = h->kinfo.netdev;
+-	struct hns3_nic_priv *priv = netdev_priv(ndev);
+-	struct hns3_enet_ring *ring;
+-	u32 i;
+-
+-	for (i = 0; i < h->kinfo.num_tqps; i++) {
+-		ring = priv->ring_data[i].ring;
+-		hns3_clear_tx_ring(ring);
+-
+-		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
+-		hns3_force_clear_rx_ring(ring);
+-	}
+-}
+-
+-static void hns3_clear_all_ring(struct hnae3_handle *h)
++static void hns3_clear_all_ring(struct hnae3_handle *h, bool force)
+ {
+ 	struct net_device *ndev = h->kinfo.netdev;
+ 	struct hns3_nic_priv *priv = netdev_priv(ndev);
+ 	u32 i;
+ 
+ 	for (i = 0; i < h->kinfo.num_tqps; i++) {
+-		struct netdev_queue *dev_queue;
+ 		struct hns3_enet_ring *ring;
+ 
+ 		ring = priv->ring_data[i].ring;
+ 		hns3_clear_tx_ring(ring);
+-		dev_queue = netdev_get_tx_queue(ndev,
+-						priv->ring_data[i].queue_index);
+-		netdev_tx_reset_queue(dev_queue);
+ 
+ 		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
+ 		/* Continue to clear other rings even if clearing some
+ 		 * rings failed.
+ 		 */
+-		hns3_clear_rx_ring(ring);
++		if (force)
++			hns3_force_clear_rx_ring(ring);
++		else
++			hns3_clear_rx_ring(ring);
+ 	}
+ }
+ 
+@@ -4153,8 +4151,8 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
+ 		return 0;
+ 	}
+ 
+-	hns3_clear_all_ring(handle);
+-	hns3_force_clear_all_ring(handle);
++	hns3_clear_all_ring(handle, true);
++	hns3_reset_tx_queue(priv->ae_handle);
+ 
+ 	hns3_nic_uninit_vector_data(priv);
+ 
 -- 
 2.20.1
 
