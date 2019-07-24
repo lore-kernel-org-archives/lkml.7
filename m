@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE63C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42843C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F82721873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 197BD21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfUUBBBj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMO5ioJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfGXIOm (ORCPT
+        id S1726410AbfGXIOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:14:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36057 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfGXIOl (ORCPT
+        Wed, 24 Jul 2019 04:14:46 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43711 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfGXIOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:14:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so20545570pfl.3;
-        Wed, 24 Jul 2019 01:14:41 -0700 (PDT)
+        Wed, 24 Jul 2019 04:14:45 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i189so20542039pfg.10;
+        Wed, 24 Jul 2019 01:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L5nL72l4EofiZh5+AlPg28m/QGAR+oMZgweBNFc3hzc=;
-        b=EfUUBBBjL2IiBl5sR7u3tdIKqH7KsZxKAVLi90QycMrEJu4rp7EdLnzgRxj0FLMPXm
-         d0sKMvmzDx0TsF75DGYMdUNswpBudNcfSWYeki3ZIPW39rfnZtw8rEmslYNibio5tMvW
-         CpOWbbs3cEtapZSJcVWmbrJQ/qL8Hpg0L43qWV/YX9UDkLiJPkKnfhdc4STxpNpUI5Ko
-         +0nYVsDo+nMCgY3eUndfwVU1sSBmWd5tfCcxjicyP8XIVjOKx77rmmmXpYA3VHO3bj1j
-         s2CTc8/Ds1Ym6e02AcbAJBrF//qNVFM1JNs3gqayDprw0gyixzuo07eey9XvQK3iFc1+
-         4xwA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WvGHFIan6lc8cVbCwxdFhs9RVF4G2GwXmrmu204eFkk=;
+        b=hMO5ioJr5LwOZiMEkdjiDeL2iLmGaSOhaVPjAqsMr1oAtj4ndvID9RVF81DLuU67Y3
+         +xtNmxuKwqqRbgWqzRjyLsSTdcHUEpWYWQS6LkX8oB1vNR1EatQq41FWakoGZSMYEmxR
+         UcOoaNc44oh0zZdJ6yzTaoxmmWiQPrJr6Mu4Gav/tTPp7muAYnnrvzIRHFeBaMI2e99D
+         eIgYyE8KQ873YB6koRPCvNBkI9o3qCIOEYOETd7reSfyzDu9X+RKIn8zeTFriKYkQ/z6
+         TrX5Eh+ZHWXubmqZVCEkqjDwGjw7l8UwnnNVqdWXiJtxIIdbXetyyIAPdXRT+KnjDZ84
+         /Lpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L5nL72l4EofiZh5+AlPg28m/QGAR+oMZgweBNFc3hzc=;
-        b=qpmZgyjPWzcajtF6ykt8YX60cF3oB3jgdHHxY3Pf/SO378mAt49YqXGnzjJ6Fl5sIS
-         opz71t4pqPsuHH7Hh6y+MLbLiCmkguEagD/8wq2I5/G+hunIxudd6mqB09bHGb3VDoB5
-         uxtY18TfeF8+7w4eo1wCsVZ3WZ6qyWDk79pRwJtZKRFr9BMy2LKXRwvP5AE2DByEuGC2
-         XzwquLnBzjFwGkzYjMUop1QPZP8QNkvd7ZOAl60L456Hf36BeGrVCQdzTp2IjUhm2mS0
-         PHmVJvGNfN+vlaJCl4FDjewTOa+lJ57Wzu+hGHYq1ZWR8ECpqI2m3MODmIfUzhQQG7ZJ
-         ZF7Q==
-X-Gm-Message-State: APjAAAU2p4reczg7KX284Xig9UNnoRYgZ6AGPRl52tdR9E+Ngw/sAiZt
-        UhAiHSl8E4g+XAEnWD5XP6A=
-X-Google-Smtp-Source: APXvYqwpZs/mtGQ8G6lFgh7SCJpHFI7lv/GkUOr8Cg7v9sxMljdT82S4d8hOzIWkOkqXRf9vOmzsKQ==
-X-Received: by 2002:a63:ff66:: with SMTP id s38mr81212888pgk.363.1563956080876;
-        Wed, 24 Jul 2019 01:14:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WvGHFIan6lc8cVbCwxdFhs9RVF4G2GwXmrmu204eFkk=;
+        b=YeA1X+0K1YUPlGig9k6S/T7Ny2iT46RMS+VeNJHpENYLiV5a8CxFsjf7kM4vh1Uc99
+         Z91VznPhvVWKxJ+dM6HPRAE5gsqkaS5J3lDDV3PKH4BSE1Ruq6IObGmhMX/IUUGpIanW
+         Rm2A1+MEE/3gQKci9HtispYboeG3YAvTIP1CsXoxZvLrye6jdAU8Shut9QWdT7l3Itpn
+         r68OZ0wOWwth7Es+svB1bjKh75MuHpcLSPSMRmiWH+JmmLm0x3syce09q8+B9nhmDqgR
+         0510fL98q4Eql7aaRk0aN3b7KOdSX23LFXSy8pykj/+xEfSte9DI0XyDQqUXgIzaDW+M
+         tnEg==
+X-Gm-Message-State: APjAAAVEsPlT1/IRbtdJGQgc/jwFvYNwBGUgZ0XwiifjBTIq+bsGiMFB
+        OWkMyq30PMCdrlENB95jNFw=
+X-Google-Smtp-Source: APXvYqyFLqoQDm/6sd6jTx6DpHT6h943h0dkJhJa5XvLUtXp+kiUpb8w+2wvy/WFIWVwb+X3NLX8XQ==
+X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr52480678pjb.115.1563956084898;
+        Wed, 24 Jul 2019 01:14:44 -0700 (PDT)
 Received: from localhost.localdomain (180-150-79-77.b4964f.syd.nbn.aussiebb.net. [180.150.79.77])
-        by smtp.gmail.com with ESMTPSA id q126sm1468146pfb.56.2019.07.24.01.14.37
+        by smtp.gmail.com with ESMTPSA id q126sm1468146pfb.56.2019.07.24.01.14.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 01:14:40 -0700 (PDT)
+        Wed, 24 Jul 2019 01:14:44 -0700 (PDT)
 From:   Rhys Kidd <rhyskidd@gmail.com>
 To:     Matthew Garrett <mjg59@google.com>,
         =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
@@ -64,10 +64,12 @@ To:     Matthew Garrett <mjg59@google.com>,
         Andy Shevchenko <andy@infradead.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Rhys Kidd <rhyskidd@gmail.com>
-Subject: [PATCH 1/3] platform/x86: dell-wmi: Ignore keyboard backlight change KBD_LED_ON_TOKEN
-Date:   Wed, 24 Jul 2019 18:14:13 +1000
-Message-Id: <20190724081415.8926-1-rhyskidd@gmail.com>
+Subject: [PATCH 2/3] platform/x86: dell-wmi: Ignore keyboard backlight change KBD_LED_AUTO_TOKEN
+Date:   Wed, 24 Jul 2019 18:14:14 +1000
+Message-Id: <20190724081415.8926-2-rhyskidd@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190724081415.8926-1-rhyskidd@gmail.com>
+References: <20190724081415.8926-1-rhyskidd@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,7 +79,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 There's a wmi event generated by dell-wmi when pressing keyboard backlight
 toggle key:
-[1224203.948894] dell_wmi: Unknown key with type 0x0011 and code 0x01e2 pressed
+[1224178.355650] dell_wmi: Unknown key with type 0x0011 and code 0x01e3 pressed
 
 This event is for notification purposes, let's ignore it.
 
@@ -87,14 +89,14 @@ Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 1f565fb69098..ae331ac119a1 100644
+index ae331ac119a1..68a8a4eba4e3 100644
 --- a/drivers/platform/x86/dell-wmi.c
 +++ b/drivers/platform/x86/dell-wmi.c
-@@ -312,6 +312,7 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
- 
+@@ -313,6 +313,7 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
  	/* Keyboard backlight level changed */
  	{ KE_IGNORE, 0x01e1, { KEY_RESERVED } },
-+	{ KE_IGNORE, 0x01e2, { KEY_RESERVED } },
+ 	{ KE_IGNORE, 0x01e2, { KEY_RESERVED } },
++	{ KE_IGNORE, 0x01e3, { KEY_RESERVED } },
  	{ KE_IGNORE, 0x02ea, { KEY_RESERVED } },
  	{ KE_IGNORE, 0x02eb, { KEY_RESERVED } },
  	{ KE_IGNORE, 0x02ec, { KEY_RESERVED } },
