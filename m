@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7477BC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23ABC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48259217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85829229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997391;
-	bh=IzjadQGVOj+uXoZGqo4UPhonMgPcLs056rrdRIz1HRI=;
+	s=default; t=1563997393;
+	bh=OoLstCwrj4LwdSUJRZg8bJXqPiWJi3vK9rLCWGtd5fA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=prFcNYvgx8B83rnuQKEpvR6BmOcgmBP7SMBUVuWD4hJgFb90RFM7vZksVgCkt7gnr
-	 nLqJdyAyJyh9De91ZVnYRFbi4bTUf/dPRNOe973N0PZJqtGtbJfKRo6ItPzX+hY62T
-	 n0RkwBGxxnqODceLKFbA4lPQsM7maEmdeqEtFMMg=
+	b=t2sB5/Gkexn/kse0j8KbcqEH1oU0mZ+COPijZOfx26lzvo0ktYrvtE6Wb80Gia42P
+	 QrZpHldrshx25JQJp8FuHWAOJTmb+UmPR+u/GdgrFm6QDB14nWAP/KnqObkGU/S3sB
+	 N/a8/4Ksdo1yL6n1uQsjk9jpGfuEX0XeBmUJ5Y/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390492AbfGXTnK (ORCPT
+        id S2390503AbfGXTnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45104 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390462AbfGXTnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:07 -0400
+        id S2390475AbfGXTnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E11A229F4;
-        Wed, 24 Jul 2019 19:43:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88EEA21873;
+        Wed, 24 Jul 2019 19:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997386;
-        bh=IzjadQGVOj+uXoZGqo4UPhonMgPcLs056rrdRIz1HRI=;
+        s=default; t=1563997384;
+        bh=OoLstCwrj4LwdSUJRZg8bJXqPiWJi3vK9rLCWGtd5fA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DbcsDlF82X71CWOnH686LbT5SaJbSQSdjyWNKiq8bUvPW1GvSklqiejtswtvPvjx0
-         +iz3AdS13dSx0/cV1Z3rIxuj/mia7xKYRPLQ3Y6jb/lRgY8zC/hpIeqVqxuHZcT2e+
-         ersnMy4VP9L5nSi7V0sanSSNupkI3MvABYQpg9xc=
+        b=S0mH8cjiwgvFTyODDIEpEq8VZOonm46WMwXwKIrNtdG3UtPizrPfM0H4oXzf2j/rb
+         zRHGNbBtnY/5WLhBXGjfmnwqoeb4oN/kCuJ3VSaVuNJKDmDx2aj3j4o0/hw9Stq6XK
+         y0LIN4X9jDKcp+7rR7O3/XyN1JVhPJc25n+Ig7Q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        stable@vger.kernel.org,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 392/413] powerpc/powernv: Fix stale iommu table base after VFIO
-Date:   Wed, 24 Jul 2019 21:21:23 +0200
-Message-Id: <20190724191802.899562363@linuxfoundation.org>
+Subject: [PATCH 5.2 391/413] powerpc/powernv/idle: Fix restore of SPRN_LDBAR for POWER9 stop state.
+Date:   Wed, 24 Jul 2019 21:21:22 +0200
+Message-Id: <20190724191802.842404671@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,63 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-commit 5636427d087a55842c1a199dfb839e6545d30e5d upstream.
+commit f5a9e488d62360c91c5770bd55a0b40e419a71ce upstream.
 
-The powernv platform uses @dma_iommu_ops for non-bypass DMA. These ops
-need an iommu_table pointer which is stored in
-dev->archdata.iommu_table_base. It is initialized during
-pcibios_setup_device() which handles boot time devices. However when a
-device is taken from the system in order to pass it through, the
-default IOMMU table is destroyed but the pointer in a device is not
-updated; also when a device is returned back to the system, a new
-table pointer is not stored in dev->archdata.iommu_table_base either.
-So when a just returned device tries using IOMMU, it crashes on
-accessing stale iommu_table or its members.
+commit 10d91611f426 ("powerpc/64s: Reimplement book3s idle code in C")
+reimplemented book3S code to pltform/powernv/idle.c. But when doing so
+missed to add the per-thread LDBAR update in the core_woken path of
+the power9_idle_stop(). Patch fixes the same.
 
-This calls set_iommu_table_base() when the default window is created.
-Note it used to be there before but was wrongly removed (see "fixes").
-It did not appear before as these days most devices simply use bypass.
-
-This adds set_iommu_table_base(NULL) when a device is taken from the
-system to make it clear that IOMMU DMA cannot be used past that point.
-
-Fixes: c4e9d3c1e65a ("powerpc/powernv/pseries: Rework device adding to IOMMU groups")
-Cc: stable@vger.kernel.org # v5.0+
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Fixes: 10d91611f426 ("powerpc/64s: Reimplement book3s idle code in C")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190702105836.26695-1-maddy@linux.vnet.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/powernv/pci-ioda.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/powerpc/platforms/powernv/idle.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2456,6 +2456,14 @@ static long pnv_pci_ioda2_setup_default_
- 	if (!pnv_iommu_bypass_disabled)
- 		pnv_pci_ioda2_set_bypass(pe, true);
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -758,7 +758,6 @@ static unsigned long power9_idle_stop(un
+ 	mtspr(SPRN_PTCR,	sprs.ptcr);
+ 	mtspr(SPRN_RPR,		sprs.rpr);
+ 	mtspr(SPRN_TSCR,	sprs.tscr);
+-	mtspr(SPRN_LDBAR,	sprs.ldbar);
  
-+	/*
-+	 * Set table base for the case of IOMMU DMA use. Usually this is done
-+	 * from dma_dev_setup() which is not called when a device is returned
-+	 * from VFIO so do it here.
-+	 */
-+	if (pe->pdev)
-+		set_iommu_table_base(&pe->pdev->dev, tbl);
-+
- 	return 0;
- }
+ 	if (pls >= pnv_first_tb_loss_level) {
+ 		/* TB loss */
+@@ -790,6 +789,7 @@ core_woken:
+ 	mtspr(SPRN_MMCR0,	sprs.mmcr0);
+ 	mtspr(SPRN_MMCR1,	sprs.mmcr1);
+ 	mtspr(SPRN_MMCR2,	sprs.mmcr2);
++	mtspr(SPRN_LDBAR,	sprs.ldbar);
  
-@@ -2543,6 +2551,8 @@ static void pnv_ioda2_take_ownership(str
- 	pnv_pci_ioda2_unset_window(&pe->table_group, 0);
- 	if (pe->pbus)
- 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
-+	else if (pe->pdev)
-+		set_iommu_table_base(&pe->pdev->dev, NULL);
- 	iommu_tce_table_put(tbl);
- }
+ 	mtspr(SPRN_SPRG3,	local_paca->sprg_vdso);
  
 
 
