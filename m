@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61160C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C625AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3950D229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996D8218EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996261;
-	bh=gpkOniK76Sb8jC7RArcrweh848Ov1osMfJvD3t4jypE=;
+	s=default; t=1563996263;
+	bh=gMMurKYMCG8pPeWNb5igVlclR8pt7aNHttM/JyzjUzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J2dVnjKqITPZCwEQs5IcoctrqVl/xFITikPgyzP4UrAcKwbLqT4tvMd0UYz/bsdSL
-	 Bf6aj+0ZE14E7w5GlzQrCW5cz+sUtxZNI1sNIhO+WRONllnGWIKJUGkEjHg3UvcOfg
-	 uQJn3UloCPw2AIrM7r6x31Wtn3VDZaPzT1p0U3zc=
+	b=UKvf5a4fTER3wp8tfeetnHbeioZ3BonMsk/TvgX2Nd9DJTTwxam1IDBY9c4UKIGiP
+	 9dxq3y5F3Ja6KyMN79e/QzYlfo7N/CvLooMmyvihe4tYg3fcAccYMpWEz9GqsDhHWF
+	 yYGu67ghIFZrbZuou6x6/7Jqrfl9Y0cMrw3kNXPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbfGXTYT (ORCPT
+        id S1729052AbfGXTYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40432 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbfGXTYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:17 -0400
+        id S1729032AbfGXTYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E46F1218EA;
-        Wed, 24 Jul 2019 19:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 911B8218EA;
+        Wed, 24 Jul 2019 19:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996256;
-        bh=gpkOniK76Sb8jC7RArcrweh848Ov1osMfJvD3t4jypE=;
+        s=default; t=1563996258;
+        bh=gMMurKYMCG8pPeWNb5igVlclR8pt7aNHttM/JyzjUzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o70aBtxoMevRLjiL7VLrmq9/iBnRoZi3wHBEe1n8qy/2sHNil/g2Zrj36nq0gU36Z
-         y/a2iGfKk7K8Xy9ulcgiHnPapY3H7P85x48G9mbfqStMADNC8Hd4p9wmYiE3wo4OoT
-         NMf4q8laD1zIwP95BA0zSCQ1dkp+/5d/V4aNLhr0=
+        b=HEkWgBAee5cydfjW3Oy2bWuxxt3t5S6Qzm67JZ4lY71HAZTenIPHww/IIED0eCW56
+         euivorDLM3Zs5W/V8Je1SKywWKtkDeieU70DrapgF6yBr1WILJMFTXrUYLIByu+adZ
+         rdMHq7o0drxZHmUFfzAcWHFSNsjQW0qFMwKowUow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 006/413] ath10k: Do not send probe response template for mesh
-Date:   Wed, 24 Jul 2019 21:14:57 +0200
-Message-Id: <20190724191735.665537951@linuxfoundation.org>
+Subject: [PATCH 5.2 007/413] spi: rockchip: turn down tx dma bursts
+Date:   Wed, 24 Jul 2019 21:14:58 +0200
+Message-Id: <20190724191735.754597361@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,41 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 97354f2c432788e3163134df6bb144f4b6289d87 ]
+[ Upstream commit 47300728fb213486a830565d2af49da967c9d16a ]
 
-Currently mac80211 do not support probe response template for
-mesh point. When WMI_SERVICE_BEACON_OFFLOAD is enabled, host
-driver tries to configure probe response template for mesh, but
-it fails because the interface type is not NL80211_IFTYPE_AP but
-NL80211_IFTYPE_MESH_POINT.
+This fixes tx and bi-directional dma transfers on rk3399-gru-kevin.
 
-To avoid this failure, skip sending probe response template to
-firmware for mesh point.
+It seems the SPI fifo must have room for 2 bursts when the dma_tx_req
+signal is generated or it might skip some words. This in turn makes
+the rx dma channel never complete for bi-directional transfers.
 
-Tested HW: WCN3990/QCA6174/QCA9984
+Fix it by setting tx burst length to fifo_len / 4 and the dma
+watermark to fifo_len / 2.
 
-Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+However the rk3399 TRM says (sic):
+"DMAC support incrementing-address burst and fixed-address burst. But in
+the case of access SPI and UART at byte or halfword size, DMAC only
+support fixed-address burst and the address must be aligned to word."
+
+So this relies on fifo_len being a multiple of 16 such that the
+burst length (= fifo_len / 4) is a multiple of 4 and the addresses
+will be word-aligned.
+
+Fixes: dcfc861d24ec ("spi: rockchip: adjust dma watermark and burstlen")
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/spi/spi-rockchip.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index e8997e22ceec..b500fd427595 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -1630,6 +1630,10 @@ static int ath10k_mac_setup_prb_tmpl(struct ath10k_vif *arvif)
- 	if (arvif->vdev_type != WMI_VDEV_TYPE_AP)
- 		return 0;
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 9b91188a85f9..2cc6d9951b52 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -417,7 +417,7 @@ static int rockchip_spi_prepare_dma(struct rockchip_spi *rs,
+ 			.direction = DMA_MEM_TO_DEV,
+ 			.dst_addr = rs->dma_addr_tx,
+ 			.dst_addr_width = rs->n_bytes,
+-			.dst_maxburst = rs->fifo_len / 2,
++			.dst_maxburst = rs->fifo_len / 4,
+ 		};
  
-+	 /* For mesh, probe response and beacon share the same template */
-+	if (ieee80211_vif_is_mesh(vif))
-+		return 0;
-+
- 	prb = ieee80211_proberesp_get(hw, vif);
- 	if (!prb) {
- 		ath10k_warn(ar, "failed to get probe resp template from mac80211\n");
+ 		dmaengine_slave_config(master->dma_tx, &txconf);
+@@ -518,7 +518,7 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
+ 	else
+ 		writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_RXFTLR);
+ 
+-	writel_relaxed(rs->fifo_len / 2 - 1, rs->regs + ROCKCHIP_SPI_DMATDLR);
++	writel_relaxed(rs->fifo_len / 2, rs->regs + ROCKCHIP_SPI_DMATDLR);
+ 	writel_relaxed(0, rs->regs + ROCKCHIP_SPI_DMARDLR);
+ 	writel_relaxed(dmacr, rs->regs + ROCKCHIP_SPI_DMACR);
+ 
 -- 
 2.20.1
 
