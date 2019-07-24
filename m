@@ -2,168 +2,104 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E04C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63125C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E02921880
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2980721873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564002595;
+	bh=u0DKWk7HCAdM9K+LNvrAozVOXRXioQba7PWbcuRuGbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SyEDYNH/1B2d7E/oPwyBkm3YjijZFrNGZHjDjiCOrVqa/VgK8uaZlDbq3SXuKRdYz
+	 mt+diqiL/tUcNTxpJQMuFaR7V3mKZUGJJ9s8KZ1SwO+TEJ445Yc2rtewP43mhVLxzy
+	 jXsum9PCvknxAGXDbt12OOIBZaDMqTZqFHK/SeXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388412AbfGXVGO (ORCPT
+        id S2387980AbfGXVJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:06:14 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:26268 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387962AbfGXVF3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:05:29 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 24 Jul 2019 14:05:12 -0700
-Received: from rlwimi.localdomain (unknown [10.166.65.164])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 98955407D5;
-        Wed, 24 Jul 2019 14:05:27 -0700 (PDT)
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [PATCH v3 05/13] recordmcount: Kernel style function signature formatting
-Date:   Wed, 24 Jul 2019 14:04:59 -0700
-Message-ID: <3fdb45e4904152fdbbda964a389a8a3e79e29ffc.1563992889.git.mhelsley@vmware.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1563992889.git.mhelsley@vmware.com>
-References: <cover.1563992889.git.mhelsley@vmware.com>
+        Wed, 24 Jul 2019 17:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387568AbfGXVJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:09:53 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0516B2054F;
+        Wed, 24 Jul 2019 21:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564002593;
+        bh=u0DKWk7HCAdM9K+LNvrAozVOXRXioQba7PWbcuRuGbE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ISL8X1YreDGnnHZlrqkUMDyeJY403ARQ1AlYq7VdKyHA9wQjBSiWDz2/YwfXZtJCa
+         ilTgdagZ+MTWkAEk/fLxBl9qVuHOprsZW+TM4v+2+kqsg0X10vC3QRsyXQ33g9R+BY
+         5W3JjjbZ7osVcC727uC4MT57GcWTbzyFLXLRQ9ao=
+Date:   Wed, 24 Jul 2019 14:09:51 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
+        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
+        dsahern@gmail.com, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
+Message-ID: <20190724210950.GH213255@gmail.com>
+Mail-Followup-To: David Miller <davem@davemloft.net>,
+        eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
+        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
+        dsahern@gmail.com, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <20190724163014.GC673@sol.localdomain>
+ <20190724.111225.2257475150626507655.davem@davemloft.net>
+ <20190724183710.GF213255@gmail.com>
+ <20190724.130928.1854327585456756387.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724.130928.1854327585456756387.davem@davemloft.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The uwrite() and ulseek() functions are formatted inconsistently
-with the rest of the file and the kernel overall. While we're
-making other changes here let's fix this.
+On Wed, Jul 24, 2019 at 01:09:28PM -0700, David Miller wrote:
+> From: Eric Biggers <ebiggers@kernel.org>
+> Date: Wed, 24 Jul 2019 11:37:12 -0700
+> 
+> > We can argue about what words to use to describe this situation, but
+> > it doesn't change the situation itself.
+> 
+> And we should argue about those words because it matters to humans and
+> effects how they feel, and humans ultimately fix these bugs.
+> 
+> So please stop with the hyperbole.
+> 
+> Thank you.
 
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
----
- scripts/recordmcount.c | 21 +++++++--------------
- scripts/recordmcount.h | 13 ++++++-------
- 2 files changed, 13 insertions(+), 21 deletions(-)
+Okay, there are 151 bugs that syzbot saw on the mainline Linux kernel in the
+last 7 days (90.1% with reproducers).  Of those, 59 were reported over 3 months
+ago (89.8% with reproducers).  Of those, 12 were reported over a year ago (83.3%
+with reproducers).
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 584dcbf3f320..1c3599f07f9b 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -52,8 +52,7 @@ static void *file_append; /* added to the end of the file */
- static size_t file_append_size; /* how much is added to end of file */
- 
- /* Per-file resource cleanup when multiple files. */
--static void
--cleanup(void)
-+static void cleanup(void)
- {
- 	if (!mmap_failed)
- 		munmap(file_map, sb.st_size);
-@@ -68,8 +67,7 @@ cleanup(void)
- 
- /* ulseek, uwrite, ...:  Check return value for errors. */
- 
--static off_t
--ulseek(off_t const offset, int const whence)
-+static off_t ulseek(off_t const offset, int const whence)
- {
- 	switch (whence) {
- 	case SEEK_SET:
-@@ -89,8 +87,7 @@ ulseek(off_t const offset, int const whence)
- 	return file_ptr - file_map;
- }
- 
--static ssize_t
--uwrite(void const *const buf, size_t const count)
-+static ssize_t uwrite(void const *const buf, size_t const count)
- {
- 	size_t cnt = count;
- 	off_t idx = 0;
-@@ -127,8 +124,7 @@ uwrite(void const *const buf, size_t const count)
- 	return count;
- }
- 
--static void *
--umalloc(size_t size)
-+static void * umalloc(size_t size)
- {
- 	void *const addr = malloc(size);
- 	if (addr == 0) {
-@@ -394,8 +390,7 @@ static uint32_t (*w)(uint32_t);
- static uint32_t (*w2)(uint16_t);
- 
- /* Names of the sections that could contain calls to mcount. */
--static int
--is_mcounted_section_name(char const *const txtname)
-+static int is_mcounted_section_name(char const *const txtname)
- {
- 	return strncmp(".text",          txtname, 5) == 0 ||
- 		strcmp(".init.text",     txtname) == 0 ||
-@@ -446,8 +441,7 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
- 	}).r_info;
- }
- 
--static int
--do_file(char const *const fname)
-+static int do_file(char const *const fname)
- {
- 	Elf32_Ehdr *const ehdr = mmap_file(fname);
- 	unsigned int reltype = 0;
-@@ -595,8 +589,7 @@ do_file(char const *const fname)
- 	return rc;
- }
- 
--int
--main(int argc, char *argv[])
-+int main(int argc, char *argv[])
- {
- 	const char ftrace[] = "/ftrace.o";
- 	int ftrace_size = sizeof(ftrace) - 1;
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 909a3e4775c2..7778ab799bc7 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -476,11 +476,10 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
- char const *already_has_rel_mcount = "success"; /* our work here is done! */
- 
- /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
--static char const *
--__has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
--		 Elf_Shdr const *const shdr0,
--		 char const *const shstrtab,
--		 char const *const fname)
-+static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
-+				     Elf_Shdr const *const shdr0,
-+				     char const *const shstrtab,
-+				     char const *const fname)
- {
- 	/* .sh_info depends on .sh_type == SHT_REL[,A] */
- 	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
-@@ -532,8 +531,8 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
- 
- 
- /* Overall supervision for Elf32 ET_REL file. */
--static int
--do_func(Elf_Ehdr *const ehdr, char const *const fname, unsigned const reltype)
-+static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
-+		   unsigned const reltype)
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
--- 
-2.20.1
+No opinion on whether those are small/medium/large numbers, in case it would
+hurt someone's feelings.
 
+These numbers do *not* include bugs that are still valid but weren't seen on
+mainline in last 7 days, e.g.:
+
+- Bugs that are seen only rarely, so by chance weren't seen in last 7 days.
+- Bugs only in linux-next and/or subsystem branches.
+- Bugs that were seen in mainline more than 7 days ago, and then only on
+  linux-next or subsystem branch in last 7 days.
+- Bugs that stopped being seen due to a change in syzkaller.
+- Bugs that stopped being seen due to a change in kernel config.
+- Bugs that stopped being seen due to other environment changes such as kernel
+  command line parameters.
+- Bugs that stopped being seen due to a kernel change that hid the bug but
+  didn't actually fix it, i.e. still reachable in other ways.
+
+Eric
