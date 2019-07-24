@@ -2,173 +2,87 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02FCC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BD4C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6AB2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsS7ZfMT"
+	by mail.kernel.org (Postfix) with ESMTP id 15F332173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfGXH4z (ORCPT
+        id S1726482AbfGXH7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 03:56:55 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39353 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfGXH4y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:56:54 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so45793315wrt.6;
-        Wed, 24 Jul 2019 00:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CWKOul5zWyLvmCqcEFdL6klVQupyTa972P0CGXCFiyo=;
-        b=HsS7ZfMTiCjuA0EPZ+ReU3GePJSQredYd4jUYk6T9eSw5or0YFHI58qK19SCPg87Cd
-         PodmffNoAu+ZyZd1syzNTZY8cPf9Kwd6m1Rrk89eYTToMQKEd1tVqYL1qB1hT7+vSxHe
-         6sTtQFV6zUcoVdDxXJPA0B/j+w3wdIo1Z0fiEJYMd+4RUuw9UuT2+wQiE7RSp6CY0acs
-         I5nqdkcC3s1XAXW/JBwNdunWtqoz33q4kQCBmuIyE210csXY6q12TGvCVpL6b3kxAzEv
-         KCE7E4PDpBYsDiruIy5h9YSYQRWAQmAxj44EjELBDEdFb0DfB87iC22XMYntolXqDs7M
-         TwIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CWKOul5zWyLvmCqcEFdL6klVQupyTa972P0CGXCFiyo=;
-        b=C0/ig37m06vDEUJ4eb3bQHM7BZA5zPkH6TcAPrb24o1TR36XYKsmurPKWT0uNDs186
-         T/5emOx5AdJHrl5gOo0FmQlxsMv2egb0fNRwaFoINCrxvUaF04tU6YIf/tWH4IksOPHp
-         zJ114GXqBtBGJdw/eJb2Uh26jULU+tZMY+iASjIM3HWOoLwauh/LOPJRhojWylU3h1Ct
-         +9Vb3QUmZUwq5Q35N63dTDf7DVz1NwDmUwwnzvIfiXKfv1wc8w70no7lf8nNxG+8d1z6
-         78dd+C8qj+sjEGcFrvz8+o25cCMA7FK3MIL7N/Nd0LlwFomfPpITjNLut8/gYB+P3e9+
-         0zxQ==
-X-Gm-Message-State: APjAAAVbnLvEkg0h76SPoldugm/ml5PPibd1VRPEAvM/JxZgc32o0b9i
-        L5ZUvix9cvditibcn+8Vd5EgcbspICD7gWE5a74=
-X-Google-Smtp-Source: APXvYqz3HVcRTUHwTARLhdDsaaeCmGC91o6UnC25yshx3nImhY6HzZDxOBK6H7v1N346b+TEj1v4R0M50x7JySNR5bM=
-X-Received: by 2002:a5d:50d1:: with SMTP id f17mr34700608wrt.124.1563955012063;
- Wed, 24 Jul 2019 00:56:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190602034429.6888-1-hdanton@sina.com> <20190602105133.GA16948@hmswarspite.think-freely.org>
- <CADvbK_dUDjK3UAF49uo+DZv+QiuEsaMmZeqDwBJ0suRwu4yXJw@mail.gmail.com>
-In-Reply-To: <CADvbK_dUDjK3UAF49uo+DZv+QiuEsaMmZeqDwBJ0suRwu4yXJw@mail.gmail.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Wed, 24 Jul 2019 15:56:40 +0800
-Message-ID: <CADvbK_ddFyO2iz-QS3bHevHN7Q29VUS4joK3Kxam3Y4tEqHFKA@mail.gmail.com>
-Subject: Re: [PATCH] net: sctp: fix memory leak in sctp_send_reset_streams
-To:     Neil Horman <nhorman@tuxdriver.com>
-Cc:     Hillf Danton <hdanton@sina.com>, linux-sctp@vger.kernel.org,
-        network dev <netdev@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Eric Dumazet <edumazet@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 24 Jul 2019 03:59:46 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54610 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfGXH7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 03:59:45 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 13FCA1A0240;
+        Wed, 24 Jul 2019 09:59:44 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C7C801A031A;
+        Wed, 24 Jul 2019 09:59:38 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 17F27402F6;
+        Wed, 24 Jul 2019 15:59:32 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] clk: imx8mn: Keep uart clocks on for early console
+Date:   Wed, 24 Jul 2019 15:50:17 +0800
+Message-Id: <20190724075017.11003-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 2, 2019 at 9:36 PM Xin Long <lucien.xin@gmail.com> wrote:
->
-> On Sun, Jun 2, 2019 at 6:52 PM Neil Horman <nhorman@tuxdriver.com> wrote:
-> >
-> > On Sun, Jun 02, 2019 at 11:44:29AM +0800, Hillf Danton wrote:
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
-> > >
-> > > executing program
-> > > executing program
-> > > executing program
-> > > executing program
-> > > executing program
-> > > BUG: memory leak
-> > > unreferenced object 0xffff888123894820 (size 32):
-> > >   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
-> > >   hex dump (first 32 bytes):
-> > >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > >   backtrace:
-> > >     [<00000000c7e71c69>] kmemleak_alloc_recursive
-> > > include/linux/kmemleak.h:55 [inline]
-> > >     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
-> > >     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
-> > >     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
-> > >     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-> > >     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
-> > >     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
-> > >     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
-> > >     [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
-> > >     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
-> > >     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
-> > >     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
-> > >     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
-> > >     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
-> > >     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
-> > >     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
-> > >     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-> > >     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > >
-> > >
-> > > It was introduced in commit d570a59c5b5f ("sctp: only allow the out stream
-> > > reset when the stream outq is empty"), in orde to check stream outqs before
-> > > sending SCTP_STRRESET_IN_PROGRESS back to the peer of the stream. EAGAIN is
-> > > returned, however, without the nstr_list slab released, if any outq is found
-> > > to be non empty.
-> > >
-> > > Freeing the slab in question before bailing out fixes it.
-> > >
-> > > Fixes: d570a59c5b5f ("sctp: only allow the out stream reset when the stream outq is empty")
-> > > Reported-by: syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
-> > > Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> > > Tested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> > > Cc: Xin Long <lucien.xin@gmail.com>
-> > > Cc: Neil Horman <nhorman@tuxdriver.com>
-> > > Cc: Vlad Yasevich <vyasevich@gmail.com>
-> > > Cc: Eric Dumazet <edumazet@google.com>
-> > > Signed-off-by: Hillf Danton <hdanton@sina.com>
-> > > ---
-> > > net/sctp/stream.c | 1 +
-> > > 1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-> > > index 93ed078..d3e2f03 100644
-> > > --- a/net/sctp/stream.c
-> > > +++ b/net/sctp/stream.c
-> > > @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
-> > >
-> > >       if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
-> > >               retval = -EAGAIN;
-> > > +             kfree(nstr_list);
-> > >               goto out;
-> > >       }
-> > >
-> > > --
-> > >
-> > >
-> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
-> Reviewed-by: Xin Long <lucien.xin@gmail.com>
-This fix is not applied, pls resend it with:
-to = network dev <netdev@vger.kernel.org>
-cc = davem@davemloft.net
-to = linux-sctp@vger.kernel.org
-cc = Neil Horman <nhorman@tuxdriver.com>
-cc = Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+
+Call imx_register_uart_clocks() API to keep uart clocks enabled
+when earlyprintk or earlycon is active.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mn.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+index 07481a5..ecd1062 100644
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@ -355,6 +355,14 @@ static const char * const imx8mn_clko2_sels[] = {"osc_24m", "sys_pll2_200m", "sy
+ static struct clk *clks[IMX8MN_CLK_END];
+ static struct clk_onecell_data clk_data;
+ 
++static struct clk ** const uart_clks[] = {
++	&clks[IMX8MN_CLK_UART1_ROOT],
++	&clks[IMX8MN_CLK_UART2_ROOT],
++	&clks[IMX8MN_CLK_UART3_ROOT],
++	&clks[IMX8MN_CLK_UART4_ROOT],
++	NULL
++};
++
+ static int imx8mn_clocks_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -612,6 +620,8 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
+ 		goto unregister_clks;
+ 	}
+ 
++	imx_register_uart_clocks(uart_clks);
++
+ 	return 0;
+ 
+ unregister_clks:
+-- 
+2.7.4
+
