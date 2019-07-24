@@ -5,54 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1DBC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73E820657
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555EA2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033706;
-	bh=b2UBcwkfIU2ZO7dtFRhcgHXFH5JZVsiLzCQVo4m4NaE=;
+	s=default; t=1564033710;
+	bh=zNQupbiFs9PvuXXguj8gzL9X5NiI7yxyqCdNkPocXbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iu0Nlwffu6mfQrCzwYBDl9OYvUJz8KZ2ePsKcXycKkQZASCy28VbBayxDpOcc8PQ4
-	 cqCdxmRjjnNpqujYgPLjpdnP3+rioL6ETjTprfrOdagTGS14h+6laf349dow/4LFEf
-	 OkdFi4c2QrKScQc1u3VLAv4T62C/zjzUi3WTmv4s=
+	b=UwNvNrB2cFbSeEVJCUhLdxcnXNpI9M5RtGRVc5X5g+WqWZ9vGRY/G5boyCD4BsZ3V
+	 0M0blGFmNMxdsfBskGKjOaDqXZD+YOgP7MXabJKs2nkruNv1eTVbVjts4dlaF6Um3Z
+	 inm77kfDGBIUGDVG88Bk42PiSbFUp/RSlnNghB1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391391AbfGYFqM (ORCPT
+        id S2391364AbfGYFpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbfGYFqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:46:07 -0400
+        id S2405272AbfGYFpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:45:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5457021880;
-        Thu, 25 Jul 2019 05:46:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 967EA22BF3;
+        Thu, 25 Jul 2019 05:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033566;
-        bh=b2UBcwkfIU2ZO7dtFRhcgHXFH5JZVsiLzCQVo4m4NaE=;
+        s=default; t=1564033551;
+        bh=zNQupbiFs9PvuXXguj8gzL9X5NiI7yxyqCdNkPocXbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JhKkKATFv07TICJG8wUFdrHLMzmkPnQEPSmBRtOFoXfOIOaZ0yYsndZBRtiLG4lcJ
-         mQKeIS0c72PaymRdU7H++oVo/ddfSyJaj4s4MpgMFckLLecjUBuVQURJ23NtBPLb5L
-         2QDZWn+ZwNDOZkQel7Ot71XOCbKoUx98n2WwE9m0=
+        b=wjRTzcYFjyGRQWO1spRKUWzzyfnF0s1q/tDTqTXuyrsQZr+z6ctRokM1ZziodPNYD
+         7LbgmhkuxmwtdzPz/5AU+26UQAgy+unIEJPm+HT9OISlKVzXjCAlwdMX52rNnVdhOm
+         vycr7oRsCG+Gv8gpfPziBvYIADmsL3mwo+qwdgkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
+        stable@vger.kernel.org,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
         Christoph Hellwig <hch@lst.de>,
+        Amir Goldstein <amir73il@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 250/271] xfs: abort unaligned nowait directio early
-Date:   Wed, 24 Jul 2019 21:21:59 +0200
-Message-Id: <20190724191716.606604161@linuxfoundation.org>
+Subject: [PATCH 4.19 246/271] xfs: dont ever put nlink > 0 inodes on the unlinked list
+Date:   Wed, 24 Jul 2019 21:21:55 +0200
+Message-Id: <20190724191716.273954390@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -65,50 +63,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 1fdeaea4d92c69fb9f871a787af6ad00f32eeea7 upstream.
+commit c4a6bf7f6cc7eb4cce120fb7eb1e1fb8b2d65e09 upstream.
 
-Dave Chinner noticed that xfs_file_dio_aio_write returns EAGAIN without
-dropping the IOLOCK when its deciding not to wait, which means that we
-leak the IOLOCK there.  Since we now make unaligned directio always
-wait, we have the opportunity to bail out before trying to take the
-lock, which should reduce the overhead of this never-gonna-work case
-considerably while also solving the dropped lock problem.
+When XFS creates an O_TMPFILE file, the inode is created with nlink = 1,
+put on the unlinked list, and then the VFS sets nlink = 0 in d_tmpfile.
+If we crash before anything logs the inode (it's dirty incore but the
+vfs doesn't tell us it's dirty so we never log that change), the iunlink
+processing part of recovery will then explode with a pile of:
 
-Reported-by: Dave Chinner <david@fromorbit.com>
+XFS: Assertion failed: VFS_I(ip)->i_nlink == 0, file:
+fs/xfs/xfs_log_recover.c, line: 5072
+
+Worse yet, since nlink is nonzero, the inodes also don't get cleaned up
+and they just leak until the next xfs_repair run.
+
+Therefore, change xfs_iunlink to require that inodes being put on the
+unlinked list have nlink == 0, change the tmpfile callers to instantiate
+nodes that way, and set the nlink to 1 just prior to calling d_tmpfile.
+Fix the comment for xfs_iunlink while we're at it.
+
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_inode.c | 16 ++++++----------
+ fs/xfs/xfs_iops.c  | 13 +++++++++++--
+ 2 files changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 10f75965243c..259549698ba7 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -517,6 +517,9 @@ xfs_file_dio_aio_write(
- 	}
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index ae07baa7bdbf..5ed84d6c7059 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1332,7 +1332,7 @@ xfs_create_tmpfile(
+ 	if (error)
+ 		goto out_trans_cancel;
  
- 	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		/* unaligned dio always waits, bail */
-+		if (unaligned_io)
-+			return -EAGAIN;
- 		if (!xfs_ilock_nowait(ip, iolock))
- 			return -EAGAIN;
- 	} else {
-@@ -536,9 +539,6 @@ xfs_file_dio_aio_write(
- 	 * xfs_file_aio_write_checks() for other reasons.
+-	error = xfs_dir_ialloc(&tp, dp, mode, 1, 0, prid, &ip);
++	error = xfs_dir_ialloc(&tp, dp, mode, 0, 0, prid, &ip);
+ 	if (error)
+ 		goto out_trans_cancel;
+ 
+@@ -1907,11 +1907,8 @@ xfs_inactive(
+ }
+ 
+ /*
+- * This is called when the inode's link count goes to 0 or we are creating a
+- * tmpfile via O_TMPFILE. In the case of a tmpfile, @ignore_linkcount will be
+- * set to true as the link count is dropped to zero by the VFS after we've
+- * created the file successfully, so we have to add it to the unlinked list
+- * while the link count is non-zero.
++ * This is called when the inode's link count has gone to 0 or we are creating
++ * a tmpfile via O_TMPFILE.  The inode @ip must have nlink == 0.
+  *
+  * We place the on-disk inode on a list in the AGI.  It will be pulled from this
+  * list when the inode is freed.
+@@ -1931,6 +1928,7 @@ xfs_iunlink(
+ 	int		offset;
+ 	int		error;
+ 
++	ASSERT(VFS_I(ip)->i_nlink == 0);
+ 	ASSERT(VFS_I(ip)->i_mode != 0);
+ 
+ 	/*
+@@ -2837,11 +2835,9 @@ xfs_rename_alloc_whiteout(
+ 
+ 	/*
+ 	 * Prepare the tmpfile inode as if it were created through the VFS.
+-	 * Otherwise, the link increment paths will complain about nlink 0->1.
+-	 * Drop the link count as done by d_tmpfile(), complete the inode setup
+-	 * and flag it as linkable.
++	 * Complete the inode setup and flag it as linkable.  nlink is already
++	 * zero, so we can skip the drop_nlink.
  	 */
- 	if (unaligned_io) {
--		/* unaligned dio always waits, bail */
--		if (iocb->ki_flags & IOCB_NOWAIT)
--			return -EAGAIN;
- 		inode_dio_wait(inode);
- 	} else if (iolock == XFS_IOLOCK_EXCL) {
- 		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
+-	drop_nlink(VFS_I(tmpfile));
+ 	xfs_setup_iops(tmpfile);
+ 	xfs_finish_inode_setup(tmpfile);
+ 	VFS_I(tmpfile)->i_state |= I_LINKABLE;
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index f48ffd7a8d3e..1efef69a7f1c 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -191,9 +191,18 @@ xfs_generic_create(
+ 
+ 	xfs_setup_iops(ip);
+ 
+-	if (tmpfile)
++	if (tmpfile) {
++		/*
++		 * The VFS requires that any inode fed to d_tmpfile must have
++		 * nlink == 1 so that it can decrement the nlink in d_tmpfile.
++		 * However, we created the temp file with nlink == 0 because
++		 * we're not allowed to put an inode with nlink > 0 on the
++		 * unlinked list.  Therefore we have to set nlink to 1 so that
++		 * d_tmpfile can immediately set it back to zero.
++		 */
++		set_nlink(inode, 1);
+ 		d_tmpfile(dentry, inode);
+-	else
++	} else
+ 		d_instantiate(dentry, inode);
+ 
+ 	xfs_finish_inode_setup(ip);
 -- 
 2.20.1
 
