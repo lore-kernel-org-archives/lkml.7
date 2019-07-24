@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31823C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB009C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FE3217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E6F22AEC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997601;
-	bh=iHJQLfNkeBgPq8nmsteVEelpcJWCvTk2DKmQESJeNII=;
+	s=default; t=1563997603;
+	bh=bSy0U5yVi9iyH1R9tnjzF1EO7KPdJi0N7GTkYrzC4Hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rGysUQV07PvKVuLY/25s/OKU5AUCuup/1/U9gsCB3ApiIzwlqY7j1aJ++9xnOS/0b
-	 pzwEdfA6JzdpILsRCz0vqWcNN2u7GZcOXlDfGwOU8OVsocpaLn8Rn0bXPIUqOuvADy
-	 o2+nIvT5eKK+IRlyxU3A0SdjDA49Zjhsbl4Z0444=
+	b=GnAPT8slD/m8hKIsIVlUHbzGHTNtYtighE8wwv2kZ2HNfHoQf7PLslbkZBvDWgIDv
+	 Gj37i3hVVbaOBdp1K6ggpN34sn77TYpjnsfHWhU6MB87kFW8w8lF1C+OePcZmRWiR+
+	 pPae0JdKtD0eo4dbeaH1oFd191165AVw8jXysls8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403750AbfGXTqj (ORCPT
+        id S2391117AbfGXTqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52280 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391089AbfGXTqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:37 -0400
+        id S2391104AbfGXTqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F26B22BEB;
-        Wed, 24 Jul 2019 19:46:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB70C205C9;
+        Wed, 24 Jul 2019 19:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997595;
-        bh=iHJQLfNkeBgPq8nmsteVEelpcJWCvTk2DKmQESJeNII=;
+        s=default; t=1563997598;
+        bh=bSy0U5yVi9iyH1R9tnjzF1EO7KPdJi0N7GTkYrzC4Hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqdf4fcb5d5PGfWtc3BstFZn495GxCGDJUbrkifNpL9p55TrnKlD9Tx+UPbj7gJ9+
-         skYfTsPTbGaEZPAnPU2aPFY31b5zDJIkjlvC7wYpQzaSRnGASIPWyAENoH0A7L5YJv
-         ESfeJD3meqyn2edB/RyMTY1Mw25/imYl+0XWNZrI=
+        b=N+FW0Vn6HkDtv6Nd//mEGpTzfxp7GGt6J9/gFL6y8JYO017/HwtRCsDDsf8EDtT36
+         eYwe48lgjNxGjrJF3f5TwoRvbydIIHQrW7xzO705DRjyhg1iXm8D9t72tRudtBq42Y
+         6VdBF90XkxVpuRkuC6I1Fjl6cHHBfcuGPJaK1Wrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Denis Bolotin <denis.bolotin@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Daniel Lezcano <daniel.lezcano@free.fr>,
+        Serge Hallyn <serge@hallyn.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 036/371] qed: Set the doorbell address correctly
-Date:   Wed, 24 Jul 2019 21:16:28 +0200
-Message-Id: <20190724191727.236446182@linuxfoundation.org>
+Subject: [PATCH 5.1 037/371] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
+Date:   Wed, 24 Jul 2019 21:16:29 +0200
+Message-Id: <20190724191727.326676535@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,102 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8366d520019f366fabd6c7a13032bdcd837e18d4 ]
+[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
 
-In 100g mode the doorbell bar is united for both engines. Set
-the correct offset in the hwfn so that the doorbell returned
-for RoCE is in the affined hwfn.
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
 
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Denis Bolotin <denis.bolotin@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
+
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
+
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
+
+Cc: Daniel Lezcano <daniel.lezcano@free.fr>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_dev.c  | 29 ++++++++++++++--------
- drivers/net/ethernet/qlogic/qed/qed_rdma.c |  2 +-
- 2 files changed, 19 insertions(+), 12 deletions(-)
+ kernel/pid_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index 866cdc86a3f2..08045fd69fad 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -3441,6 +3441,7 @@ static void qed_nvm_info_free(struct qed_hwfn *p_hwfn)
- static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 				 void __iomem *p_regview,
- 				 void __iomem *p_doorbells,
-+				 u64 db_phys_addr,
- 				 enum qed_pci_personality personality)
- {
- 	struct qed_dev *cdev = p_hwfn->cdev;
-@@ -3449,6 +3450,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
- 	/* Split PCI bars evenly between hwfns */
- 	p_hwfn->regview = p_regview;
- 	p_hwfn->doorbells = p_doorbells;
-+	p_hwfn->db_phys_addr = db_phys_addr;
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index aa6e72fb7c08..098233ebe589 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -325,7 +325,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
+ 	}
  
- 	if (IS_VF(p_hwfn->cdev))
- 		return qed_vf_hw_prepare(p_hwfn);
-@@ -3544,7 +3546,9 @@ int qed_hw_prepare(struct qed_dev *cdev,
- 	/* Initialize the first hwfn - will learn number of hwfns */
- 	rc = qed_hw_prepare_single(p_hwfn,
- 				   cdev->regview,
--				   cdev->doorbells, personality);
-+				   cdev->doorbells,
-+				   cdev->db_phys_addr,
-+				   personality);
- 	if (rc)
- 		return rc;
+ 	read_lock(&tasklist_lock);
+-	force_sig(SIGKILL, pid_ns->child_reaper);
++	send_sig(SIGKILL, pid_ns->child_reaper, 1);
+ 	read_unlock(&tasklist_lock);
  
-@@ -3553,22 +3557,25 @@ int qed_hw_prepare(struct qed_dev *cdev,
- 	/* Initialize the rest of the hwfns */
- 	if (cdev->num_hwfns > 1) {
- 		void __iomem *p_regview, *p_doorbell;
--		u8 __iomem *addr;
-+		u64 db_phys_addr;
-+		u32 offset;
- 
- 		/* adjust bar offset for second engine */
--		addr = cdev->regview +
--		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
--				       BAR_ID_0) / 2;
--		p_regview = addr;
-+		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
-+					 BAR_ID_0) / 2;
-+		p_regview = cdev->regview + offset;
- 
--		addr = cdev->doorbells +
--		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
--				       BAR_ID_1) / 2;
--		p_doorbell = addr;
-+		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
-+					 BAR_ID_1) / 2;
-+
-+		p_doorbell = cdev->doorbells + offset;
-+
-+		db_phys_addr = cdev->db_phys_addr + offset;
- 
- 		/* prepare second hw function */
- 		rc = qed_hw_prepare_single(&cdev->hwfns[1], p_regview,
--					   p_doorbell, personality);
-+					   p_doorbell, db_phys_addr,
-+					   personality);
- 
- 		/* in case of error, need to free the previously
- 		 * initiliazed hwfn 0.
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-index 7873d6dfd91f..13802b825d65 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-@@ -803,7 +803,7 @@ static int qed_rdma_add_user(void *rdma_cxt,
- 				     dpi_start_offset +
- 				     ((out_params->dpi) * p_hwfn->dpi_size));
- 
--	out_params->dpi_phys_addr = p_hwfn->cdev->db_phys_addr +
-+	out_params->dpi_phys_addr = p_hwfn->db_phys_addr +
- 				    dpi_start_offset +
- 				    ((out_params->dpi) * p_hwfn->dpi_size);
- 
+ 	do_exit(0);
 -- 
 2.20.1
 
