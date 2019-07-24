@@ -2,119 +2,124 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_12_24,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F52CC76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1948FC76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089532184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="NFaF/0+H"
+	by mail.kernel.org (Postfix) with ESMTP id E154E22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 11:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391889AbfGYLb4 (ORCPT
+        id S2391907AbfGYLcn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 07:31:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37698 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391826AbfGYLbz (ORCPT
+        Thu, 25 Jul 2019 07:32:43 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49517 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391826AbfGYLcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 07:31:55 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t76so37431480oih.4
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jul 2019 04:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=essensium-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KhuBXKW1pqwu3I/a51C/lMMrHG93yOL/odw0jXksmsM=;
-        b=NFaF/0+HWBocaTISPRN64FldkQJsCLdLOvTsLvCXfup95wjAONzWuBKO5ZBfS6oF1J
-         ekdw5EqRu1vDsLkUPP8yayxmbdrOGMKKvDgdSqTumrq/ZI2blPkLolJokz3tMpSz5Od7
-         HWqfiq+FtTHlUP+8d6HXhtaQyDxiNFxwvQFtqs/IPrI2nN9+kLAbJhhHho20DwC9vkII
-         iPPEL36enx+NCendroTEzk3RZ2eR4hq/QsxLtDL7oviQHOAk7K1QoZ4arpkFtKrTG0OF
-         2qXJXB2jE18QVAJwsyM2BX8o5PSu/f32LtkYRTY6e+0sXgxGSTCjNCgu8MFCj2e64/FE
-         njZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KhuBXKW1pqwu3I/a51C/lMMrHG93yOL/odw0jXksmsM=;
-        b=kV1UVxCyYC7nP7q21kWOLIf4Q9t1C9TTSCHaPXo4H/1W6VQ5VvobKOaeJdS6jjSZgU
-         MJDsIwo2g68zFfZt4Hg1mYzcWpwwZaPGXsdN/LWtTuSZRi0L5wMzgMFsJus4pOd++4RQ
-         URRsYEgpsIhmqflzgd9OEO5L6BwK40RVt8l8QfUU3uPb/tj73LoPH1LuAeRRqk8lN8PO
-         8USrQdKOBxbuOhH9DQ4GoLwwYdX7okAw2m4H3IV3FIO37//F+3iameZR4a21AZ8Xns8j
-         xfTF8KryjutrrZX3C3kXwmzf6R8/YQNGh7Jco3yHHo82dBtXrlD/Ge+0m6tBPQLzXba1
-         ClaQ==
-X-Gm-Message-State: APjAAAWyQP98MSGCjB587w6yAA8MxBks2wTG9RZrrSSZjkpA8UHp/uXR
-        tHxx1tlG1QU7yfTQue0h2VCf3Zcil/iFJfaSoE7vvg==
-X-Google-Smtp-Source: APXvYqyTumoJZ0ix0stK6lv6nkJJmb3o/KhhwbmFxp6XK2dHaRDdSRFrJZl7q7gsxLKrWmIrfy6vJiZqQtl3NavRNws=
-X-Received: by 2002:a05:6808:8d3:: with SMTP id k19mr41623577oij.164.1564054314741;
- Thu, 25 Jul 2019 04:31:54 -0700 (PDT)
+        Thu, 25 Jul 2019 07:32:43 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9B61F20009;
+        Thu, 25 Jul 2019 11:32:39 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 16:14:25 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 7/8] dt-bindings: arm: sunxi: add binding for Lichee
+ Zero Plus core board
+Message-ID: <20190724141425.aycdkdwlgmljwpgr@flea>
+References: <20190713034634.44585-1-icenowy@aosc.io>
+ <20190713034634.44585-8-icenowy@aosc.io>
+ <20190720101318.cwrvv5r42wxx5k4r@flea>
+ <BDF0C9F6-DD0D-4343-8E24-06A07055004C@aosc.io>
+ <20190722192934.3jaf3r4rnyeslqyw@flea>
+ <7d24576697521f4985617113dbc4cc41@aosc.io>
 MIME-Version: 1.0
-References: <20190725085458.21838-1-hslester96@gmail.com>
-In-Reply-To: <20190725085458.21838-1-hslester96@gmail.com>
-From:   Patrick Havelange <patrick.havelange@essensium.com>
-Date:   Thu, 25 Jul 2019 13:31:43 +0200
-Message-ID: <CAKKE0ZE_9dK=nCodqHjTZFF2iQQvJRn=etdT_fm4ug7L_maCgg@mail.gmail.com>
-Subject: Re: [PATCH] counter/ftm-quaddec: Use device-managed registration API
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <7d24576697521f4985617113dbc4cc41@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Jul 24, 2019 at 09:09:01PM +0800, Icenowy Zheng wrote:
+> 在 2019-07-23 03:29，Maxime Ripard 写道：
+> > On Sat, Jul 20, 2019 at 07:39:08PM +0800, Icenowy Zheng wrote:
+> > >
+> > >
+> > > 于 2019年7月20日 GMT+08:00 下午6:13:18, Maxime Ripard
+> > > <maxime.ripard@bootlin.com> 写到:
+> > > >On Sat, Jul 13, 2019 at 11:46:33AM +0800, Icenowy Zheng wrote:
+> > > >> The Lichee Zero Plus is a core board made by Sipeed, with a microUSB
+> > > >> connector on it, TF slot or WSON8 SD chip, optional eMMC or SPI
+> > > >Flash.
+> > > >> It has a gold finger connector for expansion, and UART is available
+> > > >from
+> > > >> reserved pins w/ 2.54mm pitch. The board can use either SoChip S3 or
+> > > >> Allwinner V3L SoCs.
+> > > >>
+> > > >> Add the device tree binding of the basic version of the core board --
+> > > >> w/o eMMC or SPI Flash, w/ TF slot or WSON8 SD, and use S3 SoC.
+> > > >>
+> > > >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > >> ---
+> > > >> No changes since v3.
+> > > >>
+> > > >> Patch introduced in v2.
+> > > >>
+> > > >>  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+> > > >>  1 file changed, 5 insertions(+)
+> > > >>
+> > > >> diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >> index 000a00d12d6a..48c126a7a848 100644
+> > > >> --- a/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >> +++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+> > > >> @@ -353,6 +353,11 @@ properties:
+> > > >>            - const: licheepi,licheepi-zero
+> > > >>            - const: allwinner,sun8i-v3s
+> > > >>
+> > > >> +      - description: Lichee Zero Plus (with S3, without eMMC/SPI
+> > > >Flash)
+> > > >> +        items:
+> > > >> +          - const: sipeed,lichee-zero-plus
+> > > >> +          - const: allwinner,sun8i-s3
+> > > >
+> > > >If the S3 is just a rebranded V3, then we should have the v3 compatile
+> > > >in that list too.
+> > >
+> > > S3 is V3 with copackaged DDR3 DRAM.
+> > >
+> > > It's pin incompatible w/ V3.
+> >
+> > Does it matter though?
+> >
+> > If the only thing that changes is the package, we're not manipulating
+> > that, and any software that deals with the v3 can deal with the
+> > s3. Which is what the compatible is about.
+>
+> Okay. Should the S3 compatible be kept befoer the V3 one?
 
-Comments inline
+Yep, something like (in the DT)
 
-On Thu, Jul 25, 2019 at 10:55 AM Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> Make use of devm_counter_register.
-> Then we can remove redundant unregistration API
-> usage to make code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/counter/ftm-quaddec.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-> index 68a9b7393457..bccbca8681b6 100644
-> --- a/drivers/counter/ftm-quaddec.c
-> +++ b/drivers/counter/ftm-quaddec.c
-> @@ -317,7 +317,7 @@ static int ftm_quaddec_probe(struct platform_device *pdev)
->
->         ftm_quaddec_init(ftm);
->
-> -       ret = counter_register(&ftm->counter);
-> +       ret = devm_counter_register(&pdev->dev, &ftm->counter);
->         if (ret)
->                 ftm_quaddec_disable(ftm);
->
-> @@ -328,8 +328,6 @@ static int ftm_quaddec_remove(struct platform_device *pdev)
->  {
->         struct ftm_quaddec *ftm = platform_get_drvdata(pdev);
->
-> -       counter_unregister(&ftm->counter);
-> -
+compatible = "sipeed,lichee-zero-plus", "allwinner,sun8i-s3", "allwinner,sun8i-v3"
 
-The orders of (de)initialization should be kept symmetrical.
-In this case, now that counter_unregister() will be called via devm,
-it will be executed after ftm_quaddec_remove()
+Maxime
 
-This introduces a race condition where the ftm-quaddec is disabled but
-the counter entry itself is not.
-
-Somebody else (William?) should confirm this.
-
-
->         ftm_quaddec_disable(ftm);
->
->         return 0;
-> --
-> 2.20.1
->
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
