@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6F6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2A8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B4821734
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9308217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000543;
-	bh=7x5uqPwcLPoDTZF6cLw3c7iz9svtdhqhoJcH03CK8ZE=;
+	s=default; t=1564000548;
+	bh=bxec5w9zV1i7q5BKF/WWYgqOx3tA4v5sBaOkTcJ4HAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cgY0e4ScWNeVjsZt7f/cQKBXargGEyXfwfwOStOWzT1+9ZCDB4etNcF3NM5zy1BWx
-	 FGSTC08EI+bnZ7jV5T0bZ+TsnbMbRR9bo395P4a/F6HmMd+ayCuUcGA6u4uzUlUDKC
-	 IlvLI8FFUC5Kvt9Zm6rLx6VAgnqDTSxLLiRyY1jE=
+	b=bHGOEEIWlVTw4Bq8WcpEaQcEfp9bb91d+Oe8RnKof9cm7IDdRVoiIdlVbToBJklKF
+	 2LocxIdb2iCXgpCbdlkToQZVkT6GsA4fkOVhEGICBUj94dlk+olrHMIMhyrAAqT5Zv
+	 81JcTtwQDSx3yA2/vJoY/YF218PRbZFIABJKEKho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388918AbfGXUfm (ORCPT
+        id S2389092AbfGXUfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42532 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388058AbfGXTZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:40 -0400
+        id S2388047AbfGXTZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:25:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E91CB229ED;
-        Wed, 24 Jul 2019 19:25:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414B9218F0;
+        Wed, 24 Jul 2019 19:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996339;
-        bh=7x5uqPwcLPoDTZF6cLw3c7iz9svtdhqhoJcH03CK8ZE=;
+        s=default; t=1563996336;
+        bh=bxec5w9zV1i7q5BKF/WWYgqOx3tA4v5sBaOkTcJ4HAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qubO+LVUIUht3XqNhA4aBwYzWpxqocfoSNTblT+nnRr/yfw9ZBpXzcF7/j8Wb60bS
-         ohjK7Tc61KosQoUClHCMBoRztI9fJZzhNlEVVPPG7aGUMTboJUSR+301KICzS2jmFQ
-         oA14lZZrbv0HK86e9ABF+ONALJ1pGGTkDfufpG44=
+        b=2H0g9pAA5fQVSFwV1j550jk3e4B86I3axfrP1JKucPsS2jIVn1uJm3kT9cxJZNmay
+         MEGZ4caIwMXHbZl9a+0EXZ+Y419xZhujIfRRG6LegBB8kpd9cUWzJXH/kYbdO4uJ4K
+         fFdvLI101gEn+Xmqs5P0uf48fBcFbWXbQfUuC5ZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 061/413] net: hns3: add a check to pointer in error_detected and slot_reset
-Date:   Wed, 24 Jul 2019 21:15:52 +0200
-Message-Id: <20190724191739.647808700@linuxfoundation.org>
+Subject: [PATCH 5.2 034/413] net: hns3: initialize CPU reverse mapping
+Date:   Wed, 24 Jul 2019 21:15:25 +0200
+Message-Id: <20190724191738.039776401@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,51 +61,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 661262bc3e0ecc9a1aed39c6b2a99766da2c22e2 ]
+[ Upstream commit ffab9691bcb2fe2594f4c38bfceb4d9685b93b87 ]
 
-If we add a VF without loading hclgevf.ko and then there is a RAS error
-occurs, PCIe AER will call error_detected and slot_reset of all functions,
-and will get a NULL pointer when we check ad_dev->ops->handle_hw_ras_error.
-This will cause a call trace and failures on handling of follow-up RAS
-errors.
+Allocate CPU rmap and add entry for each irq. CPU rmap is
+used in aRFS to get the queue number of the rx completion
+interrupts.
 
-This patch check ae_dev and ad_dev->ops at first to solve above issues.
+In additional, remove the calling of
+irq_set_affinity_notifier() in hns3_nic_init_irq(), because
+we have registered notifier in irq_cpu_rmap_add() for each
+vector, otherwise it may cause use-after-free issue.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 77 ++++++++++++-------
+ 1 file changed, 48 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index cd59c0cc636a..5611b990ac34 100644
+index f326805543a4..cd59c0cc636a 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1916,9 +1916,9 @@ static pci_ers_result_t hns3_error_detected(struct pci_dev *pdev,
- 	if (state == pci_channel_io_perm_failure)
- 		return PCI_ERS_RESULT_DISCONNECT;
+@@ -4,6 +4,9 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/etherdevice.h>
+ #include <linux/interrupt.h>
++#ifdef CONFIG_RFS_ACCEL
++#include <linux/cpu_rmap.h>
++#endif
+ #include <linux/if_vlan.h>
+ #include <linux/ip.h>
+ #include <linux/ipv6.h>
+@@ -79,23 +82,6 @@ static irqreturn_t hns3_irq_handle(int irq, void *vector)
+ 	return IRQ_HANDLED;
+ }
  
--	if (!ae_dev) {
-+	if (!ae_dev || !ae_dev->ops) {
- 		dev_err(&pdev->dev,
--			"Can't recover - error happened during device init\n");
-+			"Can't recover - error happened before device initialized\n");
- 		return PCI_ERS_RESULT_NONE;
+-/* This callback function is used to set affinity changes to the irq affinity
+- * masks when the irq_set_affinity_notifier function is used.
+- */
+-static void hns3_nic_irq_affinity_notify(struct irq_affinity_notify *notify,
+-					 const cpumask_t *mask)
+-{
+-	struct hns3_enet_tqp_vector *tqp_vectors =
+-		container_of(notify, struct hns3_enet_tqp_vector,
+-			     affinity_notify);
+-
+-	tqp_vectors->affinity_mask = *mask;
+-}
+-
+-static void hns3_nic_irq_affinity_release(struct kref *ref)
+-{
+-}
+-
+ static void hns3_nic_uninit_irq(struct hns3_nic_priv *priv)
+ {
+ 	struct hns3_enet_tqp_vector *tqp_vectors;
+@@ -107,8 +93,7 @@ static void hns3_nic_uninit_irq(struct hns3_nic_priv *priv)
+ 		if (tqp_vectors->irq_init_flag != HNS3_VECTOR_INITED)
+ 			continue;
+ 
+-		/* clear the affinity notifier and affinity mask */
+-		irq_set_affinity_notifier(tqp_vectors->vector_irq, NULL);
++		/* clear the affinity mask */
+ 		irq_set_affinity_hint(tqp_vectors->vector_irq, NULL);
+ 
+ 		/* release the irq resource */
+@@ -161,12 +146,6 @@ static int hns3_nic_init_irq(struct hns3_nic_priv *priv)
+ 			return ret;
+ 		}
+ 
+-		tqp_vectors->affinity_notify.notify =
+-					hns3_nic_irq_affinity_notify;
+-		tqp_vectors->affinity_notify.release =
+-					hns3_nic_irq_affinity_release;
+-		irq_set_affinity_notifier(tqp_vectors->vector_irq,
+-					  &tqp_vectors->affinity_notify);
+ 		irq_set_affinity_hint(tqp_vectors->vector_irq,
+ 				      &tqp_vectors->affinity_mask);
+ 
+@@ -340,6 +319,40 @@ static void hns3_tqp_disable(struct hnae3_queue *tqp)
+ 	hns3_write_dev(tqp, HNS3_RING_EN_REG, rcb_reg);
+ }
+ 
++static void hns3_free_rx_cpu_rmap(struct net_device *netdev)
++{
++#ifdef CONFIG_RFS_ACCEL
++	free_irq_cpu_rmap(netdev->rx_cpu_rmap);
++	netdev->rx_cpu_rmap = NULL;
++#endif
++}
++
++static int hns3_set_rx_cpu_rmap(struct net_device *netdev)
++{
++#ifdef CONFIG_RFS_ACCEL
++	struct hns3_nic_priv *priv = netdev_priv(netdev);
++	struct hns3_enet_tqp_vector *tqp_vector;
++	int i, ret;
++
++	if (!netdev->rx_cpu_rmap) {
++		netdev->rx_cpu_rmap = alloc_irq_cpu_rmap(priv->vector_num);
++		if (!netdev->rx_cpu_rmap)
++			return -ENOMEM;
++	}
++
++	for (i = 0; i < priv->vector_num; i++) {
++		tqp_vector = &priv->tqp_vector[i];
++		ret = irq_cpu_rmap_add(netdev->rx_cpu_rmap,
++				       tqp_vector->vector_irq);
++		if (ret) {
++			hns3_free_rx_cpu_rmap(netdev);
++			return ret;
++		}
++	}
++#endif
++	return 0;
++}
++
+ static int hns3_nic_net_up(struct net_device *netdev)
+ {
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+@@ -351,11 +364,16 @@ static int hns3_nic_net_up(struct net_device *netdev)
+ 	if (ret)
+ 		return ret;
+ 
++	/* the device can work without cpu rmap, only aRFS needs it */
++	ret = hns3_set_rx_cpu_rmap(netdev);
++	if (ret)
++		netdev_warn(netdev, "set rx cpu rmap fail, ret=%d!\n", ret);
++
+ 	/* get irq resource for all vectors */
+ 	ret = hns3_nic_init_irq(priv);
+ 	if (ret) {
+ 		netdev_err(netdev, "hns init irq failed! ret=%d\n", ret);
+-		return ret;
++		goto free_rmap;
  	}
  
-@@ -1937,6 +1937,9 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
+ 	clear_bit(HNS3_NIC_STATE_DOWN, &priv->state);
+@@ -384,7 +402,8 @@ static int hns3_nic_net_up(struct net_device *netdev)
+ 		hns3_vector_disable(&priv->tqp_vector[j]);
  
- 	dev_info(dev, "requesting reset due to PCI error\n");
+ 	hns3_nic_uninit_irq(priv);
+-
++free_rmap:
++	hns3_free_rx_cpu_rmap(netdev);
+ 	return ret;
+ }
  
-+	if (!ae_dev || !ae_dev->ops)
-+		return PCI_ERS_RESULT_NONE;
+@@ -467,6 +486,8 @@ static void hns3_nic_net_down(struct net_device *netdev)
+ 	if (ops->stop)
+ 		ops->stop(priv->ae_handle);
+ 
++	hns3_free_rx_cpu_rmap(netdev);
 +
- 	/* request the reset */
- 	if (ae_dev->ops->reset_event) {
- 		if (!ae_dev->override_pci_need_reset)
+ 	/* free irq resources */
+ 	hns3_nic_uninit_irq(priv);
+ 
+@@ -3331,8 +3352,6 @@ static void hns3_nic_uninit_vector_data(struct hns3_nic_priv *priv)
+ 		hns3_free_vector_ring_chain(tqp_vector, &vector_ring_chain);
+ 
+ 		if (tqp_vector->irq_init_flag == HNS3_VECTOR_INITED) {
+-			irq_set_affinity_notifier(tqp_vector->vector_irq,
+-						  NULL);
+ 			irq_set_affinity_hint(tqp_vector->vector_irq, NULL);
+ 			free_irq(tqp_vector->vector_irq, tqp_vector);
+ 			tqp_vector->irq_init_flag = HNS3_VECTOR_NOT_INITED;
 -- 
 2.20.1
 
