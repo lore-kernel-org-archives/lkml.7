@@ -2,63 +2,174 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DBBC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C32C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7E921926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A6522387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:57:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="f1iUHU7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfGXN5B (ORCPT
+        id S2387420AbfGXN5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:57:01 -0400
-Received: from verein.lst.de ([213.95.11.211]:51214 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727532AbfGXN5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:57:00 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4D0A368B20; Wed, 24 Jul 2019 15:56:57 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 15:56:57 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
-        phil@raspberrypi.org, stefan.wahren@i2se.com, f.fainelli@gmail.com,
-        mbrugger@suse.com, Jisheng.Zhang@synaptics.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 3/4] dma-direct: add dma_direct_min_mask
-Message-ID: <20190724135657.GA9075@lst.de>
-References: <20190717153135.15507-1-nsaenzjulienne@suse.de> <20190717153135.15507-4-nsaenzjulienne@suse.de> <20190718091526.GA25321@lst.de> <13dd1a4f33fcf814545f0d93f18429e853de9eaf.camel@suse.de> <58753252bd7964e3b9e9558b633bd325c4a898a1.camel@suse.de> <20190724135124.GA44864@arrakis.emea.arm.com>
+        Wed, 24 Jul 2019 09:57:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39409 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfGXN5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:57:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so22082599pls.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 06:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GWkx98bFDu9RaP8hXcQFr0cSnvxus1MNG1rYGNPKfj4=;
+        b=f1iUHU7mfd95p5DaM48MTArJN0KA8hNbkOFJVlgyUnrb/78qa+cD2lYXF1taZ5A3w+
+         jTBsKU8XtNlJ0FA5qQnn2rYXSjxYAxTNu4B3JBDIY2q4soRuoJlSDmldDOn7kUhg7EWV
+         UejidEDKpkWkdO2YN/gAnVxUE9sPMOTwqkTck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GWkx98bFDu9RaP8hXcQFr0cSnvxus1MNG1rYGNPKfj4=;
+        b=KQNmNfIwgzZW8sOouPu+6ruCDPxP99Xw0aMUQe9NJzEI6TK4qKwK/3SsygRDTY4hRH
+         5l3t7DBCimnGC8ohNffFyciHXHBPmmFwHBvHtQwdUatHXIwNVbrUIAXu6m8b1ufK56LU
+         oxGfUtCE4YAneBkXqz4EgeNRWZn8qX+L4il/TxeiMQto8sfm5smmpnSqQ7kEW2hRPQfF
+         BKJrFCxiskdP7adFnd5iIEwTazv3EkeafTPAtLsbrVRlSxudVkzrYAhHQ9my3qpBlXXf
+         jjppwv7Gf0rUfX/LxUOcJ9KDLxZNir5715f4Im5W+yJYuQmTKyjSfiMw8ypT42mQ6bjG
+         AJog==
+X-Gm-Message-State: APjAAAXwW8dgJA8smgSolLdLP9IIspj89z08ETcxI1wNnOHtIxB9yfJe
+        sAXjKQiDThnErHiiOhyJ52k=
+X-Google-Smtp-Source: APXvYqw2WoPLa2BcLQKDe4FWqERz0Muga9t0KUBGeFNngqIvIyv/zLAljwsauZ98iAIOeica29bXcQ==
+X-Received: by 2002:a17:902:2aea:: with SMTP id j97mr73752045plb.153.1563976637094;
+        Wed, 24 Jul 2019 06:57:17 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id k6sm56084171pfi.12.2019.07.24.06.57.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 06:57:15 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 09:57:14 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, kernel-team@android.com
+Subject: Re: [PATCH RFC 0/4] Add support to directly attach BPF program to
+ ftrace
+Message-ID: <20190724135714.GA9945@google.com>
+References: <20190716205455.iimn3pqpvsc3k4ry@ast-mbp.dhcp.thefacebook.com>
+ <20190716213050.GA161922@google.com>
+ <20190716222650.tk2coihjtsxszarf@ast-mbp.dhcp.thefacebook.com>
+ <20190716224150.GC172157@google.com>
+ <20190716235500.GA199237@google.com>
+ <20190717012406.lugqemvubixfdd6v@ast-mbp.dhcp.thefacebook.com>
+ <20190717130119.GA138030@google.com>
+ <CAADnVQJY_=yeY0C3k1ZKpRFu5oNbB4zhQf5tQnLr=Mi8i6cgeQ@mail.gmail.com>
+ <20190718025143.GB153617@google.com>
+ <20190723221108.gamojemj5lorol7k@ast-mbp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724135124.GA44864@arrakis.emea.arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190723221108.gamojemj5lorol7k@ast-mbp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 02:51:24PM +0100, Catalin Marinas wrote:
-> I think it may be better if we have both ZONE_DMA and ZONE_DMA32 on
-> arm64. ZONE_DMA would be based on the smallest dma-ranges as described
-> in the DT while DMA32 covers the first naturally aligned 4GB of RAM
-> (unchanged). When a smaller ZONE_DMA is not needed, it could be expanded
-> to cover what would normally be ZONE_DMA32 (or could we have ZONE_DMA as
-> 0-bytes? I don't think GFP_DMA can still allocate memory in this case).
+On Tue, Jul 23, 2019 at 03:11:10PM -0700, Alexei Starovoitov wrote:
+> > > > > I think allowing one tracepoint and disallowing another is pointless
+> > > > > from security point of view. Tracing bpf program can do bpf_probe_read
+> > > > > of anything.
+> > > >
+> > > > I think the assumption here is the user controls the program instructions at
+> > > > runtime, but that's not the case. The BPF program we are loading is not
+> > > > dynamically generated, it is built at build time and it is loaded from a
+> > > > secure verified partition, so even though it can do bpf_probe_read, it is
+> > > > still not something that the user can change.
+> > > 
+> > > so you're saying that by having a set of signed bpf programs which
+> > > instructions are known to be non-malicious and allowed set of tracepoints
+> > > to attach via selinux whitelist, such setup will be safe?
+> > > Have you considered how mix and match will behave?
+> > 
+> > Do you mean the effect of mixing tracepoints and programs? I have not
+> > considered this. I am Ok with further enforcing of this (only certain
+> > tracepoints can be attached to certain programs) if needed. What do
+> > you think? We could have a new bpf(2) syscall attribute specify which
+> > tracepoint is expected, or similar.
+> > 
+> > I wanted to walk you through our 2 usecases we are working on:
 > 
-> We'd probably have to define ARCH_ZONE_DMA_BITS for arm64 to something
-> smaller than 32-bit but sufficient to cover the known platforms like
-> RPi4 (the current 24 is too small, so maybe 30). AFAICT,
-> __dma_direct_optimal_gfp_mask() figures out whether GFP_DMA or GFP_DMA32
-> should be passed.
+> thanks for sharing the use case details. Appreciate it.
 
-ARCH_ZONE_DMA_BITS should probably become a variable.  That way we can
-just initialize it to the default 24 bits in kernel/dma/direct.c and
-allow architectures to override it in their early boot code.
+No problem and thanks for your thoughts.
+
+> > 1. timeinstate: By hooking 2 programs onto sched_switch and cpu_frequency
+> > tracepoints, we are able to collect CPU power per-UID (specific app). Connor
+> > O'Brien is working on that.
+> > 
+> > 2. inode to file path mapping: By hooking onto VFS tracepoints we are adding to
+> > the android kernels, we can collect data when the kernel resolves a file path
+> > to a inode/device number. A BPF map stores the inode/dev number (key) and the
+> > path (value). We have usecases where we need a high speed lookup of this
+> > without having to scan all the files in the filesystem.
+> 
+> Can you share the link to vfs tracepoints you're adding?
+> Sounds like you're not going to attempt to upstream them knowing
+> Al's stance towards them?
+> May be there is a way we can do the feature you need, but w/o tracepoints?
+
+Yes, given Al's stance I understand the patch is not upstreamable. The patch
+is here:
+For tracepoint:
+https://android.googlesource.com/kernel/common/+/27d3bfe20558d279041af403a887e7bdbdcc6f24%5E%21/
+For bpf program:
+https://android.googlesource.com/platform/system/bpfprogs/+/908f6cd718fab0de7a944f84628c56f292efeb17%5E%21/
+
+I intended to submit the tracepoint only for the Android kernels, however if
+there is an upstream solution to this then that's even better since upstream can
+benefit. Were you thinking of a BPF helper function to get this data?
+
+> 
+> > For the first usecase, the BPF program will be loaded and attached to the
+> > scheduler and cpufreq tracepoints at boot time and will stay attached
+> > forever.  This is why I was saying having a daemon to stay alive all the time
+> > is pointless. However, if since you are completely against using tracefs
+> > which it sounds like, then we can do a daemon that is always alive.
+> 
+> As I said earlier this use case can be solved by pinning raw_tp object
+> into bpffs. Such patches are welcomed.
+
+Ok will think more about it.
+
+> > For the second usecase, the program attach is needed on-demand unlike the
+> > first usecase, and then after the usecase completes, it is detached to avoid
+> > overhead.
+> > 
+> > For the second usecase, privacy is important and we want the data to not be
+> > available to any process. So we want to make sure only selected processes can
+> > attach to that tracepoint. This is the reason why I was doing working on
+> > these patches which use the tracefs as well, since we get that level of
+> > control.
+> 
+> It's hard to recommend anything w/o seeing the actual tracepoints you're adding
+> to vfs and type of data bpf program extracts from there.
+> Sounds like it's some sort of cache of inode->file name ?
+
+Yes, that's what it is.
+
+> If so, why is it privacy related?
+
+The reasoning is the file paths could reveal user activity (such as an app
+that opens a document) and Android has requirements to control/restrict that.
+
+thanks,
+
+ - Joel
+
