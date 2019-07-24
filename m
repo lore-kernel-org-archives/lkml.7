@@ -2,75 +2,87 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7210C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CA4C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1067217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F87218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfGXFlZ (ORCPT
+        id S1726158AbfGXFr3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:41:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:47601 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfGXFlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:41:25 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 72F3D68B02; Wed, 24 Jul 2019 07:41:23 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 07:41:23 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/2] mm/hmm: a few more C style and comment clean ups
-Message-ID: <20190724054123.GA685@lst.de>
-References: <20190723233016.26403-1-rcampbell@nvidia.com> <20190723233016.26403-2-rcampbell@nvidia.com> <20190723235747.GP15331@mellanox.com>
+        Wed, 24 Jul 2019 01:47:29 -0400
+Received: from sender2-pp-o92.zoho.com.cn ([163.53.93.251]:25380 "EHLO
+        sender2-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725894AbfGXFr2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 01:47:28 -0400
+X-Greylist: delayed 905 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jul 2019 01:47:28 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1563946340; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=EF9MQ/cO+0RD6Nq+6ZqurtZ48ymDiQlH8Kcji2rH1ew1ZilRd+L4fTXajqZJ7Cj5wDIbHVVmbdUgymZ/0elY02V3kiv8Y5aXk67bv5Uy7/0yoip2lDqK8RFGBwmejVhb+9YgIW4mMkDGkTunL4loj2IlWcy2TLgpRc/mpfdKS3A=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1563946340; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=ZGrJP8lsLyeOcZGzg9BM6QAFRxy0WJmO2A+QOuacb4g=; 
+        b=faYCzjEKT+OlaKKv4YbbfxKcg/LSIlMhnUdKlOE6Ovyaxyg687tGuZ4403gVWtI3YJWfh2EGVNIrQEbnIVqx/OsXsU8gfXL7kBtxr6hswthcWbs4hWqYDyrUA8b4KRC+qwDtwEg98BsWUBvHQ0zToL6NI/8ESbhEis+DGcSZdf0=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=zoho.com.cn;
+        spf=pass  smtp.mailfrom=cgxu519@zoho.com.cn;
+        dmarc=pass header.from=<cgxu519@zoho.com.cn> header.from=<cgxu519@zoho.com.cn>
+Received: from localhost.localdomain (218.18.229.179 [218.18.229.179]) by mx.zoho.com.cn
+        with SMTPS id 1563946339474558.2818888374384; Wed, 24 Jul 2019 13:32:19 +0800 (CST)
+From:   Chengguang Xu <cgxu519@zoho.com.cn>
+To:     jack@suse.com
+Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@zoho.com.cn>
+Message-ID: <20190724053216.19392-1-cgxu519@zoho.com.cn>
+Subject: [PATCH] quota: fix condition for resetting time limit in do_set_dqblk()
+Date:   Wed, 24 Jul 2019 13:32:16 +0800
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723235747.GP15331@mellanox.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8BIT
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:57:52PM +0000, Jason Gunthorpe wrote:
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 16b6731a34db79..3d8cdfb67a6ab8 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -285,8 +285,9 @@ struct hmm_vma_walk {
->  	struct hmm_range	*range;
->  	struct dev_pagemap	*pgmap;
->  	unsigned long		last;
-> -	bool			fault;
-> -	bool			block;
-> +	bool			fault : 1;
-> +	bool			block : 1;
-> +	bool			hugetlb : 1;
+We reset time limit when current usage is smaller
+or equal to soft limit in other place, so follow
+this rule in do_set_dqblk().
 
-I don't think we should even keep these bools around.  I have something
-like this hiding in a branche, which properly cleans much of this up:
+Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
+---
+ fs/quota/dquot.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-dma-cleanup
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index be9c471cdbc8..6e826b454082 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -2731,7 +2731,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+ 
+ 	if (check_blim) {
+ 		if (!dm->dqb_bsoftlimit ||
+-		    dm->dqb_curspace + dm->dqb_rsvspace < dm->dqb_bsoftlimit) {
++		    dm->dqb_curspace + dm->dqb_rsvspace <= dm->dqb_bsoftlimit) {
+ 			dm->dqb_btime = 0;
+ 			clear_bit(DQ_BLKS_B, &dquot->dq_flags);
+ 		} else if (!(di->d_fieldmask & QC_SPC_TIMER))
+@@ -2740,7 +2740,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+ 	}
+ 	if (check_ilim) {
+ 		if (!dm->dqb_isoftlimit ||
+-		    dm->dqb_curinodes < dm->dqb_isoftlimit) {
++		    dm->dqb_curinodes <= dm->dqb_isoftlimit) {
+ 			dm->dqb_itime = 0;
+ 			clear_bit(DQ_INODES_B, &dquot->dq_flags);
+ 		} else if (!(di->d_fieldmask & QC_INO_TIMER))
+-- 
+2.20.1
 
-Notably:
 
-http://git.infradead.org/users/hch/misc.git/commitdiff/2abdc0ac8f9f32149246957121ebccbe5c0a729d
 
-http://git.infradead.org/users/hch/misc.git/commitdiff/a34ccd30ee8a8a3111d9e91711c12901ed7dea74
-
-http://git.infradead.org/users/hch/misc.git/commitdiff/81f442ebac7170815af7770a1efa9c4ab662137e
-
-This doesn't go all the way yet - the page_walk infrastructure is
-built around the idea of doing its own vma lookups, and we should
-eventually kill the lookup inside hmm entirely. 
