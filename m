@@ -2,193 +2,182 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B42C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60568C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A29C21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A59D21880
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXRtSpQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387890AbfGXVA4 (ORCPT
+        id S2387858AbfGXVC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:00:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:10378 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfGXVAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:00:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 14:00:35 -0700
-X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
-   d="scan'208";a="175004483"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 14:00:35 -0700
-Message-ID: <c5f6c247f9a28d374678bae01952ca7fd2c044b2.camel@linux.intel.com>
-Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com
-Date:   Wed, 24 Jul 2019 14:00:35 -0700
-In-Reply-To: <e738fa65-cd1f-a9d2-8db5-318de3e49a81@redhat.com>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-         <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
-         <088abe33117e891dd6265179f678847bd574c744.camel@linux.intel.com>
-         <e738fa65-cd1f-a9d2-8db5-318de3e49a81@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 24 Jul 2019 17:02:58 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53371 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbfGXVC6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:02:58 -0400
+Received: by mail-wm1-f67.google.com with SMTP id x15so43029223wmj.3;
+        Wed, 24 Jul 2019 14:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7YgJqjEfdgZXnXeTvJ4PZQHPEn5PQ4I8CGg8M9y1/NY=;
+        b=NXRtSpQnbhspUOKyvA4vYLPHtv7ovVVB269NAGzsXKdHQTxx/wSAPrWOz7VnSQaon+
+         BNA4ahkDPqHgmLWg5B2gPMpdDyBV3lIigkELBFm7UEHhUbkgsdUln2MlSebD5BmpvTTX
+         AvlKx5xgJ27bRBwKZp1sDw31zPqjnIfEdRGeYRpSULFAixsQ9fKPUG350Mg5azB2qWbc
+         zQ6aniZU9aXPYxjOgRqWVVajHpDrVuUD9ovJA7TFAvq1/duUtIUVbzYFZrnKPWNNJUfp
+         dHIBXuvhmdrQp4t1l7BOn+oSQYjrfT5021OUrXmHBOp4Sxkd4ImPywkhH0z+c0Nu5jgM
+         jj2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7YgJqjEfdgZXnXeTvJ4PZQHPEn5PQ4I8CGg8M9y1/NY=;
+        b=Or4VtYgglrkQFkftFP+EPMxj9xAPDGNKDoJIASQ6Pi8aDzyBxLNWh06nQsIkHSZXZH
+         IM+KeWGgtDkEY85USuwrEsp/RFWcxiaI/h0aX4HIPRRB0bF5mT++OsUbswwq5xp0ht0d
+         uLDLHTUi+BBoOPsmqbzHlMy/+6MYZx7KGVUTdhGuM05StWihh5vCKcXbZOsEV8r2RFoi
+         e3N20gbU2+5oIjmvYmpm6lSNd6gdPgn/Vw3tgykVav/6RN6wSCDYyb9c3jbWACPlj1HK
+         mss3UWgTXFT0Ot07jTsfCk1f2x03Kvg1xyin9dGJ0fwQsfgGIEj3Vd2v/qT3NqaS9NP1
+         /fDg==
+X-Gm-Message-State: APjAAAWjR1ls5I5LCu77hYX6SPgL8r5OGV3jbdPquZUYZy/eMSevX/gj
+        kQWdqJ5C+DUqfht45fEyN50=
+X-Google-Smtp-Source: APXvYqyL88aMFz4WzOJeQkMPvXkNK8S4wy/OwQKWC9RR1vtpvxV36XzBzkBfVkfIIkrUy95eK68ZRg==
+X-Received: by 2002:a7b:c954:: with SMTP id i20mr77168269wml.169.1564002175217;
+        Wed, 24 Jul 2019 14:02:55 -0700 (PDT)
+Received: from [192.168.1.19] (bko238.neoplus.adsl.tpnet.pl. [83.28.182.238])
+        by smtp.gmail.com with ESMTPSA id e3sm41762283wrt.93.2019.07.24.14.02.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 14:02:54 -0700 (PDT)
+Subject: Re: [PATCH v5 00/26] Add generic support for composing LED class
+ device name
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, dmurphy@ti.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, dtor@google.com, linux@roeck-us.net
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <405b2806-342a-952d-67ab-47516225c54e@gmail.com> <20190718105233.GA3859@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAj4EEwEIACgCGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQJVo39tBQkJZgNMAAoJEL1qUBy3i3wmxLQQAK8QEQ0JqZEv
+ 5hrxiwT+Qtkx1TULYriK9sYcY9zbi18YxbKB0C4Znh5iP5o7k26WnPGLM+w4qWvTAkHjuAI7
+ aBrvb4nGRvE5s14PQ9IHgL7iL3zAAHT1azIZng9dUCCSontB+vQZu1x/Un0lVlVCvsvO7QVt
+ hAZUlT3iucNMO0jpCiS3raZkNfab8M+JWP/iplaV0Kn+O7LX3A/RdLmx5ZhuT+zvyHwl2c3K
+ T56UHaQnjkuHB2Ytk8HtOjNXGNYnm4nLx3ok3jEN1nWDRV/DeiPn8zz4Zebsp686OH9vvX/0
+ R4dk2YEjUCY/S7CbJxXzUnLjboUAGmtTVOu/uJ7y11iS9XEoJ09HEzijQwWctJXLojcTXCFw
+ rbYkgqOjDRE9NTC6b68iUUVUayEADWz80qChbDJ2R2/Spm5+eojI2NVnr3AVSc7ZCBkhSDei
+ TtSjQmlPflKEAR8LH67XbzvwvDwX/Lmi+/1Yxws0rxeJNYMqfOBBW/xi3QEc9hMDTl99EZwl
+ NqfEN7HHh2jzAGNtIYxhHHiPUw/UZeS1fxD8vRqVZHW3ENR6lOCEYED1ChU1w8Zzm/CiT4ea
+ ZakZChzFeUWVO/yFEcAzTJSiJHqLooNfP/VyFppjAlLVPISLcLBVTy+Ue76Z0IrC12fI38cm
+ lJJGVY6NUbNb883pu5B7qB8huQINBFWjfaEBEADDzcpgTaAlnNd1Oqjs7V6yCgVbCxmV6v8j
+ mkdp+4BWxQAg9E1O17h9lHJ8LzUfrkBcEq0amhHM19leoiMtgiE1yoOWL4Ndsp9PYE5mn7qC
+ MiqFNel7wt2mUENgZ9yztrET9I/zbjA/RpTt+6RwlUaSNgz8RRN/UzJtTy2x5wxvPpWapfna
+ TcFsPHQ2kYMl8di3ueNgnEwU+dlQnnlg7andjMDq+C4qGJXxnwKpsHMLnAXUxAVMZJUGjkd1
+ WyUMep7SNqAzgZTRr451Q82XvokRHeZeNJfjo02olrwRl5L+jiPsMeUxT6fgTOgE1PulMxUU
+ 1Fm4/i6lQPyTKmB0KdOGOB+RrY2xwmvGm0bwcCChL6cE8lmZX1z7afIEZTZsWJ+oEJU8hGQF
+ qHV8BOwhPisTZ6u2zx3i760p/GyzSuvNj6Exq9GNNG4LmC38rxMLg2HpNf4fWEl7R2gkdwhI
+ +C1NQeetRtY+xVWnmG1/WygQKMvxsQFvCeTtZ5psOxZ5Eh7sDv0A3tAjqDtEGettAn/SAVmB
+ 1uJtjNsoeffNZVGojHDTNpD4LCRWJaBaNlxp+pVlPQa1oxKDQ4R2bRfsmjxLsI2aOsf9xNk7
+ txOSY9FaVXBPVNWav36rg2O/ZdkSZ+RDaIDrOfj4tBo1aRGEFVn5tD0wsTTzszsxkeEAdwTR
+ bwARAQABiQIlBBgBCAAPBQJVo32hAhsMBQkJZgGAAAoJEL1qUBy3i3wmahsQAJVgVlb41OsY
+ +9BsHp4IqmGcJltYvIH0uEzYm0E/ykatM5AZxMICsF0W1aFt/KWFbhmucfyQ0DCQ6ywCdMKw
+ jkt18W0hwljpf5NmQ/TmsVHl6ujfjphk8362Lz1L1ktR8tOKvQA9XSGjDa7mUJr50X5DpNlA
+ 53AyINNeuvzUx4mCNPR+ZqVhqR5/9mk+nZqVcLqDPf6x5RebOagAKPebWdEFtgbSHHhvf622
+ JS+e8GkjDxePWsL8C0F+UYVqBfJj0uS7Aa11yoZosyLJ+NLS24tkbVo8w1oGWIrappqoo3gp
+ w7yEjeKif5wizuA44khrOfcOR0fpdJ8Hjw4TggOEWGaktXtgpcdVUpA1xaS93oGm3CLKiuwm
+ emtta/JV1aaOEZzJULJl2U50ceEmoxb1+z60YP9NgvNdXy34dq+TuYn/LCkOgSipR6broqKn
+ 4/8Pc9wdGkO9XuJ9czSQTtZHHc54pDywG6+4xoJAVF09ciYsKU30UK+ctlKNdiCbCsaIZzRV
+ WLSvF/0ektHXij462VrwJJZYCD3B4zItlWvMsCk4/yYHKVDuSjfdOj3+8sGSEnuym3HP6pxN
+ GIzz0qhTr6Hmbx3uhGQjFvfsWbGoqb5aqQckFVB51YNPSvWBb41AbAT3QvHn+mMIH0faOgJz
+ 5sZdKDFCF5AgguXPfX8yWP5PiQKtBBgBCAAgFiEEvx38ClaPBfeVdXCQvWpQHLeLfCYFAlsK
+ ioYCGwIAgQkQvWpQHLeLfCZ2IAQZFggAHRYhBBTDHErITmX+em3wBGIQbFEb9KXbBQJbCoqG
+ AAoJEGIQbFEb9KXbxC4A/1Pst/4bM9GyIzECWNCy8TP6xWPVc9S+N/pUB14y9zD7AP9ZTZub
+ GopbGO2hQVScQM02vGQBlgXVWhqOigr4pgwfBu46D/48fqBjpnUaILO5hv/x/sPQ05wXz6Z3
+ 5HooqJBmKP/obljuVdAHPbU6mXhXP/7f2LmCZ8Fr0tEcfii9H093ofQUKOO7heMg4mSIlizY
+ eAIKbqdTFElbM+DIw9JVuoIbZy3BpSIKFR1tL7T1tZvYwE2MiUjhvzAtYg63GHKfblWJ+bSn
+ 5BHkDbKbhuokn0tKt7Wozyp09ZycTE8VTg9kVhCBn2lfUnK6LvdlQ/3gvv/CDUbIlkvd494T
+ iiAFeV0TSDRarc5GoD2AD/K+sJLI0o4dNX0kwaec8Y37CMFgw8w66oM8L/Nwr6y10VdzpRtQ
+ zVA2AOdqia+O6Wh+UDFph1uUzbqAV/Km+kVvxzNw8z4E/pfq9aT4zD37y9be3Ir2VKD7jc6M
+ haUEY+k71otmxhjECq8nmJLFxts4tvmrzBZy3pTsRnVGe459UiegG22uVi91a1wj/k1BOm2S
+ 4H8PJGGvEElz98rMnjCNLaKRxZ7QWfGtClwTbKqhQgVpkx138LH1tFYAZkbTzu3l1Qcm4ydV
+ VykdkWccEqvxqDV4f8q0V0MW3KWfkD9/07bbGxXSnImeLt7bPuVMGK2tAUbr2+dUYmUdsETZ
+ 1HgZ11moCVU5Ru0RwTv9oyThOsK3HQjI7NCIsDzVpolaGQPd9E7xwOVHhhDcXRqqNjLzHUSe
+ eGGiEQ==
+Message-ID: <3d8890a2-47e8-2dd0-9764-93676703df2a@gmail.com>
+Date:   Wed, 24 Jul 2019 23:02:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190718105233.GA3859@amd>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-24 at 16:38 -0400, Nitesh Narayan Lal wrote:
-> On 7/24/19 4:27 PM, Alexander Duyck wrote:
-> > On Wed, 2019-07-24 at 14:40 -0400, Nitesh Narayan Lal wrote:
-> > > On 7/24/19 12:54 PM, Alexander Duyck wrote:
-> > > > This series provides an asynchronous means of hinting to a hypervisor
-> > > > that a guest page is no longer in use and can have the data associated
-> > > > with it dropped. To do this I have implemented functionality that allows
-> > > > for what I am referring to as page hinting
-> > > > 
-> > > > The functionality for this is fairly simple. When enabled it will allocate
-> > > > statistics to track the number of hinted pages in a given free area. When
-> > > > the number of free pages exceeds this value plus a high water value,
-> > > > currently 32,
-> > > Shouldn't we configure this to a lower number such as 16?
-> > Yes, we could do 16.
-> > 
-> > > >  it will begin performing page hinting which consists of
-> > > > pulling pages off of free list and placing them into a scatter list. The
-> > > > scatterlist is then given to the page hinting device and it will perform
-> > > > the required action to make the pages "hinted", in the case of
-> > > > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > > > and as such they are forced out of the guest. After this they are placed
-> > > > back on the free list, and an additional bit is added if they are not
-> > > > merged indicating that they are a hinted buddy page instead of a standard
-> > > > buddy page. The cycle then repeats with additional non-hinted pages being
-> > > > pulled until the free areas all consist of hinted pages.
-> > > > 
-> > > > I am leaving a number of things hard-coded such as limiting the lowest
-> > > > order processed to PAGEBLOCK_ORDER,
-> > > Have you considered making this option configurable at the compile time?
-> > We could. However, PAGEBLOCK_ORDER is already configurable on some
-> > architectures. I didn't see much point in making it configurable in the
-> > case of x86 as there are only really 2 orders that this could be used in
-> > that provided good performance and that MAX_ORDER - 1 and PAGEBLOCK_ORDER.
-> > 
-> > > >  and have left it up to the guest to
-> > > > determine what the limit is on how many pages it wants to allocate to
-> > > > process the hints.
-> > > It might make sense to set the number of pages to be hinted at a time from the
-> > > hypervisor.
-> > We could do that. Although I would still want some upper limit on that as
-> > I would prefer to keep the high water mark as a static value since it is
-> > used in an inline function. Currently the virtio driver is the one
-> > defining the capacity of pages per request.
-> For the upper limit I think we can rely on max vq size. Isn't?
+On 7/18/19 12:52 PM, Pavel Machek wrote:
+> 
+>> Hi all,
+>>
+>> I need explicit acks for some patches from this series, that
+>> were either requested improvements or I modified them by myself
+>> after v4.
+>>
+>> The patches I am talking about are the following:
+>>
+>> 1/26
+>> 21/26
+>> 23/26
+>> 25/26
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-I would still want to limit how many pages could be pulled. Otherwise we
-have the risk of a hypervisor that allocates a vq size of 1024 or
-something like that and with 4M pages that could essentially OOM a 4G
-guest.
+Applied the patch set without patch 26/26 for now.
+I had to make some formatting related changes in leds-class.rst, in
+part of the added text (we had leds-class.txt -> leds-class.rst
+transition in the meantime) to fix resulting html formatting.
+Basically they aimed to achieve nice bullets to compensate some
+sphinx issue related to lack of line breaks after quoted strings.
 
-That is why I figure what we probably should do is base the upper limit of
-either 16 or 32 so that we only have at most something like 64M or 128M of
-memory being held by the driver while it is being "reported". If we leave
-spare room in the ring so be it, better that then triggering unneeded OOM
-conditions.
+Current shape of leds-class.rst on linux-leds.git for-next branch can
+be looked up via [0].
 
-> > > > My primary testing has just been to verify the memory is being freed after
-> > > > allocation by running memhog 79g on a 80g guest and watching the total
-> > > > free memory via /proc/meminfo on the host. With this I have verified most
-> > > > of the memory is freed after each iteration. As far as performance I have
-> > > > been mainly focusing on the will-it-scale/page_fault1 test running with
-> > > > 16 vcpus. With that I have seen at most a 2% difference between the base
-> > > > kernel without these patches and the patches with virtio-balloon disabled.
-> > > > With the patches and virtio-balloon enabled with hinting the results
-> > > > largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
-> > > > drop in performance as I approached 16 threads,
-> > > I think this is acceptable.
-> > > >  however on the the lastest
-> > > > linux-next kernel I saw roughly a 4% to 5% improvement in performance for
-> > > > all tests with 8 or more threads. 
-> > > Do you mean that with your patches the will-it-scale/page_fault1 numbers were
-> > > better by 4-5% over an unmodified kernel?
-> > Yes. That is the odd thing. I am wondering if there was some improvement
-> > in the zeroing of THP pages or something that is somehow improving the
-> > cache performance for the accessing of the pages by the test in the guest.
-> The values you were observing on an unmodified kernel, were they consistent over
-> fresh reboot?
-> Do you have any sort of workload running in the host as that could also impact
-> the numbers.
+>> 26/26 would be nice to have but I presume it needs more discussion
+>> and analysis.
+> 
+> Idea is good, but I'd sort the file in different way.
+> 
+> Best regards,
+> 									Pavel
+> 
 
-The host was an unmodified linux-next kernel. What I was doing is I would
-reboot, load the guest run one kernel, swap the kernel in the guest and
-just reboot the guest, run the next kernel, and then switch back to the
-first kernel to make certain there wasn't anything that changed between
-the runs.
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git/tree/Documentation/leds/leds-class.rst?h=for-next
 
-I still need to do more research though. I'm still suspecting it has
-something to do with the page zeroing on faults though as that was what
-was showing up on a perf top when we hit about 8 or more threads active in
-the guest.
-
-> > > > I believe the difference seen is due to
-> > > > the overhead for faulting pages back into the guest and zeroing of memory.
-> > > It may also make sense to test these patches with netperf to observe how much
-> > > performance drop it is introducing.
-> > Do you have some test you were already using? I ask because I am not sure
-> > netperf would generate a large enough memory window size to really trigger
-> > much of a change in terms of hinting. If you have some test in mind I
-> > could probably set it up and run it pretty quick.
-> Earlier I have tried running netperf on a guest with 2 cores, i.e., netserver
-> pinned to one and netperf running on the other.
-> You have to specify a really large packet size and run the test for at least
-> 15-30 minutes to actually see some hinting work.
-
-I can take a look. I am not expecting much though.
-
-> > > > Patch 4 is a bit on the large side at about 600 lines of change, however
-> > > > I really didn't see a good way to break it up since each piece feeds into
-> > > > the next. So I couldn't add the statistics by themselves as it didn't
-> > > > really make sense to add them without something that will either read or
-> > > > increment/decrement them, or add the Hinted state without something that
-> > > > would set/unset it. As such I just ended up adding the entire thing as
-> > > > one patch. It makes it a bit bigger but avoids the issues in the previous
-> > > > set where I was referencing things before they had been added.
-> > > > 
-> > > > Changes from the RFC:
-> > > > https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> > > > Moved aeration requested flag out of aerator and into zone->flags.
-> > > > Moved bounary out of free_area and into local variables for aeration.
-> > > > Moved aeration cycle out of interrupt and into workqueue.
-> > > > Left nr_free as total pages instead of splitting it between raw and aerated.
-> > > > Combined size and physical address values in virtio ring into one 64b value.
-> > > > 
-> > > > Changes from v1:
-> > > > https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> > > > Dropped "waste page treatment" in favor of "page hinting"
-> > > We may still have to try and find a better name for virtio-balloon side changes.
-> > > As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
-> > We just need to settle on a name. Essentially all this requires is just a
-> > quick find and replace with whatever name we decide on.
-> I agree.
-
-I will probably look at seeing if I can keep the kernel feature as free
-page hinting and just make the virtio feature page reporting. It should be
-pretty straight forward as I could just replace the mentions of react with
-report and only have to tweak a few bits of patch 5.
-
+-- 
+Best regards,
+Jacek Anaszewski
