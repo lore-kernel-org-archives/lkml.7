@@ -2,176 +2,83 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2FCC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3E7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929C0217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F75321734
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfGXUis (ORCPT
+        id S1728465AbfGXUjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:38:48 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44656 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfGXUis (ORCPT
+        Wed, 24 Jul 2019 16:39:45 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:47411 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727529AbfGXUjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:38:48 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 44so15859065qtg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:38:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mYCnwlDrFOeB58JxVB5YgZuCp6wcmGxGKrxXr5i4nBc=;
-        b=NmgIv22DV1v/MkWXq/Rl9oAE9tuj4EDirClMVhWJgJKIae2tsdMdS6KoXsnudPM8KY
-         5skmGyAspFOBT0VdyahEuxc/eVr3UR6cxCACPeSSIe6mGr4bBAWjrkvusbVp4S0A01C1
-         pTGuVx4PDlQW/mKNg2rSccfcJxkm+4i1sqGox87uErF/bFQJn3wkz4EE+VYfgK/LI/MM
-         97KK+lZcj90KajeVMxIxN46neDgKsWTJ1v1RXKcBxqKFZQsA65dAXJG76toKmwNdn+lf
-         Sr9j5pPnLkrlRFsjiiYe0f7bT5dhApc8Garam0FTFElmmNKo/jnkRlm86Vdp6jlNlFMG
-         OmXA==
-X-Gm-Message-State: APjAAAVD3Nz/vuh/5FsGqmbRo9J0YkexOs74l7PqNUSFOgud/G8ewjAq
-        yLEZgFB16PLrW17vHjTQULjKAw==
-X-Google-Smtp-Source: APXvYqwU3o8Gh0p3iTRF2eUwetU3mRzbYpX3En+58mi7Qps50FM4raDCZMFHQwALO71XaeJ6K+oBpg==
-X-Received: by 2002:ac8:394b:: with SMTP id t11mr58254877qtb.286.1564000727125;
-        Wed, 24 Jul 2019 13:38:47 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id a23sm19743310qtp.22.2019.07.24.13.38.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:38:46 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 16:38:39 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
-Message-ID: <20190724163516-mutt-send-email-mst@kernel.org>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
- <088abe33117e891dd6265179f678847bd574c744.camel@linux.intel.com>
+        Wed, 24 Jul 2019 16:39:44 -0400
+Received: from xps13 ([83.160.161.190])
+        by smtp-cloud9.xs4all.net with ESMTPSA
+        id qO30hK1x20QvJqO34hAGd1; Wed, 24 Jul 2019 22:39:42 +0200
+Message-ID: <df4d83e5c5650ea2f1afde1469c9dc82d6120644.camel@tiscali.nl>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+From:   Paul Bolle <pebolle@tiscali.nl>
+To:     "Souza, Jose" <jose.souza@intel.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 24 Jul 2019 22:39:38 +0200
+In-Reply-To: <d084df248afc1943e06c50d391a775d117064743.camel@intel.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+         <1562876880.2840.12.camel@HansenPartnership.com>
+         <1562882235.13723.1.camel@HansenPartnership.com>
+         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
+         <1562884722.15001.3.camel@HansenPartnership.com>
+         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+         <1562888433.2915.0.camel@HansenPartnership.com>
+         <1562941185.3398.1.camel@HansenPartnership.com>
+         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
+         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
+         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
+         <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
+         <9ef8fc1ae2c3a9bad588899488a781333af4449a.camel@tiscali.nl>
+         <1563398966.3438.5.camel@HansenPartnership.com>
+         <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
+         <d084df248afc1943e06c50d391a775d117064743.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <088abe33117e891dd6265179f678847bd574c744.camel@linux.intel.com>
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMGhzXSvgUU6XdTF2WME9sHm/ITasHYUkyDSQ+HTRlbfpg+ZiZbVxTBRJpE+6Ypg2M6EAsrdBFp9DJQ0oHEsqlJVUyaJqIkE61EIzYAQ6OgLTo8wl7na
+ 5+oq/sr5kEUpv4nwWTbxHVqHOovCOZQPfjUm8vEPeCdQUHo8VeesqX3dn528mxW2mhYG8m5Xq9xIG+GjAQFYmsl/EFlclZUuAFxhfd4JN9lhu0qYQeQRhWo2
+ TFOKIiTNMC36vJSO91CJlwlggoi7Bwp56MgCtEgOW3RkJI6TTLQGdt3ocloYjEy4qJ7qJEiE722E2lE3cfxFZGQfe1TmwGVTPtEnWx4QWRk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 01:27:35PM -0700, Alexander Duyck wrote:
-> On Wed, 2019-07-24 at 14:40 -0400, Nitesh Narayan Lal wrote:
-> > On 7/24/19 12:54 PM, Alexander Duyck wrote:
-> > > This series provides an asynchronous means of hinting to a hypervisor
-> > > that a guest page is no longer in use and can have the data associated
-> > > with it dropped. To do this I have implemented functionality that allows
-> > > for what I am referring to as page hinting
-> > > 
-> > > The functionality for this is fairly simple. When enabled it will allocate
-> > > statistics to track the number of hinted pages in a given free area. When
-> > > the number of free pages exceeds this value plus a high water value,
-> > > currently 32,
-> > Shouldn't we configure this to a lower number such as 16?
-> 
-> Yes, we could do 16.
-> 
-> > >  it will begin performing page hinting which consists of
-> > > pulling pages off of free list and placing them into a scatter list. The
-> > > scatterlist is then given to the page hinting device and it will perform
-> > > the required action to make the pages "hinted", in the case of
-> > > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > > and as such they are forced out of the guest. After this they are placed
-> > > back on the free list, and an additional bit is added if they are not
-> > > merged indicating that they are a hinted buddy page instead of a standard
-> > > buddy page. The cycle then repeats with additional non-hinted pages being
-> > > pulled until the free areas all consist of hinted pages.
-> > > 
-> > > I am leaving a number of things hard-coded such as limiting the lowest
-> > > order processed to PAGEBLOCK_ORDER,
-> > Have you considered making this option configurable at the compile time?
-> 
-> We could. However, PAGEBLOCK_ORDER is already configurable on some
-> architectures. I didn't see much point in making it configurable in the
-> case of x86 as there are only really 2 orders that this could be used in
-> that provided good performance and that MAX_ORDER - 1 and PAGEBLOCK_ORDER.
-> 
-> > >  and have left it up to the guest to
-> > > determine what the limit is on how many pages it wants to allocate to
-> > > process the hints.
-> > It might make sense to set the number of pages to be hinted at a time from the
-> > hypervisor.
-> 
-> We could do that. Although I would still want some upper limit on that as
-> I would prefer to keep the high water mark as a static value since it is
-> used in an inline function. Currently the virtio driver is the one
-> defining the capacity of pages per request.
-> 
-> > > My primary testing has just been to verify the memory is being freed after
-> > > allocation by running memhog 79g on a 80g guest and watching the total
-> > > free memory via /proc/meminfo on the host. With this I have verified most
-> > > of the memory is freed after each iteration. As far as performance I have
-> > > been mainly focusing on the will-it-scale/page_fault1 test running with
-> > > 16 vcpus. With that I have seen at most a 2% difference between the base
-> > > kernel without these patches and the patches with virtio-balloon disabled.
-> > > With the patches and virtio-balloon enabled with hinting the results
-> > > largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
-> > > drop in performance as I approached 16 threads,
-> > I think this is acceptable.
-> > >  however on the the lastest
-> > > linux-next kernel I saw roughly a 4% to 5% improvement in performance for
-> > > all tests with 8 or more threads. 
-> > Do you mean that with your patches the will-it-scale/page_fault1 numbers were
-> > better by 4-5% over an unmodified kernel?
-> 
-> Yes. That is the odd thing. I am wondering if there was some improvement
-> in the zeroing of THP pages or something that is somehow improving the
-> cache performance for the accessing of the pages by the test in the guest.
+Hi Jose,
 
-Well cache is indexed by the PA on intel, right?  So if you end up never
-writing into the pages, reading them will be faster because you will end
-up with a zero page. This will be offset by a fault when you finally do
-write into the page.
+Souza, Jose schreef op wo 24-07-2019 om 20:27 [+0000]:
+> We fixed the patch instead of revert it, it is merged on drm-tip and on
+> his way to linux-stable.
 
-> > > I believe the difference seen is due to
-> > > the overhead for faulting pages back into the guest and zeroing of memory.
-> > It may also make sense to test these patches with netperf to observe how much
-> > performance drop it is introducing.
-> 
-> Do you have some test you were already using? I ask because I am not sure
-> netperf would generate a large enough memory window size to really trigger
-> much of a change in terms of hinting. If you have some test in mind I
-> could probably set it up and run it pretty quick.
-> 
-> > > Patch 4 is a bit on the large side at about 600 lines of change, however
-> > > I really didn't see a good way to break it up since each piece feeds into
-> > > the next. So I couldn't add the statistics by themselves as it didn't
-> > > really make sense to add them without something that will either read or
-> > > increment/decrement them, or add the Hinted state without something that
-> > > would set/unset it. As such I just ended up adding the entire thing as
-> > > one patch. It makes it a bit bigger but avoids the issues in the previous
-> > > set where I was referencing things before they had been added.
-> > > 
-> > > Changes from the RFC:
-> > > https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> > > Moved aeration requested flag out of aerator and into zone->flags.
-> > > Moved bounary out of free_area and into local variables for aeration.
-> > > Moved aeration cycle out of interrupt and into workqueue.
-> > > Left nr_free as total pages instead of splitting it between raw and aerated.
-> > > Combined size and physical address values in virtio ring into one 64b value.
-> > > 
-> > > Changes from v1:
-> > > https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> > > Dropped "waste page treatment" in favor of "page hinting"
-> > We may still have to try and find a better name for virtio-balloon side changes.
-> > As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
-> 
-> We just need to settle on a name. Essentially all this requires is just a
-> quick find and replace with whatever name we decide on.
+That should be (drm-tip) commit b5ea9c933700 ("drm/i915/vbt: Fix VBT parsing
+for the PSR section"). Correct?
+
+> Huge thanks again
+
+You're welcome.
+
+
+Paul Bolle
+
