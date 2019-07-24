@@ -2,122 +2,226 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90186C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B105BC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BACF21852
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563991142;
-	bh=St5GQXxw6i5OMdmiJQBNltNiWb6VR2PCKHSb/RJHrA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WcdhGHnueIAzWd6HvvK0K2ixuET2CQXapN57K98+JmSr1oOFypKu9yaRHpZG6qLMF
-	 xMH/B0oQcZzLsHx9tw6AtjcLlcJ15jkZMxPq9t8yc1tRqVrFytVCp/pXrZiiG/USLa
-	 J4h7QxiuybdRhcGqPz3vo2BlprWnmjIEW1WTBz6k=
+	by mail.kernel.org (Postfix) with ESMTP id 8884E21926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HMBUm4xr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfGXR7B (ORCPT
+        id S1727616AbfGXR7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:59:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33240 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726312AbfGXR7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:59:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4FF3CABD9;
-        Wed, 24 Jul 2019 17:58:59 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 19:58:58 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: Re: [PATCH] mm/hmm: replace hmm_update with mmu_notifier_range
-Message-ID: <20190724175858.GC6410@dhcp22.suse.cz>
-References: <20190723210506.25127-1-rcampbell@nvidia.com>
- <20190724070553.GA2523@lst.de>
- <20190724152858.GB28493@ziepe.ca>
+        Wed, 24 Jul 2019 13:59:05 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:56258 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfGXR7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:59:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563991140; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w7Ss6sBrQHMupDimQWwO95AVN89e91bf3yXBxmdm6jE=;
+        b=HMBUm4xr7tlEhCFt6PaX05OQdnJDOsbf+iiPbQaNv1FdSBMsmng4rvUDmmTlD+MLO72MTL
+        DodO/fj1dgfM302yjBbdgbKtmEYQolb7xmcXXccoIG6t6rmVAze60NJwKwJ0DH9SD10Knd
+        8s105L0qFYLSPN33HG9+U4UziLhHpcs=
+Date:   Wed, 24 Jul 2019 13:58:46 -0400
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] MIPS: dts: ingenic: Add 'cpus' node
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1563991126.1918.0@crapouillou.net>
+In-Reply-To: <20190722222858.4nmhyzi45dg7u67u@pburton-laptop>
+References: <20190722175548.18434-1-paul@crapouillou.net>
+        <20190722175548.18434-2-paul@crapouillou.net>
+        <20190722222858.4nmhyzi45dg7u67u@pburton-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724152858.GB28493@ziepe.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 24-07-19 12:28:58, Jason Gunthorpe wrote:
-> On Wed, Jul 24, 2019 at 09:05:53AM +0200, Christoph Hellwig wrote:
-> > Looks good:
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > 
-> > One comment on a related cleanup:
-> > 
-> > >  	list_for_each_entry(mirror, &hmm->mirrors, list) {
-> > >  		int rc;
-> > >  
-> > > -		rc = mirror->ops->sync_cpu_device_pagetables(mirror, &update);
-> > > +		rc = mirror->ops->sync_cpu_device_pagetables(mirror, nrange);
-> > >  		if (rc) {
-> > > -			if (WARN_ON(update.blockable || rc != -EAGAIN))
-> > > +			if (WARN_ON(mmu_notifier_range_blockable(nrange) ||
-> > > +			    rc != -EAGAIN))
-> > >  				continue;
-> > >  			ret = -EAGAIN;
-> > >  			break;
-> > 
-> > This magic handling of error seems odd.  I think we should merge rc and
-> > ret into one variable and just break out if any error happens instead
-> > or claiming in the comments -EAGAIN is the only valid error and then
-> > ignoring all others here.
-> 
-> The WARN_ON is enforcing the rules already commented near
-> mmuu_notifier_ops.invalidate_start - we could break or continue, it
-> doesn't much matter how to recover from a broken driver, but since we
-> did the WARN_ON this should sanitize the ret to EAGAIN or 0
-> 
-> Humm. Actually having looked this some more, I wonder if this is a
-> problem:
-> 
-> I see in __oom_reap_task_mm():
-> 
-> 			if (mmu_notifier_invalidate_range_start_nonblock(&range)) {
-> 				tlb_finish_mmu(&tlb, range.start, range.end);
-> 				ret = false;
-> 				continue;
-> 			}
-> 			unmap_page_range(&tlb, vma, range.start, range.end, NULL);
-> 			mmu_notifier_invalidate_range_end(&range);
-> 
-> Which looks like it creates an unbalanced start/end pairing if any
-> start returns EAGAIN?
-> 
-> This does not seem OK.. Many users require start/end to be paired to
-> keep track of their internal locking. Ie for instance hmm breaks
-> because the hmm->notifiers counter becomes unable to get to 0.
-> 
-> Below is the best idea I've had so far..
-> 
-> Michal, what do you think?
 
-IIRC we have discussed this with Jerome back then when I've introduced
-this code and unless I misremember he said the current code was OK.
-Maybe new users have started relying on a new semantic in the meantime,
-back then, none of the notifier has even started any action in blocking
-mode on a EAGAIN bailout. Most of them simply did trylock early in the
-process and bailed out so there was nothing to do for the range_end
-callback.
 
-Has this changed?
--- 
-Michal Hocko
-SUSE Labs
+Le lun. 22 juil. 2019 =E0 18:28, Paul Burton <paul.burton@mips.com> a=20
+=E9crit :
+> Hi Paul,
+>=20
+> On Mon, Jul 22, 2019 at 01:55:48PM -0400, Paul Cercueil wrote:
+>>  Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi files.
+>=20
+> What's the motivation for this?
+>=20
+> If it's to silence the "cacheinfo: Unable to detect cache hierarchy"
+> messages, does commit b8bea8a5e5d9 ("mips: fix cacheinfo") from
+> mips-fixes work for you instead?
+>=20
+> I'm not seeing much point listing cache setup in DT when we already
+> detect it from cop0 anyway.
+
+Ok, just drop this patchset then.
+
+>=20
+> Thanks,
+>     Paul
+>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   arch/mips/boot/dts/ingenic/jz4740.dtsi | 19 +++++++++++
+>>   arch/mips/boot/dts/ingenic/jz4770.dtsi | 29 ++++++++++++++++
+>>   arch/mips/boot/dts/ingenic/jz4780.dtsi | 47=20
+>> ++++++++++++++++++++++++++
+>>   3 files changed, 95 insertions(+)
+>>=20
+>>  diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi=20
+>> b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  index 2beb78a62b7d..14d777dae87d 100644
+>>  --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+>>  @@ -6,6 +6,25 @@
+>>   	#size-cells =3D <1>;
+>>   	compatible =3D "ingenic,jz4740";
+>>=20
+>>  +	cpus {
+>>  +		#address-cells =3D <1>;
+>>  +		#size-cells =3D <0>;
+>>  +
+>>  +		cpu0: cpu@0 {
+>>  +			device_type =3D "cpu";
+>>  +			compatible =3D "ingenic,xburst-d0";
+>>  +			reg =3D <0>;
+>>  +			clocks =3D <&cgu JZ4740_CLK_CCLK>;
+>>  +			clock-names =3D "cpu";
+>>  +
+>>  +			i-cache-size =3D <0x4000>;
+>>  +			i-cache-block-size =3D <32>;
+>>  +
+>>  +			d-cache-size =3D <0x4000>;
+>>  +			d-cache-block-size =3D <32>;
+>>  +		};
+>>  +	};
+>>  +
+>>   	cpuintc: interrupt-controller {
+>>   		#address-cells =3D <0>;
+>>   		#interrupt-cells =3D <1>;
+>>  diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi=20
+>> b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+>>  index 49ede6c14ff3..83ee526fbe10 100644
+>>  --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
+>>  +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+>>  @@ -7,6 +7,35 @@
+>>   	#size-cells =3D <1>;
+>>   	compatible =3D "ingenic,jz4770";
+>>=20
+>>  +	cpus {
+>>  +		#address-cells =3D <1>;
+>>  +		#size-cells =3D <0>;
+>>  +
+>>  +		cpu0: cpu@0 {
+>>  +			device_type =3D "cpu";
+>>  +			compatible =3D "ingenic,xburst-d1";
+>>  +			reg =3D <0>;
+>>  +			clocks =3D <&cgu JZ4770_CLK_CCLK>;
+>>  +			clock-names =3D "cpu";
+>>  +
+>>  +			i-cache-size =3D <0x4000>;
+>>  +			i-cache-block-size =3D <32>;
+>>  +
+>>  +			d-cache-size =3D <0x4000>;
+>>  +			d-cache-block-size =3D <32>;
+>>  +
+>>  +			next-level-cache =3D <&L2_cache>;
+>>  +
+>>  +			L2_cache: cache-controller {
+>>  +				compatible =3D "cache";
+>>  +				cache-unified;
+>>  +				cache-level =3D <2>;
+>>  +				cache-size =3D <0x40000>;
+>>  +				cache-block-size =3D <32>;
+>>  +			};
+>>  +		};
+>>  +	};
+>>  +
+>>   	cpuintc: interrupt-controller {
+>>   		#address-cells =3D <0>;
+>>   		#interrupt-cells =3D <1>;
+>>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+>> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>  index b03cdec56de9..3339b37101c0 100644
+>>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>  @@ -7,6 +7,53 @@
+>>   	#size-cells =3D <1>;
+>>   	compatible =3D "ingenic,jz4780";
+>>=20
+>>  +	cpus {
+>>  +		#address-cells =3D <1>;
+>>  +		#size-cells =3D <0>;
+>>  +
+>>  +		cpu0: cpu@0 {
+>>  +			device_type =3D "cpu";
+>>  +			compatible =3D "ingenic,xburst-e1";
+>>  +			reg =3D <0>;
+>>  +
+>>  +			clocks =3D <&cgu JZ4780_CLK_CPU>;
+>>  +			clock-names =3D "cpu";
+>>  +
+>>  +			i-cache-size =3D <0x8000>;
+>>  +			i-cache-block-size =3D <32>;
+>>  +
+>>  +			d-cache-size =3D <0x8000>;
+>>  +			d-cache-block-size =3D <32>;
+>>  +
+>>  +			next-level-cache =3D <&L2_cache>;
+>>  +
+>>  +			L2_cache: l2-cache {
+>>  +				compatible =3D "cache";
+>>  +				cache-unified;
+>>  +				cache-level =3D <2>;
+>>  +				cache-size =3D <0x80000>;
+>>  +				cache-block-size =3D <32>;
+>>  +			};
+>>  +		};
+>>  +
+>>  +		cpu1: cpu@1 {
+>>  +			device_type =3D "cpu";
+>>  +			compatible =3D "ingenic,xburst-e1";
+>>  +			reg =3D <1>;
+>>  +
+>>  +			clocks =3D <&cgu JZ4780_CLK_CORE1>;
+>>  +			clock-names =3D "cpu";
+>>  +
+>>  +			i-cache-size =3D <0x8000>;
+>>  +			i-cache-block-size =3D <32>;
+>>  +
+>>  +			d-cache-size =3D <0x8000>;
+>>  +			d-cache-block-size =3D <32>;
+>>  +
+>>  +			next-level-cache =3D <&L2_cache>;
+>>  +		};
+>>  +	};
+>>  +
+>>   	cpuintc: interrupt-controller {
+>>   		#address-cells =3D <0>;
+>>   		#interrupt-cells =3D <1>;
+>>  --
+>>  2.21.0.593.g511ec345e18
+>>=20
+
+=
+
