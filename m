@@ -2,113 +2,75 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B127EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E197FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7576520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999208;
-	bh=CPNZ+QSf1n22rncsUpD/LvnhCTo6fBi49pfftRYaJgI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBzXUxtgU+s3dr4aiO7sLp7Bw2pOcNYktWbY4vlItMbM/blEpNCWimWGo+hsyfopK
-	 Fy0um3n50xlRGMtwhQOuYhPrAFmtCqSijh1hlhDd0lvL+cRqANb1F1We0USHQzpB3x
-	 VEOKFB3jrpLWDmAdM5edW3SUTcgtEfHN4+mSLrKc=
+	by mail.kernel.org (Postfix) with ESMTP id B8E9D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404904AbfGXUN1 (ORCPT
+        id S2404990AbfGXUNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404633AbfGXT4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A73C20665;
-        Wed, 24 Jul 2019 19:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998182;
-        bh=CPNZ+QSf1n22rncsUpD/LvnhCTo6fBi49pfftRYaJgI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ttVCH86xtMNqFalg7bV2FFaoPZYdz5v2TKalWcuaw1DjeNLiUyC9LInojujbew6jI
-         AcUM71XYwhzb6c8MaB4MwFKUHOyzLJOq70NYgi/pQu6d2GI+M/ihDi8uB9eh26y2XN
-         okZymADsn8tnF00s2mTcFj3r883xTYeFvHQiccTs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.1 275/371] iwlwifi: mvm: clear rfkill_safe_init_done when we start the firmware
-Date:   Wed, 24 Jul 2019 21:20:27 +0200
-Message-Id: <20190724191745.020427315@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 24 Jul 2019 16:13:30 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:51162 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404887AbfGXUNZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:13:25 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 85A5B15431990;
+        Wed, 24 Jul 2019 13:13:24 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 13:13:24 -0700 (PDT)
+Message-Id: <20190724.131324.1545677795217357026.davem@davemloft.net>
+To:     matorola@gmail.com
+Cc:     ldv@altlinux.org, hch@lst.de, khalid.aziz@oracle.com,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CADxRZqx-jEnm4U8oe=tJf5apbvcMuw5OYZUN8h4G68sXFvDsmQ@mail.gmail.com>
+References: <20190717215956.GA30369@altlinux.org>
+        <20190718.141405.1070121094691581998.davem@davemloft.net>
+        <CADxRZqx-jEnm4U8oe=tJf5apbvcMuw5OYZUN8h4G68sXFvDsmQ@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 24 Jul 2019 13:13:24 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Anatoly Pugachev <matorola@gmail.com>
+Date: Wed, 24 Jul 2019 22:32:17 +0300
 
-commit 940225628652b340b2bfe99f42f3d2db9fd9ce6c upstream.
+> the first test where it was discovered was done on my test LDOM named
+> ttip, hardware (hypervisor) is T5-2 server, running under Solaris 11.4
+> OS.
+> ttip LDOM is debian sparc64 unstable , so with almost all the latest
+> software (gcc 8.3.0, binutils 2.32.51.20190707-1, debian GLIBC
+> 2.28-10, etc..)
+> 
+> For another test, i also installed LDOM with oracle sparc linux
+> https://oss.oracle.com/projects/linux-sparc/ , but I've to install a
+> more fresh version of gcc on it first, since system installed gcc 4.4
+> is too old for a git kernel (linux-2.6/Documentation/Changes lists gcc
+> 4.6 as a minimal version), so I choose to install gcc-7.4.0 to /opt/
+> (leaving system installed gcc 4.4 under /usr/bin). Compiled and
+> installed git kernel version, i.e. last tag 5.3.0-rc1 and ran the
+> test. Kernel still produced oops.
 
-Otherwise it'll stay set forever which is clearly buggy.
+I suspect, therefore, that we have a miscompile.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Please put your unstripped vmlinux image somewhere so I can take a closer
+look.
 
----
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -419,6 +419,8 @@ static int iwl_run_unified_mvm_ucode(str
- 
- 	lockdep_assert_held(&mvm->mutex);
- 
-+	mvm->rfkill_safe_init_done = false;
-+
- 	iwl_init_notification_wait(&mvm->notif_wait,
- 				   &init_wait,
- 				   init_complete,
-@@ -537,8 +539,7 @@ int iwl_run_init_mvm_ucode(struct iwl_mv
- 
- 	lockdep_assert_held(&mvm->mutex);
- 
--	if (WARN_ON_ONCE(mvm->rfkill_safe_init_done))
--		return 0;
-+	mvm->rfkill_safe_init_done = false;
- 
- 	iwl_init_notification_wait(&mvm->notif_wait,
- 				   &calib_wait,
-@@ -1108,10 +1109,13 @@ static int iwl_mvm_load_rt_fw(struct iwl
- 
- 	iwl_fw_dbg_apply_point(&mvm->fwrt, IWL_FW_INI_APPLY_EARLY);
- 
-+	mvm->rfkill_safe_init_done = false;
- 	ret = iwl_mvm_load_ucode_wait_alive(mvm, IWL_UCODE_REGULAR);
- 	if (ret)
- 		return ret;
- 
-+	mvm->rfkill_safe_init_done = true;
-+
- 	iwl_fw_dbg_apply_point(&mvm->fwrt, IWL_FW_INI_APPLY_AFTER_ALIVE);
- 
- 	return iwl_init_paging(&mvm->fwrt, mvm->fwrt.cur_fw_img);
-
-
+Thank you.
