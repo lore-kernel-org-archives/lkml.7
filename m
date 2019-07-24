@@ -2,120 +2,202 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90D2C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A96C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A419221926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845D421926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfGXNxJ (ORCPT
+        id S1728142AbfGXNyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:53:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:41304 "EHLO foss.arm.com"
+        Wed, 24 Jul 2019 09:54:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38562 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfGXNxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:53:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F72D28;
-        Wed, 24 Jul 2019 06:53:08 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 996793F71A;
-        Wed, 24 Jul 2019 06:53:05 -0700 (PDT)
-Subject: Re: [PATCH v9 11/21] mm: pagewalk: Add p4d_entry() and pgd_entry()
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-12-steven.price@arm.com>
- <20190723101432.GC8085@lakrids.cambridge.arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <60ee20ef-62a3-5df1-6e24-24973b69be70@arm.com>
-Date:   Wed, 24 Jul 2019 14:53:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726422AbfGXNyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:54:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 06:54:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
+   d="scan'208";a="321347618"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga004.jf.intel.com with ESMTP; 24 Jul 2019 06:54:11 -0700
+Date:   Wed, 24 Jul 2019 21:37:14 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Zhang Yi Z <yi.z.zhang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v3 03/12] fpga: dfl: pci: enable SRIOV support.
+Message-ID: <20190724133714.GC8463@hao-dev>
+References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
+ <1563857495-26692-4-git-send-email-hao.wu@intel.com>
+ <20190724093744.GC29532@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190723101432.GC8085@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724093744.GC29532@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 11:14, Mark Rutland wrote:
-> On Mon, Jul 22, 2019 at 04:42:00PM +0100, Steven Price wrote:
->> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
->> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
->> no users. We're about to add users so reintroduce them, along with
->> p4d_entry() as we now have 5 levels of tables.
->>
->> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
->> PUD-sized transparent hugepages") already re-added pud_entry() but with
->> different semantics to the other callbacks. Since there have never
->> been upstream users of this, revert the semantics back to match the
->> other callbacks. This means pud_entry() is called for all entries, not
->> just transparent huge pages.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  include/linux/mm.h | 15 +++++++++------
->>  mm/pagewalk.c      | 27 ++++++++++++++++-----------
->>  2 files changed, 25 insertions(+), 17 deletions(-)
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 0334ca97c584..b22799129128 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -1432,15 +1432,14 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
->>  
->>  /**
->>   * mm_walk - callbacks for walk_page_range
->> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
->> - *	       this handler should only handle pud_trans_huge() puds.
->> - *	       the pmd_entry or pte_entry callbacks will be used for
->> - *	       regular PUDs.
->> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
->> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
->> + * @p4d_entry: if set, called for each non-empty P4D entry
->> + * @pud_entry: if set, called for each non-empty PUD entry
->> + * @pmd_entry: if set, called for each non-empty PMD entry
+On Wed, Jul 24, 2019 at 11:37:44AM +0200, Greg KH wrote:
+> On Tue, Jul 23, 2019 at 12:51:26PM +0800, Wu Hao wrote:
+> > This patch enables the standard sriov support. It allows user to
+> > enable SRIOV (and VFs), then user could pass through accelerators
+> > (VFs) into virtual machine or use VFs directly in host.
+> > 
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Acked-by: Alan Tull <atull@kernel.org>
+> > Acked-by: Moritz Fischer <mdf@kernel.org>
+> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> > ---
+> > v2: remove DRV/MODULE_VERSION modifications.
+> > ---
+> >  drivers/fpga/dfl-pci.c | 39 +++++++++++++++++++++++++++++++++++++++
+> >  drivers/fpga/dfl.c     | 41 +++++++++++++++++++++++++++++++++++++++++
+> >  drivers/fpga/dfl.h     |  1 +
+> >  3 files changed, 81 insertions(+)
+> > 
+> > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> > index 66b5720..0e65d81 100644
+> > --- a/drivers/fpga/dfl-pci.c
+> > +++ b/drivers/fpga/dfl-pci.c
+> > @@ -223,8 +223,46 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+> >  	return ret;
+> >  }
+> >  
+> > +static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+> > +{
+> > +	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+> > +	struct dfl_fpga_cdev *cdev = drvdata->cdev;
+> > +	int ret = 0;
+> > +
+> > +	mutex_lock(&cdev->lock);
+> > +
+> > +	if (!num_vfs) {
+> > +		/*
+> > +		 * disable SRIOV and then put released ports back to default
+> > +		 * PF access mode.
+> > +		 */
+> > +		pci_disable_sriov(pcidev);
+> > +
+> > +		__dfl_fpga_cdev_config_port_vf(cdev, false);
+> > +
+> > +	} else if (cdev->released_port_num == num_vfs) {
+> > +		/*
+> > +		 * only enable SRIOV if cdev has matched released ports, put
+> > +		 * released ports into VF access mode firstly.
+> > +		 */
+> > +		__dfl_fpga_cdev_config_port_vf(cdev, true);
+> > +
+> > +		ret = pci_enable_sriov(pcidev, num_vfs);
+> > +		if (ret)
+> > +			__dfl_fpga_cdev_config_port_vf(cdev, false);
+> > +	} else {
+> > +		ret = -EINVAL;
+> > +	}
+> > +
+> > +	mutex_unlock(&cdev->lock);
+> > +	return ret;
+> > +}
+> > +
+> >  static void cci_pci_remove(struct pci_dev *pcidev)
+> >  {
+> > +	if (dev_is_pf(&pcidev->dev))
+> > +		cci_pci_sriov_configure(pcidev, 0);
+> > +
+> >  	cci_remove_feature_devs(pcidev);
+> >  	pci_disable_pcie_error_reporting(pcidev);
+> >  }
+> > @@ -234,6 +272,7 @@ static void cci_pci_remove(struct pci_dev *pcidev)
+> >  	.id_table = cci_pcie_id_tbl,
+> >  	.probe = cci_pci_probe,
+> >  	.remove = cci_pci_remove,
+> > +	.sriov_configure = cci_pci_sriov_configure,
+> >  };
+> >  
+> >  module_pci_driver(cci_pci_driver);
+> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> > index e04ed45..c3a8e1d 100644
+> > --- a/drivers/fpga/dfl.c
+> > +++ b/drivers/fpga/dfl.c
+> > @@ -1112,6 +1112,47 @@ int dfl_fpga_cdev_config_port(struct dfl_fpga_cdev *cdev, int port_id,
+> >  }
+> >  EXPORT_SYMBOL_GPL(dfl_fpga_cdev_config_port);
+> >  
+> > +static void config_port_vf(struct device *fme_dev, int port_id, bool is_vf)
+> > +{
+> > +	void __iomem *base;
+> > +	u64 v;
+> > +
+> > +	base = dfl_get_feature_ioaddr_by_id(fme_dev, FME_FEATURE_ID_HEADER);
+> > +
+> > +	v = readq(base + FME_HDR_PORT_OFST(port_id));
+> > +
+> > +	v &= ~FME_PORT_OFST_ACC_CTRL;
+> > +	v |= FIELD_PREP(FME_PORT_OFST_ACC_CTRL,
+> > +			is_vf ? FME_PORT_OFST_ACC_VF : FME_PORT_OFST_ACC_PF);
+> > +
+> > +	writeq(v, base + FME_HDR_PORT_OFST(port_id));
+> > +}
+> > +
+> > +/**
+> > + * __dfl_fpga_cdev_config_port_vf - configure port to VF access mode
+> > + *
+> > + * @cdev: parent container device.
+> > + * @if_vf: true for VF access mode, and false for PF access mode
+> > + *
+> > + * Return: 0 on success, negative error code otherwise.
+> > + *
+> > + * This function is needed in sriov configuration routine. It could be used to
+> > + * configures the released ports access mode to VF or PF.
+> > + * The caller needs to hold lock for protection.
+> > + */
+> > +void __dfl_fpga_cdev_config_port_vf(struct dfl_fpga_cdev *cdev, bool is_vf)
+> > +{
+> > +	struct dfl_feature_platform_data *pdata;
+> > +
+> > +	list_for_each_entry(pdata, &cdev->port_dev_list, node) {
+> > +		if (device_is_registered(&pdata->dev->dev))
+> > +			continue;
+> > +
+> > +		config_port_vf(cdev->fme_dev, pdata->id, is_vf);
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL_GPL(__dfl_fpga_cdev_config_port_vf);
 > 
-> How are these expected to work with folding?
+> Why are you exporting a function with a leading __?
 > 
-> For example, on arm64 with 64K pages and 42-bit VA, you can have 2-level
-> tables where the PGD is P4D, PUD, and PMD. IIUC we'd invoke the
-> callbacks for each of those levels where we found an entry in the pgd.
-> 
-> Either the callee handle that, or we should inhibit the callbacks when
-> levels are folded, and I think that needs to be explcitly stated either
-> way.
-> 
-> IIRC on x86 the p4d folding is dynamic depending on whether the HW
-> supports 5-level page tables. Maybe that implies the callee has to
-> handle that.
+> You are expecting someone else, in who knows what code, to do locking
+> correctly?  If so, and the caller always has to have a local lock, then
+> it's not a big deal, just drop the '__', otherwise if you have to have a
+> specific lock for a specific device, then you have a really complex and
+> probably broken api here :(
 
-Yes, my assumption is that it has to be up to the callee to handle that
-because folding can be dynamic. I believe this also was how these
-callbacks work before they were removed. However I'll add a comment
-explaining that here as it's probably non-obvious.
+Yes, I just want to remind the user of this API, caller needs to hold the
+lock to protect the list. I fully agree, it does make sense to make the
+APIs easy to use. I will try to improve this, maybe move the lock inside
+this function, then API user doesn't need to know the details of locking.
 
-Steve
+Thanks a lot for the comments, it really helps.
+
+Hao
+
+> 
+> thanks,
+> 
+> greg k-h
