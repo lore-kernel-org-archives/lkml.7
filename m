@@ -2,312 +2,169 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254F9C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858B5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD1921951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D40B218F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:08:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ay7nQDJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbfGXTHw (ORCPT
+        id S1728889AbfGXTIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:07:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39290 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbfGXTHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:07:50 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A85DA81F2F;
-        Wed, 24 Jul 2019 19:07:49 +0000 (UTC)
-Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 385AC5D71C;
-        Wed, 24 Jul 2019 19:07:43 +0000 (UTC)
-Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
- hints to host
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <20190724170514.6685.17161.stgit@localhost.localdomain>
- <20190724143902-mutt-send-email-mst@kernel.org>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
- z4nL4AV6VJmC7dBIlTi3Mj2eymD/2dkKP6UXlliWkq67feVg1KG+4UIp89lFW7v5Y8Muw3Fm
- uQbFvxyhN8n3tmhRe+ScWsndSBDxYOZgkbCSIfNPdZrHcnOLfA7xMJZeRCjqUpwhIjxQdFA7
- n0s0KZ2cHIsemtBM8b2WXSQG9CjqAJHVkDhrBWKThDRF7k80oiJdEQlTEiVhaEDURXq+2XmG
- jpCnvRQDb28EJSsQlNEAzwzHMeplddfB0vCg9fRk/kOBMDBtGsTvNT9OYUZD+7jaf0gvBvBB
- lbKmmMMX7uJB+ejY7bnw6ePNrVPErWyfHzR5WYrIFUtgoR3LigKnw5apzc7UIV9G8uiIcZEn
- C+QJCK43jgnkPcSmwVPztcrkbC84g1K5v2Dxh9amXKLBA1/i+CAY8JWMTepsFohIFMXNLj+B
- RJoOcR4HGYXZ6CAJa3Glu3mCmYqHTOKwezJTAvmsCLd3W7WxOGF8BbBjVaPjcZfavOvkin0u
- DaFvhAmrzN6lL0msY17JCZo046z8oAqkyvEflFbC0S1R/POzehKrzQ1RFRD3/YzzlhmIowkM
- BpTqNBeHEzQAlIhQuyu1ugmQtfsYYq6FPmWMRfFPes/4JUU/PQARAQABtCVOaXRlc2ggTmFy
- YXlhbiBMYWwgPG5pbGFsQHJlZGhhdC5jb20+iQI9BBMBCAAnBQJZeKUKAhsjBQkJZgGABQsJ
- CAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEKOGQNwGMqM56lEP/A2KMs/pu0URcVk/kqVwcBhU
- SnvB8DP3lDWDnmVrAkFEOnPX7GTbactQ41wF/xwjwmEmTzLrMRZpkqz2y9mV0hWHjqoXbOCS
- 6RwK3ri5e2ThIPoGxFLt6TrMHgCRwm8YuOSJ97o+uohCTN8pmQ86KMUrDNwMqRkeTRW9wWIQ
- EdDqW44VwelnyPwcmWHBNNb1Kd8j3xKlHtnS45vc6WuoKxYRBTQOwI/5uFpDZtZ1a5kq9Ak/
- MOPDDZpd84rqd+IvgMw5z4a5QlkvOTpScD21G3gjmtTEtyfahltyDK/5i8IaQC3YiXJCrqxE
- r7/4JMZeOYiKpE9iZMtS90t4wBgbVTqAGH1nE/ifZVAUcCtycD0f3egX9CHe45Ad4fsF3edQ
- ESa5tZAogiA4Hc/yQpnnf43a3aQ67XPOJXxS0Qptzu4vfF9h7kTKYWSrVesOU3QKYbjEAf95
- NewF9FhAlYqYrwIwnuAZ8TdXVDYt7Z3z506//sf6zoRwYIDA8RDqFGRuPMXUsoUnf/KKPrtR
- ceLcSUP/JCNiYbf1/QtW8S6Ca/4qJFXQHp0knqJPGmwuFHsarSdpvZQ9qpxD3FnuPyo64S2N
- Dfq8TAeifNp2pAmPY2PAHQ3nOmKgMG8Gn5QiORvMUGzSz8Lo31LW58NdBKbh6bci5+t/HE0H
- pnyVf5xhNC/FuQINBFl4pQoBEACr+MgxWHUP76oNNYjRiNDhaIVtnPRqxiZ9v4H5FPxJy9UD
- Bqr54rifr1E+K+yYNPt/Po43vVL2cAyfyI/LVLlhiY4yH6T1n+Di/hSkkviCaf13gczuvgz4
- KVYLwojU8+naJUsiCJw01MjO3pg9GQ+47HgsnRjCdNmmHiUQqksMIfd8k3reO9SUNlEmDDNB
- XuSzkHjE5y/R/6p8uXaVpiKPfHoULjNRWaFc3d2JGmxJpBdpYnajoz61m7XJlgwl/B5Ql/6B
- dHGaX3VHxOZsfRfugwYF9CkrPbyO5PK7yJ5vaiWre7aQ9bmCtXAomvF1q3/qRwZp77k6i9R3
- tWfXjZDOQokw0u6d6DYJ0Vkfcwheg2i/Mf/epQl7Pf846G3PgSnyVK6cRwerBl5a68w7xqVU
- 4KgAh0DePjtDcbcXsKRT9D63cfyfrNE+ea4i0SVik6+N4nAj1HbzWHTk2KIxTsJXypibOKFX
- 2VykltxutR1sUfZBYMkfU4PogE7NjVEU7KtuCOSAkYzIWrZNEQrxYkxHLJsWruhSYNRsqVBy
- KvY6JAsq/i5yhVd5JKKU8wIOgSwC9P6mXYRgwPyfg15GZpnw+Fpey4bCDkT5fMOaCcS+vSU1
- UaFmC4Ogzpe2BW2DOaPU5Ik99zUFNn6cRmOOXArrryjFlLT5oSOe4IposgWzdwARAQABiQIl
- BBgBCAAPBQJZeKUKAhsMBQkJZgGAAAoJEKOGQNwGMqM5ELoP/jj9d9gF1Al4+9bngUlYohYu
- 0sxyZo9IZ7Yb7cHuJzOMqfgoP4tydP4QCuyd9Q2OHHL5AL4VFNb8SvqAxxYSPuDJTI3JZwI7
- d8JTPKwpulMSUaJE8ZH9n8A/+sdC3CAD4QafVBcCcbFe1jifHmQRdDrvHV9Es14QVAOTZhnJ
- vweENyHEIxkpLsyUUDuVypIo6y/Cws+EBCWt27BJi9GH/EOTB0wb+2ghCs/i3h8a+bi+bS7L
- FCCm/AxIqxRurh2UySn0P/2+2eZvneJ1/uTgfxnjeSlwQJ1BWzMAdAHQO1/lnbyZgEZEtUZJ
- x9d9ASekTtJjBMKJXAw7GbB2dAA/QmbA+Q+Xuamzm/1imigz6L6sOt2n/X/SSc33w8RJUyor
- SvAIoG/zU2Y76pKTgbpQqMDmkmNYFMLcAukpvC4ki3Sf086TdMgkjqtnpTkEElMSFJC8npXv
- 3QnGGOIfFug/qs8z03DLPBz9VYS26jiiN7QIJVpeeEdN/LKnaz5LO+h5kNAyj44qdF2T2AiF
- HxnZnxO5JNP5uISQH3FjxxGxJkdJ8jKzZV7aT37sC+Rp0o3KNc+GXTR+GSVq87Xfuhx0LRST
- NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <33e41a02-7a9c-f166-8eb3-50abacb9d2cc@redhat.com>
-Date:   Wed, 24 Jul 2019 15:07:42 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Jul 2019 15:08:22 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42907 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfGXTIV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:08:21 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s184so35821115oie.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BJ2NVnXSi8ebOI8TCeX+KEiumjRr37taJEiDBtLAzIw=;
+        b=ay7nQDJto1uXe3PyisCCQ4jh0O1tS2wQekngxDHnkudc+mm443mhyxwIylnVi04ikq
+         p+0MRA6sMLXHIiw/hlRdeEzcIyX0AQkLLglriGAU52YI7GUxDDL3uP7O8MbdaG5x324/
+         s1IQjOXptoKEECbr2VtO00HQSZl+DWrRVKCPcaWpsiz6AkLZW3DHJTI1mI76g4GCPhrP
+         uohpgu8+vHc5tGBhon5LNnF9mroUP4HVW7iavecvv1zAtnAu+zBPOqE1k1qppbUtbE9V
+         CNbTUQ1m1b1++BkjeJrUj6Gkwei+gseZ/u8ExpXPnBE+5vHE2NJCJ2+XGnA32KgepmdE
+         /ALA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BJ2NVnXSi8ebOI8TCeX+KEiumjRr37taJEiDBtLAzIw=;
+        b=n3pNg8rYOP248QAp3svugXO5PjO/elQWzL9efNZI0eYQvfPwoJY0VRhCcp19j89JDz
+         Dq08pm8TNBeV0MTkFc+M7+Nyb/nxigPtcFnU8GhePoO8wfVYMFBwbBlB2R8vqwyvOihg
+         /HujxARbQk7c7DLDbtGteqU85VlWrGlKNggR/YujZD9CJNGP+Nc5rgbbnUJwW0zMluj+
+         00pgO77FuhKbeGsuca1Swmx2xWfwbdIXbCIXnd8ilMjQAgzOYOiyAISAkQFJxngdm3FO
+         YwJ4N6rK9PgbtQAYrL30cljCzVzqfkazjeUORiG6f9g4NHN4NeVw+RS+MAgDBJ1y0IQp
+         d6hA==
+X-Gm-Message-State: APjAAAV29t5zYQP4cNxTvkaPb4y5zHM6Mha2lAW2asXuaC/KO1EbReJD
+        SJ4i/9t4MTHwHwihRpqfXGtSEt3t0rY47I8v3+ab8w==
+X-Google-Smtp-Source: APXvYqya48iVqoqwk4kONppwXP1DXBm/5PjXHOXJTQ4D06+WTxrfuvoiUNL7MT9p6MSQpW48esX92p8qWTHWS+W8MI0=
+X-Received: by 2002:aca:3dd7:: with SMTP id k206mr37653038oia.47.1563995300490;
+ Wed, 24 Jul 2019 12:08:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190724143902-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 24 Jul 2019 19:07:49 +0000 (UTC)
+References: <20190724144651.28272-1-christian@brauner.io> <20190724144651.28272-5-christian@brauner.io>
+ <CAG48ez3nuY__qvctoOnX7mQbjjP4chEs4K-OPxSQficiPLS18w@mail.gmail.com> <CFB4D39F-24B9-4AD9-B19C-E2D14D38A808@brauner.io>
+In-Reply-To: <CFB4D39F-24B9-4AD9-B19C-E2D14D38A808@brauner.io>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 24 Jul 2019 21:07:54 +0200
+Message-ID: <CAG48ez1vd4Yhd3DqHVjTWM-N0MaNnX9n8MNV7MEyU5m3XDu+kQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
+To:     Christian Brauner <christian@brauner.io>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        kernel-team <kernel-team@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 8:27 PM Christian Brauner <christian@brauner.io> wrote:
+> On July 24, 2019 8:14:26 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
+> >On Wed, Jul 24, 2019 at 4:48 PM Christian Brauner
+> ><christian@brauner.io> wrote:
+> >> If CLONE_WAIT_PID is set the newly created process will not be
+> >> considered by process wait requests that wait generically on children
+> >> such as:
+> >>
+> >>         syscall(__NR_wait4, -1, wstatus, options, rusage)
+> >>         syscall(__NR_waitpid, -1, wstatus, options)
+> >>         syscall(__NR_waitid, P_ALL, -1, siginfo, options, rusage)
+> >>         syscall(__NR_waitid, P_PGID, -1, siginfo, options, rusage)
+> >>         syscall(__NR_waitpid, -pid, wstatus, options)
+> >>         syscall(__NR_wait4, -pid, wstatus, options, rusage)
+> >>
+> >> A process created with CLONE_WAIT_PID can only be waited upon with a
+> >> focussed wait call. This ensures that processes can be reaped even if
+> >> all file descriptors referring to it are closed.
+> >[...]
+> >> diff --git a/kernel/fork.c b/kernel/fork.c
+> >> index baaff6570517..a067f3876e2e 100644
+> >> --- a/kernel/fork.c
+> >> +++ b/kernel/fork.c
+> >> @@ -1910,6 +1910,8 @@ static __latent_entropy struct task_struct
+> >*copy_process(
+> >>         delayacct_tsk_init(p);  /* Must remain after
+> >dup_task_struct() */
+> >>         p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE);
+> >>         p->flags |= PF_FORKNOEXEC;
+> >> +       if (clone_flags & CLONE_WAIT_PID)
+> >> +               p->flags |= PF_WAIT_PID;
+> >>         INIT_LIST_HEAD(&p->children);
+> >>         INIT_LIST_HEAD(&p->sibling);
+> >>         rcu_copy_process(p);
+> >
+> >This means that if a process with PF_WAIT_PID forks, the child
+> >inherits the flag, right? That seems unintended? You might have to add
+> >something like "if (clone_flags & CLONE_THREAD == 0) p->flags &=
+> >~PF_WAIT_PID;" before this. (I think threads do have to inherit the
+> >flag so that the case where a non-leader thread of the child goes
+> >through execve and steals the leader's identity is handled properly.)
+> >Or you could cram it somewhere into signal_struct instead of on the
+> >task - that might be a more logical place for it?
+>
+> Hm, CLONE_WAIT_PID is only useable with CLONE_PIDFD which in turn is
+> not useable with CLONE_THREAD.
+> But we should probably make that explicit for CLONE_WAIT_PID too.
 
-On 7/24/19 3:02 PM, Michael S. Tsirkin wrote:
-> On Wed, Jul 24, 2019 at 10:05:14AM -0700, Alexander Duyck wrote:
->> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
->>
->> Add support for the page hinting feature provided by virtio-balloon.
->> Hinting differs from the regular balloon functionality in that is is
->> much less durable than a standard memory balloon. Instead of creating a
->> list of pages that cannot be accessed the pages are only inaccessible
->> while they are being indicated to the virtio interface. Once the
->> interface has acknowledged them they are placed back into their respective
->> free lists and are once again accessible by the guest system.
->>
->> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Looking at the design, it seems that hinted pages can immediately be
-> reused. I wonder how we can efficiently support this
-> with kvm when poisoning is in effect. Of course we can just
-> ignore the poison. However it seems cleaner to
-> 1. verify page is poisoned with the correct value
-> 2. fill the page with the correct value on fault
-Once VIRTIO_BALLOON_F_PAGE_POISON user side support is available.
-Can't we just use that at the time of initialization?
-> Requirement 2 requires some kind of madvise that
-> will save the poison e.g. in the VMA.
->
-> Not a blocker for sure ... 
->
->
->> ---
->>  drivers/virtio/Kconfig              |    1 +
->>  drivers/virtio/virtio_balloon.c     |   47 +++++++++++++++++++++++++++++++++++
->>  include/uapi/linux/virtio_balloon.h |    1 +
->>  3 files changed, 49 insertions(+)
->>
->> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
->> index 078615cf2afc..d45556ae1f81 100644
->> --- a/drivers/virtio/Kconfig
->> +++ b/drivers/virtio/Kconfig
->> @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
->>  	tristate "Virtio balloon driver"
->>  	depends on VIRTIO
->>  	select MEMORY_BALLOON
->> +	select PAGE_HINTING
->>  	---help---
->>  	 This driver supports increasing and decreasing the amount
->>  	 of memory within a KVM guest.
->> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
->> index 226fbb995fb0..dee9f8f3ad09 100644
->> --- a/drivers/virtio/virtio_balloon.c
->> +++ b/drivers/virtio/virtio_balloon.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/mount.h>
->>  #include <linux/magic.h>
->>  #include <linux/pseudo_fs.h>
->> +#include <linux/page_hinting.h>
->>  
->>  /*
->>   * Balloon device works in 4K page units.  So each page is pointed to by
->> @@ -27,6 +28,7 @@
->>   */
->>  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
->>  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
->> +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
->>  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
->>  
->>  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
->> @@ -46,6 +48,7 @@ enum virtio_balloon_vq {
->>  	VIRTIO_BALLOON_VQ_DEFLATE,
->>  	VIRTIO_BALLOON_VQ_STATS,
->>  	VIRTIO_BALLOON_VQ_FREE_PAGE,
->> +	VIRTIO_BALLOON_VQ_HINTING,
->>  	VIRTIO_BALLOON_VQ_MAX
->>  };
->>  
->> @@ -113,6 +116,10 @@ struct virtio_balloon {
->>  
->>  	/* To register a shrinker to shrink memory upon memory pressure */
->>  	struct shrinker shrinker;
->> +
->> +	/* Unused page hinting device */
->> +	struct virtqueue *hinting_vq;
->> +	struct page_hinting_dev_info ph_dev_info;
->>  };
->>  
->>  static struct virtio_device_id id_table[] = {
->> @@ -152,6 +159,22 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
->>  
->>  }
->>  
->> +void virtballoon_page_hinting_react(struct page_hinting_dev_info *ph_dev_info,
->> +				    unsigned int num_hints)
->> +{
->> +	struct virtio_balloon *vb =
->> +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
->> +	struct virtqueue *vq = vb->hinting_vq;
->> +	unsigned int unused;
->> +
->> +	/* We should always be able to add these buffers to an empty queue. */
->
-> can be an out of memory condition, and then ...
->
->> +	virtqueue_add_inbuf(vq, ph_dev_info->sg, num_hints, vb, GFP_KERNEL);
->> +	virtqueue_kick(vq);
-> ... this will block forever.
->
->> +	/* When host has read buffer, this completes via balloon_ack */
->> +	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
-> However below I suggest limiting capacity which will solve
-> this problem for you.
->
->
->
->> +}
->> +
->>  static void set_page_pfns(struct virtio_balloon *vb,
->>  			  __virtio32 pfns[], struct page *page)
->>  {
->> @@ -476,6 +499,7 @@ static int init_vqs(struct virtio_balloon *vb)
->>  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
->>  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
->>  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->> +	names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
->>  
->>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
->>  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
->> @@ -487,11 +511,19 @@ static int init_vqs(struct virtio_balloon *vb)
->>  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->>  	}
->>  
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
->> +		names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
->> +		callbacks[VIRTIO_BALLOON_VQ_HINTING] = balloon_ack;
->> +	}
->> +
->>  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
->>  					 vqs, callbacks, names, NULL, NULL);
->>  	if (err)
->>  		return err;
->>  
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
->> +		vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
->> +
->>  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
->>  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
->>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
->> @@ -924,12 +956,24 @@ static int virtballoon_probe(struct virtio_device *vdev)
->>  		if (err)
->>  			goto out_del_balloon_wq;
->>  	}
->> +
->> +	vb->ph_dev_info.react = virtballoon_page_hinting_react;
->> +	vb->ph_dev_info.capacity = VIRTIO_BALLOON_ARRAY_HINTS_MAX;
-> As explained above I think you should limit this by vq size.
-> Otherwise virtqueue add buf might fail.
-> In fact by struct spec reading you need to limit it
-> anyway otherwise it will fail unconditionally.
-> In practice on most hypervisors it will typically work ...
->
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
->> +		err = page_hinting_startup(&vb->ph_dev_info);
->> +		if (err)
->> +			goto out_unregister_shrinker;
->> +	}
->> +
->>  	virtio_device_ready(vdev);
->>  
->>  	if (towards_target(vb))
->>  		virtballoon_changed(vdev);
->>  	return 0;
->>  
->> +out_unregister_shrinker:
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
->> +		virtio_balloon_unregister_shrinker(vb);
->>  out_del_balloon_wq:
->>  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
->>  		destroy_workqueue(vb->balloon_wq);
->> @@ -958,6 +1002,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
->>  {
->>  	struct virtio_balloon *vb = vdev->priv;
->>  
->> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
->> +		page_hinting_shutdown(&vb->ph_dev_info);
->>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
->>  		virtio_balloon_unregister_shrinker(vb);
->>  	spin_lock_irq(&vb->stop_update_lock);
->> @@ -1027,6 +1073,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
->>  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
->>  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
->>  	VIRTIO_BALLOON_F_PAGE_POISON,
->> +	VIRTIO_BALLOON_F_HINTING,
->>  };
->>  
->>  static struct virtio_driver virtio_balloon_driver = {
->> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
->> index a1966cd7b677..2b0f62814e22 100644
->> --- a/include/uapi/linux/virtio_balloon.h
->> +++ b/include/uapi/linux/virtio_balloon.h
->> @@ -36,6 +36,7 @@
->>  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
->>  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
->>  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
->> +#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
->>  
->>  /* Size of a PFN in the balloon interface. */
->>  #define VIRTIO_BALLOON_PFN_SHIFT 12
--- 
-Thanks
-Nitesh
+To clarify:
+
+This code looks buggy to me because p->flags is inherited from the
+parent, with the exception of flags that are explicitly stripped out.
+Since PF_WAIT_PID is not stripped out, this means that if task A
+creates a child B with clone(CLONE_WAIT_PID), and then task B uses
+fork() to create a child C, then B will not be able to use
+wait(&status) to wait for C since C inherited PF_WAIT_PID from B.
+
+The obvious way to fix that would be to always strip out PF_WAIT_PID;
+but that would also be wrong, because if task B creates a thread C,
+and then C calls execve(), the task_struct of B goes away and B's TGID
+is taken over by C. When C eventually exits, it should still obey the
+CLONE_WAIT_PID (since to A, it's all the same process). Therefore, if
+p->flags is used to track whether the task was created with
+CLONE_WAIT_PID, PF_WAIT_PID must be inherited if CLONE_THREAD is set.
+So:
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index d8ae0f1b4148..b32e1e9a6c9c 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1902,6 +1902,10 @@ static __latent_entropy struct task_struct *copy_process(
+        delayacct_tsk_init(p);  /* Must remain after dup_task_struct() */
+        p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE);
+        p->flags |= PF_FORKNOEXEC;
++       if (!(clone_flags & CLONE_THREAD))
++               p->flags &= ~PF_PF_WAIT_PID;
++       if (clone_flags & CLONE_WAIT_PID)
++               p->flags |= PF_PF_WAIT_PID;
+        INIT_LIST_HEAD(&p->children);
+        INIT_LIST_HEAD(&p->sibling);
+        rcu_copy_process(p);
+
+An alternative would be to not use p->flags at all, but instead make
+this a property of the signal_struct - since the property is shared by
+all threads, that might make more sense?
