@@ -2,73 +2,120 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FE7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94D0C76190
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637232253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0561229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:31:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L8+8TSTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfGXB2f (ORCPT
+        id S1728278AbfGXBbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:28:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39324 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728069AbfGXB2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:28:33 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F20A01A3547642C26260;
-        Wed, 24 Jul 2019 09:28:30 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Jul 2019 09:28:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     YueHaibing <yuehaibing@huawei.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] drm/mediatek: Remove duplicated include from mtk_drm_drv.c
-Date:   Wed, 24 Jul 2019 01:33:48 +0000
-Message-ID: <20190724013348.153144-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 23 Jul 2019 21:31:43 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5085 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfGXBbn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 21:31:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d37b5040000>; Tue, 23 Jul 2019 18:31:48 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 18:31:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 18:31:41 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 01:31:40 +0000
+Subject: Re: [PATCH v2 1/3] mm/gup: add make_dirty arg to
+ put_user_pages_dirty_lock()
+To:     <john.hubbard@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, <netdev@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-mm@kvack.org>,
+        <linux-rdma@vger.kernel.org>, <bpf@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>
+References: <20190724012606.25844-1-jhubbard@nvidia.com>
+ <20190724012606.25844-2-jhubbard@nvidia.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <5c303c80-57fd-d278-44d5-942597051c9b@nvidia.com>
+Date:   Tue, 23 Jul 2019 18:31:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190724012606.25844-2-jhubbard@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563931908; bh=81R/Z2rovzmAa3O7DCJ8y2Mm5lAz4O2B1wbIdVhO0d8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=L8+8TSTfHtIkC1xowWnZPPItlJoP+leFf6ucvU5E2owqzMuOQ9jIZ8vvOAmRE48gG
+         nJc2BkzeiefBvFmLrdVIpofi+FqWCxnLVVCD8Km+TEsxK75nMF86BzzMDvJhOtd4Sv
+         tv/oBJtf5JB77EfsmMmPFfjUqHdF8FrA9NTbWBGktbrAYnfNv/v7rTGnTIY6IQINWA
+         7KWjSbQNfLlkpCFtMta3TS57pn2JgRvHM6UCjTP01IAnW414t4BHJWGwnR2xyxPuNo
+         ve66cppddE8vW2LUpVK1xyY3WfDsi+6f6NZZzv7rod362wLBdY3VFm9CgxAGyrUul/
+         iXE/3sT5XunbA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicated include.
+On 7/23/19 6:26 PM, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+...
+> +		 * 2) This code sees the page as clean, so it calls
+> +		 * set_page_dirty(). The page stays dirty, despite being
+> +		 * written back, so it gets written back again in the
+> +		 * next writeback cycle. This is harmless.
+> +		 */
+> +		if (!PageDirty(page))
+> +			set_page_dirty_lock(page);
+> +		break;
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 -
- 1 file changed, 1 deletion(-)
+ahem, the above "break" should not be there, it's an artifact, sorry about 
+that. Will correct on the next iteration.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 2ee809a6f3dc..e3b64a266dcf 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -23,7 +23,6 @@
- 
- #include "mtk_drm_crtc.h"
- #include "mtk_drm_ddp.h"
--#include "mtk_drm_ddp.h"
- #include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_drv.h"
- #include "mtk_drm_fb.h"
-
-
+thanks,
+-- 
+John Hubbard
+NVIDIA
 
 
-
+> +		put_user_page(page);
+> +	}
+>  }
+>  EXPORT_SYMBOL(put_user_pages_dirty_lock);
+>  
+> 
