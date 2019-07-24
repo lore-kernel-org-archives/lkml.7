@@ -2,64 +2,64 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F9AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D84C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01AF21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC7821850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e9jbkWrj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mvpW/OrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbfGXWep (ORCPT
+        id S1729445AbfGXWez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:34:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35615 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfGXWep (ORCPT
+        Wed, 24 Jul 2019 18:34:55 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39347 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfGXWez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:34:45 -0400
-Received: by mail-wr1-f66.google.com with SMTP id y4so48615636wrm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:34:43 -0700 (PDT)
+        Wed, 24 Jul 2019 18:34:55 -0400
+Received: by mail-wm1-f66.google.com with SMTP id u25so32590796wmc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LNUErNT3FtfIuEzg9UwQNkT4RYk8SKVBlzxrk6LOKI8=;
-        b=e9jbkWrjmT5lDWGz2uQjCyfzn1y1vl//RsKZAdAT7yO8kPOxI37EPr47NFn5tUu37u
-         NdlQHkkDKEHElzVPsRXEEdeuNOpeXqSRP6VP91Y1tnLPus/fOLAc6H0wJ86my+HrQmj+
-         LwooRxHY+nVqzyQANEp3oZhd46E2rbjPzIVjm1I1I6sV7/2wCpP1iNWyg+vwYMyC5q3J
-         Kulfk6Zn/BjUPw7DISFNmUyJNfHZKRsc2UlGNK1GoqkOj69T/la07WG1bCTqoNgZM1Tj
-         UN69sTrhh0DCEH9PUPZsZqRQDwQcTsxyACmhXTWu2jCcn/ggQtate+9Ejte4cF5humM9
-         MgWg==
+        bh=UaaYQjOom/rBedcmfeqJ2SI1/RfkITskc6E8mQACYxM=;
+        b=mvpW/OrV5vZp7+uvzXd/fPQocMFHXoUGw2MBI+s4vyA0vP8Stum++rw4Frwd62MsWx
+         wwPUZAZwQub1YF+hOyMfdfTRT3cBjDSMkrdRa+0Xgg8DO3iNAo300TFZlh9/fxFV74z2
+         bz02tQaihF8DvvWtEvyr6zsPKr0dggJbnfPARqZU5xJp4ZinbSZYPUta0BoMwB0tF7Bw
+         36usvx4LTjvAyd+ANeqxSOkwQbvo6eHoWKtv/GHpr22vFojGBNzMCrQg5mW5ril2K7qV
+         VcnsqU/pz/MMuSGpK3wiKN4PrKy4kifnsIAcDQJGRsUwCfBbG6dUFkNBhu2jNTesysCH
+         lWxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LNUErNT3FtfIuEzg9UwQNkT4RYk8SKVBlzxrk6LOKI8=;
-        b=MtludkA1orwyqbfSPbyuZwgAY5ZCHUOuOXuEo7yyXZ6cA0HXaz/75u814N0tIDDePM
-         xkYC1lF4MRpNd6t2u1GhJ3vCHfvBc51jxwupvi9+fxqwSS0LAjd8bExa1vJ8syvGJ3Hu
-         4Roig8sn2BPJuQ/h73zuyFJDW9XAOM4rz7u+5wFtKd1H9GKaT85BsQfqcvDcMnuM2hm5
-         Cwt6uKhCuoiZ4sRzbd2Tu4iwgUDunQOjyqwA5eIL9o+/XEf2MMx0XzbKg/dgCizmKZIP
-         xCSKKqD3iuXQ4CNSNT7S5UJHdbXJ50pElaYwV/RmloQtRaiQpZDUnKtg9jZHag6yEU9U
-         U7rQ==
-X-Gm-Message-State: APjAAAWfC80w38vrerxxfs2qJlN5sO5icZZcVvO31ZmC6JA96+JfbY1G
-        /ZirNjH4HOrXJgIpMCxcKYQCxqBCLmv3kMArnzQjfa2PjkA=
-X-Google-Smtp-Source: APXvYqznxvytiMFXhiTdrgBC0QxHpMfb+54HX8bmO8Ct7xD/AXnGiGHObWM6TapEScQTLVDVx6AxLdbpnq+tfkZPu8E=
-X-Received: by 2002:a5d:43d0:: with SMTP id v16mr86629397wrr.252.1564007682038;
- Wed, 24 Jul 2019 15:34:42 -0700 (PDT)
+        bh=UaaYQjOom/rBedcmfeqJ2SI1/RfkITskc6E8mQACYxM=;
+        b=kHCMwAiYWqincsP9jJo6ubxqujbV7Hqzu80VZcJFXtPsVQtlPT7ihdLSA5icudknQ0
+         obNs7PsHnxN+hDm8ZMhG9c27TkFEb4m4wUP42vwmeeB1perF+iTnqkWulBl2J762Q9WQ
+         sG9GvPUL2z94H3SmM748SaroCyDEn1i9c6zjRQzxKXlaBPmdD5wmSlVtoUk+JwVe8N/Z
+         LbhsT3K3eJ5y1qSGOSP8WKl1Q+gavkFu0G6uKFbXPZ6OZGfMSXAWQmWpZCZHd/vgQ8Bv
+         cTf3xHnPO50WOx+ExG4J53cCU2cucBOU3gD/9Mpn5OSd3NfC1iw7fMK2inEL8pU2JLtN
+         WLLA==
+X-Gm-Message-State: APjAAAX2tPSt0VV5Thd9s4H63eYIYWHoGlT/P0uzMgGa/P8zN/81wF9l
+        rIdHV1a0vrOMd5Of+lvWRzxBNNBbohEkAyRBuVuw1Q==
+X-Google-Smtp-Source: APXvYqw13DzvmJbH/WR3ahTOZdE6oV0KztUziVEs86+1CR7H5FOBEvnfnj/5DVLig0AOSbyiAZOkBhWtFiNn0dOy4Uk=
+X-Received: by 2002:a7b:c106:: with SMTP id w6mr80061933wmi.80.1564007692187;
+ Wed, 24 Jul 2019 15:34:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190702065955.165738-1-irogers@google.com> <20190702065955.165738-3-irogers@google.com>
- <20190708161636.GE3419@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190708161636.GE3419@hirez.programming.kicks-ass.net>
+References: <20190702065955.165738-1-irogers@google.com> <20190702065955.165738-4-irogers@google.com>
+ <20190708163021.GG3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190708163021.GG3419@hirez.programming.kicks-ass.net>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 24 Jul 2019 15:34:29 -0700
-Message-ID: <CAP-5=fXP5Sptyh_qfmnRKw=DghWyW2ZapG5NChT-F4DiOXHXFg@mail.gmail.com>
-Subject: Re: [PATCH 2/7] perf/cgroup: order events in RB tree by cgroup id
+Date:   Wed, 24 Jul 2019 15:34:40 -0700
+Message-ID: <CAP-5=fV4xmK=4ocyfzGzj5avGFZojZn-KXp9xDCATkiFLpCmcg@mail.gmail.com>
+Subject: Re: [PATCH 3/7] perf: order iterators for visit_groups_merge into a min-heap
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -75,130 +75,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 9:16 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Jul 8, 2019 at 9:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Mon, Jul 01, 2019 at 11:59:50PM -0700, Ian Rogers wrote:
-> > +static int visit_groups_merge(struct perf_event_context *ctx,
-> > +                           struct perf_cpu_context *cpuctx,
-> > +                           struct perf_event_groups *groups,
-> > +                           int (*func)(struct perf_event_context *,
-> > +                                       struct perf_cpu_context *,
-> > +                                       struct perf_event *,
-> > +                                       int *),
-> > +                           int *data)
+> On Mon, Jul 01, 2019 at 11:59:51PM -0700, Ian Rogers wrote:
+> > The groups rbtree holding perf events, either for a CPU or a task, needs
+> > to have multiple iterators that visit events in group_index (insertion)
+> > order. Rather than linearly searching the iterators, use a min-heap to go
+> > from a O(#iterators) search to a O(log2(#iterators)) insert cost per event
+> > visited.
 >
-> > -struct sched_in_data {
-> > -     struct perf_event_context *ctx;
-> > -     struct perf_cpu_context *cpuctx;
-> > -     int can_add_hw;
-> > -};
-> > -
-> > -static int pinned_sched_in(struct perf_event *event, void *data)
-> > +static int pinned_sched_in(struct perf_event_context *ctx,
-> > +                        struct perf_cpu_context *cpuctx,
-> > +                        struct perf_event *event,
-> > +                        int *unused)
-> >  {
-> > -     struct sched_in_data *sid = data;
-> > -
-> >       if (event->state <= PERF_EVENT_STATE_OFF)
-> >               return 0;
-> >
-> >       if (!event_filter_match(event))
-> >               return 0;
-> >
-> > -     if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
-> > -             if (!group_sched_in(event, sid->cpuctx, sid->ctx))
-> > -                     list_add_tail(&event->active_list, &sid->ctx->pinned_active);
-> > +     if (group_can_go_on(event, cpuctx, 1)) {
-> > +             if (!group_sched_in(event, cpuctx, ctx))
-> > +                     list_add_tail(&event->active_list, &ctx->pinned_active);
-> >       }
-> >
-> >       /*
-> > @@ -3317,24 +3444,25 @@ static int pinned_sched_in(struct perf_event *event, void *data)
-> >       return 0;
-> >  }
-> >
-> > -static int flexible_sched_in(struct perf_event *event, void *data)
-> > +static int flexible_sched_in(struct perf_event_context *ctx,
-> > +                          struct perf_cpu_context *cpuctx,
-> > +                          struct perf_event *event,
-> > +                          int *can_add_hw)
-> >  {
-> > -     struct sched_in_data *sid = data;
-> > -
-> >       if (event->state <= PERF_EVENT_STATE_OFF)
-> >               return 0;
-> >
-> >       if (!event_filter_match(event))
-> >               return 0;
-> >
-> > -     if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
-> > -             int ret = group_sched_in(event, sid->cpuctx, sid->ctx);
-> > +     if (group_can_go_on(event, cpuctx, *can_add_hw)) {
-> > +             int ret = group_sched_in(event, cpuctx, ctx);
-> >               if (ret) {
-> > -                     sid->can_add_hw = 0;
-> > -                     sid->ctx->rotate_necessary = 1;
-> > +                     *can_add_hw = 0;
-> > +                     ctx->rotate_necessary = 1;
-> >                       return 0;
-> >               }
-> > -             list_add_tail(&event->active_list, &sid->ctx->flexible_active);
-> > +             list_add_tail(&event->active_list, &ctx->flexible_active);
-> >       }
-> >
-> >       return 0;
-> > @@ -3344,30 +3472,24 @@ static void
-> >  ctx_pinned_sched_in(struct perf_event_context *ctx,
-> >                   struct perf_cpu_context *cpuctx)
-> >  {
-> > -     struct sched_in_data sid = {
-> > -             .ctx = ctx,
-> > -             .cpuctx = cpuctx,
-> > -             .can_add_hw = 1,
-> > -     };
-> > -
-> > -     visit_groups_merge(&ctx->pinned_groups,
-> > -                        smp_processor_id(),
-> > -                        pinned_sched_in, &sid);
-> > +     visit_groups_merge(ctx,
-> > +                        cpuctx,
-> > +                        &ctx->pinned_groups,
-> > +                        pinned_sched_in,
-> > +                        NULL);
-> >  }
-> >
-> >  static void
-> >  ctx_flexible_sched_in(struct perf_event_context *ctx,
-> >                     struct perf_cpu_context *cpuctx)
-> >  {
-> > -     struct sched_in_data sid = {
-> > -             .ctx = ctx,
-> > -             .cpuctx = cpuctx,
-> > -             .can_add_hw = 1,
-> > -     };
-> > +     int can_add_hw = 1;
-> >
-> > -     visit_groups_merge(&ctx->flexible_groups,
-> > -                        smp_processor_id(),
-> > -                        flexible_sched_in, &sid);
-> > +     visit_groups_merge(ctx,
-> > +                        cpuctx,
-> > +                        &ctx->flexible_groups,
-> > +                        flexible_sched_in,
-> > +                        &can_add_hw);
-> >  }
+> Is this actually faster for the common (very small n) case?
 >
-> It is not clear to me why you're doing away with that sched_in_data
-> abstraction. AFAICT that has no material impact on this patch.
+> ISTR 'stupid' sorting algorithms are actually faster when the data fits
+> into L1
 
-The change alters visit_groups_merge parameters to take ctx and cpuctx
-in order to compute the number of iterators. ctx and cpuctx were taken
-out of sched_in_data to avoid passing them twice. can_add_hw remains
-but not wrapped inside of sched_in_data as it seemed unnecessary to
-wrap a single boolean.
+A common case is for there to be 1 cgroup iterator, for which all the
+min_heapify calls will do no work as the event is always a leaf. It'd
+be expected a min-heap to be optimal for a large number of iterators.
+I'm not sure it is worth optimizing the space between small number of
+iterators and large number of iterators.
 
 Thanks,
 Ian
+
+
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  kernel/events/core.c | 123 +++++++++++++++++++++++++++++++++----------
+> >  1 file changed, 95 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 9a2ad34184b8..396b5ac6dcd4 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -3318,6 +3318,77 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
+> >       ctx_sched_out(&cpuctx->ctx, cpuctx, event_type);
+> >  }
+> >
+> > +/* Data structure used to hold a min-heap, ordered by group_index, of a fixed
+> > + * maximum size.
+> > + */
+>
+> Broken comment style.
+>
+> > +struct perf_event_heap {
+> > +     struct perf_event **storage;
+> > +     int num_elements;
+> > +     int max_elements;
+> > +};
+> > +
+> > +static void min_heap_swap(struct perf_event_heap *heap,
+> > +                       int pos1, int pos2)
+> > +{
+> > +     struct perf_event *tmp = heap->storage[pos1];
+> > +
+> > +     heap->storage[pos1] = heap->storage[pos2];
+> > +     heap->storage[pos2] = tmp;
+> > +}
+> > +
+> > +/* Sift the perf_event at pos down the heap. */
+> > +static void min_heapify(struct perf_event_heap *heap, int pos)
+> > +{
+> > +     int left_child, right_child;
+> > +
+> > +     while (pos > heap->num_elements / 2) {
+> > +             left_child = pos * 2;
+> > +             right_child = pos * 2 + 1;
+> > +             if (heap->storage[pos]->group_index >
+> > +                 heap->storage[left_child]->group_index) {
+> > +                     min_heap_swap(heap, pos, left_child);
+> > +                     pos = left_child;
+> > +             } else if (heap->storage[pos]->group_index >
+> > +                        heap->storage[right_child]->group_index) {
+> > +                     min_heap_swap(heap, pos, right_child);
+> > +                     pos = right_child;
+> > +             } else {
+> > +                     break;
+> > +             }
+> > +     }
+> > +}
+> > +
+> > +/* Floyd's approach to heapification that is O(n). */
+> > +static void min_heapify_all(struct perf_event_heap *heap)
+> > +{
+> > +     int i;
+> > +
+> > +     for (i = heap->num_elements / 2; i > 0; i--)
+> > +             min_heapify(heap, i);
+> > +}
+> > +
+> > +/* Remove minimum element from the heap. */
+> > +static void min_heap_pop(struct perf_event_heap *heap)
+> > +{
+> > +     WARN_ONCE(heap->num_elements <= 0, "Popping an empty heap");
+> > +     heap->num_elements--;
+> > +     heap->storage[0] = heap->storage[heap->num_elements];
+> > +     min_heapify(heap, 0);
+> > +}
+>
+> Is this really the first heap implementation in the kernel?
+>
+> > @@ -3378,12 +3453,14 @@ static int visit_groups_merge(struct perf_event_context *ctx,
+> >                       struct cgroup_subsys_state *css;
+> >
+> >                       for (css = &cpuctx->cgrp->css; css; css = css->parent) {
+> > -                             itrs[num_itrs] = perf_event_groups_first(groups,
+> > +                             heap.storage[heap.num_elements] =
+> > +                                             perf_event_groups_first(groups,
+> >                                                                  cpu,
+> >                                                                  css->cgroup);
+> > -                             if (itrs[num_itrs]) {
+> > -                                     num_itrs++;
+> > -                                     if (num_itrs == max_itrs) {
+> > +                             if (heap.storage[heap.num_elements]) {
+> > +                                     heap.num_elements++;
+> > +                                     if (heap.num_elements ==
+> > +                                         heap.max_elements) {
+> >                                               WARN_ONCE(
+> >                                    max_cgroups_with_events_depth,
+> >                                    "Insufficient iterators for cgroup depth");
+>
+> That's turning into unreadable garbage due to indentation; surely
+> there's a solution for that.
