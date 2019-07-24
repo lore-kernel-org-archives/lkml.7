@@ -2,99 +2,214 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15DDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1301C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC889204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A022204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564000091;
+	bh=UsOR7AERGwgbyFlCeoNHFHOxeyaMouB5BewlU/o4b98=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OjATNQxMCNNXXrrYraukNcX7fmjR2GdZphS16Z+feB2Fj725qs3e12r5wXN/dw2yA
+	 AONcnE7p8xqPBiUs38ksU2B3DS0Od0eRNIYLUVzF/MVIDrf15W0Zfz7zmCUUGQ0Nf0
+	 7eg+iDIuh38z9HJ0BVinEGP1ogJ6xRtixeQdZq6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389768AbfGXU2F (ORCPT
+        id S2389343AbfGXU2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:28:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:47085 "EHLO mga06.intel.com"
+        Wed, 24 Jul 2019 16:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388862AbfGXU2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:28:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:28:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
-   d="scan'208";a="174995764"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2019 13:27:59 -0700
-Received: from fmsmsx116.amr.corp.intel.com ([169.254.2.137]) by
- FMSMSX105.amr.corp.intel.com ([169.254.4.116]) with mapi id 14.03.0439.000;
- Wed, 24 Jul 2019 13:27:59 -0700
-From:   "Souza, Jose" <jose.souza@intel.com>
-To:     "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-Thread-Index: AQHVN8s6u18XhfEo0kuWcj/kjNqW06bGT1sAgAAD6QCAAADBAIAAGPCAgAAIRACAAANRAIAABuIAgAAHAoCAAANkgIAA9aWAgAACeQCABSUwAIAACPCAgAE98wCAAeSegIAAAIsAgArdJICAABICAA==
-Date:   Wed, 24 Jul 2019 20:27:59 +0000
-Message-ID: <d084df248afc1943e06c50d391a775d117064743.camel@intel.com>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-         <1562875878.2840.0.camel@HansenPartnership.com>
-         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
-         <1562876880.2840.12.camel@HansenPartnership.com>
-         <1562882235.13723.1.camel@HansenPartnership.com>
-         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
-         <1562884722.15001.3.camel@HansenPartnership.com>
-         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
-         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
-         <1562888433.2915.0.camel@HansenPartnership.com>
-         <1562941185.3398.1.camel@HansenPartnership.com>
-         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
-         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
-         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
-         <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
-         <9ef8fc1ae2c3a9bad588899488a781333af4449a.camel@tiscali.nl>
-         <1563398966.3438.5.camel@HansenPartnership.com>
-         <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
-In-Reply-To: <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.121.193.213]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A7957F01B860F9449BFB02718FC3DA75@intel.com>
-Content-Transfer-Encoding: base64
+        id S2389147AbfGXTfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B984C22ADC;
+        Wed, 24 Jul 2019 19:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996906;
+        bh=UsOR7AERGwgbyFlCeoNHFHOxeyaMouB5BewlU/o4b98=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YF+5lTDNG+OMOUiltxFi+1/cPivPFU+4FkxGkuGXmtNI2MC9uYexqVP9J72/Oy6mR
+         f8uZ18tLSdwJjr38YifOzEy+KyZZiQEBgyX9B5FOYDPTNP7U7YtfjGVEgzZqYjP03J
+         /Gw2UjsESsC6q8IMowg0tG/I1elKnQinn471z3Ko=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
+Subject: [PATCH 5.2 215/413] bnx2x: Prevent ptp_task to be rescheduled indefinitely
+Date:   Wed, 24 Jul 2019 21:18:26 +0200
+Message-Id: <20190724191749.959626205@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGF1bA0KDQpXZSBmaXhlZCB0aGUgcGF0Y2ggaW5zdGVhZCBvZiByZXZlcnQgaXQsIGl0IGlz
-IG1lcmdlZCBvbiBkcm0tdGlwIGFuZCBvbg0KaGlzIHdheSB0byBsaW51eC1zdGFibGUuDQoNCkh1
-Z2UgdGhhbmtzIGFnYWluDQoNCk9uIFdlZCwgMjAxOS0wNy0yNCBhdCAyMToyMyArMDIwMCwgUGF1
-bCBCb2xsZSB3cm90ZToNCj4gSGkgSm9zZSwNCj4gDQo+IEphbWVzIEJvdHRvbWxleSBzY2hyZWVm
-IG9wIGRvIDE4LTA3LTIwMTkgb20gMDY6MjkgWyswOTAwXToNCj4gPiBPbiBXZWQsIDIwMTktMDct
-MTcgYXQgMjM6MjcgKzAyMDAsIFBhdWwgQm9sbGUgd3JvdGU6DQo+ID4gPiBJJ3ZlIGp1c3QgcmVh
-Y2hlZCBhIGRheSBvZiB1cHRpbWUgd2l0aCB5b3VyIHJldmVydC4gKFRoZSBwcm9wZXINCj4gPiA+
-IHVwdGltZSBpcyBqdXN0IGEgZnJhY3Rpb24gb2YgYSBkYXksIHRoaXMgYmVpbmcgYSBsYXB0b3Au
-KSBBbnlob3csDQo+ID4gPiBubw0KPiA+ID4gc2NyZWVuIGZyZWV6ZXMgb2NjdXJyZWQgZHVyaW5n
-IHRoaXMgZGF5Lg0KPiA+IA0KPiA+IEknbSBhZnJhaWQgbXkgc3RhdHVzIGlzIHRoYXQgSSdtIGlu
-IFRva3lvIGRvaW5nIGNvbmZlcmVuY2UNCj4gPiBwcmVzZW50YXRpb25zIChhbmQga2VybmVsIGRl
-bW9zKSBzbyBJJ20gYSBiaXQgcmVsdWN0YW50IHRvIG1lc3MNCj4gPiB3aXRoIG15DQo+ID4gc2V0
-dXAgdW50aWwgSSBmaW5pc2ggZXZlcnl0aGluZyBvbiBGcmlkYXksIGJ1dCBJIHdpbGwgdGVzdCBp
-dCBhZnRlcg0KPiA+IHRoZW4sIHByb21pc2UuDQo+IA0KPiBCeSBub3cgSSdtIHRlc3RpbmcgdGhp
-cyBmb3IgYSB3ZWVrIChjdXJyZW50bHkgb24gdG9wIG9mIDUuMi4yKS4gU3RpbGwNCj4gbm8NCj4g
-ZnJlZXplcyB3aGF0c29ldmVyLiANCj4gDQo+IFNvIHdoYXQncyB0aGUgc3RhdHVzIG9mIHRoaXMg
-cmV2ZXJ0PyBVbmxlc3MgdGhpcyBpcyBzb21ldGhpbmcgcHJldHR5DQo+IG9ic2N1cmUNCj4gdGhh
-dCBmb3Igc29tZSBvZGQgcmVhc29uIG9ubHkgSmFtZXMgYW5kIEkgYXJlIGFibGUgdG8gaGl0IGl0
-IHdvdWxkIGJlDQo+IG5pY2UgdG8NCj4gZ2V0IHRoaXMgaW50byBzdGFibGUgYmVmb3JlIHRoZSBt
-YWluIGRpc3Ryb3Mgc3dpdGNoIG92ZXIgdG8gNS4yLnkuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAN
-Cj4gUGF1bCBCb2xsZQ0KPiANCg==
+[ Upstream commit 3c91f25c2f72ba6001775a5932857c1d2131c531 ]
+
+Currently bnx2x ptp worker tries to read a register with timestamp
+information in case of TX packet timestamping and in case it fails,
+the routine reschedules itself indefinitely. This was reported as a
+kworker always at 100% of CPU usage, which was narrowed down to be
+bnx2x ptp_task.
+
+By following the ioctl handler, we could narrow down the problem to
+an NTP tool (chrony) requesting HW timestamping from bnx2x NIC with
+RX filter zeroed; this isn't reproducible for example with ptp4l
+(from linuxptp) since this tool requests a supported RX filter.
+It seems NIC FW timestamp mechanism cannot work well with
+RX_FILTER_NONE - driver's PTP filter init routine skips a register
+write to the adapter if there's not a supported filter request.
+
+This patch addresses the problem of bnx2x ptp thread's everlasting
+reschedule by retrying the register read 10 times; between the read
+attempts the thread sleeps for an increasing amount of time starting
+in 1ms to give FW some time to perform the timestamping. If it still
+fails after all retries, we bail out in order to prevent an unbound
+resource consumption from bnx2x.
+
+The patch also adds an ethtool statistic for accounting the skipped
+TX timestamp packets and it reduces the priority of timestamping
+error messages to prevent log flooding. The code was tested using
+both linuxptp and chrony.
+
+Reported-and-tested-by: Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
+Suggested-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../net/ethernet/broadcom/bnx2x/bnx2x_cmn.c   |  5 ++-
+ .../ethernet/broadcom/bnx2x/bnx2x_ethtool.c   |  4 ++-
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 33 ++++++++++++++-----
+ .../net/ethernet/broadcom/bnx2x/bnx2x_stats.h |  3 ++
+ 4 files changed, 34 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+index 008ad0ca89ba..c12c1bab0fe4 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -3857,9 +3857,12 @@ netdev_tx_t bnx2x_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP)) {
+ 		if (!(bp->flags & TX_TIMESTAMPING_EN)) {
++			bp->eth_stats.ptp_skip_tx_ts++;
+ 			BNX2X_ERR("Tx timestamping was not enabled, this packet will not be timestamped\n");
+ 		} else if (bp->ptp_tx_skb) {
+-			BNX2X_ERR("The device supports only a single outstanding packet to timestamp, this packet will not be timestamped\n");
++			bp->eth_stats.ptp_skip_tx_ts++;
++			netdev_err_once(bp->dev,
++					"Device supports only a single outstanding packet to timestamp, this packet won't be timestamped\n");
+ 		} else {
+ 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+ 			/* schedule check for Tx timestamp */
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+index 51fc845de31a..4a0ba6801c9e 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -182,7 +182,9 @@ static const struct {
+ 	{ STATS_OFFSET32(driver_filtered_tx_pkt),
+ 				4, false, "driver_filtered_tx_pkt" },
+ 	{ STATS_OFFSET32(eee_tx_lpi),
+-				4, true, "Tx LPI entry count"}
++				4, true, "Tx LPI entry count"},
++	{ STATS_OFFSET32(ptp_skip_tx_ts),
++				4, false, "ptp_skipped_tx_tstamp" },
+ };
+ 
+ #define BNX2X_NUM_STATS		ARRAY_SIZE(bnx2x_stats_arr)
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index 03ac10b1cd1e..2cc14db8f0ec 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -15214,11 +15214,24 @@ static void bnx2x_ptp_task(struct work_struct *work)
+ 	u32 val_seq;
+ 	u64 timestamp, ns;
+ 	struct skb_shared_hwtstamps shhwtstamps;
++	bool bail = true;
++	int i;
++
++	/* FW may take a while to complete timestamping; try a bit and if it's
++	 * still not complete, may indicate an error state - bail out then.
++	 */
++	for (i = 0; i < 10; i++) {
++		/* Read Tx timestamp registers */
++		val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
++				 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
++		if (val_seq & 0x10000) {
++			bail = false;
++			break;
++		}
++		msleep(1 << i);
++	}
+ 
+-	/* Read Tx timestamp registers */
+-	val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
+-			 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
+-	if (val_seq & 0x10000) {
++	if (!bail) {
+ 		/* There is a valid timestamp value */
+ 		timestamp = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_TS_MSB :
+ 				   NIG_REG_P0_TLLH_PTP_BUF_TS_MSB);
+@@ -15233,16 +15246,18 @@ static void bnx2x_ptp_task(struct work_struct *work)
+ 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
+ 		shhwtstamps.hwtstamp = ns_to_ktime(ns);
+ 		skb_tstamp_tx(bp->ptp_tx_skb, &shhwtstamps);
+-		dev_kfree_skb_any(bp->ptp_tx_skb);
+-		bp->ptp_tx_skb = NULL;
+ 
+ 		DP(BNX2X_MSG_PTP, "Tx timestamp, timestamp cycles = %llu, ns = %llu\n",
+ 		   timestamp, ns);
+ 	} else {
+-		DP(BNX2X_MSG_PTP, "There is no valid Tx timestamp yet\n");
+-		/* Reschedule to keep checking for a valid timestamp value */
+-		schedule_work(&bp->ptp_task);
++		DP(BNX2X_MSG_PTP,
++		   "Tx timestamp is not recorded (register read=%u)\n",
++		   val_seq);
++		bp->eth_stats.ptp_skip_tx_ts++;
+ 	}
++
++	dev_kfree_skb_any(bp->ptp_tx_skb);
++	bp->ptp_tx_skb = NULL;
+ }
+ 
+ void bnx2x_set_rx_ts(struct bnx2x *bp, struct sk_buff *skb)
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
+index b2644ed13d06..d55e63692cf3 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
+@@ -207,6 +207,9 @@ struct bnx2x_eth_stats {
+ 	u32 driver_filtered_tx_pkt;
+ 	/* src: Clear-on-Read register; Will not survive PMF Migration */
+ 	u32 eee_tx_lpi;
++
++	/* PTP */
++	u32 ptp_skip_tx_ts;
+ };
+ 
+ struct bnx2x_eth_q_stats {
+-- 
+2.20.1
+
+
+
