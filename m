@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1987C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62183C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B719F229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC6220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997346;
-	bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
+	s=default; t=1563997350;
+	bh=gG5VG+XTA+OvFdThQtGJX+ybh7CaLGuD16nQ0MQYCwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t0PKZ73cbziK9Ma5hKdmhk3A6bBnq7745QyJIm/igtFcy8FkFUze28njFvsyQ3hg9
-	 xGgj5+pf0PKIceBTUbCUbQ17kaRrmdE5lvQINy+hKzI1ZuALpShiLTEJw0cTOnHMER
-	 wajZYjs4fT0ph2DrgXBPrkzlBS8kFEriwY/EDqUI=
+	b=yyb5CTX4ExPFOeMF39WoMD2aUXrPeqLb8VOnRoVsjUVR6rjvx5RVv2FscYg/Pq9HC
+	 nhK+IkQjb1DfkwWHJDLYAwaMxE/Po0uhQy1RcsX2elTHADoitK9KJJpzGeL2fkqCyf
+	 WCyJ2kIl4uuQJL5Yw6pPirfaYFqRgE/iP7+IzB68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390362AbfGXTmZ (ORCPT
+        id S2390370AbfGXTm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44024 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:42:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389769AbfGXTmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:42:23 -0400
+        id S2390360AbfGXTm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:42:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79DE2214AF;
-        Wed, 24 Jul 2019 19:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB1522ADA;
+        Wed, 24 Jul 2019 19:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997342;
-        bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
+        s=default; t=1563997345;
+        bh=gG5VG+XTA+OvFdThQtGJX+ybh7CaLGuD16nQ0MQYCwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MfMTWbwgLUGYgkX27mcRhMO1cyTL/9BBsiWpJdVhh+Rqd135MnYFXS0FRKcRLt/61
-         18aQ+yZp4PqJvON6JWBaVmChKhoWxz5lGRTp1FhA8+L+7oE26wpvQJyO59/D7tK6zG
-         bqqd15dV8QX4H+YOjleXGWfye/btGj4BuHNTcYMQ=
+        b=aDq6jt3oCnlroS+TBZR7PWQuBEv8D78cVE/GpOI5I7Yxduc4Bcwy51NzQgXxjS4Pm
+         jDRbMAg1kmMc4Qj0/MBA7wy8QESpIecZz0jflSTomPhfyHOZpB7r3LHmjS+JuHe0jq
+         GSAB2VIYZdnNVujn6EEOlylQOoV0xD1F36F2Hc4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeroen Roovers <jer@gentoo.org>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.2 386/413] parisc: Fix kernel panic due invalid values in IAOQ0 or IAOQ1
-Date:   Wed, 24 Jul 2019 21:21:17 +0200
-Message-Id: <20190724191802.601580770@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 404/413] blk-throttle: fix zero wait time for iops throttled group
+Date:   Wed, 24 Jul 2019 21:21:35 +0200
+Message-Id: <20190724191803.609411516@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,84 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit 10835c854685393a921b68f529bf740fa7c9984d upstream.
+commit 3a10f999ffd464d01c5a05592a15470a3c4bbc36 upstream.
 
-On parisc the privilege level of a process is stored in the lowest two bits of
-the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
-for the kernel and privilege level 3 for user-space. So userspace should not be
-allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
-level to e.g. 0 to try to gain kernel privileges.
+After commit 991f61fe7e1d ("Blk-throttle: reduce tail io latency when
+iops limit is enforced") wait time could be zero even if group is
+throttled and cannot issue requests right now. As a result
+throtl_select_dispatch() turns into busy-loop under irq-safe queue
+spinlock.
 
-This patch prevents such modifications by always setting the two lowest bits to
-one (which relates to privilege level 3 for user-space) if IAOQ0 or IAOQ1 are
-modified via ptrace calls in the native and compat ptrace paths.
+Fix is simple: always round up target time to the next throttle slice.
 
-Link: https://bugs.gentoo.org/481768
-Reported-by: Jeroen Roovers <jer@gentoo.org>
-Cc: <stable@vger.kernel.org>
-Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Fixes: 991f61fe7e1d ("Blk-throttle: reduce tail io latency when iops limit is enforced")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/kernel/ptrace.c |   28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ block/blk-throttle.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -167,6 +167,9 @@ long arch_ptrace(struct task_struct *chi
- 		if ((addr & (sizeof(unsigned long)-1)) ||
- 		     addr >= sizeof(struct pt_regs))
- 			break;
-+		if (addr == PT_IAOQ0 || addr == PT_IAOQ1) {
-+			data |= 3; /* ensure userspace privilege */
-+		}
- 		if ((addr >= PT_GR1 && addr <= PT_GR31) ||
- 				addr == PT_IAOQ0 || addr == PT_IAOQ1 ||
- 				(addr >= PT_FR0 && addr <= PT_FR31 + 4) ||
-@@ -228,16 +231,18 @@ long arch_ptrace(struct task_struct *chi
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -881,13 +881,10 @@ static bool tg_with_in_iops_limit(struct
+ 	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
+ 	u64 tmp;
  
- static compat_ulong_t translate_usr_offset(compat_ulong_t offset)
- {
--	if (offset < 0)
--		return sizeof(struct pt_regs);
--	else if (offset <= 32*4)	/* gr[0..31] */
--		return offset * 2 + 4;
--	else if (offset <= 32*4+32*8)	/* gr[0..31] + fr[0..31] */
--		return offset + 32*4;
--	else if (offset < sizeof(struct pt_regs)/2 + 32*4)
--		return offset * 2 + 4 - 32*8;
-+	compat_ulong_t pos;
-+
-+	if (offset < 32*4)	/* gr[0..31] */
-+		pos = offset * 2 + 4;
-+	else if (offset < 32*4+32*8)	/* fr[0] ... fr[31] */
-+		pos = (offset - 32*4) + PT_FR0;
-+	else if (offset < sizeof(struct pt_regs)/2 + 32*4) /* sr[0] ... ipsw */
-+		pos = (offset - 32*4 - 32*8) * 2 + PT_SR0 + 4;
- 	else
--		return sizeof(struct pt_regs);
-+		pos = sizeof(struct pt_regs);
-+
-+	return pos;
- }
+-	jiffy_elapsed = jiffy_elapsed_rnd = jiffies - tg->slice_start[rw];
++	jiffy_elapsed = jiffies - tg->slice_start[rw];
  
- long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
-@@ -281,9 +286,12 @@ long compat_arch_ptrace(struct task_stru
- 			addr = translate_usr_offset(addr);
- 			if (addr >= sizeof(struct pt_regs))
- 				break;
-+			if (addr == PT_IAOQ0+4 || addr == PT_IAOQ1+4) {
-+				data |= 3; /* ensure userspace privilege */
-+			}
- 			if (addr >= PT_FR0 && addr <= PT_FR31 + 4) {
- 				/* Special case, fp regs are 64 bits anyway */
--				*(__u64 *) ((char *) task_regs(child) + addr) = data;
-+				*(__u32 *) ((char *) task_regs(child) + addr) = data;
- 				ret = 0;
- 			}
- 			else if ((addr >= PT_GR1+4 && addr <= PT_GR31+4) ||
+-	/* Slice has just started. Consider one slice interval */
+-	if (!jiffy_elapsed)
+-		jiffy_elapsed_rnd = tg->td->throtl_slice;
+-
+-	jiffy_elapsed_rnd = roundup(jiffy_elapsed_rnd, tg->td->throtl_slice);
++	/* Round up to the next throttle slice, wait time must be nonzero */
++	jiffy_elapsed_rnd = roundup(jiffy_elapsed + 1, tg->td->throtl_slice);
+ 
+ 	/*
+ 	 * jiffy_elapsed_rnd should not be a big value as minimum iops can be
 
 
