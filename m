@@ -2,92 +2,208 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDB8C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9D5C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1433B21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A187121BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:10:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="m6YvAC5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387517AbfGXOKk (ORCPT
+        id S1727817AbfGXOKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:10:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56612 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726287AbfGXOKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:10:39 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EF2187C835ACB6CCCB09;
-        Wed, 24 Jul 2019 22:10:31 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 22:10:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] rtlwifi: remove unneeded function _rtl_dump_channel_map()
-Date:   Wed, 24 Jul 2019 22:10:20 +0800
-Message-ID: <20190724141020.58800-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 24 Jul 2019 10:10:55 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45030 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfGXOKz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:10:55 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so21002388pfe.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:10:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WXhaeMPXQ8MNtkF+Sp+2bS4wghsA38PAkoq4RUXLo/c=;
+        b=m6YvAC5UDmYi4TsfqlA07rTcUbfvc9lidZhL3ozBZPd9FuNWIKormAzLfT9QLJeXSF
+         2DlJ04Pv53eAX5aDIefwhPa4ynnSAA98nz2zD5VGbt4BI8tgCFX+iFwGmIgLSHIE1zb2
+         8tkJvPr+jPd5o5N/vsQKy8hTHoEz1YzrJNWUI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WXhaeMPXQ8MNtkF+Sp+2bS4wghsA38PAkoq4RUXLo/c=;
+        b=hShS00LQSIkaC+wSW0Sx4QjlOZNmU65M+AbEag6CrLKLzsLS7xXZfaifp0U33lSTKp
+         XqkYE3UDDZx/xU3Orwsuz6iZGzWd+GTmd5kuO7xoVJDrEaA7wLknesQ5ReJSJ+B5Z51U
+         remJxqiR+plQAYqTg3HDzaHIIpXOcgi+/JyiqC523W38smr3O5r9YniZXCVgCDj/xXdX
+         vu2OohGLJeZi/mCb7/pRCPlXhQfSVbg2hnA5rYaIjvOMjJ1zhccn3/UDbdVWPFOZ4t+L
+         8ete72oK+rMPqSHXixbAa4RWwJLYE6A6qxZT8LqFg6zMvLT3Mgf5moSAc7cWjsSpuNmx
+         1p+Q==
+X-Gm-Message-State: APjAAAUj6CrH7gxXLZmWQbh26hDsb34UmLHG3o6831fzgWixOOqsKNCZ
+        sjd9y0PL5vY/21AwiQbZeRk=
+X-Google-Smtp-Source: APXvYqxhiuMEPHH8pRDkDkxK8JM+xQ0EECYE2I6dsIIwwk5MI/hkEsc+JGVOGaSpqK/SVp9B21n2eQ==
+X-Received: by 2002:a63:dd0b:: with SMTP id t11mr41295651pgg.410.1563977454295;
+        Wed, 24 Jul 2019 07:10:54 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q63sm61399100pfb.81.2019.07.24.07.10.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 07:10:53 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 10:10:52 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, vdavydov.dev@gmail.com,
+        Brendan Gregg <bgregg@netflix.com>, kernel-team@android.com,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        carmenjackson@google.com, Christian Hansen <chansen3@cisco.com>,
+        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
+        David Howells <dhowells@redhat.com>, fmayer@google.com,
+        joaodias@google.com, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
+        sspatil@google.com, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, timmurray@google.com,
+        tkjos@google.com, Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
+Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
+ using virtual indexing
+Message-ID: <20190724141052.GB9945@google.com>
+References: <20190722213205.140845-1-joel@joelfernandes.org>
+ <20190723061358.GD128252@google.com>
+ <20190723142049.GC104199@google.com>
+ <20190724042842.GA39273@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724042842.GA39273@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now _rtl_dump_channel_map() does not do any actual
-thing using the channel. So remove it.
+On Wed, Jul 24, 2019 at 01:28:42PM +0900, Minchan Kim wrote:
+> On Tue, Jul 23, 2019 at 10:20:49AM -0400, Joel Fernandes wrote:
+> > On Tue, Jul 23, 2019 at 03:13:58PM +0900, Minchan Kim wrote:
+> > > Hi Joel,
+> > > 
+> > > On Mon, Jul 22, 2019 at 05:32:04PM -0400, Joel Fernandes (Google) wrote:
+> > > > The page_idle tracking feature currently requires looking up the pagemap
+> > > > for a process followed by interacting with /sys/kernel/mm/page_idle.
+> > > > This is quite cumbersome and can be error-prone too. If between
+> > > 
+> > > cumbersome: That's the fair tradeoff between idle page tracking and
+> > > clear_refs because idle page tracking could check even though the page
+> > > is not mapped.
+> > 
+> > It is fair tradeoff, but could be made simpler. The userspace code got
+> > reduced by a good amount as well.
+> > 
+> > > error-prone: What's the error?
+> > 
+> > We see in normal Android usage, that some of the times pages appear not to be
+> > idle even when they really are idle. Reproducing this is a bit unpredictable
+> > and happens at random occasions. With this new interface, we are seeing this
+> > happen much much lesser.
+> 
+> I don't know how you did test. Maybe that could be contributed by
+> swapping out or shared pages touched by other processes or some kernel
+> behavior not to keep access bit of their operation.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/realtek/rtlwifi/regd.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+It could be something along these lines is my thinking as well. So we know
+its already has issues due to what you mentioned, I am not sure what else
+needs investigation?
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/regd.c b/drivers/net/wireless/realtek/rtlwifi/regd.c
-index 6ccb5b9..c10432c 100644
---- a/drivers/net/wireless/realtek/rtlwifi/regd.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/regd.c
-@@ -276,22 +276,6 @@ static void _rtl_reg_apply_world_flags(struct wiphy *wiphy,
- 	return;
- }
- 
--static void _rtl_dump_channel_map(struct wiphy *wiphy)
--{
--	enum nl80211_band band;
--	struct ieee80211_supported_band *sband;
--	struct ieee80211_channel *ch;
--	unsigned int i;
--
--	for (band = 0; band < NUM_NL80211_BANDS; band++) {
--		if (!wiphy->bands[band])
--			continue;
--		sband = wiphy->bands[band];
--		for (i = 0; i < sband->n_channels; i++)
--			ch = &sband->channels[i];
--	}
--}
--
- static int _rtl_reg_notifier_apply(struct wiphy *wiphy,
- 				   struct regulatory_request *request,
- 				   struct rtl_regulatory *reg)
-@@ -309,8 +293,6 @@ static int _rtl_reg_notifier_apply(struct wiphy *wiphy,
- 		break;
- 	}
- 
--	_rtl_dump_channel_map(wiphy);
--
- 	return 0;
- }
- 
--- 
-2.7.4
+> Please investigate more what's the root cause. That would be important
+> point to justify for the patch motivation.
 
+The motivation is security. I am dropping the 'accuracy' factor I mentioned
+from the patch description since it created a lot of confusion.
+
+> > > > More over looking up PFN from pagemap in Android devices is not
+> > > > supported by unprivileged process and requires SYS_ADMIN and gives 0 for
+> > > > the PFN.
+> > > > 
+> > > > This patch adds support to directly interact with page_idle tracking at
+> > > > the PID level by introducing a /proc/<pid>/page_idle file. This
+> > > > eliminates the need for userspace to calculate the mapping of the page.
+> > > > It follows the exact same semantics as the global
+> > > > /sys/kernel/mm/page_idle, however it is easier to use for some usecases
+> > > > where looking up PFN is not needed and also does not require SYS_ADMIN.
+> > > 
+> > > Ah, so the primary goal is to provide convinience interface and it would
+> > > help accurary, too. IOW, accuracy is not your main goal?
+> > 
+> > There are a couple of primary goals: Security, conveience and also solving
+> > the accuracy/reliability problem we are seeing. Do keep in mind looking up
+> > PFN has security implications. The PFN field in pagemap is zeroed if the user
+> > does not have CAP_SYS_ADMIN.
+> 
+> Myaybe you don't need PFN. is it?
+
+With the traditional idle tracking, PFN is needed which has the mentioned
+security issues. This patch solves it. And the interface is identical and
+familiar to the existing page_idle bitmap interface.
+
+> > > > In Android, we are using this for the heap profiler (heapprofd) which
+> > > > profiles and pin points code paths which allocates and leaves memory
+> > > > idle for long periods of time.
+> > > 
+> > > So the goal is to detect idle pages with idle memory tracking?
+> > 
+> > Isn't that what idle memory tracking does?
+> 
+> To me, it's rather misleading. Please read motivation section in document.
+> The feature would be good to detect workingset pages, not idle pages
+> because workingset pages are never freed, swapped out and even we could
+> count on newly allocated pages.
+> 
+> Motivation
+> ==========
+> 
+> The idle page tracking feature allows to track which memory pages are being
+> accessed by a workload and which are idle. This information can be useful for
+> estimating the workload's working set size, which, in turn, can be taken into
+> account when configuring the workload parameters, setting memory cgroup limits,
+> or deciding where to place the workload within a compute cluster.
+
+As we discussed by chat, we could collect additional metadata to check if
+pages were swapped or freed ever since the time we marked them as idle.
+However this can be incremental improvement.
+
+> > > It couldn't work well because such idle pages could finally swap out and
+> > > lose every flags of the page descriptor which is working mechanism of
+> > > idle page tracking. It should have named "workingset page tracking",
+> > > not "idle page tracking".
+> > 
+> > The heap profiler that uses page-idle tracking is not to measure working set,
+> > but to look for pages that are idle for long periods of time.
+> 
+> It's important part. Please include it in the description so that people
+> understands what's the usecase. As I said above, if it aims for finding
+> idle pages durting the period, current idle page tracking feature is not
+> good ironically.
+
+Ok, I will mention.
+
+> > Thanks for bringing up the swapping corner case..  Perhaps we can improve
+> > the heap profiler to detect this by looking at bits 0-4 in pagemap. While it
+> 
+> Yeb, that could work but it could add overhead again what you want to remove?
+> Even, userspace should keep metadata to identify that page was already swapped
+> in last period or newly swapped in new period.
+
+Yep.
+
+thanks,
+
+ - Joel
 
