@@ -2,100 +2,115 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0C3C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0479FC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65AE218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B31218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:56:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUdjUPQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfGXFyV (ORCPT
+        id S1726255AbfGXF4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:54:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2868 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725870AbfGXFyV (ORCPT
+        Wed, 24 Jul 2019 01:56:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43012 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfGXF4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:54:21 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6O5q3sm056431
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:54:20 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2txgyq9qfa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:54:20 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Wed, 24 Jul 2019 06:54:18 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Jul 2019 06:54:15 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6O5rwXq38273368
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 05:53:58 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C617252050;
-        Wed, 24 Jul 2019 05:54:13 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.134])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 85AAC52052;
-        Wed, 24 Jul 2019 05:54:13 +0000 (GMT)
-Date:   Wed, 24 Jul 2019 07:54:12 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: linux-next: Fixes tag needs some work in the s390-fixes tree
-References: <20190724074227.63abe116@canb.auug.org.au>
+        Wed, 24 Jul 2019 01:56:47 -0400
+Received: by mail-io1-f68.google.com with SMTP id k20so87005050ios.10;
+        Tue, 23 Jul 2019 22:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E6VQtWP2Qork1ITHffxNTt9vOJoeld9a+/tl+suTeZs=;
+        b=QUdjUPQ6JMmP0H3wsWzvspkk/2zFluSDgd7egZhjHKPWA9mwGimY+3zfCDG3YjNPjn
+         ZaFNic6ggJSNuSdYItOHrgMq7rLWr83NAo531nOApeTlFyFPbY0bQ/lshQiHa4wUIRbj
+         8Adtv9CVaZh744oEUjQMCuJZbTyo3Q5IqMHJNgdHD7O3YPFg/yXmej46kH3IkJAatg3f
+         ZA3EHIRMSUhREgbOq4IGhPG9av9I/srQ7wry2B4ykFnoOWld8MH4vRfpdPpsfa34vipE
+         stlyHTSnalTq1vXoi+2sW5qmEhozDTX91NTX1/Bc2stDuMcY9NPJeeQO9LMXVolJjndP
+         7j1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E6VQtWP2Qork1ITHffxNTt9vOJoeld9a+/tl+suTeZs=;
+        b=EllVBld73IoZlFWXcDs5t1ILxZRvaCddPFypIub7axXFLX0jg2XTGMCtJdDEkxP8BX
+         U4qolhGbtpc1mEieI4AJ1SNHK1HdHpB+iWS8fmvI0jSGxf37FUkFK1quba6IJWT/UbzI
+         Nx+TJAU+ACFh9rvM+zWahQiOE0dZgHHvB4dy5llv+WQBil3zaX+AvKIpRYdqALS2Exbq
+         PO3HM1zFlNTbK7HvAV9C5g1CX0+S4tCiE0J6h4JGa6XCDJM+6D51UtnvQIv3y/3hC0tb
+         RYREEb/FhTRXerF4XEyh1h510IPqEuocfDzLKoIG5j9EJWQ4wrEvD14jcfslOZGRUKwa
+         FgeQ==
+X-Gm-Message-State: APjAAAWiYClxLolXofdN79ekblWK8+yRkexEdLHI7IGmM8/4uEe1m3TY
+        iT3Dj5OGnZSs5VzPyALe9CooD5/EtocrmA==
+X-Google-Smtp-Source: APXvYqzqzNrT7CUSQvyikq1Qah+Ake+fp6s52iiY2yNkvNiZeFeFTRwwL5fFHe4b/PKVG6ewk1n4Dw==
+X-Received: by 2002:a02:c6b8:: with SMTP id o24mr11826016jan.80.1563947806251;
+        Tue, 23 Jul 2019 22:56:46 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id s10sm108747905iod.46.2019.07.23.22.56.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 22:56:45 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 23:56:44 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
+        quan@os.amperecomputing.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn@helgaas.com,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] drivers: net: xgene: Remove acpi_has_method() calls
+Message-ID: <20190724055644.GA103525@JATN>
+References: <20190722030401.69563-1-skunberg.kelsey@gmail.com>
+ <20190723185811.8548-1-skunberg.kelsey@gmail.com>
+ <20190723.140646.505566792140054611.davem@davemloft.net>
+ <20190723.140739.379654507424022463.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724074227.63abe116@canb.auug.org.au>
-X-TM-AS-GCONF: 00
-x-cbid: 19072405-0012-0000-0000-000003359E68
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072405-0013-0000-0000-0000216F30E4
-Message-Id: <20190724055412.GB4412@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=7 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=996 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907240067
+In-Reply-To: <20190723.140739.379654507424022463.davem@davemloft.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Tue, Jul 23, 2019 at 02:07:39PM -0700, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Tue, 23 Jul 2019 14:06:46 -0700 (PDT)
+> 
+> > From: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > Date: Tue, 23 Jul 2019 12:58:11 -0600
+> > 
+> >> acpi_evaluate_object will already return an error if the needed method
+> >> does not exist. Remove unnecessary acpi_has_method() calls and check the
+> >> returned acpi_status for failure instead.
+> >> 
+> >> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> >> ---
+> >> Changes in v2:
+> >> 	- Fixed white space warnings and errors
+> > 
+> > Applied to net-next.
+> 
+> Wow did you even build test this?   Reverted...
+>
+This patch has definitely been a mess, so thank you for your time and
+sticking with me here. I thought my build tests included these files,
+though discovered they did not. Since submitting v2, I was able to reproduce the
+same errors you listed and corrected the problem in v3.
 
-On Wed, Jul 24, 2019 at 07:42:27AM +1000, Stephen Rothwell wrote:
-> In commit
->   8b515be512a2 ("vfio-ccw: Fix memory leak and don't call cp_free in cp_init")
-> Fixes tag
->   Fixes: 812271b910 ("s390/cio: Squash cp_free() and cp_unpin_free()")
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+I also realized my .git/post-commit file needed to be fixed, so the white
+space problem in v1 should also not be a problem in the future.
 
-Yes, I noticed this when merging the vfio tree, but decided to not
-ask for a rebase to fix this.
+Please let me know if you notice anything else I can improve on. I will
+learn from my mistakes and really appreciate advice. Thank you again, David.
 
-Are your scripts that do sanity checks available somewhere? I'm
-wondering since I would also like to do some sanity checks before
-pushing updates to kernel.org like
-
-- has the git author signed off the patch?
-- has the git committer signed off the patch?
-- are "fixes" tags sane: does commit exist and is format ok?
+Best Regards,
+Kelsey
 
