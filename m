@@ -2,69 +2,59 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91D6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2ACC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85437229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14BA2238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563932715;
-	bh=AsMZED3sTIcYIG25jksVgS3C+uxmaz2A2bvWD/7D2TI=;
+	s=default; t=1563932770;
+	bh=xUdN/iu9uUwJvQ4/mxEBSKN+MXsHp0QKqDxpYbcY1wY=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=CrpmiKuP1SnwCdlZlHx9Yv0R8kUFg4AoVK0FhEu1SNEmtABB4M05fLV4VRXja6M+p
-	 8xY3FxrXmeoU0wigVvzkTaVfF2Z0+7qksu563IbA7euZxEEUP6nxldrXrbxCWJQQsd
-	 1ZTKuP9GEgPGB+VCP0dGLCRL9w10+a6khOvmX410=
+	b=S1KVLVNI0IRIzedTENC8/k1e5wNS8UUyQA55JCukD0g6jwSAlF67TFguYKP00jGKm
+	 4vTTy1wwbNP/MnNe1EhAkec7vd7fncwFlfV7ZhUzuB3klHGjj5DLymak2CEGkmNSwJ
+	 omf+Z4hKvK5LaOWi2VM5qDedpBh+meMTX2ksm0vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfGXBpO (ORCPT
+        id S1728639AbfGXBqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56622 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 21:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728487AbfGXBpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:45:13 -0400
+        id S1728455AbfGXBqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 21:46:08 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 939F42238C;
-        Wed, 24 Jul 2019 01:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD42229ED;
+        Wed, 24 Jul 2019 01:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563932711;
-        bh=AsMZED3sTIcYIG25jksVgS3C+uxmaz2A2bvWD/7D2TI=;
+        s=default; t=1563932766;
+        bh=xUdN/iu9uUwJvQ4/mxEBSKN+MXsHp0QKqDxpYbcY1wY=;
         h=Date:From:To:Cc:Subject:From;
-        b=ABjXrYWlQhUXcvC2zusK09x5wxppmDhY0LdQX98bphIKkwJN4tw+kXWI4xHl6K1iq
-         Nc5SNer6s/pT/Nk9XKVXGfuX4LQZ+2faSL9vkrZ6ZEGR9QK0bZv4WyAwLA1352X6Fc
-         CLeoCvxo2SMjkDHxnVh38TXHjqTl8DBkKzeIulmo=
-Date:   Tue, 23 Jul 2019 18:45:10 -0700
+        b=BGHJsnl1u+mnRJf1afWvovztt0QZUPmCVMu3OoHJGSRD98plhgAq1w5NwSFMDyy+L
+         G7i/lbxr0+F+hBPdKY41G+fEwLK9Yhexn2RMJU80gh69qLQITFK2EfF52hUZ+iu5oT
+         gm3qdZbXsWAVcHEUhpLBLk10Yd5dftbJV60JhWB8=
+Date:   Tue, 23 Jul 2019 18:46:04 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kan Liang <kan.liang@linux.intel.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Reminder: 19 open syzbot bugs in perf subsystem
-Message-ID: <20190724014510.GG643@sol.localdomain>
-Mail-Followup-To: linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        syzkaller-bugs@googlegroups.com
+To:     v9fs-developer@lists.sourceforge.net,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 18 open syzbot bugs in "fs/9p" subsystem
+Message-ID: <20190724014604.GH643@sol.localdomain>
+Mail-Followup-To: v9fs-developer@lists.sourceforge.net,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -75,432 +65,378 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 19 of them as possibly being bugs in the perf subsystem.  I've listed
+marked 18 of them as possibly being bugs in the "fs/9p" subsystem.  I've listed
 these reports below, sorted by an algorithm that tries to list first the reports
 most likely to be still valid, important, and actionable.
 
-Of these 19 bugs, 4 were seen in mainline in the last week.
-
-Of these 19 bugs, 2 were bisected to commits from the following people:
-
-	Song Liu <songliubraving@fb.com>
-	Kan Liang <kan.liang@linux.intel.com>
+Of these 18 bugs, 1 was seen in mainline in the last week.
 
 If you believe a bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed a bug to the perf subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
+If you believe I misattributed a bug to the "fs/9p" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
 
 Here are the bugs:
 
 --------------------------------------------------------------------------------
-Title:              INFO: rcu detected stall in sys_sendfile64 (2)
-Last occurred:      1 day ago
-Reported:           185 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=6a6553c3d34bb00172b5cbd32f4912151b6133dc
-Original thread:    https://lkml.kernel.org/lkml/00000000000010b2fc057fcdfaba@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 15 replies; the last was 125 days ago.
-
-I'm not confident this bug is really in the perf subsystem.  I also think it
-might be in the fs/ext4 subsystem.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000010b2fc057fcdfaba@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: rcu detected stall in ext4_file_write_iter
-Last occurred:      3 days ago
-Reported:           147 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=bc195cf62ac17381792072c72a692bf133c528d4
-Original thread:    https://lkml.kernel.org/lkml/0000000000009a01370582c6772a@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 4 replies; the last was 145 days ago.
-
-I'm not confident this bug is really in the perf subsystem.  I also think it
-might be in the fs/ext4 subsystem.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+7d19c5fe6a3f1161abb7@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000009a01370582c6772a@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in do_exit
-Last occurred:      1 day ago
-Reported:           101 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3e6c42e24155e5f0125368e609bee32f2b7394fe
-Original thread:    https://lkml.kernel.org/lkml/000000000000e02bf505866414ae@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 100 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+9880e421ec82313d6527@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e02bf505866414ae@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in arch_install_hw_breakpoint
-Last occurred:      5 days ago
-Reported:           121 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=7250aa28cb43ada4cba944fe46d80f67435022ef
-Original thread:    https://lkml.kernel.org/lkml/000000000000639f6a0584d11b82@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 8 replies; the last was 117 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000639f6a0584d11b82@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in tracepoint_probe_register_prio (3)
+Title:              memory leak in v9fs_cache_session_get_cookie
 Last occurred:      0 days ago
-Reported:           431 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=63e3738079e5b2a71cd19820e454b8ac315c7550
-Original thread:    https://lkml.kernel.org/lkml/000000000000ab6f84056c786b93@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ab6f84056c786b93@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in add_event_to_ctx
-Last occurred:      21 days ago
-Reported:           33 days ago
+Reported:           63 days ago
 Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=c0b2e13c4e106f405e56cc89843b0e54eb6d9e52
-Original thread:    https://lkml.kernel.org/lkml/000000000000946842058bc1291d@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f012bdf297a7a4c860c38a88b44fbee43fd9bbf3
+Original thread:    https://lkml.kernel.org/lkml/0000000000001b266f058965f9a7@google.com/T/#u
 
 This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 33ea4b24277b06dbc55d7f5772a46f029600255e
-	Author: Song Liu <songliubraving@fb.com>
-	Date:   Wed Dec 6 22:45:16 2017 +0000
-
-	  perf/core: Implement the 'perf_uprobe' PMU
 
 No one has replied to the original thread for this bug yet.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com
+    Reported-by: syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000946842058bc1291d@google.com
+https://lkml.kernel.org/r/0000000000001b266f058965f9a7@google.com
 
 --------------------------------------------------------------------------------
-Title:              WARNING in perf_reg_value
-Last occurred:      25 days ago
-Reported:           34 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=629d95983fbba49821af91acf780387bca180546
-Original thread:    https://lkml.kernel.org/lkml/000000000000734545058bb27ebb@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 878068ea270ea82767ff1d26c91583263c81fba0
-	Author: Kan Liang <kan.liang@linux.intel.com>
-	Date:   Tue Apr 2 19:44:59 2019 +0000
-
-	  perf/x86: Support outputting XMM registers
-
-The original thread for this bug has received 3 replies; the last was 33 days
-ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+10189b9b0f8c4664badd@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000734545058bb27ebb@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in __do_page_fault (2)
-Last occurred:      19 days ago
-Reported:           269 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=9e5eb5f575324225d04b9b3095f5c3fc71700f08
-Original thread:    https://lkml.kernel.org/lkml/0000000000006e31980579315914@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006e31980579315914@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: stack-out-of-bounds Read in update_stack_state
-Last occurred:      28 days ago
-Reported:           517 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=51b058f4d86b9045d31b6bbe97211d3ebc96d4fa
-Original thread:    https://lkml.kernel.org/lkml/001a1143e62e6f71d20565bf329f@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2990ca6e76c080858a9c@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a1143e62e6f71d20565bf329f@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in perf_group_attach
-Last occurred:      14 days ago
-Reported:           207 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=bc574683e1e3241992f8460c82ddac937e3c88b9
-Original thread:    https://lkml.kernel.org/lkml/0000000000001282e1057e14848e@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+23fe48cbe532abffa52e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001282e1057e14848e@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in exit_mm
+Title:              KASAN: use-after-free Read in __queue_work (2)
 Last occurred:      26 days ago
-Reported:           22 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=dd115babf1498c3370fab8758d58940b7c6bffa4
-Original thread:    https://lkml.kernel.org/lkml/000000000000a193aa058c9a6499@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-The original thread for this bug has received 3 replies; the last was 21 days
-ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+8cc1843d4eec9c0dfb35@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000a193aa058c9a6499@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in refcount_sub_and_test_checked (2)
-Last occurred:      95 days ago
-Reported:           202 days ago
+Reported:           379 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=eaf7abde8e5497bbf7403a3d2afb9226005362cf
-Original thread:    https://lkml.kernel.org/lkml/0000000000004a6d7c057e77e97e@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+b0775615fa4c4479b691@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000004a6d7c057e77e97e@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in uprobe_perf_close
-Last occurred:      158 days ago
-Reported:           476 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3fb9c4777053e79a6d2a65ac3738664c87629a21
-Original thread:    https://lkml.kernel.org/lkml/001a113f8bf6a9acd90568e8ea59@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=c14270323f22e896228f470164aac59114d388be
+Original thread:    https://lkml.kernel.org/lkml/000000000000f665a30570885589@google.com/T/#u
 
 This bug has a C reproducer.
 
 No one replied to the original thread for this bug.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+cef9473c7fa0fe8ab95e@syzkaller.appspotmail.com
+    Reported-by: syzbot+1c9db6a163a4000d0765@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a113f8bf6a9acd90568e8ea59@google.com
+https://lkml.kernel.org/r/000000000000f665a30570885589@google.com
 
 --------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in _free_event
-Last occurred:      30 days ago
-Reported:           29 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=178d9570289a3e1aaf929f00e78b0d9596fccc7c
-Original thread:    https://lkml.kernel.org/lkml/000000000000dea828058c0d815d@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug has received 1 reply, 29 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+37100ea87beb0cac28f4@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000dea828058c0d815d@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in perf_tp_event
-Last occurred:      21 days ago
-Reported:           445 days ago
+Title:              WARNING: refcount bug in p9_req_put
+Last occurred:      22 days ago
+Reported:           250 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=db96e8cebcedb255a170187c8add3ea0745db13b
-Original thread:    https://lkml.kernel.org/lkml/000000000000c39de9056b5a46ca@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2f86b8550eb66cbd5808@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000c39de9056b5a46ca@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: ODEBUG bug in __do_softirq
-Last occurred:      95 days ago
-Reported:           521 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=26c9593893aa8625f556867ea71649010a07e74d
-Original thread:    https://groups.google.com/d/msgid/syzkaller-bugs/001a1143e62eb6a9510565640e76%40google.com
+Dashboard link:     https://syzkaller.appspot.com/bug?id=af5bada8b8d40472d6cd6a34a9cc1dc4b46d03df
+Original thread:    https://lkml.kernel.org/lkml/000000000000eb6a8e057ab79f82@google.com/T/#u
 
 This bug has a syzkaller reproducer only.
 
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-For some reason the original report email for this bug is missing from the LKML
-archive at lore.kernel.org, so my script couldn't check whether anyone has
-replied to it or not.  The Google Groups link above should still work, though. 
-Also try searching for the bug title.
-
---------------------------------------------------------------------------------
-Title:              INFO: rcu detected stall in __perf_sw_event
-Last occurred:      103 days ago
-Reported:           166 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=c97097e0408c6c6f60ac89b78faaf0e42663cbac
-Original thread:    https://lkml.kernel.org/lkml/00000000000003cadb05814f3284@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 2 replies; the last was 117 days ago.
+The original thread for this bug received 1 reply, 248 days ago.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+a41ac89a0712acde0e84@syzkaller.appspotmail.com
+    Reported-by: syzbot+edec7868af5997928fe9@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000003cadb05814f3284@google.com
+https://lkml.kernel.org/r/000000000000eb6a8e057ab79f82@google.com
 
 --------------------------------------------------------------------------------
-Title:              WARNING in event_function_local
-Last occurred:      286 days ago
-Reported:           542 days ago
+Title:              KASAN: use-after-free Read in p9_fd_poll
+Last occurred:      344 days ago
+Reported:           377 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ea9e1f49354606d70d272294fcc1d80a86ea0e6b
-Original thread:    https://lkml.kernel.org/lkml/001a1140589435c9b60563c76e3f@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=1b726e0a253ee75e902d090f68705da3d42d6ae0
+Original thread:    https://lkml.kernel.org/lkml/000000000000afbebb0570be9bf3@google.com/T/#u
 
 This bug has a C reproducer.
 
-The original thread for this bug received 8 replies; the last was 160 days ago.
+No one replied to the original thread for this bug.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+352bd10e338d9a90e5e0@syzkaller.appspotmail.com
+    Reported-by: syzbot+0442e6e2f7e1e33b1037@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a1140589435c9b60563c76e3f@google.com
+https://lkml.kernel.org/r/000000000000afbebb0570be9bf3@google.com
 
 --------------------------------------------------------------------------------
-Title:              INFO: task hung in uprobe_start_dup_mmap
-Last occurred:      106 days ago
-Reported:           320 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4432696d9b58dd75ab7ea39171bfaaed10f44d47
-Original thread:    https://lkml.kernel.org/lkml/000000000000d83699057536ce5b@google.com/T/#u
+Title:              KMSAN: uninit-value in unix_find_other
+Last occurred:      378 days ago
+Reported:           379 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a18dffaab644e1a6f8c7e85ff0e18b6293ba8af6
+Original thread:    https://lkml.kernel.org/lkml/0000000000004a927105708ab2d9@google.com/T/#u
 
-Unfortunately, this bug does not have a reproducer.
+This bug has a C reproducer.
+
+The original thread for this bug received 1 reply, 379 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+75d51fe5bf4ebe988518@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000004a927105708ab2d9@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: uninit-value in p9_client_rpc
+Last occurred:      376 days ago
+Reported:           378 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a90ca45133088ce07550f7cee0be028ee079c3f4
+Original thread:    https://lkml.kernel.org/lkml/000000000000c541110570a978a4@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 1 reply, 376 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+4de40388f584432bf004@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000c541110570a978a4@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in p9_conn_cancel
+Last occurred:      359 days ago
+Reported:           377 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=914af3becc310b7a00c1107f0c97bc6a1834e81d
+Original thread:    https://lkml.kernel.org/lkml/000000000000ee4dab0570be896c@google.com/T/#u
+
+This bug has a C reproducer.
 
 No one replied to the original thread for this bug.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+cad3df271fa4d88da051@syzkaller.appspotmail.com
+    Reported-by: syzbot+4d29d76a0da7a8c4d86c@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000d83699057536ce5b@google.com
+https://lkml.kernel.org/r/000000000000ee4dab0570be896c@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in ep_scan_ready_list
+Last occurred:      342 days ago
+Reported:           377 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f668a9aa79ed08cc1f386be0930a529f285a4ec8
+Original thread:    https://lkml.kernel.org/lkml/0000000000005e2bf90570bbe2ab@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+78b902c73c69102cb767@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000005e2bf90570bbe2ab@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in p9_conn_cancel
+Last occurred:      341 days ago
+Reported:           379 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=cc9f4ab3d1198237b0ee1f751ca02e21f8d46445
+Original thread:    https://lkml.kernel.org/lkml/000000000000d13b2e05708a9ca0@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+f0fdc967350bd580a80b@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000d13b2e05708a9ca0@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in iterate_supers
+Last occurred:      85 days ago
+Reported:           378 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=3c0c173ff55822aacb81ce7ae27a6676fba29a5c
+Original thread:    https://lkml.kernel.org/lkml/000000000000da8a9b0570a29c01@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 4 replies; the last was 375 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2349f5067b1772c1d8a5@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000da8a9b0570a29c01@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: corrupted list in p9_write_work
+Last occurred:      302 days ago
+Reported:           347 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=151aa3d92ac4b94c54797bd48465387068b1fddd
+Original thread:    https://lkml.kernel.org/lkml/0000000000002a2fdf0573107004@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1788bd5d4e051da6ec08@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000002a2fdf0573107004@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: task hung in flush_work
+Last occurred:      82 days ago
+Reported:           442 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=70f8f16aafb20820a026882ea1ab613b4bfa2216
+Original thread:    https://lkml.kernel.org/lkml/000000000000b15fb3056b9f94e7@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2e7b6af5956e05e5cff7@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000b15fb3056b9f94e7@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: corrupted list in p9_conn_cancel
+Last occurred:      278 days ago
+Reported:           379 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ed87cd63ebd6e82af690c83e59a3790276572fd1
+Original thread:    https://lkml.kernel.org/lkml/00000000000054395605708fbd13@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ad0832746849421bba05@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000054395605708fbd13@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: ODEBUG bug in p9_fd_close
+Last occurred:      340 days ago
+Reported:           379 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=751ed5b74aa9a00ac4b39c32881fd32d6f6b875c
+Original thread:    https://lkml.kernel.org/lkml/00000000000024f01405708aab83@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+d702a81aadeedd565723@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000024f01405708aab83@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: corrupted list in p9_read_work (2)
+Last occurred:      104 days ago
+Reported:           242 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=5df4f85d764ee89863d0294b4e0c87ef2fd2c624
+Original thread:    https://lkml.kernel.org/lkml/000000000000807fe4057b4f19c6@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000807fe4057b4f19c6@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in generic_perform_write
+Last occurred:      356 days ago
+Reported:           369 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ffccb5b7eaae1bd46ec0bd18aa9923cee7cfdb60
+Original thread:    https://lkml.kernel.org/lkml/00000000000047116205715df655@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 3 replies; the last was 369 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b173e77096a8ba815511@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000047116205715df655@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in do_raw_spin_unlock
+Last occurred:      372 days ago
+Reported:           372 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ed176b6fd7180236cd56d904bd6dcabd6e2f318b
+Original thread:    https://lkml.kernel.org/lkml/000000000000fedc1105711f11fd@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+83a25334ef203851dc81@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000fedc1105711f11fd@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in p9_client_prepare_req
+Last occurred:      300 days ago
+Reported:           369 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=993a3caa9e6efc13b53cd9531eeb9dc50d59a4e4
+Original thread:    https://lkml.kernel.org/lkml/0000000000007870ef0571590bb2@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+77a28a63a0ece0fbba97@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007870ef0571590bb2@google.com
 
