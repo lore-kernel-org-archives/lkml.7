@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34FDC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D33C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A28B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C41921855
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998710;
-	bh=4OLWmdFAVRQR5y2g4ysSUjnYuEXvUOWxTPPdprn3CD4=;
+	s=default; t=1563998713;
+	bh=tXdCGhURHCttzoYgbZfmIfemOshdS4a/j9OQkEtUABs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=omCimFByHuc5crF4sDOxdhc3090bcjR40ktIrn2LYB7NCJpC8b686JPaQhGEYeSyX
-	 ghopIicREAq7x3u/ckYcRjI+8mJWC+mnomFXj15m299kFn2wiXl6MdKksaOjPZ+TqC
-	 FgujdlfTgYwXeeUK/17XnhnqxEu+clLJfQ5LoIzE=
+	b=zQApqBiaEHAQYWIw9ilczMxuQHGGMpexeocST/AxTNvjpGs/kgjNf/Qvk9WY7oFSh
+	 GvlunBa7CzYg4/+7g2L8eKq/5ohObpT3VU0X8dmppHAzE3V07ny/NNqyfXzt3NpR9a
+	 x38NfUys/8FtaJDb03Xw3lJFOF9QxeBNePYND7zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405742AbfGXUFI (ORCPT
+        id S2392629AbfGXUFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56434 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392619AbfGXUFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:05:05 -0400
+        id S2405738AbfGXUFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:05:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18393206BA;
-        Wed, 24 Jul 2019 20:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CA6E2147A;
+        Wed, 24 Jul 2019 20:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998704;
-        bh=4OLWmdFAVRQR5y2g4ysSUjnYuEXvUOWxTPPdprn3CD4=;
+        s=default; t=1563998707;
+        bh=tXdCGhURHCttzoYgbZfmIfemOshdS4a/j9OQkEtUABs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhpEpns9xaHiVsv/2cdxv4iEH9mLqi8qftNIeQu6xZMgQwZhJzePFCe31MSAXf6bV
-         JJwiNPT8Evivj4ebWNaJGfL5gZ5cDpBLSrp4wDYzvgE/trmJO9n0kEm3YK22cDky7t
-         74XhZtSSUzr4vwS2FjsGM/mJJ0zFnLhlKimGVXfE=
+        b=quHjvYh3o7whjpu5gqnYQWZ54WKRjwI8O3wdgYJ5qRajt9NBR0WEBJTjFyqsCGNkl
+         8QmussOSODgcOkWVB0nkvDqGT5AG9Be2QSJKanZPhhjDLCzbC7Tqgm2NeMb8ulKXyI
+         CBjS8jvSMvvEHx+KGmrXitG1Z6p8Y0f6z97bmiBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/271] tua6100: Avoid build warnings.
-Date:   Wed, 24 Jul 2019 21:18:26 +0200
-Message-Id: <20190724191658.382626179@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 079/271] x86/atomic: Fix smp_mb__{before,after}_atomic()
+Date:   Wed, 24 Jul 2019 21:19:08 +0200
+Message-Id: <20190724191701.954991110@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -59,89 +62,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 621ccc6cc5f8d6730b740d31d4818227866c93c9 ]
+[ Upstream commit 69d927bba39517d0980462efc051875b7f4db185 ]
 
-Rename _P to _P_VAL and _R to _R_VAL to avoid global
-namespace conflicts:
+Recent probing at the Linux Kernel Memory Model uncovered a
+'surprise'. Strongly ordered architectures where the atomic RmW
+primitive implies full memory ordering and
+smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
+fail for:
 
-drivers/media/dvb-frontends/tua6100.c: In function ‘tua6100_set_params’:
-drivers/media/dvb-frontends/tua6100.c:79: warning: "_P" redefined
- #define _P 32
+	*x = 1;
+	atomic_inc(u);
+	smp_mb__after_atomic();
+	r0 = *y;
 
-In file included from ./include/acpi/platform/aclinux.h:54,
-                 from ./include/acpi/platform/acenv.h:152,
-                 from ./include/acpi/acpi.h:22,
-                 from ./include/linux/acpi.h:34,
-                 from ./include/linux/i2c.h:17,
-                 from drivers/media/dvb-frontends/tua6100.h:30,
-                 from drivers/media/dvb-frontends/tua6100.c:32:
-./include/linux/ctype.h:14: note: this is the location of the previous definition
- #define _P 0x10 /* punct */
+Because, while the atomic_inc() implies memory order, it
+(surprisingly) does not provide a compiler barrier. This then allows
+the compiler to re-order like so:
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	atomic_inc(u);
+	*x = 1;
+	smp_mb__after_atomic();
+	r0 = *y;
+
+Which the CPU is then allowed to re-order (under TSO rules) like:
+
+	atomic_inc(u);
+	r0 = *y;
+	*x = 1;
+
+And this very much was not intended. Therefore strengthen the atomic
+RmW ops to include a compiler barrier.
+
+NOTE: atomic_{or,and,xor} and the bitops already had the compiler
+barrier.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-frontends/tua6100.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ Documentation/atomic_t.txt         | 3 +++
+ arch/x86/include/asm/atomic.h      | 8 ++++----
+ arch/x86/include/asm/atomic64_64.h | 8 ++++----
+ arch/x86/include/asm/barrier.h     | 4 ++--
+ 4 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/media/dvb-frontends/tua6100.c b/drivers/media/dvb-frontends/tua6100.c
-index b233b7be0b84..e6aaf4973aef 100644
---- a/drivers/media/dvb-frontends/tua6100.c
-+++ b/drivers/media/dvb-frontends/tua6100.c
-@@ -75,8 +75,8 @@ static int tua6100_set_params(struct dvb_frontend *fe)
- 	struct i2c_msg msg1 = { .addr = priv->i2c_address, .flags = 0, .buf = reg1, .len = 4 };
- 	struct i2c_msg msg2 = { .addr = priv->i2c_address, .flags = 0, .buf = reg2, .len = 3 };
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index 913396ac5824..ed0d814df7e0 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -177,6 +177,9 @@ These helper barriers exist because architectures have varying implicit
+ ordering on their SMP atomic primitives. For example our TSO architectures
+ provide full ordered atomics and these barriers are no-ops.
  
--#define _R 4
--#define _P 32
-+#define _R_VAL 4
-+#define _P_VAL 32
- #define _ri 4000000
++NOTE: when the atomic RmW ops are fully ordered, they should also imply a
++compiler barrier.
++
+ Thus:
  
- 	// setup register 0
-@@ -91,14 +91,14 @@ static int tua6100_set_params(struct dvb_frontend *fe)
- 	else
- 		reg1[1] = 0x0c;
+   atomic_fetch_add();
+diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
+index ce84388e540c..d266a4066289 100644
+--- a/arch/x86/include/asm/atomic.h
++++ b/arch/x86/include/asm/atomic.h
+@@ -54,7 +54,7 @@ static __always_inline void arch_atomic_add(int i, atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "addl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
+ }
  
--	if (_P == 64)
-+	if (_P_VAL == 64)
- 		reg1[1] |= 0x40;
- 	if (c->frequency >= 1525000)
- 		reg1[1] |= 0x80;
+ /**
+@@ -68,7 +68,7 @@ static __always_inline void arch_atomic_sub(int i, atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "subl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
+ }
  
- 	// register 2
--	reg2[1] = (_R >> 8) & 0x03;
--	reg2[2] = _R;
-+	reg2[1] = (_R_VAL >> 8) & 0x03;
-+	reg2[2] = _R_VAL;
- 	if (c->frequency < 1455000)
- 		reg2[1] |= 0x1c;
- 	else if (c->frequency < 1630000)
-@@ -110,18 +110,18 @@ static int tua6100_set_params(struct dvb_frontend *fe)
- 	 * The N divisor ratio (note: c->frequency is in kHz, but we
- 	 * need it in Hz)
- 	 */
--	prediv = (c->frequency * _R) / (_ri / 1000);
--	div = prediv / _P;
-+	prediv = (c->frequency * _R_VAL) / (_ri / 1000);
-+	div = prediv / _P_VAL;
- 	reg1[1] |= (div >> 9) & 0x03;
- 	reg1[2] = div >> 1;
- 	reg1[3] = (div << 7);
--	priv->frequency = ((div * _P) * (_ri / 1000)) / _R;
-+	priv->frequency = ((div * _P_VAL) * (_ri / 1000)) / _R_VAL;
+ /**
+@@ -95,7 +95,7 @@ static __always_inline bool arch_atomic_sub_and_test(int i, atomic_t *v)
+ static __always_inline void arch_atomic_inc(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "incl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ #define arch_atomic_inc arch_atomic_inc
  
- 	// Finally, calculate and store the value for A
--	reg1[3] |= (prediv - (div*_P)) & 0x7f;
-+	reg1[3] |= (prediv - (div*_P_VAL)) & 0x7f;
+@@ -108,7 +108,7 @@ static __always_inline void arch_atomic_inc(atomic_t *v)
+ static __always_inline void arch_atomic_dec(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "decl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ #define arch_atomic_dec arch_atomic_dec
  
--#undef _R
--#undef _P
-+#undef _R_VAL
-+#undef _P_VAL
- #undef _ri
+diff --git a/arch/x86/include/asm/atomic64_64.h b/arch/x86/include/asm/atomic64_64.h
+index 5f851d92eecd..55ca027f8c1c 100644
+--- a/arch/x86/include/asm/atomic64_64.h
++++ b/arch/x86/include/asm/atomic64_64.h
+@@ -45,7 +45,7 @@ static __always_inline void arch_atomic64_add(long i, atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "addq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
  
- 	if (fe->ops.i2c_gate_ctrl)
+ /**
+@@ -59,7 +59,7 @@ static inline void arch_atomic64_sub(long i, atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "subq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -87,7 +87,7 @@ static __always_inline void arch_atomic64_inc(atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "incq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ #define arch_atomic64_inc arch_atomic64_inc
+ 
+@@ -101,7 +101,7 @@ static __always_inline void arch_atomic64_dec(atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "decq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ #define arch_atomic64_dec arch_atomic64_dec
+ 
+diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
+index 14de0432d288..84f848c2541a 100644
+--- a/arch/x86/include/asm/barrier.h
++++ b/arch/x86/include/asm/barrier.h
+@@ -80,8 +80,8 @@ do {									\
+ })
+ 
+ /* Atomic operations are already serializing on x86 */
+-#define __smp_mb__before_atomic()	barrier()
+-#define __smp_mb__after_atomic()	barrier()
++#define __smp_mb__before_atomic()	do { } while (0)
++#define __smp_mb__after_atomic()	do { } while (0)
+ 
+ #include <asm-generic/barrier.h>
+ 
 -- 
 2.20.1
 
