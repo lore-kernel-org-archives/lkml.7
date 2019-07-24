@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F270C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D10C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99BB22BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A9722ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998266;
-	bh=rWfuZLF5n7eXxel3NqYl7t1FcRCZ3izVzeftLrha4Io=;
+	s=default; t=1563998268;
+	bh=T/js2yY3PjgZPEfi3OtpxtXr6ZCEeDIG5lhr3PLXbMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJqjKKKh/vZVyrlo/kzwGjSo+HtMGpJ4fHLQmMgrX6VTAPZvamcXw3V0UENQnoVbC
-	 IhhOzVizXPoyPerh+9QwpdMmu8iabcbxUNoKoxLANHu3dK3BteTlAoOcsvBGyNFuNU
-	 FAqFcOUasiC9GpyPUdlAaSntV6jX96ZXUJzn2T/w=
+	b=i1N0vfk3wZj8JF9S7MhDoHNceXvBiNZ+j/3ErMx0+cBq4hMoUxlFxG5hBChvNvMAI
+	 AdeMFDiNyR1viVx8X4LqQysoItVyBZUHa1imz97yDRFClzOWCXtNR7qXDmHuEoA+Ip
+	 //Y/h3CnDGNB7vqb1RhdH1HEEQe/7zxatIcJ0FhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392082AbfGXT5p (ORCPT
+        id S2392094AbfGXT5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43262 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392042AbfGXT5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:39 -0400
+        id S2392054AbfGXT5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:57:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBE63206BA;
-        Wed, 24 Jul 2019 19:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F058206BA;
+        Wed, 24 Jul 2019 19:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998258;
-        bh=rWfuZLF5n7eXxel3NqYl7t1FcRCZ3izVzeftLrha4Io=;
+        s=default; t=1563998261;
+        bh=T/js2yY3PjgZPEfi3OtpxtXr6ZCEeDIG5lhr3PLXbMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKJm9IFvs/IhzvlEkEzXfikdxWKbdfAZbEUkqwRgKRib2VKxsuorZ2lMzZWj41dvs
-         zRoxgSfRgH+nBJOpWcTWOzo59fdiXIui1D3JU2So62JXeUKyJgp366XpmUS5IPc1/8
-         X2cMUk5nVyCTVXC5rABBJbWrFdLRzs4hnIl5Wi/Y=
+        b=otyzXOTAPI8Xoq5IuOGZCtJDMR7F8YViI3bTqXmPIwBJBp/GT46XqX5wX178Faest
+         39GG8apVtFku/zqB8DVjihpaEB2HHky1S8AR6cMiRqYlOXYtlQYYRv47pdclPxi8Cu
+         8IsRgFwFso+uGpC0DVHZnuEfBpWE7V5lFwnqSfVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 260/371] bcache: fix mistaken sysfs entry for io_error counter
-Date:   Wed, 24 Jul 2019 21:20:12 +0200
-Message-Id: <20190724191744.052523503@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.1 251/371] cifs: always add credits back for unsolicited PDUs
+Date:   Wed, 24 Jul 2019 21:20:03 +0200
+Message-Id: <20190724191743.564738540@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit 5461999848e0462c14f306a62923d22de820a59c upstream.
+commit 3e2725796cbdfe4efc7eb7b27cacaeac2ddad1a5 upstream.
 
-In bch_cached_dev_files[] from driver/md/bcache/sysfs.c, sysfs_errors is
-incorrectly inserted in. The correct entry should be sysfs_io_errors.
+not just if CONFIG_CIFS_DEBUG2 is enabled.
 
-This patch fixes the problem and now I/O errors of cached device can be
-read from /sys/block/bcache<N>/bcache/io_errors.
-
-Fixes: c7b7bd07404c5 ("bcache: add io_disable to struct cached_dev")
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/sysfs.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/connect.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -180,7 +180,7 @@ SHOW(__bch_cached_dev)
- 	var_print(writeback_percent);
- 	sysfs_hprint(writeback_rate,
- 		     wb ? atomic_long_read(&dc->writeback_rate.rate) << 9 : 0);
--	sysfs_hprint(io_errors,		atomic_read(&dc->io_errors));
-+	sysfs_printf(io_errors,		"%i", atomic_read(&dc->io_errors));
- 	sysfs_printf(io_error_limit,	"%i", dc->error_limit);
- 	sysfs_printf(io_disable,	"%i", dc->io_disable);
- 	var_print(writeback_rate_update_seconds);
-@@ -464,7 +464,7 @@ static struct attribute *bch_cached_dev_
- 	&sysfs_writeback_rate_p_term_inverse,
- 	&sysfs_writeback_rate_minimum,
- 	&sysfs_writeback_rate_debug,
--	&sysfs_errors,
-+	&sysfs_io_errors,
- 	&sysfs_io_error_limit,
- 	&sysfs_io_disable,
- 	&sysfs_dirty_data,
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1221,11 +1221,11 @@ next_pdu:
+ 					 atomic_read(&midCount));
+ 				cifs_dump_mem("Received Data is: ", bufs[i],
+ 					      HEADER_SIZE(server));
++				smb2_add_credits_from_hdr(bufs[i], server);
+ #ifdef CONFIG_CIFS_DEBUG2
+ 				if (server->ops->dump_detail)
+ 					server->ops->dump_detail(bufs[i],
+ 								 server);
+-				smb2_add_credits_from_hdr(bufs[i], server);
+ 				cifs_dump_mids(server);
+ #endif /* CIFS_DEBUG2 */
+ 			}
 
 
