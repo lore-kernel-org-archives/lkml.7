@@ -2,128 +2,118 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B10C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6119C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9555022BF3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563976945;
-	bh=akL4t3WLQfvH/sx6baSCdRPzrJPet6bQ0ZZAPYisZi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KoyGxJE8UImITRl5XxiHnoUp9fhQZEnhy+4epFHUic3dLrU3/ocAvI6G412eJrnI2
-	 4czDvRBWeix3GBwIGFfbqAMBLahJpj7bdPfrV6yEg6THq2u/kuZ/Ka2MvuUrmwylyq
-	 MOvsx22skABZhpHHSm2AWk9BWNCThQTbko4RDl7s=
+	by mail.kernel.org (Postfix) with ESMTP id B3BB222BF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfGXOCY (ORCPT
+        id S1728325AbfGXODH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 10:03:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39439 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfGXOCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:02:24 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A09422BE8;
-        Wed, 24 Jul 2019 14:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563976942;
-        bh=akL4t3WLQfvH/sx6baSCdRPzrJPet6bQ0ZZAPYisZi4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HGjiQdK87WShqPUCUDRg97LnVe6uyeIf9yy5HPpwultEhX+41Yn3D/DKXjIK8Af4f
-         0ygT0V9wgzsE+RPZ4QFVtqujFkiagNZGrOWFPz6QtW3TCSySYN2+CMJ5pNSGE1vClG
-         0S7ixJF2Qf9InXHgM9sSGPD0ag6vRkrIxQa7ibh4=
-Date:   Wed, 24 Jul 2019 15:02:12 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Kostya Serebryany <kcc@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v19 00/15] arm64: untag user pointers passed to the kernel
-Message-ID: <20190724140212.qzvbcx5j2gi5lcoj@willie-the-truck>
-References: <cover.1563904656.git.andreyknvl@google.com>
- <CAAeHK+yc0D_nd7nTRsY4=qcSx+eQR0VLut3uXMf4NEiE-VpeCw@mail.gmail.com>
+        id S2387418AbfGXODH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:03:07 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 45txrT3h5Bz9sLt; Thu, 25 Jul 2019 00:03:05 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     linuxppc-dev@ozlabs.org
+Cc:     christian@brauner.io, linux-kernel@vger.kernel.org,
+        asolokha@kb.kras.ru
+Subject: [PATCH v2] powerpc: Wire up clone3 syscall
+Date:   Thu, 25 Jul 2019 00:02:59 +1000
+Message-Id: <20190724140259.23554-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+yc0D_nd7nTRsY4=qcSx+eQR0VLut3uXMf4NEiE-VpeCw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+Wire up the new clone3 syscall added in commit 7f192e3cd316 ("fork:
+add clone3").
 
-On Tue, Jul 23, 2019 at 08:03:29PM +0200, Andrey Konovalov wrote:
-> On Tue, Jul 23, 2019 at 7:59 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
-> > === Overview
-> >
-> > arm64 has a feature called Top Byte Ignore, which allows to embed pointer
-> > tags into the top byte of each pointer. Userspace programs (such as
-> > HWASan, a memory debugging tool [1]) might use this feature and pass
-> > tagged user pointers to the kernel through syscalls or other interfaces.
-> >
-> > Right now the kernel is already able to handle user faults with tagged
-> > pointers, due to these patches:
-> >
-> > 1. 81cddd65 ("arm64: traps: fix userspace cache maintenance emulation on a
-> >              tagged pointer")
-> > 2. 7dcd9dd8 ("arm64: hw_breakpoint: fix watchpoint matching for tagged
-> >               pointers")
-> > 3. 276e9327 ("arm64: entry: improve data abort handling of tagged
-> >               pointers")
-> >
-> > This patchset extends tagged pointer support to syscall arguments.
+This requires a ppc_clone3 wrapper, in order to save the non-volatile
+GPRs before calling into the generic syscall code. Otherwise we hit
+the BUG_ON in CHECK_FULL_REGS in copy_thread().
 
-[...]
+Lightly tested using Christian's test code on a Power8 LE VM.
 
-> Do you think this is ready to be merged?
-> 
-> Should this go through the mm or the arm tree?
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/include/asm/unistd.h        | 1 +
+ arch/powerpc/kernel/entry_32.S           | 8 ++++++++
+ arch/powerpc/kernel/entry_64.S           | 5 +++++
+ arch/powerpc/kernel/syscalls/syscall.tbl | 1 +
+ 4 files changed, 15 insertions(+)
 
-I would certainly prefer to take at least the arm64 bits via the arm64 tree
-(i.e. patches 1, 2 and 15). We also need a Documentation patch describing
-the new ABI.
+v2: Add the wrapper for 32-bit as well, don't allow SPU programs to call
+    clone3 (switch ABI to nospu).
 
-Will
+v1: https://lore.kernel.org/r/20190722132231.10169-1-mpe@ellerman.id.au
+
+diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
+index 68473c3c471c..b0720c7c3fcf 100644
+--- a/arch/powerpc/include/asm/unistd.h
++++ b/arch/powerpc/include/asm/unistd.h
+@@ -49,6 +49,7 @@
+ #define __ARCH_WANT_SYS_FORK
+ #define __ARCH_WANT_SYS_VFORK
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
+ 
+ #endif		/* __ASSEMBLY__ */
+ #endif /* _ASM_POWERPC_UNISTD_H_ */
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 85fdb6d879f1..54fab22c9a43 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -597,6 +597,14 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+ 	stw	r0,_TRAP(r1)		/* register set saved */
+ 	b	sys_clone
+ 
++	.globl	ppc_clone3
++ppc_clone3:
++	SAVE_NVGPRS(r1)
++	lwz	r0,_TRAP(r1)
++	rlwinm	r0,r0,0,0,30		/* clear LSB to indicate full */
++	stw	r0,_TRAP(r1)		/* register set saved */
++	b	sys_clone3
++
+ 	.globl	ppc_swapcontext
+ ppc_swapcontext:
+ 	SAVE_NVGPRS(r1)
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index d9105fcf4021..0a0b5310f54a 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -487,6 +487,11 @@ _GLOBAL(ppc_clone)
+ 	bl	sys_clone
+ 	b	.Lsyscall_exit
+ 
++_GLOBAL(ppc_clone3)
++       bl      save_nvgprs
++       bl      sys_clone3
++       b       .Lsyscall_exit
++
+ _GLOBAL(ppc32_swapcontext)
+ 	bl	save_nvgprs
+ 	bl	compat_sys_swapcontext
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index f2c3bda2d39f..43f736ed47f2 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -516,3 +516,4 @@
+ 432	common	fsmount				sys_fsmount
+ 433	common	fspick				sys_fspick
+ 434	common	pidfd_open			sys_pidfd_open
++435	nospu	clone3				ppc_clone3
+-- 
+2.20.1
+
