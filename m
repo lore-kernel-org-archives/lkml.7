@@ -2,55 +2,51 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D46C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170A3C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D08A22BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D393422BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033568;
-	bh=8vP176BE1QHHUg47JaiFC0gZi7QLD3qCYVXke8Y2W60=;
+	s=default; t=1564033575;
+	bh=CqM/3sez9hDpYLVaIcw1Q3PHotGioltshOsUtlzve/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z92CZ15bEjCxBcebBer3zFhkOS71Y912BLdkh6epaWEjCWSQ19B8EKzc/sYFkwJl4
-	 YfxrYVRFik1QOjdpnxmPt7OczmC+c475CLf6YUqK8uJ1V/ejgVZXepWW1D8vrMI7I4
-	 KG+9vUB9CL2Usx8mu5w1YL3hqpYrdXsaWUDx2z8M=
+	b=x1Agr0gJklxxt0pCJ1i/SC6Fu5CUJa3YHmk+TZtQmk6liH+Y9ZVJ7fDaYUM9vzIpW
+	 22pKlhjepP413naS3JRrhkd/1UkISIG2MFENDNITX5gV1TAyskR7YENI2ozfrhOJZT
+	 M/PJXUjF2EYKle1riMAGc0lOAtKB4jpr0/8zUVws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfGYFqH (ORCPT
+        id S1728650AbfGYFqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33550 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:46:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbfGYFqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:46:05 -0400
+        id S2405319AbfGYFqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:46:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B91FE21850;
-        Thu, 25 Jul 2019 05:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D05C522BF3;
+        Thu, 25 Jul 2019 05:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033564;
-        bh=8vP176BE1QHHUg47JaiFC0gZi7QLD3qCYVXke8Y2W60=;
+        s=default; t=1564033570;
+        bh=CqM/3sez9hDpYLVaIcw1Q3PHotGioltshOsUtlzve/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ihn/YhybidxNgU10x2wsfBxJhufpuD2dGi6057icI2qrrbYjHyMu1CJ0b5KSb/CV0
-         aEEGkQBnil63k4Z1KetuIdc4AZROagBbJ6/1VXF6vsBIuWQVJeCttVrc7xF4JtH7Xf
-         Ql+/dWxA2dXE2CqHJlQR8weSripwaw3+el9f96/Q=
+        b=OD6qxEmdggZdcMk/RuYadgQBfiKKSX2LfPqbeQm0iqjcJNqW94ttB76KpHqn5TV9q
+         iQt1ketJ0pPCALv71Uqw3/UOcaRkB8O16yQACrSLm6k1mYFwZxH5XFa6oW9A5tz/W5
+         0QVVAsKsRJw+3egF6+6OGVQoKOotunCtHpwenZwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Allison Henderson <allison.henderson@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 249/271] xfs: serialize unaligned dio writes against all other dio writes
-Date:   Wed, 24 Jul 2019 21:21:58 +0200
-Message-Id: <20190724191716.531152633@linuxfoundation.org>
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 4.19 251/271] gpu: ipu-v3: ipu-ic: Fix saturation bit offset in TPMEM
+Date:   Wed, 24 Jul 2019 21:22:00 +0200
+Message-Id: <20190724191716.694285664@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,92 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 2032a8a27b5cc0f578d37fa16fa2494b80a0d00a upstream.
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-XFS applies more strict serialization constraints to unaligned
-direct writes to accommodate things like direct I/O layer zeroing,
-unwritten extent conversion, etc. Unaligned submissions acquire the
-exclusive iolock and wait for in-flight dio to complete to ensure
-multiple submissions do not race on the same block and cause data
-corruption.
+commit 3d1f62c686acdedf5ed9642b763f3808d6a47d1e upstream.
 
-This generally works in the case of an aligned dio followed by an
-unaligned dio, but the serialization is lost if I/Os occur in the
-opposite order. If an unaligned write is submitted first and
-immediately followed by an overlapping, aligned write, the latter
-submits without the typical unaligned serialization barriers because
-there is no indication of an unaligned dio still in-flight. This can
-lead to unpredictable results.
+The saturation bit was being set at bit 9 in the second 32-bit word
+of the TPMEM CSC. This isn't correct, the saturation bit is bit 42,
+which is bit 10 of the second word.
 
-To provide proper unaligned dio serialization, require that such
-direct writes are always the only dio allowed in-flight at one time
-for a particular inode. We already acquire the exclusive iolock and
-drain pending dio before submitting the unaligned dio. Wait once
-more after the dio submission to hold the iolock across the I/O and
-prevent further submissions until the unaligned I/O completes. This
-is heavy handed, but consistent with the current pre-submission
-serialization for unaligned direct writes.
+Fixes: 1aa8ea0d2bd5d ("gpu: ipu-v3: Add Image Converter unit")
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/xfs/xfs_file.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ drivers/gpu/ipu-v3/ipu-ic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 61a5ad2600e8..10f75965243c 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -529,18 +529,17 @@ xfs_file_dio_aio_write(
- 	count = iov_iter_count(from);
+--- a/drivers/gpu/ipu-v3/ipu-ic.c
++++ b/drivers/gpu/ipu-v3/ipu-ic.c
+@@ -257,7 +257,7 @@ static int init_csc(struct ipu_ic *ic,
+ 	writel(param, base++);
  
- 	/*
--	 * If we are doing unaligned IO, wait for all other IO to drain,
--	 * otherwise demote the lock if we had to take the exclusive lock
--	 * for other reasons in xfs_file_aio_write_checks.
-+	 * If we are doing unaligned IO, we can't allow any other overlapping IO
-+	 * in-flight at the same time or we risk data corruption. Wait for all
-+	 * other IO to drain before we submit. If the IO is aligned, demote the
-+	 * iolock if we had to take the exclusive lock in
-+	 * xfs_file_aio_write_checks() for other reasons.
- 	 */
- 	if (unaligned_io) {
--		/* If we are going to wait for other DIO to finish, bail */
--		if (iocb->ki_flags & IOCB_NOWAIT) {
--			if (atomic_read(&inode->i_dio_count))
--				return -EAGAIN;
--		} else {
--			inode_dio_wait(inode);
--		}
-+		/* unaligned dio always waits, bail */
-+		if (iocb->ki_flags & IOCB_NOWAIT)
-+			return -EAGAIN;
-+		inode_dio_wait(inode);
- 	} else if (iolock == XFS_IOLOCK_EXCL) {
- 		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
- 		iolock = XFS_IOLOCK_SHARED;
-@@ -548,6 +547,14 @@ xfs_file_dio_aio_write(
+ 	param = ((a[0] & 0x1fe0) >> 5) | (params->scale << 8) |
+-		(params->sat << 9);
++		(params->sat << 10);
+ 	writel(param, base++);
  
- 	trace_xfs_file_direct_write(ip, count, iocb->ki_pos);
- 	ret = iomap_dio_rw(iocb, from, &xfs_iomap_ops, xfs_dio_write_end_io);
-+
-+	/*
-+	 * If unaligned, this is the only IO in-flight. If it has not yet
-+	 * completed, wait on it before we release the iolock to prevent
-+	 * subsequent overlapping IO.
-+	 */
-+	if (ret == -EIOCBQUEUED && unaligned_io)
-+		inode_dio_wait(inode);
- out:
- 	xfs_iunlock(ip, iolock);
- 
--- 
-2.20.1
-
+ 	param = ((a[1] & 0x1f) << 27) | ((c[0][1] & 0x1ff) << 18) |
 
 
