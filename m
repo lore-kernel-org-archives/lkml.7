@@ -2,168 +2,95 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA14C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4BCC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD11229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759DE21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:54:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ik90mLvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfGXPwk (ORCPT
+        id S1726731AbfGXPyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:52:40 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:33598 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfGXPwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:52:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 23793FB04;
-        Wed, 24 Jul 2019 17:52:31 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id peRBQktrt7Wu; Wed, 24 Jul 2019 17:52:29 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 0958343419; Wed, 24 Jul 2019 17:52:26 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH 2/3] dt-bindings: display/bridge: Add binding for IMX NWL mipi dsi host controller
-Date:   Wed, 24 Jul 2019 17:52:25 +0200
-Message-Id: <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1563983037.git.agx@sigxcpu.org>
-References: <cover.1563983037.git.agx@sigxcpu.org>
+        Wed, 24 Jul 2019 11:54:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41743 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfGXPyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:54:05 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so11096586pgg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 08:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JHukw73OgEOriwdsLMhpivCbyH6cvsJtw9qqzYYPqGE=;
+        b=Ik90mLvOG+X12MYkfJNW6qLHk5ypaW1M2wjaht/c5226g1ypJeQVluQAmvTh2XlhXC
+         7If3MJd50Bgsp/roy1lFi1cKyhpozoMHxhSG3ucy/tZhW6gVM9s0OYayAeuTsS0sqxVR
+         WmAHl1K/AZrKp4dV8wxVthI00OdOR0xVxLNAE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JHukw73OgEOriwdsLMhpivCbyH6cvsJtw9qqzYYPqGE=;
+        b=oOoCvJDjZzmBK6e6T6+dOEPDDfv+yyBNnUgAikQCklC6+78uqNMWjJSaVD76nkF1N6
+         LL/NtFbdzmNK8QO7g/QPVAKhQGvD1LgKNy0m65HXz3VG0cTG3B9kAPs2em8Rh8YVDZSc
+         Nn/tvkDxt+Jjs97h/7utlagvDXTm3GRq8skZllYnyTl1YF93FtA9aYktwm+7Qbk6oSad
+         BPi9QO3Xc7Yb0fcckFtBvxlguaaZQA+SGPnTxK91730ft+IfuhgemRCFJPaDdKJw4UDJ
+         FOMZP8taH9LcI/d16inVqLVu1Y37vtMsZfvoHBHyTgfGkjEc2Mt6gey5mIoGLrNNbDcw
+         4BFg==
+X-Gm-Message-State: APjAAAW17KkKHNzPu5pHQ6sXSSKt5n9x8iXGQxwY5yJhPausOglAmggz
+        8DPqmjGRwH95oKs573DQ85MvDA==
+X-Google-Smtp-Source: APXvYqynOrVoLdvqWKYRZRVAhvhaA12eXVFnmOQowISaUwv4yMX6yfjlcao9aUbIf+j3Ef+pi6vEvw==
+X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr88610142pjz.117.1563983645153;
+        Wed, 24 Jul 2019 08:54:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o24sm91619442pfp.135.2019.07.24.08.54.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 08:54:04 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 08:54:02 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        NitinGote <nitin.r.gote@intel.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] selinux: convert struct sidtab count to refcount_t
+Message-ID: <201907240852.6D10622B2@keescook>
+References: <20190722113151.1584-1-nitin.r.gote@intel.com>
+ <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
+ <CAG48ez3zRoB7awMdb-koKYJyfP9WifTLevxLxLHioLhH=itZ-A@mail.gmail.com>
+ <201907231516.11DB47AA@keescook>
+ <CAG48ez2eXJwE+vS2_ahR9Vuc3qD8O4CDZ5Lh6DcrrOq+7VKOYQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2eXJwE+vS2_ahR9Vuc3qD8O4CDZ5Lh6DcrrOq+7VKOYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+On Wed, Jul 24, 2019 at 04:28:31PM +0200, Jann Horn wrote:
+> On Wed, Jul 24, 2019 at 12:17 AM Kees Cook <keescook@chromium.org> wrote:
+> > Perhaps we need a "statistics" counter type for these kinds of counters?
+> > "counter_t"? I bet there are a lot of atomic_t uses that are just trying
+> > to be counters. (likely most of atomic_t that isn't now refcount_t ...)
+> 
+> This isn't a statistics counter though; this thing needs ordered
+> memory accesses, which you wouldn't need for statistics.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- .../bindings/display/bridge/imx-nwl-dsi.txt   | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+Okay, it'd be a "very accurate" counter type? It _could_ be used for
+statistics. I guess what I mean is that there are a lot of places using
+atomic_t just for upward counting that don't care about wrapping, etc.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
-new file mode 100644
-index 000000000000..288fdb726d5a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
-@@ -0,0 +1,89 @@
-+Northwest Logic MIPI-DSI on imx SoCs
-+=====================================
-+
-+NWL MIPI-DSI host controller found on i.MX8 platforms. This is a
-+dsi bridge for the for the NWL MIPI-DSI host.
-+
-+Required properties:
-+- compatible: 		"fsl,<chip>-nwl-dsi"
-+	The following strings are expected:
-+			"fsl,imx8mq-nwl-dsi"
-+- reg: 			the register range of the MIPI-DSI controller
-+- interrupts: 		the interrupt number for this module
-+- clock, clock-names: 	phandles to the MIPI-DSI clocks
-+	The following clocks are expected on all platforms:
-+		"core"    - DSI core clock
-+		"tx_esc"  - TX_ESC clock (used in escape mode)
-+		"rx_esc"  - RX_ESC clock (used in escape mode)
-+		"phy_ref" - PHY_REF clock. Clock is managed by the phy. Only
-+                            used to read the clock rate.
-+- assigned-clocks:	phandles to clocks that require initial configuration
-+- assigned-clock-rates:	rates of the clocks that require initial configuration
-+	The following clocks need to have an initial configuration:
-+	"tx_esc" (20 MHz) and "rx_esc" (80 Mhz).
-+- phys: 		phandle to the phy module representing the DPHY
-+			inside the MIPI-DSI IP block
-+- phy-names: 		should be "dphy"
-+
-+Optional properties:
-+- power-domains 	phandle to the power domain
-+- src			phandle to the system reset controller (required on
-+			i.MX8MQ)
-+- mux-sel		phandle to the MUX register set (required on i.MX8MQ)
-+- assigned-clock-parents phandles to parent clocks that needs to be assigned as
-+			parents to clocks defined in assigned-clocks
-+
-+Example:
-+	mipi_dsi: mipi_dsi@30a00000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,imx8mq-nwl-dsi";
-+		reg = <0x30A00000 0x300>;
-+		clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-+			 <&clk IMX8MQ_CLK_DSI_AHB>,
-+			 <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-+			 <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-+		clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
-+		assigned-clocks = <&clk IMX8MQ_CLK_DSI_AHB>,
-+				  <&clk IMX8MQ_CLK_DSI_CORE>,
-+				  <&clk IMX8MQ_CLK_DSI_IPG_DIV>;
-+		assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>,
-+					 <&clk IMX8MQ_SYS1_PLL_266M>;
-+		assigned-clock-rates = <80000000>,
-+				       <266000000>,
-+				       <20000000>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		power-domains = <&pgc_mipi>;
-+		src = <&src>;
-+		mux-sel = <&iomuxc_gpr>;
-+		phys = <&dphy>;
-+		phy-names = "dphy";
-+		status = "okay";
-+
-+		panel@0 {
-+			compatible = "...";
-+			port {
-+			     panel_in: endpoint {
-+				       remote-endpoint = <&mipi_dsi_out>;
-+			     };
-+			};
-+		};
-+
-+		ports {
-+		      #address-cells = <1>;
-+		      #size-cells = <0>;
-+
-+		      port@0 {
-+			     reg = <0>;
-+			     mipi_dsi_in: endpoint {
-+					  remote-endpoint = <&dcss_disp0_mipi_dsi>;
-+			     };
-+		      };
-+		      port@1 {
-+			     reg = <1>;
-+			     mipi_dsi_out: endpoint {
-+					   remote-endpoint = <&panel_in>;
-+			     };
-+		      };
-+		};
-+	};
 -- 
-2.20.1
-
+Kees Cook
