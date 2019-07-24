@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E26C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9627C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2BE229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD373229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996813;
-	bh=m0fTq+hjHtyh+NTukjYK0o8EVFrit1Qv2qvErHTld2c=;
+	s=default; t=1563996816;
+	bh=l4coQT2jWIHS1qadkL5oCvqfcrlXLxCIBIK4OFgmrbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1FTxbEwM6mzqYZLrENbBiiZXfwDBBUppQKmAFc7i0Zl1Cjy+N4SqOkMMGYuBkJ8cd
-	 nYPYN9OJ+nJdDYeMMMuXTmDcTDbL3Ce4KO+gVesf6MgGLamaQfV+++uf6BhVdrskXp
-	 ZKs7YOGIKai8EkwUuQBdP+OKM8bI/kQLHCcHR9ew=
+	b=VGZOWON3VtL2jrbw/AmLJ3MRtWYz84cDV7+5yoC+nTP4MvyK/cmVFswqz8xwsudca
+	 R9k+bl4rAZQ4fxbY9vhuW26KCtyddrl6AUUJPP9Gz+G0NRELXL6oFuHiswdwaMbFpm
+	 CzlHUfn0m21mVrUTkFAwaJaEvIZziQdH7iFCdJuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388997AbfGXTdc (ORCPT
+        id S2388857AbfGXTdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:33:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388837AbfGXTda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:33:30 -0400
+        id S2388994AbfGXTdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:33:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D4DE229F3;
-        Wed, 24 Jul 2019 19:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5F0E20659;
+        Wed, 24 Jul 2019 19:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996809;
-        bh=m0fTq+hjHtyh+NTukjYK0o8EVFrit1Qv2qvErHTld2c=;
+        s=default; t=1563996812;
+        bh=l4coQT2jWIHS1qadkL5oCvqfcrlXLxCIBIK4OFgmrbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOuQ5Vq1+OFG4SKJ/GJpVUfacoxkWCedJWgZ2vUZ1N5lGbWCm5fiGnfKucqNKxjyA
-         sFPH/CqJM0CK9xAFqG58d1d9QZAUad01IIhj/yVwVYHMD3UiIEMPxYNc5i6JiIBsZ/
-         G/N6rBTjxfnONQhuPJfj5YRqleUyI5yzqBrenCrw=
+        b=CjT68A3HlNAz78XzPPAB5npvxIasy6ON8Meb2KtO8eobTEX7HMjSVBxLUpxXg7q1Y
+         jQhjt3+mhHTg9oqrfnBnQNWrVST/zvuZWKm/wDv09dIexhns13zXrCYpUb0dNGdk0I
+         jBaJjzG6LXymEt3c3s+q+xt5uu5yjW4PFe6ys+v8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 225/413] tools: bpftool: Fix json dump crash on powerpc
-Date:   Wed, 24 Jul 2019 21:18:36 +0200
-Message-Id: <20190724191751.030439363@linuxfoundation.org>
+Subject: [PATCH 5.2 226/413] net: hns3: enable broadcast promisc mode when initializing VF
+Date:   Wed, 24 Jul 2019 21:18:37 +0200
+Message-Id: <20190724191751.124550889@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,89 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa52bcbe0e72fac36b1862db08b9c09c4caefae3 ]
+[ Upstream commit 2d5066fc175ea77a733d84df9ef414b34f311641 ]
 
-Michael reported crash with by bpf program in json mode on powerpc:
+For revision 0x20, the broadcast promisc is enabled by firmware,
+it's unnecessary to enable it when initializing VF.
 
-  # bpftool prog -p dump jited id 14
-  [{
-        "name": "0xd00000000a9aa760",
-        "insns": [{
-                "pc": "0x0",
-                "operation": "nop",
-                "operands": [null
-                ]
-            },{
-                "pc": "0x4",
-                "operation": "nop",
-                "operands": [null
-                ]
-            },{
-                "pc": "0x8",
-                "operation": "mflr",
-  Segmentation fault (core dumped)
+For revision 0x21, it's necessary to enable broadcast promisc mode
+when initializing or re-initializing VF, otherwise, it will be
+unable to send and receive promisc packets.
 
-The code is assuming char pointers in format, which is not always
-true at least for powerpc. Fixing this by dumping the whole string
-into buffer based on its format.
-
-Please note that libopcodes code does not check return values from
-fprintf callback, but as per Jakub suggestion returning -1 on allocation
-failure so we do the best effort to propagate the error.
-
-Fixes: 107f041212c1 ("tools: bpftool: add JSON output for `bpftool prog dump jited *` command")
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: f01f5559cac8 ("net: hns3: don't allow vf to enable promisc mode")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/jit_disasm.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/bpf/bpftool/jit_disasm.c b/tools/bpf/bpftool/jit_disasm.c
-index 3ef3093560ba..bfed711258ce 100644
---- a/tools/bpf/bpftool/jit_disasm.c
-+++ b/tools/bpf/bpftool/jit_disasm.c
-@@ -11,6 +11,8 @@
-  * Licensed under the GNU General Public License, version 2.0 (GPLv2)
-  */
- 
-+#define _GNU_SOURCE
-+#include <stdio.h>
- #include <stdarg.h>
- #include <stdint.h>
- #include <stdio.h>
-@@ -44,11 +46,13 @@ static int fprintf_json(void *out, const char *fmt, ...)
- 	char *s;
- 
- 	va_start(ap, fmt);
-+	if (vasprintf(&s, fmt, ap) < 0)
-+		return -1;
-+	va_end(ap);
-+
- 	if (!oper_count) {
- 		int i;
- 
--		s = va_arg(ap, char *);
--
- 		/* Strip trailing spaces */
- 		i = strlen(s) - 1;
- 		while (s[i] == ' ')
-@@ -61,11 +65,10 @@ static int fprintf_json(void *out, const char *fmt, ...)
- 	} else if (!strcmp(fmt, ",")) {
- 		   /* Skip */
- 	} else {
--		s = va_arg(ap, char *);
- 		jsonw_string(json_wtr, s);
- 		oper_count++;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 5d53467ee2d2..3b02745605d4 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -2512,6 +2512,12 @@ static int hclgevf_reset_hdev(struct hclgevf_dev *hdev)
+ 		return ret;
  	}
--	va_end(ap);
-+	free(s);
- 	return 0;
- }
  
++	if (pdev->revision >= 0x21) {
++		ret = hclgevf_set_promisc_mode(hdev, true);
++		if (ret)
++			return ret;
++	}
++
+ 	dev_info(&hdev->pdev->dev, "Reset done\n");
+ 
+ 	return 0;
+@@ -2591,9 +2597,11 @@ static int hclgevf_init_hdev(struct hclgevf_dev *hdev)
+ 	 * firmware makes sure broadcast packets can be accepted.
+ 	 * For revision 0x21, default to enable broadcast promisc mode.
+ 	 */
+-	ret = hclgevf_set_promisc_mode(hdev, true);
+-	if (ret)
+-		goto err_config;
++	if (pdev->revision >= 0x21) {
++		ret = hclgevf_set_promisc_mode(hdev, true);
++		if (ret)
++			goto err_config;
++	}
+ 
+ 	/* Initialize RSS for this VF */
+ 	ret = hclgevf_rss_init_hw(hdev);
 -- 
 2.20.1
 
