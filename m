@@ -2,94 +2,189 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE10C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D81C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAFC214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQuSOeR9"
+	by mail.kernel.org (Postfix) with ESMTP id 09C71204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564000118;
+	bh=ljmNt4eEh0NMz/9kDFZauAiMqHK2zYTuqsiRF2NsJVg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=avYiAN9wrQ9OWMWJtqhHNj8T+1MENYLaEhjiqLd3yBQ20KGc7q1pNyedSMDBR9eGE
+	 mNSLBB5W+3/orQ9/8B3owJdF2A4tHwgYMciTiVZqfioTiZKGYEz2u6DKvuVUi20ex5
+	 CdwkZ97bHbekv4Lr6gNga3qiBCBJx8o7Gg4yHH9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389509AbfGXU2c (ORCPT
+        id S1727744AbfGXTeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:28:32 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40273 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbfGXTe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:29 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so21719703pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1fDn3AFXXm19Ake8tU5gjq3MWC1W7K5qFY0eF05b2Pc=;
-        b=MQuSOeR9mj5QCC1q4RsYGdjizf19viLBu8D0muFmywAqDmossyMthj1BsTRNG8GwDI
-         kxGHWNPIj3YJR1RWdDp7q+atj144Oxc6UttaYcUuFECwrQVyHnbjrs/T/hkRg6c2APan
-         pkPDkRAUv4DyfkYuDSYr8lqe07nJw1WycUm1GdzJKL+XhWhy3CedPhbfcC/oZWDJX96Z
-         HphILDBSrUAMcxlSt5OQJiUdyFQKoKLtjOWQJAoTJBz4RfW0sl5Uv3RrbHmNfO618yw6
-         QFFO1qg0PjZsg8UfzVFJexHRrSi+j6VzvJ1Lix3GIyXS5Q3uM/Ng9CEbCxPzAi2ZGMlp
-         fYMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1fDn3AFXXm19Ake8tU5gjq3MWC1W7K5qFY0eF05b2Pc=;
-        b=CPt01Uck5X5NupSF8dpzNy5eLxx1kY9AoK0EvFhqwVCJVPHQm67G6ThOre22FcD6sj
-         eRHxOjoDJI9PRB2kZ3y22pgCB0idH00pKW/bGjdr8GtVtZsQVFjtFkA9YG4/G5T/Unzd
-         3beCjwDV7u23t2yLcK0CI6a7UB9DB/kmHoQbmXazDUEx1kGmqVky60sckhb7eMBgj8I2
-         JX26pmnw7oYJ+nFDGh6grlZuQLzCz6SEODdBJy8I9PN2dZAhQoVqBf9+N551fW+yMgM6
-         Onlwe4Oo4xtb+IiGyHj43ISDtq4MN9krVonokETyg3bvQwAqj5Zg8X25OOoYhdeRdSL4
-         87Tg==
-X-Gm-Message-State: APjAAAVCtXhe8ih34a/OJ+NLjgqFucDKJS8O8BvdTPKT47XszDx695Hp
-        hi8+dCiyai10W34H6VQ0348=
-X-Google-Smtp-Source: APXvYqzWJWqJ5BleMO/Ei96DUKZpyyodxYvZ1d6IP5GguMosVsO0BWc/rWyOZUkMH7b44piPkNU3oA==
-X-Received: by 2002:a17:90a:cb15:: with SMTP id z21mr43431285pjt.87.1563996868963;
-        Wed, 24 Jul 2019 12:34:28 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
-        by smtp.gmail.com with ESMTPSA id v7sm4447177pff.87.2019.07.24.12.34.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 12:34:28 -0700 (PDT)
-Date:   Thu, 25 Jul 2019 01:04:19 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     sivanich@sgi.com, arnd@arndb.de, jhubbard@nvidia.com,
-        ira.weiny@intel.com, jglisse@redhat.com,
-        gregkh@linuxfoundation.org, william.kucharski@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 3/3] sgi-gru: Use __get_user_pages_fast in
- atomic_pte_lookup
-Message-ID: <20190724193418.GA19421@bharath12345-Inspiron-5559>
-References: <20190724160929.GA14052@infradead.org>
+        Wed, 24 Jul 2019 15:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389082AbfGXTeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:34:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AC0E229FA;
+        Wed, 24 Jul 2019 19:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996859;
+        bh=ljmNt4eEh0NMz/9kDFZauAiMqHK2zYTuqsiRF2NsJVg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZWfiEYWm/BPjDmWTLkxuqXXSapkwchlNZs5LJrHB+Pqk2+nC7a/0ea4vgz2hmlK+I
+         FaLRkha9v3MJhcfypQzxd9uQvFEYXBgVHm7CR+FyB1Ua1JgZoX+gg+fCO+Kj5D2eg2
+         4+wYeAG7xIPQAJsfFsidh+VAc0AhrQUpTELJks/0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 240/413] gtp: fix use-after-free in gtp_encap_destroy()
+Date:   Wed, 24 Jul 2019 21:18:51 +0200
+Message-Id: <20190724191752.522841774@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724160929.GA14052@infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 09:09:29AM -0700, Christoph Hellwig wrote:
-> I think the atomic_pte_lookup / non_atomic_pte_lookup helpers
-> should simply go away.  Most of the setup code is common now and should
-> be in the caller where it can be shared.  Then just do a:
-> 
-> 	if (atomic) {
-> 		__get_user_pages_fast()
-> 	} else {
-> 		get_user_pages_fast();
-> 	}
-> 
-> and we actually have an easy to understand piece of code.
+[ Upstream commit 1788b8569f5de27da09087fa3f6580d2aa04cc75 ]
 
-That makes sense. I ll do that and send v3. I ll probably cut down on a
-patch and try to fold all the changes into a single patch removing the
-*pte_lookup helpers.
+gtp_encap_destroy() is called twice.
+1. When interface is deleted.
+2. When udp socket is destroyed.
+either gtp->sk0 or gtp->sk1u could be freed by sock_put() in
+gtp_encap_destroy(). so, when gtp_encap_destroy() is called again,
+it would uses freed sk pointer.
+
+patch makes gtp_encap_destroy() to set either gtp->sk0 or gtp->sk1u to
+null. in addition, both gtp->sk0 and gtp->sk1u pointer are protected
+by rtnl_lock. so, rtnl_lock() is added.
+
+Test command:
+   gtp-link add gtp1 &
+   killall gtp-link
+   ip link del gtp1
+
+Splat looks like:
+[   83.182767] BUG: KASAN: use-after-free in __lock_acquire+0x3a20/0x46a0
+[   83.184128] Read of size 8 at addr ffff8880cc7d5360 by task ip/1008
+[   83.185567] CPU: 1 PID: 1008 Comm: ip Not tainted 5.2.0-rc6+ #50
+[   83.188469] Call Trace:
+[ ... ]
+[   83.200126]  lock_acquire+0x141/0x380
+[   83.200575]  ? lock_sock_nested+0x3a/0xf0
+[   83.201069]  _raw_spin_lock_bh+0x38/0x70
+[   83.201551]  ? lock_sock_nested+0x3a/0xf0
+[   83.202044]  lock_sock_nested+0x3a/0xf0
+[   83.202520]  gtp_encap_destroy+0x18/0xe0 [gtp]
+[   83.203065]  gtp_encap_disable.isra.14+0x13/0x50 [gtp]
+[   83.203687]  gtp_dellink+0x56/0x170 [gtp]
+[   83.204190]  rtnl_delete_link+0xb4/0x100
+[ ... ]
+[   83.236513] Allocated by task 976:
+[   83.236925]  save_stack+0x19/0x80
+[   83.237332]  __kasan_kmalloc.constprop.3+0xa0/0xd0
+[   83.237894]  kmem_cache_alloc+0xd8/0x280
+[   83.238360]  sk_prot_alloc.isra.42+0x50/0x200
+[   83.238874]  sk_alloc+0x32/0x940
+[   83.239264]  inet_create+0x283/0xc20
+[   83.239684]  __sock_create+0x2dd/0x540
+[   83.240136]  __sys_socket+0xca/0x1a0
+[   83.240550]  __x64_sys_socket+0x6f/0xb0
+[   83.240998]  do_syscall_64+0x9c/0x450
+[   83.241466]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   83.242061]
+[   83.242249] Freed by task 0:
+[   83.242616]  save_stack+0x19/0x80
+[   83.243013]  __kasan_slab_free+0x111/0x150
+[   83.243498]  kmem_cache_free+0x89/0x250
+[   83.244444]  __sk_destruct+0x38f/0x5a0
+[   83.245366]  rcu_core+0x7e9/0x1c20
+[   83.245766]  __do_softirq+0x213/0x8fa
+
+Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/gtp.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index b770335c03c1..5615cdb7202c 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -285,13 +285,17 @@ static int gtp1u_udp_encap_recv(struct gtp_dev *gtp, struct sk_buff *skb)
+ 	return gtp_rx(pctx, skb, hdrlen, gtp->role);
+ }
+ 
+-static void gtp_encap_destroy(struct sock *sk)
++static void __gtp_encap_destroy(struct sock *sk)
+ {
+ 	struct gtp_dev *gtp;
+ 
+ 	lock_sock(sk);
+ 	gtp = sk->sk_user_data;
+ 	if (gtp) {
++		if (gtp->sk0 == sk)
++			gtp->sk0 = NULL;
++		else
++			gtp->sk1u = NULL;
+ 		udp_sk(sk)->encap_type = 0;
+ 		rcu_assign_sk_user_data(sk, NULL);
+ 		sock_put(sk);
+@@ -299,12 +303,19 @@ static void gtp_encap_destroy(struct sock *sk)
+ 	release_sock(sk);
+ }
+ 
++static void gtp_encap_destroy(struct sock *sk)
++{
++	rtnl_lock();
++	__gtp_encap_destroy(sk);
++	rtnl_unlock();
++}
++
+ static void gtp_encap_disable_sock(struct sock *sk)
+ {
+ 	if (!sk)
+ 		return;
+ 
+-	gtp_encap_destroy(sk);
++	__gtp_encap_destroy(sk);
+ }
+ 
+ static void gtp_encap_disable(struct gtp_dev *gtp)
+@@ -1043,6 +1054,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
+ 		return -EINVAL;
+ 	}
+ 
++	rtnl_lock();
+ 	rcu_read_lock();
+ 
+ 	gtp = gtp_find_dev(sock_net(skb->sk), info->attrs);
+@@ -1067,6 +1079,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
+ 
+ out_unlock:
+ 	rcu_read_unlock();
++	rtnl_unlock();
+ 	return err;
+ }
+ 
+-- 
+2.20.1
+
+
+
