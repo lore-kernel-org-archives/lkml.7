@@ -2,182 +2,95 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B958C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EC2C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3071821911
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9D32147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbHzUbNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfGXVcR (ORCPT
+        id S1728982AbfGXVfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:32:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42496 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfGXVcR (ORCPT
+        Wed, 24 Jul 2019 17:35:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51488 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGXVfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:32:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h18so47027296qtm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 14:32:16 -0700 (PDT)
+        Wed, 24 Jul 2019 17:35:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so43099689wma.1;
+        Wed, 24 Jul 2019 14:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IEg8P4rVHcrzMYhNW3Mur+QDB3HpJjXn10bDzy/W1dU=;
+        b=FbHzUbNIRJIGHu+HQ5A9Eh6R1q4UeAJh8+tWiwT08ohIPEMFxT7aVfx9zgzsQDD2fB
+         KruNsqSXmMCdS9HO40PV7eAKwpEej7xONalYlw0+s1ICZinA049e2myqlSOggtQGPrNY
+         umzJYNIiljkPZOSYVVN61ciuv7ul4tLI/vccY6R/K4+idnp0hYbBJVISZiCMOLIBnVZe
+         tZ0QwZai8ddysrQ8HI/LZFmGg3edb6NvrU48w5bbEQHuMmqyIfe1opf3H/aSTKUinm6h
+         yDOHdrqXmd9hjLBGHOU+ReHxZPJIx2c1qVs66EqTvE32zKy9DW/UkL2PckJHaGlswNxf
+         rFcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ai5coBa0SEbsnkfCobaB/l8UgFxaRhE6zMbrvqUmDKQ=;
-        b=UYG2HakKCkkN0HlrX8wbrBgoVDnsOIoSE3tIXoeSXQvghlxzfwNs4o/iM2aBaddwo7
-         oMIz21NdQa3cj//DDGS4GvDieS2E89n2wnpXr1dIRChaiSNX2m5/SUlPLLTEfgGYtZT7
-         nUNYPbtOGgrmtk2LpUUZwvsr4YeiurQyLKoQtu5/BwIY3evRE2nJF+n4YvwG3dVh3GkA
-         lIggMjCu1gfrIgN4GGhusxsegJdACQOH/+uuIhyiJ/KZyIt5/tUxN/s7pqo4q8Sz/JJY
-         F3pTIStK+PRMha+GOdWWCUlhbbwDOn79OA65d59dUu2VgEJbP50B8ZrgBzQAolAwSs+c
-         K0xg==
-X-Gm-Message-State: APjAAAVy778mXh4DrPGd916GF/z8DmtW4Sxt+VnP7sRhYHMO0aSIeqb+
-        cIIbuzPDpFQVynkYw+Z+KgVYVA==
-X-Google-Smtp-Source: APXvYqyH0YRHgL6uAQpFcl1HZau/89CK88ahnBR6ktX2vEame2RO+xp6GtK5MlfC7dIethbqH316WQ==
-X-Received: by 2002:ac8:2aaa:: with SMTP id b39mr60096621qta.24.1564003936443;
-        Wed, 24 Jul 2019 14:32:16 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id b13sm29314624qtk.55.2019.07.24.14.32.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IEg8P4rVHcrzMYhNW3Mur+QDB3HpJjXn10bDzy/W1dU=;
+        b=XhBJRatI82gKXyYvlRRdgGWs5xdhK5ihOR7fnovkuvTAcCc6mDz9ryUyvtduK8DJFn
+         qV1Lch1LVtVO9LNYgWbi0qaM0zaKEtllzkDcMOLTt24V+UJ6Qot8y+fabxNHKuPr6IdK
+         4GiuUZbQQqESoz/6F/PKaUe9gGec/rfa7cOkN13uKD1TR0xEeEk3b6LKHUwO+EWUZx4c
+         odODl0cu2jhQu39Nn49lMXFSsAGpfs6MFWGiTUl+tl81Tjqd+OoO6HJv5dDCxsy/6Jfh
+         INpuiq0siQ8EzSpn0RwJ2WegtRffYW2jF44LusetkgTmjB40n00EVbf7WREgekQDLOXy
+         6d4g==
+X-Gm-Message-State: APjAAAUQYTLQNjxVSoGalnx6wKHbhX0fxSixDMW/WXOpLYPcMujYkYvL
+        CUMMMx13aT7ZNl0znrgc1Ds=
+X-Google-Smtp-Source: APXvYqymZNM9wh4T1b+PC2J4rXPEdqjaxxAtVl8cEwb1iDURMmx3hTPvsO5YYbiqtbZ1LUihLIX6Hw==
+X-Received: by 2002:a1c:a019:: with SMTP id j25mr75148878wme.95.1564004130210;
+        Wed, 24 Jul 2019 14:35:30 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.147.168])
+        by smtp.gmail.com with ESMTPSA id u186sm80799083wmu.26.2019.07.24.14.35.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 14:32:15 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 17:32:07 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
-Message-ID: <20190724154840-mutt-send-email-mst@kernel.org>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
- <f7578309-dd36-bda0-6a30-34a6df21faca@redhat.com>
- <20190724153003-mutt-send-email-mst@kernel.org>
- <b3279b70-7a64-a456-cbfa-2a5ec3e9468e@redhat.com>
+        Wed, 24 Jul 2019 14:35:29 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, josef@toxicpanda.com
+Cc:     Pavel Begunkov <asml.silence@gmail.com>
+Subject: [RESEND RFC PATCH 0/2] Fix misuse of blk_rq_stats in blk-iolatency
+Date:   Thu, 25 Jul 2019 00:35:08 +0300
+Message-Id: <cover.1560510935.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3279b70-7a64-a456-cbfa-2a5ec3e9468e@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20190724213508.WhPwfefPRdKSh-VxGJgIa9MGp9LQxqdNcSEpKKbEZck@z>
 
-On Wed, Jul 24, 2019 at 09:47:24PM +0200, David Hildenbrand wrote:
-> On 24.07.19 21:31, Michael S. Tsirkin wrote:
-> > On Wed, Jul 24, 2019 at 08:41:33PM +0200, David Hildenbrand wrote:
-> >> On 24.07.19 20:40, Nitesh Narayan Lal wrote:
-> >>>
-> >>> On 7/24/19 12:54 PM, Alexander Duyck wrote:
-> >>>> This series provides an asynchronous means of hinting to a hypervisor
-> >>>> that a guest page is no longer in use and can have the data associated
-> >>>> with it dropped. To do this I have implemented functionality that allows
-> >>>> for what I am referring to as page hinting
-> >>>>
-> >>>> The functionality for this is fairly simple. When enabled it will allocate
-> >>>> statistics to track the number of hinted pages in a given free area. When
-> >>>> the number of free pages exceeds this value plus a high water value,
-> >>>> currently 32,
-> >>> Shouldn't we configure this to a lower number such as 16?
-> >>>>  it will begin performing page hinting which consists of
-> >>>> pulling pages off of free list and placing them into a scatter list. The
-> >>>> scatterlist is then given to the page hinting device and it will perform
-> >>>> the required action to make the pages "hinted", in the case of
-> >>>> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> >>>> and as such they are forced out of the guest. After this they are placed
-> >>>> back on the free list, and an additional bit is added if they are not
-> >>>> merged indicating that they are a hinted buddy page instead of a standard
-> >>>> buddy page. The cycle then repeats with additional non-hinted pages being
-> >>>> pulled until the free areas all consist of hinted pages.
-> >>>>
-> >>>> I am leaving a number of things hard-coded such as limiting the lowest
-> >>>> order processed to PAGEBLOCK_ORDER,
-> >>> Have you considered making this option configurable at the compile time?
-> >>>>  and have left it up to the guest to
-> >>>> determine what the limit is on how many pages it wants to allocate to
-> >>>> process the hints.
-> >>> It might make sense to set the number of pages to be hinted at a time from the
-> >>> hypervisor.
-> >>>>
-> >>>> My primary testing has just been to verify the memory is being freed after
-> >>>> allocation by running memhog 79g on a 80g guest and watching the total
-> >>>> free memory via /proc/meminfo on the host. With this I have verified most
-> >>>> of the memory is freed after each iteration. As far as performance I have
-> >>>> been mainly focusing on the will-it-scale/page_fault1 test running with
-> >>>> 16 vcpus. With that I have seen at most a 2% difference between the base
-> >>>> kernel without these patches and the patches with virtio-balloon disabled.
-> >>>> With the patches and virtio-balloon enabled with hinting the results
-> >>>> largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
-> >>>> drop in performance as I approached 16 threads,
-> >>> I think this is acceptable.
-> >>>>  however on the the lastest
-> >>>> linux-next kernel I saw roughly a 4% to 5% improvement in performance for
-> >>>> all tests with 8 or more threads. 
-> >>> Do you mean that with your patches the will-it-scale/page_fault1 numbers were
-> >>> better by 4-5% over an unmodified kernel?
-> >>>> I believe the difference seen is due to
-> >>>> the overhead for faulting pages back into the guest and zeroing of memory.
-> >>> It may also make sense to test these patches with netperf to observe how much
-> >>> performance drop it is introducing.
-> >>>> Patch 4 is a bit on the large side at about 600 lines of change, however
-> >>>> I really didn't see a good way to break it up since each piece feeds into
-> >>>> the next. So I couldn't add the statistics by themselves as it didn't
-> >>>> really make sense to add them without something that will either read or
-> >>>> increment/decrement them, or add the Hinted state without something that
-> >>>> would set/unset it. As such I just ended up adding the entire thing as
-> >>>> one patch. It makes it a bit bigger but avoids the issues in the previous
-> >>>> set where I was referencing things before they had been added.
-> >>>>
-> >>>> Changes from the RFC:
-> >>>> https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> >>>> Moved aeration requested flag out of aerator and into zone->flags.
-> >>>> Moved bounary out of free_area and into local variables for aeration.
-> >>>> Moved aeration cycle out of interrupt and into workqueue.
-> >>>> Left nr_free as total pages instead of splitting it between raw and aerated.
-> >>>> Combined size and physical address values in virtio ring into one 64b value.
-> >>>>
-> >>>> Changes from v1:
-> >>>> https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> >>>> Dropped "waste page treatment" in favor of "page hinting"
-> >>> We may still have to try and find a better name for virtio-balloon side changes.
-> >>> As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
-> >>
-> >> We should have named that free page reporting, but that train already
-> >> has left.
-> > 
-> > I think VIRTIO_BALLOON_F_FREE_PAGE_HINT is different and arguably
-> > actually does provide hints.
-> 
-> I guess it depends on the point of view (e.g., getting all free pages
-> feels more like a report). But I could also live with using the term
-> reporting in this context.
-> 
-> We could go ahead and name it all "page reporting", would also work for me.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-So there are actually three differences between the machanisms:
-1. VIRTIO_BALLOON_F_FREE_PAGE_HINT sometimes reports pages which might no
-   longer be on the free list (with subtle limitations which sometimes
-   still allow hypervisor to discard the pages)
-2. VIRTIO_BALLOON_F_FREE_PAGE_HINT starts reporting when requested by
-   host
-3. VIRTIO_BALLOON_F_FREE_PAGE_HINT is not incremental: each request
-   by host reports all free memory
+There are implicit assumptions about struct blk_rq_stats, which make
+it's very easy to misuse. The first patch fixes consequences, and the
+second employs type-system to prevent recurrences.
 
-By comparison, the proposed patches:
-- always report only actually free pages
-- report at a random time
-- report incrementally
+Acked-by: Josef Bacik <josef@toxicpanda.com>
 
+Pavel Begunkov (2):
+  blk-iolatency: Fix zero mean in previous stats
+  blk-stats: Introduce explicit stat staging buffers
 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
+ block/blk-iolatency.c     | 60 ++++++++++++++++++++++++++++++---------
+ block/blk-stat.c          | 48 +++++++++++++++++++++++--------
+ block/blk-stat.h          |  9 ++++--
+ include/linux/blk_types.h |  6 ++++
+ 4 files changed, 94 insertions(+), 29 deletions(-)
+
+-- 
+2.22.0
+
