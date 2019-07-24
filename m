@@ -5,50 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC83C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873CCC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64A822BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6105E22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033186;
-	bh=l1Cm2EL1qXcjbICe/XrmTns1yILFXoIX9ISpqXLSLXk=;
+	s=default; t=1564033195;
+	bh=PEofQeh1xLeuSIEsoTeLSK3obeB2xLua1eztJzQA6fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cHofMF+7yITXBBhiwrOHWVOvy1NTLwLpZSMgjOB/U1AZZE5sAfLorD9c8+/MLezaD
-	 E2JfIfXsq+GLQL2UGUMGki3S5CBVplHFcOYWMYAdi8XYqKj7pXHw9McWWQy4yvYnHH
-	 JU2Fg9omtNKHeAfPnYePwwahzQxSBe/jKfu/yiZs=
+	b=UA+dcRA/QpkfAw9tl7lE8X9uLcF+DDc6gMekKNjXatg/Ucq+xuVNN9o2E7Q2zA+sY
+	 qAJjUnY6F35wlKs9oulzG7GKR0ib7xJ9BdIHnc7EZ2awet6Pan2bO8s/zY9GaXEYhN
+	 XJc/zw5Pb5CHx0TzK/+Yz7/70+lPYGi8jT3VAl/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404146AbfGYFjo (ORCPT
+        id S2404216AbfGYFjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:39:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404118AbfGYFjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:40 -0400
+        id S2404180AbfGYFju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:39:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2D9E22BED;
-        Thu, 25 Jul 2019 05:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A86F22C7C;
+        Thu, 25 Jul 2019 05:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033179;
-        bh=l1Cm2EL1qXcjbICe/XrmTns1yILFXoIX9ISpqXLSLXk=;
+        s=default; t=1564033190;
+        bh=PEofQeh1xLeuSIEsoTeLSK3obeB2xLua1eztJzQA6fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vI6KY76nVVbqgeQO7W0ND8/hQjuFuCM/nGTcg6vMuEeILZWcc8zywLdZryKU0bVF9
-         S6Ehqq2BR0oGKjz0wJbGr8JBKxNLNWg/azL7oHp9/TGDNi+w1jVw6wjoExovvAU9+U
-         BGD41LSCsF4Nf5By6Pc5jf9f82DLMDfXomiZTGcI=
+        b=Aei5qrvExoUzwO43EqIX0fd1MiJTIglyL+o4bdvPYQcl5SJJ3PKQzGjYladnNH2PO
+         QPUItJ/hqKs3xorizOVc5ViptTdjW/zo8OOt/n7Yd9YBTQiog60MmVEZHqOg5h404X
+         ebZtnVN56vyI1FGEN3xrzUBP3pO1UPLGfc01EZ3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Borislav Petkov <bp@suse.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pu Wen <puwen@hygon.cn>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/271] ipoib: correcly show a VF hardware address
-Date:   Wed, 24 Jul 2019 21:19:11 +0200
-Message-Id: <20190724191702.214797213@linuxfoundation.org>
+Subject: [PATCH 4.19 083/271] x86/cacheinfo: Fix a -Wtype-limits warning
+Date:   Wed, 24 Jul 2019 21:19:12 +0200
+Message-Id: <20190724191702.299978898@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,55 +68,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
+[ Upstream commit 1b7aebf0487613033aff26420e32fa2076d52846 ]
 
-in the case of IPoIB with SRIOV enabled hardware
-ip link show command incorrecly prints
-0 instead of a VF hardware address.
+cpuinfo_x86.x86_model is an unsigned type, so comparing against zero
+will generate a compilation warning:
 
-Before:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
-trust off, query_rss off
-...
-After:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0     link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
-checking off, link-state disable, trust off, query_rss off
+  arch/x86/kernel/cpu/cacheinfo.c: In function 'cacheinfo_amd_init_llc_id':
+  arch/x86/kernel/cpu/cacheinfo.c:662:19: warning: comparison is always true \
+    due to limited range of data type [-Wtype-limits]
 
-v1->v2: just copy an address without modifing ifla_vf_mac
-v2->v3: update the changelog
+Remove the unnecessary lower bound check.
 
-Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
-Acked-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ [ bp: Massage. ]
+
+Fixes: 68091ee7ac3c ("x86/CPU/AMD: Calculate last level cache ID from number of sharing threads")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1560954773-11967-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/cpu/cacheinfo.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 30f840f874b3..009615499b37 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1997,6 +1997,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
- 		return err;
- 
- 	ivf->vf = vf;
-+	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
- 
- 	return 0;
- }
+diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+index 0c5fcbd998cf..9d863e8f9b3f 100644
+--- a/arch/x86/kernel/cpu/cacheinfo.c
++++ b/arch/x86/kernel/cpu/cacheinfo.c
+@@ -651,8 +651,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id)
+ 	if (c->x86 < 0x17) {
+ 		/* LLC is at the node level. */
+ 		per_cpu(cpu_llc_id, cpu) = node_id;
+-	} else if (c->x86 == 0x17 &&
+-		   c->x86_model >= 0 && c->x86_model <= 0x1F) {
++	} else if (c->x86 == 0x17 && c->x86_model <= 0x1F) {
+ 		/*
+ 		 * LLC is at the core complex level.
+ 		 * Core complex ID is ApicId[3] for these processors.
 -- 
 2.20.1
 
