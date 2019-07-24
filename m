@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5126C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AC0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92264205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB0A22ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998202;
-	bh=jrSnnPc5i3Z5aArqF4vIMzM7X95AH+aS2uXtSjz8qVs=;
+	s=default; t=1563998206;
+	bh=4eUvF33BJGJmLIcTfsllVxlZ1WR6hcuXpNWqFJYb9Xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FSdx1baWmuW4R8zx/227Zi65ELxWf3jit9rCIGEMr0J8N1YW+xNuZzbMLtWdI+xPr
-	 uq7aOTNYDuE5LTTNjjefVvZq+tVZ2jG6ZmM/iUkQUNmFNf/SBdp5mbJC8xDu2I9BQO
-	 alxMfSTcsCj0vvLWsBjksSR7XHMKZvgzz+pgSoiw=
+	b=siPgtd+E63nPoLwYSIwLlrEs5nCJ7vTFid8IBZ8xwXd9vBVc01OHCNyDjUQiPQ2Kq
+	 thAyqTVZNMHDCTWKD+EZWqv+7Ql3hM1s8VLnpGJGX8+2VGGSuX9UObRYj6HSexHzZV
+	 16OfaKPNElKXhR4j3zgaCOS4RI5qNdYTadr4wfYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404695AbfGXT4l (ORCPT
+        id S2404704AbfGXT4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41290 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404404AbfGXT4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:40 -0400
+        id S2404404AbfGXT4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4242D205C9;
-        Wed, 24 Jul 2019 19:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CC422BEB;
+        Wed, 24 Jul 2019 19:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998199;
-        bh=jrSnnPc5i3Z5aArqF4vIMzM7X95AH+aS2uXtSjz8qVs=;
+        s=default; t=1563998202;
+        bh=4eUvF33BJGJmLIcTfsllVxlZ1WR6hcuXpNWqFJYb9Xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PYtJFiTVf421FtDbf6Gb0uMAwyvSQf43VM/uJp1HSDRC/0aQ6hw5Mhu3PmVC6YVRc
-         5SZ1tuIhl3Q+D69ylNvdgJ6ay5huUk5gc8lGDmnv0MN+BSKnLrzvcGbvq4/fCXB/r7
-         ge/royKEc+0yZWb4ojFd87JVIrYebiS4byZjoiqU=
+        b=1+LGyNgzhCmzr/SmrLfGitTEWkGXNGyqnhVZyqx0qqozbfO8BsrGHHkuQ+9mGFvGi
+         U7Edkm+apNXSDvh97Ep/E20dGBJVz/xwT+K+9/mD8PenmT45zPS+OEpz/JJoB1J6FJ
+         zoLrRCQeKwb2fVXg2C4q22PLaBZ320uC3brHAi90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.1 254/371] cifs: flush before set-info if we have writeable handles
-Date:   Wed, 24 Jul 2019 21:20:06 +0200
-Message-Id: <20190724191743.730187293@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.1 281/371] pnfs: Fix a problem where we gratuitously start doing I/O through the MDS
+Date:   Wed, 24 Jul 2019 21:20:33 +0200
+Message-Id: <20190724191745.428451845@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,61 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit aa081859b10c5d8b19f5c525c78883a59d73c2b8 upstream.
+commit 58bbeab425c6c5e318f5b6ae31d351331ddfb34b upstream.
 
-Servers can defer destaging any data and updating the mtime until close().
-This means that if we do a setinfo to modify the mtime while other handles
-are open for write the server may overwrite our setinfo timestamps when
-if flushes the file on close() of the writeable handle.
+If the client has to stop in pnfs_update_layout() to wait for another
+layoutget to complete, it currently exits and defaults to I/O through
+the MDS if the layoutget was successful.
 
-To solve this we add an explicit flush when the mtime is about to
-be updated.
-
-This fixes "cp -p" to preserve mtime when copying a file onto an SMB2 share.
-
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: d03360aaf5cc ("pNFS: Ensure we return the error if someone kills...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.20+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/nfs/pnfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2371,6 +2371,8 @@ cifs_setattr_nounix(struct dentry *diren
- 	struct inode *inode = d_inode(direntry);
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
- 	struct cifsInodeInfo *cifsInode = CIFS_I(inode);
-+	struct cifsFileInfo *wfile;
-+	struct cifs_tcon *tcon;
- 	char *full_path = NULL;
- 	int rc = -EACCES;
- 	__u32 dosattr = 0;
-@@ -2417,6 +2419,20 @@ cifs_setattr_nounix(struct dentry *diren
- 	mapping_set_error(inode->i_mapping, rc);
- 	rc = 0;
- 
-+	if (attrs->ia_valid & ATTR_MTIME) {
-+		rc = cifs_get_writable_file(cifsInode, false, &wfile);
-+		if (!rc) {
-+			tcon = tlink_tcon(wfile->tlink);
-+			rc = tcon->ses->server->ops->flush(xid, tcon, &wfile->fid);
-+			cifsFileInfo_put(wfile);
-+			if (rc)
-+				return rc;
-+		} else if (rc != -EBADF)
-+			return rc;
-+		else
-+			rc = 0;
-+	}
-+
- 	if (attrs->ia_valid & ATTR_SIZE) {
- 		rc = cifs_set_file_size(inode, attrs, xid, full_path);
- 		if (rc != 0)
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -1890,7 +1890,7 @@ lookup_again:
+ 		spin_unlock(&ino->i_lock);
+ 		lseg = ERR_PTR(wait_var_event_killable(&lo->plh_outstanding,
+ 					!atomic_read(&lo->plh_outstanding)));
+-		if (IS_ERR(lseg) || !list_empty(&lo->plh_segs))
++		if (IS_ERR(lseg))
+ 			goto out_put_layout_hdr;
+ 		pnfs_put_layout_hdr(lo);
+ 		goto lookup_again;
 
 
