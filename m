@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EA0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3524AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C20220693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0155C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999414;
-	bh=MCkv5BjsVuLHwUMT3sTujcOVzdy99s7Ox6q63NxfFqY=;
+	s=default; t=1563999420;
+	bh=afFU0aM8UiXGmjSi7LgqQ+z7YK9DmF3xnMSk4DBEfRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAnTb7HEMV/ReMmO+1Cv6Qg/FOfPTVbthvWFgTU3wRkCuAUrmGk5qmhn70aau9AMr
-	 pEUCecHh640BbPcN9SH6Z4wXAcI5mNCPB8asc0YaVz6rqa8PGpo5xop7q1Gr4hqq7d
-	 XlhCvPNrz9DR52DGD7monUsVVo9m4LmncaxvTpLY=
+	b=nQ42b2p9o3wYGOcNuCcSTMONWuYqNOaQI6kWD0WebjlfcVObxLxHll6R1k2kJDe0g
+	 vTNTYP4uVhgcchcHqXncF8YF1E6ZIJsRY44PPCK6i/MCC3nb1H76I0t7N6HxMXGa5C
+	 8gTtbuHfkrObe17QQc/3c5kcT1XQh0VCvBe7urxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403979AbfGXTut (ORCPT
+        id S2392858AbfGXUQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:50:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59580 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:16:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403920AbfGXTum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:42 -0400
+        id S2403902AbfGXTut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEF721873;
-        Wed, 24 Jul 2019 19:50:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCB5820659;
+        Wed, 24 Jul 2019 19:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997842;
-        bh=MCkv5BjsVuLHwUMT3sTujcOVzdy99s7Ox6q63NxfFqY=;
+        s=default; t=1563997848;
+        bh=afFU0aM8UiXGmjSi7LgqQ+z7YK9DmF3xnMSk4DBEfRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3wM9atUgEDb+TrLX3mlzdbATvMKqO8/85jPhIrNDpuZzxbS0asXJxAjG8HmCzyLs
-         oDE55Om4KyUtYfDQnxsibjxZpwTUStErvcXIi4mCPTTycNSOucsZjQKseWp2v5ml2C
-         D7eMdwdiNZV0IFuawUL32oGa3KVKJMYtYHV8FiLI=
+        b=OEzY5FV9CiatYWXVeuDsiHL3d6cSFtd/5sJ6VODJqZHRV2IMv/v80AGLU9YeRo+Sz
+         igW5fA7SIVmAffTIcVWttM65uVKxqqQuind7LaaaL8lYjZzfKcA8vYDDXid1yA1CNT
+         2eawQW8Yf16JJYopeqdvRbe+SOHApVJY2Caevf2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Georg Waibel <georg.waibel@sensor-technik.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 160/371] gpio: Fix return value mismatch of function gpiod_get_from_of_node()
-Date:   Wed, 24 Jul 2019 21:18:32 +0200
-Message-Id: <20190724191737.210081617@linuxfoundation.org>
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 122/371] nvme-pci: set the errno on ctrl state change error
+Date:   Wed, 24 Jul 2019 21:17:54 +0200
+Message-Id: <20190724191734.051789441@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,126 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 025bf37725f1929542361eef2245df30badf242e ]
+[ Upstream commit e71afda49335620e3d9adf56015676db33a3bd86 ]
 
-In case the requested gpio property is not found in the device tree, some
-callers of gpiod_get_from_of_node() expect a return value of NULL, others
-expect -ENOENT.
-In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-Currently it gets a NULL, which breaks the loop that tries all
-gpio_suffixes. The result is that a gpio property is not found, even
-though it is there.
+This patch removes the confusing assignment of the variable result at
+the time of declaration and sets the value in error cases next to the
+places where the actual error is happening.
 
-This patch changes gpiod_get_from_of_node() to return -ENOENT instead
-of NULL when the requested gpio property is not found in the device
-tree. Additionally it modifies all calling functions to properly
-evaluate the return value.
+Here we also set the result value to -ENODEV when we fail at the final
+ctrl state transition in nvme_reset_work(). Without this assignment
+result will hold 0 from nvme_setup_io_queue() and on failure 0 will be
+passed to he nvme_remove_dead_ctrl() from final state transition.
 
-Another approach would be to leave the return value of
-gpiod_get_from_of_node() as is and fix the bug in
-devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
-to be reworked. The effort would be the same as with the chosen solution.
-
-Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c                 | 6 +-----
- drivers/regulator/da9211-regulator.c   | 2 ++
- drivers/regulator/s2mps11.c            | 4 +++-
- drivers/regulator/s5m8767.c            | 4 +++-
- drivers/regulator/tps65090-regulator.c | 7 ++++---
- 5 files changed, 13 insertions(+), 10 deletions(-)
+ drivers/nvme/host/pci.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index bca3e7740ef6..fd1344056e1d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4232,8 +4232,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_index);
-  *
-  * Returns:
-  * On successful request the GPIO pin is configured in accordance with
-- * provided @dflags. If the node does not have the requested GPIO
-- * property, NULL is returned.
-+ * provided @dflags.
-  *
-  * In case of error an ERR_PTR() is returned.
-  */
-@@ -4255,9 +4254,6 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
- 					index, &flags);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 21a51a0ff4d7..9c956ff5344d 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2504,11 +2504,13 @@ static void nvme_reset_work(struct work_struct *work)
+ 	struct nvme_dev *dev =
+ 		container_of(work, struct nvme_dev, ctrl.reset_work);
+ 	bool was_suspend = !!(dev->ctrl.ctrl_config & NVME_CC_SHN_NORMAL);
+-	int result = -ENODEV;
++	int result;
+ 	enum nvme_ctrl_state new_state = NVME_CTRL_LIVE;
  
- 	if (!desc || IS_ERR(desc)) {
--		/* If it is not there, just return NULL */
--		if (PTR_ERR(desc) == -ENOENT)
--			return NULL;
- 		return desc;
+-	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING))
++	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING)) {
++		result = -ENODEV;
+ 		goto out;
++	}
+ 
+ 	/*
+ 	 * If we're called to reset a live controller first shut it down before
+@@ -2606,6 +2608,7 @@ static void nvme_reset_work(struct work_struct *work)
+ 	if (!nvme_change_ctrl_state(&dev->ctrl, new_state)) {
+ 		dev_warn(dev->ctrl.device,
+ 			"failed to mark controller state %d\n", new_state);
++		result = -ENODEV;
+ 		goto out;
  	}
  
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index 4d7fe4819c1c..4e95e3d0fcd5 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -299,6 +299,8 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
- 				  0,
- 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				  "da9211-enable");
-+		if (IS_ERR(pdata->gpiod_ren[n]))
-+			pdata->gpiod_ren[n] = NULL;
- 		n++;
- 	}
- 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 134c62db36c5..b518a81f75a3 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -821,7 +821,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"s2mps11-regulator");
--		if (IS_ERR(gpio[reg])) {
-+		if (PTR_ERR(gpio[reg]) == -ENOENT)
-+			gpio[reg] = NULL;
-+		else if (IS_ERR(gpio[reg])) {
- 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
- 				reg, rdata[reg].name);
- 			continue;
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index bb9d1a083299..6ca27e9d5ef7 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -574,7 +574,9 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 			0,
- 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 			"s5m8767");
--		if (IS_ERR(rdata->ext_control_gpiod))
-+		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
-+			rdata->ext_control_gpiod = NULL;
-+		else if (IS_ERR(rdata->ext_control_gpiod))
- 			return PTR_ERR(rdata->ext_control_gpiod);
- 
- 		rdata->id = i;
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index 0614551796a1..f6466db57900 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -381,11 +381,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 								    "dcdc-ext-control-gpios", 0,
- 								    gflags,
- 								    "tps65090");
--			if (IS_ERR(rpdata->gpiod))
--				return ERR_CAST(rpdata->gpiod);
--			if (!rpdata->gpiod)
-+			if (PTR_ERR(rpdata->gpiod) == -ENOENT) {
- 				dev_err(&pdev->dev,
- 					"could not find DCDC external control GPIO\n");
-+				rpdata->gpiod = NULL;
-+			} else if (IS_ERR(rpdata->gpiod))
-+				return ERR_CAST(rpdata->gpiod);
- 		}
- 
- 		if (of_property_read_u32(tps65090_matches[idx].of_node,
 -- 
 2.20.1
 
