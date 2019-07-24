@@ -8,126 +8,97 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854B5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13E7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE6920449
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66148229F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:11:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpmUwRuI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otq0W+Or"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfGXCGU (ORCPT
+        id S1728902AbfGXCLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:06:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45934 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726544AbfGXCGU (ORCPT
+        Tue, 23 Jul 2019 22:11:41 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36955 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726544AbfGXCLk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:06:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o13so20330081pgp.12;
-        Tue, 23 Jul 2019 19:06:20 -0700 (PDT)
+        Tue, 23 Jul 2019 22:11:40 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so20073537pfa.4;
+        Tue, 23 Jul 2019 19:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eUEsu1aJQ43M1dFiRUsIH0xR8QMlq0eMWSMkix2nG/s=;
-        b=SpmUwRuIct58AB5vD4iMiE7f2Wp/E4iU/jQyuqwEp/xyS9ElMer8ikqdVjtrNj3EkT
-         Z42ODOk1Yi6RlKG6jAwgXhbFKJawYA6q1E2S5mKgw37wmAJ0dbIOR/7Ng5qdm6DqkK3p
-         HkACORz9DtEO0gLLCRp1IhH1j4jhb0lfpavqRe5LVPc7fMLq1BxTMGMwkHh/0JN4zpBE
-         6RgXGsITgVOh8i1Vz3e5ucjLC9x6SeWBoWq9ZrUThpLGAtlh52CwWYJdgCXPUWW5BCPb
-         0VhQPINV/CrfaiEP/V8C2z+Vuz7kYTzXGYtIYijCf0VnuoqEtZBJmf39NE3/tVAcZS36
-         gTnw==
+        h=from:to:cc:subject:date:message-id;
+        bh=vYCyXyUlEJ+5pTzzjpf+4+GCCP70bZjgS7B7HXVmbtA=;
+        b=otq0W+OrGNxxvqCa1TtufSkA9JzZzKD7d5er425UOQKMWYquzFbYe+GOJPkzjOyv1D
+         LDbsOyMfu+uRsxjVwMzU021cUVnI8iWMV5k6XdQIO3kFfBrQbPqWQRC4MzIgPz/+SgWy
+         TZdp5ZScXcnkyJ5tjmsQxOoOUIk7MFE8LyVI9CKUjlAJmP2yeGrB5k37HZ9qG/AN6tdu
+         XkM9NtSsGbXc46WuKuB5b8XtD0CJSyXgxAnqB4jytsSt8GEhPIlpMA+HISSXJe7m0b0b
+         iRIt9O3Ag4AOr0BD+qRLeyjM80NJ63DcPNVaOEwIBptTUB5uopMZ1aZlmBQndpOxGtEN
+         fdrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eUEsu1aJQ43M1dFiRUsIH0xR8QMlq0eMWSMkix2nG/s=;
-        b=qXoh1otb4BlWYQ1SUNmO9p8zBC+0DGuGgenlgna8iyeXhuXiyMvpITdBY5yXPyGfV3
-         f4nTREu2Miq6rIi03aFI/2aZSZeRlwvQ7E0cJHsykPjyScSUZT7s8nA0LJg60dfe6lLk
-         GviYKlDZBk12ylzVZeAJPqh6qKBM07DEgOR52U9n4ma71TaaIT24Yt4NL9e6jMQ4DfcX
-         HhC8CsCNLwsZWDdbAIZnlc9Lcc3AG7tlLISsJJvlerLeibUvV6BbasYMJUyjv83+8Wy/
-         7VJcNX2VqzSf74QwOncmJv0hwMsVkdEu3S3+jinT6IQij1S9+Ownwl8IqfaTtwxGjzEk
-         xv3A==
-X-Gm-Message-State: APjAAAVn2SXA8zlxrQ5Me3oMlUrT+s2p58QGecwPsGkSIcDwmdmjcrNR
-        8rL7uy5VzxZWptcF2jX5JiA=
-X-Google-Smtp-Source: APXvYqyCAo/u0tdEDjAYadfSuXMI69XqXtjzYOL2ostY7UBdmnKxDtc1QPd76Njk33ivnhowdAXeYg==
-X-Received: by 2002:a62:1d8f:: with SMTP id d137mr8975675pfd.207.1563933979631;
-        Tue, 23 Jul 2019 19:06:19 -0700 (PDT)
-Received: from debian.net.fpt ([2405:4800:58f7:33d1:2651:be77:cf4e:952])
-        by smtp.gmail.com with ESMTPSA id 65sm48163919pgf.30.2019.07.23.19.06.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 19:06:18 -0700 (PDT)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com
-Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org, joe@perches.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        louis@kragniz.eu, syzkaller-bugs@googlegroups.com,
-        benquike@gmail.com, linux-kernel-mentees@lists.linuxfoundation.org,
-        Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH] usb: wusbcore: fix unbalanced get/put cluster_id
-Date:   Wed, 24 Jul 2019 09:06:01 +0700
-Message-Id: <20190724020601.15257-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <000000000000d48965058e589a94@google.com>
-References: <000000000000d48965058e589a94@google.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vYCyXyUlEJ+5pTzzjpf+4+GCCP70bZjgS7B7HXVmbtA=;
+        b=tKd6ekwZEcEil/KIVApFIxgcpwHe+gy3PsxNSabTfbvxX7TJ/Hz5mG2APshzfWnn6d
+         SBgSjci4KAvsMkBykpcqPt4GkpHznhYrWOEof7OAZ6KWacd9KZUz6yUz5o8neqXPqOdY
+         cd29uwkktnw3wb9uHQxSxJkRr5ZikA5EUBB3TrtKu7NFpwohCbKrGiwhfGbO9PeuicFZ
+         qHKLR5Y2dkwA52ROsYPLwcehNlpxfWVGFeTcpZDElKal/+TZhOzesEZBN+ABfREUOmHB
+         b+nFiNwVNNk9NaqbsjDRpuGlzhLdi7X4pQj3klJ2KcI/nyaNLn+7RfQUv/yagJn9Xq2t
+         pz6A==
+X-Gm-Message-State: APjAAAVLDhb9AOdXTbYyCCRVQX/V4E60vS6aqj9J4HnLgmqVD54teLNB
+        nfIAIZ0oU0D4oLgUJZgQrFQ=
+X-Google-Smtp-Source: APXvYqwZJrpSWCYWG8akdfq3HnBSbqCnDpq/7f+zse9/+/Jb4APq1dD4/PpozYP8ga0yqHxnZ98dZw==
+X-Received: by 2002:a63:f13:: with SMTP id e19mr78828781pgl.132.1563934299784;
+        Tue, 23 Jul 2019 19:11:39 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id j15sm65783194pfn.150.2019.07.23.19.11.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 19:11:38 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] fs: btrfs: Fix a possible null-pointer dereference in insert_inline_extent()
+Date:   Wed, 24 Jul 2019 10:11:32 +0800
+Message-Id: <20190724021132.27378-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzboot reported that
-https://syzkaller.appspot.com/bug?extid=fd2bd7df88c606eea4ef
+In insert_inline_extent(), there is an if statement on line 181 to check
+whether compressed_pages is NULL:
+    if (compressed_size && compressed_pages)
 
-There is not consitency parameter in cluste_id_get/put calling.
-In case of getting the id with result is failure, the wusbhc->cluster_id
-will not be updated and this can not be used for wusb_cluster_id_put().
+When compressed_pages is NULL, compressed_pages is used on line 215:
+    cpage = compressed_pages[i];
 
-Tested report
-https://groups.google.com/d/msg/syzkaller-bugs/0znZopp3-9k/oxOrhLkLEgAJ
+Thus, a possible null-pointer dereference may occur.
 
-Reported-by: syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com
+To fix this possible bug, compressed_pages is checked on line 214.
 
-Reproduce and gdb got the details:
+This bug is found by a static analysis tool STCheck written by us.
 
-139		addr = wusb_cluster_id_get();
-(gdb) n
-140		if (addr == 0)
-(gdb) print addr
-$1 = 254 '\376'
-(gdb) n
-142		result = __hwahc_set_cluster_id(hwahc, addr);
-(gdb) print result
-$2 = -71
-(gdb) break wusb_cluster_id_put
-Breakpoint 3 at 0xffffffff836e3f20: file drivers/usb/wusbcore/wusbhc.c, line 384.
-(gdb) s
-Thread 2 hit Breakpoint 3, wusb_cluster_id_put (id=0 '\000') at drivers/usb/wusbcore/wusbhc.c:384
-384		id = 0xff - id;
-(gdb) n
-385		BUG_ON(id >= CLUSTER_IDS);
-(gdb) print id
-$3 = 255 '\377'
-
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
- drivers/usb/host/hwa-hc.c | 2 +-
+ fs/btrfs/inode.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/hwa-hc.c b/drivers/usb/host/hwa-hc.c
-index 09a8ebd95588..6968b9f2b76b 100644
---- a/drivers/usb/host/hwa-hc.c
-+++ b/drivers/usb/host/hwa-hc.c
-@@ -159,7 +159,7 @@ static int hwahc_op_start(struct usb_hcd *usb_hcd)
- 	return result;
- 
- error_set_cluster_id:
--	wusb_cluster_id_put(wusbhc->cluster_id);
-+	wusb_cluster_id_put(addr);
- error_cluster_id_get:
- 	goto out;
- 
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 1af069a9a0c7..19182272fbd8 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -211,7 +211,7 @@ static int insert_inline_extent(struct btrfs_trans_handle *trans,
+ 	if (compress_type != BTRFS_COMPRESS_NONE) {
+ 		struct page *cpage;
+ 		int i = 0;
+-		while (compressed_size > 0) {
++		while (compressed_size > 0 && compressed_pages) {
+ 			cpage = compressed_pages[i];
+ 			cur_size = min_t(unsigned long, compressed_size,
+ 				       PAGE_SIZE);
 -- 
-2.20.1
+2.17.0
 
