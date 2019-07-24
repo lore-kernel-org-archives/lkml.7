@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050A6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57853C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD40421852
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282E1204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000161;
-	bh=rabk5HJpjleC/RCsRwYf0b5VguYCDz59AVw06qg5qRE=;
+	s=default; t=1564000168;
+	bh=9ji9QypqW4jWQNsf1EAynUSKTtksVznp7CxGOF3dS28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FROaQJXd07tWtXWZBNFcaKGKScv/QMLQRJw26tDQs9qgbQtXJVKavCE0bd/SWK2S7
-	 4kR1Psdkv1ycylO117eF0GL8BYYS/2ZQx+n/xzeM3Ezmsq9R8zEsuOHPWwcum0yyZP
-	 +NTJD4w+fqJHyMulMhlQEP7caIDYfT4Ojk2uopvQ=
+	b=bm1TTNDcRJ5SEJVTT2dRlp0iD4ljA5ShqE18VMwePYvZCw3uj3Wjm4XAlkO2eznXA
+	 8S5dtikXNp6ylvNeKKOV3UUwqXM2ZfUw5oGGYWKmGVmBECX/fjPacEOOsb7VmYKWnw
+	 mae6n9HxmCv6ecQ9jGvLrlm4dGu0g7eLks5+TNzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388979AbfGXU3U (ORCPT
+        id S2388773AbfGXTdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:29:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54832 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388794AbfGXTdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:33:11 -0400
+        id S2388751AbfGXTdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:33:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28740229F3;
-        Wed, 24 Jul 2019 19:33:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8551820659;
+        Wed, 24 Jul 2019 19:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996790;
-        bh=rabk5HJpjleC/RCsRwYf0b5VguYCDz59AVw06qg5qRE=;
+        s=default; t=1563996781;
+        bh=9ji9QypqW4jWQNsf1EAynUSKTtksVznp7CxGOF3dS28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GD6qD68/9lEittBg0u2aP4Z+Erg06p3iz0rlIb7ls5T/o6V5twSXMUuiVJrNkeP3x
-         foU9O6eMu5cZSpp5TDMqzvSannHW0FSpMxjuYiIsSEIwRzI7RuLfiWPGrzSAZuZgcA
-         FiWVn4AiZp98DnDZud9h3CZFBaDYsISef6gC20Bw=
+        b=bS8+c7SbbiqWhry2m1hNSOGmWKeAzULaxWXdvLaS7I/iTrPWaioeD1RRVgL9ANaMb
+         jSsemFADNMQz3Snr2t4tVChuYfvYFhA6q+H3ws/VaMapPPKQYaR0/0ouLi22mqPzHL
+         /fGppzKBagt5h/Mrk+qiV/WpAzJyEGLutSleYr+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 218/413] libbpf: fix GCC8 warning for strncpy
-Date:   Wed, 24 Jul 2019 21:18:29 +0200
-Message-Id: <20190724191750.274281968@linuxfoundation.org>
+Subject: [PATCH 5.2 163/413] ALSA: hdac: Fix codec name after machine driver is unloaded and reloaded
+Date:   Wed, 24 Jul 2019 21:17:34 +0200
+Message-Id: <20190724191746.722753187@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,37 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cdfc7f888c2a355b01308e97c6df108f1c2b64e8 ]
+[ Upstream commit 8a5b0177a7f6099ff534a4d9ce72673af5c3cade ]
 
-GCC8 started emitting warning about using strncpy with number of bytes
-exactly equal destination size, which is generally unsafe, as can lead
-to non-zero terminated string being copied. Use IFNAMSIZ - 1 as number
-of bytes to ensure name is always zero-terminated.
+Currently on each driver reload internal counter is being increased. It
+causes failure to enumerate driver devices, as they have hardcoded:
+.codec_name = "ehdaudio0D2",
+As there is currently no devices with multiple hda codecs and there is
+currently no established way to reliably differentiate, between them,
+always assign bus->idx = 0;
 
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+This fixes a problem when we unload and reload machine driver idx gets
+incremented, so .codec_name would've needed to be set to "ehdaudio1D2"
+after first reload and so on.
+
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Acked-by: Takashi Iwai <tiwai@suse.de>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/xsk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/hda/ext/hdac_ext_bus.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-index 38667b62f1fe..8a7a05bc657d 100644
---- a/tools/lib/bpf/xsk.c
-+++ b/tools/lib/bpf/xsk.c
-@@ -337,7 +337,8 @@ static int xsk_get_max_queues(struct xsk_socket *xsk)
+diff --git a/sound/hda/ext/hdac_ext_bus.c b/sound/hda/ext/hdac_ext_bus.c
+index a3a113ef5d56..4f9f1d2a2ec5 100644
+--- a/sound/hda/ext/hdac_ext_bus.c
++++ b/sound/hda/ext/hdac_ext_bus.c
+@@ -85,7 +85,6 @@ int snd_hdac_ext_bus_init(struct hdac_bus *bus, struct device *dev,
+ 			const struct hdac_ext_bus_ops *ext_ops)
+ {
+ 	int ret;
+-	static int idx;
  
- 	channels.cmd = ETHTOOL_GCHANNELS;
- 	ifr.ifr_data = (void *)&channels;
--	strncpy(ifr.ifr_name, xsk->ifname, IFNAMSIZ);
-+	strncpy(ifr.ifr_name, xsk->ifname, IFNAMSIZ - 1);
-+	ifr.ifr_name[IFNAMSIZ - 1] = '\0';
- 	err = ioctl(fd, SIOCETHTOOL, &ifr);
- 	if (err && errno != EOPNOTSUPP) {
- 		ret = -errno;
+ 	/* check if io ops are provided, if not load the defaults */
+ 	if (io_ops == NULL)
+@@ -96,7 +95,12 @@ int snd_hdac_ext_bus_init(struct hdac_bus *bus, struct device *dev,
+ 		return ret;
+ 
+ 	bus->ext_ops = ext_ops;
+-	bus->idx = idx++;
++	/* FIXME:
++	 * Currently only one bus is supported, if there is device with more
++	 * buses, bus->idx should be greater than 0, but there needs to be a
++	 * reliable way to always assign same number.
++	 */
++	bus->idx = 0;
+ 	bus->cmd_dma_state = true;
+ 
+ 	return 0;
 -- 
 2.20.1
 
