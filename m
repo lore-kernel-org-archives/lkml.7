@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AAAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A554C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5FBF20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0040820665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998593;
-	bh=mGnkw2XoQ5DXHzc2RlxPPbxIrDIFY4EP77hCvlohBjE=;
+	s=default; t=1563998595;
+	bh=S9pmwfBwKCdO+faNScla/A28byuGNNJX1zxAbgxu2oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7HO70aNV6CR3tQrnAXpUYAXjubgmUH+RU70y30vZNHKr4x0f3WSmrc10uoKW9KIL
-	 RrSAWrjdVmrZCQn9mKCjJubNxYVLQLnQSURA0/3ngiLa91PLOxo9OGG4JKGVOLov9R
-	 M5uUVkhCGUN2H/VrFtxawnIiYR81mj0kQcQy2Ok0=
+	b=KiB587vwU1NM1BSl3VvvQV4UVZWSC49t17ax1epWjzMWf/vXD31kMQV5NzLt2rHIc
+	 VW/oscEciwXxWfB5otMYofGA9PF7lx29mJzSZxTUAsACOFuCyt6d3kWp0vDxWSo/8B
+	 rYaOM3jdiW9VuN9o+/JtbZA0GtcI5knC7ZrkLdBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405668AbfGXUDL (ORCPT
+        id S2405675AbfGXUDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405071AbfGXUDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:03:08 -0400
+        id S2405667AbfGXUDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:03:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 015B420665;
-        Wed, 24 Jul 2019 20:03:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB6F21849;
+        Wed, 24 Jul 2019 20:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998587;
-        bh=mGnkw2XoQ5DXHzc2RlxPPbxIrDIFY4EP77hCvlohBjE=;
+        s=default; t=1563998591;
+        bh=S9pmwfBwKCdO+faNScla/A28byuGNNJX1zxAbgxu2oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJ1W8RLxOYx7Va2Iq71v+2ZrigIvoaxBrw8SAm1ZPPc7PzUoZOxcD3Z199ddbjkO4
-         Zzy1cZ+Y1eYqtuDWBcQuHfDkgDI6kmyhUN0ONRFbccGmW2dTX1Be/ENrtXKBNkZn2L
-         vBucIT5yFCDMqWa3faAtvgeSo7+gE/FQwFlcM6Bs=
+        b=EO//nRr5ZWryKEzeEQ9CpcwlBlWWynzoCT5zYByPUkfxQxoBAiJ5gLNI40DXMusz3
+         xbi546egQFtiK/m7/zht9S2U0p+yo1tESaNiF9f5IcgzxqGF690dXxoGgi+nokrKui
+         SHRWKakmtFo0R3igoyzQqpYm2uNBSQlk9O2XOIV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/271] batman-adv: Fix duplicated OGMs on NETDEV_UP
-Date:   Wed, 24 Jul 2019 21:18:27 +0200
-Message-Id: <20190724191658.460662211@linuxfoundation.org>
+Subject: [PATCH 4.19 047/271] crypto: inside-secure - do not rely on the hardware last bit for result descriptors
+Date:   Wed, 24 Jul 2019 21:18:36 +0200
+Message-Id: <20190724191659.188550068@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,87 +61,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9e6b5648bbc4cd48fab62cecbb81e9cc3c6e7e88 ]
+[ Upstream commit 89332590427235680236b9470e851afc49b3caa1 ]
 
-The state of slave interfaces are handled differently depending on whether
-the interface is up or not. All active interfaces (IFF_UP) will transmit
-OGMs. But for B.A.T.M.A.N. IV, also non-active interfaces are scheduling
-(low TTL) OGMs on active interfaces. The code which setups and schedules
-the OGMs must therefore already be called when the interfaces gets added as
-slave interface and the transmit function must then check whether it has to
-send out the OGM or not on the specific slave interface.
+When performing a transformation the hardware is given result
+descriptors to save the result data. Those result descriptors are
+batched using a 'first' and a 'last' bit. There are cases were more
+descriptors than needed are given to the engine, leading to the engine
+only using some of them, and not setting the last bit on the last
+descriptor we gave. This causes issues were the driver and the hardware
+aren't in sync anymore about the number of result descriptors given (as
+the driver do not give a pool of descriptor to use for any
+transformation, but a pool of descriptors to use *per* transformation).
 
-But the commit f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule
-API calls") moved the setup code from the enable function to the activate
-function. The latter is called either when the added slave was already up
-when batadv_hardif_enable_interface processed the new interface or when a
-NETDEV_UP event was received for this slave interfac. As result, each
-NETDEV_UP would schedule a new OGM worker for the interface and thus OGMs
-would be send a lot more than expected.
+This patch fixes it by attaching the number of given result descriptors
+to the requests, and by using this number instead of the 'last' bit
+found on the descriptors to process them.
 
-Fixes: f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule API calls")
-Reported-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Tested-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Acked-by: Marek Lindner <mareklindner@neomailbox.ch>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_iv_ogm.c     | 4 ++--
- net/batman-adv/hard-interface.c | 3 +++
- net/batman-adv/types.h          | 3 +++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ .../crypto/inside-secure/safexcel_cipher.c    | 24 ++++++++++++++-----
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
-index 73bf6a93a3cf..0b7b36fa0d5c 100644
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -2485,7 +2485,7 @@ batadv_iv_ogm_neigh_is_sob(struct batadv_neigh_node *neigh1,
+diff --git a/drivers/crypto/inside-secure/safexcel_cipher.c b/drivers/crypto/inside-secure/safexcel_cipher.c
+index 3aef1d43e435..42a3830fbd19 100644
+--- a/drivers/crypto/inside-secure/safexcel_cipher.c
++++ b/drivers/crypto/inside-secure/safexcel_cipher.c
+@@ -51,6 +51,8 @@ struct safexcel_cipher_ctx {
+ 
+ struct safexcel_cipher_req {
+ 	enum safexcel_cipher_direction direction;
++	/* Number of result descriptors associated to the request */
++	unsigned int rdescs;
+ 	bool needs_inv;
+ };
+ 
+@@ -333,7 +335,10 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
+ 
+ 	*ret = 0;
+ 
+-	do {
++	if (unlikely(!sreq->rdescs))
++		return 0;
++
++	while (sreq->rdescs--) {
+ 		rdesc = safexcel_ring_next_rptr(priv, &priv->ring[ring].rdr);
+ 		if (IS_ERR(rdesc)) {
+ 			dev_err(priv->dev,
+@@ -346,7 +351,7 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
+ 			*ret = safexcel_rdesc_check_errors(priv, rdesc);
+ 
+ 		ndesc++;
+-	} while (!rdesc->last_seg);
++	}
+ 
+ 	safexcel_complete(priv, ring);
+ 
+@@ -501,6 +506,7 @@ static int safexcel_send_req(struct crypto_async_request *base, int ring,
+ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 				      int ring,
+ 				      struct crypto_async_request *base,
++				      struct safexcel_cipher_req *sreq,
+ 				      bool *should_complete, int *ret)
+ {
+ 	struct safexcel_cipher_ctx *ctx = crypto_tfm_ctx(base->tfm);
+@@ -509,7 +515,10 @@ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 
+ 	*ret = 0;
+ 
+-	do {
++	if (unlikely(!sreq->rdescs))
++		return 0;
++
++	while (sreq->rdescs--) {
+ 		rdesc = safexcel_ring_next_rptr(priv, &priv->ring[ring].rdr);
+ 		if (IS_ERR(rdesc)) {
+ 			dev_err(priv->dev,
+@@ -522,7 +531,7 @@ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 			*ret = safexcel_rdesc_check_errors(priv, rdesc);
+ 
+ 		ndesc++;
+-	} while (!rdesc->last_seg);
++	}
+ 
+ 	safexcel_complete(priv, ring);
+ 
+@@ -564,7 +573,7 @@ static int safexcel_skcipher_handle_result(struct safexcel_crypto_priv *priv,
+ 
+ 	if (sreq->needs_inv) {
+ 		sreq->needs_inv = false;
+-		err = safexcel_handle_inv_result(priv, ring, async,
++		err = safexcel_handle_inv_result(priv, ring, async, sreq,
+ 						 should_complete, ret);
+ 	} else {
+ 		err = safexcel_handle_req_result(priv, ring, async, req->src,
+@@ -587,7 +596,7 @@ static int safexcel_aead_handle_result(struct safexcel_crypto_priv *priv,
+ 
+ 	if (sreq->needs_inv) {
+ 		sreq->needs_inv = false;
+-		err = safexcel_handle_inv_result(priv, ring, async,
++		err = safexcel_handle_inv_result(priv, ring, async, sreq,
+ 						 should_complete, ret);
+ 	} else {
+ 		err = safexcel_handle_req_result(priv, ring, async, req->src,
+@@ -633,6 +642,8 @@ static int safexcel_skcipher_send(struct crypto_async_request *async, int ring,
+ 		ret = safexcel_send_req(async, ring, sreq, req->src,
+ 					req->dst, req->cryptlen, 0, 0, req->iv,
+ 					commands, results);
++
++	sreq->rdescs = *results;
  	return ret;
  }
  
--static void batadv_iv_iface_activate(struct batadv_hard_iface *hard_iface)
-+static void batadv_iv_iface_enabled(struct batadv_hard_iface *hard_iface)
- {
- 	/* begin scheduling originator messages on that interface */
- 	batadv_iv_ogm_schedule(hard_iface);
-@@ -2825,8 +2825,8 @@ static void batadv_iv_gw_dump(struct sk_buff *msg, struct netlink_callback *cb,
- static struct batadv_algo_ops batadv_batman_iv __read_mostly = {
- 	.name = "BATMAN_IV",
- 	.iface = {
--		.activate = batadv_iv_iface_activate,
- 		.enable = batadv_iv_ogm_iface_enable,
-+		.enabled = batadv_iv_iface_enabled,
- 		.disable = batadv_iv_ogm_iface_disable,
- 		.update_mac = batadv_iv_ogm_iface_update_mac,
- 		.primary_set = batadv_iv_ogm_primary_iface_set,
-diff --git a/net/batman-adv/hard-interface.c b/net/batman-adv/hard-interface.c
-index 08690d06b7be..36f0962040d1 100644
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -821,6 +821,9 @@ int batadv_hardif_enable_interface(struct batadv_hard_iface *hard_iface,
- 
- 	batadv_hardif_recalc_extra_skbroom(soft_iface);
- 
-+	if (bat_priv->algo_ops->iface.enabled)
-+		bat_priv->algo_ops->iface.enabled(hard_iface);
-+
- out:
- 	return 0;
- 
-diff --git a/net/batman-adv/types.h b/net/batman-adv/types.h
-index eeee3e61c625..fdba8a144d73 100644
---- a/net/batman-adv/types.h
-+++ b/net/batman-adv/types.h
-@@ -2130,6 +2130,9 @@ struct batadv_algo_iface_ops {
- 	/** @enable: init routing info when hard-interface is enabled */
- 	int (*enable)(struct batadv_hard_iface *hard_iface);
- 
-+	/** @enabled: notification when hard-interface was enabled (optional) */
-+	void (*enabled)(struct batadv_hard_iface *hard_iface);
-+
- 	/** @disable: de-init routing info when hard-interface is disabled */
- 	void (*disable)(struct batadv_hard_iface *hard_iface);
+@@ -655,6 +666,7 @@ static int safexcel_aead_send(struct crypto_async_request *async, int ring,
+ 					req->cryptlen, req->assoclen,
+ 					crypto_aead_authsize(tfm), req->iv,
+ 					commands, results);
++	sreq->rdescs = *results;
+ 	return ret;
+ }
  
 -- 
 2.20.1
