@@ -2,175 +2,156 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F97C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1CEC76194
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8129E2253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820812253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UotzW2Kd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VecBxXs5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfGXBXy (ORCPT
+        id S1728121AbfGXB0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:23:54 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39232 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfGXBXx (ORCPT
+        Tue, 23 Jul 2019 21:26:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46897 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfGXB0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:23:53 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m10so45599588edv.6;
-        Tue, 23 Jul 2019 18:23:52 -0700 (PDT)
+        Tue, 23 Jul 2019 21:26:11 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k189so1257617pgk.13;
+        Tue, 23 Jul 2019 18:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zuqsC8D078GkOiUiVJHaHgojUFKFIMsPVDPGEDjw6Gc=;
-        b=UotzW2Kd9m6siO8z3lHzaihgWCtUhzH7aiBLbvkRaqJ3vVk+Yga+MFmvICnBqcAkxP
-         rZAQ63GXEPIxiJ/UIfS8nFecL/2ESqdkOsHCuNAIhb2xKiPO9ohJ11JfKeD+umIYY8TG
-         p+Ruq7NtG/3OsmCsOjTqya3t1fHy/4BtLlW5UjNZmnr58kSM7TAStpsyjJFCodu0abPs
-         zHpxNbNeHCUw5TzBkbfzL5dZ6mIUns8v9D40TqUus//8M/QSUbXNFEX/JQicJdPCuHau
-         xs21m38+mBh5BfSut8Db4HX1BHbHV6J8rpX/WYuqt4NR6EzzpWTUr97z1+X3T1DWe5OD
-         i1YA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZQ3b3+gTPmIEd6M8rc0OL/oIvyoPA2pZ++cTTSt4GKc=;
+        b=VecBxXs5rJxIUXj5tAX6w+Hu36MM21fpWyIYdvzDbaV5EtbHPF+1+bu2YHIo2FoU+h
+         qgdi6MriW4QsnS2XTxhZ3CT9hHBmc1EVrlmoNyXHkWprvBI+Yn65R2PNVIuyQj7C+uon
+         nfiSugQzYYHYckLsUa6rRl7irNjE5w2jdXZw55VW7ABnrd4ZUv6TxGXUQO6u5cvjdexn
+         tPG75hjNwSOtjk7bSxDRlH3uvppfjJjUfzoCSGVP1Fe1uh8JE829or5noA5IrKenAWjY
+         MKbFlG+EhvoMwVq1OJV+07GqhN9qs3wTDTL/YhnOg1Or6Ml8smZa2ujck3hWINs1JfYu
+         58Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zuqsC8D078GkOiUiVJHaHgojUFKFIMsPVDPGEDjw6Gc=;
-        b=K1u5OkhXV9v9HXa50ylTbjwhbo1O5zNAMb3q53AM6WBWYACzMdbr5t6r4fM0kxJh8B
-         TGgYRzTtAce0MQbfMZsIAAKUho7GP+q/UlN0TwyyB2LIGaOklFIpkoG0f+YfO7gE70kt
-         HAqvjH7XS3ZpbdCQ1DsMsueFPf1G/rYWNE4n7QJbOgpt7g41Wa0B3Mrcc1ircyPnCftz
-         nqwPBnDpqUD/XRvToRt/r3OaJ9DCseX8FIziIO2HLWz3xNC2Uv+V/9Y49Sl3Pl8xZcEi
-         V+bsv/iRZwXo3nyAe45ma6dOeNSHNSWY/peTyr32ZKKR1jKJ20oqE+CPG6MrQo65CmWZ
-         bksw==
-X-Gm-Message-State: APjAAAV7bbzBYwGyJZd9QK2G3/xCLlS5vKRZzBgrAPPQ0rZ7VKdVaLm4
-        e3hPTKfdeHHALiFvfGZhXNenIXNgtbho30lwAxk=
-X-Google-Smtp-Source: APXvYqwqR8mP9GiqwkFNK7mhlswfVp+zJyF0d6cdnRTmdrDcazdouyw5ok7tlT6CL1Pz9TotmJG7hXMlmosmnecHg2Q=
-X-Received: by 2002:a05:6402:896:: with SMTP id e22mr64968394edy.202.1563931431457;
- Tue, 23 Jul 2019 18:23:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZQ3b3+gTPmIEd6M8rc0OL/oIvyoPA2pZ++cTTSt4GKc=;
+        b=EvqATfmwbyMpaIMVAvYBK76tnRlM4UV//9rvCkTugQf8oEOc8SSAK7bd+DiwF0Omio
+         4X1VsBZcfJRrhaYlh/AY8GEKjphb0Gu/r1hS8whl4dosXSfff2OpfF2G5OScrvL5ldlY
+         zwWD523DKkEcaeCr/I9hGPAIVSWzxt0PsA1By91mgSACVWCR5PXo+fjsVXrofVUWRqbF
+         ttbQ6vQ9mMdqM9eZds52XmzP8Nw6o2cTSyozwU+iBeovJ2npfzCUz2YUWENZbAPLMM+w
+         /i1Bs9fUbMHHMwqRgaVTrSK/QMF9CIxqeFSh7drV7nzLe2Jc0APWcm2Ni0x4V52KfNOq
+         UyQQ==
+X-Gm-Message-State: APjAAAVE2F/bnbFjNCytyGexakunuuBc9o4aVYIYHvC4K7nh1ebDqXV4
+        KobCW312sTFOAo+MaIbkP/go84/u
+X-Google-Smtp-Source: APXvYqzuP5FE7dHH/rrJY8+GDem6uPH4CkCkgfNEStXt8Z11+GRlVjtJCHbhttMVX4qqkHRdu6Qg0Q==
+X-Received: by 2002:a17:90a:bc42:: with SMTP id t2mr84709587pjv.121.1563931570150;
+        Tue, 23 Jul 2019 18:26:10 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id k36sm45950119pgl.42.2019.07.23.18.26.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 18:26:09 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Boaz Harrosh <boaz@plexistor.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v2 0/3] mm/gup: add make_dirty arg to put_user_pages_dirty_lock()
+Date:   Tue, 23 Jul 2019 18:26:03 -0700
+Message-Id: <20190724012606.25844-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190723115014.18537-1-hslester96@gmail.com> <EE45BB6704246A4E914B70E8B61FB42A15C77041@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <EE45BB6704246A4E914B70E8B61FB42A15C77041@SHSMSX104.ccr.corp.intel.com>
-From:   Chuhong Yuan <hslester96@gmail.com>
-Date:   Wed, 24 Jul 2019 09:23:41 +0800
-Message-ID: <CANhBUQ1uODBgoiHk8nrMrtdJ2E-C70PgRJm7zLkWGoQDovKpzg@mail.gmail.com>
-Subject: Re: [PATCH] media: pci: Use dev_get_drvdata where possible
-To:     "Cao, Bingbu" <bingbu.cao@intel.com>
-Cc:     "Zhi, Yong" <yong.zhi@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Akihiro Tsukada <tskd08@gmail.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 10:39 PM Cao, Bingbu <bingbu.cao@intel.com> wrote:
->
->
->
-> ________________________
-> BRs,
-> Bingbu Cao
->
->
-> -----Original Message-----
-> From: Chuhong Yuan <hslester96@gmail.com>
-> Sent: Tuesday, July 23, 2019 7:50 PM
-> Cc: Zhi, Yong <yong.zhi@intel.com>; Sakari Ailus <sakari.ailus@linux.inte=
-l.com>; Cao, Bingbu <bingbu.cao@intel.com>; Mauro Carvalho Chehab <mchehab@=
-kernel.org>; Akihiro Tsukada <tskd08@gmail.com>; linux-media@vger.kernel.or=
-g; linux-kernel@vger.kernel.org; Chuhong Yuan <hslester96@gmail.com>
-> Subject: [PATCH] media: pci: Use dev_get_drvdata where possible
->
-> Instead of using to_pci_dev + pci_get_drvdata, use dev_get_drvdata to mak=
-e code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/media/pci/intel/ipu3/ipu3-cio2.c | 3 +--
->  drivers/media/pci/pt1/pt1.c              | 6 ++----
->  drivers/media/pci/pt3/pt3.c              | 6 ++----
->  3 files changed, 5 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2.c b/drivers/media/pci=
-/intel/ipu3/ipu3-cio2.c
-> index c1d133e17e4b..50a34bcd4d14 100644
-> --- a/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-> +++ b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-> @@ -2000,8 +2000,7 @@ static int __maybe_unused cio2_suspend(struct devic=
-e *dev)
->
->  static int __maybe_unused cio2_resume(struct device *dev)  {
-> -       struct pci_dev *pci_dev =3D to_pci_dev(dev);
-> -       struct cio2_device *cio2 =3D pci_get_drvdata(pci_dev);
-> +       struct cio2_device *cio2 =3D dev_get_drvdata(dev);
->
-> Thanks for your patch.
-> I think using pci_get_drvdata() here mainly make a pair with the pci_set_=
-drvdata() in probe.
+From: John Hubbard <jhubbard@nvidia.com>
 
-Thanks for your reply.
-I will change pci_set_drvdata() to dev_set_drvdata() in the next
-version to keep their consistency.
+Changes since v1:
 
->
->         int r =3D 0;
->         struct cio2_queue *q =3D cio2->cur_queue;
->
-> diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c in=
-dex e51c80bc4646..72b191cfeb54 100644
-> --- a/drivers/media/pci/pt1/pt1.c
-> +++ b/drivers/media/pci/pt1/pt1.c
-> @@ -1217,8 +1217,7 @@ static void pt1_i2c_init(struct pt1 *pt1)
->
->  static int pt1_suspend(struct device *dev)  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pt1 *pt1 =3D pci_get_drvdata(pdev);
-> +       struct pt1 *pt1 =3D dev_get_drvdata(dev);
->
->         pt1_init_streams(pt1);
->         pt1_disable_ram(pt1);
-> @@ -1230,8 +1229,7 @@ static int pt1_suspend(struct device *dev)
->
->  static int pt1_resume(struct device *dev)  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pt1 *pt1 =3D pci_get_drvdata(pdev);
-> +       struct pt1 *pt1 =3D dev_get_drvdata(dev);
->         int ret;
->         int i;
->
-> diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c in=
-dex 7a7afae4c84c..c0bc86793355 100644
-> --- a/drivers/media/pci/pt3/pt3.c
-> +++ b/drivers/media/pci/pt3/pt3.c
-> @@ -626,8 +626,7 @@ static void pt3_cleanup_adapter(struct pt3_board *pt3=
-, int index)
->
->  static int pt3_suspend(struct device *dev)  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pt3_board *pt3 =3D pci_get_drvdata(pdev);
-> +       struct pt3_board *pt3 =3D dev_get_drvdata(dev);
->         int i;
->         struct pt3_adapter *adap;
->
-> @@ -646,8 +645,7 @@ static int pt3_suspend(struct device *dev)
->
->  static int pt3_resume(struct device *dev)  {
-> -       struct pci_dev *pdev =3D to_pci_dev(dev);
-> -       struct pt3_board *pt3 =3D pci_get_drvdata(pdev);
-> +       struct pt3_board *pt3 =3D dev_get_drvdata(dev);
->         int i, ret;
->         struct pt3_adapter *adap;
->
-> --
-> 2.20.1
->
+* Instead of providing __put_user_pages(), add an argument to
+  put_user_pages_dirty_lock(), and delete put_user_pages_dirty().
+  This is based on the following points:
+
+    1. Lots of call sites become simpler if a bool is passed
+    into put_user_page*(), instead of making the call site
+    choose which put_user_page*() variant to call.
+
+    2. Christoph Hellwig's observation that set_page_dirty_lock()
+    is usually correct, and set_page_dirty() is usually a
+    bug, or at least questionable, within a put_user_page*()
+    calling chain.
+
+* Added the Infiniband driver back to the patch series, because it is
+  a caller of put_user_pages_dirty_lock().
+
+Unchanged parts from the v1 cover letter (except for the diffstat):
+
+Notes about the remaining patches to come:
+
+There are about 50+ patches in my tree [2], and I'll be sending out the
+remaining ones in a few more groups:
+
+    * The block/bio related changes (Jerome mostly wrote those, but I've
+      had to move stuff around extensively, and add a little code)
+
+    * mm/ changes
+
+    * other subsystem patches
+
+    * an RFC that shows the current state of the tracking patch set. That
+      can only be applied after all call sites are converted, but it's
+      good to get an early look at it.
+
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
+
+John Hubbard (3):
+  mm/gup: add make_dirty arg to put_user_pages_dirty_lock()
+  drivers/gpu/drm/via: convert put_page() to put_user_page*()
+  net/xdp: convert put_page() to put_user_page*()
+
+ drivers/gpu/drm/via/via_dmablit.c          |  10 +-
+ drivers/infiniband/core/umem.c             |   5 +-
+ drivers/infiniband/hw/hfi1/user_pages.c    |   5 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c |   5 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c   |   5 +-
+ drivers/infiniband/sw/siw/siw_mem.c        |   8 +-
+ include/linux/mm.h                         |   5 +-
+ mm/gup.c                                   | 116 +++++++++------------
+ net/xdp/xdp_umem.c                         |   9 +-
+ 9 files changed, 62 insertions(+), 106 deletions(-)
+
+-- 
+2.22.0
+
