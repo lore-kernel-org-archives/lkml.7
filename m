@@ -2,215 +2,241 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AE5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B091C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B65F2173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C7221852
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MF69AuNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfGXSkG convert rfc822-to-8bit (ORCPT
+        id S1728646AbfGXSke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:40:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50462 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfGXSkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:40:05 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C219308421A;
-        Wed, 24 Jul 2019 18:40:05 +0000 (UTC)
-Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3BED260BF7;
-        Wed, 24 Jul 2019 18:40:03 +0000 (UTC)
-Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
-To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        david@redhat.com, mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- VujM7c/b4pps
-Organization: Red Hat Inc,
-Message-ID: <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
-Date:   Wed, 24 Jul 2019 14:40:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Jul 2019 14:40:34 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35167 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfGXSke (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:40:34 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w20so47949390edd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0RBA0r+HuUMJnUIFQULKwRjicj1pjNi4d1DCC8b97rk=;
+        b=MF69AuNNNhhzCEKJkPUt7eAFK+sCltEUk6IkHaos7UwBGVBJPw9k+Fa8bJi0QGqWl8
+         04zOXGt5TnP6FuVbL3mx8zKSG32MNENIMg8bNJYTGYMoGCoiCMdPOfvGv18WkvqF5niP
+         wzJeC1XNj0T0GgPM1l9TqaMjlpfIHmB+ChV3jMw1UsEKAAXYzEwk7c8CvNP/tcEQQ8u+
+         h895HSFmoxamLAZx25NA6vvEOcKhKr+zwDgVe4g7BIrOi/1aZm21/ORt70vo8bhaZ2rB
+         psVKmAoi+e5kSYYNRQcgyPd7l1X0EZkByd9d0ef8rVpfhUC6/9pLza2a7l3F/u5okkQp
+         qsFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0RBA0r+HuUMJnUIFQULKwRjicj1pjNi4d1DCC8b97rk=;
+        b=DIBzGLld7yqUMVjg+i55uxv4/JddAEz1aXqi4QM2XUVdNS7tlCs2k6n0W8Lp0+Z0EF
+         EYGzFDVoeSDHaTG1AzfIWdtWVQplcXiZNQiEn1stNn7nCldL94h8PYWlRePT5Iwa5YE5
+         AVGf8W21P1DcBmOs7AsyFdKpwXx94G8r3AYrrzgIl/fjluVDt9Jl34qbiw+ftIQ74nvr
+         h7sTlNv1UlTLQH4EmewWTj4OqNc3v0590m0tGvmJKGHluP4xPIXtTcxh/FNZscVc6cki
+         j4uHy2qWDG1+OLyGCf9R3wNOdnZSRjS6JVMl28rxdwFxTYQspht8T7RYnOgnIqnwBlQq
+         +5RA==
+X-Gm-Message-State: APjAAAWNfZP0MHRm8nggOXSuU4zd8fr1+kEtKN9umRzBrgMEbulj3JKz
+        oS2CoDrZJ9y6A2j0bL0VWayUNs28
+X-Google-Smtp-Source: APXvYqyxnPp1hss8dzI5LTeZvLocYMD2wy5hKAUamWtogGCa9d+Trt82hxtui3TdQzf0w3mi3xpsbg==
+X-Received: by 2002:a17:906:154f:: with SMTP id c15mr63716333ejd.268.1563993631518;
+        Wed, 24 Jul 2019 11:40:31 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id b19sm9400257eje.80.2019.07.24.11.40.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 11:40:30 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E5B8010169F; Wed, 24 Jul 2019 21:40:15 +0300 (+03)
+Date:   Wed, 24 Jul 2019 21:40:15 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Lianbo Jiang <lijiang@redhat.com>
+Subject: Re: [PATCH] dma-direct: Force unencrypted DMA under SME for certain
+ DMA masks
+Message-ID: <20190724184015.ye6gjoikowiyh63f@box>
+References: <10b83d9ff31bca88e94da2ff34e30619eb396078.1562785123.git.thomas.lendacky@amd.com>
+ <20190724155530.hlingpcirjcf2ljg@box>
+ <acee0a74-77fc-9c81-087b-ce55abf87bd4@amd.com>
+ <a89e7574-096d-9105-45ff-34bbb74918a5@arm.com>
+ <c4110c6b-686c-7e77-fedc-33782e5b3e50@amd.com>
+ <20190724181139.yebja5yflzjgfxlx@box>
+ <9f9bfd05-0010-9050-20f0-8c89b2f039ef@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20190724165158.6685.87228.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 24 Jul 2019 18:40:05 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f9bfd05-0010-9050-20f0-8c89b2f039ef@amd.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 06:30:21PM +0000, Lendacky, Thomas wrote:
+> On 7/24/19 1:11 PM, Kirill A. Shutemov wrote:
+> > On Wed, Jul 24, 2019 at 05:34:26PM +0000, Lendacky, Thomas wrote:
+> >> On 7/24/19 12:06 PM, Robin Murphy wrote:
+> >>> On 24/07/2019 17:42, Lendacky, Thomas wrote:
+> >>>> On 7/24/19 10:55 AM, Kirill A. Shutemov wrote:
+> >>>>> On Wed, Jul 10, 2019 at 07:01:19PM +0000, Lendacky, Thomas wrote:
+> >>>>>> @@ -351,6 +355,32 @@ bool sev_active(void)
+> >>>>>>   }
+> >>>>>>   EXPORT_SYMBOL(sev_active);
+> >>>>>>   +/* Override for DMA direct allocation check -
+> >>>>>> ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+> >>>>>> +bool force_dma_unencrypted(struct device *dev)
+> >>>>>> +{
+> >>>>>> +    /*
+> >>>>>> +     * For SEV, all DMA must be to unencrypted addresses.
+> >>>>>> +     */
+> >>>>>> +    if (sev_active())
+> >>>>>> +        return true;
+> >>>>>> +
+> >>>>>> +    /*
+> >>>>>> +     * For SME, all DMA must be to unencrypted addresses if the
+> >>>>>> +     * device does not support DMA to addresses that include the
+> >>>>>> +     * encryption mask.
+> >>>>>> +     */
+> >>>>>> +    if (sme_active()) {
+> >>>>>> +        u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
+> >>>>>> +        u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
+> >>>>>> +                        dev->bus_dma_mask);
+> >>>>>> +
+> >>>>>> +        if (dma_dev_mask <= dma_enc_mask)
+> >>>>>> +            return true;
+> >>>>>
+> >>>>> Hm. What is wrong with the dev mask being equal to enc mask? IIUC, it
+> >>>>> means that device mask is wide enough to cover encryption bit, doesn't it?
+> >>>>
+> >>>> Not really...  it's the way DMA_BIT_MASK works vs bit numbering. Let's say
+> >>>> that sme_me_mask has bit 47 set. __ffs64 returns 47 and DMA_BIT_MASK(47)
+> >>>> will generate a mask without bit 47 set (0x7fffffffffff). So the check
+> >>>> will catch anything that does not support at least 48-bit DMA.
+> >>>
+> >>> Couldn't that be expressed as just:
+> >>>
+> >>>     if (sme_me_mask & dma_dev_mask == sme_me_mask)
+> >>
+> >> Actually !=, but yes, it could have been done like that, I just didn't
+> >> think of it.
+> > 
+> > I'm looking into generalizing the check to cover MKTME.
+> > 
+> > Leaving	off the Kconfig changes and moving the check to other file, doest
+> > the change below look reasonable to you. It's only build tested so far.
+> > 
+> > diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+> > index fece30ca8b0c..6c86adcd02da 100644
+> > --- a/arch/x86/mm/mem_encrypt.c
+> > +++ b/arch/x86/mm/mem_encrypt.c
+> > @@ -355,6 +355,8 @@ EXPORT_SYMBOL(sev_active);
+> >  /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+> >  bool force_dma_unencrypted(struct device *dev)
+> >  {
+> > +	u64 dma_enc_mask;
+> > +
+> >  	/*
+> >  	 * For SEV, all DMA must be to unencrypted addresses.
+> >  	 */
+> > @@ -362,18 +364,20 @@ bool force_dma_unencrypted(struct device *dev)
+> >  		return true;
+> >  
+> >  	/*
+> > -	 * For SME, all DMA must be to unencrypted addresses if the
+> > -	 * device does not support DMA to addresses that include the
+> > -	 * encryption mask.
+> > +	 * For SME and MKTME, all DMA must be to unencrypted addresses if the
+> > +	 * device does not support DMA to addresses that include the encryption
+> > +	 * mask.
+> >  	 */
+> > -	if (sme_active()) {
+> > -		u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
+> > -		u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
+> > -						dev->bus_dma_mask);
+> > +	if (!sme_active() && !mktme_enabled())
+> > +		return false;
+> >  
+> > -		if (dma_dev_mask <= dma_enc_mask)
+> > -			return true;
+> > -	}
+> > +	dma_enc_mask = sme_me_mask | mktme_keyid_mask();
+> > +
+> > +	if (dev->coherent_dma_mask && (dev->coherent_dma_mask & dma_enc_mask) != dma_enc_mask)
+> > +		return true;
+> > +
+> > +	if (dev->bus_dma_mask && (dev->bus_dma_mask & dma_enc_mask) != dma_enc_mask)
+> > +		return true;
+> 
+> Do you want to err on the side of caution and return true if both masks
+> are zero? You could do the min_not_zero step and then return true if the
+> result is zero. Then just make the one comparison against dma_enc_mask.
 
-On 7/24/19 12:54 PM, Alexander Duyck wrote:
-> This series provides an asynchronous means of hinting to a hypervisor
-> that a guest page is no longer in use and can have the data associated
-> with it dropped. To do this I have implemented functionality that allows
-> for what I am referring to as page hinting
->
-> The functionality for this is fairly simple. When enabled it will allocate
-> statistics to track the number of hinted pages in a given free area. When
-> the number of free pages exceeds this value plus a high water value,
-> currently 32,
-Shouldn't we configure this to a lower number such as 16?
->  it will begin performing page hinting which consists of
-> pulling pages off of free list and placing them into a scatter list. The
-> scatterlist is then given to the page hinting device and it will perform
-> the required action to make the pages "hinted", in the case of
-> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> and as such they are forced out of the guest. After this they are placed
-> back on the free list, and an additional bit is added if they are not
-> merged indicating that they are a hinted buddy page instead of a standard
-> buddy page. The cycle then repeats with additional non-hinted pages being
-> pulled until the free areas all consist of hinted pages.
->
-> I am leaving a number of things hard-coded such as limiting the lowest
-> order processed to PAGEBLOCK_ORDER,
-Have you considered making this option configurable at the compile time?
->  and have left it up to the guest to
-> determine what the limit is on how many pages it wants to allocate to
-> process the hints.
-It might make sense to set the number of pages to be hinted at a time from the
-hypervisor.
->
-> My primary testing has just been to verify the memory is being freed after
-> allocation by running memhog 79g on a 80g guest and watching the total
-> free memory via /proc/meminfo on the host. With this I have verified most
-> of the memory is freed after each iteration. As far as performance I have
-> been mainly focusing on the will-it-scale/page_fault1 test running with
-> 16 vcpus. With that I have seen at most a 2% difference between the base
-> kernel without these patches and the patches with virtio-balloon disabled.
-> With the patches and virtio-balloon enabled with hinting the results
-> largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
-> drop in performance as I approached 16 threads,
-I think this is acceptable.
->  however on the the lastest
-> linux-next kernel I saw roughly a 4% to 5% improvement in performance for
-> all tests with 8 or more threads. 
-Do you mean that with your patches the will-it-scale/page_fault1 numbers were
-better by 4-5% over an unmodified kernel?
-> I believe the difference seen is due to
-> the overhead for faulting pages back into the guest and zeroing of memory.
-It may also make sense to test these patches with netperf to observe how much
-performance drop it is introducing.
-> Patch 4 is a bit on the large side at about 600 lines of change, however
-> I really didn't see a good way to break it up since each piece feeds into
-> the next. So I couldn't add the statistics by themselves as it didn't
-> really make sense to add them without something that will either read or
-> increment/decrement them, or add the Hinted state without something that
-> would set/unset it. As such I just ended up adding the entire thing as
-> one patch. It makes it a bit bigger but avoids the issues in the previous
-> set where I was referencing things before they had been added.
->
-> Changes from the RFC:
-> https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> Moved aeration requested flag out of aerator and into zone->flags.
-> Moved bounary out of free_area and into local variables for aeration.
-> Moved aeration cycle out of interrupt and into workqueue.
-> Left nr_free as total pages instead of splitting it between raw and aerated.
-> Combined size and physical address values in virtio ring into one 64b value.
->
-> Changes from v1:
-> https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> Dropped "waste page treatment" in favor of "page hinting"
-We may still have to try and find a better name for virtio-balloon side changes.
-As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
-> Renamed files and functions from "aeration" to "page_hinting"
-> Moved from page->lru list to scatterlist
-> Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
-> Virtio now uses scatterlist directly instead of intermedate array
-> Moved stats out of free_area, now in seperate area and pointed to from zone
-> Merged patch 5 into patch 4 to improve reviewability
-> Updated various code comments throughout
->
-> ---
->
-> Alexander Duyck (5):
->       mm: Adjust shuffle code to allow for future coalescing
->       mm: Move set/get_pcppage_migratetype to mmzone.h
->       mm: Use zone and order instead of free area in free_list manipulators
->       mm: Introduce Hinted pages
->       virtio-balloon: Add support for providing page hints to host
->
->
->  drivers/virtio/Kconfig              |    1 
->  drivers/virtio/virtio_balloon.c     |   47 ++++++
->  include/linux/mmzone.h              |  116 ++++++++------
->  include/linux/page-flags.h          |    8 +
->  include/linux/page_hinting.h        |  139 ++++++++++++++++
->  include/uapi/linux/virtio_balloon.h |    1 
->  mm/Kconfig                          |    5 +
->  mm/Makefile                         |    1 
->  mm/internal.h                       |   18 ++
->  mm/memory_hotplug.c                 |    1 
->  mm/page_alloc.c                     |  238 ++++++++++++++++++++--------
->  mm/page_hinting.c                   |  298 +++++++++++++++++++++++++++++++++++
->  mm/shuffle.c                        |   24 ---
->  mm/shuffle.h                        |   32 ++++
->  14 files changed, 796 insertions(+), 133 deletions(-)
->  create mode 100644 include/linux/page_hinting.h
->  create mode 100644 mm/page_hinting.c
->
-> --
+Something like this?
+
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index fece30ca8b0c..173d68b08c55 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -355,6 +355,8 @@ EXPORT_SYMBOL(sev_active);
+ /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+ bool force_dma_unencrypted(struct device *dev)
+ {
++	u64 dma_enc_mask, dma_dev_mask;
++
+ 	/*
+ 	 * For SEV, all DMA must be to unencrypted addresses.
+ 	 */
+@@ -362,20 +364,17 @@ bool force_dma_unencrypted(struct device *dev)
+ 		return true;
+ 
+ 	/*
+-	 * For SME, all DMA must be to unencrypted addresses if the
+-	 * device does not support DMA to addresses that include the
+-	 * encryption mask.
++	 * For SME and MKTME, all DMA must be to unencrypted addresses if the
++	 * device does not support DMA to addresses that include the encryption
++	 * mask.
+ 	 */
+-	if (sme_active()) {
+-		u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
+-		u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
+-						dev->bus_dma_mask);
++	if (!sme_active() && !mktme_enabled())
++		return false;
+ 
+-		if (dma_dev_mask <= dma_enc_mask)
+-			return true;
+-	}
++	dma_enc_mask = sme_me_mask | mktme_keyid_mask();
++	dma_dev_mask = min_not_zero(dev->coherent_dma_mask, dev->bus_dma_mask);
+ 
+-	return false;
++	return (dma_dev_mask & dma_enc_mask) != dma_enc_mask;
+ }
+ 
+ /* Architecture __weak replacement functions */
 -- 
-Thanks
-Nitesh
-
+ Kirill A. Shutemov
