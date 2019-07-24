@@ -2,161 +2,168 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020A1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0DAC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF66521951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3730A2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RvATu9Oi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HgWMe3rc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfGXSqd (ORCPT
+        id S2387673AbfGXSqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:46:33 -0400
-Received: from mout.web.de ([217.72.192.78]:56523 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfGXSqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:46:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1563993960;
-        bh=Kh2yjH9xVI5lHKmo9C9G06aivcEldrX0v5Weq5gRLV8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=RvATu9OipyVIZ5FlBGyrWg0FPFem2PdFej9lI4elbUMBNfbukEgMRxH4UTSIHsDK9
-         M1K9E5YdoOUwnqDzyqK6wTPSk49sm2/ZDWqV3b88IVTzjkD5xrnOPqL/M04xsbv4bw
-         hRWofsL9Ij9r0JGKrAYo1DCgxawwTOESWu/7V90k=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.51.56]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MHp4r-1hpXKM3FG9-003hP3; Wed, 24
- Jul 2019 20:45:59 +0200
-Subject: Re: [v4 3/3] coccinelle: Add script to check for platform_get_irq()
- excessive prints
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-References: <20190723181624.203864-4-swboyd@chromium.org>
- <9b5d8470-dd6e-4358-141f-6b6c40774de1@web.de>
- <5d38a232.1c69fb81.f85f4.67e3@mx.google.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3ba98738-00a0-4bee-55ab-36127197fb85@web.de>
-Date:   Wed, 24 Jul 2019 20:45:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 24 Jul 2019 14:46:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36008 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfGXSqi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:46:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so48146107wrs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=09rFu7af1PGRR7AeHEC/mVE2Rd2hQP0HuD37W7SEc4g=;
+        b=HgWMe3rcv2qkGTsJ5HKLMVR7js0MiXzyCkVixWpym+prbnGsyCJYDL1GKs9m+5OR34
+         uZkNHDo90oUz9hGmTCJ2A7rtdhvkCY0wmCOP5iapHpn+uFzW7lNzxlwewICis4P/MDcE
+         d9UsHIsRja44yirPmbcTRDb0PioPrPYORsIu8BgUmWhiwVm9LuC5BKOKmAGgljXALRz+
+         yyEU2hYtJ6J0tRqLLcdjsOELT9/500GZkM8tDO9kvF5oe3z2Jari74Ln7KMaJLjcsAaT
+         5m4v79B8izQARxXx0MCYPdGp8DsWPthiT9PybykfXkOmJqeJU72HSsSf6pm1wYsTuLtN
+         2LFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=09rFu7af1PGRR7AeHEC/mVE2Rd2hQP0HuD37W7SEc4g=;
+        b=ZtqNld3I7tb0Vby4pNzGZyuQlJyRKDVUwtNbw4NbGh4NM2zCfYeXOqy3YAd5s3d2UK
+         MD2RRHCBQC+sJLf6QUCInDr02ZVfAdCg/MYuqiUeNFGgfnXbFQ+vpEj4DBDPq0MpaqC/
+         +3IIaXi5/bL6ADggYXTGnJkuKBOaI7ujCmCyAeob7mXc32Y6T1MeqqwnBQBgeuwI0qPx
+         zxVDAjpyC45UsOdtTL31AaUYpQHNGzluMBRTEl01wSovDAAh5dWbHSzEPYWjq3UQLGXU
+         14j6tG3VH9rA8Pcep1OTcCyrAcbuiQ7mCFbgaCTheQculiiCL+sKd5Y5tHsQfk6dlUoc
+         cxaw==
+X-Gm-Message-State: APjAAAVoJ/FzqFNpKB0h5mToXGovSK6S8Vi84TbJre5+BEFAVA4QYZKb
+        fUr4J+Sev7AkG8AquiP8REdmwhXm58vfCB+zuPqTIQ==
+X-Google-Smtp-Source: APXvYqx3pjPIwWc/lOXIzyf8yBCvPRk6JwemOLLIL57IuNozaOmrvi2+JWZwsEC1VqG+o7cdQ6vaEzwR/Zq/lP7z6KM=
+X-Received: by 2002:adf:ed4a:: with SMTP id u10mr1043985wro.284.1563993995712;
+ Wed, 24 Jul 2019 11:46:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5d38a232.1c69fb81.f85f4.67e3@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:d3GqKj2OtvfBBvcS+VL5N7Tu7iDTzpClqL/Ad/Wb1VduBqqCrnk
- 3Xt047aibAYwxPjvrjAsUoOuzvwvJ6BUvfG6v1xlMXDPzdtPHUeeKjFb20wJRnNyr1Kj/bf
- GLKFgYIqQlo+kC884B6nCvxIU+z9oWaD6MusrItfj7ICZyX8RNmuBXZMM7ChxSp/Qz4Oii1
- 6UKcQrfnxO0FE1JTf6GqA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5KAMM1wmBJY=:OTGGWaMhhE3t0/+i5Mkiy9
- M4QQsrrxrAv3sJJ0J2jWb2YimnLhpjAb0Ql/Q+gvKRxEnPt4VEn8+oH8PpWOodOsd0UOHEmcQ
- +3Wv+rJPtTDY1pUihul2YqoNQ4ARdgTxQhFZbkEDBcLVp0Vu6OsYMxG8uMYe2+xrmfEyhgnef
- UIYRGEStlpNdm8l0cGe6Rf6E4H8CJsmIu9ztGU1fv8SG38MuNc9cXCyV6xvUeZQ2bFyF71eC0
- v9hkumgslpIZJKkB2K92zaXVqtL9frem/4ortV53SSI1tkhFbbaeo8SbyBBlvKNkIvEn5ktcg
- nAKCDvxxQ4gwQiTdun87FEbuBDCyrxmeDKIIcsUUPlmMhSytKFfCUyLT0kdd8BGI54I+LnCwT
- 6pk+9IJqwIM/fj/PZYP8eQTkiYL7PezuD6mQwHe5BxIA1mhvKdjOCxcLIkZkabsZJC6sfjNVD
- jUOsVoQUYyUBmuq/Y56ozZZWdrvoz4/3MNaOxXtVaShiRAoq92ZVNnj3B8zNAr3y5BHZHzmnR
- D5fMjHjgWiHHKtBWkYw9/DWK576KgdO4LjZXEB1p5O4nYpycAz5fktmZp8f2zyVLwog/GsJAJ
- gM6mykxryN9PWfVORnt2dUSv/ScF0O+Oa/vD4d6IRvLIP568dGXyle7RLpE6v9lP/5j7ND008
- nyN94fu4EBB7UwmfCpBwssEOftnii6MS/Vpf0+EikbcyN9pqhhbiKKdf92XHq/KCzYFEA+3LL
- Zk2yQS3hEtL2X/OcaRVfxHin7DWlSUEzFcuIWNZH18DvFCbfSdyQDTQrojQK1k9qjbLxkq+q7
- U9iGm40d++8h4FcnlgWiwjM4ZmeRCgiKbkhDOxH7KehcMyvCDkDz3mjm+lYV28ls4bo3bl0vo
- KuKpcICM5oK5SS5AzTJSzmyVBuaBYjgz8/Nykr4Bob9S8ZjODR48SiFsi9FIcbXgtfEO9oiIf
- 5VPcy7c6ivXIQ7npszHUoZA/5+51AGA0wQPpSwoOwDqSu9xcn9ybEcsfJZMMxxnvc/fNfCGMD
- 7msjHLPmaCnZxEUc1aEgjpe6OYP64fXsuZu8XVYFSozpoW3wkaLXPnUxQciSKR7qP5Wyas5D8
- RMMKmwVON2EETkt9qaF2i9dFeCzWj1YPFm4
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org> <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com> <20190724065958.GC16225@infradead.org>
+In-Reply-To: <20190724065958.GC16225@infradead.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 24 Jul 2019 11:46:24 -0700
+Message-ID: <CALAqxLUbsz+paJ=P2hwKecuN8DQjJt9Vj4MENCnFuEh6waxsXg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Will further software development considerations become more interestin=
-g
->> also around a contribution like =E2=80=9CCoccinelle: Add a SmPL script =
-for
->> the reconsideration of redundant dev_err() calls=E2=80=9D?
->> https://lore.kernel.org/lkml/2744a3fc-9e67-8113-1dd9-43669e06386a@web.d=
-e/
->> https://lore.kernel.org/patchwork/patch/1095937/
->> https://lkml.org/lkml/2019/7/1/145
->> https://systeme.lip6.fr/pipermail/cocci/2019-July/006071.html
->>
+On Wed, Jul 24, 2019 at 12:00 AM Christoph Hellwig <hch@infradead.org> wrote:
+> On Mon, Jul 22, 2019 at 10:04:06PM -0700, John Stultz wrote:
+> > Apologies, I'm not sure I'm understanding your suggestion here.
+> > dma_alloc_contiguous() does have some interesting optimizations
+> > (avoiding allocating single page from cma), though its focus on
+> > default area vs specific device area doesn't quite match up the usage
+> > model for dma heaps.  Instead of allocating memory for a single
+> > device, we want to be able to allow userland, for a given usage mode,
+> > to be able to allocate a dmabuf from a specific heap of memory which
+> > will satisfy the usage mode for that buffer pipeline (across multiple
+> > devices).
+> >
+> > Now, indeed, the system and cma heaps in this patchset are a bit
+> > simple/trivial (though useful with my devices that require contiguous
+> > buffers for the display driver), but more complex ION heaps have
+> > traditionally stayed out of tree in vendor code, in many cases making
+> > incompatible tweaks to the ION core dmabuf exporter logic.
 >
-> Did this patch ever get merged?
+> So what would the more complicated heaps be?
 
-Not yet. - I hope that this addition is still in the usual patch review qu=
-eue.
+Mostly secure heaps, but there have been work in the past with
+specially aligned chunk heaps in the past. Unfortunately since every
+vendor tree also include many of their own hacks to the core ION code
+(usually without changelogs or comments) its hard to decipher much of
+it.
+
+Some examples:
+msm:
+https://github.com/Panchajanya1999/msm-4.14/blob/Pie/drivers/staging/android/ion/ion_cma_secure_heap.c
+
+exynos:
+https://github.com/exynos-linux-stable/starlte/tree/tw90-android-p/drivers/staging/android/ion/exynos
+
+hisi:
+https://github.com/hexdebug/android_kernel_huawei_hi3660/blob/master/drivers/staging/android/ion/ion_seccm_heap.c
+https://github.com/hexdebug/android_kernel_huawei_hi3660/blob/master/drivers/staging/android/ion/ion_secsg_heap.c
+https://github.com/hexdebug/android_kernel_huawei_hi3660/blob/master/drivers/staging/android/ion/ion_fama_misc_heap.c
+
+mediatek:
+https://android.googlesource.com/kernel/mediatek/+/android-mtk-3.18/drivers/staging/android/ion/mtk/ion_mm_heap.c
+
+But Andrew's example is probably a better example against the dmabuf
+heaps frameworks
 
 
-> It seems better to amend that patch instead of introduce another one.
+> > That's why
+> > dmabuf heaps is trying to destage ION in a way that allows heaps to
+> > implement their exporter logic themselves, so we can start pulling
+> > those more complicated heaps out of their vendor hidey-holes and get
+> > some proper upstream review.
+> >
+> > But I suspect I just am confused as to what your suggesting. Maybe
+> > could you expand a bit? Apologies for being a bit dense.
+>
+> My suggestion is to merge the system and CMA heaps.  CMA (at least
+> the system-wide CMA area) is really just an optimization to get
+> large contigous regions more easily.  We should make use of it as
+> transparent as possible, just like we do in the DMA code.
 
-Further extensions can become more challenging for this software area.
-How would you like to adjust common implementation details?
+I'm still not understanding how this would work. Benjamin and Laura
+already commented on this point, but for a simple example, with the
+HiKey boards, the DRM driver requires contiguous memory for the
+framebuffer, but the GPU can handle non-contiguous. Thus the target
+framebuffers that we pass to the display has to be CMA allocated, but
+all the other graphics buffers that the GPU will render to and
+composite can be system.
 
-Regards,
-Markus
+Having the separate heaps allows the gralloc code to allocate the
+proper buffer depending on the planned usage (GRALLOC_USAGE_HW_FB or
+not), and that way we don't waste CMA on buffers that don't have to be
+contiguous.
+
+Laura already touched on this, but similar logic can be used for
+camera buffers, which can make sure we allocate from a specifically
+reserved CMA region that is only used for the camera so we can always
+be sure to have N free buffers immediately to capture with, etc.
+
+But let me know if I'm still misunderstanding your suggestion.
+
+thanks
+-john
