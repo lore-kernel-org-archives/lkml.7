@@ -2,103 +2,101 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0477AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54641C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D776921841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287A921873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563988032;
+	bh=aJSfoCG0LAsFAd62My8xcDFG0irllfrZC1k2MhIA3m8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2SJdCkhT2LsPLJ56EtTrbxBAJovYxipk33fGA62hn3wJ1suBOjAPBVwbrfUdKMUjw
+	 5o07tJTOFYsf6hVMwfCJ4mbUk3BrfUKb83slPydskHCbaMLy9rU3cyozoM0fX2vYLR
+	 HywRijDYDXVnVao1mKKTyIlxlYWxSqS00KV7SNqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfGXRGP (ORCPT
+        id S1727284AbfGXRHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:06:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:44042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfGXRGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:06:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 464CE28;
-        Wed, 24 Jul 2019 10:06:14 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 769E73F71F;
-        Wed, 24 Jul 2019 10:06:12 -0700 (PDT)
-Subject: Re: [PATCH] dma-direct: Force unencrypted DMA under SME for certain
- DMA masks
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Wed, 24 Jul 2019 13:07:11 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40188 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfGXRHK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:07:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aJSfoCG0LAsFAd62My8xcDFG0irllfrZC1k2MhIA3m8=; b=ua+DyaI6E4NpZjGyP76iocXiU
+        7w4llWVKfEyGDbMUWxrB62R2X7E2SU8mAQvNsmQ2AEbl2uSHkpCfecpW1JEAANwdwPUfOyCKLh8yW
+        c0IFnjhWhfkJrMivbRVuDrMJAdg6OLRb4rUsbGajF2zc+kdo7fXREZC+j3k22D+GcPEs4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hqKj6-0008FO-PZ; Wed, 24 Jul 2019 17:06:52 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 4F2372742B5D; Wed, 24 Jul 2019 18:06:52 +0100 (BST)
+Date:   Wed, 24 Jul 2019 18:06:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Lianbo Jiang <lijiang@redhat.com>
-References: <10b83d9ff31bca88e94da2ff34e30619eb396078.1562785123.git.thomas.lendacky@amd.com>
- <20190724155530.hlingpcirjcf2ljg@box>
- <acee0a74-77fc-9c81-087b-ce55abf87bd4@amd.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a89e7574-096d-9105-45ff-34bbb74918a5@arm.com>
-Date:   Wed, 24 Jul 2019 18:06:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 2/3] treewide: Remove dev_err() usage after
+ platform_get_irq()
+Message-ID: <20190724170652.GD4524@sirena.org.uk>
+References: <20190723181624.203864-1-swboyd@chromium.org>
+ <20190723181624.203864-3-swboyd@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <acee0a74-77fc-9c81-087b-ce55abf87bd4@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RYJh/3oyKhIjGcML"
+Content-Disposition: inline
+In-Reply-To: <20190723181624.203864-3-swboyd@chromium.org>
+X-Cookie: Matrimony is the root of all evil.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/07/2019 17:42, Lendacky, Thomas wrote:
-> On 7/24/19 10:55 AM, Kirill A. Shutemov wrote:
->> On Wed, Jul 10, 2019 at 07:01:19PM +0000, Lendacky, Thomas wrote:
->>> @@ -351,6 +355,32 @@ bool sev_active(void)
->>>   }
->>>   EXPORT_SYMBOL(sev_active);
->>>   
->>> +/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
->>> +bool force_dma_unencrypted(struct device *dev)
->>> +{
->>> +	/*
->>> +	 * For SEV, all DMA must be to unencrypted addresses.
->>> +	 */
->>> +	if (sev_active())
->>> +		return true;
->>> +
->>> +	/*
->>> +	 * For SME, all DMA must be to unencrypted addresses if the
->>> +	 * device does not support DMA to addresses that include the
->>> +	 * encryption mask.
->>> +	 */
->>> +	if (sme_active()) {
->>> +		u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
->>> +		u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
->>> +						dev->bus_dma_mask);
->>> +
->>> +		if (dma_dev_mask <= dma_enc_mask)
->>> +			return true;
->>
->> Hm. What is wrong with the dev mask being equal to enc mask? IIUC, it
->> means that device mask is wide enough to cover encryption bit, doesn't it?
-> 
-> Not really...  it's the way DMA_BIT_MASK works vs bit numbering. Let's say
-> that sme_me_mask has bit 47 set. __ffs64 returns 47 and DMA_BIT_MASK(47)
-> will generate a mask without bit 47 set (0x7fffffffffff). So the check
-> will catch anything that does not support at least 48-bit DMA.
 
-Couldn't that be expressed as just:
+--RYJh/3oyKhIjGcML
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	if (sme_me_mask & dma_dev_mask == sme_me_mask)
+On Tue, Jul 23, 2019 at 11:16:23AM -0700, Stephen Boyd wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
 
-?
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Robin.
+--RYJh/3oyKhIjGcML
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl04kCsACgkQJNaLcl1U
+h9BEbAf+JK2+H8PSGzC4bVmJ8LFEQ+zp2EcRBWA//q3y/ti3pC+NkcS1a7K2/mKM
+kdYghM/4QOLrReojPWhUfr/D0FKtdmDFec7QpdKdcDiVvkRGALHZmWTUSbscUF9o
+o7xnU0G2JLCoL4JUUore5N1yA26wv3galt7ky1b06XRosUeMFiS2+pCKy4GPW3uA
+/4qzGKOIt2XmuxXS3NEImtvum9MSMDQgCR509T3RWNWQQ7NMfP2ZIyyaQJYSd34Y
+kR3wz5JJuPzuN6nDeTCFkfRWo9GNriLpnw533yJvDx7FPzY98NyGxFWBHajbTQtN
+W1xoXAs9yuVgRkwsu3Q9Z8qeWTVasA==
+=mZmN
+-----END PGP SIGNATURE-----
+
+--RYJh/3oyKhIjGcML--
