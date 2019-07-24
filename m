@@ -2,107 +2,123 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E34FC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AFDC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0001722BF3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SRZc6fvQ"
+	by mail.kernel.org (Postfix) with ESMTP id A970122ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfGXGzd (ORCPT
+        id S1726462AbfGXGzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:55:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41128 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfGXGzd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:55:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FeQ44avxjhNKGvclmL+IaW/brdwZd48AYHsy5z6HFTA=; b=SRZc6fvQkH2Cx6BKrVs1zG1pG
-        HdVl1GhjX6GW6pHtPOfTP4qzncVkK2k3hGyRQTPK7uTqj4k/v8rlT1OWZCMUsTh+m03nEou75xUL6
-        d4wm73OlcqIqyEn0gXCeqXht0OdExcVR+P9cg8w4yAxVZcAvS2A9wYUs056gY8LM0pQ69uGSnrvyx
-        pdL4AQ/ltJ0Ud6+XTSN2QiBVljMoIq5n16UvtwAhwZS5ruZPx2kmSv0dfmyYsNon2mqUiZHp2h8V6
-        xiQaZm9snI9m+RdBQ0bg9XTDmynrNCE4/ejLCnx309RG/et+4PZjYTHppyDiDhverokz5FMeIUSxv
-        D2kKI3Owg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqBBS-0006A4-Vh; Wed, 24 Jul 2019 06:55:31 +0000
-Date:   Tue, 23 Jul 2019 23:55:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>
-Subject: Re: [PATCH v6 2/5] dma-buf: heaps: Add heap helpers
-Message-ID: <20190724065530.GA16225@infradead.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-3-john.stultz@linaro.org>
- <20190718100654.GA19666@infradead.org>
- <CALAqxLX1s4mbitE-_1s1vFPJrbrCKqpyhYoFW0V6hMEqE=eKVw@mail.gmail.com>
- <CAF6AEGuM1+pimGNhyKHbYR0BdH=hH+Sai0es8RjGHE9jKHjngw@mail.gmail.com>
+        Wed, 24 Jul 2019 02:55:46 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60428 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfGXGzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:55:46 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B64D5D0066629F36656E;
+        Wed, 24 Jul 2019 14:55:03 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 14:54:54 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>, <leon@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] RDMA/hns: Fix build error
+Date:   Wed, 24 Jul 2019 14:54:43 +0800
+Message-ID: <20190724065443.53068-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190723024908.11876-1-yuehaibing@huawei.com>
+References: <20190723024908.11876-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGuM1+pimGNhyKHbYR0BdH=hH+Sai0es8RjGHE9jKHjngw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 01:09:55PM -0700, Rob Clark wrote:
-> On Mon, Jul 22, 2019 at 9:09 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Thu, Jul 18, 2019 at 3:06 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > >
-> > > Is there any exlusion between mmap / vmap and the device accessing
-> > > the data?  Without that you are going to run into a lot of coherency
-> > > problems.
-> 
-> dma_fence is basically the way to handle exclusion between different
-> device access (since device access tends to be asynchronous).  For
-> device<->device access, each driver is expected to take care of any
-> cache(s) that the device might have.  (Ie. device writing to buffer
-> should flush it's caches if needed before signalling fence to let
-> reading device know that it is safe to read, etc.)
-> 
-> _begin/end_cpu_access() is intended to be the exclusion for CPU access
-> (which is synchronous)
+If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
+but INFINIBAND_HNS is y, building fails:
 
-What I mean is that we need a clear state machine (preferably including
-ownership tracking ala dma-debug) where a piece of memory has one
-owner at a time that can access it.  Only the owner can access is at
-that time, and at any owner switch we need to flush/invalidate all
-relevant caches.  And with memory that is vmaped and mapped to userspace
-that can get really complicated.
+drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
+hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
+drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
+hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
 
-The above sounds like you have some of that in place, but we'll really
-need clear rules to make sure we don't have holes in the scheme.
+Also if INFINIBAND_HNS_HIP06 is selected and HNS_DSAF
+is m, but INFINIBAND_HNS is y, building fails:
+
+drivers/infiniband/hw/hns/hns_roce_hw_v1.o: In function `hns_roce_v1_reset':
+hns_roce_hw_v1.c:(.text+0x39fa): undefined reference to `hns_dsaf_roce_reset'
+hns_roce_hw_v1.c:(.text+0x3a25): undefined reference to `hns_dsaf_roce_reset'
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
+Fixes: 08805fdbeb2d ("RDMA/hns: Split hw v1 driver from hns roce driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/infiniband/hw/hns/Kconfig  | 6 +++---
+ drivers/infiniband/hw/hns/Makefile | 8 ++------
+ 2 files changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+index 8bf847b..5478219 100644
+--- a/drivers/infiniband/hw/hns/Kconfig
++++ b/drivers/infiniband/hw/hns/Kconfig
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config INFINIBAND_HNS
+-	tristate "HNS RoCE Driver"
++	bool "HNS RoCE Driver"
+ 	depends on NET_VENDOR_HISILICON
+ 	depends on ARM64 || (COMPILE_TEST && 64BIT)
+ 	---help---
+@@ -11,7 +11,7 @@ config INFINIBAND_HNS
+ 	  To compile HIP06 or HIP08 driver as module, choose M here.
+ 
+ config INFINIBAND_HNS_HIP06
+-	bool "Hisilicon Hip06 Family RoCE support"
++	tristate "Hisilicon Hip06 Family RoCE support"
+ 	depends on INFINIBAND_HNS && HNS && HNS_DSAF && HNS_ENET
+ 	---help---
+ 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip06 and
+@@ -21,7 +21,7 @@ config INFINIBAND_HNS_HIP06
+ 	  module will be called hns-roce-hw-v1
+ 
+ config INFINIBAND_HNS_HIP08
+-	bool "Hisilicon Hip08 Family RoCE support"
++	tristate "Hisilicon Hip08 Family RoCE support"
+ 	depends on INFINIBAND_HNS && PCI && HNS3
+ 	---help---
+ 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
+diff --git a/drivers/infiniband/hw/hns/Makefile b/drivers/infiniband/hw/hns/Makefile
+index e105945..449a2d8 100644
+--- a/drivers/infiniband/hw/hns/Makefile
++++ b/drivers/infiniband/hw/hns/Makefile
+@@ -9,12 +9,8 @@ hns-roce-objs := hns_roce_main.o hns_roce_cmd.o hns_roce_pd.o \
+ 	hns_roce_ah.o hns_roce_hem.o hns_roce_mr.o hns_roce_qp.o \
+ 	hns_roce_cq.o hns_roce_alloc.o hns_roce_db.o hns_roce_srq.o hns_roce_restrack.o
+ 
+-ifdef CONFIG_INFINIBAND_HNS_HIP06
+ hns-roce-hw-v1-objs := hns_roce_hw_v1.o $(hns-roce-objs)
+-obj-$(CONFIG_INFINIBAND_HNS) += hns-roce-hw-v1.o
+-endif
++obj-$(CONFIG_INFINIBAND_HNS_HIP06) += hns-roce-hw-v1.o
+ 
+-ifdef CONFIG_INFINIBAND_HNS_HIP08
+ hns-roce-hw-v2-objs := hns_roce_hw_v2.o hns_roce_hw_v2_dfx.o $(hns-roce-objs)
+-obj-$(CONFIG_INFINIBAND_HNS) += hns-roce-hw-v2.o
+-endif
++obj-$(CONFIG_INFINIBAND_HNS_HIP08) += hns-roce-hw-v2.o
+-- 
+2.7.4
+
+
