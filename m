@@ -2,115 +2,113 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21098C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1672C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035F1227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8194227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfGXEqM (ORCPT
+        id S1726031AbfGXEs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:46:12 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:50058 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfGXEqM (ORCPT
+        Wed, 24 Jul 2019 00:48:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45908 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfGXEs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:46:12 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hq692-0004Q6-CE; Tue, 23 Jul 2019 19:32:40 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hq691-0003ye-Le; Tue, 23 Jul 2019 19:32:40 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Steve French <smfrench@gmail.com>
-Cc:     ronnie sahlberg <ronniesahlberg@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
-        <20190715134655.4076-39-sashal@kernel.org>
-        <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
-        <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com>
-Date:   Tue, 23 Jul 2019 20:32:33 -0500
-In-Reply-To: <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com>
-        (Steve French's message of "Tue, 23 Jul 2019 19:29:10 -0500")
-Message-ID: <87v9vs43pq.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hq691-0003ye-Le;;;mid=<87v9vs43pq.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19WPNvkH+gWSBLcyA8Qu0HmQ+IFY+GAvQc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Wed, 24 Jul 2019 00:48:28 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hq9CU-0007m6-Ni
+        for linux-kernel@vger.kernel.org; Wed, 24 Jul 2019 04:48:26 +0000
+Received: by mail-pg1-f199.google.com with SMTP id w5so27473949pgs.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 21:48:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yfzK+CD5lC0fbY3LJShFWmbhqPkImhOP3cc2stxkE2c=;
+        b=KGguBRisVaLa+qyUYsiug6Eq/5pu93CPrXdm641bcIAApmDIYoQRj47x8wiorwY6am
+         Hx70FeUG3MFtqFKUfA3dkW7ENop5q16miWL0MtUHBjTGIUhYd3ikuZ0+fOPM20T7gqmQ
+         iTDVjo7YLhZDlPhtZMn+V3YJQ01ap486GPXznVqyATGR8SQeMilCnU7d0f9W7LF8IrxI
+         LdmyP7KfSrCCaZjGdthraAYQL7UqXp1hXbs4jW//M5eDy/T0zYpN0RAswX7XKBAMMsve
+         3FlpAkzBpOvHunKZqWkpTH+L9mshliyb1GDaGyI0tiwJHFBytdrnWqZ8sLL4z2B189jN
+         iBhA==
+X-Gm-Message-State: APjAAAXEyXR0SRg7b3UBE06DMyY+RHDQo7zJMnXQVFtcIVLXrQUnGg/l
+        BH57O48gfcSFzgY+zGSYMdfDmInswZXpu3AXogylFo1At2rmumiBxwj7/zFQ7cxI7wRyWJ4SUXo
+        m61uPwhQH22VOafmcWWiTr5AzwY7oQtF15euoapnj5g==
+X-Received: by 2002:a17:90a:ff17:: with SMTP id ce23mr85387746pjb.47.1563943705186;
+        Tue, 23 Jul 2019 21:48:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwpPQg9WiyNO1ZuciWHV6XFxN1rkRMp+EjLZh1z8SW7D3P7l0k07rIIMzDqyBTW9T7TfafXjA==
+X-Received: by 2002:a17:90a:ff17:: with SMTP id ce23mr85387728pjb.47.1563943704873;
+        Tue, 23 Jul 2019 21:48:24 -0700 (PDT)
+Received: from 2001-b011-380f-3c20-9d3c-ccd5-c106-ac9d.dynamic-ip6.hinet.net (2001-b011-380f-3c20-9d3c-ccd5-c106-ac9d.dynamic-ip6.hinet.net. [2001:b011:380f:3c20:9d3c:ccd5:c106:ac9d])
+        by smtp.gmail.com with ESMTPSA id k8sm43825030pgm.14.2019.07.23.21.48.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 21:48:24 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: linux-next: build warning after merge of the input-current tree
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190724095416.65450cbf@canb.auug.org.au>
+Date:   Wed, 24 Jul 2019 12:48:21 +0800
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <5463D761-FAFB-4BBE-8EE1-95EF1A52F927@canonical.com>
+References: <20190724095416.65450cbf@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steve French <smfrench@gmail.com> writes:
+Hi Stephen,
 
-> Very easy to see what caused the regression with this global change:
+at 07:54, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+
+> Hi all,
 >
-> mount (which launches "cifsd" thread to read the socket)
-> umount (which kills the "cifsd" thread)
-> rmmod   (rmmod now fails since "cifsd" thread is still active)
+> After merging the input-current tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
 >
-> mount launches a thread to read from the socket ("cifsd")
-> umount is supposed to kill that thread (but with the patch
-> "signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of
-> force_sig" that no longer works).  So the regression is that after
-> unmount you still see the "cifsd" thread, and the reason that cifsd
-> thread is still around is that that patch no longer force kills the
-> process (see line 2652 of fs/cifs/connect.c) which regresses module
-> removal.
+> drivers/input/mouse/elantech.c: In function 'elantech_use_host_notify':
+> drivers/input/mouse/elantech.c:1843:6: warning: this statement may fall  
+> through [-Wimplicit-fallthrough=]
+>    if (dmi_get_bios_year() >= 2018)
+>       ^
+> drivers/input/mouse/elantech.c:1845:2: note: here
+>   default:
+>   ^~~~~~~
 >
-> -               force_sig(SIGKILL, task);
-> +               send_sig(SIGKILL, task, 1);
+> Introduced by commit
 >
-> The comment in the changeset indicates "The signal SIGKILL can not be
-> ignored" but obviously it can be ignored - at least on 5.3-rc1 it is
-> being ignored.
+>   883a2a80f79c ("Input: elantech - enable SMBus on new (2018+) systems")
 >
-> If send_sig(SIGKILL ...) doesn't work and if force_sig(SIGKILL, task)
-> is removed and no longer possible - how do we kill a helper process
-> ...
+> I get these warnings because I am building with -Wimplicit-fallthrough
+> in attempt to catch new additions early.  The gcc warning can be turned
+> off by adding a /* fall through */ comment at the point the fall through
+> happens (assuming that the fall through is intentional).
 
-I think I see what is happening.  It looks like as well as misuinsg
-force_sig, cifs is also violating the invariant that keeps SIGKILL out
-of the blocked signal set.
+Yes the fall through is intentional.
 
-For that force_sig will act differently.  I did not consider it because
-that is never supposed to happen.
+Kai-Heng
 
-Can someone test this code below and confirm the issue goes away?
-
-diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-index 5d6d44bfe10a..2a782ebc7b65 100644
---- a/fs/cifs/transport.c
-+++ b/fs/cifs/transport.c
-@@ -347,6 +347,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
- 	 */
- 
- 	sigfillset(&mask);
-+	sigdelset(&mask, SIGKILL);
- 	sigprocmask(SIG_BLOCK, &mask, &oldmask);
- 
- 	/* Generate a rfc1002 marker for SMB2+ */
+>
+> -- 
+> Cheers,
+> Stephen Rothwell
 
 
-Eric
