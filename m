@@ -2,112 +2,97 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE57C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C56C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3051A22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996343;
-	bh=4rXGb2R6EyZ9Mx+KiWyRg97meu2sfPYTAiAJSzPbv7U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=roBiOrtq5ufdirmyf/k4mw8CgutfUp98p/hqdDxslc2BLNp9eML7c3OgAGfBM6GAg
-	 QiZecChiUUdyneke3eJS3bCRXik88nzHyHCtmWkUnuuy/o/vxHUMBvuqLXX4o307rQ
-	 3N5HatwUwS40VO5TEEj4qtSLsHOmJPqQpVh1SiSQ=
+	by mail.kernel.org (Postfix) with ESMTP id 112A9229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/UPHHu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387570AbfGXTZl (ORCPT
+        id S1729189AbfGXTZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:25:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388029AbfGXTZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29336229ED;
-        Wed, 24 Jul 2019 19:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996330;
-        bh=4rXGb2R6EyZ9Mx+KiWyRg97meu2sfPYTAiAJSzPbv7U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQBo2xgE15D5ZyAJpf3Ub0i8SnfZAcpZ4J3hIbMa6L53SE8FfwfPD/mQ+Df2/fSIW
-         dGhmdzCWDUhEvCCvgXGsSxgGeaZTrMunfyIjGk6bSud6xaA6Y+zR9NondwJuXJwekq
-         eVv6mT/FsWC6DI4rpfGn/auANBIl5QTiB+dVgO5E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 059/413] media: platform: ao-cec-g12a: disable regmap fast_io for cec bus regmap
-Date:   Wed, 24 Jul 2019 21:15:50 +0200
-Message-Id: <20190724191739.541651408@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 15:25:46 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43303 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388043AbfGXTZh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:25:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id c19so32727182lfm.10;
+        Wed, 24 Jul 2019 12:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=62j7+wSkhUHI/uSOEbsFJlruhr6Za1QWHbaqDgoEVtQ=;
+        b=D/UPHHu/fRcxCNNCrIdrC/33dxO3nj5swxlbIsELJLpjb2uo7H37kp4yGQ5uAHGGtj
+         wLpgAFUMrHa1mZmTO4lu9Bh8EKH50d3EFZ7EjCX3SPIZRUaENr4lQFPThmYTI4fjVwDQ
+         iUE6dcIf/SXrAt9dwzL2DSdMsaVQp4eGs87+rxz1XpaW/abr+DOHGmb+eqv6kzEl8b8O
+         TZwRvz7aAnrDiwX6CHPs0ZhUq4/TzvEKUgH7dqL4Z+JGLo80HvGUBKVl3kJ0ANKU90jr
+         dCL7t8ONpYxKjBd9RuQ9pEFnfomu0WBuKrBZIfDyXXLV/X5254HidEocWQ2+IbuO1ZA6
+         eYFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=62j7+wSkhUHI/uSOEbsFJlruhr6Za1QWHbaqDgoEVtQ=;
+        b=A7kIPOXssOwQoHaO06HPM+jk9HywL73bV1z1nHwS11czdNjX0kfQwwhSSvFGhrD2l1
+         2PgDs08d4Jc9XKWDnACaekbGlchVlR5TwYjgYQK/RJc2VY4ujc6UCVqMUfrFx7w9vS31
+         ufpZmafIvp7baUgZIRj3UK2ZqLQYXsc3p8MqSUQObgP5ka6n0E83bE8bH8R0f1nmG0f2
+         l9psNMpWK9qKzvBxWiodaaa5xixhskykOe646Cg4WK1G3gxPALlr7xco5gZ2TL8S11Zg
+         nJtCiSAZiLK0uG/MdKj2Uw7Cbyn/QY/Bqt/FUjzNDKAVbj7IXdPOL7+GoY5XBApkOZfb
+         COHQ==
+X-Gm-Message-State: APjAAAXHRY1NXkRc6jskE3L9+GUYhJDA9d6HD4YsVJy7aTTIMe5QqJkY
+        33BGJiypb45e8cpmjK7nMPc=
+X-Google-Smtp-Source: APXvYqw7B3oyjIfw1cKuffGMQUDFrbiFo4davqC0Fk4UMrvpLwisAi0F3pd6A8VSflQTS2vwH4V40Q==
+X-Received: by 2002:a19:6e41:: with SMTP id q1mr28989439lfk.20.1563996334490;
+        Wed, 24 Jul 2019 12:25:34 -0700 (PDT)
+Received: from localhost ([188.170.223.67])
+        by smtp.gmail.com with ESMTPSA id k27sm8003487lfm.90.2019.07.24.12.25.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 12:25:33 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 22:25:28 +0300
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: elantech - mark expected switch fall-through
+Message-ID: <20190724192528.GA6859@penguin>
+References: <20190724175202.GA9583@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724175202.GA9583@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9f7406d6b56b4b71a12480b68221755ea7b3e0ee ]
+Hi Gustavo,
 
-With fast_io enabled, spinlock_irq is used for read/write operations,
-thus leading to :
-BUG: sleeping function called from invalid context at [snip]/ao-cec-g12a.c:379
- in_atomic(): 1, irqs_disabled(): 128, pid: 1451, name: irq/14-ff800280
-[snip]
-Call trace:
- dump_backtrace+0x0/0x180
- show_stack+0x14/0x1c
- dump_stack+0xa8/0xe0
- ___might_sleep+0xf4/0x104
- __might_sleep+0x4c/0x80
- meson_ao_cec_g12a_read+0x7c/0x164
- regmap_read+0x16c/0x1b0
- meson_ao_cec_g12a_irq_thread+0xcc/0x200
- irq_thread_fn+0x2c/0x60
- irq_thread+0x14c/0x1fc
- kthread+0x11c/0x12c
- ret_from_fork+0x10/0x18
+On Wed, Jul 24, 2019 at 12:52:02PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning:
+> 
+> drivers/input/mouse/elantech.c: In function 'elantech_use_host_notify':
+> drivers/input/mouse/elantech.c:1843:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (dmi_get_bios_year() >= 2018)
+>       ^
+> drivers/input/mouse/elantech.c:1845:2: note: here
+>   default:
+>   ^~~~~~~
 
-Simply remove fast_io to use mutexes instead.
+Thank you for the patch but I already pushed out similar patch.
 
-Fixes: b7778c46683c ("media: platform: meson: Add Amlogic Meson G12A AO CEC Controller driver")
+Thanks.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/platform/meson/ao-cec-g12a.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/media/platform/meson/ao-cec-g12a.c b/drivers/media/platform/meson/ao-cec-g12a.c
-index 3620a1e310f5..ddfd060625da 100644
---- a/drivers/media/platform/meson/ao-cec-g12a.c
-+++ b/drivers/media/platform/meson/ao-cec-g12a.c
-@@ -415,7 +415,6 @@ static const struct regmap_config meson_ao_cec_g12a_cec_regmap_conf = {
- 	.reg_read = meson_ao_cec_g12a_read,
- 	.reg_write = meson_ao_cec_g12a_write,
- 	.max_register = 0xffff,
--	.fast_io = true,
- };
- 
- static inline void
 -- 
-2.20.1
-
-
-
+Dmitry
