@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02706C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED5CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B572E2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080692184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dqqZjCR+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TG63xheF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfGXALX (ORCPT
+        id S1727485AbfGXAL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 20:11:23 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:54567 "EHLO
+        Tue, 23 Jul 2019 20:11:27 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:43597 "EHLO
         mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfGXALT (ORCPT
+        with ESMTP id S1727605AbfGXALZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 20:11:19 -0400
-Received: by mail-pl1-f202.google.com with SMTP id u10so22969682plq.21
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 17:11:18 -0700 (PDT)
+        Tue, 23 Jul 2019 20:11:25 -0400
+Received: by mail-pl1-f202.google.com with SMTP id t2so22976863plo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 17:11:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=IYZJQm88reXdHTotfhEXNDoGdAFDYghT6+BVbD2Lx3Q=;
-        b=dqqZjCR+9x1b/sm4CzwlG2/awM1366lUViCWXDx4V8KnhoXbyvEQYVgmGIpQXikM+n
-         vbtc83xbzYPRCTghlh7EtxsIBnKppVjh2HA+S/lWsPcbJkgcTargvDfiNIYrofwlsEhG
-         HPI2NLaA9FrWJ6gIoGxjwj6NiXxwQIxkWLjRxmAwX9+odvoQohtI2Y7kiE6Uh/jpk0di
-         b/OJMmbJBBPuVqLHWjFRjfvjxDS9+uLi0MscZ9s6IdZixznXBU7a4o+SDLOmXgnzS69+
-         uWxWc4H73Svl65U//mrysvQuagd3COUBMyYHnNr3a5I0vXZWTd3irnVWEUcH0VCN+ZJN
-         XkLw==
+        bh=L03s0/cCwSibWbjOlLSetg9NEt3OrkecIhAnIwN841s=;
+        b=TG63xheFeu2TtgFwns1F37AaSHu7rAHoMRk+RRVOIKJ8Ya+2Znfh8TIvoJJB4JkqHU
+         gSNCzASvMpUQnrcSjpvOmaDQqPxEsL1iEEwUutzRjWt0rvWBXuY6A+fJ3T31BqTqkXYy
+         75wO6Isa8nJ99vGoEKt2cs9nfxoY5qA3fjYp80D9Bey/LO93+orki8csi0DDKNMoRACM
+         EtF1g+p+LezFGYIYqBssjGmjAd2JRIVpe1QqD4mhCTTsgwZcVM2fqr72YoyzPXAzht8r
+         rY+tYHS9Z1vGj4bWXcM/1coYsmxI9spyPAWy1i1VJtk9BW3yqfE1KNM4SYeFIUHfPyR3
+         JelQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=IYZJQm88reXdHTotfhEXNDoGdAFDYghT6+BVbD2Lx3Q=;
-        b=cBNTSZ6W7cXUnHYOt0DYqZH0+FB1JYublSea9JOqzs0LkL4Kxbc3/sce0UVv0FtkvO
-         dXRt2pkMQlndcOW02heZMzdZf+MfXfHFqWr2y3grCya9wopBOHjTntDOxst1pXkGOaz3
-         Gj9L6j9ykc2QDARa/mkYbSKgzHHoJKW+RzVqCHOIz4O4QUZw+uT3ym6AaZKWHEMPRKo8
-         /w3OxDpvserziE3sbt5jvPJy2gqm7Oh8O2wPqAM6AWFiAk5wbzudFHSKP2uZPK6rWQUG
-         ZcYertwunfJijRU0BBF4dVgX6loYGm0P3zRbuyYxN2Is4AA7b18SOd6aVkpzbsujNIY+
-         qx4Q==
-X-Gm-Message-State: APjAAAXcIA2fSmbqUEg93n/gM+VnhcqP9n46f8TSxniHwUf4leE+W6c1
-        0VpgGwqdzmnSWmRrL1g/NuwOzZA7NZIFGA8=
-X-Google-Smtp-Source: APXvYqw81ryZIxgaHt4TIsMz754hWWiNGMi1s1EvNmAmSyt8ChVHTwzTfOg5U9ErdBOoGLx6o/xx8OjryufME7w=
-X-Received: by 2002:a63:460c:: with SMTP id t12mr78200789pga.69.1563927077993;
- Tue, 23 Jul 2019 17:11:17 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 17:10:57 -0700
+        bh=L03s0/cCwSibWbjOlLSetg9NEt3OrkecIhAnIwN841s=;
+        b=PRoDmUfaTxdlrPrYkuow39iVWfBLmFx5s/99YxWP0UMw3CggZ+uT5Pkd1Q2E+7sTGM
+         o3ZgH628uLmcVdi9HquYGsaBoT4XejIQGaW3HFXGoobAnz/ZP5Luzn7TNcoM+qPiiaDP
+         fHW++AV/EgcpsvVt5h7anL4T5nmJRJBoZJ4+olCjdftgaAGY3QIhVN6RODUgExx1HSqe
+         RvOzEJEaqwEVZSUXb9SxEcYUwBdDGh8wcbsgYIjTONpOUuDkJtjKIYwc6OvAg7oAhcRa
+         5A9xU6uITJd0XoHseCMjf1OlYz+s5/WZfHU2p/fz2iKBjHItULX4cJBGMbMLaYdV85gR
+         7zlA==
+X-Gm-Message-State: APjAAAWh8TBG9WPdUmqRK9Z0RivVULbam5/hon59RwnTXfscmKGQLh1Q
+        6ul8V49+xqBH/PETzZOkuEWHxIj0uBTgNNM=
+X-Google-Smtp-Source: APXvYqwXM3zaatfsro6OzkcL1pd5UbOLfzL1dK6ZYUTH1e3CKFd84+WcyriFc2O6S1UEB9t2wnPoV/KmMJuO2tM=
+X-Received: by 2002:a63:204b:: with SMTP id r11mr38959699pgm.121.1563927084355;
+ Tue, 23 Jul 2019 17:11:24 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 17:10:59 -0700
 In-Reply-To: <20190724001100.133423-1-saravanak@google.com>
-Message-Id: <20190724001100.133423-5-saravanak@google.com>
+Message-Id: <20190724001100.133423-7-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190724001100.133423-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v7 4/7] driver core: Add sync_state driver/bus callback
+Subject: [PATCH v7 6/7] of/platform: Create device links for all
+ child-supplier depencencies
 From:   Saravana Kannan <saravanak@google.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -75,235 +76,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sync_state driver/bus callback is called once all the consumers
-of a supplier have probed successfully.
+A parent device can have child devices that it adds when it probes. But
+this probing of the parent device can happen way after kernel init is done
+-- for example, when the parent device's driver is loaded as a module.
 
-This allows the supplier device's driver/bus to sync the supplier
-device's state to the software state with the guarantee that all the
-consumers are actively managing the resources provided by the supplier
-device.
+In such cases, if the child devices depend on a supplier in the system, we
+need to make sure the supplier gets the sync_state() callback only after
+these child devices are added and probed.
 
-To maintain backwards compatibility and ease transition from existing
-frameworks and resource cleanup schemes, late_initcall_sync is the
-earliest when the sync_state callback might be called.
+To achieve this, when creating device links for a device by looking at its
+DT node, don't just look at DT references at the top node level. Look at DT
+references in all the descendant nodes too and create device links from the
+ancestor device to all these supplier devices.
 
-There is no upper bound on the time by which the sync_state callback
-has to be called. This is because if a consumer device never probes,
-the supplier has to maintain its resources in the state left by the
-bootloader. For example, if the bootloader leaves the display
-backlight at a fixed voltage and the backlight driver is never probed,
-you don't want the backlight to ever be turned off after boot up.
+This way, when the parent device probes and adds child devices, the child
+devices can then create their own device links to the suppliers and further
+delay the supplier's sync_state() callback to after the child devices are
+probed.
 
-Also, when multiple devices are added after kernel init, some
-suppliers could be added before their consumer devices get added. In
-these instances, the supplier devices could get their sync_state
-callback called right after they probe because the consumers devices
-haven't had a chance to create device links to the suppliers.
+Example:
+In this illustration, -> denotes DT references and indentation
+represents child status.
 
-To handle this correctly, this change also provides APIs to
-pause/resume sync state callbacks so that when multiple devices are
-added, their sync_state callback evaluation can be postponed to happen
-after all of them are added.
+Device node A
+	Device node B -> D
+	Device node C -> B, D
+
+Device node D
+
+Assume all these devices have their drivers loaded as modules.
+
+Without this patch, this is the sequence of events:
+1. D is added.
+2. A is added.
+3. Device D probes.
+4. Device D gets its sync_state() callback.
+5. Device B and C might malfunction because their resources got
+   altered/turned off before they can make active requests for them.
+
+With this patch, this is the sequence of events:
+1. D is added.
+2. A is added and creates device links to D.
+3. Device link from A to B is not added because A is a parent of B.
+4. Device D probes.
+5. Device D does not get it's sync_state() callback because consumer A
+   hasn't probed yet.
+5. Device A probes.
+5. a. Devices B and C are added.
+5. b. Device links from B and C to D are added.
+5. c. Device A's probe completes.
+6. Device D does not get it's sync_state() callback because consumer A
+   has probed but consumers B and C haven't probed yet.
+7. Device B and C probe.
+8. Device D gets it's sync_state() callback because all its consumers
+   have probed.
+9. None of the devices malfunction.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c    | 65 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h | 23 +++++++++++++++
- 2 files changed, 88 insertions(+)
+ drivers/of/platform.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 733d8a9aec76..aec725d9e17e 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -46,6 +46,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
- /* Device links support. */
- static LIST_HEAD(wait_for_suppliers);
- static DEFINE_MUTEX(wfs_lock);
-+static LIST_HEAD(deferred_sync);
-+static unsigned int supplier_sync_state_disabled;
- 
- #ifdef CONFIG_SRCU
- static DEFINE_MUTEX(device_links_lock);
-@@ -634,6 +636,62 @@ int device_links_check_suppliers(struct device *dev)
- 	return ret;
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 71d6138698ec..41499ddc8d95 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -655,24 +655,35 @@ static bool of_link_property(struct device *dev, struct device_node *con_np,
+ 	return done ? 0 : -ENODEV;
  }
  
-+static void __device_links_supplier_sync_state(struct device *dev)
++static int __of_link_to_suppliers(struct device *dev,
++				  struct device_node *con_np)
 +{
-+	struct device_link *link;
++	struct device_node *child;
++	struct property *p;
++	bool done = true;
 +
-+	if (dev->state_synced)
-+		return;
++	for_each_property_of_node(con_np, p)
++		if (of_link_property(dev, con_np, p->name))
++			done = false;
 +
-+	list_for_each_entry(link, &dev->links.consumers, s_node) {
-+		if (link->flags & DL_FLAG_STATELESS)
-+			continue;
-+		if (link->status != DL_STATE_ACTIVE)
-+			return;
-+	}
++	for_each_child_of_node(con_np, child)
++		if (__of_link_to_suppliers(dev, child))
++			done = false;
 +
-+	if (dev->bus->sync_state)
-+		dev->bus->sync_state(dev);
-+	else if (dev->driver && dev->driver->sync_state)
-+		dev->driver->sync_state(dev);
-+
-+	dev->state_synced = true;
++	return done ? 0 : -ENODEV;
 +}
 +
-+void device_links_supplier_sync_state_pause(void)
-+{
-+	device_links_write_lock();
-+	supplier_sync_state_disabled++;
-+	device_links_write_unlock();
-+}
-+
-+void device_links_supplier_sync_state_resume(void)
-+{
-+	struct device *dev, *tmp;
-+
-+	device_links_write_lock();
-+	if (!supplier_sync_state_disabled) {
-+		WARN(true, "Unmatched sync_state pause/resume!");
-+		goto out;
-+	}
-+	supplier_sync_state_disabled--;
-+	if (supplier_sync_state_disabled)
-+		goto out;
-+
-+	list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
-+		__device_links_supplier_sync_state(dev);
-+		list_del_init(&dev->links.defer_sync);
-+	}
-+out:
-+	device_links_write_unlock();
-+}
-+
-+static void __device_links_supplier_defer_sync(struct device *sup)
-+{
-+	if (list_empty(&sup->links.defer_sync))
-+		list_add_tail(&sup->links.defer_sync, &deferred_sync);
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -678,6 +736,11 @@ void device_links_driver_bound(struct device *dev)
+ static bool of_devlink;
+ core_param(of_devlink, of_devlink, bool, 0);
  
- 		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
- 		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+
-+		if (supplier_sync_state_disabled)
-+			__device_links_supplier_defer_sync(link->supplier);
-+		else
-+			__device_links_supplier_sync_state(link->supplier);
- 	}
+ static int of_link_to_suppliers(struct device *dev)
+ {
+-	struct property *p;
+-	bool done = true;
+-
+ 	if (!of_devlink)
+ 		return 0;
+ 	if (unlikely(!dev->of_node))
+ 		return 0;
  
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-@@ -787,6 +850,7 @@ void device_links_driver_cleanup(struct device *dev)
- 		WRITE_ONCE(link->status, DL_STATE_DORMANT);
- 	}
- 
-+	list_del_init(&dev->links.defer_sync);
- 	__device_links_no_driver(dev);
- 
- 	device_links_write_unlock();
-@@ -1758,6 +1822,7 @@ void device_initialize(struct device *dev)
- 	INIT_LIST_HEAD(&dev->links.consumers);
- 	INIT_LIST_HEAD(&dev->links.suppliers);
- 	INIT_LIST_HEAD(&dev->links.needs_suppliers);
-+	INIT_LIST_HEAD(&dev->links.defer_sync);
- 	dev->links.status = DL_DEV_NO_DRIVER;
+-	for_each_property_of_node(dev->of_node, p)
+-		if (of_link_property(dev, dev->of_node, p->name))
+-			done = false;
+-
+-	return done ? 0 : -ENODEV;
++	return __of_link_to_suppliers(dev, dev->of_node);
  }
- EXPORT_SYMBOL_GPL(device_initialize);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 35aed50033c4..4e74ed9137a0 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -84,6 +84,8 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		available at the time this function is called.  As in, the
-  *		function should NOT stop at the first failed device link if
-  *		other unlinked supplier devices are present in the system.
-+ *		This is necessary for the sync_state() callback to work
-+ *		correctly.
-  *
-  *		Return 0 if device links have been successfully created to all
-  *		the suppliers of this device.  Return an error if some of the
-@@ -91,6 +93,13 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		reattempted in the future.
-  * @probe:	Called when a new device or driver add to this bus, and callback
-  *		the specific driver's probe to initial the matched device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when a device removed from this bus.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-  *
-@@ -135,6 +144,7 @@ struct bus_type {
- 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
- 	int (*add_links)(struct device *dev);
- 	int (*probe)(struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove)(struct device *dev);
- 	void (*shutdown)(struct device *dev);
  
-@@ -280,6 +290,13 @@ enum probe_type {
-  * @probe:	Called to query the existence of a specific device,
-  *		whether this driver can work with it, and bind the driver
-  *		to a specific device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when the device is removed from the system to
-  *		unbind a device from this driver.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-@@ -318,6 +335,7 @@ struct device_driver {
- 
- 	int (*edit_links)(struct device *dev);
- 	int (*probe) (struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove) (struct device *dev);
- 	void (*shutdown) (struct device *dev);
- 	int (*suspend) (struct device *dev, pm_message_t state);
-@@ -921,12 +939,14 @@ enum dl_dev_state {
-  * @suppliers: List of links to supplier devices.
-  * @consumers: List of links to consumer devices.
-  * @needs_suppliers: Hook to global list of devices waiting for suppliers.
-+ * @defer_sync: Hook to global list of devices that have deferred sync_state.
-  * @status: Driver status information.
-  */
- struct dev_links_info {
- 	struct list_head suppliers;
- 	struct list_head consumers;
- 	struct list_head needs_suppliers;
-+	struct list_head defer_sync;
- 	enum dl_dev_state status;
- };
- 
-@@ -1094,6 +1114,7 @@ struct device {
- 	bool			offline:1;
- 	bool			of_node_reused:1;
- 	bool			has_edit_links:1;
-+	bool			state_synced:1;
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
-@@ -1437,6 +1458,8 @@ struct device_link *device_link_add(struct device *consumer,
- void device_link_del(struct device_link *link);
- void device_link_remove(void *consumer, struct device *supplier);
- void device_link_remove_from_wfs(struct device *consumer);
-+void device_links_supplier_sync_state_pause(void);
-+void device_links_supplier_sync_state_resume(void);
- 
- #ifndef dev_fmt
- #define dev_fmt(fmt) fmt
+ #ifndef CONFIG_PPC
 -- 
 2.22.0.709.g102302147b-goog
 
