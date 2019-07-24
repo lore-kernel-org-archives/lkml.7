@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107CDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D56C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7819206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CC0205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998763;
-	bh=OhSZtjLvVeSkSEdAXWuZWyJWeCmDNXA06ipGKmFqN5E=;
+	s=default; t=1563998771;
+	bh=S4svMKdHuAGeN67O6kmLtk+ZNOQ7EGTIYKVayCpUo8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1mI3MKw2hikPpaMwIwdoNOcFNbvt8fanSpKx6ZKSQQK2dyZasqNEXo9IRN13vlX5
-	 6GUkFPqBuzxOTH0YiPz19JsnLjgu4t/IvgGs7vaXwWgw5/F1cvBa6haL89hRcPxYyi
-	 Q0vxnT87QcybdBs/cM2hlO2tNkenXhaEWBu4RT+E=
+	b=SyefvyWBa9H0m6ZiwCXgWtsckuA06W+G9II4CocfEvTF/Vx35Lrs5UxoPyP7gf/oM
+	 NtwXcR5RG7P/RvmvhfWsgn3cUAylif1SJzit+qDuxSMiJvL/2SSUAnlk4VaQ35NJ9L
+	 hKAv9gVnD3MjBB+OjpFvJzoZ6SPpv+DahghWqwOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392787AbfGXUGC (ORCPT
+        id S2388527AbfGXUFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57830 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:05:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392760AbfGXUF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:05:56 -0400
+        id S2405808AbfGXUFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:05:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8078120665;
-        Wed, 24 Jul 2019 20:05:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF67B205C9;
+        Wed, 24 Jul 2019 20:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998755;
-        bh=OhSZtjLvVeSkSEdAXWuZWyJWeCmDNXA06ipGKmFqN5E=;
+        s=default; t=1563998729;
+        bh=S4svMKdHuAGeN67O6kmLtk+ZNOQ7EGTIYKVayCpUo8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TngG7Rz3RHaZjA5XqV4+rztlb/OIbrJm+X/M6g1Yf0coE1gxGoSrC2RkuYLA0yJmn
-         cIQQvia1n6oOI6PGZT/zoM0WpGdS4gwsmpd4UQ7YiQZDTAabzn3TSyxn2Phe9N1HAo
-         5knNayRBm4Ywj308Ra3PQu3t9oGcZoBQ07AztqCY=
+        b=LPyY/DX1eth4SXTJVZh8/UxrnDu75Y9q6T8V5pBZs0XgHZQJKjf7TKJSlvp/ic7JI
+         j+kUWfZFs7P+TXnfUWmr6eqKjbxkgrfVb+Tn9qTlNnbYlIH+U4Yb4KCFMFaGzRinAy
+         I7S9Em5bHXnAqK8OZ+pPcSiAFO5Gq4TSRxWthCsE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/271] media: vimc: cap: check v4l2_fill_pixfmt return value
-Date:   Wed, 24 Jul 2019 21:19:31 +0200
-Message-Id: <20190724191703.965148109@linuxfoundation.org>
+Subject: [PATCH 4.19 094/271] media: s5p-mfc: Make additional clocks optional
+Date:   Wed, 24 Jul 2019 21:19:23 +0200
+Message-Id: <20190724191703.282154977@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,44 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 77ae46e11df5c96bb4582633851f838f5d954df4 ]
+[ Upstream commit e08efef8fe7db87206314c19b341612c719f891a ]
 
-v4l2_fill_pixfmt() returns -EINVAL if the pixelformat used as parameter is
-invalid or if the user is trying to use a multiplanar format with the
-singleplanar API. Currently, the vimc_cap_try_fmt_vid_cap() returns such
-value, but vimc_cap_s_fmt_vid_cap() is ignoring it. Fix that and returns
-an error value if vimc_cap_try_fmt_vid_cap() has failed.
+Since the beginning the second clock ('special', 'sclk') was optional and
+it is not available on some variants of Exynos SoCs (i.e. Exynos5420 with
+v7 of MFC hardware).
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
-Suggested-by: Helen Koike <helen.koike@collabora.com>
+However commit 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
+made handling of all specified clocks mandatory. This patch restores
+original behavior of the driver and fixes its operation on
+Exynos5420 SoCs.
+
+Fixes: 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-capture.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/platform/s5p-mfc/s5p_mfc_pm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-index 65d657daf66f..8e014cc485f0 100644
---- a/drivers/media/platform/vimc/vimc-capture.c
-+++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -132,12 +132,15 @@ static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
- 				  struct v4l2_format *f)
- {
- 	struct vimc_cap_device *vcap = video_drvdata(file);
-+	int ret;
- 
- 	/* Do not change the format while stream is on */
- 	if (vb2_is_busy(&vcap->queue))
- 		return -EBUSY;
- 
--	vimc_cap_try_fmt_vid_cap(file, priv, f);
-+	ret = vimc_cap_try_fmt_vid_cap(file, priv, f);
-+	if (ret)
-+		return ret;
- 
- 	dev_dbg(vcap->dev, "%s: format update: "
- 		"old:%dx%d (0x%x, %d, %d, %d, %d) "
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
+index eb85cedc5ef3..5e080f32b0e8 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
+@@ -38,6 +38,11 @@ int s5p_mfc_init_pm(struct s5p_mfc_dev *dev)
+ 	for (i = 0; i < pm->num_clocks; i++) {
+ 		pm->clocks[i] = devm_clk_get(pm->device, pm->clk_names[i]);
+ 		if (IS_ERR(pm->clocks[i])) {
++			/* additional clocks are optional */
++			if (i && PTR_ERR(pm->clocks[i]) == -ENOENT) {
++				pm->clocks[i] = NULL;
++				continue;
++			}
+ 			mfc_err("Failed to get clock: %s\n",
+ 				pm->clk_names[i]);
+ 			return PTR_ERR(pm->clocks[i]);
 -- 
 2.20.1
 
