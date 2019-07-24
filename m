@@ -2,118 +2,113 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6119C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6260C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3BB222BF5
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E8A22BF5
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfGXODH (ORCPT
+        id S1728352AbfGXODt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:03:07 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:39439 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387418AbfGXODH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:03:07 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 45txrT3h5Bz9sLt; Thu, 25 Jul 2019 00:03:05 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     linuxppc-dev@ozlabs.org
-Cc:     christian@brauner.io, linux-kernel@vger.kernel.org,
-        asolokha@kb.kras.ru
-Subject: [PATCH v2] powerpc: Wire up clone3 syscall
-Date:   Thu, 25 Jul 2019 00:02:59 +1000
-Message-Id: <20190724140259.23554-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.20.1
+        Wed, 24 Jul 2019 10:03:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50252 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726622AbfGXODs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:03:48 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2CBBFA9AC7F18D8330B1;
+        Wed, 24 Jul 2019 22:03:32 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 22:03:27 +0800
+Subject: Re: [PATCH] media: staging: ipu3: Enable IOVA API only when IOMMU
+ support is enabled
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+References: <20190722134749.21580-1-yuehaibing@huawei.com>
+ <20190724103027.GD21370@paasikivi.fi.intel.com>
+ <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
+CC:     <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <hverkuil-cisco@xs4all.nl>,
+        <digetx@gmail.com>, <mchehab@kernel.org>, <yong.zhi@intel.com>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <0c08bdae-facc-0f28-0e58-17a65172587a@huawei.com>
+Date:   Wed, 24 Jul 2019 22:03:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wire up the new clone3 syscall added in commit 7f192e3cd316 ("fork:
-add clone3").
+On 2019/7/24 21:49, Robin Murphy wrote:
+> On 24/07/2019 11:30, Sakari Ailus wrote:
+>> Hi Yue,
+>>
+>> On Mon, Jul 22, 2019 at 09:47:49PM +0800, YueHaibing wrote:
+>>> If IOMMU_SUPPORT is not set, ipu3 driver may select IOMMU_IOVA to m.
+>>> But for many drivers, they use "select IOMMU_IOVA if IOMMU_SUPPORT"
+>>> in the Kconfig, for example, CONFIG_TEGRA_VDE is set to y but IOMMU_IOVA
+>>> is m, then the building fails like this:
+>>>
+>>> drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
+>>> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
+>>> iommu.c:(.text+0x56): undefined reference to `__free_iova'
+>>>
+>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>> ---
+>>>   drivers/staging/media/ipu3/Kconfig | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/staging/media/ipu3/Kconfig b/drivers/staging/media/ipu3/Kconfig
+>>> index 4b51c67..b7df18f 100644
+>>> --- a/drivers/staging/media/ipu3/Kconfig
+>>> +++ b/drivers/staging/media/ipu3/Kconfig
+>>> @@ -4,7 +4,7 @@ config VIDEO_IPU3_IMGU
+>>>       depends on PCI && VIDEO_V4L2
+>>>       depends on MEDIA_CONTROLLER && VIDEO_V4L2_SUBDEV_API
+>>>       depends on X86
+>>> -    select IOMMU_IOVA
+>>> +    select IOMMU_IOVA if IOMMU_SUPPORT
+>>
+>> This doesn't seem right: the ipu3-cio2 driver needs IOMMU_IOVA
+>> independently of IOMMU_SUPPORT.
+>>
+>> Looking at tegra-vde, it seems to depend on IOMMU_SUPPORT but that's not
+>> declared in its Kconfig entry. I wonder if adding that would be the right
+>> way to fix this.
+>>
+>> Cc'ing the IOMMU list.
+> 
+> Right, I also had the impression that we'd made the IOVA library completely standalone. And what does the IPU3 driver's Kconfig have to do with some *other* driver failing to link anyway?
 
-This requires a ppc_clone3 wrapper, in order to save the non-volatile
-GPRs before calling into the generic syscall code. Otherwise we hit
-the BUG_ON in CHECK_FULL_REGS in copy_thread().
+Oh, I misunderstand that IOMMU_IOVA is depend on IOMMU_SUPPORT, thank you for clarification.
 
-Lightly tested using Christian's test code on a Power8 LE VM.
+I will try to fix this in tegra-vde.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
----
- arch/powerpc/include/asm/unistd.h        | 1 +
- arch/powerpc/kernel/entry_32.S           | 8 ++++++++
- arch/powerpc/kernel/entry_64.S           | 5 +++++
- arch/powerpc/kernel/syscalls/syscall.tbl | 1 +
- 4 files changed, 15 insertions(+)
-
-v2: Add the wrapper for 32-bit as well, don't allow SPU programs to call
-    clone3 (switch ABI to nospu).
-
-v1: https://lore.kernel.org/r/20190722132231.10169-1-mpe@ellerman.id.au
-
-diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
-index 68473c3c471c..b0720c7c3fcf 100644
---- a/arch/powerpc/include/asm/unistd.h
-+++ b/arch/powerpc/include/asm/unistd.h
-@@ -49,6 +49,7 @@
- #define __ARCH_WANT_SYS_FORK
- #define __ARCH_WANT_SYS_VFORK
- #define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_CLONE3
- 
- #endif		/* __ASSEMBLY__ */
- #endif /* _ASM_POWERPC_UNISTD_H_ */
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 85fdb6d879f1..54fab22c9a43 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -597,6 +597,14 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
- 	stw	r0,_TRAP(r1)		/* register set saved */
- 	b	sys_clone
- 
-+	.globl	ppc_clone3
-+ppc_clone3:
-+	SAVE_NVGPRS(r1)
-+	lwz	r0,_TRAP(r1)
-+	rlwinm	r0,r0,0,0,30		/* clear LSB to indicate full */
-+	stw	r0,_TRAP(r1)		/* register set saved */
-+	b	sys_clone3
-+
- 	.globl	ppc_swapcontext
- ppc_swapcontext:
- 	SAVE_NVGPRS(r1)
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index d9105fcf4021..0a0b5310f54a 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -487,6 +487,11 @@ _GLOBAL(ppc_clone)
- 	bl	sys_clone
- 	b	.Lsyscall_exit
- 
-+_GLOBAL(ppc_clone3)
-+       bl      save_nvgprs
-+       bl      sys_clone3
-+       b       .Lsyscall_exit
-+
- _GLOBAL(ppc32_swapcontext)
- 	bl	save_nvgprs
- 	bl	compat_sys_swapcontext
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index f2c3bda2d39f..43f736ed47f2 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -516,3 +516,4 @@
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
-+435	nospu	clone3				ppc_clone3
--- 
-2.20.1
+> 
+> Robin.
+> 
+>>
+>>>       select VIDEOBUF2_DMA_SG
+>>>       help
+>>>         This is the Video4Linux2 driver for Intel IPU3 image processing unit,
+>>
+> 
+> .
+> 
 
