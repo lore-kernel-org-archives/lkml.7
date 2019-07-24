@@ -3,272 +3,190 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE056C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9759C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B362C21926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E72217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="E7C1anIb"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="zS/bVLGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfGXSKi (ORCPT
+        id S1727756AbfGXSLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:10:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34663 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfGXSKi (ORCPT
+        Wed, 24 Jul 2019 14:11:47 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35015 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfGXSLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:10:38 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k10so46489965qtq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:10:37 -0700 (PDT)
+        Wed, 24 Jul 2019 14:11:46 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w20so47884159edd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:11:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AgQzBOtr/JltxPGhZk+AY96SUJ5Pcnx5e1/XHa6kQec=;
-        b=E7C1anIbh2D5eFxSNCwrS3A3q2wjnylLIPRAOLxDzTUk7g5WeY1VwIwUicPunUsZav
-         KURvM1QHIcL9XwRD8AVmuYLajHNaO4+851NJWFQbr5Fc4nK5JjW7en27a0UnmcZ9pMt1
-         NBSbd+U/Xvfctp/OpgEl/KHCh5EI97JaEcdJESbf5g230hidlW51h/ebW3Annt2FcHMs
-         94oM1u3p4R40n6fRcawQSiQNC3b65VolLJoT/4rXIVU1A7H2wpDTlcHe6EFIlI/riRcm
-         7ByTDGObLiTMDXidvM9AQlU8aT5QSVtDR/URI4VP5jrpc/BmSIYGFI4G0X8U9cv98fPV
-         58lw==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=O8BpPykOGPMrcNWO68vuYRL0O4QY5mFmWnwLnMdbXek=;
+        b=zS/bVLGPe7Biddu3tvwjxuJoE7XfssHm9A/D8B3sP1tRSW0ABm1Zr3GTP948ZUZoYk
+         rRQk1qET++mJxWEizDZAZlrHpxRur3R4IwaejxU3NgmAAP0EBUVI+lb/54oEy/WdTZ9h
+         SKobC8Q0AWyJr5Kk/XAxuCZLeTUzOg78ZegpDU6YlMXhQWYFdKRsi9QpqYTrCqUIgbEI
+         vNQ4oIeVdvyPQLBmKqZdyuQkJeTgbO5xafzcXSyUD1eoBeiiEoSACykaToz9efeG/xQZ
+         Opm842qAOGZH9V/l9cbqIRV8TfquUXfLQlDvLLZl8EPUa/YUvwrY6sdElsmQdqZvgcDS
+         tdzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AgQzBOtr/JltxPGhZk+AY96SUJ5Pcnx5e1/XHa6kQec=;
-        b=SLdha7pgtoI2TmSe1jv7927UzvoZdULepaaAk8Ru+71XqGe52cv3UnYHun9wd4T0Mf
-         925UkM93h0y0nYyAiwKQTEDJHT/PSnRw45/B9I9dI/qIAGl2JyeOjWAYX+8e++9zu/tt
-         +ooEPiY2sUKXndoAZJEOZkTHNyJOIjyZ9EXpfn47M7fU5jlKe4UGzFJL8ZnUNU7It3Qm
-         lHnX2PrGsAlcCguByj/MpsgBWBAALQ/lHsuvlbnyScBrEq/gCN0wjKlTbVGYu2o7ZJdA
-         Gh/99hZDn+Aqv2M6ki2n8PMWalMwnTrWfK7b7nzfbbmcHk+9siebObYhENYgiEZxtPk5
-         nMAw==
-X-Gm-Message-State: APjAAAXZIhwQBLlyz43O2EKn1rIcCJ3U19x8vKL9rbs09X/gF+x1Qss8
-        YSJGF1arwih81TMiw65kVfoeNbGnclU5Xg==
-X-Google-Smtp-Source: APXvYqyHveJRhG4khKgd9sc+eZwBR0v18lWW5sPiVrZazsSvZMIHyOwwm+bV/IDRT62bRmJy6Qh+Rw==
-X-Received: by 2002:aed:2a43:: with SMTP id k3mr59564766qtf.301.1563991836377;
-        Wed, 24 Jul 2019 11:10:36 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id k123sm19731462qkf.13.2019.07.24.11.10.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=O8BpPykOGPMrcNWO68vuYRL0O4QY5mFmWnwLnMdbXek=;
+        b=OW7HalopPhISxJ82D95vINoX2szbIIIWEqGA9GtHXicdxia32DkjLJLbd21o1RdhHv
+         pySAu7ENUgCsZrZlgIM7K31dKsocnIJEi5Bbl67wHIW+7Rv77OrA5Hnp9232IKFurEMz
+         YRwIdYiQO9I4nfTjo3tpmtlD5zKz+NfGmWfairjOd/fDYhQdN97rke9PUC75vYl7xzLY
+         GAoCAPMNylrnxyFHolxVLrptja6SVxAywTPWIo2lD4EjuwwtPC+nTuaqjXwOqpYHYo5m
+         ML6RupBY1HNIFtpZAhkN/MXliR44MThuCj39PLyecrWRQWaq8yTBm8DGB3FSli9Csfx9
+         b8Jw==
+X-Gm-Message-State: APjAAAWXawob1MDvsDzWyHKcgHLEmhjrdG4pFgoGg6i7hoX/N2Esj9YR
+        QAqwXZY8/ZA51HuKFbE7wCw=
+X-Google-Smtp-Source: APXvYqwHZDCykwuaTSueWVYio2HcO73aA9TvoYdpNFeI/tjrkP+9Vh22NPhDR7Ipv0BvDyCS4iR4qQ==
+X-Received: by 2002:a17:906:2f0f:: with SMTP id v15mr61261234eji.33.1563991904593;
+        Wed, 24 Jul 2019 11:11:44 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id o11sm9407138ejd.68.2019.07.24.11.11.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 11:10:35 -0700 (PDT)
-Message-ID: <1563991833.11067.13.camel@lca.pw>
-Subject: Re: list corruption in deferred_split_scan()
-From:   Qian Cai <cai@lca.pw>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Date:   Wed, 24 Jul 2019 14:10:33 -0400
-In-Reply-To: <7a0c0092-40d1-eede-14dd-3c4c052edf0c@linux.alibaba.com>
-References: <1562795006.8510.19.camel@lca.pw>
-         <cd6e10bc-cb79-65c5-ff2b-4c244ae5eb1c@linux.alibaba.com>
-         <1562879229.8510.24.camel@lca.pw>
-         <b38ee633-f8e0-00ee-55ee-2f0aaea9ed6b@linux.alibaba.com>
-         <9F50D703-FF08-44FA-B1E5-4F8A2F8C7061@lca.pw>
-         <7a0c0092-40d1-eede-14dd-3c4c052edf0c@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        Wed, 24 Jul 2019 11:11:44 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 00DBA10169F; Wed, 24 Jul 2019 21:11:39 +0300 (+03)
+Date:   Wed, 24 Jul 2019 21:11:39 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Lianbo Jiang <lijiang@redhat.com>
+Subject: Re: [PATCH] dma-direct: Force unencrypted DMA under SME for certain
+ DMA masks
+Message-ID: <20190724181139.yebja5yflzjgfxlx@box>
+References: <10b83d9ff31bca88e94da2ff34e30619eb396078.1562785123.git.thomas.lendacky@amd.com>
+ <20190724155530.hlingpcirjcf2ljg@box>
+ <acee0a74-77fc-9c81-087b-ce55abf87bd4@amd.com>
+ <a89e7574-096d-9105-45ff-34bbb74918a5@arm.com>
+ <c4110c6b-686c-7e77-fedc-33782e5b3e50@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <c4110c6b-686c-7e77-fedc-33782e5b3e50@amd.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-07-18 at 17:59 -0700, Yang Shi wrote:
-> 
-> On 7/18/19 5:54 PM, Qian Cai wrote:
+On Wed, Jul 24, 2019 at 05:34:26PM +0000, Lendacky, Thomas wrote:
+> On 7/24/19 12:06 PM, Robin Murphy wrote:
+> > On 24/07/2019 17:42, Lendacky, Thomas wrote:
+> >> On 7/24/19 10:55 AM, Kirill A. Shutemov wrote:
+> >>> On Wed, Jul 10, 2019 at 07:01:19PM +0000, Lendacky, Thomas wrote:
+> >>>> @@ -351,6 +355,32 @@ bool sev_active(void)
+> >>>> � }
+> >>>> � EXPORT_SYMBOL(sev_active);
+> >>>> � +/* Override for DMA direct allocation check -
+> >>>> ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+> >>>> +bool force_dma_unencrypted(struct device *dev)
+> >>>> +{
+> >>>> +��� /*
+> >>>> +���� * For SEV, all DMA must be to unencrypted addresses.
+> >>>> +���� */
+> >>>> +��� if (sev_active())
+> >>>> +������� return true;
+> >>>> +
+> >>>> +��� /*
+> >>>> +���� * For SME, all DMA must be to unencrypted addresses if the
+> >>>> +���� * device does not support DMA to addresses that include the
+> >>>> +���� * encryption mask.
+> >>>> +���� */
+> >>>> +��� if (sme_active()) {
+> >>>> +������� u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
+> >>>> +������� u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
+> >>>> +����������������������� dev->bus_dma_mask);
+> >>>> +
+> >>>> +������� if (dma_dev_mask <= dma_enc_mask)
+> >>>> +����������� return true;
+> >>>
+> >>> Hm. What is wrong with the dev mask being equal to enc mask? IIUC, it
+> >>> means that device mask is wide enough to cover encryption bit, doesn't it?
+> >>
+> >> Not really...� it's the way DMA_BIT_MASK works vs bit numbering. Let's say
+> >> that sme_me_mask has bit 47 set. __ffs64 returns 47 and DMA_BIT_MASK(47)
+> >> will generate a mask without bit 47 set (0x7fffffffffff). So the check
+> >> will catch anything that does not support at least 48-bit DMA.
 > > 
-> > > On Jul 12, 2019, at 3:12 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
-> > > 
-> > > 
-> > > 
-> > > On 7/11/19 2:07 PM, Qian Cai wrote:
-> > > > On Wed, 2019-07-10 at 17:16 -0700, Yang Shi wrote:
-> > > > > Hi Qian,
-> > > > > 
-> > > > > 
-> > > > > Thanks for reporting the issue. But, I can't reproduce it on my
-> > > > > machine.
-> > > > > Could you please share more details about your test? How often did you
-> > > > > run into this problem?
-> > > > 
-> > > > I can almost reproduce it every time on a HPE ProLiant DL385 Gen10
-> > > > server. Here
-> > > > is some more information.
-> > > > 
-> > > > # cat .config
-> > > > 
-> > > > https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
-> > > 
-> > > I tried your kernel config, but I still can't reproduce it. My compiler
-> > > doesn't have retpoline support, so CONFIG_RETPOLINE is disabled in my
-> > > test, but I don't think this would make any difference for this case.
-> > > 
-> > > According to the bug call trace in the earlier email, it looks deferred
-> > > _split_scan lost race with put_compound_page. The put_compound_page would
-> > > call free_transhuge_page() which delete the page from the deferred split
-> > > queue, but it may still appear on the deferred list due to some reason.
-> > > 
-> > > Would you please try the below patch?
-> > > 
-> > > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > > index b7f709d..66bd9db 100644
-> > > --- a/mm/huge_memory.c
-> > > +++ b/mm/huge_memory.c
-> > > @@ -2765,7 +2765,7 @@ int split_huge_page_to_list(struct page *page,
-> > > struct list_head *list)
-> > >          if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
-> > >                  if (!list_empty(page_deferred_list(head))) {
-> > >                          ds_queue->split_queue_len--;
-> > > -                       list_del(page_deferred_list(head));
-> > > +                       list_del_init(page_deferred_list(head));
-> > >                  }
-> > >                  if (mapping)
-> > >                          __dec_node_page_state(page, NR_SHMEM_THPS);
-> > > @@ -2814,7 +2814,7 @@ void free_transhuge_page(struct page *page)
-> > >          spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
-> > >          if (!list_empty(page_deferred_list(page))) {
-> > >                  ds_queue->split_queue_len--;
-> > > -               list_del(page_deferred_list(page));
-> > > +               list_del_init(page_deferred_list(page));
-> > >          }
-> > >          spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
-> > >          free_compound_page(page);
+> > Couldn't that be expressed as just:
 > > 
-> > Unfortunately, I am no longer be able to reproduce the original list
-> > corruption with today’s linux-next.
+> > ����if (sme_me_mask & dma_dev_mask == sme_me_mask)
 > 
-> It is because the patches have been dropped from -mm tree by Andrew due 
-> to this problem I guess. You have to use next-20190711, or apply the 
-> patches on today's linux-next.
-> 
+> Actually !=, but yes, it could have been done like that, I just didn't
+> think of it.
 
-The patch you have here does not help. Only applied the part for
-free_transhuge_page() as you requested.
+I'm looking into generalizing the check to cover MKTME.
 
-[  375.006307][ T3580] list_del corruption. next->prev should be
-ffffea0030e10098, but was ffff888ea8d0cdb8
-[  375.015928][ T3580] ------------[ cut here ]------------
-[  375.021296][ T3580] kernel BUG at lib/list_debug.c:56!
-[  375.026491][ T3580] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN NOPTI
-[  375.033680][ T3580] CPU: 84 PID: 3580 Comm: oom01 Tainted:
-G        W         5.2.0-next-20190711+ #2
-[  375.042964][ T3580] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385
-Gen10, BIOS A40 06/24/2019
-[  375.052256][ T3580] RIP: 0010:__list_del_entry_valid+0xa8/0xb6
-[  375.058135][ T3580] Code: de 48 c7 c7 c0 5a b3 b0 e8 b9 fa bc ff 0f 0b 48 c7
-c7 60 a0 21 b1 e8 13 52 01 00 4c 89 e6 48 c7 c7 20 5b b3 b0 e8 9c fa bc ff <0f>
-0b 48 c7 c7 20 a0 21 b1 e8 f6 51 01 00 4c 89 ea 48 89 de 48 c7
-[  375.077722][ T3580] RSP: 0018:ffff888ebc4b73c0 EFLAGS: 00010082
-[  375.083684][ T3580] RAX: 0000000000000054 RBX: ffffea0030e10098 RCX:
-ffffffffb015d728
-[  375.091566][ T3580] RDX: 0000000000000000 RSI: 0000000000000008 RDI:
-ffff88903263d380
-[  375.099448][ T3580] RBP: ffff888ebc4b73d8 R08: ffffed12064c7a71 R09:
-ffffed12064c7a70
-[  375.107330][ T3580] R10: ffffed12064c7a70 R11: ffff88903263d387 R12:
-ffffea0030e10098
-[  375.115212][ T3580] R13: ffffea0031d40098 R14: ffffea0030e10034 R15:
-ffffea0031d40098
-[  375.123095][ T3580] FS:  00007fc3dc851700(0000) GS:ffff889032600000(0000)
-knlGS:0000000000000000
-[  375.131937][ T3580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  375.138421][ T3580] CR2: 00007fc25fa39000 CR3: 0000000884762000 CR4:
-00000000001406a0
-[  375.146301][ T3580] Call Trace:
-[  375.149472][ T3580]  deferred_split_scan+0x337/0x740
-[  375.154475][ T3580]  ? split_huge_page_to_list+0xe30/0xe30
-[  375.160002][ T3580]  ? __sched_text_start+0x8/0x8
-[  375.164743][ T3580]  ? __radix_tree_lookup+0x12d/0x1e0
-[  375.169923][ T3580]  do_shrink_slab+0x244/0x5a0
-[  375.174490][ T3580]  shrink_slab+0x253/0x440
-[  375.178794][ T3580]  ? unregister_shrinker+0x110/0x110
-[  375.183972][ T3580]  ? kasan_check_read+0x11/0x20
-[  375.188715][ T3580]  ? mem_cgroup_protected+0x20f/0x260
-[  375.193976][ T3580]  ? shrink_node+0x1ad/0xa30
-[  375.198453][ T3580]  shrink_node+0x31e/0xa30
-[  375.202755][ T3580]  ? shrink_node_memcg+0x1560/0x1560
-[  375.207934][ T3580]  ? ktime_get+0x93/0x110
-[  375.212147][ T3580]  do_try_to_free_pages+0x22f/0x820
-[  375.217236][ T3580]  ? shrink_node+0xa30/0xa30
-[  375.221711][ T3580]  ? kasan_check_read+0x11/0x20
-[  375.226450][ T3580]  ? check_chain_key+0x1df/0x2e0
-[  375.231277][ T3580]  try_to_free_pages+0x242/0x4d0
-[  375.236102][ T3580]  ? do_try_to_free_pages+0x820/0x820
-[  375.241370][ T3580]  __alloc_pages_nodemask+0x9ce/0x1bc0
-[  375.246721][ T3580]  ? kasan_check_read+0x11/0x20
-[  375.251459][ T3580]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
-[  375.256722][ T3580]  ? kasan_check_read+0x11/0x20
-[  375.261458][ T3580]  ? check_chain_key+0x1df/0x2e0
-[  375.266287][ T3580]  ? do_anonymous_page+0x343/0xe30
-[  375.271289][ T3580]  ? lock_downgrade+0x390/0x390
-[  375.276029][ T3580]  ? __count_memcg_events+0x8b/0x1c0
-[  375.281204][ T3580]  ? kasan_check_read+0x11/0x20
-[  375.285945][ T3580]  ? __lru_cache_add+0x122/0x160
-[  375.290774][ T3580]  alloc_pages_vma+0x89/0x2c0
-[  375.295339][ T3580]  do_anonymous_page+0x3e1/0xe30
-[  375.300168][ T3580]  ? __update_load_avg_cfs_rq+0x2c/0x490
-[  375.305692][ T3580]  ? finish_fault+0x120/0x120
-[  375.310257][ T3580]  ? alloc_pages_vma+0x21e/0x2c0
-[  375.315085][ T3580]  handle_pte_fault+0x457/0x12c0
-[  375.319912][ T3580]  __handle_mm_fault+0x79a/0xa50
-[  375.324738][ T3580]  ? vmf_insert_mixed_mkwrite+0x20/0x20
-[  375.330175][ T3580]  ? kasan_check_read+0x11/0x20
-[  375.334913][ T3580]  ? __count_memcg_events+0x8b/0x1c0
-[  375.340090][ T3580]  handle_mm_fault+0x17f/0x370
-[  375.344745][ T3580]  __do_page_fault+0x25b/0x5d0
-[  375.349398][ T3580]  do_page_fault+0x4c/0x2cf
-[  375.353793][ T3580]  ? page_fault+0x5/0x20
-[  375.357920][ T3580]  page_fault+0x1b/0x20
-[  375.361959][ T3580] RIP: 0033:0x410be0
-[  375.365737][ T3580] Code: 89 de e8 e3 23 ff ff 48 83 f8 ff 0f 84 86 00 00 00
-48 89 c5 41 83 fc 02 74 28 41 83 fc 03 74 62 e8 95 29 ff ff 31 d2 48 98 90 <c6>
-44 15 00 07 48 01 c2 48 39 d3 7f f3 31 c0 5b 5d 41 5c c3 0f 1f
-[  375.385323][ T3580] RSP: 002b:00007fc3dc850ec0 EFLAGS: 00010206
-[  375.391283][ T3580] RAX: 0000000000001000 RBX: 00000000c0000000 RCX:
-00007fda6c168497
-[  375.399164][ T3580] RDX: 00000000041e9000 RSI: 00000000c0000000 RDI:
-0000000000000000
-[  375.407047][ T3580] RBP: 00007fc25b850000 R08: 00000000ffffffff R09:
-0000000000000000
-[  375.414928][ T3580] R10: 0000000000000022 R11: 0000000000000246 R12:
-0000000000000001
-[  375.422812][ T3580] R13: 00007ffc4a58701f R14: 0000000000000000 R15:
-00007fc3dc850fc0
-[  375.430694][ T3580] Modules linked in: nls_iso8859_1 nls_cp437 vfat fat
-kvm_amd kvm ses enclosure irqbypass dax_pmem dax_pmem_core efivars ip_tables
-x_tables xfs sd_mod smartpqi scsi_transport_sas mlx5_core tg3 firmware_class
-libphy dm_mirror dm_region_hash dm_log dm_mod efivarfs
-[  375.455820][ T3580] ---[ end trace 82d52f9627313e53 ]---
-[  375.461172][ T3580] RIP: 0010:__list_del_entry_valid+0xa8/0xb6
-[  375.467048][ T3580] Code: de 48 c7 c7 c0 5a b3 b0 e8 b9 fa bc ff 0f 0b 48 c7
-c7 60 a0 21 b1 e8 13 52 01 00 4c 89 e6 48 c7 c7 20 5b b3 b0 e8 9c fa bc ff <0f>
-0b 48 c7 c7 20 a0 21 b1 e8 f6 51 01 00 4c 89 ea 48 89 de 48 c7
-[  375.486635][ T3580] RSP: 0018:ffff888ebc4b73c0 EFLAGS: 00010082
-[  375.492597][ T3580] RAX: 0000000000000054 RBX: ffffea0030e10098 RCX:
-ffffffffb015d728
-[  375.500479][ T3580] RDX: 0000000000000000 RSI: 0000000000000008 RDI:
-ffff88903263d380
-[  375.508361][ T3580] RBP: ffff888ebc4b73d8 R08: ffffed12064c7a71 R09:
-ffffed12064c7a70
-[  375.516244][ T3580] R10: ffffed12064c7a70 R11: ffff88903263d387 R12:
-ffffea0030e10098
-[  375.524124][ T3580] R13: ffffea0031d40098 R14: ffffea0030e10034 R15:
-ffffea0031d40098
-[  375.532007][ T3580] FS:  00007fc3dc851700(0000) GS:ffff889032600000(0000)
-knlGS:0000000000000000
-[  375.540851][ T3580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  375.547335][ T3580] CR2: 00007fc25fa39000 CR3: 0000000884762000 CR4:
-00000000001406a0
-[  375.555217][ T3580] Kernel panic - not syncing: Fatal exception
-[  376.868640][ T3580] Shutting down cpus with NMI
-[  376.873223][ T3580] Kernel Offset: 0x2ec00000 from 0xffffffff81000000
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[  376.884878][ T3580] ---[ end Kernel panic - not syncing: Fatal exception ]---
+Leaving	off the Kconfig changes and moving the check to other file, doest
+the change below look reasonable to you. It's only build tested so far.
 
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index fece30ca8b0c..6c86adcd02da 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -355,6 +355,8 @@ EXPORT_SYMBOL(sev_active);
+ /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+ bool force_dma_unencrypted(struct device *dev)
+ {
++	u64 dma_enc_mask;
++
+ 	/*
+ 	 * For SEV, all DMA must be to unencrypted addresses.
+ 	 */
+@@ -362,18 +364,20 @@ bool force_dma_unencrypted(struct device *dev)
+ 		return true;
+ 
+ 	/*
+-	 * For SME, all DMA must be to unencrypted addresses if the
+-	 * device does not support DMA to addresses that include the
+-	 * encryption mask.
++	 * For SME and MKTME, all DMA must be to unencrypted addresses if the
++	 * device does not support DMA to addresses that include the encryption
++	 * mask.
+ 	 */
+-	if (sme_active()) {
+-		u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
+-		u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
+-						dev->bus_dma_mask);
++	if (!sme_active() && !mktme_enabled())
++		return false;
+ 
+-		if (dma_dev_mask <= dma_enc_mask)
+-			return true;
+-	}
++	dma_enc_mask = sme_me_mask | mktme_keyid_mask();
++
++	if (dev->coherent_dma_mask && (dev->coherent_dma_mask & dma_enc_mask) != dma_enc_mask)
++		return true;
++
++	if (dev->bus_dma_mask && (dev->bus_dma_mask & dma_enc_mask) != dma_enc_mask)
++		return true;
+ 
+ 	return false;
+ }
+-- 
+ Kirill A. Shutemov
