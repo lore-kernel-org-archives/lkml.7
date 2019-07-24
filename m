@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D19C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AB5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F79D206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C6D21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000285;
-	bh=2tlj+gJUZ0QsrlOhryzgMPlsWNUYQBRxuajkAnYEg8s=;
+	s=default; t=1564000289;
+	bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2OOXaPqcH1VqFs4fd1B6Z2jJW4eC0bNJVsHyeVYEu9JxDLElD55DgMDUgRHIusJaD
-	 BL3jvAUJAmrwH3hWNGP9c8WWcVHLhnj59+dvOpnzkHW9IZye/yMzT6k0ZeL2aIQFmu
-	 5M6oomTfYOMyAlJH6hCfiHd4dqXmVAqnHcTHIOMU=
+	b=tqe2RykcUcEVSLf00hWM7Nen24Ui14ZMhu/diMxil4hjnbGM6AolDbmJyJfisYtZD
+	 Qaa226xt6i4SRypUoTlmMRXjLxhgke5OH+YrtCbFdoOfI5bwsqqO6nC3ohfmJ9upwU
+	 Pui72Uka78WpXcmUI/GI6m3UdhHuhdV7f7z0BZUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388376AbfGXTae (ORCPT
+        id S1729190AbfGXUb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:31:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387927AbfGXTa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:28 -0400
+        id S2388313AbfGXTab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1311A20659;
-        Wed, 24 Jul 2019 19:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B4D920659;
+        Wed, 24 Jul 2019 19:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996627;
-        bh=2tlj+gJUZ0QsrlOhryzgMPlsWNUYQBRxuajkAnYEg8s=;
+        s=default; t=1563996630;
+        bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WYgnOO7FCiHwuVmplft86TZY7WaTWV8U0e2W9Nn0FwN0c6z5Gg27Bes50kOQ54y81
-         xgCkuyrI2rCm68ZOLZPDng7/CvU98KdJ9//aXSYDJaycKm0fVkvF6ThYklNURI3Bl7
-         E60eq3hWddHa9rhOEP33uNLpYrGw41akNSQm9hW4=
+        b=mCMn8LJcwV4EYthUCMvZk73/RbH90gC+6JbZG1Ydy/kpJN4SQIMzK2r9qAwyBJv3o
+         qDRR+FSV2t5ZTMuSo98w3Vsx1BAfiv7+I3xnV7IrdR0Uohez7gALpQBOR8NC+cKaPW
+         T6P34B+s7IlBxeVtqfOrWoNom5bpi5tmt8pvfOcY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claire Chang <tientzu@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 160/413] ath10k: add missing error handling
-Date:   Wed, 24 Jul 2019 21:17:31 +0200
-Message-Id: <20190724191746.527234230@linuxfoundation.org>
+Subject: [PATCH 5.2 161/413] ath10k: fix fw crash by moving chip reset after napi disabled
+Date:   Wed, 24 Jul 2019 21:17:32 +0200
+Message-Id: <20190724191746.602512161@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,44 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4b553f3ca4cbde67399aa3a756c37eb92145b8a1 ]
+[ Upstream commit 08d80e4cd27ba19f9bee9e5f788f9a9fc440a22f ]
 
-In function ath10k_sdio_mbox_rx_alloc() [sdio.c],
-ath10k_sdio_mbox_alloc_rx_pkt() is called without handling the error cases.
-This will make the driver think the allocation for skb is successful and
-try to access the skb. If we enable failslab, system will easily crash with
-NULL pointer dereferencing.
+On SMP platform, when continuously running wifi up/down, the napi
+poll can be scheduled during chip reset, which will call
+ath10k_pci_has_fw_crashed() to check the fw status. But in the reset
+period, the value from FW_INDICATOR_ADDRESS register will return
+0xdeadbeef, which also be treated as fw crash. Fix the issue by
+moving chip reset after napi disabled.
 
-Call trace of CONFIG_FAILSLAB:
-ath10k_sdio_irq_handler+0x570/0xa88 [ath10k_sdio]
-process_sdio_pending_irqs+0x4c/0x174
-sdio_run_irqs+0x3c/0x64
-sdio_irq_work+0x1c/0x28
+ath10k_pci 0000:01:00.0: firmware crashed! (guid 73b30611-5b1e-4bdd-90b4-64c81eb947b6)
+ath10k_pci 0000:01:00.0: qca9984/qca9994 hw1.0 target 0x01000000 chip_id 0x00000000 sub 168c:cafe
+ath10k_pci 0000:01:00.0: htt-ver 2.2 wmi-op 6 htt-op 4 cal otp max-sta 512 raw 0 hwcrypto 1
+ath10k_pci 0000:01:00.0: failed to get memcpy hi address for firmware address 4: -16
+ath10k_pci 0000:01:00.0: failed to read firmware dump area: -16
+ath10k_pci 0000:01:00.0: Copy Engine register dump:
+ath10k_pci 0000:01:00.0: [00]: 0x0004a000   0   0   0   0
+ath10k_pci 0000:01:00.0: [01]: 0x0004a400   0   0   0   0
+ath10k_pci 0000:01:00.0: [02]: 0x0004a800   0   0   0   0
+ath10k_pci 0000:01:00.0: [03]: 0x0004ac00   0   0   0   0
+ath10k_pci 0000:01:00.0: [04]: 0x0004b000   0   0   0   0
+ath10k_pci 0000:01:00.0: [05]: 0x0004b400   0   0   0   0
+ath10k_pci 0000:01:00.0: [06]: 0x0004b800   0   0   0   0
+ath10k_pci 0000:01:00.0: [07]: 0x0004bc00   1   0   1   0
+ath10k_pci 0000:01:00.0: [08]: 0x0004c000   0   0   0   0
+ath10k_pci 0000:01:00.0: [09]: 0x0004c400   0   0   0   0
+ath10k_pci 0000:01:00.0: [10]: 0x0004c800   0   0   0   0
+ath10k_pci 0000:01:00.0: [11]: 0x0004cc00   0   0   0   0
 
-Fixes: d96db25d2025 ("ath10k: add initial SDIO support")
-Signed-off-by: Claire Chang <tientzu@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+Tested HW: QCA9984,QCA9887,WCN3990
+
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index fae56c67766f..73ef3e75d199 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -602,6 +602,10 @@ static int ath10k_sdio_mbox_rx_alloc(struct ath10k *ar,
- 						    full_len,
- 						    last_in_bundle,
- 						    last_in_bundle);
-+		if (ret) {
-+			ath10k_warn(ar, "alloc_rx_pkt error %d\n", ret);
-+			goto err;
-+		}
- 	}
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 2c27f407a851..6e5f7ae00253 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -2059,6 +2059,11 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
  
- 	ar_sdio->n_rx_pkts = i;
+ 	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot hif stop\n");
+ 
++	ath10k_pci_irq_disable(ar);
++	ath10k_pci_irq_sync(ar);
++	napi_synchronize(&ar->napi);
++	napi_disable(&ar->napi);
++
+ 	/* Most likely the device has HTT Rx ring configured. The only way to
+ 	 * prevent the device from accessing (and possible corrupting) host
+ 	 * memory is to reset the chip now.
+@@ -2072,10 +2077,6 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+ 	 */
+ 	ath10k_pci_safe_chip_reset(ar);
+ 
+-	ath10k_pci_irq_disable(ar);
+-	ath10k_pci_irq_sync(ar);
+-	napi_synchronize(&ar->napi);
+-	napi_disable(&ar->napi);
+ 	ath10k_pci_flush(ar);
+ 
+ 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
 -- 
 2.20.1
 
