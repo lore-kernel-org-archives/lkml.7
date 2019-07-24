@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C998BC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2332BC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBD122ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB7C217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997175;
-	bh=qIUI0Na8vCijcEjObETvQCA0O1xN6Q4ok4GitC6WA3I=;
+	s=default; t=1563997182;
+	bh=3Cw7wmrxI0vPXcZeOl+alUhNYLWkew2XmGOFUWbkJdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZwC6t6wvVoI5cVico6PtFNBe0yeZGk/B9wdDvknoMVNWcuoQEu5wecLFTlI5xI3iq
-	 iD+q0B6cIWzuWPY5ZA0BBBpFmryysKLOXMmYw8LgBhjRzsl3lvzWwyEzyTrhSA2i1L
-	 Zzdw2Bt62rcx76O7cLoNfTST3e5DHchEZkEyVewg=
+	b=H6TKGT/4sYGX4us62+SdMOFEvQ4hV39HlTewsJdV1HvP8IcREX/tHar01n1fEtC2X
+	 tRWmi75oRQriNddqezbUxpDpdr6wQMBLCKuxRd9LptTyIk0qlH31WH3eNGobaNx6BT
+	 YWEDKzMK7o2KgzIL34Jg8OCDUrAk/QIxAd8PZk8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389958AbfGXTje (ORCPT
+        id S2389667AbfGXTjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389939AbfGXTja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:39:30 -0400
+        id S2389961AbfGXTjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:39:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8197229F3;
-        Wed, 24 Jul 2019 19:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83176229F4;
+        Wed, 24 Jul 2019 19:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997170;
-        bh=qIUI0Na8vCijcEjObETvQCA0O1xN6Q4ok4GitC6WA3I=;
+        s=default; t=1563997175;
+        bh=3Cw7wmrxI0vPXcZeOl+alUhNYLWkew2XmGOFUWbkJdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+1nZAhNUyurQ/0+ih4vN1cpl0KcT7sYzQDksrNjxryJ9V5U1/gLCe3+2c1AEhCU6
-         OkW8A+uyVPnVjhDqeffa/RiT3vDwMkQTgVHwSbXD32ZkG2/9sH2obaDYgNviFHxrxN
-         zyQ4t0ysXEu8KtXhWwHkBvsjPB0Zi5GmDsXcP3T4=
+        b=Hiw1JFjdhdJTIiIw9k/BB0CFswECh8obgENmK/A4uZtCqOs0gotdN5gXppC8aHwOH
+         42PEvZpn9cCh7w4uiZTH0Rn0mTbXsBzWXqUxDjRqEbMsNnm3jHCNcwuf8reHEgkulz
+         ZdDO+59C9R/uOzEONgpHRsvcpN6U/H0bvMIGySX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.2 303/413] tracing: Fix user stack trace "??" output
-Date:   Wed, 24 Jul 2019 21:19:54 +0200
-Message-Id: <20190724191757.558048310@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 5.2 295/413] iwlwifi: pcie: dont service an interrupt that was masked
+Date:   Wed, 24 Jul 2019 21:19:46 +0200
+Message-Id: <20190724191757.215495817@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,63 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit 6d54ceb539aacc3df65c89500e8b045924f3ef81 upstream.
+commit 3b57a10ca14c619707398dc58fe5ece18c95b20b upstream.
 
-Commit c5c27a0a5838 ("x86/stacktrace: Remove the pointless ULONG_MAX
-marker") removes ULONG_MAX marker from user stack trace entries but
-trace_user_stack_print() still uses the marker and it outputs unnecessary
-"??".
-
-For example:
-
-            less-1911  [001] d..2    34.758944: <user stack trace>
-   =>  <00007f16f2295910>
-   => ??
-   => ??
-   => ??
-   => ??
-   => ??
-   => ??
-   => ??
-
-The user stack trace code zeroes the storage before saving the stack, so if
-the trace is shorter than the maximum number of entries it can terminate
-the print loop if a zero entry is detected.
-
-Link: http://lkml.kernel.org/r/20190630085438.25545-1-devel@etsukata.com
+Sometimes the register status can include interrupts that
+were masked. We can, for example, get the RF-Kill bit set
+in the interrupt status register although this interrupt
+was masked. Then if we get the ALIVE interrupt (for example)
+that was not masked, we need to *not* service the RF-Kill
+interrupt.
+Fix this in the MSI-X interrupt handler.
 
 Cc: stable@vger.kernel.org
-Fixes: 4285f2fcef80 ("tracing: Remove the ULONG_MAX stack trace hackery")
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_output.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c |   27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1109,17 +1109,10 @@ static enum print_line_t trace_user_stac
- 	for (i = 0; i < FTRACE_STACK_ENTRIES; i++) {
- 		unsigned long ip = field->caller[i];
- 
--		if (ip == ULONG_MAX || trace_seq_has_overflowed(s))
-+		if (!ip || trace_seq_has_overflowed(s))
- 			break;
- 
- 		trace_seq_puts(s, " => ");
--
--		if (!ip) {
--			trace_seq_puts(s, "??");
--			trace_seq_putc(s, '\n');
--			continue;
--		}
--
- 		seq_print_user_ip(s, mm, ip, flags);
- 		trace_seq_putc(s, '\n');
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -2108,10 +2108,18 @@ irqreturn_t iwl_pcie_irq_msix_handler(in
+ 		return IRQ_NONE;
  	}
+ 
+-	if (iwl_have_debug_level(IWL_DL_ISR))
+-		IWL_DEBUG_ISR(trans, "ISR inta_fh 0x%08x, enabled 0x%08x\n",
+-			      inta_fh,
++	if (iwl_have_debug_level(IWL_DL_ISR)) {
++		IWL_DEBUG_ISR(trans,
++			      "ISR inta_fh 0x%08x, enabled (sw) 0x%08x (hw) 0x%08x\n",
++			      inta_fh, trans_pcie->fh_mask,
+ 			      iwl_read32(trans, CSR_MSIX_FH_INT_MASK_AD));
++		if (inta_fh & ~trans_pcie->fh_mask)
++			IWL_DEBUG_ISR(trans,
++				      "We got a masked interrupt (0x%08x)\n",
++				      inta_fh & ~trans_pcie->fh_mask);
++	}
++
++	inta_fh &= trans_pcie->fh_mask;
+ 
+ 	if ((trans_pcie->shared_vec_mask & IWL_SHARED_IRQ_NON_RX) &&
+ 	    inta_fh & MSIX_FH_INT_CAUSES_Q0) {
+@@ -2151,11 +2159,18 @@ irqreturn_t iwl_pcie_irq_msix_handler(in
+ 	}
+ 
+ 	/* After checking FH register check HW register */
+-	if (iwl_have_debug_level(IWL_DL_ISR))
++	if (iwl_have_debug_level(IWL_DL_ISR)) {
+ 		IWL_DEBUG_ISR(trans,
+-			      "ISR inta_hw 0x%08x, enabled 0x%08x\n",
+-			      inta_hw,
++			      "ISR inta_hw 0x%08x, enabled (sw) 0x%08x (hw) 0x%08x\n",
++			      inta_hw, trans_pcie->hw_mask,
+ 			      iwl_read32(trans, CSR_MSIX_HW_INT_MASK_AD));
++		if (inta_hw & ~trans_pcie->hw_mask)
++			IWL_DEBUG_ISR(trans,
++				      "We got a masked interrupt 0x%08x\n",
++				      inta_hw & ~trans_pcie->hw_mask);
++	}
++
++	inta_hw &= trans_pcie->hw_mask;
+ 
+ 	/* Alive notification via Rx interrupt will do the real work */
+ 	if (inta_hw & MSIX_HW_INT_CAUSES_REG_ALIVE) {
 
 
