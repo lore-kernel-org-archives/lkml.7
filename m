@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A4EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9605EC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685B921873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64167229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997154;
-	bh=+1CtUSW3tQES3BjigDLmzURGFyl5t5pK8WVLmrjnpjY=;
+	s=default; t=1563997157;
+	bh=FQ1efTMIR9YJ2eou7CCmelxBInYOQMC+ETv6l+wCXSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTaULlYs50Nyq74nqGUAOItQ20Q5S1Pst3bZw/NYxWRGahBOeCbUUuobfSERzHSL/
-	 C6KJHMMI6E+G97aLEUX5or+FrGl79y9AHGkOgTW+cStefuJ21syICodtnqEaxWKEnB
-	 BXhfXy4alsRsfVeKbwkh4htwjxPcT3TfdTmujJYw=
+	b=j++WNoY+62bjIRBP2pK8AbFT7SS8TqgAs2wtpjDC7xu/wtnFX46BhmRbXYwt9iuWE
+	 2ztfOg1RuXB6148QQco+s8RSUj3QdTT3a40nYkcWd1K+kYAe3hOraBjWd48ccOWe2z
+	 KED0XE9saXimsxf4XQWDZXGk7C2bc4pjIJIR8qJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389876AbfGXTjN (ORCPT
+        id S2389887AbfGXTjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:39:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389419AbfGXTjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:39:11 -0400
+        id S2389419AbfGXTjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:39:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5514922ADA;
-        Wed, 24 Jul 2019 19:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7B322ADA;
+        Wed, 24 Jul 2019 19:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997150;
-        bh=+1CtUSW3tQES3BjigDLmzURGFyl5t5pK8WVLmrjnpjY=;
+        s=default; t=1563997153;
+        bh=FQ1efTMIR9YJ2eou7CCmelxBInYOQMC+ETv6l+wCXSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+fEO/tj0Vt/WYAGbOvZv73s9ofQdp4MR2MLUZQ+1WOvbQnlEClOXFzQkdn3VawJx
-         DtVepZUFojaqeRKpQ14RrSNKZ5vl8MEO7rBJXfl6z29pTbGc7EGkCI48H9UOSjTzgn
-         +CanTa4gNEWvWdb3bkYCSHXjtSXrOax/yYWVo2L8=
+        b=o4uXz3LORYVcYZySF0NtXt2JAzqVZie656zmz8dAqmkq97OVhqPKYa7mzmFPrjUSH
+         CrG3KBbisXCq33dNSPlMdYhfILeZVmFEbL5IpegtaFMo/uh33D/6InrvxbE7mJ1gD6
+         +Vl7KK1i29NDlAchs9ajPtN6shoD5m7gW/bcUrBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.2 336/413] arm64: tegra: Fix AGIC register range
-Date:   Wed, 24 Jul 2019 21:20:27 +0200
-Message-Id: <20190724191759.864229523@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.2 337/413] arm64: irqflags: Add condition flags to inline asm clobber list
+Date:   Wed, 24 Jul 2019 21:20:28 +0200
+Message-Id: <20190724191759.928890805@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,38 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Julien Thierry <julien.thierry@arm.com>
 
-commit ba24eee6686f6ed3738602b54d959253316a9541 upstream.
+commit f57065782f245ca96f1472209a485073bbc11247 upstream.
 
-The Tegra AGIC interrupt controller is an ARM GIC400 interrupt
-controller. Per the ARM GIC device-tree binding, the first address
-region is for the GIC distributor registers and the second address
-region is for the GIC CPU interface registers. The address space for
-the distributor registers is 4kB, but currently this is incorrectly
-defined as 8kB for the Tegra AGIC and overlaps with the CPU interface
-registers. Correct the address space for the distributor to be 4kB.
+Some of the inline assembly instruction use the condition flags and need
+to include "cc" in the clobber list.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Fixes: bcdbde433542 ("arm64: tegra: Add AGIC node for Tegra210")
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 4a503217ce37 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
+Cc: <stable@vger.kernel.org> # 5.1.x-
+Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/nvidia/tegra210.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/irqflags.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1258,7 +1258,7 @@
- 			compatible = "nvidia,tegra210-agic";
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
--			reg = <0x702f9000 0x2000>,
-+			reg = <0x702f9000 0x1000>,
- 			      <0x702fa000 0x2000>;
- 			interrupts = <GIC_SPI 102 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&tegra_car TEGRA210_CLK_APE>;
+--- a/arch/arm64/include/asm/irqflags.h
++++ b/arch/arm64/include/asm/irqflags.h
+@@ -81,7 +81,7 @@ static inline unsigned long arch_local_s
+ 			ARM64_HAS_IRQ_PRIO_MASKING)
+ 		: "=&r" (flags), "+r" (daif_bits)
+ 		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
+-		: "memory");
++		: "cc", "memory");
+ 
+ 	return flags;
+ }
+@@ -125,7 +125,7 @@ static inline int arch_irqs_disabled_fla
+ 			ARM64_HAS_IRQ_PRIO_MASKING)
+ 		: "=&r" (res)
+ 		: "r" ((int) flags)
+-		: "memory");
++		: "cc", "memory");
+ 
+ 	return res;
+ }
 
 
