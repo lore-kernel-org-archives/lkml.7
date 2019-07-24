@@ -2,138 +2,184 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15E1C76190
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4C8C76194
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8233229EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F44229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rgxIEaoJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IESMVaT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbfGXBxF (ORCPT
+        id S1728818AbfGXCCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:53:05 -0400
-Received: from mail-eopbgr140083.outbound.protection.outlook.com ([40.107.14.83]:20858
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbfGXBxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:53:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQTOEWBkE04IY+YAyrzfpgwlv93BC/UfmnlY4I5Rnnu69m5crFIR3nMuozpmwShzXM0ZsO1TXuRI0kR4p2NnbGb/xSff8gpIlfCzRJ3sIRESxaSX8M9cm2e5ACvSYq0QKFf7CgIjTVs7IYsxDs80WRjL8+mnFVCogfVOgywjLniGkFndmxZesC8nd1CE/5WIkpUasqSCz0fX8IVPQ8ZaqWU9xXPviX82tNXbgLGfE9jh6cMaQ9yljidhpmBAtxqnb7J3p7WnGbfryBK0/VNMF++ppbC2zQTAKDzpo0Gl5BNQCe9mD28SRJzcyKql5QwTWnVV1/dHMWUe2Vd65naxNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XVRTQOJR8hUnc7CckOKhDvoVieXPJrdfQhUMUFZtr60=;
- b=mLO0BAXB5arqC6QvgNlnmklpthF2TszeSehQTJAPXTbf44gy0I4pNoEDGmimL2FkGP1H4XLKfssl8IDuZrMx8peRxw0uTDI6GSiBXrx39VBCbqQ8JsRrdwNN9O8lSSsUJ2sF0H+QMvoLVxqHukuUXesNfXZBANNjKFO3perFZdeWUdPX2LbuJfg9EGR8QY3bEB/1ttHFCLjrUY1iYd2D5Suymwjm3d8itf+M40os8k6xO+8yUF6OYTu1hbnXbG4V50ShUN2cJS3f8F5MhacFj63IuJDZ/ukoWPk3oB0ioj1giOIdONMCDIKgP5w336lCCFCiutvT2aPuUZURQ/6isA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XVRTQOJR8hUnc7CckOKhDvoVieXPJrdfQhUMUFZtr60=;
- b=rgxIEaoJ9pJjqTGIRqLjPk5AgUK6+HScSwjGq6hxjrRC1a69OpSMGZZkT9E2QYDsmuBDzlTTdy1S7WIIpurQiNVixdHwgmjh/lRs/zH/sEtimmv3XHwCr28oPKhPbtqyVX2U6Wr8SokWXAEgAnlmpH2/bbs3u/s1gMA1PDiQjfI=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
- VE1SPR01MB0007.eurprd04.prod.outlook.com (20.179.193.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Wed, 24 Jul 2019 01:53:01 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::905c:a110:72fc:3a49]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::905c:a110:72fc:3a49%7]) with mapi id 15.20.2094.017; Wed, 24 Jul 2019
- 01:53:01 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v5 12/15] ARM: dts: imx6ul: add dma support on ecspi
-Thread-Topic: [PATCH v5 12/15] ARM: dts: imx6ul: add dma support on ecspi
-Thread-Index: AQHVH2TVoxrocaPAG0GbhXUgE95pRabOlrSAgAmbW7CAAQJGgIAAEIzw
-Date:   Wed, 24 Jul 2019 01:53:00 +0000
-Message-ID: <VE1PR04MB6638F60965CD3D5CE47F26C489C60@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
- <20190610081753.11422-13-yibin.gong@nxp.com> <20190717064204.GA3738@dragon>
- <VE1PR04MB663894FA5BC88B130C70AC0789C70@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20190724004848.GV15632@dragon>
-In-Reply-To: <20190724004848.GV15632@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 153fc810-43c0-4ffa-be34-08d70fd9a8e4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1SPR01MB0007;
-x-ms-traffictypediagnostic: VE1SPR01MB0007:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VE1SPR01MB0007C7C8F79C9966AFE4CB7589C60@VE1SPR01MB0007.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0108A997B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(376002)(136003)(199004)(189003)(6436002)(33656002)(55016002)(966005)(66066001)(4001150100001)(6306002)(486006)(9686003)(53936002)(2906002)(102836004)(8936002)(6116002)(68736007)(25786009)(6506007)(53546011)(76176011)(7696005)(478600001)(186003)(11346002)(66556008)(66476007)(81166006)(4326008)(8676002)(99286004)(64756008)(14454004)(26005)(305945005)(316002)(7736002)(256004)(4744005)(476003)(76116006)(5660300002)(229853002)(66946007)(54906003)(52536014)(3846002)(446003)(71200400001)(74316002)(66446008)(6916009)(7416002)(81156014)(86362001)(71190400001)(6246003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1SPR01MB0007;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GHJD73MEUaC/tMFOsrJaSUhVSGrdVXLWUG8i8gVF083Z8djAh+aZH4AtLNofEPr0hzxubHDvFE9hsUYLtaOphE2LSOSpTmvH/hyoOT+XB0/KgcvV2wM+sdv1iBhL8Oamhv4eLMqMy+2gELHLrwfReLZbwU4OJ03bPguINsp85dYeUjQxPG7y9A9w+OgbKx67F1fkZ3WlLEahuwtTAkc6rEw3Dr1mVqa1oQ9+BP8eUJwNRSt7Tp8wSCl/eq+XbpmlBEhKy8OtxIA861rYfjEObHNznoESU20iz7eWqpsCoeyn27Y60JQ3/SaAX/UaQ3TYavsDlIBNovRFIeadrZFm7nt2gB8CRV+krHmZZMrx4OSC1QgQBVkurTCtBFpOEDz0Pw/T4c3t1+T4eAi8FZGmUnjbENxAGbTv7yK4eiwC3UQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Jul 2019 22:02:16 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39700 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbfGXCCP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:02:15 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so20337918pgi.6;
+        Tue, 23 Jul 2019 19:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MHXWLNkBi4IYlJRSCQ7XL9Ay+J09vpF8KwLPUC4SKIU=;
+        b=IESMVaT8yvh5w1FIxv4hRPats+B4/ECJQn4da/rPuLLeeTvwXzcp7WupjkHeGFjVvV
+         zRC1QulnMvcrutEg6lvLQBQwwuFeib0Fkg0t2GQb6QrqyFeQ8d36iJyMFXzo8BoQFRiI
+         0/zYR5iXQ4G9TvZ/pUbbDl0OFZASDij6hig3+YGw5ueZlMdSL/jEF8DzkgkU47dmcEJf
+         57jjFmQie9JXwdMi7BTqla4dNRDdypp9jAKUgddRoGfzbj13X6Hep+X5rj3ClCgjQTnY
+         GMX4/qJHpBFucfV6XDbR9g9QZpEYDdQO8NWzBJXCPWmb1pdmr5d/tvemxr/zTVgoGPza
+         Dnqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MHXWLNkBi4IYlJRSCQ7XL9Ay+J09vpF8KwLPUC4SKIU=;
+        b=VF8xsUFirMq09CFGwORbQ9LSt063yQFcgkQE0zXwBrL4qIUSTbLzovPnoVlc6tuOR+
+         kKIfmcWu2LPaacxJ/9jB4/uF+fRnxG1bapzlOk1Jd0IFp+Ex34wO21irs/wLr4T8a5RV
+         lQyvwuI9sSrJMnk6Pq0s6/0mz+3U+T+OndIQiPjvjSE1ZcIFWsC7To+cVOTDcFbuf2mw
+         MuzGDSsyJ538Qm/4cNjbY8LRP8t55UKyH/WzmIyznFkwTYUDYY+iGd77ibDvDC9WhaUj
+         GQVrxCB4OMSGw3riydge0OfApI1hwy2JnllF74FCauuiE9D1fEiG/mSIYHFyHuNGRQOV
+         fTOQ==
+X-Gm-Message-State: APjAAAUBvWaphJXC33lpUaLJa6DES/JrVOBZI2dLzLW8Ucrb9/9qJGlS
+        /GVbdGYpPakftbTpnN33yaEVtL25xmk=
+X-Google-Smtp-Source: APXvYqwQuaHFKLxA6edw86vkdlDAr++oHybNiK7Mu0IJOTN3gfJ8ZFjCYhs0K/0w8fTrJfDFXIF3tw==
+X-Received: by 2002:a65:4b89:: with SMTP id t9mr10206526pgq.55.1563933734972;
+        Tue, 23 Jul 2019 19:02:14 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id b19sm41008521pgh.57.2019.07.23.19.02.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 19:02:14 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Yong Zhi <yong.zhi@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Akihiro Tsukada <tskd08@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] media: pci: Use dev_get_drvdata where possible
+Date:   Wed, 24 Jul 2019 10:02:06 +0800
+Message-Id: <20190724020206.11044-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 153fc810-43c0-4ffa-be34-08d70fd9a8e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 01:53:01.0358
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1SPR01MB0007
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-7-24 at 08:49 Shawn Guo <shawnguo@kernel.org> wrote:
-> On Tue, Jul 23, 2019 at 09:39:38AM +0000, Robin Gong wrote:
-> > On 2019-7-17 at 14:42 Shawn Guo <shawnguo@kernel.org> wrote:
-> > > On Mon, Jun 10, 2019 at 04:17:50PM +0800, yibin.gong@nxp.com wrote:
-> > > > From: Robin Gong <yibin.gong@nxp.com>
-> > > >
-> > > > Add dma support on ecspi.
-> > > >
-> > > > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > >
-> > > Applied, thanks.
-> > Thanks Shawn, but how about other dts patches such as 01/15,02/15?
->=20
-> I need the authors of the commits being reverted agree on the reverting.
->=20
->   Sean Nyekjaer <sean.nyekjaer@prevas.dk>
->   Sascha Hauer <s.hauer@pengutronix.de>
-Seems Sean's mail can't be reached.
-Hello Sacha, Could you please help test if my patch set could fix your issu=
-e even
-I revert your patch?
-https://patchwork.kernel.org/cover/10984301/
->=20
-> Shawn
+Instead of using to_pci_dev + pci_get_drvdata,
+use dev_get_drvdata to make code simpler.
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Change pci_set_drvdata to dev_set_drvdata
+    to keep consistency.
+
+ drivers/media/pci/intel/ipu3/ipu3-cio2.c | 5 ++---
+ drivers/media/pci/pt1/pt1.c              | 8 +++-----
+ drivers/media/pci/pt3/pt3.c              | 8 +++-----
+ 3 files changed, 8 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2.c b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+index c1d133e17e4b..2b2c77c2fc7e 100644
+--- a/drivers/media/pci/intel/ipu3/ipu3-cio2.c
++++ b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
+@@ -1765,7 +1765,7 @@ static int cio2_pci_probe(struct pci_dev *pci_dev,
+ 
+ 	cio2->base = iomap[CIO2_PCI_BAR];
+ 
+-	pci_set_drvdata(pci_dev, cio2);
++	dev_set_drvdata(&pci_dev->dev, cio2);
+ 
+ 	pci_set_master(pci_dev);
+ 
+@@ -2000,8 +2000,7 @@ static int __maybe_unused cio2_suspend(struct device *dev)
+ 
+ static int __maybe_unused cio2_resume(struct device *dev)
+ {
+-	struct pci_dev *pci_dev = to_pci_dev(dev);
+-	struct cio2_device *cio2 = pci_get_drvdata(pci_dev);
++	struct cio2_device *cio2 = dev_get_drvdata(dev);
+ 	int r = 0;
+ 	struct cio2_queue *q = cio2->cur_queue;
+ 
+diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c
+index e51c80bc4646..06f25b658a76 100644
+--- a/drivers/media/pci/pt1/pt1.c
++++ b/drivers/media/pci/pt1/pt1.c
+@@ -1217,8 +1217,7 @@ static void pt1_i2c_init(struct pt1 *pt1)
+ 
+ static int pt1_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt1 *pt1 = pci_get_drvdata(pdev);
++	struct pt1 *pt1 = dev_get_drvdata(dev);
+ 
+ 	pt1_init_streams(pt1);
+ 	pt1_disable_ram(pt1);
+@@ -1230,8 +1229,7 @@ static int pt1_suspend(struct device *dev)
+ 
+ static int pt1_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt1 *pt1 = pci_get_drvdata(pdev);
++	struct pt1 *pt1 = dev_get_drvdata(dev);
+ 	int ret;
+ 	int i;
+ 
+@@ -1371,7 +1369,7 @@ static int pt1_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	pt1->regs = regs;
+ 	pt1->fe_clk = (pdev->device == 0x211a) ?
+ 				PT1_FE_CLK_20MHZ : PT1_FE_CLK_25MHZ;
+-	pci_set_drvdata(pdev, pt1);
++	dev_set_drvdata(&pdev->dev, pt1);
+ 
+ 	ret = pt1_init_adapters(pt1);
+ 	if (ret < 0)
+diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c
+index 7a7afae4c84c..ab09e0f2ed99 100644
+--- a/drivers/media/pci/pt3/pt3.c
++++ b/drivers/media/pci/pt3/pt3.c
+@@ -626,8 +626,7 @@ static void pt3_cleanup_adapter(struct pt3_board *pt3, int index)
+ 
+ static int pt3_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt3_board *pt3 = pci_get_drvdata(pdev);
++	struct pt3_board *pt3 = dev_get_drvdata(dev);
+ 	int i;
+ 	struct pt3_adapter *adap;
+ 
+@@ -646,8 +645,7 @@ static int pt3_suspend(struct device *dev)
+ 
+ static int pt3_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct pt3_board *pt3 = pci_get_drvdata(pdev);
++	struct pt3_board *pt3 = dev_get_drvdata(dev);
+ 	int i, ret;
+ 	struct pt3_adapter *adap;
+ 
+@@ -734,7 +732,7 @@ static int pt3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		ret = -ENOMEM;
+ 		goto err_release_regions;
+ 	}
+-	pci_set_drvdata(pdev, pt3);
++	dev_set_drvdata(&pdev->dev, pt3);
+ 	pt3->pdev = pdev;
+ 	mutex_init(&pt3->lock);
+ 	pt3->regs[0] = pci_ioremap_bar(pdev, 0);
+-- 
+2.20.1
+
