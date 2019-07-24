@@ -2,148 +2,73 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61777C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5DDC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B5021850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A719321850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKSNuYim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387462AbfGXOlt (ORCPT
+        id S1728221AbfGXOnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:41:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41228 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfGXOlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:41:47 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B46B0200348;
-        Wed, 24 Jul 2019 16:41:44 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A786520033E;
-        Wed, 24 Jul 2019 16:41:44 +0200 (CEST)
-Received: from fsr-ub1664-016.ea.freescale.net (fsr-ub1664-016.ea.freescale.net [10.171.71.216])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 41CC6205D8;
-        Wed, 24 Jul 2019 16:41:44 +0200 (CEST)
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v1 4/4] arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
-Date:   Wed, 24 Jul 2019 17:41:41 +0300
-Message-Id: <1563979301-596-5-git-send-email-claudiu.manoil@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
-References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 24 Jul 2019 10:43:20 -0400
+Received: from mail-qt1-f172.google.com ([209.85.160.172]:33373 "EHLO
+        mail-qt1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfGXOnU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:43:20 -0400
+Received: by mail-qt1-f172.google.com with SMTP id r6so41501045qtt.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:43:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=hhwWMTyEvMH3Y8XcTDW/iVp/DTf0XVaB1tiSVtDZri8=;
+        b=iKSNuYim7mWdkT53o25ofN5wgS6aXiS6LNRhncAP4giCAwrEXPXh5utjUFMBM27RJP
+         9c6UJaRTQC+AmBmzYHXOs3lgRPprl8ihDXDsvSl8ntkB7m0Y21Is6HeUtsEbrdSTUuqE
+         8a3Pe84Gq6Z51VAQgOPNyO6zrsa/JhWhrKHFq6dJlxjSAQGOwK0ZxYQCkBLmzKdIAKnQ
+         /z6YuxTQO/oNYv+hgq20WQwCaR+aXDD7f/KNmTDsosYLvRN8PvslfZ3bs9e6U/DpBUX4
+         zTF1Jy1xsw/Neq3QPQO8iYbrFlS8WHInuB+/47R+jtYEAXqKoX0LaUnOkGl1VrSsF6Qg
+         qJqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=hhwWMTyEvMH3Y8XcTDW/iVp/DTf0XVaB1tiSVtDZri8=;
+        b=hbGWc5eYIEWRaAVySGABlwIuebCOLnrvUxEYP87Q00qgpuk4bu8/2S59vz22j6j0OB
+         pff53YjBfpSIhVB9Fr7o5j5zpmLcEBuk1knryPFx/8mX3JEBJsXXUexi8WcFeAWtdGYQ
+         QhwV7GHv3DQGA0iQG9sygQjuv5ksqjUPFsAiB5Dxw6brejHDTjyVPownaAAUxp0ne6gJ
+         82SKa3cz83XcmixSbBxMUp3tjDGRQAIJ6ysVfkIVf97KygJNCn4YS2LvI5kH1+6BZVnW
+         F4t7aRseXZreRorxfcr/QEaxMckssCCxLdXXaOUasI2vXW72IKBXpazZDSoD1LO85+s4
+         NmRQ==
+X-Gm-Message-State: APjAAAUocy7XOKZ/ZG1JGfjbUbwIjawttGTVdCGOeZg7o2UMrxDthjlq
+        CSv2/kIEBy0GpyThvwpPOOCptLkdRn+z63qaueyyEEbp
+X-Google-Smtp-Source: APXvYqy60lFAXsMJILlxHftSozBiF6+CPYctJIFODYfoi0TMCA88IlYB7fdKx4svIuZlStxD9s3YoJIFCviRt4zCbmc=
+X-Received: by 2002:ac8:540e:: with SMTP id b14mr52946592qtq.134.1563979399042;
+ Wed, 24 Jul 2019 07:43:19 -0700 (PDT)
+MIME-Version: 1.0
+From:   Gilberto Nunes <gilberto.nunes32@gmail.com>
+Date:   Wed, 24 Jul 2019 11:42:42 -0300
+Message-ID: <CAOKSTBv5-1aNwOrhXp0GtK4ROx_NQ6fhCbrnj7PsNPp+NPAhMg@mail.gmail.com>
+Subject: How to disable amdgpu powerplay?
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LS1028a has one Ethernet management interface. On the QDS board, the
-MDIO signals are multiplexed to either on-board AR8035 PHY device or
-to 4 PCIe slots allowing for SGMII cards.
-To enable the Ethernet ENETC Port 1, which can only be connected to a
-RGMII PHY, the multiplexer needs to be configured to route the MDIO to
-the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
-board config register 0x54, and value 0 selects the on-board RGMII PHY.
-The FPGA board config registers are accessible on the i2c bus, at address
-0x66.
+Hi there
 
-The PF3 MDIO PCIe integrated endpoint device allows for centralized access
-to the MDIO bus.  Add the corresponding devicetree node and set it to be
-the MDIO bus parent.
+I have a laptop AMD A12 with amdgpu.
+When I use kernel 5.X I have trouble with powerplay!
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
----
-v1 - none
+https://paste.ubuntu.com/p/YhbjnzYYYh/
 
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
- 2 files changed, 46 insertions(+)
+Is there same kernel boot parameters to use in order to disable powerplay??
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39f3118..663c4b728c07 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -85,6 +85,26 @@
- 			system-clock-frequency = <25000000>;
- 		};
- 	};
-+
-+	mdio-mux {
-+		compatible = "mdio-mux-multiplexer";
-+		mux-controls = <&mux 0>;
-+		mdio-parent-bus = <&enetc_mdio_pf3>;
-+		#address-cells=<1>;
-+		#size-cells = <0>;
-+
-+		/* on-board RGMII PHY */
-+		mdio@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			qds_phy1: ethernet-phy@5 {
-+				/* Atheros 8035 */
-+				reg = <5>;
-+			};
-+		};
-+	};
- };
- 
- &duart0 {
-@@ -164,6 +184,26 @@
- 			};
- 		};
- 	};
-+
-+	fpga@66 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg = <0x66>;
-+
-+		mux: mux-controller {
-+			compatible = "reg-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
-+		};
-+	};
-+
-+};
-+
-+&enetc_port1 {
-+	phy-handle = <&qds_phy1>;
-+	phy-connection-type = "rgmii-id";
- };
- 
- &sai1 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..de71153fda00 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -536,6 +536,12 @@
- 				compatible = "fsl,enetc";
- 				reg = <0x000100 0 0 0 0>;
- 			};
-+			enetc_mdio_pf3: mdio@0,3 {
-+				compatible = "fsl,enetc-mdio";
-+				reg = <0x000300 0 0 0 0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 			ethernet@0,4 {
- 				compatible = "fsl,enetc-ptp";
- 				reg = <0x000400 0 0 0 0>;
--- 
-2.17.1
-
+Thanks
