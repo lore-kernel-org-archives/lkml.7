@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73491C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435CEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF4020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101CF22AEC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997840;
-	bh=PHfpj0Kk7aJ4IC0pjE/zbgjHra14MWgefuEMGmYyf1E=;
+	s=default; t=1563997843;
+	bh=rxnY3wrfDDLzY2Euytksiym4+Ent8PQJYLcAuC5pEYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fqu4K5lAxYRMzwH8YnUg4Mov5cJaezYqPSoWUOiARrS/OmXVQ0S9bqEfJhUl9NNPy
-	 d+Nzs1Uqbyz/ZDGvvSe2D9/y2P/jS57TuZD0WF1j07XsAddMP+RyjP8bkw/0Jt8NZ1
-	 4YyGLs0npI8Ty26qSv0/q0yizAI4Vj4q6D/2HJSk=
+	b=lrswjWeafao1/1Sn/KEvfK5/zJT4IbwmTfsENN00KZnbt1ZEgvUtvznRR0469+tqo
+	 P4CiORidSRjbL0fJHdJ/eSkpTnjCf84hyicsBpRLRAeoyNpLRfoxAf5NBKCIJmYOxg
+	 braoNl0/mEufzyEp1jxvKvxKfCHv4WQ1zUUHzeMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403858AbfGXTui (ORCPT
+        id S2403867AbfGXTul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59280 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:50:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391594AbfGXTua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:30 -0400
+        id S2391602AbfGXTud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43BF420665;
-        Wed, 24 Jul 2019 19:50:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5DA620665;
+        Wed, 24 Jul 2019 19:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997829;
-        bh=PHfpj0Kk7aJ4IC0pjE/zbgjHra14MWgefuEMGmYyf1E=;
+        s=default; t=1563997832;
+        bh=rxnY3wrfDDLzY2Euytksiym4+Ent8PQJYLcAuC5pEYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRh8q4otRmjnXH7ZmrGblddq4W4ppdYoCaajJG/ye3lgEUoLMKbDslhKXp3CizHcm
-         POj1hrrJ8p5pBnKSffXG8CcLy8YN4LHJBMpBY3/AapR/0VwQdXnDOd0r1n6EY8yRcv
-         skXdTDQoZPQ6HfYjJBphAOQmue7CUBK3DGEu1AL0=
+        b=mlZH9PZ7vgFfuDXPcz0IOFy6b49nWhGfIkV1DhFRFe/tEXfLTuAKpsgfR1Vt0fZIG
+         GnArtGzv3h1nw27l8JOpdTHlqqCuB2bxoL0vQ3tb+6I3eiDl5IJ/yTnMy9A9pop6id
+         H3ZhW0Bkc60wElMc6d7lyo8OXsF05lhgI+Fg4OUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minwoo Im <minwoo.im.dev@gmail.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 121/371] nvme-pci: properly report state change failure in nvme_reset_work
-Date:   Wed, 24 Jul 2019 21:17:53 +0200
-Message-Id: <20190724191733.952879949@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 157/371] rslib: Fix decoding of shortened codes
+Date:   Wed, 24 Jul 2019 21:18:29 +0200
+Message-Id: <20190724191737.003107560@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,45 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cee6c269b016ba89c62e34d6bccb103ee2c7de4f ]
+[ Upstream commit 2034a42d1747fc1e1eeef2c6f1789c4d0762cb9c ]
 
-If the state change to NVME_CTRL_CONNECTING fails, the dmesg is going to
-be like:
+The decoding of shortenend codes is broken. It only works as expected if
+there are no erasures.
 
-  [  293.689160] nvme nvme0: failed to mark controller CONNECTING
-  [  293.689160] nvme nvme0: Removing after probe failure status: 0
+When decoding with erasures, Lambda (the error and erasure locator
+polynomial) is initialized from the given erasure positions. The pad
+parameter is not accounted for by the initialisation code, and hence
+Lambda is initialized from incorrect erasure positions.
 
-Even it prints the first line to indicate the situation, the second line
-is not proper because the status is 0 which means normally success of
-the previous operation.
+The fix is to adjust the erasure positions by the supplied pad.
 
-This patch makes it indicate the proper error value when it fails.
-  [   25.932367] nvme nvme0: failed to mark controller CONNECTING
-  [   25.932369] nvme nvme0: Removing after probe failure status: -16
-
-This situation is able to be easily reproduced by:
-  root@target:~# rmmod nvme && modprobe nvme && rmmod nvme
-
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190620141039.9874-3-ferdinand.blomqvist@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/reed_solomon/decode_rs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 693f2a856200..21a51a0ff4d7 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2545,6 +2545,7 @@ static void nvme_reset_work(struct work_struct *work)
- 	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
- 		dev_warn(dev->ctrl.device,
- 			"failed to mark controller CONNECTING\n");
-+		result = -EBUSY;
- 		goto out;
- 	}
- 
+diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
+index 1db74eb098d0..3313bf944ff1 100644
+--- a/lib/reed_solomon/decode_rs.c
++++ b/lib/reed_solomon/decode_rs.c
+@@ -99,9 +99,9 @@
+ 	if (no_eras > 0) {
+ 		/* Init lambda to be the erasure locator polynomial */
+ 		lambda[1] = alpha_to[rs_modnn(rs,
+-					      prim * (nn - 1 - eras_pos[0]))];
++					prim * (nn - 1 - (eras_pos[0] + pad)))];
+ 		for (i = 1; i < no_eras; i++) {
+-			u = rs_modnn(rs, prim * (nn - 1 - eras_pos[i]));
++			u = rs_modnn(rs, prim * (nn - 1 - (eras_pos[i] + pad)));
+ 			for (j = i + 1; j > 0; j--) {
+ 				tmp = index_of[lambda[j - 1]];
+ 				if (tmp != nn) {
 -- 
 2.20.1
 
