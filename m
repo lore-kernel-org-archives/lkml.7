@@ -2,102 +2,171 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BF9C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE994C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80D021738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C05217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:28:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klbseCMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfGXO16 (ORCPT
+        id S2387434AbfGXO2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:27:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37172 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfGXO16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:27:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1A8E9AE44;
-        Wed, 24 Jul 2019 14:27:57 +0000 (UTC)
-Message-ID: <3a2f952e090d972b33f62592b12399f9ef3b0513.camel@suse.de>
-Subject: Re: [RFC 3/4] dma-direct: add dma_direct_min_mask
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     stefan.wahren@i2se.com, f.fainelli@gmail.com,
-        Robin Murphy <robin.murphy@arm.com>, phil@raspberrypi.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jisheng.Zhang@synaptics.com, mbrugger@suse.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Date:   Wed, 24 Jul 2019 16:27:55 +0200
-In-Reply-To: <20190724135657.GA9075@lst.de>
-References: <20190717153135.15507-1-nsaenzjulienne@suse.de>
-         <20190717153135.15507-4-nsaenzjulienne@suse.de>
-         <20190718091526.GA25321@lst.de>
-         <13dd1a4f33fcf814545f0d93f18429e853de9eaf.camel@suse.de>
-         <58753252bd7964e3b9e9558b633bd325c4a898a1.camel@suse.de>
-         <20190724135124.GA44864@arrakis.emea.arm.com>
-         <20190724135657.GA9075@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-m+/FyWNmUHFI+YRB/Gte"
-User-Agent: Evolution 3.32.3 
+        Wed, 24 Jul 2019 10:28:54 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44942 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfGXO2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:28:54 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k18so44697824ljc.11;
+        Wed, 24 Jul 2019 07:28:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a8adFHytHBTsJftWOAZexTFr5WjQ4+eUKt3ZlK8cE/Y=;
+        b=klbseCMCkn55eIImdEW1DX/nC888w41MonWoWNZdmbsu+Xc8JOxrl5yE2W71Tv65o+
+         2BPSm/oN9PHr0w+MjelFN+TBWC8jjH+1yFn18bfVnCZMnQsHvHMzuJfaCtigjYVCmd13
+         X0i5zWVC9xhSjEmEFsW0aWcR5b4hs0pAvHsnWf6ElJoZMkTjS1xUDRpmjb5BkrCOCPYu
+         6MwTSQultvbfWthAa7fZmSP7YOYx3EufLper+mcE0aGJponeyVlGJQH64jCniOqbe3hb
+         ML5m6yVvC16Xs9VOXIWZwxkyJEVMSM7f+FGrS9O60h0pyYJ71fFWc24l3ZDa4+VIFbs7
+         sUWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a8adFHytHBTsJftWOAZexTFr5WjQ4+eUKt3ZlK8cE/Y=;
+        b=IPeLkoF927Ze97W5i3q3cff3a2yP3Ded5RcTTbLc981TZAK0FLon/ARmbKSD7iI38A
+         C+coxjdQWRKGPaZMXNtCL41zJyRbWliG2V0AADFJLFhpx6mUbqocAUSc9Fig34aYAk6d
+         dfO7lFXk+7422s4R5Gf0LdyB1kEp+QWaFlpvNev9PnlRql+rqXx1vzmKXFlMgIIQZ+w0
+         fwjlawacPkH8xf2AABduh2vwqHVtDiErMZbbMFdp+MOkzOn7kI445GpD1p87A8EPYs2X
+         FJYuyDc38OUN5NUkm6HxZDoDwMXUziKFadKdKKCUoPC2PKYFhzI9DWZqU7US05WkrV+F
+         NenA==
+X-Gm-Message-State: APjAAAUCe9xXeeEZxBfj7tquooAhdd5UaeLxGhf6eqC36ax0MFLA0qiY
+        T2rvNb8mM6EUR/sdcxW22JM=
+X-Google-Smtp-Source: APXvYqzYVIyHbPQXFWnL98erzAUeU8oyIbBaN4a7OiAXSepJRjVkXKAD4PtiNbFuP/Z4sy6b4cdsjA==
+X-Received: by 2002:a2e:b003:: with SMTP id y3mr43747276ljk.72.1563978531475;
+        Wed, 24 Jul 2019 07:28:51 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id j11sm7098446lfm.29.2019.07.24.07.28.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 07:28:50 -0700 (PDT)
+Subject: Re: [PATCH] media: staging: ipu3: Enable IOVA API only when IOMMU
+ support is enabled
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Yuehaibing <yuehaibing@huawei.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, hverkuil-cisco@xs4all.nl,
+        mchehab@kernel.org, yong.zhi@intel.com
+References: <20190722134749.21580-1-yuehaibing@huawei.com>
+ <20190724103027.GD21370@paasikivi.fi.intel.com>
+ <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
+ <0c08bdae-facc-0f28-0e58-17a65172587a@huawei.com>
+ <491dbca1-8a58-b26e-cf56-a1a419da288f@gmail.com>
+ <eaf521ff-7dc6-70ae-0473-9c994def602b@arm.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <dc354ede-5963-cd7f-ee53-f3df3061d39a@gmail.com>
+Date:   Wed, 24 Jul 2019 17:28:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <eaf521ff-7dc6-70ae-0473-9c994def602b@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+24.07.2019 17:23, Robin Murphy пишет:
+> On 24/07/2019 15:09, Dmitry Osipenko wrote:
+>> 24.07.2019 17:03, Yuehaibing пишет:
+>>> On 2019/7/24 21:49, Robin Murphy wrote:
+>>>> On 24/07/2019 11:30, Sakari Ailus wrote:
+>>>>> Hi Yue,
+>>>>>
+>>>>> On Mon, Jul 22, 2019 at 09:47:49PM +0800, YueHaibing wrote:
+>>>>>> If IOMMU_SUPPORT is not set, ipu3 driver may select IOMMU_IOVA to m.
+>>>>>> But for many drivers, they use "select IOMMU_IOVA if IOMMU_SUPPORT"
+>>>>>> in the Kconfig, for example, CONFIG_TEGRA_VDE is set to y but
+>>>>>> IOMMU_IOVA
+>>>>>> is m, then the building fails like this:
+>>>>>>
+>>>>>> drivers/staging/media/tegra-vde/iommu.o: In function
+>>>>>> `tegra_vde_iommu_map':
+>>>>>> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
+>>>>>> iommu.c:(.text+0x56): undefined reference to `__free_iova'
+>>>>>>
+>>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>>>> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top
+>>>>>> level pci device driver")
+>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>> ---
+>>>>>>    drivers/staging/media/ipu3/Kconfig | 2 +-
+>>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/staging/media/ipu3/Kconfig
+>>>>>> b/drivers/staging/media/ipu3/Kconfig
+>>>>>> index 4b51c67..b7df18f 100644
+>>>>>> --- a/drivers/staging/media/ipu3/Kconfig
+>>>>>> +++ b/drivers/staging/media/ipu3/Kconfig
+>>>>>> @@ -4,7 +4,7 @@ config VIDEO_IPU3_IMGU
+>>>>>>        depends on PCI && VIDEO_V4L2
+>>>>>>        depends on MEDIA_CONTROLLER && VIDEO_V4L2_SUBDEV_API
+>>>>>>        depends on X86
+>>>>>> -    select IOMMU_IOVA
+>>>>>> +    select IOMMU_IOVA if IOMMU_SUPPORT
+>>>>>
+>>>>> This doesn't seem right: the ipu3-cio2 driver needs IOMMU_IOVA
+>>>>> independently of IOMMU_SUPPORT.
+>>>>>
+>>>>> Looking at tegra-vde, it seems to depend on IOMMU_SUPPORT but
+>>>>> that's not
+>>>>> declared in its Kconfig entry. I wonder if adding that would be the
+>>>>> right
+>>>>> way to fix this.
+>>>>>
+>>>>> Cc'ing the IOMMU list.
+>> IOMMU_SUPPORT is optional for the Tegra-VDE driver.
+>>
+>>>> Right, I also had the impression that we'd made the IOVA library
+>>>> completely standalone. And what does the IPU3 driver's Kconfig have
+>>>> to do with some *other* driver failing to link anyway?
+>>
+>> I can see it failing if IPU3 is compiled as a loadable module, while
+>> Tegra-VDE is a built-in driver. Hence IOVA lib should be also a kernel
+>> module and thus the IOVA symbols will be missing during of linkage of
+>> the VDE driver.
+>>
+>>> Oh, I misunderstand that IOMMU_IOVA is depend on IOMMU_SUPPORT, thank
+>>> you for clarification.
+>>>
+>>> I will try to fix this in tegra-vde.
+>>
+>> Probably IOVA could be selected independently of IOMMU_SUPPORT, but IOVA
+>> library isn't needed for the VDE driver if IOMMU_SUPPORT is disabled.
+> 
+> Oh, I think I get the problem now - tegra-vde/iommu.c is built
+> unconditionally and relies on the static inline stubs for IOMMU and IOVA
+> calls if !IOMMU_SUPPORT, but in a compile-test config where IOVA=m for
+> other reasons, it then picks up the real declarations from linux/iova.h
+> instead of the stubs, and things go downhill from there. So there is a
+> real issue, but indeed it's Tegra-VDE which needs to be restructured to
+> cope with such configurations, and not IPU3's (or anyone else who may
+> select IOVA=m in future) job to work around it.
 
---=-m+/FyWNmUHFI+YRB/Gte
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I guess it could be:
 
-On Wed, 2019-07-24 at 15:56 +0200, Christoph Hellwig wrote:
-> On Wed, Jul 24, 2019 at 02:51:24PM +0100, Catalin Marinas wrote:
-> > I think it may be better if we have both ZONE_DMA and ZONE_DMA32 on
-> > arm64. ZONE_DMA would be based on the smallest dma-ranges as described
-> > in the DT while DMA32 covers the first naturally aligned 4GB of RAM
-> > (unchanged). When a smaller ZONE_DMA is not needed, it could be expande=
-d
-> > to cover what would normally be ZONE_DMA32 (or could we have ZONE_DMA a=
-s
-> > 0-bytes? I don't think GFP_DMA can still allocate memory in this case).
-> >=20
-> > We'd probably have to define ARCH_ZONE_DMA_BITS for arm64 to something
-> > smaller than 32-bit but sufficient to cover the known platforms like
-> > RPi4 (the current 24 is too small, so maybe 30). AFAICT,
-> > __dma_direct_optimal_gfp_mask() figures out whether GFP_DMA or GFP_DMA3=
-2
-> > should be passed.
->=20
-> ARCH_ZONE_DMA_BITS should probably become a variable.  That way we can
-> just initialize it to the default 24 bits in kernel/dma/direct.c and
-> allow architectures to override it in their early boot code.
+	select IOMMU_IOVA if (IOMMU_SUPPORT || COMPILE_TEST)
 
-Thanks both for your feedback. I'll start preparing a proper series.
-
-
---=-m+/FyWNmUHFI+YRB/Gte
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl04ausACgkQlfZmHno8
-x/5nVAf/bB5PkXsWGRSrKIKToRRuuBU3F3Qkczzlf22bZ/BWtFMeSNlTL1Fz2BXY
-fntHM/mLq5eBmbhnOMljQi4PSaNXX09olyWxJl4W6kJuDNyoAQ4+ncqWubT9Sevw
-Kz7S8rqShYPxZT5vdNUHg/11Clx5lB1FkgmErz+Gc5qUunLClW66KuhTy6pls4vt
-Odp5uE2S6j/YXpM1osSK7Ty3psAoyJ8QEGSlDiFFi4Zx69ycqmiKitmWYaAHCLu5
-9a/KvFdyeE8UrF5sALymEDQr/G3V+G3AUtbI+xqsmTacUpCJYMhMJr2xtb3sWb5L
-+UzW6OpVwWRETgf1XlNpbiIHOrAKKA==
-=Tmgu
------END PGP SIGNATURE-----
-
---=-m+/FyWNmUHFI+YRB/Gte--
-
+as a workaround.
