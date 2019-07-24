@@ -2,188 +2,180 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6999C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF1BC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2D92199C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B1B2190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:43:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qqtH1upj";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fG//cHZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfGXHnR (ORCPT
+        id S1726357AbfGXHnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 03:43:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55396 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725776AbfGXHnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:43:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 96ADBB02A;
-        Wed, 24 Jul 2019 07:43:14 +0000 (UTC)
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-From:   Nikolay Borisov <nborisov@suse.com>
-Subject: 5.3-rc1 BUGS in dma_addressing_limited
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <cda1952f-0265-e055-a3ce-237c59069a3f@suse.com>
-Date:   Wed, 24 Jul 2019 10:43:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Wed, 24 Jul 2019 03:43:52 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:31446 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725776AbfGXHnw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 03:43:52 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x6O7gR72017385;
+        Wed, 24 Jul 2019 00:42:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=e8wllviU9zMlgfRppGKysLrOEbGJ3CXkR1emWDIdBEQ=;
+ b=qqtH1upjZA1ZLYf1+SolHROmp1McvPaNAsGHqkrbdamg97oWsxlO6IKn1rq+9QDNiIjR
+ qLJiGcCsf/Vj7meyQ8ydR+N3lTKmfqNqA5trpOrVboe9+O0Jiy83IWfrjv7CwIi/8ry/
+ CbsCsTb7KtiKisoGXxy2JGB3FE+0YZwgfCg= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2tx613jrkq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 24 Jul 2019 00:42:58 -0700
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 24 Jul 2019 00:42:51 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 24 Jul 2019 00:42:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YYRMdQZ3nV5OOtvHYdOafQ8kgtNFh9OmIziaoH9QINVnxJgnnducEWXUvS3dp8FX9NbGoZeWSVptApRT3NmrUVHI5nI24gzgDVmhOcGPrXcRN9btEApuZH5XK0GUWbnXpd77GmrrHWTnQLl/HBoYSdcjC1Xi265OwiVqDfeK05dvAZXW90/Sn0+z6j31SI0AgrbUnEAZUBypldBaZSWQ06d+Vq2mK+VHVWrjAiE54tc7XiqMlDKGba+XvQ07cF07W7GB+EL/Qwh5wychw9GP/tZm2f41dv1WWeQsw82wnAwtjPhAMSnCyoASBjr/KnoFKEghJnxS5iyowGn9g2MsZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8wllviU9zMlgfRppGKysLrOEbGJ3CXkR1emWDIdBEQ=;
+ b=F4YcRpbIvSlepN8JSzVM1F9x7TgzuNxiaWPMyrNr+4Kr85bloCH7X4SaLvY7WFKohO6+sTB0xUQQ/UdULY+DutIDFS4HeDNpbXvUHpEAqQ1SiHGbVzAyKikzvIlFhL6mwtwVqdOuxv+pyXNyJHR5NLpkd5Mvgs7uplyOHkGnBA94PgeQcfnDRXRal1QAMNP0DpGFfiKS2PXmOkh0HI4OF2dTWj0qhF63xxvnZU2j7Kd+4F8sJa6dIDgu4jDZGmD2bFgrbl9mG6MQDRJuEx57qE0r6PAXo9E5mmDDFmBtl6irM6etuI2NidvxQJwByoBTfK4LnBNtCDGOMZdAyewdnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
+ header.d=fb.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8wllviU9zMlgfRppGKysLrOEbGJ3CXkR1emWDIdBEQ=;
+ b=fG//cHZu03FAS9Hsi5NTHQ1/QmymGFyB9f4VXNJjxGa1uXmuOBRbJEWv6KkX/xbG6BHTzXW7Xb17N87nOwqMSpFRHempq+g7+dEF2+Nu94nYDwcficEPNg38B0bPhuahhHU2vrar0mhUX+ZRVZpqZJhNGOzNSH80WRWFbywALzE=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1552.namprd15.prod.outlook.com (10.173.229.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Wed, 24 Jul 2019 07:42:50 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::4066:b41c:4397:27b7]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::4066:b41c:4397:27b7%7]) with mapi id 15.20.2094.013; Wed, 24 Jul 2019
+ 07:42:50 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jiri Olsa <jolsa@kernel.org>
+CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephane Eranian <eranian@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [RFC 00/79] perf tools: Initial libperf separation
+Thread-Topic: [RFC 00/79] perf tools: Initial libperf separation
+Thread-Index: AQHVP7b8omKid2yF70mY04HbAJ4cv6bZZ1qA
+Date:   Wed, 24 Jul 2019 07:42:50 +0000
+Message-ID: <327EF79F-4573-4387-8DA5-24FFD9EDBBB1@fb.com>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+In-Reply-To: <20190721112506.12306-1-jolsa@kernel.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::1:87bf]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5e2dc6c7-7038-4b20-c693-08d7100a874a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1552;
+x-ms-traffictypediagnostic: MWHPR15MB1552:
+x-microsoft-antispam-prvs: <MWHPR15MB15521FDF286F1C7D0723A076B3C60@MWHPR15MB1552.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0108A997B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(366004)(396003)(39860400002)(376002)(189003)(199004)(99286004)(54906003)(6512007)(7416002)(6486002)(86362001)(14454004)(2906002)(81156014)(6436002)(33656002)(6116002)(6246003)(81166006)(50226002)(68736007)(4326008)(36756003)(8936002)(53936002)(71200400001)(71190400001)(5660300002)(14444005)(229853002)(256004)(2616005)(76176011)(316002)(66446008)(66556008)(66946007)(76116006)(46003)(25786009)(57306001)(11346002)(305945005)(102836004)(478600001)(7736002)(66476007)(6916009)(53546011)(64756008)(8676002)(6506007)(186003)(476003)(486006)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1552;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +YecAUg1jZ0x2zcoYkRuc4pvmZNPAsZoBGr1cJhdrUgkJvqsgj3gjMfygs1z6TcbkpzAocVm/rXbjaGgVbNvTy6c/kaWKoWSd5ICdkUZaPEidcuYX22EArb5lIxnEgWH1SIS6s3l7m4uzFGYGuQajhnhot5+ZFxEgtUJIuEACOPl9ayTzqIaf6up2E94jgFhfK4+8Z/zqQRUpMDH8C1lQRJxm7Q6IULNEGvQyw0JufcFCWCoykk9vYfnXgYxbLrhXdZoA6el8hDh6n07leQpJ8riSXgJqy4o7wFWTbJTSL34Qd+0oAn+oWyBHHd7bjWSV/XjbDbIbQPEhFpw/+48HuyGfSScIoH1IdJ3poHZw4sa8vUit/8g5idStqryM9QvfVarWhP2+loDIT3KVuYNbmbkyzpWa7ZF6azNYLYhONs=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BA6E51CA3E3D304CB9DF5BBADCC0A106@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e2dc6c7-7038-4b20-c693-08d7100a874a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 07:42:50.0415
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1552
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=977 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907240086
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Christoph, 
+Hi Jiri,
 
-5.3-rc1 crashes for me when run in qemu with scsi disks. 
-Quick investigation shows that the following triggers a BUG_ON: 
+> On Jul 21, 2019, at 4:23 AM, Jiri Olsa <jolsa@kernel.org> wrote:
+>=20
+> hi,
+> we have long term goal to separate some of the perf functionality
+> into library. This patchset is initial effort on separating some
+> of the interface.
+>=20
+> Currently only the basic counting interface is exported, it allows
+> to:
+>  - create cpu/threads maps
+>  - create evlist/evsel objects
+>  - add evsel objects into evlist
+>  - open/close evlist/evsel objects
+>  - enable/disable events
+>  - read evsel counts
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index e11b115dd0e4..4465e352b8dd 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -689,6 +689,7 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
-  */
- static inline bool dma_addressing_limited(struct device *dev)
- {
-+       BUG_ON(!(dev->dma_mask));
-        return min_not_zero(*dev->dma_mask, dev->bus_dma_mask) <
-                dma_get_required_mask(dev);
+Based on my understanding, evsel and evlist are abstractions in
+perf utilities. I think most other tools that use perf UAPIs are=20
+not built based on these abstractions. I looked at a few internal
+tools. Most of them just uses sys_perf_event_open() and struct=20
+perf_event_attr. I am not sure whether these tools would adopt
+libperf, as libperf changes their existing concepts/abstractions.
 
+>=20
+> The initial effort was to have total separation of the objects
+> from perf code, but it showed not to be a good way. The amount
+> of changed code was too big with high chance for regressions,
+> mainly because of the code embedding one of the above objects
+> statically.
+>=20
+> We took the other approach of sharing the objects/struct details
+> within the perf and libperf code. This way we can keep perf
+> functionality without any major changes and the libperf users
+> are still separated from the object/struct details. We can move
+> to total libperf's objects separation gradually in future.
 
-Otherwise here is what the real backtrace looks like: 
+I found some duplicated logic between libperf and perf, for=20
+example, perf_evlist__open() and evlist__open(). Do we plan to=20
+merge them in the future?=20
 
-[    5.387839] scsi host0: Virtio SCSI HBA
-[    5.389860] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[    5.390217] #PF: supervisor read access in kernel mode
-[    5.390520] #PF: error_code(0x0000) - not-present page
-[    5.390813] PGD 0 P4D 0 
-[    5.391007] Oops: 0000 [#1] SMP
-[    5.391007] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc1-default #578
-[    5.391007] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[    5.391007] RIP: 0010:dma_direct_max_mapping_size+0x21/0x80
-[    5.391007] Code: 0f b6 c0 c3 0f 1f 44 00 00 0f 1f 44 00 00 55 53 48 89 fb e8 f1 0e 00 00 84 c0 74 42 48 8b 83 e8 01 00 00 48 8b ab f8 01 00 00 <48> 8b 00 48 85 c0 74 0c 48 85 ed 74 31 48 39 c5 48 0f 47 e8 48 89
-[    5.391007] RSP: 0000:ffffb0edc0013ac0 EFLAGS: 00010202
-[    5.391007] RAX: 0000000000000000 RBX: ffff9216f9d8b838 RCX: 0000000000000000
-[    5.391007] RDX: 0000000000000000 RSI: 000000000000007e RDI: ffff9216f9d8b838
-[    5.391007] RBP: 0000000000000000 R08: 0000000249ffd97b R09: 0000000000000001
-[    5.391007] R10: 0000000000000000 R11: 0000000000000000 R12: ffff9216f9d8b838
-[    5.391007] R13: 000000000000ffff R14: ffff9216f7348580 R15: 0000000000000000
-[    5.391007] FS:  0000000000000000(0000) GS:ffff9216fba00000(0000) knlGS:0000000000000000
-[    5.391007] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.391007] CR2: 0000000000000000 CR3: 000000007a211000 CR4: 00000000000006e0
-[    5.391007] Call Trace:
-[    5.391007]  __scsi_init_queue+0x75/0x130
-[    5.391007]  scsi_mq_alloc_queue+0x34/0x50
-[    5.391007]  scsi_alloc_sdev+0x232/0x300
-[    5.391007]  scsi_probe_and_add_lun+0x482/0xda0
-[    5.391007]  ? scsi_alloc_target+0x282/0x340
-[    5.391007]  __scsi_scan_target+0xe6/0x610
-[    5.391007]  ? sched_clock_local+0x12/0x80
-[    5.391007]  ? sched_clock_cpu+0x94/0xc0
-[    5.391007]  scsi_scan_channel.part.15+0x55/0x70
-[    5.391007]  scsi_scan_host_selected+0xd7/0x180
-[    5.391007]  virtscsi_probe+0x6f6/0x710
-[    5.391007]  ? msi_get_domain_info+0x10/0x10
-[    5.391007]  virtio_dev_probe+0x147/0x1d0
-[    5.391007]  really_probe+0xd6/0x3b0
-[    5.391007]  ? set_debug_rodata+0x11/0x11
-[    5.391007]  device_driver_attach+0x4f/0x60
-[    5.391007]  __driver_attach+0x99/0x130
-[    5.391007]  ? device_driver_attach+0x60/0x60
-[    5.391007]  bus_for_each_dev+0x76/0xc0
-[    5.391007]  bus_add_driver+0x144/0x220
-[    5.391007]  ? sym2_init+0xf6/0xf6
-[    5.391007]  driver_register+0x5b/0xe0
-[    5.391007]  ? sym2_init+0xf6/0xf6
-[    5.391007]  init+0x86/0xcc
-[    5.391007]  do_one_initcall+0x5a/0x2d4
-[    5.391007]  ? set_debug_rodata+0x11/0x11
-[    5.391007]  ? rcu_read_lock_sched_held+0x74/0x80
-[    5.391007]  kernel_init_freeable+0x139/0x1c9
-[    5.391007]  ? rest_init+0x260/0x260
-[    5.391007]  kernel_init+0xa/0x100
-[    5.391007]  ret_from_fork+0x24/0x30
-[    5.391007] Modules linked in:
-[    5.391007] CR2: 0000000000000000
-[    5.391007] ---[ end trace 03e50b8909d2f2e5 ]---
-[    5.391007] RIP: 0010:dma_direct_max_mapping_size+0x21/0x80
-[    5.391007] Code: 0f b6 c0 c3 0f 1f 44 00 00 0f 1f 44 00 00 55 53 48 89 fb e8 f1 0e 00 00 84 c0 74 42 48 8b 83 e8 01 00 00 48 8b ab f8 01 00 00 <48> 8b 00 48 85 c0 74 0c 48 85 ed 74 31 48 39 c5 48 0f 47 e8 48 89
-[    5.391007] RSP: 0000:ffffb0edc0013ac0 EFLAGS: 00010202
-[    5.391007] RAX: 0000000000000000 RBX: ffff9216f9d8b838 RCX: 0000000000000000
-[    5.391007] RDX: 0000000000000000 RSI: 000000000000007e RDI: ffff9216f9d8b838
-[    5.391007] RBP: 0000000000000000 R08: 0000000249ffd97b R09: 0000000000000001
-[    5.391007] R10: 0000000000000000 R11: 0000000000000000 R12: ffff9216f9d8b838
-[    5.391007] R13: 000000000000ffff R14: ffff9216f7348580 R15: 0000000000000000
-[    5.391007] FS:  0000000000000000(0000) GS:ffff9216fba00000(0000) knlGS:0000000000000000
-[    5.391007] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.391007] CR2: 0000000000000000 CR3: 000000007a211000 CR4: 00000000000006e0
-[    5.391007] BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:38
-[    5.391007] in_atomic(): 0, irqs_disabled(): 1, pid: 1, name: swapper/0
-[    5.391007] INFO: lockdep is turned off.
-[    5.391007] irq event stamp: 13427044
-[    5.391007] hardirqs last  enabled at (13427043): [<ffffffff92215b9b>] __slab_alloc+0x4b/0x80
-[    5.391007] hardirqs last disabled at (13427044): [<ffffffff92001a4a>] trace_hardirqs_off_thunk+0x1a/0x20
-[    5.391007] softirqs last  enabled at (13425414): [<ffffffff92c0032c>] __do_softirq+0x32c/0x430
-[    5.391007] softirqs last disabled at (13425375): [<ffffffff9206fc03>] irq_exit+0xb3/0xc0
-[    5.391007] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G      D           5.3.0-rc1-default #578
-[    5.391007] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[    5.391007] Call Trace:
-[    5.391007]  dump_stack+0x67/0x9b
-[    5.391007]  ___might_sleep+0x152/0x240
-[    5.391007]  exit_signals+0x30/0x320
-[    5.391007]  do_exit+0xb8/0xca0
-[    5.391007]  rewind_stack_do_exit+0x17/0x20
-[    5.419466] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    5.420114] Kernel Offset: 0x11000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[    5.420667] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
+Thanks,
+Song
