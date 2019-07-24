@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F24C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D22C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57DC6229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14E922AEC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996565;
-	bh=9Pt7VSf7Y+EbxOQtUc7WMxkJU/adgdCjXxViKqeXkv0=;
+	s=default; t=1563996569;
+	bh=KIYoyPT6hiDqeItvtK0AmY4urCzTc8H5ZE80bWnX5HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11J3fFtEWChKAIueptdiuZEW7Dzn19JBfyZ5TlsaQoY6CBqbsyXFe2OCV+je4olrt
-	 RWo9URIabuKb3u/MafOVlmwwIn7a+n3dnsZiEJQqvB/dxFaiyiIhkALpZwD3Mr2Gm+
-	 1Gu/ElJYgv+hHN9qFy4LTxQ4YexmG02JaUmLKmSA=
+	b=a1wevBzYJiD2T77c/Fy5Z13ECfRmI6rLqrdxqi6uZSLnc0cp5uQXameEnDAv8Ycuo
+	 70vnq6GKLzXE6gLAQ4ZGjSZkjLXC7EDYRetFW0myw0NuPWh5Fv8LnpQeN7PsRg07RB
+	 BvPZ5QBDUzNETJgFM6Dzl4dDCU3l6f0/keiOyt3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388355AbfGXT3W (ORCPT
+        id S1729320AbfGXT32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:29:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48436 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:29:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728552AbfGXT3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:29:18 -0400
+        id S1728635AbfGXT3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:29:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE8120659;
-        Wed, 24 Jul 2019 19:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5175022ADA;
+        Wed, 24 Jul 2019 19:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996557;
-        bh=9Pt7VSf7Y+EbxOQtUc7WMxkJU/adgdCjXxViKqeXkv0=;
+        s=default; t=1563996563;
+        bh=KIYoyPT6hiDqeItvtK0AmY4urCzTc8H5ZE80bWnX5HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZy3MTtDu637Br45f34WkUg8bwVkddz6YTiQMXj6YBkgQtMDa5YUzhiXEjsl2ZoJm
-         oUg9UYDqOIXgAxFQFcZvm/ZiknQCYUTe++e4/RN3FJ+2U7NWkwH1Bw8VDbNhQqC0n7
-         KgERPHPZBDUovhEe+Evl4KfaqYLrXjihNLAU9qII=
+        b=zLRtOpSZ07dVFo71LCBEtsmhMwWzCsILFvgZbc2GWnY+ZokwQJWO2m3IMWW+ZG7Pt
+         7K/NtHNujeVznrW37RyQ+3T534vEtKCMrAlF+ZVhnHuf3l1TIDbN2U75bnwv1EHwWq
+         3S9eQHTZ4T4mD+e6goR2RUkc4R/OcTc870nqC0ro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com,
+        Julian Anastasov <ja@ssi.bg>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 121/413] bpf: fix callees pruning callers
-Date:   Wed, 24 Jul 2019 21:16:52 +0200
-Message-Id: <20190724191743.873298644@linuxfoundation.org>
+Subject: [PATCH 5.2 140/413] ipvs: defer hook registration to avoid leaks
+Date:   Wed, 24 Jul 2019 21:17:11 +0200
+Message-Id: <20190724191745.026979271@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,60 +63,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eea1c227b9e9bad295e8ef984004a9acf12bb68c ]
+[ Upstream commit cf47a0b882a4e5f6b34c7949d7b293e9287f1972 ]
 
-The commit 7640ead93924 partially resolved the issue of callees
-incorrectly pruning the callers.
-With introduction of bounded loops and jmps_processed heuristic
-single verifier state may contain multiple branches and calls.
-It's possible that new verifier state (for future pruning) will be
-allocated inside callee. Then callee will exit (still within the same
-verifier state). It will go back to the caller and there R6-R9 registers
-will be read and will trigger mark_reg_read. But the reg->live for all frames
-but the top frame is not set to LIVE_NONE. Hence mark_reg_read will fail
-to propagate liveness into parent and future walking will incorrectly
-conclude that the states are equivalent because LIVE_READ is not set.
-In other words the rule for parent/live should be:
-whenever register parentage chain is set the reg->live should be set to LIVE_NONE.
-is_state_visited logic already follows this rule for spilled registers.
+syzkaller reports for memory leak when registering hooks [1]
 
-Fixes: 7640ead93924 ("bpf: verifier: make sure callees don't prune with caller differences")
-Fixes: f4d7e40a5b71 ("bpf: introduce function calls (verification)")
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+As we moved the nf_unregister_net_hooks() call into
+__ip_vs_dev_cleanup(), defer the nf_register_net_hooks()
+call, so that hooks are allocated and freed from same
+pernet_operations (ipvs_core_dev_ops).
+
+[1]
+BUG: memory leak
+unreferenced object 0xffff88810acd8a80 (size 96):
+ comm "syz-executor073", pid 7254, jiffies 4294950560 (age 22.250s)
+ hex dump (first 32 bytes):
+   02 00 00 00 00 00 00 00 50 8b bb 82 ff ff ff ff  ........P.......
+   00 00 00 00 00 00 00 00 00 77 bb 82 ff ff ff ff  .........w......
+ backtrace:
+   [<0000000013db61f1>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
+   [<0000000013db61f1>] slab_post_alloc_hook mm/slab.h:439 [inline]
+   [<0000000013db61f1>] slab_alloc_node mm/slab.c:3269 [inline]
+   [<0000000013db61f1>] kmem_cache_alloc_node_trace+0x15b/0x2a0 mm/slab.c:3597
+   [<000000001a27307d>] __do_kmalloc_node mm/slab.c:3619 [inline]
+   [<000000001a27307d>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
+   [<0000000025054add>] kmalloc_node include/linux/slab.h:590 [inline]
+   [<0000000025054add>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
+   [<0000000050d1bc00>] kvmalloc include/linux/mm.h:637 [inline]
+   [<0000000050d1bc00>] kvzalloc include/linux/mm.h:645 [inline]
+   [<0000000050d1bc00>] allocate_hook_entries_size+0x3b/0x60 net/netfilter/core.c:61
+   [<00000000e8abe142>] nf_hook_entries_grow+0xae/0x270 net/netfilter/core.c:128
+   [<000000004b94797c>] __nf_register_net_hook+0x9a/0x170 net/netfilter/core.c:337
+   [<00000000d1545cbc>] nf_register_net_hook+0x34/0xc0 net/netfilter/core.c:464
+   [<00000000876c9b55>] nf_register_net_hooks+0x53/0xc0 net/netfilter/core.c:480
+   [<000000002ea868e0>] __ip_vs_init+0xe8/0x170 net/netfilter/ipvs/ip_vs_core.c:2280
+   [<000000002eb2d451>] ops_init+0x4c/0x140 net/core/net_namespace.c:130
+   [<000000000284ec48>] setup_net+0xde/0x230 net/core/net_namespace.c:316
+   [<00000000a70600fa>] copy_net_ns+0xf0/0x1e0 net/core/net_namespace.c:439
+   [<00000000ff26c15e>] create_new_namespaces+0x141/0x2a0 kernel/nsproxy.c:107
+   [<00000000b103dc79>] copy_namespaces+0xa1/0xe0 kernel/nsproxy.c:165
+   [<000000007cc008a2>] copy_process.part.0+0x11fd/0x2150 kernel/fork.c:2035
+   [<00000000c344af7c>] copy_process kernel/fork.c:1800 [inline]
+   [<00000000c344af7c>] _do_fork+0x121/0x4f0 kernel/fork.c:2369
+
+Reported-by: syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com
+Fixes: 719c7d563c17 ("ipvs: Fix use-after-free in ip_vs_in")
+Signed-off-by: Julian Anastasov <ja@ssi.bg>
+Acked-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/netfilter/ipvs/ip_vs_core.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index a5c369e60343..11528bdaa9dc 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -6456,17 +6456,18 @@ static int is_state_visited(struct bpf_verifier_env *env, int insn_idx)
- 	 * the state of the call instruction (with WRITTEN set), and r0 comes
- 	 * from callee with its full parentage chain, anyway.
- 	 */
--	for (j = 0; j <= cur->curframe; j++)
--		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
--			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
- 	/* clear write marks in current state: the writes we did are not writes
- 	 * our child did, so they don't screen off its reads from us.
- 	 * (There are no read marks in current state, because reads always mark
- 	 * their parent and current state never has children yet.  Only
- 	 * explored_states can get read marks.)
- 	 */
--	for (i = 0; i < BPF_REG_FP; i++)
--		cur->frame[cur->curframe]->regs[i].live = REG_LIVE_NONE;
-+	for (j = 0; j <= cur->curframe; j++) {
-+		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
-+			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
-+		for (i = 0; i < BPF_REG_FP; i++)
-+			cur->frame[j]->regs[i].live = REG_LIVE_NONE;
-+	}
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index 7138556b206b..d5103a9eb302 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2245,7 +2245,6 @@ static const struct nf_hook_ops ip_vs_ops[] = {
+ static int __net_init __ip_vs_init(struct net *net)
+ {
+ 	struct netns_ipvs *ipvs;
+-	int ret;
  
- 	/* all stack frames are accessible from callee, clear them all */
- 	for (j = 0; j <= cur->curframe; j++) {
+ 	ipvs = net_generic(net, ip_vs_net_id);
+ 	if (ipvs == NULL)
+@@ -2277,17 +2276,11 @@ static int __net_init __ip_vs_init(struct net *net)
+ 	if (ip_vs_sync_net_init(ipvs) < 0)
+ 		goto sync_fail;
+ 
+-	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+-	if (ret < 0)
+-		goto hook_fail;
+-
+ 	return 0;
+ /*
+  * Error handling
+  */
+ 
+-hook_fail:
+-	ip_vs_sync_net_cleanup(ipvs);
+ sync_fail:
+ 	ip_vs_conn_net_cleanup(ipvs);
+ conn_fail:
+@@ -2317,6 +2310,19 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
+ 	net->ipvs = NULL;
+ }
+ 
++static int __net_init __ip_vs_dev_init(struct net *net)
++{
++	int ret;
++
++	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
++	if (ret < 0)
++		goto hook_fail;
++	return 0;
++
++hook_fail:
++	return ret;
++}
++
+ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
+ {
+ 	struct netns_ipvs *ipvs = net_ipvs(net);
+@@ -2336,6 +2342,7 @@ static struct pernet_operations ipvs_core_ops = {
+ };
+ 
+ static struct pernet_operations ipvs_core_dev_ops = {
++	.init = __ip_vs_dev_init,
+ 	.exit = __ip_vs_dev_cleanup,
+ };
+ 
 -- 
 2.20.1
 
