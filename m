@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278A6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91830C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F019F21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682AD21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997439;
-	bh=FoaA1YC+rRTjrO05a9bfwU/h/RW7sujYxE3/nZVSiGE=;
+	s=default; t=1563997441;
+	bh=wjmhdoh01PWDs0XXTJmyjkbOn+Q6pkC/BIa2uCU4dNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ftC4fAoRrybRNb77ekIcbef92KKFnMi8kyhTQ9jj68vgpTHwHxdPeAOfbSdgjC5Xn
-	 j5qB29B7mPdhU2UrdAvLS6mcNbiiQnco+9tGmSmkdwTO3brwJ5Lp9m6txy2ptCe6WI
-	 J1hvMeunG1bftHMwVJ/YGL9V6Ka7pwZgzknsahOc=
+	b=jpTOxiARSQlIfaL/+luAcgndsYwGkD1zrn26u2KxZk7T31EJ9LzLicAn+ofUeKaSS
+	 X9t74KsKANaZy/flvbHEhe1yu/WLFnMoHjOJzJRuXJBGMdeu95u+8cWp4vcmvDVgNF
+	 NQdNdCWepR4mac568pLfyl06Sd1B8jxy9PauTPP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390728AbfGXTn6 (ORCPT
+        id S2390737AbfGXTn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46486 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388211AbfGXTnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:55 -0400
+        id S2390726AbfGXTn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F42F21873;
-        Wed, 24 Jul 2019 19:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF6E622ADA;
+        Wed, 24 Jul 2019 19:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997434;
-        bh=FoaA1YC+rRTjrO05a9bfwU/h/RW7sujYxE3/nZVSiGE=;
+        s=default; t=1563997437;
+        bh=wjmhdoh01PWDs0XXTJmyjkbOn+Q6pkC/BIa2uCU4dNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCm72RxDyg5EWNHu7pn7J+14uVVnlopyTOFF6Ib8w2a4T912FiWoEDPKpgx9TrVQw
-         SBjgmVN7CNsvXEmfXbyA6owE65+hFW3Nvg6Q7SxTxVLOMuDcBe7zoPKXzDq+galOjP
-         SX0qAGpFJNCmCrd8vgLpHcddr5ujD+p4yyigv1ug=
+        b=J8MsCT7t0+V8MtaLwaT4GIF4qOBSMy5VUvMA4QQ2nuVN1xx83gwnUO/q9C7gDJp4n
+         MBbZ+KqifezvEIyfnjW8dtrjtYmlJggRS7wcDGQysXOwPXJFIxch1kBqD91aISZwW5
+         XxTdRziETJe7UolgnIwxNLUDqP/xJz6+Qu/8HAS4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d454a826e670502484b8@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 022/371] batman-adv: fix for leaked TVLV handler.
-Date:   Wed, 24 Jul 2019 21:16:14 +0200
-Message-Id: <20190724191726.164673947@linuxfoundation.org>
+Subject: [PATCH 5.1 023/371] media: dvb: usb: fix use after free in dvb_usb_device_exit
+Date:   Wed, 24 Jul 2019 21:16:15 +0200
+Message-Id: <20190724191726.244088898@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,34 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 17f78dd1bd624a4dd78ed5db3284a63ee807fcc3 ]
+[ Upstream commit 6cf97230cd5f36b7665099083272595c55d72be7 ]
 
-A handler for BATADV_TVLV_ROAM was being registered when the
-translation-table was initialized, but not unregistered when the
-translation-table was freed.  Unregister it.
+dvb_usb_device_exit() frees and uses the device name in that order.
+Fix by storing the name in a buffer before freeing it.
 
-Fixes: 122edaa05940 ("batman-adv: tvlv - convert roaming adv packet to use tvlv unicast packets")
-Reported-by: syzbot+d454a826e670502484b8@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index 26c4e2493ddf..abad64eb7dc4 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -3826,6 +3826,8 @@ static void batadv_tt_purge(struct work_struct *work)
-  */
- void batadv_tt_free(struct batadv_priv *bat_priv)
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+index 99951e02a880..dd063a736df5 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+@@ -287,12 +287,15 @@ EXPORT_SYMBOL(dvb_usb_device_init);
+ void dvb_usb_device_exit(struct usb_interface *intf)
  {
-+	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_ROAM, 1);
-+
- 	batadv_tvlv_container_unregister(bat_priv, BATADV_TVLV_TT, 1);
- 	batadv_tvlv_handler_unregister(bat_priv, BATADV_TVLV_TT, 1);
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+-	const char *name = "generic DVB-USB module";
++	const char *default_name = "generic DVB-USB module";
++	char name[40];
+ 
+ 	usb_set_intfdata(intf, NULL);
+ 	if (d != NULL && d->desc != NULL) {
+-		name = d->desc->name;
++		strscpy(name, d->desc->name, sizeof(name));
+ 		dvb_usb_exit(d);
++	} else {
++		strscpy(name, default_name, sizeof(name));
+ 	}
+ 	info("%s successfully deinitialized and disconnected.", name);
  
 -- 
 2.20.1
