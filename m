@@ -2,55 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD995C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05767C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F700229FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27CE218EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996596;
-	bh=1IhLdSTJ384CIEvJIEt8sq+hnX1k7Ne5k/kgyLm0Ezg=;
+	s=default; t=1563996602;
+	bh=39gwfs7zH42d9G8RTt/ZE+bL7MJZDcrcQcu/PPWOfww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoqxfWXepRksQow9RxICaANTl11Mxt9iDTaxLXSba0EtUjvV5PDZfxWufE7GUZZ1M
-	 sm0us3vKvYP9RjB5BGh3v2g+8bBCO/Kfm5/NMzTc60I481grT3ySLQpsd1gjn31V3W
-	 hiAxg2jo0EzOw2uewDaZybbHrchzuaLPu3L1Klf8=
+	b=gazwfIlXe/8quFiLvUUn1YlNCpQeBY+U4xF7aBU3Ws5Tl+RWOraCW6U8rAvTDc9p9
+	 kTJPGSJ371CmES3YZRsLT41ngL3JQjCmNAam1OR/0dr8ulaYyURhtrzzn+OwYV75Xk
+	 Kl2ZwyX5rkumJfVlsp2xf/OMDvJZpHmj5bBiLizk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbfGXT3y (ORCPT
+        id S2388068AbfGXTaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:29:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387978AbfGXT3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:29:51 -0400
+        id S1727302AbfGXT36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:29:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B008A229FA;
-        Wed, 24 Jul 2019 19:29:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876432238C;
+        Wed, 24 Jul 2019 19:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996590;
-        bh=1IhLdSTJ384CIEvJIEt8sq+hnX1k7Ne5k/kgyLm0Ezg=;
+        s=default; t=1563996597;
+        bh=39gwfs7zH42d9G8RTt/ZE+bL7MJZDcrcQcu/PPWOfww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7FIN5LMjLLgKnwzNYEGEbv3aMOtYKLPfTuLuj7uN+dZRk+PpnpOW7xTxi1UTBbr+
-         3yo3UuCQWidP3fXaEtq90Zc4X2t3pXbeoTQtn173g5t4ndxBGsmdn0EcHDBFND/CFY
-         qk1hq7ePKi5vlSzh5KE3LxsC+k2Nl91wFhFwXerw=
+        b=dkIWiFggldRzxtKqfHeYjVyC6tzFgBlFJNiFq/WaQNptMAgQRkK06/WoYWMDyNTgm
+         3stfBnuK54jT7pAoFNIqsOM1Tg2i77iUaISkpkr/3EUenSuc8RZq3cpFJocqeqcFBY
+         jL/C8GG6p84w57O+0G47InusMP8g3WDu/5oHapAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 122/413] perf build: Handle slang being in /usr/include and in /usr/include/slang/
-Date:   Wed, 24 Jul 2019 21:16:53 +0200
-Message-Id: <20190724191743.928000697@linuxfoundation.org>
+Subject: [PATCH 5.2 151/413] media: vimc: cap: check v4l2_fill_pixfmt return value
+Date:   Wed, 24 Jul 2019 21:17:22 +0200
+Message-Id: <20190724191745.787752001@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,100 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78d6ccce03e86de34c7000bcada493ed0679e350 ]
+[ Upstream commit 77ae46e11df5c96bb4582633851f838f5d954df4 ]
 
-In some distros slang.h may be in a /usr/include 'slang' subdir, so use
-the if slang is not explicitely disabled (by using NO_SLANG=1) and its
-feature test for the common case (having /usr/include/slang.h) failed,
-use the results for the test that checks if it is in slang/slang.h.
+v4l2_fill_pixfmt() returns -EINVAL if the pixelformat used as parameter is
+invalid or if the user is trying to use a multiplanar format with the
+singleplanar API. Currently, the vimc_cap_try_fmt_vid_cap() returns such
+value, but vimc_cap_s_fmt_vid_cap() is ignoring it. Fix that and returns
+an error value if vimc_cap_try_fmt_vid_cap() has failed.
 
-Change the only file in perf that includes slang.h to use
-HAVE_SLANG_INCLUDE_SUBDIR and forget about this for good.
-
-On a rhel6 system now we have:
-
-  $ /tmp/build/perf/perf -vv | grep slang
-                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-  $ ldd /tmp/build/perf/perf | grep libslang
-  	libslang.so.2 => /usr/lib64/libslang.so.2 (0x00007fa2d5a8d000)
-  $ grep slang /tmp/build/perf/FEATURE-DUMP
-  feature-libslang=0
-  feature-libslang-include-subdir=1
-  $ cat /etc/redhat-release
-  CentOS release 6.10 (Final)
-  $
-
-While on fedora:29:
-
-  $ /tmp/build/perf/perf -vv | grep slang
-                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-  $ ldd /tmp/build/perf/perf | grep slang
-  	libslang.so.2 => /lib64/libslang.so.2 (0x00007f8eb11a7000)
-  $ grep slang /tmp/build/perf/FEATURE-DUMP
-  feature-libslang=1
-  feature-libslang-include-subdir=1
-  $
-  $ cat /etc/fedora-release
-  Fedora release 29 (Twenty Nine)
-  $
-
-The feature-libslang-include-subdir=1 line is because the 'gettid()'
-test was added to test-all.c as the new glibc has an implementation for
-that, so we soon should have it not failing, i.e. should be the common
-case soon. Perhaps I should move it out till it becomes the norm...
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 1955c8cf5e26 ("perf tools: Don't hardcode host include path for libslang")
-Link: https://lkml.kernel.org/n/tip-bkgtpsu3uit821fuwsdhj9gd@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Suggested-by: Helen Koike <helen.koike@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/Makefile.config | 11 ++++++++---
- tools/perf/ui/libslang.h   |  5 +++++
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ drivers/media/platform/vimc/vimc-capture.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 85fbcd265351..17b81bc403e4 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -637,9 +637,14 @@ endif
+diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+index 946dc0908566..664855708fdf 100644
+--- a/drivers/media/platform/vimc/vimc-capture.c
++++ b/drivers/media/platform/vimc/vimc-capture.c
+@@ -142,12 +142,15 @@ static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
+ 				  struct v4l2_format *f)
+ {
+ 	struct vimc_cap_device *vcap = video_drvdata(file);
++	int ret;
  
- ifndef NO_SLANG
-   ifneq ($(feature-libslang), 1)
--    msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
--    NO_SLANG := 1
--  else
-+    ifneq ($(feature-libslang-include-subdir), 1)
-+      msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
-+      NO_SLANG := 1
-+    else
-+      CFLAGS += -DHAVE_SLANG_INCLUDE_SUBDIR
-+    endif
-+  endif
-+  ifndef NO_SLANG
-     # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
-     CFLAGS += -I/usr/include/slang
-     CFLAGS += -DHAVE_SLANG_SUPPORT
-diff --git a/tools/perf/ui/libslang.h b/tools/perf/ui/libslang.h
-index c0686cda39a5..991e692b9b46 100644
---- a/tools/perf/ui/libslang.h
-+++ b/tools/perf/ui/libslang.h
-@@ -10,7 +10,12 @@
- #ifndef HAVE_LONG_LONG
- #define HAVE_LONG_LONG __GLIBC_HAVE_LONG_LONG
- #endif
-+
-+#ifdef HAVE_SLANG_INCLUDE_SUBDIR
-+#include <slang/slang.h>
-+#else
- #include <slang.h>
-+#endif
+ 	/* Do not change the format while stream is on */
+ 	if (vb2_is_busy(&vcap->queue))
+ 		return -EBUSY;
  
- #if SLANG_VERSION < 20104
- #define slsmg_printf(msg, args...) \
+-	vimc_cap_try_fmt_vid_cap(file, priv, f);
++	ret = vimc_cap_try_fmt_vid_cap(file, priv, f);
++	if (ret)
++		return ret;
+ 
+ 	dev_dbg(vcap->dev, "%s: format update: "
+ 		"old:%dx%d (0x%x, %d, %d, %d, %d) "
 -- 
 2.20.1
 
