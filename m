@@ -5,56 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587FFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A98C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDAA229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFDC20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996647;
-	bh=3MB4bK7EG96b5G7lE/CIVDA98zKHLKKru1XWZkbPHGY=;
+	s=default; t=1563996651;
+	bh=6/ZdEZJo5ChseS0KXOgOxgb3G8chUGu4rgGVPCC4dWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1u1fEO3RVvlVaN35p5drL1/l4pIPxIQow+vtGDPVzudGRPXw5QaIqTSe+yoFn/boL
-	 K3rG6uDBJ36pXmmo+RREnUixbHsxruSIJ/FzkIrAsbXShDN9a2y8YsVbQ9qzJ/2xUd
-	 OtXishVaDMwvU5ZhnhcrRwBcG1o9v0/XF5UV3yDs=
+	b=cI3Kf79He8VJBlXu/J1kZQauUbQeDeb4JDZef8Qb65XmgW62EOI6EvTKTvz+7DRNN
+	 kVdPsJ0YRQ2JWet3WRsY2i3zNGIjqb2TvB2lwTfZvK7xWj+88/kYc2BmSUoyncFMME
+	 3hyDynwHqmU2qFNph6j2XhxKo1sJJg16yUlGMGJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388410AbfGXTap (ORCPT
+        id S2388418AbfGXTau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388389AbfGXTak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:40 -0400
+        id S2388409AbfGXTaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC8C20659;
-        Wed, 24 Jul 2019 19:30:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF43C21951;
+        Wed, 24 Jul 2019 19:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996639;
-        bh=3MB4bK7EG96b5G7lE/CIVDA98zKHLKKru1XWZkbPHGY=;
+        s=default; t=1563996645;
+        bh=6/ZdEZJo5ChseS0KXOgOxgb3G8chUGu4rgGVPCC4dWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fW9VtnYAC/K/g8O+n48CBhu41pe4CKGVBv/IUVwZ1iVzKnLBDsSebjxGT1W2uI6KK
-         IUFsjchgEgp/Tz63/ItdvnFd3wEaA7qBP6ucZKl+xk3gTx/HlN0qmlroSKBwQExLMC
-         jUFEuvUj67OSualHKxpM4yx1vab67DYCDFHL/sSc=
+        b=D199ksdx/WdOvoqISd7cmSFbuiCeyH+IR4yWq8blH6iA3Emgg6aBpfKcMHCNpgugy
+         7EIZ65lmFbdYIzrysn+7D4lmcBEPfbkqttj6WWDiMph9ihr9VARapucIJ4Q9DFQSui
+         p/aa6sHaPQNUzBPcr8GHq5OAtgzXLL9ov6NFpPGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Borislav Petkov <bp@suse.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pu Wen <puwen@hygon.cn>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Furquan Shaikh <furquan@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 125/413] x86/cacheinfo: Fix a -Wtype-limits warning
-Date:   Wed, 24 Jul 2019 21:16:56 +0200
-Message-Id: <20190724191744.090186828@linuxfoundation.org>
+Subject: [PATCH 5.2 127/413] ACPICA: Clear status of GPEs on first direct enable
+Date:   Wed, 24 Jul 2019 21:16:58 +0200
+Message-Id: <20190724191744.203633217@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -67,51 +61,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b7aebf0487613033aff26420e32fa2076d52846 ]
+[ Upstream commit 44758bafa53602f2581a6857bb20b55d4d8ad5b2 ]
 
-cpuinfo_x86.x86_model is an unsigned type, so comparing against zero
-will generate a compilation warning:
+ACPI GPEs (other than the EC one) can be enabled in two situations.
+First, the GPEs with existing _Lxx and _Exx methods are enabled
+implicitly by ACPICA during system initialization.  Second, the
+GPEs without these methods (like GPEs listed by _PRW objects for
+wakeup devices) need to be enabled directly by the code that is
+going to use them (e.g. ACPI power management or device drivers).
 
-  arch/x86/kernel/cpu/cacheinfo.c: In function 'cacheinfo_amd_init_llc_id':
-  arch/x86/kernel/cpu/cacheinfo.c:662:19: warning: comparison is always true \
-    due to limited range of data type [-Wtype-limits]
+In the former case, if the status of a given GPE is set to start
+with, its handler method (either _Lxx or _Exx) needs to be invoked
+to take care of the events (possibly) signaled before the GPE was
+enabled.  In the latter case, however, the first caller of
+acpi_enable_gpe() for a given GPE should not be expected to care
+about any events that might be signaled through it earlier.  In
+that case, it is better to clear the status of the GPE before
+enabling it, to prevent stale events from triggering unwanted
+actions (like spurious system resume, for example).
 
-Remove the unnecessary lower bound check.
+For this reason, modify acpi_ev_add_gpe_reference() to take an
+additional boolean argument indicating whether or not the GPE
+status needs to be cleared when its reference counter changes from
+zero to one and make acpi_enable_gpe() pass TRUE to it through
+that new argument.
 
- [ bp: Massage. ]
-
-Fixes: 68091ee7ac3c ("x86/CPU/AMD: Calculate last level cache ID from number of sharing threads")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1560954773-11967-1-git-send-email-cai@lca.pw
+Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
+Reported-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Furquan Shaikh <furquan@google.com>
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/acpi/acpica/acevents.h | 3 ++-
+ drivers/acpi/acpica/evgpe.c    | 8 +++++++-
+ drivers/acpi/acpica/evgpeblk.c | 2 +-
+ drivers/acpi/acpica/evxface.c  | 2 +-
+ drivers/acpi/acpica/evxfgpe.c  | 2 +-
+ 5 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 395d46f78582..c7503be92f35 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -658,8 +658,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id)
- 	if (c->x86 < 0x17) {
- 		/* LLC is at the node level. */
- 		per_cpu(cpu_llc_id, cpu) = node_id;
--	} else if (c->x86 == 0x17 &&
--		   c->x86_model >= 0 && c->x86_model <= 0x1F) {
-+	} else if (c->x86 == 0x17 && c->x86_model <= 0x1F) {
- 		/*
- 		 * LLC is at the core complex level.
- 		 * Core complex ID is ApicId[3] for these processors.
+diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
+index 831660179662..c8652f91054e 100644
+--- a/drivers/acpi/acpica/acevents.h
++++ b/drivers/acpi/acpica/acevents.h
+@@ -69,7 +69,8 @@ acpi_status
+ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked);
+ 
+ acpi_status
+-acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
++acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
++			  u8 clear_on_enable);
+ 
+ acpi_status
+ acpi_ev_remove_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
+diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
+index 62d3aa74277b..344feba29063 100644
+--- a/drivers/acpi/acpica/evgpe.c
++++ b/drivers/acpi/acpica/evgpe.c
+@@ -146,6 +146,7 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
+  * FUNCTION:    acpi_ev_add_gpe_reference
+  *
+  * PARAMETERS:  gpe_event_info          - Add a reference to this GPE
++ *              clear_on_enable         - Clear GPE status before enabling it
+  *
+  * RETURN:      Status
+  *
+@@ -155,7 +156,8 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
+  ******************************************************************************/
+ 
+ acpi_status
+-acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
++acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
++			  u8 clear_on_enable)
+ {
+ 	acpi_status status = AE_OK;
+ 
+@@ -170,6 +172,10 @@ acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
+ 
+ 		/* Enable on first reference */
+ 
++		if (clear_on_enable) {
++			(void)acpi_hw_clear_gpe(gpe_event_info);
++		}
++
+ 		status = acpi_ev_update_gpe_enable_mask(gpe_event_info);
+ 		if (ACPI_SUCCESS(status)) {
+ 			status = acpi_ev_enable_gpe(gpe_event_info);
+diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
+index 328d1d6123ad..fb15e9e2373b 100644
+--- a/drivers/acpi/acpica/evgpeblk.c
++++ b/drivers/acpi/acpica/evgpeblk.c
+@@ -453,7 +453,7 @@ acpi_ev_initialize_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
+ 				continue;
+ 			}
+ 
+-			status = acpi_ev_add_gpe_reference(gpe_event_info);
++			status = acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
+ 			if (ACPI_FAILURE(status)) {
+ 				ACPI_EXCEPTION((AE_INFO, status,
+ 					"Could not enable GPE 0x%02X",
+diff --git a/drivers/acpi/acpica/evxface.c b/drivers/acpi/acpica/evxface.c
+index 3df00eb6621b..279ef0557aa3 100644
+--- a/drivers/acpi/acpica/evxface.c
++++ b/drivers/acpi/acpica/evxface.c
+@@ -971,7 +971,7 @@ acpi_remove_gpe_handler(acpi_handle gpe_device,
+ 	      ACPI_GPE_DISPATCH_METHOD) ||
+ 	     (ACPI_GPE_DISPATCH_TYPE(handler->original_flags) ==
+ 	      ACPI_GPE_DISPATCH_NOTIFY)) && handler->originally_enabled) {
+-		(void)acpi_ev_add_gpe_reference(gpe_event_info);
++		(void)acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
+ 		if (ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
+ 
+ 			/* Poll edge triggered GPEs to handle existing events */
+diff --git a/drivers/acpi/acpica/evxfgpe.c b/drivers/acpi/acpica/evxfgpe.c
+index 30a083902f52..710488ec59e9 100644
+--- a/drivers/acpi/acpica/evxfgpe.c
++++ b/drivers/acpi/acpica/evxfgpe.c
+@@ -108,7 +108,7 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
+ 	if (gpe_event_info) {
+ 		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
+ 		    ACPI_GPE_DISPATCH_NONE) {
+-			status = acpi_ev_add_gpe_reference(gpe_event_info);
++			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
+ 			if (ACPI_SUCCESS(status) &&
+ 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
+ 
 -- 
 2.20.1
 
