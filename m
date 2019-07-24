@@ -2,111 +2,136 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72932C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1091C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E4C214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A542166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999799;
-	bh=NBBBglQK+Yq5wlIKUZLXqNIBOF02Fs1buLxEgTTKyjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TqyujykqWhlTnyVzRIJ18Gmid/M+bBTVKr6jY8Yq1desCQHQvgRM67GHkqe+yEdyg
-	 VeJDSM8cr67pzzlwy+lheJr8IuegPMe5INfC6SfYUhdyVu7LF3rmuB6xS5/m0xCUkT
-	 ECAJhXSUJAcC2Yrh+VH4bbKAe+SkyoC5kzXqunBQ=
+	s=default; t=1563999813;
+	bh=aKEnaZ7Q19gHsX4lVgdncCYO5iiTFGDI+R4d4ch3Riw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mV1Q3+5/rNhflzABWLNuOjVYxz6ujeRKV/lAgOgEFI9TAyiGY7SLM/E6WFUnpo9wx
+	 VZ12o9K9wt3FqTRW+RVYSdurj66mlDmIGNcQYF/k70XPWPifjyRF69zgl7nfE66/U5
+	 hvShup9nE7H4GzqQ1T5aCXprWgVgPMrHTzr0BUcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392908AbfGXUXS (ORCPT
+        id S2390414AbfGXTms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:23:18 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36129 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390453AbfGXTnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id o9so92214717iom.3;
-        Wed, 24 Jul 2019 12:43:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XSPJRPecmIkBOwXjOa6IB3IwqosGZbZUtric4Ph4E4o=;
-        b=Uz1vzZMmISM+EBL8D3JE3iB1WEkzLnUcCa+bZq8kQ8vBTZt/CeK49yyuH9VYj/mSQc
-         cKlTho2y9sBe6EHEFFt83JI7+My4kdNg5/+xAF5za2rAOUUBC7D6OFf8Rj9CzLLEbGT6
-         3qYGZyfMMWw74jZBcFkWO/qG5IdITPtAAHdx9Y6orfZRsFu3yyUmMDK0j2G8h16un2Tb
-         YedgapKIVgB3pfSAq9fJZ9cz933OAL0WyWhvAYCj/NQ3bvKRQGeB9H6AWHrzQCS43ezW
-         cSueR2pTrupM5Z8xG9FJBTA22Rt46yyKNWN87IvV2nmEaKWlh/sGqUGiEiR4WzQLKL/u
-         44ZQ==
-X-Gm-Message-State: APjAAAW6XZ70Q2gH8z4pMOEYyTJDuWWAH/kl6D/Fczi/WQ8GNHJqSCwc
-        ze1rvu/wU7y7+fUKcNTvkw==
-X-Google-Smtp-Source: APXvYqwHgt8wZNph+Kfk3NAJ2uOYvBBd1tibxisfgZlYpbdY6CVInbD0nZywDI8EDMJ/YLDUSyHdAw==
-X-Received: by 2002:a5d:885a:: with SMTP id t26mr25104113ios.218.1563997380432;
-        Wed, 24 Jul 2019 12:43:00 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id v13sm38532541ioq.13.2019.07.24.12.42.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 12:42:59 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 13:42:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, letux-kernel@openphoenux.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to
- make display work again
-Message-ID: <20190724194259.GA25847@bogus>
-References: <cover.1562597164.git.hns@goldelico.com>
- <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
+        Wed, 24 Jul 2019 15:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390409AbfGXTmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:42:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42AAD20665;
+        Wed, 24 Jul 2019 19:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997364;
+        bh=aKEnaZ7Q19gHsX4lVgdncCYO5iiTFGDI+R4d4ch3Riw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KydtvRasS0UhI8RR1N1baE8p+rGN7EXj9Tu2NmNmxZ7LxIlGnIbRj6MhTVeizVMqL
+         zo2ILwDeXd/v34VCjXSrUVYkvvV+7+tt2BKEUXSmoF9z22ELowcanD7OhXcW7KXUk4
+         KmRpOnhc6jSRkbC11DRcfslZKpfcKDVhzoHwE1G0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 5.2 411/413] phy: qcom-qmp: Correct READY_STATUS poll break condition
+Date:   Wed, 24 Jul 2019 21:21:42 +0200
+Message-Id: <20190724191803.918536116@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 04:46:05PM +0200, H. Nikolaus Schaller wrote:
-> commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
-> 
-> did introduce logic to centrally handle the legacy spi-cs-high property
-> in combination with cs-gpios. This assumes that the polarity
-> of the CS has to be inverted if spi-cs-high is missing, even
-> and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
-> 
-> The DTS for the GTA04 was orginally introduced under the assumption
-> that there is no need for spi-cs-high if the gpio is defined with
-> proper polarity GPIO_ACTIVE_HIGH.
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Given that spi-cs-high is called legacy, that would imply that DT's 
-should not have to use spi-cs-high.
+commit 885bd765963b42c380db442db7f1c0f2a26076fa upstream.
 
-> This was not a problem until gpiolib changed the interpretation of
-> GPIO_ACTIVE_HIGH and missing spi-cs-high.
+After issuing a PHY_START request to the QMP, the hardware documentation
+states that the software should wait for the PCS_READY_STATUS to become
+1.
 
-Then we should fix gpiolib...
+With the introduction of commit c9b589791fc1 ("phy: qcom: Utilize UFS
+reset controller") an additional 1ms delay was introduced between the
+start request and the check of the status bit. This greatly increases
+the chances for the hardware to actually becoming ready before the
+status bit is read.
 
-> The effect is that the missing spi-cs-high is now interpreted as CS being
-> low (despite GPIO_ACTIVE_HIGH) which turns off the SPI interface when the
-> panel is to be programmed by the panel driver.
-> 
-> Therefore, we have to add the redundant and legacy spi-cs-high property
-> to properly pass through the legacy handler.
-> 
-> Since this is nowhere documented in the bindings, we add some words of
-> WARNING.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 6 ++++++
->  arch/arm/boot/dts/omap3-gta04.dtsi                | 1 +
->  2 files changed, 7 insertions(+)
+The result can be seen in that UFS PHY enabling is now reported as a
+failure in 10% of the boots on SDM845, which is a clear regression from
+the previous rare/occasional failure.
+
+This patch fixes the "break condition" of the poll to check for the
+correct state of the status bit.
+
+Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
+register, which means that the code checks a bit that's always 0. So the
+patch also fixes these, in order to not regress these targets.
+
+Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
+Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
+Cc: stable@vger.kernel.org
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1074,6 +1074,7 @@ static const struct qmp_phy_cfg msm8996_
+ 
+ 	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
++	.mask_pcs_ready		= PHYSTATUS,
+ 	.mask_com_pcs_ready	= PCS_READY,
+ 
+ 	.has_phy_com_ctrl	= true,
+@@ -1253,6 +1254,7 @@ static const struct qmp_phy_cfg msm8998_
+ 
+ 	.start_ctrl             = SERDES_START | PCS_START,
+ 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
++	.mask_pcs_ready		= PHYSTATUS,
+ 	.mask_com_pcs_ready	= PCS_READY,
+ };
+ 
+@@ -1547,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct ph
+ 	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
+ 	mask = cfg->mask_pcs_ready;
+ 
+-	ret = readl_poll_timeout(status, val, !(val & mask), 1,
++	ret = readl_poll_timeout(status, val, val & mask, 1,
+ 				 PHY_INIT_COMPLETE_TIMEOUT);
+ 	if (ret) {
+ 		dev_err(qmp->dev, "phy initialization timed-out\n");
+
+
