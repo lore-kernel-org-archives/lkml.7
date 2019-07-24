@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26169C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B11C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E000722BE9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637A2214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997609;
-	bh=L2lOm5Rni18yK6PKzNIl2jF5hHRrKSkT9xmNvGKvhE0=;
+	s=default; t=1563997616;
+	bh=3hy9gzkHKUTO3An2RXMx7190IZqmTuxNC+BLw3pswNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J4fu1KhUbdU8qkQPinQYoV4jCv8LwtoTdULOTPbrkpc6p5wdZcz6ktZScFTzUjc8p
-	 Qvskpl6MwbhOi1/FrAKojVyn0Gh+CzWnPbmeqJFLam40kU2U8yy6i7QDg3Bqj289GE
-	 ZyrpJvhnSbrXXUA2iUy8D9WuShOEc0EPpfIOaMIM=
+	b=YnbjJlPBmWOFQ5CtUkKWhwvUtymkoEQP9sCSkLZtRvQS/K8fksPVPLgbB9QJ5Y8ga
+	 m5rFggWcZUFxlke3wBXP5XXbcDdfoDsn4ZRXU11hmn5Hk2WDASliInQtrrl+ihjdr3
+	 03cEkre41qqggN+rnkMxPIxVEsjwpp4Q1hKwWDwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391108AbfGXTqr (ORCPT
+        id S2391155AbfGXTqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52684 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391120AbfGXTqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:44 -0400
+        id S2391136AbfGXTqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A7222ADA;
-        Wed, 24 Jul 2019 19:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 847AC22AEC;
+        Wed, 24 Jul 2019 19:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997603;
-        bh=L2lOm5Rni18yK6PKzNIl2jF5hHRrKSkT9xmNvGKvhE0=;
+        s=default; t=1563997607;
+        bh=3hy9gzkHKUTO3An2RXMx7190IZqmTuxNC+BLw3pswNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XankJw0DQWvwdeYUkieEr2UOhRELXdmq1ZqJXispQoEXn2BowUItZJjg/06xUdOb8
-         gE1/8fUbVl2nnpY4T0eAXV+bA23bhgGlwHqzknbvbyxFn95WpTlTBhv6ZBlb+B7j5y
-         YQijpTBvAfFu+JEMTw3qOyPA5q9iDA3/kuWIghxA=
+        b=TaxIyqqPcIQI81EjYJQtsZdZJuHnt8RYWd93mR7q+VSvlUCbTdivVhfIvvDbdg6hn
+         qDcKQreiKna45HqBiWwOT/9m4B7DYirXnM+bQQRr44s4OSKWkP1pC4u3S4MoDND43q
+         xaFU4EMM42VLRZE605ehE1WP5QJ+1DqeaLZcoyMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 039/371] af_key: fix leaks in key_pol_get_resp and dump_sp.
-Date:   Wed, 24 Jul 2019 21:16:31 +0200
-Message-Id: <20190724191727.481281165@linuxfoundation.org>
+Subject: [PATCH 5.1 030/371] media: venus: firmware: fix leaked of_node references
+Date:   Wed, 24 Jul 2019 21:16:22 +0200
+Message-Id: <20190724191726.763980984@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,48 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c80eb1c7e2b8420477fbc998971d62a648035d9 ]
+[ Upstream commit 2c41cc0be07b5ee2f1167f41cd8a86fc5b53d82c ]
 
-In both functions, if pfkey_xfrm_policy2msg failed we leaked the newly
-allocated sk_buff.  Free it on error.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Fixes: 55569ce256ce ("Fix conversion between IPSEC_MODE_xxx and XFRM_MODE_xxx.")
-Reported-by: syzbot+4f0529365f7f2208d9f0@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Detected by coccinelle with the following warnings:
+drivers/media/platform/qcom/venus/firmware.c:90:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:94:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:128:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/key/af_key.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/venus/firmware.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index 4af1e1d60b9f..51c0f10bb131 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -2442,8 +2442,10 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
- 		goto out;
- 	}
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		goto out;
-+	}
+diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+index 6cfa8021721e..f81449b400c4 100644
+--- a/drivers/media/platform/qcom/venus/firmware.c
++++ b/drivers/media/platform/qcom/venus/firmware.c
+@@ -87,11 +87,11 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
  
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = hdr->sadb_msg_version;
-@@ -2694,8 +2696,10 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
- 		return PTR_ERR(out_skb);
+ 	ret = of_address_to_resource(node, 0, &r);
+ 	if (ret)
+-		return ret;
++		goto err_put_node;
  
- 	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
--	if (err < 0)
-+	if (err < 0) {
-+		kfree_skb(out_skb);
- 		return err;
-+	}
+ 	ret = request_firmware(&mdt, fwname, dev);
+ 	if (ret < 0)
+-		return ret;
++		goto err_put_node;
  
- 	out_hdr = (struct sadb_msg *) out_skb->data;
- 	out_hdr->sadb_msg_version = pfk->dump.msg_version;
+ 	fw_size = qcom_mdt_get_size(mdt);
+ 	if (fw_size < 0) {
+@@ -125,6 +125,8 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
+ 	memunmap(mem_va);
+ err_release_fw:
+ 	release_firmware(mdt);
++err_put_node:
++	of_node_put(node);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
