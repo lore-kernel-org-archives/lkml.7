@@ -2,75 +2,124 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E197FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0C4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E9D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F146C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563999216;
+	bh=oMhK2svDNQZluWMPovVKARVEW6yfUn3Wpof1lc/Qgvs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O1debaAJxPbLwNmutCvOEUjTQs+BuvvKV9/pRHA7iC/ZtzZrWfxtQ6SARZsaPa1E0
+	 nZT9p38lBWfAzCClFPaft+vAOv8QrdnSgr6EcL0sJihE8QUviBDg8NjfKlUwN84QiV
+	 CytsDmuyyySP9mC/Dnib7ch2o4ztJsTHPSE0LTS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404990AbfGXUNa (ORCPT
+        id S2404580AbfGXT4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:13:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:51162 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404887AbfGXUNZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:13:25 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 85A5B15431990;
-        Wed, 24 Jul 2019 13:13:24 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 13:13:24 -0700 (PDT)
-Message-Id: <20190724.131324.1545677795217357026.davem@davemloft.net>
-To:     matorola@gmail.com
-Cc:     ldv@altlinux.org, hch@lst.de, khalid.aziz@oracle.com,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CADxRZqx-jEnm4U8oe=tJf5apbvcMuw5OYZUN8h4G68sXFvDsmQ@mail.gmail.com>
-References: <20190717215956.GA30369@altlinux.org>
-        <20190718.141405.1070121094691581998.davem@davemloft.net>
-        <CADxRZqx-jEnm4U8oe=tJf5apbvcMuw5OYZUN8h4G68sXFvDsmQ@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 24 Jul 2019 13:13:24 -0700 (PDT)
+        Wed, 24 Jul 2019 15:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391831AbfGXT4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1376C205C9;
+        Wed, 24 Jul 2019 19:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563998174;
+        bh=oMhK2svDNQZluWMPovVKARVEW6yfUn3Wpof1lc/Qgvs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vkvOGZQH0Bviy9Z0a2lbo+xfs9D8IBuy8w7bIAP3bbGFd/JvlIuRSY1GRLLlhZNib
+         Ro2tONa1Z0op2ctzYwgOiRFXwXmD+a8CWGmuktkX7c02zt7E/vSIjT2r9r2fwYub3w
+         ozH+wuXrrBd7Wqgktezx3cmZ9W9curVoaIL1GcUw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 5.1 272/371] iwlwifi: dont WARN when calling iwl_get_shared_mem_conf with RF-Kill
+Date:   Wed, 24 Jul 2019 21:20:24 +0200
+Message-Id: <20190724191744.800167597@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anatoly Pugachev <matorola@gmail.com>
-Date: Wed, 24 Jul 2019 22:32:17 +0300
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-> the first test where it was discovered was done on my test LDOM named
-> ttip, hardware (hypervisor) is T5-2 server, running under Solaris 11.4
-> OS.
-> ttip LDOM is debian sparc64 unstable , so with almost all the latest
-> software (gcc 8.3.0, binutils 2.32.51.20190707-1, debian GLIBC
-> 2.28-10, etc..)
-> 
-> For another test, i also installed LDOM with oracle sparc linux
-> https://oss.oracle.com/projects/linux-sparc/ , but I've to install a
-> more fresh version of gcc on it first, since system installed gcc 4.4
-> is too old for a git kernel (linux-2.6/Documentation/Changes lists gcc
-> 4.6 as a minimal version), so I choose to install gcc-7.4.0 to /opt/
-> (leaving system installed gcc 4.4 under /usr/bin). Compiled and
-> installed git kernel version, i.e. last tag 5.3.0-rc1 and ran the
-> test. Kernel still produced oops.
+commit 0d53cfd0cca3c729a089c39eef0e7d8ae7662974 upstream.
 
-I suspect, therefore, that we have a miscompile.
+iwl_mvm_send_cmd returns 0 when the command won't be sent
+because RF-Kill is asserted. Do the same when we call
+iwl_get_shared_mem_conf since it is not sent through
+iwl_mvm_send_cmd but directly calls the transport layer.
 
-Please put your unstripped vmlinux image somewhere so I can take a closer
-look.
+Cc: stable@vger.kernel.org
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thank you.
+---
+ drivers/net/wireless/intel/iwlwifi/fw/smem.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+--- a/drivers/net/wireless/intel/iwlwifi/fw/smem.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/smem.c
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 Intel Corporation
++ * Copyright(c) 2018 - 2019 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 Intel Corporation
++ * Copyright(c) 2018 - 2019 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -134,6 +134,7 @@ void iwl_get_shared_mem_conf(struct iwl_
+ 		.len = { 0, },
+ 	};
+ 	struct iwl_rx_packet *pkt;
++	int ret;
+ 
+ 	if (fw_has_capa(&fwrt->fw->ucode_capa,
+ 			IWL_UCODE_TLV_CAPA_EXTEND_SHARED_MEM_CFG))
+@@ -141,8 +142,13 @@ void iwl_get_shared_mem_conf(struct iwl_
+ 	else
+ 		cmd.id = SHARED_MEM_CFG;
+ 
+-	if (WARN_ON(iwl_trans_send_cmd(fwrt->trans, &cmd)))
++	ret = iwl_trans_send_cmd(fwrt->trans, &cmd);
++
++	if (ret) {
++		WARN(ret != -ERFKILL,
++		     "Could not send the SMEM command: %d\n", ret);
+ 		return;
++	}
+ 
+ 	pkt = cmd.resp_pkt;
+ 	if (fwrt->trans->cfg->device_family >= IWL_DEVICE_FAMILY_22000)
+
+
