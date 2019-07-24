@@ -2,417 +2,92 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DB2C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34FCC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA0B2199C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C510229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pe/cE7r7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfGXKRB (ORCPT
+        id S1726764AbfGXKSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:17:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:38404 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfGXKRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:17:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 096B4337;
-        Wed, 24 Jul 2019 03:17:00 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F5C73F71F;
-        Wed, 24 Jul 2019 03:16:58 -0700 (PDT)
-Subject: Re: [PATCH v3 3/7] drivers: Introduce device lookup variants by
- fwnode
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Doug Ledford <dledford@redhat.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-usb@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joe Perches <joe@perches.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20190723221838.12024-1-suzuki.poulose@arm.com>
- <20190723221838.12024-4-suzuki.poulose@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8ca8c30d-a31a-024a-70b6-d58b394020bf@arm.com>
-Date:   Wed, 24 Jul 2019 11:16:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Jul 2019 06:18:05 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38464 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbfGXKSF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:18:05 -0400
+Received: by mail-ed1-f67.google.com with SMTP id r12so11833818edo.5;
+        Wed, 24 Jul 2019 03:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZFqgSiYPAinxvLfUxTqUXyh4XMM9+7IXXnlhhfhWpwI=;
+        b=pe/cE7r7iqcJRsJyBPWVoXjP1Jxy7fXOW+n5iMyOn+WbSS8Ls6JwiNyj7pDv3nzSGe
+         dzfCja9wOn43d7Rq6i1nbLkG3kyhaipb2SzRm4ERCb8J74979D4WCmJfaJFbIk9pVPvY
+         B4rvH8XCQYwd+7t4ayPzwITKhO/s8YWhGk6vz87Qm4SYN0+pactZeONMUXbx3F9rpK8i
+         412RepXY4Cj6R5xsC1D1UNgUZ673kIId+AUusCO/6LaKd/IuWceFWFp9+28Grvfk7um6
+         ioV1d/46YTNvcUpHuJ5YAbYuaZH5X6JgWCqnKcNVhEep0T9dHLSeNE5DD4F4GhrOsjIR
+         WwoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZFqgSiYPAinxvLfUxTqUXyh4XMM9+7IXXnlhhfhWpwI=;
+        b=Wyyosv66l+FoBUZz14b7ScsDXvJvS7XJQBlTK8Hyotffzit5TLk4TMVXypWouTPRm8
+         hmdfQEYPnLH2yVATiMlaw77SHyGXEZ665hD/LwxCCmJ44asrJyR/KyFFzvFO1E8X60Qh
+         ZjmLVnGWRedtyStBBLXwmenGPCioXHw98RilXGolohLNac+5AslTTCyyYcc8qhf3k0kL
+         j5Y8B20x6UC6m2OycWK4+mtE9sIO0KDvdrLtms8wdfIeU1ShJM1a38yUoTUXTIvvdHoe
+         cfiKI0SEq5thi7L/i+Vso0uckuQaginY0cH3llIuB7fyl5d8Qz7Cb+F7KQKGB85Btgwj
+         XPvA==
+X-Gm-Message-State: APjAAAWaFpCK6vP7jHwCpVS8wbjy2C4IX8Mv66GcAW9MsVWwyOp8VPF+
+        1xW5NT67lbbWhjTSKArNRSrydnyX3pJAb1rG9T+2Wg==
+X-Google-Smtp-Source: APXvYqxwS3R2moKyO80rq/sz60wGXAPhb7Xn4d35V9ncoA5nxvOV6T01i4VAMLOhWdeE9cFHyy+GEkm1cY94mvSPYig=
+X-Received: by 2002:a50:ba19:: with SMTP id g25mr70418810edc.123.1563963483167;
+ Wed, 24 Jul 2019 03:18:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190723221838.12024-4-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190723104448.8125-1-nishkadg.linux@gmail.com> <20190723.133856.860402214064308020.davem@davemloft.net>
+In-Reply-To: <20190723.133856.860402214064308020.davem@davemloft.net>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 24 Jul 2019 13:17:52 +0300
+Message-ID: <CA+h21hrP7q=NTKW2yukCThW4v4FJH4wqXS2ZQ8u8jJDDKMVeLw@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: sja1105: sja1105_main: Add of_node_put()
+To:     David Miller <davem@davemloft.net>
+Cc:     nishkadg.linux@gmail.com, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 23:18, Suzuki K Poulose wrote:
-> Add a helper to match the firmware node handle of a device and provide
-> wrappers for {bus/class/driver}_find_device() APIs to avoid proliferation
-> of duplicate custom match functions.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: linux-usb@vger.kernel.org
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->   drivers/base/core.c                           |  6 +++
->   drivers/base/devcon.c                         |  8 +---
->   .../hwtracing/coresight/coresight-platform.c  | 11 +-----
->   drivers/hwtracing/coresight/coresight-priv.h  |  2 -
->   drivers/hwtracing/coresight/coresight.c       |  4 +-
->   drivers/infiniband/hw/hns/hns_roce_hw_v1.c    |  8 +---
->   drivers/iommu/arm-smmu-v3.c                   |  9 +----
->   drivers/iommu/arm-smmu.c                      |  9 +----
+On Tue, 23 Jul 2019 at 23:38, David Miller <davem@davemloft.net> wrote:
+>
+> From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> Date: Tue, 23 Jul 2019 16:14:48 +0530
+>
+> > Each iteration of for_each_child_of_node puts the previous node, but in
+> > the case of a return from the middle of the loop, there is no put, thus
+> > causing a memory leak. Hence add an of_node_put before the return.
+> > Issue found with Coccinelle.
+> >
+> > Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>
+> Applied.
+>
+> Again, the semantics of these looping constructs are terrible.
 
-For the Arm SMMU drivers,
+Strange.
+Thanks for the fix.
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-
->   .../ethernet/hisilicon/hns/hns_dsaf_misc.c    |  8 +---
->   drivers/usb/roles/class.c                     |  8 +---
->   drivers/usb/typec/class.c                     |  8 +---
->   include/linux/device.h                        | 39 +++++++++++++++++++
->   12 files changed, 57 insertions(+), 63 deletions(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index fb83647d685a..e8f81a667545 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -3368,3 +3368,9 @@ int device_match_of_node(struct device *dev, const void *np)
->   	return dev->of_node == np;
->   }
->   EXPORT_SYMBOL_GPL(device_match_of_node);
-> +
-> +int device_match_fwnode(struct device *dev, const void *fwnode)
-> +{
-> +	return dev_fwnode(dev) == fwnode;
-> +}
-> +EXPORT_SYMBOL_GPL(device_match_fwnode);
-> diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
-> index 09f28479b243..1d488dc5dd0c 100644
-> --- a/drivers/base/devcon.c
-> +++ b/drivers/base/devcon.c
-> @@ -133,19 +133,13 @@ static struct bus_type *generic_match_buses[] = {
->   	NULL,
->   };
->   
-> -static int device_fwnode_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev_fwnode(dev) == fwnode;
-> -}
-> -
->   static void *device_connection_fwnode_match(struct device_connection *con)
->   {
->   	struct bus_type *bus;
->   	struct device *dev;
->   
->   	for (bus = generic_match_buses[0]; bus; bus++) {
-> -		dev = bus_find_device(bus, NULL, (void *)con->fwnode,
-> -				      device_fwnode_match);
-> +		dev = bus_find_device_by_fwnode(bus, con->fwnode);
->   		if (dev && !strncmp(dev_name(dev), con->id, strlen(con->id)))
->   			return dev;
->   
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index dad7d96c5943..3c5bee429105 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -37,11 +37,6 @@ static int coresight_alloc_conns(struct device *dev,
->   	return 0;
->   }
->   
-> -int coresight_device_fwnode_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev_fwnode(dev) == fwnode;
-> -}
-> -
->   static struct device *
->   coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
->   {
-> @@ -51,8 +46,7 @@ coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
->   	 * If we have a non-configurable replicator, it will be found on the
->   	 * platform bus.
->   	 */
-> -	dev = bus_find_device(&platform_bus_type, NULL,
-> -			      fwnode, coresight_device_fwnode_match);
-> +	dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
->   	if (dev)
->   		return dev;
->   
-> @@ -60,8 +54,7 @@ coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
->   	 * We have a configurable component - circle through the AMBA bus
->   	 * looking for the device that matches the endpoint node.
->   	 */
-> -	return bus_find_device(&amba_bustype, NULL,
-> -			       fwnode, coresight_device_fwnode_match);
-> +	return bus_find_device_by_fwnode(&amba_bustype, fwnode);
->   }
->   
->   #ifdef CONFIG_OF
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index 7d401790dd7e..61d7f9ff054d 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -202,6 +202,4 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
->   
->   void coresight_release_platform_data(struct coresight_platform_data *pdata);
->   
-> -int coresight_device_fwnode_match(struct device *dev, const void *fwnode);
-> -
->   #endif
-> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index 55db77f6410b..6453c67a4d01 100644
-> --- a/drivers/hwtracing/coresight/coresight.c
-> +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -1046,9 +1046,7 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
->   		struct coresight_connection *conn = &csdev->pdata->conns[i];
->   		struct device *dev = NULL;
->   
-> -		dev = bus_find_device(&coresight_bustype, NULL,
-> -				      (void *)conn->child_fwnode,
-> -				      coresight_device_fwnode_match);
-> +		dev = bus_find_device_by_fwnode(&coresight_bustype, conn->child_fwnode);
->   		if (dev) {
->   			conn->child_dev = to_coresight_device(dev);
->   			/* and put reference from 'bus_find_device()' */
-> diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-> index 81e6dedb1e02..fa05e943038a 100644
-> --- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-> +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-> @@ -4499,19 +4499,13 @@ static const struct acpi_device_id hns_roce_acpi_match[] = {
->   };
->   MODULE_DEVICE_TABLE(acpi, hns_roce_acpi_match);
->   
-> -static int hns_roce_node_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev->fwnode == fwnode;
-> -}
-> -
->   static struct
->   platform_device *hns_roce_find_pdev(struct fwnode_handle *fwnode)
->   {
->   	struct device *dev;
->   
->   	/* get the 'device' corresponding to the matching 'fwnode' */
-> -	dev = bus_find_device(&platform_bus_type, NULL,
-> -			      fwnode, hns_roce_node_match);
-> +	dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
->   	/* get the platform device */
->   	return dev ? to_platform_device(dev) : NULL;
->   }
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index a9a9fabd3968..6f0e13fa5e1a 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2034,16 +2034,11 @@ arm_smmu_iova_to_phys(struct iommu_domain *domain, dma_addr_t iova)
->   
->   static struct platform_driver arm_smmu_driver;
->   
-> -static int arm_smmu_match_node(struct device *dev, const void *data)
-> -{
-> -	return dev->fwnode == data;
-> -}
-> -
->   static
->   struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
->   {
-> -	struct device *dev = driver_find_device(&arm_smmu_driver.driver, NULL,
-> -						fwnode, arm_smmu_match_node);
-> +	struct device *dev = driver_find_device_by_fwnode(&arm_smmu_driver.driver,
-> +							  fwnode);
->   	put_device(dev);
->   	return dev ? dev_get_drvdata(dev) : NULL;
->   }
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 64977c131ee6..aa06498f291d 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -1426,16 +1426,11 @@ static bool arm_smmu_capable(enum iommu_cap cap)
->   	}
->   }
->   
-> -static int arm_smmu_match_node(struct device *dev, const void *data)
-> -{
-> -	return dev->fwnode == data;
-> -}
-> -
->   static
->   struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
->   {
-> -	struct device *dev = driver_find_device(&arm_smmu_driver.driver, NULL,
-> -						fwnode, arm_smmu_match_node);
-> +	struct device *dev = driver_find_device_by_fwnode(&arm_smmu_driver.driver,
-> +							  fwnode);
->   	put_device(dev);
->   	return dev ? dev_get_drvdata(dev) : NULL;
->   }
-> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-> index bb6586d0e5af..ed3829ae4ef1 100644
-> --- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-> +++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c
-> @@ -754,17 +754,11 @@ struct dsaf_misc_op *hns_misc_op_get(struct dsaf_device *dsaf_dev)
->   	return (void *)misc_op;
->   }
->   
-> -static int hns_dsaf_dev_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev->fwnode == fwnode;
-> -}
-> -
->   struct
->   platform_device *hns_dsaf_find_platform_device(struct fwnode_handle *fwnode)
->   {
->   	struct device *dev;
->   
-> -	dev = bus_find_device(&platform_bus_type, NULL,
-> -			      fwnode, hns_dsaf_dev_match);
-> +	dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
->   	return dev ? to_platform_device(dev) : NULL;
->   }
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index c8efe60e2465..0526efbc4922 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -85,11 +85,6 @@ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
->   }
->   EXPORT_SYMBOL_GPL(usb_role_switch_get_role);
->   
-> -static int switch_fwnode_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev_fwnode(dev) == fwnode;
-> -}
-> -
->   static void *usb_role_switch_match(struct device_connection *con, int ep,
->   				   void *data)
->   {
-> @@ -99,8 +94,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
->   		if (con->id && !fwnode_property_present(con->fwnode, con->id))
->   			return NULL;
->   
-> -		dev = class_find_device(role_class, NULL, con->fwnode,
-> -					switch_fwnode_match);
-> +		dev = class_find_device_by_fwnode(role_class, con->fwnode);
->   	} else {
->   		dev = class_find_device_by_name(role_class, con->endpoint[ep]);
->   	}
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 9b0d15b487e5..94a3eda62add 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -205,11 +205,6 @@ static void typec_altmode_put_partner(struct altmode *altmode)
->   	put_device(&adev->dev);
->   }
->   
-> -static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev_fwnode(dev) == fwnode;
-> -}
-> -
->   static void *typec_port_match(struct device_connection *con, int ep, void *data)
->   {
->   	struct device *dev;
-> @@ -219,8 +214,7 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
->   	 * we need to return ERR_PTR(-PROBE_DEFER) when there is no device.
->   	 */
->   	if (con->fwnode)
-> -		return class_find_device(typec_class, NULL, con->fwnode,
-> -					 typec_port_fwnode_match);
-> +		return class_find_device_by_fwnode(typec_class, con->fwnode);
->   
->   	dev = class_find_device_by_name(typec_class, con->endpoint[ep]);
->   
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 29d8d7ad41e6..7133fc1c285d 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -166,6 +166,7 @@ void subsys_dev_iter_exit(struct subsys_dev_iter *iter);
->   
->   int device_match_name(struct device *dev, const void *name);
->   int device_match_of_node(struct device *dev, const void *np);
-> +int device_match_fwnode(struct device *dev, const void *fwnode);
->   
->   int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data,
->   		     int (*fn)(struct device *dev, void *data));
-> @@ -198,6 +199,18 @@ bus_find_device_by_of_node(struct bus_type *bus, const struct device_node *np)
->   	return bus_find_device(bus, NULL, np, device_match_of_node);
->   }
->   
-> +/**
-> + * bus_find_device_by_fwnode : device iterator for locating a particular device
-> + * matching the fwnode.
-> + * @bus: bus type
-> + * @fwnode: fwnode of the device to match.
-> + */
-> +static inline struct device *
-> +bus_find_device_by_fwnode(struct bus_type *bus, const struct fwnode_handle *fwnode)
-> +{
-> +	return bus_find_device(bus, NULL, fwnode, device_match_fwnode);
-> +}
-> +
->   struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
->   					struct device *hint);
->   int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
-> @@ -391,6 +404,19 @@ driver_find_device_by_of_node(struct device_driver *drv,
->   	return driver_find_device(drv, NULL, np, device_match_of_node);
->   }
->   
-> +/**
-> + * driver_find_device_by_fwnode- device iterator for locating a particular device
-> + * by fwnode pointer.
-> + * @driver: the driver we're iterating
-> + * @fwnode: fwnode pointer to match.
-> + */
-> +static inline struct device *
-> +driver_find_device_by_fwnode(struct device_driver *drv,
-> +			     const struct fwnode_handle *fwnode)
-> +{
-> +	return driver_find_device(drv, NULL, fwnode, device_match_fwnode);
-> +}
-> +
->   void driver_deferred_probe_add(struct device *dev);
->   int driver_deferred_probe_check_state(struct device *dev);
->   int driver_deferred_probe_check_state_continue(struct device *dev);
-> @@ -544,6 +570,19 @@ class_find_device_by_of_node(struct class *class, const struct device_node *np)
->   	return class_find_device(class, NULL, np, device_match_of_node);
->   }
->   
-> +/**
-> + * class_find_device_by_fwnode : device iterator for locating a particular device
-> + * matching the fwnode.
-> + * @class: class type
-> + * @fwnode: fwnode of the device to match.
-> + */
-> +static inline struct device *
-> +class_find_device_by_fwnode(struct class *class,
-> +			    const struct fwnode_handle *fwnode)
-> +{
-> +	return class_find_device(class, NULL, fwnode, device_match_fwnode);
-> +}
-> +
->   struct class_attribute {
->   	struct attribute attr;
->   	ssize_t (*show)(struct class *class, struct class_attribute *attr,
-> 
+-Vladimir
