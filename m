@@ -5,51 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CB6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587FFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090BF229FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDAA229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996642;
-	bh=eCYjIyDM/jcflqiRqencvb4jCEnsdmoqDhxKfRDM8Lo=;
+	s=default; t=1563996647;
+	bh=3MB4bK7EG96b5G7lE/CIVDA98zKHLKKru1XWZkbPHGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3zdzkzUacKXWcudwk+ANRSXrPd11uR+BMNLq/7wWvmckT+EZ2kRW6GXi7fuo6UP/
-	 Ku3cvxT9BzvllhM6u/OjvrWkdO/qfw05CdxbXUMNowSm3Dtp39J0wpP6eI+bjP2zxL
-	 VGUHCqiZS9piuZJ2ji4ztKoa7kJ/qrJ7pTV10D1A=
+	b=1u1fEO3RVvlVaN35p5drL1/l4pIPxIQow+vtGDPVzudGRPXw5QaIqTSe+yoFn/boL
+	 K3rG6uDBJ36pXmmo+RREnUixbHsxruSIJ/FzkIrAsbXShDN9a2y8YsVbQ9qzJ/2xUd
+	 OtXishVaDMwvU5ZhnhcrRwBcG1o9v0/XF5UV3yDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387394AbfGXTak (ORCPT
+        id S2388410AbfGXTap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388383AbfGXTah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:37 -0400
+        id S2388389AbfGXTak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44A45229F3;
-        Wed, 24 Jul 2019 19:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CC8C20659;
+        Wed, 24 Jul 2019 19:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996635;
-        bh=eCYjIyDM/jcflqiRqencvb4jCEnsdmoqDhxKfRDM8Lo=;
+        s=default; t=1563996639;
+        bh=3MB4bK7EG96b5G7lE/CIVDA98zKHLKKru1XWZkbPHGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aYo5m6hw93R4e2X8S3RH3YpjYnueSvxAXcQNMG8KYwzAmaOaI0wV36U/wk2gTNL8Y
-         ag1xkb26mxUa1ebo2IFeP5CL1adzh3vwW0KAL1bILBg3Nw/ALn4hEJ17+6GU8SHlaS
-         zYuL1WvzFy2FTIWnYo/jWV8J+hs0J3KY4tfdJkpg=
+        b=fW9VtnYAC/K/g8O+n48CBhu41pe4CKGVBv/IUVwZ1iVzKnLBDsSebjxGT1W2uI6KK
+         IUFsjchgEgp/Tz63/ItdvnFd3wEaA7qBP6ucZKl+xk3gTx/HlN0qmlroSKBwQExLMC
+         jUFEuvUj67OSualHKxpM4yx1vab67DYCDFHL/sSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Borislav Petkov <bp@suse.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pu Wen <puwen@hygon.cn>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 124/413] net: netsec: initialize tx ring on ndo_open
-Date:   Wed, 24 Jul 2019 21:16:55 +0200
-Message-Id: <20190724191744.034549270@linuxfoundation.org>
+Subject: [PATCH 5.2 125/413] x86/cacheinfo: Fix a -Wtype-limits warning
+Date:   Wed, 24 Jul 2019 21:16:56 +0200
+Message-Id: <20190724191744.090186828@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,90 +67,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 39e3622edeffa63c2871153d8743c5825b139968 ]
+[ Upstream commit 1b7aebf0487613033aff26420e32fa2076d52846 ]
 
-Since we changed the Tx ring handling and now depends on bit31 to figure
-out the owner of the descriptor, we should initialize this every time
-the device goes down-up instead of doing it once on driver init. If the
-value is not correctly initialized the device won't have any available
-descriptors
+cpuinfo_x86.x86_model is an unsigned type, so comparing against zero
+will generate a compilation warning:
 
-Changes since v1:
-- Typo fixes
+  arch/x86/kernel/cpu/cacheinfo.c: In function 'cacheinfo_amd_init_llc_id':
+  arch/x86/kernel/cpu/cacheinfo.c:662:19: warning: comparison is always true \
+    due to limited range of data type [-Wtype-limits]
 
-Fixes: 35e07d234739 ("net: socionext: remove mmio reads on Tx")
-Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Remove the unnecessary lower bound check.
+
+ [ bp: Massage. ]
+
+Fixes: 68091ee7ac3c ("x86/CPU/AMD: Calculate last level cache ID from number of sharing threads")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1560954773-11967-1-git-send-email-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/socionext/netsec.c | 32 ++++++++++++++-----------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ arch/x86/kernel/cpu/cacheinfo.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
-index cba5881b2746..a10ef700f16d 100644
---- a/drivers/net/ethernet/socionext/netsec.c
-+++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -1029,7 +1029,6 @@ static void netsec_free_dring(struct netsec_priv *priv, int id)
- static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
- {
- 	struct netsec_desc_ring *dring = &priv->desc_ring[id];
--	int i;
- 
- 	dring->vaddr = dma_alloc_coherent(priv->dev, DESC_SZ * DESC_NUM,
- 					  &dring->desc_dma, GFP_KERNEL);
-@@ -1040,19 +1039,6 @@ static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
- 	if (!dring->desc)
- 		goto err;
- 
--	if (id == NETSEC_RING_TX) {
--		for (i = 0; i < DESC_NUM; i++) {
--			struct netsec_de *de;
--
--			de = dring->vaddr + (DESC_SZ * i);
--			/* de->attr is not going to be accessed by the NIC
--			 * until netsec_set_tx_de() is called.
--			 * No need for a dma_wmb() here
--			 */
--			de->attr = 1U << NETSEC_TX_SHIFT_OWN_FIELD;
--		}
--	}
--
- 	return 0;
- err:
- 	netsec_free_dring(priv, id);
-@@ -1060,6 +1046,23 @@ static int netsec_alloc_dring(struct netsec_priv *priv, enum ring_id id)
- 	return -ENOMEM;
- }
- 
-+static void netsec_setup_tx_dring(struct netsec_priv *priv)
-+{
-+	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_TX];
-+	int i;
-+
-+	for (i = 0; i < DESC_NUM; i++) {
-+		struct netsec_de *de;
-+
-+		de = dring->vaddr + (DESC_SZ * i);
-+		/* de->attr is not going to be accessed by the NIC
-+		 * until netsec_set_tx_de() is called.
-+		 * No need for a dma_wmb() here
-+		 */
-+		de->attr = 1U << NETSEC_TX_SHIFT_OWN_FIELD;
-+	}
-+}
-+
- static int netsec_setup_rx_dring(struct netsec_priv *priv)
- {
- 	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_RX];
-@@ -1361,6 +1364,7 @@ static int netsec_netdev_open(struct net_device *ndev)
- 
- 	pm_runtime_get_sync(priv->dev);
- 
-+	netsec_setup_tx_dring(priv);
- 	ret = netsec_setup_rx_dring(priv);
- 	if (ret) {
- 		netif_err(priv, probe, priv->ndev,
+diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+index 395d46f78582..c7503be92f35 100644
+--- a/arch/x86/kernel/cpu/cacheinfo.c
++++ b/arch/x86/kernel/cpu/cacheinfo.c
+@@ -658,8 +658,7 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id)
+ 	if (c->x86 < 0x17) {
+ 		/* LLC is at the node level. */
+ 		per_cpu(cpu_llc_id, cpu) = node_id;
+-	} else if (c->x86 == 0x17 &&
+-		   c->x86_model >= 0 && c->x86_model <= 0x1F) {
++	} else if (c->x86 == 0x17 && c->x86_model <= 0x1F) {
+ 		/*
+ 		 * LLC is at the core complex level.
+ 		 * Core complex ID is ApicId[3] for these processors.
 -- 
 2.20.1
 
