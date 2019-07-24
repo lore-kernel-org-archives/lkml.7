@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C834EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C77C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944B22075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC422075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033796;
-	bh=sX3FSgQbZueRubhLEc2kROJOAcVqYYn40pCYrivNa7w=;
+	s=default; t=1564033806;
+	bh=oMhK2svDNQZluWMPovVKARVEW6yfUn3Wpof1lc/Qgvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OsrferpoJIz7MnQI4c9adXfW/k6CkX88gLaYl/CbKV6Lv9OuXq1zofIFe4qy6aZwA
-	 WP0Z4WE0NELialV7Rbf/IqAcTcvxK5jm85GRubLiTHMd/hdqe+fke0B+j76OZwxJze
-	 x/N4UH5v/vRUh5/cx04kMgBjIbqKWKwwFJrxHeiA=
+	b=MUMGEj3Qc/CbgBAaabTyERsfo63ZwnhRZYThmyhS8KoXuxvaZc0Wd1Vr4CIg++/kb
+	 +gYbIJxlgV1ENjYDUVEzh0X5KGZFPmihSLC/r8QbxwOadLeLwc4ymsZH8Zs/F20D3C
+	 nDuBEVOudNBS21PhCjYhAlHJbKTRs1jnDdJGXcX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387528AbfGYFtz (ORCPT
+        id S1729079AbfGYFuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:49:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391082AbfGYFno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:43:44 -0400
+        id S2387572AbfGYFnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:43:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9882D21850;
-        Thu, 25 Jul 2019 05:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F8CD21850;
+        Thu, 25 Jul 2019 05:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033424;
-        bh=sX3FSgQbZueRubhLEc2kROJOAcVqYYn40pCYrivNa7w=;
+        s=default; t=1564033410;
+        bh=oMhK2svDNQZluWMPovVKARVEW6yfUn3Wpof1lc/Qgvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yG17frNvuRcvzdqd7dIC9IznAKYRe01Jm6OOh1nI0Ttt1XFS63B/cHouDRXPxVbNY
-         8hViWFRzH4vOfdImOE7m/2nym2y1zx3KxfQwvBazjViablMkXFMM4O/wTLbpcUCDPG
-         tjdiXB4g+7DbzSRN1KOVxhIMb3iooXdCEJStBs2k=
+        b=cFCo/Y2EdDoZoVX9mE1c+WtK8gG2FQfSRmh4jc56+7XaCQFyREYr7VWZh22R+lz2Z
+         RgBn96T/yAEnpJFkdaKah5/q1XLiwlHJVk1nCi+t0JosutIOxwHYo3P9RaQnlxD1jo
+         vvaTmtaX0R8XbuznR6ICpDLv23GQIKYYo7HVzYyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.19 202/271] pnfs: Fix a problem where we gratuitously start doing I/O through the MDS
-Date:   Wed, 24 Jul 2019 21:21:11 +0200
-Message-Id: <20190724191712.404937925@linuxfoundation.org>
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 4.19 197/271] iwlwifi: dont WARN when calling iwl_get_shared_mem_conf with RF-Kill
+Date:   Wed, 24 Jul 2019 21:21:06 +0200
+Message-Id: <20190724191711.990595571@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -59,33 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-commit 58bbeab425c6c5e318f5b6ae31d351331ddfb34b upstream.
+commit 0d53cfd0cca3c729a089c39eef0e7d8ae7662974 upstream.
 
-If the client has to stop in pnfs_update_layout() to wait for another
-layoutget to complete, it currently exits and defaults to I/O through
-the MDS if the layoutget was successful.
+iwl_mvm_send_cmd returns 0 when the command won't be sent
+because RF-Kill is asserted. Do the same when we call
+iwl_get_shared_mem_conf since it is not sent through
+iwl_mvm_send_cmd but directly calls the transport layer.
 
-Fixes: d03360aaf5cc ("pNFS: Ensure we return the error if someone kills...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.20+
+Cc: stable@vger.kernel.org
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/pnfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/fw/smem.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1867,7 +1867,7 @@ lookup_again:
- 		spin_unlock(&ino->i_lock);
- 		lseg = ERR_PTR(wait_var_event_killable(&lo->plh_outstanding,
- 					!atomic_read(&lo->plh_outstanding)));
--		if (IS_ERR(lseg) || !list_empty(&lo->plh_segs))
-+		if (IS_ERR(lseg))
- 			goto out_put_layout_hdr;
- 		pnfs_put_layout_hdr(lo);
- 		goto lookup_again;
+--- a/drivers/net/wireless/intel/iwlwifi/fw/smem.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/smem.c
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 Intel Corporation
++ * Copyright(c) 2018 - 2019 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 Intel Corporation
++ * Copyright(c) 2018 - 2019 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -134,6 +134,7 @@ void iwl_get_shared_mem_conf(struct iwl_
+ 		.len = { 0, },
+ 	};
+ 	struct iwl_rx_packet *pkt;
++	int ret;
+ 
+ 	if (fw_has_capa(&fwrt->fw->ucode_capa,
+ 			IWL_UCODE_TLV_CAPA_EXTEND_SHARED_MEM_CFG))
+@@ -141,8 +142,13 @@ void iwl_get_shared_mem_conf(struct iwl_
+ 	else
+ 		cmd.id = SHARED_MEM_CFG;
+ 
+-	if (WARN_ON(iwl_trans_send_cmd(fwrt->trans, &cmd)))
++	ret = iwl_trans_send_cmd(fwrt->trans, &cmd);
++
++	if (ret) {
++		WARN(ret != -ERFKILL,
++		     "Could not send the SMEM command: %d\n", ret);
+ 		return;
++	}
+ 
+ 	pkt = cmd.resp_pkt;
+ 	if (fwrt->trans->cfg->device_family >= IWL_DEVICE_FAMILY_22000)
 
 
