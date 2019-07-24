@@ -2,86 +2,226 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9164EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C75AC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BEF217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000663;
-	bh=1jFADVUDdc/r8+77jiHpMMfXTsy6SnNDtLTtfL/1D5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JSxhwEhDf/Zf3xZ7j3qqDrhgAiiXtiHiWXWecBM0q5frZHNaUN1nwCiatz2Td8Y23
-	 kawqQi1Iprh4IFwDItg22ylPs/ns09OEAkh6PUYnV5e/XiMRX+bR7bQjl+DtLVhsWO
-	 j4DlQiqT9CznFONRUc50vKQMHJGHTHRVZrXe+H98=
+	by mail.kernel.org (Postfix) with ESMTP id 72FFE21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388883AbfGXUhm (ORCPT
+        id S2389449AbfGXUhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:37:42 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42051 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfGXUhj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:37:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id e20so62067789iob.9;
-        Wed, 24 Jul 2019 13:37:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d4NY+Zoiq+xj4BLlyojFL41fph5cwqpn3LM6JI8x6A0=;
-        b=kIAI2nru5rHtIBKOoUwz36Wk+tEKSwSVe9DMlLSMXwwZaGhOnYr0VWPI4U0HV8iLn9
-         aFPzJ1lo4oFrDoxX3V9uN8D2eKQMXhrO1oTxeSgp7Y7ozYUDZd8NEOntZHu7tZaFuaNu
-         aquZZuMTpytT86gGyfBqYwoP01/afCRYynpDkklt1odwbQEEvKFAe01ti1WTyjk6rDdM
-         T9eombebpG3S1kifWIHRI9hMkH9J02bBIb0QMsF0HYIb5XkXuVsVFvp4rjePn7lYJIle
-         K2gpG0xqW+I4I5KFfPp2dAu3IpJnKnsmFzhdgI2MZA7WQEftIn7rXvZLZ3sCaKjGiekt
-         s/lQ==
-X-Gm-Message-State: APjAAAWKbM0tX2vkswHdVA90VTrtX5XiZFa95Ko56RVnB5Llc6dFYijx
-        LvZE2XvO/lkqIC8pCRtK1Q==
-X-Google-Smtp-Source: APXvYqyhpV3f2IHu4wbrNhH0RD6PhImD4v+i3f6JW3doG56hhB/77vFnVZDx/SMcwhFIB1N+Acceew==
-X-Received: by 2002:a02:ad15:: with SMTP id s21mr89937576jan.47.1564000658461;
-        Wed, 24 Jul 2019 13:37:38 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id b8sm38662840ioj.16.2019.07.24.13.37.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:37:37 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:37:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Cc:     agross@kernel.org, david.brown@linaro.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        jassisinghbrar@gmail.com, ohad@wizery.com,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        sricharan@codeaurora.org
-Subject: Re: [PATCH 06/12] dt-bindings: clock: qcom: Add reset for WCSSAON
-Message-ID: <20190724203737.GA27783@bogus>
-References: <1562859668-14209-1-git-send-email-gokulsri@codeaurora.org>
- <1562859668-14209-7-git-send-email-gokulsri@codeaurora.org>
+        Wed, 24 Jul 2019 16:37:50 -0400
+Received: from mga14.intel.com ([192.55.52.115]:46021 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727248AbfGXUhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:37:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:37:48 -0700
+X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
+   d="scan'208";a="160685252"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:37:47 -0700
+Message-ID: <e11ba530cda97d3cc8efaeb105290cfe32db6cba.camel@linux.intel.com>
+Subject: Re: [PATCH v2 5/5] virtio-balloon: Add support for providing page
+ hints to host
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com
+Date:   Wed, 24 Jul 2019 13:37:47 -0700
+In-Reply-To: <20190724143902-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724170514.6685.17161.stgit@localhost.localdomain>
+         <20190724143902-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562859668-14209-7-git-send-email-gokulsri@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 09:11:02PM +0530, Gokul Sriram Palanisamy wrote:
-> Add binding for WCSSAON reset required for Q6v5 reset on IPQ8074 SoC.
+On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
+> On Wed, Jul 24, 2019 at 10:05:14AM -0700, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > Add support for the page hinting feature provided by virtio-balloon.
+> > Hinting differs from the regular balloon functionality in that is is
+> > much less durable than a standard memory balloon. Instead of creating a
+> > list of pages that cannot be accessed the pages are only inaccessible
+> > while they are being indicated to the virtio interface. Once the
+> > interface has acknowledged them they are placed back into their respective
+> > free lists and are once again accessible by the guest system.
+> > 
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > 
-> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
-> ---
->  include/dt-bindings/clock/qcom,gcc-ipq8074.h | 1 +
->  1 file changed, 1 insertion(+)
+> Looking at the design, it seems that hinted pages can immediately be
+> reused. I wonder how we can efficiently support this
+> with kvm when poisoning is in effect. Of course we can just
+> ignore the poison. However it seems cleaner to
+> 1. verify page is poisoned with the correct value
+> 2. fill the page with the correct value on fault
+> 
+> Requirement 2 requires some kind of madvise that
+> will save the poison e.g. in the VMA.
+> 
+> Not a blocker for sure ... 
 
-Acked-by: Rob Herring <robh@kernel.org>
+As per our discussion in the other patch I agree that we should either
+ignore the hint/report if page poisoning is enabled, or page poisoning
+should result in us poisoning the page when it is faulted back in. I had
+assumed we were doing the latter, I didn't realize that is was just
+disabling the free page hinting.
+
+> > ---
+> >  drivers/virtio/Kconfig              |    1 +
+> >  drivers/virtio/virtio_balloon.c     |   47 +++++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/virtio_balloon.h |    1 +
+> >  3 files changed, 49 insertions(+)
+> > 
+> > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> > index 078615cf2afc..d45556ae1f81 100644
+> > --- a/drivers/virtio/Kconfig
+> > +++ b/drivers/virtio/Kconfig
+> > @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+> >  	tristate "Virtio balloon driver"
+> >  	depends on VIRTIO
+> >  	select MEMORY_BALLOON
+> > +	select PAGE_HINTING
+> >  	---help---
+> >  	 This driver supports increasing and decreasing the amount
+> >  	 of memory within a KVM guest.
+> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > index 226fbb995fb0..dee9f8f3ad09 100644
+> > --- a/drivers/virtio/virtio_balloon.c
+> > +++ b/drivers/virtio/virtio_balloon.c
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/mount.h>
+> >  #include <linux/magic.h>
+> >  #include <linux/pseudo_fs.h>
+> > +#include <linux/page_hinting.h>
+> >  
+> >  /*
+> >   * Balloon device works in 4K page units.  So each page is pointed to by
+> > @@ -27,6 +28,7 @@
+> >   */
+> >  #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BALLOON_PFN_SHIFT)
+> >  #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+> > +#define VIRTIO_BALLOON_ARRAY_HINTS_MAX	32
+> >  #define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
+> >  
+> >  #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWARN | \
+> > @@ -46,6 +48,7 @@ enum virtio_balloon_vq {
+> >  	VIRTIO_BALLOON_VQ_DEFLATE,
+> >  	VIRTIO_BALLOON_VQ_STATS,
+> >  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+> > +	VIRTIO_BALLOON_VQ_HINTING,
+> >  	VIRTIO_BALLOON_VQ_MAX
+> >  };
+> >  
+> > @@ -113,6 +116,10 @@ struct virtio_balloon {
+> >  
+> >  	/* To register a shrinker to shrink memory upon memory pressure */
+> >  	struct shrinker shrinker;
+> > +
+> > +	/* Unused page hinting device */
+> > +	struct virtqueue *hinting_vq;
+> > +	struct page_hinting_dev_info ph_dev_info;
+> >  };
+> >  
+> >  static struct virtio_device_id id_table[] = {
+> > @@ -152,6 +159,22 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+> >  
+> >  }
+> >  
+> > +void virtballoon_page_hinting_react(struct page_hinting_dev_info *ph_dev_info,
+> > +				    unsigned int num_hints)
+> > +{
+> > +	struct virtio_balloon *vb =
+> > +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+> > +	struct virtqueue *vq = vb->hinting_vq;
+> > +	unsigned int unused;
+> > +
+> > +	/* We should always be able to add these buffers to an empty queue. */
+> 
+> can be an out of memory condition, and then ...
+> 
+> > +	virtqueue_add_inbuf(vq, ph_dev_info->sg, num_hints, vb, GFP_KERNEL);
+> > +	virtqueue_kick(vq);
+> 
+> ... this will block forever.
+> 
+> > +	/* When host has read buffer, this completes via balloon_ack */
+> > +	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
+> 
+> However below I suggest limiting capacity which will solve
+> this problem for you.
+
+I wasn't aware that virtqueue_add_inbuf actually performed an allocation.
+
+> > +}
+> > +
+> >  static void set_page_pfns(struct virtio_balloon *vb,
+> >  			  __virtio32 pfns[], struct page *page)
+> >  {
+> > @@ -476,6 +499,7 @@ static int init_vqs(struct virtio_balloon *vb)
+> >  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+> >  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+> >  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> > +	names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
+> >  
+> >  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> >  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+> > @@ -487,11 +511,19 @@ static int init_vqs(struct virtio_balloon *vb)
+> >  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> >  	}
+> >  
+> > +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
+> > +		names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
+> > +		callbacks[VIRTIO_BALLOON_VQ_HINTING] = balloon_ack;
+> > +	}
+> > +
+> >  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
+> >  					 vqs, callbacks, names, NULL, NULL);
+> >  	if (err)
+> >  		return err;
+> >  
+> > +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
+> > +		vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
+> > +
+> >  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+> >  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+> >  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> > @@ -924,12 +956,24 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >  		if (err)
+> >  			goto out_del_balloon_wq;
+> >  	}
+> > +
+> > +	vb->ph_dev_info.react = virtballoon_page_hinting_react;
+> > +	vb->ph_dev_info.capacity = VIRTIO_BALLOON_ARRAY_HINTS_MAX;
+> 
+> As explained above I think you should limit this by vq size.
+> Otherwise virtqueue add buf might fail.
+> In fact by struct spec reading you need to limit it
+> anyway otherwise it will fail unconditionally.
+> In practice on most hypervisors it will typically work ...
+
+So I would just need to query that via the virtqueue_get_vring_size
+function correct? I could probably just set capacity to the minimum of the
+HINTS_MAX and that value right?
+
+
+
