@@ -2,106 +2,154 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7674FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869F5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDFC21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB2821841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563994362;
+	bh=x+GzCZo8UTDOlovmXTV+B736Nvu1DiHgXhK/fyppo30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I/H2zADT5NTaBuq57IZ3PYVmQDSstFnI9REgas2SfyNm4SmtM4AInNZegMgLQP4vq
+	 IVUvojNPRIGBbGTe04XloJ01vljdbrq+duKgz79unGw7jV2YPyktTfBLyIJ7+wWv83
+	 rKB2cvyO7Tnlk15X69y8PzyTrAYctW+M9xx+4O2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfGXSwc (ORCPT
+        id S1728522AbfGXSwl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:52:32 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:38155 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfGXSwa (ORCPT
+        Wed, 24 Jul 2019 14:52:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37810 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfGXSwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:52:30 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N4z2Y-1iZMDt3sXc-010r7i; Wed, 24 Jul 2019 20:52:10 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     kasan-dev@googlegroups.com,
-        =?UTF-8?q?Stephan=20M=C3=BCller?= <smueller@chronox.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] crypto: jitterentropy: build without sanitizer
-Date:   Wed, 24 Jul 2019 20:51:55 +0200
-Message-Id: <20190724185207.4023459-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 24 Jul 2019 14:52:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f17so42524383wme.2;
+        Wed, 24 Jul 2019 11:52:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=3hQEInE7wPS7npsqDdyReFD8+DVG0G6gksarFiD+BUE=;
+        b=p1QXjmSjibShYD8ZOl1TAGs1sAhM/9Y59m8s4PH/SNL0JLri/rNK6Ro6goiffhHlxA
+         2WI7eVxfIJoCI8ZAQIluAteADtY9YRzlyOIaEz+c+1ekoDTtPb2dvn0gYiWMl1aE8qJ3
+         eHnMEI3rjh/pZ3dKWzDBA8nfIF+wFFWxtgOJDAuREd2L4EYW8xGpSGxRUp8bO2XnJChJ
+         vJ0lq7leBZu15G1ecw7uDvbuwY83/J9Z+i7BmVl0ifcWb7Z7UAcNIfBHrS55gEZkGx2U
+         BqyIdDlrz3Xin5KC1U7TrEckWQ/Dw9hSHUPkqlqtTKfCMuNldTNlPnsdPrszjHKQi7YG
+         DjIg==
+X-Gm-Message-State: APjAAAUrbaHUuQcrFfPwL8KrSqmBYOybatflkWMpXNYOk9cnfgustWwj
+        pDTtr0zCbU1KSsCfei1cTbA=
+X-Google-Smtp-Source: APXvYqybZTUdLFKKpdj8xlUt1rpHKS6FMa+wFWKprezrQieSHRxtcvXpOkuvDUOeXbkAfzPmH5YXgQ==
+X-Received: by 2002:a05:600c:10ce:: with SMTP id l14mr73562275wmd.118.1563994357830;
+        Wed, 24 Jul 2019 11:52:37 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.239])
+        by smtp.googlemail.com with ESMTPSA id w24sm37230033wmc.30.2019.07.24.11.52.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 11:52:36 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 20:52:34 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, m.szyprowski@samsung.com
+Subject: Re: [RFC PATCH 11/11] drm: exynos: mixer: Add interconnect support
+Message-ID: <20190724185234.GB14346@kozik-lap>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122029eucas1p2915f536d9ef43a7bd043a878a553439f@eucas1p2.samsung.com>
+ <20190723122016.30279-12-a.swigon@partner.samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:2QZYaO519OJxYJsrSQIe/UzdE5AmrOwOkLjXT+CjRW8Dx1lg2Dy
- XV/NNUYdwM3vTfiFDwSD0F4fyLZmjd6jW+NV7AJpT+rAQ/sdhR4X1aKa+ZOReDYN8zdd2t/
- Ox2vDe5VdQRl1nHDLe+c38FlsGf4wYILrfhx66IL+1gIA7RT6JgkxFaiP7CwnYG/V2V5wfs
- fgvfUk/OsccuBGMrqhh/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZAZZZe+kadI=:rnEzG0t1GmceK0/lAFvYax
- Ex+XREoW3yNiDExdl9vfsXIjNkyvMdsCAn1FwWI7ElysOPL8L+Dx/4F9Ep3vW5LunKGgsyQQI
- yv00OJ6maRvK3LcMCmWUJIbWFUE8sskArxmHTlPGR7InwTiBMgZUHuRbnS8StCea9EgLWeL3r
- jy83jMfnVRvdKH7Jth/itcIV/WUhwQe2LDxJ3VuCreyugM/3bTF8MpMl0zcCN//tEyD0w8+xW
- Du4tJ4rFmi+sUNpeyvSGqSVK7gAn9NhOI3H/BVBkMnEhU9bB9J/ZVYxXIcKq+BMhlwE3Ra6k6
- f2Se4X678XzaJuT1ov055sLk0MnEFvD/inMo7rXZ9fDcJ7b1kQ0JLNX4NOapppsAkAxejmo7c
- 9ke/cBlq2BAcDMkWdVfjbZzd+BPR3ORrzjnJu5WLtnJeB1u7q+rieUaCeJY36DgH0hqCNRysh
- 69709d1BQlv3lfq+fXkple66lk7o126EGCSeuuhYxWrxN5PIazkrjeftVuZaUeS6pcCl7sSHd
- EdwAJHRSdgxtUWv6p92aNNsRhFJa0e8Hv43wSqKQrvPVq8xhELBOl5LvAKOcGQ/UKH+h5PJCu
- QYuanTrvsit0f4rxUE0kdYpNix8gPchck9Q8ZXw4Z2wXB/EF0wnfg27WTonImdt4nl/B/yR9b
- X4XrmEhr1kEVinpZHGB0gB/jOW6ftgC8qNgRmY8Ff6uL3Hs1ONFB6V1Ycbez4KvGP6w3j8rzz
- yhQXpQFLY+j8/q6KKgqbwrTRwUd6KVxz+18WNQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190723122016.30279-12-a.swigon@partner.samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent clang-9 snapshots double the kernel stack usage when building
-this file with -O0 -fsanitize=kernel-hwaddress, compared to clang-8
-and older snapshots, this changed between commits svn364966 and
-svn366056:
+On Tue, Jul 23, 2019 at 02:20:16PM +0200, Artur Świgoń wrote:
+> From: Marek Szyprowski <m.szyprowski@samsung.com>
+> 
+> This patch adds interconnect support to exynos-mixer. Please note that the
+> mixer works the same as before when CONFIG_INTERCONNECT is 'n'.
+> 
+> Co-developed-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_mixer.c | 68 +++++++++++++++++++++++++--
+>  1 file changed, 63 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
+> index 7b24338fad3c..fb763854b300 100644
+> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
+> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/component.h>
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/kernel.h>
+> @@ -97,6 +98,7 @@ struct mixer_context {
+>  	struct exynos_drm_crtc	*crtc;
+>  	struct exynos_drm_plane	planes[MIXER_WIN_NR];
+>  	unsigned long		flags;
+> +	struct icc_path		*soc_path;
+>  
+>  	int			irq;
+>  	void __iomem		*mixer_regs;
+> @@ -931,6 +933,37 @@ static void mixer_disable_vblank(struct exynos_drm_crtc *crtc)
+>  	mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
+>  }
+>  
+> +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
+> +{
+> +	struct drm_display_mode *mode = &crtc->base.state->adjusted_mode;
+> +	struct mixer_context *ctx = crtc->ctx;
+> +	unsigned long bw, bandwidth = 0;
+> +	int i, j, sub;
+> +
 
-crypto/jitterentropy.c:516:5: error: stack frame size of 2640 bytes in function 'jent_entropy_init' [-Werror,-Wframe-larger-than=]
-int jent_entropy_init(void)
-    ^
-crypto/jitterentropy.c:185:14: error: stack frame size of 2224 bytes in function 'jent_lfsr_time' [-Werror,-Wframe-larger-than=]
-static __u64 jent_lfsr_time(struct rand_data *ec, __u64 time, __u64 loop_cnt)
-             ^
+Early exit if !ctx->soc_path, no need to figure out the bandwidth.
+Optionally check it before calling mixer_set_memory_bandwidth() - should
+not hurt readability.
 
-I prepared a reduced test case in case any clang developers want to
-take a closer look, but from looking at the earlier output it seems
-that even with clang-8, something was very wrong here.
+> +	for (i = 0; i < MIXER_WIN_NR; i++) {
+> +		struct drm_plane *plane = &ctx->planes[i].base;
+> +		const struct drm_format_info *format;
+> +
+> +		if (plane->state && plane->state->crtc && plane->state->fb) {
+> +			format = plane->state->fb->format;
+> +			bw = mode->hdisplay * mode->vdisplay *
+> +							drm_mode_vrefresh(mode);
+> +			if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+> +				bw /= 2;
+> +			for (j = 0; j < format->num_planes; j++) {
+> +				sub = j ? (format->vsub * format->hsub) : 1;
+> +				bandwidth += format->cpp[j] * bw / sub;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* add 20% safety margin */
+> +	bandwidth = 5UL * bandwidth / 4;
+> +
+> +	pr_info("exynos-mixer: safe bandwidth %ld Bps\n", bandwidth);
 
-Turn off any KASAN and UBSAN sanitizing for this file, as that likely
-clashes with -O0 anyway.  Turning off just KASAN avoids the warning
-already, but I suspect both of these have undesired side-effects
-for jitterentropy.
+dev_dbg()
 
-Link: https://godbolt.org/z/fDcwZ5
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- crypto/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+Best regards,
+Krzysztof
 
-diff --git a/crypto/Makefile b/crypto/Makefile
-index 9479e1a45d8c..176b2623dd68 100644
---- a/crypto/Makefile
-+++ b/crypto/Makefile
-@@ -136,6 +136,8 @@ obj-$(CONFIG_CRYPTO_ANSI_CPRNG) += ansi_cprng.o
- obj-$(CONFIG_CRYPTO_DRBG) += drbg.o
- obj-$(CONFIG_CRYPTO_JITTERENTROPY) += jitterentropy_rng.o
- CFLAGS_jitterentropy.o = -O0
-+KASAN_SANITIZE_jitterentropy.o = n
-+UBSAN_SANITIZE_jitterentropy.o = n
- jitterentropy_rng-y := jitterentropy.o jitterentropy-kcapi.o
- obj-$(CONFIG_CRYPTO_TEST) += tcrypt.o
- obj-$(CONFIG_CRYPTO_GHASH) += ghash-generic.o
--- 
-2.20.0
 
