@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88320C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3011FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5A0205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F69205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998414;
-	bh=KA3Z+uT9YKRz0tLsoqjBeY0+gyv4LdT1Si7fJUJ72t8=;
+	s=default; t=1563998417;
+	bh=ozFrx/M2HTdb2ea2TXNgTjOFLCMt2emR2AIPv3eCTX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EF/lJybgPpl78YZymQD5ErfA1LSg6QHhrVHoyBgiYbRio1i6p1aNsrxiaP76JG8c6
-	 QCJeky6Ey1EImlR7AWEknvMsVM8jZsPA6YhGDmCA1xONX20h3j49lShjWT8YwFj/FD
-	 5lT+Ri9wVfLGH1aOoLS432DVZnVsYW5Yc4N/rVIs=
+	b=zW/+nsuf36Qvz9A8h7QIB0G19vq8oFT9MzYXS2DPOFt+pcekQGW6rk5NmrWhSrkU7
+	 +7HoxftYHzYPGHBtS2BxbO4sVYyi6ix1xKXqDUVDYSVe1aFVU96LoFTE6FEAxhF/W4
+	 IFpyVC//nJCidkovlLO/ugi7tOb/qLCeYqRgiELA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405198AbfGXUAN (ORCPT
+        id S2405210AbfGXUAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:00:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405181AbfGXUAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:00:09 -0400
+        id S2405192AbfGXUAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:00:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B2CD205C9;
-        Wed, 24 Jul 2019 20:00:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7DC21873;
+        Wed, 24 Jul 2019 20:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998408;
-        bh=KA3Z+uT9YKRz0tLsoqjBeY0+gyv4LdT1Si7fJUJ72t8=;
+        s=default; t=1563998411;
+        bh=ozFrx/M2HTdb2ea2TXNgTjOFLCMt2emR2AIPv3eCTX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mU5GzonPSoaN7WtRTKqM6YLfzQJuw2uXlnqHV7fmeXaf+qOyTLm0fIv5UrFv1VkX
-         LJqb363K13MYnfIr8sUr3wNh9Dz6Ilt6RvmS3t47kgz3SOl/vZQnCev2KELMYU+5TB
-         IIhbsZaMt34z/K2LKTgqAIikxc/yDju+P3utHbFE=
+        b=O0kZJSeqHMXgJOeh1zoq800eKOfAzHFtv3cHcaFvjajUXGE4g4Xf9zX/p7iTWwwiC
+         nFsOwcSfctjS/qi1DxEndfD2bMTSqkGlMbwL8rSHVcTJ6sn+K+8M9OrUK2IsrhBa5O
+         6fW2c/hLjoBET1iUg7rNbAtPJn82xyDNpOe9r0Js=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.1 356/371] mmc: sdhci-msm: fix mutex while in spinlock
-Date:   Wed, 24 Jul 2019 21:21:48 +0200
-Message-Id: <20190724191750.757264008@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Tyler Hicks <tyhicks@canonical.com>
+Subject: [PATCH 5.1 357/371] eCryptfs: fix a couple type promotion bugs
+Date:   Wed, 24 Jul 2019 21:21:49 +0200
+Message-Id: <20190724191750.872695378@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,57 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 5e6b6651d22de109ebf48ca00d0373bc2c0cc080 upstream.
+commit 0bdf8a8245fdea6f075a5fede833a5fcf1b3466c upstream.
 
-mutexes can sleep and therefore should not be taken while holding a
-spinlock. move clk_get_rate (can sleep) outside the spinlock protected
-region.
+ECRYPTFS_SIZE_AND_MARKER_BYTES is type size_t, so if "rc" is negative
+that gets type promoted to a high positive value and treated as success.
 
-Fixes: 83736352e0ca ("mmc: sdhci-msm: Update DLL reset sequence")
+Fixes: 778aeb42a708 ("eCryptfs: Cleanup and optimize ecryptfs_lookup_interpose()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+[tyhicks: Use "if/else if" rather than "if/if"]
 Cc: stable@vger.kernel.org
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-msm.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/ecryptfs/crypto.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -584,11 +584,14 @@ static int msm_init_cm_dll(struct sdhci_
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
- 	int wait_cnt = 50;
--	unsigned long flags;
-+	unsigned long flags, xo_clk = 0;
- 	u32 config;
- 	const struct sdhci_msm_offset *msm_offset =
- 					msm_host->offset;
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -1019,8 +1019,10 @@ int ecryptfs_read_and_validate_header_re
  
-+	if (msm_host->use_14lpp_dll_reset && !IS_ERR_OR_NULL(msm_host->xo_clk))
-+		xo_clk = clk_get_rate(msm_host->xo_clk);
-+
- 	spin_lock_irqsave(&host->lock, flags);
- 
- 	/*
-@@ -636,10 +639,10 @@ static int msm_init_cm_dll(struct sdhci_
- 		config &= CORE_FLL_CYCLE_CNT;
- 		if (config)
- 			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 8),
--					clk_get_rate(msm_host->xo_clk));
-+					xo_clk);
- 		else
- 			mclk_freq = DIV_ROUND_CLOSEST_ULL((host->clock * 4),
--					clk_get_rate(msm_host->xo_clk));
-+					xo_clk);
- 
- 		config = readl_relaxed(host->ioaddr +
- 				msm_offset->core_dll_config_2);
+ 	rc = ecryptfs_read_lower(file_size, 0, ECRYPTFS_SIZE_AND_MARKER_BYTES,
+ 				 inode);
+-	if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
+-		return rc >= 0 ? -EINVAL : rc;
++	if (rc < 0)
++		return rc;
++	else if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
++		return -EINVAL;
+ 	rc = ecryptfs_validate_marker(marker);
+ 	if (!rc)
+ 		ecryptfs_i_size_init(file_size, inode);
+@@ -1382,8 +1384,10 @@ int ecryptfs_read_and_validate_xattr_reg
+ 				     ecryptfs_inode_to_lower(inode),
+ 				     ECRYPTFS_XATTR_NAME, file_size,
+ 				     ECRYPTFS_SIZE_AND_MARKER_BYTES);
+-	if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
+-		return rc >= 0 ? -EINVAL : rc;
++	if (rc < 0)
++		return rc;
++	else if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
++		return -EINVAL;
+ 	rc = ecryptfs_validate_marker(marker);
+ 	if (!rc)
+ 		ecryptfs_i_size_init(file_size, inode);
 
 
