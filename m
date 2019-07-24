@@ -5,134 +5,125 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E495C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B54C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545FA21849
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149DE21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fCnsLvZS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PO7hinLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387884AbfGXUvQ (ORCPT
+        id S1728083AbfGXUxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:51:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38226 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387468AbfGXUvP (ORCPT
+        Wed, 24 Jul 2019 16:53:13 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43048 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfGXUxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:51:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y15so21525515pfn.5;
-        Wed, 24 Jul 2019 13:51:15 -0700 (PDT)
+        Wed, 24 Jul 2019 16:53:12 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m14so9149646qka.10;
+        Wed, 24 Jul 2019 13:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ds6DoMC8+Sm3L+5TDki5vxC1QfgRywL0wnVBt6Olylo=;
-        b=fCnsLvZSkH7Xrin8sHs9P8Nbx7ZrzJMc3/mRQkJ5SbeEHt0Ql1cnLmpplGFrQUpL3x
-         z6yiMlKRqVQWdo9kc8+tZ5tgF+oW0cGGcu5nlUh6a85GS5LaAR7Wxu5XVEzu8Bp4AvHK
-         J/uiPKZpK0IfD83moh3gfjf8qbDayiv0vF15ZeHIyxRMPnNdf6IU6UJdiolEefiL3kLm
-         WmcEKzfLvhcyIt1FmOeh1gAFFjOlICPE+oXOsgyduPLwUjMzhTvWnmOGnIeodbcAc5/D
-         G/spncq7NtH/D+zmJKf0d9fUJ/DAdRZGEQDIBDGjhGXLV7GMMBLbmdC8QC97XDZVMZ65
-         x7/Q==
+        bh=K5EpkRFFvgeAt0nL+hNBcZ+U2NkFxnbvcSf3cki+3DA=;
+        b=PO7hinLFq3VFv+ooVfZfkXHUFKFsUauDMz7qczK0IejHr9Xbvef73lKFG7PUClE09N
+         jpXXO3hwY78SrylxapqREKIH/tXYzqVOzetb7kOm1IkAO2/P4aM3VZcGmZQJUiGj0V2E
+         T6HuDnb5PWbJoDEFvOEqXAVtHNDgEowEluhoZG9zgOlxJXzi4XIlufKYFvm4Y/itVCzv
+         cYPTDkin1sJujrBFaeoFQmCZ9bwanBSYl8ZhtuQJFJ71kiyyi/JnRCKnonYCvABMCemR
+         HFE+RfiZ1P8u3MAxWc7bvaIBjFF6Zh8RY3dQxrm5KSYLKJZpfdIZP8IQyKqtM6uQW/pj
+         3O5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ds6DoMC8+Sm3L+5TDki5vxC1QfgRywL0wnVBt6Olylo=;
-        b=QR1LBLbmJ4ZGU/0AIvGeYZp9Y5ZDMSOVexWF0R0Owm7tN4GFJS6PAqWufXwB3tMmlq
-         yuwFU3jaaQGP14uSK5cTtYkexBpatGbO4TuHQyAavEaM8yCa3vT2z6KvU5ud7ulkdLuE
-         gvk7MzVIDThf0CeHhS2ufrbuSTOJb9O+A/iddp4hXI+DCxDONWEKjSL+N4+Qx2FWpke2
-         GLy2UJ27MmZAHTVmE6qUsk4uzM9EMlo4l00gav3gUuYHiNHWF9K8wTh6AR17/GQLsL6u
-         njNGZB5aG5qehpUOP3xwRGGu9eJcgyNBeN/GlfNDW1hXzVCALqfzJjAp/wUjEfv4Uica
-         neSQ==
-X-Gm-Message-State: APjAAAUJ1rZ+vjUfkuIF7tbld3M5xFLScYvNoaIo639MjGnIkdBm43hm
-        Nah9MkVpL9XuOFMOGcBiLrx8TyGbu87H3vfwdYwwjtXWLVU=
-X-Google-Smtp-Source: APXvYqydGZ+58IEZV9P9Wh19Vs31nSeY4KKzrqDPI1rB995ISm8d68W0C99qy8qdBJbaeTksTQ7irwQRG6dfUn4Cuwg=
-X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr86827880pjb.138.1564001474948;
- Wed, 24 Jul 2019 13:51:14 -0700 (PDT)
+        bh=K5EpkRFFvgeAt0nL+hNBcZ+U2NkFxnbvcSf3cki+3DA=;
+        b=JVievqKYKMMpRmcOWEh9Tb5/SjFeN9o/WIdq+jSQUfzZWNWiX8/ypqHRBwJJ+PnkUg
+         HVYP8WJ5A8jDp4/uSwr1MQzg/SJNKRLsPgv+ftI7t3YW+ht11ATKcF4QRHILm49VBR5g
+         EeFW0NjTfqZ0jLs3yfCMRzZ73bUflvkEMEDDPqVFYJURepDjTGFUCzY5LE0QjLw0KxL8
+         LFVmfyykwI6IQDsONNnfhKSkACu1Axi+vNgkIZLXiCQ2xp1iBO4UMyUj3zWTZjemoHvY
+         mdiQ7Vf0sd5SKCWWqZKTVdpItTLvcyrJxhmtuao+C3kOSlNiu5w1UEskpg+oAj4yf0tC
+         veOQ==
+X-Gm-Message-State: APjAAAWkelVgbfqrp7yLbpwG49zWSc7qN8cTQyRSs9ACNK864WgbIKhz
+        KBe/sTJvEEYZ7KH65ETnxsc/RNQBXkufncFsOHpsR5Su
+X-Google-Smtp-Source: APXvYqycjV23O2jrVhScZbVxlyvDRHLnHUWOh7urEY5E8B0lZkIFywjV65DeQv3X/fGC4vS0gF9Ab++9zBMlilHwQeM=
+X-Received: by 2002:a37:6d85:: with SMTP id i127mr55779207qkc.74.1564001591445;
+ Wed, 24 Jul 2019 13:53:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190724191655.268628197@linuxfoundation.org> <20190724191657.444120528@linuxfoundation.org>
-In-Reply-To: <20190724191657.444120528@linuxfoundation.org>
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 24 Jul 2019 15:51:04 -0500
-Message-ID: <CAH2r5msdLOSZ7W-PmbasQR8GfxPn2_ZjAJf6DwEX3GKsUbGkgQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 026/271] signal/cifs: Fix cifs_put_tcp_session to
- call send_sig instead of force_sig
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>
+References: <20190724165803.87470-1-brianvv@google.com> <20190724165803.87470-2-brianvv@google.com>
+In-Reply-To: <20190724165803.87470-2-brianvv@google.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Wed, 24 Jul 2019 13:53:00 -0700
+Message-ID: <CAPhsuW5dXr4X9O3JtOVe=K+9yXzUY=WQuSgvhNWDKbJ57bnFAg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/6] bpf: add bpf_map_value_size and
+ bp_map_copy_value helper functions
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Note that this patch causes a regression (removing cifs module fails,
-due to unmount leaking a thread with this change).
+On Wed, Jul 24, 2019 at 10:10 AM Brian Vazquez <brianvv@google.com> wrote:
+>
+> Move reusable code from map_lookup_elem to helper functions to avoid code
+> duplication in kernel/bpf/syscall.c
+>
+> Suggested-by: Stanislav Fomichev <sdf@google.com>
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
 
-We are testing a workaround to cifs.ko which would be needed if this
-patch were to be backported.
+Acked-by: Song Liu <songliubraving@fb.com>
 
-On Wed, Jul 24, 2019 at 3:02 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> [ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
->
-> The locking in force_sig_info is not prepared to deal with a task that
-> exits or execs (as sighand may change).  The is not a locking problem
-> in force_sig as force_sig is only built to handle synchronous
-> exceptions.
->
-> Further the function force_sig_info changes the signal state if the
-> signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-> delivery of the signal.  The signal SIGKILL can not be ignored and can
-> not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-> delivered.
->
-> So using force_sig rather than send_sig for SIGKILL is confusing
-> and pointless.
->
-> Because it won't impact the sending of the signal and and because
-> using force_sig is wrong, replace force_sig with send_sig.
->
-> Cc: Namjae Jeon <namjae.jeon@samsung.com>
-> Cc: Jeff Layton <jlayton@primarydata.com>
-> Cc: Steve French <smfrench@gmail.com>
-> Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
-> Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Some very minor nits though.
+
 > ---
->  fs/cifs/connect.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  kernel/bpf/syscall.c | 134 +++++++++++++++++++++++--------------------
+>  1 file changed, 73 insertions(+), 61 deletions(-)
 >
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index f31339db45fd..82b3af47bce3 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -2428,7 +2428,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
->
->         task = xchg(&server->tsk, NULL);
->         if (task)
-> -               force_sig(SIGKILL, task);
-> +               send_sig(SIGKILL, task, 1);
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 5d141f16f6fa9..86cdc2f7bb56e 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -126,6 +126,76 @@ static struct bpf_map *find_and_alloc_map(union bpf_attr *attr)
+>         return map;
 >  }
 >
->  static struct TCP_Server_Info *
-> --
-> 2.20.1
->
->
->
+> +static u32 bpf_map_value_size(struct bpf_map *map)
+> +{
+> +       if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
+> +           map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH ||
+> +           map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY ||
+> +           map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE)
+> +               return round_up(map->value_size, 8) * num_possible_cpus();
+> +       else if (IS_FD_MAP(map))
+> +               return sizeof(u32);
+> +       else
+> +               return  map->value_size;
+                  ^ extra space after return
 
+> +}
+> +
+> +static int bpf_map_copy_value(struct bpf_map *map, void *key, void *value,
+> +                             __u64 flags)
+> +{
+> +       void *ptr;
+> +       int err;
+> +
+> +       if (bpf_map_is_dev_bound(map))
+> +               return  bpf_map_offload_lookup_elem(map, key, value);
+                  ^ another extra space after return, did replace? :-)
 
--- 
 Thanks,
-
-Steve
+Song
