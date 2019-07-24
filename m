@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EABC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFA3C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2093A214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4197922ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998335;
-	bh=B5lV7H+VYdRscgK66XEcHYrTZuvSYkuM/YfZm2Pz5GI=;
+	s=default; t=1563998339;
+	bh=CyBCEbDBz1BSAcBzsXW89LRvaF7GfCsGEVdKEaDP2d8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xfBsS3DHs7fyiqB/OCePFuLasHpiQvpq9/etZD8SgXlhGNSVGF81PuzUq+b9JLLX1
-	 OrrhMN/21u5DP0IPyj2+sIVl8YP8ZIkIuI+3wpzJGycYA6QT5x4eM7mNGXwRD2FQg/
-	 di0+lZhrSuXLIEWGSEOPO8I9/Vwy9Umn1xPBNc3U=
+	b=SrZdQQh+noVsnAsvykgT8AltVrhfACMRAhySwAfJsWxZlGt1ShmPEPD1KpLCpZIK9
+	 ZiZTox08aaAq2n1X1Vxjlnf7hnVGr8h5qiLwkGcNJssNZjWQc4aVVczxG669/iXkNq
+	 B0F/VSwl1dGsXXPwh/n4fgf9LVPMBHwb75WCqcsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405042AbfGXT6y (ORCPT
+        id S2404724AbfGXT66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:58:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404614AbfGXT6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:45 -0400
+        id S2405004AbfGXT6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:58:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F3CB22ADC;
-        Wed, 24 Jul 2019 19:58:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB6A120665;
+        Wed, 24 Jul 2019 19:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998324;
-        bh=B5lV7H+VYdRscgK66XEcHYrTZuvSYkuM/YfZm2Pz5GI=;
+        s=default; t=1563998333;
+        bh=CyBCEbDBz1BSAcBzsXW89LRvaF7GfCsGEVdKEaDP2d8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fOTim199QQT4rd1vyivsEWNYyYyvWPXov3ayabU1cd5UKJwJSePeH/vOKOy1tdnGe
-         aE5po0WKzr31PUpvbTklOYygn8AoHTXd7II10+Lw9K1UqIlLFipKei9yYlzqWx0Gx7
-         Jl78Vdlh3bJ1i62xc+FP73NtQX2IqgAxGmYh8Jzw=
+        b=f7LOulmn+CT1sEy1HaIUJ1t/ar2VFZ/rnOkHfL3JSC6Ys6PTut9im4sYtPqE8t5A5
+         MpUYHfMKJvGuz6IapA+40xbDlaSdJiy2SMRyhLk6yuAHI5Dhwn6f7Z/G0BLGZqfW1Y
+         1e5rhc7pWvEOEcQ70y0w3F6vqfOlD+v8NywtWZBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 299/371] KVM: nVMX: Always sync GUEST_BNDCFGS when it comes from vmcs01
-Date:   Wed, 24 Jul 2019 21:20:51 +0200
-Message-Id: <20190724191746.796720364@linuxfoundation.org>
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.1 328/371] RDMA/srp: Accept again source addresses that do not have a port number
+Date:   Wed, 24 Jul 2019 21:21:20 +0200
+Message-Id: <20190724191748.507692141@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,54 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 3b013a2972d5bc344d6eaa8f24fdfe268211e45f upstream.
+commit bcef5b7215681250c4bf8961dfe15e9e4fef97d0 upstream.
 
-If L1 does not set VM_ENTRY_LOAD_BNDCFGS, then L1's BNDCFGS value must
-be propagated to vmcs02 since KVM always runs with VM_ENTRY_LOAD_BNDCFGS
-when MPX is supported.  Because the value effectively comes from vmcs01,
-vmcs02 must be updated even if vmcs12 is clean.
+The function srp_parse_in() is used both for parsing source address
+specifications and for target address specifications. Target addresses
+must have a port number. Having to specify a port number for source
+addresses is inconvenient. Make sure that srp_parse_in() supports again
+parsing addresses with no port number.
 
-Fixes: 62cf9bd8118c4 ("KVM: nVMX: Fix emulation of VM_ENTRY_LOAD_BNDCFGS")
-Cc: stable@vger.kernel.org
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Fixes: c62adb7def71 ("IB/srp: Fix IPv6 address parsing")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/infiniband/ulp/srp/ib_srp.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2243,13 +2243,9 @@ static void prepare_vmcs02_full(struct v
- 
- 	set_cr4_guest_host_mask(vmx);
- 
--	if (kvm_mpx_supported()) {
--		if (vmx->nested.nested_run_pending &&
--			(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
--			vmcs_write64(GUEST_BNDCFGS, vmcs12->guest_bndcfgs);
--		else
--			vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
--	}
-+	if (kvm_mpx_supported() && vmx->nested.nested_run_pending &&
-+	    (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
-+		vmcs_write64(GUEST_BNDCFGS, vmcs12->guest_bndcfgs);
- }
- 
- /*
-@@ -2292,6 +2288,9 @@ static int prepare_vmcs02(struct kvm_vcp
- 		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
- 		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.vmcs01_debugctl);
- 	}
-+	if (kvm_mpx_supported() && (!vmx->nested.nested_run_pending ||
-+	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
-+		vmcs_write64(GUEST_BNDCFGS, vmx->nested.vmcs01_guest_bndcfgs);
- 	vmx_set_rflags(vcpu, vmcs12->guest_rflags);
- 
- 	/* EXCEPTION_BITMAP and CR0_GUEST_HOST_MASK should basically be the
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -3481,13 +3481,14 @@ static const match_table_t srp_opt_token
+  * @net:	   [in]  Network namespace.
+  * @sa:		   [out] Address family, IP address and port number.
+  * @addr_port_str: [in]  IP address and port number.
++ * @has_port:	   [out] Whether or not @addr_port_str includes a port number.
+  *
+  * Parse the following address formats:
+  * - IPv4: <ip_address>:<port>, e.g. 1.2.3.4:5.
+  * - IPv6: \[<ipv6_address>\]:<port>, e.g. [1::2:3%4]:5.
+  */
+ static int srp_parse_in(struct net *net, struct sockaddr_storage *sa,
+-			const char *addr_port_str)
++			const char *addr_port_str, bool *has_port)
+ {
+ 	char *addr_end, *addr = kstrdup(addr_port_str, GFP_KERNEL);
+ 	char *port_str;
+@@ -3496,9 +3497,12 @@ static int srp_parse_in(struct net *net,
+ 	if (!addr)
+ 		return -ENOMEM;
+ 	port_str = strrchr(addr, ':');
+-	if (!port_str)
+-		return -EINVAL;
+-	*port_str++ = '\0';
++	if (port_str && strchr(port_str, ']'))
++		port_str = NULL;
++	if (port_str)
++		*port_str++ = '\0';
++	if (has_port)
++		*has_port = port_str != NULL;
+ 	ret = inet_pton_with_scope(net, AF_INET, addr, port_str, sa);
+ 	if (ret && addr[0]) {
+ 		addr_end = addr + strlen(addr) - 1;
+@@ -3520,6 +3524,7 @@ static int srp_parse_options(struct net
+ 	char *p;
+ 	substring_t args[MAX_OPT_ARGS];
+ 	unsigned long long ull;
++	bool has_port;
+ 	int opt_mask = 0;
+ 	int token;
+ 	int ret = -EINVAL;
+@@ -3618,7 +3623,8 @@ static int srp_parse_options(struct net
+ 				ret = -ENOMEM;
+ 				goto out;
+ 			}
+-			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p);
++			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p,
++					   NULL);
+ 			if (ret < 0) {
+ 				pr_warn("bad source parameter '%s'\n", p);
+ 				kfree(p);
+@@ -3634,7 +3640,10 @@ static int srp_parse_options(struct net
+ 				ret = -ENOMEM;
+ 				goto out;
+ 			}
+-			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p);
++			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p,
++					   &has_port);
++			if (!has_port)
++				ret = -EINVAL;
+ 			if (ret < 0) {
+ 				pr_warn("bad dest parameter '%s'\n", p);
+ 				kfree(p);
 
 
