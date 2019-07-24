@@ -2,86 +2,111 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61957C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987CCC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2965722387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C53F229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JsE/PZjj";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V4goodYF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="K38QiI9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfGXLtL (ORCPT
+        id S1727993AbfGXLtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:49:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51112 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfGXLtJ (ORCPT
+        Wed, 24 Jul 2019 07:49:19 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45223 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727570AbfGXLtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:49:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7B2AC60588; Wed, 24 Jul 2019 11:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968948;
-        bh=42X7y5jJNRiCroR9vcblJwiwKYId8aMdP1NkVM2G/cM=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=JsE/PZjj9TT6KMcugkuWN6Nr8E417u6Fbi6WoOdVmjvjmukRM2UZAhsuNftLoS26X
-         UJGwi4TxWK7YNaDJ7lJkmFT5nZ5GcOxrEYwbzdOuECTOYCiTlQ2XusKlS/WG7uhIxv
-         jE5O/mROSYw+0E7ofq1IesYuYJLn6XL1AK6FHVz0=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B27D26044E;
-        Wed, 24 Jul 2019 11:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968946;
-        bh=42X7y5jJNRiCroR9vcblJwiwKYId8aMdP1NkVM2G/cM=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=V4goodYFjZUkBLLOfZJnbzqps9+Gv5bQrb3NHB0izq8zXvcrYQ8MPqzowV6xYho/V
-         cz2lb44YHCgoXnIbwMHfGlea8l2lHRNzEaFCE4d937M/1m/qRZI7FTgqrC4xwB9M6H
-         PjIqNclMdJdc4hCuz6afAyPAxPGwGZugbcd1JTFM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B27D26044E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] libertas: Add missing sentinel at end of if_usb.c fw_table
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190710133138.GA31901@ip-172-31-14-16>
-References: <20190710133138.GA31901@ip-172-31-14-16>
-To:     Kevin Easton <kevin@guarana.org>
-Cc:     linux-wireless@vger.kernel.org, andreyknvl@google.com,
-        davem@davemloft.net, libertas-dev@lists.infradead.org,
+        Wed, 24 Jul 2019 07:49:18 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x19so40928990eda.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 04:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ky6MiqknUauxBZH/dFB9V8N7cSZFbXcp813AEssc034=;
+        b=K38QiI9z0UqP/jOGfZgUBdANryYHFccCp4EpAHFXhr18n9XPmRDBNkulDfwEzUlJt6
+         zauV896QRGbFz/vfGhitFSXoEG210dh16UprC6STA5QWoi8Q8/fLuF1A7bYa+L/CtiOG
+         SsKMSUs0mIzX1EFoodnQBTAEIlWL5lIs1EcVw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Ky6MiqknUauxBZH/dFB9V8N7cSZFbXcp813AEssc034=;
+        b=ngG5Aqyzx848xzEjy+maATLlI+4law/4xw4yzpp1Ff67MdeT+ikd4uF5a7jkXt8auj
+         82wWxznNlwzt9h5RP3VfEkSkR7h+XmELXhCXpT8t9M9N9y4Y0YZDQPp8552J4IqZFh+1
+         yTQ0i0DRgWrrazbU3GJSb9sCNT7pg11WizMNmW9ZMLaXaGQQICCwwflp2qtTurZssYN6
+         UHtYxja/D4vphruKOiZhOdyVgE/yTRUlgWfhbE/vEgQBLQ6TZrmliOJNB+nTizy6bZcp
+         4w3kPtx6UNaaXgpVG1IVGImApnYc7im40o0HSzCUXpaA8AHNNNV1vAiV2xMpcnfTJIQm
+         yAjw==
+X-Gm-Message-State: APjAAAXcyjEZQv7BZ0ECjbKdg1gNL3mjFBQfmLQNZ5NHbXGPLL6kcQjx
+        T6o3SW+Kwpo9KQMf/+FdIms=
+X-Google-Smtp-Source: APXvYqwxJaa6d48jFA2r5dQ4BfamVvHN3hDlPbM+EjOINhA7XXW533p+MIuVnfd7kvr+TWyx1PBo2Q==
+X-Received: by 2002:a17:906:a39a:: with SMTP id k26mr13973104ejz.82.1563968956237;
+        Wed, 24 Jul 2019 04:49:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id x11sm9268496eju.26.2019.07.24.04.49.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 04:49:15 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 13:49:13 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
-        syzbot <syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com>,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190724114908.7B2AC60588@smtp.codeaurora.org>
-Date:   Wed, 24 Jul 2019 11:49:08 +0000 (UTC)
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH] MAINTAINERS: handle fbdev changes through drm-misc tree
+Message-ID: <20190724114913.GZ15868@phenom.ffwll.local>
+Mail-Followup-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <CGME20190723143329eucas1p211688de2902dbac72998fda9e694083d@eucas1p2.samsung.com>
+ <d449f697-ed25-8a3f-16d5-b981f1a52217@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d449f697-ed25-8a3f-16d5-b981f1a52217@samsung.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Easton <kevin@guarana.org> wrote:
-
-> This sentinel tells the firmware loading process when to stop.
+On Tue, Jul 23, 2019 at 04:33:27PM +0200, Bartlomiej Zolnierkiewicz wrote:
+> fbdev patches will now go to upstream through drm-misc tree (IOW
+> starting with v5.4 merge window fbdev changes will be included in
+> DRM pull request) for improved maintainership and better integration
+> testing. Update MAINTAINERS file accordingly.
 > 
-> Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
-> Signed-off-by: Kevin Easton <kevin@guarana.org>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+>  MAINTAINERS |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Index: b/MAINTAINERS
+> ===================================================================
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6389,7 +6389,7 @@ FRAMEBUFFER LAYER
+>  M:	Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>  L:	dri-devel@lists.freedesktop.org
+>  L:	linux-fbdev@vger.kernel.org
+> -T:	git git://github.com/bzolnier/linux.git
+> +T:	git git://anongit.freedesktop.org/drm/drm-misc
+>  Q:	http://patchwork.kernel.org/project/linux-fbdev/list/
+>  S:	Maintained
+>  F:	Documentation/fb/
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-764f3f1ecffc libertas: Add missing sentinel at end of if_usb.c fw_table
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
 -- 
-https://patchwork.kernel.org/patch/11038493/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
