@@ -2,145 +2,177 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFCDC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31D7C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B7F21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:30:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TCGu0AHU"
+	by mail.kernel.org (Postfix) with ESMTP id D27D121841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfGXHaO (ORCPT
+        id S1726426AbfGXHbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 03:30:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45650 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfGXHaN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:30:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O7Sok9085679;
-        Wed, 24 Jul 2019 07:29:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=5rHaoPqVyO/Z653y01L3kbFt1bw3GKwSsu1Fgnt7N5k=;
- b=TCGu0AHUg1f1UAn1Wq2Jy9kqqnlFHRN/VwvZR+lp0hdk0hhqnZbeV4Z2PLWmpXMNN9Pb
- ne12mjvxm9H7fnhS+1fpaDXS6/gWZ/TzSyTdDUaCrRuFHx5EONlts0tgJ8QsFwr47uOV
- eVpeICTC1v8fKPeDzxEg/9thV1z0Hfoa0K7bLsfd3Sc1arG1PS7aGs3XptQ6+tr1EZk5
- FG+l2pHk4vNiG/XHaUGaks5fKr0Nzz2Anqn9dy7A6T7o6DrsDU6DSrYcZ4d8IZnDU+DB
- qRjBJH3odQ+71VYLEJngFmCauNqwfn8E/k8BMLy++FyYruaQhQgKp4kZqb4dOcF3k0Ry Vg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2tx61bue0u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 07:29:16 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O7RWvn116368;
-        Wed, 24 Jul 2019 07:29:16 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2tx60xjgcf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 07:29:15 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6O7TAAN016494;
-        Wed, 24 Jul 2019 07:29:11 GMT
-Received: from [10.191.29.208] (/10.191.29.208)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jul 2019 00:29:10 -0700
-Subject: Re: [PATCH v3] locking/spinlocks, paravirt, hyperv: Correct the
- hv_nopvspin case
-To:     linux-kernel@vger.kernel.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Wed, 24 Jul 2019 03:31:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52770 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfGXHbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 03:31:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 12D7EAEF8;
+        Wed, 24 Jul 2019 07:31:28 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 09:31:25 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@google.com>,
+        David Rientjes <rientjes@google.com>,
+        kunit-dev@googlegroups.com,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-hyperv@vger.kernel.org
-References: <1562120635-9806-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <a3b87a0e-803d-5a28-03be-b9e2b37b94ba@oracle.com>
-Date:   Wed, 24 Jul 2019 15:29:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        wfg@linux.intel.com, Greg KH <gregkh@linuxfoundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Richard Weinberger <richard@nod.at>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Timothy Bird <Tim.Bird@sony.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream
+ like logger
+Message-ID: <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
+References: <CAFd5g47ikJmA0uGoavAFsh+hQvDmgsOi26tyii0612R=rt7iiw@mail.gmail.com>
+ <CAFd5g44_axVHNMBzxSURQB_-R+Rif7cZcg7PyZ_SS+5hcy5jZA@mail.gmail.com>
+ <20190716175021.9CA412173C@mail.kernel.org>
+ <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
+ <20190718175024.C3EC421019@mail.kernel.org>
+ <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
+ <20190719000834.GA3228@google.com>
+ <20190722200347.261D3218C9@mail.kernel.org>
+ <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
+ <20190722235411.06C1320840@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1562120635-9806-1-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722235411.06C1320840@mail.kernel.org>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maintainers,
+On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
+> Quoting Brendan Higgins (2019-07-22 15:30:49)
+> > On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > >
+> > > What's the calling context of the assertions and expectations? I still
+> > > don't like the fact that string stream needs to allocate buffers and
+> > > throw them into a list somewhere because the calling context matters
+> > > there.
+> > 
+> > The calling context is the same as before, which is anywhere.
+> 
+> Ok. That's concerning then.
+> 
+> > 
+> > > I'd prefer we just wrote directly to the console/log via printk
+> > > instead. That way things are simple because we use the existing
+> > > buffering path of printk, but maybe there's some benefit to the string
+> > > stream that I don't see? Right now it looks like it builds a string and
+> > > then dumps it to printk so I'm sort of lost what the benefit is over
+> > > just writing directly with printk.
+> > 
+> > It's just buffering it so the whole string gets printed uninterrupted.
+> > If we were to print out piecemeal to printk, couldn't we have another
+> > call to printk come in causing it to garble the KUnit message we are
+> > in the middle of printing?
+> 
+> Yes, printing piecemeal by calling printk many times could lead to
+> interleaving of messages if something else comes in such as an interrupt
+> printing something. Printk has some support to hold "records" but I'm
+> not sure how that would work here because KERN_CONT talks about only
+> being used early on in boot code. I haven't looked at printk in detail
+> though so maybe I'm all wrong and KERN_CONT just works?
 
-Any further comments on this? Thanks
+KERN_CONT does not guarantee that the message will get printed
+together. The pieces get interleaved with messages printed in
+parallel.
 
-Zhenzhong
+Note that KERN_CONT was originally really meant to be used only during
+boot. It was later used more widely and ended in the best effort category.
 
-On 2019/7/3 10:23, Zhenzhong Duan wrote:
-> With the boot parameter "hv_nopvspin" specified a Hyperv guest should
-> not make use of paravirt spinlocks, but behave as if running on bare
-> metal. This is not true, however, as the qspinlock code will fall back
-> to a test-and-set scheme when it is detecting a hypervisor.
->
-> In order to avoid this disable the virt_spin_lock_key.
->
-> Same change for XEN is already in Commit e6fd28eb3522
-> ("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
->
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Sasha Levin <sashal@kernel.org>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: linux-hyperv@vger.kernel.org
-> ---
-> v3: remove unlikely() as suggested by Sasha
->
->   arch/x86/hyperv/hv_spinlock.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-> index 07f21a0..210495b 100644
-> --- a/arch/x86/hyperv/hv_spinlock.c
-> +++ b/arch/x86/hyperv/hv_spinlock.c
-> @@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
->   
->   void __init hv_init_spinlocks(void)
->   {
-> +	if (!hv_pvspin)
-> +		static_branch_disable(&virt_spin_lock_key);
-> +
->   	if (!hv_pvspin || !apic ||
->   	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
->   	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
+There were several attempts to make it more reliable. But it was
+always either too complicated or error prone or both.
+
+You need to use your own buffering if you rely want perfect output.
+The question is if it is really worth the complexity. Also note that
+any buffering reduces the chance that the messages will reach
+the console.
+
+BTW: There is a work in progress on a lockless printk ring buffer.
+It will make printk() more secure regarding deadlocks. But it might
+make transparent handling of continuous lines even more tricky.
+
+I guess that local buffering, before calling printk(), will be
+even more important then. Well, it might really force us to create
+an API for it.
+
+
+> Can printk be called once with whatever is in the struct? Otherwise if
+> this is about making printk into a structured log then maybe printk
+> isn't the proper solution anyway. Maybe a dev interface should be used
+> instead that can handle starting and stopping tests (via ioctl) in
+> addition to reading test results, records, etc. with read() and a
+> clearing of the records. Then the seqfile API works naturally. All of
+> this is a bit premature, but it looks like you're going down the path of
+> making something akin to ftrace that stores binary formatted
+> assertion/expectation records in a lockless ring buffer that then
+> formats those records when the user asks for them.
+
+IMHO, ftrace postpones the text formatting primary because it does not
+not want to slow down the traced code more than necessary. It is yet
+another layer and there should be some strong reason for it.
+
+> I can imagine someone wanting to write unit tests that check conditions
+> from a simulated hardirq context via irq works (a driver mock
+> framework?), so this doesn't seem far off.
+
+Note that stroring the messages into the printk log is basically safe in any
+context. It uses temporary per-CPU buffers for recursive messages and
+in NMI. The only problem is panic() when some CPU gets stuck with the
+lock taken. This will get solved by the lockless ringbuffer. Also
+the temporary buffers will not be necessary any longer.
+
+Much bigger problems are with consoles. There are many of them. It
+means a lot of code and more locks involved, including scheduler
+locks. Note that console lock is a semaphore.
+
+Best Regards,
+Petr
