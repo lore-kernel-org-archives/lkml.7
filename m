@@ -2,101 +2,219 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184BCC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF1EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32C921951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hf5QP/9G"
+	by mail.kernel.org (Postfix) with ESMTP id 152EE21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:57:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfGXQ4Q (ORCPT
+        id S1728266AbfGXQ5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:56:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44562 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbfGXQ4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:56:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b7so10101349otl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lj5VxMT7ytpqUXOYqjV0SKU1nsfCOyOUOiGQpNCaobw=;
-        b=Hf5QP/9Gi6ugQidFc1Hm+WBEJpAQIEtpQ7l4tIiLgRnLmI7Jh7/AM3JX+PtpswSZlp
-         AVuLSWocf3cXjTCleGz9CJ4T1PqEUUx5GTyeHTNGwet7kw8n3MkOxUzEGb8QBrP2j60T
-         gXknXyP8eoQbZ++rJWA2iAhdf2EOi6FDOy/V3xOwcji1yFBFBEIfQfgPI/c57puE0urV
-         2c8fsxHE8iGFEyGVuQpMnRWT5/bLME98JycyzMuLxvp0AEsPpBBw44GwmbYPiBqFCDIl
-         gKoV04gnZcdVMOPmVYmPiFQmgt++jK5QKoW+Yfi4Eb+FAwqch1BhT7IGNsl2BXf1KbSl
-         2qXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lj5VxMT7ytpqUXOYqjV0SKU1nsfCOyOUOiGQpNCaobw=;
-        b=SP9yASakBQ/HGfawVqBn9leomEOgNGQ85aVll7t133eusYdqdUpt6yF3Brwf1uvhLT
-         ult71IKYA4brDQnNLlIXl+EUm51lWRddcQxRvOyKw7Vx+MuB8az8VmBkZ8hGc0H0EL+G
-         pps4h4O8Gl7b7ytD29EQ4NBcQAS5bRqzDwmrQzQmOKpdbn9I5VhdYJL5O2LYXFFoBQKc
-         gvpk/5vAPw501vcygqCWYcSI9qCiEpP0hBPGPrYQF1T+T4OtU2NixayepcL7AqfUZf4A
-         wA0yhh4ZkkzfRa2Rs5TmKqV7BVH6pqxg+R0nW/XF219n4807X+9aDOwd5qxxG3q7wHRM
-         P5Lw==
-X-Gm-Message-State: APjAAAWJkWh/ngBzvOhZBhcs1HWAZNEVwTgEN5bw2ODlRuYWvXxxd5M7
-        HFeEyjzmkm5XRIaYULouXV+lSq+dC1BZLMhL3kVrNA==
-X-Google-Smtp-Source: APXvYqwh6vIcM8Jk1c4NR1KfxKt+DGUENc04BHP7lwI3tYLzzDoMhYrlgtCveTpKvh97oEm0dQAfR9WL3p/kkMmdu68=
-X-Received: by 2002:a9d:774a:: with SMTP id t10mr29134096otl.228.1563987373619;
- Wed, 24 Jul 2019 09:56:13 -0700 (PDT)
+        Wed, 24 Jul 2019 12:57:13 -0400
+Received: from mga01.intel.com ([192.55.52.88]:29580 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbfGXQ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:57:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 09:57:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
+   d="scan'208";a="193519956"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Jul 2019 09:57:12 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCHv2 2/3] fpga: altera-cvp: Preparation for V2 parts.
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     richard.gong@linux.intel.com, agust@denx.de,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1563317287-18834-1-git-send-email-thor.thayer@linux.intel.com>
+ <1563317287-18834-3-git-send-email-thor.thayer@linux.intel.com>
+ <20190722005938.GB2583@archbook>
+ <6e54c0ee-b8ec-4f95-cf81-70aacc82c72e@linux.intel.com>
+ <20190724145704.GB24455@archbox>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <b52ea6f3-a547-ebce-88f5-6256501a7e99@linux.intel.com>
+Date:   Wed, 24 Jul 2019 11:59:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190722113151.1584-1-nitin.r.gote@intel.com> <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
- <CAG48ez3zRoB7awMdb-koKYJyfP9WifTLevxLxLHioLhH=itZ-A@mail.gmail.com>
- <201907231516.11DB47AA@keescook> <CAG48ez2eXJwE+vS2_ahR9Vuc3qD8O4CDZ5Lh6DcrrOq+7VKOYQ@mail.gmail.com>
- <201907240852.6D10622B2@keescook>
-In-Reply-To: <201907240852.6D10622B2@keescook>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 24 Jul 2019 18:55:47 +0200
-Message-ID: <CAG48ez3-qdbnJaEooFrhfBT8czyAZNDp5YfkDRcy5mLH4BQy2g@mail.gmail.com>
-Subject: Re: [PATCH] selinux: convert struct sidtab count to refcount_t
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
-        NitinGote <nitin.r.gote@intel.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190724145704.GB24455@archbox>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 5:54 PM Kees Cook <keescook@chromium.org> wrote:
-> On Wed, Jul 24, 2019 at 04:28:31PM +0200, Jann Horn wrote:
-> > On Wed, Jul 24, 2019 at 12:17 AM Kees Cook <keescook@chromium.org> wrote:
-> > > Perhaps we need a "statistics" counter type for these kinds of counters?
-> > > "counter_t"? I bet there are a lot of atomic_t uses that are just trying
-> > > to be counters. (likely most of atomic_t that isn't now refcount_t ...)
-> >
-> > This isn't a statistics counter though; this thing needs ordered
-> > memory accesses, which you wouldn't need for statistics.
->
-> Okay, it'd be a "very accurate" counter type? It _could_ be used for
-> statistics. I guess what I mean is that there are a lot of places using
-> atomic_t just for upward counting that don't care about wrapping, etc.
+Hi Moritz,
 
-(Accurate) statistics counters need RMW ops, don't need memory
-ordering, usually can't be locked against writes, and may not care
-about wrapping.
-This thing doesn't need RMW ops, does need memory ordering, can be
-locked against writes, and definitely shouldn't wrap.
+On 7/24/19 9:57 AM, Moritz Fischer wrote:
+> On Tue, Jul 23, 2019 at 09:40:51AM -0500, Thor Thayer wrote:
+>> Hi Moritz,
+>>
+>> On 7/21/19 7:59 PM, Moritz Fischer wrote:
+>>> Thor,
+>>>
+>>> On Tue, Jul 16, 2019 at 05:48:06PM -0500, thor.thayer@linux.intel.com wrote:
+>>>> From: Thor Thayer <thor.thayer@linux.intel.com>
+>>>>
+>>>> In preparation for adding newer V2 parts that use a FIFO,
+>>>> reorganize altera_cvp_chk_error() and change the write
+>>>> function to block based.
+>>>> V2 parts have a block size matching the FIFO while older
+>>>> V1 parts write a 32 bit word at a time.
+>>>>
+>>>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+>>>> ---
+>>>> v2 Remove inline function declaration
+>>>>      Reverse Christmas Tree format for local variables
+>>>> ---
+>>>>    drivers/fpga/altera-cvp.c | 72 ++++++++++++++++++++++++++++++-----------------
+>>>>    1 file changed, 46 insertions(+), 26 deletions(-)
+>>>>
+>>>> diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+>>>> index b78c90580071..37419d6b9915 100644
+>>>> --- a/drivers/fpga/altera-cvp.c
+>>>> +++ b/drivers/fpga/altera-cvp.c
+>>>> @@ -140,6 +140,41 @@ static int altera_cvp_wait_status(struct altera_cvp_conf *conf, u32 status_mask,
+>>>>    	return -ETIMEDOUT;
+>>>>    }
+>>>> +static int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
+>>>> +{
+>>>> +	struct altera_cvp_conf *conf = mgr->priv;
+>>>> +	u32 val;
+>>>> +
+>>>> +	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
+>>>> +	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+>>> Same as in the other email, why can we ignore return values here. I
+>>> think the original code probably did that already.
+>>
+>> Yes, I actually didn't make any changes to this function. You can see I
+>> moved it from below since it is used in the following function.
+>>
+>> I'm not checking the return code from any of the read/write functions since
+>> the original driver didn't. Would you prefer I check and issue a warning?
+> 
+> Not sure a warning would change much here. We should probably look at
+> why it was ok in the first place.
 
-I agree that there are a bunch of statistics counters in the kernel,
-and it's not necessarily a bad idea to use a separate type for them;
-but this is not a statistics counter.
+A quick grep of the drivers directory shows that an overwhelming 
+majority of pci_read_config_dword() and pci_write_config_dword() calls 
+do not check the return code.
+
+For robustness, I agree with you that checking and returning the return 
+code in this error checking function is important. I will return the 
+error code if the read fails.
+
+It shouldn't be necessary to change the rest of the code though unless 
+you feel strongly about updating the existing codebase.
+
+>>
+>> Thanks for reviewing!
+>>
+>>>> +	if (val & VSE_CVP_STATUS_CFG_ERR) {
+>>>> +		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
+>>>> +			bytes);
+>>>> +		return -EPROTO;
+>>>> +	}
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int altera_cvp_send_block(struct altera_cvp_conf *conf,
+>>>> +				 const u32 *data, size_t len)
+>>>> +{
+>>>> +	u32 mask, words = len / sizeof(u32);
+>>>> +	int i, remainder;
+>>>> +
+>>>> +	for (i = 0; i < words; i++)
+>>>> +		conf->write_data(conf, *data++);
+>>>> +
+>>>> +	/* write up to 3 trailing bytes, if any */
+>>>> +	remainder = len % sizeof(u32);
+>>>> +	if (remainder) {
+>>>> +		mask = BIT(remainder * 8) - 1;
+>>>> +		if (mask)
+>>>> +			conf->write_data(conf, *data & mask);
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>>    static int altera_cvp_teardown(struct fpga_manager *mgr,
+>>>>    			       struct fpga_image_info *info)
+>>>>    {
+>>>> @@ -262,39 +297,29 @@ static int altera_cvp_write_init(struct fpga_manager *mgr,
+>>>>    	return 0;
+>>>>    }
+>>>> -static inline int altera_cvp_chk_error(struct fpga_manager *mgr, size_t bytes)
+>>>> -{
+>>>> -	struct altera_cvp_conf *conf = mgr->priv;
+>>>> -	u32 val;
+>>>> -
+>>>> -	/* STEP 10 (optional) - check CVP_CONFIG_ERROR flag */
+>>>> -	altera_read_config_dword(conf, VSE_CVP_STATUS, &val);
+>>>> -	if (val & VSE_CVP_STATUS_CFG_ERR) {
+>>>> -		dev_err(&mgr->dev, "CVP_CONFIG_ERROR after %zu bytes!\n",
+>>>> -			bytes);
+>>>> -		return -EPROTO;
+>>>> -	}
+>>>> -	return 0;
+>>>> -}
+>>>> -
+>>>>    static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+>>>>    			    size_t count)
+>>>>    {
+>>>>    	struct altera_cvp_conf *conf = mgr->priv;
+>>>> +	size_t done, remaining, len;
+>>>>    	const u32 *data;
+>>>> -	size_t done, remaining;
+>>>>    	int status = 0;
+>>>> -	u32 mask;
+>>>>    	/* STEP 9 - write 32-bit data from RBF file to CVP data register */
+>>>>    	data = (u32 *)buf;
+>>>>    	remaining = count;
+>>>>    	done = 0;
+>>>> -	while (remaining >= 4) {
+>>>> -		conf->write_data(conf, *data++);
+>>>> -		done += 4;
+>>>> -		remaining -= 4;
+>>>> +	while (remaining) {
+>>>> +		if (remaining >= sizeof(u32))
+>>>> +			len = sizeof(u32);
+>>>> +		else
+>>>> +			len = remaining;
+>>>> +
+>>>> +		altera_cvp_send_block(conf, data, len);
+>>>> +		data++;
+>>>> +		done += len;
+>>>> +		remaining -= len;
+>>>>    		/*
+>>>>    		 * STEP 10 (optional) and STEP 11
+>>>> @@ -312,11 +337,6 @@ static int altera_cvp_write(struct fpga_manager *mgr, const char *buf,
+>>>>    		}
+>>>>    	}
+>>>> -	/* write up to 3 trailing bytes, if any */
+>>>> -	mask = BIT(remaining * 8) - 1;
+>>>> -	if (mask)
+>>>> -		conf->write_data(conf, *data & mask);
+>>>> -
+>>>>    	if (altera_cvp_chkcfg)
+>>>>    		status = altera_cvp_chk_error(mgr, count);
+>>>> -- 
+>>>> 2.7.4
+>>>>
+>>> Cheers,
+>>> Moritz
+>>>
+>>
+> 
+> Moritz
+> 
+Thor
