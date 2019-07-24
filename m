@@ -2,136 +2,141 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52D4C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC36C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A141121901
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:03:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfAfUuZN"
+	by mail.kernel.org (Postfix) with ESMTP id 318B322ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfGXNDx (ORCPT
+        id S1728404AbfGXNEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:03:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34152 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfGXNDx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:03:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n5so47794845otk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 06:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=St0OD81vvxUjVHgZdUhOHp3xMGk7dggtbpwmHrGdlCs=;
-        b=IfAfUuZNwlAO7G27XDwU/70KmfgndhtBPb/CVvFerZOY1UsTrBAZaBsxQUu4Uq2rWV
-         VM6BynX+WW5IUD54TP9OSGt86xAG7c+3wb7rIFQ8aMuksZhdN/giH03bex2NMXVAALdp
-         9bWMi6AiogYkRVi+2jUaIaILcA7nMoVXOKc4nT4Q/b6i2lbeilJGuvDLqqvqo/Obc3sw
-         TvHtU3ZcgzNNH9ZhDf/9mNdOtrMC8djomF0r5uL9l0hHt8F6VLq2cTH413aZApemW5Iv
-         1PLpjtob4WbpnpTR1RxCy69DKvcWcdwmu/0R+RriQz61AdIpwonqdGL2neGLwbF5ToFj
-         XvVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=St0OD81vvxUjVHgZdUhOHp3xMGk7dggtbpwmHrGdlCs=;
-        b=szd44/+DnLmZxmxiu+Bu/nehuNRksFeZnwt+tTFj2s2IQrXtmKIXzi6riouv9maACJ
-         zr9tJtd5zpvUF4hM/U3DmwSlifoLg4tYjvsBsg/ZHvua/4KLDlATIrf+VjJDxP5qRFOS
-         BEkjAx2LXaP601RFH5+v6n6bPUNjPn9uPa0h17e853XyNdVOTfheZ/1FcIrIem1MjQOU
-         OTj7VuwJevXyu80zLSZfKVaUC0d64ztPOKPYLKpOFjVfS4pcR5hmZnK0HQ8ZsaG2l9xd
-         QdPZLPuuoKjlnEhJFpsIxvXk5MYvEUAJn3g/I1IgYzOqZrFOW1AN73QCYlyzPNfhDwCt
-         hzMQ==
-X-Gm-Message-State: APjAAAU6nOPCByCvSsayCiBmXYYgAkTAtiqb/mcMRfpc4kaWFlfWXF2A
-        cKuO+z/oNZ99+3jNypHTFg==
-X-Google-Smtp-Source: APXvYqwoqN64SzSosnuwzz9M5scf3EzvSuLj58zC6HvVED2/ou7nWq+PGi7bsI3eG18k3dsZrSjeyw==
-X-Received: by 2002:a9d:4703:: with SMTP id a3mr33765462otf.183.1563973432330;
-        Wed, 24 Jul 2019 06:03:52 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id u139sm16367244oie.55.2019.07.24.06.03.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 06:03:51 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:c4e8:4e9:949c:2f11])
-        by serve.minyard.net (Postfix) with ESMTPSA id 08AF01800D1;
-        Wed, 24 Jul 2019 13:03:51 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 08:03:49 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char: ipmi: Fix possible pointer dereferences in
- msg_done_handler()
-Message-ID: <20190724130349.GI3066@minyard.net>
-Reply-To: minyard@acm.org
-References: <20190724102528.2165-1-baijiaju1990@gmail.com>
+        Wed, 24 Jul 2019 09:04:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:40630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbfGXNED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:04:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29A9128;
+        Wed, 24 Jul 2019 06:04:03 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FC383F71A;
+        Wed, 24 Jul 2019 06:04:00 -0700 (PDT)
+Subject: Re: [PATCH v9 04/21] mips: mm: Add p?d_leaf() definitions
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-5-steven.price@arm.com>
+ <20190722214722.wdlj6a3der3r2oro@pburton-laptop>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <85b20d93-bb60-b9e2-ea6a-92ca6f90abc6@arm.com>
+Date:   Wed, 24 Jul 2019 14:03:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724102528.2165-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190722214722.wdlj6a3der3r2oro@pburton-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 06:25:28PM +0800, Jia-Ju Bai wrote:
-> In msg_done_handler(), there is an if statement on line 778 to check
-> whether msg is NULL:
->     if (msg)
+On 22/07/2019 22:47, Paul Burton wrote:
+> Hi Steven,
 > 
-> When msg is NULL, it is used on line 845:
->     if ((result < 0) || (len < 3) || (msg->rsp[2] != 0))
-> and line 869:
->     if ((result < 0) || (len < 3) || (msg->rsp[2] != 0))
+> On Mon, Jul 22, 2019 at 04:41:53PM +0100, Steven Price wrote:
+>> walk_page_range() is going to be allowed to walk page tables other than
+>> those of user space. For this it needs to know when it has reached a
+>> 'leaf' entry in the page tables. This information is provided by the
+>> p?d_leaf() functions/macros.
+>>
+>> For mips, we only support large pages on 64 bit.
+> 
+> That ceases to be true with commit 35476311e529 ("MIPS: Add partial
+> 32-bit huge page support") in mips-next, so I think it may be best to
+> move the definition to asm/pgtable.h so that both 32b & 64b kernels can
+> pick it up.
 
-You cannot get into those states without msg being set, so there
-is no need to check for that msg is NULL there.  If you look
-at those states elsewhere, you can see that curr_msg is set every
-time you go into those states.
+Thanks for pointing that out. I'll move the definitions as you suggest.
 
--corey
+Steve
 
+> Thanks,
+>     Paul
 > 
-> Thus, possible null-pointer dereferences may occur.
+>> For 64 bit if _PAGE_HUGE is defined we can simply look for it. When not
+>> defined we can be confident that there are no leaf pages in existence
+>> and fall back on the generic implementation (added in a later patch)
+>> which returns 0.
+>>
+>> CC: Ralf Baechle <ralf@linux-mips.org>
+>> CC: Paul Burton <paul.burton@mips.com>
+>> CC: James Hogan <jhogan@kernel.org>
+>> CC: linux-mips@vger.kernel.org
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  arch/mips/include/asm/pgtable-64.h | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+>> index 93a9dce31f25..2bdbf8652b5f 100644
+>> --- a/arch/mips/include/asm/pgtable-64.h
+>> +++ b/arch/mips/include/asm/pgtable-64.h
+>> @@ -273,6 +273,10 @@ static inline int pmd_present(pmd_t pmd)
+>>  	return pmd_val(pmd) != (unsigned long) invalid_pte_table;
+>>  }
+>>  
+>> +#ifdef _PAGE_HUGE
+>> +#define pmd_leaf(pmd)	((pmd_val(pmd) & _PAGE_HUGE) != 0)
+>> +#endif
+>> +
+>>  static inline void pmd_clear(pmd_t *pmdp)
+>>  {
+>>  	pmd_val(*pmdp) = ((unsigned long) invalid_pte_table);
+>> @@ -297,6 +301,10 @@ static inline int pud_present(pud_t pud)
+>>  	return pud_val(pud) != (unsigned long) invalid_pmd_table;
+>>  }
+>>  
+>> +#ifdef _PAGE_HUGE
+>> +#define pud_leaf(pud)	((pud_val(pud) & _PAGE_HUGE) != 0)
+>> +#endif
+>> +
+>>  static inline void pud_clear(pud_t *pudp)
+>>  {
+>>  	pud_val(*pudp) = ((unsigned long) invalid_pmd_table);
+>> -- 
+>> 2.20.1
+>>
 > 
-> To fix these bugs, msg is checked before being used.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> These bugs are found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  drivers/char/ipmi/ipmi_ssif.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 305fa5054274..2e40a98d9939 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -842,6 +842,8 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
->  		break;
->  
->  	case SSIF_GETTING_EVENTS:
-> +		if (!msg)
-> +			break;
->  		if ((result < 0) || (len < 3) || (msg->rsp[2] != 0)) {
->  			/* Error getting event, probably done. */
->  			msg->done(msg);
-> @@ -866,6 +868,8 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
->  		break;
->  
->  	case SSIF_GETTING_MESSAGES:
-> +		if (!msg)
-> +			break;
->  		if ((result < 0) || (len < 3) || (msg->rsp[2] != 0)) {
->  			/* Error getting event, probably done. */
->  			msg->done(msg);
-> -- 
-> 2.17.0
-> 
+
