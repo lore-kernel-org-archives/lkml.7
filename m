@@ -2,192 +2,259 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FDFC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAEFC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2529E229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EA5229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563965252;
+	bh=XqKYmTUOX1jzb8jQJM2UMIUVBoEiIefjBqEXYZC6+Q8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HZU3AutxkzN7N3yXs3xXoDNy6Ibmwebx4LYCYazY3wi7lytS4M4epKjO7D83Fo2p8
+	 K0uXHwkv44qF0e+daDvlJTaGIauiXSNonupTjErl64GTkyaoRN5bPc0k/481jQ9EPp
+	 AzQt+5q3BfFgPW6jkfE/wteDMHmMLv4rlXBwk6Vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727204AbfGXKrD (ORCPT
+        id S1727267AbfGXKrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:47:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45410 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726087AbfGXKrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:47:03 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B6D1D7B848989C48A984;
-        Wed, 24 Jul 2019 18:47:00 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 18:46:56 +0800
-Subject: Re: [PATCH 4.4 stable net] net: tcp: Fix use-after-free in
- tcp_write_xmit
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190724091715.137033-1-maowenan@huawei.com>
- <2e09f4d1-8a47-27e9-60f9-63d3b19a98ec@gmail.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <13ffa2fe-d064-9786-bc52-e4281d26ed1d@huawei.com>
-Date:   Wed, 24 Jul 2019 18:46:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 24 Jul 2019 06:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfGXKra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:47:30 -0400
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740DD229FA;
+        Wed, 24 Jul 2019 10:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563965249;
+        bh=XqKYmTUOX1jzb8jQJM2UMIUVBoEiIefjBqEXYZC6+Q8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OoGNIGo9n4Dw84KdQMXHr14YIuwr2v8gYyq0EpRSCa9WKf+y7ws5X9/vH4LRw6p+8
+         SFkjNiyvQVYGlIeX6ckPa0c4raZaFSEN47cp/ldLMzJbn7Up0Ewl89osIHve4t2YQ+
+         BVe0+JzQteGkevspNOcHU9wHbFz3urZEyVZ27h2M=
+Received: by mail-lf1-f44.google.com with SMTP id h28so31595219lfj.5;
+        Wed, 24 Jul 2019 03:47:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAVB0sEi4uWalFek4V1AiMFr2wUOuHO9542zz4BABQoUX2SLR3Bx
+        0Q4k5zTwQNPviarwR8hNKZbODZc5+62xCYshOMM=
+X-Google-Smtp-Source: APXvYqy9K5E4hGCz/s/b0MY68jWI8cr4JC7OTnKDyAKC2ApiptG9TrpIaoDaLUgFlFXSddwxu9vPHeV69/haNP5yOT0=
+X-Received: by 2002:a19:4f4a:: with SMTP id a10mr37712878lfk.30.1563965247598;
+ Wed, 24 Jul 2019 03:47:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2e09f4d1-8a47-27e9-60f9-63d3b19a98ec@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+References: <CGME20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3@eucas1p1.samsung.com>
+ <20190718143044.25066-1-s.nawrocki@samsung.com> <20190718143044.25066-2-s.nawrocki@samsung.com>
+ <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com> <1117f432-8adf-fbe9-f4af-f8acb755326e@samsung.com>
+In-Reply-To: <1117f432-8adf-fbe9-f4af-f8acb755326e@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 24 Jul 2019 12:47:16 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPf2dsnaV4cRT3JxvY=uFEH1hr8SempEHUXq5GiLwmwEzA@mail.gmail.com>
+Message-ID: <CAJKOXPf2dsnaV4cRT3JxvY=uFEH1hr8SempEHUXq5GiLwmwEzA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] soc: samsung: Add exynos chipid driver support
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt@kernel.org,
+        vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org,
+        pankaj.dubey@samsung.com,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 23 Jul 2019 at 16:10, Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+>
+>
+> Hi Krzysztof,
+>
+> On 7/23/19 2:57 PM, Krzysztof Kozlowski wrote:
+> > On Thu, 18 Jul 2019 at 16:31, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+> >>
+> >> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+> >>
+> >> Exynos SoCs have Chipid, for identification of product IDs and SoC
+> >> revisions. This patch intends to provide initialization code for all
+> >> these functionalities, at the same time it provides some sysfs entries
+> >> for accessing these information to user-space.
+> >>
+> >> This driver uses existing binding for exynos-chipid.
+> >>
+> >> Changes by Bartlomiej:
+> >> - fixed return values on errors
+> >> - removed bogus kfree_const()
+> >> - added missing Exynos4210 EVT0 id
+> >> - converted code to use EXYNOS_MASK define
+> >> - fixed np use after of_node_put()
+> >> - fixed too early use of dev_info()
+> >> - made driver fail for unknown SoC-s
+> >> - added SPDX tag
+> >> - updated Copyrights
+> >>
+> >> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> >> [m.szyprowski: for suggestion and code snippet of product_id_to_soc_id]
+> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> >> [s.nawrocki: updated copyright date]
+> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> >> ---
+> >>  drivers/soc/samsung/Kconfig         |   5 ++
+> >>  drivers/soc/samsung/Makefile        |   2 +
+> >>  drivers/soc/samsung/exynos-chipid.c | 111 ++++++++++++++++++++++++++++
+> >>  3 files changed, 118 insertions(+)
+> >>  create mode 100644 drivers/soc/samsung/exynos-chipid.c
+> >>
+> >> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
+> >> index 2186285fda92..2905f5262197 100644
+> >> --- a/drivers/soc/samsung/Kconfig
+> >> +++ b/drivers/soc/samsung/Kconfig
+> >> @@ -7,6 +7,11 @@ menuconfig SOC_SAMSUNG
+> >>
+> >>  if SOC_SAMSUNG
+> >>
+> >> +config EXYNOS_CHIPID
+> >> +       bool "Exynos Chipid controller driver" if COMPILE_TEST
+> >> +       depends on ARCH_EXYNOS || COMPILE_TEST
+> >> +       select SOC_BUS
+> >> +
+> >>  config EXYNOS_PMU
+> >>         bool "Exynos PMU controller driver" if COMPILE_TEST
+> >>         depends on ARCH_EXYNOS || ((ARM || ARM64) && COMPILE_TEST)
+> >> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
+> >> index 29f294baac6e..3b6a8797416c 100644
+> >> --- a/drivers/soc/samsung/Makefile
+> >> +++ b/drivers/soc/samsung/Makefile
+> >> @@ -1,4 +1,6 @@
+> >>  # SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +obj-$(CONFIG_EXYNOS_CHIPID)    += exynos-chipid.o
+> >>  obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o
+> >>
+> >>  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)   += exynos3250-pmu.o exynos4-pmu.o \
+> >> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+> >> new file mode 100644
+> >> index 000000000000..78b123ee60c0
+> >> --- /dev/null
+> >> +++ b/drivers/soc/samsung/exynos-chipid.c
+> >> @@ -0,0 +1,111 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+> >> + *           http://www.samsung.com/
+> >> + *
+> >> + * EXYNOS - CHIP ID support
+> >> + * Author: Pankaj Dubey <pankaj.dubey@samsung.com>
+> >> + * Author: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> >> + */
+> >> +
+> >> +#include <linux/io.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/of_platform.h>
+> >> +#include <linux/platform_device.h>
+> >
+> > Any changes here from my previous comments?
+> >
+> > I have also one more new thought later.
+> >
+> >> +#include <linux/slab.h>
+> >> +#include <linux/sys_soc.h>
+> >> +
+> >> +#define EXYNOS_SUBREV_MASK     (0xF << 4)
+> >> +#define EXYNOS_MAINREV_MASK    (0xF << 0)
+> >> +#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
+> >> +#define EXYNOS_MASK            0xFFFFF000
+> >> +
+> >> +static const struct exynos_soc_id {
+> >> +       const char *name;
+> >> +       unsigned int id;
+> >> +} soc_ids[] = {
+> >> +       { "EXYNOS3250", 0xE3472000 },
+> >> +       { "EXYNOS4210", 0x43200000 },   /* EVT0 revision */
+> >> +       { "EXYNOS4210", 0x43210000 },
+> >> +       { "EXYNOS4212", 0x43220000 },
+> >> +       { "EXYNOS4412", 0xE4412000 },
+> >> +       { "EXYNOS5250", 0x43520000 },
+> >> +       { "EXYNOS5260", 0xE5260000 },
+> >> +       { "EXYNOS5410", 0xE5410000 },
+> >> +       { "EXYNOS5420", 0xE5420000 },
+> >> +       { "EXYNOS5440", 0xE5440000 },
+> >> +       { "EXYNOS5800", 0xE5422000 },
+> >> +       { "EXYNOS7420", 0xE7420000 },
+> >> +       { "EXYNOS5433", 0xE5433000 },
+> >> +};
+> >> +
+> >> +static const char * __init product_id_to_soc_id(unsigned int product_id)
+> >> +{
+> >> +       int i;
+> >> +
+> >> +       for (i = 0; i < ARRAY_SIZE(soc_ids); i++)
+> >> +               if ((product_id & EXYNOS_MASK) == soc_ids[i].id)
+> >> +                       return soc_ids[i].name;
+> >> +       return NULL;
+> >> +}
+> >> +
+> >> +int __init exynos_chipid_early_init(void)
+> >> +{
+> >> +       struct soc_device_attribute *soc_dev_attr;
+> >> +       void __iomem *exynos_chipid_base;
+> >> +       struct soc_device *soc_dev;
+> >> +       struct device_node *root;
+> >> +       struct device_node *np;
+> >> +       u32 product_id;
+> >> +       u32 revision;
+> >> +
+> >> +       /* look up for chipid node */
+> >> +       np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
+> >> +       if (!np)
+> >> +               return -ENODEV;
+> >> +
+> >> +       exynos_chipid_base = of_iomap(np, 0);
+> >> +       of_node_put(np);
+> >> +
+> >> +       if (!exynos_chipid_base) {
+> >> +               pr_err("Failed to map SoC chipid\n");
+> >> +               return -ENXIO;
+> >> +       }
+> >> +
+> >> +       product_id = readl_relaxed(exynos_chipid_base);
+> >> +       revision = product_id & EXYNOS_REV_MASK;
+> >> +       iounmap(exynos_chipid_base);
+> >> +
+> >> +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> >> +       if (!soc_dev_attr)
+> >> +               return -ENOMEM;
+> >> +
+> >> +       soc_dev_attr->family = "Samsung Exynos";
+> >> +
+> >> +       root = of_find_node_by_path("/");
+> >> +       of_property_read_string(root, "model", &soc_dev_attr->machine);
+> >> +       of_node_put(root);
+> >> +
+> >> +       soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%x", revision);
+> >> +       soc_dev_attr->soc_id = product_id_to_soc_id(product_id);
+> >> +       if (!soc_dev_attr->soc_id) {
+> >> +               pr_err("Unknown SoC\n");
+> >
+> > In case of running old kernel on unknown SoC (new revision of existing
+> > one or older design not longer supported like 4415), the device will
+> > not bind. This was added by Bartlomiej. Why? I imagine that soc driver
+> > could be still matched and just report "Unknown". I am not sure if
+> > this changes anything, though.
+>
+> I was thinking that we shouldn't be pretending that we know how to
+> handle unsupported SoCs, i.e. that we know how to correctly read its
+> product_id and revision.
 
-
-On 2019/7/24 17:45, Eric Dumazet wrote:
-> 
-> 
-> On 7/24/19 11:17 AM, Mao Wenan wrote:
->> There is one report about tcp_write_xmit use-after-free with version 4.4.136:
->>
->> BUG: KASAN: use-after-free in tcp_skb_pcount include/net/tcp.h:796 [inline]
->> BUG: KASAN: use-after-free in tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
->> BUG: KASAN: use-after-free in tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
->> Read of size 2 at addr ffff8801d6fc87b0 by task syz-executor408/4195
->>
->> CPU: 0 PID: 4195 Comm: syz-executor408 Not tainted 4.4.136-gfb7e319 #59
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->>  0000000000000000 7d8f38ecc03be946 ffff8801d73b7710 ffffffff81e0edad
->>  ffffea00075bf200 ffff8801d6fc87b0 0000000000000000 ffff8801d6fc87b0
->>  dffffc0000000000 ffff8801d73b7748 ffffffff815159b6 ffff8801d6fc87b0
->> Call Trace:
->>  [<ffffffff81e0edad>] __dump_stack lib/dump_stack.c:15 [inline]
->>  [<ffffffff81e0edad>] dump_stack+0xc1/0x124 lib/dump_stack.c:51
->>  [<ffffffff815159b6>] print_address_description+0x6c/0x216 mm/kasan/report.c:252
->>  [<ffffffff81515cd5>] kasan_report_error mm/kasan/report.c:351 [inline]
->>  [<ffffffff81515cd5>] kasan_report.cold.7+0x175/0x2f7 mm/kasan/report.c:408
->>  [<ffffffff814f9784>] __asan_report_load2_noabort+0x14/0x20 mm/kasan/report.c:427
->>  [<ffffffff83286582>] tcp_skb_pcount include/net/tcp.h:796 [inline]
->>  [<ffffffff83286582>] tcp_init_tso_segs net/ipv4/tcp_output.c:1619 [inline]
->>  [<ffffffff83286582>] tcp_write_xmit+0x3fc2/0x4cb0 net/ipv4/tcp_output.c:2056
->>  [<ffffffff83287a40>] __tcp_push_pending_frames+0xa0/0x290 net/ipv4/tcp_output.c:2307
->>  [<ffffffff8328e966>] tcp_send_fin+0x176/0xab0 net/ipv4/tcp_output.c:2883
->>  [<ffffffff8324c0d0>] tcp_close+0xca0/0xf70 net/ipv4/tcp.c:2112
->>  [<ffffffff832f8d0f>] inet_release+0xff/0x1d0 net/ipv4/af_inet.c:435
->>  [<ffffffff82f1a156>] sock_release+0x96/0x1c0 net/socket.c:586
->>  [<ffffffff82f1a296>] sock_close+0x16/0x20 net/socket.c:1037
->>  [<ffffffff81522da5>] __fput+0x235/0x6f0 fs/file_table.c:208
->>  [<ffffffff815232e5>] ____fput+0x15/0x20 fs/file_table.c:244
->>  [<ffffffff8118bd7f>] task_work_run+0x10f/0x190 kernel/task_work.c:115
->>  [<ffffffff81135285>] exit_task_work include/linux/task_work.h:21 [inline]
->>  [<ffffffff81135285>] do_exit+0x9e5/0x26b0 kernel/exit.c:759
->>  [<ffffffff8113b1d1>] do_group_exit+0x111/0x330 kernel/exit.c:889
->>  [<ffffffff8115e5cc>] get_signal+0x4ec/0x14b0 kernel/signal.c:2321
->>  [<ffffffff8100e02b>] do_signal+0x8b/0x1d30 arch/x86/kernel/signal.c:712
->>  [<ffffffff8100360a>] exit_to_usermode_loop+0x11a/0x160 arch/x86/entry/common.c:248
->>  [<ffffffff81006535>] prepare_exit_to_usermode arch/x86/entry/common.c:283 [inline]
->>  [<ffffffff81006535>] syscall_return_slowpath+0x1b5/0x1f0 arch/x86/entry/common.c:348
->>  [<ffffffff838c29b5>] int_ret_from_sys_call+0x25/0xa3
->>
->> Allocated by task 4194:
->>  [<ffffffff810341d6>] save_stack_trace+0x26/0x50 arch/x86/kernel/stacktrace.c:63
->>  [<ffffffff814f8873>] save_stack+0x43/0xd0 mm/kasan/kasan.c:512
->>  [<ffffffff814f8b57>] set_track mm/kasan/kasan.c:524 [inline]
->>  [<ffffffff814f8b57>] kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:616
->>  [<ffffffff814f9122>] kasan_slab_alloc+0x12/0x20 mm/kasan/kasan.c:554
->>  [<ffffffff814f4c1e>] slab_post_alloc_hook mm/slub.c:1349 [inline]
->>  [<ffffffff814f4c1e>] slab_alloc_node mm/slub.c:2615 [inline]
->>  [<ffffffff814f4c1e>] slab_alloc mm/slub.c:2623 [inline]
->>  [<ffffffff814f4c1e>] kmem_cache_alloc+0xbe/0x2a0 mm/slub.c:2628
->>  [<ffffffff82f380a6>] kmem_cache_alloc_node include/linux/slab.h:350 [inline]
->>  [<ffffffff82f380a6>] __alloc_skb+0xe6/0x600 net/core/skbuff.c:218
->>  [<ffffffff832466c3>] alloc_skb_fclone include/linux/skbuff.h:856 [inline]
->>  [<ffffffff832466c3>] sk_stream_alloc_skb+0xa3/0x5d0 net/ipv4/tcp.c:833
->>  [<ffffffff83249164>] tcp_sendmsg+0xd34/0x2b00 net/ipv4/tcp.c:1178
->>  [<ffffffff83300ef3>] inet_sendmsg+0x203/0x4d0 net/ipv4/af_inet.c:755
->>  [<ffffffff82f1e1fc>] sock_sendmsg_nosec net/socket.c:625 [inline]
->>  [<ffffffff82f1e1fc>] sock_sendmsg+0xcc/0x110 net/socket.c:635
->>  [<ffffffff82f1eedc>] SYSC_sendto+0x21c/0x370 net/socket.c:1665
->>  [<ffffffff82f21560>] SyS_sendto+0x40/0x50 net/socket.c:1633
->>  [<ffffffff838c2825>] entry_SYSCALL_64_fastpath+0x22/0x9e
->>
->> Freed by task 4194:
->>  [<ffffffff810341d6>] save_stack_trace+0x26/0x50 arch/x86/kernel/stacktrace.c:63
->>  [<ffffffff814f8873>] save_stack+0x43/0xd0 mm/kasan/kasan.c:512
->>  [<ffffffff814f91a2>] set_track mm/kasan/kasan.c:524 [inline]
->>  [<ffffffff814f91a2>] kasan_slab_free+0x72/0xc0 mm/kasan/kasan.c:589
->>  [<ffffffff814f632e>] slab_free_hook mm/slub.c:1383 [inline]
->>  [<ffffffff814f632e>] slab_free_freelist_hook mm/slub.c:1405 [inline]
->>  [<ffffffff814f632e>] slab_free mm/slub.c:2859 [inline]
->>  [<ffffffff814f632e>] kmem_cache_free+0xbe/0x340 mm/slub.c:2881
->>  [<ffffffff82f3527f>] kfree_skbmem+0xcf/0x100 net/core/skbuff.c:635
->>  [<ffffffff82f372fd>] __kfree_skb+0x1d/0x20 net/core/skbuff.c:676
->>  [<ffffffff83288834>] sk_wmem_free_skb include/net/sock.h:1447 [inline]
->>  [<ffffffff83288834>] tcp_write_queue_purge include/net/tcp.h:1460 [inline]
->>  [<ffffffff83288834>] tcp_connect_init net/ipv4/tcp_output.c:3122 [inline]
->>  [<ffffffff83288834>] tcp_connect+0xb24/0x30c0 net/ipv4/tcp_output.c:3261
->>  [<ffffffff8329b991>] tcp_v4_connect+0xf31/0x1890 net/ipv4/tcp_ipv4.c:246
->>  [<ffffffff832f9ca9>] __inet_stream_connect+0x2a9/0xc30 net/ipv4/af_inet.c:615
->>  [<ffffffff832fa685>] inet_stream_connect+0x55/0xa0 net/ipv4/af_inet.c:676
->>  [<ffffffff82f1eb78>] SYSC_connect+0x1b8/0x300 net/socket.c:1557
->>  [<ffffffff82f214b4>] SyS_connect+0x24/0x30 net/socket.c:1538
->>  [<ffffffff838c2825>] entry_SYSCALL_64_fastpath+0x22/0x9e
->>
->> Syzkaller reproducer():
->> r0 = socket$packet(0x11, 0x3, 0x300)
->> r1 = socket$inet_tcp(0x2, 0x1, 0x0)
->> bind$inet(r1, &(0x7f0000000300)={0x2, 0x4e21, @multicast1}, 0x10)
->> connect$inet(r1, &(0x7f0000000140)={0x2, 0x1000004e21, @loopback}, 0x10)
->> recvmmsg(r1, &(0x7f0000001e40)=[{{0x0, 0x0, &(0x7f0000000100)=[{&(0x7f00000005c0)=""/88, 0x58}], 0x1}}], 0x1, 0x40000000, 0x0)
->> sendto$inet(r1, &(0x7f0000000000)="e2f7ad5b661c761edf", 0x9, 0x8080, 0x0, 0x0)
->> r2 = fcntl$dupfd(r1, 0x0, r0)
->> connect$unix(r2, &(0x7f00000001c0)=@file={0x0, './file0\x00'}, 0x6e)
->>
->> C repro link: https://syzkaller.appspot.com/text?tag=ReproC&x=14db474f800000
->>
->> This is because when tcp_connect_init call tcp_write_queue_purge, it will
->> kfree all the skb in the write_queue, but the sk->sk_send_head forget to set NULL,
->> then tcp_write_xmit try to send skb, which has freed in tcp_write_queue_purge, UAF happens.
->>
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  include/net/tcp.h | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index bf8a0dae977a..8f8aace28cf8 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -1457,6 +1457,7 @@ static inline void tcp_write_queue_purge(struct sock *sk)
->>  
->>  	while ((skb = __skb_dequeue(&sk->sk_write_queue)) != NULL)
->>  		sk_wmem_free_skb(sk, skb);
->> +	sk->sk_send_head = NULL;
->>  	sk_mem_reclaim(sk);
->>  	tcp_clear_all_retrans_hints(tcp_sk(sk));
->>  	inet_csk(sk)->icsk_backoff = 0;
->>
-> 
-> This is strange, because tcp_init_send_head() is called from tcp_disconnect()
-> which is the syzkaller way to trigger this kind of bugs.
-> 
-
-syzkaller reproduce program duplicate one socket that have multiple skb in write queue,
-and new socket have purged skb but original socket still try to send skb. In this program,
-it does not call tcp_disconnect?
-
-> 
-> I suspect there is another root cause.
-> 
-> 
-> 
-> .
-> 
-
+Reasonable, thanks for explanation.
+Best regards,
+Krzysztof
