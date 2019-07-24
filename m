@@ -2,88 +2,139 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45D2C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0E5C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC5B2190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EAFC22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563985637;
-	bh=tuE9J2EOne+NslRdzdQJ0TtHE1sB+k105tq6JIxLUdw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=d1WmtVhbiDtQi2x14R2LKvdUUEsiWhIfQZaafcvUDCHG2vEBDNzJcoL5Y/pIuspyW
-	 VUWU5m+hVvI+QBG9UPO3OUP1T9O6L3ckUK5+Pb6qVeyuh6YsxMHLe4yOEtsWaIR6Al
-	 uBHOnLiBvOnrWscGxqHig9gayvXqk1UIGE64Y15U=
+	s=default; t=1563985819;
+	bh=aXnST1Zy+5dz8CWNsZfcAqojaBnHYTD1OJuzvi9y2o4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zaf16RHxg0iQEZt0PYV+XsIL8Usa6eBWb90naqpggOdeeMDm+K2uOh39FwYDxHOhd
+	 1Rg7esyd8fPX/klZYurI8pRdCSf+Bmzufj6ZKy5A+Gwa6QOsD5Wx3si0uVDmhxCKB4
+	 JyhKvdYbYHrFaC7ltzLLFRhjrr4flu0Bfxt7MgZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfGXQ1Q (ORCPT
+        id S1726997AbfGXQaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45798 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 12:30:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfGXQ1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:27:16 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725826AbfGXQaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:30:17 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C2D221951
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:27:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC44A21871;
+        Wed, 24 Jul 2019 16:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563985635;
-        bh=tuE9J2EOne+NslRdzdQJ0TtHE1sB+k105tq6JIxLUdw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zb8X/OpEv0xafmvlDz/057Tig2SM1IPeZsqvFMuvKLB4cEtdmqEqNvO5nbrYEVZzJ
-         3gY1mfPUAFiKPkJ/XUpxrXDJQxFyzdDtgw3JseH4vuCcv+LnFoevL85+ZBHdbvQFEY
-         aX+ejwSEfgue3WJ/NpLIzGCL00hcP/HrxuQpbKT0=
-Received: by mail-qt1-f182.google.com with SMTP id w17so1759212qto.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:27:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAUg+DPQpWXNmQ7mSpz0C33/xkb/crza9juLi9Y9K7W0nMkRK+Ih
-        /JHd7llLyLxcd4XPisSLK8C6oPKVmLXQZ72+5g==
-X-Google-Smtp-Source: APXvYqwptXe/uTWee4NuZzm9CGkPpdvwocUmqOtUgHcd5yCy2ZnFI0mL/snhlDQY3I9nBEg8FUdR7pOActwPyf6Od68=
-X-Received: by 2002:a0c:8a43:: with SMTP id 3mr61365918qvu.138.1563985634625;
- Wed, 24 Jul 2019 09:27:14 -0700 (PDT)
+        s=default; t=1563985816;
+        bh=aXnST1Zy+5dz8CWNsZfcAqojaBnHYTD1OJuzvi9y2o4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sxl6AmiyJogEutNkMx10bst2DtY9JXT9gevPqUof4Qqo6HT+y160gFdVne+tUl+/C
+         8V5Cjhpk8lxry7d5JIRYedRvu2W5dfAv7kaKt3gVkoEbpo3Cix1mZSwcTtlmtHZDKI
+         hjuujCEhJIvlBksjwJOOhFW6fQhlXigF4uZem8M0=
+Date:   Wed, 24 Jul 2019 09:30:14 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Ilya Maximets <i.maximets@samsung.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
+Message-ID: <20190724163014.GC673@sol.localdomain>
+Mail-Followup-To: Eric Dumazet <eric.dumazet@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Ilya Maximets <i.maximets@samsung.com>,
+        Eric Dumazet <edumazet@google.com>, David Ahern <dsahern@gmail.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20190724013813.GB643@sol.localdomain>
+ <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
 MIME-Version: 1.0
-References: <20190724105626.53552-1-steven.price@arm.com>
-In-Reply-To: <20190724105626.53552-1-steven.price@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 24 Jul 2019 10:27:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLkxKe=feVQDb3VXqOnA7fvDBEKWgLf2suOHhNLnR704Q@mail.gmail.com>
-Message-ID: <CAL_JsqLkxKe=feVQDb3VXqOnA7fvDBEKWgLf2suOHhNLnR704Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/panfrost: Export all GPU feature registers
-To:     Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Alyssa's Collabora email.
+On Wed, Jul 24, 2019 at 08:39:05AM +0200, Eric Dumazet wrote:
+> 
+> 
+> On 7/24/19 3:38 AM, Eric Biggers wrote:
+> > [This email was generated by a script.  Let me know if you have any suggestions
+> > to make it better, or if you want it re-generated with the latest status.]
+> > 
+> > Of the currently open syzbot reports against the upstream kernel, I've manually
+> > marked 99 of them as possibly being bugs in the net subsystem.  This category
+> > only includes the networking bugs that I couldn't assign to a more specific
+> > component (bpf, xfrm, bluetooth, tls, tipc, sctp, wireless, etc.).  I've listed
+> > these reports below, sorted by an algorithm that tries to list first the reports
+> > most likely to be still valid, important, and actionable.
+> > 
+> > Of these 99 bugs, 17 were seen in mainline in the last week.
+> > 
+> > Of these 99 bugs, 4 were bisected to commits from the following people:
+> > 
+> > 	Florian Westphal <fw@strlen.de>
+> > 	Ilya Maximets <i.maximets@samsung.com>
+> > 	Eric Dumazet <edumazet@google.com>
+> > 	David Ahern <dsahern@gmail.com>
+> > 
+> > If you believe a bug is no longer valid, please close the syzbot report by
+> > sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+> > original thread, as explained at https://goo.gl/tpsmEJ#status
+> > 
+> > If you believe I misattributed a bug to the net subsystem, please let me know,
+> > and if possible forward the report to the correct people or mailing list.
+> >
+> 
+> Some of the bugs have been fixed already, before syzbot found them.
+> 
+> Why force human to be gentle to bots and actually replying to them ?
+> 
+> I usually simply wait that syzbot is finding the bug does not repro anymore,
+> but now if you send these emails, we will have even more pressure on us.
+> 
 
-On Wed, Jul 24, 2019 at 4:56 AM Steven Price <steven.price@arm.com> wrote:
->
-> Midgard/Bifrost GPUs have a bunch of feature registers providing details
-> of what the hardware supports. Panfrost already reads these, this patch
-> exports them all to user space so that the jobs created by the user space
-> driver can be tuned for the particular hardware implementation.
->
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
->  drivers/gpu/drm/panfrost/panfrost_drv.c    | 38 +++++++++++++++++++--
->  drivers/gpu/drm/panfrost/panfrost_gpu.c    |  2 ++
->  include/uapi/drm/panfrost_drm.h            | 39 ++++++++++++++++++++++
->  4 files changed, 77 insertions(+), 3 deletions(-)
+First, based on experience, I'd guess about 30-45 of these are still valid.  17
+were seen in mainline in the last week, but some others are valid too.  The ones
+most likely to still be valid are at the beginning of the list.  So let's try
+not use the presence of outdated bugs as an excuse not to fix current bugs.
 
-LGTM. I'll give it a bit more time to see if there are any comments
-before I apply it.
+Second, all these bug reports are still open, regardless of whether reminders
+are sent or not.  I think you're really suggesting that possibly outdated bug
+reports should be automatically invalidated by syzbot.
 
-Rob
+syzbot already does that for bugs with no reproducer.  However, that still
+leaves a lot of outdated bugs with reproducers.
+
+Since the kernel community is basically in continuous bug bankruptcy and lots of
+syzbot reports are being ignored anyway, I'm in favor of making the invalidation
+criteria more aggressive, so we can best focus people's efforts.  I understand
+that Dmitry has been against this though, since a significant fraction of bugs
+that syzbot stopped hitting for some reason actually turn out to be still valid.
+
+But we probably have no choice.  So I suggest we agree on new criteria for
+invalidating bugs.  I'd suggest assigning a timeout to each bug, based on
+attributes like "seen in mainline?", "reproducer type", "bisected?", "does it
+look like a 'bad' crash (e.g. use-after-free)"; similar to the algorithm I'm
+using to sort the bugs when sorting these reminders.  I.e., bugs most likely to
+still be valid, important, and actionable get longest timeouts.
+
+Then if no crash or activity was seen in the timeout, the bug is closed.
+
+Any thoughts from anyone?
+
+- Eric
