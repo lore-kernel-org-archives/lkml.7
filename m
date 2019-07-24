@@ -2,164 +2,263 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EB3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F57C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE60227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:17:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N/ryaTxl"
+	by mail.kernel.org (Postfix) with ESMTP id 75DAD227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfGXDRJ (ORCPT
+        id S1726364AbfGXDU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:17:09 -0400
-Received: from mail-eopbgr40057.outbound.protection.outlook.com ([40.107.4.57]:15942
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        Tue, 23 Jul 2019 23:20:56 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50540 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbfGXDRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:17:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n8qcp6rPfc7/zvm5FT4pwVD+0AtEG4mpGkDmJ7Bp871psDAMZ1o4rsuTedG/2Dnu9WNa1UTbmqBjfNvs5f+xnnAYdgkBvFMJTX0xgHdfQ4+osW0dTfurlbIgxqNm2HTQrgzpPN0860UoqGdLTPFjWEVO/DgOgBwOI7m9oYmc1R2FjAJuDcDBt1b1vP0crK+4E523i3nJyawMfgFHb2HJHH5UKTkAC20reazgRjQ23pVoroz5MPNfmUnIoa/mDdGFseQ68800qs3++cU0ERvF5JTTt/KPg+PUxQ2TTiWgN/GgXWWzKWGzq2uJF2kB42HXGP5jVwdlEswpuosQ+Gaquw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F4s6gOeuodSoyUOPUAU23lLZHe+QbUK8IOOoLOZxYCk=;
- b=PK4zgwDWETOoyVN6+OySX+PTmUEoKOTjTYMXXEI/NFm5tyHwDcfUvYj2fXvGi1lu/UPCOwasmJ+Hw86QLGI2PzjxpZCgyd7Zm1SkU+LoJ/nA/5ApnRd17N/ka3oFYBqzYTPkB12fFq8gGOvcr0MJnyjtixnIXQN4cDQ3oUvVF47FUyl7stK6X63Q6+bM71QXFXkUYEfqaiItcsp/Ai/RnRih1YYd5azcsjsiZ3gH3KamRoi2XUqdcqYHoj76uwYvm9vLmoLdhkYJ2ayCQy3JSSpw9/CkEdY3sT8HMCh9cqxv+LegfY1EMSFFgGZJP0U/fKNddhSupcymBUm7VTgfDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F4s6gOeuodSoyUOPUAU23lLZHe+QbUK8IOOoLOZxYCk=;
- b=N/ryaTxl7yn6LUEGEJM+VvHdpKO94DT6NuUf1JN3OBFWxUUona36WunMS7Sc+9kUZsvUiNurEa8s9IwtmtJUAMUUMUYn44rKyvkHQ/1Qu8gO6/G9PXy3R7OqTt90+44E+jlukKfW7VHT2W9joYI32EQIObxN1yDF8xNTlvG9PuM=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3769.eurprd04.prod.outlook.com (52.134.71.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2115.10; Wed, 24 Jul 2019 03:17:00 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::7cdf:bddc:212c:f77e%4]) with mapi id 15.20.2094.017; Wed, 24 Jul 2019
- 03:16:59 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "edubezval@gmail.com" <edubezval@gmail.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
-Thread-Topic: [PATCH V15 1/5] dt-bindings: fsl: scu: add thermal binding
-Thread-Index: AQHVJXvnLQPj9qjL2U2LZTWuyBDONqaqeq9ggC7WvJA=
-Date:   Wed, 24 Jul 2019 03:16:59 +0000
-Message-ID: <DB3PR0402MB39162EB555CD7AE75D58C582F5C60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190618021820.14885-1-Anson.Huang@nxp.com>
- <DB3PR0402MB39162C5B5AF828B127DD871EF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39162C5B5AF828B127DD871EF5E00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 31936f57-d2e2-4326-9e48-08d70fe5643a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3769;
-x-ms-traffictypediagnostic: DB3PR0402MB3769:
-x-microsoft-antispam-prvs: <DB3PR0402MB37696D24A8E05080CFCC8D18F5C60@DB3PR0402MB3769.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0108A997B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(39860400002)(366004)(199004)(189003)(9686003)(14454004)(55016002)(53936002)(6436002)(33656002)(7416002)(478600001)(305945005)(7736002)(74316002)(2501003)(256004)(44832011)(446003)(2906002)(11346002)(486006)(476003)(66066001)(3846002)(6116002)(186003)(26005)(6506007)(102836004)(68736007)(81166006)(8676002)(81156014)(76176011)(8936002)(229853002)(316002)(71190400001)(71200400001)(110136005)(99286004)(7696005)(2201001)(6246003)(25786009)(4326008)(66446008)(76116006)(52536014)(66946007)(5660300002)(66476007)(66556008)(86362001)(64756008)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3769;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Bj1vxS/qyAckNIUkEfG27smZ76qHrrvIwsf02G4wQrsroiaKC48WWpYmJdQYatEf5WDSXzFN1nxXEE/ag86VSGE+//6P1BkNRP1NxJJN9dMW/fKXByXNbEW7Ty0uyYcX3nhg4OQjCD+1Z2fhN2JVKqgDJQTSTO1yoFq69GwIfq/d5U7Yao4nEeN0eYAREEXDXVOX4ZJQk1naWtDePXOsbgHUQ4MbxlhO1ZLqMiCHeyCdgBd3AmGRoMmvaFRi8ydwVlJRpX0vwmDek5hULQQc6Seeefan+PLMOsgTH/eFEDnI0ikNuR7U0hbMNnxnuQ3CCePai6hmSXhWZRe6j0mjZegEtjOUzGzU7DaHI2iRFt6zEBvOsGvOz+BtbvhfQvqVbCpUD9PoXqe1RiOQGy4nEiRAaZp8YcDw8V7yrWVAhNM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725827AbfGXDU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:20:56 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7AFF5FFCEA1B5656419F;
+        Wed, 24 Jul 2019 11:20:52 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 24 Jul 2019 11:20:44 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 07/11] net: hns3: adds debug messages to identify eth down cause
+Date:   Wed, 24 Jul 2019 11:18:43 +0800
+Message-ID: <1563938327-9865-8-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
+References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31936f57-d2e2-4326-9e48-08d70fe5643a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 03:16:59.9045
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3769
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UGluZy4uLg0KDQo+IEhpLCBEYW5pZWwvUnVpL0VkdWFyZG8NCj4gCUNvdWxkIHlvdSBwbGVhc2Ug
-dGFrZSBhIGxvb2sgYXQgdGhpcyBwYXRjaCBzZXJpZXM/DQo+IA0KPiBBbnNvbg0KPiANCj4gPiBG
-cm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPg0KPiA+IE5YUCBpLk1Y
-OFFYUCBpcyBhbiBBUk12OCBTb0Mgd2l0aCBhIENvcnRleC1NNCBjb3JlIGluc2lkZSBhcyBzeXN0
-ZW0NCj4gPiBjb250cm9sbGVyLCB0aGUgc3lzdGVtIGNvbnRyb2xsZXIgaXMgaW4gY2hhcmdlIG9m
-IHN5c3RlbSBwb3dlciwgY2xvY2sNCj4gPiBhbmQgdGhlcm1hbCBzZW5zb3JzIGV0Yy4gbWFuYWdl
-bWVudCwgTGludXgga2VybmVsIGhhcyB0byBjb21tdW5pY2F0ZQ0KPiA+IHdpdGggc3lzdGVtIGNv
-bnRyb2xsZXIgdmlhIE1VIChtZXNzYWdlIHVuaXQpIElQQyB0byBnZXQgdGVtcGVyYXR1cmUNCj4g
-PiBmcm9tIHRoZXJtYWwgc2Vuc29ycywgdGhpcyBwYXRjaCBhZGRzIGJpbmRpbmcgZG9jIGZvciBp
-Lk1YIHN5c3RlbQ0KPiA+IGNvbnRyb2xsZXIgdGhlcm1hbCBkcml2ZXIuDQo+ID4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiBSZXZpZXdl
-ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiBSZXZpZXdlZC1ieTogRG9u
-ZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBObyBjaGFuZ2Uu
-DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNs
-LHNjdS50eHQgICAgICAgIHwgMTYNCj4gKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgMTYgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvZnNsLHNjdS50eHQNCj4g
-PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxz
-Y3UudHh0DQo+ID4gaW5kZXggYTU3NWU0Mi4uZmMzODQ0ZSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0K
-PiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
-L2ZzbCxzY3UudHh0DQo+ID4gQEAgLTE1NSw2ICsxNTUsMTcgQEAgUmVxdWlyZWQgcHJvcGVydGll
-czoNCj4gPiAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAgLSB0aW1lb3V0LXNlYzogY29udGFp
-bnMgdGhlIHdhdGNoZG9nIHRpbWVvdXQgaW4gc2Vjb25kcy4NCj4gPg0KPiA+ICtUaGVybWFsIGJp
-bmRpbmdzIGJhc2VkIG9uIFNDVSBNZXNzYWdlIFByb3RvY29sDQo+ID4gKy0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICsNCj4g
-PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOgkJCVNob3VsZCBiZSA6
-DQo+ID4gKwkJCQkgICJmc2wsaW14OHF4cC1zYy10aGVybWFsIg0KPiA+ICsJCQkJZm9sbG93ZWQg
-YnkgImZzbCxpbXgtc2MtdGhlcm1hbCI7DQo+ID4gKw0KPiA+ICstICN0aGVybWFsLXNlbnNvci1j
-ZWxsczoJU2VlDQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwv
-dGhlcm1hbC50eHQNCj4gPiArCQkJCWZvciBhIGRlc2NyaXB0aW9uLg0KPiA+ICsNCj4gPiAgRXhh
-bXBsZSAoaW14OHF4cCk6DQo+ID4gIC0tLS0tLS0tLS0tLS0NCj4gPiAgYWxpYXNlcyB7DQo+ID4g
-QEAgLTIyMiw2ICsyMzMsMTEgQEAgZmlybXdhcmUgew0KPiA+ICAJCQljb21wYXRpYmxlID0gImZz
-bCxpbXg4cXhwLXNjLXdkdCIsICJmc2wsaW14LXNjLXdkdCI7DQo+ID4gIAkJCXRpbWVvdXQtc2Vj
-ID0gPDYwPjsNCj4gPiAgCQl9Ow0KPiA+ICsNCj4gPiArCQl0c2VuczogdGhlcm1hbC1zZW5zb3Ig
-ew0KPiA+ICsJCQljb21wYXRpYmxlID0gImZzbCxpbXg4cXhwLXNjLXRoZXJtYWwiLCAiZnNsLGlt
-eC1zYy0NCj4gPiB0aGVybWFsIjsNCj4gPiArCQkJI3RoZXJtYWwtc2Vuc29yLWNlbGxzID0gPDE+
-Ow0KPiA+ICsJCX07DQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAyLjcuNA0K
-DQo=
+From: Yonglong Liu <liuyonglong@huawei.com>
+
+Some times just see the eth interface have been down/up via
+dmesg, but can not know why the eth down. So adds some debug
+messages to identify the cause for this.
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 24 ++++++++++++++++++++
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 26 ++++++++++++++++++++++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c | 14 ++++++++++++
+ 3 files changed, 64 insertions(+)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 4d58c53..cff5d59 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -459,6 +459,10 @@ static int hns3_nic_net_open(struct net_device *netdev)
+ 		h->ae_algo->ops->set_timer_task(priv->ae_handle, true);
+ 
+ 	hns3_config_xps(priv);
++
++	if (netif_msg_ifup(h))
++		netdev_info(netdev, "net open\n");
++
+ 	return 0;
+ }
+ 
+@@ -519,6 +523,9 @@ static int hns3_nic_net_stop(struct net_device *netdev)
+ 	if (test_and_set_bit(HNS3_NIC_STATE_DOWN, &priv->state))
+ 		return 0;
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(netdev, "net stop\n");
++
+ 	if (h->ae_algo->ops->set_timer_task)
+ 		h->ae_algo->ops->set_timer_task(priv->ae_handle, false);
+ 
+@@ -1550,6 +1557,9 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
+ 	h = hns3_get_handle(netdev);
+ 	kinfo = &h->kinfo;
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(netdev, "setup tc: num_tc=%d\n", tc);
++
+ 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
+ 		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
+ }
+@@ -1593,6 +1603,11 @@ static int hns3_ndo_set_vf_vlan(struct net_device *netdev, int vf, u16 vlan,
+ 	struct hnae3_handle *h = hns3_get_handle(netdev);
+ 	int ret = -EIO;
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(netdev,
++			    "set vf vlan: vf=%d, vlan=%d, qos=%d, vlan_proto=%d\n",
++			    vf, vlan, qos, vlan_proto);
++
+ 	if (h->ae_algo->ops->set_vf_vlan_filter)
+ 		ret = h->ae_algo->ops->set_vf_vlan_filter(h, vf, vlan,
+ 							  qos, vlan_proto);
+@@ -1611,6 +1626,10 @@ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
+ 	if (!h->ae_algo->ops->set_mtu)
+ 		return -EOPNOTSUPP;
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(netdev, "change mtu from %d to %d\n",
++			    netdev->mtu, new_mtu);
++
+ 	ret = h->ae_algo->ops->set_mtu(h, new_mtu);
+ 	if (ret)
+ 		netdev_err(netdev, "failed to change MTU in hardware %d\n",
+@@ -4395,6 +4414,11 @@ int hns3_set_channels(struct net_device *netdev,
+ 	if (kinfo->rss_size == new_tqp_num)
+ 		return 0;
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(netdev,
++			    "set channels: tqp_num=%d, rxfh=%d\n",
++			    new_tqp_num, rxfh_configured);
++
+ 	ret = hns3_reset_notify(h, HNAE3_DOWN_CLIENT);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index e71c92b..edb9845 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -311,6 +311,9 @@ static void hns3_self_test(struct net_device *ndev,
+ 	if (eth_test->flags != ETH_TEST_FL_OFFLINE)
+ 		return;
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(ndev, "self test start\n");
++
+ 	st_param[HNAE3_LOOP_APP][0] = HNAE3_LOOP_APP;
+ 	st_param[HNAE3_LOOP_APP][1] =
+ 			h->flags & HNAE3_SUPPORT_APP_LOOPBACK;
+@@ -374,6 +377,9 @@ static void hns3_self_test(struct net_device *ndev,
+ 
+ 	if (if_running)
+ 		ndev->netdev_ops->ndo_open(ndev);
++
++	if (netif_msg_ifdown(h))
++		netdev_info(ndev, "self test end\n");
+ }
+ 
+ static int hns3_get_sset_count(struct net_device *netdev, int stringset)
+@@ -604,6 +610,11 @@ static int hns3_set_pauseparam(struct net_device *netdev,
+ {
+ 	struct hnae3_handle *h = hns3_get_handle(netdev);
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(netdev,
++			    "set pauseparam: autoneg=%d, rx:%d, tx:%d\n",
++			    param->autoneg, param->rx_pause, param->tx_pause);
++
+ 	if (h->ae_algo->ops->set_pauseparam)
+ 		return h->ae_algo->ops->set_pauseparam(h, param->autoneg,
+ 						       param->rx_pause,
+@@ -743,6 +754,13 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
+ 	if (cmd->base.speed == SPEED_1000 && cmd->base.duplex == DUPLEX_HALF)
+ 		return -EINVAL;
+ 
++	if (netif_msg_ifdown(handle))
++		netdev_info(netdev,
++			    "set link(%s): autoneg=%d, speed=%d, duplex=%d\n",
++			    netdev->phydev ? "phy" : "mac",
++			    cmd->base.autoneg, cmd->base.speed,
++			    cmd->base.duplex);
++
+ 	/* Only support ksettings_set for netdev with phy attached for now */
+ 	if (netdev->phydev)
+ 		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
+@@ -984,6 +1002,10 @@ static int hns3_nway_reset(struct net_device *netdev)
+ 		return -EINVAL;
+ 	}
+ 
++	if (netif_msg_ifdown(handle))
++		netdev_info(netdev, "nway reset (using %s)\n",
++			    phy ? "phy" : "mac");
++
+ 	if (phy)
+ 		return genphy_restart_aneg(phy);
+ 
+@@ -1308,6 +1330,10 @@ static int hns3_set_fecparam(struct net_device *netdev,
+ 	if (!ops->set_fec)
+ 		return -EOPNOTSUPP;
+ 	fec_mode = eth_to_loc_fec(fec->fec);
++
++	if (netif_msg_ifdown(handle))
++		netdev_info(netdev, "set fecparam: mode=%d\n", fec_mode);
++
+ 	return ops->set_fec(handle, fec_mode);
+ }
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+index bac4ce1..133e7c6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+@@ -201,6 +201,7 @@ static int hclge_client_setup_tc(struct hclge_dev *hdev)
+ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(h);
++	struct net_device *netdev = h->kinfo.netdev;
+ 	struct hclge_dev *hdev = vport->back;
+ 	bool map_changed = false;
+ 	u8 num_tc = 0;
+@@ -215,6 +216,9 @@ static int hclge_ieee_setets(struct hnae3_handle *h, struct ieee_ets *ets)
+ 		return ret;
+ 
+ 	if (map_changed) {
++		if (netif_msg_ifdown(h))
++			netdev_info(netdev, "set ets\n");
++
+ 		ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
+ 		if (ret)
+ 			return ret;
+@@ -300,6 +304,7 @@ static int hclge_ieee_getpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(h);
++	struct net_device *netdev = h->kinfo.netdev;
+ 	struct hclge_dev *hdev = vport->back;
+ 	u8 i, j, pfc_map, *prio_tc;
+ 
+@@ -325,6 +330,11 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ 	hdev->tm_info.hw_pfc_map = pfc_map;
+ 	hdev->tm_info.pfc_en = pfc->pfc_en;
+ 
++	if (netif_msg_ifdown(h))
++		netdev_info(netdev,
++			    "set pfc: pfc_en=%d, pfc_map=%d, num_tc=%d\n",
++			    pfc->pfc_en, pfc_map, hdev->tm_info.num_tc);
++
+ 	hclge_tm_pfc_info_update(hdev);
+ 
+ 	return hclge_pause_setup_hw(hdev, false);
+@@ -345,8 +355,12 @@ static u8 hclge_getdcbx(struct hnae3_handle *h)
+ static u8 hclge_setdcbx(struct hnae3_handle *h, u8 mode)
+ {
+ 	struct hclge_vport *vport = hclge_get_vport(h);
++	struct net_device *netdev = h->kinfo.netdev;
+ 	struct hclge_dev *hdev = vport->back;
+ 
++	if (netif_msg_drv(h))
++		netdev_info(netdev, "set dcbx: mode=%d\n", mode);
++
+ 	/* No support for LLD_MANAGED modes or CEE */
+ 	if ((mode & DCB_CAP_DCBX_LLD_MANAGED) ||
+ 	    (mode & DCB_CAP_DCBX_VER_CEE) ||
+-- 
+2.7.4
+
