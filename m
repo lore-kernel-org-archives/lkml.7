@@ -2,85 +2,114 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E46C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D854CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1BF214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47022081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999735;
-	bh=pOQ5hG3KottIS8v1HNbGEdwmegP5XHsvE7vXdILawNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ez5Uq3wPoEbWiOHUCRHZMxRT3qJCBCPon3SW4FPJcRgxbiw/2ywR6pZ7p86UNEGkB
-	 mXzvE6Dh574RbiNXekYy6OvVbWVcCketxUiUObbzzJbLcc7cGRIaT1S5TIEDDZm2QZ
-	 LkggN8k/k/1bZfQyTDwCPp38IzQt7EVIgSVql2Ms=
+	s=default; t=1563999744;
+	bh=bJaK2y8fDj1FTi8KvmgjRlVEATUN3kZOzc1QfZTsTQ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tvbsXFsWZbC9giXqoUOGrXkkbYRWgKsmp5NZq5Oq11hzxFfajAnrpLVyqN60XaW5z
+	 JG2amhYVl3I+Jl1Z4fhcnqxmWN0p7wzH+36EUJ/aq/4n5JlYtfeRojen0H+pceOwjP
+	 79tufbMBrbKm9czH4XJNft6q6oGWcPqL82roH//I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392236AbfGXUWO (ORCPT
+        id S2390719AbfGXTn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:22:14 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40394 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390815AbfGXUWL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:22:11 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so5804918iom.7;
-        Wed, 24 Jul 2019 13:22:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/30AS3nqkWWu+3IMVyX4v9nQ/uVi14wrBVbKbNIwDH0=;
-        b=ekj0LIeZj9w5dZ1iFJTQMocLGklgKFNFkBXzDwuhI4RB10PYuavh/i6uOI32d86B2C
-         ypTECM/GBXT90NiCeRuCFHbWlUFgCV7VKamtmNBuIEv5+JsQhj1FzUS+O/EMwdCH6dcO
-         P0NYZGuMMILra9O7AV4bXVRtv1zeSEC64XsLkYfbGSn6WO4cwl4Vgj7P/nSUHe5YMaKO
-         9Io15AcVq5ImPVNFW+NzVsDzoYKzwNV8XmLBGFvWyteipR1T/PuH3YVywCZNc/09l7nv
-         kel45+XZXMcJIKx9+AL9K/mP7Uwsp/SZ5vghfH9WbfznN3puV5oUmF6PjSY3kpV+iI5J
-         pTqg==
-X-Gm-Message-State: APjAAAUL+Ou5xExnGsGQUNWjTps4YOw0N88V0Km2aTOWtG1+nr7MEkLB
-        hKhKCqwLnrC8dCiTARBtKg==
-X-Google-Smtp-Source: APXvYqw8/yMFLvKjW7NMwY+ZvPnqeFIopuxH5djPlnJEGbRQVjM6/Fd6l3umrAZVnmBM4ywFQ0VJmA==
-X-Received: by 2002:a02:b395:: with SMTP id p21mr88532316jan.31.1563999730430;
-        Wed, 24 Jul 2019 13:22:10 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id x22sm33617648ioh.87.2019.07.24.13.22.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:22:09 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:22:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Eugen.Hristev@microchip.com
-Cc:     wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com, Eugen.Hristev@microchip.com
-Subject: Re: [PATCH v3 1/9] dt-bindings: i2c: at91: add new compatible
-Message-ID: <20190724202209.GA31102@bogus>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
- <1562678049-17581-2-git-send-email-eugen.hristev@microchip.com>
+        Wed, 24 Jul 2019 15:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390064AbfGXTnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C5F722ADA;
+        Wed, 24 Jul 2019 19:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997431;
+        bh=bJaK2y8fDj1FTi8KvmgjRlVEATUN3kZOzc1QfZTsTQ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2S+XfE8OirsSrSZ3Ayw/CTlM6f9gzl0r0zlb9b679SyheKy6uJlaeL/Pq0UVdpYk5
+         hGZCbhxlVxGf0dh+t+pJH28A7R9ydrruqvMv4EVLoCX5ADx5y0U5W8dkeG8Be574fz
+         /HjpZE7rx1XUKndaZWYyEDgGV48QzvRdCiC23Zb4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 021/371] regmap: debugfs: Fix memory leak in regmap_debugfs_init
+Date:   Wed, 24 Jul 2019 21:16:13 +0200
+Message-Id: <20190724191726.094079567@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562678049-17581-2-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jul 2019 13:19:29 +0000, <Eugen.Hristev@microchip.com> wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Add compatible for new Microchip SoC, sam9x60
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-at91.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+[ Upstream commit 2899872b627e99b7586fe3b6c9f861da1b4d5072 ]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+As detected by kmemleak running on i.MX6ULL board:
+
+nreferenced object 0xd8366600 (size 64):
+  comm "swapper/0", pid 1, jiffies 4294937370 (age 933.220s)
+  hex dump (first 32 bytes):
+    64 75 6d 6d 79 2d 69 6f 6d 75 78 63 2d 67 70 72  dummy-iomuxc-gpr
+    40 32 30 65 34 30 30 30 00 e3 f3 ab fe d1 1b dd  @20e4000........
+  backtrace:
+    [<b0402aec>] kasprintf+0x2c/0x54
+    [<a6fbad2c>] regmap_debugfs_init+0x7c/0x31c
+    [<9c8d91fa>] __regmap_init+0xb5c/0xcf4
+    [<5b1c3d2a>] of_syscon_register+0x164/0x2c4
+    [<596a5d80>] syscon_node_to_regmap+0x64/0x90
+    [<49bd597b>] imx6ul_init_machine+0x34/0xa0
+    [<250a4dac>] customize_machine+0x1c/0x30
+    [<2d19fdaf>] do_one_initcall+0x7c/0x398
+    [<e6084469>] kernel_init_freeable+0x328/0x448
+    [<168c9101>] kernel_init+0x8/0x114
+    [<913268aa>] ret_from_fork+0x14/0x20
+    [<ce7b131a>] 0x0
+
+Root cause is that map->debugfs_name is allocated using kasprintf
+and then the pointer is lost by assigning it other memory address.
+
+Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/base/regmap/regmap-debugfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 19eb454f26c3..df2893d4626b 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -565,6 +565,8 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
+ 	}
+ 
+ 	if (!strcmp(name, "dummy")) {
++		kfree(map->debugfs_name);
++
+ 		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
+ 						dummy_index);
+ 		name = map->debugfs_name;
+-- 
+2.20.1
+
+
+
