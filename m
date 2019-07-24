@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E344C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B24C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE1A22ADB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26068229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997024;
-	bh=eBZ62cRWa9VRaFzG4EcxN3DST27SeKFUtLhOrnP5MaI=;
+	s=default; t=1563997027;
+	bh=wLenPchzmHu2bxlRqWuzksxeHYWnPHMNI1svPZQDuIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BuRCFBSqvzuQZjDhSld5Uk8PzY+ZLsika9J9TKpztPglvjqP9LA/24ZGCx8Lq0rPA
-	 8m6T/Hxygi2QGJ+Y2RXmKxqQ5YPH4f3mkFbzC8yvV3zXuxXKx/F6myLkySwaCf5alQ
-	 IpBk7gPzCISGx94Il2BpBzaYZZuLeE4k1cUvdcRs=
+	b=Cas3SwT84JFAzmtTXeLXkLNuL4sYH/4v90S759WmkRp8ATsCK2mLyAoiAInGWQAjn
+	 YRkuW2JyJp24ZDgfZsmFy2E+Ciuy3w9Aoq6DHIivLr9Q+gvRjf9QGpQtIFRBlRxnF7
+	 QQTJD9lGUiEc1cDusa9uRHwA0dO0a3iOEX46QbKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389387AbfGXThC (ORCPT
+        id S1729097AbfGXThF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:37:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36776 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388478AbfGXTgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:54 -0400
+        id S2389377AbfGXThB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:37:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9511214AF;
-        Wed, 24 Jul 2019 19:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8D2620665;
+        Wed, 24 Jul 2019 19:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997014;
-        bh=eBZ62cRWa9VRaFzG4EcxN3DST27SeKFUtLhOrnP5MaI=;
+        s=default; t=1563997020;
+        bh=wLenPchzmHu2bxlRqWuzksxeHYWnPHMNI1svPZQDuIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcT+KDkjLmu5dwmyYxnT/L9qusgdkzC2JKmVWBNZ1z3VzzJyp3xgwg4R1/BiT1c6T
-         1juUNwOMC+eIJJkS45VXFC8y2ppQeNK878UhYPYu3Zej2elA2rZhzre/P7yFpOY5Do
-         F//JSH4FaMtKGa8y2gD2ypI0F4jLC8jIkZ5vim4Q=
+        b=w0rJPAae0UwSXEL86pS80KUwcjaOCSiyv/zG8Deq+yAt7fzK7f74c/BWWKhO1w6lZ
+         oLZJnX+pz/iZilqRjUZ5zqc3mw5BTyuW5RluGZEU5issbc+4HSJlrUx7DBDR/kyDwD
+         GI4AIiuQ5cEg2LlohrCfBkQRiq33VII6Ej3clJr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.2 256/413] scsi: core: Fix race on creating sense cache
-Date:   Wed, 24 Jul 2019 21:19:07 +0200
-Message-Id: <20190724191754.319591458@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.2 293/413] arm64: tegra: Fix Jetson Nano GPU regulator
+Date:   Wed, 24 Jul 2019 21:19:44 +0200
+Message-Id: <20190724191757.121960621@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,55 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc upstream.
+commit 434e8aedeaec595933811c2af191db9f11d3ce3b upstream.
 
-When scsi_init_sense_cache(host) is called concurrently from different
-hosts, each code path may find that no cache has been created and
-allocate a new one. The lack of locking can lead to potentially
-overriding a cache allocated by a different host.
+There are a few issues with the GPU regulator defined for Jetson Nano
+which are:
 
-Fix the issue by moving 'mutex_lock(&scsi_sense_cache_mutex)' before
-scsi_select_sense_cache().
+1. The GPU regulator is a PWM based regulator and not a fixed voltage
+   regulator.
+2. The output voltages for the GPU regulator are not correct.
+3. The regulator enable ramp delay is too short for the regulator and
+   needs to be increased. 2ms should be sufficient.
+4. This is the same regulator used on Jetson TX1 and so make the ramp
+   delay and settling time the same as Jetson TX1.
 
-Fixes: 0a6ac4ee7c21 ("scsi: respect unchecked_isa_dma for blk-mq")
-Cc: Stable <stable@vger.kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: 6772cd0eacc8 ("arm64: tegra: Add NVIDIA Jetson Nano Developer Kit support")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/scsi_lib.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |   17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -72,11 +72,11 @@ int scsi_init_sense_cache(struct Scsi_Ho
- 	struct kmem_cache *cache;
- 	int ret = 0;
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+@@ -633,17 +633,16 @@
+ 		};
  
-+	mutex_lock(&scsi_sense_cache_mutex);
- 	cache = scsi_select_sense_cache(shost->unchecked_isa_dma);
- 	if (cache)
--		return 0;
-+		goto exit;
- 
--	mutex_lock(&scsi_sense_cache_mutex);
- 	if (shost->unchecked_isa_dma) {
- 		scsi_sense_isadma_cache =
- 			kmem_cache_create("scsi_sense_cache(DMA)",
-@@ -92,7 +92,7 @@ int scsi_init_sense_cache(struct Scsi_Ho
- 		if (!scsi_sense_cache)
- 			ret = -ENOMEM;
- 	}
+ 		vdd_gpu: regulator@6 {
+-			compatible = "regulator-fixed";
++			compatible = "pwm-regulator";
+ 			reg = <6>;
 -
-+ exit:
- 	mutex_unlock(&scsi_sense_cache_mutex);
- 	return ret;
- }
++			pwms = <&pwm 1 4880>;
+ 			regulator-name = "VDD_GPU";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			regulator-enable-ramp-delay = <250>;
+-
+-			gpio = <&pmic 6 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-
++			regulator-min-microvolt = <710000>;
++			regulator-max-microvolt = <1320000>;
++			regulator-ramp-delay = <80>;
++			regulator-enable-ramp-delay = <2000>;
++			regulator-settling-time-us = <160>;
++			enable-gpios = <&pmic 6 GPIO_ACTIVE_HIGH>;
+ 			vin-supply = <&vdd_5v0_sys>;
+ 		};
+ 	};
 
 
