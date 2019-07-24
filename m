@@ -2,120 +2,93 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9AAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EA8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C58820693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942A0214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999536;
-	bh=9emZkSTCwyNtMvzp8juiAJBq7YHr93QN1SGkx+lKNoM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8PvBLga9+RX91xtYGee4LLCKXox/gpwksAJfimLT2Tr4gFpifbEoU9zIstksphdb
-	 hDJIpkjqveTL4m7UMlllABQ0neG5McvkFBVg2XWy4wADLekB9oFu/wwO1rmzyLGn8+
-	 Yjk17YAKH9aAwurmVD5ZaAJ69Bs7gXhjOYj2pNhg=
+	s=default; t=1563999545;
+	bh=RsIV7nCwd4cu6oT4XPd5FAmVMrrYSWNhIvH2E9GPtaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OwoFDv7CqBAofVKrVu/Go5G5y/PbSSKZLtaYxznKzGHRTErd/UIcdT3sbBiCVHHav
+	 xPijmKBIXgYD5rozT2JUWLuXSaJ/jKynPtGezanGBRfsAh1tueO1OvDBXpWhlLD4Zz
+	 +Bh1/jfkFbd+B6SON+GPac6ucDQTp/7c4dG5DA1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403911AbfGXTsY (ORCPT
+        id S2392303AbfGXUTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391034AbfGXTsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:48:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB21C21873;
-        Wed, 24 Jul 2019 19:48:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997698;
-        bh=9emZkSTCwyNtMvzp8juiAJBq7YHr93QN1SGkx+lKNoM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N+Gz4S5zGifu4cf2r2iEw0kceeMutCMsMeoc26k16wXJzO3k+DvpHgUDjXx9rXarA
-         ZRDXqyOpazn9vfrwU/Jbr/EEdZuwHZpLKmCzdV2aMDbmsPXj5OM/w6tPdoqIWSNB96
-         E9yW/Y8gHEjMhFHaf9RX+7ncIr+O7TIOgbkUE1tU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 111/371] bpf: fix callees pruning callers
-Date:   Wed, 24 Jul 2019 21:17:43 +0200
-Message-Id: <20190724191733.191660682@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:19:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40672 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388983AbfGXUTB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:19:01 -0400
+Received: by mail-io1-f67.google.com with SMTP id h6so5786802iom.7;
+        Wed, 24 Jul 2019 13:19:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ApQotHQxWJr5zyqbEl1C9NpdXsHo5uhr1/je6Huq+bI=;
+        b=NqlLMQzTzcPx9v5G9pwHgv4DssgL3rdJXDK0N3kNiZHw80bZW9/HDDXM572fhL/5ZF
+         SvW0zaoIFkjcNHPvHhFL5+bY/Dr2ZrMtVRZukNucY4giAQ51AWd77YWVx3EKjTqLvy/c
+         vF2TNnzXapH26V15y8iHNzL4+Y/0edcMW2XfyUlkC1vbqvXoBuG9EfTta5XyMeTz4i+/
+         FsyFIGMHS6pWjTTC59lJ2wbf60VFxm9jrMCCIlnnkiwwgbgs35f+zCAKOFLaAcOKuD6h
+         BaAWDQ9TsG8y/A0DnQ2kEb/pkZ3RFVAddplsmpdTRyXJWZavjNbNd+oSUBM+oLjXxcLl
+         UIbA==
+X-Gm-Message-State: APjAAAUFM3vMfJN7kg+0pvfkn2amAYqiV5KS2tK6cEVVtAP3wVHrlhUY
+        Q3G7OTHc0rWSSxkrHDn1sA==
+X-Google-Smtp-Source: APXvYqxZ9dmUz3ZXKBjOYJnBYyOwokAXvh0AFf4QNJLoM+DksevICYOosUh4VFPZzV82gw2GdpbfrA==
+X-Received: by 2002:a6b:fb02:: with SMTP id h2mr53385887iog.289.1563999540221;
+        Wed, 24 Jul 2019 13:19:00 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id r5sm43517794iom.42.2019.07.24.13.18.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 13:18:59 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 14:18:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson.Huang@nxp.com
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        leonard.crestez@nxp.com, p.zabel@pengutronix.de, ping.bai@nxp.com,
+        daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
+        angus@akkea.ca, andrew.smirnov@gmail.com, ccaione@baylibre.com,
+        agx@sigxcpu.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/4] dt-bindings: opp: Support multiple opp-suspend
+ properties
+Message-ID: <20190724201858.GA25048@bogus>
+References: <20190709080015.43442-1-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190709080015.43442-1-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eea1c227b9e9bad295e8ef984004a9acf12bb68c ]
+On Tue,  9 Jul 2019 16:00:12 +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> Update opp-suspend property's description to support multiple
+> opp-suspend properties defined in DT, the OPP with highest opp-hz
+> and with opp-suspend property present will be used as suspend opp.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> New patch.
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-The commit 7640ead93924 partially resolved the issue of callees
-incorrectly pruning the callers.
-With introduction of bounded loops and jmps_processed heuristic
-single verifier state may contain multiple branches and calls.
-It's possible that new verifier state (for future pruning) will be
-allocated inside callee. Then callee will exit (still within the same
-verifier state). It will go back to the caller and there R6-R9 registers
-will be read and will trigger mark_reg_read. But the reg->live for all frames
-but the top frame is not set to LIVE_NONE. Hence mark_reg_read will fail
-to propagate liveness into parent and future walking will incorrectly
-conclude that the states are equivalent because LIVE_READ is not set.
-In other words the rule for parent/live should be:
-whenever register parentage chain is set the reg->live should be set to LIVE_NONE.
-is_state_visited logic already follows this rule for spilled registers.
-
-Fixes: 7640ead93924 ("bpf: verifier: make sure callees don't prune with caller differences")
-Fixes: f4d7e40a5b71 ("bpf: introduce function calls (verification)")
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/verifier.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 4ff130ddfbf6..cbc03f051598 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -6197,17 +6197,18 @@ static int is_state_visited(struct bpf_verifier_env *env, int insn_idx)
- 	 * the state of the call instruction (with WRITTEN set), and r0 comes
- 	 * from callee with its full parentage chain, anyway.
- 	 */
--	for (j = 0; j <= cur->curframe; j++)
--		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
--			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
- 	/* clear write marks in current state: the writes we did are not writes
- 	 * our child did, so they don't screen off its reads from us.
- 	 * (There are no read marks in current state, because reads always mark
- 	 * their parent and current state never has children yet.  Only
- 	 * explored_states can get read marks.)
- 	 */
--	for (i = 0; i < BPF_REG_FP; i++)
--		cur->frame[cur->curframe]->regs[i].live = REG_LIVE_NONE;
-+	for (j = 0; j <= cur->curframe; j++) {
-+		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
-+			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
-+		for (i = 0; i < BPF_REG_FP; i++)
-+			cur->frame[j]->regs[i].live = REG_LIVE_NONE;
-+	}
- 
- 	/* all stack frames are accessible from callee, clear them all */
- 	for (j = 0; j <= cur->curframe; j++) {
--- 
-2.20.1
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
