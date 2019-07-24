@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585B6C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDDFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220A4205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834032083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998784;
-	bh=jqZTEZW2sYsyEtBKIkWIWFXkpDQSd/XWU6PFsFqOt6s=;
+	s=default; t=1563998788;
+	bh=MCkTkboS5swa3Jmq6u4Euf81bn2SLIL7ucVq96xxI/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t19nePN6LU1Nc8fdJ7P+ondXcaKw/cYjyOkPsr94N59VONLj9uzyoqrR2k3lOme4Q
-	 Juu7iuzA5Q0kagT+Er5HyUhP6B7npw1j3EzJ68pxBayMetYFmIS1lN7OcazLvPukki
-	 KKzTUOb3LBGtm5mXjQU0zfno/WCS0JAceBZFAcHk=
+	b=t59bXUffhr5jITLOtUYyeHqxjBjQ6uCCtjogV02rBUWAb+Ksr0M4uT+dj9uEVKkmX
+	 oRV9NOFR2oIuCvWcDRfA2dg6PmsN5sXMM2Ut/GUGjxs+pU8xE6PIOOr3LrxJYwNT3Z
+	 kYWMe5EHT4qZzRbvsY9r3v3EbZeF6ZF/DJoA0BGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392699AbfGXUFe (ORCPT
+        id S2392792AbfGXUG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53938 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405818AbfGXUDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:03:31 -0400
+        id S2392692AbfGXUFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:05:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A56D5205C9;
-        Wed, 24 Jul 2019 20:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84F8C2147A;
+        Wed, 24 Jul 2019 20:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998610;
-        bh=jqZTEZW2sYsyEtBKIkWIWFXkpDQSd/XWU6PFsFqOt6s=;
+        s=default; t=1563998732;
+        bh=MCkTkboS5swa3Jmq6u4Euf81bn2SLIL7ucVq96xxI/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMbaIBGYdxcERgtkxmoJSZ1rTQPXDURoKhiQoEysRqiowiTjcylEBNHllhVVCApzg
-         JLwMNY60Do9fvPr9P7nSZi4JRqLElXSpMjQ52q9BvFPEb9lLGbyUTDnfssAhJ4kUQs
-         4F3vv2oYtkyQkDiRbK59UTs5AmA/50sapHglIkgQ=
+        b=aQ8OV0fe4oVtjJEmo0Xj3dH09Yrv0L2LRTrzvSW3IgRP9JjAfaqyY3LVO2N6ux07w
+         eo4SR6vCpuYugHBaTRRvW6r5sPmBMX/KtbcUzFQEhRRJzPopHpdYEjSOY0vaS0GeBG
+         tSUtdQ15uRZ2b4Z61DpY7AEeArVmHFudXDTayaPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/271] perf cs-etm: Properly set the value of old and head in snapshot mode
-Date:   Wed, 24 Jul 2019 21:18:43 +0200
-Message-Id: <20190724191659.776669335@linuxfoundation.org>
+Subject: [PATCH 4.19 095/271] media: i2c: fix warning same module names
+Date:   Wed, 24 Jul 2019 21:19:24 +0200
+Message-Id: <20190724191703.369477176@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -67,203 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e45c48a9a4d20ebc7b639a62c3ef8f4b08007027 ]
+[ Upstream commit b2ce5617dad254230551feda3599f2cc68e53ad8 ]
 
-This patch adds the necessary intelligence to properly compute the value
-of 'old' and 'head' when operating in snapshot mode.  That way we can
-get the latest information in the AUX buffer and be compatible with the
-generic AUX ring buffer mechanic.
+When building with CONFIG_VIDEO_ADV7511 and CONFIG_DRM_I2C_ADV7511
+enabled as loadable modules, we see the following warning:
 
-Tester notes:
+  drivers/gpu/drm/bridge/adv7511/adv7511.ko
+  drivers/media/i2c/adv7511.ko
 
-> Leo, have you had the chance to test/review this one? Suzuki?
+Rework so that the file is named adv7511-v4l2.c.
 
-Sure.  I applied this patch on the perf/core branch (with latest
-commit 3e4fbf36c1e3 'perf augmented_raw_syscalls: Move reading
-filename to the loop') and passed testing with below steps:
-
-  # perf record -e cs_etm/@tmc_etr0/ -S -m,64 --per-thread ./sort &
-  [1] 19097
-  Bubble sorting array of 30000 elements
-
-  # kill -USR2 19097
-  # kill -USR2 19097
-  # kill -USR2 19097
-  [ perf record: Woken up 4 times to write data ]
-  [ perf record: Captured and wrote 0.753 MB perf.data ]
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190605161633.12245-1-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 127 +++++++++++++++++++++++++++++-
- 1 file changed, 123 insertions(+), 4 deletions(-)
+ drivers/media/i2c/Makefile                      | 2 +-
+ drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+ rename drivers/media/i2c/{adv7511.c => adv7511-v4l2.c} (99%)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 2f595cd73da6..16af6c3b1365 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -32,6 +32,8 @@ struct cs_etm_recording {
- 	struct auxtrace_record	itr;
- 	struct perf_pmu		*cs_etm_pmu;
- 	struct perf_evlist	*evlist;
-+	int			wrapped_cnt;
-+	bool			*wrapped;
- 	bool			snapshot_mode;
- 	size_t			snapshot_size;
- };
-@@ -495,16 +497,131 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
- 	return 0;
- }
+diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+index a94eb03d10d4..520b3c3bf48c 100644
+--- a/drivers/media/i2c/Makefile
++++ b/drivers/media/i2c/Makefile
+@@ -36,7 +36,7 @@ obj-$(CONFIG_VIDEO_ADV748X) += adv748x/
+ obj-$(CONFIG_VIDEO_ADV7604) += adv7604.o
+ obj-$(CONFIG_VIDEO_ADV7842) += adv7842.o
+ obj-$(CONFIG_VIDEO_AD9389B) += ad9389b.o
+-obj-$(CONFIG_VIDEO_ADV7511) += adv7511.o
++obj-$(CONFIG_VIDEO_ADV7511) += adv7511-v4l2.o
+ obj-$(CONFIG_VIDEO_VPX3220) += vpx3220.o
+ obj-$(CONFIG_VIDEO_VS6624)  += vs6624.o
+ obj-$(CONFIG_VIDEO_BT819) += bt819.o
+diff --git a/drivers/media/i2c/adv7511.c b/drivers/media/i2c/adv7511-v4l2.c
+similarity index 99%
+rename from drivers/media/i2c/adv7511.c
+rename to drivers/media/i2c/adv7511-v4l2.c
+index 88349b5053cc..6869bb593a68 100644
+--- a/drivers/media/i2c/adv7511.c
++++ b/drivers/media/i2c/adv7511-v4l2.c
+@@ -5,6 +5,11 @@
+  * Copyright 2013 Cisco Systems, Inc. and/or its affiliates. All rights reserved.
+  */
  
--static int cs_etm_find_snapshot(struct auxtrace_record *itr __maybe_unused,
-+static int cs_etm_alloc_wrapped_array(struct cs_etm_recording *ptr, int idx)
-+{
-+	bool *wrapped;
-+	int cnt = ptr->wrapped_cnt;
++/*
++ * This file is named adv7511-v4l2.c so it doesn't conflict with the Analog
++ * Device ADV7511 (config fragment CONFIG_DRM_I2C_ADV7511).
++ */
 +
-+	/* Make @ptr->wrapped as big as @idx */
-+	while (cnt <= idx)
-+		cnt++;
-+
-+	/*
-+	 * Free'ed in cs_etm_recording_free().  Using realloc() to avoid
-+	 * cross compilation problems where the host's system supports
-+	 * reallocarray() but not the target.
-+	 */
-+	wrapped = realloc(ptr->wrapped, cnt * sizeof(bool));
-+	if (!wrapped)
-+		return -ENOMEM;
-+
-+	wrapped[cnt - 1] = false;
-+	ptr->wrapped_cnt = cnt;
-+	ptr->wrapped = wrapped;
-+
-+	return 0;
-+}
-+
-+static bool cs_etm_buffer_has_wrapped(unsigned char *buffer,
-+				      size_t buffer_size, u64 head)
-+{
-+	u64 i, watermark;
-+	u64 *buf = (u64 *)buffer;
-+	size_t buf_size = buffer_size;
-+
-+	/*
-+	 * We want to look the very last 512 byte (chosen arbitrarily) in
-+	 * the ring buffer.
-+	 */
-+	watermark = buf_size - 512;
-+
-+	/*
-+	 * @head is continuously increasing - if its value is equal or greater
-+	 * than the size of the ring buffer, it has wrapped around.
-+	 */
-+	if (head >= buffer_size)
-+		return true;
-+
-+	/*
-+	 * The value of @head is somewhere within the size of the ring buffer.
-+	 * This can be that there hasn't been enough data to fill the ring
-+	 * buffer yet or the trace time was so long that @head has numerically
-+	 * wrapped around.  To find we need to check if we have data at the very
-+	 * end of the ring buffer.  We can reliably do this because mmap'ed
-+	 * pages are zeroed out and there is a fresh mapping with every new
-+	 * session.
-+	 */
-+
-+	/* @head is less than 512 byte from the end of the ring buffer */
-+	if (head > watermark)
-+		watermark = head;
-+
-+	/*
-+	 * Speed things up by using 64 bit transactions (see "u64 *buf" above)
-+	 */
-+	watermark >>= 3;
-+	buf_size >>= 3;
-+
-+	/*
-+	 * If we find trace data at the end of the ring buffer, @head has
-+	 * been there and has numerically wrapped around at least once.
-+	 */
-+	for (i = watermark; i < buf_size; i++)
-+		if (buf[i])
-+			return true;
-+
-+	return false;
-+}
-+
-+static int cs_etm_find_snapshot(struct auxtrace_record *itr,
- 				int idx, struct auxtrace_mmap *mm,
--				unsigned char *data __maybe_unused,
-+				unsigned char *data,
- 				u64 *head, u64 *old)
- {
-+	int err;
-+	bool wrapped;
-+	struct cs_etm_recording *ptr =
-+			container_of(itr, struct cs_etm_recording, itr);
-+
-+	/*
-+	 * Allocate memory to keep track of wrapping if this is the first
-+	 * time we deal with this *mm.
-+	 */
-+	if (idx >= ptr->wrapped_cnt) {
-+		err = cs_etm_alloc_wrapped_array(ptr, idx);
-+		if (err)
-+			return err;
-+	}
-+
-+	/*
-+	 * Check to see if *head has wrapped around.  If it hasn't only the
-+	 * amount of data between *head and *old is snapshot'ed to avoid
-+	 * bloating the perf.data file with zeros.  But as soon as *head has
-+	 * wrapped around the entire size of the AUX ring buffer it taken.
-+	 */
-+	wrapped = ptr->wrapped[idx];
-+	if (!wrapped && cs_etm_buffer_has_wrapped(data, mm->len, *head)) {
-+		wrapped = true;
-+		ptr->wrapped[idx] = true;
-+	}
-+
- 	pr_debug3("%s: mmap index %d old head %zu new head %zu size %zu\n",
- 		  __func__, idx, (size_t)*old, (size_t)*head, mm->len);
  
--	*old = *head;
--	*head += mm->len;
-+	/* No wrap has occurred, we can just use *head and *old. */
-+	if (!wrapped)
-+		return 0;
-+
-+	/*
-+	 * *head has wrapped around - adjust *head and *old to pickup the
-+	 * entire content of the AUX buffer.
-+	 */
-+	if (*head >= mm->len) {
-+		*old = *head - mm->len;
-+	} else {
-+		*head += mm->len;
-+		*old = *head - mm->len;
-+	}
- 
- 	return 0;
- }
-@@ -545,6 +662,8 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
- {
- 	struct cs_etm_recording *ptr =
- 			container_of(itr, struct cs_etm_recording, itr);
-+
-+	zfree(&ptr->wrapped);
- 	free(ptr);
- }
- 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
 -- 
 2.20.1
 
