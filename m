@@ -8,64 +8,61 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F017C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF57C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6830122CBB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D662A22CBA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:23:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X18Azr3F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2Nrydxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbfGXMX0 (ORCPT
+        id S1728326AbfGXMXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:23:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36230 "EHLO
+        Wed, 24 Jul 2019 08:23:36 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45986 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfGXMXZ (ORCPT
+        with ESMTP id S1727512AbfGXMXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:23:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so21966033plt.3;
-        Wed, 24 Jul 2019 05:23:25 -0700 (PDT)
+        Wed, 24 Jul 2019 08:23:36 -0400
+Received: by mail-pl1-f194.google.com with SMTP id y8so21958584plr.12;
+        Wed, 24 Jul 2019 05:23:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=M65x0rcjdQ+L+xMxfa4ktYvbjy7eRRieI4KAgQxJ2Bo=;
-        b=X18Azr3FSYrvMf2tklpGL/Bg3aJ2xBIQDt9JQUBcx05HLo8w7qR1MvNQW7ReZlsAKO
-         7yPVxgYH4v7drBG86eJ+4ivpSILcV9ILklLbO9uyrgj+W+A7P+E4SraFN45jQypXqQ3r
-         8c8Pknc4LR/pN63Mf8cpPp/mTRJ7+mDPsmff0z/VoPsRLoCAEtAGWWLHSC1/SoB22rSi
-         6rFh7fNYTlMJgr8i8TXdY03W6SKZNCwsjNFg6z4iue5EVVoV/fZxtslILEz83y+Zvc11
-         07ElYodQKsRsyy32cTQfC48yKMxbfr4OKS1qlBWdhYG/f8jtZOEVBb+fnCg5hQchX9Mm
-         CFoQ==
+        bh=48E6HSc2L70hlQLRSBeIv+/Db8vjv1Bu/UW8jXrS+U4=;
+        b=M2NrydxgGzbdA1NpgU+GmccIx2rtAZfaW5/PTnf6k4bFLoXu9E6I7yzi8mDNk7O2+L
+         NmE/PlITHEZ/LHV02kSI3E5R8WLqFrgtxKH6q6R9/hyZREojXXk+aAn60WRGIqqFhI1j
+         pwWNiCgWU3ht7GvK+rRF24/3xfoqrE1rW7GTjXblwVTgpGMAtkcqld/pPmuimVrHGIKa
+         5QIIcE5/HvD/kaNTrVn5U5QjlmRC84llpXAu00Kdh52KQB63o5h7Mr06+KSNXYVIdG+T
+         w6wf+rE0xqAOzfZT4ndWwXasR0xMDg987TxzhBaIBAl9QPLKhtqHgCY71HaWYC53glS4
+         Xm8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=M65x0rcjdQ+L+xMxfa4ktYvbjy7eRRieI4KAgQxJ2Bo=;
-        b=I2paR2PDkD+/gkjPfWsN348ML36rYE/WqrL5Gxn9/njTY+IOmbRaJ6hndEUGHmGOg/
-         ycdb776Xk1pqnsN0UmeVy/8pHzE3n8Sh9W+DJTFDRWcUXmN+p8Pq1iehIjTz4bVR5Cv+
-         S8KoIkXP8yW0euy4O0ZeDB7vExkdFcyGJZh6OcA8+x8GZQJPA+n0DFPI+yToyQ1pZCuw
-         aHId3q3mNDaIYCbr9o4ihOzumlhHH7gjiTtwLrIeImwkj+kZgA2Ux91tQye2IavkuQ+o
-         cmriid06KQEu1WjR7PbWfVn2Lq7WI5oTEPl2VJoBcLkiAn3repvfuhYCoSydbjfOatFn
-         cOnw==
-X-Gm-Message-State: APjAAAWj9GZROS6MaZol2+ObrErnKni9+vvR0MJ05gv7DnhFReIrB0Z2
-        7EefPWzoH8WAPcB7YM6UhW5xhXfg834=
-X-Google-Smtp-Source: APXvYqw3LHYiOOlsx6rep3pBSVg9nqey/WKzm8bvaToKW7kZWye9i/l9w0dT+8jdGO5g27bwQ42BYg==
-X-Received: by 2002:a17:902:740a:: with SMTP id g10mr85999960pll.82.1563971005247;
-        Wed, 24 Jul 2019 05:23:25 -0700 (PDT)
+        bh=48E6HSc2L70hlQLRSBeIv+/Db8vjv1Bu/UW8jXrS+U4=;
+        b=qDonSdslwfWiMfHqG4E6U3FdvMs97LinETLZh1TVHnwxoUeOMbrZemeHoq21lnK+s8
+         jY84xeyNt3R10RT68f9MkJUZ4ojab7D0yBzqNEtJAcA5BjlCWtXJN/P55cW5Ev8+lW57
+         d6ZgL8bd1KGqOu4k4p9nchKTqi5Hob3C7ihOkPM8xLvUqX1WOkmdXg9PLpjnsYBQMciF
+         jdK9m98VZzEwG+wRmxOoG9kPgJgIoYkIdkp3Rkg9htXt5sJQGp4n+2htArABFpYy3wyR
+         u91mefqesXBQp/y1eptZplDk1Dh3GQfVekVo3WziqblO7KNAQv7qb0PDb47CTNh4G63Y
+         gCSQ==
+X-Gm-Message-State: APjAAAUyKoByatY/WTDRv75o1CpFbUbcTF7sj+TII91l000j6e3HD0jz
+        VTQ93+22l/0aR54/ZP8WhP4=
+X-Google-Smtp-Source: APXvYqyV++dF7Y2xCtTuo3l0EnNtBGcrJdWUNyN9cvS5LLSYn0cSjpYTw/jbSWSTUYf/WN5oZxKypg==
+X-Received: by 2002:a17:902:9a85:: with SMTP id w5mr85693188plp.221.1563971015577;
+        Wed, 24 Jul 2019 05:23:35 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id u9sm13675245pgc.5.2019.07.24.05.23.22
+        by smtp.gmail.com with ESMTPSA id x9sm55087298pfn.177.2019.07.24.05.23.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 05:23:24 -0700 (PDT)
+        Wed, 24 Jul 2019 05:23:35 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] platform/x86: ISST: Use dev_get_drvdata
-Date:   Wed, 24 Jul 2019 20:23:20 +0800
-Message-Id: <20190724122320.21802-1-hslester96@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] spi: dw-pci: Use dev_get_drvdata
+Date:   Wed, 24 Jul 2019 20:23:31 +0800
+Message-Id: <20190724122331.21856-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,39 +77,32 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/spi/spi-dw-pci.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-index f7266a115a08..ad8c7c0df4d9 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-@@ -132,11 +132,9 @@ static void isst_if_remove(struct pci_dev *pdev)
- 
- static int __maybe_unused isst_if_suspend(struct device *device)
+diff --git a/drivers/spi/spi-dw-pci.c b/drivers/spi/spi-dw-pci.c
+index 9651679ee7f7..c1e2401cace0 100644
+--- a/drivers/spi/spi-dw-pci.c
++++ b/drivers/spi/spi-dw-pci.c
+@@ -98,16 +98,14 @@ static void spi_pci_remove(struct pci_dev *pdev)
+ #ifdef CONFIG_PM_SLEEP
+ static int spi_suspend(struct device *dev)
  {
--	struct pci_dev *pdev = to_pci_dev(device);
--	struct isst_if_device *punit_dev;
-+	struct isst_if_device *punit_dev = dev_get_drvdata(device);
- 	int i;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct dw_spi *dws = pci_get_drvdata(pdev);
++	struct dw_spi *dws = dev_get_drvdata(dev);
  
--	punit_dev = pci_get_drvdata(pdev);
- 	for (i = 0; i < ARRAY_SIZE(punit_dev->range_0); ++i)
- 		punit_dev->range_0[i] = readl(punit_dev->punit_mmio +
- 						mmio_range[0].beg + 4 * i);
-@@ -149,11 +147,9 @@ static int __maybe_unused isst_if_suspend(struct device *device)
+ 	return dw_spi_suspend_host(dws);
+ }
  
- static int __maybe_unused isst_if_resume(struct device *device)
+ static int spi_resume(struct device *dev)
  {
--	struct pci_dev *pdev = to_pci_dev(device);
--	struct isst_if_device *punit_dev;
-+	struct isst_if_device *punit_dev = dev_get_drvdata(device);
- 	int i;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct dw_spi *dws = pci_get_drvdata(pdev);
++	struct dw_spi *dws = dev_get_drvdata(dev);
  
--	punit_dev = pci_get_drvdata(pdev);
- 	for (i = 0; i < ARRAY_SIZE(punit_dev->range_0); ++i)
- 		writel(punit_dev->range_0[i], punit_dev->punit_mmio +
- 						mmio_range[0].beg + 4 * i);
+ 	return dw_spi_resume_host(dws);
+ }
 -- 
 2.20.1
 
