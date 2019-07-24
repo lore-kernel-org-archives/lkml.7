@@ -2,87 +2,75 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96C3C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7210C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93AB3218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:39:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nb4y6vBn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="D4xHNZx0"
+	by mail.kernel.org (Postfix) with ESMTP id B1067217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfGXFjy (ORCPT
+        id S1726126AbfGXFlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:39:54 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34300 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfGXFjx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:39:53 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5C0C160CED; Wed, 24 Jul 2019 05:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563946793;
-        bh=MMhai2COm8cnkYrv/dvMLvXqAKcjY56ENAXvop82H7U=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=nb4y6vBnz9vkLD+pOIry/36Icm3pzibY3vWq8Hw/MKQk82eZN5Xu6Okz/p+xD/O/y
-         ptqssP+qM/GHEx2FfIlUYfZ691DgfRilOS8wG7jEGNl++sl3BwFuKqoiVbclW4Z5Fw
-         5JADz9BIvRZB2Z5DxpSR28lazd8EYRCy8omMlSmw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D2C8760CED;
-        Wed, 24 Jul 2019 05:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563946792;
-        bh=MMhai2COm8cnkYrv/dvMLvXqAKcjY56ENAXvop82H7U=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=D4xHNZx0wfHaVp+2Zls4zbfCKV0fk4Pci1I4X0elSeXXAysqDci8QeoH8tvJsPoCn
-         mRLFfiOzGaCcEshfsMkjJN1XN0KolGQb7SAuADNhT5iPtkHzpShOCeIimSYsxOnUgu
-         gXinv+XQvHWvapDGY0gjfSm7yP3ERjLIBR0LVE5Y=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D2C8760CED
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        secalert@redhat.com, Jakub Kicinski <kubakici@wp.pl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mt76_init_sband_2g: null check the allocation
-References: <20190723221954.9233-1-navid.emamdoost@gmail.com>
-Date:   Wed, 24 Jul 2019 08:39:46 +0300
-In-Reply-To: <20190723221954.9233-1-navid.emamdoost@gmail.com> (Navid
-        Emamdoost's message of "Tue, 23 Jul 2019 17:19:54 -0500")
-Message-ID: <87d0i00z4t.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 24 Jul 2019 01:41:25 -0400
+Received: from verein.lst.de ([213.95.11.211]:47601 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725917AbfGXFlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 01:41:25 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 72F3D68B02; Wed, 24 Jul 2019 07:41:23 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 07:41:23 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2] mm/hmm: a few more C style and comment clean ups
+Message-ID: <20190724054123.GA685@lst.de>
+References: <20190723233016.26403-1-rcampbell@nvidia.com> <20190723233016.26403-2-rcampbell@nvidia.com> <20190723235747.GP15331@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723235747.GP15331@mellanox.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Navid Emamdoost <navid.emamdoost@gmail.com> writes:
+On Tue, Jul 23, 2019 at 11:57:52PM +0000, Jason Gunthorpe wrote:
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 16b6731a34db79..3d8cdfb67a6ab8 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -285,8 +285,9 @@ struct hmm_vma_walk {
+>  	struct hmm_range	*range;
+>  	struct dev_pagemap	*pgmap;
+>  	unsigned long		last;
+> -	bool			fault;
+> -	bool			block;
+> +	bool			fault : 1;
+> +	bool			block : 1;
+> +	bool			hugetlb : 1;
 
-> devm_kzalloc may fail and return NULL. So the null check is needed.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  drivers/net/wireless/mediatek/mt7601u/init.c | 3 +++
->  1 file changed, 3 insertions(+)
+I don't think we should even keep these bools around.  I have something
+like this hiding in a branche, which properly cleans much of this up:
 
-The prefix in the title should be "mt7601u:".
+http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-dma-cleanup
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
+Notably:
 
--- 
-Kalle Valo
+http://git.infradead.org/users/hch/misc.git/commitdiff/2abdc0ac8f9f32149246957121ebccbe5c0a729d
+
+http://git.infradead.org/users/hch/misc.git/commitdiff/a34ccd30ee8a8a3111d9e91711c12901ed7dea74
+
+http://git.infradead.org/users/hch/misc.git/commitdiff/81f442ebac7170815af7770a1efa9c4ab662137e
+
+This doesn't go all the way yet - the page_walk infrastructure is
+built around the idea of doing its own vma lookups, and we should
+eventually kill the lookup inside hmm entirely. 
