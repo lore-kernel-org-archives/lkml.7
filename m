@@ -2,93 +2,119 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1901C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FFEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEEA21852
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB08421852
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:04:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uSCiCyQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfGXSDk (ORCPT
+        id S1727284AbfGXSEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:03:40 -0400
-Received: from smtprelay0101.hostedemail.com ([216.40.44.101]:45288 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725944AbfGXSDk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:03:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 416D2182CF674;
-        Wed, 24 Jul 2019 18:03:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: crush75_3ce39f3b86a14
-X-Filterd-Recvd-Size: 2307
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 24 Jul 2019 18:03:38 +0000 (UTC)
-Message-ID: <4ce25249a42248e7762f22f40d6d9898365024ea.camel@perches.com>
-Subject: Re: [PATCH 01/12] checkpatch: Add GENMASK tests
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 24 Jul 2019 11:03:35 -0700
-In-Reply-To: <c5cf9dd30360a395b50514f8fece2231e0180ce1.1562734889.git.joe@perches.com>
-References: <cover.1562734889.git.joe@perches.com>
-         <c5cf9dd30360a395b50514f8fece2231e0180ce1.1562734889.git.joe@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 24 Jul 2019 14:04:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:35226 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbfGXSEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:04:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=UpzgCoPq0Wu6UDjrL//LrXChGIZ8cQyw8Fm5gnrCxag=; b=uSCiCyQURATsR/8rSFcWw4XWAi
+        SFtoSKMVeIDa2RmJc1V6rmyvW0kYyCPDOGcHOCEFtupgRlAqo6wTLZEh5RcntlIn+sspActh0D7CD
+        NIq3MQlbePLbM/hYbTyIJHrJoEsr79jvr7L8959e3/hdG9X/lzK5p3siuZhy8dLeLbXA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hqLcs-0001VX-3i; Wed, 24 Jul 2019 20:04:30 +0200
+Date:   Wed, 24 Jul 2019 20:04:30 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [RFC] dt-bindings: net: phy: Add subnode for LED configuration
+Message-ID: <20190724180430.GB28488@lunn.ch>
+References: <20190722223741.113347-1-mka@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722223741.113347-1-mka@chromium.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
-> This macro is easy to misuse as it's odd argument order.
+On Mon, Jul 22, 2019 at 03:37:41PM -0700, Matthias Kaehlcke wrote:
+> The LED behavior of some Ethernet PHYs is configurable. Add an
+> optional 'leds' subnode with a child node for each LED to be
+> configured. The binding aims to be compatible with the common
+> LED binding (see devicetree/bindings/leds/common.txt).
 > 
-> If specified with simple decimal values, make sure the arguments are
-> ordered high then low.
+> A LED can be configured to be 'on' when a link with a certain speed
+> is active, or to blink on RX/TX activity. For the configuration to
+> be effective it needs to be supported by the hardware and the
+> corresponding PHY driver.
 > 
-> Also check if any argument is > 32 where instead of GENMASK,
-> GENMASK_ULL should be used.
-
-Hey Andrew, can you add this please.
-
-> Signed-off-by: Joe Perches <joe@perches.com>
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  scripts/checkpatch.pl | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> This RFC is a follow up of the discussion on "[PATCH v2 6/7]
+> dt-bindings: net: realtek: Add property to configure LED mode"
+> (https://lore.kernel.org/patchwork/patch/1097185/).
 > 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 6cb99ec62000..d37bbe33524b 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -6368,6 +6368,21 @@ sub process {
->  			     "switch default: should use break\n" . $herectx);
->  		}
+> For now posting as RFC to get a basic agreement on the bindings
+> before proceding with the implementation in phylib and a specific
+> driver.
+> ---
+>  Documentation/devicetree/bindings/net/phy.txt | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+> index 9b9e5b1765dd..ad495d3abbbb 100644
+> --- a/Documentation/devicetree/bindings/net/phy.txt
+> +++ b/Documentation/devicetree/bindings/net/phy.txt
+> @@ -46,6 +46,25 @@ Optional Properties:
+>    Mark the corresponding energy efficient ethernet mode as broken and
+>    request the ethernet to stop advertising it.
 >  
-> +# check for misuses of GENMASK
-> +		if ($line =~ /\b(GENMASK(?:_ULL)?)\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/) {
-> +			my $type = $1;
-> +			my $high = $2;
-> +			my $low = $3;
-> +			if ($high < $low) {
-> +				ERROR("GENMASK",
-> +				      "$type argument order is high then low\n" . $herecurr);
-> +			}
-> +			if ($type eq "GENMASK" && ($high >= 32 || $low >= 32)) {
-> +				ERROR("GENMASK",
-> +				      "$type with arguments >= 32 should use GENMASK_ULL\n" . $herecurr);
-> +			}
-> +		}
+> +- leds: A sub-node which is a container of only LED nodes. Each child
+> +    node represents a PHY LED.
 > +
->  # check for gcc specific __FUNCTION__
->  		if ($line =~ /\b__FUNCTION__\b/) {
->  			if (WARN("USE_FUNC",
+> +  Required properties for LED child nodes:
+> +  - reg: The ID number of the LED, typically corresponds to a hardware ID.
+> +
+> +  Optional properties for child nodes:
+> +  - label: The label for this LED. If omitted, the label is taken from the node
+> +    name (excluding the unit address). It has to uniquely identify a device,
+> +    i.e. no other LED class device can be assigned the same label.
 
+Hi Matthias
+
+I've thought about label a bit more. 
+
+> +			label = "ethphy0:left:green";
+
+We need to be careful with names here. systemd etc renames
+interfaces. ethphy0 could in fact be connected to enp3s0, or eth0
+might get renamed to eth1, etc. So i think we should avoid things like
+ethphy0. Also, i'm not sure we actually need a label, at least not to
+start with.Do we have any way to expose it to the user?
+
+If we do ever make it part of the generic LED framework, we can then
+use the label. At that point, i would probably combine the label with
+the interface name in a dynamic way to avoid issues like this.
+
+    Andrew
