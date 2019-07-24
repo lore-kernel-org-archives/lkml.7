@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE12C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8BBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD1A218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD5922ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996431;
-	bh=JCPTuGfRM364P6BBf0xXm6vZVjJevDMqfh/vxoEhrBg=;
+	s=default; t=1563996435;
+	bh=nrWoDL7XEid3OLCQ158UCjFe0QkT4IbeN4Q5Enb0E4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9AlxZnOvGv5FoZwJLF3gi33iUeyNsFXY51qaQaZcYrftKYwwgucKu5Q3q8sCnLAf
-	 tBdR0sUaiUS9CjOgAapffP+oEN3VQ0QcuKY+Xh7oGEFWXYxUfmmHMb0wMhvbqPLcI+
-	 lkiLZPAaQB+C/WsBANefz4vi8qofpWN+mub9Tujo=
+	b=eJgUDILP2XArPLZRUi4g28QmJ7dNLxLXcRcyreCUpqnDiX8fljLYsqhe3+Nr0AtFI
+	 HKzm7yTVY3eoeOVRN5tG1sVERibbUVhiP8dxuCUBksBb478e0XvOmG9K2ISIrD8HfO
+	 5yOjWfbHZw0Kt/2WBodM6vuOc+2v97nzUBwZFAgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbfGXT1K (ORCPT
+        id S1728175AbfGXT1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:27:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728572AbfGXT0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:26:55 -0400
+        id S1728733AbfGXT1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81F0D22387;
-        Wed, 24 Jul 2019 19:26:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B53422387;
+        Wed, 24 Jul 2019 19:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996415;
-        bh=JCPTuGfRM364P6BBf0xXm6vZVjJevDMqfh/vxoEhrBg=;
+        s=default; t=1563996428;
+        bh=nrWoDL7XEid3OLCQ158UCjFe0QkT4IbeN4Q5Enb0E4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5HDU5xfZbpVxw/Y+kqBx1LrjKtzu88cGIdbNyWMZtbrjwxRDlnvn5i03360uZ8q/
-         9aD9BLLs+KqOzI2n+E+8KVr+GqnL6YfEF3Hf+RviEhvMLRujw8GJN5pbxIH7tZ0Hdz
-         g9sQ3zHUVwxJDRsiI0nB4fK0g7AEkHmlov9P/ji8=
+        b=wvyZI1SloFZcUoYoiiRVP0amhmaEIHNXyt7GgvXxmvRA571Lz446prRGeXfj/UgNd
+         +vNUmsl0FHmzfgf9UY9Eowa9f4AfZRj4tnKoTuowCTk1CaUt7clhlCgOdSeWUVEOKr
+         vXjIzsHWWLE71qZzTDdQia/qwiSG/nOzwqty9blI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Kir Kolyshkin <kir@sacred.ru>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 089/413] regmap: fix bulk writes on paged registers
-Date:   Wed, 24 Jul 2019 21:16:20 +0200
-Message-Id: <20190724191741.433561892@linuxfoundation.org>
+Subject: [PATCH 5.2 094/413] selinux: fix empty write to keycreate file
+Date:   Wed, 24 Jul 2019 21:16:25 +0200
+Message-Id: <20190724191741.738557199@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,40 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db057679de3e9e6a03c1bcd5aee09b0d25fd9f5b ]
+[ Upstream commit 464c258aa45b09f16aa0f05847ed8895873262d9 ]
 
-On buses like SlimBus and SoundWire which does not support
-gather_writes yet in regmap, A bulk write on paged register
-would be silently ignored after programming page.
-This is because local variable 'ret' value in regmap_raw_write_impl()
-gets reset to 0 once page register is written successfully and the
-code below checks for 'ret' value to be -ENOTSUPP before linearising
-the write buffer to send to bus->write().
+When sid == 0 (we are resetting keycreate_sid to the default value), we
+should skip the KEY__CREATE check.
 
-Fix this by resetting the 'ret' value to -ENOTSUPP in cases where
-gather_writes() is not supported or single register write is
-not possible.
+Before this patch, doing a zero-sized write to /proc/self/keycreate
+would check if the current task can create unlabeled keys (which would
+usually fail with -EACCESS and generate an AVC). Now it skips the check
+and correctly sets the task's keycreate_sid to 0.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Bug report: https://bugzilla.redhat.com/show_bug.cgi?id=1719067
+
+Tested using the reproducer from the report above.
+
+Fixes: 4eb582cf1fbd ("[PATCH] keys: add a way to store the appropriate context for newly-created keys")
+Reported-by: Kir Kolyshkin <kir@sacred.ru>
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ security/selinux/hooks.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index f1025452bb39..19f57ccfbe1d 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1637,6 +1637,8 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
- 					     map->format.reg_bytes +
- 					     map->format.pad_bytes,
- 					     val, val_len);
-+	else
-+		ret = -ENOTSUPP;
- 
- 	/* If that didn't work fall back on linearising by hand. */
- 	if (ret == -ENOTSUPP) {
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 94de51628fdc..3ec7ac70c313 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -6351,11 +6351,12 @@ static int selinux_setprocattr(const char *name, void *value, size_t size)
+ 	} else if (!strcmp(name, "fscreate")) {
+ 		tsec->create_sid = sid;
+ 	} else if (!strcmp(name, "keycreate")) {
+-		error = avc_has_perm(&selinux_state,
+-				     mysid, sid, SECCLASS_KEY, KEY__CREATE,
+-				     NULL);
+-		if (error)
+-			goto abort_change;
++		if (sid) {
++			error = avc_has_perm(&selinux_state, mysid, sid,
++					     SECCLASS_KEY, KEY__CREATE, NULL);
++			if (error)
++				goto abort_change;
++		}
+ 		tsec->keycreate_sid = sid;
+ 	} else if (!strcmp(name, "sockcreate")) {
+ 		tsec->sockcreate_sid = sid;
 -- 
 2.20.1
 
