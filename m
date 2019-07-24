@@ -2,299 +2,268 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38916C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2335EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108CD21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D034321850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmAgAkG9"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SdVMEYL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbfGXXFC (ORCPT
+        id S2388274AbfGXXJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:05:02 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37729 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfGXXFB (ORCPT
+        Wed, 24 Jul 2019 19:09:59 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9465 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387660AbfGXXJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:05:01 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y26so47239131qto.4;
-        Wed, 24 Jul 2019 16:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R7rWft6F3bA/tG51c+ZfWgjzu6JzJyAuVH+CKO1ZKEs=;
-        b=gmAgAkG9blbkmEcLcxNuRMj67eOiDugp5u0rYEyqC581XKIXAAcCgYGONE2MK1Peol
-         9JZwpj2FKEvzrCdU+8CAHRtu34WvauxS2zTZu1uUtHoNlBYeAWQ7U//qd+Sx3uZfdk70
-         a1L3waOw/IfgwgJLjPkUrcEM1gYfjNxImetwrs+i9djjZZm2NQJgFLtMk1HJf2M5HDwN
-         U7VtzLa2+OkuNP/tzgOpxO5R9gWo7ZVbTACkF13I5hJOBtk7LHEHU5kJozlaAqKAA9Ti
-         O0F2PrKmKCm3T+jzVEpOvNdE0gpDKD0jBpsEYAyJgCxryj1wiHCK70yT3YxFAbbZJu6W
-         zOVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R7rWft6F3bA/tG51c+ZfWgjzu6JzJyAuVH+CKO1ZKEs=;
-        b=ZDYaxJoZvANrUKtin71Ty+60y+52e2gQfXjs6gh3iCzPS6tKvY2hqi7fCebh7bDpDD
-         enGboK+Y9cuZgISLO0ZqtV68bkYQ/66mffsl+7zurad45q8TACkYVnblDcEY2Xgn7pi6
-         tc5dFLBQJ0eJK5kLL90SJYHx5HYiFuhPP3LkoUTah3j6c/1L4wHMXQBV+RxuanTg+Doz
-         KJVS06/FJRHA+fGyfarl/K4+jF0q1AjLTV+xkG4v6/OIPB/n+fLeMHrgEty70LobV7XU
-         mAujEn/Ff0nNBEIfU250aRqmNTd6V3Bzpf7NKIXxXTBbNzT3IZoi39AXmln0kyWAArkw
-         63Ig==
-X-Gm-Message-State: APjAAAWQMRvUJPWc62IsCK74y3S9jNJMrVknacE6qX8cwBE40MlvS/dw
-        9EouPImPSQziwWDk8THzPQ5brqx1IpjpmjTj328=
-X-Google-Smtp-Source: APXvYqxVzAqOhXnhIHZLPDY0p/04H7QBnxJWXYjUbc0iECaFPDpTb187Sn/vNNJsFsZuxNbcmmIZD0ZwpmYiLpzwKV4=
-X-Received: by 2002:ac8:6a17:: with SMTP id t23mr57874962qtr.183.1564009500202;
- Wed, 24 Jul 2019 16:05:00 -0700 (PDT)
+        Wed, 24 Jul 2019 19:09:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d38e5410001>; Wed, 24 Jul 2019 16:09:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 24 Jul 2019 16:09:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 24 Jul 2019 16:09:56 -0700
+Received: from [10.2.167.182] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 23:09:54 +0000
+Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
+ suspend
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
+ <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
+ <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
+ <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
+ <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
+ <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
+ <20190722193838.0d7cd2ad@why>
+ <8e9f821c-3717-510d-c64f-8a1cc2452c25@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <78d5af07-2556-b60d-01d7-3684ebe7040b@nvidia.com>
+Date:   Wed, 24 Jul 2019 16:09:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190724165803.87470-1-brianvv@google.com> <20190724165803.87470-3-brianvv@google.com>
- <CAPhsuW4HPjXE+zZGmPM9GVPgnVieRr0WOuXfM0W6ec3SB4imDw@mail.gmail.com> <CABCgpaXz4hO=iGoswdqYBECWE5eu2AdUgms=hyfKnqz7E+ZgNg@mail.gmail.com>
-In-Reply-To: <CABCgpaXz4hO=iGoswdqYBECWE5eu2AdUgms=hyfKnqz7E+ZgNg@mail.gmail.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 24 Jul 2019 16:04:48 -0700
-Message-ID: <CAPhsuW5NzzeDmNmgqRh0kwHnoQfaD90L44NJ9AbydG_tGJkKiQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/6] bpf: add BPF_MAP_DUMP command to dump more
- than one entry per call
-To:     Brian Vazquez <brianvv.kernel@gmail.com>
-Cc:     Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8e9f821c-3717-510d-c64f-8a1cc2452c25@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1564009793; bh=VLSdAR9+W67zAKWVdoz86+wcbQ6rb1+Uzd1mw8RH294=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=SdVMEYL5emd/8G9K2633IxqV/KN49aMr3dWzJPn2VFIaGFLvcy7dIaYY8AI6Hq/Zz
+         IsYz6f6EzpV/WMOQl7hMBh4xik02UCf/JfxxF580qxgXnwDhWyYvfcYtnpf2O/VpZN
+         3/cSKpxS1B332brBqbohEr1V7AP7smYIokQRft7YbsTBZTIvSxpM5tbiMy2EOQ8gx6
+         fRjv6eAQU3vM31uuAGdUUdjfvIH0viWxEo+Y4Bv9zqGBtA+zrE60kWhl9fdYRFPu6u
+         QEM/biMGUNbU6uP2LCyx9oNEr8nSKoDZDUNUbVGyJMCzRuVTh/T9Yy+VGSy3cXrNRF
+         hkzAWYcj+B0yw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 3:44 PM Brian Vazquez <brianvv.kernel@gmail.com> wrote:
->
-> On Wed, Jul 24, 2019 at 2:40 PM Song Liu <liu.song.a23@gmail.com> wrote:
-> >
-> > On Wed, Jul 24, 2019 at 10:10 AM Brian Vazquez <brianvv@google.com> wrote:
-> > >
-> > > This introduces a new command to retrieve multiple number of entries
-> > > from a bpf map, wrapping the existing bpf methods:
-> > > map_get_next_key and map_lookup_elem
-> > >
-> > > To start dumping the map from the beginning you must specify NULL as
-> > > the prev_key.
-> > >
-> > > The new API returns 0 when it successfully copied all the elements
-> > > requested or it copied less because there weren't more elements to
-> > > retrieved (i.e err == -ENOENT). In last scenario err will be masked to 0.
-> > >
-> > > On a successful call buf and buf_len will contain correct data and in
-> > > case prev_key was provided (not for the first walk, since prev_key is
-> > > NULL) it will contain the last_key copied into the prev_key which will
-> > > simplify next call.
-> > >
-> > > Only when it can't find a single element it will return -ENOENT meaning
-> > > that the map has been entirely walked. When an error is return buf,
-> > > buf_len and prev_key shouldn't be read nor used.
-> > >
-> > > Because maps can be called from userspace and kernel code, this function
-> > > can have a scenario where the next_key was found but by the time we
-> > > try to retrieve the value the element is not there, in this case the
-> > > function continues and tries to get a new next_key value, skipping the
-> > > deleted key. If at some point the function find itself trap in a loop,
-> > > it will return -EINTR.
-> > >
-> > > The function will try to fit as much as possible in the buf provided and
-> > > will return -EINVAL if buf_len is smaller than elem_size.
-> > >
-> > > QUEUE and STACK maps are not supported.
-> > >
-> > > Note that map_dump doesn't guarantee that reading the entire table is
-> > > consistent since this function is always racing with kernel and user code
-> > > but the same behaviour is found when the entire table is walked using
-> > > the current interfaces: map_get_next_key + map_lookup_elem.
-> > > It is also important to note that with  a locked map, the lock is grabbed
-> > > for 1 entry at the time, meaning that the returned buf might or might not
-> > > be consistent.
-> > >
-> > > Suggested-by: Stanislav Fomichev <sdf@google.com>
-> > > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > > ---
-> > >  include/uapi/linux/bpf.h |   9 +++
-> > >  kernel/bpf/syscall.c     | 117 +++++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 126 insertions(+)
-> > >
-> > > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > > index fa1c753dcdbc7..66dab5385170d 100644
-> > > --- a/include/uapi/linux/bpf.h
-> > > +++ b/include/uapi/linux/bpf.h
-> > > @@ -106,6 +106,7 @@ enum bpf_cmd {
-> > >         BPF_TASK_FD_QUERY,
-> > >         BPF_MAP_LOOKUP_AND_DELETE_ELEM,
-> > >         BPF_MAP_FREEZE,
-> > > +       BPF_MAP_DUMP,
-> > >  };
-> > >
-> > >  enum bpf_map_type {
-> > > @@ -388,6 +389,14 @@ union bpf_attr {
-> > >                 __u64           flags;
-> > >         };
-> > >
-> > > +       struct { /* struct used by BPF_MAP_DUMP command */
-> > > +               __aligned_u64   prev_key;
-> > > +               __aligned_u64   buf;
-> > > +               __aligned_u64   buf_len; /* input/output: len of buf */
-> > > +               __u64           flags;
-> >
-> > Please add explanation of flags here.
->
-> got it!
->
-> > Also, we need to update the
-> > comments of BPF_F_LOCK for BPF_MAP_DUMP.
->
-> What do you mean? I didn't get this part.
 
-I meant, current comment says BPF_F_LOCK is for BPF_MAP_UPDATE_ELEM.
-But it is also used by BPF_MAP_LOOKUP_ELEM and BPF_MAP_DUMP. So
-current comment is not accurate either.
-
-Maybe fix it while you are on it?
+On 7/22/19 4:35 PM, Dmitry Osipenko wrote:
+> 22.07.2019 21:38, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On Mon, 22 Jul 2019 09:21:21 -0700
+>> Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
+>>
+>>> On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
+>>>> 22.07.2019 13:13, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On 22/07/2019 10:54, Dmitry Osipenko wrote:
+>>>>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 =
+entry
+>>>>>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
+>>>>>>>
+>>>>>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend seq=
+uence
+>>>>>>> for Tegra210.
+>>>>>>>
+>>>>>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 dur=
+ing
+>>>>>>> interrupt controller suspend operation.
+>>>>>>>
+>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>> ---
+>>>>>>>    drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
+>>>>>>>    1 file changed, 18 insertions(+), 2 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegr=
+a.c
+>>>>>>> index e1f771c72fc4..851f88cef508 100644
+>>>>>>> --- a/drivers/irqchip/irq-tegra.c
+>>>>>>> +++ b/drivers/irqchip/irq-tegra.c
+>>>>>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
+>>>>>>>   =20
+>>>>>>>    struct tegra_ictlr_soc {
+>>>>>>>    	unsigned int num_ictlrs;
+>>>>>>> +	bool supports_sc7;
+>>>>>>>    };
+>>>>>>>   =20
+>>>>>>>    static const struct tegra_ictlr_soc tegra20_ictlr_soc =3D {
+>>>>>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr=
+_soc =3D {
+>>>>>>>   =20
+>>>>>>>    static const struct tegra_ictlr_soc tegra210_ictlr_soc =3D {
+>>>>>>>    	.num_ictlrs =3D 6,
+>>>>>>> +	.supports_sc7 =3D true,
+>>>>>>>    };
+>>>>>>>   =20
+>>>>>>>    static const struct of_device_id ictlr_matches[] =3D {
+>>>>>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] =
+=3D {
+>>>>>>>   =20
+>>>>>>>    struct tegra_ictlr_info {
+>>>>>>>    	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+>>>>>>> +	const struct tegra_ictlr_soc *soc;
+>>>>>>>    #ifdef CONFIG_PM_SLEEP
+>>>>>>>    	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>>>>>>>    	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+>>>>>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
+>>>>>>>    		lic->cop_ier[i] =3D readl_relaxed(ictlr + ICTLR_COP_IER);
+>>>>>>>    		lic->cop_iep[i] =3D readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS)=
+;
+>>>>>>>   =20
+>>>>>>> -		/* Disable COP interrupts */
+>>>>>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>>>>>> +		/*
+>>>>>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+>>>>>>> +		 *
+>>>>>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+>>>>>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+>>>>>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+>>>>>>> +		 * system to go to SC7/LP0.
+>>>>>>> +		 *
+>>>>>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+>>>>>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
+>>>>>>> +		 */
+>>>>>>> +		if (!lic->soc->supports_sc7)
+>>>>>>> +			/* Disable COP interrupts if SC7 is not supported */
+>>>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
+>>>>>> doesn't sound correct to me. Something like 'firmware_sc7' should su=
+it
+>>>>>> better here.
+>>>>> If what you're saying is true, then the whole patch is wrong, and the
+>>>>> SC7 property should come from DT.
+>>>> It should be safe to assume that all of existing Tegra210 devices use
+>>>> the firmware for SC7, hence I wouldn't say that the patch is entirely
+>>>> wrong. To me it's not entirely correct.
+>>> Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 an=
+d
+>>> AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ
+>>> to COP for SC7 entry fw execution.
+> Okay, as I already wrote before, it looks to me that a more proper
+> solution should be to just remove everything related to COP from this
+> driver instead of adding custom quirks for T210.
 >
-> >
-> > > +               __u32           map_fd;
-> > > +       } dump;
-> > > +
-> > >         struct { /* anonymous struct used by BPF_PROG_LOAD command */
-> > >                 __u32           prog_type;      /* one of enum bpf_prog_type */
-> > >                 __u32           insn_cnt;
-> > > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > > index 86cdc2f7bb56e..0c35505aa219f 100644
-> > > --- a/kernel/bpf/syscall.c
-> > > +++ b/kernel/bpf/syscall.c
-> > > @@ -1097,6 +1097,120 @@ static int map_get_next_key(union bpf_attr *attr)
-> > >         return err;
-> > >  }
-> > >
-> > > +/* last field in 'union bpf_attr' used by this command */
-> > > +#define BPF_MAP_DUMP_LAST_FIELD dump.map_fd
-> > > +
-> > > +static int map_dump(union bpf_attr *attr)
-> > > +{
-> > > +       void __user *ukey = u64_to_user_ptr(attr->dump.prev_key);
-> > > +       void __user *ubuf = u64_to_user_ptr(attr->dump.buf);
-> > > +       u32 __user *ubuf_len = u64_to_user_ptr(attr->dump.buf_len);
-> > > +       int ufd = attr->dump.map_fd;
-> > > +       struct bpf_map *map;
-> > > +       void *buf, *prev_key, *key, *value;
-> > > +       u32 value_size, elem_size, buf_len, cp_len;
-> > > +       struct fd f;
-> > > +       int err;
-> > > +       bool first_key = false;
-> > > +
-> > > +       if (CHECK_ATTR(BPF_MAP_DUMP))
-> > > +               return -EINVAL;
-> > > +
-> > > +       if (attr->dump.flags & ~BPF_F_LOCK)
-> > > +               return -EINVAL;
-> > > +
-> > > +       f = fdget(ufd);
-> > > +       map = __bpf_map_get(f);
-> > > +       if (IS_ERR(map))
-> > > +               return PTR_ERR(map);
-> > > +       if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ)) {
-> > > +               err = -EPERM;
-> > > +               goto err_put;
-> > > +       }
-> > > +
-> > > +       if ((attr->dump.flags & BPF_F_LOCK) &&
-> > > +           !map_value_has_spin_lock(map)) {
-> > > +               err = -EINVAL;
-> > > +               goto err_put;
-> > > +       }
-> >
-> > We can share these lines with map_lookup_elem(). Maybe
-> > add another helper function?
+> The disabling / restoring of COP interrupts should be relevant only for
+> the multimedia firmware on older Tegra SoCs. That firmware won't be ever
+> supported in the upstream simply because NVIDIA abandoned the support
+> for older hardware in the downstream and because it is not possible due
+> to some legal weirdness (IIUC). The only variant for upstream is
+> reverse-engineering of hardware (not the firmware BLOB) and writing
+> proper opensource drivers for the upstream kernel, which we're already
+> doing and have success to a some extent.
 >
-> Which are the lines you are referring to? the dump.flags? It makes
-> sense so that way when a new flag is added you only need to modify
-> them in one spot.
-
-I think I misread it. attr->dump.flags is not same as attr->flags.
-
-So never mind.
-
+>> That's not the question. Dmitry says that the SC7 support is not a
+>> property of the SoC, but mostly a platform decision on whether the
+>> firmware supports SC7 or not.
+>>
+>> To me, that's a clear indication that this should not be hardcoded in
+>> the driver, but instead obtained dynamically, via DT or otherwise.
+> We already have an nvidia,suspend-mode property in the device-tree of
+> the Power Management Controller node (all Tegra SoCs) which defines what
+> suspending type is supported by a particular board.
 >
-> > > +
-> > > +       if (map->map_type == BPF_MAP_TYPE_QUEUE ||
-> > > +           map->map_type == BPF_MAP_TYPE_STACK) {
-> > > +               err = -ENOTSUPP;
-> > > +               goto err_put;
-> > > +       }
-> > > +
-> > > +       value_size = bpf_map_value_size(map);
-> > > +
-> > > +       err = get_user(buf_len, ubuf_len);
-> > > +       if (err)
-> > > +               goto err_put;
-> > > +
-> > > +       elem_size = map->key_size + value_size;
-> > > +       if (buf_len < elem_size) {
-> > > +               err = -EINVAL;
-> > > +               goto err_put;
-> > > +       }
-> > > +
-> > > +       if (ukey) {
-> > > +               prev_key = __bpf_copy_key(ukey, map->key_size);
-> > > +               if (IS_ERR(prev_key)) {
-> > > +                       err = PTR_ERR(prev_key);
-> > > +                       goto err_put;
-> > > +               }
-> > > +       } else {
-> > > +               prev_key = NULL;
-> > > +               first_key = true;
-> > > +       }
-> > > +
-> > > +       err = -ENOMEM;
-> > > +       buf = kmalloc(elem_size, GFP_USER | __GFP_NOWARN);
-> > > +       if (!buf)
-> > > +               goto err_put;
-> > > +
-> > > +       key = buf;
-> > > +       value = key + map->key_size;
-> > > +       for (cp_len = 0; cp_len + elem_size <= buf_len;) {
-> > > +               if (signal_pending(current)) {
-> > > +                       err = -EINTR;
-> > > +                       break;
-> > > +               }
-> > > +
-> > > +               rcu_read_lock();
-> > > +               err = map->ops->map_get_next_key(map, prev_key, key);
-> >
-> > If prev_key is deleted before map_get_next_key(), we get the first key
-> > again. This is pretty weird.
+>>>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+>>>>>> Secondly, I'm also not sure why COP interrupts need to be disabled f=
+or
+>>>>>> pre-T210 at all, since COP is unused. This looks to me like it was
+>>>>>> cut-n-pasted from downstream kernel without a good reason and could =
+be
+>>>>>> simply removed.
+>>>>> Please verify that this is actually the case. Tegra-2 definitely need=
+ed
+>>>>> some level of poking, and I'm not keen on changing anything there unt=
+il
+>>>>> you (or someone else) has verified it on actual HW (see e307cc8941fc)=
+.
+>>>> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
+>>>> with all COP bits removed from the driver.
+>>>>
+>>>> AFAIK, the reason why downstream needed that disabling is that it uses
+>>>> proprietary firmware which is running on the COP and that firmware is
+>>>> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
+>>>> interrupts after itself. That firmware is not applicable for the
+>>>> upstream kernel, hence there is no need to care about it.
+>>>>  =20
+>>>>> Joseph, can you please shed some light here?
+>>> SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the
+>>> one that actually loads SC7 entry firmware and triggers IRQ to
+>>> AVP/COP which causes COP to wakeup and run SC7 entry FW.
+>>>
+>>> So when SC7 support is enabled, IRQ need to be kept enabled and when
+>>> SC7 FW starts execution, it will disable COP IRQ.
+>> This looks like a lot of undocumented assumptions on what firmware
+>> does, as well as what firmware *is*. What I gather from this thread is
+>> that there is at least two versions of firmware (a "proprietary
+>> firmware" for "downstream kernels", and another one for mainline), and
+>> that they do different things.
+>>
+>> Given that we cannot know what people actually run, I don't think we
+>> can safely remove anything unless this gets tested on the full spectrum
+>> of HW/FW combination.
+> I'm not sure whether multiple firmware variations exist in the wild for
+> Tegra210. Maybe Sowjanya or somebody else from NVIDIA could clarify. I
+> think there should be some efforts in regards to a fully opensource
+> firmware on Tegra210, but I'm not following it and have no idea about
+> the status.
 >
-> Yes, I know. But note that the current scenario happens even for the
-> old interface (imagine you are walking a map from userspace and you
-> tried get_next_key the prev_key was removed, you will start again from
-> the beginning without noticing it).
-> I tried to sent a patch in the past but I was missing some context:
-> before NULL was used to get the very first_key the interface relied in
-> a random (non existent) key to retrieve the first_key in the map, and
-> I was told what we still have to support that scenario.
+> You're right that there are multiple variants of suspend-resuming flow
+> on Tegra SoCs. The older 32bit Tegra SoC generations have a variety of
+> options in regards to suspend-resuming, including firmware-less variants
+> on platforms that are having kernel running in secure mode (dev boards,
+> most of Tegra20 consumer devices) and Trusted-Foundations firmware
+> variant for insecure platforms (consumer devices). And yes, vendor
+> firmware creates a lot of headache in regards to bringing support into
+> upstream because it usually does a lot of odd undocumented things which
+> may also vary depending on a firmware version (bootloader, etc) and it
+> also usually difficult to replace it with an opensource alternative due
+> to a crypto signing.
 
-BPF_MAP_DUMP is slightly different, as you may return the first key
-multiple times in the same call. Also, BPF_MAP_DUMP is new, so we
-don't have to support legacy scenarios.
+Tried without this patch which keeps COP IRQ disabled and I see SC7=20
+entry FW execution happens still.
 
-Since BPF_MAP_DUMP keeps a list of elements. It is possible to try
-to look up previous keys. Would something down this direction work?
+Digging through the ATF FW code, I see on SC7 entry firmware loading=20
+into IRAM, COP processor is reset with RESET VECTOR set to SC7 entry=20
+firmware location in IRAM and on reset de-assert & unhalt COP, SC7=20
+firmware starts execution.
 
-Thanks,
-Song
+Will remove this patch in next version...
+
