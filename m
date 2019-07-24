@@ -2,125 +2,200 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D59C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E14C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E2C20840
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6BC20840
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pWCEaUXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbfGXR1W (ORCPT
+        id S2387765AbfGXR2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:27:22 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32492 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfGXR1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:27:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 10:18:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="368859086"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.84])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Jul 2019 10:18:18 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 0/8] TopDown metrics support for Icelake
-Date:   Wed, 24 Jul 2019 10:17:45 -0700
-Message-Id: <20190724171753.8087-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 24 Jul 2019 13:28:12 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:52026 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728310AbfGXR2J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:28:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563988651; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cq/6GvwGL7/hPF8mufyJ7EZk4QaPV3bSCBnWavgiG1c=;
+        b=pWCEaUXj9OBuIU51+UoC+ElFQqM6KQxo1Oj5axpLC+qO+X9ZGUoMWQ6Xh4GwXSvRru4JaG
+        wvemkIiwYQ+LYYWjLu+VedWBZWpjHDR+DtHBshlrnY+yRDeiFCQCYjST877kOJ4L4NAmvP
+        4GOnVcw3zC5erA5HeV0YqYWE65i2x1g=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-clk@vger.kernel.org, od@zcrc.me,
+        Mathieu Malaterre <malat@debian.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v15 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
+Date:   Wed, 24 Jul 2019 13:16:11 -0400
+Message-Id: <20190724171615.20774-10-paul@crapouillou.net>
+In-Reply-To: <20190724171615.20774-1-paul@crapouillou.net>
+References: <20190724171615.20774-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
 
-Icelake has support for measuring the level 1 TopDown metrics
-directly in hardware. This is implemented by an additional METRICS
-register, and a new Fixed Counter 3 that measures pipeline SLOTS.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+---
 
-Four TopDown metric events as separate perf events, which map to
-internal METRICS register, are exposed. They are topdown-retiring,
-topdown-bad-spec, topdown-fe-bound and topdown-be-bound.
-Those events do not exist in hardware, but can be allocated by the
-scheduler. The value of TopDown metric events can be calculated by
-multiplying the METRICS (percentage) register with SLOTS fixed counter.
+Notes:
+    v5: New patch
+    
+    v6: Fix register lengths in watchdog/pwm nodes
+    
+    v7: No change
+    
+    v8: - Fix wrong start address for PWM node
+    	- Add system timer and clocksource sub-nodes
+    
+    v9: Drop timer and clocksource sub-nodes
+    
+    v10-v11: No change
+    
+    v12: Drop PWM/watchdog/OST sub-nodes, for now.
+    
+    v13-v14: No change
+    
+    v15: Add "simple-mfd" compatible string
 
-New in Icelake
-- Do not require generic counters. This allows to collect TopDown always
-  in addition to other events.
-- Measuring TopDown per thread/process instead of only per core
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
+ arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
+ 3 files changed, 66 insertions(+)
 
-Limitation
-- To get accurate result and avoid reading the METRICS register multiple
-  times, the TopDown metrics events and SLOTS event have to be in the
-  same group.
-- METRICS and SLOTS registers have to be cleared after each read by SW.
-  That is to prevent the lose of precision and a known side effect of
-  METRICS register.
-- Cannot do sampling read SLOTS and TopDown metric events
-
-Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
-TopDown metrics.
-
-Changes since V2:
-- Rebase on top of v5.3-rc1
-
-Key changes since V1:
-- Remove variables for reg_idx and enabled_events[] array.
-  The reg_idx can be calculated by idx in runtime.
-  Using existing active_mask to replace enabled_events.
-- Choose value 47 for the fixed index of BTS.
-- Support OVF_PERF_METRICS overflow bit in PMI handler
-- Drops the caching mechanism and related variables
-  New mechanism is to update all active slots/metrics events for the
-  first slots/metrics events in a group. For each group reading, it
-  still only read the slots/perf_metrics MSR once
-- Disable PMU for read of topdown events to avoid the NMI issue
-- Move RDPMC support to a separate patch
-- Using event=0x00,umask=0x1X for topdown metrics events
-- Drop the patch which add REMOVE transaction
-  We can indicate x86_pmu_stop() by checking
-  (event && !test_bit(event->hw.idx, cpuc->active_mask)),
-  which is a good place to save the slots/metrics MSR value
-
-Andi Kleen (2):
-  perf, tools, stat: Support new per thread TopDown metrics
-  perf, tools: Add documentation for topdown metrics
-
-Kan Liang (6):
-  perf/x86/intel: Set correct mask for TOPDOWN.SLOTS
-  perf/x86/intel: Basic support for metrics counters
-  perf/x86/intel: Support hardware TopDown metrics
-  perf/x86/intel: Support per thread RDPMC TopDown metrics
-  perf/x86/intel: Export TopDown events for Icelake
-  perf/x86/intel: Disable sampling read slots and topdown
-
- arch/x86/events/core.c                 |  35 ++-
- arch/x86/events/intel/core.c           | 362 ++++++++++++++++++++++++-
- arch/x86/events/perf_event.h           |  33 +++
- arch/x86/include/asm/msr-index.h       |   3 +
- arch/x86/include/asm/perf_event.h      |  54 +++-
- include/linux/perf_event.h             |   3 +
- tools/perf/Documentation/perf-stat.txt |   9 +-
- tools/perf/Documentation/topdown.txt   | 223 +++++++++++++++
- tools/perf/builtin-stat.c              |  24 ++
- tools/perf/util/stat-shadow.c          |  89 ++++++
- tools/perf/util/stat.c                 |   4 +
- tools/perf/util/stat.h                 |   8 +
- 12 files changed, 827 insertions(+), 20 deletions(-)
- create mode 100644 tools/perf/Documentation/topdown.txt
-
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index 3ffaf63f22dd..058800bfc875 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -53,6 +53,28 @@
+ 		clock-names = "rtc";
+ 	};
+ 
++	tcu: timer@10002000 {
++		compatible = "ingenic,jz4740-tcu", "simple-mfd";
++		reg = <0x10002000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x10002000 0x1000>;
++
++		#clock-cells = <1>;
++
++		clocks = <&cgu JZ4740_CLK_RTC
++			  &cgu JZ4740_CLK_EXT
++			  &cgu JZ4740_CLK_PCLK
++			  &cgu JZ4740_CLK_TCU>;
++		clock-names = "rtc", "ext", "pclk", "tcu";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <23 22 21>;
++	};
++
+ 	rtc_dev: rtc@10003000 {
+ 		compatible = "ingenic,jz4740-rtc";
+ 		reg = <0x10003000 0x40>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+index 49ede6c14ff3..0bfb9edff3d0 100644
+--- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+@@ -46,6 +46,27 @@
+ 		#clock-cells = <1>;
+ 	};
+ 
++	tcu: timer@10002000 {
++		compatible = "ingenic,jz4770-tcu", "simple-mfd";
++		reg = <0x10002000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x10002000 0x1000>;
++
++		#clock-cells = <1>;
++
++		clocks = <&cgu JZ4770_CLK_RTC
++			  &cgu JZ4770_CLK_EXT
++			  &cgu JZ4770_CLK_PCLK>;
++		clock-names = "rtc", "ext", "pclk";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <27 26 25>;
++	};
++
+ 	pinctrl: pin-controller@10010000 {
+ 		compatible = "ingenic,jz4770-pinctrl";
+ 		reg = <0x10010000 0x600>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index b03cdec56de9..c54bd7cfec55 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -46,6 +46,29 @@
+ 		#clock-cells = <1>;
+ 	};
+ 
++	tcu: timer@10002000 {
++		compatible = "ingenic,jz4780-tcu",
++			     "ingenic,jz4770-tcu",
++			     "simple-mfd";
++		reg = <0x10002000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x10002000 0x1000>;
++
++		#clock-cells = <1>;
++
++		clocks = <&cgu JZ4780_CLK_RTCLK
++			  &cgu JZ4780_CLK_EXCLK
++			  &cgu JZ4780_CLK_PCLK>;
++		clock-names = "rtc", "ext", "pclk";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <27 26 25>;
++	};
++
+ 	rtc_dev: rtc@10003000 {
+ 		compatible = "ingenic,jz4780-rtc";
+ 		reg = <0x10003000 0x4c>;
 -- 
-2.17.1
+2.21.0.593.g511ec345e18
 
