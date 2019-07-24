@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A8FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC567C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463F620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8983120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999187;
-	bh=sekeUZsFe40A6R5S9zKi9lEAV1KgH2ez1/bzAXZ8O9g=;
+	s=default; t=1563999197;
+	bh=fZB5B3euX9xDp94FfkC8onyNjVLEfrDxhC0/XifFDe8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9w2pFclfOoTFnGH7yi3v+CxndR92Ab4u6Yth4DatH2AJTp6vm/91elGaGR6sHtHp
-	 0/AhvLk5VQFIKuYxYczg2iM3/T1CKInfkqW0ifwzBt9jugreiQi+WEPjF6fsiSn8No
-	 EAv/zoadsw/ED98uiSWP/sVcRlTPo6AwfkxCZ4d8=
+	b=CPWfFaZuOPsjrhfEpvXjcF600zEZGPnN7UTPEmU51UBxgh9Vy4eUYSz2rAsdDHKpS
+	 6XG06+yl8Op0/aOOxCnPEmBMQON7eWGtm7W2zUrMsKmtsvuhHy/ck9OVVqeTGPU8wi
+	 MaDlYDoNGpNzncNKYTWTl3T/Y0dNeemjjLezH0eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391979AbfGXUNG (ORCPT
+        id S2392154AbfGXUNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41628 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:13:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404450AbfGXT4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:51 -0400
+        id S2404656AbfGXT4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2992205C9;
-        Wed, 24 Jul 2019 19:56:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07EE5205C9;
+        Wed, 24 Jul 2019 19:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998210;
-        bh=sekeUZsFe40A6R5S9zKi9lEAV1KgH2ez1/bzAXZ8O9g=;
+        s=default; t=1563998190;
+        bh=fZB5B3euX9xDp94FfkC8onyNjVLEfrDxhC0/XifFDe8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mYIEsNRvCDF8YpGkySy8BNonyxjsdNtnBvNobxW6Vdh9bFTOsIXwV3r3/HM6rwm5y
-         JcS+LVVVkzNHKGT9QNzZilvxg4vxoHZUJ9Qx3ivxoOstKZHw93RTyYEikB9i5I4QL8
-         mKXmL3MejLUri/cRVpxmrAqYx6I3u/IuiY1MbtRA=
+        b=PjFUswxQpLwx69o4W2iOHjBMPYVrmhD0bzuu9R/tRsSSc8KplPh0V+5QrK+W2BsiR
+         OibEl1NbkPHVeKR1NOJi6dH6D6RvJrwp938SX9mylVCDyAc4B4161g+g77/NeL0TdL
+         R/0gTiPLA++OV5Vr5MWtsxisJjyThsu6rbvvmM/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.1 284/371] ASoC: dapm: Adapt for debugfs API change
-Date:   Wed, 24 Jul 2019 21:20:36 +0200
-Message-Id: <20190724191745.653534180@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.1 278/371] NFSv4: Handle the special Linux file open access mode
+Date:   Wed, 24 Jul 2019 21:20:30 +0200
+Message-Id: <20190724191745.204378394@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -58,72 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit ceaea851b9ea75f9ea2bbefb53ff0d4b27cd5a6e upstream.
+commit 44942b4e457beda00981f616402a1a791e8c616e upstream.
 
-Back in ff9fb72bc07705c (debugfs: return error values, not NULL) the
-debugfs APIs were changed to return error pointers rather than NULL
-pointers on error, breaking the error checking in ASoC. Update the
-code to use IS_ERR() and log the codes that are returned as part of
-the error messages.
+According to the open() manpage, Linux reserves the access mode 3
+to mean "check for read and write permission on the file and return
+a file descriptor that can't be used for reading or writing."
 
-Fixes: ff9fb72bc07705c (debugfs: return error values, not NULL)
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Currently, the NFSv4 code will ask the server to open the file,
+and will use an incorrect share access mode of 0. Since it has
+an incorrect share access mode, the client later forgets to send
+a corresponding close, meaning it can leak stateids on the server.
+
+Fixes: ce4ef7c0a8a05 ("NFS: Split out NFS v4 file operations")
+Cc: stable@vger.kernel.org # 3.6+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ fs/nfs/inode.c    |    1 +
+ fs/nfs/nfs4file.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -2154,23 +2154,25 @@ void snd_soc_dapm_debugfs_init(struct sn
- {
- 	struct dentry *d;
- 
--	if (!parent)
-+	if (!parent || IS_ERR(parent))
- 		return;
- 
- 	dapm->debugfs_dapm = debugfs_create_dir("dapm", parent);
- 
--	if (!dapm->debugfs_dapm) {
-+	if (IS_ERR(dapm->debugfs_dapm)) {
- 		dev_warn(dapm->dev,
--		       "ASoC: Failed to create DAPM debugfs directory\n");
-+			 "ASoC: Failed to create DAPM debugfs directory %ld\n",
-+			 PTR_ERR(dapm->debugfs_dapm));
- 		return;
- 	}
- 
- 	d = debugfs_create_file("bias_level", 0444,
- 				dapm->debugfs_dapm, dapm,
- 				&dapm_bias_fops);
--	if (!d)
-+	if (IS_ERR(d))
- 		dev_warn(dapm->dev,
--			 "ASoC: Failed to create bias level debugfs file\n");
-+			 "ASoC: Failed to create bias level debugfs file: %ld\n",
-+			 PTR_ERR(d));
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1094,6 +1094,7 @@ int nfs_open(struct inode *inode, struct
+ 	nfs_fscache_open_file(inode, filp);
+ 	return 0;
  }
++EXPORT_SYMBOL_GPL(nfs_open);
  
- static void dapm_debugfs_add_widget(struct snd_soc_dapm_widget *w)
-@@ -2184,10 +2186,10 @@ static void dapm_debugfs_add_widget(stru
- 	d = debugfs_create_file(w->name, 0444,
- 				dapm->debugfs_dapm, w,
- 				&dapm_widget_power_fops);
--	if (!d)
-+	if (IS_ERR(d))
- 		dev_warn(w->dapm->dev,
--			"ASoC: Failed to create %s debugfs file\n",
--			w->name);
-+			 "ASoC: Failed to create %s debugfs file: %ld\n",
-+			 w->name, PTR_ERR(d));
- }
+ /*
+  * This function is called whenever some part of NFS notices that
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -49,7 +49,7 @@ nfs4_file_open(struct inode *inode, stru
+ 		return err;
  
- static void dapm_debugfs_cleanup(struct snd_soc_dapm_context *dapm)
+ 	if ((openflags & O_ACCMODE) == 3)
+-		openflags--;
++		return nfs_open(inode, filp);
+ 
+ 	/* We can't create new files here */
+ 	openflags &= ~(O_CREAT|O_EXCL);
 
 
