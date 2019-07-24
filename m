@@ -2,122 +2,98 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E47C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887F2C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5F921926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4EE22ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfGXNUs (ORCPT
+        id S1727681AbfGXNWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:20:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:13080 "EHLO mga04.intel.com"
+        Wed, 24 Jul 2019 09:22:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:12795 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbfGXNUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:20:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726981AbfGXNWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:22:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 06:20:47 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 06:22:22 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="368787055"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Jul 2019 06:20:44 -0700
-Date:   Wed, 24 Jul 2019 21:03:47 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v3 09/12] fpga: dfl: afu: add STP (SignalTap) support
-Message-ID: <20190724130346.GA8463@hao-dev>
-References: <1563857495-26692-1-git-send-email-hao.wu@intel.com>
- <1563857495-26692-10-git-send-email-hao.wu@intel.com>
- <20190724101109.GE29532@kroah.com>
+   d="scan'208";a="189095851"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Jul 2019 06:22:21 -0700
+Received: from [10.251.5.204] (kliang2-mobl.ccr.corp.intel.com [10.251.5.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id E1B255803EA;
+        Wed, 24 Jul 2019 06:22:20 -0700 (PDT)
+Subject: Re: Reminder: 19 open syzbot bugs in perf subsystem
+To:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        syzkaller-bugs@googlegroups.com
+References: <20190724014510.GG643@sol.localdomain>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <dbbad15e-6452-76b9-f7d1-82a19c7eff68@linux.intel.com>
+Date:   Wed, 24 Jul 2019 09:22:19 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724101109.GE29532@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190724014510.GG643@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 12:11:09PM +0200, Greg KH wrote:
-> On Tue, Jul 23, 2019 at 12:51:32PM +0800, Wu Hao wrote:
-> > STP (SignalTap) is one of the private features under the port for
-> > debugging. This patch adds private feature driver support for it
-> > to allow userspace applications to mmap related mmio region and
-> > provide STP service.
-> > 
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Acked-by: Moritz Fischer <mdf@kernel.org>
-> > Acked-by: Alan Tull <atull@kernel.org>
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> >  drivers/fpga/dfl-afu-main.c | 34 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> > 
-> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> > index 15dd4cb..395f96e 100644
-> > --- a/drivers/fpga/dfl-afu-main.c
-> > +++ b/drivers/fpga/dfl-afu-main.c
-> > @@ -514,6 +514,36 @@ static void port_afu_uinit(struct platform_device *pdev,
-> >  	.uinit = port_afu_uinit,
-> >  };
-> >  
-> > +static int port_stp_init(struct platform_device *pdev,
-> > +			 struct dfl_feature *feature)
-> > +{
-> > +	struct resource *res = &pdev->resource[feature->resource_index];
-> > +
-> > +	dev_dbg(&pdev->dev, "PORT STP Init.\n");
-> 
-> ftrace is your friend, no need to do a lot of "look I am here!"
-> messages.
 
-Hi Greg,
 
-Thanks for the code review!
+On 7/23/2019 9:45 PM, Eric Biggers wrote:
+> --------------------------------------------------------------------------------
+> Title:              WARNING in perf_reg_value
+> Last occurred:      25 days ago
+> Reported:           34 days ago
+> Branches:           Mainline and others
+> Dashboard link:https://syzkaller.appspot.com/bug?id=629d95983fbba49821af91acf780387bca180546
+> Original thread:https://lkml.kernel.org/lkml/000000000000734545058bb27ebb@google.com/T/#u
+> 
+> This bug has a C reproducer.
+> 
+> This bug was bisected to:
+> 
+> 	commit 878068ea270ea82767ff1d26c91583263c81fba0
+> 	Author: Kan Liang<kan.liang@linux.intel.com>
+> 	Date:   Tue Apr 2 19:44:59 2019 +0000
+> 
+> 	  perf/x86: Support outputting XMM registers
+> 
+> The original thread for this bug has received 3 replies; the last was 33 days
+> ago.
+>
 
-Sure, let me remove them.
+I believe the bug fixes have been merged month ago.
+https://lore.kernel.org/lkml/1559081314-9714-1-git-send-email-kan.liang@linux.intel.com/
 
-> 
-> > +
-> > +	return afu_mmio_region_add(dev_get_platdata(&pdev->dev),
-> > +				   DFL_PORT_REGION_INDEX_STP,
-> > +				   resource_size(res), res->start,
-> > +				   DFL_PORT_REGION_MMAP | DFL_PORT_REGION_READ |
-> > +				   DFL_PORT_REGION_WRITE);
-> > +}
-> > +
-> > +static void port_stp_uinit(struct platform_device *pdev,
-> > +			   struct dfl_feature *feature)
-> > +{
-> > +	dev_dbg(&pdev->dev, "PORT STP UInit.\n");
-> 
-> Same here.
-> 
-> Why have this function at all if it does not do anything?
+Thanks,
+Kan
 
-Let me remove them in the next version. actually uinit callback is
-always required in current code, i will add one more patch to change
-it, and remove all uinit functions who do nothing, it does save code.
-
-Thanks for the comments.
-Hao
-
+> If you fix this bug, please add the following tag to the commit:
+>      Reported-by:syzbot+10189b9b0f8c4664badd@syzkaller.appspotmail.com
 > 
-> 
-> thanks,
-> 
-> greg k-h
+> If you send any email or patch for this bug, please consider replying to the
+> original thread.  For the git send-email command to use, or tips on how to reply
+> if the thread isn't in your mailbox, see the "Reply instructions" at
+> https://lkml.kernel.org/r/000000000000734545058bb27ebb@google.com
