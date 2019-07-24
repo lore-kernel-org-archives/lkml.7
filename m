@@ -2,114 +2,105 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55307C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A0EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AC121873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205D221873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwW7PY9z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiRIOuBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfGXUxr (ORCPT
+        id S1728473AbfGXUxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:53:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44283 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbfGXUxq (ORCPT
+        Wed, 24 Jul 2019 16:53:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35823 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbfGXUxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:53:46 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b7so10835180otl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:53:46 -0700 (PDT)
+        Wed, 24 Jul 2019 16:53:54 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y4so48409443wrm.2;
+        Wed, 24 Jul 2019 13:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cUrlJCZxaf4T1g+T4aXAfuhu96qkBIISRiC4UHQUVRA=;
-        b=GwW7PY9zHQi+1BkAgJ7qamRMiNcpVCQSgg4YCkiJDIKYBuL+yGWVhbmEixhU2TomMq
-         jGUMq6Vihfz2OnrC3chQQiaF2/jRfEmNTr7Xfm/fgFH9gkG3w3g13OUArRjZzP6HoKuv
-         yJ98dXCQMz8rDLi9P+cq9TBlPGPV4Dt6PG/HPbIdUw3ZIree8zjL13aYgirlVyXfwXit
-         j4V9k1WD5wUWarOxRNF95VZvCXTMXJrSXtNGOoUPBYNueWHQFyJ7W8plNd8TH0uuPjOT
-         hzWh72y7tYYp1TYQlj9Y2P8VZKHJt2YaFQwZhyslMtJviKQVHWgMFVnUwJQuxy3rDG3t
-         19nw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4vlSApADqMaTQFZAxWh91F0OWIIUGfY31jKzlHYv4ro=;
+        b=eiRIOuBUTR85cjQF+CPoya5Fs/9ywSqpR5yxsKy2OoKDwpDfmYISZAxFPz5JbK2f8K
+         xgt758mkixIxl9ofXh0aWVuwQU9feueVDNoJ8q9egwsqwZAghlLX4EwOmWAaQY3wX8TI
+         a8ScX6njDe62XzQ1Ct1GpuNHHfgRdOCh+oHn/F6g9f2KGRxWXMxZfXOkzrQn1YdFfepT
+         P7F2e46Wnlnq0nP8O0S/MfLgi2AOOfzuBSmKQ9yAQZBitZgfezJwl5IRJ0gPIvEc5LNs
+         KnrPcTuQ79hQe/VpXActnjZJT/zJPMOnBVhMuKjNbF6BOBDQNq+Sqbz0FcL3w8m6CdN0
+         4YuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=cUrlJCZxaf4T1g+T4aXAfuhu96qkBIISRiC4UHQUVRA=;
-        b=JA3D1e5SE0hg4VjV07t1v4jKC0Kn+rKPmNPEHDfggo9G0pWF5HLpTVg6qR8o1kfRj2
-         I8pb65W2fBRxvKvRTvzBQXawZH0oVQT42SP0O6KeXP6NdAo1Ikxs15ajrBrURlDwgyOt
-         Haou//2+5PqmiHzDTFMxZ+QZy9aZf3zP+Ptq9eIj0ZNol12MzbJQ1ft4NwJs40L1sEAF
-         PMrUaTzIIr06+/SARASia/Go1Z+CYuL4OqdWqxGtLPK/YrpEtHxdB5ZCvPCypyGsmAgf
-         ZM/s0q9AEpy2Rr+4tUC1WXu5evd+sqntcUsweldnc8cRDaNv8bE5ybILgsiA3y+DhWqD
-         bN9Q==
-X-Gm-Message-State: APjAAAVDeVF6gkwclp7ZxY+rFOClGKjWdBLFAU8k+9jVuqIY9NYH9orZ
-        JzueCIQ/+8kuAHc5YcNgig==
-X-Google-Smtp-Source: APXvYqwd9Qe2p+++OO1/Bp30E4fCRhCgWvcVMezJv3qluHQkMLsqCmsmOf+JU7ItKP744UzmZt9QgA==
-X-Received: by 2002:a9d:65cb:: with SMTP id z11mr24566566oth.325.1564001625547;
-        Wed, 24 Jul 2019 13:53:45 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.134.43])
-        by smtp.gmail.com with ESMTPSA id u16sm15844649otk.46.2019.07.24.13.53.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:53:45 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:e55a:7d0e:c640:aed1])
-        by serve.minyard.net (Postfix) with ESMTPSA id 885721800CD;
-        Wed, 24 Jul 2019 20:53:44 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 15:53:43 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] Fix uninitialized variable in ipmb_dev_int.c
-Message-ID: <20190724205343.GB5134@minyard.net>
-Reply-To: minyard@acm.org
-References: <cover.1563996586.git.Asmaa@mellanox.com>
- <571dbb67cf58411d567953d9fb3739eb4789238b.1563996586.git.Asmaa@mellanox.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4vlSApADqMaTQFZAxWh91F0OWIIUGfY31jKzlHYv4ro=;
+        b=gwLR0LReX3f8Ro5SVF5QzayvpbysUmG+KAANc3q2xXmGq3rW8qIyXNl65cjCoEMts7
+         3nHl0wSdA/tNfKztcuVDCWRk8CgtfEypzROg4mXUyA3pHdPQqNl/EN+3mTx+qlqjaMF+
+         FCyEgiv2pFeF8yfr+iXpgfyP/9D3Ic57+N8NZYoyvyn2xMVERXQwpA7RSxJgHZqwuEaH
+         HqUCc8VmE9vfojhBfTyUxe2bjpXGDqTncqDPTZKdq4yFR+MmQvdVKqWobKyWz1HhieRT
+         J26KsS7j4k/9KqXEtlx/OgBPV62chZLefxx6nEjG+ehaVXzx6QmUGz6UEyp9i0RJTSRc
+         anrQ==
+X-Gm-Message-State: APjAAAX5GVFO8oWaVNP1ARPG4kh/qckLRfG3Q7Vgs6y4/W20TbM6bUFX
+        HoQJVLMdTFgRHXKdH2qPW4c=
+X-Google-Smtp-Source: APXvYqxB08CWxE94JVIMWBJ0C3dksYR7ciXCx/OVdhC20OJs3uxrZmlNIjoEmeVN2tCy9tbBT5jkAQ==
+X-Received: by 2002:adf:ce82:: with SMTP id r2mr13381528wrn.223.1564001632521;
+        Wed, 24 Jul 2019 13:53:52 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f43:4200:60e4:dd99:f7ec:c519? (p200300EA8F43420060E4DD99F7ECC519.dip0.t-ipconnect.de. [2003:ea:8f43:4200:60e4:dd99:f7ec:c519])
+        by smtp.googlemail.com with ESMTPSA id g12sm66827271wrv.9.2019.07.24.13.53.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 13:53:51 -0700 (PDT)
+Subject: Re: [PATCH] r8169: fix a typo in a comment
+To:     Corentin Musard <corentinmusard@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trivial@kernel.org
+References: <20190724123443.GA9626@user.home>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <647a446f-f922-016b-0118-ff2854f9419e@gmail.com>
+Date:   Wed, 24 Jul 2019 22:53:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <571dbb67cf58411d567953d9fb3739eb4789238b.1563996586.git.Asmaa@mellanox.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190724123443.GA9626@user.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 03:32:57PM -0400, Asmaa Mnebhi wrote:
-> ret at line 112 of ipmb_dev_int.c is uninitialized which
-> results in a warning during build regressions.
-> This warning was found by build regression/improvement
-> testing for v5.3-rc1.
-
-Applied, thanks for sticking with it :).
-
--corey
-
+On 24.07.2019 14:34, Corentin Musard wrote:
+> Replace "additonal" by "additional" in a comment.
+> Typo found by checkpatch.pl.
 > 
-> Reported-by: build regression/improvement testing for v5.3-rc1.
-> Fixes: 51bd6f291583 ("Add support for IPMB driver")
-> Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
+> Signed-off-by: Corentin Musard <corentinmusard@gmail.com>
 > ---
->  drivers/char/ipmi/ipmb_dev_int.c | 2 +-
+>  drivers/net/ethernet/realtek/r8169_main.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
-> index 5720433..285e0b8 100644
-> --- a/drivers/char/ipmi/ipmb_dev_int.c
-> +++ b/drivers/char/ipmi/ipmb_dev_int.c
-> @@ -76,7 +76,7 @@ static ssize_t ipmb_read(struct file *file, char __user *buf, size_t count,
->  	struct ipmb_dev *ipmb_dev = to_ipmb_dev(file);
->  	struct ipmb_request_elem *queue_elem;
->  	struct ipmb_msg msg;
-> -	ssize_t ret;
-> +	ssize_t ret = 0;
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index 0637c6752a78..7231ab3573ff 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -6334,7 +6334,7 @@ rtl8169_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
+>  	stats->multicast	= dev->stats.multicast;
 >  
->  	memset(&msg, 0, sizeof(msg));
->  
-> -- 
-> 2.1.2
+>  	/*
+> -	 * Fetch additonal counter values missing in stats collected by driver
+> +	 * Fetch additional counter values missing in stats collected by driver
+>  	 * from tally counters.
+>  	 */
+>  	if (pm_runtime_active(&pdev->dev))
 > 
+Should have been annotated net-next and sent also to me. Apart from that:
+Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
