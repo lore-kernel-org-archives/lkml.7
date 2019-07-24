@@ -4,65 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A6AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FE421873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176E021873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998394;
-	bh=hSOb7GUfJuM5+OPWyZ91ZZubNd/IypmHMaPFebwGTR4=;
+	s=default; t=1563998398;
+	bh=NticxMVj6PBShtH547aOCNGgY2tsGGfYAZD4CXLmEJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9EyDNYOLz0UnZYGNQfKEr6nxPNQhK1aA5Ok+As3wJ3mo75oLiBzspOUhvG7s6UcT
-	 iVY6ciP7INxERF1b3ne55OVJq6KHWDEu6E+7u2sFFgikCWGbprdSi8+ZLzuAEjmL5u
-	 w8DOkHII/Fqskjma/KjiEGYdDlbktDYWaY78JtlM=
+	b=oDRnyETofwiZbM6QCCeXK583o7cq7g9ArUVjjN6TV9wwSYUW0jj/U3t98tB+TYFNj
+	 TYIw6K7EPI5ik6U9vlqXT5+wIRTAvpmhqfs6Dor1oVQhz1N52eoKZsenAxIIK5d/aP
+	 waUpGbxkqODNGlotSdn3kUsxGre7bbOMKfXLq3Hk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392051AbfGXT7x (ORCPT
+        id S2392251AbfGXT75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:59:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47348 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405003AbfGXT7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:59:50 -0400
+        id S2405059AbfGXT7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:59:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F57B206BA;
-        Wed, 24 Jul 2019 19:59:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D232C205C9;
+        Wed, 24 Jul 2019 19:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998389;
-        bh=hSOb7GUfJuM5+OPWyZ91ZZubNd/IypmHMaPFebwGTR4=;
+        s=default; t=1563998392;
+        bh=NticxMVj6PBShtH547aOCNGgY2tsGGfYAZD4CXLmEJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JjVfQmQGUwIBkVPnw5N8BBPl9+H/OmmL6RBV89jWafvwRkLQKZicL11+B7hNWbVWb
-         NOnabjF0hHt66sF6CQMtPOTP8OMDEx23gwVge3TxQeJQLklr45/EN5IVRxI2P0NoiB
-         oieUIMXVWnf75Cd3EIIWfTzrgSLl3eRvTMqnw4/k=
+        b=dTbS00asD+5RpqyicCz9cUR7fzhNdCkJjoWqbkYxcEguh/9xUFOpXTEMvvyUvKv11
+         NZxFyFMmqyqsjiqQ0b3plxVfxm5cDNV/QcDpzkvwurnlGpfox8D50fh/loxhb+RwvT
+         dYqc6MQltqHhbK8R24cd8IIgNyOXjaiFb2fq8uag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jane Chu <jane.chu@oracle.com>, Jeff Moyer <jmoyer@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH 5.1 341/371] libnvdimm/pfn: fix fsdax-mode namespace info-block zero-fields
-Date:   Wed, 24 Jul 2019 21:21:33 +0200
-Message-Id: <20190724191749.342086135@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.1 350/371] powerpc/mm/32s: fix condition that is always true
+Date:   Wed, 24 Jul 2019 21:21:42 +0200
+Message-Id: <20190724191750.125329395@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -75,143 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: Andreas Schwab <schwab@linux-m68k.org>
 
-commit 7e3e888dfc138089f4c15a81b418e88f0978f744 upstream.
+commit 46c2478af610efb3212b8b08f74389d69899ef70 upstream.
 
-At namespace creation time there is the potential for the "expected to
-be zero" fields of a 'pfn' info-block to be filled with indeterminate
-data.  While the kernel buffer is zeroed on allocation it is immediately
-overwritten by nd_pfn_validate() filling it with the current contents of
-the on-media info-block location.  For fields like, 'flags' and the
-'padding' it potentially means that future implementations can not rely on
-those fields being zero.
+Move a misplaced paren that makes the condition always true.
 
-In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-section alignment, arrange for fields that are not explicitly
-initialized to be guaranteed zero.  Bump the minor version to indicate
-it is safe to assume the 'padding' and 'flags' are zero.  Otherwise,
-this corruption is expected to benign since all other critical fields
-are explicitly initialized.
-
-Note The cc: stable is about spreading this new policy to as many
-kernels as possible not fixing an issue in those kernels.  It is not
-until the change titled "libnvdimm/pfn: Stop padding pmem namespaces to
-section alignment" where this improper initialization becomes a problem.
-So if someone decides to backport "libnvdimm/pfn: Stop padding pmem
-namespaces to section alignment" (which is not tagged for stable), make
-sure this pre-requisite is flagged.
-
-Link: http://lkml.kernel.org/r/156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com
-Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Tested-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>	[ppc64]
-Cc: <stable@vger.kernel.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Jane Chu <jane.chu@oracle.com>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Toshi Kani <toshi.kani@hpe.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+Cc: stable@vger.kernel.org # v5.1+
+Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvdimm/dax_devs.c |    2 +-
- drivers/nvdimm/pfn.h      |    1 +
- drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/pgtable_32.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvdimm/dax_devs.c
-+++ b/drivers/nvdimm/dax_devs.c
-@@ -126,7 +126,7 @@ int nd_dax_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!dax_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
- 	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
---- a/drivers/nvdimm/pfn.h
-+++ b/drivers/nvdimm/pfn.h
-@@ -36,6 +36,7 @@ struct nd_pfn_sb {
- 	__le32 end_trunc;
- 	/* minor-version-2 record the base alignment of the mapping */
- 	__le32 align;
-+	/* minor-version-3 guarantee the padding and flags are zero */
- 	u8 padding[4000];
- 	__le64 checksum;
- };
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -420,6 +420,15 @@ static int nd_pfn_clear_memmap_errors(st
- 	return 0;
- }
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -353,7 +353,7 @@ void mark_initmem_nx(void)
+ 	unsigned long numpages = PFN_UP((unsigned long)_einittext) -
+ 				 PFN_DOWN((unsigned long)_sinittext);
  
-+/**
-+ * nd_pfn_validate - read and validate info-block
-+ * @nd_pfn: fsdax namespace runtime state / properties
-+ * @sig: 'devdax' or 'fsdax' signature
-+ *
-+ * Upon return the info-block buffer contents (->pfn_sb) are
-+ * indeterminate when validation fails, and a coherent info-block
-+ * otherwise.
-+ */
- int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- {
- 	u64 checksum, offset;
-@@ -565,7 +574,7 @@ int nd_pfn_probe(struct device *dev, str
- 	nvdimm_bus_unlock(&ndns->dev);
- 	if (!pfn_dev)
- 		return -ENOMEM;
--	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	nd_pfn = to_nd_pfn(pfn_dev);
- 	nd_pfn->pfn_sb = pfn_sb;
- 	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
-@@ -702,7 +711,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	u64 checksum;
- 	int rc;
- 
--	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
-+	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
- 	if (!pfn_sb)
- 		return -ENOMEM;
- 
-@@ -711,11 +720,14 @@ static int nd_pfn_init(struct nd_pfn *nd
- 		sig = DAX_SIG;
+-	if (v_block_mapped((unsigned long)_stext) + 1)
++	if (v_block_mapped((unsigned long)_stext + 1))
+ 		mmu_mark_initmem_nx();
  	else
- 		sig = PFN_SIG;
-+
- 	rc = nd_pfn_validate(nd_pfn, sig);
- 	if (rc != -ENODEV)
- 		return rc;
- 
- 	/* no info block, do init */;
-+	memset(pfn_sb, 0, sizeof(*pfn_sb));
-+
- 	nd_region = to_nd_region(nd_pfn->dev.parent);
- 	if (nd_region->ro) {
- 		dev_info(&nd_pfn->dev,
-@@ -768,7 +780,7 @@ static int nd_pfn_init(struct nd_pfn *nd
- 	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
- 	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
- 	pfn_sb->version_major = cpu_to_le16(1);
--	pfn_sb->version_minor = cpu_to_le16(2);
-+	pfn_sb->version_minor = cpu_to_le16(3);
- 	pfn_sb->start_pad = cpu_to_le32(start_pad);
- 	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
- 	pfn_sb->align = cpu_to_le32(nd_pfn->align);
+ 		change_page_attr(page, numpages, PAGE_KERNEL);
 
 
