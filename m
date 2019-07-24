@@ -2,95 +2,215 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DEDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CCBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B9A2253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610C820651
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pzp7/UYt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z4hxi5G1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfGXCTT (ORCPT
+        id S1727806AbfGXCWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:19:19 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38022 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfGXCTT (ORCPT
+        Tue, 23 Jul 2019 22:22:09 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39988 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfGXCWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:19:19 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O2IaK2042371;
-        Wed, 24 Jul 2019 02:19:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=+M7LK/ZtYxBmXZfLIfjuOrGvvva8ZmsJzQvLKXtlqfY=;
- b=Pzp7/UYtgsYSGYF/it5yMDCJwnB4GnfhmgBABiZ/kNKbj/cRnVy2UUX1OKsRNwR0AVmU
- Ionj01aaOMfz7YQP0qiRX6rrPO+d191jZdBRrqP7w6tIEmD4zHQEM3EQ/VhgDXT8ln9H
- 9T15DgQ7V1q00WaKmS+jOiUpbWwS6nu7TPExzvsXEpGcUOazLPxf7PMoXXWeyazIZlkg
- gELAQpNU0/tQDpPcxJaAdrZvvU26xKlNwzoNoYxXrxq/OAJjoMzGQW9XwAoHupYB3vyv
- WK9X5XSpMSG4c/fpjz8Y3gTFntmWl2kwD7qqSZCdd0ByMjzUV7zyV2TWYAX03UY0+9NR KA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2tx61bt7u5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:19:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O2I6bx072234;
-        Wed, 24 Jul 2019 02:19:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2tx60wy810-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:19:01 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6O2IqrZ019991;
-        Wed, 24 Jul 2019 02:18:55 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jul 2019 19:18:52 -0700
-To:     Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Cc:     james.bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, brking@linux.vnet.ibm.com,
-        abdhalee@linux.vnet.ibm.com
-Subject: Re: [PATCH] ibmvfc: fix WARN_ON during event pool release
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190717194827.12514-1-tyreld@linux.vnet.ibm.com>
-Date:   Tue, 23 Jul 2019 22:18:49 -0400
-In-Reply-To: <20190717194827.12514-1-tyreld@linux.vnet.ibm.com> (Tyrel
-        Datwyler's message of "Wed, 17 Jul 2019 14:48:27 -0500")
-Message-ID: <yq1ftmwqinq.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 23 Jul 2019 22:22:09 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s7so131957oth.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 19:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DLF4pm4RL0wA5hcVMMrw5NHFRQ2ig5s8he/98rvlGyk=;
+        b=z4hxi5G1bGRKaxWUmoOapIH+np2Z8tsVglNR9ERPddstRiq1j+A8iaNPQj935G+M7h
+         3yqJUpOVU86A4Z0eoouJecKlZXZ7G7dRajE79VKd3RQe8MfNzzist2Eu+WvktxfNhtjN
+         W6SOLeN4cPTx8t1SngtztORzM+JDxOlvVfEAgnvT0AzT4W0Uv0NhiehmCPaUYtXrbf3Z
+         2bRBT9XbxdIKTb9bdhXnNbbZtISNzn4jEJdR1gZmtBUGY+A6RBB1AWn24FS/nzODNjmN
+         K24AURwQG2mM+llYT3GsFwP/sAE/u4iMIS+OfBIesHOQkyFA5U092OEe/HPyjsOXHDdI
+         lTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DLF4pm4RL0wA5hcVMMrw5NHFRQ2ig5s8he/98rvlGyk=;
+        b=BezeNPYUpuN5RQauy8tKGJkxLiooTBqetXkD3LlzCNRkVMUBb3S3Nv8GdgFg0cLTGK
+         Nyf25VTy5lXhXrldB3D3eyhDSKH1yg89sQ5Qu4igVVM2C9ptcwvjhLVm3NbfH3dNuCWH
+         N5USRYmh3MjK/qfI+o+jz0ZUTkp9txJu0d8TQ/0dmZszhpgkbJJ0UUvD57q86YS6yi2x
+         UCl+9+jeCM2eG9L8mYxEOsyFh8wZNNtyfVWv2bxZWEIcE6qrXduG+bufexGvZmecB1nk
+         jgW+1KOjZxwEGUSV46nMaYNG3551mZ8uX7571WRMH6tBust7RJ1a3ovt0Ye+oH3o3wkM
+         5Iiw==
+X-Gm-Message-State: APjAAAUm9eBDLRDLzDx/sRrvkVfmy+mHnmXwQRWpOJnNmFwxXcXzeb29
+        iX+HGiPOscQGHAPYEMDImH0rCJ8DZZgFDPJDxaURxQ==
+X-Google-Smtp-Source: APXvYqxnOt402L5HhNkgDDvSy4DpF7ukOVhYefdp2TGaYvy/AB0kwedVYo2x2l8D2jCfGB1qH9kpkALSvsj4T0IXBwM=
+X-Received: by 2002:a9d:1718:: with SMTP id i24mr20907922ota.269.1563934928175;
+ Tue, 23 Jul 2019 19:22:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=714
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240024
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=780 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240024
+References: <89c3ef495c367d58ca3abe99a1f82c48f8c08705.1563274904.git.baolin.wang@linaro.org>
+ <CAPDyKFq1y6xVfA=b1ybWvA1+e9h9aSteHAHjBbXvXGVJx95FQA@mail.gmail.com>
+ <CAMz4kuKraOb_o0LFWnqkS7m0Xd3QGrw1P+md0YBNbbbp1967OA@mail.gmail.com> <CAPDyKFpy5JeGZ2w1KJN0ECB6jPG=UTZXbPRjMQQs8+NdK4rxuQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFpy5JeGZ2w1KJN0ECB6jPG=UTZXbPRjMQQs8+NdK4rxuQ@mail.gmail.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 24 Jul 2019 10:21:56 +0800
+Message-ID: <CAMz4ku+ZTtnJdonZVAPVuvAiGCmCESvM8SbYKjwpNUgE4bO3gA@mail.gmail.com>
+Subject: Re: [PATCH v4] mmc: host: sdhci-sprd: Fix the incorrect soft reset
+ operation when runtime resuming
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 23 Jul 2019 at 20:39, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 23 Jul 2019 at 05:05, Baolin Wang <baolin.wang@linaro.org> wrote:
+> >
+> > Hi Ulf,
+> >
+> > On Mon, 22 Jul 2019 at 19:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > >
+> > > On Wed, 17 Jul 2019 at 04:29, Baolin Wang <baolin.wang@linaro.org> wrote:
+> > > >
+> > > > In sdhci_runtime_resume_host() function, we will always do software reset
+> > > > for all, which will cause Spreadtrum host controller work abnormally after
+> > > > resuming.
+> > >
+> > > What does "software reset for all" means?
+> >
+> > The SD host controller specification defines 3 types software reset:
+> > software reset for data line, software reset for command line and
+> > software reset for all.
+> > Software reset for all means this reset affects the entire Host
+> > controller except for the card detection circuit.
+>
+> Thanks for clarifying, please update the changelog accordingly.
 
-Tyrel,
+Sure, sorry for confusing.
 
-> While removing an ibmvfc client adapter a WARN_ON like the following
-> WARN_ON is seen in the kernel log:
+>
+> >
+> > >
+> > > >
+> > > > Thus for Spreadtrum platform that will not power down the SD/eMMC card during
+> > > > runtime suspend, we should not do software reset for all.
+> > >
+> > > Normally, sdhci hosts that enters runtime suspend doesn't power off
+> > > the card (there are some exceptions like PCI variants).
+> >
+> > Yes, same as our controller.
+> >
+> > >
+> > > So, what's so special here and how does the reset come into play? I
+> > > don't see sdhci doing a reset in sdhci_runtime_suspend|resume_host()
+> > > and nor doesn the callback from the sdhci-sprd.c variant doing it.
+> >
+> > In sdhci_runtime_resume_host(), it will issue sdhci_init(host, 0) to
+> > issue software reset for all.
+>
+> Aha, I didn't read the code carefully enough. Apologize for the noise.
 
-Applied to 5.3/scsi-fixes, thanks!
+No worries :)
+
+> >
+> > >
+> > > > To fix this
+> > > > issue, adding a specific reset operation that adds one condition to validate
+> > > > the power mode to decide if we can do software reset for all or just reset
+> > > > command and data lines.
+> > > >
+> > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > > ---
+> > > > Changess from v3:
+> > > >  - Use ios.power_mode to validate if the card is power down or not.
+> > > >
+> > > > Changes from v2:
+> > > >  - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
+> > > >
+> > > > Changes from v1:
+> > > >  - Add a specific reset operation instead of changing the core to avoid
+> > > >  affecting other hardware.
+> > > > ---
+> > > >  drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
+> > > >  1 file changed, 18 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> > > > index 603a5d9..94f9726 100644
+> > > > --- a/drivers/mmc/host/sdhci-sprd.c
+> > > > +++ b/drivers/mmc/host/sdhci-sprd.c
+> > > > @@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
+> > > >         return 1 << 31;
+> > > >  }
+> > > >
+> > > > +static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
+> > > > +{
+> > > > +       struct mmc_host *mmc = host->mmc;
+> > > > +
+> > > > +       /*
+> > > > +        * When try to reset controller after runtime suspend, we should not
+> > > > +        * reset for all if the SD/eMMC card is not power down, just reset
+> > > > +        * command and data lines instead. Otherwise will meet some strange
+> > > > +        * behaviors for Spreadtrum host controller.
+> > > > +        */
+> > > > +       if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
+> > > > +           mmc->ios.power_mode == MMC_POWER_ON)
+> > > > +               mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
+> > >
+> > > Can sdhci_sprd_reset() be called when the host is runtime suspended?
+> >
+> > When host tries to runtime resume in sdhci_runtime_resume_host(), it
+> > will call reset operation to do software reset.
+>
+> Right, I see that now, thanks for clarifying.
+>
+> However, there are still some weird things going on in
+> sdhci_runtime_resume_host(). Like why is host->ops->enable_dma()
+> called first, directly from sdhci_runtime_resume_host(), then again in
+> sdhci_do_reset(), after host->ops->reset() has been called. Looks like
+> the first call to ->enable_dma() doesn't make sense?
+
+I am mot sure, since our host did not supply enable_dma() operation.
+This logic was used by some other hardware and worked well, I am not
+sure if it can reveal some issues if we change the logic here.
+
+Adrian, could you help to explain why we put enable_dma() in front of
+software reset?
+
+>
+> >
+> > > That sounds like a bug to me, no?
+> >
+> > Since our controller will meet some strange behaviors if we do
+> > software reset for all in sdhci_runtime_resume_host(), and try to
+> > avoid changing the core logic of sdhci_runtime_resume_host() used by
+> > other hardware controllers, thus I introduced a specific reset ops and
+> > added some condition to make sure we just do software reset command
+> > and data lines from runtime suspend state.
+>
+> I understand, but perhaps it would become more clear if
+> sdhci_runtime_resume_host() is re-factored a bit. Maybe the caller can
+> give it some new parameter to let it decide if a SDHCI_RESET_ALL shall
+> be done or not.
+
+Yes, sounds reasonable, but need change other host drivers which
+issued the sdhci_runtime_resume_host().
+
+Adrian, if you also agree with Ulf's suggestion, then I will post new
+patches to add a parameter to decide the reset mode. Thanks.
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Baolin Wang
+Best Regards
