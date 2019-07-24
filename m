@@ -2,185 +2,128 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A7FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7EFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A39214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Y8l89H10"
+	by mail.kernel.org (Postfix) with ESMTP id A1B9321852
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564000188;
+	bh=qvES8AofnuKpT28/zZ3iEIvmuM4TjFi3lCL+v98rJ3Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zvdqetXlxgDs6uPSTLXxHRqZKJhmYRsL8tMIqIHWE3PntyL2Ljy9MuXOkjjCjRCac
+	 Te7nlMWBJRrtV/rMyHQwjFgSSXGytA2HVm69DcyiLTYxxkHXuyGZ+bR+7TU+1jgdTH
+	 nUWRunC+BkMred/68b0+R9dF0hVh/dC9IiDaEBbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390025AbfGXU3o (ORCPT
+        id S2389466AbfGXU3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:29:44 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36354 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389224AbfGXU3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:29:42 -0400
-Received: by mail-qk1-f193.google.com with SMTP id g18so34761028qkl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=jMuXZCkU9Ct89wOn6NBnDyHgJz0Yj3VpJrE3krYoMBo=;
-        b=Y8l89H10hDJOBdtg0LtWprl/ct7QZfhT5686p+b9YXoN+oy3Eclg3xjZXguHL3KwmO
-         abUyx4EoNNPkVVU0UByMLrD6y7rbBUYgi4E3RQTBS+z94H/nZiuLXHMLAIWoui/4bUlG
-         PnOwXPkgW2UZbhsNwQW7pkaX5YGilXWuOsloqeV9lUjsAB5aRFrEvXvwgp1wTqFrQ5O5
-         g1sz3KrIkBtUt7opmlF21wev+CI73210Iu930+Biwds/yzbhGeNO7TMcZPbQ5q4pZb2A
-         WmUz2zd/8AtntvDiB3BIrPjWuzlzNdxRPx/fCF+GhdkaF562DDlA746+0Fk4qMHUBFiJ
-         9BpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jMuXZCkU9Ct89wOn6NBnDyHgJz0Yj3VpJrE3krYoMBo=;
-        b=qSJuXAQyaU/8RRX0OKUElKTYigFROSzYCe334lNgevEn/gorFeJjZVhn9jXkS1Xzlf
-         c1dtXOTQPxnhU9jPW3rfz71ZIm7tuZFJsLntQhD8GnJ2fEiMu3vdQuVcR0HxszlxoJQp
-         Ztvm4pmNUuG9yBC2w3Q/kvBfH3CBYDnL7mniCCWnkDU1w7URQHl3QNMprZc58X+5+JEn
-         9AVLXlnN1vd7FzMoRLyPaXk7qPDthh5Jqgmc9hM67nwYwDKoMphwe8ZaXCWhUflPfmYo
-         YMsgQQTC22fAEUX/MlOB4oMJ8y1Q0ju2lM2eGCiSU6S3SaGJzTxP2Am1kYwFg9aEaKDD
-         0LAg==
-X-Gm-Message-State: APjAAAXVicAi0KtWQenEFnv81Oh3uOh+85FTvltig3eIpriypXT8cx5d
-        oEfn3RgqxmT4GNGcdw+0xCS0LQ==
-X-Google-Smtp-Source: APXvYqw9LTSo4+/ExlpXauIFR9jBl5GdjmT+cEkMwOIsoifwY6EF1GRlgatrSdGiKHpe4HSQVmcY2g==
-X-Received: by 2002:a05:620a:10bc:: with SMTP id h28mr55522007qkk.289.1564000181815;
-        Wed, 24 Jul 2019 13:29:41 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id r205sm24529121qke.115.2019.07.24.13.29.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 13:29:41 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     davem@davemloft.net, arnd@arndb.de, dhowells@redhat.com,
-        ndesaulniers@google.com, morbo@google.com, jyknight@google.com,
-        natechancellor@gmail.com, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] asm-generic: fix -Wtype-limits compiler warnings
-Date:   Wed, 24 Jul 2019 16:29:26 -0400
-Message-Id: <1564000166-31428-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 24 Jul 2019 16:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388704AbfGXTcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:32:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AD3320659;
+        Wed, 24 Jul 2019 19:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996766;
+        bh=qvES8AofnuKpT28/zZ3iEIvmuM4TjFi3lCL+v98rJ3Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QrrAcf/qt4wFQ9Pvdz2uB8kAna3F5272VR0f8DGcvC+OQZchQxrBA6E35OTdeeJNR
+         RkwNGDati2FEM77s/1w9/lIUkf8/abOA1vnXP2n4no8+OyoYgDbJ75xxdyK5V+Z682
+         lIutMxp0zLSlzgxRldgunr6yrNgzvj/LeZMV6cuQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 168/413] libata: dont request sense data on !ZAC ATA devices
+Date:   Wed, 24 Jul 2019 21:17:39 +0200
+Message-Id: <20190724191747.013028053@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
-compilation warning because "rx_frag_size" is an "ushort" while
-PAGE_SHIFT here is 16. The commit changed the get_order() to be a
-multi-line macro where compilers insist to check all statements in the
-macro even when __builtin_constant_p(rx_frag_size) will return false as
-"rx_frag_size" is a module parameter.
+[ Upstream commit ca156e006add67e4beea7896be395160735e09b0 ]
 
-In file included from ./arch/powerpc/include/asm/page_64.h:107,
-                 from ./arch/powerpc/include/asm/page.h:242,
-                 from ./arch/powerpc/include/asm/mmu.h:132,
-                 from ./arch/powerpc/include/asm/lppaca.h:47,
-                 from ./arch/powerpc/include/asm/paca.h:17,
-                 from ./arch/powerpc/include/asm/current.h:13,
-                 from ./include/linux/thread_info.h:21,
-                 from ./arch/powerpc/include/asm/processor.h:39,
-                 from ./include/linux/prefetch.h:15,
-                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
-drivers/net/ethernet/emulex/benet/be_main.c: In function
-'be_rx_cqs_create':
-./include/asm-generic/getorder.h:54:9: warning: comparison is always
-true due to limited range of data type [-Wtype-limits]
-   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
-         ^
-drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
-of macro 'get_order'
-  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
-                                 ^~~~~~~~~
+ZAC support added sense data requesting on error for both ZAC and ATA
+devices. This seems to cause erratic error handling behaviors on some
+SSDs where the device reports sense data availability and then
+delivers the wrong content making EH take the wrong actions.  The
+failure mode was sporadic on a LITE-ON ssd and couldn't be reliably
+reproduced.
 
-Fix it by moving all of this multi-line macro into a proper function,
-and killing __get_order() off.
+There is no value in requesting sense data from non-ZAC ATA devices
+while there's a significant risk of introducing EH misbehaviors which
+are difficult to reproduce and fix.  Let's do the sense data dancing
+only for ZAC devices.
 
-Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
-Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/ata/libata-eh.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-v2: Kill off __get_order() per Andrew.
-    Update the comments per David.
-    Remove a variable "order" to be consistent with the rest of return
-    statements.
-
- include/asm-generic/getorder.h | 50 +++++++++++++++++-------------------------
- 1 file changed, 20 insertions(+), 30 deletions(-)
-
-diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
-index c64bea7a52be..e9f20b813a69 100644
---- a/include/asm-generic/getorder.h
-+++ b/include/asm-generic/getorder.h
-@@ -7,24 +7,6 @@
- #include <linux/compiler.h>
- #include <linux/log2.h>
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index 9d687e1d4325..3bfd9da58473 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -1469,7 +1469,7 @@ static int ata_eh_read_log_10h(struct ata_device *dev,
+ 	tf->hob_lbah = buf[10];
+ 	tf->nsect = buf[12];
+ 	tf->hob_nsect = buf[13];
+-	if (ata_id_has_ncq_autosense(dev->id))
++	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
+ 		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
  
--/*
-- * Runtime evaluation of get_order()
-- */
--static inline __attribute_const__
--int __get_order(unsigned long size)
--{
--	int order;
--
--	size--;
--	size >>= PAGE_SHIFT;
--#if BITS_PER_LONG == 32
--	order = fls(size);
--#else
--	order = fls64(size);
--#endif
--	return order;
--}
--
- /**
-  * get_order - Determine the allocation order of a memory size
-  * @size: The size for which to get the order
-@@ -43,19 +25,27 @@ int __get_order(unsigned long size)
-  * to hold an object of the specified size.
-  *
-  * The result is undefined if the size is 0.
-- *
-- * This function may be used to initialise variables with compile time
-- * evaluations of constants.
-  */
--#define get_order(n)						\
--(								\
--	__builtin_constant_p(n) ? (				\
--		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
--		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
--		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
--	) :							\
--	__get_order(n)						\
--)
-+static inline __attribute_const__ int get_order(unsigned long size)
-+{
-+	if (__builtin_constant_p(size)) {
-+		if (!size)
-+			return BITS_PER_LONG - PAGE_SHIFT;
-+
-+		if (size < (1UL << PAGE_SHIFT))
-+			return 0;
-+
-+		return ilog2((size) - 1) - PAGE_SHIFT + 1;
-+	}
-+
-+	size--;
-+	size >>= PAGE_SHIFT;
-+#if BITS_PER_LONG == 32
-+	return fls(size);
-+#else
-+	return fls64(size);
-+#endif
-+}
+ 	return 0;
+@@ -1716,7 +1716,8 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
+ 	memcpy(&qc->result_tf, &tf, sizeof(tf));
+ 	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
+ 	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
+-	if ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary) {
++	if (dev->class == ATA_DEV_ZAC &&
++	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
+ 		char sense_key, asc, ascq;
  
- #endif	/* __ASSEMBLY__ */
+ 		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
+@@ -1770,10 +1771,11 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc,
+ 	}
  
+ 	switch (qc->dev->class) {
+-	case ATA_DEV_ATA:
+ 	case ATA_DEV_ZAC:
+ 		if (stat & ATA_SENSE)
+ 			ata_eh_request_sense(qc, qc->scsicmd);
++		/* fall through */
++	case ATA_DEV_ATA:
+ 		if (err & ATA_ICRC)
+ 			qc->err_mask |= AC_ERR_ATA_BUS;
+ 		if (err & (ATA_UNC | ATA_AMNF))
 -- 
-1.8.3.1
+2.20.1
+
+
 
