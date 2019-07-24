@@ -2,197 +2,125 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFDDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AA9C76190
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3312C229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA717229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Frn1fSzU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Je6bXjfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfGXCCb (ORCPT
+        id S1728865AbfGXCDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:02:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42091 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbfGXCCa (ORCPT
+        Tue, 23 Jul 2019 22:03:01 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58356 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbfGXCDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:02:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so21353942plb.9;
-        Tue, 23 Jul 2019 19:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=utzeHdlKnJ8Jsg5KiD3HvsIOK8aNJAUqQomKEkAT0jw=;
-        b=Frn1fSzU7Hs6HFsPjqPEd7iPDyz3Ynjesxlx/brBizTjGTVtSx98hbgnFJg/vcdeJ3
-         U0lKUt11tN9HFrNybfTgt0AvCNUDtP60bWNSRaWyNhAZ2Gq0utpFyf5N1OimCOT5qJ0T
-         i3xvLAM7f8H++QOSmLUmIVGQ8O4vMRW2XvN5WxlNmK2FBIs59D6/HoWZ/cC71JYWHtsk
-         NWEyxTbqMmixzi10djjAmf7drv+oSSjFblR/QL2TzexRmysBxFULMpjEtnF7RXzJW73v
-         +/ODKm6LGGvaKElgXcQj6mtS8mvr8furUMK2L0zOm7y6XSdPeSSPDwh3sjpjNcuWSR9V
-         JFPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=utzeHdlKnJ8Jsg5KiD3HvsIOK8aNJAUqQomKEkAT0jw=;
-        b=mFmK+3ocSxBFQU6IAXiCtCkvgrLbxMzPugjLEnBohaLibfllybvfNe47YfIoXv5qbS
-         dZ13GqEueO6uuGxqQNDgyChh3rpxx8MGnxCbVIpQI0dK93Ngqf9eXuV2EJMseablBbQ0
-         WBl3Rc08uYaX2Wk9O87DEV548Mrwng/PNwNjYhjAPzF33J6/0A+Ra2WLuk1V2l/cdScb
-         XnmgBIqRgWUgwXx90Nj8PY6UJqKLTGMcESAPjs0R5+od3qQdUhwh+Qi8tKYYfQ3D6twT
-         3bEyYpygi+dDs+CPdWWfFUHUTJyjbyF4lLyeKAmdyi5Ya44dvY6UTAU055m+J9aFjzfi
-         /VeA==
-X-Gm-Message-State: APjAAAXRnHdeQUNvwrCwrUQtf4gOajbPaleIcS0oF6eYMMnXj5MZj2aq
-        M8ycVqKb1/W3h/aus16zy0cEESiEU4gOTuiuNoY=
-X-Google-Smtp-Source: APXvYqyTlL7iex/bgjSHKUXZkR5Q0EHQ0AscX9+V6owz2Wmr2wofhrW2X6+UwfLnyoBVAyomr1SOlaLp7luO+pvX4ew=
-X-Received: by 2002:a17:902:2a68:: with SMTP id i95mr84858089plb.167.1563933749237;
- Tue, 23 Jul 2019 19:02:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190715134655.4076-1-sashal@kernel.org> <20190715134655.4076-39-sashal@kernel.org>
- <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
- <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com> <87v9vs43pq.fsf@xmission.com>
-In-Reply-To: <87v9vs43pq.fsf@xmission.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 23 Jul 2019 21:02:18 -0500
-Message-ID: <CAH2r5mtB=KO+9fxSYQHbjD+0K+5rGL6Q8TSU0_wsHUdqHy1rSw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session
- to call send_sig instead of force_sig
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     ronnie sahlberg <ronniesahlberg@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Jul 2019 22:03:01 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O1wZCE029592;
+        Wed, 24 Jul 2019 02:02:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=aPJ/gz+1htaF0JhpGjhp8e3/McToimuUgnVMZqHte9s=;
+ b=Je6bXjfvhms99P77tbjOa/GUP3fCbw+7/Jpcme25tvf+ziqD7j//GF+yZWuPOW+bPSou
+ T507xOemfOsA12Rz1jBR01Z4mwJFdAIh8VUMFDueI5M8ZzS6d8EZBA0pub8og66qm4s6
+ j7labDK7Ph+mSL7gnwObln3ayUujWHZgha8wIxg/dEZ7YOSzINjWbXLhKGKymEEjc7vW
+ kXtNeFjZIsRwrsAWlRPN+C5IONGL/0FAwmfqmRYdX/BJs2gVLG4dgxFJw5A1XQPiiEDU
+ OOEWKi26aD60jxZRcWIR6D1owq6Etx/g4CzqgJQjJM3xKwAQK6A8tLVPdaP3OL3WJ7/s lA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2tx61bt601-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 02:02:24 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O1vO96057801;
+        Wed, 24 Jul 2019 02:02:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2tx60xk9hy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 02:02:23 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6O22LdJ003994;
+        Wed, 24 Jul 2019 02:02:21 GMT
+Received: from [31.133.156.81] (/31.133.156.81)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Jul 2019 19:02:21 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] rpcrdma_decode_msg: check xdr_inline_decode result
+From:   Chuck Lever <chuck.lever@oracle.com>
+X-Mailer: iPad Mail (16F203)
+In-Reply-To: <20190724015115.3493-1-navid.emamdoost@gmail.com>
+Date:   Tue, 23 Jul 2019 22:02:09 -0400
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        secalert@redhat.com,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AE745E5F-63A8-4377-98E8-512828179FC0@oracle.com>
+References: <20190724015115.3493-1-navid.emamdoost@gmail.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907240020
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907240020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 8:32 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Steve French <smfrench@gmail.com> writes:
->
-> > Very easy to see what caused the regression with this global change:
-> >
-> > mount (which launches "cifsd" thread to read the socket)
-> > umount (which kills the "cifsd" thread)
-> > rmmod   (rmmod now fails since "cifsd" thread is still active)
-> >
-> > mount launches a thread to read from the socket ("cifsd")
-> > umount is supposed to kill that thread (but with the patch
-> > "signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of
-> > force_sig" that no longer works).  So the regression is that after
-> > unmount you still see the "cifsd" thread, and the reason that cifsd
-> > thread is still around is that that patch no longer force kills the
-> > process (see line 2652 of fs/cifs/connect.c) which regresses module
-> > removal.
-> >
-> > -               force_sig(SIGKILL, task);
-> > +               send_sig(SIGKILL, task, 1);
-> >
-> > The comment in the changeset indicates "The signal SIGKILL can not be
-> > ignored" but obviously it can be ignored - at least on 5.3-rc1 it is
-> > being ignored.
-> >
-> > If send_sig(SIGKILL ...) doesn't work and if force_sig(SIGKILL, task)
-> > is removed and no longer possible - how do we kill a helper process
-> > ...
->
-> I think I see what is happening.  It looks like as well as misuinsg
-> force_sig, cifs is also violating the invariant that keeps SIGKILL out
-> of the blocked signal set.
->
-> For that force_sig will act differently.  I did not consider it because
-> that is never supposed to happen.
->
-> Can someone test this code below and confirm the issue goes away?
->
-> diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
-> index 5d6d44bfe10a..2a782ebc7b65 100644
-> --- a/fs/cifs/transport.c
-> +++ b/fs/cifs/transport.c
-> @@ -347,6 +347,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
->          */
->
->         sigfillset(&mask);
-> +       sigdelset(&mask, SIGKILL);
->         sigprocmask(SIG_BLOCK, &mask, &oldmask);
->
->         /* Generate a rfc1002 marker for SMB2+ */
->
->
-> Eric
-
-I just tried your suggestion and it didn't work.   I also tried doing
-a similar thing on the thread we are trying to kills ("cifsd" - ie
-which is blocked in the function cifs_demultiplex_thread waiting to
-read from the socket)
-# git diff -a
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index a4830ced0f98..b73062520a17 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1104,6 +1104,7 @@ cifs_demultiplex_thread(void *p)
-        struct task_struct *task_to_wake = NULL;
-        struct mid_q_entry *mids[MAX_COMPOUND];
-        char *bufs[MAX_COMPOUND];
-+       sigset_t mask;
-
-        current->flags |= PF_MEMALLOC;
-        cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
-@@ -1113,6 +1114,8 @@ cifs_demultiplex_thread(void *p)
-                mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
-
-        set_freezable();
-+       sigfillset(&mask);
-+       sigdelset(&mask, SIGKILL);
-        while (server->tcpStatus != CifsExiting) {
-                if (try_to_freeze())
-                        continue;
 
 
-That also didn't work.     The only thing I have been able to find
-which worked was:
+> On Jul 23, 2019, at 9:51 PM, Navid Emamdoost <navid.emamdoost@gmail.com> w=
+rote:
+>=20
+> xdr_inline_decode may return NULL, so the check is necessary. The base
+> pointer will be dereferenced later in rpcrdma_inline_fixup.
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index a4830ced0f98..e74f04163fc9 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1113,6 +1113,7 @@ cifs_demultiplex_thread(void *p)
-                mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
-
-        set_freezable();
-+      allow_signal(SIGKILL);
-        while (server->tcpStatus != CifsExiting) {
-                if (try_to_freeze())
-                        continue;
+NACK. When xdr_inline_decode is passed a zero =E2=80=9Clength=E2=80=9D argum=
+ent, it can never return NULL.
 
 
-That fixes the problem ... but ... as Ronnie and others have noted it
-would allow a userspace process to make the mount unusable (all you
-would have to do would be to do a kill -9 of the "cifsd" process from
-some userspace process like bash and the mount would be unusable - so
-this sounds dangerous.
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+> net/sunrpc/xprtrdma/rpc_rdma.c | 3 +++
+> 1 file changed, 3 insertions(+)
+>=20
+> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma=
+.c
+> index 4345e6912392..d0479efe0e72 100644
+> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
+> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+> @@ -1160,6 +1160,9 @@ rpcrdma_decode_msg(struct rpcrdma_xprt *r_xprt, stru=
+ct rpcrdma_rep *rep,
+>=20
+>    /* Build the RPC reply's Payload stream in rqst->rq_rcv_buf */
+>    base =3D (char *)xdr_inline_decode(xdr, 0);
+> +    if (!base)
+> +        return -EIO;
+> +
+>    rpclen =3D xdr_stream_remaining(xdr);
+>    r_xprt->rx_stats.fixup_copy_count +=3D
+>        rpcrdma_inline_fixup(rqst, base, rpclen, writelist & 3);
+> --=20
+> 2.17.1
+>=20
 
-Is there an alternative that, in the process doing the unmount in
-kernel, would allow us to do the equivalent of:
-      "allow_signal(SIGKILL, <the id of the cifsd process>"
-In otherwords, to minimize the risk of some userspace process killing
-cifsd, could we delay enabling allow_signal(SIGKILL) till the unmount
-begins by doing it for a different process (have the unmount process
-enable signals for the cifsd process).   Otherwise is there a way to
-force kill a process from the kernel as we used to do - without
-running the risk of a user space process killing cifsd (which is bad).
-
--- 
-Thanks,
-
-Steve
