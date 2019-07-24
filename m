@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8021EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477B6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541EA22ADF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEE7214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997570;
-	bh=MK2R2rPOeCr9nONFoatxszOMXFDiMjCww6jnLMbXkVs=;
+	s=default; t=1563997576;
+	bh=qAWOwzw/cwiUcLWrhEYzt4usW8EDeskhEElCW8ichWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0HQ+icEccbD1jF/8SWY2vMRtoFXQpPszGpKHxoruqeZa5IHlJuWINuBXICnjIThWB
-	 AhA/nA/YSIlEBkIY5sEvvwIrPGb+S520IUKu8QX8HQgk0OGN3Scg/yPBMSyLYeJdYZ
-	 kZsIitA6Yv1fgxTjZgllBr+8G53i7TznPkm9LtXA=
+	b=WYQMzsS7guK1wgb4wPu886ejGtgi/oX3OMtqltG+BYBvmH+RTZTKCabIwkzG9OSOw
+	 nC3bfWDPQ0uXFTV9sjDTj3W1Q9b3hK7aKp2+yIksc2/EdBveXLQb3NdKm77uX3Gosu
+	 VfLItddsQMbj7mcdA0sBmwkhNXTd8wR8jThDdei0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfGXTqI (ORCPT
+        id S2390716AbfGXTqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50940 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390672AbfGXTqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:05 -0400
+        id S2390672AbfGXTqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAE5C2083B;
-        Wed, 24 Jul 2019 19:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41368214AF;
+        Wed, 24 Jul 2019 19:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997564;
-        bh=MK2R2rPOeCr9nONFoatxszOMXFDiMjCww6jnLMbXkVs=;
+        s=default; t=1563997569;
+        bh=qAWOwzw/cwiUcLWrhEYzt4usW8EDeskhEElCW8ichWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lOK/IQID4Hiw1QEPuZm1dJaCe6QGI2ufH9mER+xXLFp1+E55tMXA4CC//GzxdZg8H
-         8TNbKz0mHPm0DXXhcQ3stJ1NaC4/yj1vBYdkQNam8aLX/zmye0ehscwIV1AxfymqaF
-         gt2sNEfzGo1V6t560+YsS5e+MqvLUBsc+WoCse8Y=
+        b=kXMWmw0+s0gs7O6zFaCM/b4Wu59H3/pO41qfpwCXQr6SsCF5MjUBLiMiGOcliY1FF
+         fuEy8aOOchy85iPlsKPNRsQyLXh7pG5YVDUB1n7ojhvqf5JssyQKveCVSCSFeqQOY4
+         lSXGG6UA2GZBf25L42NLSh2sxKzQ+73e+qe2L2Wo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 065/371] net: stmmac: modify default value of tx-frames
-Date:   Wed, 24 Jul 2019 21:16:57 +0200
-Message-Id: <20190724191729.787667008@linuxfoundation.org>
+Subject: [PATCH 5.1 067/371] net: fec: Do not use netdev messages too early
+Date:   Wed, 24 Jul 2019 21:16:59 +0200
+Message-Id: <20190724191729.947450292@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,47 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d2facb4b3983425f6776c24dd678a82dbe673773 ]
+[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
 
-the default value of tx-frames is 25, it's too late when
-passing tstamp to stack, then the ptp4l will fail:
+When a valid MAC address is not found the current messages
+are shown:
 
-ptp4l -i eth0 -f gPTP.cfg -m
-ptp4l: selected /dev/ptp0 as PTP clock
-ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
-ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
-ptp4l: port 1: link up
-ptp4l: timed out while polling for tx timestamp
-ptp4l: increasing tx_timestamp_timeout may correct this issue,
-       but it is likely caused by a driver bug
-ptp4l: port 1: send peer delay response failed
-ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
 
-ptp4l tests pass when changing the tx-frames from 25 to 1 with
-ethtool -C option.
-It should be fine to set tx-frames default value to 1, so ptp4l will pass
-by default.
+Since the network device has not been registered at this point, it is better
+to use dev_err()/dev_info() instead, which will provide cleaner log
+messages like these:
 
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
+fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
+
+Tested on a imx6dl-pico-pi board.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fec_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 272b9ca66314..b069b3a2453b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -261,7 +261,7 @@ struct stmmac_safety_stats {
- #define STMMAC_COAL_TX_TIMER	1000
- #define STMMAC_MAX_COAL_TX_TICK	100000
- #define STMMAC_TX_MAX_FRAMES	256
--#define STMMAC_TX_FRAMES	25
-+#define STMMAC_TX_FRAMES	1
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 878ccce1dfcd..87a9c5716958 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1689,10 +1689,10 @@ static void fec_get_mac(struct net_device *ndev)
+ 	 */
+ 	if (!is_valid_ether_addr(iap)) {
+ 		/* Report it and use a random ethernet address instead */
+-		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
++		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
+ 		eth_hw_addr_random(ndev);
+-		netdev_info(ndev, "Using random MAC address: %pM\n",
+-			    ndev->dev_addr);
++		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
++			 ndev->dev_addr);
+ 		return;
+ 	}
  
- /* Packets types */
- enum packets_types {
 -- 
 2.20.1
 
