@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8E7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5D2C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18A5206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287792054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000463;
-	bh=TcI0KtqJ6S5x+qOrxbfvT28giSgQcp0x9Mb7ZFhOaC8=;
+	s=default; t=1564000470;
+	bh=DiAvjLi+T1b+gYMiXdEeABcglqyLWn5tDrZylTP3nH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ao1gG9/oRT6wNPGh4hO7fmBGvCmqETRsA1IMm0yT3+ACuhqh/EsaLbof+L5wVILMX
-	 qAg8y5X7oaCgtDBttAQiC11WqcQ0sFImxRxRz3OzePa/KzCbco4YSaRcWZLWzH8WKT
-	 dJerIGZ0AL1CnFGskkAj2oiFKwu9UJ6OWDVnCCVk=
+	b=ILAp+/Vs04dkU2sDMuuZCWP0idC5hB0bvuzt50T4yF2m7iNjJK3CsTjh8amOjCd6S
+	 tlQlhG3vyzkb+04DMhnjSrYW9PSnQBxVpqzlSG3hHt9Z5nqAhzJF2CIrLtEvQirRVC
+	 my2LAK0N1E54f8PNcyBUQll2m9/umq4+LBIv6G4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388706AbfGXUeW (ORCPT
+        id S1729303AbfGXUe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:34:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44590 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbfGXT1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:07 -0400
+        id S1729264AbfGXT0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:26:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE583218F0;
-        Wed, 24 Jul 2019 19:27:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F4CA20659;
+        Wed, 24 Jul 2019 19:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996426;
-        bh=TcI0KtqJ6S5x+qOrxbfvT28giSgQcp0x9Mb7ZFhOaC8=;
+        s=default; t=1563996408;
+        bh=DiAvjLi+T1b+gYMiXdEeABcglqyLWn5tDrZylTP3nH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ku7TSkg1YcA2oKsOKHnZKobPxzumWoe/SaDYtwAwJD+aUdRBgWeL8bn8g252yoQ3a
-         P4yrheImJLncmZ925VxBJhCy8qQAoOUDYvltIUOerEolC0+AwvbMEi4EfRt0WPQZ3L
-         yhu3SitKX8BU2hSTGqQ0id54Cu9/TlUgouBDpPIU=
+        b=jBwxP9J2IVSvPsVITfzBDCn8f6YjyPM0NG/rUkd+8nfRU6ldJh9HJH2dHoqbLieQm
+         QYNycSvfSZrLQbPN2FDw5XcJn/9EBupOlnoHC2ezRkaAiRAFAQgLLn5KmuQrnAMk4W
+         ytLXh541IqWVF5MrYtIY6ITzAzfEyW65gwQlwDPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 093/413] media: s5p-mfc: fix reading min scratch buffer size on MFC v6/v7
-Date:   Wed, 24 Jul 2019 21:16:24 +0200
-Message-Id: <20190724191741.672459619@linuxfoundation.org>
+Subject: [PATCH 5.2 087/413] gpio: omap: fix lack of irqstatus_raw0 for OMAP4
+Date:   Wed, 24 Jul 2019 21:16:18 +0200
+Message-Id: <20190724191741.323349310@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,72 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit be22203aec440c1761ce8542c2636ac6c8951e3a ]
+[ Upstream commit 64ea3e9094a1f13b96c33244a3fb3a0f45690bd2 ]
 
-MFC v6 and v7 has no register to read min scratch buffer size, so it has
-to be read conditionally only if hardware supports it. This fixes following
-NULL pointer exception on SoCs with MFC v6/v7:
+Commit 384ebe1c2849 ("gpio/omap: Add DT support to GPIO driver") added
+the register definition tables to the gpio-omap driver. Subsequently to
+that commit, commit 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx()
+checks from *_runtime_resume()") added definitions for irqstatus_raw*
+registers to the legacy OMAP4 definitions, but missed the DT
+definitions.
 
-8<--- cut here ---
-Unable to handle kernel NULL pointer dereference at virtual address 00000000
-pgd = f25837f9
-[00000000] *pgd=bd93d835
-Internal error: Oops: 17 [#1] PREEMPT SMP ARM
-Modules linked in: btmrvl_sdio btmrvl bluetooth mwifiex_sdio mwifiex ecdh_generic ecc
-Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-PC is at s5p_mfc_get_min_scratch_buf_size+0x30/0x3c
-LR is at s5p_mfc_get_min_scratch_buf_size+0x28/0x3c
-...
-[<c074f998>] (s5p_mfc_get_min_scratch_buf_size) from [<c0745bc0>] (s5p_mfc_irq+0x814/0xa5c)
-[<c0745bc0>] (s5p_mfc_irq) from [<c019a218>] (__handle_irq_event_percpu+0x64/0x3f8)
-[<c019a218>] (__handle_irq_event_percpu) from [<c019a5d8>] (handle_irq_event_percpu+0x2c/0x7c)
-[<c019a5d8>] (handle_irq_event_percpu) from [<c019a660>] (handle_irq_event+0x38/0x5c)
-[<c019a660>] (handle_irq_event) from [<c019ebc4>] (handle_fasteoi_irq+0xc4/0x180)
-[<c019ebc4>] (handle_fasteoi_irq) from [<c0199270>] (generic_handle_irq+0x24/0x34)
-[<c0199270>] (generic_handle_irq) from [<c0199888>] (__handle_domain_irq+0x7c/0xec)
-[<c0199888>] (__handle_domain_irq) from [<c04ac298>] (gic_handle_irq+0x58/0x9c)
-[<c04ac298>] (gic_handle_irq) from [<c0101ab0>] (__irq_svc+0x70/0xb0)
-Exception stack(0xe73ddc60 to 0xe73ddca8)
-...
-[<c0101ab0>] (__irq_svc) from [<c01967d8>] (console_unlock+0x5a8/0x6a8)
-[<c01967d8>] (console_unlock) from [<c01981d0>] (vprintk_emit+0x118/0x2d8)
-[<c01981d0>] (vprintk_emit) from [<c01983b0>] (vprintk_default+0x20/0x28)
-[<c01983b0>] (vprintk_default) from [<c01989b4>] (printk+0x30/0x54)
-[<c01989b4>] (printk) from [<c07500b8>] (s5p_mfc_init_decode_v6+0x1d4/0x284)
-[<c07500b8>] (s5p_mfc_init_decode_v6) from [<c07230d0>] (vb2_start_streaming+0x24/0x150)
-[<c07230d0>] (vb2_start_streaming) from [<c0724e4c>] (vb2_core_streamon+0x11c/0x15c)
-[<c0724e4c>] (vb2_core_streamon) from [<c07478b8>] (vidioc_streamon+0x64/0xa0)
-[<c07478b8>] (vidioc_streamon) from [<c0709640>] (__video_do_ioctl+0x28c/0x45c)
-[<c0709640>] (__video_do_ioctl) from [<c0709bc8>] (video_usercopy+0x260/0x8a4)
-[<c0709bc8>] (video_usercopy) from [<c02b3820>] (do_vfs_ioctl+0xb0/0x9fc)
-[<c02b3820>] (do_vfs_ioctl) from [<c02b41a0>] (ksys_ioctl+0x34/0x58)
-[<c02b41a0>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xe73ddfa8 to 0xe73ddff0)
-...
----[ end trace 376cf5ba6e0bee93 ]---
+This causes an unintentional change of behaviour for the 1.101 errata
+workaround on OMAP4 platforms. Fix this oversight.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 4e962e8998cc ("gpio/omap: remove cpu_is_omapxxxx() checks from *_runtime_resume()")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-mfc/s5p_mfc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-omap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-index 4e936b95018a..481088a83212 100644
---- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
-+++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-@@ -523,7 +523,8 @@ static void s5p_mfc_handle_seq_done(struct s5p_mfc_ctx *ctx,
- 				dev);
- 		ctx->mv_count = s5p_mfc_hw_call(dev->mfc_ops, get_mv_count,
- 				dev);
--		ctx->scratch_buf_size = s5p_mfc_hw_call(dev->mfc_ops,
-+		if (FW_HAS_E_MIN_SCRATCH_BUF(dev))
-+			ctx->scratch_buf_size = s5p_mfc_hw_call(dev->mfc_ops,
- 						get_min_scratch_buf_size, dev);
- 		if (ctx->img_width == 0 || ctx->img_height == 0)
- 			ctx->state = MFCINST_ERROR;
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 9276ef616430..7632c98aa3a4 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1453,6 +1453,8 @@ static struct omap_gpio_reg_offs omap4_gpio_regs = {
+ 	.clr_dataout =		OMAP4_GPIO_CLEARDATAOUT,
+ 	.irqstatus =		OMAP4_GPIO_IRQSTATUS0,
+ 	.irqstatus2 =		OMAP4_GPIO_IRQSTATUS1,
++	.irqstatus_raw0 =	OMAP4_GPIO_IRQSTATUSRAW0,
++	.irqstatus_raw1 =	OMAP4_GPIO_IRQSTATUSRAW1,
+ 	.irqenable =		OMAP4_GPIO_IRQSTATUSSET0,
+ 	.irqenable2 =		OMAP4_GPIO_IRQSTATUSSET1,
+ 	.set_irqenable =	OMAP4_GPIO_IRQSTATUSSET0,
 -- 
 2.20.1
 
