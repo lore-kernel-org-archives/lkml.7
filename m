@@ -2,151 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CACC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5DEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D36520659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996757;
-	bh=f2z1+/ExFEaSu80eogXx5LLz1xthQarn3wNUp8hRhXs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oxZf4ZuKrlFmEBPbstFbQvt3UxEZ9InaOIfUxpMAX4m9ekZQ1qURDPy2LXssLwgSD
-	 nBcZN7Ke4dP/iBggeujMu/zLDenSyvSeV+0GETRAqhAUdAH43AwbR+TYi8OFhSVrkO
-	 dLTr2mFDf5z6p7FT5JpQBeLtadGugUlT9Z889I+k=
+	by mail.kernel.org (Postfix) with ESMTP id BF0D820659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="daangUid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388657AbfGXTca (ORCPT
+        id S2388677AbfGXTcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Jul 2019 15:32:39 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44232 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388653AbfGXTca (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 15:32:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388637AbfGXTc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:32:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 697F52238C;
-        Wed, 24 Jul 2019 19:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996746;
-        bh=f2z1+/ExFEaSu80eogXx5LLz1xthQarn3wNUp8hRhXs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mG7Z4HTDYVBB4LVeBvcNdJ1GeDybSCFXxu8hGEU9Nn4K4u+YDdqORkJc2tOnmQHFl
-         mwOwkh/ZjEGqrKAG43AS0XC4B/Ln4P2rJMk6EPg9ySABzOsztod9sctm1RDxnO0a/c
-         f0BJRV+gcwAvM2+LsqAYYSvyeldigK2vesVrHbXA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dann Frazier <dann.frazier@canonical.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 201/413] ixgbe: Avoid NULL pointer dereference with VF on non-IPsec hw
-Date:   Wed, 24 Jul 2019 21:18:12 +0200
-Message-Id: <20190724191748.931574637@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-ed1-f66.google.com with SMTP id k8so48068790edr.11;
+        Wed, 24 Jul 2019 12:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RmmUOfw6KdNJB7Dw3A649BONg+TVcJuxBPKeIVpSw5Y=;
+        b=daangUidITkUVKr7vk3OUx08Gl1Jxg57OGBaW32/VfgcDYW4r8ueSaHlvl7prjeAAn
+         6hbbOLWpvFqcVTCDWVzqtuonDNxTeBQ+SKsmAZa2QZG5GqbYinzXg9AQ78AarKMfpjje
+         3IQG9AXksuIrunc2zx7/mlH6K0s4IGMvmxff7cHuLu5R8mGFv5U79S7o+KLdAHgA95Lr
+         uN4yR1koyNq/sBo4AzrOFlpzNT0eZeoXLnzT7iCkJWsONrShxQpzSGGp7Us4+8mQ1sNf
+         vIPKBtPZPxJUw3XWCA/roIuHPsq7vBfCJS3fZ69Vvb6pSNJKIcsFkES1O2U9mLRunOvz
+         kkDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RmmUOfw6KdNJB7Dw3A649BONg+TVcJuxBPKeIVpSw5Y=;
+        b=B4FhwRlMmV/HpR7cZinVEBhsvjD7k9K/ZAnnBZsHwvc4k1+25q0Tp8go0N/2+Ro9QF
+         4NR0BOThx/E1dBHcoKPo8tR8jC4UwCKDUXk2TgVd5RqeIhJOqBMcAzNGwWYkDvWeAayM
+         T/AJexE2DddYjmZosyXTCqSzv8aEGbG1l89zbzSUsG0H5+CzOHr5J9cMvpwKNsZKsA/6
+         6Fa4gRbyBFWFF2SxkUniErUzCjtO/N6rc7EO4JqpaES8yd0UJ/Qy3Wya9CBMKMCicCzK
+         RqtU1C9QVmC94qQiz5xjkA2phmS54hmihEyaDX7YCA6PAXDvdyoo2xbMSI20OZFfA94C
+         M4mQ==
+X-Gm-Message-State: APjAAAVuS75jfJ6mrzh9hwmBsrRYva0WJctAsuKGboqkmMME3U0eMV6I
+        3dPpVvusT3V3B4PnUj6Ia9UdwddUYBGgdhVytFmNeyHlnAw=
+X-Google-Smtp-Source: APXvYqzQK3O5v+7yVlFJSGeU4C2I4d4sf8cRDv+2qxowZgzIVi2SvDX7ph8dKH/Lo5xszlodW3vLefHeISTmBsyrRKY=
+X-Received: by 2002:a17:906:7f16:: with SMTP id d22mr64449323ejr.17.1563996748713;
+ Wed, 24 Jul 2019 12:32:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190625143715.1689-1-hch@lst.de> <20190625143715.1689-10-hch@lst.de>
+ <20190717215956.GA30369@altlinux.org> <20190718.141405.1070121094691581998.davem@davemloft.net>
+In-Reply-To: <20190718.141405.1070121094691581998.davem@davemloft.net>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Wed, 24 Jul 2019 22:32:17 +0300
+Message-ID: <CADxRZqx-jEnm4U8oe=tJf5apbvcMuw5OYZUN8h4G68sXFvDsmQ@mail.gmail.com>
+Subject: Re: [PATCH 09/16] sparc64: use the generic get_user_pages_fast code
+To:     David Miller <davem@davemloft.net>
+Cc:     "Dmitry V. Levin" <ldv@altlinux.org>,
+        Christoph Hellwig <hch@lst.de>, khalid.aziz@oracle.com,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Sparc kernel list <sparclinux@vger.kernel.org>,
+        linux-mm@kvack.org,
+        Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 92924064106e410cdc015f1dbfc0499309f9f5b1 ]
+On Fri, Jul 19, 2019 at 12:14 AM David Miller <davem@davemloft.net> wrote:
+> > So this ended up as commit 7b9afb86b6328f10dc2cad9223d7def12d60e505
+> > (thanks to Anatoly for bisecting) and introduced a regression:
+> > futex.test from the strace test suite now causes an Oops on sparc64
+> > in futex syscall.
+> >
+> > Here is a heavily stripped down reproducer:
+>
+> Does not reproduce for me on a T4-2 machine.
+>
+> So this problem might depend on the type of system you are on,
+> I suspect it's one of those "pre-Niagara vs. Niagara and later"
+> situations because that's the dividing line between two set of
+> wildly different TLB and cache management methods.
+>
+> What kind of machine are you on?
 
-An ipsec structure will not be allocated if the hardware does not support
-offload. Fixes the following Oops:
+David,
 
-[  191.045452] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[  191.054232] Mem abort info:
-[  191.057014]   ESR = 0x96000004
-[  191.060057]   Exception class = DABT (current EL), IL = 32 bits
-[  191.065963]   SET = 0, FnV = 0
-[  191.069004]   EA = 0, S1PTW = 0
-[  191.072132] Data abort info:
-[  191.074999]   ISV = 0, ISS = 0x00000004
-[  191.078822]   CM = 0, WnR = 0
-[  191.081780] user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000043d9e467
-[  191.088382] [0000000000000000] pgd=0000000000000000
-[  191.093252] Internal error: Oops: 96000004 [#1] SMP
-[  191.098119] Modules linked in: vhost_net vhost tap vfio_pci vfio_virqfd vfio_iommu_type1 vfio xt_CHECKSUM iptable_mangle ipt_MASQUERADE iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4 xt_tcpudp bridge stp llc ebtable_filter devlink ebtables ip6table_filter ip6_tables iptable_filter bpfilter ipmi_ssif nls_iso8859_1 input_leds joydev ipmi_si hns_roce_hw_v2 ipmi_devintf hns_roce ipmi_msghandler cppc_cpufreq sch_fq_codel ib_iser rdma_cm iw_cm ib_cm ib_core iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi ip_tables x_tables autofs4 ses enclosure btrfs zstd_compress raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor hid_generic usbhid hid raid6_pq libcrc32c raid1 raid0 multipath linear ixgbevf hibmc_drm ttm
-[  191.168607]  drm_kms_helper aes_ce_blk aes_ce_cipher syscopyarea crct10dif_ce sysfillrect ghash_ce qla2xxx sysimgblt sha2_ce sha256_arm64 hisi_sas_v3_hw fb_sys_fops sha1_ce uas nvme_fc mpt3sas ixgbe drm hisi_sas_main nvme_fabrics usb_storage hclge scsi_transport_fc ahci libsas hnae3 raid_class libahci xfrm_algo scsi_transport_sas mdio aes_neon_bs aes_neon_blk crypto_simd cryptd aes_arm64
-[  191.202952] CPU: 94 PID: 0 Comm: swapper/94 Not tainted 4.19.0-rc1+ #11
-[  191.209553] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.20.01 04/26/2019
-[  191.218064] pstate: 20400089 (nzCv daIf +PAN -UAO)
-[  191.222873] pc : ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
-[  191.228093] lr : ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
-[  191.233044] sp : ffff000009b3bcd0
-[  191.236346] x29: ffff000009b3bcd0 x28: 0000000000000000
-[  191.241647] x27: ffff000009628000 x26: 0000000000000000
-[  191.246946] x25: ffff803f652d7600 x24: 0000000000000004
-[  191.252246] x23: ffff803f6a718900 x22: 0000000000000000
-[  191.257546] x21: 0000000000000000 x20: 0000000000000000
-[  191.262845] x19: 0000000000000000 x18: 0000000000000000
-[  191.268144] x17: 0000000000000000 x16: 0000000000000000
-[  191.273443] x15: 0000000000000000 x14: 0000000100000026
-[  191.278742] x13: 0000000100000025 x12: ffff8a5f7fbe0df0
-[  191.284042] x11: 000000010000000b x10: 0000000000000040
-[  191.289341] x9 : 0000000000001100 x8 : ffff803f6a824fd8
-[  191.294640] x7 : ffff803f6a825098 x6 : 0000000000000001
-[  191.299939] x5 : ffff000000f0ffc0 x4 : 0000000000000000
-[  191.305238] x3 : ffff000028c00000 x2 : ffff803f652d7600
-[  191.310538] x1 : 0000000000000000 x0 : ffff000000f205f0
-[  191.315838] Process swapper/94 (pid: 0, stack limit = 0x00000000addfed5a)
-[  191.322613] Call trace:
-[  191.325055]  ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
-[  191.329927]  ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
-[  191.334536]  ixgbe_msix_other+0x274/0x330 [ixgbe]
-[  191.339233]  __handle_irq_event_percpu+0x78/0x270
-[  191.343924]  handle_irq_event_percpu+0x40/0x98
-[  191.348355]  handle_irq_event+0x50/0xa8
-[  191.352180]  handle_fasteoi_irq+0xbc/0x148
-[  191.356263]  generic_handle_irq+0x34/0x50
-[  191.360259]  __handle_domain_irq+0x68/0xc0
-[  191.364343]  gic_handle_irq+0x84/0x180
-[  191.368079]  el1_irq+0xe8/0x180
-[  191.371208]  arch_cpu_idle+0x30/0x1a8
-[  191.374860]  do_idle+0x1dc/0x2a0
-[  191.378077]  cpu_startup_entry+0x2c/0x30
-[  191.381988]  secondary_start_kernel+0x150/0x1e0
-[  191.386506] Code: 6b15003f 54000320 f1404a9f 54000060 (79400260)
+the first test where it was discovered was done on my test LDOM named
+ttip, hardware (hypervisor) is T5-2 server, running under Solaris 11.4
+OS.
+ttip LDOM is debian sparc64 unstable , so with almost all the latest
+software (gcc 8.3.0, binutils 2.32.51.20190707-1, debian GLIBC
+2.28-10, etc..)
 
-Fixes: eda0333ac2930 ("ixgbe: add VF IPsec management")
-Signed-off-by: Dann Frazier <dann.frazier@canonical.com>
-Acked-by: Shannon Nelson <snelson@pensando.io>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-index ff85ce5791a3..31629fc7e820 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-@@ -842,6 +842,9 @@ void ixgbe_ipsec_vf_clear(struct ixgbe_adapter *adapter, u32 vf)
- 	struct ixgbe_ipsec *ipsec = adapter->ipsec;
- 	int i;
- 
-+	if (!ipsec)
-+		return;
-+
- 	/* search rx sa table */
- 	for (i = 0; i < IXGBE_IPSEC_MAX_SA_COUNT && ipsec->num_rx_sa; i++) {
- 		if (!ipsec->rx_tbl[i].used)
--- 
-2.20.1
-
-
-
+For another test, i also installed LDOM with oracle sparc linux
+https://oss.oracle.com/projects/linux-sparc/ , but I've to install a
+more fresh version of gcc on it first, since system installed gcc 4.4
+is too old for a git kernel (linux-2.6/Documentation/Changes lists gcc
+4.6 as a minimal version), so I choose to install gcc-7.4.0 to /opt/
+(leaving system installed gcc 4.4 under /usr/bin). Compiled and
+installed git kernel version, i.e. last tag 5.3.0-rc1 and ran the
+test. Kernel still produced oops.
