@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46492C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD09C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F3822BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6752F22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033172;
-	bh=KkaYYQsP1JulotGc3s1ket+pT2PtH78DcBhjkTA5z/I=;
+	s=default; t=1564033175;
+	bh=/buIL5Dy76vjXaqEV9HtE3MekR1LN3sN8RMpqKcVehk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pSNEwk9f5yTaIMTU9+OmkgGrgZIl9XHMHkseHLK1rttrQEWG6dOdfpKW8lQyG/+Ox
-	 d364X+DUBHOFE8R4Eg122JvXjM4xB/C3pNJBdEfMzg7cli+twdwXm+1XiLq+8zVTO5
-	 A46kraJQNxGQz8i/1+Au9YPffMn8NAZiFhI3aMZQ=
+	b=YSu7vS7bdfMzi/qC3EMZtjCZ4nxu4M7yS/DTGHZxXs7xtAZpr6NEprp1sKqPgywow
+	 DwCxTNea7VwSCD/eCdANfs7KH8a24x0VQtkByoFSuKpFbMPXCWnFcQTKXjucgGFLn7
+	 pKx0lCtyLIXjE0b18aGXarpXNrDKGDR8bdiJ153E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404086AbfGYFjb (ORCPT
+        id S2404100AbfGYFje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:39:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53604 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404059AbfGYFj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:26 -0400
+        id S2404050AbfGYFj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:39:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1AD722BEB;
-        Thu, 25 Jul 2019 05:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4154422C7C;
+        Thu, 25 Jul 2019 05:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033165;
-        bh=KkaYYQsP1JulotGc3s1ket+pT2PtH78DcBhjkTA5z/I=;
+        s=default; t=1564033168;
+        bh=/buIL5Dy76vjXaqEV9HtE3MekR1LN3sN8RMpqKcVehk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NoFCspFweL83KZ+HoYEIoyszeaUayj6Ifip6HZbZHvkkAFWAYT5XsfahM2w5Qc3f2
-         Z9koJ0WTPr6ulMSP017hdT4eFuuxaT+NHSC6uUdI51kD+jKSGXtscTQwcROPMyBq0v
-         ovh2gbi+A/Pjm6kT8kCv0Y6cXatwVlPlj5hk3YeI=
+        b=QBSGaNWWd0NKerKAIZLcsv41OhlhtC8ModawagH3Ps9SCuEPrHtyZ5upZ4PAwluiz
+         /2nBoIPTkLcT6wh2pXVh74hChw6y2itsrCPE0xJOlr/ZinVslVhpTz4ynCGQlCv7u0
+         SZsD2aIZhmLyI3Q5GA1eyVQEfzYzMXn23Cma7GDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Masato Suzuki <masato.suzuki@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/271] ASoC: Intel: hdac_hdmi: Set ops to NULL on remove
-Date:   Wed, 24 Jul 2019 21:19:42 +0200
-Message-Id: <20190724191704.911859650@linuxfoundation.org>
+Subject: [PATCH 4.19 114/271] libata: dont request sense data on !ZAC ATA devices
+Date:   Wed, 24 Jul 2019 21:19:43 +0200
+Message-Id: <20190724191705.015100934@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,38 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0f6ff78540bd1b4df1e0f17806b0ce2e1dff0d78 ]
+[ Upstream commit ca156e006add67e4beea7896be395160735e09b0 ]
 
-When we unload Skylake driver we may end up calling
-hdac_component_master_unbind(), it uses acomp->audio_ops, which we set
-in hdmi_codec_probe(), so we need to set it to NULL in hdmi_codec_remove(),
-otherwise we will dereference no longer existing pointer.
+ZAC support added sense data requesting on error for both ZAC and ATA
+devices. This seems to cause erratic error handling behaviors on some
+SSDs where the device reports sense data availability and then
+delivers the wrong content making EH take the wrong actions.  The
+failure mode was sporadic on a LITE-ON ssd and couldn't be reliably
+reproduced.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+There is no value in requesting sense data from non-ZAC ATA devices
+while there's a significant risk of introducing EH misbehaviors which
+are difficult to reproduce and fix.  Let's do the sense data dancing
+only for ZAC devices.
+
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hdmi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/ata/libata-eh.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index 63487240b61e..098196610542 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -1854,6 +1854,12 @@ static void hdmi_codec_remove(struct snd_soc_component *component)
- {
- 	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
- 	struct hdac_device *hdev = hdmi->hdev;
-+	int ret;
-+
-+	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
-+	if (ret < 0)
-+		dev_err(&hdev->dev, "notifier unregister failed: err: %d\n",
-+				ret);
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index 01306c018398..ccc80ff57eb2 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -1490,7 +1490,7 @@ static int ata_eh_read_log_10h(struct ata_device *dev,
+ 	tf->hob_lbah = buf[10];
+ 	tf->nsect = buf[12];
+ 	tf->hob_nsect = buf[13];
+-	if (ata_id_has_ncq_autosense(dev->id))
++	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
+ 		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
  
- 	pm_runtime_disable(&hdev->dev);
- }
+ 	return 0;
+@@ -1737,7 +1737,8 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
+ 	memcpy(&qc->result_tf, &tf, sizeof(tf));
+ 	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
+ 	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
+-	if ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary) {
++	if (dev->class == ATA_DEV_ZAC &&
++	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
+ 		char sense_key, asc, ascq;
+ 
+ 		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
+@@ -1791,10 +1792,11 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc,
+ 	}
+ 
+ 	switch (qc->dev->class) {
+-	case ATA_DEV_ATA:
+ 	case ATA_DEV_ZAC:
+ 		if (stat & ATA_SENSE)
+ 			ata_eh_request_sense(qc, qc->scsicmd);
++		/* fall through */
++	case ATA_DEV_ATA:
+ 		if (err & ATA_ICRC)
+ 			qc->err_mask |= AC_ERR_ATA_BUS;
+ 		if (err & (ATA_UNC | ATA_AMNF))
 -- 
 2.20.1
 
