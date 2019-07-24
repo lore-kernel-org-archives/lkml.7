@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CC3C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46492C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935AE22C7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F3822BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033167;
-	bh=sC7LZzts/ecEg+5vOpALr6R0OhbdGwkmWRFNOsoXAhU=;
+	s=default; t=1564033172;
+	bh=KkaYYQsP1JulotGc3s1ket+pT2PtH78DcBhjkTA5z/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ryH+GDn5icYhueVTfF+TR05PHtB2v7ooW43+q6F80NTL2yaJRHYHOrhRYVA1lwhH
-	 bzLin4keylzjkw4rovgJtVVol3piwdxjdwO6ghGE7oemdMS361jkbzbDUQf4niwwoT
-	 2haSL0QKzIj8VTCZRSpFYrgEYGoHkePNa/f/0RPo=
+	b=pSNEwk9f5yTaIMTU9+OmkgGrgZIl9XHMHkseHLK1rttrQEWG6dOdfpKW8lQyG/+Ox
+	 d364X+DUBHOFE8R4Eg122JvXjM4xB/C3pNJBdEfMzg7cli+twdwXm+1XiLq+8zVTO5
+	 A46kraJQNxGQz8i/1+Au9YPffMn8NAZiFhI3aMZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404070AbfGYFj0 (ORCPT
+        id S2404086AbfGYFjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:39:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:39:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404050AbfGYFjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:23 -0400
+        id S2404059AbfGYFj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:39:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D6E122C7C;
-        Thu, 25 Jul 2019 05:39:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1AD722BEB;
+        Thu, 25 Jul 2019 05:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033162;
-        bh=sC7LZzts/ecEg+5vOpALr6R0OhbdGwkmWRFNOsoXAhU=;
+        s=default; t=1564033165;
+        bh=KkaYYQsP1JulotGc3s1ket+pT2PtH78DcBhjkTA5z/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wby3m7A8iuCUfboKlEKlo6wDENu5EANwoN32tD6/drKBsOSOlvYcvqe22DkasE5AD
-         YLxB7Tm8pdPX7xqFqiDrfkm+wH2WkC91GOHCsq6iAo0J8G8RzO8zmm3Q7gnf+1akD+
-         2A4hUAjwZ1E//g5PdM0dmDAxH+qBoEOh6EF3kRs4=
+        b=NoFCspFweL83KZ+HoYEIoyszeaUayj6Ifip6HZbZHvkkAFWAYT5XsfahM2w5Qc3f2
+         Z9koJ0WTPr6ulMSP017hdT4eFuuxaT+NHSC6uUdI51kD+jKSGXtscTQwcROPMyBq0v
+         ovh2gbi+A/Pjm6kT8kCv0Y6cXatwVlPlj5hk3YeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Meyer <kyle.meyer@hpe.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 112/271] perf tools: Increase MAX_NR_CPUS and MAX_CACHES
-Date:   Wed, 24 Jul 2019 21:19:41 +0200
-Message-Id: <20190724191704.820359242@linuxfoundation.org>
+Subject: [PATCH 4.19 113/271] ASoC: Intel: hdac_hdmi: Set ops to NULL on remove
+Date:   Wed, 24 Jul 2019 21:19:42 +0200
+Message-Id: <20190724191704.911859650@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -64,68 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9f94c7f947e919c343b30f080285af53d0fa9902 ]
+[ Upstream commit 0f6ff78540bd1b4df1e0f17806b0ce2e1dff0d78 ]
 
-Attempting to profile 1024 or more CPUs with perf causes two errors:
+When we unload Skylake driver we may end up calling
+hdac_component_master_unbind(), it uses acomp->audio_ops, which we set
+in hdmi_codec_probe(), so we need to set it to NULL in hdmi_codec_remove(),
+otherwise we will dereference no longer existing pointer.
 
-  perf record -a
-  [ perf record: Woken up X times to write data ]
-  way too many cpu caches..
-  [ perf record: Captured and wrote X MB perf.data (X samples) ]
-
-  perf report -C 1024
-  Error: failed to set  cpu bitmap
-  Requested CPU 1024 too large. Consider raising MAX_NR_CPUS
-
-  Increasing MAX_NR_CPUS from 1024 to 2048 and redefining MAX_CACHES as
-  MAX_NR_CPUS * 4 returns normal functionality to perf:
-
-  perf record -a
-  [ perf record: Woken up X times to write data ]
-  [ perf record: Captured and wrote X MB perf.data (X samples) ]
-
-  perf report -C 1024
-  ...
-
-Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190620193630.154025-1-meyerk@stormcage.eag.rdlabs.hpecorp.net
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/perf.h        | 2 +-
- tools/perf/util/header.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index 21bf7f5a3cf5..19d435a9623b 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -26,7 +26,7 @@ static inline unsigned long long rdclock(void)
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index 63487240b61e..098196610542 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1854,6 +1854,12 @@ static void hdmi_codec_remove(struct snd_soc_component *component)
+ {
+ 	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
+ 	struct hdac_device *hdev = hdmi->hdev;
++	int ret;
++
++	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
++	if (ret < 0)
++		dev_err(&hdev->dev, "notifier unregister failed: err: %d\n",
++				ret);
+ 
+ 	pm_runtime_disable(&hdev->dev);
  }
- 
- #ifndef MAX_NR_CPUS
--#define MAX_NR_CPUS			1024
-+#define MAX_NR_CPUS			2048
- #endif
- 
- extern const char *input_name;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index b9a82598e2ac..7f2e3b1c746c 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1173,7 +1173,7 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
- 	return 0;
- }
- 
--#define MAX_CACHES 2000
-+#define MAX_CACHES (MAX_NR_CPUS * 4)
- 
- static int write_cache(struct feat_fd *ff,
- 		       struct perf_evlist *evlist __maybe_unused)
 -- 
 2.20.1
 
