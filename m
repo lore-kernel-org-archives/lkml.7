@@ -2,209 +2,144 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2A3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413E4C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E3821880
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1845121880
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QjMnrXve"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+uv8qpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387653AbfGXWPd (ORCPT
+        id S1728893AbfGXWP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:15:33 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37144 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387405AbfGXWPc (ORCPT
+        Wed, 24 Jul 2019 18:15:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36445 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfGXWP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:15:32 -0400
-Received: by mail-ua1-f66.google.com with SMTP id z13so19067164uaa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:15:31 -0700 (PDT)
+        Wed, 24 Jul 2019 18:15:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so46033965ljj.3;
+        Wed, 24 Jul 2019 15:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=h6iTGbrUj20I8zXniTeQ544bNCuLGyZB+YlcvBGsDjw=;
-        b=QjMnrXveL05m7SHFOkDi+a02nbwWABa8uU8sNtH30U4t6yef45p+bYczQ9t7NU/950
-         mTkzHvr0KUu9Gz63UOr+C9TUeTOcrYKzHzRbGoLZrL02mYYBlsT+wdqezNU65Lmixk/C
-         UBThtKqkwyQehSA5xllnpBSs2w4OYjl1HLulM=
+        bh=UBF6bNBt/PemNw217in5S9v8lFOv59SFC9xNcgdoU6Y=;
+        b=s+uv8qpFxE+t54WGQJxNv5PYL7LjIriR64oc1BJyj1009oNYg6lzg+rMYzQQOCEQ/4
+         QMO4FRyZCOuroPUbx/6MBgHUdMdnEQwtfxh2xCc2q4kRbiUdpUyvMegZrChhGGNgJUAy
+         Avf8nJfUygtP6hrUCLBQbNyAPWmEHblYOzgfDrxZOYT4sb7wUIbwDdogK+r6+C7bntd1
+         +4WqbjfwD6gUnOOpW6Dx9tKsZJRXETh89NSOLtFpz6P4uu6xdSRhH1vM8s0lTRrSfEjw
+         GorBm5VsmBWs/7Jx2ZCSLyDT5+kidDNLZJ2dWq9ruL3lc9uDai+Qh4U0qR+mrnSPTidp
+         qRfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=h6iTGbrUj20I8zXniTeQ544bNCuLGyZB+YlcvBGsDjw=;
-        b=ovRAPvK6wTcKynBYxxYmH5Tp0eooXmOX0Mfx1Zo/MXP84cyahbGgzVeKGTgMlONSHw
-         SokSMkA5NuUXHr7xBEtOHAB1z+4txbdREglBUaC2v3NynS2renimkW8gz4Di2QzgKPTG
-         usXRm03XrfiUyEaLEsGDviTCOgWIhPtIJxhtwJ159+GOfscOnGXzi5hoql95qagmtKcj
-         ieFNT8nBVnjgTOkew4oVgqVm+citWxDrZzbdsBpE8T4RoBTpdBLmq8eE3mB4kizhmvb6
-         /xGGxSvKEaq8Ymj0srTpDXoKebzCTv0Pdby1iVBuCiPmTbM02Xer92qClgSy4HIQ4hO0
-         rKsw==
-X-Gm-Message-State: APjAAAXlbWFSL5AH7WQQSH4SZ9UZdp2vUrbCpwQYauwtVOOEKD7Lax/+
-        Ej5NSrGZb52niGL05grPfW6ppRjxQzRXyQXSdC0Oww==
-X-Google-Smtp-Source: APXvYqx7BFn9iOZ2wlwR0mjBuA9rIFMZM3RWFpJKuC+0oBv8yw1N5p6TIxqSauPfez/DPzzJ4xYri1jiwaditw5mz3E=
-X-Received: by 2002:ab0:614d:: with SMTP id w13mr34675942uan.66.1564006530811;
- Wed, 24 Jul 2019 15:15:30 -0700 (PDT)
+        bh=UBF6bNBt/PemNw217in5S9v8lFOv59SFC9xNcgdoU6Y=;
+        b=fUGyCmD8sMc7BsJPqMr1azO6Hv/2CBZ0CGdOKUeys9APJZBHraNOk1H5mWgFieXks9
+         M9O8YAaS0WtjcoZISEEKTKHLd3dPAFF+M+Csq+/9w03roWcJeaOoJkRaGExL5aM+nGo8
+         J2RgQR+UWcuNre9PAoFPLZKZPoayfKc/qYnVEDJD5wdjCqyt404IFz+Zrn38E1SJ3Ilj
+         gLafZRl4rwCIizadG/5PabG7gs5ex1okVSZqjcl15up/9IjjaAPSvlw20ghgYQaQyx4r
+         yZFX7iQb24eDwlC9hKrRdk6L7Ay+jrlh4B/GqfAR5P6FL/Sfio9OWRCE3Vojw5TJ0gDT
+         6IIA==
+X-Gm-Message-State: APjAAAXPaesB7+s8PpzShWpa6Xr4H84lwzIKA8DoQJRLeqop+Vv4Xr9/
+        2yepAZmDetNvoW49A/X5K9/L8HnN+tUIBKnSJRs=
+X-Google-Smtp-Source: APXvYqwM9LPq8IoQDhPWPLNNHxpyCL3AuIe6TPRs7D3NajHezX5f401oHxVeqFYuSFlyCQnR0SrW8LZ2qREKv7Tmk+o=
+X-Received: by 2002:a2e:9a82:: with SMTP id p2mr45445949lji.64.1564006555385;
+ Wed, 24 Jul 2019 15:15:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190710021659.177950-1-dbasehore@chromium.org>
- <20190710021659.177950-3-dbasehore@chromium.org> <20190723091945.GD787@ravnborg.org>
-In-Reply-To: <20190723091945.GD787@ravnborg.org>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Wed, 24 Jul 2019 15:15:19 -0700
-Message-ID: <CAGAzgsonxAcOLxPSoP6Swab+AFPxWaxmC_tg87J=6Nes_awACg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/4] drm/panel: set display info in panel attach
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, Sean Paul <sean@poorly.run>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+References: <20190724165803.87470-1-brianvv@google.com> <CAPhsuW7PU1PP91e8vD2diwhBAwGJHWu6wAKOoBThT86f4r5OJw@mail.gmail.com>
+In-Reply-To: <CAPhsuW7PU1PP91e8vD2diwhBAwGJHWu6wAKOoBThT86f4r5OJw@mail.gmail.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Wed, 24 Jul 2019 15:15:44 -0700
+Message-ID: <CABCgpaU3xxX6CMMxD+1knApivtc2jLBHysDXw-0E9bQEL0qC3A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/6] bpf: add BPF_MAP_DUMP command to dump more
+ than one entry per call
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam, thanks for pointing out the potential conflict.
+On Wed, Jul 24, 2019 at 12:20 PM Song Liu <liu.song.a23@gmail.com> wrote:
+>
+> On Wed, Jul 24, 2019 at 10:09 AM Brian Vazquez <brianvv@google.com> wrote:
+> >
+> > This introduces a new command to retrieve multiple number of entries
+> > from a bpf map.
+> >
+> > This new command can be executed from the existing BPF syscall as
+> > follows:
+> >
+> > err =  bpf(BPF_MAP_DUMP, union bpf_attr *attr, u32 size)
+> > using attr->dump.map_fd, attr->dump.prev_key, attr->dump.buf,
+> > attr->dump.buf_len
+> > returns zero or negative error, and populates buf and buf_len on
+> > succees
+> >
+> > This implementation is wrapping the existing bpf methods:
+> > map_get_next_key and map_lookup_elem
+> >
+> > Note that this implementation can be extended later to do dump and
+> > delete by extending map_lookup_and_delete_elem (currently it only works
+> > for bpf queue/stack maps) and either use a new flag in map_dump or a new
+> > command map_dump_and_delete.
+> >
+> > Results show that even with a 1-elem_size buffer, it runs ~40 faster
+>
+> Why is the new command 40% faster with 1-elem_size buffer?
 
-On Tue, Jul 23, 2019 at 2:19 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Derek.
->
-> On Tue, Jul 09, 2019 at 07:16:57PM -0700, Derek Basehore wrote:
-> > Devicetree systems can set panel orientation via a panel binding, but
-> > there's no way, as is, to propagate this setting to the connector,
-> > where the property need to be added.
-> > To address this, this patch sets orientation, as well as other fixed
-> > values for the panel, in the drm_panel_attach function. These values
-> > are stored from probe in the drm_panel struct.
->
-> This approch seems to conflict with work done by Laurent where the
-> ownership/creation of the connector will be moved to the display controller.
->
-> If I understand it correct then there should not be a 1:1 relation
-> between a panel and a connector anymore.
+The test is using a really simple map structure: uint64_t key,val.
+Which makes the lookup_elem logic faster since it doesn't spend too
+much time copying the value. My conclusion with the 40% was that this
+new implementation only needs 1 syscall per elem compare to the 2
+syscalls that we needed with previous implementation so in this
+particular case the number of ops that we are doing is almost halved.
+I did one experiment increasing the value_size (448*64B) and it was
+only 14% faster with 1-elem_size buffer.
 
+> > than the current implementation, improvements of ~85% are reported when
+> > the buffer size is increased, although, after the buffer size is around
+> > 5% of the total number of entries there's no huge difference in
+> > increasing it.
+> >
+> > Tested:
+> > Tried different size buffers to handle case where the bulk is bigger, or
+> > the elements to retrieve are less than the existing ones, all runs read
+> > a map of 100K entries. Below are the results(in ns) from the different
+> > runs:
+> >
+> > buf_len_1:       69038725 entry-by-entry: 112384424 improvement
+> > 38.569134
+> > buf_len_2:       40897447 entry-by-entry: 111030546 improvement
+> > 63.165590
+> > buf_len_230:     13652714 entry-by-entry: 111694058 improvement
+> > 87.776687
+> > buf_len_5000:    13576271 entry-by-entry: 111101169 improvement
+> > 87.780263
+> > buf_len_73000:   14694343 entry-by-entry: 111740162 improvement
+> > 86.849542
+> > buf_len_100000:  13745969 entry-by-entry: 114151991 improvement
+> > 87.958187
+> > buf_len_234567:  14329834 entry-by-entry: 114427589 improvement
+> > 87.476941
+>
+> It took me a while to figure out the meaning of 87.476941. It is probably
+> a good idea to say 87.5% instead.
 
-Can you point me to this work? I still see the lone drm_display_info
-struct in the drm_connector struct. This seems to indicate that the
-kernel still assume one display per connector.
-
->
-> We should not try to work in two different directions with this.
-> Laurent, can you comment on this?
->
-> If we move forard with this patch, then all fields in drm_panel needs
-> kernel-doc - preferably inline.
->
->         Sam
->
-> >
-> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > ---
-> >  drivers/gpu/drm/drm_panel.c | 28 ++++++++++++++++++++++++++++
-> >  include/drm/drm_panel.h     | 14 ++++++++++++++
-> >  2 files changed, 42 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > index 169bab54d52d..ca01095470a9 100644
-> > --- a/drivers/gpu/drm/drm_panel.c
-> > +++ b/drivers/gpu/drm/drm_panel.c
-> > @@ -104,11 +104,23 @@ EXPORT_SYMBOL(drm_panel_remove);
-> >   */
-> >  int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector)
-> >  {
-> > +     struct drm_display_info *info;
-> > +
-> >       if (panel->connector)
-> >               return -EBUSY;
-> >
-> >       panel->connector = connector;
-> >       panel->drm = connector->dev;
-> > +     info = &connector->display_info;
-> > +     info->width_mm = panel->width_mm;
-> > +     info->height_mm = panel->height_mm;
-> > +     info->bpc = panel->bpc;
-> > +     info->panel_orientation = panel->orientation;
-> > +     info->bus_flags = panel->bus_flags;
-> > +     if (panel->bus_formats)
-> > +             drm_display_info_set_bus_formats(&connector->display_info,
-> > +                                              panel->bus_formats,
-> > +                                              panel->num_bus_formats);
-> >
-> >       return 0;
-> >  }
-> > @@ -128,6 +140,22 @@ EXPORT_SYMBOL(drm_panel_attach);
-> >   */
-> >  int drm_panel_detach(struct drm_panel *panel)
-> >  {
-> > +     struct drm_display_info *info;
-> > +
-> > +     if (!panel->connector)
-> > +             goto out;
-> > +
-> > +     info = &panel->connector->display_info;
-> > +     info->width_mm = 0;
-> > +     info->height_mm = 0;
-> > +     info->bpc = 0;
-> > +     info->panel_orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-> > +     info->bus_flags = 0;
-> > +     kfree(info->bus_formats);
-> > +     info->bus_formats = NULL;
-> > +     info->num_bus_formats = 0;
-> > +
-> > +out:
-> >       panel->connector = NULL;
-> >       panel->drm = NULL;
-> >
-> > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> > index fc7da55f41d9..a6a881b987dd 100644
-> > --- a/include/drm/drm_panel.h
-> > +++ b/include/drm/drm_panel.h
-> > @@ -39,6 +39,8 @@ enum drm_panel_orientation;
-> >   * struct drm_panel_funcs - perform operations on a given panel
-> >   * @disable: disable panel (turn off back light, etc.)
-> >   * @unprepare: turn off panel
-> > + * @detach: detach panel->connector (clear internal state, etc.)
-> > + * @attach: attach panel->connector (update internal state, etc.)
-> >   * @prepare: turn on panel and perform set up
-> >   * @enable: enable panel (turn on back light, etc.)
-> >   * @get_modes: add modes to the connector that the panel is attached to and
-> > @@ -95,6 +97,18 @@ struct drm_panel {
-> >
-> >       const struct drm_panel_funcs *funcs;
-> >
-> > +     /*
-> > +      * panel information to be set in the connector when the panel is
-> > +      * attached.
-> > +      */
-> > +     unsigned int width_mm;
-> > +     unsigned int height_mm;
-> > +     unsigned int bpc;
-> > +     int orientation;
-> > +     const u32 *bus_formats;
-> > +     unsigned int num_bus_formats;
-> > +     u32 bus_flags;
-> > +
-> >       struct list_head list;
-> >  };
-> >
-> > --
-> > 2.22.0.410.gd8fdbe21b5-goog
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+right, will change it in next version.
