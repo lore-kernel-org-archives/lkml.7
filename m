@@ -2,98 +2,152 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C456DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41077C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93DF92253D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:16:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uVO+SOoA"
+	by mail.kernel.org (Postfix) with ESMTP id 1F86A22ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbfGXCQx (ORCPT
+        id S1727298AbfGXCR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:16:53 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45204 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfGXCQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:16:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O2E4Xm040703;
-        Wed, 24 Jul 2019 02:16:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=kX6I6PYSOxMHGHIybK4B01JXbztXP64NVNWd7iSZHLQ=;
- b=uVO+SOoAz+inSRkazNKfa0l3CsmH09O36PM8mMJsPng6vncQJpUpo/d020LyqAQGmNCm
- kWgSoixU1ZnZJZhB8jnAnImjOIE29KSvZt56yArJH8qa4VruAo6LXEpBpxrEkrIybGP1
- YhaCNtc4WNWcpq/opHvQSlZ36KxbSUZX124WiG0zxxIPXoTzV0w9/CgZco/vFbtb/RpC
- VyJtQhnqtZ/XrJbrULmTJRMpMQKXvyyTUatdoj7mC7C/UWzBm3Vy+b/qd3oso5/GP5zD
- HqtrdydNJdBUwrifmw9SULQUC6UfxdUMQOl+p7bDLJOHc56Uxg/lPffgUjZUXEkxOeEq Kw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2tx61bt7c0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:16:48 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O2CsXD092257;
-        Wed, 24 Jul 2019 02:16:47 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2tx60xkj7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:16:47 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6O2GjaI011944;
-        Wed, 24 Jul 2019 02:16:46 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jul 2019 19:16:45 -0700
-To:     Colin King <colin.king@canonical.com>
-Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: megaraid_sas: fix spelling mistake "megarid_sas" -> "megaraid_sas"
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190720215840.23831-1-colin.king@canonical.com>
-Date:   Tue, 23 Jul 2019 22:16:43 -0400
-In-Reply-To: <20190720215840.23831-1-colin.king@canonical.com> (Colin King's
-        message of "Sat, 20 Jul 2019 22:58:40 +0100")
-Message-ID: <yq1k1c8qir8.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 23 Jul 2019 22:17:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44554 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfGXCR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:17:29 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A97D381DF1;
+        Wed, 24 Jul 2019 02:17:28 +0000 (UTC)
+Received: from [10.72.12.167] (ovpn-12-167.pek2.redhat.com [10.72.12.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2233F60497;
+        Wed, 24 Jul 2019 02:17:16 +0000 (UTC)
+Subject: Re: WARNING in __mmdrop
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     syzbot <syzbot+e58112d71f77113ddb7b@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, ldv@altlinux.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        wad@chromium.org
+References: <20190721044615-mutt-send-email-mst@kernel.org>
+ <75c43998-3a1c-676f-99ff-3d04663c3fcc@redhat.com>
+ <20190722035657-mutt-send-email-mst@kernel.org>
+ <cfcd330d-5f4a-835a-69f7-c342d5d0d52d@redhat.com>
+ <20190723010156-mutt-send-email-mst@kernel.org>
+ <124be1a2-1c53-8e65-0f06-ee2294710822@redhat.com>
+ <20190723032800-mutt-send-email-mst@kernel.org>
+ <e2e01a05-63d8-4388-2bcd-b2be3c865486@redhat.com>
+ <20190723062221-mutt-send-email-mst@kernel.org>
+ <9baa4214-67fd-7ad2-cbad-aadf90bbfc20@redhat.com>
+ <20190723110219-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e0c91b89-d1e8-9831-00fe-23fe92d79fa2@redhat.com>
+Date:   Wed, 24 Jul 2019 10:17:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=697
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240023
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=766 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240023
+In-Reply-To: <20190723110219-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 24 Jul 2019 02:17:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Colin,
+On 2019/7/23 下午11:02, Michael S. Tsirkin wrote:
+> On Tue, Jul 23, 2019 at 09:34:29PM +0800, Jason Wang wrote:
+>> On 2019/7/23 下午6:27, Michael S. Tsirkin wrote:
+>>>> Yes, since there could be multiple co-current invalidation requests. We need
+>>>> count them to make sure we don't pin wrong pages.
+>>>>
+>>>>
+>>>>> I also wonder about ordering. kvm has this:
+>>>>>           /*
+>>>>>             * Used to check for invalidations in progress, of the pfn that is
+>>>>>             * returned by pfn_to_pfn_prot below.
+>>>>>             */
+>>>>>            mmu_seq = kvm->mmu_notifier_seq;
+>>>>>            /*
+>>>>>             * Ensure the read of mmu_notifier_seq isn't reordered with PTE reads in
+>>>>>             * gfn_to_pfn_prot() (which calls get_user_pages()), so that we don't
+>>>>>             * risk the page we get a reference to getting unmapped before we have a
+>>>>>             * chance to grab the mmu_lock without mmu_notifier_retry() noticing.
+>>>>>             *
+>>>>>             * This smp_rmb() pairs with the effective smp_wmb() of the combination
+>>>>>             * of the pte_unmap_unlock() after the PTE is zapped, and the
+>>>>>             * spin_lock() in kvm_mmu_notifier_invalidate_<page|range_end>() before
+>>>>>             * mmu_notifier_seq is incremented.
+>>>>>             */
+>>>>>            smp_rmb();
+>>>>>
+>>>>> does this apply to us? Can't we use a seqlock instead so we do
+>>>>> not need to worry?
+>>>> I'm not familiar with kvm MMU internals, but we do everything under of
+>>>> mmu_lock.
+>>>>
+>>>> Thanks
+>>> I don't think this helps at all.
+>>>
+>>> There's no lock between checking the invalidate counter and
+>>> get user pages fast within vhost_map_prefetch. So it's possible
+>>> that get user pages fast reads PTEs speculatively before
+>>> invalidate is read.
+>>>
+>>> -- 
+>>
+>> In vhost_map_prefetch() we do:
+>>
+>>          spin_lock(&vq->mmu_lock);
+>>
+>>          ...
+>>
+>>          err = -EFAULT;
+>>          if (vq->invalidate_count)
+>>                  goto err;
+>>
+>>          ...
+>>
+>>          npinned = __get_user_pages_fast(uaddr->uaddr, npages,
+>>                                          uaddr->write, pages);
+>>
+>>          ...
+>>
+>>          spin_unlock(&vq->mmu_lock);
+>>
+>> Is this not sufficient?
+>>
+>> Thanks
+> So what orders __get_user_pages_fast wrt invalidate_count read?
 
-> Fix spelling mistake in kernel warning message and replace printk with
-> with pr_warn.
 
-Applied to 5.3/scsi-fixes, thanks!
+So in invalidate_end() callback we have:
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+spin_lock(&vq->mmu_lock);
+--vq->invalidate_count;
+         spin_unlock(&vq->mmu_lock);
+
+
+So even PTE is read speculatively before reading invalidate_count (only 
+in the case of invalidate_count is zero). The spinlock has guaranteed 
+that we won't read any stale PTEs.
+
+Thanks
+
+
+>
