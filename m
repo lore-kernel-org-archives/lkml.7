@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214AEC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E754C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70C52147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB63206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998625;
-	bh=65BWGDIpap0BzGsgf1qyxTzlcwLR6BGBbWyre8uNvJU=;
+	s=default; t=1563998632;
+	bh=PzCYWCyELM16TJPLUlAN2chL9JFCp2DEFuWMgzwqbvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SCRhBcdqysOdxclqbnYg9AkY8iOZ5HpmW5pNPX9j4qOxtRPpf60vkuJ+DDKTZgvkt
-	 OdCzZs+ScZZpl65RhgSuY7yG1oNPrkmwa/J8sHGozM0BTg4TjylqJDeHZmu4KIUK4g
-	 bu9Pb1pGQ19rFWrCWB+UVb1OME1fP6cadOOMqT0Y=
+	b=CQGUV/hN/mm/RQ2JRFeOr3wc9qj5BNCZLpR9rxaHwArEIr0xe0Px6JoXde4JcFciT
+	 8OFxdwP3gtUokwXMtx51sfqQGct/QS1Qp2/shRXOJESuiFmGcU5I0UegdVi6PsJmP1
+	 BITViQ/JFuFWAqCxXp3LSbfXXBlqZfOVhOdxGzjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392376AbfGXUDn (ORCPT
+        id S2392402AbfGXUDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54114 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405868AbfGXUDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:03:37 -0400
+        id S2392328AbfGXUDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:03:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8CFB2147A;
-        Wed, 24 Jul 2019 20:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3FC214AF;
+        Wed, 24 Jul 2019 20:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998616;
-        bh=65BWGDIpap0BzGsgf1qyxTzlcwLR6BGBbWyre8uNvJU=;
+        s=default; t=1563998625;
+        bh=PzCYWCyELM16TJPLUlAN2chL9JFCp2DEFuWMgzwqbvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DmBiAPTRB8aIpcR03Y7qdqkz9Dd2LJ1kjzDGkWAozpG2qXgAuG0pwwK9I6dYSgC8F
-         KRtB7dwGmHQtAaRHsdeqzeg3WvI+LlkVqxRQ6x97bSuJHsYKop1MBQKqprajO3Ne4w
-         8uu7yu94Jd3fKC+GG+nj880STYMeMwVWLE679Ygc=
+        b=hMU1/v6NX/SUyQb+NFXgE3/lE5T1/J5ajRnKqlIKnH7i2Li18z35dDqxbXn9X8fSF
+         2nSrOd/sbQABea5BtvZxPYYknCfC1NbMtf2OAxufPlct5guRDUmYx52UJ63ggl7hJu
+         F6FnrYoFk8dAhAKqMYvCJl7geQHIt7478m4gAlSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+2e1ef9188251d9cc7944@syzkaller.appspotmail.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/271] perf report: Fix OOM error in TUI mode on s390
-Date:   Wed, 24 Jul 2019 21:18:45 +0200
-Message-Id: <20190724191659.940987995@linuxfoundation.org>
+Subject: [PATCH 4.19 058/271] media: uvcvideo: Fix access to uninitialized fields on probe error
+Date:   Wed, 24 Jul 2019 21:18:47 +0200
+Message-Id: <20190724191700.129205442@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,116 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8a07aa4e9b7b0222129c07afff81634a884b2866 ]
+[ Upstream commit 11a087f484bf15ff65f0a9f277aa5a61fd07ed2a ]
 
-Debugging a OOM error using the TUI interface revealed this issue
-on s390:
+We need to check whether this work we are canceling actually is
+initialized.
 
-[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
-....
-00000001119b7158 B radix_tree_node_cachep
-00000001119b8000 B __bss_stop
-00000001119b8000 B _end
-000003ff80002850 t autofs_mount	[autofs4]
-000003ff80002868 t autofs_show_options	[autofs4]
-000003ff80002a98 t autofs_evict_inode	[autofs4]
-....
-
-There is a huge gap between the last kernel symbol
-__bss_stop/_end and the first kernel module symbol
-autofs_mount (from autofs4 module).
-
-After reading the kernel symbol table via functions:
-
- dso__load()
- +--> dso__load_kernel_sym()
-      +--> dso__load_kallsyms()
-	   +--> __dso_load_kallsyms()
-	        +--> symbols__fixup_end()
-
-the symbol __bss_stop has a start address of 1119b8000 and
-an end address of 3ff80002850, as can be seen by this debug statement:
-
-  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
-
-The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
-It is the last kernel symbol and fills up the space until
-the first kernel module symbol.
-
-This size kills the TUI interface when executing the following
-code:
-
-  process_sample_event()
-    hist_entry_iter__add()
-      hist_iter__report_callback()
-        hist_entry__inc_addr_samples()
-          symbol__inc_addr_samples(symbol = __bss_stop)
-            symbol__cycles_hist()
-               annotated_source__alloc_histograms(...,
-				                symbol__size(sym),
-		                                ...)
-
-This function allocates memory to save sample histograms.
-The symbol_size() marco is defined as sym->end - sym->start, which
-results in above value of 0x3fe6e64a850 bytes and
-the call to calloc() in annotated_source__alloc_histograms() fails.
-
-The histgram memory allocation might fail, make this failure
-no-fatal and continue processing.
-
-Output before:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
-		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
-		func: 0
-problem adding hist entry, skipping event
-0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
-[tmricht@m83lp54 perf]$
-
-Output after:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
-   symbol__hists notes->src:0x2aa2a70 nr_hists:1
-   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
-   __symbol__inc_addr_samples: addr=0x11094c69e
-   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
-   	=> nr_samples: 1, period: 526008
-[tmricht@m83lp54 perf]$
-
-There is no error about failed memory allocation and the TUI interface
-shows all entries.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/90cb5607-3e12-5167-682d-978eba7dafa8@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+2e1ef9188251d9cc7944@syzkaller.appspotmail.com
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/media/usb/uvc/uvc_ctrl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index dfee110b3a58..c357051dd2b6 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -911,9 +911,8 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
- 	if (sym == NULL)
- 		return 0;
- 	src = symbol__hists(sym, evsel->evlist->nr_entries);
--	if (src == NULL)
--		return -ENOMEM;
--	return __symbol__inc_addr_samples(sym, map, src, evsel->idx, addr, sample);
-+	return (src) ?  __symbol__inc_addr_samples(sym, map, src, evsel->idx,
-+						   addr, sample) : 0;
- }
+diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+index 467b1ddaf4e7..f2854337cdca 100644
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -2350,7 +2350,9 @@ void uvc_ctrl_cleanup_device(struct uvc_device *dev)
+ 	struct uvc_entity *entity;
+ 	unsigned int i;
  
- static int symbol__account_cycles(u64 addr, u64 start,
+-	cancel_work_sync(&dev->async_ctrl.work);
++	/* Can be uninitialized if we are aborting on probe error. */
++	if (dev->async_ctrl.work.func)
++		cancel_work_sync(&dev->async_ctrl.work);
+ 
+ 	/* Free controls and control mappings for all entities. */
+ 	list_for_each_entry(entity, &dev->entities, list) {
 -- 
 2.20.1
 
