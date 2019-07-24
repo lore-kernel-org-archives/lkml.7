@@ -2,214 +2,252 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8045C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7341C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA1320665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997944;
-	bh=8BQOTuIw7lc2OCfIx4b+UjJgllDVu7q1Kxjvkr9eHtI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ikt1STHdBrG34yB13suTCo7KsolgvBDNKEmPPiQ2sLDNOiTnMCJwQiu8iX8rCPy9d
-	 ymqPj05txQzL9f9OHiTBQzTphmMLA0iWLZWrwzaeVBfq5LdUkWPIZljUCexjFHMmz2
-	 g2V8IWioFOvt5Kp9szPfPM64Tog6TVvxU+3MhkyA=
+	by mail.kernel.org (Postfix) with ESMTP id 9D1C32147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391564AbfGXTwW (ORCPT
+        id S2391736AbfGXTw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404116AbfGXTwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:52:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E04C205C9;
-        Wed, 24 Jul 2019 19:52:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997937;
-        bh=8BQOTuIw7lc2OCfIx4b+UjJgllDVu7q1Kxjvkr9eHtI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XbJUrfe62qR8l4DeVosBOZegLaVJvGMGi+j+8lC1b5+Fhzf2HV61vQZatvUWCbaHc
-         t4T9oOJ0Turf/QfnTTOMcHub219CIY0aYXaZEPaNT9+J8lXBbpq5wDz2XQfF/tx8ED
-         LceZ5jBOSD1TrfYdLh0nR1Io79AS+xKGA0sfA/5U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
-Subject: [PATCH 5.1 193/371] bnx2x: Prevent ptp_task to be rescheduled indefinitely
-Date:   Wed, 24 Jul 2019 21:19:05 +0200
-Message-Id: <20190724191739.408374701@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 15:52:27 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:35156 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388294AbfGXTwX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:52:23 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <benjamin@sipsolutions.net>)
+        id 1hqNJ5-0004Yr-16; Wed, 24 Jul 2019 21:52:11 +0200
+Message-ID: <7f13681e20034516103a9559d394289a6975aed4.camel@sipsolutions.net>
+Subject: Re: [PATCH] drivers: thermal: processor_thermal_device: Export
+ sysfs inteface for TCC offset
+From:   Benjamin Berg <benjamin@sipsolutions.net>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        rui.zhang@intel.com, edubezval@gmail.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 24 Jul 2019 21:52:06 +0200
+In-Reply-To: <20190723010302.18048-1-srinivas.pandruvada@linux.intel.com>
+References: <20190723010302.18048-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Gs75zxF5lC00YPwVB/aa"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c91f25c2f72ba6001775a5932857c1d2131c531 ]
 
-Currently bnx2x ptp worker tries to read a register with timestamp
-information in case of TX packet timestamping and in case it fails,
-the routine reschedules itself indefinitely. This was reported as a
-kworker always at 100% of CPU usage, which was narrowed down to be
-bnx2x ptp_task.
+--=-Gs75zxF5lC00YPwVB/aa
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-By following the ioctl handler, we could narrow down the problem to
-an NTP tool (chrony) requesting HW timestamping from bnx2x NIC with
-RX filter zeroed; this isn't reproducible for example with ptp4l
-(from linuxptp) since this tool requests a supported RX filter.
-It seems NIC FW timestamp mechanism cannot work well with
-RX_FILTER_NONE - driver's PTP filter init routine skips a register
-write to the adapter if there's not a supported filter request.
+Tested-by: Benjamin Berg <bberg@redhat.com>
 
-This patch addresses the problem of bnx2x ptp thread's everlasting
-reschedule by retrying the register read 10 times; between the read
-attempts the thread sleeps for an increasing amount of time starting
-in 1ms to give FW some time to perform the timestamping. If it still
-fails after all retries, we bail out in order to prevent an unbound
-resource consumption from bnx2x.
+Hi,
 
-The patch also adds an ethtool statistic for accounting the skipped
-TX timestamp packets and it reduces the priority of timestamping
-error messages to prevent log flooding. The code was tested using
-both linuxptp and chrony.
+this patch allows performance improvements of some machines. It would
+be nice if this could still make 5.3.
 
-Reported-and-tested-by: Przemyslaw Hausman <przemyslaw.hausman@canonical.com>
-Suggested-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/ethernet/broadcom/bnx2x/bnx2x_cmn.c   |  5 ++-
- .../ethernet/broadcom/bnx2x/bnx2x_ethtool.c   |  4 ++-
- .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 33 ++++++++++++++-----
- .../net/ethernet/broadcom/bnx2x/bnx2x_stats.h |  3 ++
- 4 files changed, 34 insertions(+), 11 deletions(-)
+Benjamin
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-index ecb1bd7eb508..78a01880931c 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -3858,9 +3858,12 @@ netdev_tx_t bnx2x_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP)) {
- 		if (!(bp->flags & TX_TIMESTAMPING_EN)) {
-+			bp->eth_stats.ptp_skip_tx_ts++;
- 			BNX2X_ERR("Tx timestamping was not enabled, this packet will not be timestamped\n");
- 		} else if (bp->ptp_tx_skb) {
--			BNX2X_ERR("The device supports only a single outstanding packet to timestamp, this packet will not be timestamped\n");
-+			bp->eth_stats.ptp_skip_tx_ts++;
-+			netdev_err_once(bp->dev,
-+					"Device supports only a single outstanding packet to timestamp, this packet won't be timestamped\n");
- 		} else {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			/* schedule check for Tx timestamp */
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-index 59f227fcc68b..0e1b884a5344 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-@@ -182,7 +182,9 @@ static const struct {
- 	{ STATS_OFFSET32(driver_filtered_tx_pkt),
- 				4, false, "driver_filtered_tx_pkt" },
- 	{ STATS_OFFSET32(eee_tx_lpi),
--				4, true, "Tx LPI entry count"}
-+				4, true, "Tx LPI entry count"},
-+	{ STATS_OFFSET32(ptp_skip_tx_ts),
-+				4, false, "ptp_skipped_tx_tstamp" },
- };
- 
- #define BNX2X_NUM_STATS		ARRAY_SIZE(bnx2x_stats_arr)
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index 626b491f7674..7a075f1f1242 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -15243,11 +15243,24 @@ static void bnx2x_ptp_task(struct work_struct *work)
- 	u32 val_seq;
- 	u64 timestamp, ns;
- 	struct skb_shared_hwtstamps shhwtstamps;
-+	bool bail = true;
-+	int i;
-+
-+	/* FW may take a while to complete timestamping; try a bit and if it's
-+	 * still not complete, may indicate an error state - bail out then.
-+	 */
-+	for (i = 0; i < 10; i++) {
-+		/* Read Tx timestamp registers */
-+		val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
-+				 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
-+		if (val_seq & 0x10000) {
-+			bail = false;
-+			break;
-+		}
-+		msleep(1 << i);
-+	}
- 
--	/* Read Tx timestamp registers */
--	val_seq = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_SEQID :
--			 NIG_REG_P0_TLLH_PTP_BUF_SEQID);
--	if (val_seq & 0x10000) {
-+	if (!bail) {
- 		/* There is a valid timestamp value */
- 		timestamp = REG_RD(bp, port ? NIG_REG_P1_TLLH_PTP_BUF_TS_MSB :
- 				   NIG_REG_P0_TLLH_PTP_BUF_TS_MSB);
-@@ -15262,16 +15275,18 @@ static void bnx2x_ptp_task(struct work_struct *work)
- 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
- 		shhwtstamps.hwtstamp = ns_to_ktime(ns);
- 		skb_tstamp_tx(bp->ptp_tx_skb, &shhwtstamps);
--		dev_kfree_skb_any(bp->ptp_tx_skb);
--		bp->ptp_tx_skb = NULL;
- 
- 		DP(BNX2X_MSG_PTP, "Tx timestamp, timestamp cycles = %llu, ns = %llu\n",
- 		   timestamp, ns);
- 	} else {
--		DP(BNX2X_MSG_PTP, "There is no valid Tx timestamp yet\n");
--		/* Reschedule to keep checking for a valid timestamp value */
--		schedule_work(&bp->ptp_task);
-+		DP(BNX2X_MSG_PTP,
-+		   "Tx timestamp is not recorded (register read=%u)\n",
-+		   val_seq);
-+		bp->eth_stats.ptp_skip_tx_ts++;
- 	}
-+
-+	dev_kfree_skb_any(bp->ptp_tx_skb);
-+	bp->ptp_tx_skb = NULL;
- }
- 
- void bnx2x_set_rx_ts(struct bnx2x *bp, struct sk_buff *skb)
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-index b2644ed13d06..d55e63692cf3 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_stats.h
-@@ -207,6 +207,9 @@ struct bnx2x_eth_stats {
- 	u32 driver_filtered_tx_pkt;
- 	/* src: Clear-on-Read register; Will not survive PMF Migration */
- 	u32 eee_tx_lpi;
-+
-+	/* PTP */
-+	u32 ptp_skip_tx_ts;
- };
- 
- struct bnx2x_eth_q_stats {
--- 
-2.20.1
+On Mon, 2019-07-22 at 18:03 -0700, Srinivas Pandruvada wrote:
+> This change exports an interface to read tcc offset and allow writing if
+> the platform is not locked.
+>=20
+> Refer to Intel SDM for details on the MSR: MSR_TEMPERATURE_TARGET.
+> Here TCC Activation Offset (R/W) bits allow temperature offset in degrees
+> in relation to TjMAX.
+>=20
+> This change will be useful for improving performance from user space for
+> some platforms, if the current offset is not optimal.
+>=20
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  .../processor_thermal_device.c                | 91
+> ++++++++++++++++++-
+>  1 file changed, 87 insertions(+), 4 deletions(-)
+>=20
+> diff --git
+> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> index 213ab3cc6b80..a35635129fed 100644
+> ---
+> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> +++
+> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> @@ -137,6 +137,72 @@ static const struct attribute_group
+> power_limit_attribute_group =3D {
+>  	.name =3D "power_limits"
+>  };
+> =20
+> +static ssize_t tcc_offset_degree_celsius_show(struct device *dev,
+> +			       struct device_attribute *attr, char
+> *buf)
+> +{
+> +	u64 val;
+> +	int err;
+> +
+> +	err =3D rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	val =3D (val >> 24) & 0xff;
+> +	return sprintf(buf, "%d\n", (int)val);
+> +}
+> +
+> +static int tcc_offset_update(int tcc)
+> +{
+> +	u64 val;
+> +	int err;
+> +
+> +	if (!tcc)
+> +		return -EINVAL;
+> +
+> +	err =3D rdmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	val =3D ~GENMASK_ULL(31, 24);
+> +	val =3D (tcc & 0xff) << 24;
+> +
+> +	err =3D wrmsrl_safe(MSR_IA32_TEMPERATURE_TARGET, val);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tcc_offset_save;
+> +
+> +static ssize_t tcc_offset_degree_celsius_store(struct device *dev,
+> +				struct device_attribute *attr, const
+> char *buf,
+> +				size_t count)
+> +{
+> +	u64 val;
+> +	int tcc, err;
+> +
+> +	err =3D rdmsrl_safe(MSR_PLATFORM_INFO, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!(val & BIT(30)))
+> +		return -EACCES;
+> +
+> +	if (kstrtoint(buf, 0, &tcc))
+> +		return -EINVAL;
+> +
+> +	err =3D tcc_offset_update(tcc);
+> +	if (err)
+> +		return err;
+> +
+> +	tcc_offset_save =3D tcc;
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(tcc_offset_degree_celsius);
+> +
+>  static int stored_tjmax; /* since it is fixed, we can have local
+> storage */
+> =20
+>  static int get_tjmax(void)
+> @@ -332,6 +398,7 @@ static void proc_thermal_remove(struct
+> proc_thermal_device *proc_priv)
+>  	acpi_remove_notify_handler(proc_priv->adev->handle,
+>  				   ACPI_DEVICE_NOTIFY,
+> proc_thermal_notify);
+>  	int340x_thermal_zone_remove(proc_priv->int340x_zone);
+> +	sysfs_remove_file(&proc_priv->dev->kobj,
+> &dev_attr_tcc_offset_degree_celsius.attr);
+>  	sysfs_remove_group(&proc_priv->dev->kobj,
+>  			   &power_limit_attribute_group);
+>  }
+> @@ -355,8 +422,15 @@ static int int3401_add(struct platform_device
+> *pdev)
+> =20
+>  	dev_info(&pdev->dev, "Creating sysfs group for
+> PROC_THERMAL_PLATFORM_DEV\n");
+> =20
+> -	return sysfs_create_group(&pdev->dev.kobj,
+> -					 &power_limit_attribute_group);
+> +	ret =3D sysfs_create_file(&pdev->dev.kobj,
+> &dev_attr_tcc_offset_degree_celsius.attr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D sysfs_create_group(&pdev->dev.kobj,
+> &power_limit_attribute_group);
+> +	if (ret)
+> +		sysfs_remove_file(&pdev->dev.kobj,
+> &dev_attr_tcc_offset_degree_celsius.attr);
+> +
+> +	return ret;
+>  }
+> =20
+>  static int int3401_remove(struct platform_device *pdev)
+> @@ -584,8 +658,15 @@ static int  proc_thermal_pci_probe(struct
+> pci_dev *pdev,
+> =20
+>  	dev_info(&pdev->dev, "Creating sysfs group for
+> PROC_THERMAL_PCI\n");
+> =20
+> -	return sysfs_create_group(&pdev->dev.kobj,
+> -					 &power_limit_attribute_group);
+> +	ret =3D sysfs_create_file(&pdev->dev.kobj,
+> &dev_attr_tcc_offset_degree_celsius.attr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D sysfs_create_group(&pdev->dev.kobj,
+> &power_limit_attribute_group);
+> +	if (ret)
+> +		sysfs_remove_file(&pdev->dev.kobj,
+> &dev_attr_tcc_offset_degree_celsius.attr);
+> +
+> +	return ret;
+>  }
+> =20
+>  static void  proc_thermal_pci_remove(struct pci_dev *pdev)
+> @@ -611,6 +692,8 @@ static int proc_thermal_resume(struct device
+> *dev)
+>  	proc_dev =3D dev_get_drvdata(dev);
+>  	proc_thermal_read_ppcc(proc_dev);
+> =20
+> +	tcc_offset_update(tcc_offset_save);
+> +
+>  	return 0;
+>  }
+>  #else
 
+--=-Gs75zxF5lC00YPwVB/aa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAl04tucACgkQq6ZWhpmF
+Y3B3WQ//TVtdQypLx4QvRa7Z/y/chYF/Drv92Xz0YIGh4SyxvEY7/6NWsRZnllqc
+RG9iQ4HtyEFO5oJK47kGTF86VQFPhAqXLMsG6J90mQTJfaVLhXfee8t2tPTxFwcd
+HLmRYbIPea1ImO6joVy9L0TEZdh6mNgxuD6Kh2o5HFhYwA0e78nidHnv+e2oAV+m
+ppOWRZnGHPfColTCyCL8yjL5Z1R3lWjtMVJ1tnP8wI9evcoQ7CMs4qJNglsoW6LP
+/cfHkUb9O2ALBcmj1UIxJaQWAlmp0gn34g9OBylUq1zfQGGYhPw+f5gUmejl8/3J
+71cE3qV0O45/0i+zn97xNC2drGxCB0aDoaSO/03/ssL0j/SIB/WQrax0husFB3LO
+ndisfMQQ4wYRZxzz2v7AXzJVDNKrYAYqj3NA/s7eW/4SrZB9zj0hnYzhAcYk4wLT
+NdMKzasuPIPMLhNJ9WdnjH9nA9dtP0nlFydh54SZyylH64c8fUxiIW7VI9vrxOwL
+dp1DB0Aqz8eTwEwRsu3EVXyGWvlXoE+bHMV+NFlkpw36/+EGWzFuJ/pBlJHHxny/
+gBsTJSUJHueIE0XhxM+cIg5jtgzsooO9QCDzwTV8/bSLiDXJkBMlfSOJIWDqyoLL
+SALSHulh/zeduG9rNvACWMl1ihxNOwbysRjgn694nfOtwtgbmys=
+=QUhc
+-----END PGP SIGNATURE-----
+
+--=-Gs75zxF5lC00YPwVB/aa--
 
