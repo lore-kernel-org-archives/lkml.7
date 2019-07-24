@@ -2,58 +2,56 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8683EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747E0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB8422BE9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4150A214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997401;
-	bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+	s=default; t=1563997405;
+	bh=gpkOniK76Sb8jC7RArcrweh848Ov1osMfJvD3t4jypE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQ3pvTf1skogC2NAPK+CPe2UmvbmVltK+PssSIL2oHNbQHMrklscjN17uK6GNp9zo
-	 VipstUyI1IBmNCqeVu+0s6shMLueHF9NBYNlCed9GIWJ7GIVrHVgg0iBhZT9CQ3avj
-	 Mc+DvmOzM11WzLfbswf6/NBxbenLzUShkZ5+pdoI=
+	b=nTdZUeezXxA8kL3qCSrQK37j4OLICJ3q+oNNF49kTGaa3W3Ua/QXc2K9ZlJA6LY1o
+	 vQmZrfZ2W92/8zKtesY5aBYDu0OwFw7ScIFw2lMBiPUf/bQACpZoCZaMkjggK+HeCY
+	 UCJW0lW+q3RI6/BK4ORYVzTUYGKsgMT2zkm4bAaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390524AbfGXTnU (ORCPT
+        id S2390546AbfGXTnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45376 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390073AbfGXTnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:17 -0400
+        id S2389600AbfGXTnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DD77229F4;
-        Wed, 24 Jul 2019 19:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CFF72083B;
+        Wed, 24 Jul 2019 19:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997396;
-        bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+        s=default; t=1563997401;
+        bh=gpkOniK76Sb8jC7RArcrweh848Ov1osMfJvD3t4jypE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UUuWZvXAd+Dz0uXed+sdSqLrmQOOl664BaVT1lA+01z1LMiGQ5VebVQgJmQMJDXlh
-         pi5X5d5OVkix5f3Jw8PPmQsb3rCuP2Wqbj6+A+fpkfDG3OkGc1bndKVtRvfKYe+5SO
-         nXDjnjK2ApPwKjWFUIeWDeL+tVT+em3eCsMdCyxg=
+        b=qM+dj3p0udsEzSnWTMbUgKSstdFrtHZMip7imOUNHdupg/k78gkzkCPWc+HBIZckB
+         NcpiOGZVfcnTE+j8xJmbtm/LopUjCyXMaxWnkThb9njLt+WT645gYMqpzGsyvgX5i/
+         XMlKksT0P04z6IzA8BQrQe6ucj4XJ6vWBbm8Zsd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Hellermann <stefan@the2masters.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 001/371] MIPS: ath79: fix ar933x uart parity mode
-Date:   Wed, 24 Jul 2019 21:15:53 +0200
-Message-Id: <20190724191724.521675033@linuxfoundation.org>
+Subject: [PATCH 5.1 011/371] ath10k: Do not send probe response template for mesh
+Date:   Wed, 24 Jul 2019 21:16:03 +0200
+Message-Id: <20190724191725.353275865@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,38 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
+[ Upstream commit 97354f2c432788e3163134df6bb144f4b6289d87 ]
 
-While trying to get the uart with parity working I found setting even
-parity enabled odd parity insted. Fix the register settings to match
-the datasheet of AR9331.
+Currently mac80211 do not support probe response template for
+mesh point. When WMI_SERVICE_BEACON_OFFLOAD is enabled, host
+driver tries to configure probe response template for mesh, but
+it fails because the interface type is not NL80211_IFTYPE_AP but
+NL80211_IFTYPE_MESH_POINT.
 
-A similar patch was created by 8devices, but not sent upstream.
-https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
+To avoid this failure, skip sending probe response template to
+firmware for mesh point.
 
-Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
+Tested HW: WCN3990/QCA6174/QCA9984
+
+Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-index c2917b39966b..bba2c8837951 100644
---- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-+++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-@@ -27,8 +27,8 @@
- #define AR933X_UART_CS_PARITY_S		0
- #define AR933X_UART_CS_PARITY_M		0x3
- #define	  AR933X_UART_CS_PARITY_NONE	0
--#define	  AR933X_UART_CS_PARITY_ODD	1
--#define	  AR933X_UART_CS_PARITY_EVEN	2
-+#define	  AR933X_UART_CS_PARITY_ODD	2
-+#define	  AR933X_UART_CS_PARITY_EVEN	3
- #define AR933X_UART_CS_IF_MODE_S	2
- #define AR933X_UART_CS_IF_MODE_M	0x3
- #define	  AR933X_UART_CS_IF_MODE_NONE	0
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index e8997e22ceec..b500fd427595 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -1630,6 +1630,10 @@ static int ath10k_mac_setup_prb_tmpl(struct ath10k_vif *arvif)
+ 	if (arvif->vdev_type != WMI_VDEV_TYPE_AP)
+ 		return 0;
+ 
++	 /* For mesh, probe response and beacon share the same template */
++	if (ieee80211_vif_is_mesh(vif))
++		return 0;
++
+ 	prb = ieee80211_proberesp_get(hw, vif);
+ 	if (!prb) {
+ 		ath10k_warn(ar, "failed to get probe resp template from mac80211\n");
 -- 
 2.20.1
 
