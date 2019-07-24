@@ -2,123 +2,117 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA884C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E1AC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCEC621738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1FD21738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:25:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pmagx+/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbfGXOX7 (ORCPT
+        id S2387433AbfGXOZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:23:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:42012 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfGXOX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:23:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 007AC28;
-        Wed, 24 Jul 2019 07:23:58 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 911C33F71A;
-        Wed, 24 Jul 2019 07:23:56 -0700 (PDT)
-Subject: Re: [PATCH] media: staging: ipu3: Enable IOVA API only when IOMMU
- support is enabled
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Yuehaibing <yuehaibing@huawei.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, hverkuil-cisco@xs4all.nl,
-        mchehab@kernel.org, yong.zhi@intel.com
-References: <20190722134749.21580-1-yuehaibing@huawei.com>
- <20190724103027.GD21370@paasikivi.fi.intel.com>
- <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
- <0c08bdae-facc-0f28-0e58-17a65172587a@huawei.com>
- <491dbca1-8a58-b26e-cf56-a1a419da288f@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <eaf521ff-7dc6-70ae-0473-9c994def602b@arm.com>
-Date:   Wed, 24 Jul 2019 15:23:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Jul 2019 10:25:10 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44199 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGXOZK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:25:10 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t16so21022217pfe.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zeiboGSV7ypLA6dVtPYsNtNIh035XqkP74sEvzaLWW8=;
+        b=Pmagx+/ziuTOsvielbY4z1LP1u14ot91S39ggDgrdZTUssRHH0vrvUR/uxFpkCYjBN
+         WjMoRkhoe5I3OHMUlooZdztdfA6xrrwrofkfJq965JFnbnr0o52wIt5iWzm0kahaGFTu
+         h9nSIU2rCswCk3Ez5biY2V3LuYv3lA7UZraFCg9LnLvFbalWqgIuT9KVjUNJfQsf2P8N
+         I98AigjLweb3NRV2ApOuRPVLLAyzxfuyrtcaJ34BHJ8iXDRiwEkcqV+Rw3iIRPC0lshp
+         pYLAkeF+C04MpVqPOCitVVUk13ccsAj6eUkj4KKya1in7YFPNizfJ37N5wPPL5TMb+At
+         l/Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zeiboGSV7ypLA6dVtPYsNtNIh035XqkP74sEvzaLWW8=;
+        b=AUyX2HqkaHwSUIVm/fTtOyQHyOIk8giCd+YjYX9GWZfKOQeB+lzPW0wrMtXLgYp8pF
+         wcBtZijkgNvpvJNiOVHehG0/RHIBXMwAG8YuzmhR88F2//HqbxBdpEyoYkpm7CkvwwoU
+         JM6bp8ADsgC8gYezibcKXletSuKCjt8Gp24BxwbUTzilDfgaJn6+huv4ZWIVy+3QQGyi
+         ojAb0rI5nahZXxd2lDGOIZTUOgVTofJc3aQ0Sb9J9ghZMDwze2t+eeO3Ni5egcakq+vN
+         aFr2FjXAusxACpVxfca8Tw6JqSUlFc6hiKVwbjyJ92ZspsUkeakk+ifmiaXQjLiCisuN
+         U9gw==
+X-Gm-Message-State: APjAAAX2DjjkegkUt6AYuVIHR0dJ0MpAQVSoPogGL0BManOAtu1ajTTk
+        CPNcABqRJSxDXw6/nlA/bTyBhjXFkskI0rUu8LkxaQ==
+X-Google-Smtp-Source: APXvYqwfjIKHX+tJXl8xh6pWa+B5dCG49t49e2sDtBf7Bs0Yz/UNqB0hu6apHj84EXj2entUm4ziZIPPAJhdd+XcnxI=
+X-Received: by 2002:a63:c442:: with SMTP id m2mr82929692pgg.286.1563978309069;
+ Wed, 24 Jul 2019 07:25:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <491dbca1-8a58-b26e-cf56-a1a419da288f@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+References: <000000000000bb4247058e589a20@google.com> <1563977855.4670.8.camel@suse.com>
+In-Reply-To: <1563977855.4670.8.camel@suse.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 24 Jul 2019 16:24:58 +0200
+Message-ID: <CAAeHK+xqTgexC8sQtsXpsnEv5VpqgUDxR8kLfHa7NHeUR_p7OQ@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in usbhid_power
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     syzbot <syzbot+ef5de9c4f99c4edb4e49@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/07/2019 15:09, Dmitry Osipenko wrote:
-> 24.07.2019 17:03, Yuehaibing пишет:
->> On 2019/7/24 21:49, Robin Murphy wrote:
->>> On 24/07/2019 11:30, Sakari Ailus wrote:
->>>> Hi Yue,
->>>>
->>>> On Mon, Jul 22, 2019 at 09:47:49PM +0800, YueHaibing wrote:
->>>>> If IOMMU_SUPPORT is not set, ipu3 driver may select IOMMU_IOVA to m.
->>>>> But for many drivers, they use "select IOMMU_IOVA if IOMMU_SUPPORT"
->>>>> in the Kconfig, for example, CONFIG_TEGRA_VDE is set to y but IOMMU_IOVA
->>>>> is m, then the building fails like this:
->>>>>
->>>>> drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
->>>>> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
->>>>> iommu.c:(.text+0x56): undefined reference to `__free_iova'
->>>>>
->>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>>> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
->>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>> ---
->>>>>    drivers/staging/media/ipu3/Kconfig | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/staging/media/ipu3/Kconfig b/drivers/staging/media/ipu3/Kconfig
->>>>> index 4b51c67..b7df18f 100644
->>>>> --- a/drivers/staging/media/ipu3/Kconfig
->>>>> +++ b/drivers/staging/media/ipu3/Kconfig
->>>>> @@ -4,7 +4,7 @@ config VIDEO_IPU3_IMGU
->>>>>        depends on PCI && VIDEO_V4L2
->>>>>        depends on MEDIA_CONTROLLER && VIDEO_V4L2_SUBDEV_API
->>>>>        depends on X86
->>>>> -    select IOMMU_IOVA
->>>>> +    select IOMMU_IOVA if IOMMU_SUPPORT
->>>>
->>>> This doesn't seem right: the ipu3-cio2 driver needs IOMMU_IOVA
->>>> independently of IOMMU_SUPPORT.
->>>>
->>>> Looking at tegra-vde, it seems to depend on IOMMU_SUPPORT but that's not
->>>> declared in its Kconfig entry. I wonder if adding that would be the right
->>>> way to fix this.
->>>>
->>>> Cc'ing the IOMMU list.
-> IOMMU_SUPPORT is optional for the Tegra-VDE driver.
-> 
->>> Right, I also had the impression that we'd made the IOVA library completely standalone. And what does the IPU3 driver's Kconfig have to do with some *other* driver failing to link anyway?
-> 
-> I can see it failing if IPU3 is compiled as a loadable module, while
-> Tegra-VDE is a built-in driver. Hence IOVA lib should be also a kernel
-> module and thus the IOVA symbols will be missing during of linkage of
-> the VDE driver.
-> 
->> Oh, I misunderstand that IOMMU_IOVA is depend on IOMMU_SUPPORT, thank you for clarification.
->>
->> I will try to fix this in tegra-vde.
-> 
-> Probably IOVA could be selected independently of IOMMU_SUPPORT, but IOVA
-> library isn't needed for the VDE driver if IOMMU_SUPPORT is disabled.
+On Wed, Jul 24, 2019 at 4:17 PM Oliver Neukum <oneukum@suse.com> wrote:
+>
+> Am Dienstag, den 23.07.2019, 05:48 -0700 schrieb syzbot:
+> >
+> > Freed by task 243:
+> >   save_stack+0x1b/0x80 /mm/kasan/common.c:71
+> >   set_track /mm/kasan/common.c:79 [inline]
+> >   __kasan_slab_free+0x130/0x180 /mm/kasan/common.c:451
+> >   slab_free_hook /mm/slub.c:1421 [inline]
+> >   slab_free_freelist_hook /mm/slub.c:1448 [inline]
+> >   slab_free /mm/slub.c:2994 [inline]
+> >   kfree+0xd7/0x280 /mm/slub.c:3949
+> >   skb_free_head+0x8b/0xa0 /net/core/skbuff.c:588
+> >   skb_release_data+0x41f/0x7c0 /net/core/skbuff.c:608
+> >   skb_release_all+0x46/0x60 /net/core/skbuff.c:662
+> >   __kfree_skb /net/core/skbuff.c:676 [inline]
+> >   consume_skb /net/core/skbuff.c:736 [inline]
+> >   consume_skb+0xc0/0x2f0 /net/core/skbuff.c:730
+> >   skb_free_datagram+0x16/0xf0 /net/core/datagram.c:328
+> >   netlink_recvmsg+0x65e/0xea0 /net/netlink/af_netlink.c:2001
+> >   sock_recvmsg_nosec /net/socket.c:877 [inline]
+> >   sock_recvmsg /net/socket.c:894 [inline]
+> >   sock_recvmsg+0xca/0x110 /net/socket.c:890
+> >   ___sys_recvmsg+0x271/0x5a0 /net/socket.c:2448
+> >   __sys_recvmsg+0xe9/0x1b0 /net/socket.c:2497
+> >   do_syscall_64+0xb7/0x560 /arch/x86/entry/common.c:301
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> How reliable is this trace? It seems very likely to me that this bug
+> is the same bug as
+>
+> syzbot <syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com>
+> KASAN: use-after-free Read in hidraw_ioctl
+>
+> which shows a race with disconnect() instead of some networking code,
+> which I really cannot fathom.
 
-Oh, I think I get the problem now - tegra-vde/iommu.c is built 
-unconditionally and relies on the static inline stubs for IOMMU and IOVA 
-calls if !IOMMU_SUPPORT, but in a compile-test config where IOVA=m for 
-other reasons, it then picks up the real declarations from linux/iova.h 
-instead of the stubs, and things go downhill from there. So there is a 
-real issue, but indeed it's Tegra-VDE which needs to be restructured to 
-cope with such configurations, and not IPU3's (or anyone else who may 
-select IOVA=m in future) job to work around it.
+To me the alloc/free stack trace doesn't seem to have anything to do
+with the access stack trace here, so I wouldn't rely on them. This is
+a limitation of KASAN and can happen when there's a wild memory access
+or a huge out-of-bounds or some kind of a racy-use-after-free.
 
-Robin.
+>
+>         Regards
+>                 Oliver
+>
