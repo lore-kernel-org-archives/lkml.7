@@ -2,192 +2,69 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB83EC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C889C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0A121BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6153E21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:59:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G3KNP7bV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfGXN6w (ORCPT
+        id S1728288AbfGXN7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:58:52 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38223 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbfGXN6v (ORCPT
+        Wed, 24 Jul 2019 09:59:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41014 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727570AbfGXN7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:58:51 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C4C96200004;
-        Wed, 24 Jul 2019 13:58:46 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 15:58:46 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, Torsten Duwe <duwe@lst.de>,
-        Harald Geyer <harald@ccbib.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge
- on Teres-I
-Message-ID: <20190724135846.7mnuau4aih4zqm6a@flea>
-References: <20190612152022.c3cfhp4cauhzhfyr@flea>
- <bb2c2c00-b46e-1984-088f-861ac8952331@samsung.com>
- <20190701095842.fvganvycce2cy7jn@flea>
- <CA+E=qVdsYV2Bxk245=Myq=otd7-7WHzUnSJN8_1dciAzvSOG8g@mail.gmail.com>
- <20190709085532.cdqv7whuesrjs64c@flea>
- <CA+E=qVdz4vfU3rtTTKjYdM+4UA+=FWheJfWOMaDtFMnWQ1rHbw@mail.gmail.com>
- <20190710114042.ybgavnxb4hgqrtor@flea>
- <CA+E=qVdFoT137pADfxz3uMwhOqjqrA9+6hBeOfbJxuH-M-3Pjw@mail.gmail.com>
- <20190712201543.krhsfjepd3cqndla@flea>
- <CA+E=qVeDpLqAM6Qsd6oHfeYHB_JHdSb5GtY7i994GT5_RW4_Bg@mail.gmail.com>
+        Wed, 24 Jul 2019 09:59:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RAl0a6XDBiz9KDbwHW5cZpAX7aqNsCFK4D5fjNEt504=; b=G3KNP7bVg9plKS5fOyhdPIFM9
+        FCUqbYqDja3G744oXtV3DyJdNz9NpPJ/LkXGIVx0fG4F8s4cPNePyGW5UPiGQr096HX+TNnt4N6v+
+        oceg3Cj5KycotFytiEFIpsdxTLiz4WsZRygEt7keJcijolBO0BdW7FzYS/ZVDlaFPwMU8ZuZqJF5R
+        UmUbnSVYgGWDqhfFUS+vBoOTYmeG3aM/fLjdxWdn73OcJxKyJPDQN3jIH5z1uxUMfXsHep6eiSYLF
+        yOCteZLHTcXEOx8p9Sa3r3plfNMIzHxXe+cGiIAVMkItva8kHok7oClOufqb4OeZRC03MLXMuFMTD
+        hPsQ7dARw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqHnL-00052P-7I; Wed, 24 Jul 2019 13:59:03 +0000
+Date:   Wed, 24 Jul 2019 06:59:03 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     davem@davemloft.net, jeffrey.t.kirsher@intel.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] net/ixgbevf: fix a compilation error of skb_frag_t
+Message-ID: <20190724135903.GU363@bombadil.infradead.org>
+References: <1563975157-30691-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ga3sbptupgkf2nsb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+E=qVeDpLqAM6Qsd6oHfeYHB_JHdSb5GtY7i994GT5_RW4_Bg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1563975157-30691-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 09:32:37AM -0400, Qian Cai wrote:
+>  	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
+> -		count += TXD_USE_COUNT(skb_shinfo(skb)->frags[f].size);
+> +		count += TXD_USE_COUNT(skb_shinfo(skb)->frags[f].bv_len);
+>  #else
 
---ga3sbptupgkf2nsb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No, this is the wrong fix.  Use the fine accessor instead:
 
-On Mon, Jul 15, 2019 at 05:28:53PM -0700, Vasily Khoruzhick wrote:
-> On Fri, Jul 12, 2019 at 1:15 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Wed, Jul 10, 2019 at 03:11:04PM -0700, Vasily Khoruzhick wrote:
-> > > On Wed, Jul 10, 2019 at 4:40 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > There's another issue: if we introduce edp-connector we'll have to
-> > > > > > > specify power up delays somewhere (in dts? or in platform driver?), so
-> > > > > > > edp-connector doesn't really solve the issue of multiple panels with
-> > > > > > > same motherboard.
-> > > > > >
-> > > > > > And that's what that compatible is about :)
-> > > > >
-> > > > > Sorry, I fail to see how it would be different from using existing
-> > > > > panels infrastructure and different panels compatibles. I think Rob's
-> > > > > idea was to introduce generic edp-connector.
-> > > >
-> > > > Again, there's no such thing as a generic edp-connector. The spec
-> > > > doesn't define anything related to the power sequence for example.
-> > > >
-> > > > > If we can't make it generic then let's use panel infrastructure.
-> > > >
-> > > > Which uses a device specific compatible. Really, I'm not sure what
-> > > > your objection and / or argument is here.
-> > > >
-> > > > In addition, when that was brought up in the discussion, you rejected
-> > > > it because it was inconvenient:
-> > > > https://patchwork.freedesktop.org/patch/283012/?series=56163&rev=1#comment_535206
-> > >
-> > > It is inconvenient, but I don't understand how having board-specific
-> > > connectors fixes it.
-> >
-> > How it would not fix it?
->
-> I think I got your idea, but yet I think it's not the best solution.
->
-> Do I understand correctly that you're proposing to introduce
-> board-specific edp-connector driver that will be aware of worst case
-> power up delays and will control backlight and power?
->
-> Then why not to add another board-specific panel (e.g.
-> "pine64,pinebook-panel") to simple-panel.c that does the same?
++		count += TXD_USE_COUNT(skb_frag_size(&skb_shinfo(skb)->frags[f]));
 
-That would be fine for me too. Thierry was against it though IIRC, and
-I don't recall why exactly.
+although now there's a line length problem.  Most drivers do:
 
-> > You'll have one connector, without the need to describe each and every
-> > panel in the device tree and rely on the EDID instead, and you'll have
-> > the option to power up the regulator you need.
-> >
-> > I really don't understand what's the issue here, so let's take a step
-> > back. What are is the issue , what are your requirements, and how
-> > would you like that to be described ?
->
-> We have a device (Pinebook) that uses the same board with multiple edp
-> panels. So far there're pinebooks with 3 different panels: 11" with
-> 768p panel, 11" with 1080p panel, 14" with 768p panel.
->
-> Currently there's no way to describe all pinebooks with a single dts.
-> There's a simple workaround though -- we can just specify a panel with
-> worst power up delays in dts and it'll work since anx6345 driver
-> ignores panel modes anyway and uses EDID.
->
-> Originally I proposed to extend simple-panel driver to support generic
-> edp-panel but it was rejected. I still believe that it's the best
-> solution assuming we can specify delays in dts, since panels list is
-> specific to particular device and it probably can't be reused, i.e.
-> there's no good reason to move it into C code.
->
-> Rob Herring proposed to introduce edp-connector. While I still believe
-> that it's not accurate description of hardware since it'll have to
-> have backlight node (backlight is actually panel property) I was OK
-> with this approach assuming we can store delays in dts.
->
-> Later it evolved into board-specific edp-connector.
-
-I think you got that wrong. As far as I'm concerned, the plan was to
-have two compatibles: the board-specific one, and the generic one.
-
-Something like compatible = "pine64,pinebook-edp-connector",
-"edp-connector"; or whatever.
-
-> So far I don't understand why everyone is trying to avoid introducing
-> edp-panel driver that can read delays from dts. Basically, I don't
-> understand what's the magic behind simple-panel.c and why new panels
-> should be added there rather than described in dts. [1] Doesn't
-> explain that.
-
-So others might have different viewpoints here as well, but the major
-downside I see in putting those kind of values in the device tree is
-that at some point, someone will get it wrong, and chances are that
-even for the same panel, everyone will use a slightly different set of
-timings.
-
-And once it's wrong, then it's a mess to fix. You have to track down
-every DT using it, make sure it's corrected, and then every user will
-have to change their DT in their system. Whereas if you have just a
-compatible and those timings in the kernel, then the only thing
-required is a kernel update, which should be a pretty standard
-operation.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ga3sbptupgkf2nsb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXThkFgAKCRDj7w1vZxhR
-xdmDAP9yBWH/KYH8hNsfJpjtSxRuDZg1xa/Ai5yq/48P70rBqQEAxJBFYLdvAn8g
-WJBWvY6ToqNpGVah2fBV3mDR/Au2/wc=
-=7SCN
------END PGP SIGNATURE-----
-
---ga3sbptupgkf2nsb--
+		skb_frag_t frag = &skb_shinfo(skb)->frags[f];
+		count += TXD_USE_COUNT(skb_frag_size(frag));
