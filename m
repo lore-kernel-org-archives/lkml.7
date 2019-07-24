@@ -2,499 +2,63 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B89C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718A6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F2F2238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:49:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vBsunLdt"
+	by mail.kernel.org (Postfix) with ESMTP id 4DD0021850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 21:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387467AbfGXVtR (ORCPT
+        id S2388442AbfGXVtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 17:49:17 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39155 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbfGXVtQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 17:49:16 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r21so43433046otq.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 14:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bsGVrNHwPTAmOMLvk4TLoH5B1OMej5ej2NFNpjdGbHQ=;
-        b=vBsunLdtnscnRRD7VWOrh8PUFocKMK74x7hBDqY5pSGhZiMcykmH6jfowq92kDpybQ
-         K904++3PDOpOGAaBc7ulWs64lfqZ3niAf5EU75f/NOerUjLHPsOfmZLH4evorMhpkMY+
-         4VeIa3K62mBxqjZBT1QR8/mlM1UVdVwArppFNZFxcU/DqMCul1SUEJGNdRMdWkyVUvqy
-         y0slr7qRVbfclvDR6hC6PtPmb/hZz6IAPQrRG/x9jGsrHcnEQGrEz4cgZRTJRUpOmGiO
-         Xe1nMSjIlQBVkZyaOyH7hebiuMMLpuHPvxu/uO6HcyK2N16piw7k9UFttDKASe4ptT+k
-         JDXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bsGVrNHwPTAmOMLvk4TLoH5B1OMej5ej2NFNpjdGbHQ=;
-        b=EO+8rvt0QsWLSduVBgDqKIJnx/cNDSwpgJHATYKDvuR9vUdYP+koZEsuKZBy2Jbqhu
-         DpEr3QIuypmiJztGmEL2zvtUNY9WJ6AlOQsWxBlv7b5Nu2ueP9+E9WTbOT0WVRIJ4TBR
-         P+28PptTCGn5CTj6bXdbhIxvdKpah8sMhBCyiY9wLK/ki1gKWqNvSdr7YnSNSXv5Pd/M
-         mwkV3BLLO82fP4S2fbtnAmFikouiwrbic6TBBqJ7QSkedNkzG86OpT1NcoghdOS/Ge9t
-         ktj5/1j3axCSHC0KfYIKiJgu2D7pOjxrEX7h85uUVfIPsBjRKHRBu5tDW4yECDpNYgZP
-         S4GQ==
-X-Gm-Message-State: APjAAAUqmbhBDjS0PExMGSwxbA3AAWw4Zjva6WKi0AemocfwIKUc2NMo
-        t107i2YBndbXNdONB5TquFCspQ3as/e5UzSa/2zw9w==
-X-Google-Smtp-Source: APXvYqy1805FeL99np02CekB9UIZRx/rUOItOLKh0I10dd8W10WU+sAnMUj8E/WaSPgOrqy+Tg13OOgizhfmtIvT1TU=
-X-Received: by 2002:a9d:470d:: with SMTP id a13mr61423217otf.126.1564004954433;
- Wed, 24 Jul 2019 14:49:14 -0700 (PDT)
+        Wed, 24 Jul 2019 17:49:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33862 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387517AbfGXVtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 17:49:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5FAAD308FBAF;
+        Wed, 24 Jul 2019 21:49:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 241CA600D1;
+        Wed, 24 Jul 2019 21:49:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <1563993952.11067.15.camel@lca.pw>
+References: <1563993952.11067.15.camel@lca.pw> <1563914986-26502-1-git-send-email-cai@lca.pw> <31573.1563954571@warthog.procyon.org.uk>
+To:     Qian Cai <cai@lca.pw>
+Cc:     dhowells@redhat.com, akpm@linux-foundation.org,
+        davem@davemloft.net, arnd@arndb.de, jakub@redhat.com,
+        ndesaulniers@google.com, morbo@google.com, jyknight@google.com,
+        natechancellor@gmail.com, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] asm-generic: fix -Wtype-limits compiler warnings
 MIME-Version: 1.0
-References: <20190625075227.15193-1-osalvador@suse.de> <20190625075227.15193-5-osalvador@suse.de>
-In-Reply-To: <20190625075227.15193-5-osalvador@suse.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Jul 2019 14:49:02 -0700
-Message-ID: <CAPcyv4iPKm7c7-xPN9AVoKdXKdcZqO8v1K=Op1t86P2F8E40YQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] mm,memory_hotplug: allocate memmap from the added
- memory range for sparse-vmemmap
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        David Hildenbrand <david@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <14025.1564004959.1@warthog.procyon.org.uk>
+Date:   Wed, 24 Jul 2019 22:49:19 +0100
+Message-ID: <14026.1564004959@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 24 Jul 2019 21:49:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:53 AM Oscar Salvador <osalvador@suse.de> wrote:
->
-> Physical memory hotadd has to allocate a memmap (struct page array) for
-> the newly added memory section. Currently, alloc_pages_node() is used
-> for those allocations.
->
-> This has some disadvantages:
->  a) an existing memory is consumed for that purpose
->     (~2MB per 128MB memory section on x86_64)
->  b) if the whole node is movable then we have off-node struct pages
->     which has performance drawbacks.
->
-> a) has turned out to be a problem for memory hotplug based ballooning
->    because the userspace might not react in time to online memory while
->    the memory consumed during physical hotadd consumes enough memory to
->    push system to OOM. 31bc3858ea3e ("memory-hotplug: add automatic onlining
->    policy for the newly added memory") has been added to workaround that
->    problem.
->
-> I have also seen hot-add operations failing on powerpc due to the fact
-> that we try to use order-8 pages. If the base page size is 64KB, this
-> gives us 16MB, and if we run out of those, we simply fail.
-> One could arge that we can fall back to basepages as we do in x86_64, but
-> we can do better when CONFIG_SPARSEMEM_VMEMMAP is enabled.
->
-> Vmemap page tables can map arbitrary memory.
-> That means that we can simply use the beginning of each memory section and
-> map struct pages there.
-> struct pages which back the allocated space then just need to be treated
-> carefully.
->
-> Implementation wise we reuse vmem_altmap infrastructure to override
-> the default allocator used by __vmemap_populate. Once the memmap is
-> allocated we need a way to mark altmap pfns used for the allocation.
-> If MHP_MEMMAP_{DEVICE,MEMBLOCK} flag was passed, we set up the layout of the
-> altmap structure at the beginning of __add_pages(), and then we call
-> mark_vmemmap_pages().
->
-> Depending on which flag is passed (MHP_MEMMAP_DEVICE or MHP_MEMMAP_MEMBLOCK),
-> mark_vmemmap_pages() gets called at a different stage.
-> With MHP_MEMMAP_MEMBLOCK, we call it once we have populated the sections
-> fitting in a single memblock, while with MHP_MEMMAP_DEVICE we wait until all
-> sections have been populated.
->
-> mark_vmemmap_pages() marks the pages as vmemmap and sets some metadata:
->
-> The current layout of the Vmemmap pages are:
->
->         [Head->refcount] : Nr sections used by this altmap
->         [Head->private]  : Nr of vmemmap pages
->         [Tail->freelist] : Pointer to the head page
->
-> This is done to easy the computation we need in some places.
-> E.g:
->
-> Example 1)
-> We hot-add 1GB on x86_64 (memory block 128MB) using
-> MHP_MEMMAP_DEVICE:
->
-> head->_refcount = 8 sections
-> head->private = 4096 vmemmap pages
-> tail's->freelist = head
->
-> Example 2)
-> We hot-add 1GB on x86_64 using MHP_MEMMAP_MEMBLOCK:
->
-> [at the beginning of each memblock]
-> head->_refcount = 1 section
-> head->private = 512 vmemmap pages
-> tail's->freelist = head
->
-> We have the refcount because when using MHP_MEMMAP_DEVICE, we need to know
-> how much do we have to defer the call to vmemmap_free().
-> The thing is that the first pages of the hot-added range are used to create
-> the memmap mapping, so we cannot remove those first, otherwise we would blow up
-> when accessing the other pages.
->
-> What we do is that since when we hot-remove a memory-range, sections are being
-> removed sequentially, we wait until we hit the last section, and then we free
-> the hole range to vmemmap_free backwards.
-> We know that it is the last section because in every pass we
-> decrease head->_refcount, and when it reaches 0, we got our last section.
->
-> We also have to be careful about those pages during online and offline
-> operations. They are simply skipped, so online will keep them
-> reserved and so unusable for any other purpose and offline ignores them
-> so they do not block the offline operation.
->
-> In offline operation we only have to check for one particularity.
-> Depending on how large was the hot-added range, and using MHP_MEMMAP_DEVICE,
-> can be that one or more than one memory block is filled with only vmemmap pages.
-> We just need to check for this case and skip 1) isolating 2) migrating,
-> because those pages do not need to be migrated anywhere, they are self-hosted.
+Qian Cai <cai@lca.pw> wrote:
 
-Can you rewrite the changelog without using the word 'we' I get
-confused when it seems to reference the 'we' current implementation vs
-the 'we' new implementation.
+> I have GCC 8.2.1 which works fine.
 
->
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  arch/arm64/mm/mmu.c            |   5 +-
->  arch/powerpc/mm/init_64.c      |   7 +++
->  arch/s390/mm/init.c            |   6 ++
->  arch/x86/mm/init_64.c          |  10 +++
->  drivers/acpi/acpi_memhotplug.c |   2 +-
->  drivers/base/memory.c          |   2 +-
->  include/linux/memory_hotplug.h |   6 ++
->  include/linux/memremap.h       |   2 +-
->  mm/compaction.c                |   7 +++
->  mm/memory_hotplug.c            | 138 +++++++++++++++++++++++++++++++++++------
->  mm/page_alloc.c                |  22 ++++++-
->  mm/page_isolation.c            |  14 ++++-
->  mm/sparse.c                    |  93 +++++++++++++++++++++++++++
->  13 files changed, 289 insertions(+), 25 deletions(-)
->
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 93ed0df4df79..d4b5661fa6b6 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -765,7 +765,10 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->                 if (pmd_none(READ_ONCE(*pmdp))) {
->                         void *p = NULL;
->
-> -                       p = vmemmap_alloc_block_buf(PMD_SIZE, node);
-> +                       if (altmap)
-> +                               p = altmap_alloc_block_buf(PMD_SIZE, altmap);
-> +                       else
-> +                               p = vmemmap_alloc_block_buf(PMD_SIZE, node);
->                         if (!p)
->                                 return -ENOMEM;
->
-> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
-> index a4e17a979e45..ff9d2c245321 100644
-> --- a/arch/powerpc/mm/init_64.c
-> +++ b/arch/powerpc/mm/init_64.c
-> @@ -289,6 +289,13 @@ void __ref vmemmap_free(unsigned long start, unsigned long end,
->
->                 if (base_pfn >= alt_start && base_pfn < alt_end) {
->                         vmem_altmap_free(altmap, nr_pages);
-> +               } else if (PageVmemmap(page)) {
-> +                       /*
-> +                        * runtime vmemmap pages are residing inside the memory
-> +                        * section so they do not have to be freed anywhere.
-> +                        */
-> +                       while (PageVmemmap(page))
-> +                               __ClearPageVmemmap(page++);
->                 } else if (PageReserved(page)) {
->                         /* allocated from bootmem */
->                         if (page_size < PAGE_SIZE) {
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index ffb81fe95c77..c045411552a3 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -226,6 +226,12 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         unsigned long size_pages = PFN_DOWN(size);
->         int rc;
->
-> +       /*
-> +        * Physical memory is added only later during the memory online so we
-> +        * cannot use the added range at this stage unfortunately.
-> +        */
-> +       restrictions->flags &= ~restrictions->flags;
-> +
->         if (WARN_ON_ONCE(restrictions->altmap))
->                 return -EINVAL;
+But you need to check the minimum version, i.e. 4.6:
 
-Perhaps these per-arch changes should be pulled out into separate prep patches?
+	#if GCC_VERSION < 40600
 
->
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index 688fb0687e55..00d17b666337 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -874,6 +874,16 @@ static void __meminit free_pagetable(struct page *page, int order)
->         unsigned long magic;
->         unsigned int nr_pages = 1 << order;
->
-> +       /*
-> +        * Runtime vmemmap pages are residing inside the memory section so
-> +        * they do not have to be freed anywhere.
-> +        */
-> +       if (PageVmemmap(page)) {
-> +               while (nr_pages--)
-> +                       __ClearPageVmemmap(page++);
-> +               return;
-> +       }
-
-If there is nothing to do and these pages are just going to be
-released, why spend any effort clearing the vmemmap state?
-
-> +
->         /* bootmem page has reserved flag */
->         if (PageReserved(page)) {
->                 __ClearPageReserved(page);
-> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-> index 860f84e82dd0..3257edb98d90 100644
-> --- a/drivers/acpi/acpi_memhotplug.c
-> +++ b/drivers/acpi/acpi_memhotplug.c
-> @@ -218,7 +218,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
->                 if (node < 0)
->                         node = memory_add_physaddr_to_nid(info->start_addr);
->
-> -               result = __add_memory(node, info->start_addr, info->length, 0);
-> +               result = __add_memory(node, info->start_addr, info->length, MHP_MEMMAP_DEVICE);
-
-Why is this changed to MHP_MEMMAP_DEVICE? Where does it get the altmap?
-
->
->                 /*
->                  * If the memory block has been used by the kernel, add_memory()
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index ad9834b8b7f7..e0ac9a3b66f8 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -32,7 +32,7 @@ static DEFINE_MUTEX(mem_sysfs_mutex);
->
->  #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
->
-> -static int sections_per_block;
-> +int sections_per_block;
->
->  static inline int base_memory_block_id(int section_nr)
->  {
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 6fdbce9d04f9..e28e226c9a20 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -375,4 +375,10 @@ extern bool allow_online_pfn_range(int nid, unsigned long pfn, unsigned long nr_
->                 int online_type);
->  extern struct zone *zone_for_pfn_range(int online_type, int nid, unsigned start_pfn,
->                 unsigned long nr_pages);
-> +
-> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
-> +extern void mark_vmemmap_pages(struct vmem_altmap *self);
-> +#else
-> +static inline void mark_vmemmap_pages(struct vmem_altmap *self) {}
-> +#endif
->  #endif /* __LINUX_MEMORY_HOTPLUG_H */
-> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> index 1732dea030b2..6de37e168f57 100644
-> --- a/include/linux/memremap.h
-> +++ b/include/linux/memremap.h
-> @@ -16,7 +16,7 @@ struct device;
->   * @alloc: track pages consumed, private to vmemmap_populate()
->   */
->  struct vmem_altmap {
-> -       const unsigned long base_pfn;
-> +       unsigned long base_pfn;
->         const unsigned long reserve;
->         unsigned long free;
->         unsigned long align;
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 9e1b9acb116b..40697f74b8b4 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -855,6 +855,13 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
->                 nr_scanned++;
->
->                 page = pfn_to_page(low_pfn);
-> +               /*
-> +                * Vmemmap pages do not need to be isolated.
-> +                */
-> +               if (PageVmemmap(page)) {
-> +                       low_pfn += get_nr_vmemmap_pages(page) - 1;
-
-I'm failing to grok the get_nr_vmemmap_pages() api. It seems this is
-more of a get_next_mapped_page() and perhaps it should VM_BUG_ON if it
-is not passed a Vmemmap page.
-
-> +                       continue;
-> +               }
->
->                 /*
->                  * Check if the pageblock has already been marked skipped.
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index e4e3baa6eaa7..b5106cb75795 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -42,6 +42,8 @@
->  #include "internal.h"
->  #include "shuffle.h"
->
-> +extern int sections_per_block;
-> +
->  /*
->   * online_page_callback contains pointer to current page onlining function.
->   * Initially it is generic_online_page(). If it is required it could be
-> @@ -279,6 +281,24 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
->         return 0;
->  }
->
-> +static void mhp_reset_altmap(unsigned long next_pfn,
-> +                            struct vmem_altmap *altmap)
-> +{
-> +       altmap->base_pfn = next_pfn;
-> +       altmap->alloc = 0;
-> +}
-> +
-> +static void mhp_init_altmap(unsigned long pfn, unsigned long nr_pages,
-> +                           unsigned long mhp_flags,
-> +                           struct vmem_altmap *altmap)
-> +{
-> +       if (mhp_flags & MHP_MEMMAP_DEVICE)
-> +               altmap->free = nr_pages;
-> +       else
-> +               altmap->free = PAGES_PER_SECTION * sections_per_block;
-> +       altmap->base_pfn = pfn;
-
-The ->free member is meant to be the number of free pages in the
-altmap this seems to be set to the number of pages being mapped. Am I
-misreading?
-
-> +}
-> +
->  /*
->   * Reasonably generic function for adding memory.  It is
->   * expected that archs that support memory hotplug will
-> @@ -290,8 +310,17 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
->  {
->         unsigned long i;
->         int start_sec, end_sec, err;
-> -       struct vmem_altmap *altmap = restrictions->altmap;
-> +       struct vmem_altmap *altmap;
-> +       struct vmem_altmap __memblk_altmap = {};
-> +       unsigned long mhp_flags = restrictions->flags;
-> +       unsigned long sections_added;
-> +
-> +       if (mhp_flags & MHP_VMEMMAP_FLAGS) {
-> +               mhp_init_altmap(pfn, nr_pages, mhp_flags, &__memblk_altmap);
-> +               restrictions->altmap = &__memblk_altmap;
-> +       }
-
-So this silently overrides a passed in altmap if a flag is set? The
-NVDIMM use case can't necessarily trust __memblk_altmap to be
-consistent with what the nvdimm namespace has reserved.
-
->
-> +       altmap = restrictions->altmap;
->         if (altmap) {
->                 /*
->                  * Validate altmap is within bounds of the total request
-> @@ -308,9 +337,10 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
->         if (err)
->                 return err;
->
-> +       sections_added = 1;
->         start_sec = pfn_to_section_nr(pfn);
->         end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
-> -       for (i = start_sec; i <= end_sec; i++) {
-> +       for (i = start_sec; i <= end_sec; i++, sections_added++) {
->                 unsigned long pfns;
->
->                 pfns = min(nr_pages, PAGES_PER_SECTION
-> @@ -320,9 +350,19 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
->                         break;
->                 pfn += pfns;
->                 nr_pages -= pfns;
-> +
-> +               if (mhp_flags & MHP_MEMMAP_MEMBLOCK &&
-> +                   !(sections_added % sections_per_block)) {
-> +                       mark_vmemmap_pages(altmap);
-> +                       mhp_reset_altmap(pfn, altmap);
-> +               }
->                 cond_resched();
->         }
->         vmemmap_populate_print_last();
-> +
-> +       if (mhp_flags & MHP_MEMMAP_DEVICE)
-> +               mark_vmemmap_pages(altmap);
-> +
->         return err;
->  }
->
-> @@ -642,6 +682,14 @@ static int online_pages_blocks(unsigned long start, unsigned long nr_pages)
->         while (start < end) {
->                 order = min(MAX_ORDER - 1,
->                         get_order(PFN_PHYS(end) - PFN_PHYS(start)));
-> +               /*
-> +                * Check if the pfn is aligned to its order.
-> +                * If not, we decrement the order until it is,
-> +                * otherwise __free_one_page will bug us.
-> +                */
-> +               while (start & ((1 << order) - 1))
-> +                       order--;
-> +
-
-Is this a candidate for a standalone patch? It seems out of place for
-this patch.
-
->                 (*online_page_callback)(pfn_to_page(start), order);
->
->                 onlined_pages += (1UL << order);
-> @@ -654,13 +702,30 @@ static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
->                         void *arg)
->  {
->         unsigned long onlined_pages = *(unsigned long *)arg;
-> +       unsigned long pfn = start_pfn;
-> +       unsigned long nr_vmemmap_pages = 0;
->
-> -       if (PageReserved(pfn_to_page(start_pfn)))
-> -               onlined_pages += online_pages_blocks(start_pfn, nr_pages);
-> +       if (PageVmemmap(pfn_to_page(pfn))) {
-> +               /*
-> +                * Do not send vmemmap pages to the page allocator.
-> +                */
-> +               nr_vmemmap_pages = get_nr_vmemmap_pages(pfn_to_page(start_pfn));
-> +               nr_vmemmap_pages = min(nr_vmemmap_pages, nr_pages);
-> +               pfn += nr_vmemmap_pages;
-> +               if (nr_vmemmap_pages == nr_pages)
-> +                       /*
-> +                        * If the entire range contains only vmemmap pages,
-> +                        * there are no pages left for the page allocator.
-> +                        */
-> +                       goto skip_online;
-> +       }
-
-Seems this should be caller (online_pages()) responsibility rather
-than making this fixup internal to the helper... and if it's moved up
-can it be pushed one more level up so even online_pages() need not
-worry about this fixup? It just does not seem to an operation that
-belongs to the online path. Might that eliminate the need for tracking
-altmap parameters in struct page?
+David
