@@ -2,54 +2,51 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370E5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9406C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D9C20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B942A20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998944;
-	bh=KO1mmfrXB/4Qi6kQgaa12CkoQHiEMULINy7lqSaWw2g=;
+	s=default; t=1563998953;
+	bh=C3Ji68M2HvbT4xXP9wITpbyHdwCYmlngudHd4n2hFY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ft4AJvdC+NXsNySNRGleBvzMXljTN7QCar3VdHLkxgQ5oyd/claqK7tF0+JrxcHfa
-	 BQm1XuniooJRIeAuV5gijuJB9rMM3pv2hCTFt2+VeQpikZLQVBWFPw+wI4N8FHBuGB
-	 oPiqg63SzvEPVwpNv9KPVB7u0DuHafB8UG058mOw=
+	b=irY76Ng93PmLwiTs5rEix4MV9dHYD4ok4Jm95zBvtLyYHFelidUHVFDdjMSUUzfFk
+	 8mh3nlvnsSmZVcquB54d0R1p5jm1aPeOZs2700JSRyZfqttmfO/a4hNobo4vSv3axD
+	 gC+vNXU9+uuBs0bk0LBQLr6o3rdC/+KjBHoplT8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405344AbfGXUBJ (ORCPT
+        id S2392501AbfGXUJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49576 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:09:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405328AbfGXUBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:04 -0400
+        id S2405298AbfGXUA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:00:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 921D9205C9;
-        Wed, 24 Jul 2019 20:01:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7DE3205C9;
+        Wed, 24 Jul 2019 20:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998464;
-        bh=KO1mmfrXB/4Qi6kQgaa12CkoQHiEMULINy7lqSaWw2g=;
+        s=default; t=1563998455;
+        bh=C3Ji68M2HvbT4xXP9wITpbyHdwCYmlngudHd4n2hFY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fbrbQmZPxJEHNQC0+bducLxv9X5adm2K4mWHN0sO11NSMj3S5tfXgsv+8fg3RwSgF
-         p5hW7We75zU1/p+LEo7hP+ODIho1C7ujienEP7Dnl4EvBl6hbYi6wTGLbwVl9T1Ifw
-         QyLpb2LLVaIUsu5fV02QmMuCBEXpmId/yZFYAtJc=
+        b=arTfTNMQRaL71B+nH/jerY3IaUHGlBz260V23XYgFXafV+GkvJDTAWe2iiCHpeE22
+         TLFrUSuZhsyMrzIendc1KJAfsjdzLN5dDmpZkJQZR1LaLMdSAji/etQvdiStCcjf57
+         TSHwKXAjMXzlhShUZzx6zNx8DyDkMWKBqo0qqnzI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 345/371] xfs: abort unaligned nowait directio early
-Date:   Wed, 24 Jul 2019 21:21:37 +0200
-Message-Id: <20190724191749.638151167@linuxfoundation.org>
+        stable@vger.kernel.org, Norbert Manthey <nmanthey@amazon.de>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.1 370/371] pstore: Fix double-free in pstore_mkfile() failure path
+Date:   Wed, 24 Jul 2019 21:22:02 +0200
+Message-Id: <20190724191752.233895887@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,51 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1fdeaea4d92c69fb9f871a787af6ad00f32eeea7 ]
+From: Norbert Manthey <nmanthey@amazon.de>
 
-Dave Chinner noticed that xfs_file_dio_aio_write returns EAGAIN without
-dropping the IOLOCK when its deciding not to wait, which means that we
-leak the IOLOCK there.  Since we now make unaligned directio always
-wait, we have the opportunity to bail out before trying to take the
-lock, which should reduce the overhead of this never-gonna-work case
-considerably while also solving the dropped lock problem.
+commit 4c6d80e1144bdf48cae6b602ae30d41f3e5c76a9 upstream.
 
-Reported-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The pstore_mkfile() function is passed a pointer to a struct
+pstore_record. On success it consumes this 'record' pointer and
+references it from the created inode.
+
+On failure, however, it may or may not free the record. There are even
+two different code paths which return -ENOMEM -- one of which does and
+the other doesn't free the record.
+
+Make the behaviour deterministic by never consuming and freeing the
+record when returning failure, allowing the caller to do the cleanup
+consistently.
+
+Signed-off-by: Norbert Manthey <nmanthey@amazon.de>
+Link: https://lore.kernel.org/r/1562331960-26198-1-git-send-email-nmanthey@amazon.de
+Fixes: 83f70f0769ddd ("pstore: Do not duplicate record metadata")
+Fixes: 1dfff7dd67d1a ("pstore: Pass record contents instead of copying")
+Cc: stable@vger.kernel.org
+[kees: also move "private" allocation location, rename inode cleanup label]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/xfs/xfs_file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/pstore/inode.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index a7ceae90110e..76748255f843 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -517,6 +517,9 @@ xfs_file_dio_aio_write(
- 	}
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -330,22 +330,21 @@ int pstore_mkfile(struct dentry *root, s
+ 		goto fail;
+ 	inode->i_mode = S_IFREG | 0444;
+ 	inode->i_fop = &pstore_file_operations;
+-	private = kzalloc(sizeof(*private), GFP_KERNEL);
+-	if (!private)
+-		goto fail_alloc;
+-	private->record = record;
+-
+ 	scnprintf(name, sizeof(name), "%s-%s-%llu%s",
+ 			pstore_type_to_name(record->type),
+ 			record->psi->name, record->id,
+ 			record->compressed ? ".enc.z" : "");
  
- 	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		/* unaligned dio always waits, bail */
-+		if (unaligned_io)
-+			return -EAGAIN;
- 		if (!xfs_ilock_nowait(ip, iolock))
- 			return -EAGAIN;
- 	} else {
-@@ -536,9 +539,6 @@ xfs_file_dio_aio_write(
- 	 * xfs_file_aio_write_checks() for other reasons.
- 	 */
- 	if (unaligned_io) {
--		/* unaligned dio always waits, bail */
--		if (iocb->ki_flags & IOCB_NOWAIT)
--			return -EAGAIN;
- 		inode_dio_wait(inode);
- 	} else if (iolock == XFS_IOLOCK_EXCL) {
- 		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
--- 
-2.20.1
-
++	private = kzalloc(sizeof(*private), GFP_KERNEL);
++	if (!private)
++		goto fail_inode;
++
+ 	dentry = d_alloc_name(root, name);
+ 	if (!dentry)
+ 		goto fail_private;
+ 
++	private->record = record;
+ 	inode->i_size = private->total_size = size;
+-
+ 	inode->i_private = private;
+ 
+ 	if (record->time.tv_sec)
+@@ -361,7 +360,7 @@ int pstore_mkfile(struct dentry *root, s
+ 
+ fail_private:
+ 	free_pstore_private(private);
+-fail_alloc:
++fail_inode:
+ 	iput(inode);
+ 
+ fail:
 
 
