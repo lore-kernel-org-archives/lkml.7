@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477B6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C68C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEE7214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A1C20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997576;
-	bh=qAWOwzw/cwiUcLWrhEYzt4usW8EDeskhEElCW8ichWI=;
+	s=default; t=1563997584;
+	bh=NdZgxNvROlfz8nIhsadzb0D4z4Mn8dm2HzdGLTurW9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WYQMzsS7guK1wgb4wPu886ejGtgi/oX3OMtqltG+BYBvmH+RTZTKCabIwkzG9OSOw
-	 nC3bfWDPQ0uXFTV9sjDTj3W1Q9b3hK7aKp2+yIksc2/EdBveXLQb3NdKm77uX3Gosu
-	 VfLItddsQMbj7mcdA0sBmwkhNXTd8wR8jThDdei0=
+	b=qLp84L8Ypj3mYLhvSErT2Y2+iy+7lC3EinMBbK8vssJRqtjhReHkSDN1kVfyQJFPc
+	 hfyMe5lwkswGJgGW19HCoG25gfF3x2Ms7hEecbTygnxfWD4EP03C1ClAvC022r7wWy
+	 dy7Fit2vafmvZFOq1g24IOwPgVG/aTCbTF8CeyuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390716AbfGXTqP (ORCPT
+        id S2391055AbfGXTqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51134 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390672AbfGXTqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:10 -0400
+        id S2390774AbfGXTqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41368214AF;
-        Wed, 24 Jul 2019 19:46:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349E92083B;
+        Wed, 24 Jul 2019 19:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997569;
-        bh=qAWOwzw/cwiUcLWrhEYzt4usW8EDeskhEElCW8ichWI=;
+        s=default; t=1563997577;
+        bh=NdZgxNvROlfz8nIhsadzb0D4z4Mn8dm2HzdGLTurW9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kXMWmw0+s0gs7O6zFaCM/b4Wu59H3/pO41qfpwCXQr6SsCF5MjUBLiMiGOcliY1FF
-         fuEy8aOOchy85iPlsKPNRsQyLXh7pG5YVDUB1n7ojhvqf5JssyQKveCVSCSFeqQOY4
-         lSXGG6UA2GZBf25L42NLSh2sxKzQ+73e+qe2L2Wo=
+        b=sE5TEIDVk94UAZJtbdADUTd+57Wq/bNstPNVwkO8YQ/eNb+oZOvCE7SWyRr+Z0W3V
+         E336tZlcs+smbsSou5TgPqzD95ZkVta+wJnsSE8EJTTYuwzWAAHJQ2z/DKtMBV4/gU
+         rkoUGygUV/O/JmUyIJ+vaLBWFL6bsigc/n8Xztyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
         "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 067/371] net: fec: Do not use netdev messages too early
-Date:   Wed, 24 Jul 2019 21:16:59 +0200
-Message-Id: <20190724191729.947450292@linuxfoundation.org>
+Subject: [PATCH 5.1 034/371] net: stmmac: Prevent missing interrupts when running NAPI
+Date:   Wed, 24 Jul 2019 21:16:26 +0200
+Message-Id: <20190724191727.083180882@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,48 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a19a0582363b9a5f8ba812f34f1b8df394898780 ]
+[ Upstream commit a976ca79e23f13bff79c14e7266cea4a0ea51e67 ]
 
-When a valid MAC address is not found the current messages
-are shown:
+When we trigger NAPI we are disabling interrupts but in case we receive
+or send a packet in the meantime, as interrupts are disabled, we will
+miss this event.
 
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet (unnamed net_device) (uninitialized): Using random MAC address: aa:9f:25:eb:7e:aa
+Trigger both NAPI instances (RX and TX) when at least one event happens
+so that we don't miss any interrupts.
 
-Since the network device has not been registered at this point, it is better
-to use dev_err()/dev_info() instead, which will provide cleaner log
-messages like these:
-
-fec 2188000.ethernet: Invalid MAC address: 00:00:00:00:00:00
-fec 2188000.ethernet: Using random MAC address: aa:9f:25:eb:7e:aa
-
-Tested on a imx6dl-pico-pi board.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fec_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 878ccce1dfcd..87a9c5716958 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1689,10 +1689,10 @@ static void fec_get_mac(struct net_device *ndev)
- 	 */
- 	if (!is_valid_ether_addr(iap)) {
- 		/* Report it and use a random ethernet address instead */
--		netdev_err(ndev, "Invalid MAC address: %pM\n", iap);
-+		dev_err(&fep->pdev->dev, "Invalid MAC address: %pM\n", iap);
- 		eth_hw_addr_random(ndev);
--		netdev_info(ndev, "Using random MAC address: %pM\n",
--			    ndev->dev_addr);
-+		dev_info(&fep->pdev->dev, "Using random MAC address: %pM\n",
-+			 ndev->dev_addr);
- 		return;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index a634054dcb11..f3735d0458eb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2058,6 +2058,9 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
+ 						 &priv->xstats, chan);
+ 	struct stmmac_channel *ch = &priv->channel[chan];
  
++	if (status)
++		status |= handle_rx | handle_tx;
++
+ 	if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+ 		stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
+ 		napi_schedule_irqoff(&ch->rx_napi);
 -- 
 2.20.1
 
