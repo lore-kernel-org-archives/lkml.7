@@ -2,184 +2,197 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4C8C76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFDDC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F44229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3312C229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IESMVaT8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Frn1fSzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfGXCCQ (ORCPT
+        id S1728837AbfGXCCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:02:16 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39700 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbfGXCCP (ORCPT
+        Tue, 23 Jul 2019 22:02:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42091 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbfGXCCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:02:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so20337918pgi.6;
-        Tue, 23 Jul 2019 19:02:15 -0700 (PDT)
+        Tue, 23 Jul 2019 22:02:30 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so21353942plb.9;
+        Tue, 23 Jul 2019 19:02:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MHXWLNkBi4IYlJRSCQ7XL9Ay+J09vpF8KwLPUC4SKIU=;
-        b=IESMVaT8yvh5w1FIxv4hRPats+B4/ECJQn4da/rPuLLeeTvwXzcp7WupjkHeGFjVvV
-         zRC1QulnMvcrutEg6lvLQBQwwuFeib0Fkg0t2GQb6QrqyFeQ8d36iJyMFXzo8BoQFRiI
-         0/zYR5iXQ4G9TvZ/pUbbDl0OFZASDij6hig3+YGw5ueZlMdSL/jEF8DzkgkU47dmcEJf
-         57jjFmQie9JXwdMi7BTqla4dNRDdypp9jAKUgddRoGfzbj13X6Hep+X5rj3ClCgjQTnY
-         GMX4/qJHpBFucfV6XDbR9g9QZpEYDdQO8NWzBJXCPWmb1pdmr5d/tvemxr/zTVgoGPza
-         Dnqg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=utzeHdlKnJ8Jsg5KiD3HvsIOK8aNJAUqQomKEkAT0jw=;
+        b=Frn1fSzU7Hs6HFsPjqPEd7iPDyz3Ynjesxlx/brBizTjGTVtSx98hbgnFJg/vcdeJ3
+         U0lKUt11tN9HFrNybfTgt0AvCNUDtP60bWNSRaWyNhAZ2Gq0utpFyf5N1OimCOT5qJ0T
+         i3xvLAM7f8H++QOSmLUmIVGQ8O4vMRW2XvN5WxlNmK2FBIs59D6/HoWZ/cC71JYWHtsk
+         NWEyxTbqMmixzi10djjAmf7drv+oSSjFblR/QL2TzexRmysBxFULMpjEtnF7RXzJW73v
+         +/ODKm6LGGvaKElgXcQj6mtS8mvr8furUMK2L0zOm7y6XSdPeSSPDwh3sjpjNcuWSR9V
+         JFPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MHXWLNkBi4IYlJRSCQ7XL9Ay+J09vpF8KwLPUC4SKIU=;
-        b=VF8xsUFirMq09CFGwORbQ9LSt063yQFcgkQE0zXwBrL4qIUSTbLzovPnoVlc6tuOR+
-         kKIfmcWu2LPaacxJ/9jB4/uF+fRnxG1bapzlOk1Jd0IFp+Ex34wO21irs/wLr4T8a5RV
-         lQyvwuI9sSrJMnk6Pq0s6/0mz+3U+T+OndIQiPjvjSE1ZcIFWsC7To+cVOTDcFbuf2mw
-         MuzGDSsyJ538Qm/4cNjbY8LRP8t55UKyH/WzmIyznFkwTYUDYY+iGd77ibDvDC9WhaUj
-         GQVrxCB4OMSGw3riydge0OfApI1hwy2JnllF74FCauuiE9D1fEiG/mSIYHFyHuNGRQOV
-         fTOQ==
-X-Gm-Message-State: APjAAAUBvWaphJXC33lpUaLJa6DES/JrVOBZI2dLzLW8Ucrb9/9qJGlS
-        /GVbdGYpPakftbTpnN33yaEVtL25xmk=
-X-Google-Smtp-Source: APXvYqwQuaHFKLxA6edw86vkdlDAr++oHybNiK7Mu0IJOTN3gfJ8ZFjCYhs0K/0w8fTrJfDFXIF3tw==
-X-Received: by 2002:a65:4b89:: with SMTP id t9mr10206526pgq.55.1563933734972;
-        Tue, 23 Jul 2019 19:02:14 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id b19sm41008521pgh.57.2019.07.23.19.02.11
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 19:02:14 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Yong Zhi <yong.zhi@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Akihiro Tsukada <tskd08@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] media: pci: Use dev_get_drvdata where possible
-Date:   Wed, 24 Jul 2019 10:02:06 +0800
-Message-Id: <20190724020206.11044-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=utzeHdlKnJ8Jsg5KiD3HvsIOK8aNJAUqQomKEkAT0jw=;
+        b=mFmK+3ocSxBFQU6IAXiCtCkvgrLbxMzPugjLEnBohaLibfllybvfNe47YfIoXv5qbS
+         dZ13GqEueO6uuGxqQNDgyChh3rpxx8MGnxCbVIpQI0dK93Ngqf9eXuV2EJMseablBbQ0
+         WBl3Rc08uYaX2Wk9O87DEV548Mrwng/PNwNjYhjAPzF33J6/0A+Ra2WLuk1V2l/cdScb
+         XnmgBIqRgWUgwXx90Nj8PY6UJqKLTGMcESAPjs0R5+od3qQdUhwh+Qi8tKYYfQ3D6twT
+         3bEyYpygi+dDs+CPdWWfFUHUTJyjbyF4lLyeKAmdyi5Ya44dvY6UTAU055m+J9aFjzfi
+         /VeA==
+X-Gm-Message-State: APjAAAXRnHdeQUNvwrCwrUQtf4gOajbPaleIcS0oF6eYMMnXj5MZj2aq
+        M8ycVqKb1/W3h/aus16zy0cEESiEU4gOTuiuNoY=
+X-Google-Smtp-Source: APXvYqyTlL7iex/bgjSHKUXZkR5Q0EHQ0AscX9+V6owz2Wmr2wofhrW2X6+UwfLnyoBVAyomr1SOlaLp7luO+pvX4ew=
+X-Received: by 2002:a17:902:2a68:: with SMTP id i95mr84858089plb.167.1563933749237;
+ Tue, 23 Jul 2019 19:02:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20190715134655.4076-1-sashal@kernel.org> <20190715134655.4076-39-sashal@kernel.org>
+ <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
+ <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com> <87v9vs43pq.fsf@xmission.com>
+In-Reply-To: <87v9vs43pq.fsf@xmission.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 23 Jul 2019 21:02:18 -0500
+Message-ID: <CAH2r5mtB=KO+9fxSYQHbjD+0K+5rGL6Q8TSU0_wsHUdqHy1rSw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session
+ to call send_sig instead of force_sig
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     ronnie sahlberg <ronniesahlberg@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+On Tue, Jul 23, 2019 at 8:32 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Steve French <smfrench@gmail.com> writes:
+>
+> > Very easy to see what caused the regression with this global change:
+> >
+> > mount (which launches "cifsd" thread to read the socket)
+> > umount (which kills the "cifsd" thread)
+> > rmmod   (rmmod now fails since "cifsd" thread is still active)
+> >
+> > mount launches a thread to read from the socket ("cifsd")
+> > umount is supposed to kill that thread (but with the patch
+> > "signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of
+> > force_sig" that no longer works).  So the regression is that after
+> > unmount you still see the "cifsd" thread, and the reason that cifsd
+> > thread is still around is that that patch no longer force kills the
+> > process (see line 2652 of fs/cifs/connect.c) which regresses module
+> > removal.
+> >
+> > -               force_sig(SIGKILL, task);
+> > +               send_sig(SIGKILL, task, 1);
+> >
+> > The comment in the changeset indicates "The signal SIGKILL can not be
+> > ignored" but obviously it can be ignored - at least on 5.3-rc1 it is
+> > being ignored.
+> >
+> > If send_sig(SIGKILL ...) doesn't work and if force_sig(SIGKILL, task)
+> > is removed and no longer possible - how do we kill a helper process
+> > ...
+>
+> I think I see what is happening.  It looks like as well as misuinsg
+> force_sig, cifs is also violating the invariant that keeps SIGKILL out
+> of the blocked signal set.
+>
+> For that force_sig will act differently.  I did not consider it because
+> that is never supposed to happen.
+>
+> Can someone test this code below and confirm the issue goes away?
+>
+> diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+> index 5d6d44bfe10a..2a782ebc7b65 100644
+> --- a/fs/cifs/transport.c
+> +++ b/fs/cifs/transport.c
+> @@ -347,6 +347,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+>          */
+>
+>         sigfillset(&mask);
+> +       sigdelset(&mask, SIGKILL);
+>         sigprocmask(SIG_BLOCK, &mask, &oldmask);
+>
+>         /* Generate a rfc1002 marker for SMB2+ */
+>
+>
+> Eric
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Change pci_set_drvdata to dev_set_drvdata
-    to keep consistency.
+I just tried your suggestion and it didn't work.   I also tried doing
+a similar thing on the thread we are trying to kills ("cifsd" - ie
+which is blocked in the function cifs_demultiplex_thread waiting to
+read from the socket)
+# git diff -a
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index a4830ced0f98..b73062520a17 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1104,6 +1104,7 @@ cifs_demultiplex_thread(void *p)
+        struct task_struct *task_to_wake = NULL;
+        struct mid_q_entry *mids[MAX_COMPOUND];
+        char *bufs[MAX_COMPOUND];
++       sigset_t mask;
 
- drivers/media/pci/intel/ipu3/ipu3-cio2.c | 5 ++---
- drivers/media/pci/pt1/pt1.c              | 8 +++-----
- drivers/media/pci/pt3/pt3.c              | 8 +++-----
- 3 files changed, 8 insertions(+), 13 deletions(-)
+        current->flags |= PF_MEMALLOC;
+        cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
+@@ -1113,6 +1114,8 @@ cifs_demultiplex_thread(void *p)
+                mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
 
-diff --git a/drivers/media/pci/intel/ipu3/ipu3-cio2.c b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-index c1d133e17e4b..2b2c77c2fc7e 100644
---- a/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-+++ b/drivers/media/pci/intel/ipu3/ipu3-cio2.c
-@@ -1765,7 +1765,7 @@ static int cio2_pci_probe(struct pci_dev *pci_dev,
- 
- 	cio2->base = iomap[CIO2_PCI_BAR];
- 
--	pci_set_drvdata(pci_dev, cio2);
-+	dev_set_drvdata(&pci_dev->dev, cio2);
- 
- 	pci_set_master(pci_dev);
- 
-@@ -2000,8 +2000,7 @@ static int __maybe_unused cio2_suspend(struct device *dev)
- 
- static int __maybe_unused cio2_resume(struct device *dev)
- {
--	struct pci_dev *pci_dev = to_pci_dev(dev);
--	struct cio2_device *cio2 = pci_get_drvdata(pci_dev);
-+	struct cio2_device *cio2 = dev_get_drvdata(dev);
- 	int r = 0;
- 	struct cio2_queue *q = cio2->cur_queue;
- 
-diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c
-index e51c80bc4646..06f25b658a76 100644
---- a/drivers/media/pci/pt1/pt1.c
-+++ b/drivers/media/pci/pt1/pt1.c
-@@ -1217,8 +1217,7 @@ static void pt1_i2c_init(struct pt1 *pt1)
- 
- static int pt1_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt1 *pt1 = pci_get_drvdata(pdev);
-+	struct pt1 *pt1 = dev_get_drvdata(dev);
- 
- 	pt1_init_streams(pt1);
- 	pt1_disable_ram(pt1);
-@@ -1230,8 +1229,7 @@ static int pt1_suspend(struct device *dev)
- 
- static int pt1_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt1 *pt1 = pci_get_drvdata(pdev);
-+	struct pt1 *pt1 = dev_get_drvdata(dev);
- 	int ret;
- 	int i;
- 
-@@ -1371,7 +1369,7 @@ static int pt1_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	pt1->regs = regs;
- 	pt1->fe_clk = (pdev->device == 0x211a) ?
- 				PT1_FE_CLK_20MHZ : PT1_FE_CLK_25MHZ;
--	pci_set_drvdata(pdev, pt1);
-+	dev_set_drvdata(&pdev->dev, pt1);
- 
- 	ret = pt1_init_adapters(pt1);
- 	if (ret < 0)
-diff --git a/drivers/media/pci/pt3/pt3.c b/drivers/media/pci/pt3/pt3.c
-index 7a7afae4c84c..ab09e0f2ed99 100644
---- a/drivers/media/pci/pt3/pt3.c
-+++ b/drivers/media/pci/pt3/pt3.c
-@@ -626,8 +626,7 @@ static void pt3_cleanup_adapter(struct pt3_board *pt3, int index)
- 
- static int pt3_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt3_board *pt3 = pci_get_drvdata(pdev);
-+	struct pt3_board *pt3 = dev_get_drvdata(dev);
- 	int i;
- 	struct pt3_adapter *adap;
- 
-@@ -646,8 +645,7 @@ static int pt3_suspend(struct device *dev)
- 
- static int pt3_resume(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct pt3_board *pt3 = pci_get_drvdata(pdev);
-+	struct pt3_board *pt3 = dev_get_drvdata(dev);
- 	int i, ret;
- 	struct pt3_adapter *adap;
- 
-@@ -734,7 +732,7 @@ static int pt3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		ret = -ENOMEM;
- 		goto err_release_regions;
- 	}
--	pci_set_drvdata(pdev, pt3);
-+	dev_set_drvdata(&pdev->dev, pt3);
- 	pt3->pdev = pdev;
- 	mutex_init(&pt3->lock);
- 	pt3->regs[0] = pci_ioremap_bar(pdev, 0);
+        set_freezable();
++       sigfillset(&mask);
++       sigdelset(&mask, SIGKILL);
+        while (server->tcpStatus != CifsExiting) {
+                if (try_to_freeze())
+                        continue;
+
+
+That also didn't work.     The only thing I have been able to find
+which worked was:
+
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index a4830ced0f98..e74f04163fc9 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1113,6 +1113,7 @@ cifs_demultiplex_thread(void *p)
+                mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+
+        set_freezable();
++      allow_signal(SIGKILL);
+        while (server->tcpStatus != CifsExiting) {
+                if (try_to_freeze())
+                        continue;
+
+
+That fixes the problem ... but ... as Ronnie and others have noted it
+would allow a userspace process to make the mount unusable (all you
+would have to do would be to do a kill -9 of the "cifsd" process from
+some userspace process like bash and the mount would be unusable - so
+this sounds dangerous.
+
+Is there an alternative that, in the process doing the unmount in
+kernel, would allow us to do the equivalent of:
+      "allow_signal(SIGKILL, <the id of the cifsd process>"
+In otherwords, to minimize the risk of some userspace process killing
+cifsd, could we delay enabling allow_signal(SIGKILL) till the unmount
+begins by doing it for a different process (have the unmount process
+enable signals for the cifsd process).   Otherwise is there a way to
+force kill a process from the kernel as we used to do - without
+running the risk of a user space process killing cifsd (which is bad).
+
 -- 
-2.20.1
+Thanks,
 
+Steve
