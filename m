@@ -2,112 +2,147 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E28C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275A9C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FAA22ADB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EEF22BE8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4xIq3yR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TND1gWT+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfGXOSH (ORCPT
+        id S1728233AbfGXOST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:18:07 -0400
-Received: from mail-qt1-f175.google.com ([209.85.160.175]:44183 "EHLO
-        mail-qt1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfGXOSH (ORCPT
+        Wed, 24 Jul 2019 10:18:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33127 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728184AbfGXOSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:18:07 -0400
-Received: by mail-qt1-f175.google.com with SMTP id 44so14604446qtg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:18:06 -0700 (PDT)
+        Wed, 24 Jul 2019 10:18:18 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so21042183pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=4Z7NceRYmsd4mWj9JDUNB9v0QmsmFhuBmenBnT38Iog=;
-        b=m4xIq3yRVJW0kxd1xSkW/21rcobDF5TddzNVTZ1fwY9hughmP+OlYTaeKcDTy67WG6
-         DBlsIAr/tKJJ8gEfc/jFgXOiT36nCdxnHjD8ugTQNW2aCHNPmdnGmU+cpNpNRQ2xNSB7
-         IQFRtXdNHd8iAVAud2/g1ewOOXj8Im3LJCSwtL6Mx8xoXYR4ikG6cAMzdXfhHQNv8pbs
-         AYbkIgxmlj9jplcT6noutzZUscT+QOH1S7G2SWpEwmTZlRjWcUpielJHDBZfPh60pVvK
-         Q48+IDqr+r3VYCx/+UTTiVSAZj3kiyvkRIBf3Zoftyp1eLKROPVH5dT0S0hnqA45JkcA
-         3/CQ==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=i6ucO8M1kBwfk/WDeuCHxIoA+2DfAiPuMamyFSvxMIE=;
+        b=TND1gWT+zyPtTrknjApjowmDcsWxhTeFFGQQKuHPjwHM2p+eRGXgyM/jgeho5dZ5b/
+         bLE5zwWspO66n2PXUX4fU3WNEigbELc5ZOvRddO9zVh/AEf6mn610vnp/GjuLr8pjT3r
+         Tl8gh340iXQfZf7V6Z0eW5ED8IBh6e7w7hGeQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=4Z7NceRYmsd4mWj9JDUNB9v0QmsmFhuBmenBnT38Iog=;
-        b=iWECEHFgqOsPE2LBkT9fdspbbMwRx1enH1NvXV+XVS4AxQy8l4IkiaX9POboOl1HBM
-         G94MFx5wFTuovoDkq6QL7Fm6ZvH58C1832V2zxqYSTTuYdYGEH5SmmJjGk18oT2UjNNY
-         aQycRx09EaRuQjZJEHKt+MURSkmzjrSNAS/PvGuLP4R6jdbSa03g/1QYov/I2NGLATR2
-         GfoFVSj2bm9mMaRWS9iA1FEm5V/+q33RdeBOqAEUIzcXvQgfCsYmbtpewPpL4AMPnLvx
-         sxrP6xsBocCgelcvCcH96rS1VAHBA5XKCqG1DKUVuLa2Gpycv3t5C9uOX6v1Dzno79IW
-         MNUQ==
-X-Gm-Message-State: APjAAAVq/3ZhZmMr7dVR0PholFcEuitZXiWcEK3VAU6SrXSasVw6ZNdc
-        ltNNY1llF0bzRorYC5ra8ox6Kho9YbVNOrrzNB6D50js
-X-Google-Smtp-Source: APXvYqx0fQpMpc3+dt/dgtbDwqdkAWPE94gAyxxd02MLjxJqiq/qwdpcg/T+wVNem3jaqcUEpLzjD673gxGuDyqGPdg=
-X-Received: by 2002:a0c:d251:: with SMTP id o17mr60155947qvh.109.1563977885709;
- Wed, 24 Jul 2019 07:18:05 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=i6ucO8M1kBwfk/WDeuCHxIoA+2DfAiPuMamyFSvxMIE=;
+        b=DAnUb5z0gYoXuntmwaeYT8i09HJIsqNzWMAYV7F+9xlYfKRVHNR8pVqi2caC2ZBUPD
+         +kPePlR410q51387dKnSgWe5Q35AECYC92kJo8dmYWTzwVdfkv2HZ7jAz71ZHsvQEqdi
+         L/uFJU+z+T0IEidwgPt41cRyEAMFQ7Ma0EfSnO9DGZ0a39b4UYSbvVjqhASwQyPKKkTg
+         B7AeA02bI4C14pidzw9/AUHDB0+/lUGajQ/BK+7pwnJYvuf7fczxdkNWdgoGS+h5F8e7
+         i6EnWy12DiFWS1XuHnT4sm5FVL+t9EA1CtpO2ZgvX4u+b9mD/G3HwOYmPHZU9ka/gHim
+         UU4w==
+X-Gm-Message-State: APjAAAXx4A3QxNcQVMfTOi4x+jhAG1A+eJvbfYeNFNncQ84ocj5LOwVt
+        wsnKwGe7TV6A/2veN93QJA17Sg==
+X-Google-Smtp-Source: APXvYqwA2DaROWqS6dAgzLQRMlZAOqpPRUpDwwbWaRi5dnx4FVbkt5kHlJYwChON/qwoRaxOY5ouTQ==
+X-Received: by 2002:a17:90a:d151:: with SMTP id t17mr87008292pjw.60.1563977898088;
+        Wed, 24 Jul 2019 07:18:18 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j20sm44352358pfr.113.2019.07.24.07.18.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 07:18:17 -0700 (PDT)
+Message-ID: <5d3868a9.1c69fb81.876aa.ac30@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-From:   Gilberto Nunes <gilberto.nunes32@gmail.com>
-Date:   Wed, 24 Jul 2019 11:17:29 -0300
-Message-ID: <CAOKSTBs-cHMr7xbJVVUjZ9C3__bY6jZU-_TZ0RmMRMJ3dBk3PA@mail.gmail.com>
-Subject: AMD Drivers
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8c181f08-559b-5d77-a617-65cfd3d5da55@codeaurora.org>
+References: <1563568344-1274-1-git-send-email-daidavid1@codeaurora.org> <1563568344-1274-2-git-send-email-daidavid1@codeaurora.org> <5d371ce7.1c69fb81.9650.8239@mx.google.com> <8c181f08-559b-5d77-a617-65cfd3d5da55@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Update Qualcomm SDM845 DT bindings
+To:     David Dai <daidavid1@codeaurora.org>, bjorn.andersson@linaro.org,
+        georgi.djakov@linaro.org, robh+dt@kernel.org
+Cc:     evgreen@google.com, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 24 Jul 2019 07:18:16 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi there!
+Quoting David Dai (2019-07-23 14:48:42)
+> On 7/23/2019 7:42 AM, Stephen Boyd wrote:
+> > Quoting David Dai (2019-07-19 13:32:23)
+> >> +- compatible : shall contain only one of the following:
+> >> +                       "qcom,sdm845-bcm-voter",
+> >> +
+> >> +Examples:
+> >> +
+> >> +apps_rsc: rsc@179c0000 {
+> > But there isn't a reg property.
+> I'll change this to the generic example with just apps_rsc: rsc {
+> >
+> >> +       label =3D "apps_rsc";
+> > Is label required?
 
-I am usging Linux mint here 19.1.
-My laptop has the following configuration:
+Any answer?
 
-CPU - AMD A12-9720P RADEON R7, 12 COMPUTE CORES 4C+8G
-GPU - Wani [Radeon R5/R6/R7 Graphics] (amdgpu)
-Network Interface card:
-01:00.1 Ethernet controller: Realtek Semiconductor Co., Ltd.
-RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 12)
+> >
+> >> +       compatible =3D "qcom,rpmh-rsc";
+> >> +
+> >> +       apps_bcm_voter: bcm_voter {
+> >> +               compatible =3D "qcom,sdm845-bcm-voter";
+> >> +       };
+> >> +}
+> >> +
+> >> +disp_rsc: rsc@179d0000 {
+> >> +       label =3D "disp_rsc";
+> >> +       compatible =3D "qcom,rpmh-rsc";
+> >> +
+> >> +       disp_bcm_voter: bcm_voter {
+> >> +               compatible =3D "qcom,sdm845-bcm-voter";
+> >> +       };
+> >> +}
+> >> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm84=
+5.txt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+> >> index 5c4f1d9..27f9ed9 100644
+> >> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+> >> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+[...]
+> >> +
+> >> +mem_noc: interconnect@1380000 {
+> >> +       compatible =3D "qcom,sdm845-mem_noc";
+> >> +       reg =3D <0 0x1380000 0 0x27200>;
+> >> +       #interconnect-cells =3D <1>;
+> >> +       qcom,bcm-voter =3D <&apps_bcm_voter>, <&disp_bcm_voter>;
+> >> +};
+> > How does a consumer target a particular RSC? For example, how can
+> > display decide to use the disp_bcm_voter node from mem_noc here? Maybe
+> > you can add that consumer to the example?
+>=20
+> I was thinking that the association between the bcm voters and the icc=20
+> nodes would be handled by the interconnect provider, and that there=20
+> would be a set of display specific icc nodes with their own unique IDs=20
+> that the consumers could reference. I will mention this as part of the=20
+> description and provide an example.
+>=20
+> Ex: interconnects =3D <&mmss_noc MASTER_MDP0_DISP &mem_noc SLAVE_EBI_DISP=
+>;
+>=20
 
-When I install kernel 4.18.x or 5.x, the network doesn't work anymore...
-I can loaded the modulo r8169 andr8168.
-I saw enp1s0f1 as well but there's no link at all!
-Even when I fixed the IP none link!
-I cannot ping the network gateway or any other IP inside LAN!
-Right now, I booted my laptop with kernel
-Linux version 5.2.2-050202-generic (kernel@kathleen) (gcc version
-9.1.0 (Ubuntu 9.1.0-9ubuntu2)) #201907231250 SMP Tue Jul 23 12:53:21
-UTC 2019
+It looks backwards to me. Don't the consumers want to consume a
+particular RSC, i.e. apps or display RSC, so they can choose where to
+put the bcm vote and then those RSCs want to find MMIO registers for
+mmss_noc or mem_noc that they have to write to tune something else like
+QoS? If the MMIO space is the provider then I'm lost how it can
+differentiate between the RSCs that may be targetting the particular
+NoC.=20
 
-The system boot slowly, and I have a SSD Samsung, which in kernel
-4.15, boot quickly.
-And there's many errors in dmesg command, like you can see in this pastbin
+Maybe I've just completely missed something and this is all decided
+already. If so, sorry, I'm just trying to understand.
 
-https://paste.ubuntu.com/p/YhbjnzYYYh/
-
-The system get stuck for 5 seconds and then the X login screen appears!
-Also, I get this message:
-dmesg | grep stuck
-[   40.231513] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [kworker/0:1:7]
-[   68.231511] watchdog: BUG: soft lockup - CPU#0 stuck for 21s! [kworker/0:1:7]
-[  104.231513] watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [kworker/0:0:5]
-[  176.239514] watchdog: BUG: soft lockup - CPU#3 stuck for 23s!
-[kworker/3:3:593]
-
-Which make the system freeze for a while and then return to normal!
-Oh! By the way, the network card r8169 are work wonderful!
-
-
-
-Thanks a lot.
----
-Gilberto Nunes Ferreira
-
-(47) 3025-5907
-(47) 99676-7530 - Whatsapp / Telegram
-
-Skype: gilberto.nunes36
