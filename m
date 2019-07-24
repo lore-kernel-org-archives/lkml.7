@@ -2,80 +2,68 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0711C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3ADC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF91522387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004AE22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563988222;
+	bh=xAhl0C0csUV8JTXFW2xkr4vyIY3HtsxxZk+pzzR9NyM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=pFJ7D7qo5nfmndGt6p44mCKSulcZccogQ1U3vO7CzS5EusvU6y5ffBOV4KVHByg4z
+	 KmLn1s9z/yinz0OvQMbIqPyTi0UJTIK/FgYvq20nA272LRnu1waUX1VHn0bQxw+EqG
+	 +9F4hPJrxwKxnjSpCPebRS0IBTNcvyNSAhL+Rql4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbfGXRJt (ORCPT
+        id S1728144AbfGXRKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:09:49 -0400
-Received: from smtprelay0228.hostedemail.com ([216.40.44.228]:44087 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726031AbfGXRJt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:09:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 96310182251B2;
-        Wed, 24 Jul 2019 17:09:47 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: stop29_1b0e5232f4617
-X-Filterd-Recvd-Size: 2157
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 24 Jul 2019 17:09:45 +0000 (UTC)
-Message-ID: <be536d37a3b58557cdacd33943915d397bcb5037.camel@perches.com>
-Subject: Re: [PATCH 11/12] staging: media: cedrus: Fix misuse of GENMASK
- macro
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Wed, 24 Jul 2019 10:09:44 -0700
-In-Reply-To: <cd543a5f26b031a0bbd3baa55e1f15813f59f107.1562734889.git.joe@perches.com>
-References: <cover.1562734889.git.joe@perches.com>
-         <cd543a5f26b031a0bbd3baa55e1f15813f59f107.1562734889.git.joe@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Jul 2019 13:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726031AbfGXRKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:10:20 -0400
+Subject: Re: [GIT PULL] KVM fixes for Linux 5.3-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563988220;
+        bh=xAhl0C0csUV8JTXFW2xkr4vyIY3HtsxxZk+pzzR9NyM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=1+NlSG6k/RJZ8sVwO+m8XK8z02aYybIA8kDaxUmz84SOcgkADpJVN6lCpPmnecZkw
+         CMSM3YzdU15eYmGSJA2H3jowPy+0GP4l9mjPACliROPhkWfw6iZz6OkWQrA4nP5EC2
+         K3gAiQC1RmfcLUG83GUDE7JPt6WEAAaP4UTUhMOU=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1563970561-44925-1-git-send-email-pbonzini@redhat.com>
+References: <1563970561-44925-1-git-send-email-pbonzini@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1563970561-44925-1-git-send-email-pbonzini@redhat.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
+ tags/for-linus
+X-PR-Tracked-Commit-Id: 266e85a5ec9100dcd9ae03601453bbc96fefee5d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 76260774575c0ff7464bf5a4beabc9852180799f
+Message-Id: <156398822001.2764.12907694831246058752.pr-tracker-bot@kernel.org>
+Date:   Wed, 24 Jul 2019 17:10:20 +0000
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        rkrcmar@redhat.com, kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
-> Arguments are supposed to be ordered high then low.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus_regs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> index 3e9931416e45..ddd29788d685 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> @@ -110,7 +110,7 @@
->  #define VE_DEC_MPEG_MBADDR			(VE_ENGINE_DEC_MPEG + 0x10)
->  
->  #define VE_DEC_MPEG_MBADDR_X(w)			(((w) << 8) & GENMASK(15, 8))
-> -#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(0, 7))
-> +#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(7, 0))
->  
->  #define VE_DEC_MPEG_CTRL			(VE_ENGINE_DEC_MPEG + 0x14)
+The pull request you sent on Wed, 24 Jul 2019 14:16:01 +0200:
 
-Greg?  ping?
- 
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/76260774575c0ff7464bf5a4beabc9852180799f
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
