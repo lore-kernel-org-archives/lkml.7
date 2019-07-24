@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD28C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2529C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6062238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A745021951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996508;
-	bh=+E7l2ji47+QPKyzCYtnJU/gcwcZY0L7QrDYr5U6InH8=;
+	s=default; t=1563996513;
+	bh=q/PP4wEmBuwNZos+xIzrwifTyzw3b6/QtHSmRi3p/48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mpJfRERVSW8XANgjy7gIzpQdoK77ANh/piZmntfASDOVAkjx4KvU+SgOFPd0zVe7U
-	 536wbaRoSWihLjHW9NMekXuToQpC1C1Q3fxpPM5bdytRK+rrDjqw/8YKHC1oE7YOva
-	 e1JHRTPuGAJOM7lKYiKjXL7GtWWbWFg5p82LzJKI=
+	b=YkePyKuCA4WXcfJf5dZo2lrZAa2LZVJTZDAPL9RYlEIMYJkg1TUMxDZxbKWH+8idU
+	 QlN9PdKOmWtb8ueUv8+A67eDawZgp1QpPr5s9N2eWDphvMnfMrX99WDsgkQgKPn4/b
+	 RsfNUBmAe9YWbISvEyPPngX54q+lI6NuIJTNQ+ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388330AbfGXT2Z (ORCPT
+        id S2388268AbfGXT2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46550 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:28:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388233AbfGXT2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:21 -0400
+        id S2388332AbfGXT20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D48B321951;
-        Wed, 24 Jul 2019 19:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C43921951;
+        Wed, 24 Jul 2019 19:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996500;
-        bh=+E7l2ji47+QPKyzCYtnJU/gcwcZY0L7QrDYr5U6InH8=;
+        s=default; t=1563996505;
+        bh=q/PP4wEmBuwNZos+xIzrwifTyzw3b6/QtHSmRi3p/48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBtYh1A4Cf46UhJmYjGAQG1UhwDgmt8EjzO4TkSMfPuQxrLxHSUvg7FGlftOMTK23
-         8pDRHct3Z6oRzcNJkdC71kXj+ZSJ5MUk9SB3vqMrmVFF2bGw72CqmKQXrJ2LkM7Y6J
-         hf32G2FSgdfelruvVYzZfJuDg3bS7cyQO7jgyE9I=
+        b=KgZ0HbQCAw37ygQVk+0tjKnRnn3JPZ0gu2JeFCD6Vu/Ev0uLJLZqgVgg13aOML8x/
+         /bNQvGLIbBqPtuYgh1k0CjO3D2fx/v+36m0Kd2ioTrXC1FAMFOPGuRJqeK3XWepZcY
+         ZNxK7orAFCDzb1PhClJDoBiOuaS0NZe0rOG323jk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        stable@vger.kernel.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Doug Ledford <dledford@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 116/413] vhost_net: disable zerocopy by default
-Date:   Wed, 24 Jul 2019 21:16:47 +0200
-Message-Id: <20190724191743.595313393@linuxfoundation.org>
+Subject: [PATCH 5.2 118/413] ipoib: correcly show a VF hardware address
+Date:   Wed, 24 Jul 2019 21:16:49 +0200
+Message-Id: <20190724191743.712150851@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,41 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
+[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
 
-Vhost_net was known to suffer from HOL[1] issues which is not easy to
-fix. Several downstream disable the feature by default. What's more,
-the datapath was split and datacopy path got the support of batching
-and XDP support recently which makes it faster than zerocopy part for
-small packets transmission.
+in the case of IPoIB with SRIOV enabled hardware
+ip link show command incorrecly prints
+0 instead of a VF hardware address.
 
-It looks to me that disable zerocopy by default is more
-appropriate. It cold be enabled by default again in the future if we
-fix the above issues.
+Before:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
+trust off, query_rss off
+...
+After:
+11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
+state UP mode DEFAULT group default qlen 256
+    link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    vf 0     link/infiniband
+80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
+00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
+checking off, link-state disable, trust off, query_rss off
 
-[1] https://patchwork.kernel.org/patch/3787671/
+v1->v2: just copy an address without modifing ifla_vf_mac
+v2->v3: update the changelog
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
+Acked-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index d57ebdd616d9..247e5585af5d 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -35,7 +35,7 @@
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+index 9b5e11d3fb85..04ea7db08e87 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -1998,6 +1998,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
+ 		return err;
  
- #include "vhost.h"
+ 	ivf->vf = vf;
++	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
  
--static int experimental_zcopytx = 1;
-+static int experimental_zcopytx = 0;
- module_param(experimental_zcopytx, int, 0444);
- MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
- 		                       " 1 -Enable; 0 - Disable");
+ 	return 0;
+ }
 -- 
 2.20.1
 
