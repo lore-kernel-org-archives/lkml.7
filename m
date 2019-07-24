@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA4BC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6145C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B719322BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31E422BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033378;
-	bh=8frdZ2c/nwbuf5ayWbpcbZ1EZJwyPNhQLipVNts1tZ8=;
+	s=default; t=1564033385;
+	bh=pmkVIllkbG370/6M52zBITjYZF5DFjYWiNDBziqlTIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCWJs0KV55JtIPKk+DggeYSUBax/YnVlyp9gyqYAUi4gOucpneVXHG9dkoZoYGle+
-	 yRonVWcwCTHMPeufscnZ5UWdbM5GrxYSmGGJaeg3WdnaobeAn+X1e6h+AiFWoqYlgf
-	 uwMkmTeB1WYDxvmzFrU1mkDiMNCim1jnFNXB/lDM=
+	b=G1yKABTwO2ck0rtzhkTtPZqW34HyuqRlwVU4mRry1/u5tj31DtAYNK6Pt9n//avR1
+	 hO7+h+VC11LWxyp8sIqE8ib1llKLvqMU8cMw6qjF3doEzPrerpbHKsamW+XJzvcbWI
+	 Zvei58I/RM2bDTTGORgi9sHPDF0b3l9/e/quAS94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404857AbfGYFm5 (ORCPT
+        id S2404870AbfGYFnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57738 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390943AbfGYFmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:42:47 -0400
+        id S2390976AbfGYFm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDF0E21880;
-        Thu, 25 Jul 2019 05:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2469B22C7C;
+        Thu, 25 Jul 2019 05:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033366;
-        bh=8frdZ2c/nwbuf5ayWbpcbZ1EZJwyPNhQLipVNts1tZ8=;
+        s=default; t=1564033378;
+        bh=pmkVIllkbG370/6M52zBITjYZF5DFjYWiNDBziqlTIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SvTX//mIXP3HXoieLVL+iRQuk96lZzS+/TTJ5cE+b0CYs3MRAGDXNV0XrLXhCYkhJ
-         jgn4GNXtlmFGm/izgOPpsaR6441QnWk4f8rHgGJI2qsEi8s5fJY7U8YQ5PYeVFykKD
-         kl4w9eab7WTLixhgRcXYjGzrfnXl4eo4vvvlN6zQ=
+        b=gg2rFVOtLXvOoV+At5d5jQ//Utc9ETEI13DMjZP5ttYeY2WF/iyFVchuqDQONrndY
+         ekBka0RDKMxET0WzoQJsCC9vXV2MRyswep8jGo13H+yKOHS7X6OgmxzMDSDDJ7gmWE
+         4O4ubx27cm1BxlahtorZm+NygLhwFN12YhbRkMJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Tang Junhui <tang.junhui.linux@gmail.com>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 184/271] bcache: Revert "bcache: fix high CPU occupancy during journal"
-Date:   Wed, 24 Jul 2019 21:20:53 +0200
-Message-Id: <20190724191710.904921845@linuxfoundation.org>
+Subject: [PATCH 4.19 187/271] bcache: fix mistaken sysfs entry for io_error counter
+Date:   Wed, 24 Jul 2019 21:20:56 +0200
+Message-Id: <20190724191711.152341158@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,124 +61,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Coly Li <colyli@suse.de>
 
-commit 249a5f6da57c28a903c75d81505d58ec8c10030d upstream.
+commit 5461999848e0462c14f306a62923d22de820a59c upstream.
 
-This reverts commit c4dc2497d50d9c6fb16aa0d07b6a14f3b2adb1e0.
+In bch_cached_dev_files[] from driver/md/bcache/sysfs.c, sysfs_errors is
+incorrectly inserted in. The correct entry should be sysfs_io_errors.
 
-This patch enlarges a race between normal btree flush code path and
-flush_btree_write(), which causes deadlock when journal space is
-exhausted. Reverts this patch makes the race window from 128 btree
-nodes to only 1 btree nodes.
+This patch fixes the problem and now I/O errors of cached device can be
+read from /sys/block/bcache<N>/bcache/io_errors.
 
-Fixes: c4dc2497d50d ("bcache: fix high CPU occupancy during journal")
+Fixes: c7b7bd07404c5 ("bcache: add io_disable to struct cached_dev")
 Signed-off-by: Coly Li <colyli@suse.de>
 Cc: stable@vger.kernel.org
-Cc: Tang Junhui <tang.junhui.linux@gmail.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/bcache.h  |    2 -
- drivers/md/bcache/journal.c |   47 ++++++++++++++------------------------------
- drivers/md/bcache/util.h    |    2 -
- 3 files changed, 15 insertions(+), 36 deletions(-)
+ drivers/md/bcache/sysfs.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -708,8 +708,6 @@ struct cache_set {
- 
- #define BUCKET_HASH_BITS	12
- 	struct hlist_head	bucket_hash[1 << BUCKET_HASH_BITS];
--
--	DECLARE_HEAP(struct btree *, flush_btree);
- };
- 
- struct bbio {
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -390,12 +390,6 @@ err:
- }
- 
- /* Journalling */
--#define journal_max_cmp(l, r) \
--	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) < \
--	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
--#define journal_min_cmp(l, r) \
--	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) > \
--	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
- 
- static void btree_flush_write(struct cache_set *c)
- {
-@@ -403,35 +397,25 @@ static void btree_flush_write(struct cac
- 	 * Try to find the btree node with that references the oldest journal
- 	 * entry, best is our current candidate and is locked if non NULL:
- 	 */
--	struct btree *b;
--	int i;
-+	struct btree *b, *best;
-+	unsigned int i;
- 
- 	atomic_long_inc(&c->flush_write);
--
- retry:
--	spin_lock(&c->journal.lock);
--	if (heap_empty(&c->flush_btree)) {
--		for_each_cached_btree(b, c, i)
--			if (btree_current_write(b)->journal) {
--				if (!heap_full(&c->flush_btree))
--					heap_add(&c->flush_btree, b,
--						 journal_max_cmp);
--				else if (journal_max_cmp(b,
--					 heap_peek(&c->flush_btree))) {
--					c->flush_btree.data[0] = b;
--					heap_sift(&c->flush_btree, 0,
--						  journal_max_cmp);
--				}
--			}
--
--		for (i = c->flush_btree.used / 2 - 1; i >= 0; --i)
--			heap_sift(&c->flush_btree, i, journal_min_cmp);
--	}
-+	best = NULL;
- 
--	b = NULL;
--	heap_pop(&c->flush_btree, b, journal_min_cmp);
--	spin_unlock(&c->journal.lock);
-+	for_each_cached_btree(b, c, i)
-+		if (btree_current_write(b)->journal) {
-+			if (!best)
-+				best = b;
-+			else if (journal_pin_cmp(c,
-+					btree_current_write(best)->journal,
-+					btree_current_write(b)->journal)) {
-+				best = b;
-+			}
-+		}
- 
-+	b = best;
- 	if (b) {
- 		mutex_lock(&b->write_lock);
- 		if (!btree_current_write(b)->journal) {
-@@ -873,8 +857,7 @@ int bch_journal_alloc(struct cache_set *
- 	j->w[0].c = c;
- 	j->w[1].c = c;
- 
--	if (!(init_heap(&c->flush_btree, 128, GFP_KERNEL)) ||
--	    !(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
-+	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
- 	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
- 	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
- 		return -ENOMEM;
---- a/drivers/md/bcache/util.h
-+++ b/drivers/md/bcache/util.h
-@@ -113,8 +113,6 @@ do {									\
- 
- #define heap_full(h)	((h)->used == (h)->size)
- 
--#define heap_empty(h)	((h)->used == 0)
--
- #define DECLARE_FIFO(type, name)					\
- 	struct {							\
- 		size_t front, back, size, mask;				\
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -175,7 +175,7 @@ SHOW(__bch_cached_dev)
+ 	var_print(writeback_percent);
+ 	sysfs_hprint(writeback_rate,
+ 		     wb ? atomic_long_read(&dc->writeback_rate.rate) << 9 : 0);
+-	sysfs_hprint(io_errors,		atomic_read(&dc->io_errors));
++	sysfs_printf(io_errors,		"%i", atomic_read(&dc->io_errors));
+ 	sysfs_printf(io_error_limit,	"%i", dc->error_limit);
+ 	sysfs_printf(io_disable,	"%i", dc->io_disable);
+ 	var_print(writeback_rate_update_seconds);
+@@ -426,7 +426,7 @@ static struct attribute *bch_cached_dev_
+ 	&sysfs_writeback_rate_p_term_inverse,
+ 	&sysfs_writeback_rate_minimum,
+ 	&sysfs_writeback_rate_debug,
+-	&sysfs_errors,
++	&sysfs_io_errors,
+ 	&sysfs_io_error_limit,
+ 	&sysfs_io_disable,
+ 	&sysfs_dirty_data,
 
 
