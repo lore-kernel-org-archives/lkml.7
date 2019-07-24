@@ -2,140 +2,115 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410B3C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21098C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1050B227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arDVEhmz"
+	by mail.kernel.org (Postfix) with ESMTP id 035F1227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfGXEpw (ORCPT
+        id S1726473AbfGXEqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:45:52 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34457 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfGXEps (ORCPT
+        Wed, 24 Jul 2019 00:46:12 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:50058 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfGXEqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:45:48 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so14312710pgc.1;
-        Tue, 23 Jul 2019 21:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zIg1AeRgD/CqkmVywbx+SzJM6fRrXplz7aYhAvptzng=;
-        b=arDVEhmzmwYc0UEKQFalOXDiIHqPt1pV7vU0JUv5mKmQ089wfTwsdopP42Bp86zZ12
-         9WIcbg0FL0S7NcMN8EBa/ZsKL/7UCA0dKCKuCKM+lXn0ABjHzkKf7GbzTzgsqLNlu959
-         x8Wf+GMGeki27TD3sIzrhRYDi+0to0FseWV9eOKqeTdGtNvmAsbUvqbDLALoFmNeN8lC
-         q8qaQ09EwqFPHJ0FosCJ6TkG/MI4KAUit4mNdGB4LeHjfVsf4BvlJpxIDvO5f0c0rcDz
-         cnxHWz5yRd1W3BrSj7Xo/RaJcRj1t3haKXhTaAtTRDrTJ75HdwRRYeQcAOlujCws3i0K
-         8Xcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zIg1AeRgD/CqkmVywbx+SzJM6fRrXplz7aYhAvptzng=;
-        b=EZhE+lrleyRwjQIqZzTR73Gc+axWiq3BPKi+SRd585HhO3rvq37sLDCY/9HhbCETbx
-         BPuEmEcI3234O8YkWQKg3/YUvmusw9Pzq5i8JRe7tBKrpxeswWDdr9rM4i4QjJ4IBxrJ
-         xyZ77tTl2y20nKISNq/6YxAkNeLUfhyDmuhrMK4k2odlYkRQh36cw+YNHAprl9R7rNPU
-         /Zb886M2BLV2APK+p0IQgLF9io7jnBzhi46t4Ar3ZjHWDk0OuqzmKOEhaVM5PdZJCG20
-         I1aWHVgrQ5GDI8kPN1zjW7lW1Nk0O0bWpDf3ROSk8y0XyvTp9FzV/gBlxEwYUSdkILk9
-         DTkQ==
-X-Gm-Message-State: APjAAAWmzGaNnf8mmHc0prQkrNDJDHvTvOrL8ep6hfU48mqX8ta0ApGZ
-        5Y6LhLkYk7fMZorSR/T3TmA=
-X-Google-Smtp-Source: APXvYqxa/GK/rSekD6RsEbqfAEidKg6pPzN0E429BN4FKlNPqtfCT9Yymo4uvci3p2qlK1ysgtHEgw==
-X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr83262648pjb.138.1563943547267;
-        Tue, 23 Jul 2019 21:45:47 -0700 (PDT)
-Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id b30sm65685861pfr.117.2019.07.23.21.45.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 21:45:46 -0700 (PDT)
-From:   john.hubbard@gmail.com
-X-Google-Original-From: jhubbard@nvidia.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Boaz Harrosh <boaz@plexistor.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ilya Dryomov <idryomov@gmail.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ming Lei <ming.lei@redhat.com>, Sage Weil <sage@redhat.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Yan Zheng <zyan@redhat.com>, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+        Wed, 24 Jul 2019 00:46:12 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hq692-0004Q6-CE; Tue, 23 Jul 2019 19:32:40 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hq691-0003ye-Le; Tue, 23 Jul 2019 19:32:40 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Steve French <smfrench@gmail.com>
+Cc:     ronnie sahlberg <ronniesahlberg@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v3 3/3] net/xdp: convert put_page() to put_user_page*()
-Date:   Tue, 23 Jul 2019 21:45:37 -0700
-Message-Id: <20190724044537.10458-4-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724044537.10458-1-jhubbard@nvidia.com>
-References: <20190724044537.10458-1-jhubbard@nvidia.com>
+        Stable <stable@vger.kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
+        <20190715134655.4076-39-sashal@kernel.org>
+        <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
+        <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com>
+Date:   Tue, 23 Jul 2019 20:32:33 -0500
+In-Reply-To: <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com>
+        (Steve French's message of "Tue, 23 Jul 2019 19:29:10 -0500")
+Message-ID: <87v9vs43pq.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1hq691-0003ye-Le;;;mid=<87v9vs43pq.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19WPNvkH+gWSBLcyA8Qu0HmQ+IFY+GAvQc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+Steve French <smfrench@gmail.com> writes:
 
-For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page() or
-release_pages().
+> Very easy to see what caused the regression with this global change:
+>
+> mount (which launches "cifsd" thread to read the socket)
+> umount (which kills the "cifsd" thread)
+> rmmod   (rmmod now fails since "cifsd" thread is still active)
+>
+> mount launches a thread to read from the socket ("cifsd")
+> umount is supposed to kill that thread (but with the patch
+> "signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of
+> force_sig" that no longer works).  So the regression is that after
+> unmount you still see the "cifsd" thread, and the reason that cifsd
+> thread is still around is that that patch no longer force kills the
+> process (see line 2652 of fs/cifs/connect.c) which regresses module
+> removal.
+>
+> -               force_sig(SIGKILL, task);
+> +               send_sig(SIGKILL, task, 1);
+>
+> The comment in the changeset indicates "The signal SIGKILL can not be
+> ignored" but obviously it can be ignored - at least on 5.3-rc1 it is
+> being ignored.
+>
+> If send_sig(SIGKILL ...) doesn't work and if force_sig(SIGKILL, task)
+> is removed and no longer possible - how do we kill a helper process
+> ...
 
-This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-("mm: introduce put_user_page*(), placeholder versions").
+I think I see what is happening.  It looks like as well as misuinsg
+force_sig, cifs is also violating the invariant that keeps SIGKILL out
+of the blocked signal set.
 
-Cc: Björn Töpel <bjorn.topel@intel.com>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- net/xdp/xdp_umem.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+For that force_sig will act differently.  I did not consider it because
+that is never supposed to happen.
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 83de74ca729a..17c4b3d3dc34 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -166,14 +166,7 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
+Can someone test this code below and confirm the issue goes away?
+
+diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+index 5d6d44bfe10a..2a782ebc7b65 100644
+--- a/fs/cifs/transport.c
++++ b/fs/cifs/transport.c
+@@ -347,6 +347,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+ 	 */
  
- static void xdp_umem_unpin_pages(struct xdp_umem *umem)
- {
--	unsigned int i;
--
--	for (i = 0; i < umem->npgs; i++) {
--		struct page *page = umem->pgs[i];
--
--		set_page_dirty_lock(page);
--		put_page(page);
--	}
-+	put_user_pages_dirty_lock(umem->pgs, umem->npgs, true);
+ 	sigfillset(&mask);
++	sigdelset(&mask, SIGKILL);
+ 	sigprocmask(SIG_BLOCK, &mask, &oldmask);
  
- 	kfree(umem->pgs);
- 	umem->pgs = NULL;
--- 
-2.22.0
+ 	/* Generate a rfc1002 marker for SMB2+ */
 
+
+Eric
