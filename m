@@ -2,138 +2,101 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EDCC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17920C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78D9229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4Cn/0ZM"
+	by mail.kernel.org (Postfix) with ESMTP id E291C229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfGXKj4 (ORCPT
+        id S1726828AbfGXKn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:39:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41142 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbfGXKj4 (ORCPT
+        Wed, 24 Jul 2019 06:43:26 -0400
+Received: from smtprelay0152.hostedemail.com ([216.40.44.152]:54892 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726070AbfGXKn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:39:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so20754890pff.8;
-        Wed, 24 Jul 2019 03:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wO4O/Gvif+MADZGPdW4dqB529LtcQYyXiVt50YTB8sQ=;
-        b=L4Cn/0ZMJQOyjLGxVaYXm152UsTOpbzYiYWqFq9i917amlQjuDqAGIDml7mnGbbS18
-         hr2goSQqpjPH+wib0GQ1sPE4/MmxAPeSOzHpdZYyxwWeORTnnZtFuHpqArXYlnhHuB0/
-         AU3Nr3KjBpWkKtCMlJBtl6PXylB84eX4sKomMC0Q9hXUa2/UWO3gGU5WPtpwKvnC2V5t
-         pVXYu7f3G3tabd0agHqv02mcBr2ywbWKxqDIlnQQDricK/1cnQIMKCRjmpxJHxkmrDtV
-         m3/5YUtHLMA8fuCdjIphE7TmX/xOXeZMiE/ukZmvmKj6fmdN3Byo7VO/vWb+k2JHHmgw
-         gEBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wO4O/Gvif+MADZGPdW4dqB529LtcQYyXiVt50YTB8sQ=;
-        b=SX3KLZ46c8nU9x49ebt3HiSclf584+41RXH47ewLzhefhK5yrJh1tVmb6PvoBQPV5l
-         WlYj7ll5F8sgR4u837uyw+gs+QLRisH1Qqz6Qwc/Aa6eOJNatPZzKQFfXNmCqeQBBBVm
-         WJgowtvtaLwQcP8rQKMSegBVYUivRVfDQCj5QeyFVs8G1UoE9wWu+6A4WaCQd6/IX3Pt
-         YAw/6FU2u2N4wv+0k1BG3iT/KHiDmz+1wrGrGBQtucbUIeBM2SsrKO/ofw4jqFPh7V5y
-         pzfzLReR1ahGHGXwt4+plpqmsnRzbEsp85yboxSJ9du7rrFOHgCq6AZDFsw8I6f1bDz7
-         ZPGg==
-X-Gm-Message-State: APjAAAVj0i+VdsviT++HgBJZAKbewrv1S6JXiSuj+StELYe4vfeTifzy
-        jJ7DPMivAH6vJJKs4/R6Zr3TqYxdqcA=
-X-Google-Smtp-Source: APXvYqyB5tVuEHxgF/eAqyCET+wGzXScctFnZx1o/V16PJa1fLsTcB4Ztr+LWCuALB5012je06dYuA==
-X-Received: by 2002:a62:1515:: with SMTP id 21mr10953193pfv.100.1563964795549;
-        Wed, 24 Jul 2019 03:39:55 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id i7sm36393739pjk.24.2019.07.24.03.39.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 03:39:55 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     ericvh@gmail.com, lucho@ionkov.net, asmadeus@codewreck.org,
-        davem@davemloft.net
-Cc:     v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: 9p: Fix possible null-pointer dereferences in p9_cm_event_handler()
-Date:   Wed, 24 Jul 2019 18:39:48 +0800
-Message-Id: <20190724103948.5834-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Wed, 24 Jul 2019 06:43:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 423DB180A68A2;
+        Wed, 24 Jul 2019 10:43:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lip98_a3a5877a904
+X-Filterd-Recvd-Size: 3083
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 24 Jul 2019 10:43:24 +0000 (UTC)
+Message-ID: <d2b2b528b9f296dfeb1d92554be024245abd678e.camel@perches.com>
+Subject: Re: [Fwd: [PATCH 1/2] string: Add stracpy and stracpy_pad
+ mechanisms]
+From:   Joe Perches <joe@perches.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     cocci <cocci@systeme.lip6.fr>, LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 24 Jul 2019 03:43:22 -0700
+In-Reply-To: <563222fbfdbb44daa98078db9d404972@AcuMS.aculab.com>
+References: <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
+         <66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com>
+         <alpine.DEB.2.21.1907231546090.2551@hadrien>
+         <0f3ba090dfc956f5651e6c7c430abdba94ddcb8b.camel@perches.com>
+         <alpine.DEB.2.21.1907232252260.2539@hadrien>
+         <d5993902fd44ce89915fab94f4db03f5081c3c8e.camel@perches.com>
+         <alpine.DEB.2.21.1907232326360.2539@hadrien>
+         <f909b4b31f123c7d88535db397a04421077ed0ab.camel@perches.com>
+         <563222fbfdbb44daa98078db9d404972@AcuMS.aculab.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In p9_cm_event_handler(), there is an if statement on 260 to check
-whether rdma is NULL, which indicates that rdma can be NULL.
-If so, using rdma->xxx may cause a possible null-pointer dereference.
+On Wed, 2019-07-24 at 10:28 +0000, David Laight wrote:
+> From: Joe Perches
+> > Sent: 24 July 2019 05:38
+> > On Tue, 2019-07-23 at 23:27 -0500, Julia Lawall wrote:
+> > > On Tue, 23 Jul 2019, Joe Perches wrote:
+> > > > On Tue, 2019-07-23 at 22:54 -0500, Julia Lawall wrote:
+> > > > > A seantic patch and the resulting output for the case where the third
+> > > > > arugument is a constant is attached.  Likewise the resulting output on a
+> > > > > recent linux-next.
+[]
+> > > > There is a problem with conversions with assignments
+> > > > of strlcpy() so ideally the cocci script should make sure
+> > > > any return value was not used before conversion.
+> > > > 
+> > > > This is not a provably good conversion:
+> > > > 
+> > > > drivers/s390/char/sclp_ftp.c
+> > > > @@ -114,8 +114,7 @@ static int sclp_ftp_et7(const struct hmc
+> > > >         sccb->evbuf.mdd.ftp.length = ftp->len;
+> > > >         sccb->evbuf.mdd.ftp.bufaddr = virt_to_phys(ftp->buf);
+> > > > 
+> > > > -       len = strlcpy(sccb->evbuf.mdd.ftp.fident, ftp->fname,
+> > > > -                     HMCDRV_FTP_FIDENT_MAX);
+> > > > +       len = stracpy(sccb->evbuf.mdd.ftp.fident, ftp->fname);
+[]
+> > Any use of the strlcpy return value should not be converted
+> > because the logic after an assignment or use of the return value
+> > can not be assured to have the same behavior.
+> 
+> Most of the code probably expects the length to be that copied
+> (so is broken if the string is truncated).
 
-To fix these bugs, rdma is checked before being used.
+Fortunately there are relatively few uses of the return
+value of strlcpy so it's not a large problem set.
 
-These bugs are found by a static analysis tool STCheck written by us.
+Slightly unrepresentative counts:
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- net/9p/trans_rdma.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+$ git grep -P "^\s+strlcpy\b" | wc -l
+1681
+$ git grep -P "=\s*strlcpy\b" | wc -l
+28
 
-diff --git a/net/9p/trans_rdma.c b/net/9p/trans_rdma.c
-index bac8dad5dd69..eba3c5fc2731 100644
---- a/net/9p/trans_rdma.c
-+++ b/net/9p/trans_rdma.c
-@@ -242,18 +242,24 @@ p9_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 	struct p9_trans_rdma *rdma = c->trans;
- 	switch (event->event) {
- 	case RDMA_CM_EVENT_ADDR_RESOLVED:
--		BUG_ON(rdma->state != P9_RDMA_INIT);
--		rdma->state = P9_RDMA_ADDR_RESOLVED;
-+		if (rdma) {
-+			BUG_ON(rdma->state != P9_RDMA_INIT);
-+			rdma->state = P9_RDMA_ADDR_RESOLVED;
-+		}
- 		break;
- 
- 	case RDMA_CM_EVENT_ROUTE_RESOLVED:
--		BUG_ON(rdma->state != P9_RDMA_ADDR_RESOLVED);
--		rdma->state = P9_RDMA_ROUTE_RESOLVED;
-+		if (rdma) {
-+			BUG_ON(rdma->state != P9_RDMA_ADDR_RESOLVED);
-+			rdma->state = P9_RDMA_ROUTE_RESOLVED;
-+		}
- 		break;
- 
- 	case RDMA_CM_EVENT_ESTABLISHED:
--		BUG_ON(rdma->state != P9_RDMA_ROUTE_RESOLVED);
--		rdma->state = P9_RDMA_CONNECTED;
-+		if (rdma) {
-+			BUG_ON(rdma->state != P9_RDMA_ROUTE_RESOLVED);
-+			rdma->state = P9_RDMA_CONNECTED;
-+		}
- 		break;
- 
- 	case RDMA_CM_EVENT_DISCONNECTED:
-@@ -277,12 +283,14 @@ p9_cm_event_handler(struct rdma_cm_id *id, struct rdma_cm_event *event)
- 	case RDMA_CM_EVENT_ADDR_ERROR:
- 	case RDMA_CM_EVENT_UNREACHABLE:
- 		c->status = Disconnected;
--		rdma_disconnect(rdma->cm_id);
-+		if (rdma)
-+			rdma_disconnect(rdma->cm_id);
- 		break;
- 	default:
- 		BUG();
- 	}
--	complete(&rdma->cm_done);
-+	if (rdma)
-+		complete(&rdma->cm_done);
- 	return 0;
- }
- 
--- 
-2.17.0
 
