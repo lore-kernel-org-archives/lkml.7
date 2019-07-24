@@ -2,245 +2,158 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BA2C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A67C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D883C21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563982527;
-	bh=rpBcyKSqXMryPCdFjZrJsmxuh9JCGMuHfuWdt3uu7fI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L8BhAofN/KvGz/m0GOEq+KGScJEUYcnKL9mBIfRkWJnPUMnEyfKmbcP4Ocb/pXwpn
-	 TisPthgtY7OSdtyIUGxnWMvXblBeFqXkDkMj/eSqfctNCBR+82oHGzTLmF8kl4bhVk
-	 03A51l8DIBpQovI6BSNDEvyExai6OJNHRntaVhfc=
+	by mail.kernel.org (Postfix) with ESMTP id E67B822387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NQ/R8B08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfGXPfZ (ORCPT
+        id S2387648AbfGXPgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:35:25 -0400
-Received: from mga12.intel.com ([192.55.52.136]:24911 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfGXPfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:35:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 08:35:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="345136302"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga005.jf.intel.com with ESMTP; 24 Jul 2019 08:35:23 -0700
-Date:   Wed, 24 Jul 2019 09:32:28 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Busch, Keith" <keith.busch@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>
-Subject: Re: [PATCHv2 1/2] hmat: Register memory-side cache after parsing
-Message-ID: <20190724153228.GB5379@localhost.localdomain>
-References: <20190515215444.22256-1-keith.busch@intel.com>
- <2816033.6i9P6v0dDn@kreacher>
+        Wed, 24 Jul 2019 11:36:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51856 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfGXPgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:36:12 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6OFa4V8068342;
+        Wed, 24 Jul 2019 10:36:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563982564;
+        bh=NQLqsA8/Ngn3H2FxerfsPD+JWi46FHhUiIHy8lZl8T4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NQ/R8B08ViyuzyN821PPohdthMRBob1GdULACYpn1vsb8AH161z7/imKmM7mBkadk
+         cm64dSjK3DCIytuF14WIiQDBR0PupfcAYVGlHjnFctnXK8TvLHAgvPcP+F7B2WFQCd
+         OyR9GygLAl1JjmIfrbESDEv64r+wAJNKYXgmxhHc=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6OFa3tX106644
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jul 2019 10:36:04 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
+ Jul 2019 10:36:03 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 24 Jul 2019 10:36:03 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6OFa2vp066515;
+        Wed, 24 Jul 2019 10:36:02 -0500
+Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190509161109.10499-1-dmurphy@ti.com>
+ <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
+ <a8e3f2d3-18c3-3bdb-1318-8964afc7e032@ti.com>
+ <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
+ <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
+ <6fa79302-ad32-7f43-f9d5-af70aa789284@ti.com>
+ <f236a88a-485c-9002-1e4a-9a5ad0e1c81f@ti.com>
+ <437b6371-8488-a0ff-fa68-d1fb5a81bb8b@ti.com>
+ <20190724064754.GC22447@kroah.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <443fe5e5-5e5c-f669-1f4b-565d9f3dd6c8@ti.com>
+Date:   Wed, 24 Jul 2019 10:36:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2816033.6i9P6v0dDn@kreacher>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190724064754.GC22447@kroah.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 01:27:05PM -0700, Rafael J. Wysocki wrote:
-> On Wednesday, May 15, 2019 11:54:43 PM CEST Keith Busch wrote:
-> > Instead of registering the hmat cache attributes in line with parsing
-> > the table, save the attributes in the memory target and register them
-> > after parsing completes. This will make it easier to register the
-> > attributes later when hot add is supported.
-> > 
-> > Signed-off-by: Keith Busch <keith.busch@intel.com>
-> > ---
-> > v1 -> v2:
-> > 
-> >   Fixed multi-level caches, and no caches. v1 incorrectly assumed only a level
-> >   1 always existed (Brice).
-> > 
-> >  drivers/acpi/hmat/hmat.c | 70 +++++++++++++++++++++++++++++++++++++-----------
-> >  1 file changed, 55 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-> > index 96b7d39a97c6..bf23c9a27958 100644
-> > --- a/drivers/acpi/hmat/hmat.c
-> > +++ b/drivers/acpi/hmat/hmat.c
-> > @@ -36,11 +36,17 @@ enum locality_types {
-> >  
-> >  static struct memory_locality *localities_types[4];
-> >  
-> > +struct target_cache {
-> > +	struct list_head node;
-> > +	struct node_cache_attrs cache_attrs;
-> > +};
-> > +
-> >  struct memory_target {
-> >  	struct list_head node;
-> >  	unsigned int memory_pxm;
-> >  	unsigned int processor_pxm;
-> >  	struct node_hmem_attrs hmem_attrs;
-> > +	struct list_head caches;
-> >  };
-> >  
-> >  struct memory_initiator {
-> > @@ -110,6 +116,7 @@ static __init void alloc_memory_target(unsigned int mem_pxm)
-> >  	target->memory_pxm = mem_pxm;
-> >  	target->processor_pxm = PXM_INVAL;
-> >  	list_add_tail(&target->node, &targets);
-> > +	INIT_LIST_HEAD(&target->caches);
-> >  }
-> >  
-> >  static __init const char *hmat_data_type(u8 type)
-> > @@ -314,7 +321,8 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
-> >  				   const unsigned long end)
-> >  {
-> >  	struct acpi_hmat_cache *cache = (void *)header;
-> > -	struct node_cache_attrs cache_attrs;
-> > +	struct memory_target *target;
-> > +	struct target_cache *tcache;
-> >  	u32 attrs;
-> >  
-> >  	if (cache->header.length < sizeof(*cache)) {
-> > @@ -328,37 +336,47 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
-> >  		cache->memory_PD, cache->cache_size, attrs,
-> >  		cache->number_of_SMBIOShandles);
-> >  
-> > -	cache_attrs.size = cache->cache_size;
-> > -	cache_attrs.level = (attrs & ACPI_HMAT_CACHE_LEVEL) >> 4;
-> > -	cache_attrs.line_size = (attrs & ACPI_HMAT_CACHE_LINE_SIZE) >> 16;
-> > +	target = find_mem_target(cache->memory_PD);
-> > +	if (!target)
-> > +		return 0;
-> > +
-> > +	tcache = kzalloc(sizeof(*tcache), GFP_KERNEL);
-> > +	if (!tcache) {
-> > +		pr_notice_once("Failed to allocate HMAT cache info\n");
-> > +		return 0;
-> > +	}
-> > +
-> > +	tcache->cache_attrs.size = cache->cache_size;
-> > +	tcache->cache_attrs.level = (attrs & ACPI_HMAT_CACHE_LEVEL) >> 4;
-> > +	tcache->cache_attrs.line_size = (attrs & ACPI_HMAT_CACHE_LINE_SIZE) >> 16;
-> >  
-> >  	switch ((attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8) {
-> >  	case ACPI_HMAT_CA_DIRECT_MAPPED:
-> > -		cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
-> > +		tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
-> >  		break;
-> >  	case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
-> > -		cache_attrs.indexing = NODE_CACHE_INDEXED;
-> > +		tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
-> >  		break;
-> >  	case ACPI_HMAT_CA_NONE:
-> >  	default:
-> > -		cache_attrs.indexing = NODE_CACHE_OTHER;
-> > +		tcache->cache_attrs.indexing = NODE_CACHE_OTHER;
-> >  		break;
-> >  	}
-> >  
-> >  	switch ((attrs & ACPI_HMAT_WRITE_POLICY) >> 12) {
-> >  	case ACPI_HMAT_CP_WB:
-> > -		cache_attrs.write_policy = NODE_CACHE_WRITE_BACK;
-> > +		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_BACK;
-> >  		break;
-> >  	case ACPI_HMAT_CP_WT:
-> > -		cache_attrs.write_policy = NODE_CACHE_WRITE_THROUGH;
-> > +		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_THROUGH;
-> >  		break;
-> >  	case ACPI_HMAT_CP_NONE:
-> >  	default:
-> > -		cache_attrs.write_policy = NODE_CACHE_WRITE_OTHER;
-> > +		tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_OTHER;
-> >  		break;
-> >  	}
-> > +	list_add_tail(&tcache->node, &target->caches);
-> >  
-> > -	node_add_cache(pxm_to_node(cache->memory_PD), &cache_attrs);
-> >  	return 0;
-> >  }
-> >  
-> > @@ -577,20 +595,37 @@ static __init void hmat_register_target_initiators(struct memory_target *target)
-> >  	}
-> >  }
-> >  
-> > +static __init void hmat_register_target_cache(struct memory_target *target)
-> > +{
-> > +	unsigned mem_nid = pxm_to_node(target->memory_pxm);
-> > +	struct target_cache *tcache;
-> > +
-> > +	list_for_each_entry(tcache, &target->caches, node)
-> > +		node_add_cache(mem_nid, &tcache->cache_attrs);
-> > +}
-> > +
-> >  static __init void hmat_register_target_perf(struct memory_target *target)
-> >  {
-> >  	unsigned mem_nid = pxm_to_node(target->memory_pxm);
-> >  	node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
-> >  }
-> >  
-> > +static __init void hmat_register_target(struct memory_target *target)
-> > +{
-> > +	if (!node_online(pxm_to_node(target->memory_pxm)))
-> > +		return;
-> > +
-> > +	hmat_register_target_initiators(target);
-> > +	hmat_register_target_cache(target);
-> > +	hmat_register_target_perf(target);
-> > +}
-> > +
-> >  static __init void hmat_register_targets(void)
-> >  {
-> >  	struct memory_target *target;
-> >  
-> > -	list_for_each_entry(target, &targets, node) {
-> > -		hmat_register_target_initiators(target);
-> > -		hmat_register_target_perf(target);
-> > -	}
-> > +	list_for_each_entry(target, &targets, node)
-> > +		hmat_register_target(target);
-> >  }
-> >  
-> >  static __init void hmat_free_structures(void)
-> > @@ -598,8 +633,13 @@ static __init void hmat_free_structures(void)
-> >  	struct memory_target *target, *tnext;
-> >  	struct memory_locality *loc, *lnext;
-> >  	struct memory_initiator *initiator, *inext;
-> > +	struct target_cache *tcache, *cnext;
-> >  
-> >  	list_for_each_entry_safe(target, tnext, &targets, node) {
-> > +		list_for_each_entry_safe(tcache, cnext, &target->caches, node) {
-> > +			list_del(&tcache->node);
-> > +			kfree(tcache);
-> > +		}
-> >  		list_del(&target->node);
-> >  		kfree(target);
-> >  	}
-> > 
-> 
-> Not sure what to do with this patch and the next one in the series.
-> 
-> FWIW, they both are fine by me.
-> 
-> Also ISTR seeing them in a series from Dan. (?)
+Hello
 
-I see Dan provided a series for EFI specific purpose support, but I
-didn't find anything else touching this part of the code. FWIW, Dan's
-EFI series looks goot to me, and I can rebase the hot-add support this
-series provides on top of that.
+On 7/24/19 1:47 AM, Greg KH wrote:
+> On Tue, Jul 23, 2019 at 10:14:14AM -0500, Dan Murphy wrote:
+>> Hello
+>>
+>> On 7/10/19 7:08 AM, Dan Murphy wrote:
+>>> Hello
+>>>
+>>> On 6/17/19 10:09 AM, Dan Murphy wrote:
+>>>> Marc
+>>>>
+>>>> On 6/10/19 11:35 AM, Dan Murphy wrote:
+>>>>> Bump
+>>>>>
+>>>>> On 6/6/19 8:16 AM, Dan Murphy wrote:
+>>>>>> Marc
+>>>>>>
+>>>>>> Bump
+>>>>>>
+>>>>>> On 5/31/19 6:51 AM, Dan Murphy wrote:
+>>>>>>> Marc
+>>>>>>>
+>>>>>>> On 5/15/19 3:54 PM, Dan Murphy wrote:
+>>>>>>>> Marc
+>>>>>>>>
+>>>>>>>> On 5/9/19 11:11 AM, Dan Murphy wrote:
+>>>>>>>>> Create a m_can platform framework that peripheral
+>>>>>>>>> devices can register to and use common code and register sets.
+>>>>>>>>> The peripheral devices may provide read/write and configuration
+>>>>>>>>> support of the IP.
+>>>>>>>>>
+>>>>>>>>> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
+>>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>>>> ---
+>>>>>>>>>
+>>>>>>>>> v12 - Update the m_can_read/write functions to
+>>>>>>>>> create a backtrace if the callback
+>>>>>>>>> pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
+>>>>>>>>>
+>>>>>>>> Is this able to be merged now?
+>>>>>>> ping
+>>>> Wondering if there is anything else we need to do?
+>>>>
+>>>> The part has officially shipped and we had hoped to have driver
+>>>> support in Linux as part of the announcement.
+>>>>
+>>> Is this being sent in a PR for 5.3?
+>>>
+>>> Dan
+>>>
+>> Adding Greg to this thread as I have no idea what is going on with this.
+> Why me?  What am I supposed to do here?  I see no patches at all to do
+> anything with :(
+
+I am not sure who to email. The maintainer seems to be on hiatus or 
+super busy with other work.
+
+So I added you to see if you know how to handle this.  Wolfgang Acked it 
+but he said Marc needs to pull
+
+it in.  We have quite a few users of this patchset. I have been hosting 
+the patchset in a different tree.
+
+These users keep pinging us for upstream status and all we can do is 
+point them to the
+
+LKML to show we are continuing to pursue inclusion.
+
+https://lore.kernel.org/patchwork/project/lkml/list/?series=393454
+
+Thanks
+Dan
+
+
+>
+> thanks,
+>
+> greg "not a miracle worker" k-h
