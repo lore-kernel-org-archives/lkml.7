@@ -2,229 +2,104 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4019FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF28C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097CB20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996723;
-	bh=E1O+vluLkMEmLN13DRVTye10ZWguJfeD44F82+WoL84=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hfOdtVvjWCVjGTQrhm+jG8Q71hye5Kd4/YHOny6fKmPv7kECNJ3fnbbkd0Sk2npbc
-	 9cCWUBog9q5Pk2y4Cvsc2SrmKgzrXIw9y770/4eW0TWC6pY37c8Kj7gcQQsRmclK1S
-	 Xg6gOPUC3TpOioXmWERLeKOd+cMkwb3XoaVsOcfc=
+	by mail.kernel.org (Postfix) with ESMTP id 2DA81229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kqZlOYO6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbfGXTcB (ORCPT
+        id S2388595AbfGXTcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388565AbfGXTb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641952238C;
-        Wed, 24 Jul 2019 19:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996716;
-        bh=E1O+vluLkMEmLN13DRVTye10ZWguJfeD44F82+WoL84=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zKUbQmH+ULXzwCMKX+xXUxmfLWVJy7FMSb96E15YhI1eOMEKzXq6jutZjvF1xKSSq
-         uUansmjjuPII42Bb8PR6OdjjJ6gFWZeCg2O1u6vL8U/IcQH4QbjmNx8uAYBwQXU3dS
-         swUabQ01pGR7e4m7s5AcCxqFF6SIurTJejJIYniE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 192/413] bcache: fix potential deadlock in cached_def_free()
-Date:   Wed, 24 Jul 2019 21:18:03 +0200
-Message-Id: <20190724191748.383224556@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 15:32:06 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43147 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388573AbfGXTcA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:32:00 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m14so8965694qka.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JInymQc+r2pImT3B/SmMJqhNX9Hf0EsstZD4VE2LjQM=;
+        b=kqZlOYO69x/UMTO3KbfUun+RUej+Y76S6n3UnFY6G3wqJzkvqWxwRxlpmvMwx+lWQp
+         5P9Ndi1/9ULn3zbXOvj43rZB0qedEiDhjIQyLZpqiO5jWvvjUpbuSLTz6gw40pIyuntD
+         cggriFRIBnzO0dFwBsK1LW9AG+oSsbnKRqd9uBFaiBHzjjfM7TJVfClTjmOZ8ugBiuap
+         e+wEr5Hxo0frnDbySkZTeLae0KrjbsyVtLi40YtQfm//ENZepIaOs2io14Ncx3Had2jj
+         BXr+eLZ5gyA77h7uoSpLFR7S/AV7V7Gd6/I2q8XVXeVOcxH6jFEGqEsXWRMTP5SwFtzV
+         786A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JInymQc+r2pImT3B/SmMJqhNX9Hf0EsstZD4VE2LjQM=;
+        b=oYzUu6pbbrYWYPcLJTrwZSZmEeeInDehy9qCaUNuStcqSDUlkAyZjCQ28sMq6SGEi+
+         br3KktILLtAGsbYe6GWpijHm9cpUOFS+6Y7tL/YCjm2RD2W27/PKQ22lcBZjmA9z3SxX
+         uBBtOSckNwJNEdNt1BFbiXkYn2erQvIoIHAEQFe/Ic7XBTpqODdobcG1ImhE+Io/x0Q1
+         KxIHRtvypBci41vm9BAlLCyc9FPzhxgM2e+xcUYEpNI3XUS1RkwohrhURk2BW02AzvX4
+         qQ5R+fC87ecwKitU7y+uS6flzl1VPiASptbtiJyb5UX/rrwrqPaHW8/ytZNlRKLQwRmO
+         t7IA==
+X-Gm-Message-State: APjAAAW2MYMpD1ahbmGH8JP0f8qETgZldeETOlHu/eXoe957PwSfrjbR
+        0ZHJUwXt9ux5liMR7U6XK0y3MQ==
+X-Google-Smtp-Source: APXvYqxLDN1MDxYfhjO8ggCE8CbyvO+EWhy5R2UY8hExLnegRMJl96uiWmL/0ruwscoK42+uMywHnw==
+X-Received: by 2002:a37:7604:: with SMTP id r4mr53902933qkc.395.1563996718992;
+        Wed, 24 Jul 2019 12:31:58 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id u4sm21157159qkb.16.2019.07.24.12.31.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 12:31:58 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hqMzW-0001jO-03; Wed, 24 Jul 2019 16:31:58 -0300
+Date:   Wed, 24 Jul 2019 16:31:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2][next] RDMA/hns: fix comparison of unsigned long
+ variable 'end' with less than zero
+Message-ID: <20190724193157.GA6620@ziepe.ca>
+References: <20190531092101.28772-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531092101.28772-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7e865eba00a3df2dc8c4746173a8ca1c1c7f042e ]
+On Fri, May 31, 2019 at 10:21:00AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the comparison of end with less than zero is always false
+> because end is an unsigned long.  Also, replace checks of end with
+> non-zero with end > 0 as it is possible that the #defined decrement
+> may be changed in the future causing end to step over zero and go
+> negative.
+> 
+> The initialization of end with 0 is also redundant as this value is
+> never read and is later set to HW_SYNC_TIMEOUT_MSECS, so fix this by
+> initializing it with this value to begin with.
+> 
+> Addresses-Coverity: ("Unsigned compared against 0")
+> Fixes: 669cefb654cb ("RDMA/hns: Remove jiffies operation in disable interrupt context")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_hem.c   |  4 ++--
+>  drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 12 ++++++------
+>  2 files changed, 8 insertions(+), 8 deletions(-)
 
-When enable lockdep and reboot system with a writeback mode bcache
-device, the following potential deadlock warning is reported by lockdep
-engine.
+Applied to for-next, thanks
 
-[  101.536569][  T401] kworker/2:2/401 is trying to acquire lock:
-[  101.538575][  T401] 00000000bbf6e6c7 ((wq_completion)bcache_writeback_wq){+.+.}, at: flush_workqueue+0x87/0x4c0
-[  101.542054][  T401]
-[  101.542054][  T401] but task is already holding lock:
-[  101.544587][  T401] 00000000f5f305b3 ((work_completion)(&cl->work)#2){+.+.}, at: process_one_work+0x21e/0x640
-[  101.548386][  T401]
-[  101.548386][  T401] which lock already depends on the new lock.
-[  101.548386][  T401]
-[  101.551874][  T401]
-[  101.551874][  T401] the existing dependency chain (in reverse order) is:
-[  101.555000][  T401]
-[  101.555000][  T401] -> #1 ((work_completion)(&cl->work)#2){+.+.}:
-[  101.557860][  T401]        process_one_work+0x277/0x640
-[  101.559661][  T401]        worker_thread+0x39/0x3f0
-[  101.561340][  T401]        kthread+0x125/0x140
-[  101.562963][  T401]        ret_from_fork+0x3a/0x50
-[  101.564718][  T401]
-[  101.564718][  T401] -> #0 ((wq_completion)bcache_writeback_wq){+.+.}:
-[  101.567701][  T401]        lock_acquire+0xb4/0x1c0
-[  101.569651][  T401]        flush_workqueue+0xae/0x4c0
-[  101.571494][  T401]        drain_workqueue+0xa9/0x180
-[  101.573234][  T401]        destroy_workqueue+0x17/0x250
-[  101.575109][  T401]        cached_dev_free+0x44/0x120 [bcache]
-[  101.577304][  T401]        process_one_work+0x2a4/0x640
-[  101.579357][  T401]        worker_thread+0x39/0x3f0
-[  101.581055][  T401]        kthread+0x125/0x140
-[  101.582709][  T401]        ret_from_fork+0x3a/0x50
-[  101.584592][  T401]
-[  101.584592][  T401] other info that might help us debug this:
-[  101.584592][  T401]
-[  101.588355][  T401]  Possible unsafe locking scenario:
-[  101.588355][  T401]
-[  101.590974][  T401]        CPU0                    CPU1
-[  101.592889][  T401]        ----                    ----
-[  101.594743][  T401]   lock((work_completion)(&cl->work)#2);
-[  101.596785][  T401]                                lock((wq_completion)bcache_writeback_wq);
-[  101.600072][  T401]                                lock((work_completion)(&cl->work)#2);
-[  101.602971][  T401]   lock((wq_completion)bcache_writeback_wq);
-[  101.605255][  T401]
-[  101.605255][  T401]  *** DEADLOCK ***
-[  101.605255][  T401]
-[  101.608310][  T401] 2 locks held by kworker/2:2/401:
-[  101.610208][  T401]  #0: 00000000cf2c7d17 ((wq_completion)events){+.+.}, at: process_one_work+0x21e/0x640
-[  101.613709][  T401]  #1: 00000000f5f305b3 ((work_completion)(&cl->work)#2){+.+.}, at: process_one_work+0x21e/0x640
-[  101.617480][  T401]
-[  101.617480][  T401] stack backtrace:
-[  101.619539][  T401] CPU: 2 PID: 401 Comm: kworker/2:2 Tainted: G        W         5.2.0-rc4-lp151.20-default+ #1
-[  101.623225][  T401] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
-[  101.627210][  T401] Workqueue: events cached_dev_free [bcache]
-[  101.629239][  T401] Call Trace:
-[  101.630360][  T401]  dump_stack+0x85/0xcb
-[  101.631777][  T401]  print_circular_bug+0x19a/0x1f0
-[  101.633485][  T401]  __lock_acquire+0x16cd/0x1850
-[  101.635184][  T401]  ? __lock_acquire+0x6a8/0x1850
-[  101.636863][  T401]  ? lock_acquire+0xb4/0x1c0
-[  101.638421][  T401]  ? find_held_lock+0x34/0xa0
-[  101.640015][  T401]  lock_acquire+0xb4/0x1c0
-[  101.641513][  T401]  ? flush_workqueue+0x87/0x4c0
-[  101.643248][  T401]  flush_workqueue+0xae/0x4c0
-[  101.644832][  T401]  ? flush_workqueue+0x87/0x4c0
-[  101.646476][  T401]  ? drain_workqueue+0xa9/0x180
-[  101.648303][  T401]  drain_workqueue+0xa9/0x180
-[  101.649867][  T401]  destroy_workqueue+0x17/0x250
-[  101.651503][  T401]  cached_dev_free+0x44/0x120 [bcache]
-[  101.653328][  T401]  process_one_work+0x2a4/0x640
-[  101.655029][  T401]  worker_thread+0x39/0x3f0
-[  101.656693][  T401]  ? process_one_work+0x640/0x640
-[  101.658501][  T401]  kthread+0x125/0x140
-[  101.660012][  T401]  ? kthread_create_worker_on_cpu+0x70/0x70
-[  101.661985][  T401]  ret_from_fork+0x3a/0x50
-[  101.691318][  T401] bcache: bcache_device_free() bcache0 stopped
-
-Here is how the above potential deadlock may happen in reboot/shutdown
-code path,
-1) bcache_reboot() is called firstly in the reboot/shutdown code path,
-   then in bcache_reboot(), bcache_device_stop() is called.
-2) bcache_device_stop() sets BCACHE_DEV_CLOSING on d->falgs, then call
-   closure_queue(&d->cl) to invoke cached_dev_flush(). And in turn
-   cached_dev_flush() calls cached_dev_free() via closure_at()
-3) In cached_dev_free(), after stopped writebach kthread
-   dc->writeback_thread, the kwork dc->writeback_write_wq is stopping by
-   destroy_workqueue().
-4) Inside destroy_workqueue(), drain_workqueue() is called. Inside
-   drain_workqueue(), flush_workqueue() is called. Then wq->lockdep_map
-   is acquired by lock_map_acquire() in flush_workqueue(). After the
-   lock acquired the rest part of flush_workqueue() just wait for the
-   workqueue to complete.
-5) Now we look back at writeback thread routine bch_writeback_thread(),
-   in the main while-loop, write_dirty() is called via continue_at() in
-   read_dirty_submit(), which is called via continue_at() in while-loop
-   level called function read_dirty(). Inside write_dirty() it may be
-   re-called on workqueeu dc->writeback_write_wq via continue_at().
-   It means when the writeback kthread is stopped in cached_dev_free()
-   there might be still one kworker queued on dc->writeback_write_wq
-   to execute write_dirty() again.
-6) Now this kworker is scheduled on dc->writeback_write_wq to run by
-   process_one_work() (which is called by worker_thread()). Before
-   calling the kwork routine, wq->lockdep_map is acquired.
-7) But wq->lockdep_map is acquired already in step 4), so a A-A lock
-   (lockdep terminology) scenario happens.
-
-Indeed on multiple cores syatem, the above deadlock is very rare to
-happen, just as the code comments in process_one_work() says,
-2263     * AFAICT there is no possible deadlock scenario between the
-2264     * flush_work() and complete() primitives (except for
-	   single-threaded
-2265     * workqueues), so hiding them isn't a problem.
-
-But it is still good to fix such lockdep warning, even no one running
-bcache on single core system.
-
-The fix is simple. This patch solves the above potential deadlock by,
-- Do not destroy workqueue dc->writeback_write_wq in cached_dev_free().
-- Flush and destroy dc->writeback_write_wq in writebach kthread routine
-  bch_writeback_thread(), where after quit the thread main while-loop
-  and before cached_dev_put() is called.
-
-By this fix, dc->writeback_write_wq will be stopped and destroy before
-the writeback kthread stopped, so the chance for a A-A locking on
-wq->lockdep_map is disappeared, such A-A deadlock won't happen
-any more.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/bcache/super.c     | 2 --
- drivers/md/bcache/writeback.c | 4 ++++
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index dcd8b319a01e..4ccc5e5fe3a1 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1197,8 +1197,6 @@ static void cached_dev_free(struct closure *cl)
- 
- 	if (!IS_ERR_OR_NULL(dc->writeback_thread))
- 		kthread_stop(dc->writeback_thread);
--	if (dc->writeback_write_wq)
--		destroy_workqueue(dc->writeback_write_wq);
- 	if (!IS_ERR_OR_NULL(dc->status_update_thread))
- 		kthread_stop(dc->status_update_thread);
- 
-diff --git a/drivers/md/bcache/writeback.c b/drivers/md/bcache/writeback.c
-index 73f0efac2b9f..df0f4e5a051a 100644
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -735,6 +735,10 @@ static int bch_writeback_thread(void *arg)
- 		}
- 	}
- 
-+	if (dc->writeback_write_wq) {
-+		flush_workqueue(dc->writeback_write_wq);
-+		destroy_workqueue(dc->writeback_write_wq);
-+	}
- 	cached_dev_put(dc);
- 	wait_for_kthread_stop();
- 
--- 
-2.20.1
-
-
-
+Jason
