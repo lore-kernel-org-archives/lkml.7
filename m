@@ -2,113 +2,155 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D25C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446F4C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A16221873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYZUXT5z"
+	by mail.kernel.org (Postfix) with ESMTP id 0BE21229FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfGXIOu (ORCPT
+        id S1726438AbfGXITh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:14:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43897 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfGXIOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:14:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id 4so14712366pld.10;
-        Wed, 24 Jul 2019 01:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u4jdANospx80Yco3qzr0MBrgUd3XcqTStgdGW4daQMA=;
-        b=WYZUXT5zPfgf4El3/3CgdCjZ8MtOfieMBy3KQyormqyQf3F+3uKR8TGi27XOl4tauY
-         vHAwp2cmNlHsWgRplz6kct3pd1EJ4O/hVQ/7wCUF1EGLdEd5ju3VSaW5MFtyQhx+ARyg
-         OUQpPol75z3kqqzxlR3BR0PbcxlwWvam4F6EvWEYwrM2Hnm5VfB/C/t+GzuCDNR8cdXq
-         P2rGdraFRddgIbHHAEwSXeJ8m5+V2PG+K++Out7Ssjzy5d2ToVwXvN6n/+tyWqvM5oOO
-         JpybdgoCWCegLdc7Lh/jN+PczaaAfby2EmKLZgdGY9PLKbxv8gdMFCsAL5HBRrtrVgEK
-         Dq6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u4jdANospx80Yco3qzr0MBrgUd3XcqTStgdGW4daQMA=;
-        b=WVZKIMXzOQf7Ym9QwY1418jFi3d9B8im9GNi7qUsH09MMCtipTvw9gISLNocjv7M/N
-         haNMfJaXR21nBjoq9XsEEqeGFYd35nxWDu7EWBws8tWzUXaG3RZAlMhPcJa4JZg7El4p
-         y9jDesjRpYIlKLyRwFmn2SF8eTWoCy0zaqpwRxZl1rjpajWujvr6hwzTXzcDl6BnESBo
-         Xf6PUTCdeir8XCbazTHq//zHmMrXiReN9M6nGEykTSsC4VvvK7QKSvtH4K3k3iHvyZdK
-         rjN/ZaK7RI1FFGZp1wYRAodtyHb4LzZqOebA8udD85UHfk1m+8QXU0Vm+gBvr2wWQ8Tu
-         xnhA==
-X-Gm-Message-State: APjAAAXz5PvaQ0Bxr967vDDMIng6Go+MZBKx/mnkQ91j5gkhOXTmulpO
-        BKbUq6UGDVJc3B3vxYWZTO7YvhSW0w8=
-X-Google-Smtp-Source: APXvYqx4OO3g4yeW54i9vzqJzowwjZI5wdSnLqcb0Lklfpw6g6EsSqOW05KWXiLmglbLuY4+xYphGQ==
-X-Received: by 2002:a17:902:1003:: with SMTP id b3mr25011331pla.172.1563956088660;
-        Wed, 24 Jul 2019 01:14:48 -0700 (PDT)
-Received: from localhost.localdomain (180-150-79-77.b4964f.syd.nbn.aussiebb.net. [180.150.79.77])
-        by smtp.gmail.com with ESMTPSA id q126sm1468146pfb.56.2019.07.24.01.14.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 01:14:48 -0700 (PDT)
-From:   Rhys Kidd <rhyskidd@gmail.com>
-To:     Matthew Garrett <mjg59@google.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rhys Kidd <rhyskidd@gmail.com>
-Subject: [PATCH 3/3] platform/x86: dell-wmi: Use existing defined KBD_LED_* magic values
-Date:   Wed, 24 Jul 2019 18:14:15 +1000
-Message-Id: <20190724081415.8926-3-rhyskidd@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724081415.8926-1-rhyskidd@gmail.com>
-References: <20190724081415.8926-1-rhyskidd@gmail.com>
+        Wed, 24 Jul 2019 04:19:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39184 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725970AbfGXITg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:19:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 86B9DAD8A;
+        Wed, 24 Jul 2019 08:19:34 +0000 (UTC)
+Subject: Re: [v4 PATCH 2/2] mm: mempolicy: handle vma with unmovable pages
+ mapped correctly in mbind
+To:     Yang Shi <yang.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     mhocko@kernel.org, mgorman@techsingularity.net, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+References: <1563556862-54056-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1563556862-54056-3-git-send-email-yang.shi@linux.alibaba.com>
+ <6c948a96-7af1-c0d2-b3df-5fe613284d4f@suse.cz>
+ <20190722180231.b7abbe8bdb046d725bdd9e6b@linux-foundation.org>
+ <a9b8cae7-4bca-3c98-99f9-6b92de7e5909@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6aeca7cf-d9da-95cc-e6dc-a10c2978c523@suse.cz>
+Date:   Wed, 24 Jul 2019 10:19:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a9b8cae7-4bca-3c98-99f9-6b92de7e5909@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These values have already been defined in platform/x86/dell-smbios.h
+On 7/23/19 7:35 AM, Yang Shi wrote:
+> 
+> 
+> On 7/22/19 6:02 PM, Andrew Morton wrote:
+>> On Mon, 22 Jul 2019 09:25:09 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+>>
+>>>> since there may be pages off LRU temporarily.  We should migrate other
+>>>> pages if MPOL_MF_MOVE* is specified.  Set has_unmovable flag if some
+>>>> paged could not be not moved, then return -EIO for mbind() eventually.
+>>>>
+>>>> With this change the above test would return -EIO as expected.
+>>>>
+>>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+>> Thanks.
+>>
+>> I'm a bit surprised that this doesn't have a cc:stable.  Did we
+>> consider that?
+> 
+> The VM_BUG just happens on 4.9, and it is enabled only by CONFIG_VM. For 
+> post-4.9 kernel, this fixes the semantics of mbind which should be not a 
+> regression IMHO.
 
-Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
----
- drivers/platform/x86/dell-wmi.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+4.9 is a LTS kernel, so perhaps worth trying?
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 68a8a4eba4e3..fc33c38f5f82 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -311,13 +311,13 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
- 	{ KE_IGNORE, 0xfff1, { KEY_RESERVED } },
- 
- 	/* Keyboard backlight level changed */
--	{ KE_IGNORE, 0x01e1, { KEY_RESERVED } },
--	{ KE_IGNORE, 0x01e2, { KEY_RESERVED } },
--	{ KE_IGNORE, 0x01e3, { KEY_RESERVED } },
--	{ KE_IGNORE, 0x02ea, { KEY_RESERVED } },
--	{ KE_IGNORE, 0x02eb, { KEY_RESERVED } },
--	{ KE_IGNORE, 0x02ec, { KEY_RESERVED } },
--	{ KE_IGNORE, 0x02f6, { KEY_RESERVED } },
-+	{ KE_IGNORE, KBD_LED_OFF_TOKEN,      { KEY_RESERVED } },
-+	{ KE_IGNORE, KBD_LED_ON_TOKEN,       { KEY_RESERVED } },
-+	{ KE_IGNORE, KBD_LED_AUTO_TOKEN,     { KEY_RESERVED } },
-+	{ KE_IGNORE, KBD_LED_AUTO_25_TOKEN,  { KEY_RESERVED } },
-+	{ KE_IGNORE, KBD_LED_AUTO_50_TOKEN,  { KEY_RESERVED } },
-+	{ KE_IGNORE, KBD_LED_AUTO_75_TOKEN,  { KEY_RESERVED } },
-+	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
- };
- 
- static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
--- 
-2.20.1
+>>
+>> Also, is this patch dependent upon "mm: mempolicy: make the behavior
+>> consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified"?
+>> Doesn't look that way..
+> 
+> No, it depends on patch #1.
+> 
+>>
+>> Also, I have a note that you had concerns with "mm: mempolicy: make the
+>> behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were
+>> specified".  What is the status now?
+> 
+> Vlastimil had given his Reviewed-by.
+
+Yes, the concerns were resolved.
 
