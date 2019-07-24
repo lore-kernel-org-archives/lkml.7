@@ -2,137 +2,207 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B3C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263BCC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD5D21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37EC21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfGXM1O (ORCPT
+        id S1726665AbfGXM1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:27:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58928 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbfGXM1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:27:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 296BDAFE1;
-        Wed, 24 Jul 2019 12:27:12 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 14:27:11 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Konstantin Khlebnikov <koct9i@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        John Ogness <john.ogness@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] printk/panic: Access the main printk log in panic()
- only when safe
-Message-ID: <20190724122711.qquevkcuge24bhdd@pathway.suse.cz>
-References: <20190716072805.22445-1-pmladek@suse.com>
- <20190716072805.22445-2-pmladek@suse.com>
- <20190717095615.GD3664@jagdpanzerIV>
- <20190718083629.nso3vwbvmankqgks@pathway.suse.cz>
- <20190718094934.GA10041@jagdpanzerIV>
- <20190719125753.miniwfq4nhicy76n@pathway.suse.cz>
- <20190723031340.GA19463@jagdpanzerIV>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723031340.GA19463@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Wed, 24 Jul 2019 08:27:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10230 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726547AbfGXM1W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 08:27:22 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6OCMMYr111393
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 08:27:20 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2txmx76qh6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 08:27:20 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Wed, 24 Jul 2019 13:27:18 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 24 Jul 2019 13:27:16 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6OCQxJA26673596
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 12:26:59 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95ADCA4059;
+        Wed, 24 Jul 2019 12:27:14 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5381AA4040;
+        Wed, 24 Jul 2019 12:27:14 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Jul 2019 12:27:14 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     brueckner@linux.ibm.com, gor@linux.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH 1/2] perf/record: Fix module size on s390
+Date:   Wed, 24 Jul 2019 14:27:02 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19072412-0012-0000-0000-00000335B941
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072412-0013-0000-0000-0000216F4D07
+Message-Id: <20190724122703.3996-1-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907240139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-07-23 12:13:40, Sergey Senozhatsky wrote:
-> On (07/19/19 14:57), Petr Mladek wrote:
-> > But there is one more scenario 3:
-> 
-> Yes!
-> 
-> >   - we have CPUB which loops or is deadlocked in IRQ context
-> > 
-> >   - we have CPUA which panic()-s the system, but can't bring CPUB down,
-> >     so logbuf_lock might be takes and release from time to time
-> >     by CPUB
-> 
-> Great!
-> 
-> This is the only case when we actually need to pay attention to
-> num_online_cpus(), because there is an active logbuf_lock owner;
-> in any other case we can unconditionally re-init printk() locks.
-> 
-> But there is more to it.
-> 
-> Note, that the problem in scenario 3 is bigger than just logbuf_lock.
-> Regardless of logbuf implementation we will not be able to panic()
-> the system.
-> 
-> If we have a never ending source of printk() messages, coming from
-> misbehaving CPU which stuck in printing loop in IRQ context, then
-> flush_on_panic() will never end or kmsg dump will never stop, etc.
+On s390 the modules loaded in memory have the text segment
+located after the GOT and Relocation table. This can be seen
+with this output:
+  [root@m35lp76 perf]# fgrep qeth /proc/modules
+  qeth 151552 1 qeth_l2, Live 0x000003ff800b2000
+  ...
+  [root@m35lp76 perf]# cat /sys/module/qeth/sections/.text
+  0x000003ff800b3990
+  [root@m35lp76 perf]#
 
-Yes.
+There is an offset of 0x1990 bytes. The size of the qeth module
+is 151552 bytes (0x25000 in hex).
+The location of the GOT/relocation table at the beginning of a
+module is unique to s390.
 
-> We need to cut off misbehaving CPUs. Panic CPU waits (for up to 1
-> second?) in smp_send_stop() for secondary CPUs to die, if some
-> secondary CPUs are still chatty after that then most likely those
-> CPUs don't have anything good to say, just a pointless flood of same
-> messages over and over again; which, however, will not let panic
-> CPU to proceed.
+commit 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+adjusts the start address of a module in the map structures, but
+does not adjust the size of the modules. This leads to overlapping
+of module maps as this example shows:
 
-Makes sense.
+[root@m35lp76 perf] # ./perf report -D
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x25000)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x8000)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
 
-> And this is where the idea of "disconnecting" those CPUs from main
-> logbuf come from.
-> 
-> So what we can do:
-> - smp_send_stop()
-> - disconnect all-but-self from logbuf (via printk-safe)
+The module qeth.ko has an adjusted start address modified to b3990,
+but its size is unchanged and the module ends at 0x3ff800d8990.
+This end address overlaps with the next modules start address of
+0x3ff800d85a0.
 
-printk_safe is not really necessary. As you wrote, nobody
-is interested into messages from CPUs that are supposed
-to be stopped.
+When the size of the leading GOT/Relocation table stored in the
+beginning of the text segment (0x1990 bytes) is subtracted from
+module qeth end address, there are no overlaps anymore:
 
-It might be enough to set some global variable, for example,
-with the CPU number that is calling panic() and is the only
-one allowed to print messages from this point on.
+   0x3ff800d8990 - 0x1990 = 0x0x3ff800d7000
 
-It might even be used to force console lock owner to leave
-the cycle immediately.
+which is the same as
 
-> - wait for 1 or 2 more extra seconds for secondary CPUs to leave
->   console_unlock() and to redirect printks to per-CPU buffers
-> - after that we are sort of good-to-go: re-init printk locks
->   and do kmsg_dump, flush_on_panic().
+   0x3ff800b2000 + 0x25000 = 0x0x3ff800d7000.
 
-Sounds good.
+To fix this issue, also adjust the modules size in function
+arch__fix_module_text_start(). Add another function parameter
+named size and reduce the size of the module when the text segment
+start address is changed.
 
-> Note, misbehaving CPUs will write to per-CPU buffers, they are not
-> expected to be able to flush per-CPU buffers to the main logbuf. That
-> will require enabled IRQs, which should deliver stop IPI. But we can
-> do even more - just disable print_safe irq work on disconnect CPUs.
->
-> So, shall we try one more time with the "disconnect" misbehaving CPUs
-> approach? I can send an RFC patch.
+Output after:
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x23670)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x7a60)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
 
-IMHO, it will be acceptable only when it is reasonably simple and
-straightforward. The panic() code is full of special hacks and
-it is already complicated to follow all the twists.
+Fixes: 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+Cc: <stable@vger.kernel.org> # v4.9+
+Reported-by: Stefan Liebler <stli@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+---
+ tools/perf/arch/s390/util/machine.c | 14 +++++++++++++-
+ tools/perf/util/machine.c           |  3 ++-
+ tools/perf/util/machine.h           |  2 +-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
 
-Especially because this scenario came up from a theoretical
-discussion. Note that my original, real bug report, was
-with logbuf_lock NMI, enabled kdump notifiers, ...
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index a19690a17291..de26b1441a48 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -7,7 +7,7 @@
+ #include "api/fs/fs.h"
+ #include "debug.h"
+ 
+-int arch__fix_module_text_start(u64 *start, const char *name)
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
+ {
+ 	u64 m_start = *start;
+ 	char path[PATH_MAX];
+@@ -17,6 +17,18 @@ int arch__fix_module_text_start(u64 *start, const char *name)
+ 	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
+ 		pr_debug2("Using module %s start:%#lx\n", path, m_start);
+ 		*start = m_start;
++	} else {
++		/* Successful read of the modules segment text start address.
++		 * Calculate difference between module start address
++		 * in memory and module text segment start address.
++		 * For example module load address is 0x3ff8011b000
++		 * (from /proc/modules) and module text segment start
++		 * address is 0x3ff8011b870 (from file above).
++		 *
++		 * Adjust the module size and subtract the GOT table
++		 * size located at the beginning of the module.
++		 */
++		*size -= (*start - m_start);
+ 	}
+ 
+ 	return 0;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index dc7aafe45a2b..081fe4bdebaa 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1365,6 +1365,7 @@ static int machine__set_modules_path(struct machine *machine)
+ 	return map_groups__set_modules_path_dir(&machine->kmaps, modules_path, 0);
+ }
+ int __weak arch__fix_module_text_start(u64 *start __maybe_unused,
++				u64 *size __maybe_unused,
+ 				const char *name __maybe_unused)
+ {
+ 	return 0;
+@@ -1376,7 +1377,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
+ 	struct machine *machine = arg;
+ 	struct map *map;
+ 
+-	if (arch__fix_module_text_start(&start, name) < 0)
++	if (arch__fix_module_text_start(&start, &size, name) < 0)
+ 		return -1;
+ 
+ 	map = machine__findnew_module_map(machine, start, name);
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index f70ab98a7bde..7aa38da26427 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -222,7 +222,7 @@ struct symbol *machine__find_kernel_symbol_by_name(struct machine *machine,
+ 
+ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 					const char *filename);
+-int arch__fix_module_text_start(u64 *start, const char *name);
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
+ 
+ int machine__load_kallsyms(struct machine *machine, const char *filename);
+ 
+-- 
+2.21.0
 
-Best Regards,
-Petr
