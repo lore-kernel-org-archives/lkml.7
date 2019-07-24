@@ -2,289 +2,152 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD4FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4813DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA43A21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5F421841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9Uxl1pQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHN1iP7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfGXQ7C (ORCPT
+        id S2387724AbfGXRAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:59:02 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:49081 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbfGXQ6c (ORCPT
+        Wed, 24 Jul 2019 13:00:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44956 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfGXRAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:58:32 -0400
-Received: by mail-pf1-f202.google.com with SMTP id u21so28934242pfn.15
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:58:32 -0700 (PDT)
+        Wed, 24 Jul 2019 13:00:41 -0400
+Received: by mail-io1-f68.google.com with SMTP id s7so90976712iob.11;
+        Wed, 24 Jul 2019 10:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=JhiTFKPdgUPiq/3CLngeqY1pwECv2NMtE4FVnY5brWc=;
-        b=X9Uxl1pQtqKu/ZuT+YDSx8UQSm3E8s/yC/XufSX18tbohg9rSekknJLAe9xHgjbbx7
-         D2FPWzlMHRyfhSABm7bsrH1CDV39nx5g/pZXfNSJDmv6KOKaV1ytCIuoTdonm84Xifu3
-         UmGhHpNPjWrLeSkfYgEksG+xolx7KSzitNaroJzNkljJjObyTRTnJh7FP9h1W6X4cLQD
-         6HNOMNCIQbMKTbsGenAS/UIDF2nr6dFP3BQumesprJGlCr7QRL4hHTOH/PLvi9b97IAE
-         N22di3vtH1Es+HlUbMQnVhUY+utIpvPyX8xURkbBfAUs6OMTRGWhjEvDR0a2oXqSw+wx
-         7hkQ==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=H5uePaAnfho3jP4O84y/TR/d85pMr1PHhHfJNr70LiM=;
+        b=kHN1iP7zA3FJ74YxjzC8lHyl0JgV6YH25zYfaGW5aYOffgySOf1QKp+KZSQHNEMZFn
+         GKh2kTELEzLGxrmnDZLQUmt0ykjoIDF3onJTscviyJA5ehSAC5J/5UW+6OaSP+iS5bu/
+         1xU8vU3Z2VYVFmXfnmjeHFfNhPttjVDYToOKq1rg678rqHxcm0f7g0tiQhJpl/xRi+Wd
+         hxAt6HjXkfC9jvuYIpfnwcVzdP5pFdL9Cf7F6GyLICGbk9RmPEUy6b4Qcp04eardBWx/
+         jknqRgy69k+O7wjc/qY01mpJ20yzKRb5wPGzFCtmmEbEQ6QD7AfuECV7TisOSvi+bo3l
+         Y7Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=JhiTFKPdgUPiq/3CLngeqY1pwECv2NMtE4FVnY5brWc=;
-        b=UOnPG1i08b+6/tIGjn7GEEb/7Nztj25QMgcmHuHZkzMgt+t9ehTWyzdh/2ipvR6n0k
-         4mEuBvN2mind3ZApcVV9WVaHPGzp17PGvIOujG6ivm2Ewxmjk1AQmTekop0Wy41q7BqC
-         POmWizBStKVtEShmFCKoWr9A6qBibxkwDkleFeA1nyAjx2yH0fIppEAFsF3YyE14EBVY
-         g4o2MDMEsF6dZcSH0yUq9433dWuWJJHjwHy5B7dJoi4+8mLagmG4F7bwinC5O3dr1hII
-         FfXKEdjVBYFAUe4iOJcJJGu5xcxnU3U9U6HaxM8uJp7AE3tMajGWT77YlRnNYTb0qybO
-         rNnw==
-X-Gm-Message-State: APjAAAWw9rKL1FjejzP5XzSvRdqZm5TDcKJ6fmj7VAWrkvkMnBFNwusE
-        2MCvl7Tpn6XxqdnhT/ml8CVpBDxc9EZO
-X-Google-Smtp-Source: APXvYqw2VsB8QRHHZVMQ1VhvHU/nDMf5a8qvedfp46p5hb+FxJEbYpXEIh3n7OA6WwWDSR2D++aTvC0B3Fhm
-X-Received: by 2002:a63:dd16:: with SMTP id t22mr50863450pgg.140.1563987511332;
- Wed, 24 Jul 2019 09:58:31 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 09:57:59 -0700
-In-Reply-To: <20190724165803.87470-1-brianvv@google.com>
-Message-Id: <20190724165803.87470-3-brianvv@google.com>
-Mime-Version: 1.0
-References: <20190724165803.87470-1-brianvv@google.com>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [PATCH bpf-next 2/6] bpf: add BPF_MAP_DUMP command to dump more than
- one entry per call
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Brian Vazquez <brianvv@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=H5uePaAnfho3jP4O84y/TR/d85pMr1PHhHfJNr70LiM=;
+        b=Ouj7+48xLx8xxC/3hrv/3u8iPvVsXEERwc49aQESMcXao6pIjVEZaI20MS9qM5JRL8
+         tTNK3c8UpvQxyl4WSnReiVASL2r1hEDrm42yD8dYIQhntu+0e4k1IvPJmzs6KhyBway2
+         lxslRlR0TC7JRx+un1XZnGNS9YXmSrY+baV/xouNjmURJ+wi1RmIpUFRwyo6Q8AJ8S1C
+         s9szJUg5RtM2SDPymhw4mvNlTFhYNJDIO/T8vzZEh1i5npMDzhpWfVJHwxbUIK4HGChy
+         ebQuxolOP31ST3I8iehr/jVZYBtV/1leBCaOcP65EPcJonKJb9kAc2/EDJ6bGXVGNPuG
+         7UgA==
+X-Gm-Message-State: APjAAAXdIBFF2vN118kIC7Tmxc7edqz2fNABaBNCsdBp3guQXa47Hmv0
+        m7LjyM5rLXsBOSC2JzNjthM=
+X-Google-Smtp-Source: APXvYqx+6Zi+RypFO68n1WeSfP+QuoinYaHM4/PZrw3z9TvZURJv9ULbWB+7BvwlnKgD1QoYlHaN3g==
+X-Received: by 2002:a02:6d24:: with SMTP id m36mr87555505jac.87.1563987640301;
+        Wed, 24 Jul 2019 10:00:40 -0700 (PDT)
+Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
+        by smtp.gmail.com with ESMTPSA id b8sm38161917ioj.16.2019.07.24.10.00.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 10:00:39 -0700 (PDT)
+Subject: [PATCH v2 2/5] mm: Move set/get_pcppage_migratetype to mmzone.h
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Date:   Wed, 24 Jul 2019 09:58:30 -0700
+Message-ID: <20190724165830.6685.51110.stgit@localhost.localdomain>
+In-Reply-To: <20190724165158.6685.87228.stgit@localhost.localdomain>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This introduces a new command to retrieve multiple number of entries
-from a bpf map, wrapping the existing bpf methods:
-map_get_next_key and map_lookup_elem
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-To start dumping the map from the beginning you must specify NULL as
-the prev_key.
+In order to support page aeration it will be necessary to store and
+retrieve the migratetype of a page. To enable that I am moving the set and
+get operations for pcppage_migratetype into the mm/internal.h header so
+that they can be used outside of the page_alloc.c file.
 
-The new API returns 0 when it successfully copied all the elements
-requested or it copied less because there weren't more elements to
-retrieved (i.e err == -ENOENT). In last scenario err will be masked to 0.
-
-On a successful call buf and buf_len will contain correct data and in
-case prev_key was provided (not for the first walk, since prev_key is
-NULL) it will contain the last_key copied into the prev_key which will
-simplify next call.
-
-Only when it can't find a single element it will return -ENOENT meaning
-that the map has been entirely walked. When an error is return buf,
-buf_len and prev_key shouldn't be read nor used.
-
-Because maps can be called from userspace and kernel code, this function
-can have a scenario where the next_key was found but by the time we
-try to retrieve the value the element is not there, in this case the
-function continues and tries to get a new next_key value, skipping the
-deleted key. If at some point the function find itself trap in a loop,
-it will return -EINTR.
-
-The function will try to fit as much as possible in the buf provided and
-will return -EINVAL if buf_len is smaller than elem_size.
-
-QUEUE and STACK maps are not supported.
-
-Note that map_dump doesn't guarantee that reading the entire table is
-consistent since this function is always racing with kernel and user code
-but the same behaviour is found when the entire table is walked using
-the current interfaces: map_get_next_key + map_lookup_elem.
-It is also important to note that with  a locked map, the lock is grabbed
-for 1 entry at the time, meaning that the returned buf might or might not
-be consistent.
-
-Suggested-by: Stanislav Fomichev <sdf@google.com>
-Signed-off-by: Brian Vazquez <brianvv@google.com>
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 ---
- include/uapi/linux/bpf.h |   9 +++
- kernel/bpf/syscall.c     | 117 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 126 insertions(+)
+ mm/internal.h   |   18 ++++++++++++++++++
+ mm/page_alloc.c |   18 ------------------
+ 2 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index fa1c753dcdbc7..66dab5385170d 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -106,6 +106,7 @@ enum bpf_cmd {
- 	BPF_TASK_FD_QUERY,
- 	BPF_MAP_LOOKUP_AND_DELETE_ELEM,
- 	BPF_MAP_FREEZE,
-+	BPF_MAP_DUMP,
- };
- 
- enum bpf_map_type {
-@@ -388,6 +389,14 @@ union bpf_attr {
- 		__u64		flags;
- 	};
- 
-+	struct { /* struct used by BPF_MAP_DUMP command */
-+		__aligned_u64	prev_key;
-+		__aligned_u64	buf;
-+		__aligned_u64	buf_len; /* input/output: len of buf */
-+		__u64		flags;
-+		__u32		map_fd;
-+	} dump;
-+
- 	struct { /* anonymous struct used by BPF_PROG_LOAD command */
- 		__u32		prog_type;	/* one of enum bpf_prog_type */
- 		__u32		insn_cnt;
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 86cdc2f7bb56e..0c35505aa219f 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1097,6 +1097,120 @@ static int map_get_next_key(union bpf_attr *attr)
- 	return err;
+diff --git a/mm/internal.h b/mm/internal.h
+index e32390802fd3..e432c7d5940d 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -549,6 +549,24 @@ static inline bool is_migrate_highatomic_page(struct page *page)
+ 	return get_pageblock_migratetype(page) == MIGRATE_HIGHATOMIC;
  }
  
-+/* last field in 'union bpf_attr' used by this command */
-+#define BPF_MAP_DUMP_LAST_FIELD dump.map_fd
-+
-+static int map_dump(union bpf_attr *attr)
++/*
++ * A cached value of the page's pageblock's migratetype, used when the page is
++ * put on a pcplist. Used to avoid the pageblock migratetype lookup when
++ * freeing from pcplists in most cases, at the cost of possibly becoming stale.
++ * Also the migratetype set in the page does not necessarily match the pcplist
++ * index, e.g. page might have MIGRATE_CMA set but be on a pcplist with any
++ * other index - this ensures that it will be put on the correct CMA freelist.
++ */
++static inline int get_pcppage_migratetype(struct page *page)
 +{
-+	void __user *ukey = u64_to_user_ptr(attr->dump.prev_key);
-+	void __user *ubuf = u64_to_user_ptr(attr->dump.buf);
-+	u32 __user *ubuf_len = u64_to_user_ptr(attr->dump.buf_len);
-+	int ufd = attr->dump.map_fd;
-+	struct bpf_map *map;
-+	void *buf, *prev_key, *key, *value;
-+	u32 value_size, elem_size, buf_len, cp_len;
-+	struct fd f;
-+	int err;
-+	bool first_key = false;
-+
-+	if (CHECK_ATTR(BPF_MAP_DUMP))
-+		return -EINVAL;
-+
-+	if (attr->dump.flags & ~BPF_F_LOCK)
-+		return -EINVAL;
-+
-+	f = fdget(ufd);
-+	map = __bpf_map_get(f);
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+	if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ)) {
-+		err = -EPERM;
-+		goto err_put;
-+	}
-+
-+	if ((attr->dump.flags & BPF_F_LOCK) &&
-+	    !map_value_has_spin_lock(map)) {
-+		err = -EINVAL;
-+		goto err_put;
-+	}
-+
-+	if (map->map_type == BPF_MAP_TYPE_QUEUE ||
-+	    map->map_type == BPF_MAP_TYPE_STACK) {
-+		err = -ENOTSUPP;
-+		goto err_put;
-+	}
-+
-+	value_size = bpf_map_value_size(map);
-+
-+	err = get_user(buf_len, ubuf_len);
-+	if (err)
-+		goto err_put;
-+
-+	elem_size = map->key_size + value_size;
-+	if (buf_len < elem_size) {
-+		err = -EINVAL;
-+		goto err_put;
-+	}
-+
-+	if (ukey) {
-+		prev_key = __bpf_copy_key(ukey, map->key_size);
-+		if (IS_ERR(prev_key)) {
-+			err = PTR_ERR(prev_key);
-+			goto err_put;
-+		}
-+	} else {
-+		prev_key = NULL;
-+		first_key = true;
-+	}
-+
-+	err = -ENOMEM;
-+	buf = kmalloc(elem_size, GFP_USER | __GFP_NOWARN);
-+	if (!buf)
-+		goto err_put;
-+
-+	key = buf;
-+	value = key + map->key_size;
-+	for (cp_len = 0; cp_len + elem_size <= buf_len;) {
-+		if (signal_pending(current)) {
-+			err = -EINTR;
-+			break;
-+		}
-+
-+		rcu_read_lock();
-+		err = map->ops->map_get_next_key(map, prev_key, key);
-+		rcu_read_unlock();
-+
-+		if (err)
-+			break;
-+
-+		err = bpf_map_copy_value(map, key, value, attr->dump.flags);
-+
-+		if (err == -ENOENT)
-+			continue;
-+		if (err)
-+			goto free_buf;
-+
-+		if (copy_to_user(ubuf + cp_len, buf, elem_size)) {
-+			err = -EFAULT;
-+			goto free_buf;
-+		}
-+
-+		prev_key = key;
-+		cp_len += elem_size;
-+	}
-+
-+	if (err == -ENOENT && cp_len)
-+		err = 0;
-+	if (!err && (copy_to_user(ubuf_len, &cp_len, sizeof(cp_len)) ||
-+		    (!first_key && copy_to_user(ukey, key, map->key_size))))
-+		err = -EFAULT;
-+free_buf:
-+	kfree(buf);
-+err_put:
-+	fdput(f);
-+	return err;
++	return page->index;
 +}
 +
- #define BPF_MAP_LOOKUP_AND_DELETE_ELEM_LAST_FIELD value
++static inline void set_pcppage_migratetype(struct page *page, int migratetype)
++{
++	page->index = migratetype;
++}
++
+ void setup_zone_pageset(struct zone *zone);
+ extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
+ #endif	/* __MM_INTERNAL_H */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 1c4644b6cdc3..3d612a6b1771 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -185,24 +185,6 @@ static int __init early_init_on_free(char *buf)
+ }
+ early_param("init_on_free", early_init_on_free);
  
- static int map_lookup_and_delete_elem(union bpf_attr *attr)
-@@ -2910,6 +3024,9 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
- 	case BPF_MAP_LOOKUP_AND_DELETE_ELEM:
- 		err = map_lookup_and_delete_elem(&attr);
- 		break;
-+	case BPF_MAP_DUMP:
-+		err = map_dump(&attr);
-+		break;
- 	default:
- 		err = -EINVAL;
- 		break;
--- 
-2.22.0.657.g960e92d24f-goog
+-/*
+- * A cached value of the page's pageblock's migratetype, used when the page is
+- * put on a pcplist. Used to avoid the pageblock migratetype lookup when
+- * freeing from pcplists in most cases, at the cost of possibly becoming stale.
+- * Also the migratetype set in the page does not necessarily match the pcplist
+- * index, e.g. page might have MIGRATE_CMA set but be on a pcplist with any
+- * other index - this ensures that it will be put on the correct CMA freelist.
+- */
+-static inline int get_pcppage_migratetype(struct page *page)
+-{
+-	return page->index;
+-}
+-
+-static inline void set_pcppage_migratetype(struct page *page, int migratetype)
+-{
+-	page->index = migratetype;
+-}
+-
+ #ifdef CONFIG_PM_SLEEP
+ /*
+  * The following functions are used by the suspend/hibernate code to temporarily
 
