@@ -2,123 +2,143 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B0C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F044C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223A021BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA3821BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:09:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cxpmsx6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387486AbfGXOJO (ORCPT
+        id S2387496AbfGXOJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:09:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:41720 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbfGXOJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:09:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4428D28;
-        Wed, 24 Jul 2019 07:09:13 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB3973F71A;
-        Wed, 24 Jul 2019 07:09:10 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 15:09:08 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH v9 11/21] mm: pagewalk: Add p4d_entry() and pgd_entry()
-Message-ID: <20190724140908.GE2624@lakrids.cambridge.arm.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-12-steven.price@arm.com>
- <20190723101432.GC8085@lakrids.cambridge.arm.com>
- <60ee20ef-62a3-5df1-6e24-24973b69be70@arm.com>
+        Wed, 24 Jul 2019 10:09:58 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40441 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfGXOJ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:09:58 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so32087046lff.7;
+        Wed, 24 Jul 2019 07:09:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5TDhFld/eHS7IYB60yUBetfgICBgTmFxknVZGppAKVY=;
+        b=cxpmsx6uLdsw/bi3AUvQq74Ww0ft0zqDkE3E2M0XpOcl4d8LkUCY8osX8eCgUmAuJo
+         97osGTWiQotVc/jqUlLU0HkmnJ5tieJdvz396iTeiMa58ryVZVqapLIe0Hav+EgFyMmU
+         +9eGt90wvLTF5BvibV1Q21U7szJSArumW31ZMaX/R3yOQhnAAINOGAuXC2OAt6vJOopV
+         d38MxAXLa0p/5Jz8uUSvB3RRWjK9PQbhHVqec5YHlbcGcSb98m6CrYlIkhdC0gEIG+mv
+         vCbBpGLuo3S2lEI4ud7o0gzMjt9rWzuQG5fT3ZAHKzdluYnmIgvwSdawdsIsE/28pABs
+         hmxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5TDhFld/eHS7IYB60yUBetfgICBgTmFxknVZGppAKVY=;
+        b=OuwrrQtuyuDYvevvsdHd1TjJm8Jyka61nRf5n2u/hx5LycXEIchEWwaJUXsEeaiwRO
+         H67HMMqxR98JI+HNESHX+fL0ofpi76XRft2sZH681i0jHZ0gbMk4rmN+3u1BryoVkUMB
+         Xb5eAnkjVtc2vpn1W8e7ha9kBzY0UIfu03G57ITpgbyJSfeLhs6ecAst6r4fnLgdDWth
+         VxpwaQhFQUPqsY0cjJrGLJ00UcdyT5EGtEEWDPp+yFoRxVx9a712iVw7WwT5RNAUIKHK
+         bVH0DHVMgwVcVhhrp0tZuo7DrpCrRFDguMBFQ5UgWvoXEINwook6BSpop13QbAyX+/0M
+         RG2A==
+X-Gm-Message-State: APjAAAWl/oNs2+3yZHNjMNOZXHpPFQnAEbi6dyI0rW01G7RAJfNyN1Sj
+        R4JpqQ2uLPGo0Nj36FHokxU=
+X-Google-Smtp-Source: APXvYqxK1fG+r2FGv25yZ1DPzjciv2L5EMqpAScm54D7ySJTLFckDaUho8RmvveLM6wOUsw87x2pvw==
+X-Received: by 2002:ac2:44b1:: with SMTP id c17mr27772968lfm.87.1563977396265;
+        Wed, 24 Jul 2019 07:09:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id c12sm6989583lfj.58.2019.07.24.07.09.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 07:09:55 -0700 (PDT)
+Subject: Re: [PATCH] media: staging: ipu3: Enable IOVA API only when IOMMU
+ support is enabled
+To:     Yuehaibing <yuehaibing@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, hverkuil-cisco@xs4all.nl,
+        mchehab@kernel.org, yong.zhi@intel.com
+References: <20190722134749.21580-1-yuehaibing@huawei.com>
+ <20190724103027.GD21370@paasikivi.fi.intel.com>
+ <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
+ <0c08bdae-facc-0f28-0e58-17a65172587a@huawei.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <491dbca1-8a58-b26e-cf56-a1a419da288f@gmail.com>
+Date:   Wed, 24 Jul 2019 17:09:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60ee20ef-62a3-5df1-6e24-24973b69be70@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <0c08bdae-facc-0f28-0e58-17a65172587a@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 02:53:04PM +0100, Steven Price wrote:
-> On 23/07/2019 11:14, Mark Rutland wrote:
-> > On Mon, Jul 22, 2019 at 04:42:00PM +0100, Steven Price wrote:
-> >> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
-> >> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
-> >> no users. We're about to add users so reintroduce them, along with
-> >> p4d_entry() as we now have 5 levels of tables.
-> >>
-> >> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
-> >> PUD-sized transparent hugepages") already re-added pud_entry() but with
-> >> different semantics to the other callbacks. Since there have never
-> >> been upstream users of this, revert the semantics back to match the
-> >> other callbacks. This means pud_entry() is called for all entries, not
-> >> just transparent huge pages.
-> >>
-> >> Signed-off-by: Steven Price <steven.price@arm.com>
-> >> ---
-> >>  include/linux/mm.h | 15 +++++++++------
-> >>  mm/pagewalk.c      | 27 ++++++++++++++++-----------
-> >>  2 files changed, 25 insertions(+), 17 deletions(-)
-> >>
-> >> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> >> index 0334ca97c584..b22799129128 100644
-> >> --- a/include/linux/mm.h
-> >> +++ b/include/linux/mm.h
-> >> @@ -1432,15 +1432,14 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
-> >>  
-> >>  /**
-> >>   * mm_walk - callbacks for walk_page_range
-> >> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
-> >> - *	       this handler should only handle pud_trans_huge() puds.
-> >> - *	       the pmd_entry or pte_entry callbacks will be used for
-> >> - *	       regular PUDs.
-> >> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
-> >> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
-> >> + * @p4d_entry: if set, called for each non-empty P4D entry
-> >> + * @pud_entry: if set, called for each non-empty PUD entry
-> >> + * @pmd_entry: if set, called for each non-empty PMD entry
-> > 
-> > How are these expected to work with folding?
-> > 
-> > For example, on arm64 with 64K pages and 42-bit VA, you can have 2-level
-> > tables where the PGD is P4D, PUD, and PMD. IIUC we'd invoke the
-> > callbacks for each of those levels where we found an entry in the pgd.
-> > 
-> > Either the callee handle that, or we should inhibit the callbacks when
-> > levels are folded, and I think that needs to be explcitly stated either
-> > way.
-> > 
-> > IIRC on x86 the p4d folding is dynamic depending on whether the HW
-> > supports 5-level page tables. Maybe that implies the callee has to
-> > handle that.
+24.07.2019 17:03, Yuehaibing пишет:
+> On 2019/7/24 21:49, Robin Murphy wrote:
+>> On 24/07/2019 11:30, Sakari Ailus wrote:
+>>> Hi Yue,
+>>>
+>>> On Mon, Jul 22, 2019 at 09:47:49PM +0800, YueHaibing wrote:
+>>>> If IOMMU_SUPPORT is not set, ipu3 driver may select IOMMU_IOVA to m.
+>>>> But for many drivers, they use "select IOMMU_IOVA if IOMMU_SUPPORT"
+>>>> in the Kconfig, for example, CONFIG_TEGRA_VDE is set to y but IOMMU_IOVA
+>>>> is m, then the building fails like this:
+>>>>
+>>>> drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
+>>>> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
+>>>> iommu.c:(.text+0x56): undefined reference to `__free_iova'
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
+>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>> ---
+>>>>   drivers/staging/media/ipu3/Kconfig | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/staging/media/ipu3/Kconfig b/drivers/staging/media/ipu3/Kconfig
+>>>> index 4b51c67..b7df18f 100644
+>>>> --- a/drivers/staging/media/ipu3/Kconfig
+>>>> +++ b/drivers/staging/media/ipu3/Kconfig
+>>>> @@ -4,7 +4,7 @@ config VIDEO_IPU3_IMGU
+>>>>       depends on PCI && VIDEO_V4L2
+>>>>       depends on MEDIA_CONTROLLER && VIDEO_V4L2_SUBDEV_API
+>>>>       depends on X86
+>>>> -    select IOMMU_IOVA
+>>>> +    select IOMMU_IOVA if IOMMU_SUPPORT
+>>>
+>>> This doesn't seem right: the ipu3-cio2 driver needs IOMMU_IOVA
+>>> independently of IOMMU_SUPPORT.
+>>>
+>>> Looking at tegra-vde, it seems to depend on IOMMU_SUPPORT but that's not
+>>> declared in its Kconfig entry. I wonder if adding that would be the right
+>>> way to fix this.
+>>>
+>>> Cc'ing the IOMMU list.
+IOMMU_SUPPORT is optional for the Tegra-VDE driver.
+
+>> Right, I also had the impression that we'd made the IOVA library completely standalone. And what does the IPU3 driver's Kconfig have to do with some *other* driver failing to link anyway?
+
+I can see it failing if IPU3 is compiled as a loadable module, while
+Tegra-VDE is a built-in driver. Hence IOVA lib should be also a kernel
+module and thus the IOVA symbols will be missing during of linkage of
+the VDE driver.
+
+> Oh, I misunderstand that IOMMU_IOVA is depend on IOMMU_SUPPORT, thank you for clarification.
 > 
-> Yes, my assumption is that it has to be up to the callee to handle that
-> because folding can be dynamic. I believe this also was how these
-> callbacks work before they were removed. However I'll add a comment
-> explaining that here as it's probably non-obvious.
+> I will try to fix this in tegra-vde.
 
-That sounds good to me.
-
-Thanks,
-Mark.
+Probably IOVA could be selected independently of IOMMU_SUPPORT, but IOVA
+library isn't needed for the VDE driver if IOMMU_SUPPORT is disabled.
