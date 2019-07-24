@@ -2,167 +2,145 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F03BC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962DDC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C5C2199C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE8B2199C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThQQ5MqP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fE8HJvWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfGXKNS (ORCPT
+        id S1726622AbfGXKNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:13:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45907 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfGXKNR (ORCPT
+        Wed, 24 Jul 2019 06:13:37 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:57993 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfGXKNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:13:17 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so46274244wre.12;
-        Wed, 24 Jul 2019 03:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=qP3V0F8WB62jX3gDppOBMqvVTpl8jvF/MWPx//rxH3I=;
-        b=ThQQ5MqPBe7sMVGlJ3OD59ZKMZEhPr15aG3ljbNebMPz0UwruFjqka7INR9MzhFoBZ
-         GL2AzJKsITND9ZiixWnmYR7XQRnaPoEy/oqYhx4UL46zVMseoblqVf77u08Edv1sZStA
-         DOVpf+FRFZGnrlUrsoZ83bIbI3y5URow24Y1VRB+cIW7jjfMhOwVD9tqwefw058DikLG
-         UY1PMy+f/yrH7d+5KOKjJ8ZWqnal2TG4q9+MXCPekMWSIUNHZJgP4KMO7fKbr+AIyjui
-         jnH/sPZ+d1nK6L20ImiQ4wH/NWTkrXmVdwRBAS3JCWctvTyS0VjP8QUEMvtZI4KVe0oM
-         Hfeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qP3V0F8WB62jX3gDppOBMqvVTpl8jvF/MWPx//rxH3I=;
-        b=NkevTcAnr8RR6+XwqB7CUntba0LJf4TnU78y+dLYPwroXbWL/E7xSvlJ5SmS+W7sGJ
-         VXuPTsjrWaDwkJoxu84U/qX6uY0r5utYOB/GleZgFqi6xvABd7yi+NCmVsYurMmcFk/U
-         vqxYYkbJsMj7Znn2RRUxyHaB9DOgzJhWEkv5BSryPH9qTdnk++tmguKy1Te5CybI4P1Y
-         nA6cFime5H76RFFrptLysFkFtjSlaFcEvNT72tubsYhLM+Jz7QZ54U1vcsp9iUcDBZ+X
-         3vuL5LBIKp0aloLJaSiIdNwSyVfz/v4cRXeAUAqBc4KNazG3F/Jpw4p+QtHMrYdfhBY4
-         EYsA==
-X-Gm-Message-State: APjAAAUEc/9ecMNir2vELzQIWVFGIwVo3EC/KX4XnQLzqJTZyfWhEZ74
-        lup9GjISg2xPlKI+K3i1qreF54OL
-X-Google-Smtp-Source: APXvYqwmLY+GQMo5KFT7NcZEEdvYXExGCmeP7Vw8FXB+Xjfx+Kp5yosA+mrSoWnsEOcdeOBMZU/zxw==
-X-Received: by 2002:adf:f84f:: with SMTP id d15mr86190372wrq.53.1563963194380;
-        Wed, 24 Jul 2019 03:13:14 -0700 (PDT)
-Received: from [192.168.8.147] (200.150.22.93.rev.sfr.net. [93.22.150.200])
-        by smtp.gmail.com with ESMTPSA id e3sm42770344wrs.37.2019.07.24.03.13.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 03:13:13 -0700 (PDT)
-Subject: Re: [PATCH 4.4 stable net] net: tcp: Fix use-after-free in
- tcp_write_xmit
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-To:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        gregkh@linuxfoundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190724091715.137033-1-maowenan@huawei.com>
- <badce2b6-b75e-db01-39c8-d68a0161c101@gmail.com>
-Message-ID: <be1aebb5-fee7-e079-d864-a2e4aa13007f@gmail.com>
-Date:   Wed, 24 Jul 2019 12:13:12 +0200
+        Wed, 24 Jul 2019 06:13:36 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190724101334epoutp02cd183d0634ad4590878940f1d5d3d787~0UEHKmuTE2872328723epoutp023
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:13:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190724101334epoutp02cd183d0634ad4590878940f1d5d3d787~0UEHKmuTE2872328723epoutp023
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563963214;
+        bh=dlSU5Hb7KyERK56QTSeEqX63Sp8U8qWENv6AcYBRUqU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=fE8HJvWbFGY+VQluPPKBZSnAtkzFN2UIqhXK4xP/Rd5xLw+IdGo8+qRdKYwAMfWDM
+         dYNHLlc1zSfAyT5UUzLGxxT52iyhQgPH2eNi0U4JXrgcTcwbpht6XwcUqO9ybBu5HI
+         uiG6CpV+YkE3dD4vKT3tDkv8M1IdMchK9Pfp3T3c=
+Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190724101333epcas1p164333765f1b988c16aec598a26dbba31~0UEGtXPqI2134821348epcas1p1w;
+        Wed, 24 Jul 2019 10:13:33 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp5.localdomain (Postfix) with ESMTP id 45trlb1509zMqYkV; Wed, 24 Jul
+        2019 10:13:31 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        ED.A8.04066.A4F283D5; Wed, 24 Jul 2019 19:13:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190724101329epcas1p4922898dd0fdee60ad26461f0e0ff6ffc~0UEDQwxDz0895808958epcas1p4F;
+        Wed, 24 Jul 2019 10:13:29 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190724101329epsmtrp2f7ebc7ffe6142def73def602a9eb9c57~0UEDQDOJn1150711507epsmtrp2D;
+        Wed, 24 Jul 2019 10:13:29 +0000 (GMT)
+X-AuditID: b6c32a37-e3fff70000000fe2-ce-5d382f4a8605
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A6.32.03638.94F283D5; Wed, 24 Jul 2019 19:13:29 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190724101329epsmtip29ed3b8771bbbe0ada22168cc7a3ee31e~0UEDGTNQC2396923969epsmtip2i;
+        Wed, 24 Jul 2019 10:13:29 +0000 (GMT)
+Subject: Re: [PATCH] extcon: arizona: Update binding example to use
+ available defines
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     myungjoo.ham@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        patches@opensource.cirrus.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <55bef964-1680-27ef-2bd9-c44de2ee07fc@samsung.com>
+Date:   Wed, 24 Jul 2019 19:16:32 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <badce2b6-b75e-db01-39c8-d68a0161c101@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190724094914.19284-1-ckeepax@opensource.cirrus.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH++3uXme0+nXVPC2wdSNIxcd1Tm8PIzBikH8o/VFEa13cTcW9
+        2J2WWaDFSi3snbRSAxPKwmqo2UwGy1ILRk+K3pmVRfmsyAps213kf5/z+n3POb+jIOhzlEpR
+        ZHEIdgtvYqiZ8o6b8clJ61I4ferFyQjukdONuMYeP8k99JyhuOYn92Xc88rzFDcx4iU5Z3dP
+        xOoI3aWGS0jnbqmmdHVnppCutq0F6SbccbnkpuKVhQJvFOxqwZJvNRZZCrKYdesN2QZtRiqb
+        xC7jMhm1hTcLWcyanNyktUWmQBuMupQ3lQRcubwoMimrVtqtJQ5BXWgVHVmMYDOabMtsySJv
+        FkssBcn5VvNyNjU1TRtI3FpceHTIL7e1UjuuTnWRFaiVrEGRCsDpsM/5lqpBMxU07kTwa8AT
+        NsYRtPo9csn4geDQ3dGIfyXjAx8JKdCNYLTrhCwYoPEIgsq9xiBH4Q3g+dqBghyN02Cs95ks
+        WEDgJgS+K7WhAIUTwDv0lAryHLwIHv98F/Ir8SpoGmkkgizHS6D2jj8kEIM3wvibm6SUMxf6
+        Tw3KgxyJs+HO4IFQDoFj4dlgY5gXwt7204TU9QQFB/yBWkWA10DfGCu5o+Bzb1t4MBVMDHdT
+        EpfDhf6e0CoAVyFo894LL0wD3uZjsuA7BI6Hy54Uyb0Irv+uR5LsbBj+fjAspYSqfbSUshge
+        vnkpk3g+NO2vpg4jxjVtGNe0AVzTBnD9FzuL5C1onmATzQWCyNo00z/bjUIXmpDZia74c3wI
+        KxAzS6mekamnSb5ULDP7ECgIJlqZV5Ghp5VGvmynYLca7CUmQfQhbWDXRwhVTL41cO8Wh4HV
+        pmk0Gi6dzdCyLBOrbPgTr6dxAe8QigXBJtj/1ckUkaoKFBWzvf12JfXCXEOfdGWzZIxuvCFf
+        P7+O1D9Y/H750Bf/0/7JgW2JiTe0J291v875o7R/Kvs69iHy+PPH3uq5S03I+M25S0O38nGG
+        jGvvvuxR1emaN/NTn9N/yfzO+qr6vBelSz+siJ4cjotNS8l9taWmKNqdYOm6nXWhfIHat7uP
+        kYuFPJtA2EX+L7qUfgq3AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSvK6nvkWswcEVxhZXWjcxWsw/co7V
+        4vKuOWwWS69fZLK43biCzeLz+/2sFq17j7A7sHusmbeG0WPTqk42j+lz/jN69G1ZxejxeZNc
+        AGsUl01Kak5mWWqRvl0CV8akF+dYCtaxVWz8v5u1gXEdaxcjJ4eEgInEp0fPmbsYuTiEBHYz
+        SkxruM0OkZCUmHbxKFCCA8gWljh8uBii5i2jxNxDF8CahQXCJRouNLOA2CICRhIfj99iAili
+        FljMKPFo7mGwIiGBaYwS15+VgdhsAloS+1/cYAOx+QUUJa7+eMwIYvMK2Eksfj+fGcRmEVCV
+        6Dt1jgnEFhWIkDi8YxZUjaDEyZlPwJZxCjhLnHrSDVbDLKAu8WfeJWYIW1zi1pP5UHF5ieat
+        s5knMArPQtI+C0nLLCQts5C0LGBkWcUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERxP
+        Wlo7GE+ciD/EKMDBqMTDq8BgHivEmlhWXJl7iFGCg1lJhDewwSxWiDclsbIqtSg/vqg0J7X4
+        EKM0B4uSOK98/rFIIYH0xJLU7NTUgtQimCwTB6dUA2P3ND3fM18rg57ty+hQznunWe3Gpj+b
+        Sf1hzg4h9QNJbSEXdrvMb3xzmPvrv+5lk8IzD/PIzbw6//GZ0D9ym1amTTw+PYTxp+hmreIJ
+        cbLP+fpbzjVm2y+/lcS32yhP1zM86IYM97bnZ/U2ZJhOv/pBR/f4VFXrwKbHqxmb9MM/5jmc
+        fDdR7ZQSS3FGoqEWc1FxIgBFlPHTowIAAA==
+X-CMS-MailID: 20190724101329epcas1p4922898dd0fdee60ad26461f0e0ff6ffc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190724094922epcas5p3382c6fedfd2c450fc975223cef1de319
+References: <CGME20190724094922epcas5p3382c6fedfd2c450fc975223cef1de319@epcas5p3.samsung.com>
+        <20190724094914.19284-1-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/24/19 12:01 PM, Eric Dumazet wrote:
+On 19. 7. 24. 오후 6:49, Charles Keepax wrote:
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 
-> On 7/24/19 11:17 AM, Mao Wenan wrote:
->> There is one report about tcp_write_xmit use-after-free with version 4.4.136:
-> 
-> Current stable 4.4 is 4.4.186
-> 
-> Can you check the bug is still there ?
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> index 7f3d94ae81ffb..208daaff0be4f 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> @@ -72,5 +72,5 @@ codec: wm8280@0 {
+>  		1 2 1 /* MICDET2 MICBIAS2 GPIO=high */
+>  	>;
+>  
+> -	wlf,gpsw = <0>;
+> +	wlf,gpsw = <ARIZONA_GPSW_OPEN>;
+>  };
 > 
 
-BTW, I tried the C repro and another bug showed up.
+Applied it. Thanks.
 
-It looks like 4.4.186 misses other fixes :/
-
-[  180.811610] skbuff: skb_under_panic: text:ffffffff825ec6ea len:156 put:84 head:ffff8837dd1f0990 data:ffff8837dd1f098c tail:0x98 end:0xc0 dev:ip6gre0
-[  180.825037] ------------[ cut here ]------------
-[  180.829688] kernel BUG at net/core/skbuff.c:104!
-[  180.834316] invalid opcode: 0000 [#1] SMP KASAN
-[  180.839305] gsmi: Log Shutdown Reason 0x03
-[  180.843426] Modules linked in: ipip bonding bridge stp llc tun veth w1_therm wire i2c_mux_pca954x i2c_mux cdc_acm ehci_pci ehci_hcd ip_gre mlx4_en ib_uverbs mlx4_ib ib_sa ib_mad ib_core ib_addr mlx4_core
-[  180.862052] CPU: 22 PID: 1619 Comm: kworker/22:1 Not tainted 4.4.186-smp-DEV #41
-[  180.869475] Hardware name: Intel BIOS 2.56.0 10/19/2018
-[  180.876463] Workqueue: ipv6_addrconf addrconf_dad_work
-[  180.881658] task: ffff8837f1f59d80 ti: ffff8837eeeb8000 task.ti: ffff8837eeeb8000
-[  180.889171] RIP: 0010:[<ffffffff821ef26f>]  [<ffffffff821ef26f>] skb_panic+0x14f/0x210
-[  180.897162] RSP: 0018:ffff8837eeebf4b8  EFLAGS: 00010282
-[  180.902504] RAX: 0000000000000088 RBX: ffff8837eeeeb600 RCX: 0000000000000000
-[  180.909645] RDX: 0000000000000000 RSI: 0000000000000246 RDI: ffffffff83508c00
-[  180.916854] RBP: ffff8837eeebf520 R08: 0000000000000016 R09: 0000000000000000
-[  180.924029] R10: ffff881fc8abf038 R11: 0000000000000007 R12: ffff881fc8abe720
-[  180.931213] R13: ffffffff82aa9e80 R14: 00000000000000c0 R15: 0000000000000098
-[  180.938390] FS:  0000000000000000(0000) GS:ffff8837ff280000(0000) knlGS:0000000000000000
-[  180.946519] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  180.952290] CR2: 00007f519426f530 CR3: 00000037d37f2000 CR4: 0000000000160670
-[  180.959447] Stack:
-[  180.961458]  ffff8837dd1f098c 0000000000000098 00000000000000c0 ffff881fc8abe720
-[  180.968909]  ffffea00df747c00 ffff881fff404b40 ffff8837ff2a1a20 ffff8837eeebf5b8
-[  180.976371]  ffff8837eeeeb600 ffffffff825ec6ea 1ffff106fddd7eb6 ffff8837eeeeb600
-[  180.983848] Call Trace:
-[  180.986297]  [<ffffffff825ec6ea>] ? ip6gre_header+0xba/0xd50
-[  180.991962]  [<ffffffff821f0e01>] skb_push+0xc1/0x100
-[  180.997023]  [<ffffffff825ec6ea>] ip6gre_header+0xba/0xd50
-[  181.002519]  [<ffffffff8158dc16>] ? memcpy+0x36/0x40
-[  181.007509]  [<ffffffff825ec630>] ? ip6gre_changelink+0x6d0/0x6d0
-[  181.013629]  [<ffffffff82550741>] ? ndisc_constructor+0x5b1/0x770
-[  181.019728]  [<ffffffff82666861>] ? _raw_write_unlock_bh+0x41/0x50
-[  181.025924]  [<ffffffff8226540b>] ? __neigh_create+0xe6b/0x1670
-[  181.031851]  [<ffffffff8225817f>] neigh_connected_output+0x23f/0x480
-[  181.038219]  [<ffffffff824f61ec>] ip6_finish_output2+0x74c/0x1a90
-[  181.044324]  [<ffffffff810f1d33>] ? print_context_stack+0x73/0xf0
-[  181.050429]  [<ffffffff824f5aa0>] ? ip6_xmit+0x1700/0x1700
-[  181.055933]  [<ffffffff82304a28>] ? nf_hook_slow+0x118/0x1b0
-[  181.061617]  [<ffffffff82502d7a>] ip6_finish_output+0x2ba/0x580
-[  181.067546]  [<ffffffff82503179>] ip6_output+0x139/0x380
-[  181.072884]  [<ffffffff82503040>] ? ip6_finish_output+0x580/0x580
-[  181.079004]  [<ffffffff82502ac0>] ? ip6_fragment+0x31b0/0x31b0
-[  181.084852]  [<ffffffff82251b51>] ? dst_init+0x4b1/0x820
-[  181.090172]  [<ffffffff8158da45>] ? kasan_unpoison_shadow+0x35/0x50
-[  181.096437]  [<ffffffff8158da45>] ? kasan_unpoison_shadow+0x35/0x50
-[  181.102712]  [<ffffffff8254f3ca>] NF_HOOK_THRESH.constprop.22+0xca/0x180
-[  181.109421]  [<ffffffff8254f300>] ? ndisc_alloc_skb+0x340/0x340
-[  181.115338]  [<ffffffff8254d820>] ? compat_ipv6_setsockopt+0x180/0x180
-[  181.121874]  [<ffffffff8254fbc2>] ndisc_send_skb+0x742/0xd10
-[  181.127550]  [<ffffffff8254f480>] ? NF_HOOK_THRESH.constprop.22+0x180/0x180
-[  181.134516]  [<ffffffff821f2440>] ? skb_complete_tx_timestamp+0x280/0x280
-[  181.141311]  [<ffffffff8254e2b3>] ? ndisc_fill_addr_option+0x193/0x260
-[  181.147844]  [<ffffffff82553bd9>] ndisc_send_rs+0x179/0x2d0
-[  181.153426]  [<ffffffff8251e7df>] addrconf_dad_completed+0x41f/0x7c0
-[  181.159795]  [<ffffffff81297f78>] ? pick_next_entity+0x198/0x470
-[  181.165807]  [<ffffffff8251e3c0>] ? addrconf_rs_timer+0x4a0/0x4a0
-[  181.171918]  [<ffffffff81aab928>] ? find_next_bit+0x18/0x20
-[  181.177504]  [<ffffffff81a99ec9>] ? prandom_seed+0xd9/0x160
-[  181.183095]  [<ffffffff8251eef5>] addrconf_dad_work+0x375/0x9e0
-[  181.189024]  [<ffffffff8251eb80>] ? addrconf_dad_completed+0x7c0/0x7c0
-[  181.195576]  [<ffffffff81249d8f>] process_one_work+0x52f/0xf60
-[  181.201468]  [<ffffffff8124a89d>] worker_thread+0xdd/0xe80
-[  181.206977]  [<ffffffff8265cf0a>] ? __schedule+0x73a/0x16d0
-[  181.212550]  [<ffffffff8124a7c0>] ? process_one_work+0xf60/0xf60
-[  181.218572]  [<ffffffff8125a115>] kthread+0x205/0x2b0
-[  181.223633]  [<ffffffff81259f10>] ? kthread_worker_fn+0x4e0/0x4e0
-[  181.229743]  [<ffffffff81259f10>] ? kthread_worker_fn+0x4e0/0x4e0
-[  181.235834]  [<ffffffff8266726f>] ret_from_fork+0x3f/0x70
-[  181.241232]  [<ffffffff81259f10>] ? kthread_worker_fn+0x4e0/0x4e0
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
