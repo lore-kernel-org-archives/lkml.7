@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFAFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A085C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E7C20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AA520665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998959;
-	bh=GxwN1mmkCycNO3fHNV+ZrdYXA6d6xmqH0Z4BO14KspE=;
+	s=default; t=1563998966;
+	bh=f9GvLwt0Ne5glBUpi3HIOx+1C4PY7x9yuu4XeqMRo38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a9r/HDVapR1hT4uPKsbIsNg9ngw0aehWWFOxjz1bGHXgXb8wGay/8S4QXKf+0Lzi1
-	 2NhApwK1zprOKulgOZbW/7gc+Gaxr4N+970O9cQnHSkkiwbVxr9T/sbV5ECUB3zcOw
-	 N5ajSsGsZ+l1P3xvteBBR5x40pRJ4M0s6SpUUsNc=
+	b=AE+VAjUEhhnvqu0dG3XcqhD4ztWzncJxlQE2qk9IAciIrPX7CFIofReaWw5FDI3gf
+	 kYw45xXn5qRybTAQ5/9v/Y+8N4KKicC/Y0vcjjz2rulFMS7toJOAsktBg+llt2YL8o
+	 5wGgV7JfyuW/vkSnajOgizblUgshHhomcQ69hVqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392474AbfGXUJS (ORCPT
+        id S2392637AbfGXUJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404932AbfGXUAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:00:53 -0400
+        id S2404989AbfGXUAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:00:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B30205C9;
-        Wed, 24 Jul 2019 20:00:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F62205C9;
+        Wed, 24 Jul 2019 20:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998452;
-        bh=GxwN1mmkCycNO3fHNV+ZrdYXA6d6xmqH0Z4BO14KspE=;
+        s=default; t=1563998443;
+        bh=f9GvLwt0Ne5glBUpi3HIOx+1C4PY7x9yuu4XeqMRo38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tUP2sQSfY6PbRFU0hoGEWTxM2JRLfDV+9OhFHI+mw31+yzd59HtWCjMVgBlysPAYH
-         OLBlOTPLRw0o4rkS6xzzC5CB+7POtBR4sXTpFp2lJ20+CsT089XOfi7xd6KtjUrFJ4
-         1E3fWHun/Do2FV+IVH4wLkxTy4294/3Iha3mH6WE=
+        b=G004fKzuVSvokJToAe0vq76yHtVvNx2wbvBwo/A/NqceiJZNHXYIJuu+yfC+zdWWh
+         L+UUNTXcTNot/GhD8SUE9iykbBYtMVS5GTOauXmuXhp1yakfL4/F64lMwMWGbwd0Kd
+         Y/8i6vW1VP3jcFAk9R/+KbKg6jK3BCocI8fW805s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Drew Davenport <ddavenport@chromium.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 343/371] include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures
-Date:   Wed, 24 Jul 2019 21:21:35 +0200
-Message-Id: <20190724191749.483685257@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Josef Bacik <jbacik@fb.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 367/371] blkcg: update blkcg_print_stat() to handle larger outputs
+Date:   Wed, 24 Jul 2019 21:21:59 +0200
+Message-Id: <20190724191751.893451048@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,43 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Drew Davenport <ddavenport@chromium.org>
+From: Tejun Heo <tj@kernel.org>
 
-commit 6b15f678fb7d5ef54e089e6ace72f007fe6e9895 upstream.
+commit f539da82f2158916e154d206054e0efd5df7ab61 upstream.
 
-For architectures using __WARN_TAINT, the WARN_ON macro did not print
-out the "cut here" string.  The other WARN_XXX macros would print "cut
-here" inside __warn_printk, which is not called for WARN_ON since it
-doesn't have a message to print.
+Depending on the number of devices, blkcg stats can go over the
+default seqfile buf size.  seqfile normally retries with a larger
+buffer but since the ->pd_stat() addition, blkcg_print_stat() doesn't
+tell seqfile that overflow has happened and the output gets printed
+truncated.  Fix it by calling seq_commit() w/ -1 on possible
+overflows.
 
-Link: http://lkml.kernel.org/r/20190624154831.163888-1-ddavenport@chromium.org
-Fixes: a7bed27af194 ("bug: fix "cut here" location for __WARN_TAINT architectures")
-Signed-off-by: Drew Davenport <ddavenport@chromium.org>
-Acked-by: Kees Cook <keescook@chromium.org>
-Tested-by: Kees Cook <keescook@chromium.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 903d23f0a354 ("blk-cgroup: allow controllers to output their own stats")
+Cc: stable@vger.kernel.org # v4.19+
+Cc: Josef Bacik <jbacik@fb.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/asm-generic/bug.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ block/blk-cgroup.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -104,8 +104,10 @@ extern void warn_slowpath_null(const cha
- 	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
- #else
- extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
--#define __WARN()		__WARN_TAINT(TAINT_WARN)
--#define __WARN_printf(arg...)	do { __warn_printk(arg); __WARN(); } while (0)
-+#define __WARN() do { \
-+	printk(KERN_WARNING CUT_HERE); __WARN_TAINT(TAINT_WARN); \
-+} while (0)
-+#define __WARN_printf(arg...)	__WARN_printf_taint(TAINT_WARN, arg)
- #define __WARN_printf_taint(taint, arg...)				\
- 	do { __warn_printk(arg); __WARN_TAINT(taint); } while (0)
- #endif
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1005,8 +1005,12 @@ static int blkcg_print_stat(struct seq_f
+ 		}
+ next:
+ 		if (has_stats) {
+-			off += scnprintf(buf+off, size-off, "\n");
+-			seq_commit(sf, off);
++			if (off < size - 1) {
++				off += scnprintf(buf+off, size-off, "\n");
++				seq_commit(sf, off);
++			} else {
++				seq_commit(sf, -1);
++			}
+ 		}
+ 	}
+ 
 
 
