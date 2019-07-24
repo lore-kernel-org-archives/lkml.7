@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2D5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB308C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE7622ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80192147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998474;
-	bh=kEHKA4EUTrNeERxwRQ+APkr3hFEhUC2gW5svMuPHzJY=;
+	s=default; t=1563998478;
+	bh=MF8rD2QGHB9J0ZLkwA0r7YPIlLeoGOqpJ0E+xa3tB/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CgAZLzjpdraJ/BvLKOMmptpKd7kS7k8Tr0ga6DiJS5IYWD6qgpE3uBGbxvv56rHcL
-	 jifl+iT8zWgU6Tbx/n75bBeITc+QWuJUO/+72h2S2dlXp3CKnavoOg97gWSfUwXcO0
-	 NUpvNszUS/XSscQ2IMNTzZVeEDsFsW9c33p0LWiY=
+	b=kPN6yJxfnMFpS7nu3XgusuOtEw9Ds1tQe6YKkr4dfjM3lNDJnJLjbwzIW8MqaCL78
+	 60Gxx1KRWOqzuDfkjyCXRqC5x+5SlRE9Z6FYB0CGY0CEJhSqWCVkTGcZl0XPhCyAeV
+	 OjKVe0au248RlUlzUSq6G7WhPo8BFkAFEWhiLybM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405369AbfGXUBN (ORCPT
+        id S2405380AbfGXUBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49750 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405350AbfGXUBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:10 -0400
+        id S2388390AbfGXUBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC535205C9;
-        Wed, 24 Jul 2019 20:01:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 135FD2147A;
+        Wed, 24 Jul 2019 20:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998469;
-        bh=kEHKA4EUTrNeERxwRQ+APkr3hFEhUC2gW5svMuPHzJY=;
+        s=default; t=1563998474;
+        bh=MF8rD2QGHB9J0ZLkwA0r7YPIlLeoGOqpJ0E+xa3tB/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vWBORWmwSPoDt54kkpUD+iTsDXiAPO254V3nTPGcYpxDdkUjG7W2PAlzfLCitT2dH
-         8vlhV6HqyWTpfmWX8RRBQQ0n6MNmlnperE6L3E0ycSef9B+m2ZOQLPCFfnjyO+r3D0
-         g0C2cmtw9eCrQz39BZu9d1lzlseyb2/syVzu7wpg=
+        b=cdDojLmHYzy4IxOg+7z7mOeBfVKc1QkThqptF1Nf2bPaFRKTLnl+xwQn9Cldc2XQs
+         c84UsSMpwz+028U9kD7UZzQXiWlogHTQpDpGi8+DVNurnJduXHgn5DVcpl3rDpI274
+         U0bsSufkkyKSp7kpnij444yMnarBUX9HvTW1GZlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.1 347/371] parisc: Ensure userspace privilege for ptraced processes in regset functions
-Date:   Wed, 24 Jul 2019 21:21:39 +0200
-Message-Id: <20190724191749.824479528@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.1 349/371] powerpc/32s: fix suspend/resume when IBATs 4-7 are used
+Date:   Wed, 24 Jul 2019 21:21:41 +0200
+Message-Id: <20190724191750.045555914@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,41 +60,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 34c32fc603311a72cb558e5e337555434f64c27b upstream.
+commit 6ecb78ef56e08d2119d337ae23cb951a640dc52d upstream.
 
-On parisc the privilege level of a process is stored in the lowest two bits of
-the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
-for the kernel and privilege level 3 for user-space. So userspace should not be
-allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
-level to e.g. 0 to try to gain kernel privileges.
+Previously, only IBAT1 and IBAT2 were used to map kernel linear mem.
+Since commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
+STRICT_KERNEL_RWX"), we may have all 8 BATs used for mapping
+kernel text. But the suspend/restore functions only save/restore
+BATs 0 to 3, and clears BATs 4 to 7.
 
-This patch prevents such modifications in the regset support functions by
-always setting the two lowest bits to one (which relates to privilege level 3
-for user-space) if IAOQ0 or IAOQ1 are modified via ptrace regset calls.
+Make suspend and restore functions respectively save and reload
+the 8 BATs on CPUs having MMU_FTR_USE_HIGH_BATS feature.
 
-Link: https://bugs.gentoo.org/481768
-Cc: <stable@vger.kernel.org> # v4.7+
-Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Reported-by: Andreas Schwab <schwab@linux-m68k.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/kernel/ptrace.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/swsusp_32.S         |   73 ++++++++++++++++++++++++++++----
+ arch/powerpc/platforms/powermac/sleep.S |   68 +++++++++++++++++++++++++++--
+ 2 files changed, 128 insertions(+), 13 deletions(-)
 
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -496,7 +496,8 @@ static void set_reg(struct pt_regs *regs
- 			return;
- 	case RI(iaoq[0]):
- 	case RI(iaoq[1]):
--			regs->iaoq[num - RI(iaoq[0])] = val;
-+			/* set 2 lowest bits to ensure userspace privilege: */
-+			regs->iaoq[num - RI(iaoq[0])] = val | 3;
- 			return;
- 	case RI(sar):	regs->sar = val;
- 			return;
+--- a/arch/powerpc/kernel/swsusp_32.S
++++ b/arch/powerpc/kernel/swsusp_32.S
+@@ -25,11 +25,19 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_LR		0x70
+-#define SL_R12		0x74	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_LR		0xb0
++#define SL_R12		0xb4	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
+ 
+ 	.section .data
+@@ -114,6 +122,41 @@ _GLOBAL(swsusp_arch_suspend)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r11)
+ 
++BEGIN_MMU_FTR_SECTION
++	mfspr	r4,SPRN_DBAT4U
++	stw	r4,SL_DBAT4(r11)
++	mfspr	r4,SPRN_DBAT4L
++	stw	r4,SL_DBAT4+4(r11)
++	mfspr	r4,SPRN_DBAT5U
++	stw	r4,SL_DBAT5(r11)
++	mfspr	r4,SPRN_DBAT5L
++	stw	r4,SL_DBAT5+4(r11)
++	mfspr	r4,SPRN_DBAT6U
++	stw	r4,SL_DBAT6(r11)
++	mfspr	r4,SPRN_DBAT6L
++	stw	r4,SL_DBAT6+4(r11)
++	mfspr	r4,SPRN_DBAT7U
++	stw	r4,SL_DBAT7(r11)
++	mfspr	r4,SPRN_DBAT7L
++	stw	r4,SL_DBAT7+4(r11)
++	mfspr	r4,SPRN_IBAT4U
++	stw	r4,SL_IBAT4(r11)
++	mfspr	r4,SPRN_IBAT4L
++	stw	r4,SL_IBAT4+4(r11)
++	mfspr	r4,SPRN_IBAT5U
++	stw	r4,SL_IBAT5(r11)
++	mfspr	r4,SPRN_IBAT5L
++	stw	r4,SL_IBAT5+4(r11)
++	mfspr	r4,SPRN_IBAT6U
++	stw	r4,SL_IBAT6(r11)
++	mfspr	r4,SPRN_IBAT6L
++	stw	r4,SL_IBAT6+4(r11)
++	mfspr	r4,SPRN_IBAT7U
++	stw	r4,SL_IBAT7(r11)
++	mfspr	r4,SPRN_IBAT7L
++	stw	r4,SL_IBAT7+4(r11)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++
+ #if  0
+ 	/* Backup various CPU config stuffs */
+ 	bl	__save_cpu_setup
+@@ -279,27 +322,41 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	mtibatu	3,r4
+ 	lwz	r4,SL_IBAT3+4(r11)
+ 	mtibatl	3,r4
+-#endif
+-
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
++	lwz	r4,SL_DBAT4(r11)
+ 	mtspr	SPRN_DBAT4U,r4
++	lwz	r4,SL_DBAT4+4(r11)
+ 	mtspr	SPRN_DBAT4L,r4
++	lwz	r4,SL_DBAT5(r11)
+ 	mtspr	SPRN_DBAT5U,r4
++	lwz	r4,SL_DBAT5+4(r11)
+ 	mtspr	SPRN_DBAT5L,r4
++	lwz	r4,SL_DBAT6(r11)
+ 	mtspr	SPRN_DBAT6U,r4
++	lwz	r4,SL_DBAT6+4(r11)
+ 	mtspr	SPRN_DBAT6L,r4
++	lwz	r4,SL_DBAT7(r11)
+ 	mtspr	SPRN_DBAT7U,r4
++	lwz	r4,SL_DBAT7+4(r11)
+ 	mtspr	SPRN_DBAT7L,r4
++	lwz	r4,SL_IBAT4(r11)
+ 	mtspr	SPRN_IBAT4U,r4
++	lwz	r4,SL_IBAT4+4(r11)
+ 	mtspr	SPRN_IBAT4L,r4
++	lwz	r4,SL_IBAT5(r11)
+ 	mtspr	SPRN_IBAT5U,r4
++	lwz	r4,SL_IBAT5+4(r11)
+ 	mtspr	SPRN_IBAT5L,r4
++	lwz	r4,SL_IBAT6(r11)
+ 	mtspr	SPRN_IBAT6U,r4
++	lwz	r4,SL_IBAT6+4(r11)
+ 	mtspr	SPRN_IBAT6L,r4
++	lwz	r4,SL_IBAT7(r11)
+ 	mtspr	SPRN_IBAT7U,r4
++	lwz	r4,SL_IBAT7+4(r11)
+ 	mtspr	SPRN_IBAT7L,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++#endif
+ 
+ 	/* Flush all TLBs */
+ 	lis	r4,0x1000
+--- a/arch/powerpc/platforms/powermac/sleep.S
++++ b/arch/powerpc/platforms/powermac/sleep.S
+@@ -38,10 +38,18 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_R12		0x70	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_R12		0xb0	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
+ 
+ 	.section .text
+@@ -126,6 +134,41 @@ _GLOBAL(low_sleep_handler)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r1)
+ 
++BEGIN_MMU_FTR_SECTION
++	mfspr	r4,SPRN_DBAT4U
++	stw	r4,SL_DBAT4(r1)
++	mfspr	r4,SPRN_DBAT4L
++	stw	r4,SL_DBAT4+4(r1)
++	mfspr	r4,SPRN_DBAT5U
++	stw	r4,SL_DBAT5(r1)
++	mfspr	r4,SPRN_DBAT5L
++	stw	r4,SL_DBAT5+4(r1)
++	mfspr	r4,SPRN_DBAT6U
++	stw	r4,SL_DBAT6(r1)
++	mfspr	r4,SPRN_DBAT6L
++	stw	r4,SL_DBAT6+4(r1)
++	mfspr	r4,SPRN_DBAT7U
++	stw	r4,SL_DBAT7(r1)
++	mfspr	r4,SPRN_DBAT7L
++	stw	r4,SL_DBAT7+4(r1)
++	mfspr	r4,SPRN_IBAT4U
++	stw	r4,SL_IBAT4(r1)
++	mfspr	r4,SPRN_IBAT4L
++	stw	r4,SL_IBAT4+4(r1)
++	mfspr	r4,SPRN_IBAT5U
++	stw	r4,SL_IBAT5(r1)
++	mfspr	r4,SPRN_IBAT5L
++	stw	r4,SL_IBAT5+4(r1)
++	mfspr	r4,SPRN_IBAT6U
++	stw	r4,SL_IBAT6(r1)
++	mfspr	r4,SPRN_IBAT6L
++	stw	r4,SL_IBAT6+4(r1)
++	mfspr	r4,SPRN_IBAT7U
++	stw	r4,SL_IBAT7(r1)
++	mfspr	r4,SPRN_IBAT7L
++	stw	r4,SL_IBAT7+4(r1)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++
+ 	/* Backup various CPU config stuffs */
+ 	bl	__save_cpu_setup
+ 
+@@ -326,22 +369,37 @@ grackle_wake_up:
+ 	mtibatl	3,r4
+ 
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
++	lwz	r4,SL_DBAT4(r1)
+ 	mtspr	SPRN_DBAT4U,r4
++	lwz	r4,SL_DBAT4+4(r1)
+ 	mtspr	SPRN_DBAT4L,r4
++	lwz	r4,SL_DBAT5(r1)
+ 	mtspr	SPRN_DBAT5U,r4
++	lwz	r4,SL_DBAT5+4(r1)
+ 	mtspr	SPRN_DBAT5L,r4
++	lwz	r4,SL_DBAT6(r1)
+ 	mtspr	SPRN_DBAT6U,r4
++	lwz	r4,SL_DBAT6+4(r1)
+ 	mtspr	SPRN_DBAT6L,r4
++	lwz	r4,SL_DBAT7(r1)
+ 	mtspr	SPRN_DBAT7U,r4
++	lwz	r4,SL_DBAT7+4(r1)
+ 	mtspr	SPRN_DBAT7L,r4
++	lwz	r4,SL_IBAT4(r1)
+ 	mtspr	SPRN_IBAT4U,r4
++	lwz	r4,SL_IBAT4+4(r1)
+ 	mtspr	SPRN_IBAT4L,r4
++	lwz	r4,SL_IBAT5(r1)
+ 	mtspr	SPRN_IBAT5U,r4
++	lwz	r4,SL_IBAT5+4(r1)
+ 	mtspr	SPRN_IBAT5L,r4
++	lwz	r4,SL_IBAT6(r1)
+ 	mtspr	SPRN_IBAT6U,r4
++	lwz	r4,SL_IBAT6+4(r1)
+ 	mtspr	SPRN_IBAT6L,r4
++	lwz	r4,SL_IBAT7(r1)
+ 	mtspr	SPRN_IBAT7U,r4
++	lwz	r4,SL_IBAT7+4(r1)
+ 	mtspr	SPRN_IBAT7L,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 
 
 
