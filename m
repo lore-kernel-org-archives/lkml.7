@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C77C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13807C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC422075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C8E2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033806;
-	bh=oMhK2svDNQZluWMPovVKARVEW6yfUn3Wpof1lc/Qgvs=;
+	s=default; t=1564033810;
+	bh=+BKNhstZkIim4IgI8aZWRD5EJTEYYGqYqAS97BenvGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MUMGEj3Qc/CbgBAaabTyERsfo63ZwnhRZYThmyhS8KoXuxvaZc0Wd1Vr4CIg++/kb
-	 +gYbIJxlgV1ENjYDUVEzh0X5KGZFPmihSLC/r8QbxwOadLeLwc4ymsZH8Zs/F20D3C
-	 nDuBEVOudNBS21PhCjYhAlHJbKTRs1jnDdJGXcX4=
+	b=TnCncZJYU4386gLjGArrA1SMe6yfuqsMXYdwCbUZ+2IFszZzcLDk4bhoa7j6QgROl
+	 1gt5Cv/tf6jXsrY3J+0VONgrJNSGLpUER9Zqojies190+KmAtLy44oJK1sadvAc5la
+	 TK8ZI1D+YvU8hujEG53EY0CaHDgmLcj5Mji9FX+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbfGYFuF (ORCPT
+        id S2391004AbfGYFnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58450 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387572AbfGYFnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:43:31 -0400
+        id S2404889AbfGYFnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:43:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8CD21850;
-        Thu, 25 Jul 2019 05:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B468521850;
+        Thu, 25 Jul 2019 05:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033410;
-        bh=oMhK2svDNQZluWMPovVKARVEW6yfUn3Wpof1lc/Qgvs=;
+        s=default; t=1564033389;
+        bh=+BKNhstZkIim4IgI8aZWRD5EJTEYYGqYqAS97BenvGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFCo/Y2EdDoZoVX9mE1c+WtK8gG2FQfSRmh4jc56+7XaCQFyREYr7VWZh22R+lz2Z
-         RgBn96T/yAEnpJFkdaKah5/q1XLiwlHJVk1nCi+t0JosutIOxwHYo3P9RaQnlxD1jo
-         vvaTmtaX0R8XbuznR6ICpDLv23GQIKYYo7HVzYyA=
+        b=ppCi9XG+OrhyXcZT/5tw79Zm/6f5MEebhRR7CR1B0mBF8ELrX8iQ5n7AfLRgqHEfb
+         rY797LcB8SzegDv/cqeMHW9hdwoE9s3j6om2rFb5WrO6sgJQdBpmR+BX6X5Q7u3qfq
+         kVhQNsr0nytQbRZ9VvU5C9niMKMPXT8+D9iliN/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 4.19 197/271] iwlwifi: dont WARN when calling iwl_get_shared_mem_conf with RF-Kill
-Date:   Wed, 24 Jul 2019 21:21:06 +0200
-Message-Id: <20190724191711.990595571@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Black <dankamongmen@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 191/271] Input: synaptics - whitelist Lenovo T580 SMBus intertouch
+Date:   Wed, 24 Jul 2019 21:21:00 +0200
+Message-Id: <20190724191711.475428348@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,66 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Nick Black <dankamongmen@gmail.com>
 
-commit 0d53cfd0cca3c729a089c39eef0e7d8ae7662974 upstream.
+commit 1976d7d200c5a32e72293a2ada36b7b7c9d6dd6e upstream.
 
-iwl_mvm_send_cmd returns 0 when the command won't be sent
-because RF-Kill is asserted. Do the same when we call
-iwl_get_shared_mem_conf since it is not sent through
-iwl_mvm_send_cmd but directly calls the transport layer.
+Adds the Lenovo T580 to the SMBus intertouch list for Synaptics
+touchpads. I've tested with this for a week now, and it seems a great
+improvement. It's also nice to have the complaint gone from dmesg.
 
+Signed-off-by: Nick Black <dankamongmen@gmail.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/fw/smem.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/input/mouse/synaptics.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/intel/iwlwifi/fw/smem.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/smem.c
-@@ -8,7 +8,7 @@
-  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 Intel Corporation
-+ * Copyright(c) 2018 - 2019 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -31,7 +31,7 @@
-  * Copyright(c) 2012 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 Intel Corporation
-+ * Copyright(c) 2018 - 2019 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -134,6 +134,7 @@ void iwl_get_shared_mem_conf(struct iwl_
- 		.len = { 0, },
- 	};
- 	struct iwl_rx_packet *pkt;
-+	int ret;
- 
- 	if (fw_has_capa(&fwrt->fw->ucode_capa,
- 			IWL_UCODE_TLV_CAPA_EXTEND_SHARED_MEM_CFG))
-@@ -141,8 +142,13 @@ void iwl_get_shared_mem_conf(struct iwl_
- 	else
- 		cmd.id = SHARED_MEM_CFG;
- 
--	if (WARN_ON(iwl_trans_send_cmd(fwrt->trans, &cmd)))
-+	ret = iwl_trans_send_cmd(fwrt->trans, &cmd);
-+
-+	if (ret) {
-+		WARN(ret != -ERFKILL,
-+		     "Could not send the SMEM command: %d\n", ret);
- 		return;
-+	}
- 
- 	pkt = cmd.resp_pkt;
- 	if (fwrt->trans->cfg->device_family >= IWL_DEVICE_FAMILY_22000)
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -179,6 +179,7 @@ static const char * const smbus_pnp_ids[
+ 	"LEN0093", /* T480 */
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
++	"LEN009b", /* T580 */
+ 	"LEN200f", /* T450s */
+ 	"LEN2054", /* E480 */
+ 	"LEN2055", /* E580 */
 
 
