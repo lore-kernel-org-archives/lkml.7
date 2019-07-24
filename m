@@ -2,111 +2,131 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EFDC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44006C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59F4229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563983860;
-	bh=WmChL+Yyy9MFTNkMH2DU83voQKBjFaMJYXMpkoWGQZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uxxTFDTaXLcXIXaKPVg2pPDV1s1w7ST/TmDcN4+Rs5qKQMz9CR293ALdUkFXSH5cg
-	 SEosbY4YBhvyJDqWGn9K8MjDMxCyyKpQoyrcK6hSUhIhZBU++H9mEHwnMiWhzX0iu+
-	 8ND/TTmZik6gAfC2ouarT4/4EzHFBRj3kf7I7cgY=
+	by mail.kernel.org (Postfix) with ESMTP id 27C99229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfGXP5j (ORCPT
+        id S1728363AbfGXP7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58774 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 11:59:16 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:43522 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfGXP5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:57:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5C62083B;
-        Wed, 24 Jul 2019 15:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563983858;
-        bh=WmChL+Yyy9MFTNkMH2DU83voQKBjFaMJYXMpkoWGQZM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HYAOOvPlDrCRaetUlG5ur3qrKVKQ3OB91rXLMuAMkAZh/HBEECZKXOTUSMqkRM4fz
-         71Kh3BFX7/C0fHjoGkxWGncYHPtLn2mkpey16PmoMeLMtTuUmqtsAGWtyEXEe1aEnD
-         n0LnJbcRlTyppcxLVdwWgrOoYN+bb8WDthBISXgk=
-Date:   Wed, 24 Jul 2019 17:57:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be
- reserved
-Message-ID: <20190724155735.GC5571@kroah.com>
-References: <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de>
- <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com>
- <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de>
- <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com>
- <20190723130513.GA25290@kroah.com>
- <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de>
- <20190723134454.GA7260@kroah.com>
- <20190724153416.GA27117@kroah.com>
- <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de>
+        id S1725776AbfGXP7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:59:15 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hqJfR-0005E5-5g; Wed, 24 Jul 2019 09:59:02 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190722230859.5436-1-logang@deltatee.com>
+ <20190722230859.5436-12-logang@deltatee.com> <20190724063232.GB1804@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <7173a4dd-0c9c-48de-98cd-93513313fd8d@deltatee.com>
+Date:   Wed, 24 Jul 2019 09:58:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190724063232.GB1804@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, Christian.Koenig@amd.com, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 11/14] PCI/P2PDMA: dma_map P2PDMA map requests that
+ traverse the host bridge
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:49:45PM +0200, Thomas Gleixner wrote:
-> On Wed, 24 Jul 2019, Greg KH wrote:
-> > On Tue, Jul 23, 2019 at 03:44:54PM +0200, Greg KH wrote:
-> > > Sorry, I saw that after writing that.  You are right, if the others
-> > > don't object, that's fine with me.  I'll go poke the various build
-> > > systems that are failing right now on 5.3-rc1 and try to get them fixed
-> > > for this reason.
-> > 
-> > Ok, I dug around and the gold linker is not being used here, only clang
-> > to build the source and GNU ld to link, and I am still seeing this
-> > error.
+
+
+On 2019-07-24 12:32 a.m., Christoph Hellwig wrote:
+>>  	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
+>> +	struct pci_dev *client;
+>> +	int dist;
+>> +
+>> +	client = find_parent_pci_dev(dev);
+>> +	if (WARN_ON_ONCE(!client))
+>> +		return 0;
+>>  
+>> +	dist = upstream_bridge_distance(pgmap->pci_p2pdma_provider,
+>> +					client, NULL);
 > 
-> Odd combo.
+> Doing this on every mapping call sounds expensive..
 
-I'm not disagreeing :)
+The result of this function is cached in an xarray (per patch 4) so, on
+the hot path, it should just be a single xa_load() which should be a
+relatively fast lookup which is similarly used for other hot path
+operations.
 
-Wait, does clang link things itself and not need ld?
-
-> > Hm, clang 8 does not cause this error, but clang 9 does.  Let me go poke
-> > the people who are providing this version of clang to see if there's
-> > something they can figure out.
 > 
-> Let me try that with my clang variant. Which version of GNU ld are you
-> using?
+>> +	if (WARN_ON_ONCE(dist & P2PDMA_NOT_SUPPORTED))
+>> +		return 0;
+>> +
+>> +	if (dist & P2PDMA_THRU_HOST_BRIDGE)
+>> +		return dma_map_sg_attrs(dev, sg, nents, dir, attrs);
+>> +	else
+>> +		return __pci_p2pdma_map_sg(pgmap, dev, sg, nents);
+> 
+> Can't we organize the values so that we can switch on the return
+> value instead of doing flag checks?
 
-I think it is 2.27:
-$ ./ld --version
-GNU ld (binutils-2.27-44492f8) 2.27.0.20170315
+Sorry, I don't follow what you are saying here. If you mean for
+upstream_bridge_distance() to just return how to map and not the
+distance that would interfere with other uses of that function.
 
-Which does feel old to me.
+>>  }
+>>  EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
+>>  
+>> @@ -847,6 +861,21 @@ EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
+>>  void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
+>>  		int nents, enum dma_data_direction dir, unsigned long attrs)
+>>  {
+>> +	struct dev_pagemap *pgmap = sg_page(sg)->pgmap;
+>> +	struct pci_dev *client;
+>> +	int dist;
+>> +
+>> +	client = find_parent_pci_dev(dev);
+>> +	if (!client)
+>> +		return;
+>> +
+>> +	dist = upstream_bridge_distance(pgmap->pci_p2pdma_provider,
+>> +					client, NULL);
+> 
+> And then we do it for every unmap again..
 
-I know 2.32 works fine.
+Yup, I don't think there's much else we can do here.
 
-Gotta love old tool-chains :(
+This is why I was fighting against doing lookups against the phys_addr_t
+because that means you have to do these additional lookups.
 
-greg k-h
+My hope is if we can move to the phys_addr_t and flags as I described
+here[1] we can get rid of these hot path lookups, but with the way
+things are structured now this is necessary.
+
+Logan
+
+[1]
+https://lore.kernel.org/linux-block/e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com/
+
