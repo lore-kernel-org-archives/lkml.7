@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3524AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D8AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0155C214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FCED214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999420;
-	bh=afFU0aM8UiXGmjSi7LgqQ+z7YK9DmF3xnMSk4DBEfRk=;
+	s=default; t=1563999425;
+	bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQ42b2p9o3wYGOcNuCcSTMONWuYqNOaQI6kWD0WebjlfcVObxLxHll6R1k2kJDe0g
-	 vTNTYP4uVhgcchcHqXncF8YF1E6ZIJsRY44PPCK6i/MCC3nb1H76I0t7N6HxMXGa5C
-	 8gTtbuHfkrObe17QQc/3c5kcT1XQh0VCvBe7urxU=
+	b=cayduz9ul2vDi+ZzrxtnbH4GC5uLuwqhP+9WWjB7OcMApcX0d/GFYcLPOqY1MJ8tF
+	 KHbk3i8J8/HNtu3KhQ2rXViorvgAbhvYZgudv3E9xnQflzN2RnD0GnY7SCLrTp+Yuj
+	 rGb0ozQMeuuRR8CShBQq5RoOUft/ZjS1AINLX34Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392858AbfGXUQ6 (ORCPT
+        id S2392867AbfGXURE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:16:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59752 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403902AbfGXTut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:49 -0400
+        id S2403863AbfGXTuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCB5820659;
-        Wed, 24 Jul 2019 19:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69C8D217D4;
+        Wed, 24 Jul 2019 19:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997848;
-        bh=afFU0aM8UiXGmjSi7LgqQ+z7YK9DmF3xnMSk4DBEfRk=;
+        s=default; t=1563997838;
+        bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OEzY5FV9CiatYWXVeuDsiHL3d6cSFtd/5sJ6VODJqZHRV2IMv/v80AGLU9YeRo+Sz
-         igW5fA7SIVmAffTIcVWttM65uVKxqqQuind7LaaaL8lYjZzfKcA8vYDDXid1yA1CNT
-         2eawQW8Yf16JJYopeqdvRbe+SOHApVJY2Caevf2I=
+        b=m8UAJwS2+vjVR2e3sGGoer377bceZSf/bsEhFu7pj+L6c/72hZyniNEH0zavvPgou
+         LQ4W/26Ro1ozqTxiEOdJuKdPp7iAQwlE+2VQZbl6mAXZ+fxxOuoMtWAb/2sNR1yUwA
+         WAd/FhIJLIwRZKzD2H/wsWoGmhqvnqX05lPmArj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 122/371] nvme-pci: set the errno on ctrl state change error
-Date:   Wed, 24 Jul 2019 21:17:54 +0200
-Message-Id: <20190724191734.051789441@linuxfoundation.org>
+        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 159/371] rslib: Fix handling of of caller provided syndrome
+Date:   Wed, 24 Jul 2019 21:18:31 +0200
+Message-Id: <20190724191737.128277013@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,52 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e71afda49335620e3d9adf56015676db33a3bd86 ]
+[ Upstream commit ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9 ]
 
-This patch removes the confusing assignment of the variable result at
-the time of declaration and sets the value in error cases next to the
-places where the actual error is happening.
+Check if the syndrome provided by the caller is zero, and act
+accordingly.
 
-Here we also set the result value to -ENODEV when we fail at the final
-ctrl state transition in nvme_reset_work(). Without this assignment
-result will hold 0 from nvme_setup_io_queue() and on failure 0 will be
-passed to he nvme_remove_dead_ctrl() from final state transition.
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 21a51a0ff4d7..9c956ff5344d 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2504,11 +2504,13 @@ static void nvme_reset_work(struct work_struct *work)
- 	struct nvme_dev *dev =
- 		container_of(work, struct nvme_dev, ctrl.reset_work);
- 	bool was_suspend = !!(dev->ctrl.ctrl_config & NVME_CC_SHN_NORMAL);
--	int result = -ENODEV;
-+	int result;
- 	enum nvme_ctrl_state new_state = NVME_CTRL_LIVE;
+diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
+index 3313bf944ff1..121beb2f0930 100644
+--- a/lib/reed_solomon/decode_rs.c
++++ b/lib/reed_solomon/decode_rs.c
+@@ -42,8 +42,18 @@
+ 	BUG_ON(pad < 0 || pad >= nn);
  
--	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING))
-+	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING)) {
-+		result = -ENODEV;
- 		goto out;
+ 	/* Does the caller provide the syndrome ? */
+-	if (s != NULL)
+-		goto decode;
++	if (s != NULL) {
++		for (i = 0; i < nroots; i++) {
++			/* The syndrome is in index form,
++			 * so nn represents zero
++			 */
++			if (s[i] != nn)
++				goto decode;
++		}
++
++		/* syndrome is zero, no errors to correct  */
++		return 0;
 +	}
  
- 	/*
- 	 * If we're called to reset a live controller first shut it down before
-@@ -2606,6 +2608,7 @@ static void nvme_reset_work(struct work_struct *work)
- 	if (!nvme_change_ctrl_state(&dev->ctrl, new_state)) {
- 		dev_warn(dev->ctrl.device,
- 			"failed to mark controller state %d\n", new_state);
-+		result = -ENODEV;
- 		goto out;
- 	}
- 
+ 	/* form the syndromes; i.e., evaluate data(x) at roots of
+ 	 * g(x) */
 -- 
 2.20.1
 
