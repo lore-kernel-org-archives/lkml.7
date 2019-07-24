@@ -3,80 +3,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074C6C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE63C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C986122ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F82721873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Q82/EoOG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nET6tHWd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfUUBBBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfGXIN1 (ORCPT
+        id S1726305AbfGXIOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:13:27 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:44791 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725955AbfGXINX (ORCPT
+        Wed, 24 Jul 2019 04:14:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36057 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfGXIOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:13:23 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 26E371315;
-        Wed, 24 Jul 2019 04:13:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 24 Jul 2019 04:13:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=DN2+Lj8I7jFnN
-        IMUgDd2QFBVg48TKo12C1rBwKfbzK4=; b=Q82/EoOGrisOx1VaTEyTN4D24J9MV
-        tjZq/hIz1OnnTwifcqwuT1bz23TkKgZTy9kFDunatTy4ydSsPzGQ25ZQPBoAqxXH
-        1xMxI6DCz/cXJlB98BHs6G5X/UN8ml4VR8lk8q5GoZTZdbpzUNJW2U/O3/YNQe1P
-        A++Y6wym4Uj2+IZP8/eGyidNZHcPjLrjgA6PSdc8OgdQkJKJ8gkOOBUma7IRxziA
-        S12PuTJr5JzIJ8zilGvJJNf214XrAvFJ5iZZV+ukc48ykw9iXJcx6aEJ1PlT+sbL
-        qabn/ioVgIMze6JIGvwP1k/KyzqKBsYtDU37J4nuXCHdObWeFGTRCyjjQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=DN2+Lj8I7jFnNIMUgDd2QFBVg48TKo12C1rBwKfbzK4=; b=nET6tHWd
-        JJ96qY49c4Za0UAt5MieK0yfLHxga23nXgtOjq2zcHTfeWUy2g2iXisRNa56DtVT
-        QRaccRzIveH3Rm9NgMSQO8f/dlhsoN2KhlDcg5pfQouSbDAxwvDuGNptP1I7v2X2
-        H9EQIU4S6R/m7P8nxW58k9sgx6Se7GkRr2L0LM9XHrfXspvujomH4qEd22/wtvko
-        bUo5saJ+DSm1ZSuqZFvYaq0OJKGbh6vfzl1P6hj1xJDN2A1BDvt0zQBGyzACtXLh
-        KLaUFiO+lT//88ql8SU1HcvK2dsFXS1kElJru/anvTVvbHSsVqYF49HU+HJ8aHeC
-        elVDEa7+FKUveg==
-X-ME-Sender: <xms:IRM4XfRui1gp9DZ0fTXg2AcK9atTVynS1ByzllgFP4tl756yashxUg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrjeelgdduvdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
-    hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
-    pedu
-X-ME-Proxy: <xmx:IRM4XZUom8hNEXdsDaO_Pl0qrubtZCQ2uD4ROZrk6eMgH_u9rXu2dg>
-    <xmx:IRM4XcnhiaevzQ-p6Kt2uYSDafesBSnp2jzbrADrBn-8OvY7Cr7xhQ>
-    <xmx:IRM4XX8dtMO-jIft6q_Qjsu2EmlWsbmS0SfdooGG5djvIEtWYP6b6A>
-    <xmx:IhM4XYLdsVgbWmJdVA2xzX5CefS3r9d7WaciF8TjGNXSdHWzTFavUg>
-Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6A32680059;
-        Wed, 24 Jul 2019 04:13:18 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated compatibles
-Date:   Wed, 24 Jul 2019 17:43:13 +0930
-Message-Id: <20190724081313.12934-4-andrew@aj.id.au>
+        Wed, 24 Jul 2019 04:14:41 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so20545570pfl.3;
+        Wed, 24 Jul 2019 01:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L5nL72l4EofiZh5+AlPg28m/QGAR+oMZgweBNFc3hzc=;
+        b=EfUUBBBjL2IiBl5sR7u3tdIKqH7KsZxKAVLi90QycMrEJu4rp7EdLnzgRxj0FLMPXm
+         d0sKMvmzDx0TsF75DGYMdUNswpBudNcfSWYeki3ZIPW39rfnZtw8rEmslYNibio5tMvW
+         CpOWbbs3cEtapZSJcVWmbrJQ/qL8Hpg0L43qWV/YX9UDkLiJPkKnfhdc4STxpNpUI5Ko
+         +0nYVsDo+nMCgY3eUndfwVU1sSBmWd5tfCcxjicyP8XIVjOKx77rmmmXpYA3VHO3bj1j
+         s2CTc8/Ds1Ym6e02AcbAJBrF//qNVFM1JNs3gqayDprw0gyixzuo07eey9XvQK3iFc1+
+         4xwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L5nL72l4EofiZh5+AlPg28m/QGAR+oMZgweBNFc3hzc=;
+        b=qpmZgyjPWzcajtF6ykt8YX60cF3oB3jgdHHxY3Pf/SO378mAt49YqXGnzjJ6Fl5sIS
+         opz71t4pqPsuHH7Hh6y+MLbLiCmkguEagD/8wq2I5/G+hunIxudd6mqB09bHGb3VDoB5
+         uxtY18TfeF8+7w4eo1wCsVZ3WZ6qyWDk79pRwJtZKRFr9BMy2LKXRwvP5AE2DByEuGC2
+         XzwquLnBzjFwGkzYjMUop1QPZP8QNkvd7ZOAl60L456Hf36BeGrVCQdzTp2IjUhm2mS0
+         PHmVJvGNfN+vlaJCl4FDjewTOa+lJ57Wzu+hGHYq1ZWR8ECpqI2m3MODmIfUzhQQG7ZJ
+         ZF7Q==
+X-Gm-Message-State: APjAAAU2p4reczg7KX284Xig9UNnoRYgZ6AGPRl52tdR9E+Ngw/sAiZt
+        UhAiHSl8E4g+XAEnWD5XP6A=
+X-Google-Smtp-Source: APXvYqwpZs/mtGQ8G6lFgh7SCJpHFI7lv/GkUOr8Cg7v9sxMljdT82S4d8hOzIWkOkqXRf9vOmzsKQ==
+X-Received: by 2002:a63:ff66:: with SMTP id s38mr81212888pgk.363.1563956080876;
+        Wed, 24 Jul 2019 01:14:40 -0700 (PDT)
+Received: from localhost.localdomain (180-150-79-77.b4964f.syd.nbn.aussiebb.net. [180.150.79.77])
+        by smtp.gmail.com with ESMTPSA id q126sm1468146pfb.56.2019.07.24.01.14.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 01:14:40 -0700 (PDT)
+From:   Rhys Kidd <rhyskidd@gmail.com>
+To:     Matthew Garrett <mjg59@google.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rhys Kidd <rhyskidd@gmail.com>
+Subject: [PATCH 1/3] platform/x86: dell-wmi: Ignore keyboard backlight change KBD_LED_ON_TOKEN
+Date:   Wed, 24 Jul 2019 18:14:13 +1000
+Message-Id: <20190724081415.8926-1-rhyskidd@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724081313.12934-1-andrew@aj.id.au>
-References: <20190724081313.12934-1-andrew@aj.id.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,81 +75,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guide readers away from using the aspeed,g[45].* compatible patterns.
+There's a wmi event generated by dell-wmi when pressing keyboard backlight
+toggle key:
+[1224203.948894] dell_wmi: Unknown key with type 0x0011 and code 0x01e2 pressed
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+This event is for notification purposes, let's ignore it.
+
+Signed-off-by: Rhys Kidd <rhyskidd@gmail.com>
 ---
- Documentation/devicetree/bindings/mfd/aspeed-scu.txt         | 2 --
- Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt   | 2 --
- .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml  | 5 +----
- .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 4 +---
- 4 files changed, 2 insertions(+), 11 deletions(-)
+ drivers/platform/x86/dell-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-index ce8cf0ec6279..4d92c0bb6687 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-@@ -4,9 +4,7 @@ configuring elements such as clocks, pinmux, and reset.
- Required properties:
- - compatible:	One of:
- 		"aspeed,ast2400-scu", "syscon", "simple-mfd"
--		"aspeed,g4-scu", "syscon", "simple-mfd"
- 		"aspeed,ast2500-scu", "syscon", "simple-mfd"
--		"aspeed,g5-scu", "syscon", "simple-mfd"
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 1f565fb69098..ae331ac119a1 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -312,6 +312,7 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
  
- - reg:		contains the offset and length of the SCU memory region
- - #clock-cells: should be set to <1> - the system controller is also a
-diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-index 854bd67ffec6..0e1fa5bc6a30 100644
---- a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-+++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-@@ -26,9 +26,7 @@ property:
- 
- - compatible : Should be one of the following:
- 		"aspeed,ast2400-scu", "syscon", "simple-mfd"
--		"aspeed,g4-scu", "syscon", "simple-mfd"
- 		"aspeed,ast2500-scu", "syscon", "simple-mfd"
--		"aspeed,g5-scu", "syscon", "simple-mfd"
- 
- Example
- ===================
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-index 125599a2dc5e..9368e4b6d4d0 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-@@ -15,16 +15,13 @@ description: |+
- 
-   - compatible:     Should be one of the following:
-                     "aspeed,ast2400-scu", "syscon", "simple-mfd"
--                    "aspeed,g4-scu", "syscon", "simple-mfd"
- 
-   Refer to the the bindings described in
-   Documentation/devicetree/bindings/mfd/syscon.txt
- 
- properties:
-   compatible:
--    enum:
--      - aspeed,ast2400-pinctrl
--      - aspeed,g4-pinctrl
-+    const: aspeed,ast2400-pinctrl
- 
- patternProperties:
-   '^.*$':
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-index 3e6d85318577..939fb755a6db 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-@@ -22,9 +22,7 @@ description: |+
- 
- properties:
-   compatible:
--    enum:
--      - aspeed,ast2500-pinctrl
--      - aspeed,g5-pinctrl
-+    const: aspeed,ast2500-pinctrl
-   aspeed,external-nodes:
-     minItems: 2
-     maxItems: 2
+ 	/* Keyboard backlight level changed */
+ 	{ KE_IGNORE, 0x01e1, { KEY_RESERVED } },
++	{ KE_IGNORE, 0x01e2, { KEY_RESERVED } },
+ 	{ KE_IGNORE, 0x02ea, { KEY_RESERVED } },
+ 	{ KE_IGNORE, 0x02eb, { KEY_RESERVED } },
+ 	{ KE_IGNORE, 0x02ec, { KEY_RESERVED } },
 -- 
 2.20.1
 
