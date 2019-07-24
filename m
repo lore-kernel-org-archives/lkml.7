@@ -2,259 +2,155 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAEFC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74FEC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18EA5229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563965252;
-	bh=XqKYmTUOX1jzb8jQJM2UMIUVBoEiIefjBqEXYZC6+Q8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HZU3AutxkzN7N3yXs3xXoDNy6Ibmwebx4LYCYazY3wi7lytS4M4epKjO7D83Fo2p8
-	 K0uXHwkv44qF0e+daDvlJTaGIauiXSNonupTjErl64GTkyaoRN5bPc0k/481jQ9EPp
-	 AzQt+5q3BfFgPW6jkfE/wteDMHmMLv4rlXBwk6Vk=
+	by mail.kernel.org (Postfix) with ESMTP id AF7D3229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EK8m57GW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfGXKrb (ORCPT
+        id S1727323AbfGXKrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:47:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfGXKra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:47:30 -0400
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740DD229FA;
-        Wed, 24 Jul 2019 10:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563965249;
-        bh=XqKYmTUOX1jzb8jQJM2UMIUVBoEiIefjBqEXYZC6+Q8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OoGNIGo9n4Dw84KdQMXHr14YIuwr2v8gYyq0EpRSCa9WKf+y7ws5X9/vH4LRw6p+8
-         SFkjNiyvQVYGlIeX6ckPa0c4raZaFSEN47cp/ldLMzJbn7Up0Ewl89osIHve4t2YQ+
-         BVe0+JzQteGkevspNOcHU9wHbFz3urZEyVZ27h2M=
-Received: by mail-lf1-f44.google.com with SMTP id h28so31595219lfj.5;
-        Wed, 24 Jul 2019 03:47:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAVB0sEi4uWalFek4V1AiMFr2wUOuHO9542zz4BABQoUX2SLR3Bx
-        0Q4k5zTwQNPviarwR8hNKZbODZc5+62xCYshOMM=
-X-Google-Smtp-Source: APXvYqy9K5E4hGCz/s/b0MY68jWI8cr4JC7OTnKDyAKC2ApiptG9TrpIaoDaLUgFlFXSddwxu9vPHeV69/haNP5yOT0=
-X-Received: by 2002:a19:4f4a:: with SMTP id a10mr37712878lfk.30.1563965247598;
- Wed, 24 Jul 2019 03:47:27 -0700 (PDT)
+        Wed, 24 Jul 2019 06:47:46 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32790 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGXKrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:47:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q20so47310235otl.0;
+        Wed, 24 Jul 2019 03:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c/u6Ul6eSGfqr/SaYhCYPb/PuuVt6oryQFyHXq1Lw6M=;
+        b=EK8m57GWsorqR6PN8Fc1QeDOA+iyhHouiH0L7g4Brjxe4bNV0GK1HJ++2mdbcK3QP2
+         dzKo0BaHn/mLCoXfbgS+IopyHEHSt6xditsw2HDjZfPHCcqSyeP4MgJoUVKlAyjxkPHO
+         9JPLKaHM9xp2FtoiB5CO//8r31Ju5aaAKVM5fSBkm3Y7/IRMVbRNMqkiALqwdvvZe3xT
+         4TzTCIPeiLGVc2WpWx1XZTarUUqm4cGEtm1cU7JzrhD51J16YS4unIMTA07WwY+nwb9b
+         N0/b6qi18o9lZcwJF0tKSUvE00WrZEMZarAsxD/ARIBL8ANiloNL4gxYOWB+jWJ0W6vG
+         gSfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c/u6Ul6eSGfqr/SaYhCYPb/PuuVt6oryQFyHXq1Lw6M=;
+        b=DIwVWuiNlzVEyuvR8RG5oCLJj2hWErFAJgr68iqOLLB78/6XeZw0kHG34oIy5XjDTk
+         iTWTfL9lFIqvtx12r0fcLoZGGLllt+PSJLCMqaYR0px+y96VXhd4jhzFIN4NRnrzKQpJ
+         kewA4lXfcU1TLi3aKBHPt0dZV3tdT7GMDuH+iBbSUGW/tiWtj4KjzGZ863e3QYTpKmpp
+         HBZqyr44vIyoCB/mUwExCtlrx1b4QiBskGSKCHcbuIAufpaVOA8Eo1lS9I2pDs8k+V1P
+         d4rqrKcf7zZomQMr6AFHN1kURyyIc3RSfjZ8xKsj92p4XBuGS9ZP+nHI0PT/X5SVrMJR
+         QIRA==
+X-Gm-Message-State: APjAAAWfBnGIQiifINx3y28rygh0Mg+j4CKGLP/R+xvu1cN2niOWDHcM
+        itrOtq7Z7gfDAsMYbAM1VzgQWkUliAnTBVBhaic=
+X-Google-Smtp-Source: APXvYqz9QA6BCf/a/Wq0ly9dhpDoTP4VWgL7lYOSAzAslHP6ajhVOITUuZlJh+mqz4Al7PbxDBDxMiZxoUsC6o+NTws=
+X-Received: by 2002:a05:6830:157:: with SMTP id j23mr36863462otp.198.1563965264852;
+ Wed, 24 Jul 2019 03:47:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3@eucas1p1.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com> <20190718143044.25066-2-s.nawrocki@samsung.com>
- <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com> <1117f432-8adf-fbe9-f4af-f8acb755326e@samsung.com>
-In-Reply-To: <1117f432-8adf-fbe9-f4af-f8acb755326e@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 24 Jul 2019 12:47:16 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPf2dsnaV4cRT3JxvY=uFEH1hr8SempEHUXq5GiLwmwEzA@mail.gmail.com>
-Message-ID: <CAJKOXPf2dsnaV4cRT3JxvY=uFEH1hr8SempEHUXq5GiLwmwEzA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] soc: samsung: Add exynos chipid driver support
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt@kernel.org,
-        vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org,
-        pankaj.dubey@samsung.com,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20190723104602.3215243-1-arnd@arndb.de>
+In-Reply-To: <20190723104602.3215243-1-arnd@arndb.de>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 24 Jul 2019 11:47:17 +0100
+Message-ID: <CA+V-a8uVt5GD=XZuCubFf8ZFacxPLofUdU3HKNZsbU4aQr5X7w@mail.gmail.com>
+Subject: Re: [PATCH] media: staging: davinci: remove vpfe driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        OSUOSL Drivers <devel@driverdev.osuosl.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 at 16:10, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
+On Tue, Jul 23, 2019 at 11:46 AM Arnd Bergmann <arnd@arndb.de> wrote:
 >
+> The davinci_vpfe driver was merged into staging back in 2012 by Manjunath
+> Hadli from TI, with a long TODO list.
 >
-> Hi Krzysztof,
+> For all I can tell, since then it has only seen fixes for compile-time
+> issues and global cleanups, but nobody has actually worked on the items
+> on the TODO list.
 >
-> On 7/23/19 2:57 PM, Krzysztof Kozlowski wrote:
-> > On Thu, 18 Jul 2019 at 16:31, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
-> >>
-> >> From: Pankaj Dubey <pankaj.dubey@samsung.com>
-> >>
-> >> Exynos SoCs have Chipid, for identification of product IDs and SoC
-> >> revisions. This patch intends to provide initialization code for all
-> >> these functionalities, at the same time it provides some sysfs entries
-> >> for accessing these information to user-space.
-> >>
-> >> This driver uses existing binding for exynos-chipid.
-> >>
-> >> Changes by Bartlomiej:
-> >> - fixed return values on errors
-> >> - removed bogus kfree_const()
-> >> - added missing Exynos4210 EVT0 id
-> >> - converted code to use EXYNOS_MASK define
-> >> - fixed np use after of_node_put()
-> >> - fixed too early use of dev_info()
-> >> - made driver fail for unknown SoC-s
-> >> - added SPDX tag
-> >> - updated Copyrights
-> >>
-> >> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> >> [m.szyprowski: for suggestion and code snippet of product_id_to_soc_id]
-> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> >> [s.nawrocki: updated copyright date]
-> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> ---
-> >>  drivers/soc/samsung/Kconfig         |   5 ++
-> >>  drivers/soc/samsung/Makefile        |   2 +
-> >>  drivers/soc/samsung/exynos-chipid.c | 111 ++++++++++++++++++++++++++++
-> >>  3 files changed, 118 insertions(+)
-> >>  create mode 100644 drivers/soc/samsung/exynos-chipid.c
-> >>
-> >> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
-> >> index 2186285fda92..2905f5262197 100644
-> >> --- a/drivers/soc/samsung/Kconfig
-> >> +++ b/drivers/soc/samsung/Kconfig
-> >> @@ -7,6 +7,11 @@ menuconfig SOC_SAMSUNG
-> >>
-> >>  if SOC_SAMSUNG
-> >>
-> >> +config EXYNOS_CHIPID
-> >> +       bool "Exynos Chipid controller driver" if COMPILE_TEST
-> >> +       depends on ARCH_EXYNOS || COMPILE_TEST
-> >> +       select SOC_BUS
-> >> +
-> >>  config EXYNOS_PMU
-> >>         bool "Exynos PMU controller driver" if COMPILE_TEST
-> >>         depends on ARCH_EXYNOS || ((ARM || ARM64) && COMPILE_TEST)
-> >> diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
-> >> index 29f294baac6e..3b6a8797416c 100644
-> >> --- a/drivers/soc/samsung/Makefile
-> >> +++ b/drivers/soc/samsung/Makefile
-> >> @@ -1,4 +1,6 @@
-> >>  # SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +obj-$(CONFIG_EXYNOS_CHIPID)    += exynos-chipid.o
-> >>  obj-$(CONFIG_EXYNOS_PMU)       += exynos-pmu.o
-> >>
-> >>  obj-$(CONFIG_EXYNOS_PMU_ARM_DRIVERS)   += exynos3250-pmu.o exynos4-pmu.o \
-> >> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> >> new file mode 100644
-> >> index 000000000000..78b123ee60c0
-> >> --- /dev/null
-> >> +++ b/drivers/soc/samsung/exynos-chipid.c
-> >> @@ -0,0 +1,111 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (c) 2019 Samsung Electronics Co., Ltd.
-> >> + *           http://www.samsung.com/
-> >> + *
-> >> + * EXYNOS - CHIP ID support
-> >> + * Author: Pankaj Dubey <pankaj.dubey@samsung.com>
-> >> + * Author: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> >> + */
-> >> +
-> >> +#include <linux/io.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_address.h>
-> >> +#include <linux/of_platform.h>
-> >> +#include <linux/platform_device.h>
-> >
-> > Any changes here from my previous comments?
-> >
-> > I have also one more new thought later.
-> >
-> >> +#include <linux/slab.h>
-> >> +#include <linux/sys_soc.h>
-> >> +
-> >> +#define EXYNOS_SUBREV_MASK     (0xF << 4)
-> >> +#define EXYNOS_MAINREV_MASK    (0xF << 0)
-> >> +#define EXYNOS_REV_MASK                (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
-> >> +#define EXYNOS_MASK            0xFFFFF000
-> >> +
-> >> +static const struct exynos_soc_id {
-> >> +       const char *name;
-> >> +       unsigned int id;
-> >> +} soc_ids[] = {
-> >> +       { "EXYNOS3250", 0xE3472000 },
-> >> +       { "EXYNOS4210", 0x43200000 },   /* EVT0 revision */
-> >> +       { "EXYNOS4210", 0x43210000 },
-> >> +       { "EXYNOS4212", 0x43220000 },
-> >> +       { "EXYNOS4412", 0xE4412000 },
-> >> +       { "EXYNOS5250", 0x43520000 },
-> >> +       { "EXYNOS5260", 0xE5260000 },
-> >> +       { "EXYNOS5410", 0xE5410000 },
-> >> +       { "EXYNOS5420", 0xE5420000 },
-> >> +       { "EXYNOS5440", 0xE5440000 },
-> >> +       { "EXYNOS5800", 0xE5422000 },
-> >> +       { "EXYNOS7420", 0xE7420000 },
-> >> +       { "EXYNOS5433", 0xE5433000 },
-> >> +};
-> >> +
-> >> +static const char * __init product_id_to_soc_id(unsigned int product_id)
-> >> +{
-> >> +       int i;
-> >> +
-> >> +       for (i = 0; i < ARRAY_SIZE(soc_ids); i++)
-> >> +               if ((product_id & EXYNOS_MASK) == soc_ids[i].id)
-> >> +                       return soc_ids[i].name;
-> >> +       return NULL;
-> >> +}
-> >> +
-> >> +int __init exynos_chipid_early_init(void)
-> >> +{
-> >> +       struct soc_device_attribute *soc_dev_attr;
-> >> +       void __iomem *exynos_chipid_base;
-> >> +       struct soc_device *soc_dev;
-> >> +       struct device_node *root;
-> >> +       struct device_node *np;
-> >> +       u32 product_id;
-> >> +       u32 revision;
-> >> +
-> >> +       /* look up for chipid node */
-> >> +       np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
-> >> +       if (!np)
-> >> +               return -ENODEV;
-> >> +
-> >> +       exynos_chipid_base = of_iomap(np, 0);
-> >> +       of_node_put(np);
-> >> +
-> >> +       if (!exynos_chipid_base) {
-> >> +               pr_err("Failed to map SoC chipid\n");
-> >> +               return -ENXIO;
-> >> +       }
-> >> +
-> >> +       product_id = readl_relaxed(exynos_chipid_base);
-> >> +       revision = product_id & EXYNOS_REV_MASK;
-> >> +       iounmap(exynos_chipid_base);
-> >> +
-> >> +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> >> +       if (!soc_dev_attr)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       soc_dev_attr->family = "Samsung Exynos";
-> >> +
-> >> +       root = of_find_node_by_path("/");
-> >> +       of_property_read_string(root, "model", &soc_dev_attr->machine);
-> >> +       of_node_put(root);
-> >> +
-> >> +       soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%x", revision);
-> >> +       soc_dev_attr->soc_id = product_id_to_soc_id(product_id);
-> >> +       if (!soc_dev_attr->soc_id) {
-> >> +               pr_err("Unknown SoC\n");
-> >
-> > In case of running old kernel on unknown SoC (new revision of existing
-> > one or older design not longer supported like 4415), the device will
-> > not bind. This was added by Bartlomiej. Why? I imagine that soc driver
-> > could be still matched and just report "Unknown". I am not sure if
-> > this changes anything, though.
->
-> I was thinking that we shouldn't be pretending that we know how to
-> handle unsupported SoCs, i.e. that we know how to correctly read its
-> product_id and revision.
+> To make things worse, the driver in its current form is incompatible with
+> the platform code in arch/arm/mach-davinci, i.e. the driver expects to
+> get its platform_data passed to the device as a 'struct vpfe_config',
+> but uses a differnet definition for that structure compared to what the
 
-Reasonable, thanks for explanation.
-Best regards,
-Krzysztof
+s/differnet/different
+
+> platform uses.
+>
+> Finally, there is another driver for the same device in
+> drivers/media/platform/davinci/vpfe_capture.c. From all I can tell, the
+> staging version was originally a copy of a more featureful driver in TI's
+> downstream kernels. However, that kernel no longer supports dm365 after
+> linux-2.6.37, and the mainline version moved in a different direction.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/staging/media/Kconfig                 |    2 -
+>  drivers/staging/media/Makefile                |    1 -
+>  drivers/staging/media/davinci_vpfe/Kconfig    |   13 -
+>  drivers/staging/media/davinci_vpfe/Makefile   |   11 -
+>  drivers/staging/media/davinci_vpfe/TODO       |   38 -
+>  .../media/davinci_vpfe/davinci-vpfe-mc.txt    |  154 --
+>  .../media/davinci_vpfe/davinci_vpfe_user.h    | 1287 ----------
+>  .../staging/media/davinci_vpfe/dm365_ipipe.c  | 1852 ---------------
+>  .../staging/media/davinci_vpfe/dm365_ipipe.h  |  174 --
+>  .../media/davinci_vpfe/dm365_ipipe_hw.c       | 1038 --------
+>  .../media/davinci_vpfe/dm365_ipipe_hw.h       |  556 -----
+>  .../media/davinci_vpfe/dm365_ipipeif.c        | 1070 ---------
+>  .../media/davinci_vpfe/dm365_ipipeif.h        |  228 --
+>  .../media/davinci_vpfe/dm365_ipipeif_user.h   |   90 -
+>  .../staging/media/davinci_vpfe/dm365_isif.c   | 2097 -----------------
+>  .../staging/media/davinci_vpfe/dm365_isif.h   |  200 --
+>  .../media/davinci_vpfe/dm365_isif_regs.h      |  291 ---
+>  .../media/davinci_vpfe/dm365_resizer.c        | 1995 ----------------
+>  .../media/davinci_vpfe/dm365_resizer.h        |  241 --
+>  drivers/staging/media/davinci_vpfe/vpfe.h     |   83 -
+>  .../media/davinci_vpfe/vpfe_mc_capture.c      |  716 ------
+>  .../media/davinci_vpfe/vpfe_mc_capture.h      |   90 -
+>  .../staging/media/davinci_vpfe/vpfe_video.c   | 1646 -------------
+>  .../staging/media/davinci_vpfe/vpfe_video.h   |  150 --
+>  24 files changed, 14023 deletions(-)
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/Kconfig
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/Makefile
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/TODO
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/davinci-vpfe-mc.txt
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/davinci_vpfe_user.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_ipipe.c
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_ipipe.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_ipipe_hw.c
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_ipipe_hw.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_ipipeif.c
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_ipipeif.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_ipipeif_user.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_isif.c
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_isif.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_isif_regs.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_resizer.c
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/dm365_resizer.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/vpfe.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/vpfe_mc_capture.c
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/vpfe_mc_capture.h
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/vpfe_video.c
+>  delete mode 100644 drivers/staging/media/davinci_vpfe/vpfe_video.h
+>
+
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+
+Regards,
+--Prabhakar Lad
