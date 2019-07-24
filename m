@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FAFC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BB9C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1928A20840
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3D422BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564038088;
-	bh=zAjhHSsJhZ6oAn03Z7pWLillY7bVUdhE6rcmIWjShpk=;
+	s=default; t=1564038107;
+	bh=8YVVh3ZDx+QV67v4bqCdoi+CmlKP9V6fZTVJvPaXQ2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lne78ZDZRltaGPTTCd5O1c1LPswwkleFrR+ww73KJ1BcZgWzhwgM8uVZPa0usp0w7
-	 HwrVpHPVp5RM/fbCP+f2gy8zVA2U8BaANuKCUdBaMlK0RFR7JNOB7TDwIbcEN3RSGr
-	 0if/YQ0mqKlJ2XGZd22V7lskBdUOsMuH+CKmg0Dc=
+	b=1qgQESoJERCsytuqEp5J+KrcZPMykUEfQDCKopju7l2TRD+ojBJ5LY7jGdeWhJZmk
+	 s6UuHi7uPeuBSG6N0Anpo6pbR25R87Hfb2qKOzUl8gFK2Hq8nTtkfUeoQx9YjZjYRh
+	 EcZz8+PamOvSrBPYnyYtuP/Sq666NEJbm08Y5M+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfGYHB0 (ORCPT
+        id S1729518AbfGYHBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:01:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34510 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 03:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbfGYHBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:01:24 -0400
+        id S1728097AbfGYHBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 03:01:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB7BF20657;
-        Thu, 25 Jul 2019 07:01:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1389920657;
+        Thu, 25 Jul 2019 07:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564038083;
-        bh=zAjhHSsJhZ6oAn03Z7pWLillY7bVUdhE6rcmIWjShpk=;
+        s=default; t=1564038105;
+        bh=8YVVh3ZDx+QV67v4bqCdoi+CmlKP9V6fZTVJvPaXQ2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjJqtVQv5/q2UhBZY205lrIvIaIE6hTj2YLzE3d8t5b2i/vWhU0kzcHzgDgAwBaV1
-         AKUyhWIGwGykoGelnUF4pHIKN5UF46AVkm+6WoRKI2uOM95niPjKv3tPlKTI4R/nhK
-         BvxkvjW65pMrAkqtZtO+ROSqlitmm5K8f5lcoF+4=
+        b=wdkD2FJ0eB9OcUMyhApkr9aH9MnvQXUOyzOQUVT5rDPdKcg98ibM3uMIl8TQzUi3s
+         ElgUsWy6g/kI02Ocio2kvD69iggEuMPwAAOvKMwHIZwSiy6i5kTx4j+1AddeJNU3TE
+         IljsxcYHKl1oM+8RrpI2aMs5Wo9boqa8YY2DK3Yc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -54,12 +54,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>,
         Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 224/271] perf/x86/intel: Fix spurious NMI on fixed counter
-Date:   Wed, 24 Jul 2019 21:21:33 +0200
-Message-Id: <20190724191714.344365170@linuxfoundation.org>
+Subject: [PATCH 5.1 322/371] perf/x86/intel: Fix spurious NMI on fixed counter
+Date:   Wed, 24 Jul 2019 21:21:14 +0200
+Message-Id: <20190724191748.152212146@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
-References: <20190724191655.268628197@linuxfoundation.org>
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -121,7 +121,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2074,12 +2074,10 @@ static void intel_pmu_disable_event(stru
+@@ -2092,12 +2092,10 @@ static void intel_pmu_disable_event(stru
  	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
  	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
  
