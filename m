@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9FAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FB7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62798204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F33204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000018;
-	bh=gQ0sO9cXgN/kznbncuXVuL2Tn5qrJBMk4NT5njuP8Pc=;
+	s=default; t=1564000027;
+	bh=OR9DaQIEQw3qnxF0j8VZbZv+NIuXumN8R7MCJwQNeYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAg7sMtgSQpg3sJa/idLz9HIKA7SnTu7CC6oiZhJA3YOQZChEoLQ+M9JrRG6zJRM9
-	 Z2y+OM20DuY1nkcJI4OVRGDXzp6hYABoJ/UOlGMgFIM9y2sTPIgOfqIZn5i38SPKQn
-	 876WMsYSVenABV6IzNZIjsZyMZf0v267E53GX4vg=
+	b=QVO8rLBOERzbuD8n2PykGIRrOCdd4ajDohImNgyPnLPADyD6w771Ag0jQlqar8htn
+	 /4vw0H9Y7bhCukfRoyb6ROmIPBRPT/LqU79INoKoUwKpf/aI713cMvpEPlhR79yMqz
+	 rSaN9MBlR0eaQqEP0ycH7QAX9+5PDYxtcLbOJg10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390234AbfGXU05 (ORCPT
+        id S2388850AbfGXTgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:26:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36300 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388363AbfGXTgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:32 -0400
+        id S2389289AbfGXTgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9813214AF;
-        Wed, 24 Jul 2019 19:36:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C50A229F3;
+        Wed, 24 Jul 2019 19:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996992;
-        bh=gQ0sO9cXgN/kznbncuXVuL2Tn5qrJBMk4NT5njuP8Pc=;
+        s=default; t=1563996971;
+        bh=OR9DaQIEQw3qnxF0j8VZbZv+NIuXumN8R7MCJwQNeYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAZbwRxE5GSD35uJulipPZ85je8OoZp1RnpRBYbImuFHTH3wisHTO1rGyYPsVrEt+
-         pnmRdSnQI8GGxucWJWTD+X4RUq6oZBrVtpw2uP+iuzpK1tHIBTASU8/zZloEYO5meL
-         9b0tzVGiusgKU+zNR2KJ5MtMGIfvpu+YTuRIyIyA=
+        b=sOA6/cgTVIS1yciJgCOt/qBTs+TpsIo2R3Vv/eim8PnmJ/VWqPqJzURXOFSZgT3Eb
+         pB79rosTu7HsoaWeXz91bOkmfM58U8m0iFmPx4PjgECDwK2M2ZyDwqePrU4K6Tuf7t
+         rrYGNKBh0YBOKedAUDvVgDOtLASNnVS/sSU/01rk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 285/413] bcache: destroy dc->writeback_write_wq if failed to create dc->writeback_thread
-Date:   Wed, 24 Jul 2019 21:19:36 +0200
-Message-Id: <20190724191756.658501267@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.2 279/413] CIFS: fix deadlock in cached root handling
+Date:   Wed, 24 Jul 2019 21:19:30 +0200
+Message-Id: <20190724191756.262519456@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,36 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Aurelien Aptel <aaptel@suse.com>
 
-commit f54d801dda14942dbefa00541d10603015b7859c upstream.
+commit 7e5a70ad88b1e6f6d9b934b2efb41afff496820f upstream.
 
-Commit 9baf30972b55 ("bcache: fix for gc and write-back race") added a
-new work queue dc->writeback_write_wq, but forgot to destroy it in the
-error condition when creating dc->writeback_thread failed.
+Prevent deadlock between open_shroot() and
+cifs_mark_open_files_invalid() by releasing the lock before entering
+SMB2_open, taking it again after and checking if we still need to use
+the result.
 
-This patch destroys dc->writeback_write_wq if kthread_create() returns
-error pointer to dc->writeback_thread, then a memory leak is avoided.
-
-Fixes: 9baf30972b55 ("bcache: fix for gc and write-back race")
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/linux-cifs/684ed01c-cbca-2716-bc28-b0a59a0f8521@prodrive-technologies.com/T/#u
+Fixes: 3d4ef9a15343 ("smb3: fix redundant opens on root")
+Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/writeback.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/cifs/smb2ops.c |   46 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -834,6 +834,7 @@ int bch_cached_dev_writeback_start(struc
- 					      "bcache_writeback");
- 	if (IS_ERR(dc->writeback_thread)) {
- 		cached_dev_put(dc);
-+		destroy_workqueue(dc->writeback_write_wq);
- 		return PTR_ERR(dc->writeback_thread);
- 	}
- 	dc->writeback_running = true;
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -694,8 +694,51 @@ int open_shroot(unsigned int xid, struct
+ 
+ 	smb2_set_related(&rqst[1]);
+ 
++	/*
++	 * We do not hold the lock for the open because in case
++	 * SMB2_open needs to reconnect, it will end up calling
++	 * cifs_mark_open_files_invalid() which takes the lock again
++	 * thus causing a deadlock
++	 */
++
++	mutex_unlock(&tcon->crfid.fid_mutex);
+ 	rc = compound_send_recv(xid, ses, flags, 2, rqst,
+ 				resp_buftype, rsp_iov);
++	mutex_lock(&tcon->crfid.fid_mutex);
++
++	/*
++	 * Now we need to check again as the cached root might have
++	 * been successfully re-opened from a concurrent process
++	 */
++
++	if (tcon->crfid.is_valid) {
++		/* work was already done */
++
++		/* stash fids for close() later */
++		struct cifs_fid fid = {
++			.persistent_fid = pfid->persistent_fid,
++			.volatile_fid = pfid->volatile_fid,
++		};
++
++		/*
++		 * caller expects this func to set pfid to a valid
++		 * cached root, so we copy the existing one and get a
++		 * reference.
++		 */
++		memcpy(pfid, tcon->crfid.fid, sizeof(*pfid));
++		kref_get(&tcon->crfid.refcount);
++
++		mutex_unlock(&tcon->crfid.fid_mutex);
++
++		if (rc == 0) {
++			/* close extra handle outside of crit sec */
++			SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
++		}
++		goto oshr_free;
++	}
++
++	/* Cached root is still invalid, continue normaly */
++
+ 	if (rc)
+ 		goto oshr_exit;
+ 
+@@ -729,8 +772,9 @@ int open_shroot(unsigned int xid, struct
+ 				(char *)&tcon->crfid.file_all_info))
+ 		tcon->crfid.file_all_info_is_valid = 1;
+ 
+- oshr_exit:
++oshr_exit:
+ 	mutex_unlock(&tcon->crfid.fid_mutex);
++oshr_free:
+ 	SMB2_open_free(&rqst[0]);
+ 	SMB2_query_info_free(&rqst[1]);
+ 	free_rsp_buf(resp_buftype[0], rsp_iov[0].iov_base);
 
 
