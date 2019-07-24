@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB35C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7DDC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC2C206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DFD205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998561;
-	bh=Gq88P1ucxtUp7OMw8rXapHzhLNAJA9bxIEa2qEVQnV4=;
+	s=default; t=1563998568;
+	bh=UWE2DN4Cd8hLRQMDE57ZxB+Xn521+jVhFIUc94A+9zc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+Mbp59jXcHVwB3dWTXNq+qrM0r4ikh0lrE6E7R2rWJ/0+yVIUEmFHBsxunigjmRZ
-	 nzpIiUTTf0Y9gke3vQm4BXSlmHFX9K+5MOLaeqcwxZLqbGULCDXN3CjUsin8/oFDTY
-	 CqaeBUo/Ih9Hk+IHjYN8njSs4TznKMy56GegCA60=
+	b=nE6QTjoZKO713vnuYBk21FmA9ftlo3EKDEFHmq8TVmGtMEcgsHPVE9PXvdSW7avWm
+	 rxLFsTjN5ncj90mu9hu/PRLBKOcNDR7f9mJ8NFyqMlgi2ljL9D2UEtQglIx1WG8Vqh
+	 EGzclywuhKPN4Kx0nMYdqtkaw2LadJjm706/az8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405549AbfGXUCk (ORCPT
+        id S2405583AbfGXUCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405508AbfGXUCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:02:34 -0400
+        id S2404679AbfGXUCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:02:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D20F720665;
-        Wed, 24 Jul 2019 20:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00FF2205C9;
+        Wed, 24 Jul 2019 20:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998553;
-        bh=Gq88P1ucxtUp7OMw8rXapHzhLNAJA9bxIEa2qEVQnV4=;
+        s=default; t=1563998564;
+        bh=UWE2DN4Cd8hLRQMDE57ZxB+Xn521+jVhFIUc94A+9zc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p4plyptNbFxIkB7ZKU0/gt14x12fIolBho19My0U6ahkV/9AeNuKeY3vkVoofKW4p
-         6pgmNx8LFP1dgln/DA2TaCUYxRxSEh0q7loXnam1WFrx8h/Aqh/VcNXntu7DwrJr9c
-         EtbDaWdOwRneTH0iEvzjWHgyNLgMUgFdhwXahfMY=
+        b=FCEjR4u4TsC8cy5Xb9ypSXV/5TDHkfQuvxkAYUm23EUnD50vLoUyYgOonG/ZM3dWx
+         QX3THGHAlwJjoNvvdYYf6PTMuPaIahmwQcVhpEciyf7MB8Za9rGQh4qUfqazeeGJgD
+         QxGFu9fYDByp99Hq8w1Olz84ICuqKfXyiB2jDNV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 032/271] media: saa7164: fix remove_proc_entry warning
-Date:   Wed, 24 Jul 2019 21:18:21 +0200
-Message-Id: <20190724191657.942089694@linuxfoundation.org>
+Subject: [PATCH 4.19 036/271] crypto: talitos - Align SEC1 accesses to 32 bits boundaries.
+Date:   Wed, 24 Jul 2019 21:18:25 +0200
+Message-Id: <20190724191658.293730178@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,101 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 50710eeefbc1ed25375942aad0c4d1eb4af0f330 ]
+[ Upstream commit c9cca7034b34a2d82e9a03b757de2485c294851c ]
 
-if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
+The MPC885 reference manual states:
 
-name 'saa7164'
-WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
-  ? remove_proc_entry+0x1e8/0x3a0
-  ? try_stop_module+0x7b/0x240
-  ? proc_readdir+0x70/0x70
-  ? rcu_read_lock_sched_held+0xd7/0x100
-  saa7164_fini+0x13/0x1f [saa7164]
-  __x64_sys_delete_module+0x30c/0x480
-  ? __ia32_sys_delete_module+0x480/0x480
-  ? __x64_sys_clock_gettime+0x11e/0x1c0
-  ? __x64_sys_timer_create+0x1a0/0x1a0
-  ? trace_hardirqs_off_caller+0x40/0x180
-  ? do_syscall_64+0x18/0x450
-  do_syscall_64+0x9f/0x450
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+SEC Lite-initiated 8xx writes can occur only on 32-bit-word boundaries, but
+reads can occur on any byte boundary. Writing back a header read from a
+non-32-bit-word boundary will yield unpredictable results.
 
-Fix it by checking the return of proc_create_single() before
-calling remove_proc_entry().
+In order to ensure that, cra_alignmask is set to 3 for SEC1.
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: use 0444 instead of S_IRUGO]
-[hverkuil-cisco@xs4all.nl: use pr_info instead of KERN_INFO]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/saa7164/saa7164-core.c | 33 ++++++++++++++++--------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ drivers/crypto/talitos.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
-index d697e1ad929c..5102519df108 100644
---- a/drivers/media/pci/saa7164/saa7164-core.c
-+++ b/drivers/media/pci/saa7164/saa7164-core.c
-@@ -1122,16 +1122,25 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
- 	return 0;
- }
- 
-+static struct proc_dir_entry *saa7164_pe;
-+
- static int saa7164_proc_create(void)
- {
--	struct proc_dir_entry *pe;
--
--	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
--	if (!pe)
-+	saa7164_pe = proc_create_single("saa7164", 0444, NULL, saa7164_proc_show);
-+	if (!saa7164_pe)
- 		return -ENOMEM;
- 
- 	return 0;
- }
-+
-+static void saa7164_proc_destroy(void)
-+{
-+	if (saa7164_pe)
-+		remove_proc_entry("saa7164", NULL);
-+}
-+#else
-+static int saa7164_proc_create(void) { return 0; }
-+static void saa7164_proc_destroy(void) {}
- #endif
- 
- static int saa7164_thread_function(void *data)
-@@ -1503,19 +1512,21 @@ static struct pci_driver saa7164_pci_driver = {
- 
- static int __init saa7164_init(void)
- {
--	printk(KERN_INFO "saa7164 driver loaded\n");
-+	int ret = pci_register_driver(&saa7164_pci_driver);
-+
-+	if (ret)
-+		return ret;
- 
--#ifdef CONFIG_PROC_FS
- 	saa7164_proc_create();
--#endif
--	return pci_register_driver(&saa7164_pci_driver);
-+
-+	pr_info("saa7164 driver loaded\n");
-+
-+	return 0;
- }
- 
- static void __exit saa7164_fini(void)
- {
--#ifdef CONFIG_PROC_FS
--	remove_proc_entry("saa7164", NULL);
--#endif
-+	saa7164_proc_destroy();
- 	pci_unregister_driver(&saa7164_pci_driver);
- }
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index 254f711f1934..41b288bdcdbf 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -3193,7 +3193,10 @@ static struct talitos_crypto_alg *talitos_alg_alloc(struct device *dev,
+ 		alg->cra_priority = t_alg->algt.priority;
+ 	else
+ 		alg->cra_priority = TALITOS_CRA_PRIORITY;
+-	alg->cra_alignmask = 0;
++	if (has_ftr_sec1(priv))
++		alg->cra_alignmask = 3;
++	else
++		alg->cra_alignmask = 0;
+ 	alg->cra_ctxsize = sizeof(struct talitos_ctx);
+ 	alg->cra_flags |= CRYPTO_ALG_KERN_DRIVER_ONLY;
  
 -- 
 2.20.1
