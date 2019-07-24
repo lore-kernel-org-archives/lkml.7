@@ -2,54 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D56C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1697FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CC0205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E1D205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998771;
-	bh=S4svMKdHuAGeN67O6kmLtk+ZNOQ7EGTIYKVayCpUo8g=;
+	s=default; t=1563998773;
+	bh=qJQ9MdWWEcEJ8wHvcnyUSW8VtppiD40F5u1xLzG7IXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SyefvyWBa9H0m6ZiwCXgWtsckuA06W+G9II4CocfEvTF/Vx35Lrs5UxoPyP7gf/oM
-	 NtwXcR5RG7P/RvmvhfWsgn3cUAylif1SJzit+qDuxSMiJvL/2SSUAnlk4VaQ35NJ9L
-	 hKAv9gVnD3MjBB+OjpFvJzoZ6SPpv+DahghWqwOU=
+	b=VK28zVia8BamxgL1AYkmjq0UWM2o7xRjIR4miJpH5UG+OK/DuYNi4iUL+qwu7KnNd
+	 s7mVxQBI/HLXWPy/kdTfN4yqbPmsf+6t0DlgUMxLaEP5S95rskYbdzTX1wyMC/1jtM
+	 DynjSzBtdOQjyB5EGe1qkj+O0ZsUrNQr27pE+ees=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388527AbfGXUFk (ORCPT
+        id S2392479AbfGXUGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:05:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57012 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405808AbfGXUFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:05:30 -0400
+        id S2392724AbfGXUFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:05:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF67B205C9;
-        Wed, 24 Jul 2019 20:05:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ADFE21849;
+        Wed, 24 Jul 2019 20:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998729;
-        bh=S4svMKdHuAGeN67O6kmLtk+ZNOQ7EGTIYKVayCpUo8g=;
+        s=default; t=1563998739;
+        bh=qJQ9MdWWEcEJ8wHvcnyUSW8VtppiD40F5u1xLzG7IXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LPyY/DX1eth4SXTJVZh8/UxrnDu75Y9q6T8V5pBZs0XgHZQJKjf7TKJSlvp/ic7JI
-         j+kUWfZFs7P+TXnfUWmr6eqKjbxkgrfVb+Tn9qTlNnbYlIH+U4Yb4KCFMFaGzRinAy
-         I7S9Em5bHXnAqK8OZ+pPcSiAFO5Gq4TSRxWthCsE=
+        b=YRugYXUV1ybsgJEF8tFJqPcATx1g5gtC88bFswmqQq0C3xXVE+6QrL0p/efTVXZgV
+         sgL0cs4IZRxIbHRwSilT+VopFBB/SnjRjq224JHBb/sor9ifki+CaBovwHdfJo10Zy
+         axGD6sKJEAvgpN9QFjMhUdz4QmdRUzndQJtSU6ww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/271] media: s5p-mfc: Make additional clocks optional
-Date:   Wed, 24 Jul 2019 21:19:23 +0200
-Message-Id: <20190724191703.282154977@linuxfoundation.org>
+Subject: [PATCH 4.19 080/271] perf evsel: Make perf_evsel__name() accept a NULL argument
+Date:   Wed, 24 Jul 2019 21:19:09 +0200
+Message-Id: <20190724191702.034626006@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,42 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e08efef8fe7db87206314c19b341612c719f891a ]
+[ Upstream commit fdbdd7e8580eac9bdafa532746c865644d125e34 ]
 
-Since the beginning the second clock ('special', 'sclk') was optional and
-it is not available on some variants of Exynos SoCs (i.e. Exynos5420 with
-v7 of MFC hardware).
+In which case it simply returns "unknown", like when it can't figure out
+the evsel->name value.
 
-However commit 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
-made handling of all specified clocks mandatory. This patch restores
-original behavior of the driver and fixes its operation on
-Exynos5420 SoCs.
+This makes this code more robust and fixes a problem in 'perf trace'
+where a NULL evsel was being passed to a routine that only used the
+evsel for printing its name when a invalid syscall id was passed.
 
-Fixes: 1bce6fb3edf1 ("[media] s5p-mfc: Rework clock handling")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-f30ztaasku3z935cn3ak3h53@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-mfc/s5p_mfc_pm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/util/evsel.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
-index eb85cedc5ef3..5e080f32b0e8 100644
---- a/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
-+++ b/drivers/media/platform/s5p-mfc/s5p_mfc_pm.c
-@@ -38,6 +38,11 @@ int s5p_mfc_init_pm(struct s5p_mfc_dev *dev)
- 	for (i = 0; i < pm->num_clocks; i++) {
- 		pm->clocks[i] = devm_clk_get(pm->device, pm->clk_names[i]);
- 		if (IS_ERR(pm->clocks[i])) {
-+			/* additional clocks are optional */
-+			if (i && PTR_ERR(pm->clocks[i]) == -ENOENT) {
-+				pm->clocks[i] = NULL;
-+				continue;
-+			}
- 			mfc_err("Failed to get clock: %s\n",
- 				pm->clk_names[i]);
- 			return PTR_ERR(pm->clocks[i]);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index b65ad5a273eb..4fad92213609 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -590,6 +590,9 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
+ {
+ 	char bf[128];
+ 
++	if (!evsel)
++		goto out_unknown;
++
+ 	if (evsel->name)
+ 		return evsel->name;
+ 
+@@ -626,7 +629,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
+ 
+ 	evsel->name = strdup(bf);
+ 
+-	return evsel->name ?: "unknown";
++	if (evsel->name)
++		return evsel->name;
++out_unknown:
++	return "unknown";
+ }
+ 
+ const char *perf_evsel__group_name(struct perf_evsel *evsel)
 -- 
 2.20.1
 
