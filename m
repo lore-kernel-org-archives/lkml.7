@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1CEC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045A6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA93214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB51322ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998152;
-	bh=gQ0sO9cXgN/kznbncuXVuL2Tn5qrJBMk4NT5njuP8Pc=;
+	s=default; t=1563998156;
+	bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XT9ygJnm4zhyUjIZWoIVLYYKhC3ZTXKi5NKVYjEVV3sgEryeCpz0RHMefh5JcaKZ+
-	 Aar8sqjjlnHzVJX908LVcxNbTkEj9jTRt/d7iTAGZWVgBbNHrKGuSkHc7vRbnOo8KR
-	 RgPq289xKkMuLeYBmltQH5IjjLtF/op+rjuzVVh0=
+	b=E71b5llm/XEQXNYLnH9xnYWyGmdbFm9JyIOAVZTdRvLbWYdLZfqk2uTPE2BjW9UZQ
+	 Aks1/qqxSXFUEiKGcWAYlYja7Qwsoq9fRh7KiRbB+9/AF894XWsqBbMvcmyj+J88Ce
+	 wyCEHdfnRB+lfxOZZ3zVftXHs2l4tpvXqa0sh830=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404559AbfGXTzv (ORCPT
+        id S2391782AbfGXTzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39540 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391806AbfGXTzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:55:40 -0400
+        id S2391743AbfGXTzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B9A9214AF;
-        Wed, 24 Jul 2019 19:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5421205C9;
+        Wed, 24 Jul 2019 19:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998139;
-        bh=gQ0sO9cXgN/kznbncuXVuL2Tn5qrJBMk4NT5njuP8Pc=;
+        s=default; t=1563998143;
+        bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h00aSE9aB37eJYkIKiqKHUEzmef6/Rp3f/sGBNJTQBeCiGudaZK9KUXGJc1uuY5qa
-         QL4/cpydREPr5BXEFBX7e2JeD7EMau3MuBjBPMQssKpCl8MvTSJ4O3eCGnpgWu8Jbp
-         q/eQ0FpGDxr24r1oMKFhmxk/C3B7BAvOTdgTFsOo=
+        b=qgge97N5DnfMrzcxoPrLPXH5FvrB17Q6P1mTN/ZFsLcWhI+Tok5qojbrBmFA4Y+Il
+         obbwEl/QXT2CPAsic7Cq5FCBBMF4FThVrcnyZNdrMJRf8vgu1UBbuSvywjLmhrUXhA
+         63PWofvwHCxJeB2vq9fv9QMrMrs/FSIIdPyOYLSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 261/371] bcache: destroy dc->writeback_write_wq if failed to create dc->writeback_thread
-Date:   Wed, 24 Jul 2019 21:20:13 +0200
-Message-Id: <20190724191744.106352084@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grant Hernandez <granthernandez@google.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.1 262/371] Input: gtco - bounds check collection indent level
+Date:   Wed, 24 Jul 2019 21:20:14 +0200
+Message-Id: <20190724191744.165701375@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,36 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Grant Hernandez <granthernandez@google.com>
 
-commit f54d801dda14942dbefa00541d10603015b7859c upstream.
+commit 2a017fd82c5402b3c8df5e3d6e5165d9e6147dc1 upstream.
 
-Commit 9baf30972b55 ("bcache: fix for gc and write-back race") added a
-new work queue dc->writeback_write_wq, but forgot to destroy it in the
-error condition when creating dc->writeback_thread failed.
+The GTCO tablet input driver configures itself from an HID report sent
+via USB during the initial enumeration process. Some debugging messages
+are generated during the parsing. A debugging message indentation
+counter is not bounds checked, leading to the ability for a specially
+crafted HID report to cause '-' and null bytes be written past the end
+of the indentation array. As long as the kernel has CONFIG_DYNAMIC_DEBUG
+enabled, this code will not be optimized out.  This was discovered
+during code review after a previous syzkaller bug was found in this
+driver.
 
-This patch destroys dc->writeback_write_wq if kthread_create() returns
-error pointer to dc->writeback_thread, then a memory leak is avoided.
-
-Fixes: 9baf30972b55 ("bcache: fix for gc and write-back race")
-Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Grant Hernandez <granthernandez@google.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/writeback.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/input/tablet/gtco.c |   20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -834,6 +834,7 @@ int bch_cached_dev_writeback_start(struc
- 					      "bcache_writeback");
- 	if (IS_ERR(dc->writeback_thread)) {
- 		cached_dev_put(dc);
-+		destroy_workqueue(dc->writeback_write_wq);
- 		return PTR_ERR(dc->writeback_thread);
- 	}
- 	dc->writeback_running = true;
+--- a/drivers/input/tablet/gtco.c
++++ b/drivers/input/tablet/gtco.c
+@@ -78,6 +78,7 @@ Scott Hill shill@gtcocalcomp.com
+ 
+ /* Max size of a single report */
+ #define REPORT_MAX_SIZE       10
++#define MAX_COLLECTION_LEVELS  10
+ 
+ 
+ /* Bitmask whether pen is in range */
+@@ -223,8 +224,7 @@ static void parse_hid_report_descriptor(
+ 	char  maintype = 'x';
+ 	char  globtype[12];
+ 	int   indent = 0;
+-	char  indentstr[10] = "";
+-
++	char  indentstr[MAX_COLLECTION_LEVELS + 1] = { 0 };
+ 
+ 	dev_dbg(ddev, "======>>>>>>PARSE<<<<<<======\n");
+ 
+@@ -350,6 +350,13 @@ static void parse_hid_report_descriptor(
+ 			case TAG_MAIN_COL_START:
+ 				maintype = 'S';
+ 
++				if (indent == MAX_COLLECTION_LEVELS) {
++					dev_err(ddev, "Collection level %d would exceed limit of %d\n",
++						indent + 1,
++						MAX_COLLECTION_LEVELS);
++					break;
++				}
++
+ 				if (data == 0) {
+ 					dev_dbg(ddev, "======>>>>>> Physical\n");
+ 					strcpy(globtype, "Physical");
+@@ -369,8 +376,15 @@ static void parse_hid_report_descriptor(
+ 				break;
+ 
+ 			case TAG_MAIN_COL_END:
+-				dev_dbg(ddev, "<<<<<<======\n");
+ 				maintype = 'E';
++
++				if (indent == 0) {
++					dev_err(ddev, "Collection level already at zero\n");
++					break;
++				}
++
++				dev_dbg(ddev, "<<<<<<======\n");
++
+ 				indent--;
+ 				for (x = 0; x < indent; x++)
+ 					indentstr[x] = '-';
 
 
