@@ -2,91 +2,86 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913B5C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0345EC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F1E22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB732227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfGXGMJ (ORCPT
+        id S1726314AbfGXGMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:12:09 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:42379 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXGMJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:12:09 -0400
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 8BB91100006;
-        Wed, 24 Jul 2019 06:12:01 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH REBASE v4 12/14] mips: Replace arch specific way to determine 32bit task with generic version
-Date:   Wed, 24 Jul 2019 01:58:48 -0400
-Message-Id: <20190724055850.6232-13-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
-References: <20190724055850.6232-1-alex@ghiti.fr>
+        Wed, 24 Jul 2019 02:12:40 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2711 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbfGXGMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:12:39 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DB0DDD7CEC6E4F93575F;
+        Wed, 24 Jul 2019 14:12:36 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 14:12:26 +0800
+Subject: Re: [PATCH v2] RDMA/hns: Fix build error for hip08
+To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>, <leon@kernel.org>
+References: <20190723024908.11876-1-yuehaibing@huawei.com>
+ <20190724034016.15048-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <a022a386-85cc-aa92-2f50-1b61070d4d2e@huawei.com>
+Date:   Wed, 24 Jul 2019 14:12:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190724034016.15048-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mips uses TASK_IS_32BIT_ADDR to determine if a task is 32bit, but
-this define is mips specific and other arches do not have it: instead,
-use !IS_ENABLED(CONFIG_64BIT) || is_compat_task() condition.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/mips/mm/mmap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Pls drop this, this cannot fix the issue.
 
-diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-index faa5aa615389..d4eafbb82789 100644
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -17,6 +17,7 @@
- #include <linux/sched/signal.h>
- #include <linux/sched/mm.h>
- #include <linux/sizes.h>
-+#include <linux/compat.h>
- 
- unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
- EXPORT_SYMBOL(shm_align_mask);
-@@ -191,7 +192,7 @@ static inline unsigned long brk_rnd(void)
- 
- 	rnd = rnd << PAGE_SHIFT;
- 	/* 32MB for 32bit, 1GB for 64bit */
--	if (TASK_IS_32BIT_ADDR)
-+	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
- 		rnd = rnd & SZ_32M;
- 	else
- 		rnd = rnd & SZ_1G;
--- 
-2.20.1
+On 2019/7/24 11:40, YueHaibing wrote:
+> If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
+> but INFINIBAND_HNS is y, building fails:
+> 
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
+> hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
+> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
+> hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> v2: select HNS3 to fix this
+> ---
+>  drivers/infiniband/hw/hns/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+> index 8bf847b..b9dfac0 100644
+> --- a/drivers/infiniband/hw/hns/Kconfig
+> +++ b/drivers/infiniband/hw/hns/Kconfig
+> @@ -22,7 +22,8 @@ config INFINIBAND_HNS_HIP06
+>  
+>  config INFINIBAND_HNS_HIP08
+>  	bool "Hisilicon Hip08 Family RoCE support"
+> -	depends on INFINIBAND_HNS && PCI && HNS3
+> +	depends on INFINIBAND_HNS && PCI
+> +	select HNS3
+>  	---help---
+>  	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
+>  	  The RoCE engine is a PCI device.
+> 
 
