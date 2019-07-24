@@ -2,208 +2,174 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9D5C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C4FC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A187121BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C5CD22ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="m6YvAC5U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="px+1KWzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfGXOKz (ORCPT
+        id S2387527AbfGXOK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:10:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45030 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfGXOKz (ORCPT
+        Wed, 24 Jul 2019 10:10:58 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:56974 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfGXOK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:10:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so21002388pfe.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WXhaeMPXQ8MNtkF+Sp+2bS4wghsA38PAkoq4RUXLo/c=;
-        b=m6YvAC5UDmYi4TsfqlA07rTcUbfvc9lidZhL3ozBZPd9FuNWIKormAzLfT9QLJeXSF
-         2DlJ04Pv53eAX5aDIefwhPa4ynnSAA98nz2zD5VGbt4BI8tgCFX+iFwGmIgLSHIE1zb2
-         8tkJvPr+jPd5o5N/vsQKy8hTHoEz1YzrJNWUI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WXhaeMPXQ8MNtkF+Sp+2bS4wghsA38PAkoq4RUXLo/c=;
-        b=hShS00LQSIkaC+wSW0Sx4QjlOZNmU65M+AbEag6CrLKLzsLS7xXZfaifp0U33lSTKp
-         XqkYE3UDDZx/xU3Orwsuz6iZGzWd+GTmd5kuO7xoVJDrEaA7wLknesQ5ReJSJ+B5Z51U
-         remJxqiR+plQAYqTg3HDzaHIIpXOcgi+/JyiqC523W38smr3O5r9YniZXCVgCDj/xXdX
-         vu2OohGLJeZi/mCb7/pRCPlXhQfSVbg2hnA5rYaIjvOMjJ1zhccn3/UDbdVWPFOZ4t+L
-         8ete72oK+rMPqSHXixbAa4RWwJLYE6A6qxZT8LqFg6zMvLT3Mgf5moSAc7cWjsSpuNmx
-         1p+Q==
-X-Gm-Message-State: APjAAAUj6CrH7gxXLZmWQbh26hDsb34UmLHG3o6831fzgWixOOqsKNCZ
-        sjd9y0PL5vY/21AwiQbZeRk=
-X-Google-Smtp-Source: APXvYqxhiuMEPHH8pRDkDkxK8JM+xQ0EECYE2I6dsIIwwk5MI/hkEsc+JGVOGaSpqK/SVp9B21n2eQ==
-X-Received: by 2002:a63:dd0b:: with SMTP id t11mr41295651pgg.410.1563977454295;
-        Wed, 24 Jul 2019 07:10:54 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q63sm61399100pfb.81.2019.07.24.07.10.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 07:10:53 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 10:10:52 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, vdavydov.dev@gmail.com,
-        Brendan Gregg <bgregg@netflix.com>, kernel-team@android.com,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        carmenjackson@google.com, Christian Hansen <chansen3@cisco.com>,
-        Colin Ian King <colin.king@canonical.com>, dancol@google.com,
-        David Howells <dhowells@redhat.com>, fmayer@google.com,
-        joaodias@google.com, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
-        sspatil@google.com, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, timmurray@google.com,
-        tkjos@google.com, Vlastimil Babka <vbabka@suse.cz>, wvw@google.com
-Subject: Re: [PATCH v1 1/2] mm/page_idle: Add support for per-pid page_idle
- using virtual indexing
-Message-ID: <20190724141052.GB9945@google.com>
-References: <20190722213205.140845-1-joel@joelfernandes.org>
- <20190723061358.GD128252@google.com>
- <20190723142049.GC104199@google.com>
- <20190724042842.GA39273@google.com>
+        Wed, 24 Jul 2019 10:10:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=peX7w0IHZmmNWGkQS7oFrjlTuMLY4e+Bl3q2bETnND4=; b=px+1KWzK31nDTPo1BKsXH9fgm
+        +fbyZQR5E+7OVTNCsicikdHFL4zSeTgToYPFx3vztOK4nhri7vr8Qw+r+BMmGOOx7Cu1TkbGnfFrS
+        8hdU8NfG+xZcQN+UQ5VZ0pNkel0v0m2u+NPQX3qTuwLBpAcurjBP1piRKDecFoTEaNFXU0dj5Fu0q
+        R64WZYV0A1W4WSUMwe7ZJAHeIcwNTN51VnwIdUP58YqNR8zZenoYYKNXWpfd/fhx87JVzGTwe+bKL
+        SvhdAh7rHRciFY8QrAs9p0FylNrh5E8g43mBb2z6AAILQDcCvx+o8HfX8wLTKleyJnwvfVSMMQzi8
+        tN84/ITrg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqHye-0005Jv-5Q; Wed, 24 Jul 2019 14:10:44 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DBE0E2026E809; Wed, 24 Jul 2019 16:10:40 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 16:10:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: x86 - clang / objtool status
+Message-ID: <20190724141040.GA31425@hirez.programming.kicks-ass.net>
+References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de>
+ <20190724023946.yxsz5im22fz4zxrn@treble>
+ <20190724074732.GJ3402@hirez.programming.kicks-ass.net>
+ <20190724125525.kgybu3nnpvwlcz2c@treble>
+ <20190724133516.GB31381@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724042842.GA39273@google.com>
+In-Reply-To: <20190724133516.GB31381@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 01:28:42PM +0900, Minchan Kim wrote:
-> On Tue, Jul 23, 2019 at 10:20:49AM -0400, Joel Fernandes wrote:
-> > On Tue, Jul 23, 2019 at 03:13:58PM +0900, Minchan Kim wrote:
-> > > Hi Joel,
-> > > 
-> > > On Mon, Jul 22, 2019 at 05:32:04PM -0400, Joel Fernandes (Google) wrote:
-> > > > The page_idle tracking feature currently requires looking up the pagemap
-> > > > for a process followed by interacting with /sys/kernel/mm/page_idle.
-> > > > This is quite cumbersome and can be error-prone too. If between
-> > > 
-> > > cumbersome: That's the fair tradeoff between idle page tracking and
-> > > clear_refs because idle page tracking could check even though the page
-> > > is not mapped.
-> > 
-> > It is fair tradeoff, but could be made simpler. The userspace code got
-> > reduced by a good amount as well.
-> > 
-> > > error-prone: What's the error?
-> > 
-> > We see in normal Android usage, that some of the times pages appear not to be
-> > idle even when they really are idle. Reproducing this is a bit unpredictable
-> > and happens at random occasions. With this new interface, we are seeing this
-> > happen much much lesser.
+On Wed, Jul 24, 2019 at 03:35:16PM +0200, Peter Zijlstra wrote:
+> On Wed, Jul 24, 2019 at 07:55:25AM -0500, Josh Poimboeuf wrote:
+
+> > b) why doesn't objtool detect the case I found?
 > 
-> I don't know how you did test. Maybe that could be contributed by
-> swapping out or shared pages touched by other processes or some kernel
-> behavior not to keep access bit of their operation.
-
-It could be something along these lines is my thinking as well. So we know
-its already has issues due to what you mentioned, I am not sure what else
-needs investigation?
-
-> Please investigate more what's the root cause. That would be important
-> point to justify for the patch motivation.
-
-The motivation is security. I am dropping the 'accuracy' factor I mentioned
-from the patch description since it created a lot of confusion.
-
-> > > > More over looking up PFN from pagemap in Android devices is not
-> > > > supported by unprivileged process and requires SYS_ADMIN and gives 0 for
-> > > > the PFN.
-> > > > 
-> > > > This patch adds support to directly interact with page_idle tracking at
-> > > > the PID level by introducing a /proc/<pid>/page_idle file. This
-> > > > eliminates the need for userspace to calculate the mapping of the page.
-> > > > It follows the exact same semantics as the global
-> > > > /sys/kernel/mm/page_idle, however it is easier to use for some usecases
-> > > > where looking up PFN is not needed and also does not require SYS_ADMIN.
-> > > 
-> > > Ah, so the primary goal is to provide convinience interface and it would
-> > > help accurary, too. IOW, accuracy is not your main goal?
-> > 
-> > There are a couple of primary goals: Security, conveience and also solving
-> > the accuracy/reliability problem we are seeing. Do keep in mind looking up
-> > PFN has security implications. The PFN field in pagemap is zeroed if the user
-> > does not have CAP_SYS_ADMIN.
+> With GCC you mean? Yes, that is really really weird.
 > 
-> Myaybe you don't need PFN. is it?
-
-With the traditional idle tracking, PFN is needed which has the mentioned
-security issues. This patch solves it. And the interface is identical and
-familiar to the existing page_idle bitmap interface.
-
-> > > > In Android, we are using this for the heap profiler (heapprofd) which
-> > > > profiles and pin points code paths which allocates and leaves memory
-> > > > idle for long periods of time.
-> > > 
-> > > So the goal is to detect idle pages with idle memory tracking?
-> > 
-> > Isn't that what idle memory tracking does?
+> Let me go stare at objdump output for this file (which doesn't build
+> with:
 > 
-> To me, it's rather misleading. Please read motivation section in document.
-> The feature would be good to detect workingset pages, not idle pages
-> because workingset pages are never freed, swapped out and even we could
-> count on newly allocated pages.
-> 
-> Motivation
-> ==========
-> 
-> The idle page tracking feature allows to track which memory pages are being
-> accessed by a workload and which are idle. This information can be useful for
-> estimating the workload's working set size, which, in turn, can be taken into
-> account when configuring the workload parameters, setting memory cgroup limits,
-> or deciding where to place the workload within a compute cluster.
+>    make O=defconfig-build/ drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o
+> )
 
-As we discussed by chat, we could collect additional metadata to check if
-pages were swapped or freed ever since the time we marked them as idle.
-However this can be incremental improvement.
+0000 0000000000000240 <eb_copy_relocations.isra.34>:
+0000      240:	41 57                	push   %r15
+0002      242:	41 56                	push   %r14
+0004      244:	41 55                	push   %r13
+0006      246:	41 54                	push   %r12
+0008      248:	55                   	push   %rbp
+0009      249:	53                   	push   %rbx
+000a      24a:	48 83 ec 20          	sub    $0x20,%rsp
+000e      24e:	85 f6                	test   %esi,%esi
+0010      250:	74 39                	je     28b <eb_copy_relocations.isra.34+0x4b>
+0012      252:	89 74 24 14          	mov    %esi,0x14(%rsp)
+0016      256:	45 31 f6             	xor    %r14d,%r14d
+0019      259:	48 c7 04 24 00 00 00 	movq   $0x0,(%rsp)
+0020      260:	00 
+0021      261:	48 89 7c 24 08       	mov    %rdi,0x8(%rsp)
+0026      266:	48 8b 44 24 08       	mov    0x8(%rsp),%rax
+002b      26b:	48 8b 34 24          	mov    (%rsp),%rsi
+002f      26f:	48 03 30             	add    (%rax),%rsi
+0032      272:	44 8b 46 04          	mov    0x4(%rsi),%r8d
+0036      276:	45 85 c0             	test   %r8d,%r8d
+0039      279:	75 23                	jne    29e <eb_copy_relocations.isra.34+0x5e>
+003b      27b:	41 83 c6 01          	add    $0x1,%r14d
+003f      27f:	48 83 04 24 38       	addq   $0x38,(%rsp)
+0044      284:	44 3b 74 24 14       	cmp    0x14(%rsp),%r14d
+0049      289:	75 db                	jne    266 <eb_copy_relocations.isra.34+0x26>
+004b      28b:	31 db                	xor    %ebx,%ebx
+004d      28d:	48 83 c4 20          	add    $0x20,%rsp
+0051      291:	89 d8                	mov    %ebx,%eax
+0053      293:	5b                   	pop    %rbx
+0054      294:	5d                   	pop    %rbp
+0055      295:	41 5c                	pop    %r12
+0057      297:	41 5d                	pop    %r13
+0059      299:	41 5e                	pop    %r14
+005b      29b:	41 5f                	pop    %r15
+005d      29d:	c3                   	retq   
 
-> > > It couldn't work well because such idle pages could finally swap out and
-> > > lose every flags of the page descriptor which is working mechanism of
-> > > idle page tracking. It should have named "workingset page tracking",
-> > > not "idle page tracking".
-> > 
-> > The heap profiler that uses page-idle tracking is not to measure working set,
-> > but to look for pages that are idle for long periods of time.
-> 
-> It's important part. Please include it in the description so that people
-> understands what's the usecase. As I said above, if it aims for finding
-> idle pages durting the period, current idle page tracking feature is not
-> good ironically.
+(<- from +39)
 
-Ok, I will mention.
+005e      29e:	48 83 c6 08          	add    $0x8,%rsi
+0062      2a2:	44 89 c7             	mov    %r8d,%edi
+0065      2a5:	e8 26 ff ff ff       	callq  1d0 <check_relocations.isra.32>
+006a      2aa:	85 c0                	test   %eax,%eax
+006c      2ac:	0f 85 35 01 00 00    	jne    3e7 <eb_copy_relocations.isra.34+0x1a7>
+0072      2b2:	48 8b 44 24 08       	mov    0x8(%rsp),%rax
+0077      2b7:	48 8b 0c 24          	mov    (%rsp),%rcx
+007b      2bb:	ba ff ff ff ff       	mov    $0xffffffff,%edx
+0080      2c0:	be c0 0c 00 00       	mov    $0xcc0,%esi
+0085      2c5:	48 8b 00             	mov    (%rax),%rax
+0088      2c8:	4c 8b 6c 08 08       	mov    0x8(%rax,%rcx,1),%r13
+008d      2cd:	44 89 c0             	mov    %r8d,%eax
+0090      2d0:	49 89 c4             	mov    %rax,%r12
+0093      2d3:	48 89 44 24 18       	mov    %rax,0x18(%rsp)
+0098      2d8:	49 c1 e4 05          	shl    $0x5,%r12
+009c      2dc:	4c 89 e7             	mov    %r12,%rdi
+009f      2df:	e8 00 00 00 00       	callq  2e4 <eb_copy_relocations.isra.34+0xa4>
+00a0 			2e0: R_X86_64_PLT32	kvmalloc_node-0x4
+00a4      2e4:	49 89 c7             	mov    %rax,%r15
+00a7      2e7:	48 85 c0             	test   %rax,%rax
+00aa      2ea:	0f 84 e8 00 00 00    	je     3d8 <eb_copy_relocations.isra.34+0x198>
+00b0      2f0:	31 ed                	xor    %ebp,%ebp
+00b2      2f2:	eb 08                	jmp    2fc <eb_copy_relocations.isra.34+0xbc>
 
-> > Thanks for bringing up the swapping corner case..  Perhaps we can improve
-> > the heap profiler to detect this by looking at bits 0-4 in pagemap. While it
-> 
-> Yeb, that could work but it could add overhead again what you want to remove?
-> Even, userspace should keep metadata to identify that page was already swapped
-> in last period or newly swapped in new period.
+(<- from +e0)
 
-Yep.
+00b4      2f4:	48 01 dd             	add    %rbx,%rbp
+00b7      2f7:	49 39 ec             	cmp    %rbp,%r12
+00ba      2fa:	76 73                	jbe    36f <eb_copy_relocations.isra.34+0x12f>
 
-thanks,
+(<- from +b2)
 
- - Joel
+00bc      2fc:	4c 89 e3             	mov    %r12,%rbx
+00bf      2ff:	b8 00 00 00 80       	mov    $0x80000000,%eax
+00c4      304:	49 8d 3c 2f          	lea    (%r15,%rbp,1),%rdi
+00c8      308:	48 29 eb             	sub    %rbp,%rbx
+00cb      30b:	49 8d 74 2d 00       	lea    0x0(%r13,%rbp,1),%rsi
+00d0      310:	48 39 c3             	cmp    %rax,%rbx
+00d3      313:	48 0f 47 d8          	cmova  %rax,%rbx
+00d7      317:	89 da                	mov    %ebx,%edx
+00d9      319:	e8 00 00 00 00       	callq  31e <eb_copy_relocations.isra.34+0xde>
+00da 			31a: R_X86_64_PLT32	copy_user_generic_unrolled-0x4
+00de      31e:	85 c0                	test   %eax,%eax
+00e0      320:	74 d2                	je     2f4 <eb_copy_relocations.isra.34+0xb4>
+00e2      322:	4c 89 f8             	mov    %r15,%rax
+00e5      325:	4c 8b 7c 24 08       	mov    0x8(%rsp),%r15
+00ea      32a:	90                   	nop
+00eb      32b:	90                   	nop
+00ec      32c:	90                   	nop
 
+					^^^ CLAC
+
+And that most certainly should trigger...
+
+Let me gdb that objtool thing.
