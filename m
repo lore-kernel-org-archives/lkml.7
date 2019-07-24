@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239EDC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EB4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC66221951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B43C229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996256;
-	bh=z2tDvDZ1wSCfjB31V79vAvatC0HzUue8IWw2Z5RYXzA=;
+	s=default; t=1563996259;
+	bh=x0Otm5+B2/Do0stGHsY8H0ODRlpvuVqoHO8j47jB2O4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PNDdxIkgJkgqWdFWyFFo+ZarReWZmXGXMcJhRf3jn7AUetr+p4jPXjXZHSEAfPA8m
-	 PUBu3Nsul0g6ppT+4SFIHyVR/V5mQL/c9FRMrwhS9XtmczM4CIBeD93ZWHxHuugMqE
-	 8wGdI2hDipaRJvLCbVQLhH180GuD2W1iwLjAmHWQ=
+	b=vwxX2Isx1Iyd8vx3KDRXKx+5MqH0U7scm9pUsQgSLhvViBPZD5/W8b2pa81oxVfEe
+	 2AB8Puxs5MV5dsLZgRGaI2U7NkSdyUcpM50n/aYYEY5+/jhYKLZxW9libZceGbzbr+
+	 4K7o6OVD5b7soaIk8j5dylnzEGsk+8+GzK4igBhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbfGXTYO (ORCPT
+        id S1729016AbfGXTYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40260 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387916AbfGXTYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:11 -0400
+        id S2387931AbfGXTYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAB4622387;
-        Wed, 24 Jul 2019 19:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614F4218F0;
+        Wed, 24 Jul 2019 19:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996250;
-        bh=z2tDvDZ1wSCfjB31V79vAvatC0HzUue8IWw2Z5RYXzA=;
+        s=default; t=1563996253;
+        bh=x0Otm5+B2/Do0stGHsY8H0ODRlpvuVqoHO8j47jB2O4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FOUfXS60WsPhZmEg2VEZE/n6Hh+6xP77yQbIC+sa2ggDTX732RwqvdpbecQY7Q2wu
-         ink5jqgrE1dLg4M5NAZkzeUZ+V46RTG2Du6SVPoun/9JyHKiFbajkSVo3Oo0Cg9MSq
-         l0X4/OBbuhotvYmEcl6gbabsCq6WFppOXAxeUITA=
+        b=Cb9QVvwaTH11LeGxv7S2EjsXknT+ClQ7Syux6k2pUKzWy4qpxZmYSPFheo+EWUDDN
+         29TKJS0OZDiQ7pOSYCquPudqxzqR5CB/kKjHVzUp9n2zzjYaqw50TNixkc4/8ZqobP
+         SyDn9YhzBXUV2eSgJX9rZuEwOFnWPeRwQQC90zRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Miguel Catalan Cid <miguel.catalan@i2cat.net>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Maya Erez <merez@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 004/413] ath9k: Dont trust TX status TID number when reporting airtime
-Date:   Wed, 24 Jul 2019 21:14:55 +0200
-Message-Id: <20190724191735.486183261@linuxfoundation.org>
+Subject: [PATCH 5.2 005/413] wil6210: fix potential out-of-bounds read
+Date:   Wed, 24 Jul 2019 21:14:56 +0200
+Message-Id: <20190724191735.588603012@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,57 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 389b72e58259336c2d56d58b660b79cf4b9e0dcb ]
+[ Upstream commit bfabdd6997323adbedccb13a3fed1967fb8cf8f5 ]
 
-As already noted a comment in ath_tx_complete_aggr(), the hardware will
-occasionally send a TX status with the wrong tid number. If we trust the
-value, airtime usage will be reported to the wrong AC, which can cause the
-deficit on that AC to become very low, blocking subsequent attempts to
-transmit.
+Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
 
-To fix this, account airtime usage to the TID number from the original skb,
-instead of the one in the hardware TX status report.
+enum gro_result {
+        GRO_MERGED,
+        GRO_MERGED_FREE,
+        GRO_HELD,
+        GRO_NORMAL,
+        GRO_DROP,
+        GRO_CONSUMED,
+};
+typedef enum gro_result gro_result_t;
 
-Reported-by: Miguel Catalan Cid <miguel.catalan@i2cat.net>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+In case *rc* evaluates to 5, we end up having an out-of-bounds read
+at drivers/net/wireless/ath/wil6210/txrx.c:821:
+
+	wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
+		     len, gro_res_str[rc]);
+
+Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
+
+Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
+Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Maya Erez <merez@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/xmit.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/wil6210/txrx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
-index b17e1ca40995..3be0aeedb9b5 100644
---- a/drivers/net/wireless/ath/ath9k/xmit.c
-+++ b/drivers/net/wireless/ath/ath9k/xmit.c
-@@ -668,7 +668,8 @@ static bool bf_is_ampdu_not_probing(struct ath_buf *bf)
- static void ath_tx_count_airtime(struct ath_softc *sc,
- 				 struct ieee80211_sta *sta,
- 				 struct ath_buf *bf,
--				 struct ath_tx_status *ts)
-+				 struct ath_tx_status *ts,
-+				 u8 tid)
- {
- 	u32 airtime = 0;
- 	int i;
-@@ -679,7 +680,7 @@ static void ath_tx_count_airtime(struct ath_softc *sc,
- 		airtime += rate_dur * bf->rates[i].count;
- 	}
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index 4ccfd1404458..d74837cce67f 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -750,6 +750,7 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
+ 		[GRO_HELD]		= "GRO_HELD",
+ 		[GRO_NORMAL]		= "GRO_NORMAL",
+ 		[GRO_DROP]		= "GRO_DROP",
++		[GRO_CONSUMED]		= "GRO_CONSUMED",
+ 	};
  
--	ieee80211_sta_register_airtime(sta, ts->tid, airtime, 0);
-+	ieee80211_sta_register_airtime(sta, tid, airtime, 0);
- }
- 
- static void ath_tx_process_buffer(struct ath_softc *sc, struct ath_txq *txq,
-@@ -709,7 +710,7 @@ static void ath_tx_process_buffer(struct ath_softc *sc, struct ath_txq *txq,
- 	if (sta) {
- 		struct ath_node *an = (struct ath_node *)sta->drv_priv;
- 		tid = ath_get_skb_tid(sc, an, bf->bf_mpdu);
--		ath_tx_count_airtime(sc, sta, bf, ts);
-+		ath_tx_count_airtime(sc, sta, bf, ts, tid->tidno);
- 		if (ts->ts_status & (ATH9K_TXERR_FILT | ATH9K_TXERR_XRETRY))
- 			tid->clear_ps_filter = true;
- 	}
+ 	wil->txrx_ops.get_netif_rx_params(skb, &cid, &security);
 -- 
 2.20.1
 
