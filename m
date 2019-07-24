@@ -2,170 +2,348 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F81DC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F09C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A286227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F7B227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JwKg4GIv"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="HK56g/HV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qXG2dnB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfGXICG (ORCPT
+        id S1726604AbfGXICR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:02:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34051 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfGXICF (ORCPT
+        Wed, 24 Jul 2019 04:02:17 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55441 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725878AbfGXICQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:02:05 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so87701647iot.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZpELpXZSSnQ+e7/1lwzRijm6kavkrokO6GLtsw9fuV0=;
-        b=JwKg4GIvFbJO5YwYWbAJdFJp1+mANUlNeWtfS5YJz1LG/VusuAjOU09iWNiRlFuNHs
-         XWx5coRVGyCJQn2QpBPH3hitrIIBRwad4Iok7A1qRdTLQjrC3sxKeNjbu5SUCjxcNzD4
-         fo9niMh4IiWkQv3udhNpV0Y6aOlcGgA2kejax+oSoab6+wvGiCso6jJ7coB0gmBKEt+s
-         ipb/8ucl5bBIlqOuL38zOufUs0aWBXS8K4AnK1EFuehnwkRiiB/h8RwDdwZqezNLDG8T
-         Z/zjX+nAEl9hVp2BtWuXPVr0DRj7wPvX8FIl2+G/nwxBbyUINeW8zQVQRqtdMy9dZDiu
-         x+iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZpELpXZSSnQ+e7/1lwzRijm6kavkrokO6GLtsw9fuV0=;
-        b=RQa77ygpxxcxTTvZgcyaufxcIOtVcGaPuuCXhEfyWDfb3UIUQqfTpR696ajQHbQdjg
-         xdx2T5cuqQG27Bolm2w5ySL9d9K2XQmq7pJDNNjqeQWfNZfyez/5pfcUHy0k4g2P68pN
-         ZX4y8GSeDjNOqwvXJ74fKronowyExXa07ckvo0KNVeFdyvUtJEiM9tMrk0QXJv/u7Xxb
-         bvIn4RugRMxWHB3d/aD+zfhrwrK8rS9a/d+SDheszJmbAHajF4NuBHUt1kznC0t+WBvJ
-         yRUdVg+7bZtl0XRS+hFfjTPny1jzQxb1ytMbvslfA4BkYTJEx7extlsmyqMMjjyxnn75
-         1bWA==
-X-Gm-Message-State: APjAAAVNsJaIffLbEXzVQekXeDyy+FwImjSb/sU5QXAsL61Bb+kJtdUq
-        WVkTBYNf1EISCibowFby5vhdn9Le+MtA6QkYSLkEyw==
-X-Google-Smtp-Source: APXvYqx+SVNDI1oseLGo7yIVur0e2cfnChvuGs1uNJGP5sugMwXmaKGfcTH8AHDPyxq12vRfCBJvejJZuxiEDnmTwLk=
-X-Received: by 2002:a6b:641a:: with SMTP id t26mr29709718iog.3.1563955323876;
- Wed, 24 Jul 2019 01:02:03 -0700 (PDT)
+        Wed, 24 Jul 2019 04:02:16 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id A18E920319;
+        Wed, 24 Jul 2019 04:02:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 24 Jul 2019 04:02:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=vGMWGeup4fNzBdqplWpmo0KCMG
+        AiAgFTbEnQSTgMS68=; b=HK56g/HVg7olzOkStP/bNLJiK1e596UnMP1SS9zmpq
+        DcxuWhwgipRBQma979wtZj7OEG8RE+WJmTANr6j/+t00qyjPTATHZZlXypDPI4yI
+        /UhfEG/jZUPiEkTtfgC0lSKxoYW6izXQgelkTsXOtxMvPm8P1+mUPWMdmWGdgaFK
+        TlB9HFROrQloJx+DnozOkRpYvqNHzpkc0ZcOHwQNC8S6nFEXbpMzOwJ7z/nMu22a
+        rbInz7r0SriT163TaNqdDFAfHEbHNFie8zVy2QjVA+y7QL78tsVlknBdWCOm4M9f
+        oNXY8ncaL5HQcSH4Ft5pk5kdvMluu4dp8bJzSwPLvOIQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=vGMWGeup4fNzBdqpl
+        Wpmo0KCMGAiAgFTbEnQSTgMS68=; b=qXG2dnB9/a5jAOKSV4Mfpt0EtZce6DMla
+        Bf3Q034MHyMPF9PTvYQhxnR+LhSfbB7gOGTaqMk7sr8hOpKjcHh/Adu3xFHswJ/z
+        9tz5S7d/A92vi/xxz5vd969Rqvb50sppbo/mP/KZ+0SxIBd/wAmX10lRR18HeCHz
+        2V0nWZk0j/WRVjWRGzMFG68NwNglb1bNsr4PjlT9So+Khq5tQj0ldZ5AoeYLAlBv
+        tEjpKiotE9GTuzcEVb82rcMjuAMBetPVgdFvwbgo4Oq3s7eM5Pzui4DIX/GEoNZL
+        72mJH63GH+OBbDrcJOamw0If6jokF6iXNHzc25V+fhk4cnh6l5d2g==
+X-ME-Sender: <xms:hhA4Xc1tNkdzUhn-zrJu5xW3TSs8vVRXoQ9skZ0yAH_R5H_x8BKhWQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrjeelgdduvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuffhomhgrihhnpehpihhnmhhugidruggvvhenucfkphepvddtvddrke
+    durddukedrfedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhi
+    ugdrrghunecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:hhA4XYkYcL0yZZz8mdIJesNj919MKI1wUoZQu3Ew72Du930NqOECww>
+    <xmx:hhA4XU9FJwCLsbei9ZKsQ3LzbSKl46g61krowX8BUxI5QBYhWlFnkQ>
+    <xmx:hhA4XVrWzcP7utJyM8zwbOff2s_hnZVjcgYaWS_2wwp0DsFD2IUZfg>
+    <xmx:hxA4XbXgAdQt9x85E0BUjZN7CPqM_bJXBMIQBjNYsOfvnj2F7-9jNA>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E71C1380074;
+        Wed, 24 Jul 2019 04:02:11 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: aspeed-g5: Delay acquisition of regmaps
+Date:   Wed, 24 Jul 2019 17:31:55 +0930
+Message-Id: <20190724080155.12209-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190724024049.GC643@sol.localdomain> <623ff230-5883-560c-22d0-3e6b0eeaba39@mcn.org>
-In-Reply-To: <623ff230-5883-560c-22d0-3e6b0eeaba39@mcn.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 24 Jul 2019 10:01:51 +0200
-Message-ID: <CACT4Y+aqUPQ-T8zZBFiyDu7v8gk_3j+B3NEtuKC7aupQU9JFzA@mail.gmail.com>
-Subject: Re: Reminder: 3 open syzbot bugs in "net/ax25" subsystem
-To:     Joe <joego@mcn.org>
-Cc:     linux-hams <linux-hams@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 5:42 AM Joe <joego@mcn.org> wrote:
->
-> Hi Eric, How do I get off of this thread? When I try to unsubscribe it
-> tells me I'm not a member of the group.
+While sorting out some devicetree issues I found that the pinctrl driver
+was failing to acquire its GFX regmap even though the phandle was
+present in the devicetree:
 
-Hi Joe,
+    [    0.124190] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: No GFX phandle found, some mux configurations may fail
 
-If you received it via netdev or linux-hams mailing lists, here are
-instructions on how to unsubscribe:
-http://vger.kernel.org/vger-lists.html#netdev
-http://vger.kernel.org/vger-lists.html#linux-hams
+Without access to the GFX regmap we fail to configure the mux for the
+VPO function:
 
+    [    1.548866] pinctrl core: add 1 pinctrl maps
+    [    1.549826] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: found group selector 164 for VPO
+    [    1.550638] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 144 (V20) for 1e6e6000.display
+    [    1.551346] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 145 (U19) for 1e6e6000.display
+    ...
+    [    1.562057] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 218 (T22) for 1e6e6000.display
+    [    1.562541] aspeed-g5-pinctrl 1e6e2000.syscon:pinctrl: request pin 219 (R20) for 1e6e6000.display
+    [    1.563113] Muxing pin 144 for VPO
+    [    1.563456] Want SCU8C[0x00000001]=0x1, got 0x0 from 0x00000000
+    [    1.564624] aspeed_gfx 1e6e6000.display: Error applying setting, reverse things back
 
+This turned out to be a simple problem of timing: The ASPEED pinctrl
+driver is probed during arch_initcall(), while GFX is processed much
+later. As such the GFX syscon is not yet registered during the pinctrl
+probe() and we get an -EPROBE_DEFER when we try to look it up, however
+we must not defer probing the pinctrl driver for the inability to mux
+some GFX-related functions.
 
-> On 7/23/19 7:40 PM, Eric Biggers wrote:
-> > [This email was generated by a script.  Let me know if you have any suggestions
-> > to make it better, or if you want it re-generated with the latest status.]
-> >
-> > Of the currently open syzbot reports against the upstream kernel, I've manually
-> > marked 3 of them as possibly being bugs in the "net/ax25" subsystem.  I've
-> > listed these reports below, sorted by an algorithm that tries to list first the
-> > reports most likely to be still valid, important, and actionable.
-> >
-> > If you believe a bug is no longer valid, please close the syzbot report by
-> > sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-> > original thread, as explained at https://goo.gl/tpsmEJ#status
-> >
-> > If you believe I misattributed a bug to the "net/ax25" subsystem, please let me
-> > know, and if possible forward the report to the correct people or mailing list.
-> >
-> > Here are the bugs:
-> >
-> > --------------------------------------------------------------------------------
-> > Title:              general protection fault in ax25_send_frame
-> > Last occurred:      0 days ago
-> > Reported:           204 days ago
-> > Branches:           Mainline and others
-> > Dashboard link:     https://syzkaller.appspot.com/bug?id=1cdd5b120f129364fc8e9b2b027826cf99fa696e
-> > Original thread:    https://lkml.kernel.org/lkml/0000000000009ea37c057e58d787@google.com/T/#u
-> >
-> > Unfortunately, this bug does not have a reproducer.
-> >
-> > No one replied to the original thread for this bug.
-> >
-> > If you fix this bug, please add the following tag to the commit:
-> >      Reported-by: syzbot+e0b81535a27b8be39502@syzkaller.appspotmail.com
-> >
-> > If you send any email or patch for this bug, please consider replying to the
-> > original thread.  For the git send-email command to use, or tips on how to reply
-> > if the thread isn't in your mailbox, see the "Reply instructions" at
-> > https://lkml.kernel.org/r/0000000000009ea37c057e58d787@google.com
-> >
-> > --------------------------------------------------------------------------------
-> > Title:              KASAN: stack-out-of-bounds Write in ax25_getname
-> > Last occurred:      90 days ago
-> > Reported:           206 days ago
-> > Branches:           Mainline and others
-> > Dashboard link:     https://syzkaller.appspot.com/bug?id=fb195f91dc044978c1b186f1288b1eff61edcc20
-> > Original thread:    https://lkml.kernel.org/lkml/000000000000ed4120057e2df0c6@google.com/T/#u
-> >
-> > This bug has a syzkaller reproducer only.
-> >
-> > No one replied to the original thread for this bug.
-> >
-> > If you fix this bug, please add the following tag to the commit:
-> >      Reported-by: syzbot+6a29097222b4d3b8617c@syzkaller.appspotmail.com
-> >
-> > If you send any email or patch for this bug, please consider replying to the
-> > original thread.  For the git send-email command to use, or tips on how to reply
-> > if the thread isn't in your mailbox, see the "Reply instructions" at
-> > https://lkml.kernel.org/r/000000000000ed4120057e2df0c6@google.com
-> >
-> > --------------------------------------------------------------------------------
-> > Title:              inconsistent lock state in ax25_std_heartbeat_expiry
-> > Last occurred:      122 days ago
-> > Reported:           120 days ago
-> > Branches:           net
-> > Dashboard link:     https://syzkaller.appspot.com/bug?id=9086a8eac930890b2730d6441093bd478e32913f
-> > Original thread:    https://lkml.kernel.org/lkml/0000000000001b07250584efbee3@google.com/T/#u
-> >
-> > Unfortunately, this bug does not have a reproducer.
-> >
-> > The original thread for this bug received 2 replies; the last was 119 days ago.
-> >
-> > If you fix this bug, please add the following tag to the commit:
-> >      Reported-by: syzbot+e350b81e95a6a214da8a@syzkaller.appspotmail.com
-> >
-> > If you send any email or patch for this bug, please consider replying to the
-> > original thread.  For the git send-email command to use, or tips on how to reply
-> > if the thread isn't in your mailbox, see the "Reply instructions" at
-> > https://lkml.kernel.org/r/0000000000001b07250584efbee3@google.com
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/623ff230-5883-560c-22d0-3e6b0eeaba39%40mcn.org.
+Switch to lazily grabbing the regmaps when they're first required by the
+mux configuration. This generates a bit of noise in the patch as we have
+to drop the `const` qualifier on arguments for several function
+prototypes, but has the benefit of working.
+
+I've smoke tested this for the ast2500-evb under qemu with a dummy
+graphics device. We now succeed in our attempts to configure the SoC's
+VPO pinmux function.
+
+Fixes: 7d29ed88acbb ("pinctrl: aspeed: Read and write bits in LPC and GFX controllers")
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c |  2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 92 +++++++++++++++-------
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c    | 12 ++-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h     |  5 +-
+ 4 files changed, 74 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+index 384396cbb22d..22256576b69a 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+@@ -2412,7 +2412,7 @@ static const struct aspeed_pin_config aspeed_g4_configs[] = {
+ 	{ PIN_CONFIG_INPUT_DEBOUNCE, { C14, B14 }, SCUA8, 27 },
+ };
+ 
+-static int aspeed_g4_sig_expr_set(const struct aspeed_pinmux_data *ctx,
++static int aspeed_g4_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ 				  const struct aspeed_sig_expr *expr,
+ 				  bool enable)
+ {
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+index 053101f795a2..ba6438ac4d72 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -2507,6 +2507,61 @@ static struct aspeed_pin_config aspeed_g5_configs[] = {
+ 	{ PIN_CONFIG_INPUT_DEBOUNCE, { A20, B19 }, SCUA8, 27 },
+ };
+ 
++static struct regmap *aspeed_g5_acquire_regmap(struct aspeed_pinmux_data *ctx,
++					       int ip)
++{
++	if (ip == ASPEED_IP_SCU) {
++		WARN(!ctx->maps[ip], "Missing SCU syscon!");
++		return ctx->maps[ip];
++	}
++
++	if (ip >= ASPEED_NR_PINMUX_IPS)
++		return ERR_PTR(-EINVAL);
++
++	if (likely(ctx->maps[ip]))
++		return ctx->maps[ip];
++
++	if (ip == ASPEED_IP_GFX) {
++		struct device_node *node;
++		struct regmap *map;
++
++		node = of_parse_phandle(ctx->dev->of_node,
++					"aspeed,external-nodes", 0);
++		if (node) {
++			map = syscon_node_to_regmap(node);
++			of_node_put(node);
++			if (IS_ERR(map))
++				return map;
++		} else
++			return ERR_PTR(-ENODEV);
++
++		ctx->maps[ASPEED_IP_GFX] = map;
++		dev_dbg(ctx->dev, "Acquired GFX regmap");
++		return map;
++	}
++
++	if (ip == ASPEED_IP_LPC) {
++		struct device_node *node;
++		struct regmap *map;
++
++		node = of_parse_phandle(ctx->dev->of_node,
++					"aspeed,external-nodes", 1);
++		if (node) {
++			map = syscon_node_to_regmap(node->parent);
++			of_node_put(node);
++			if (IS_ERR(map))
++				return map;
++		} else
++			map = ERR_PTR(-ENODEV);
++
++		ctx->maps[ASPEED_IP_LPC] = map;
++		dev_dbg(ctx->dev, "Acquired LPC regmap");
++		return map;
++	}
++
++	return ERR_PTR(-EINVAL);
++}
++
+ /**
+  * Configure a pin's signal by applying an expression's descriptor state for
+  * all descriptors in the expression.
+@@ -2520,7 +2575,7 @@ static struct aspeed_pin_config aspeed_g5_configs[] = {
+  * Return: 0 if the expression is configured as requested and a negative error
+  * code otherwise
+  */
+-static int aspeed_g5_sig_expr_set(const struct aspeed_pinmux_data *ctx,
++static int aspeed_g5_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ 				  const struct aspeed_sig_expr *expr,
+ 				  bool enable)
+ {
+@@ -2531,9 +2586,15 @@ static int aspeed_g5_sig_expr_set(const struct aspeed_pinmux_data *ctx,
+ 		const struct aspeed_sig_desc *desc = &expr->descs[i];
+ 		u32 pattern = enable ? desc->enable : desc->disable;
+ 		u32 val = (pattern << __ffs(desc->mask));
++		struct regmap *map;
+ 
+-		if (!ctx->maps[desc->ip])
+-			return -ENODEV;
++		map = aspeed_g5_acquire_regmap(ctx, desc->ip);
++		if (IS_ERR(map)) {
++			dev_err(ctx->dev,
++				"Failed to acquire regmap for IP block %d\n",
++				desc->ip);
++			return PTR_ERR(map);
++		}
+ 
+ 		/*
+ 		 * Strap registers are configured in hardware or by early-boot
+@@ -2641,34 +2702,11 @@ static struct pinctrl_desc aspeed_g5_pinctrl_desc = {
+ static int aspeed_g5_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	int i;
+-	struct regmap *map;
+-	struct device_node *node;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(aspeed_g5_pins); i++)
+ 		aspeed_g5_pins[i].number = i;
+ 
+-	node = of_parse_phandle(pdev->dev.of_node, "aspeed,external-nodes", 0);
+-	map = syscon_node_to_regmap(node);
+-	of_node_put(node);
+-	if (IS_ERR(map)) {
+-		dev_warn(&pdev->dev, "No GFX phandle found, some mux configurations may fail\n");
+-		map = NULL;
+-	}
+-	aspeed_g5_pinctrl_data.pinmux.maps[ASPEED_IP_GFX] = map;
+-
+-	node = of_parse_phandle(pdev->dev.of_node, "aspeed,external-nodes", 1);
+-	if (node) {
+-		map = syscon_node_to_regmap(node->parent);
+-		if (IS_ERR(map)) {
+-			dev_warn(&pdev->dev, "LHC parent is not a syscon, some mux configurations may fail\n");
+-			map = NULL;
+-		}
+-	} else {
+-		dev_warn(&pdev->dev, "No LHC phandle found, some mux configurations may fail\n");
+-		map = NULL;
+-	}
+-	of_node_put(node);
+-	aspeed_g5_pinctrl_data.pinmux.maps[ASPEED_IP_LPC] = map;
++	aspeed_g5_pinctrl_data.pinmux.dev = &pdev->dev;
+ 
+ 	return aspeed_pinctrl_probe(pdev, &aspeed_g5_pinctrl_desc,
+ 			&aspeed_g5_pinctrl_data);
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+index 535db3de490b..54933665b5f8 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+@@ -71,7 +71,7 @@ int aspeed_pinmux_get_fn_groups(struct pinctrl_dev *pctldev,
+ 	return 0;
+ }
+ 
+-static int aspeed_sig_expr_enable(const struct aspeed_pinmux_data *ctx,
++static int aspeed_sig_expr_enable(struct aspeed_pinmux_data *ctx,
+ 				  const struct aspeed_sig_expr *expr)
+ {
+ 	int ret;
+@@ -86,7 +86,7 @@ static int aspeed_sig_expr_enable(const struct aspeed_pinmux_data *ctx,
+ 	return 0;
+ }
+ 
+-static int aspeed_sig_expr_disable(const struct aspeed_pinmux_data *ctx,
++static int aspeed_sig_expr_disable(struct aspeed_pinmux_data *ctx,
+ 				   const struct aspeed_sig_expr *expr)
+ {
+ 	int ret;
+@@ -109,7 +109,7 @@ static int aspeed_sig_expr_disable(const struct aspeed_pinmux_data *ctx,
+  *
+  * Return: 0 if all expressions are disabled, otherwise a negative error code
+  */
+-static int aspeed_disable_sig(const struct aspeed_pinmux_data *ctx,
++static int aspeed_disable_sig(struct aspeed_pinmux_data *ctx,
+ 			      const struct aspeed_sig_expr **exprs)
+ {
+ 	int ret = 0;
+@@ -217,8 +217,7 @@ int aspeed_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
+ {
+ 	int i;
+ 	int ret;
+-	const struct aspeed_pinctrl_data *pdata =
+-		pinctrl_dev_get_drvdata(pctldev);
++	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	const struct aspeed_pin_group *pgroup = &pdata->pinmux.groups[group];
+ 	const struct aspeed_pin_function *pfunc =
+ 		&pdata->pinmux.functions[function];
+@@ -306,8 +305,7 @@ int aspeed_gpio_request_enable(struct pinctrl_dev *pctldev,
+ 			       unsigned int offset)
+ {
+ 	int ret;
+-	const struct aspeed_pinctrl_data *pdata =
+-		pinctrl_dev_get_drvdata(pctldev);
++	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	const struct aspeed_pin_desc *pdesc = pdata->pins[offset].drv_data;
+ 	const struct aspeed_sig_expr ***prios, **funcs, *expr;
+ 
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+index 329d54d48667..52d299b59ce2 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+@@ -702,11 +702,12 @@ struct aspeed_pin_function {
+ struct aspeed_pinmux_data;
+ 
+ struct aspeed_pinmux_ops {
+-	int (*set)(const struct aspeed_pinmux_data *ctx,
++	int (*set)(struct aspeed_pinmux_data *ctx,
+ 		   const struct aspeed_sig_expr *expr, bool enabled);
+ };
+ 
+ struct aspeed_pinmux_data {
++	struct device *dev;
+ 	struct regmap *maps[ASPEED_NR_PINMUX_IPS];
+ 
+ 	const struct aspeed_pinmux_ops *ops;
+@@ -725,7 +726,7 @@ int aspeed_sig_expr_eval(const struct aspeed_pinmux_data *ctx,
+ 			 const struct aspeed_sig_expr *expr,
+ 			 bool enabled);
+ 
+-static inline int aspeed_sig_expr_set(const struct aspeed_pinmux_data *ctx,
++static inline int aspeed_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ 				      const struct aspeed_sig_expr *expr,
+ 				      bool enabled)
+ {
+-- 
+2.20.1
+
