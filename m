@@ -2,141 +2,125 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80749C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602A3C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5672C20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 333D620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="rw9cYvw8"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="n3J+GAL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393007AbfGXUSa (ORCPT
+        id S2392841AbfGXUSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:18:30 -0400
-Received: from mail-eopbgr820131.outbound.protection.outlook.com ([40.107.82.131]:15529
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392932AbfGXUSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:18:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dEcxRKaSO2AoIYxNQlEQnkYJF2+19aVRVaTXx8Qw3axYRl/nLGeZfzFMjj1ZYJBmKKaWddySOzvyiciZ/6hJK4xKjxL0dZVinXzwh14S0G1RWOwE4RjVBfpnyl7luLPgd0tYIDXgik518b6P/yG//lB8JPFTMuZsLjFr/uRSobpQL/xyWrti1LDLtZahRvcbXUm8hDvg48/FVdsowPpi77B8GyqOxiolZJupjMAo1i2AaC5dcTTuH8NDbYNHQw+46k+LrdhM4oNZznypB0KV3fOijfVMMH5fO2ZELTUsLPk6N1lwsj5zr7xRCvLx/tRrmL6cQvosIRMOWGuQhFLSjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0O8bf3MkktXRPasPPM0aZ8FRhXf2oYT66ZTm5ExM6I0=;
- b=GjhLEl/3aCpE5yBEUbXtH7RFh0N9vPDeyFB+jonv13OOm4aWyqfkCo1pN1W3C6mjbmpPhJ+i/bR6jawkwlTKLSUpYHZ3prIaAap+t4x/tu+UjMcG8KmwX8eeZJvIeLP2nLc4DmcqLZdwAF0RPMUwaoGSCMK6aOJIMa0L3t6Qm7Vc/xR/9akg/PsTeGxNQDj4qUbr8IfEtKw6qEJcbL77erp/nvlgvklh+KMXKF8GD7MfGSE/oPuKlWTBq92AqpSHpXXkVbGg6ImH/zuJ08zTtjz3WWBB4f6b0biPbpFqm1Drzbby17IeZsahVMhLS75esyNZu+e9MXgeCNFhjDUY7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wavecomp.com;dmarc=pass action=none
- header.from=mips.com;dkim=pass header.d=mips.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0O8bf3MkktXRPasPPM0aZ8FRhXf2oYT66ZTm5ExM6I0=;
- b=rw9cYvw81npIghzHa7jJTgc1qKS8CzgD6T/igdouSV7aKAtnCQJLFdVX/2PpIJOQdRopyH3dpan9mgJOq0s8DcBq3tDVKzZFLg2PkOmiC7UIUPAl27C/gDUf/lQ/qbYDUchMN505PEuBt6ls8gbnJffVAYz3kD3VYMJDx5h89vk=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1136.namprd22.prod.outlook.com (10.174.171.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Wed, 24 Jul 2019 20:18:21 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::49d3:37f8:217:c83]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::49d3:37f8:217:c83%6]) with mapi id 15.20.2094.017; Wed, 24 Jul 2019
- 20:18:21 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [EXTERNAL][PATCH REBASE v4 00/14] Provide generic top-down mmap
- layout functions
-Thread-Topic: [EXTERNAL][PATCH REBASE v4 00/14] Provide generic top-down mmap
- layout functions
-Thread-Index: AQHVQeTmQ3VcX06rl0WqkHC9YJERUabaNhSA
-Date:   Wed, 24 Jul 2019 20:18:20 +0000
-Message-ID: <20190724201819.6bhvyugquhfrldfa@pburton-laptop>
-References: <20190724055850.6232-1-alex@ghiti.fr>
-In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0001.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::14) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cf1a8fed-1258-4da6-cc22-08d710741252
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1136;
-x-ms-traffictypediagnostic: MWHPR2201MB1136:
-x-microsoft-antispam-prvs: <MWHPR2201MB1136D73898811083245B6C6CC1C60@MWHPR2201MB1136.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0108A997B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(199004)(189003)(33716001)(6246003)(76176011)(498600001)(256004)(52116002)(66066001)(66946007)(5660300002)(64756008)(66476007)(66556008)(3846002)(66446008)(8676002)(1076003)(4744005)(6116002)(68736007)(4326008)(386003)(6506007)(6916009)(71190400001)(71200400001)(305945005)(102836004)(26005)(6436002)(81156014)(7736002)(2906002)(9686003)(6512007)(229853002)(7416002)(42882007)(58126008)(54906003)(8936002)(53936002)(99286004)(446003)(11346002)(14454004)(44832011)(25786009)(6486002)(186003)(476003)(486006)(81166006)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1136;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WBLpAxl0Uei/df2NBs1wSm/pUK/0/nZcFDTE1JL7co+n5YffPuoFkkubkl2DnVpFgsg/ShI7v/j6PI9el+OoSH8IU2+aUbrLiI01ePp1Fs53VLA9mtAmRRnZp8+vW42I5fKA1+Ac4MpqTLk6mmK9Jd13L1B872iZfJJW9mQXvPI5y04CDfIUnuvE9/v0W3wCHzAOltlSpJz8W5kShY5DuIFTr4FUed7TIDpYIkdTvdn3S3/wOi3lpaeO6iok/SUjHQNbYc9UG0fA0qngBZ40kdwQlkJHU84J7Dn18x9xrG9/OFSLu8YGXF68xqleN7IbrKMBUD4/6098KibtOs92PqSWKhSVzMJ5H3yXfDTPAgCb0NlEhASAuZMyMmFxm3cz2OVVn3LhXIa/pNmaiSDsVCwK3zx1cFnTDUNs0Q7hteM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FB1BB9830032BE468CCBFB9649F40069@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 24 Jul 2019 16:18:38 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:47049 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388998AbfGXUSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:18:35 -0400
+Received: by mail-qt1-f196.google.com with SMTP id h21so46771212qtn.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VWJ6DdSzX3UNH5IsBG0QIkcKoVJ3m7vBBB3d3WVZ5uE=;
+        b=n3J+GAL+FB7VbB4RL6GVAirOAzlkzTHdeG1dUMoxA6P765HJ6vilINgoGfg1gmk1C2
+         QeSv4gST+tMRdO9dLK69LLxfwyPsmiKfyvs3TUfCoqfmvKURPNG1u5ThxfSfZB/rAVJW
+         lzianxfqFVnwvVRML7U80M5T1T+Rvr5AfzzqyvrySHXOSTaI+056H1I+ByDUtnJBhlEg
+         xIezRDw+WneukJZqZHL6mhNX2cx/6DDLOuo7f4psXrJoTCceu3eN0GU9eB/Ur5nkuNRK
+         9EMn6cOnl72B0kvwpSRZeH//s6PjsHVcKalg1f9Sgc0xqts4GjQ2MeeoyqGPz1aGpEOO
+         krHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VWJ6DdSzX3UNH5IsBG0QIkcKoVJ3m7vBBB3d3WVZ5uE=;
+        b=X3046i2MJYOaAgghVjBRXvr1vUz6K9aJDZRRHpOayKzGVZaifSS3DlcD/WpNwwk06B
+         1mxtdxzxt/9pDq5hkNqU1tapKruae7LysgnWH3KBTd4IwGERdOvbyFQzn5TDR4mZdKee
+         Ggn+iV8pKJONFEAm8jDsPgb5a/TJ0dmRb2ZoHBhEgIKx5qwFHkw6jPcw9sB4nl1TNsVo
+         Xe1d/m68VvwA2VNvb0MpQjN/m5ogHueg42P8MCa+L3ophqSWQkg4plqgwrkojb3DUoOc
+         ZV/lrL1J3Pc5fE6eI0N8qre+lq43XwC2b9dwDXikQE14gvJcV16W6X3kTGrwIrbqUO9J
+         Ekcw==
+X-Gm-Message-State: APjAAAUpaQKgJaRmIK3ZYLAe9h0Ecv2Jp25PG7qUGjobzrKEkLTyh+7u
+        gt2oGUiMSoZKttMZsvi6Wi/YDA==
+X-Google-Smtp-Source: APXvYqy6Kd2FCXwA5ViOoNdVk66YE8CWdFXTM44KqYbLUvwUjmODvbZbHeyXtq/HnU0w/t05AaFPsA==
+X-Received: by 2002:ac8:7b99:: with SMTP id p25mr59513506qtu.243.1563999514197;
+        Wed, 24 Jul 2019 13:18:34 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id v1sm21152817qkj.19.2019.07.24.13.18.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 13:18:33 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hqNib-0007Qc-5i; Wed, 24 Jul 2019 17:18:33 -0300
+Date:   Wed, 24 Jul 2019 17:18:33 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH] mm/hmm: replace hmm_update with mmu_notifier_range
+Message-ID: <20190724201833.GI28493@ziepe.ca>
+References: <20190723210506.25127-1-rcampbell@nvidia.com>
+ <20190724070553.GA2523@lst.de>
+ <20190724152858.GB28493@ziepe.ca>
+ <20190724175858.GC6410@dhcp22.suse.cz>
+ <20190724180837.GF28493@ziepe.ca>
+ <20190724185617.GE6410@dhcp22.suse.cz>
+ <20190724185910.GF6410@dhcp22.suse.cz>
+ <20190724192155.GG28493@ziepe.ca>
+ <20190724194855.GA15029@lst.de>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf1a8fed-1258-4da6-cc22-08d710741252
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 20:18:20.8213
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724194855.GA15029@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+On Wed, Jul 24, 2019 at 09:48:55PM +0200, Christoph Hellwig wrote:
+> On Wed, Jul 24, 2019 at 04:21:55PM -0300, Jason Gunthorpe wrote:
+> > If we change the register to keep the hlist sorted by address then we
+> > can do a targetted 'undo' of past starts terminated by address
+> > less-than comparison of the first failing struct mmu_notifier.
+> > 
+> > It relies on the fact that rcu is only used to remove items, the list
+> > adds are all protected by mm locks, and the number of mmu notifiers is
+> > very small.
+> > 
+> > This seems workable and does not need more driver review/update...
+> > 
+> > However, hmm's implementation still needs more fixing.
+> 
+> Can we take one step back, please?  The only reason why drivers
+> implement both ->invalidate_range_start and ->invalidate_range_end and
+> expect them to be called paired is to keep some form of counter of
+> active invalidation "sections".  So instead of doctoring around
+> undo schemes the only sane answer is to take such a counter into the
+> core VM code instead of having each driver struggle with it.
 
-On Wed, Jul 24, 2019 at 01:58:36AM -0400, Alexandre Ghiti wrote:
-> Hi Andrew,
->=20
-> This is simply a rebase on top of next-20190719, where I added various
-> Acked/Reviewed-by from Kees and Catalin and a note on commit 08/14 sugges=
-ted
-> by Kees regarding the removal of STACK_RND_MASK that is safe doing.
->=20
-> I would have appreciated a feedback from a mips maintainer but failed to =
-get
-> it: can you consider this series for inclusion anyway ? Mips parts have b=
-een
-> reviewed-by Kees.
+This might work as a hybrid sort of idea, like what HMM tried to do
+with the counter and valid together.
 
-Whilst skimming email on vacation I hadn't spotted how extensive the
-changes in v4 were after acking v3... In any case, for patches 11-13:
+If we keep the counter global and then provide an 'all invalidates
+finished' callback then the driver could potentially still ignore
+invalidates that do not touch its ranges during its page fault path.
 
-    Acked-by: Paul Burton <paul.burton@mips.com>
+I'd have to sketch it..
 
-Thanks,
-    Paul
+I agree it would solve this problem as well and better advance the
+goal to make mmu notifiers simpler to use.. 
+
+But I didn't audit all the invalidate_end users to be sure :)
+
+Jason
