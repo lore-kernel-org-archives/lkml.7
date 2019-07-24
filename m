@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B24AC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B993C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2EF2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8FC2081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999697;
-	bh=K/9hXdjdLbOyie9sfKfu0UVL4P5uobe5o3tW4w9bU4Y=;
+	s=default; t=1563999699;
+	bh=KFUjm0H86IfclthYtdlyr4q47GTjpoPT65+A/Mnqdls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOTIo7BExhgGihmVI5u2NgCe2waD3Y83IRpaUcwqaAuNvoBEiGeYg1bm8TgtIFoFU
-	 EZgtDTnzhPbN00QevQQCZp1lDYap3KEAPS3Twk63GGpNoMAermTzFBc/+pvFrUN+ex
-	 GdTKiGgGTnxBjL0nd7ugE3edkxW9A8aLomGRiKKc=
+	b=IHYQEMK83rITzKZ3GL9xS77feRPGe7mfHsUIKsV3IKYzt+AFTm/QZ/S1O68UIPtGr
+	 OvBkENBK9t1HvwXiv35WfHQKVafs4OxfKBb4UEburxGE4cuxEv4YWUAdD9EH6M/vpb
+	 eLPtOG0LHPMeupv+8ZmfKaSKqM8ziEJ6gupN8tiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389203AbfGXTpR (ORCPT
+        id S2390944AbfGXTpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390373AbfGXTpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 15:45:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390938AbfGXTpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:45:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D28721873;
-        Wed, 24 Jul 2019 19:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E92214AF;
+        Wed, 24 Jul 2019 19:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997513;
-        bh=K/9hXdjdLbOyie9sfKfu0UVL4P5uobe5o3tW4w9bU4Y=;
+        s=default; t=1563997510;
+        bh=KFUjm0H86IfclthYtdlyr4q47GTjpoPT65+A/Mnqdls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W198LDnRPK8UjleDxoY9EIyPuk+dha7/66Nvqae1fQhnNHkAcEhGKnNE9Qs6IQSeY
-         k1ldWwzJuAKCZyzqOCXpyfrhTSGrorSncOc71WR8/zWZAURHq9XbGn27C/hvCMyz64
-         NpebgIQpvtRwKdumizTNQ3kuB+eBq3OKOBZ0naV8=
+        b=jxczrrDnlOFqYtHL3jqXEBBrigjJcOnMjj5BdufvAVD4tB2WEIonYmew1yArl6787
+         v2B+fgfXC3WmQTrz2UxwZ5P5CTptns0Fi3m328z91y+4iJPkiGKsL8cKi6y11isUGt
+         PfkaxxuQwPb+L2PfADeHJwj1eAd5DaxzFd7nb2w8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
+        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 032/371] net: stmmac: dwmac1000: Clear unused address entries
-Date:   Wed, 24 Jul 2019 21:16:24 +0200
-Message-Id: <20190724191726.928184323@linuxfoundation.org>
+Subject: [PATCH 5.1 049/371] net: phy: Check against net_device being NULL
+Date:   Wed, 24 Jul 2019 21:16:41 +0200
+Message-Id: <20190724191728.389785727@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,41 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9463c445590091202659cdfdd44b236acadfbd84 ]
+[ Upstream commit 82c76aca81187b3d28a6fb3062f6916450ce955e ]
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+In general, we don't want MAC drivers calling phy_attach_direct with the
+net_device being NULL. Add checks against this in all the functions
+calling it: phy_attach() and phy_connect_direct().
 
-Found out while running stmmac selftests.
-
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 6 ++++++
+ drivers/net/phy/phy_device.c | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index 0877bde6e860..21d131347e2e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -216,6 +216,12 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
- 					    GMAC_ADDR_LOW(reg));
- 			reg++;
- 		}
-+
-+		while (reg <= perfect_addr_number) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
- 	}
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index f6a6cc5bf118..e748aee82033 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -948,6 +948,9 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
+ {
+ 	int rc;
  
- #ifdef FRAME_FILTER_DEBUG
++	if (!dev)
++		return -EINVAL;
++
+ 	rc = phy_attach_direct(dev, phydev, phydev->dev_flags, interface);
+ 	if (rc)
+ 		return rc;
+@@ -1290,6 +1293,9 @@ struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
+ 	struct device *d;
+ 	int rc;
+ 
++	if (!dev)
++		return ERR_PTR(-EINVAL);
++
+ 	/* Search the list of PHY devices on the mdio bus for the
+ 	 * PHY with the requested name
+ 	 */
 -- 
 2.20.1
 
