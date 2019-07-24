@@ -5,48 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1F1C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4F4C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A359B21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7261122C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033366;
-	bh=r662jml85MiQMgRGSEkOVO10RYOobqyOSejyrb8hO7I=;
+	s=default; t=1564033370;
+	bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wAgyyHfpGCdzo1wXhpWXMNaJaYiZJXxpquxVouFo9huflW0vMqGgLpz0EY0Ep+z/1
-	 3FAvmDmjhWJVFBwI0my5QREgahhOz59/8NPdeKWXMvXl/RbTRyjwOeNhiF3sv2ojrA
-	 0sNS/vQ1B8nE0kz0SqD+W7psrXVpSotU1sf5/PZk=
+	b=P9LrRHEW0vM9GK1e33OTn0l4dKYSwpHdBW03cb+sSNKWyZ8NtzJWVkkW7eMLtWQ8+
+	 4Xbk/YKsE54cayhqAAc18NbrjcrNJ43cPpredoWgkPDgnRDQb/odwtIu4VLmIhTItN
+	 r6Rsz8JwcSsKiGulx8OgJIhX2JuENv37fIQKHDII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390940AbfGYFmp (ORCPT
+        id S2390953AbfGYFmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:42:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390887AbfGYFmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:42:43 -0400
+        id S2390918AbfGYFml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38D121850;
-        Thu, 25 Jul 2019 05:42:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10CE22CB8;
+        Thu, 25 Jul 2019 05:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033363;
-        bh=r662jml85MiQMgRGSEkOVO10RYOobqyOSejyrb8hO7I=;
+        s=default; t=1564033360;
+        bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tTdzPUvrHGzh1PKYjiFIfL1KSKAe8If1EM6lk7j4NzLjOzlcJKeF1L5hRi87VTWAk
-         okUXOD39RFhQTM0LGRx0/UQTKvFrDebDPlmE6v1lq/jNueSkzYO5NMv1hc1zRknwLU
-         xXKAyM2sv7kRnEIR10zEk4ItBeR11Dih5rG9UGgY=
+        b=vQ7H4HYNkuERzU6iLwlAmPgucZhfFIPhdWz9dPd2u/NW/+WDZCebY+9wVo+mbqhYj
+         AWg2SEYGU6ihCyWjMaZzMACrvepJZ1s6AIrXWHzzJYgf1V7nlnz+FLyee/U3YDQLkb
+         RNhhHzad4rXWjv8wrhzSED67WVivmqnh7oiHCy+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yong Li <mr.liyong@qq.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 183/271] Revert "bcache: set CACHE_SET_IO_DISABLE in bch_cached_dev_error()"
-Date:   Wed, 24 Jul 2019 21:20:52 +0200
-Message-Id: <20190724191710.824018675@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        linux-crypto@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 182/271] crypto: crypto4xx - fix a potential double free in ppc4xx_trng_probe
+Date:   Wed, 24 Jul 2019 21:20:51 +0200
+Message-Id: <20190724191710.728178886@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -59,65 +65,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-commit 695277f16b3a102fcc22c97fdf2de77c7b19f0b3 upstream.
+commit 95566aa75cd6b3b404502c06f66956b5481194b3 upstream.
 
-This reverts commit 6147305c73e4511ca1a975b766b97a779d442567.
+There is a possible double free issue in ppc4xx_trng_probe():
 
-Although this patch helps the failed bcache device to stop faster when
-too many I/O errors detected on corresponding cached device, setting
-CACHE_SET_IO_DISABLE bit to cache set c->flags was not a good idea. This
-operation will disable all I/Os on cache set, which means other attached
-bcache devices won't work neither.
+85:	dev->trng_base = of_iomap(trng, 0);
+86:	of_node_put(trng);          ---> released here
+87:	if (!dev->trng_base)
+88:		goto err_out;
+...
+110:	ierr_out:
+111:		of_node_put(trng);  ---> double released here
+...
 
-Without this patch, the failed bcache device can also be stopped
-eventually if internal I/O accomplished (e.g. writeback). Therefore here
-I revert it.
+This issue was detected by using the Coccinelle software.
+We fix it by removing the unnecessary of_node_put().
 
-Fixes: 6147305c73e4 ("bcache: set CACHE_SET_IO_DISABLE in bch_cached_dev_error()")
-Reported-by: Yong Li <mr.liyong@qq.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: <stable@vger.kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Armijn Hemel <armijn@tjaldur.nl>
+Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/super.c |   17 -----------------
- 1 file changed, 17 deletions(-)
+ drivers/crypto/amcc/crypto4xx_trng.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1423,8 +1423,6 @@ int bch_flash_dev_create(struct cache_se
+--- a/drivers/crypto/amcc/crypto4xx_trng.c
++++ b/drivers/crypto/amcc/crypto4xx_trng.c
+@@ -111,7 +111,6 @@ void ppc4xx_trng_probe(struct crypto4xx_
+ 	return;
  
- bool bch_cached_dev_error(struct cached_dev *dc)
- {
--	struct cache_set *c;
--
- 	if (!dc || test_bit(BCACHE_DEV_CLOSING, &dc->disk.flags))
- 		return false;
- 
-@@ -1435,21 +1433,6 @@ bool bch_cached_dev_error(struct cached_
- 	pr_err("stop %s: too many IO errors on backing device %s\n",
- 		dc->disk.disk->disk_name, dc->backing_dev_name);
- 
--	/*
--	 * If the cached device is still attached to a cache set,
--	 * even dc->io_disable is true and no more I/O requests
--	 * accepted, cache device internal I/O (writeback scan or
--	 * garbage collection) may still prevent bcache device from
--	 * being stopped. So here CACHE_SET_IO_DISABLE should be
--	 * set to c->flags too, to make the internal I/O to cache
--	 * device rejected and stopped immediately.
--	 * If c is NULL, that means the bcache device is not attached
--	 * to any cache set, then no CACHE_SET_IO_DISABLE bit to set.
--	 */
--	c = dc->disk.c;
--	if (c && test_and_set_bit(CACHE_SET_IO_DISABLE, &c->flags))
--		pr_info("CACHE_SET_IO_DISABLE already set");
--
- 	bcache_device_stop(&dc->disk);
- 	return true;
- }
+ err_out:
+-	of_node_put(trng);
+ 	iounmap(dev->trng_base);
+ 	kfree(rng);
+ 	dev->trng_base = NULL;
 
 
