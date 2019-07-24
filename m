@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AB5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7EDC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C6D21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B58D21852
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000289;
-	bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
+	s=default; t=1564000294;
+	bh=hIGXtT9RPZkp/4zODg2muN+I9WYt71VhJm/jM3KQN6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqe2RykcUcEVSLf00hWM7Nen24Ui14ZMhu/diMxil4hjnbGM6AolDbmJyJfisYtZD
-	 Qaa226xt6i4SRypUoTlmMRXjLxhgke5OH+YrtCbFdoOfI5bwsqqO6nC3ohfmJ9upwU
-	 Pui72Uka78WpXcmUI/GI6m3UdhHuhdV7f7z0BZUc=
+	b=o0oTBkJrpS9QpaZPEJa+3S46O+jF/oJ7rEtw4Jia68+rCKAFO6qLNUmrwNjO6QQnU
+	 S7HtJxBdF7a0too5jPhezvD1teqvTaRFjEdKUwdwiV0EDgNP/TdZobzykEXyZEuRfF
+	 4Vgqt96umU/OOQInzd4ulqu6nyjYg+4QjoKSy0O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbfGXUb2 (ORCPT
+        id S1729262AbfGXUbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:31:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388313AbfGXTab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:31 -0400
+        id S2388293AbfGXTaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B4D920659;
-        Wed, 24 Jul 2019 19:30:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3BF020659;
+        Wed, 24 Jul 2019 19:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996630;
-        bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
+        s=default; t=1563996622;
+        bh=hIGXtT9RPZkp/4zODg2muN+I9WYt71VhJm/jM3KQN6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCMn8LJcwV4EYthUCMvZk73/RbH90gC+6JbZG1Ydy/kpJN4SQIMzK2r9qAwyBJv3o
-         qDRR+FSV2t5ZTMuSo98w3Vsx1BAfiv7+I3xnV7IrdR0Uohez7gALpQBOR8NC+cKaPW
-         T6P34B+s7IlBxeVtqfOrWoNom5bpi5tmt8pvfOcY=
+        b=ixQ17kT8oq00YoNH0Uf/Zb3FtcvbjC573XctotEndIx7R44UBEhD5RiJQ88FBGbQq
+         lbAgaHLyh3rdciW4ndU0ffCh4A08tuasI3y6m3/o4gC0AS8XYXTKhgdZ+6kZPB3Ns/
+         IspeDSXK1k45nzN/Qeanr4jVYQg03IZtAusRUbYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 161/413] ath10k: fix fw crash by moving chip reset after napi disabled
-Date:   Wed, 24 Jul 2019 21:17:32 +0200
-Message-Id: <20190724191746.602512161@linuxfoundation.org>
+Subject: [PATCH 5.2 123/413] PCI: Add missing link delays required by the PCIe spec
+Date:   Wed, 24 Jul 2019 21:16:54 +0200
+Message-Id: <20190724191743.977277445@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,70 +61,341 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 08d80e4cd27ba19f9bee9e5f788f9a9fc440a22f ]
+[ Upstream commit c2bf1fc212f7e6f25ace1af8f0b3ac061ea48ba5 ]
 
-On SMP platform, when continuously running wifi up/down, the napi
-poll can be scheduled during chip reset, which will call
-ath10k_pci_has_fw_crashed() to check the fw status. But in the reset
-period, the value from FW_INDICATOR_ADDRESS register will return
-0xdeadbeef, which also be treated as fw crash. Fix the issue by
-moving chip reset after napi disabled.
+Currently Linux does not follow PCIe spec regarding the required delays
+after reset. A concrete example is a Thunderbolt add-in-card that
+consists of a PCIe switch and two PCIe endpoints:
 
-ath10k_pci 0000:01:00.0: firmware crashed! (guid 73b30611-5b1e-4bdd-90b4-64c81eb947b6)
-ath10k_pci 0000:01:00.0: qca9984/qca9994 hw1.0 target 0x01000000 chip_id 0x00000000 sub 168c:cafe
-ath10k_pci 0000:01:00.0: htt-ver 2.2 wmi-op 6 htt-op 4 cal otp max-sta 512 raw 0 hwcrypto 1
-ath10k_pci 0000:01:00.0: failed to get memcpy hi address for firmware address 4: -16
-ath10k_pci 0000:01:00.0: failed to read firmware dump area: -16
-ath10k_pci 0000:01:00.0: Copy Engine register dump:
-ath10k_pci 0000:01:00.0: [00]: 0x0004a000   0   0   0   0
-ath10k_pci 0000:01:00.0: [01]: 0x0004a400   0   0   0   0
-ath10k_pci 0000:01:00.0: [02]: 0x0004a800   0   0   0   0
-ath10k_pci 0000:01:00.0: [03]: 0x0004ac00   0   0   0   0
-ath10k_pci 0000:01:00.0: [04]: 0x0004b000   0   0   0   0
-ath10k_pci 0000:01:00.0: [05]: 0x0004b400   0   0   0   0
-ath10k_pci 0000:01:00.0: [06]: 0x0004b800   0   0   0   0
-ath10k_pci 0000:01:00.0: [07]: 0x0004bc00   1   0   1   0
-ath10k_pci 0000:01:00.0: [08]: 0x0004c000   0   0   0   0
-ath10k_pci 0000:01:00.0: [09]: 0x0004c400   0   0   0   0
-ath10k_pci 0000:01:00.0: [10]: 0x0004c800   0   0   0   0
-ath10k_pci 0000:01:00.0: [11]: 0x0004cc00   0   0   0   0
+  +-1b.0-[01-6b]----00.0-[02-6b]--+-00.0-[03]----00.0 TBT controller
+                                  +-01.0-[04-36]-- DS hotplug port
+                                  +-02.0-[37]----00.0 xHCI controller
+                                  \-04.0-[38-6b]-- DS hotplug port
 
-Tested HW: QCA9984,QCA9887,WCN3990
+The root port (1b.0) and the PCIe switch downstream ports are all PCIe
+gen3 so they support 8GT/s link speeds.
 
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+We wait for the PCIe hierarchy to enter D3cold (runtime):
+
+  pcieport 0000:00:1b.0: power state changed by ACPI to D3cold
+
+When it wakes up from D3cold, according to the PCIe 4.0 section 5.8 the
+PCIe switch is put to reset and its power is re-applied. This means that
+we must follow the rules in PCIe 4.0 section 6.6.1.
+
+For the PCIe gen3 ports we are dealing with here, the following applies:
+
+  With a Downstream Port that supports Link speeds greater than 5.0
+  GT/s, software must wait a minimum of 100 ms after Link training
+  completes before sending a Configuration Request to the device
+  immediately below that Port. Software can determine when Link training
+  completes by polling the Data Link Layer Link Active bit or by setting
+  up an associated interrupt (see Section 6.7.3.3).
+
+Translating this into the above topology we would need to do this (DLLLA
+stands for Data Link Layer Link Active):
+
+  pcieport 0000:00:1b.0: wait for 100ms after DLLLA is set before access to 0000:01:00.0
+  pcieport 0000:02:00.0: wait for 100ms after DLLLA is set before access to 0000:03:00.0
+  pcieport 0000:02:02.0: wait for 100ms after DLLLA is set before access to 0000:37:00.0
+
+I've instrumented the kernel with additional logging so we can see the
+actual delays the kernel performs:
+
+  pcieport 0000:00:1b.0: power state changed by ACPI to D0
+  pcieport 0000:00:1b.0: waiting for D3cold delay of 100 ms
+  pcieport 0000:00:1b.0: waking up bus
+  pcieport 0000:00:1b.0: waiting for D3hot delay of 10 ms
+  pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
+  ...
+  pcieport 0000:00:1b.0: PME# disabled
+  pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  ...
+  pcieport 0000:01:00.0: PME# disabled
+  pcieport 0000:02:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  ...
+  pcieport 0000:02:00.0: PME# disabled
+  pcieport 0000:02:01.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  ...
+  pcieport 0000:02:01.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+  pcieport 0000:02:01.0: PME# disabled
+  pcieport 0000:02:02.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  ...
+  pcieport 0000:02:02.0: PME# disabled
+  pcieport 0000:02:04.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  ...
+  pcieport 0000:02:04.0: PME# disabled
+  pcieport 0000:02:01.0: PME# enabled
+  pcieport 0000:02:01.0: waiting for D3hot delay of 10 ms
+  pcieport 0000:02:04.0: PME# enabled
+  pcieport 0000:02:04.0: waiting for D3hot delay of 10 ms
+  thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
+  ...
+  thunderbolt 0000:03:00.0: PME# disabled
+  xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
+  ...
+  xhci_hcd 0000:37:00.0: PME# disabled
+
+For the switch upstream port (01:00.0) we wait for 100ms but not taking
+into account the DLLLA requirement. We then wait 10ms for D3hot -> D0
+transition of the root port and the two downstream hotplug ports. This
+means that we deviate from what the spec requires.
+
+Performing the same check for system sleep (s2idle) transitions we can
+see following when resuming from s2idle:
+
+  pcieport 0000:00:1b.0: power state changed by ACPI to D0
+  pcieport 0000:00:1b.0: restoring config space at offset 0x2c (was 0x60, writing 0x60)
+  ...
+  pcieport 0000:01:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  ...
+  pcieport 0000:02:02.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  pcieport 0000:02:02.0: restoring config space at offset 0x2c (was 0x0, writing 0x0)
+  pcieport 0000:02:01.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  pcieport 0000:02:04.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  pcieport 0000:02:02.0: restoring config space at offset 0x28 (was 0x0, writing 0x0)
+  pcieport 0000:02:00.0: restoring config space at offset 0x3c (was 0x1ff, writing 0x201ff)
+  pcieport 0000:02:02.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1fff1)
+  pcieport 0000:02:01.0: restoring config space at offset 0x2c (was 0x0, writing 0x60)
+  pcieport 0000:02:02.0: restoring config space at offset 0x20 (was 0x0, writing 0x73f073f0)
+  pcieport 0000:02:04.0: restoring config space at offset 0x2c (was 0x0, writing 0x60)
+  pcieport 0000:02:01.0: restoring config space at offset 0x28 (was 0x0, writing 0x60)
+  pcieport 0000:02:00.0: restoring config space at offset 0x2c (was 0x0, writing 0x0)
+  pcieport 0000:02:02.0: restoring config space at offset 0x1c (was 0x101, writing 0x1f1)
+  pcieport 0000:02:04.0: restoring config space at offset 0x28 (was 0x0, writing 0x60)
+  pcieport 0000:02:01.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1ff10001)
+  pcieport 0000:02:00.0: restoring config space at offset 0x28 (was 0x0, writing 0x0)
+  pcieport 0000:02:02.0: restoring config space at offset 0x18 (was 0x0, writing 0x373702)
+  pcieport 0000:02:04.0: restoring config space at offset 0x24 (was 0x10001, writing 0x49f12001)
+  pcieport 0000:02:01.0: restoring config space at offset 0x20 (was 0x0, writing 0x73e05c00)
+  pcieport 0000:02:00.0: restoring config space at offset 0x24 (was 0x10001, writing 0x1fff1)
+  pcieport 0000:02:04.0: restoring config space at offset 0x20 (was 0x0, writing 0x89f07400)
+  pcieport 0000:02:01.0: restoring config space at offset 0x1c (was 0x101, writing 0x5151)
+  pcieport 0000:02:00.0: restoring config space at offset 0x20 (was 0x0, writing 0x8a008a00)
+  pcieport 0000:02:02.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+  pcieport 0000:02:04.0: restoring config space at offset 0x1c (was 0x101, writing 0x6161)
+  pcieport 0000:02:01.0: restoring config space at offset 0x18 (was 0x0, writing 0x360402)
+  pcieport 0000:02:00.0: restoring config space at offset 0x1c (was 0x101, writing 0x1f1)
+  pcieport 0000:02:04.0: restoring config space at offset 0x18 (was 0x0, writing 0x6b3802)
+  pcieport 0000:02:02.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+  pcieport 0000:02:00.0: restoring config space at offset 0x18 (was 0x0, writing 0x30302)
+  pcieport 0000:02:01.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+  pcieport 0000:02:04.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+  pcieport 0000:02:00.0: restoring config space at offset 0xc (was 0x10000, writing 0x10020)
+  pcieport 0000:02:01.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+  pcieport 0000:02:04.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+  pcieport 0000:02:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100407)
+  xhci_hcd 0000:37:00.0: restoring config space at offset 0x10 (was 0x0, writing 0x73f00000)
+  ...
+  thunderbolt 0000:03:00.0: restoring config space at offset 0x14 (was 0x0, writing 0x8a040000)
+
+This is even worse. None of the mandatory delays are performed. If this
+would be S3 instead of s2idle then according to PCI FW spec 3.2 section
+4.6.8.  there is a specific _DSM that allows the OS to skip the delays
+but this platform does not provide the _DSM and does not go to S3 anyway
+so no firmware is involved that could already handle these delays.
+
+In this particular Intel Coffee Lake platform these delays are not
+actually needed because there is an additional delay as part of the ACPI
+power resource that is used to turn on power to the hierarchy but since
+that additional delay is not required by any of standards (PCIe, ACPI)
+it is not present in the Intel Ice Lake, for example where missing the
+mandatory delays causes pciehp to start tearing down the stack too early
+(links are not yet trained).
+
+For this reason, change the PCIe portdrv PM resume hooks so that they
+perform the mandatory delays before the downstream component gets
+resumed. We perform the delays before port services are resumed because
+otherwise pciehp might find that the link is not up (even if it is just
+training) and tears-down the hierarchy.
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/pci/pci.c               | 29 ++++++++++-----
+ drivers/pci/pci.h               |  1 +
+ drivers/pci/pcie/portdrv_core.c | 66 +++++++++++++++++++++++++++++++++
+ 3 files changed, 86 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 2c27f407a851..6e5f7ae00253 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -2059,6 +2059,11 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8abc843b1615..87a1f902fa8e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1004,15 +1004,10 @@ static void __pci_start_power_transition(struct pci_dev *dev, pci_power_t state)
+ 	if (state == PCI_D0) {
+ 		pci_platform_power_transition(dev, PCI_D0);
+ 		/*
+-		 * Mandatory power management transition delays, see
+-		 * PCI Express Base Specification Revision 2.0 Section
+-		 * 6.6.1: Conventional Reset.  Do not delay for
+-		 * devices powered on/off by corresponding bridge,
+-		 * because have already delayed for the bridge.
++		 * Mandatory power management transition delays are
++		 * handled in the PCIe portdrv resume hooks.
+ 		 */
+ 		if (dev->runtime_d3cold) {
+-			if (dev->d3cold_delay && !dev->imm_ready)
+-				msleep(dev->d3cold_delay);
+ 			/*
+ 			 * When powering on a bridge from D3cold, the
+ 			 * whole hierarchy may be powered on into
+@@ -4568,14 +4563,16 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
  
- 	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot hif stop\n");
- 
-+	ath10k_pci_irq_disable(ar);
-+	ath10k_pci_irq_sync(ar);
-+	napi_synchronize(&ar->napi);
-+	napi_disable(&ar->napi);
+ 	return pci_dev_wait(dev, "PM D3->D0", PCIE_RESET_READY_POLL_MS);
+ }
 +
- 	/* Most likely the device has HTT Rx ring configured. The only way to
- 	 * prevent the device from accessing (and possible corrupting) host
- 	 * memory is to reset the chip now.
-@@ -2072,10 +2077,6 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 	 */
- 	ath10k_pci_safe_chip_reset(ar);
+ /**
+- * pcie_wait_for_link - Wait until link is active or inactive
++ * pcie_wait_for_link_delay - Wait until link is active or inactive
+  * @pdev: Bridge device
+  * @active: waiting for active or inactive?
++ * @delay: Delay to wait after link has become active (in ms)
+  *
+  * Use this to wait till link becomes active or inactive.
+  */
+-bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
++bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active, int delay)
+ {
+ 	int timeout = 1000;
+ 	bool ret;
+@@ -4612,13 +4609,25 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
+ 		timeout -= 10;
+ 	}
+ 	if (active && ret)
+-		msleep(100);
++		msleep(delay);
+ 	else if (ret != active)
+ 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
+ 			active ? "set" : "cleared");
+ 	return ret == active;
+ }
  
--	ath10k_pci_irq_disable(ar);
--	ath10k_pci_irq_sync(ar);
--	napi_synchronize(&ar->napi);
--	napi_disable(&ar->napi);
- 	ath10k_pci_flush(ar);
++/**
++ * pcie_wait_for_link - Wait until link is active or inactive
++ * @pdev: Bridge device
++ * @active: waiting for active or inactive?
++ *
++ * Use this to wait till link becomes active or inactive.
++ */
++bool pcie_wait_for_link(struct pci_dev *pdev, bool active)
++{
++	return pcie_wait_for_link_delay(pdev, active, 100);
++}
++
+ void pci_reset_secondary_bus(struct pci_dev *dev)
+ {
+ 	u16 ctrl;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9cb99380c61e..59802b3def4b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -493,6 +493,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+ 		      u32 service);
  
- 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
++bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active, int delay);
+ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+ #ifdef CONFIG_PCIEASPM
+ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 1b330129089f..308c3e0c4a34 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/kernel.h>
++#include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/pm.h>
+ #include <linux/pm_runtime.h>
+@@ -378,6 +379,67 @@ static int pm_iter(struct device *dev, void *data)
+ 	return 0;
+ }
+ 
++static int get_downstream_delay(struct pci_bus *bus)
++{
++	struct pci_dev *pdev;
++	int min_delay = 100;
++	int max_delay = 0;
++
++	list_for_each_entry(pdev, &bus->devices, bus_list) {
++		if (!pdev->imm_ready)
++			min_delay = 0;
++		else if (pdev->d3cold_delay < min_delay)
++			min_delay = pdev->d3cold_delay;
++		if (pdev->d3cold_delay > max_delay)
++			max_delay = pdev->d3cold_delay;
++	}
++
++	return max(min_delay, max_delay);
++}
++
++/*
++ * wait_for_downstream_link - Wait for downstream link to establish
++ * @pdev: PCIe port whose downstream link is waited
++ *
++ * Handle delays according to PCIe 4.0 section 6.6.1 before configuration
++ * access to the downstream component is permitted.
++ *
++ * This blocks PCI core resume of the hierarchy below this port until the
++ * link is trained. Should be called before resuming port services to
++ * prevent pciehp from starting to tear-down the hierarchy too soon.
++ */
++static void wait_for_downstream_link(struct pci_dev *pdev)
++{
++	int delay;
++
++	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT &&
++	    pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM)
++		return;
++
++	if (pci_dev_is_disconnected(pdev))
++		return;
++
++	if (!pdev->subordinate || list_empty(&pdev->subordinate->devices) ||
++	    !pdev->bridge_d3)
++		return;
++
++	delay = get_downstream_delay(pdev->subordinate);
++	if (!delay)
++		return;
++
++	dev_dbg(&pdev->dev, "waiting downstream link for %d ms\n", delay);
++
++	/*
++	 * If downstream port does not support speeds greater than 5 GT/s
++	 * need to wait 100ms. For higher speeds (gen3) we need to wait
++	 * first for the data link layer to become active.
++	 */
++	if (pcie_get_speed_cap(pdev) <= PCIE_SPEED_5_0GT)
++		msleep(delay);
++	else
++		pcie_wait_for_link_delay(pdev, true, delay);
++}
++
+ /**
+  * pcie_port_device_suspend - suspend port services associated with a PCIe port
+  * @dev: PCI Express port to handle
+@@ -391,6 +453,8 @@ int pcie_port_device_suspend(struct device *dev)
+ int pcie_port_device_resume_noirq(struct device *dev)
+ {
+ 	size_t off = offsetof(struct pcie_port_service_driver, resume_noirq);
++
++	wait_for_downstream_link(to_pci_dev(dev));
+ 	return device_for_each_child(dev, &off, pm_iter);
+ }
+ 
+@@ -421,6 +485,8 @@ int pcie_port_device_runtime_suspend(struct device *dev)
+ int pcie_port_device_runtime_resume(struct device *dev)
+ {
+ 	size_t off = offsetof(struct pcie_port_service_driver, runtime_resume);
++
++	wait_for_downstream_link(to_pci_dev(dev));
+ 	return device_for_each_child(dev, &off, pm_iter);
+ }
+ #endif /* PM */
 -- 
 2.20.1
 
