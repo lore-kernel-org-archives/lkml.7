@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05767C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5BDC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27CE218EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 557732238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996602;
-	bh=39gwfs7zH42d9G8RTt/ZE+bL7MJZDcrcQcu/PPWOfww=;
+	s=default; t=1563996607;
+	bh=uBgELbhUqCeoKuc7FME1hWiKsVaU7eEsxO07pSIDEA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gazwfIlXe/8quFiLvUUn1YlNCpQeBY+U4xF7aBU3Ws5Tl+RWOraCW6U8rAvTDc9p9
-	 kTJPGSJ371CmES3YZRsLT41ngL3JQjCmNAam1OR/0dr8ulaYyURhtrzzn+OwYV75Xk
-	 Kl2ZwyX5rkumJfVlsp2xf/OMDvJZpHmj5bBiLizk=
+	b=BvT3vG+C292fSw+M5I7oFpdRZHzcqJXo/a0y4qIwpLi+Pnw5GFByPWG/zAODgrfRW
+	 FpElABkQsUfd1C/YBi2Av7duqGiT3qpMovg3xoewzC0KDExrOCYhgiFh84C3/+KDmI
+	 EFBAS7oAJtlXnQ9AygJmP4n10FyYY09oMLdYGLzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388068AbfGXTaB (ORCPT
+        id S2388286AbfGXTaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:30:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbfGXT36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:29:58 -0400
+        id S2388259AbfGXTaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876432238C;
-        Wed, 24 Jul 2019 19:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 948C6218EA;
+        Wed, 24 Jul 2019 19:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996597;
-        bh=39gwfs7zH42d9G8RTt/ZE+bL7MJZDcrcQcu/PPWOfww=;
+        s=default; t=1563996604;
+        bh=uBgELbhUqCeoKuc7FME1hWiKsVaU7eEsxO07pSIDEA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dkIWiFggldRzxtKqfHeYjVyC6tzFgBlFJNiFq/WaQNptMAgQRkK06/WoYWMDyNTgm
-         3stfBnuK54jT7pAoFNIqsOM1Tg2i77iUaISkpkr/3EUenSuc8RZq3cpFJocqeqcFBY
-         jL/C8GG6p84w57O+0G47InusMP8g3WDu/5oHapAw=
+        b=11Nz0t3gsDgQUQY5MaifKvUgeC69ypbUfZzI8QI5kevU6OeR48aUi0XG/khrYhW4x
+         nDrQ2U9wamNTAQReyF8swCXkxwg5rOmW2dqJAguzKBi19wHb1PklgGxvbRzlApuQP2
+         5jG/F7nR3cjv3RDKsuqAkCkj4IiSeAnmTEi+vUgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
+        Ondrej Jirman <megous@megous.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 151/413] media: vimc: cap: check v4l2_fill_pixfmt return value
-Date:   Wed, 24 Jul 2019 21:17:22 +0200
-Message-Id: <20190724191745.787752001@linuxfoundation.org>
+Subject: [PATCH 5.2 153/413] net: stmmac: sun8i: force select external PHY when no internal one
+Date:   Wed, 24 Jul 2019 21:17:24 +0200
+Message-Id: <20190724191745.962993931@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,44 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 77ae46e11df5c96bb4582633851f838f5d954df4 ]
+[ Upstream commit 0fec7e72ae1391bb2d7527efb54fe6ae88acabce ]
 
-v4l2_fill_pixfmt() returns -EINVAL if the pixelformat used as parameter is
-invalid or if the user is trying to use a multiplanar format with the
-singleplanar API. Currently, the vimc_cap_try_fmt_vid_cap() returns such
-value, but vimc_cap_s_fmt_vid_cap() is ignoring it. Fix that and returns
-an error value if vimc_cap_try_fmt_vid_cap() has failed.
+The PHY selection bit also exists on SoCs without an internal PHY; if it's
+set to 1 (internal PHY, default value) then the MAC will not make use of
+any PHY on such SoCs.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
-Suggested-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This problem appears when adapting for H6, which has no real internal PHY
+(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
+connected via RMII interface at GPIO bank A).
+
+Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
+to address the problem of a wrong default value.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-capture.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
-index 946dc0908566..664855708fdf 100644
---- a/drivers/media/platform/vimc/vimc-capture.c
-+++ b/drivers/media/platform/vimc/vimc-capture.c
-@@ -142,12 +142,15 @@ static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
- 				  struct v4l2_format *f)
- {
- 	struct vimc_cap_device *vcap = video_drvdata(file);
-+	int ret;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index a69c34f605b1..98a15ba8be9f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -884,6 +884,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
+ 		 * address. No need to mask it again.
+ 		 */
+ 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
++	} else {
++		/* For SoCs without internal PHY the PHY selection bit should be
++		 * set to 0 (external PHY).
++		 */
++		reg &= ~H3_EPHY_SELECT;
+ 	}
  
- 	/* Do not change the format while stream is on */
- 	if (vb2_is_busy(&vcap->queue))
- 		return -EBUSY;
- 
--	vimc_cap_try_fmt_vid_cap(file, priv, f);
-+	ret = vimc_cap_try_fmt_vid_cap(file, priv, f);
-+	if (ret)
-+		return ret;
- 
- 	dev_dbg(vcap->dev, "%s: format update: "
- 		"old:%dx%d (0x%x, %d, %d, %d, %d) "
+ 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
 -- 
 2.20.1
 
