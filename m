@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E775C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234CFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3919321852
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABA520693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999375;
-	bh=EMo90s9/Lf/53Jng08uBdWrjmrAc+fc74PM8durqgvw=;
+	s=default; t=1563999386;
+	bh=f2z1+/ExFEaSu80eogXx5LLz1xthQarn3wNUp8hRhXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3TbqezUkvWcOoe/GCN87f0OKNED+9nQU/d/HnBcH93MHxExtF3oyYIqAMW4rVK2C
-	 Z6lWpks/AC5DqjnwAc2ZLwNdRkg2VDKE2huu6tfN9uQfxpVgh08GeO4LlolKm8DSUl
-	 faTWdbeW3RNhZChNH6pNNrC8ZZ2qziNQJdwqAbwQ=
+	b=MkyDoJI2KHpcUgqct8/V6UyZDnbDVNwaiCzF6BNOLATGbEEM6L7rgywCN9AEt6/9H
+	 chVBpbHee4K9NbhFcclbytHkbI0UctlE6pa9XmGkwXXzEx8heFG3L5fLH6FT0RP1sl
+	 gVB8eF7OzLuUkMGOayhbBN703FEYjqahwrJXZO2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392839AbfGXUQO (ORCPT
+        id S2404272AbfGXUQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:16:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391711AbfGXTvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:53 -0400
+        id S2404014AbfGXTvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:51:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF96222ADC;
-        Wed, 24 Jul 2019 19:51:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0D2C205C9;
+        Wed, 24 Jul 2019 19:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997912;
-        bh=EMo90s9/Lf/53Jng08uBdWrjmrAc+fc74PM8durqgvw=;
+        s=default; t=1563997892;
+        bh=f2z1+/ExFEaSu80eogXx5LLz1xthQarn3wNUp8hRhXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0rMiuBtUQ9HKObRyxjNBldpO1jeQQ4Kg2YZ9YJAf/X5KFZllYvQEuxhAUXzT3wBv
-         Ta0+yfBjYidN1fZS/M3ri1pjqdtVmgWcHMCUY+8RidoVR7vtaHdRM7WaRV3FHiBY+G
-         XDeHWRbHqYsihDwgd138QeuYNzs71nRlyp4oyPJ0=
+        b=pld79haOONzazIx0vPO1ZfcIn8BlI/eH+hgA370r24bJaR3aqTDs4qOtyBpxd95Nr
+         zusNpKUA/o3ps6tqJWzfw26s2XQkcck+cs2zyKmAhJaPpC16Y32sGhLIVr5WmDveYS
+         dzgKZQgGeWO/Ab6gKRWIWTAB7y6OyloJFjjHdWQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dann Frazier <dann.frazier@canonical.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 186/371] bnxt_en: Fix statistics context reservation logic for RDMA driver.
-Date:   Wed, 24 Jul 2019 21:18:58 +0200
-Message-Id: <20190724191739.054987764@linuxfoundation.org>
+Subject: [PATCH 5.1 180/371] ixgbe: Avoid NULL pointer dereference with VF on non-IPsec hw
+Date:   Wed, 24 Jul 2019 21:18:52 +0200
+Message-Id: <20190724191738.713814516@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,58 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d77b1ad8e87dc5a6cd0d9158b097a4817946ca3b ]
+[ Upstream commit 92924064106e410cdc015f1dbfc0499309f9f5b1 ]
 
-The current logic assumes that the RDMA driver uses one statistics
-context adjacent to the ones used by the network driver.  This
-assumption is not true and the statistics context used by the
-RDMA driver is tied to its MSIX base vector.  This wrong assumption
-can cause RDMA driver failure after changing ethtool rings on the
-network side.  Fix the statistics reservation logic accordingly.
+An ipsec structure will not be allocated if the hardware does not support
+offload. Fixes the following Oops:
 
-Fixes: 780baad44f0f ("bnxt_en: Reserve 1 stat_ctx for RDMA driver.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[  191.045452] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  191.054232] Mem abort info:
+[  191.057014]   ESR = 0x96000004
+[  191.060057]   Exception class = DABT (current EL), IL = 32 bits
+[  191.065963]   SET = 0, FnV = 0
+[  191.069004]   EA = 0, S1PTW = 0
+[  191.072132] Data abort info:
+[  191.074999]   ISV = 0, ISS = 0x00000004
+[  191.078822]   CM = 0, WnR = 0
+[  191.081780] user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000043d9e467
+[  191.088382] [0000000000000000] pgd=0000000000000000
+[  191.093252] Internal error: Oops: 96000004 [#1] SMP
+[  191.098119] Modules linked in: vhost_net vhost tap vfio_pci vfio_virqfd vfio_iommu_type1 vfio xt_CHECKSUM iptable_mangle ipt_MASQUERADE iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4 xt_tcpudp bridge stp llc ebtable_filter devlink ebtables ip6table_filter ip6_tables iptable_filter bpfilter ipmi_ssif nls_iso8859_1 input_leds joydev ipmi_si hns_roce_hw_v2 ipmi_devintf hns_roce ipmi_msghandler cppc_cpufreq sch_fq_codel ib_iser rdma_cm iw_cm ib_cm ib_core iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi ip_tables x_tables autofs4 ses enclosure btrfs zstd_compress raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor hid_generic usbhid hid raid6_pq libcrc32c raid1 raid0 multipath linear ixgbevf hibmc_drm ttm
+[  191.168607]  drm_kms_helper aes_ce_blk aes_ce_cipher syscopyarea crct10dif_ce sysfillrect ghash_ce qla2xxx sysimgblt sha2_ce sha256_arm64 hisi_sas_v3_hw fb_sys_fops sha1_ce uas nvme_fc mpt3sas ixgbe drm hisi_sas_main nvme_fabrics usb_storage hclge scsi_transport_fc ahci libsas hnae3 raid_class libahci xfrm_algo scsi_transport_sas mdio aes_neon_bs aes_neon_blk crypto_simd cryptd aes_arm64
+[  191.202952] CPU: 94 PID: 0 Comm: swapper/94 Not tainted 4.19.0-rc1+ #11
+[  191.209553] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.20.01 04/26/2019
+[  191.218064] pstate: 20400089 (nzCv daIf +PAN -UAO)
+[  191.222873] pc : ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
+[  191.228093] lr : ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
+[  191.233044] sp : ffff000009b3bcd0
+[  191.236346] x29: ffff000009b3bcd0 x28: 0000000000000000
+[  191.241647] x27: ffff000009628000 x26: 0000000000000000
+[  191.246946] x25: ffff803f652d7600 x24: 0000000000000004
+[  191.252246] x23: ffff803f6a718900 x22: 0000000000000000
+[  191.257546] x21: 0000000000000000 x20: 0000000000000000
+[  191.262845] x19: 0000000000000000 x18: 0000000000000000
+[  191.268144] x17: 0000000000000000 x16: 0000000000000000
+[  191.273443] x15: 0000000000000000 x14: 0000000100000026
+[  191.278742] x13: 0000000100000025 x12: ffff8a5f7fbe0df0
+[  191.284042] x11: 000000010000000b x10: 0000000000000040
+[  191.289341] x9 : 0000000000001100 x8 : ffff803f6a824fd8
+[  191.294640] x7 : ffff803f6a825098 x6 : 0000000000000001
+[  191.299939] x5 : ffff000000f0ffc0 x4 : 0000000000000000
+[  191.305238] x3 : ffff000028c00000 x2 : ffff803f652d7600
+[  191.310538] x1 : 0000000000000000 x0 : ffff000000f205f0
+[  191.315838] Process swapper/94 (pid: 0, stack limit = 0x00000000addfed5a)
+[  191.322613] Call trace:
+[  191.325055]  ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
+[  191.329927]  ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
+[  191.334536]  ixgbe_msix_other+0x274/0x330 [ixgbe]
+[  191.339233]  __handle_irq_event_percpu+0x78/0x270
+[  191.343924]  handle_irq_event_percpu+0x40/0x98
+[  191.348355]  handle_irq_event+0x50/0xa8
+[  191.352180]  handle_fasteoi_irq+0xbc/0x148
+[  191.356263]  generic_handle_irq+0x34/0x50
+[  191.360259]  __handle_domain_irq+0x68/0xc0
+[  191.364343]  gic_handle_irq+0x84/0x180
+[  191.368079]  el1_irq+0xe8/0x180
+[  191.371208]  arch_cpu_idle+0x30/0x1a8
+[  191.374860]  do_idle+0x1dc/0x2a0
+[  191.378077]  cpu_startup_entry+0x2c/0x30
+[  191.381988]  secondary_start_kernel+0x150/0x1e0
+[  191.386506] Code: 6b15003f 54000320 f1404a9f 54000060 (79400260)
+
+Fixes: eda0333ac2930 ("ixgbe: add VF IPsec management")
+Signed-off-by: Dann Frazier <dann.frazier@canonical.com>
+Acked-by: Shannon Nelson <snelson@pensando.io>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index bf1fd513fa02..09557bf49bb0 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -5481,7 +5481,16 @@ static int bnxt_cp_rings_in_use(struct bnxt *bp)
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+index ff85ce5791a3..31629fc7e820 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+@@ -842,6 +842,9 @@ void ixgbe_ipsec_vf_clear(struct ixgbe_adapter *adapter, u32 vf)
+ 	struct ixgbe_ipsec *ipsec = adapter->ipsec;
+ 	int i;
  
- static int bnxt_get_func_stat_ctxs(struct bnxt *bp)
- {
--	return bp->cp_nr_rings + bnxt_get_ulp_stat_ctxs(bp);
-+	int ulp_stat = bnxt_get_ulp_stat_ctxs(bp);
-+	int cp = bp->cp_nr_rings;
++	if (!ipsec)
++		return;
 +
-+	if (!ulp_stat)
-+		return cp;
-+
-+	if (bnxt_nq_rings_in_use(bp) > cp + bnxt_get_ulp_msix_num(bp))
-+		return bnxt_get_ulp_msix_base(bp) + ulp_stat;
-+
-+	return cp + ulp_stat;
- }
- 
- static bool bnxt_need_reserve_rings(struct bnxt *bp)
-@@ -7373,11 +7382,7 @@ unsigned int bnxt_get_avail_cp_rings_for_en(struct bnxt *bp)
- 
- unsigned int bnxt_get_avail_stat_ctxs_for_en(struct bnxt *bp)
- {
--	unsigned int stat;
--
--	stat = bnxt_get_max_func_stat_ctxs(bp) - bnxt_get_ulp_stat_ctxs(bp);
--	stat -= bp->cp_nr_rings;
--	return stat;
-+	return bnxt_get_max_func_stat_ctxs(bp) - bnxt_get_func_stat_ctxs(bp);
- }
- 
- int bnxt_get_avail_msix(struct bnxt *bp, int num)
+ 	/* search rx sa table */
+ 	for (i = 0; i < IXGBE_IPSEC_MAX_SA_COUNT && ipsec->num_rx_sa; i++) {
+ 		if (!ipsec->rx_tbl[i].used)
 -- 
 2.20.1
 
