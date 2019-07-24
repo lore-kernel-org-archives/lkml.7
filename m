@@ -2,235 +2,155 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07089C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D2C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EA2204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000042;
-	bh=MxbTrWEfclhDQ2aiyMg7D09m/ztBVxxhPyylCf+k+WI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPH2gA7Giai0SeeIKQYpJ416VD9p1nCVxxQyyGugIxtrziuiW0He/Woj3D1+7I10F
-	 oHNnjMeqtaK7NnSt16AsHWoslumwKBhk2RaQwjHeugWWHa9CyrvB2OR2Z/j/vC0n9z
-	 4tP/vSlKaeIzCui0jqrFBsvxBnjtP/PUlV4rfcKc=
+	by mail.kernel.org (Postfix) with ESMTP id 1C39E204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388911AbfGXTfu (ORCPT
+        id S2388890AbfGXTfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33806 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:35:48 -0400
+Received: from mga18.intel.com ([134.134.136.126]:56931 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388392AbfGXTfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08DAA20659;
-        Wed, 24 Jul 2019 19:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996945;
-        bh=MxbTrWEfclhDQ2aiyMg7D09m/ztBVxxhPyylCf+k+WI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTPSqXZmzdRh2yvNpKV48IWqX0+OHUHjwVQoKH206EpDzoatyrz7W2V4kcEBN11aG
-         i15Ea02V6DUwzV7ijGnDo6xEzws5Swza9sbTPvjFPQhWAxemz0HLv2xZLm8WLGDuAa
-         FDE5NxRS5fICqXgXTTLZ6GgQO3tK9Tqil1Mp4Ffs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 271/413] crypto: crypto4xx - block ciphers should only accept complete blocks
-Date:   Wed, 24 Jul 2019 21:19:22 +0200
-Message-Id: <20190724191755.607730272@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2389255AbfGXTfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 12:35:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
+   d="scan'208";a="321437783"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.165])
+  by orsmga004.jf.intel.com with ESMTP; 24 Jul 2019 12:35:42 -0700
+Date:   Wed, 24 Jul 2019 12:35:42 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com
+Subject: Re: [PATCH v21 08/28] x86/cpu/intel: Detect SGX support and update
+ caps appropriately
+Message-ID: <20190724193542.GD25376@linux.intel.com>
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+ <20190713170804.2340-9-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713170804.2340-9-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+On Sat, Jul 13, 2019 at 08:07:44PM +0300, Jarkko Sakkinen wrote:
+>  arch/x86/kernel/cpu/intel.c | 71 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 8d6d92ebeb54..1503b251d10f 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -623,6 +623,72 @@ static void detect_tme(struct cpuinfo_x86 *c)
+>  	c->x86_phys_bits -= keyid_bits;
+>  }
+>  
+> +static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
+> +{
+> +	unsigned long long fc;
+> +
+> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
+> +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
+> +		pr_err_once("sgx: The feature control MSR is not locked\n");
+> +		goto err_unsupported;
+> +	}
+> +
+> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
+> +		pr_err_once("sgx: SGX is not enabled in IA32_FEATURE_CONTROL MSR\n");
+> +		goto err_unsupported;
+> +	}
+> +
+> +	if (!cpu_has(c, X86_FEATURE_SGX1)) {
+> +		pr_err_once("sgx: SGX1 instruction set is not supported\n");
+> +		goto err_unsupported;
+> +	}
+> +
+> +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
+> +		pr_info_once("sgx: The launch control MSRs are not writable\n");
+> +		goto err_msrs_rdonly;
+> +	}
+> +
+> +	return;
+> +
+> +err_unsupported:
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX);
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX1);
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX2);
+> +
+> +err_msrs_rdonly:
+> +	setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
+> +}
+> +
+> +static void init_intel_energy_perf(struct cpuinfo_x86 *c)
+> +{
+> +	u64 epb;
+> +
+> +	/*
+> +	 * Initialize MSR_IA32_ENERGY_PERF_BIAS if not already initialized.
+> +	 * (x86_energy_perf_policy(8) is available to change it at run-time.)
+> +	 */
+> +	if (!cpu_has(c, X86_FEATURE_EPB))
+> +		return;
+> +
+> +	rdmsrl(MSR_IA32_ENERGY_PERF_BIAS, epb);
+> +	if ((epb & 0xF) != ENERGY_PERF_BIAS_PERFORMANCE)
+> +		return;
+> +
+> +	pr_warn_once("ENERGY_PERF_BIAS: Set to 'normal', was 'performance'\n");
+> +	pr_warn_once("ENERGY_PERF_BIAS: View and update with x86_energy_perf_policy(8)\n");
+> +	epb = (epb & ~0xF) | ENERGY_PERF_BIAS_NORMAL;
+> +	wrmsrl(MSR_IA32_ENERGY_PERF_BIAS, epb);
+> +}
+> +
+> +static void intel_bsp_resume(struct cpuinfo_x86 *c)
+> +{
+> +	/*
+> +	 * MSR_IA32_ENERGY_PERF_BIAS is lost across suspend/resume,
+> +	 * so reinitialize it properly like during bootup:
+> +	 */
+> +	init_intel_energy_perf(c);
+> +}
+> +
+>  static void init_cpuid_fault(struct cpuinfo_x86 *c)
+>  {
+>  	u64 msr;
+> @@ -760,6 +826,11 @@ static void init_intel(struct cpuinfo_x86 *c)
+>  	if (cpu_has(c, X86_FEATURE_TME))
+>  		detect_tme(c);
+>  
+> +	if (IS_ENABLED(CONFIG_INTEL_SGX) && cpu_has(c, X86_FEATURE_SGX))
+> +		detect_sgx(c);
+> +
+> +	init_intel_energy_perf(c);
 
-commit 0f7a81374060828280fcfdfbaa162cb559017f9f upstream.
+All of the energy_perf additions are bogus, looks like a rebase gone wrong.
 
-The hardware automatically zero pads incomplete block ciphers
-blocks without raising any errors. This is a screw-up. This
-was noticed by CONFIG_CRYPTO_MANAGER_EXTRA_TESTS tests that
-sent a incomplete blocks and expect them to fail.
-
-This fixes:
-cbc-aes-ppc4xx encryption unexpectedly succeeded on test vector
-"random: len=2409 klen=32"; expected_error=-22, cfg="random:
-may_sleep use_digest src_divs=[96.90%@+2295, 2.34%@+4066,
-0.32%@alignmask+12, 0.34%@+4087, 0.9%@alignmask+1787, 0.1%@+3767]
-iv_offset=6"
-
-ecb-aes-ppc4xx encryption unexpectedly succeeded on test vector
-"random: len=1011 klen=32"; expected_error=-22, cfg="random:
-may_sleep use_digest src_divs=[100.0%@alignmask+20]
-dst_divs=[3.12%@+3001, 96.88%@+4070]"
-
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: stable@vger.kernel.org [4.19, 5.0 and 5.1]
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/crypto/amcc/crypto4xx_alg.c  |   36 ++++++++++++++++++++++++-----------
- drivers/crypto/amcc/crypto4xx_core.c |   16 +++++++--------
- drivers/crypto/amcc/crypto4xx_core.h |   10 +++++----
- 3 files changed, 39 insertions(+), 23 deletions(-)
-
---- a/drivers/crypto/amcc/crypto4xx_alg.c
-+++ b/drivers/crypto/amcc/crypto4xx_alg.c
-@@ -67,12 +67,16 @@ static void set_dynamic_sa_command_1(str
- }
- 
- static inline int crypto4xx_crypt(struct skcipher_request *req,
--				  const unsigned int ivlen, bool decrypt)
-+				  const unsigned int ivlen, bool decrypt,
-+				  bool check_blocksize)
- {
- 	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(req);
- 	struct crypto4xx_ctx *ctx = crypto_skcipher_ctx(cipher);
- 	__le32 iv[AES_IV_SIZE];
- 
-+	if (check_blocksize && !IS_ALIGNED(req->cryptlen, AES_BLOCK_SIZE))
-+		return -EINVAL;
-+
- 	if (ivlen)
- 		crypto4xx_memcpy_to_le32(iv, req->iv, ivlen);
- 
-@@ -81,24 +85,34 @@ static inline int crypto4xx_crypt(struct
- 		ctx->sa_len, 0, NULL);
- }
- 
--int crypto4xx_encrypt_noiv(struct skcipher_request *req)
-+int crypto4xx_encrypt_noiv_block(struct skcipher_request *req)
-+{
-+	return crypto4xx_crypt(req, 0, false, true);
-+}
-+
-+int crypto4xx_encrypt_iv_stream(struct skcipher_request *req)
-+{
-+	return crypto4xx_crypt(req, AES_IV_SIZE, false, false);
-+}
-+
-+int crypto4xx_decrypt_noiv_block(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, 0, false);
-+	return crypto4xx_crypt(req, 0, true, true);
- }
- 
--int crypto4xx_encrypt_iv(struct skcipher_request *req)
-+int crypto4xx_decrypt_iv_stream(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, AES_IV_SIZE, false);
-+	return crypto4xx_crypt(req, AES_IV_SIZE, true, false);
- }
- 
--int crypto4xx_decrypt_noiv(struct skcipher_request *req)
-+int crypto4xx_encrypt_iv_block(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, 0, true);
-+	return crypto4xx_crypt(req, AES_IV_SIZE, false, true);
- }
- 
--int crypto4xx_decrypt_iv(struct skcipher_request *req)
-+int crypto4xx_decrypt_iv_block(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, AES_IV_SIZE, true);
-+	return crypto4xx_crypt(req, AES_IV_SIZE, true, true);
- }
- 
- /**
-@@ -269,8 +283,8 @@ crypto4xx_ctr_crypt(struct skcipher_requ
- 		return ret;
- 	}
- 
--	return encrypt ? crypto4xx_encrypt_iv(req)
--		       : crypto4xx_decrypt_iv(req);
-+	return encrypt ? crypto4xx_encrypt_iv_stream(req)
-+		       : crypto4xx_decrypt_iv_stream(req);
- }
- 
- static int crypto4xx_sk_setup_fallback(struct crypto4xx_ctx *ctx,
---- a/drivers/crypto/amcc/crypto4xx_core.c
-+++ b/drivers/crypto/amcc/crypto4xx_core.c
-@@ -1210,8 +1210,8 @@ static struct crypto4xx_alg_common crypt
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.ivsize	= AES_IV_SIZE,
- 		.setkey = crypto4xx_setkey_aes_cbc,
--		.encrypt = crypto4xx_encrypt_iv,
--		.decrypt = crypto4xx_decrypt_iv,
-+		.encrypt = crypto4xx_encrypt_iv_block,
-+		.decrypt = crypto4xx_decrypt_iv_block,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
-@@ -1230,8 +1230,8 @@ static struct crypto4xx_alg_common crypt
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.ivsize	= AES_IV_SIZE,
- 		.setkey	= crypto4xx_setkey_aes_cfb,
--		.encrypt = crypto4xx_encrypt_iv,
--		.decrypt = crypto4xx_decrypt_iv,
-+		.encrypt = crypto4xx_encrypt_iv_stream,
-+		.decrypt = crypto4xx_decrypt_iv_stream,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
-@@ -1290,8 +1290,8 @@ static struct crypto4xx_alg_common crypt
- 		.min_keysize = AES_MIN_KEY_SIZE,
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.setkey	= crypto4xx_setkey_aes_ecb,
--		.encrypt = crypto4xx_encrypt_noiv,
--		.decrypt = crypto4xx_decrypt_noiv,
-+		.encrypt = crypto4xx_encrypt_noiv_block,
-+		.decrypt = crypto4xx_decrypt_noiv_block,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
-@@ -1310,8 +1310,8 @@ static struct crypto4xx_alg_common crypt
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.ivsize	= AES_IV_SIZE,
- 		.setkey	= crypto4xx_setkey_aes_ofb,
--		.encrypt = crypto4xx_encrypt_iv,
--		.decrypt = crypto4xx_decrypt_iv,
-+		.encrypt = crypto4xx_encrypt_iv_stream,
-+		.decrypt = crypto4xx_decrypt_iv_stream,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
---- a/drivers/crypto/amcc/crypto4xx_core.h
-+++ b/drivers/crypto/amcc/crypto4xx_core.h
-@@ -173,10 +173,12 @@ int crypto4xx_setkey_rfc3686(struct cryp
- 			     const u8 *key, unsigned int keylen);
- int crypto4xx_encrypt_ctr(struct skcipher_request *req);
- int crypto4xx_decrypt_ctr(struct skcipher_request *req);
--int crypto4xx_encrypt_iv(struct skcipher_request *req);
--int crypto4xx_decrypt_iv(struct skcipher_request *req);
--int crypto4xx_encrypt_noiv(struct skcipher_request *req);
--int crypto4xx_decrypt_noiv(struct skcipher_request *req);
-+int crypto4xx_encrypt_iv_stream(struct skcipher_request *req);
-+int crypto4xx_decrypt_iv_stream(struct skcipher_request *req);
-+int crypto4xx_encrypt_iv_block(struct skcipher_request *req);
-+int crypto4xx_decrypt_iv_block(struct skcipher_request *req);
-+int crypto4xx_encrypt_noiv_block(struct skcipher_request *req);
-+int crypto4xx_decrypt_noiv_block(struct skcipher_request *req);
- int crypto4xx_rfc3686_encrypt(struct skcipher_request *req);
- int crypto4xx_rfc3686_decrypt(struct skcipher_request *req);
- int crypto4xx_sha1_alg_init(struct crypto_tfm *tfm);
-
-
+> +
+>  	init_intel_misc_features(c);
+>  }
+>  
+> -- 
+> 2.20.1
+> 
