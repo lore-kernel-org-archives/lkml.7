@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCA8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC3CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B03320659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85446229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996823;
-	bh=3uFTwaDHAmJ73S7JmU9w0woFrRgrA8PUMRkK9FBCeew=;
+	s=default; t=1563996826;
+	bh=PgKnROCQHhUXgNF+sEJkwgBPQQeZ1guqkKm9GmCfoGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ryyo+uG7mDED+izvV8Qbzjrtgs3RYlDKpIqAklAwAzIiCaQyvk/fbvHvSB0zB+VGC
-	 L0gj+INi3W7ExELLZOMnOjDZX/cTQETq8pA2EwBh33Nk+MMkh6nc8rsD8VAtifsCU9
-	 Gvp1rib7VMXCBEk/8a4kYlLHgZlw1wz8BdF9moGA=
+	b=Yd8qDRWJ9CAmYCbqiwJmV1P/p7oJ1CuiW8lF99SWpaqVh8aKJSKpBz3DfOeVDCtIY
+	 E66FcQYLZrkFLtm6LXq6mExfvshxfo/tbkunwRHqym3frJf0KM/raQHPhkFI4XpuL9
+	 +lsq8Kt8SXDGL4iZct0lg17KX9pAeYFHYDikmQg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388898AbfGXTdl (ORCPT
+        id S2388922AbfGXTdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:33:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55484 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:33:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388846AbfGXTdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:33:36 -0400
+        id S2388899AbfGXTdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:33:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38638229FA;
-        Wed, 24 Jul 2019 19:33:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20455229F4;
+        Wed, 24 Jul 2019 19:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996815;
-        bh=3uFTwaDHAmJ73S7JmU9w0woFrRgrA8PUMRkK9FBCeew=;
+        s=default; t=1563996821;
+        bh=PgKnROCQHhUXgNF+sEJkwgBPQQeZ1guqkKm9GmCfoGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaYHBNkU6lTFpP4psXvfXZrNo+j9vwUjBHWXCcl2a+1TtZLMgexzXLNNJUhVLOUGX
-         sNEmE47XA2OwX0Szvc/uDyEIInr/XMkVuPS4BxrbOhxLjEYzgB4VroJH2Q4y2GMl53
-         7C8sTEGeyNvNys92EjEcM1+hj6+TLPlu86ly2p7s=
+        b=MDJJbP0KcrYOV6848DwLXdL+U8952TGaxDuJI1vEL24tV2+wQk45P7Ml2BZQKqHo2
+         iHHEnbeY0ED5u9uGFFyZ+DzxIk8tlnEHZoYbgjzpdcPPNHMnB6vKrcnxfN1PAJ2OI+
+         fl7lE6yQR+1aheVUcjtvV/zzmJcQsIkl+jTjpuVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Rander Wang <rander.wang@linux.intel.com>,
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 209/413] ALSA: hda: Fix a headphone detection issue when using SOF
-Date:   Wed, 24 Jul 2019 21:18:20 +0200
-Message-Id: <20190724191749.456916644@linuxfoundation.org>
+Subject: [PATCH 5.2 228/413] Bluetooth: hci_bcsp: Fix memory leak in rx_skb
+Date:   Wed, 24 Jul 2019 21:18:39 +0200
+Message-Id: <20190724191751.299627738@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,55 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c2b3629d09ddec810dc4c1d3a6657c32def8f71 ]
+[ Upstream commit 4ce9146e0370fcd573f0372d9b4e5a211112567c ]
 
-To save power, the hda hdmi driver in ASoC invokes snd_hdac_ext_bus_link_put
-to disable CORB/RIRB buffers DMA if there is no user of bus and invokes
-snd_hdac_ext_bus_link_get to set up CORB/RIRB buffers when it is used.
-Unsolicited responses is disabled in snd_hdac_bus_stop_cmd_io called by
-snd_hdac_ext_bus_link_put , but it is not enabled in snd_hdac_bus_init_cmd_io
-called by snd_hdac_ext_bus_link_get. So for put-get sequence, Unsolicited
-responses is disabled and headphone can't be detected by hda codecs.
+Syzkaller found that it is possible to provoke a memory leak by
+never freeing rx_skb in struct bcsp_struct.
 
-Now unsolicited responses is only enabled in snd_hdac_bus_reset_link
-which resets controller. The function is only called for setup of
-controller. This patch enables Unsolicited responses after RIRB is
-initialized in snd_hdac_bus_init_cmd_io which works together with
-snd_hdac_bus_reset_link to set up controller.
+Fix by freeing in bcsp_close()
 
-Tested legacy hda driver and SOF driver on intel whiskeylake.
-
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+98162c885993b72f19c4@syzkaller.appspotmail.com
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_controller.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/bluetooth/hci_bcsp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/hda/hdac_controller.c b/sound/hda/hdac_controller.c
-index b02f74528b66..812dc144fb5b 100644
---- a/sound/hda/hdac_controller.c
-+++ b/sound/hda/hdac_controller.c
-@@ -79,6 +79,8 @@ void snd_hdac_bus_init_cmd_io(struct hdac_bus *bus)
- 	snd_hdac_chip_writew(bus, RINTCNT, 1);
- 	/* enable rirb dma and response irq */
- 	snd_hdac_chip_writeb(bus, RIRBCTL, AZX_RBCTL_DMA_EN | AZX_RBCTL_IRQ_EN);
-+	/* Accept unsolicited responses */
-+	snd_hdac_chip_updatel(bus, GCTL, AZX_GCTL_UNSOL, AZX_GCTL_UNSOL);
- 	spin_unlock_irq(&bus->reg_lock);
- }
- EXPORT_SYMBOL_GPL(snd_hdac_bus_init_cmd_io);
-@@ -415,9 +417,6 @@ int snd_hdac_bus_reset_link(struct hdac_bus *bus, bool full_reset)
- 		return -EBUSY;
- 	}
+diff --git a/drivers/bluetooth/hci_bcsp.c b/drivers/bluetooth/hci_bcsp.c
+index 82b13faa9422..fe2e307009f4 100644
+--- a/drivers/bluetooth/hci_bcsp.c
++++ b/drivers/bluetooth/hci_bcsp.c
+@@ -744,6 +744,11 @@ static int bcsp_close(struct hci_uart *hu)
+ 	skb_queue_purge(&bcsp->rel);
+ 	skb_queue_purge(&bcsp->unrel);
  
--	/* Accept unsolicited responses */
--	snd_hdac_chip_updatel(bus, GCTL, AZX_GCTL_UNSOL, AZX_GCTL_UNSOL);
--
- 	/* detect codecs */
- 	if (!bus->codec_mask) {
- 		bus->codec_mask = snd_hdac_chip_readw(bus, STATESTS);
++	if (bcsp->rx_skb) {
++		kfree_skb(bcsp->rx_skb);
++		bcsp->rx_skb = NULL;
++	}
++
+ 	kfree(bcsp);
+ 	return 0;
+ }
 -- 
 2.20.1
 
