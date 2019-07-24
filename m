@@ -2,122 +2,103 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4228C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E608C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C854229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4IffpNC"
+	by mail.kernel.org (Postfix) with ESMTP id 5398221738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfGXGFi (ORCPT
+        id S1726458AbfGXGFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:05:38 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38518 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfGXGFi (ORCPT
+        Wed, 24 Jul 2019 02:05:43 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41695 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfGXGFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 02:05:38 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f5so11813364pgu.5;
-        Tue, 23 Jul 2019 23:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Twevo6sVaaVI2A1vSf1Wr6zgrYSK1ESB5x0Su/v7Gzs=;
-        b=L4IffpNCaLWQdp6NduS2I/CeGI/8IxEc5bIcVNd1Ufqu7dpzl86yM2GAT3AbQJxflM
-         rbTxLMTqmhZQV3jYc3oQVXwZqZJyfRKad0g/Wyk1i+yED2FVHAQVhQD4gao4l7Eo+hjt
-         yeh/rtik6XxgZ5jCIo7xM8Ju/E5lkGubDrba2+4Jm+QqiK+7/7YXxYD+qbhyy+jraUBW
-         cu7V4dsU5A4FbjaNSP03G4+J7ExNxbG65iV6uaDBQZt1dawxPs4xeVYGhQZPrRofUAjm
-         LY2MllpTrYhLU5z5IantJpDlfD2TuQ80NFw/B+aUiO1iHhQZlrQ1awkiMRHiw4ZQEAR0
-         REYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Twevo6sVaaVI2A1vSf1Wr6zgrYSK1ESB5x0Su/v7Gzs=;
-        b=UL/Up+OV9UekcLqzBXDD9dj4aUf7TmdOEf1ZviWgFIH1Fy3O78tQaeLv4+0LjlKTho
-         QWlKrWLJX+9yTEQNplhSUR4RCmiEE59G6Tk7rTjF6S9r1MqELNvTHsbcS3dVtUUwwToA
-         bd3rf4zXR450Ogetmwy/iXDTQPyoh8h5euLJLt1yKvjkCUZP9/K6wv+cgY3UtR1a/g3g
-         qNUHlYpuVAnLxjYYUYoml5MBiCc4tgR6wBXH1O4KMpzU4+/+2LDzjaNle3yDRufUfP4X
-         DZ5bQcTI3IzlOjCmuduno6asVptJXn2kk3fWOwyV3YFImwbCTYE7r1TVIGN4WC3CBvm5
-         8bXA==
-X-Gm-Message-State: APjAAAXs6tc46JgbGr8zylXj+1WSeGA3glMRJTnzSkj3rbvBMhsX2bgR
-        8mWn2ExqQ4hl8TFhH+VGzrM=
-X-Google-Smtp-Source: APXvYqx6NzMVRq9UDmtL8rB3rGw5UcM+b/nhEFGqoT+WC2z1naHBnw9aS+KksTy6cfzk3x8qe8O2Fw==
-X-Received: by 2002:a63:b904:: with SMTP id z4mr78435659pge.388.1563948337113;
-        Tue, 23 Jul 2019 23:05:37 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id i7sm35722269pjk.24.2019.07.23.23.05.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 23:05:36 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Steffen Klassert <klassert@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH net-next v2 1/8] net: 3com: 3c59x: Use dev_get_drvdata
-Date:   Wed, 24 Jul 2019 14:05:32 +0800
-Message-Id: <20190724060532.23953-1-hslester96@gmail.com>
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7E8472000C;
+        Wed, 24 Jul 2019 06:05:32 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH REBASE v4 06/14] arm: Properly account for stack randomization and stack guard gap
+Date:   Wed, 24 Jul 2019 01:58:42 -0400
+Message-Id: <20190724055850.6232-7-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
+References: <20190724055850.6232-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+This commit takes care of stack randomization and stack guard gap when
+computing mmap base address and checks if the task asked for randomization.
+This fixes the problem uncovered and not fixed for arm here:
+https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
 ---
-Changes in v2:
-  - Change pci_set_drvdata to dev_set_drvdata
-    to keep consistency.
+ arch/arm/mm/mmap.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
- drivers/net/ethernet/3com/3c59x.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/3com/3c59x.c b/drivers/net/ethernet/3com/3c59x.c
-index 147051404194..a0960c05833d 100644
---- a/drivers/net/ethernet/3com/3c59x.c
-+++ b/drivers/net/ethernet/3com/3c59x.c
-@@ -847,8 +847,7 @@ static void poll_vortex(struct net_device *dev)
+diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+index f866870db749..bff3d00bda5b 100644
+--- a/arch/arm/mm/mmap.c
++++ b/arch/arm/mm/mmap.c
+@@ -18,8 +18,9 @@
+ 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
  
- static int vortex_suspend(struct device *dev)
+ /* gap between mmap and stack */
+-#define MIN_GAP (128*1024*1024UL)
+-#define MAX_GAP ((TASK_SIZE)/6*5)
++#define MIN_GAP		(128*1024*1024UL)
++#define MAX_GAP		((TASK_SIZE)/6*5)
++#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+ 
+ static int mmap_is_legacy(struct rlimit *rlim_stack)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *ndev = pci_get_drvdata(pdev);
-+	struct net_device *ndev = dev_get_drvdata(dev);
- 
- 	if (!ndev || !netif_running(ndev))
- 		return 0;
-@@ -861,8 +860,7 @@ static int vortex_suspend(struct device *dev)
- 
- static int vortex_resume(struct device *dev)
+@@ -35,6 +36,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
  {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *ndev = pci_get_drvdata(pdev);
-+	struct net_device *ndev = dev_get_drvdata(dev);
- 	int err;
+ 	unsigned long gap = rlim_stack->rlim_cur;
++	unsigned long pad = stack_guard_gap;
++
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
++
++	/* Values close to RLIM_INFINITY can overflow. */
++	if (gap + pad > gap)
++		gap += pad;
  
- 	if (!ndev || !netif_running(ndev))
-@@ -1222,7 +1220,7 @@ static int vortex_probe1(struct device *gendev, void __iomem *ioaddr, int irq,
- 	/* if we are a PCI driver, we store info in pdev->driver_data
- 	 * instead of a module list */
- 	if (pdev)
--		pci_set_drvdata(pdev, dev);
-+		dev_set_drvdata(&pdev->dev, dev);
- 	if (edev)
- 		eisa_set_drvdata(edev, dev);
- 
+ 	if (gap < MIN_GAP)
+ 		gap = MIN_GAP;
 -- 
 2.20.1
 
