@@ -7,56 +7,46 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D96C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E7FC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DAD22BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7619422BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033271;
-	bh=8DMklsvQV6fe9UrzD0NLaowBnG4I7eiVU5QUoamScYY=;
+	s=default; t=1564033275;
+	bh=01qyR8q1qcmNZMZN8DfT208IbnjjFId6g0x+quyxSl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QBR55TnZiA2dnN561DKb2qa/WzwkFdWhQJKGYwPAQ71uo1O6Cz/p0My2ngqM7/yRR
-	 HxEfKz3VtztNTc/UmHfjWhj4m1wBWc2hmGkWzpQvWNdvfA3KaDk3mbxgG9jSf4J3QE
-	 gJ7xGjeqGvesqUMbO3jMG3r9IiePI8L7KLhcdFss=
+	b=ynt4KJsMba06La2PborAnuYoCxxgIo1rfBIEtQBsDq/l+gP4pZHb7FefuiV92kqGm
+	 TbSwOf3QhYZOJdxtlENothGch/WDk8E0xOc5f99Tjk0SPsLFIl+YGNZWnNusKmcbnB
+	 h9nUpYdmmSOe0DxSonVONQFRHubDNC/H+GY6NorA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404553AbfGYFlK (ORCPT
+        id S2404573AbfGYFlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:41:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404534AbfGYFlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:41:07 -0400
+        id S2404534AbfGYFlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:41:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1297522BEF;
-        Thu, 25 Jul 2019 05:41:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF92F22BF3;
+        Thu, 25 Jul 2019 05:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033266;
-        bh=8DMklsvQV6fe9UrzD0NLaowBnG4I7eiVU5QUoamScYY=;
+        s=default; t=1564033270;
+        bh=01qyR8q1qcmNZMZN8DfT208IbnjjFId6g0x+quyxSl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HO79zcTgiw9aUc8z080S9UN6bSRDumyMVOWxBIsaDGWUMxnwuSW/Wx6bCLQOmdigw
-         QEtW5AmGBDZsWHhoQE/jnb5G7AIzsrfBhVWNU84oQt7GeLbAVC8xwGKerrLuLyzghR
-         hOGlo/Rzb+dKGN4SRkDFfduUzdryppcbakld0poU=
+        b=qTxHTKF3g4YikHCqUmfQ3FGT7ShBeqvlWP6HhZFOdnB0hv0td/r/ydXj4KbIuLncf
+         tCaDvwdimttCKLyFjFnBL93+J+E7NuBvMLJ3KVTLZL0tta+U6yPTy913somWEUM98s
+         Iuh0r/S5ITWj88DlI1YCBIE/1es+EHH2PrnusUFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 150/271] perf tests: Fix record+probe_libc_inet_pton.sh for powerpc64
-Date:   Wed, 24 Jul 2019 21:20:19 +0200
-Message-Id: <20190724191708.067810524@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 124/271] bcache: check CACHE_SET_IO_DISABLE in allocator code
+Date:   Wed, 24 Jul 2019 21:19:53 +0200
+Message-Id: <20190724191705.898378775@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -69,80 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bff5a556c149804de29347a88a884d25e4e4e3a2 ]
+[ Upstream commit e775339e1ae1205b47d94881db124c11385e597c ]
 
-'probe libc's inet_pton & backtrace it with ping' testcase sometimes
-fails on powerpc because distro ping binary does not have symbol
-information and thus it prints "[unknown]" function name in the
-backtrace.
+If CACHE_SET_IO_DISABLE of a cache set flag is set by too many I/O
+errors, currently allocator routines can still continue allocate
+space which may introduce inconsistent metadata state.
 
-Accept "[unknown]" as valid function name for powerpc as well.
+This patch checkes CACHE_SET_IO_DISABLE bit in following allocator
+routines,
+- bch_bucket_alloc()
+- __bch_bucket_alloc_set()
+Once CACHE_SET_IO_DISABLE is set on cache set, the allocator routines
+may reject allocation request earlier to avoid potential inconsistent
+metadata.
 
- # perf test -v "probe libc's inet_pton & backtrace it with ping"
-
-Before:
-
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79695
-  ping 79718 [077] 96483.787025: probe_libc:inet_pton: (7fff83a754c8)
-  7fff83a754c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  1171830f4 [unknown] (/usr/bin/ping)
-  FAIL: expected backtrace entry
-  ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
-  got "1171830f4 [unknown] (/usr/bin/ping)"
-  test child finished with -1
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: FAILED!
-
-After:
-
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79085
-  ping 79108 [045] 96400.214177: probe_libc:inet_pton: (7fffbb9654c8)
-  7fffbb9654c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  132e830f4 [unknown] (/usr/bin/ping)
-  test child finished with 0
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: Ok
-
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Reviewed-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sandipan Das <sandipan@linux.ibm.com>
-Fixes: 1632936480a5 ("perf tests: Fix record+probe_libc_inet_pton.sh without ping's debuginfo")
-Link: http://lkml.kernel.org/r/1561630614-3216-1-git-send-email-s1seetee@linux.vnet.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/alloc.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index cab7b0aea6ea..f5837f28f3af 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -43,7 +43,7 @@ trace_libc_inet_pton_backtrace() {
- 		eventattr='max-stack=4'
- 		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
- 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
- 	*)
- 		eventattr='max-stack=3'
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index de85b3af3b39..9c3beb1e382b 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -393,6 +393,11 @@ long bch_bucket_alloc(struct cache *ca, unsigned int reserve, bool wait)
+ 	struct bucket *b;
+ 	long r;
+ 
++
++	/* No allocation if CACHE_SET_IO_DISABLE bit is set */
++	if (unlikely(test_bit(CACHE_SET_IO_DISABLE, &ca->set->flags)))
++		return -1;
++
+ 	/* fastpath */
+ 	if (fifo_pop(&ca->free[RESERVE_NONE], r) ||
+ 	    fifo_pop(&ca->free[reserve], r))
+@@ -484,6 +489,10 @@ int __bch_bucket_alloc_set(struct cache_set *c, unsigned int reserve,
+ {
+ 	int i;
+ 
++	/* No allocation if CACHE_SET_IO_DISABLE bit is set */
++	if (unlikely(test_bit(CACHE_SET_IO_DISABLE, &c->flags)))
++		return -1;
++
+ 	lockdep_assert_held(&c->bucket_lock);
+ 	BUG_ON(!n || n > c->caches_loaded || n > 8);
+ 
 -- 
 2.20.1
 
