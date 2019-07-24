@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E4DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BE9C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EB2204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CF6204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000149;
-	bh=1UxkEgMDGesnIPbV3F1ENZaDuBaggGu38f6L0zhjtCM=;
+	s=default; t=1564000157;
+	bh=RDAwFYFk700LNDIbZGyjr6fi+Bo0kEjzccYSW1lisUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUSCSgcplcwYAZ13aq/0/cKwOJPYIWGj3/jTKMsg1JnZVf65/YNR4dhnni7GcQhfq
-	 4kEMGwkNR15SoZYpjH+tbs6V/J4k30nXvzDuovUCWb22e4QPw+RcBkefJVHEhLVCmE
-	 dwy0/LuHs1xX05CF+G0XCnD4Mf9WcBRiYla4CfQQ=
+	b=QK8XGsNarJd6xh75Qt8KGD46FEwJrGKZpOVH/B2pGc6Z9ToVQSR8AvD23/zKrSMIH
+	 bvduEY9WQc0sErCoGCNYpvXQM60nP/FrR/43/fGipDmRwsUM8TKBHdw+o0ZqLvPGOP
+	 QM3bRg15BpchhiTlTfi7khn1bAL2Nha9SYXlzy4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389476AbfGXU3I (ORCPT
+        id S2388804AbfGXTdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:29:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55544 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387685AbfGXTdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:33:39 -0400
+        id S2388778AbfGXTdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:33:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B930120659;
-        Wed, 24 Jul 2019 19:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9D6D20659;
+        Wed, 24 Jul 2019 19:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996818;
-        bh=1UxkEgMDGesnIPbV3F1ENZaDuBaggGu38f6L0zhjtCM=;
+        s=default; t=1563996787;
+        bh=RDAwFYFk700LNDIbZGyjr6fi+Bo0kEjzccYSW1lisUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LiLc3CBb8W6abkTNBRYltzCMfUmt2dNQPHetchdS8z6zbX35vNEwqcYlOnbAVNbWZ
-         Tu/F/0PFwJV44Ca7PGZUQSGLvfe0HVcy1ut4ZJRGRGkTTk55QQ0pQry+d4Qj76TqUb
-         mSh4jVvnx2Z/qxQHU2DsxglRJyTgM0GuIcJoDPOw=
+        b=S4b2BJjQmRdY4d0avbNeEvUtWJKRtjhBqUzE6BQy4x2d1TpJjWPTWaFM81zGBuKZM
+         NfghgyYyk2BKWK3obgbSPqgpCfstRh1HsM2fu1azLHJ470RZMMBl5tSXY4TcAvBd8x
+         OCm3VOcJYEB4EQ1MerfOqI4Iijo/HfBuv8WhWBzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 227/413] net: hns3: fix port capbility updating issue
-Date:   Wed, 24 Jul 2019 21:18:38 +0200
-Message-Id: <20190724191751.215518732@linuxfoundation.org>
+Subject: [PATCH 5.2 217/413] rxrpc: Fix oops in tracepoint
+Date:   Wed, 24 Jul 2019 21:18:28 +0200
+Message-Id: <20190724191750.157542573@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,34 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 49b1255603de5183c5e377200be3b3afe0dcdb86 ]
+[ Upstream commit 99f0eae653b2db64917d0b58099eb51e300b311d ]
 
-Currently, the driver queries the media port information, and
-updates the port capability periodically. But it sets an error
-mac->speed_type value, which stops update port capability.
+If the rxrpc_eproto tracepoint is enabled, an oops will be cause by the
+trace line that rxrpc_extract_header() tries to emit when a protocol error
+occurs (typically because the packet is short) because the call argument is
+NULL.
 
-Fixes: 88d10bd6f730 ("net: hns3: add support for multiple media type")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fix this by using ?: to assume 0 as the debug_id if call is NULL.
+
+This can then be induced by:
+
+	echo -e '\0\0\0\0\0\0\0\0' | ncat -4u --send-only <addr> 20001
+
+where addr has the following program running on it:
+
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <unistd.h>
+	#include <sys/socket.h>
+	#include <arpa/inet.h>
+	#include <linux/rxrpc.h>
+	int main(void)
+	{
+		struct sockaddr_rxrpc srx;
+		int fd;
+		memset(&srx, 0, sizeof(srx));
+		srx.srx_family			= AF_RXRPC;
+		srx.srx_service			= 0;
+		srx.transport_type		= AF_INET;
+		srx.transport_len		= sizeof(srx.transport.sin);
+		srx.transport.sin.sin_family	= AF_INET;
+		srx.transport.sin.sin_port	= htons(0x4e21);
+		fd = socket(AF_RXRPC, SOCK_DGRAM, AF_INET6);
+		bind(fd, (struct sockaddr *)&srx, sizeof(srx));
+		sleep(20);
+		return 0;
+	}
+
+It results in the following oops.
+
+	BUG: kernel NULL pointer dereference, address: 0000000000000340
+	#PF: supervisor read access in kernel mode
+	#PF: error_code(0x0000) - not-present page
+	...
+	RIP: 0010:trace_event_raw_event_rxrpc_rx_eproto+0x47/0xac
+	...
+	Call Trace:
+	 <IRQ>
+	 rxrpc_extract_header+0x86/0x171
+	 ? rcu_read_lock_sched_held+0x5d/0x63
+	 ? rxrpc_new_skb+0xd4/0x109
+	 rxrpc_input_packet+0xef/0x14fc
+	 ? rxrpc_input_data+0x986/0x986
+	 udp_queue_rcv_one_skb+0xbf/0x3d0
+	 udp_unicast_rcv_skb.isra.8+0x64/0x71
+	 ip_protocol_deliver_rcu+0xe4/0x1b4
+	 ip_local_deliver+0xf0/0x154
+	 __netif_receive_skb_one_core+0x50/0x6c
+	 netif_receive_skb_internal+0x26b/0x2e9
+	 napi_gro_receive+0xf8/0x1da
+	 rtl8169_poll+0x303/0x4c4
+	 net_rx_action+0x10e/0x333
+	 __do_softirq+0x1a5/0x38f
+	 irq_exit+0x54/0xc4
+	 do_IRQ+0xda/0xf8
+	 common_interrupt+0xf/0xf
+	 </IRQ>
+	 ...
+	 ? cpuidle_enter_state+0x23c/0x34d
+	 cpuidle_enter+0x2a/0x36
+	 do_idle+0x163/0x1ea
+	 cpu_startup_entry+0x1d/0x1f
+	 start_secondary+0x157/0x172
+	 secondary_startup_64+0xa4/0xb0
+
+Fixes: a25e21f0bcd2 ("rxrpc, afs: Use debug_ids rather than pointers in traces")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/trace/events/rxrpc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index bab04d2d674a..f2bffc05e902 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2592,6 +2592,7 @@ static int hclge_get_sfp_info(struct hclge_dev *hdev, struct hclge_mac *mac)
- 		mac->speed_ability = le32_to_cpu(resp->speed_ability);
- 		mac->autoneg = resp->autoneg;
- 		mac->support_autoneg = resp->autoneg_ability;
-+		mac->speed_type = QUERY_ACTIVE_SPEED;
- 		if (!resp->active_fec)
- 			mac->fec_mode = 0;
- 		else
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index d85816878a52..cc1d060cbf13 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -1379,7 +1379,7 @@ TRACE_EVENT(rxrpc_rx_eproto,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->call = call->debug_id;
++		    __entry->call = call ? call->debug_id : 0;
+ 		    __entry->serial = serial;
+ 		    __entry->why = why;
+ 			   ),
 -- 
 2.20.1
 
