@@ -2,257 +2,155 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B0C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1609BC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D46121738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD58321738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WoBJMQbd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="aD9gCEO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387533AbfGXPKZ (ORCPT
+        id S2387578AbfGXPSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:10:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60322 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXPKZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:10:25 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6OFADcv028920;
-        Wed, 24 Jul 2019 10:10:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563981013;
-        bh=MYZR/Apw8pwKUZRnXARqM+5BCYCnDGqRAiLE5RLG73M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WoBJMQbdZqYElDTVuammAiAyuMQqptS//Kl1TgYl2HihiF6jcKUEJ2n9/qXp+A7i4
-         7K31Rg+78Wb0FrgJIMVbr67IgrJIu1WmKuyURFDDxPtA255mgwkNDow7ORvqeiBJRQ
-         h2TBVwVB3oAMkWCNQcJZCw4RPxysx8MWiUh+pvUQ=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6OFADjA049577
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jul 2019 10:10:13 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Jul 2019 10:10:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Jul 2019 10:10:12 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6OFAC73107494;
-        Wed, 24 Jul 2019 10:10:12 -0500
-Subject: Re: Backlight in motorola Droid 4
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <linux-omap@vger.kernel.org>, <tony@atomide.com>, <sre@kernel.org>,
-        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
-        <jacek.anaszewski@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20190722205921.GA24787@amd> <b8fbc94f-c087-2c9d-4532-ea423f1626e6@ti.com>
- <20190724124530.GA30211@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <fdcab21e-dd5e-1f7e-6927-16597a94c1a2@ti.com>
-Date:   Wed, 24 Jul 2019 10:10:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 24 Jul 2019 11:18:12 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34626 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387503AbfGXPSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:18:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=HhOq85evkFM/y15ZM/uScRYpMDK7uIWdehOeEOZxwf4=; b=aD9gCEO/FuimjgYQZxJxnzZ4v1
+        SEPBl3v97IkgN4q2SfajCnLPZCPyb9eAUvSJCSsM/ceXh7w22MSJIGZYynurXwVFVmUsi6Qkb6gy4
+        numZoJbK/AWNh/CnvIzhqder6Q5qnPPyuV1qWrQqWUAjRrDjAC982P5hwYPoiIoAFa8U=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hqJ1n-000061-9c; Wed, 24 Jul 2019 17:18:03 +0200
+Date:   Wed, 24 Jul 2019 17:18:03 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        alexandru.marginean@nxp.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus allocation
+Message-ID: <20190724151803.GR25635@lunn.ch>
+References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
+ <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190724124530.GA30211@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On Wed, Jul 24, 2019 at 05:41:38PM +0300, Claudiu Manoil wrote:
+> Though it works, this is not how it should have been.
+> What's needed is a pointer to the mdio registers.
+> Store it properly inside bus->priv allocated space.
+> Use devm_* variant to further clean up the init error /
+> remove paths.
+> 
+> Fixes following sparse warning:
+>  warning: incorrect type in assignment (different address spaces)
+>     expected void *priv
+>     got struct enetc_mdio_regs [noderef] <asn:2>*[assigned] regs
+> 
+> Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
+> 
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> ---
+> v1 - added this patch
+> 
+>  .../net/ethernet/freescale/enetc/enetc_mdio.c | 31 +++++++------------
+>  1 file changed, 12 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+> index 77b9cd10ba2b..1e3cd21c13ee 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
+> @@ -15,7 +15,8 @@ struct enetc_mdio_regs {
+>  	u32	mdio_addr;	/* MDIO address */
+>  };
+>  
+> -#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem *)((bus)->priv)
+> +#define bus_to_enetc_regs(bus)	(*(struct enetc_mdio_regs __iomem **) \
+> +				((bus)->priv))
+>  
+>  #define ENETC_MDIO_REG_OFFSET	0x1c00
+>  #define ENETC_MDC_DIV		258
+> @@ -146,12 +147,12 @@ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+>  int enetc_mdio_probe(struct enetc_pf *pf)
+>  {
+>  	struct device *dev = &pf->si->pdev->dev;
+> -	struct enetc_mdio_regs __iomem *regs;
+> +	struct enetc_mdio_regs __iomem **regsp;
+>  	struct device_node *np;
+>  	struct mii_bus *bus;
+> -	int ret;
+> +	int err;
+>  
+> -	bus = mdiobus_alloc_size(sizeof(regs));
+> +	bus = devm_mdiobus_alloc_size(dev, sizeof(*regsp));
+>  	if (!bus)
+>  		return -ENOMEM;
+>  
+> @@ -159,41 +160,33 @@ int enetc_mdio_probe(struct enetc_pf *pf)
+>  	bus->read = enetc_mdio_read;
+>  	bus->write = enetc_mdio_write;
+>  	bus->parent = dev;
+> +	regsp = bus->priv;
+>  	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
+>  
+>  	/* store the enetc mdio base address for this bus */
+> -	regs = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+> -	bus->priv = regs;
+> +	*regsp = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
 
-On 7/24/19 7:45 AM, Pavel Machek wrote:
-> Hi!
->
->>> So now the backlight LED can be controlled. Good. (And thanks!)
->>>
->>> But I seem to remember that backlight had range from "is it really on?"
->>> to "very bright"; now it seems to have range from "bright" to "very
->>> bright".
->>>
->>> Any ideas what goes on there?
->> In the LM3552 driver we are changing the Full scale brightness registers for
->> the
->>
->> specific control bank.
->>
->> #define LM3532_REG_CTRL_A_BRT    0x17
->> #define LM3532_REG_CTRL_B_BRT    0x19
->> #define LM3532_REG_CTRL_C_BRT    0x1b
->>
->> In the ti-lmu code the ALS zones were being modified not the control bank
->> brightness.
->>
->> #define LM3532_REG_BRT_A            0x70    /* zone 0 */
->> #define LM3532_REG_BRT_B            0x76    /* zone 1 */
->> #define LM3532_REG_BRT_C            0x7C    /* zone 2 */
->>
->> Not sure how the ALS is attached in the system if it reports to the host and
->> the host manages
->>
->> the back light or if the the ALS is connected directly to the LM3532.
->>
->> Maybe the ALS zone targets need to be updated to allow a fuller range.  The
->> LM3532 may be stuck
->>
->> in a certain zone.
->>
->> Probably should set up the ALS properties in the device tree.
-> I came with this so far.
+This is all very odd and different to every other driver.
 
-OK I guess you will remove the commentary in the driver once you submit
+If i get the code write, there are 4 registers, each u32 in size,
+starting at pf->si->hw.port + ENETC_MDIO_REG_OFFSET?
 
-the patch
+There are macros like enetc_port_wr() and enetc_global_wr(). It think
+it would be much cleaner to add a macro enet_mdio_wr() which takes
+hw, off, val.
 
+#define enet_mdio_wr(hw, off, val) enet_port_wr(hw, off + ENETC_MDIO_REG_OFFSET, val)
 
-> 									Pavel
->
-> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> index 62af1b8..752952e 100644
-> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> @@ -422,6 +422,7 @@
->   			led-sources = <2>;
->   			ti,led-mode = <0>;
->   			label = ":backlight";
-> +			default-state = "on";
->   			linux,default-trigger = "backlight";
->   		};
->   
-> diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-> index e5e1b3a..2baeacd 100644
-> --- a/drivers/base/regmap/regmap-debugfs.c
-> +++ b/drivers/base/regmap/regmap-debugfs.c
-> @@ -288,7 +288,7 @@ static ssize_t regmap_map_read_file(struct file *file, char __user *user_buf,
->   				   count, ppos);
->   }
->   
-> -#undef REGMAP_ALLOW_WRITE_DEBUGFS
-> +#define REGMAP_ALLOW_WRITE_DEBUGFS
->   #ifdef REGMAP_ALLOW_WRITE_DEBUGFS
->   /*
->    * This can be dangerous especially when we have clients such as
-> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> index bdc98dd..db6e382 100644
-> --- a/drivers/leds/leds-gpio.c
-> +++ b/drivers/leds/leds-gpio.c
-> @@ -172,6 +172,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
->   				led.default_state = LEDS_GPIO_DEFSTATE_ON;
->   			else
->   				led.default_state = LEDS_GPIO_DEFSTATE_OFF;
-> +			/* FIXME: else ... warn about bad device tree */
->   		}
->   
->   		if (fwnode_property_present(child, "retain-state-suspended"))
-> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-> index 180895b..365a22a5 100644
-> --- a/drivers/leds/leds-lm3532.c
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -1,6 +1,7 @@
->   // SPDX-License-Identifier: GPL-2.0
->   // TI LM3532 LED driver
->   // Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> +// http://www.ti.com/lit/ds/symlink/lm3532.pdf
+struct enetc_mdio_priv {
+       struct enetc_hw *hw;
+}
 
-I don't put symlinks in drivers as they are subject to change.
+	struct enetc_mdio_priv *mdio_priv;
 
-This link is in the patch history anyway
+	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
+
+	mdio_priv = bus->priv;
+	mdio_priv->hw = pf->si->hw;
 
 
->   
->   #include <linux/i2c.h>
->   #include <linux/leds.h>
-> @@ -23,7 +24,7 @@
->   #define LM3532_REG_PWM_B_CFG	0x14
->   #define LM3532_REG_PWM_C_CFG	0x15
->   #define LM3532_REG_ZONE_CFG_A	0x16
-> -#define LM3532_REG_CTRL_A_BRT	0x17
-> +#define LM3532_REG_CTRL_A_BRT	0x17 /* Called "Control A Full-Scale Current " in documentation */
->   #define LM3532_REG_ZONE_CFG_B	0x18
->   #define LM3532_REG_CTRL_B_BRT	0x19
->   #define LM3532_REG_ZONE_CFG_C	0x1a
-> @@ -38,6 +39,7 @@
->   #define LM3532_REG_ZN_2_LO	0x65
->   #define LM3532_REG_ZN_3_HI	0x66
->   #define LM3532_REG_ZN_3_LO	0x67
-> +#define LM3532_REG_ZN_TARGET	0x70
->   #define LM3532_REG_MAX		0x7e
->   
->   /* Contorl Enable */
-> @@ -302,7 +304,7 @@ static int lm3532_led_disable(struct lm3532_led *led_data)
->   	int ret;
->   
->   	ret = regmap_update_bits(led_data->priv->regmap, LM3532_REG_ENABLE,
-> -					 ctrl_en_val, ~ctrl_en_val);
-> +					 ctrl_en_val, 0);
->   	if (ret) {
->   		dev_err(led_data->priv->dev, "Failed to set ctrl:%d\n", ret);
->   		return ret;
-> @@ -321,6 +323,7 @@ static int lm3532_brightness_set(struct led_classdev *led_cdev,
->   
->   	mutex_lock(&led->priv->lock);
->   
-> +	/* Actually, I don't think this is acceptable */
->   	if (led->mode == LM3532_BL_MODE_ALS) {
->   		if (brt_val > LED_OFF)
->   			ret = lm3532_led_enable(led);
-> @@ -339,11 +342,23 @@ static int lm3532_brightness_set(struct led_classdev *led_cdev,
->   	if (ret)
->   		goto unlock;
->   
-> +	/* This driver is sick. It manipulates maximum current register (5-bit),
-> +	   but fails to control 8-bit brightness register... which is exponential
-> +	   so it allows >8 bit of control */
-> +
+static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
+                            u16 value)
+{
+	struct enetc_mdio_priv *mdio_priv = bus->priv;
+...
+	enet_mdio_wr(priv->hw, ENETC_MDIO_CFG, mdio_cfg);
+}
+			    	
+All the horrible casts go away, the driver is structured like every
+other driver, sparse is probably happy, etc.
 
->   	brightness_reg = LM3532_REG_CTRL_A_BRT + led->control_bank * 2;
-The appropriate target register can be programmed in the control bank 
-config register bits[4:2]
-
-Default is 0x1xx which is 0x74.
-
-The target register should be set in the config as well and then stored 
-as a register offset.
-
-Or just set the CTRL_A_BRT to 0x74 and take the default config
-
-> -	brt_val = brt_val / LM3532_BRT_VAL_ADJUST;
-> +	brt_val = 255 / LM3532_BRT_VAL_ADJUST;
->   
-
-Don't need this if we have 8 bit control.  This was only needed for the 
-max current control.
-
-
->   	ret = regmap_write(led->priv->regmap, brightness_reg, brt_val);
->   
-> +	brightness_reg = 0x70 + led->control_bank * 5;
-> +
-> +	ret = regmap_write(led->priv->regmap, brightness_reg, brt_val);
-> +	ret = regmap_write(led->priv->regmap, brightness_reg+1, brt_val);
-> +	ret = regmap_write(led->priv->regmap, brightness_reg+2, brt_val);
-> +	ret = regmap_write(led->priv->regmap, brightness_reg+3, brt_val);
-> +	ret = regmap_write(led->priv->regmap, brightness_reg+4, brt_val);
-> +
-
-You don't need to write all the target registers.
-
-Dan
-
-<snip>
-
-
+      Andrew
