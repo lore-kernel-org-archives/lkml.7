@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08774C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102B7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0912214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D9D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997556;
-	bh=OgRx/pHz+ryvb/eVxoFbkiGVp79nL9fr7SzT47ZFZJE=;
+	s=default; t=1563997559;
+	bh=24KKvS/5BVLuNBrRT/Ci1feReR9yLJePTHw4GykVB30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUejcjUShmtD5XbYHA1akn9Vt2531vo0ieIvOG2cpKMtYNOr8XG5fwkZBcGWx8T3U
-	 FD8Es30CygbF2cGY3fAXf5sSVQuiL9bRR1RhOjtC108GcX13CBBIaMyiEA+9oUEszv
-	 ZiS6iYdhc2ml9y+sV5ARHFgu4B5lP6Cy/z8v+BDE=
+	b=Y8BoGpMPR2utr5h4quousH1NjrfwdBv8Powmlol7uv10UffGIeq51wINDxZvUBDOM
+	 TdgowwcBFU3/d+9fWaEDUg4X6sb4X0UsFLEufFivzNU8jHHmOmU5eqSmVZeC9oSW7o
+	 fu5GUG6p7wkjPlwws1Aq8m6aScmSKGGHiN3d+1uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390635AbfGXTpz (ORCPT
+        id S2390645AbfGXTp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50410 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390611AbfGXTpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:45:51 -0400
+        id S2390636AbfGXTpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:45:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A6C22BE8;
-        Wed, 24 Jul 2019 19:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96384217D4;
+        Wed, 24 Jul 2019 19:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997551;
-        bh=OgRx/pHz+ryvb/eVxoFbkiGVp79nL9fr7SzT47ZFZJE=;
+        s=default; t=1563997555;
+        bh=24KKvS/5BVLuNBrRT/Ci1feReR9yLJePTHw4GykVB30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0aVZP2EFgZOI2WHA2FMWNsstBRxn/Hr9OCaLhTl0loFG9XSVkMFi1OtF9nCvgGKLy
-         Lbjl77/keeXS28+/LICBUCfM2hIR4BbwpL1ULHOztfHSpgYBK1IskxHi6ykb8Mc3cJ
-         Z4yC9zV+Ff/ChMYnf8gD+mUkKT0lYAM466v85b0g=
+        b=Mesy/Azij8jgYodet0XG7dcoKvZOXaEuPXFhYY6dDr/W9OZjyOrN+LsDindQIu+Cl
+         OHmM+oS6WjYTh/Lg1VTBVAMPUGOm2Lz5xij3SBrWY2VJfeHs/O0Ey1AbaMuXdv3BJh
+         C8wYk3yBJeZobizpz4Ddmds1MXqF2krIzLTA8uc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ben Gainey <ben.gainey@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 061/371] media: imx7-mipi-csis: Propagate the error if clock enabling fails
-Date:   Wed, 24 Jul 2019 21:16:53 +0200
-Message-Id: <20190724191729.472632315@linuxfoundation.org>
+Subject: [PATCH 5.1 062/371] perf jvmti: Address gcc string overflow warning for strncpy()
+Date:   Wed, 24 Jul 2019 21:16:54 +0200
+Message-Id: <20190724191729.553090019@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,56 +65,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b393f91c651c16d5c09f5c7aa689e58a79df34e ]
+[ Upstream commit 279ab04dbea1370d2eac0f854270369ccaef8a44 ]
 
-Currently the return value from clk_bulk_prepare_enable() is checked,
-but it is not propagate it in the case of failure.
+We are getting false positive gcc warning when we compile with gcc9 (9.1.1):
 
-Fix it and also move the error message to the caller of
-mipi_csis_clk_enable().
+     CC       jvmti/libjvmti.o
+   In file included from /usr/include/string.h:494,
+                    from jvmti/libjvmti.c:5:
+   In function ‘strncpy’,
+       inlined from ‘copy_class_filename.constprop’ at jvmti/libjvmti.c:166:3:
+   /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ specified bound depends on the length of the source argument [-Werror=stringop-overflow=]
+     106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   jvmti/libjvmti.c: In function ‘copy_class_filename.constprop’:
+   jvmti/libjvmti.c:165:26: note: length computed here
+     165 |   size_t file_name_len = strlen(file_name);
+         |                          ^~~~~~~~~~~~~~~~~
+   cc1: all warnings being treated as errors
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+As per Arnaldo's suggestion use strlcpy(), which does the same thing and keeps
+gcc silent.
+
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ben Gainey <ben.gainey@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190531131321.GB1281@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx7-mipi-csis.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/jvmti/libjvmti.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 2ddcc42ab8ff..e9d621e19d6d 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -455,13 +455,9 @@ static void mipi_csis_set_params(struct csi_state *state)
- 			MIPI_CSIS_CMN_CTRL_UPDATE_SHADOW_CTRL);
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index aea7b1fe85aa..c441a34cb1c0 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/compiler.h>
++#include <linux/string.h>
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -162,8 +163,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+ 		result[i] = '\0';
+ 	} else {
+ 		/* fallback case */
+-		size_t file_name_len = strlen(file_name);
+-		strncpy(result, file_name, file_name_len < max_length ? file_name_len : max_length);
++		strlcpy(result, file_name, max_length);
+ 	}
  }
  
--static void mipi_csis_clk_enable(struct csi_state *state)
-+static int mipi_csis_clk_enable(struct csi_state *state)
- {
--	int ret;
--
--	ret = clk_bulk_prepare_enable(state->num_clks, state->clks);
--	if (ret < 0)
--		dev_err(state->dev, "failed to enable clocks\n");
-+	return clk_bulk_prepare_enable(state->num_clks, state->clks);
- }
- 
- static void mipi_csis_clk_disable(struct csi_state *state)
-@@ -985,7 +981,11 @@ static int mipi_csis_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
--	mipi_csis_clk_enable(state);
-+	ret = mipi_csis_clk_enable(state);
-+	if (ret < 0) {
-+		dev_err(state->dev, "failed to enable clocks: %d\n", ret);
-+		return ret;
-+	}
- 
- 	ret = devm_request_irq(dev, state->irq, mipi_csis_irq_handler,
- 			       0, dev_name(dev), state);
 -- 
 2.20.1
 
