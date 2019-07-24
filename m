@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204F0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA289C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E681F20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8EE20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998134;
-	bh=IEE+22g5OQ2To3AmLiJfIHdoE2uP0WmmHaHP3ulGDuo=;
+	s=default; t=1563998138;
+	bh=bJYU+BBdlRGXP2j5ps58YvTfzAMLYvWUtZycSO9cWgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOkuxhSK8MdCUakEe2sPYIBPNYT/p/OTvyyfNPZV2GssMac3rwUz+iVQEGND1Ci+s
-	 HvL93j4v6Av+3r7OA2J12ro0L/DKxZdySb7QqJgDKUezYjtK8sJl4G0f/VAQqu4hAR
-	 D/tW7OPdrClsFEQOPyLPQRIQPN/+yr9Jrw+g+UZA=
+	b=aBYmyxBMey/jmcJ/LU8rLiZn8TI3+HkR/UDXk5q5gALkYrx4tiO6VHeqjFPdLUNZf
+	 dQIIHvAeBkPb701N0J2e3uf2qyTiB2ZnlS44waJooKW5vzJF3Nk0K+BLGrmQwe1Xf/
+	 2PJNnDyQ6Tcg7MeLJOBJaVbSlguFHdQAp60dfM3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404520AbfGXTzd (ORCPT
+        id S2404537AbfGXTzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39206 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404065AbfGXTza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:55:30 -0400
+        id S2404508AbfGXTzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61DAA20665;
-        Wed, 24 Jul 2019 19:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20572205C9;
+        Wed, 24 Jul 2019 19:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998128;
-        bh=IEE+22g5OQ2To3AmLiJfIHdoE2uP0WmmHaHP3ulGDuo=;
+        s=default; t=1563998131;
+        bh=bJYU+BBdlRGXP2j5ps58YvTfzAMLYvWUtZycSO9cWgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ieUBMYCKW3p1ijP76E6/e/deYI5FwcpexjKlqMrMkctxBF95rYc7rGnMmhcindkeU
-         6WniU6izWxNUJ5UGvo3epVacTvqACCZWt5nFZZFOsYZb9bjYTNnYdqYQHHVv9i2oNv
-         xvmopYYzAnkXKRaQOnyNQMi09oqTe0jmB8We3/Zk=
+        b=KYAX6HXKl8xaFxrR1hRBTiaUrjJ7yQwJGBkSHKr8lrtDv2cr4ipd9qI2gzI6IlQzS
+         +Kpa2tdbqX3soSB3UVNndooSrVNn8kuehdn7/1VF0zqdMIG5VIXkAsawytPp4XF15A
+         Tzfpn3BQz5td56YdSpIJi6O5nBzaL4hXYJX9tzAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 214/371] gtp: fix suspicious RCU usage
-Date:   Wed, 24 Jul 2019 21:19:26 +0200
-Message-Id: <20190724191740.660928847@linuxfoundation.org>
+Subject: [PATCH 5.1 215/371] gtp: fix Illegal context switch in RCU read-side critical section.
+Date:   Wed, 24 Jul 2019 21:19:27 +0200
+Message-Id: <20190724191740.731183797@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,90 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e198987e7dd7d3645a53875151cd6f8fc425b706 ]
+[ Upstream commit 3f167e1921865b379a9becf03828e7202c7b4917 ]
 
-gtp_encap_enable_socket() and gtp_encap_destroy() are not protected
-by rcu_read_lock(). and it's not safe to write sk->sk_user_data.
-This patch make these functions to use lock_sock() instead of
-rcu_dereference_sk_user_data().
+ipv4_pdp_add() is called in RCU read-side critical section.
+So GFP_KERNEL should not be used in the function.
+This patch make ipv4_pdp_add() to use GFP_ATOMIC instead of GFP_KERNEL.
 
 Test commands:
-    gtp-link add gtp1
+gtp-link add gtp1 &
+gtp-tunnel add gtp1 v1 100 200 1.1.1.1 2.2.2.2
 
 Splat looks like:
-[   83.238315] =============================
-[   83.239127] WARNING: suspicious RCU usage
-[   83.239702] 5.2.0-rc6+ #49 Not tainted
-[   83.240268] -----------------------------
-[   83.241205] drivers/net/gtp.c:799 suspicious rcu_dereference_check() usage!
-[   83.243828]
-[   83.243828] other info that might help us debug this:
-[   83.243828]
-[   83.246325]
-[   83.246325] rcu_scheduler_active = 2, debug_locks = 1
-[   83.247314] 1 lock held by gtp-link/1008:
-[   83.248523]  #0: 0000000017772c7f (rtnl_mutex){+.+.}, at: __rtnl_newlink+0x5f5/0x11b0
-[   83.251503]
-[   83.251503] stack backtrace:
-[   83.252173] CPU: 0 PID: 1008 Comm: gtp-link Not tainted 5.2.0-rc6+ #49
-[   83.253271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   83.254562] Call Trace:
-[   83.254995]  dump_stack+0x7c/0xbb
-[   83.255567]  gtp_encap_enable_socket+0x2df/0x360 [gtp]
-[   83.256415]  ? gtp_find_dev+0x1a0/0x1a0 [gtp]
-[   83.257161]  ? memset+0x1f/0x40
-[   83.257843]  gtp_newlink+0x90/0xa21 [gtp]
-[   83.258497]  ? __netlink_ns_capable+0xc3/0xf0
-[   83.259260]  __rtnl_newlink+0xb9f/0x11b0
-[   83.260022]  ? rtnl_link_unregister+0x230/0x230
+[  130.618881] =============================
+[  130.626382] WARNING: suspicious RCU usage
+[  130.626994] 5.2.0-rc6+ #50 Not tainted
+[  130.627622] -----------------------------
+[  130.628223] ./include/linux/rcupdate.h:266 Illegal context switch in RCU read-side critical section!
+[  130.629684]
+[  130.629684] other info that might help us debug this:
+[  130.629684]
+[  130.631022]
+[  130.631022] rcu_scheduler_active = 2, debug_locks = 1
+[  130.632136] 4 locks held by gtp-tunnel/1025:
+[  130.632925]  #0: 000000002b93c8b7 (cb_lock){++++}, at: genl_rcv+0x15/0x40
+[  130.634159]  #1: 00000000f17bc999 (genl_mutex){+.+.}, at: genl_rcv_msg+0xfb/0x130
+[  130.635487]  #2: 00000000c644ed8e (rtnl_mutex){+.+.}, at: gtp_genl_new_pdp+0x18c/0x1150 [gtp]
+[  130.636936]  #3: 0000000007a1cde7 (rcu_read_lock){....}, at: gtp_genl_new_pdp+0x187/0x1150 [gtp]
+[  130.638348]
+[  130.638348] stack backtrace:
+[  130.639062] CPU: 1 PID: 1025 Comm: gtp-tunnel Not tainted 5.2.0-rc6+ #50
+[  130.641318] Call Trace:
+[  130.641707]  dump_stack+0x7c/0xbb
+[  130.642252]  ___might_sleep+0x2c0/0x3b0
+[  130.642862]  kmem_cache_alloc_trace+0x1cd/0x2b0
+[  130.643591]  gtp_genl_new_pdp+0x6c5/0x1150 [gtp]
+[  130.644371]  genl_family_rcv_msg+0x63a/0x1030
+[  130.645074]  ? mutex_lock_io_nested+0x1090/0x1090
+[  130.645845]  ? genl_unregister_family+0x630/0x630
+[  130.646592]  ? debug_show_all_locks+0x2d0/0x2d0
+[  130.647293]  ? check_flags.part.40+0x440/0x440
+[  130.648099]  genl_rcv_msg+0xa3/0x130
 [ ... ]
 
-Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/gtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 83488f2bf7a0..f45a806b6c06 100644
+index f45a806b6c06..6f1ad7ccaea6 100644
 --- a/drivers/net/gtp.c
 +++ b/drivers/net/gtp.c
-@@ -293,12 +293,14 @@ static void gtp_encap_destroy(struct sock *sk)
- {
- 	struct gtp_dev *gtp;
+@@ -958,7 +958,7 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
  
--	gtp = rcu_dereference_sk_user_data(sk);
-+	lock_sock(sk);
-+	gtp = sk->sk_user_data;
- 	if (gtp) {
- 		udp_sk(sk)->encap_type = 0;
- 		rcu_assign_sk_user_data(sk, NULL);
- 		sock_put(sk);
- 	}
-+	release_sock(sk);
- }
- 
- static void gtp_encap_disable_sock(struct sock *sk)
-@@ -800,7 +802,8 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 		goto out_sock;
  	}
  
--	if (rcu_dereference_sk_user_data(sock->sk)) {
-+	lock_sock(sock->sk);
-+	if (sock->sk->sk_user_data) {
- 		sk = ERR_PTR(-EBUSY);
- 		goto out_sock;
- 	}
-@@ -816,6 +819,7 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
+-	pctx = kmalloc(sizeof(struct pdp_ctx), GFP_KERNEL);
++	pctx = kmalloc(sizeof(*pctx), GFP_ATOMIC);
+ 	if (pctx == NULL)
+ 		return -ENOMEM;
  
- out_sock:
-+	release_sock(sock->sk);
- 	sockfd_put(sock);
- 	return sk;
- }
 -- 
 2.20.1
 
