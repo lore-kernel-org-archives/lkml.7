@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C5DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE12C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83031218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD1A218F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996424;
-	bh=d48ehVTORlKXviT2Y2XYVr7rT+Ebkzd6pWcD+Wo1+qU=;
+	s=default; t=1563996431;
+	bh=JCPTuGfRM364P6BBf0xXm6vZVjJevDMqfh/vxoEhrBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BqfPDPFmRak0YqWXIB3Wyl1bKtEUgzBg5UvcZdvb5uJgjkV/AGXGXeMcpnhxqGCiQ
-	 R6odaab9RvgSn5X5uiogjzw7TZdODXb9Z2GBJDHRdWqey97j9LaNhJDUewU80CL/yC
-	 nSX3eQJcZ4tJsZleI3W3vp9KrkiVC/cqrSv3B2GY=
+	b=W9AlxZnOvGv5FoZwJLF3gi33iUeyNsFXY51qaQaZcYrftKYwwgucKu5Q3q8sCnLAf
+	 tBdR0sUaiUS9CjOgAapffP+oEN3VQ0QcuKY+Xh7oGEFWXYxUfmmHMb0wMhvbqPLcI+
+	 lkiLZPAaQB+C/WsBANefz4vi8qofpWN+mub9Tujo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbfGXT1D (ORCPT
+        id S1729296AbfGXT1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44398 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728733AbfGXT07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:26:59 -0400
+        id S1728572AbfGXT0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:26:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A22F20659;
-        Wed, 24 Jul 2019 19:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F0D22387;
+        Wed, 24 Jul 2019 19:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996418;
-        bh=d48ehVTORlKXviT2Y2XYVr7rT+Ebkzd6pWcD+Wo1+qU=;
+        s=default; t=1563996415;
+        bh=JCPTuGfRM364P6BBf0xXm6vZVjJevDMqfh/vxoEhrBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N6oeCSpd8dOVwYUhT0+qKrpx5Mf7iDKGQkANgbsvSq5CVS12f8yfL/EARTfz4ylU+
-         oWuTTYMpDqRC7bzonuUeptpBHS//bRozDXy6mHK8/LgqiHhadH4ixoPL5p8tXOIVi1
-         3H7AHR6soOE3c2K8UITjBatWPWYvGplRkOK2l8OA=
+        b=n5HDU5xfZbpVxw/Y+kqBx1LrjKtzu88cGIdbNyWMZtbrjwxRDlnvn5i03360uZ8q/
+         9aD9BLLs+KqOzI2n+E+8KVr+GqnL6YfEF3Hf+RviEhvMLRujw8GJN5pbxIH7tZ0Hdz
+         g9sQ3zHUVwxJDRsiI0nB4fK0g7AEkHmlov9P/ji8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 090/413] gpio: omap: Fix lost edge wake-up interrupts
-Date:   Wed, 24 Jul 2019 21:16:21 +0200
-Message-Id: <20190724191741.492376199@linuxfoundation.org>
+Subject: [PATCH 5.2 089/413] regmap: fix bulk writes on paged registers
+Date:   Wed, 24 Jul 2019 21:16:20 +0200
+Message-Id: <20190724191741.433561892@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -67,77 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a522f1d0c381c42f3ace13b8bbeeccabdd6d2e5c ]
+[ Upstream commit db057679de3e9e6a03c1bcd5aee09b0d25fd9f5b ]
 
-If an edge interrupt triggers while entering idle just before we save
-GPIO datain register to saved_datain, the triggered GPIO will not be
-noticed on wake-up. This is because the saved_datain and GPIO datain
-are the same on wake-up in omap_gpio_unidle(). Let's fix this by
-ignoring any pending edge interrupts for saved_datain.
+On buses like SlimBus and SoundWire which does not support
+gather_writes yet in regmap, A bulk write on paged register
+would be silently ignored after programming page.
+This is because local variable 'ret' value in regmap_raw_write_impl()
+gets reset to 0 once page register is written successfully and the
+code below checks for 'ret' value to be -ENOTSUPP before linearising
+the write buffer to send to bus->write().
 
-This issue affects only idle states where the GPIO module internal
-wake-up path is operational. For deeper idle states where the GPIO
-module gets powered off, Linux generic wakeirqs must be used for
-the padconf wake-up events with pinctrl-single driver. For examples,
-please see "interrupts-extended" dts usage in many drivers.
+Fix this by resetting the 'ret' value to -ENOTSUPP in cases where
+gather_writes() is not supported or single register write is
+not possible.
 
-This issue can be somewhat easily reproduced by pinging an idle system
-with smsc911x Ethernet interface configured IRQ_TYPE_EDGE_FALLING. At
-some point the smsc911x interrupts will just stop triggering. Also if
-WLCORE WLAN is used with EDGE interrupt like it's documentation specifies,
-we can see lost interrupts without this patch.
-
-Note that in the long run we may be able to cancel entering idle by
-returning an error in gpio_omap_cpu_notifier() on pending interrupts.
-But let's fix the bug first.
-
-Also note that because of the recent clean-up efforts this patch does
-not apply directly to older kernels. This does fix a long term issue
-though, and can be backported as needed.
-
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/base/regmap/regmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 746aa9caf934..8591c410ecaa 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1275,13 +1275,23 @@ static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context)
- {
- 	struct device *dev = bank->chip.parent;
- 	void __iomem *base = bank->base;
--	u32 nowake;
-+	u32 mask, nowake;
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index f1025452bb39..19f57ccfbe1d 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1637,6 +1637,8 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+ 					     map->format.reg_bytes +
+ 					     map->format.pad_bytes,
+ 					     val, val_len);
++	else
++		ret = -ENOTSUPP;
  
- 	bank->saved_datain = readl_relaxed(base + bank->regs->datain);
- 
- 	if (!bank->enabled_non_wakeup_gpios)
- 		goto update_gpio_context_count;
- 
-+	/* Check for pending EDGE_FALLING, ignore EDGE_BOTH */
-+	mask = bank->enabled_non_wakeup_gpios & bank->context.fallingdetect;
-+	mask &= ~bank->context.risingdetect;
-+	bank->saved_datain |= mask;
-+
-+	/* Check for pending EDGE_RISING, ignore EDGE_BOTH */
-+	mask = bank->enabled_non_wakeup_gpios & bank->context.risingdetect;
-+	mask &= ~bank->context.fallingdetect;
-+	bank->saved_datain &= ~mask;
-+
- 	if (!may_lose_context)
- 		goto update_gpio_context_count;
- 
+ 	/* If that didn't work fall back on linearising by hand. */
+ 	if (ret == -ENOTSUPP) {
 -- 
 2.20.1
 
