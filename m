@@ -2,190 +2,86 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C32C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B51C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EDD22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563968405;
-	bh=Waz30FvbM2bDuciG00WYPrNVQxeN8XFol+6MLZngaDU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OHfjZUsGHnBFFOrXjHks0oCd6ptqLsLEaQN2Gm4O188JB49Jb2DocmhKKSVH29+xM
-	 Uwx4hlq9R+QVPWzhnf1b/LQyKFAtAa104544deBCnIjPgYqsQNcIAOTmKfQGxEeWxv
-	 7GpqKwiDpsBskdziDwxfw2hq63LxmREXWZTeTL7w=
+	by mail.kernel.org (Postfix) with ESMTP id C8B6E22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfGXLkD (ORCPT
+        id S1727576AbfGXLkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727409AbfGXLkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:40:03 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A257022BEA;
-        Wed, 24 Jul 2019 11:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563968402;
-        bh=Waz30FvbM2bDuciG00WYPrNVQxeN8XFol+6MLZngaDU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UbDgSp5MCNlE5sgwQ9+EIE7o8SHwMpf+XN4VT6PiWNo6t5C+chmfrADPAC81mnyzB
-         lLmezBMZBzexYyBBLromTjhqtQTKq0OCsnLq13HYRjL1N0PQazge1y0S3uzvb70j/g
-         CY2l7sN0Vh3XA6XhCjKmPSJf9D1Fd+bQNC9WtNO4=
-Received: by mail-lf1-f41.google.com with SMTP id b29so24483102lfq.1;
-        Wed, 24 Jul 2019 04:40:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAW5d3OgsVcSacdRv7N3+Olybz6wP/sAvCRKKHpbCnTNLhnIKX2Q
-        8ES034jbw5iDUVMz9nu1/rz0DlS01SOhbCK7S7o=
-X-Google-Smtp-Source: APXvYqx3+A563bA8Nc3lxEu2U+a/qw7GJbEPteETDwnhna9Ox1cYxk6dVWTYQpIDqElHtzAZl4iPfU/mdKjG6U8RDME=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr39260124lfc.60.1563968399768;
- Wed, 24 Jul 2019 04:39:59 -0700 (PDT)
+        Wed, 24 Jul 2019 07:40:35 -0400
+Received: from smtprelay0172.hostedemail.com ([216.40.44.172]:55115 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727378AbfGXLkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:40:35 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 0582A83777ED;
+        Wed, 24 Jul 2019 11:40:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: shape98_3ee351f3c5a54
+X-Filterd-Recvd-Size: 2144
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 24 Jul 2019 11:40:32 +0000 (UTC)
+Message-ID: <b88ca439f5b2d578888a1cd39b30acb8121d422c.camel@perches.com>
+Subject: Re: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Stephen Kitt <steve@sk2.org>,
+        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
+        kernel-hardening@lists.openwall.com,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Date:   Wed, 24 Jul 2019 04:40:30 -0700
+In-Reply-To: <201907231435.FABB1CC@keescook>
+References: <cover.1563841972.git.joe@perches.com>
+         <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
+         <201907231435.FABB1CC@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <CGME20190722094727eucas1p10041ba25819e6e62d639423a97435f2d@eucas1p1.samsung.com>
- <20190722094646.13342-1-l.luba@partner.samsung.com> <20190722094646.13342-4-l.luba@partner.samsung.com>
-In-Reply-To: <20190722094646.13342-4-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 24 Jul 2019 13:39:48 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
-Message-ID: <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
-Subject: Re: [PATCH v12 3/9] drivers: memory: extend of_memory by LPDDR3 support
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
-        willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 at 11:47, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> The patch adds AC timings information needed to support LPDDR3 and memory
-> controllers. The structure is used in of_memory and currently in Exynos
-> 5422 DMC. Add parsing data needed for LPDDR3 support.
-> It is currently used in Exynos5422 Dynamic Memory Controller.
->
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  drivers/memory/jedec_ddr.h |  61 +++++++++++++++
->  drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
->  drivers/memory/of_memory.h |  18 +++++
->  3 files changed, 233 insertions(+)
->
-> diff --git a/drivers/memory/jedec_ddr.h b/drivers/memory/jedec_ddr.h
-> index 4a21b5044ff8..38e26d461bdb 100644
-> --- a/drivers/memory/jedec_ddr.h
-> +++ b/drivers/memory/jedec_ddr.h
-> @@ -29,6 +29,7 @@
->  #define DDR_TYPE_LPDDR2_S4     3
->  #define DDR_TYPE_LPDDR2_S2     4
->  #define DDR_TYPE_LPDDR2_NVM    5
-> +#define DDR_TYPE_LPDDR3                6
->
->  /* DDR IO width */
->  #define DDR_IO_WIDTH_4         1
-> @@ -169,4 +170,64 @@ extern const struct lpddr2_timings
->         lpddr2_jedec_timings[NUM_DDR_TIMING_TABLE_ENTRIES];
->  extern const struct lpddr2_min_tck lpddr2_jedec_min_tck;
->
-> +/*
-> + * Structure for timings for LPDDR3 based on LPDDR2 plus additional fields.
-> + * All parameters are in pico seconds(ps) unless explicitly indicated
-> + * with a suffix like tRAS_max_ns below
-> + */
-> +struct lpddr3_timings {
-> +       u32 max_freq;
-> +       u32 min_freq;
-> +       u32 tRFC;
-> +       u32 tRRD;
-> +       u32 tRPab;
-> +       u32 tRPpb;
-> +       u32 tRCD;
-> +       u32 tRC;
-> +       u32 tRAS;
-> +       u32 tWTR;
-> +       u32 tWR;
-> +       u32 tRTP;
-> +       u32 tW2W_C2C;
-> +       u32 tR2R_C2C;
-> +       u32 tWL;
-> +       u32 tDQSCK;
-> +       u32 tRL;
-> +       u32 tFAW;
-> +       u32 tXSR;
-> +       u32 tXP;
-> +       u32 tCKE;
-> +       u32 tCKESR;
-> +       u32 tMRD;
-> +};
-> +
-> +/*
-> + * Min value for some parameters in terms of number of tCK cycles(nCK)
-> + * Please set to zero parameters that are not valid for a given memory
-> + * type
-> + */
-> +struct lpddr3_min_tck {
-> +       u32 tRFC;
-> +       u32 tRRD;
-> +       u32 tRPab;
-> +       u32 tRPpb;
-> +       u32 tRCD;
-> +       u32 tRC;
-> +       u32 tRAS;
-> +       u32 tWTR;
-> +       u32 tWR;
-> +       u32 tRTP;
-> +       u32 tW2W_C2C;
-> +       u32 tR2R_C2C;
-> +       u32 tWL;
-> +       u32 tDQSCK;
-> +       u32 tRL;
-> +       u32 tFAW;
-> +       u32 tXSR;
-> +       u32 tXP;
-> +       u32 tCKE;
-> +       u32 tCKESR;
-> +       u32 tMRD;
-> +};
-> +
->  #endif /* __JEDEC_DDR_H */
-> diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
-> index 46539b27a3fb..4f5b8c81669f 100644
-> --- a/drivers/memory/of_memory.c
-> +++ b/drivers/memory/of_memory.c
-> @@ -3,6 +3,12 @@
->   * OpenFirmware helpers for memory drivers
->   *
->   * Copyright (C) 2012 Texas Instruments, Inc.
-> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
+On Tue, 2019-07-23 at 14:36 -0700, Kees Cook wrote:
+> On Mon, Jul 22, 2019 at 05:38:15PM -0700, Joe Perches wrote:
+> > Several uses of strlcpy and strscpy have had defects because the
+> > last argument of each function is misused or typoed.
+> > 
+> > Add macro mechanisms to avoid this defect.
+> > 
+> > stracpy (copy a string to a string array) must have a string
+> > array as the first argument (to) and uses sizeof(to) as the
+> > size.
+> > 
+> > These mechanisms verify that the to argument is an array of
+> > char or other compatible types like u8 or unsigned char.
+> > 
+> > A BUILD_BUG is emitted when the type of to is not compatible.
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> 
+> I think Rasmus's suggestion would make sense:
+> 
+> 	BUILD_BUG_ON(!__same_type(typeof(to), char[]))
 
-What's this?
+I think Rasmus had an excellent suggestion.
+I liked it and submitted it as V2.
 
-Please, get a independent review or ack for this patch.
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Best regards,
-Krzysztof
+Thanks.
+
+
