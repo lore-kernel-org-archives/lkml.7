@@ -2,123 +2,167 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C5EC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A890EC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B069C21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563985291;
-	bh=iz+jSb7Boce+LPWDYmU9nw8oEuP0Ta1BCHASPoCeT3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rcGN2eXmfX5c60+Mknq82nRfQ5OiBwOucVq0XCwFG2RYq58yRSvQW7AU2Elq8R3m7
-	 Z56LU+I1/4k/3OiwsNdws+NxQzTZmEnnnc26RVuPX5lQ0BUm53/QFCNwAWQQFcrXfF
-	 KcUjKoG9Wkgu/rAktaXgV7eA+sU0t50NzGfowRgo=
+	by mail.kernel.org (Postfix) with ESMTP id 80F662190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nb+QKuyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfGXQVa (ORCPT
+        id S1728729AbfGXQWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:21:30 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35311 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfGXQVa (ORCPT
+        Wed, 24 Jul 2019 12:22:36 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34157 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfGXQWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:21:30 -0400
-Received: by mail-io1-f66.google.com with SMTP id m24so90883658ioo.2;
-        Wed, 24 Jul 2019 09:21:29 -0700 (PDT)
+        Wed, 24 Jul 2019 12:22:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so15255859pgc.1;
+        Wed, 24 Jul 2019 09:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=8HMIhpVktcQhLcnMlnSaMxrwzTT+wDaUZPtys8u8fmw=;
+        b=Nb+QKuyfZCPgjcPcKYb70rJP06rSomXYL96XBqGn5uwG+aPhQOUW7JWY+ULGJSxE4c
+         NI3ItO2Y9gXpAQK0whGKfKhodO1Iz+bnSeIixWjDbzJwNo1f264USDdHmE/g034mNcUe
+         Le9IOlBtvAykhqNIZeC3VigzQBzk+VHJZDHZr2E3rI9pL4iwvxexiMfVrAs99zMQZgFY
+         MfncWSTWtjEUVs5K3FBLnhcPIxe/BprBx2BbAZvVh8wkhzK5ivmICs08vuvpnqKaGhgA
+         O6+icuuP33Hlu1OHPvh8+kHqExvi57GSYzoO2dSODYlwt5J/4RJVaX7IiOlxYvb588D+
+         8ihQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cIOpdLyyO80yQr+H18fi6enmhcJP2WqDZtbyw7dr8es=;
-        b=SVy+b2rpS/g3OdhNDHoouY/US0OiHIlZPx8Ng0Dt9LD21LT+KyZo7YAtz3yeCwk+6F
-         6vlCrKOhqnVNxmCoEZUAjB/wp+2Mbul5THP0pxH49XORgrwtHDhsvuqkHVjVx9I4q+Kj
-         TTXZAAZx8yvLtWwWxPEnGuBfWXB/P7TIxQ4QnVwT3s0WByiZk4WyWR+47VGfUz5iwZFV
-         9If4IdZwXm1PIlJvahGr6LQBGswoOzAlcyBr70IFw5DHLkNJIr7FRDGP827Bz4UNYqxt
-         TdoOnN/z06y2p2aHUkae76tc6rnVhV+mxQpMiEjUxtDsoolduToep37C2Q9SEAP0lGof
-         mK6g==
-X-Gm-Message-State: APjAAAUMzD43WbLP2RUpj3morzHgu44lIo70EE1XB/q3QTB1OMUcZwz3
-        P1qgRdBBxYYOrKtVlg3sngEAA5k=
-X-Google-Smtp-Source: APXvYqxQft6/Gn3J4bej7QhSHCCn4RjwBZq8Yx5ld6DVv2xVNqa1+ZQeC+BDlbugTGZmrR15x++HOA==
-X-Received: by 2002:a6b:8f47:: with SMTP id r68mr80316101iod.204.1563985289138;
-        Wed, 24 Jul 2019 09:21:29 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id z17sm65438559iol.73.2019.07.24.09.21.28
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=8HMIhpVktcQhLcnMlnSaMxrwzTT+wDaUZPtys8u8fmw=;
+        b=qcvSd5hMAVzHl87hxdcdxnKlfimcDImOB1NNPm1gYlJVxPeEKSI+s2KBvFVJ3Oh3M9
+         zvwNXd1fcZPmb0Mvk6exQ1TBqLb189D5pzcjrxHVHm217l3FMlCMJ5lW3F3ItZcdGXey
+         P8tu2HVPwKZ91ZkRzI5AoU04a//GnYU7e7a4YMKy5/GvPM1Ygl5aU53HENwJM8SaSOJu
+         oDDKsGpi1mfIZKRJ+Xm1D7clvL72q31Vl/F3A+Mn+qrbL7FuIcbiWYyNLEi0Eesyl3Y0
+         FFkkAFn424uEK4ESKX0KhfCF2+jUZBhH74r+ggItFieVtUAXGy7Ux+xRL8KMarOBAylH
+         KWMw==
+X-Gm-Message-State: APjAAAXtv/vsVPhcsfvf/QLYffLCgcbfzUWPAMUckQiERTb11X/JwU+g
+        IMpx+nyCvW3MmYC+aP0GuWg=
+X-Google-Smtp-Source: APXvYqws5GAAL0AstDH8/4fyQ3x/GSONd0VZXKS14G9KUgQ4IflPjwyD4xUKd8HXv4SFO3MhmvN10A==
+X-Received: by 2002:a63:8c0e:: with SMTP id m14mr66910923pgd.219.1563985355520;
+        Wed, 24 Jul 2019 09:22:35 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id b3sm61556650pfp.65.2019.07.24.09.22.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 09:21:28 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 10:21:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Aleix Roca Nonell <kernelrocks@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: interrupt-controller: Document RTD129x
-Message-ID: <20190724162127.GA32658@bogus>
-References: <20190707132246.GB13340@arks.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190707132246.GB13340@arks.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 24 Jul 2019 09:22:34 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 09:22:26 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        John Fastabend <john.fastabend@gmail.com>
+Cc:     syzbot <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com>,
+        bpf <bpf@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        alexander.deucher@amd.com, amd-gfx@lists.freedesktop.org,
+        Alexei Starovoitov <ast@kernel.org>, christian.koenig@amd.com,
+        Daniel Borkmann <daniel@iogearbox.net>, david1.zhou@amd.com,
+        DRI <dri-devel@lists.freedesktop.org>, leo.liu@amd.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Marco Elver <elver@google.com>
+Message-ID: <5d3885c2e2e20_73c32aebc43b65c08@john-XPS-13-9370.notmuch>
+In-Reply-To: <CACT4Y+ZbPmRB9T9ZzhE79VnKKD3+ieHeLpaDGRkcQ72nADKH_g@mail.gmail.com>
+References: <0000000000001a51c4058ddcb1b6@google.com>
+ <CACT4Y+ZGwKP+f4esJdx60AywO9b3Y5Bxb4zLtH6EEkaHpP6Zag@mail.gmail.com>
+ <5d37433a832d_3aba2ae4f6ec05bc3a@john-XPS-13-9370.notmuch>
+ <CACT4Y+ZbPmRB9T9ZzhE79VnKKD3+ieHeLpaDGRkcQ72nADKH_g@mail.gmail.com>
+Subject: Re: kernel panic: stack is corrupted in pointer
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 07, 2019 at 03:22:46PM +0200, Aleix Roca Nonell wrote:
-> Add binding for Realtek RTD129x interrupt controller.
+Dmitry Vyukov wrote:
+> On Tue, Jul 23, 2019 at 7:26 PM John Fastabend <john.fastabend@gmail.com> wrote:
+> >
+> > Dmitry Vyukov wrote:
+> > > On Wed, Jul 17, 2019 at 10:58 AM syzbot
+> > > <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    1438cde7 Add linux-next specific files for 20190716
+> > > > git tree:       linux-next
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13988058600000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=79f5f028005a77ecb6bb
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111fc8afa00000
+> > >
+> > > From the repro it looks like the same bpf stack overflow bug. +John
+> > > We need to dup them onto some canonical report for this bug, or this
+> > > becomes unmanageable.
+> >
+> > Fixes in bpf tree should fix this. Hopefully, we will squash this once fixes
+> > percolate up.
+> >
+> > #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
 > 
-> Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
-> ---
->  .../realtek,rtd129x-intc.txt                  | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
+> Cool! What is the fix?
+
+It took a series of patches here,
+
+https://www.spinics.net/lists/netdev/msg586986.html
+
+The fix commits from bpf tree are,
+
+(git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git) 
+
+318892ac068397f40ff81d9155898da01493b1d2
+ac78fc148d8249dbf382c2127456dd08ec5b161c
+f87e62d45e51b12d48d2cb46b5cde8f83b866bc4
+313ab004805cf52a42673b15852b3842474ccd87
+32857cf57f920cdc03b5095f08febec94cf9c36b
+45a4521dcbd92e71c9e53031b40e34211d3b4feb
+2bb90e5cc90e1d09f631aeab041a9cf913a5bbe5
+0e858739c2d2eedeeac1d35bfa0ec3cc2a7190d8
+95fa145479fbc0a0c1fd3274ceb42ec03c042a4a
+
+The last commit fixes this paticular syzbot issue,
+
+commit 95fa145479fbc0a0c1fd3274ceb42ec03c042a4a
+Author: John Fastabend <john.fastabend@gmail.com>
+Date:   Fri Jul 19 10:29:22 2019 -0700
+
+    bpf: sockmap/tls, close can race with map free
+
+The other commits address some other issues found while testing.
+
+> We don't need to wait for the fix to percolate up (and then down
+> too!). syzbot gracefully handles when a patch is not yet present
+> everywhere (it happens all the time).
+
+Great. By the way the above should fix many of the outstanding
+reports against bpf sockmap and tls side. I'll have to walk through
+each one individually to double check though. I guess we can mark
+them as dup reports and syzbot should sort it out?
+
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
-> new file mode 100644
-> index 000000000000..3ebb7c02afe5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd129x-intc.txt
-> @@ -0,0 +1,24 @@
-> +Realtek RTD129x IRQ Interrupt Controller
-> +=======================================
-> +
-> +Required properties:
-> +
-> +- compatible           :  Should be one of the following:
-> +                          - "realtek,rtd129x-intc-misc"
-> +                          - "realtek,rtd129x-intc-iso"
+> Btw, this was due to a stack overflow, right? Or something else?
 
-Don't use wildcards in compatible strings.
+Right, stack overflow due to race in updating sock ops where build a
+circular call chain.
 
-> +- reg                  :  Specifies the address of the ISR, IER and Unmask
-> +                          register in couples of "address length".
-> +- interrupts           :  Specifies the interrupt line which is mux'ed.
-> +- interrupt-controller :  Presence indicates the node as interrupt controller.
-> +- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
-> +
-> +
-> +Example:
-> +
-> +	interrupt-controller@98007000 {
-> +		compatible = "realtek,rtd129x-iso-irq-mux";
-> +		reg = <0x98007000 0x4 0x98007040 0x4 0x98007004 0x4>;
-
-What's in the holes?
-
-> +		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +	};
-> -- 
-> 2.21.0
+> We are trying to make KASAN configuration detect stack overflows too,
+> so that it does not cause havoc next time. But it turns out to be
+> non-trivial and our current attempt seems to fail:
+> https://groups.google.com/forum/#!topic/kasan-dev/IhYv7QYhLfY
+> 
 > 
