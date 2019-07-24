@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54109C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08B6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260E12147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C544E22ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998066;
-	bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+	s=default; t=1563998068;
+	bh=Hq7xfIPpMVKYh/xEQ7Nzp1ydd1HyY/Vs4u0I5IFpz+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YH7hP/8hi8Cz23Z401nBsv2VitjyV87Z+RwBCjgIPKKMgRuVX4q+CSnWuZiBKJa87
-	 ofXtrFNq647NQ8R1YXtxwFz8rHQ0RgQbb2WV8jcagJVeFMpmPKb9+gxw78q/YMCT47
-	 24uJ2HMexY+qdPQu8Pc8M0uuNL/sZM+WCyeOXYE8=
+	b=tAugI8SmAxpYAtpOt1EMzaJjI/UVK9sQWiy1KcEcS6OR/9F668E6w+4gUKdSbOV9n
+	 W1pMrAn4Yiyu96K3ECCdztKtCDa83oLhzg8I4wYGrC4SjOpl7gpBzEPjRBJvrDGOX/
+	 5AtSGHPtDFlT31YDxk8D20ZEW7mUiEEHseydBk+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388344AbfGXTyZ (ORCPT
+        id S2404333AbfGXTyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:54:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37140 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404310AbfGXTyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:54:17 -0400
+        id S2404086AbfGXTyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:54:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FDDF20665;
-        Wed, 24 Jul 2019 19:54:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7767C22ADC;
+        Wed, 24 Jul 2019 19:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998056;
-        bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+        s=default; t=1563998048;
+        bh=Hq7xfIPpMVKYh/xEQ7Nzp1ydd1HyY/Vs4u0I5IFpz+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GSk74EDIvolqs+8zWCKmz7346Ko7+m5rcyMTUR1NaIghE/DzXjksreQ+umk/R+s52
-         cZAofc1FgNiWFPVfihpMN0NnnphODD2SdT326z7dphja6WkTGJ8o86y7I+r1PzHF3E
-         IMfHtebNzsbvwpJK//9qPUyYza2QUtJOwqn2qfvQ=
+        b=YrFjiT9tKrWtOd8XuHkc5wT+84/km1Y4TR9hjhsjKgEPCFqBJQiQgPUiOMgEhRXW/
+         tslBaIiELDX1Rj5HSCRxhVE5c+RBGSOkVEK1jI1jC7+ldPDRO91PeuXpld71G1uMAD
+         raJpX4EwYCLv50N953sv9gUXnOV/EYnDZCUaJoGk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.1 231/371] Revert "scsi: ncr5380: Increase register polling limit"
-Date:   Wed, 24 Jul 2019 21:19:43 +0200
-Message-Id: <20190724191741.855280714@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.1 228/371] xen: let alloc_xenballooned_pages() fail if not enough memory free
+Date:   Wed, 24 Jul 2019 21:19:40 +0200
+Message-Id: <20190724191741.610322101@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,43 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Juergen Gross <jgross@suse.com>
 
-commit 25fcf94a2fa89dd3e73e965ebb0b38a2a4f72aa4 upstream.
+commit a1078e821b605813b63bf6bca414a85f804d5c66 upstream.
 
-This reverts commit 4822827a69d7cd3bc5a07b7637484ebd2cf88db6.
+Instead of trying to allocate pages with GFP_USER in
+add_ballooned_pages() check the available free memory via
+si_mem_available(). GFP_USER is far less limiting memory exhaustion
+than the test via si_mem_available().
 
-The purpose of that commit was to suppress a timeout warning message which
-appeared to be caused by target latency. But suppressing the warning is
-undesirable as the warning may indicate a messed up transfer count.
+This will avoid dom0 running out of memory due to excessive foreign
+page mappings especially on ARM and on x86 in PVH mode, as those don't
+have a pre-ballooned area which can be used for foreign mappings.
 
-Another problem with that commit is that 15 ms is too long to keep
-interrupts disabled as interrupt latency can cause system clock drift and
-other problems.
+As the normal ballooning suffers from the same problem don't balloon
+down more than si_mem_available() pages in one iteration. At the same
+time limit the default maximum number of retries.
 
-Cc: Michael Schmitz <schmitzmic@gmail.com>
-Cc: stable@vger.kernel.org
-Fixes: 4822827a69d7 ("scsi: ncr5380: Increase register polling limit")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This is part of XSA-300.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/NCR5380.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/balloon.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/drivers/scsi/NCR5380.h
-+++ b/drivers/scsi/NCR5380.h
-@@ -235,7 +235,7 @@ struct NCR5380_cmd {
- #define NCR5380_PIO_CHUNK_SIZE		256
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -538,8 +538,15 @@ static void balloon_process(struct work_
+ 				state = reserve_additional_memory();
+ 		}
  
- /* Time limit (ms) to poll registers when IRQs are disabled, e.g. during PDMA */
--#define NCR5380_REG_POLL_TIME		15
-+#define NCR5380_REG_POLL_TIME		10
+-		if (credit < 0)
+-			state = decrease_reservation(-credit, GFP_BALLOON);
++		if (credit < 0) {
++			long n_pages;
++
++			n_pages = min(-credit, si_mem_available());
++			state = decrease_reservation(n_pages, GFP_BALLOON);
++			if (state == BP_DONE && n_pages != -credit &&
++			    n_pages < totalreserve_pages)
++				state = BP_EAGAIN;
++		}
  
- static inline struct scsi_cmnd *NCR5380_to_scmd(struct NCR5380_cmd *ncmd_ptr)
- {
+ 		state = update_schedule(state);
+ 
+@@ -578,6 +585,9 @@ static int add_ballooned_pages(int nr_pa
+ 		}
+ 	}
+ 
++	if (si_mem_available() < nr_pages)
++		return -ENOMEM;
++
+ 	st = decrease_reservation(nr_pages, GFP_USER);
+ 	if (st != BP_DONE)
+ 		return -ENOMEM;
+@@ -710,7 +720,7 @@ static int __init balloon_init(void)
+ 	balloon_stats.schedule_delay = 1;
+ 	balloon_stats.max_schedule_delay = 32;
+ 	balloon_stats.retry_count = 1;
+-	balloon_stats.max_retry_count = RETRY_UNLIMITED;
++	balloon_stats.max_retry_count = 4;
+ 
+ #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
+ 	set_online_page_callback(&xen_online_page);
 
 
