@@ -2,142 +2,194 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924B6C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949F1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696DC2238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996285;
-	bh=DPOVhRsbmHAQ4KoD6mYmKHtyVkRPraFZzcol/yanGqQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7UKoN/UBq0mWfGnXTl7vy/SV2gDwEmOXpmn72wdLmJEC/QJWBKf5wf8T6EwEluzo
-	 UxhyDd8t0G/lrt6qUZi+F1iKdDKi6YXDvoS/xscumfroThlqq8xSTmxhvPVBCBKxvu
-	 h7dkSqkx9QGc2M9+z1CnDn3QSjuVPox2qFOq22ZM=
+	by mail.kernel.org (Postfix) with ESMTP id 64EE32238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387969AbfGXTYo (ORCPT
+        id S2387982AbfGXTYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Jul 2019 15:24:48 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40171 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387551AbfGXTYo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 15:24:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729117AbfGXTYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF48622387;
-        Wed, 24 Jul 2019 19:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996282;
-        bh=DPOVhRsbmHAQ4KoD6mYmKHtyVkRPraFZzcol/yanGqQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zcD5Vd2qubpSRZi12GIQOF4s7qjfApxiKecfFB/IHxV9dx2JNec192mycOchoTWhk
-         fLRgNS/8Bth5gwsFOv3eg4JwuXPhVFexSCJte37SnNomDL32u5Bv56q8Iw19MXNkuW
-         ZmBgGdEvoMd6pL2L6MDYw2o58GCBSrtKZRo2E2Mw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com,
-        Vandana BN <bnvandana@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 044/413] media: usb:zr364xx:Fix KASAN:null-ptr-deref Read in zr364xx_vidioc_querycap
-Date:   Wed, 24 Jul 2019 21:15:35 +0200
-Message-Id: <20190724191738.724233368@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-qk1-f196.google.com with SMTP id s145so34624703qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:24:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6wfpg22kkBGQSGagL3FHOCSJzZUomxdfgUX443/VLoE=;
+        b=c5nMOTVW0zL64A8i8hpz6SfSI8If5z42EAC6X2ZtOOeIG0WKMZvs5etsCTpchk6CFc
+         1yrz9mJ9cYFMg1gnWfELTjUNt4QdhtQfKOUE8W7BPia4m4L0uXZzeHIp/L93OHIfx5+s
+         wvrFP9vGXDkF9Alu1/xeRHOmCuKChHrzTXdDCIVJN9KO2mvc446Cdgat6A+/kCd6zPs/
+         FXECLYjasl0GJbPi7VtzbA42O6W4/XS8XH/OqOEiKo4q6T8y7+ooZZ7fG8RuVAMCrzHx
+         OljhOmeZGFN7GrhbQqE499lpHVz2sxmbKW/awt22WSrbqi7qosPHrOyXxX1os+b1LGw6
+         470g==
+X-Gm-Message-State: APjAAAWbpcpr7nfeYSWxUOVbEpqrcqA5+SFTVlQ+e24RcD4RGi9zF916
+        2JFfsZiQIOmtyoZZ8yqa+4W6IQ==
+X-Google-Smtp-Source: APXvYqy77kkB2RpSxBnWenjZ0UwyhE7LKJGBKOCJhGTtIhJgVV+u7LlioVLo64z1RecpigW2GqU0Mw==
+X-Received: by 2002:a37:ac19:: with SMTP id e25mr56019402qkm.155.1563996283591;
+        Wed, 24 Jul 2019 12:24:43 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id j6sm3007749qtl.85.2019.07.24.12.24.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 12:24:42 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 15:24:35 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
+Message-ID: <20190724151855-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d2e73a5f80a5b5aff3caf1ec6d39b5b3f54b26e ]
+On Wed, Jul 24, 2019 at 02:40:02PM -0400, Nitesh Narayan Lal wrote:
+> 
+> On 7/24/19 12:54 PM, Alexander Duyck wrote:
+> > This series provides an asynchronous means of hinting to a hypervisor
+> > that a guest page is no longer in use and can have the data associated
+> > with it dropped. To do this I have implemented functionality that allows
+> > for what I am referring to as page hinting
+> >
+> > The functionality for this is fairly simple. When enabled it will allocate
+> > statistics to track the number of hinted pages in a given free area. When
+> > the number of free pages exceeds this value plus a high water value,
+> > currently 32,
+> Shouldn't we configure this to a lower number such as 16?
+> >  it will begin performing page hinting which consists of
+> > pulling pages off of free list and placing them into a scatter list. The
+> > scatterlist is then given to the page hinting device and it will perform
+> > the required action to make the pages "hinted", in the case of
+> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> > and as such they are forced out of the guest. After this they are placed
+> > back on the free list, and an additional bit is added if they are not
+> > merged indicating that they are a hinted buddy page instead of a standard
+> > buddy page. The cycle then repeats with additional non-hinted pages being
+> > pulled until the free areas all consist of hinted pages.
+> >
+> > I am leaving a number of things hard-coded such as limiting the lowest
+> > order processed to PAGEBLOCK_ORDER,
+> Have you considered making this option configurable at the compile time?
+> >  and have left it up to the guest to
+> > determine what the limit is on how many pages it wants to allocate to
+> > process the hints.
+> It might make sense to set the number of pages to be hinted at a time from the
+> hypervisor.
+> >
+> > My primary testing has just been to verify the memory is being freed after
+> > allocation by running memhog 79g on a 80g guest and watching the total
+> > free memory via /proc/meminfo on the host. With this I have verified most
+> > of the memory is freed after each iteration. As far as performance I have
+> > been mainly focusing on the will-it-scale/page_fault1 test running with
+> > 16 vcpus. With that I have seen at most a 2% difference between the base
+> > kernel without these patches and the patches with virtio-balloon disabled.
+> > With the patches and virtio-balloon enabled with hinting the results
+> > largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
+> > drop in performance as I approached 16 threads,
+> I think this is acceptable.
+> >  however on the the lastest
+> > linux-next kernel I saw roughly a 4% to 5% improvement in performance for
+> > all tests with 8 or more threads. 
+> Do you mean that with your patches the will-it-scale/page_fault1 numbers were
+> better by 4-5% over an unmodified kernel?
+> > I believe the difference seen is due to
+> > the overhead for faulting pages back into the guest and zeroing of memory.
+> It may also make sense to test these patches with netperf to observe how much
+> performance drop it is introducing.
+> > Patch 4 is a bit on the large side at about 600 lines of change, however
+> > I really didn't see a good way to break it up since each piece feeds into
+> > the next. So I couldn't add the statistics by themselves as it didn't
+> > really make sense to add them without something that will either read or
+> > increment/decrement them, or add the Hinted state without something that
+> > would set/unset it. As such I just ended up adding the entire thing as
+> > one patch. It makes it a bit bigger but avoids the issues in the previous
+> > set where I was referencing things before they had been added.
+> >
+> > Changes from the RFC:
+> > https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
+> > Moved aeration requested flag out of aerator and into zone->flags.
+> > Moved bounary out of free_area and into local variables for aeration.
+> > Moved aeration cycle out of interrupt and into workqueue.
+> > Left nr_free as total pages instead of splitting it between raw and aerated.
+> > Combined size and physical address values in virtio ring into one 64b value.
+> >
+> > Changes from v1:
+> > https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
+> > Dropped "waste page treatment" in favor of "page hinting"
+> We may still have to try and find a better name for virtio-balloon side changes.
+> As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
 
-SyzKaller hit the null pointer deref while reading from uninitialized
-udev->product in zr364xx_vidioc_querycap().
+Right. In fact I'm not sure why should these be called hints at all.
+VIRTIO_BALLOON_F_FREE_PAGE_HINT is a hint because pages might no
+longer be free by the time they are reported.
 
-==================================================================
-BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
-include/linux/compiler.h:274
-Read of size 1 at addr 0000000000000000 by task v4l_id/5287
-
-CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
-  read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
-  strscpy+0x8a/0x280 lib/string.c:207
-  zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
-  v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
-  __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
-  video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
-  v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
-  ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f3b56d8b347
-Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
-ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
-ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
-RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
-R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
-==================================================================
-
-For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
-
-The fix is to check for NULL before strscpy() and copy empty string, if
-product is NULL
-
-Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/usb/zr364xx/zr364xx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/usb/zr364xx/zr364xx.c b/drivers/media/usb/zr364xx/zr364xx.c
-index 37a7992585df..48803eb773ed 100644
---- a/drivers/media/usb/zr364xx/zr364xx.c
-+++ b/drivers/media/usb/zr364xx/zr364xx.c
-@@ -694,7 +694,8 @@ static int zr364xx_vidioc_querycap(struct file *file, void *priv,
- 	struct zr364xx_camera *cam = video_drvdata(file);
- 
- 	strscpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
--	strscpy(cap->card, cam->udev->product, sizeof(cap->card));
-+	if (cam->udev->product)
-+		strscpy(cap->card, cam->udev->product, sizeof(cap->card));
- 	strscpy(cap->bus_info, dev_name(&cam->udev->dev),
- 		sizeof(cap->bus_info));
- 	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
--- 
-2.20.1
+I think of this one as a free page reporting capability.
+I don't really mind how are internal kernel functions called,
+but I think for virtio uapi things that's a better name.
 
 
 
+
+> > Renamed files and functions from "aeration" to "page_hinting"
+> > Moved from page->lru list to scatterlist
+> > Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
+> > Virtio now uses scatterlist directly instead of intermedate array
+> > Moved stats out of free_area, now in seperate area and pointed to from zone
+> > Merged patch 5 into patch 4 to improve reviewability
+> > Updated various code comments throughout
+> >
+> > ---
+> >
+> > Alexander Duyck (5):
+> >       mm: Adjust shuffle code to allow for future coalescing
+> >       mm: Move set/get_pcppage_migratetype to mmzone.h
+> >       mm: Use zone and order instead of free area in free_list manipulators
+> >       mm: Introduce Hinted pages
+> >       virtio-balloon: Add support for providing page hints to host
+> >
+> >
+> >  drivers/virtio/Kconfig              |    1 
+> >  drivers/virtio/virtio_balloon.c     |   47 ++++++
+> >  include/linux/mmzone.h              |  116 ++++++++------
+> >  include/linux/page-flags.h          |    8 +
+> >  include/linux/page_hinting.h        |  139 ++++++++++++++++
+> >  include/uapi/linux/virtio_balloon.h |    1 
+> >  mm/Kconfig                          |    5 +
+> >  mm/Makefile                         |    1 
+> >  mm/internal.h                       |   18 ++
+> >  mm/memory_hotplug.c                 |    1 
+> >  mm/page_alloc.c                     |  238 ++++++++++++++++++++--------
+> >  mm/page_hinting.c                   |  298 +++++++++++++++++++++++++++++++++++
+> >  mm/shuffle.c                        |   24 ---
+> >  mm/shuffle.h                        |   32 ++++
+> >  14 files changed, 796 insertions(+), 133 deletions(-)
+> >  create mode 100644 include/linux/page_hinting.h
+> >  create mode 100644 mm/page_hinting.c
+> >
+> > --
+> -- 
+> Thanks
+> Nitesh
