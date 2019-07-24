@@ -2,80 +2,116 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A62C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36316C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9885221871
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0960C2190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:24:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B49etVYt"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jITz/uDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbfGXQW4 (ORCPT
+        id S1728763AbfGXQYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:22:56 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58156 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfGXQW4 (ORCPT
+        Wed, 24 Jul 2019 12:24:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33718 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfGXQYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:22:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=htcr0HwWfZTO2fZDhlOnsFU5KgxRNA5yit/dcbMX3ew=; b=B49etVYt9Msj8vnMr6MkdqPGm
-        yKkFNiQudN6pzocirl1HKFoDh7Qn9uzXA7Q/TDrz8gae87USJ+sF6Y4sOQI1W5Nlf7AuDost0Lz+3
-        iCrZ3qiWtIPPzcFr9Qagysoqaf+5VD9frki/ZMknmb0tze4hBWmGCNrFnfJdrC9xxO347oU7KmaY+
-        0hHapM55o873JOIMSea+jl4dLZMnNaVQvWzTp9NsKTx4Jm3Jwp8fxsOYG/3k2DhvOv6Ec1o3XwN3e
-        LMLCnNR1//k8URyzbMDTjU9MnTTnSRhikg37NAck/PegkGwk5wt+sJeYjym3Nlc4yTTujahVyQg/F
-        +PODkU9rA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqK2G-0006qF-1x; Wed, 24 Jul 2019 16:22:36 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7C77D20288388; Wed, 24 Jul 2019 18:22:33 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 18:22:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be
- reserved
-Message-ID: <20190724162233.GC31381@hirez.programming.kicks-ass.net>
-References: <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com>
- <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de>
- <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com>
- <20190723130513.GA25290@kroah.com>
- <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de>
- <20190723134454.GA7260@kroah.com>
- <20190724153416.GA27117@kroah.com>
- <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de>
- <20190724155735.GC5571@kroah.com>
+        Wed, 24 Jul 2019 12:24:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so47740355wru.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rscQz3KUGOpkCDKHMcXdQe7Cl/GoBVV86V2E9kxxK1s=;
+        b=jITz/uDE43k3A8NB1nlk3u+xzG/Y0MTElmt4Smge4Q7/p2i4AQP+Ot+lzFSbs47nGs
+         nn730d5rJ1NTniNhwvL69qjT1i8otT5IErkH1IiOMTNxW24JI06varqHToVixQg9jubW
+         apzUCJPFyUzn7NKyoVzr34ZHbOSBLFFqurZhsZcz1QT5CYE5yCVjRWij5XwCt1SsMLH6
+         gO3Jx9ohRvjRTh/gNM246+tC38Ty8u7M+KUP7nIZiB3NUacjKhIFZsBmuWhWZ1skiHep
+         HHskYmreyeF6CvNKUjIf88ehFvrMJu1k0LGqCrX+Itgq1xAhb/3oczCVjg1ktXi2w5x3
+         +efA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rscQz3KUGOpkCDKHMcXdQe7Cl/GoBVV86V2E9kxxK1s=;
+        b=V/tC6XZE6m8IxJ3BjBAQPrO23GlHHCH4H5UFHYQbS5wGgiJqeqzvnXraXU8sxrIcMC
+         q1AOejsmG5oOrOHJWeEVvWqCTwGLH6vcnpNuAEjLFkJTsZ+WP0j/xdKddLZR9j9om71t
+         VTP2ANGADzTp9rJZ8g1SYPnI1BiiibpuJjmgk5nmcp6r8Z396PnURCyYyDXWnG/I04zq
+         +R/+RybA1UQEoiDPaoBLBb5jnct4O7MNINMBO+I1X21DQ+lwi4usIaJBKT5ZYSBELfKv
+         sTFphGe4VsohF9qkOlVX+spsKKs5dMVshSzH1maQIX+WeDwMxOwcTyevfyGnfxK4po1X
+         kH9A==
+X-Gm-Message-State: APjAAAXN4itw8FCvXw/hFQMUOOzKBU9ee01vvhaZwFCXGsMwwslbsJ8E
+        9xMSmq1b9KEz8lmhKb+TYVGMZXr14lQ=
+X-Google-Smtp-Source: APXvYqwzABCOBCOzXWxksAWXozHEuvx2wpN+ZOBXgno4LlJoOSdi7K6PGndRhEJOhxZWMIuNGujEzw==
+X-Received: by 2002:adf:8bc2:: with SMTP id w2mr5964754wra.7.1563985449460;
+        Wed, 24 Jul 2019 09:24:09 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id f70sm55688960wme.22.2019.07.24.09.24.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 09:24:08 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH 0/6] ASoC: improve codec to codec link support
+Date:   Wed, 24 Jul 2019 18:23:59 +0200
+Message-Id: <20190724162405.6574-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724155735.GC5571@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:57:35PM +0200, Greg KH wrote:
-> Wait, does clang link things itself and not need ld?
+As explained in this previous series [0], on Amlogic, we are using codec to
+codec links to deal with the glue which is between the i2s backends and the
+synopsys hdmi controller.
 
-There's ld.lld; which might be used by your clang.
+This worked well until I tried to .get_eld() support in the dw-hdmi-i2s
+driver.  Doing so adds channel mapping controls to the codec. This shown
+several problem
+
+1) .pcm_new() is not called on codec to codec links.
+   struct snd_soc_pcm_runtime do not even have a valid .pcm
+2) struct snd_pcm_substream and struct snd_pcm_runtime are ephemeral
+   This is a problem if a control needs to access them
+
+The goal of this patchset is to resolve the above issues and improve the
+codec to codec link support enough to correctly handle the hdmi-codec
+
+The support of these codec to codec links could probably be improved in the
+future to behave like any other link and use soc_pcm_open(),
+soc_pcm_hw_params(), etc...
+
+The challenge lies in the dapm mutex. The soc_pcm call dapm function locking
+this mutex but the dapm mutex is already held in snd_soc_dai_link_event()
+
+[0]: https://lkml.kernel.org/r/20190515131858.32130-1-jbrunet@baylibre.com
+
+Jerome Brunet (6):
+  ASoC: codec2codec: run callbacks in order
+  ASoC: codec2codec: name link using stream direction
+  ASoC: codec2codec: deal with params when necessary
+  ASoC: create pcm for codec2codec links as well
+  ASoC: codec2codec: remove ephemeral variables
+  ASoC: codec2codec: fill some of the runtime stream parameters
+
+ sound/soc/soc-core.c |  42 +++-------
+ sound/soc/soc-dapm.c | 186 +++++++++++++++++++++++++++----------------
+ sound/soc/soc-pcm.c  |  35 +++++++-
+ 3 files changed, 162 insertions(+), 101 deletions(-)
+
+-- 
+2.21.0
+
