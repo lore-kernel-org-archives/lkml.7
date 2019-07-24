@@ -2,188 +2,132 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2398DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDB7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBD7206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998303;
-	bh=jCXGdMDV83SSi0RMcl/cTH0AX2saeysAkpPWqNnn6r8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JP6nCgz/EM0oYBrfve4nigdu/qr4IvFf32bUdzrWnLKYaCBfHbQtafO0GK8vFXytM
-	 xaPq7XkRRn8JngHsMt5ORc8zUWXbS5PeNN8SiYHpHvw2Z2+KFOT8gpcqZ4PqjCL+7p
-	 iWfSMowrqltqOmx3F7McFu1bV1OjlP8AiHvR8hp8=
+	by mail.kernel.org (Postfix) with ESMTP id ED1CE205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aD8DzIJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404941AbfGXT6W (ORCPT
+        id S2405094AbfGXT6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404931AbfGXT6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBBB4214AF;
-        Wed, 24 Jul 2019 19:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998298;
-        bh=jCXGdMDV83SSi0RMcl/cTH0AX2saeysAkpPWqNnn6r8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2WXehhtQkuoPdzw/j/dQbSQebKs+B351qQzO70uj/MqHsIIS1PD8j1/GD5nxesWpm
-         4aZU5EIC9LpiFjDf6tlYsh1aMcXq4zHyN4gVdgEr8VJ9G+MR7XCyPWiS5Ywo7d4oVE
-         C8fF8UYokWozQEa78TyTeRm4be/GtK7sz0/t/4AI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masato Suzuki <masato.suzuki@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.1 316/371] dm zoned: fix zone state management race
-Date:   Wed, 24 Jul 2019 21:21:08 +0200
-Message-Id: <20190724191747.805533618@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 15:58:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40837 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404944AbfGXT6Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:58:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w10so21746768pgj.7;
+        Wed, 24 Jul 2019 12:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kGXUJmflPwZDNqZjPGTg/V3j3vLBzx4voLRvsXsS5x0=;
+        b=aD8DzIJr9crHzm0gBBO4cTdLB4JaczjMgE7+gZxVXuGETisB5/Coe/4fDBu6CPDDe5
+         XoBvL/KZGrpqntiZ+kYWIh6OsYxQ8dKcRHRiCEfLwNWeohPX0eWh/OmPBT9iJW9OjTDv
+         p/f/g24wKaYQU7CP6+cx8L1cpjK3yaypyoUX7TzqqdkgahmLctioNhQ4y2WmbzzycJIb
+         Qp371SC/pNl4nosEc3lAytYs/sdVzjpIPXnFY1ghyLle5415/zDIYALelW3tn53SIXEt
+         6DGiFNpJxtrWQ0kDcN9565KswsNxhccwABD4bjnWkoIvo9MlfdU0iZWNHLTkWB3ZOxAw
+         bE1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kGXUJmflPwZDNqZjPGTg/V3j3vLBzx4voLRvsXsS5x0=;
+        b=uKMcekcsumt6Bej9FEEn1FI+CvhdT+5w2RCe3nhE4FR7gFw392rUuuZ5yBue3txzi0
+         uNET2BfM0W7tirOXlk19P7QmGlNpBMMqQMFwxBqxs972NpWcYvn/+6SpRl2Z+kob+X4R
+         leydJ0K06AWDFG2rTSR19YfGolx+dKy9sVDYRFh+CHBVpN/OStI4k41hYb1tE3JnNkgm
+         8Ev05AHHBcx/CPO+dYdydrdk7Y/Ehg1/52rwMxZZwg19YZ/lyIIXNKz/CcdEAy5osLOz
+         NYA7vRW3V8Sfb8Ps0TGU5Ba9LfYFiQ1YXN6qOHce6yEDikxloRgA8rFkkit5J3Qe/UZs
+         ZZUw==
+X-Gm-Message-State: APjAAAXyjHy6xuOr4i0XltTA2KN8gBntDFzUrVbF15xFxrbPiQYUnepB
+        l2Hl1eS2rAwT2w4rQYoFQwoqKJ5D
+X-Google-Smtp-Source: APXvYqzn7cT7zcsP8mgCbwroZ91teSNZ4cC4OJqPgYJN31TDgaNhbAOo22JdnPmzjE3E17x+IJT+hg==
+X-Received: by 2002:a62:f20b:: with SMTP id m11mr13043335pfh.125.1563998303220;
+        Wed, 24 Jul 2019 12:58:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b6sm41772738pgq.26.2019.07.24.12.58.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 12:58:22 -0700 (PDT)
+Subject: Re: [PATCH 5.3] mwifiex: fix 802.11n/WPA detection
+To:     Brian Norris <briannorris@chromium.org>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.de>, stable@vger.kernel.org
+References: <20190724194634.205718-1-briannorris@chromium.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <6c6b1d11-f13c-0dde-74ac-93a9e51c4deb@roeck-us.net>
+Date:   Wed, 24 Jul 2019 12:58:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190724194634.205718-1-briannorris@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+On 7/24/19 12:46 PM, Brian Norris wrote:
+> Commit 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant
+> vendor IEs") adjusted the ieee_types_vendor_header struct, which
+> inadvertently messed up the offsets used in
+> mwifiex_is_wpa_oui_present(). Add that offset back in, mirroring
+> mwifiex_is_rsn_oui_present().
+> 
+> As it stands, commit 63d7ef36103d breaks compatibility with WPA (not
+> WPA2) 802.11n networks, since we hit the "info: Disable 11n if AES is
+> not supported by AP" case in mwifiex_is_network_compatible().
+> 
+> Fixes: 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant vendor IEs")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-commit 3b8cafdd5436f9298b3bf6eb831df5eef5ee82b6 upstream.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-dm-zoned uses the zone flag DMZ_ACTIVE to indicate that a zone of the
-backend device is being actively read or written and so cannot be
-reclaimed. This flag is set as long as the zone atomic reference
-counter is not 0. When this atomic is decremented and reaches 0 (e.g.
-on BIO completion), the active flag is cleared and set again whenever
-the zone is reused and BIO issued with the atomic counter incremented.
-These 2 operations (atomic inc/dec and flag set/clear) are however not
-always executed atomically under the target metadata mutex lock and
-this causes the warning:
-
-WARN_ON(!test_bit(DMZ_ACTIVE, &zone->flags));
-
-in dmz_deactivate_zone() to be displayed. This problem is regularly
-triggered with xfstests generic/209, generic/300, generic/451 and
-xfs/077 with XFS being used as the file system on the dm-zoned target
-device. Similarly, xfstests ext4/303, ext4/304, generic/209 and
-generic/300 trigger the warning with ext4 use.
-
-This problem can be easily fixed by simply removing the DMZ_ACTIVE flag
-and managing the "ACTIVE" state by directly looking at the reference
-counter value. To do so, the functions dmz_activate_zone() and
-dmz_deactivate_zone() are changed to inline functions respectively
-calling atomic_inc() and atomic_dec(), while the dmz_is_active() macro
-is changed to an inline function calling atomic_read().
-
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Reported-by: Masato Suzuki <masato.suzuki@wdc.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/md/dm-zoned-metadata.c |   24 ------------------------
- drivers/md/dm-zoned.h          |   28 ++++++++++++++++++++++++----
- 2 files changed, 24 insertions(+), 28 deletions(-)
-
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1594,30 +1594,6 @@ struct dm_zone *dmz_get_zone_for_reclaim
- }
- 
- /*
-- * Activate a zone (increment its reference count).
-- */
--void dmz_activate_zone(struct dm_zone *zone)
--{
--	set_bit(DMZ_ACTIVE, &zone->flags);
--	atomic_inc(&zone->refcount);
--}
--
--/*
-- * Deactivate a zone. This decrement the zone reference counter
-- * and clears the active state of the zone once the count reaches 0,
-- * indicating that all BIOs to the zone have completed. Returns
-- * true if the zone was deactivated.
-- */
--void dmz_deactivate_zone(struct dm_zone *zone)
--{
--	if (atomic_dec_and_test(&zone->refcount)) {
--		WARN_ON(!test_bit(DMZ_ACTIVE, &zone->flags));
--		clear_bit_unlock(DMZ_ACTIVE, &zone->flags);
--		smp_mb__after_atomic();
--	}
--}
--
--/*
-  * Get the zone mapping a chunk, if the chunk is mapped already.
-  * If no mapping exist and the operation is WRITE, a zone is
-  * allocated and used to map the chunk.
---- a/drivers/md/dm-zoned.h
-+++ b/drivers/md/dm-zoned.h
-@@ -115,7 +115,6 @@ enum {
- 	DMZ_BUF,
- 
- 	/* Zone internal state */
--	DMZ_ACTIVE,
- 	DMZ_RECLAIM,
- 	DMZ_SEQ_WRITE_ERR,
- };
-@@ -128,7 +127,6 @@ enum {
- #define dmz_is_empty(z)		((z)->wp_block == 0)
- #define dmz_is_offline(z)	test_bit(DMZ_OFFLINE, &(z)->flags)
- #define dmz_is_readonly(z)	test_bit(DMZ_READ_ONLY, &(z)->flags)
--#define dmz_is_active(z)	test_bit(DMZ_ACTIVE, &(z)->flags)
- #define dmz_in_reclaim(z)	test_bit(DMZ_RECLAIM, &(z)->flags)
- #define dmz_seq_write_err(z)	test_bit(DMZ_SEQ_WRITE_ERR, &(z)->flags)
- 
-@@ -188,8 +186,30 @@ void dmz_unmap_zone(struct dmz_metadata
- unsigned int dmz_nr_rnd_zones(struct dmz_metadata *zmd);
- unsigned int dmz_nr_unmap_rnd_zones(struct dmz_metadata *zmd);
- 
--void dmz_activate_zone(struct dm_zone *zone);
--void dmz_deactivate_zone(struct dm_zone *zone);
-+/*
-+ * Activate a zone (increment its reference count).
-+ */
-+static inline void dmz_activate_zone(struct dm_zone *zone)
-+{
-+	atomic_inc(&zone->refcount);
-+}
-+
-+/*
-+ * Deactivate a zone. This decrement the zone reference counter
-+ * indicating that all BIOs to the zone have completed when the count is 0.
-+ */
-+static inline void dmz_deactivate_zone(struct dm_zone *zone)
-+{
-+	atomic_dec(&zone->refcount);
-+}
-+
-+/*
-+ * Test if a zone is active, that is, has a refcount > 0.
-+ */
-+static inline bool dmz_is_active(struct dm_zone *zone)
-+{
-+	return atomic_read(&zone->refcount);
-+}
- 
- int dmz_lock_zone_reclaim(struct dm_zone *zone);
- void dmz_unlock_zone_reclaim(struct dm_zone *zone);
-
+> ---
+>   drivers/net/wireless/marvell/mwifiex/main.h | 1 +
+>   drivers/net/wireless/marvell/mwifiex/scan.c | 3 ++-
+>   2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
+> index 3e442c7f7882..095837fba300 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/main.h
+> +++ b/drivers/net/wireless/marvell/mwifiex/main.h
+> @@ -124,6 +124,7 @@ enum {
+>   
+>   #define MWIFIEX_MAX_TOTAL_SCAN_TIME	(MWIFIEX_TIMER_10S - MWIFIEX_TIMER_1S)
+>   
+> +#define WPA_GTK_OUI_OFFSET				2
+>   #define RSN_GTK_OUI_OFFSET				2
+>   
+>   #define MWIFIEX_OUI_NOT_PRESENT			0
+> diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+> index 0d6d41727037..21dda385f6c6 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/scan.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+> @@ -181,7 +181,8 @@ mwifiex_is_wpa_oui_present(struct mwifiex_bssdescriptor *bss_desc, u32 cipher)
+>   	u8 ret = MWIFIEX_OUI_NOT_PRESENT;
+>   
+>   	if (has_vendor_hdr(bss_desc->bcn_wpa_ie, WLAN_EID_VENDOR_SPECIFIC)) {
+> -		iebody = (struct ie_body *) bss_desc->bcn_wpa_ie->data;
+> +		iebody = (struct ie_body *)((u8 *)bss_desc->bcn_wpa_ie->data +
+> +					    WPA_GTK_OUI_OFFSET);
+>   		oui = &mwifiex_wpa_oui[cipher][0];
+>   		ret = mwifiex_search_oui_in_ie(iebody, oui);
+>   		if (ret)
+> 
 
