@@ -2,174 +2,107 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D958C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA8C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 586112083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC1B2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfGXIxC (ORCPT
+        id S1726513AbfGXIxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:53:02 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34835 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfGXIxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:53:01 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3181760012;
-        Wed, 24 Jul 2019 08:52:54 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 10:52:54 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>
-Cc:     "kishon@ti.com" <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] phy: Change the configuration interface param to void*
- to make it more general
-Message-ID: <20190724085254.2amajixbxllgfluq@flea>
-References: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
- <20190711112039.leuvelpm7opeoaxq@flea>
- <678F3D1BB717D949B966B68EAEB446ED2FF5B22D@DGGEMM506-MBX.china.huawei.com>
- <20190717163753.ti6swjfhm7fczcn4@flea>
- <678F3D1BB717D949B966B68EAEB446ED2FF5D942@DGGEMM506-MBX.china.huawei.com>
+        Wed, 24 Jul 2019 04:53:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42874 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfGXIxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:53:35 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3038FB2DD2;
+        Wed, 24 Jul 2019 08:53:35 +0000 (UTC)
+Received: from krava (unknown [10.40.205.115])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2FABC102486D;
+        Wed, 24 Jul 2019 08:53:26 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 10:53:25 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephane Eranian <eranian@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [RFC 00/79] perf tools: Initial libperf separation
+Message-ID: <20190724085325.GB5860@krava>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+ <CAP-5=fUt94YqLSwbKCbsgF+019U8dW3jgYdn0OhS01C1wooguA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zhoe2rfuq6ldgivi"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED2FF5D942@DGGEMM506-MBX.china.huawei.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAP-5=fUt94YqLSwbKCbsgF+019U8dW3jgYdn0OhS01C1wooguA@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 24 Jul 2019 08:53:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 22, 2019 at 09:23:36AM -0700, Ian Rogers wrote:
+> This is really helpful and thank you for taking the initiative! I've
+> no real feedback other than to offer support.
+> We've been looking in this direction to avoid memory overhead in:
+> https://github.com/google/perf_data_converter
+> Some use cases:
+> 1) streaming protobuf rather than perf.data files,
 
---zhoe2rfuq6ldgivi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+hum, we already have the CTF conversion support (perf data convert --to-ctf),
+perhaps we could add support for profile.proto, so you dont need special app
 
-Hi,
+> 2) using libperf inside of a runtime with JIT for a symbolization
+> story that can reduce the storage/memory overhead of the current 'perf
+> record' and 'perf inject -j'. Something similar is done here:
+> https://github.com/jvm-profiling-tools/async-profiler/blob/936a9fea8dafc5d0674860d229a1b3d86d295e2f/src/perfEvents_linux.cpp
 
-On Sat, Jul 20, 2019 at 03:03:20AM +0000, Zengtao (B) wrote:
-> >-----Original Message-----
-> >From: Maxime Ripard [mailto:maxime.ripard@bootlin.com]
-> >Sent: Thursday, July 18, 2019 12:38 AM
-> >To: Zengtao (B) <prime.zeng@hisilicon.com>
-> >Cc: kishon@ti.com; Chen-Yu Tsai <wens@csie.org>; Paul Kocialkowski
-> ><paul.kocialkowski@bootlin.com>; Sakari Ailus <sakari.ailus@linux.intel.com>;
-> >linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> >Subject: Re: [PATCH] phy: Change the configuration interface param to void*
-> >to make it more general
-> >
-> >Hi,
-> >
-> >On Wed, Jul 17, 2019 at 06:36:09AM +0000, Zengtao (B) wrote:
-> >> Hi Maxime:
-> >>
-> >> Thanks for your reply.
-> >>
-> >> >-----Original Message-----
-> >> >From: Maxime Ripard [mailto:maxime.ripard@bootlin.com]
-> >> >Sent: Thursday, July 11, 2019 7:21 PM
-> >> >To: Zengtao (B) <prime.zeng@hisilicon.com>
-> >> >Cc: kishon@ti.com; Chen-Yu Tsai <wens@csie.org>; Paul Kocialkowski
-> >> ><paul.kocialkowski@bootlin.com>; Sakari Ailus
-> >> ><sakari.ailus@linux.intel.com>; linux-kernel@vger.kernel.org;
-> >> >linux-arm-kernel@lists.infradead.org
-> >> >Subject: Re: [PATCH] phy: Change the configuration interface param to
-> >> >void* to make it more general
-> >> >
-> >> >* PGP Signed by an unknown key
-> >> >
-> >> >On Fri, Jul 12, 2019 at 02:04:08AM +0800, Zeng Tao wrote:
-> >> >> The phy framework now allows runtime configurations, but only
-> >> >> limited to mipi now, and it's not reasonable to introduce user
-> >> >> specified configurations into the union phy_configure_opts
-> >> >> structure. An simple way is to replace with a void *.
-> >> >
-> >> >I'm not sure why it's unreasonable?
-> >> >
-> >>
-> >> The phy.h will need to include vendor specific phy headers
-> >
-> >I'm not sure this is an issue.
-> >
-> >> and the union phy_configure_opts will become more complex.
-> >
-> >And this was the plan all along.
-> >
-> >> I don't think this is a good solution to include all vendor specific
-> >> phy configs into a single union structure.
-> >
-> >The thing is, as Sakari have stated, this interface was meant as a generic way
-> >to negotiate a configuration between a PHY consumer and a PHY provider (ie,
-> >whatever sends data to the phy and the phy itself).
-> >
-> >If you remove the explicit type check, then you need to have prior knowledge
-> >(and agreement) on both sides, which breaks the initial intent.
->
-> I get your point, so if we follow your design, it will look this:
->
-> union phy_configure_opts {
-> 	struct xxxx1_phy phy1_opts;
-> 	struct xxxx1_phy phy2_opts;
-> 	struct xxxx1_phy phy3_opts;
-> 	.....
-> }
->
-> And the general phy framework needn't to know about the type but
-> just pass through, the caller and the phy driver definitely need to
-> know what they are doing.
+I think that once we have the mmap interface in place we can
+discuss some higher level interface that would help you
 
-I'm not quite sure what you mean here. The configuration only applies
-to the current PHY mode. So the phy consumer will have changed the
-mode, and the PHY will have accepted it.
+> 3) self profiling with dwarf based call graphs, to avoid stack samples
+> being visible outside of the process which could be a security
+> concern.
 
-That change is also doable from the framework.
+same as above, once we have mmap support I think this is
+one of the things we definitely want to add to libperf
 
-Then, which part of the union is being used is easy to figure out for
-both parties, since they agree on it already.
+> 
+> Most of our tooling is C++ rather than C, and we run into issues like
+> tools/include/linux/list.h using 'new' as a variable name. The
 
-> So I suggest a more general type void *, otherwise the general phy
-> will need to see a lot of details which is not that general.
+libperf has currently the full object separation, so outside users
+dont see its object struct's inners.. that should solve the 'new' issue
 
-Except that this effectively becomes a black box that the framework
-has no control and / or knowledge about.
+> duplication of header files in tools/, the importance of -I precedence
+> and the use of -include have been other build system gotchas -
+> principally because there are so many files with exactly the same
+> name. I don't know if in the reorganization into a library this can be
+> simplified.
 
-Which means that it cannot do any kind of checks on it anymore, and
-again, that the consumer and driver need to have prior knowledge of
-what is being passed, without any way to check whether it's actually
-what needs to be passed.
+libperf will be public so the building should be hopefuly simpler
+and straightforward
 
-To some extent, the union also allows that, but it's just less
-explicit and in general worse, to just pass void* here.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---zhoe2rfuq6ldgivi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXTgcZgAKCRDj7w1vZxhR
-xbVJAQC2WbhGtzvCUsqlgubaKt5tOZDSw/86LuIRNUn0C631dQD9GWfS8I5V23G8
-OJ5HZ5/L3OnvQJfGu3rgI+p9a7tHdgU=
-=jk2+
------END PGP SIGNATURE-----
-
---zhoe2rfuq6ldgivi--
+thanks a lot for the feedback,
+jirka
