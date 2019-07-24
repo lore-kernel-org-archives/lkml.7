@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EF8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37563C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52AC22ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E9C22ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998033;
-	bh=XCRvcFMH9hXvqaVK+9zIaKSTL5zpL8XnoLWiAkMwm1s=;
+	s=default; t=1563998044;
+	bh=OHFDIYzqs79pKcoyXYwFV4CD6amEp2CPhuctPsllLsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwfAEth9nGdkN5NjqiWyZW7Lm3LG3QOl/aGgdQTQ9zazXXX05XnIXVNP/bmrDRv/3
-	 BGaTFozbRuXKkDnERbGfzhKuZysl1EOspJqWNpLKpl0nEoACyMfZtZ8RCZR7DAEfRC
-	 YtheP3qqeb1924kBNv8oQ+QAsKaQXMyrlo/aik0k=
+	b=OyL60y5E7WuFK39xjh47EY9rTxJ4+BX5R2cBS7tyj7CbBdEx2FNBpsjTrdtuDKrir
+	 xKUmPXY9pJPPXC1JSQTgrlsx2+jPSLnS6J5baXDoWFDI4+Cit66/gdOJ1mxp2FF/VO
+	 P6VxzVsWbrTWunif5vA7S8JD665WIcKRLWyS5TXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404259AbfGXTxw (ORCPT
+        id S2404280AbfGXTyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36480 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:54:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404241AbfGXTxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:53:50 -0400
+        id S2403959AbfGXTx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:53:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A439922ADA;
-        Wed, 24 Jul 2019 19:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37BC8205C9;
+        Wed, 24 Jul 2019 19:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998030;
-        bh=XCRvcFMH9hXvqaVK+9zIaKSTL5zpL8XnoLWiAkMwm1s=;
+        s=default; t=1563998036;
+        bh=OHFDIYzqs79pKcoyXYwFV4CD6amEp2CPhuctPsllLsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJc9qBMKh2sMKraSZhPWsBtdHAkxUzbkONVVqlj0KVUMTlqaXLwkqRRgIFtmwAKVb
-         0TfxDhXJd6aswHszOFXkAHPTQXFPIIeejC22a/yd3L/BJjLmwjGl4T3FJf3sXFfOVB
-         oSYusuUXwdnSM++zH//dLJzYA4ZX1I95fk25vBcA=
+        b=Bx/OBHBfP9jyI4NtQWhbuRbzzLG6S395pxR8hrsKh4OZ0eqrIxiUtGFPFD/6JImbG
+         KiPwJule6nBMyGs46D14akJR7a+bzcgds60b4cqYC/e3Pmzgk9HpzaGSYH+sAaNo1y
+         l7ilz9iXLkH9EOKb0eZG8kzAV+iUfDBMNK08C5c0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 223/371] libbpf: fix another GCC8 warning for strncpy
-Date:   Wed, 24 Jul 2019 21:19:35 +0200
-Message-Id: <20190724191741.313180904@linuxfoundation.org>
+Subject: [PATCH 5.1 225/371] floppy: fix out-of-bounds read in next_valid_format
+Date:   Wed, 24 Jul 2019 21:19:37 +0200
+Message-Id: <20190724191741.428424679@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,34 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 763ff0e7d9c72e7094b31e7fb84a859be9325635 ]
+[ Upstream commit 5635f897ed83fd539df78e98ba69ee91592f9bb8 ]
 
-Similar issue was fixed in cdfc7f888c2a ("libbpf: fix GCC8 warning for
-strncpy") already. This one was missed. Fixing now.
+This fixes a global out-of-bounds read access in the next_valid_format
+function of the floppy driver.
 
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+The values from autodetect field of the struct floppy_drive_params are
+used as indices for the floppy_type array in the next_valid_format
+function 'floppy_type[DP->autodetect[probed_format]].sect'.
+
+To trigger the bug, one could use a value out of range and set the drive
+parameters with the FDSETDRVPRM ioctl.  A floppy disk is not required to
+be inserted.
+
+CAP_SYS_ADMIN is required to call FDSETDRVPRM.
+
+The patch adds the check for values of the autodetect field to be in the
+'0 <= x < ARRAY_SIZE(floppy_type)' range of the floppy_type array indices.
+
+The bug was found by syzkaller.
+
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/xsk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/floppy.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-index 1fe0e1eec738..4ecd33ff46ec 100644
---- a/tools/lib/bpf/xsk.c
-+++ b/tools/lib/bpf/xsk.c
-@@ -560,7 +560,8 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
- 		err = -errno;
- 		goto out_socket;
- 	}
--	strncpy(xsk->ifname, ifname, IFNAMSIZ);
-+	strncpy(xsk->ifname, ifname, IFNAMSIZ - 1);
-+	xsk->ifname[IFNAMSIZ - 1] = '\0';
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index e2f742e17683..77c527db5134 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3379,6 +3379,20 @@ static int fd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
+ 	return 0;
+ }
  
- 	err = xsk_set_xdp_socket_config(&xsk->config, usr_config);
- 	if (err)
++static bool valid_floppy_drive_params(const short autodetect[8])
++{
++	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
++	size_t i = 0;
++
++	for (i = 0; i < 8; ++i) {
++		if (autodetect[i] < 0 ||
++		    autodetect[i] >= floppy_type_size)
++			return false;
++	}
++
++	return true;
++}
++
+ static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
+ 		    unsigned long param)
+ {
+@@ -3505,6 +3519,8 @@ static int fd_locked_ioctl(struct block_device *bdev, fmode_t mode, unsigned int
+ 		SUPBOUND(size, strlen((const char *)outparam) + 1);
+ 		break;
+ 	case FDSETDRVPRM:
++		if (!valid_floppy_drive_params(inparam.dp.autodetect))
++			return -EINVAL;
+ 		*UDP = inparam.dp;
+ 		break;
+ 	case FDGETDRVPRM:
+@@ -3702,6 +3718,8 @@ static int compat_setdrvprm(int drive,
+ 		return -EPERM;
+ 	if (copy_from_user(&v, arg, sizeof(struct compat_floppy_drive_params)))
+ 		return -EFAULT;
++	if (!valid_floppy_drive_params(v.autodetect))
++		return -EINVAL;
+ 	mutex_lock(&floppy_mutex);
+ 	UDP->cmos = v.cmos;
+ 	UDP->max_dtr = v.max_dtr;
 -- 
 2.20.1
 
