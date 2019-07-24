@@ -2,127 +2,163 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E029EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C683C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5797206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e+1uovH+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a7cYdd2x"
+	by mail.kernel.org (Postfix) with ESMTP id 42685206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564000583;
+	bh=JyOwmzys1P/HTssEN1TQGUn5WUnChrmVDD/EuknGGXQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Le40+eRHZtzjNd1W2d7teJAp5gEk47n8lPlPYbYtkzGTIAzo5yovmhiOEquhv/1LI
+	 g4bO4dH9E0Vg55B/NJTFbfIK60wo9oUEgUKXqV+RI+hvuFIZONeoYQJcSbKyAxjk5/
+	 ypS0aEQPxIm0geTMVI07asea6gP4/idZtJOXJkyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389684AbfGXUgP (ORCPT
+        id S2390374AbfGXUgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:36:15 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52914 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfGXUgO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:36:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4F28560588; Wed, 24 Jul 2019 20:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564000573;
-        bh=LeXYBF4XZF+Eab2E7VFMqCpPAbcHZ5qGNQCkNioMI04=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e+1uovH+DfPEa13HCBRKq6kYXCNe6BUY6BmVLWd3OKIn8uKQvdwzAsfQWJOsWBzQo
-         3pvyITvUwHHKKGVn2H9TVqF4fswgAvsjnPVfGJHJrwFaAxji7ZtNGamZ99JAUT88Z6
-         5jWTHlmS8r64iMczX1k0rRZfF/s0hfElDANZnM5c=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        Wed, 24 Jul 2019 16:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388004AbfGXTYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B4F460392;
-        Wed, 24 Jul 2019 20:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1564000572;
-        bh=LeXYBF4XZF+Eab2E7VFMqCpPAbcHZ5qGNQCkNioMI04=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a7cYdd2xjX2abQ5f3LG+OcGurndQp/AjKXZLkjoyWEbhzmCKz5cGH9RYpwbVgNul3
-         DXzxFpU9IaTIG/TbQawoIbIfm78gJR8tDStF9ih2Mr3HYMPS5o2h5Yt5g6r/4sKjZM
-         ieya17n3ksapj9vhBRNQYj6TdCHqcfu4GSdYaPg0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B4F460392
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Wed, 24 Jul 2019 14:36:10 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org
-Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the
- interrupt handler
-Message-ID: <20190724203610.GE18620@codeaurora.org>
-References: <20190722215340.3071-1-ilina@codeaurora.org>
- <20190722215340.3071-2-ilina@codeaurora.org>
- <5d3769df.1c69fb81.55d03.aa33@mx.google.com>
- <20190724145251.GB18620@codeaurora.org>
- <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 143F921951;
+        Wed, 24 Jul 2019 19:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996293;
+        bh=JyOwmzys1P/HTssEN1TQGUn5WUnChrmVDD/EuknGGXQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=s444G6Ohb/CEKOMatfbnzo+PwP1fDr8rDpFlDJ2N2FBlTf5onh1Rb9EJOAQLMofPP
+         4ToBa/plaUwcPJrmb/kNOxxfAzv0Il8BUYG8Q5nchlcXsGs+236uZ7y/DTbvpvEE5S
+         AmR7Td+j4X266uQjI6igIuPvoXKOVX/ePiS+hjd4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 048/413] media: saa7164: fix remove_proc_entry warning
+Date:   Wed, 24 Jul 2019 21:15:39 +0200
+Message-Id: <20190724191738.979704618@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24 2019 at 13:38 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-07-24 07:52:51)
->> On Tue, Jul 23 2019 at 14:11 -0600, Stephen Boyd wrote:
->> >Quoting Lina Iyer (2019-07-22 14:53:38)
->> >> Avoid locking in the interrupt context to improve latency. Since we
->> >> don't lock in the interrupt context, it is possible that we now could
->> >> race with the DRV_CONTROL register that writes the enable register and
->> >> cleared by the interrupt handler. For fire-n-forget requests, the
->> >> interrupt may be raised as soon as the TCS is triggered and the IRQ
->> >> handler may clear the enable bit before the DRV_CONTROL is read back.
->> >>
->> >> Use the non-sync variant when enabling the TCS register to avoid reading
->> >> back a value that may been cleared because the interrupt handler ran
->> >> immediately after triggering the TCS.
->> >>
->> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> >> ---
->> >
->> >I have to read this patch carefully. The commit text isn't convincing me
->> >that it is actually safe to make this change. It mostly talks about the
->> >performance improvements and how we need to fix __tcs_trigger(), which
->> >is good, but I was hoping to be convinced that not grabbing the lock
->> >here is safe.
->> >
->> >How do we ensure that drv->tcs_in_use is cleared before we call
->> >tcs_write() and try to look for a free bit? Isn't it possible that we'll
->> >get into a situation where the bitmap is all used up but the hardware
->> >has just received an interrupt and is going to clear out a bit and then
->> >an rpmh write fails with -EBUSY?
->> >
->> If we have a situation where there are no available free bits, we retry
->> and that is part of the function. Since we have only 2 TCSes avaialble
->> to write to the hardware and there could be multiple requests coming in,
->> it is a very common situation. We try and acquire the drv->lock and if
->> there are free TCS available and if available mark them busy and send
->> our requests. If there are none available, we keep retrying.
->>
->
->Ok. I wonder if we need some sort of barriers here too, like an
->smp_mb__after_atomic()? That way we can make sure that the write to
->clear the bit is seen by another CPU that could be spinning forever
->waiting for that bit to be cleared? Before this change the spinlock
->would be guaranteed to make these barriers for us, but now that doesn't
->seem to be the case. I really hope that this whole thing can be changed
->to be a mutex though, in which case we can use the bit_wait() API, etc.
->to put tasks to sleep while RPMh is processing things.
->
-We have drivers that want to send requests in atomic contexts and
-therefore mutex locks would not work.
+[ Upstream commit 50710eeefbc1ed25375942aad0c4d1eb4af0f330 ]
 
---Lina
+if saa7164_proc_create() fails, saa7164_fini() will trigger a warning,
+
+name 'saa7164'
+WARNING: CPU: 1 PID: 6311 at fs/proc/generic.c:672 remove_proc_entry+0x1e8/0x3a0
+  ? remove_proc_entry+0x1e8/0x3a0
+  ? try_stop_module+0x7b/0x240
+  ? proc_readdir+0x70/0x70
+  ? rcu_read_lock_sched_held+0xd7/0x100
+  saa7164_fini+0x13/0x1f [saa7164]
+  __x64_sys_delete_module+0x30c/0x480
+  ? __ia32_sys_delete_module+0x480/0x480
+  ? __x64_sys_clock_gettime+0x11e/0x1c0
+  ? __x64_sys_timer_create+0x1a0/0x1a0
+  ? trace_hardirqs_off_caller+0x40/0x180
+  ? do_syscall_64+0x18/0x450
+  do_syscall_64+0x9f/0x450
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix it by checking the return of proc_create_single() before
+calling remove_proc_entry().
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: use 0444 instead of S_IRUGO]
+[hverkuil-cisco@xs4all.nl: use pr_info instead of KERN_INFO]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/pci/saa7164/saa7164-core.c | 33 ++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/media/pci/saa7164/saa7164-core.c b/drivers/media/pci/saa7164/saa7164-core.c
+index c594aff92e70..9ae04e18e6c6 100644
+--- a/drivers/media/pci/saa7164/saa7164-core.c
++++ b/drivers/media/pci/saa7164/saa7164-core.c
+@@ -1112,16 +1112,25 @@ static int saa7164_proc_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ 
++static struct proc_dir_entry *saa7164_pe;
++
+ static int saa7164_proc_create(void)
+ {
+-	struct proc_dir_entry *pe;
+-
+-	pe = proc_create_single("saa7164", S_IRUGO, NULL, saa7164_proc_show);
+-	if (!pe)
++	saa7164_pe = proc_create_single("saa7164", 0444, NULL, saa7164_proc_show);
++	if (!saa7164_pe)
+ 		return -ENOMEM;
+ 
+ 	return 0;
+ }
++
++static void saa7164_proc_destroy(void)
++{
++	if (saa7164_pe)
++		remove_proc_entry("saa7164", NULL);
++}
++#else
++static int saa7164_proc_create(void) { return 0; }
++static void saa7164_proc_destroy(void) {}
+ #endif
+ 
+ static int saa7164_thread_function(void *data)
+@@ -1493,19 +1502,21 @@ static struct pci_driver saa7164_pci_driver = {
+ 
+ static int __init saa7164_init(void)
+ {
+-	printk(KERN_INFO "saa7164 driver loaded\n");
++	int ret = pci_register_driver(&saa7164_pci_driver);
++
++	if (ret)
++		return ret;
+ 
+-#ifdef CONFIG_PROC_FS
+ 	saa7164_proc_create();
+-#endif
+-	return pci_register_driver(&saa7164_pci_driver);
++
++	pr_info("saa7164 driver loaded\n");
++
++	return 0;
+ }
+ 
+ static void __exit saa7164_fini(void)
+ {
+-#ifdef CONFIG_PROC_FS
+-	remove_proc_entry("saa7164", NULL);
+-#endif
++	saa7164_proc_destroy();
+ 	pci_unregister_driver(&saa7164_pci_driver);
+ }
+ 
+-- 
+2.20.1
+
+
 
