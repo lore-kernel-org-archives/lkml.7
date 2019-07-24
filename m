@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EABC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158D8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D384214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6AC2184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998506;
-	bh=Tiw9wrVuP8FVL6ODanQa3/r4I5xRYoyg/j0dQmxR1xY=;
+	s=default; t=1563998509;
+	bh=/PxWPvXyvvy70tcEUvRgNjp9YgGWC22G+SGFrQeMoE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLBNKTv/X01pCAPM2mNhugR3arbCOGiC8BLvnXWx1DyQD+llh5gX+ppBpuv/lB1hb
-	 7mUy6VwCqH4pw0nY6LYMu4s5R3DrCUqfwcQGHbZ5CZo5ZUE2haoFXTaQnmHfMTwFP5
-	 2F7Q780pf3CeCVh18XuybHbQKtgwWZXn/LJIHsxU=
+	b=mDKV0dUqvAfAQBid/+iEvCM0Lo5Pge8cCFTBFhQBjGvGxaziodwk7waqZy1Xn8CWn
+	 H3x0A538PcDn2kMyGLO9d2NatfhvWmGyq2snYtZhKGxkSdE1pbpTRgc44JgkjrEZIN
+	 HNO4Ykxi8rvbGKCvmS+NAUf2kVJjg/ms2M4M409Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392320AbfGXUBp (ORCPT
+        id S2392333AbfGXUBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50838 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392295AbfGXUBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:44 -0400
+        id S2392322AbfGXUBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D36BF205C9;
-        Wed, 24 Jul 2019 20:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B2E206BA;
+        Wed, 24 Jul 2019 20:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998503;
-        bh=Tiw9wrVuP8FVL6ODanQa3/r4I5xRYoyg/j0dQmxR1xY=;
+        s=default; t=1563998506;
+        bh=/PxWPvXyvvy70tcEUvRgNjp9YgGWC22G+SGFrQeMoE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GIf0eETtG1MTlchc9R2w8NjcBEm8jvuwdqIhtx9IkiifUwRY4BfS91vSOA7+ZMt2i
-         7hDxBEzGXC+jeJrEd3sGXQd6+KlT4J+SWR9jVunKCSRVAKdiK8MsqyRrMWtd91hXdy
-         GvWCx7P4HsfTJhjnqsAXX/Svlgm+bZYD296FKKQk=
+        b=bnOzvwlOp2DMdeE2xMtSUyVaQpgp5P23N1saqxbQepk8GYvct/saOk1MXO+N5NHhG
+         K/pybHl+Y3eoLiPcGe0ODRahS0AHlAwgSn/BhJiwBXV+Qpu73yAItiMQH+EocU1Xt2
+         ZYukY4M+eOiBMYjthYVtFpdH3L4GmQNaxH0bFS+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/271] crypto: talitos - fix skcipher failure due to wrong output IV
-Date:   Wed, 24 Jul 2019 21:18:06 +0200
-Message-Id: <20190724191656.726984666@linuxfoundation.org>
+Subject: [PATCH 4.19 018/271] media: ov7740: avoid invalid framesize setting
+Date:   Wed, 24 Jul 2019 21:18:07 +0200
+Message-Id: <20190724191656.808396677@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,49 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e03e792865ae48b8cfc69a0b4d65f02f467389f ]
+[ Upstream commit 6e4ab830ac6d6a0d7cd7f87dc5d6536369bf24a8 ]
 
-Selftests report the following:
+If the requested framesize by VIDIOC_SUBDEV_S_FMT is larger than supported
+framesizes, it causes an out of bounds array access and the resulting
+framesize is unexpected.
 
-[    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
-[    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.043185] 00000000: fe dc ba 98 76 54 32 10
-[    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-[    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
+Avoid out of bounds array access and select the default framesize.
 
-This above dumps show that the actual output IV is indeed the input IV.
-This is due to the IV not being copied back into the request.
-
-This patch fixes that.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Wenyou Yang <wenyou.yang@microchip.com>
+Cc: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/talitos.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/i2c/ov7740.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index 5849075d54c7..d46f58c13433 100644
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -1553,11 +1553,15 @@ static void ablkcipher_done(struct device *dev,
- 			    int err)
- {
- 	struct ablkcipher_request *areq = context;
-+	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
-+	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
-+	unsigned int ivsize = crypto_ablkcipher_ivsize(cipher);
- 	struct talitos_edesc *edesc;
+diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+index f5a1ee90a6c5..8a6a7a5929aa 100644
+--- a/drivers/media/i2c/ov7740.c
++++ b/drivers/media/i2c/ov7740.c
+@@ -761,7 +761,11 @@ static int ov7740_try_fmt_internal(struct v4l2_subdev *sd,
  
- 	edesc = container_of(desc, struct talitos_edesc, desc);
- 
- 	common_nonsnoop_unmap(dev, edesc, areq);
-+	memcpy(areq->info, ctx->iv, ivsize);
- 
- 	kfree(edesc);
+ 		fsize++;
+ 	}
+-
++	if (i >= ARRAY_SIZE(ov7740_framesizes)) {
++		fsize = &ov7740_framesizes[0];
++		fmt->width = fsize->width;
++		fmt->height = fsize->height;
++	}
+ 	if (ret_frmsize != NULL)
+ 		*ret_frmsize = fsize;
  
 -- 
 2.20.1
