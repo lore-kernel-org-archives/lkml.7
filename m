@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E379FC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB85C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1012083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71D52083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999289;
-	bh=HMENl/L5+knTn/Fjjyg+GxPo4hsqznlJ+G8e9eT390w=;
+	s=default; t=1563999306;
+	bh=7qHMARGZqYN8XVCRyjerYdEwNpm0JOUaZFtCVUzQbSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1l4LdXt15iNDWqgNJYLGvG4coGYsAyZQKSNBW5darqUoT+MlkIniNf19AUBdTguI
-	 5i96Wgd7T2jvOXQ+CPyGYojekX4glkbWLsEmeknWT2sH4W5pMWUstrSKv79ISFLrex
-	 bAk1a8bd4U6hYscdfX8g/HAN6UBdpl0a1nxSlmhE=
+	b=iDp4lnZVG65TR3bt8bTHHh7icQ09v3A7y5xiVy5Kdjf7pKRxp6kBRZ83cfprfkPu5
+	 C/M2Yp3GV/ANxclozC2uJ+DiNer7H9KByfQsPzxb5gNCOwq6omgSIlaaEol33ZIE7l
+	 3GoukUeo05VtBCn9PkN8zCP2hCkbtqHJb2ZVHwQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404430AbfGXTyq (ORCPT
+        id S2392113AbfGXUPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:54:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37884 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404416AbfGXTym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:54:42 -0400
+        id S2404318AbfGXTyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:54:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E31B722ADC;
-        Wed, 24 Jul 2019 19:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2976420665;
+        Wed, 24 Jul 2019 19:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998082;
-        bh=HMENl/L5+knTn/Fjjyg+GxPo4hsqznlJ+G8e9eT390w=;
+        s=default; t=1563998059;
+        bh=7qHMARGZqYN8XVCRyjerYdEwNpm0JOUaZFtCVUzQbSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y2iuQBOqQiilVxNeo+7LY34OHmWU7Ou9oQgPY7ImaNaIiLr9W7q+Zh8C9Qcm2cXXQ
-         ESZ5sj+C/Wpr/LalzKMMfpAkCx3H7xN3XJAh3AuIQVN4iExH/7746MdWhlG3VhzS5D
-         OPYH2/RQjr3+WZKYRrqS/iWPJ1bXBPylmesUPk3w=
+        b=lQ04XvIHiIWbjCPFhtrL/6bZ0EDWGY895RAgaeFgH2tXjks7bWVTG6t7YMkHmHHxl
+         SwOJePt7xDCZ3rxs/9rb30EnutpieiLGQAnmj/poC0pyBjhg5wEqiYW+zLzndnG4fy
+         QzLft9YD5yM3RK2mCKn3TVuRELV5wWW5KmNC1N20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Robinson <pbrobinson@gmail.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 239/371] crypto: ghash - fix unaligned memory access in ghash_setkey()
-Date:   Wed, 24 Jul 2019 21:19:51 +0200
-Message-Id: <20190724191742.620811056@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.1 232/371] scsi: core: Fix race on creating sense cache
+Date:   Wed, 24 Jul 2019 21:19:44 +0200
+Message-Id: <20190724191741.947657397@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,57 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit 5c6bc4dfa515738149998bb0db2481a4fdead979 upstream.
+commit f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc upstream.
 
-Changing ghash_mod_init() to be subsys_initcall made it start running
-before the alignment fault handler has been installed on ARM.  In kernel
-builds where the keys in the ghash test vectors happened to be
-misaligned in the kernel image, this exposed the longstanding bug that
-ghash_setkey() is incorrectly casting the key buffer (which can have any
-alignment) to be128 for passing to gf128mul_init_4k_lle().
+When scsi_init_sense_cache(host) is called concurrently from different
+hosts, each code path may find that no cache has been created and
+allocate a new one. The lack of locking can lead to potentially
+overriding a cache allocated by a different host.
 
-Fix this by memcpy()ing the key to a temporary buffer.
+Fix the issue by moving 'mutex_lock(&scsi_sense_cache_mutex)' before
+scsi_select_sense_cache().
 
-Don't fix it by setting an alignmask on the algorithm instead because
-that would unnecessarily force alignment of the data too.
-
-Fixes: 2cdc6899a88e ("crypto: ghash - Add GHASH digest algorithm for GCM")
-Reported-by: Peter Robinson <pbrobinson@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 0a6ac4ee7c21 ("scsi: respect unchecked_isa_dma for blk-mq")
+Cc: Stable <stable@vger.kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/ghash-generic.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/crypto/ghash-generic.c
-+++ b/crypto/ghash-generic.c
-@@ -34,6 +34,7 @@ static int ghash_setkey(struct crypto_sh
- 			const u8 *key, unsigned int keylen)
- {
- 	struct ghash_ctx *ctx = crypto_shash_ctx(tfm);
-+	be128 k;
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -71,11 +71,11 @@ int scsi_init_sense_cache(struct Scsi_Ho
+ 	struct kmem_cache *cache;
+ 	int ret = 0;
  
- 	if (keylen != GHASH_BLOCK_SIZE) {
- 		crypto_shash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
-@@ -42,7 +43,12 @@ static int ghash_setkey(struct crypto_sh
++	mutex_lock(&scsi_sense_cache_mutex);
+ 	cache = scsi_select_sense_cache(shost->unchecked_isa_dma);
+ 	if (cache)
+-		return 0;
++		goto exit;
  
- 	if (ctx->gf128)
- 		gf128mul_free_4k(ctx->gf128);
--	ctx->gf128 = gf128mul_init_4k_lle((be128 *)key);
-+
-+	BUILD_BUG_ON(sizeof(k) != GHASH_BLOCK_SIZE);
-+	memcpy(&k, key, GHASH_BLOCK_SIZE); /* avoid violating alignment rules */
-+	ctx->gf128 = gf128mul_init_4k_lle(&k);
-+	memzero_explicit(&k, GHASH_BLOCK_SIZE);
-+
- 	if (!ctx->gf128)
- 		return -ENOMEM;
- 
+-	mutex_lock(&scsi_sense_cache_mutex);
+ 	if (shost->unchecked_isa_dma) {
+ 		scsi_sense_isadma_cache =
+ 			kmem_cache_create("scsi_sense_cache(DMA)",
+@@ -91,7 +91,7 @@ int scsi_init_sense_cache(struct Scsi_Ho
+ 		if (!scsi_sense_cache)
+ 			ret = -ENOMEM;
+ 	}
+-
++ exit:
+ 	mutex_unlock(&scsi_sense_cache_mutex);
+ 	return ret;
+ }
 
 
