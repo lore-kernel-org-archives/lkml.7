@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FC7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A41C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676C120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAB220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999149;
-	bh=8t5QVbCM8xFqk4NuKu5dd9sVDoCfed5xoDeOenDTj5I=;
+	s=default; t=1563999154;
+	bh=BaCUtOpBk5NR380AvK+1GHq4ZwFVoy4k4pxaJsg3mgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uARxHRp1m2Q2zhYuXebzMPPSSUFj25RlWmzpQkrZxIrRV4rf6nj0Hr+hOneVaJcXl
-	 qNBm78YtOuA8OcJwid13B88DofUbtTthn6TUMkcGoFKiQHv5p0b92/d4hG3nsvfnN4
-	 cdJ8Bltx29mMuQ9QiqC//RCr1xjrPBT7YPsAQCx8=
+	b=D2Nzr1WeV4RMVfGnlRRWGqLMq+18IuuFtBu0//pbYx5PViLCr6K4qrt6Fywx70zdl
+	 9JxG3T1D+tJJB9HKreHR9Iq0raAjDk5B+c93BYpA6KeyezjAfIGDuHhzFeRBVDMOqq
+	 5O6KG2H4IhSJYfLf6j3/L//s78YIi2qA4FMCVGHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391994AbfGXT5N (ORCPT
+        id S2404804AbfGXUMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:57:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404393AbfGXT5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:00 -0400
+        id S2404852AbfGXT5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:57:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E93BB205C9;
-        Wed, 24 Jul 2019 19:56:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB1A205C9;
+        Wed, 24 Jul 2019 19:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998219;
-        bh=8t5QVbCM8xFqk4NuKu5dd9sVDoCfed5xoDeOenDTj5I=;
+        s=default; t=1563998231;
+        bh=BaCUtOpBk5NR380AvK+1GHq4ZwFVoy4k4pxaJsg3mgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ueMjHy1gCEJwA4xJ4gJ/NCPt2bEfoUg2nyS75fVAPJBl2uoPtMsfUVyhycuPWTh4Y
-         WVr2nhqAHURSfgYuEw7FAP0JS+PNzIIh+PWtpdOc3rWIInYuZ6/RMORiZkw+2FrrP/
-         KSS64ZdkSzf8PnZLheznCmVjWhKSLg9ZIy1H6YIo=
+        b=DK3omRgxAegIt4vjejT3x0g65oGrAvfmZCQ5fLEdSbGACFVF9ukDNlENypAtVQF5A
+         HQwZvfnhpNq7hS1ql3XXCbwQAnTUpIeB1Dplpa3sHw4qBf3j5XVFGVeSTBRM3YpqJb
+         9ZPjlTTxNLGG7tuUaxPqKPn98TP11XyCZJthTbc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com,
-        syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 287/371] ALSA: seq: Break too long mutex context in the write loop
-Date:   Wed, 24 Jul 2019 21:20:39 +0200
-Message-Id: <20190724191745.902560876@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.1 255/371] CIFS: fix deadlock in cached root handling
+Date:   Wed, 24 Jul 2019 21:20:07 +0200
+Message-Id: <20190724191743.787523781@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,73 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Aurelien Aptel <aaptel@suse.com>
 
-commit ede34f397ddb063b145b9e7d79c6026f819ded13 upstream.
+commit 7e5a70ad88b1e6f6d9b934b2efb41afff496820f upstream.
 
-The fix for the racy writes and ioctls to sequencer widened the
-application of client->ioctl_mutex to the whole write loop.  Although
-it does unlock/relock for the lengthy operation like the event dup,
-the loop keeps the ioctl_mutex for the whole time in other
-situations.  This may take quite long time if the user-space would
-give a huge buffer, and this is a likely cause of some weird behavior
-spotted by syzcaller fuzzer.
+Prevent deadlock between open_shroot() and
+cifs_mark_open_files_invalid() by releasing the lock before entering
+SMB2_open, taking it again after and checking if we still need to use
+the result.
 
-This patch puts a simple workaround, just adding a mutex break in the
-loop when a large number of events have been processed.  This
-shouldn't hit any performance drop because the threshold is set high
-enough for usual operations.
-
-Fixes: 7bd800915677 ("ALSA: seq: More protection for concurrent write and ioctl races")
-Reported-by: syzbot+97aae04ce27e39cbfca9@syzkaller.appspotmail.com
-Reported-by: syzbot+4c595632b98bb8ffcc66@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/linux-cifs/684ed01c-cbca-2716-bc28-b0a59a0f8521@prodrive-technologies.com/T/#u
+Fixes: 3d4ef9a15343 ("smb3: fix redundant opens on root")
+Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_clientmgr.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ fs/cifs/smb2ops.c |   46 +++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1004,7 +1004,7 @@ static ssize_t snd_seq_write(struct file
- {
- 	struct snd_seq_client *client = file->private_data;
- 	int written = 0, len;
--	int err;
-+	int err, handled;
- 	struct snd_seq_event event;
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -705,8 +705,51 @@ int open_shroot(unsigned int xid, struct
  
- 	if (!(snd_seq_file_flags(file) & SNDRV_SEQ_LFLG_OUTPUT))
-@@ -1017,6 +1017,8 @@ static ssize_t snd_seq_write(struct file
- 	if (!client->accept_output || client->pool == NULL)
- 		return -ENXIO;
+ 	smb2_set_related(&rqst[1]);
  
-+ repeat:
-+	handled = 0;
- 	/* allocate the pool now if the pool is not allocated yet */ 
- 	mutex_lock(&client->ioctl_mutex);
- 	if (client->pool->size > 0 && !snd_seq_write_pool_allocated(client)) {
-@@ -1076,12 +1078,19 @@ static ssize_t snd_seq_write(struct file
- 						   0, 0, &client->ioctl_mutex);
- 		if (err < 0)
- 			break;
-+		handled++;
- 
- 	__skip_event:
- 		/* Update pointers and counts */
- 		count -= len;
- 		buf += len;
- 		written += len;
++	/*
++	 * We do not hold the lock for the open because in case
++	 * SMB2_open needs to reconnect, it will end up calling
++	 * cifs_mark_open_files_invalid() which takes the lock again
++	 * thus causing a deadlock
++	 */
 +
-+		/* let's have a coffee break if too many events are queued */
-+		if (++handled >= 200) {
-+			mutex_unlock(&client->ioctl_mutex);
-+			goto repeat;
++	mutex_unlock(&tcon->crfid.fid_mutex);
+ 	rc = compound_send_recv(xid, ses, flags, 2, rqst,
+ 				resp_buftype, rsp_iov);
++	mutex_lock(&tcon->crfid.fid_mutex);
++
++	/*
++	 * Now we need to check again as the cached root might have
++	 * been successfully re-opened from a concurrent process
++	 */
++
++	if (tcon->crfid.is_valid) {
++		/* work was already done */
++
++		/* stash fids for close() later */
++		struct cifs_fid fid = {
++			.persistent_fid = pfid->persistent_fid,
++			.volatile_fid = pfid->volatile_fid,
++		};
++
++		/*
++		 * caller expects this func to set pfid to a valid
++		 * cached root, so we copy the existing one and get a
++		 * reference.
++		 */
++		memcpy(pfid, tcon->crfid.fid, sizeof(*pfid));
++		kref_get(&tcon->crfid.refcount);
++
++		mutex_unlock(&tcon->crfid.fid_mutex);
++
++		if (rc == 0) {
++			/* close extra handle outside of crit sec */
++			SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
 +		}
- 	}
++		goto oshr_free;
++	}
++
++	/* Cached root is still invalid, continue normaly */
++
+ 	if (rc)
+ 		goto oshr_exit;
  
-  out:
+@@ -740,8 +783,9 @@ int open_shroot(unsigned int xid, struct
+ 				(char *)&tcon->crfid.file_all_info))
+ 		tcon->crfid.file_all_info_is_valid = 1;
+ 
+- oshr_exit:
++oshr_exit:
+ 	mutex_unlock(&tcon->crfid.fid_mutex);
++oshr_free:
+ 	SMB2_open_free(&rqst[0]);
+ 	SMB2_query_info_free(&rqst[1]);
+ 	free_rsp_buf(resp_buftype[0], rsp_iov[0].iov_base);
 
 
