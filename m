@@ -2,122 +2,96 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B37BC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC7FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3B32173B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yo26VlqE"
+	by mail.kernel.org (Postfix) with ESMTP id 4E4C521951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563993327;
+	bh=ivb462RCAqYcM+CEIUHWvMX1gixFhHbVEh8bvKnsZwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dcappnq4lstFUvP3xK0vpRCcBEWoqotK/QlmcTv+k+mMj21/CxvpjUURkClHxrX3f
+	 gXN2UlL2rCccxnt+uQALccxj5w9ZANb05Z2FrS9hTd7bSyqHIlaL9Onl6c0fBq9pOw
+	 koqN3ybMi+5jyi3yaVtj3m1nwhRgq9UDKVhrD50Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfGXSdz (ORCPT
+        id S1728495AbfGXSf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:33:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43085 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727756AbfGXSdz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:33:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p13so48003586wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=TO0xjqiTQO/p7K9jnlDraXQQotZEfPR7wy4JzLU7jqY=;
-        b=Yo26VlqENppPcL21btDGMJSfZXIPsg4ehEMup6rkX/CRFX8w3sb3v231Yu8ecIR3rg
-         8w+NRrE0YQMLWfhQ52BPzCIjw2Z9WEwVKWRNd4b5fZf+8AenTE6PhmmsZyz+6iDXIyQ5
-         d17VrFe8j2krN6DKIfXWvzESrye8Kc3uYQYJ/mXPtAm6RVwq0BTvaTyJB7BoxpKoF6RR
-         JsgoBSxHnDyrzNEw5qrlvlGtcDxB9tcheyAU6gMSIl+d7uYKM5lFVdhiB06YibCGBGkI
-         bVkMszlYH0io5yoVdB7y7mIHwEsL9OYNL+ehosyRTGPC+2VBOgH2GO8QWjAcCEZiorWq
-         KN7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=TO0xjqiTQO/p7K9jnlDraXQQotZEfPR7wy4JzLU7jqY=;
-        b=CWOSNZ9lRFXLqeFYV3y8J//iV/XmlKowEwr/boqq7Cp0UcONxO6ae0WblOgvkWZSNw
-         a4B8MT487VcQwPpZXt+yEA++G0cn9kp1tyAX1TcS6yKiZoszgbAeo1W2tKOqWViOEOw0
-         HKLvE72mqEAGf4Ar05OEZjM+YurcGpjC2FG/pPrRaES9Y4FgwVZ5VOSXhOaGBFMRqens
-         xYnRcYbudrUz3/SRsExyrY9PXOxPxb1OBoC7UAr57PgYlCCPNV18NgY1Gj+GZ/OLRP7T
-         avMrvtEGC8+znyct9Tk5hSTv8F0jNlYmolNzaQUkNOhc+fcpUTiU2DfFrhOja2WCBvmX
-         k2bA==
-X-Gm-Message-State: APjAAAVfRvhPoY9zN2pb21KDofthCkxegTIOzzr6eFCKnUNQVsjao4pc
-        YRjrXMAge0maEprrFbRzZLihkrU=
-X-Google-Smtp-Source: APXvYqznmWIF+Lt9jF0RO9uuoFfEFBqg32aKX1M6kw3bCBGtBaybT9Y7I9dS8tQP/wyko6h3xKa8Kg==
-X-Received: by 2002:adf:ed4a:: with SMTP id u10mr1004330wro.284.1563993233213;
-        Wed, 24 Jul 2019 11:33:53 -0700 (PDT)
-Received: from avx2 ([46.53.248.54])
-        by smtp.gmail.com with ESMTPSA id e19sm63167455wra.71.2019.07.24.11.33.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 11:33:52 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 21:33:50 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] cpumask: nicer for_each_cpumask_and() signature
-Message-ID: <20190724183350.GA15041@avx2>
+        Wed, 24 Jul 2019 14:35:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727756AbfGXSfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:35:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BFC52173B;
+        Wed, 24 Jul 2019 18:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563993324;
+        bh=ivb462RCAqYcM+CEIUHWvMX1gixFhHbVEh8bvKnsZwU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vIJlFl/rmULIZQ5m5/dSx1f/4odnY2xiY17sxmMLAHbTLAg2CGU+fMtaFFEyrOt32
+         UXy/p7nETqJzvO43jL3MLOqhKsf5ytuU9JIwHFLuKXRr4hoNEqA0YbLqbjGbYXc+vL
+         c4ETvXEVDDkfJhV7iLt5wmejWcKdtkZiWHNOt3ko=
+Date:   Wed, 24 Jul 2019 20:35:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/12] staging: media: cedrus: Fix misuse of GENMASK macro
+Message-ID: <20190724183522.GA30299@kroah.com>
+References: <cover.1562734889.git.joe@perches.com>
+ <cd543a5f26b031a0bbd3baa55e1f15813f59f107.1562734889.git.joe@perches.com>
+ <be536d37a3b58557cdacd33943915d397bcb5037.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <be536d37a3b58557cdacd33943915d397bcb5037.camel@perches.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mask arguments can be swapped without changing anything.
-Make arguments names reflect that:
+On Wed, Jul 24, 2019 at 10:09:44AM -0700, Joe Perches wrote:
+> On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
+> > Arguments are supposed to be ordered high then low.
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >  drivers/staging/media/sunxi/cedrus/cedrus_regs.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > index 3e9931416e45..ddd29788d685 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > @@ -110,7 +110,7 @@
+> >  #define VE_DEC_MPEG_MBADDR			(VE_ENGINE_DEC_MPEG + 0x10)
+> >  
+> >  #define VE_DEC_MPEG_MBADDR_X(w)			(((w) << 8) & GENMASK(15, 8))
+> > -#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(0, 7))
+> > +#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(7, 0))
+> >  
+> >  #define VE_DEC_MPEG_CTRL			(VE_ENGINE_DEC_MPEG + 0x14)
+> 
+> Greg?  ping?
+>  
+> 
 
-	#define for_each_cpu_and(cpu, mask1, mask2)
+I am not the maintainer of drivers/staging/media, that is Mauro.
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+thanks,
 
- include/linux/cpumask.h |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -184,8 +184,8 @@ static inline unsigned int cpumask_local_spread(unsigned int i, int node)
- 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask)
- #define for_each_cpu_wrap(cpu, mask, start)	\
- 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask, (void)(start))
--#define for_each_cpu_and(cpu, mask, and)	\
--	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask, (void)and)
-+#define for_each_cpu_and(cpu, mask1, mask2)	\
-+	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
- #else
- /**
-  * cpumask_first - get the first cpu in a cpumask
-@@ -274,20 +274,20 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool
- /**
-  * for_each_cpu_and - iterate over every cpu in both masks
-  * @cpu: the (optionally unsigned) integer iterator
-- * @mask: the first cpumask pointer
-- * @and: the second cpumask pointer
-+ * @mask1: the first cpumask pointer
-+ * @mask2: the second cpumask pointer
-  *
-  * This saves a temporary CPU mask in many places.  It is equivalent to:
-  *	struct cpumask tmp;
-- *	cpumask_and(&tmp, &mask, &and);
-+ *	cpumask_and(&tmp, &mask1, &mask2);
-  *	for_each_cpu(cpu, &tmp)
-  *		...
-  *
-  * After the loop, cpu is >= nr_cpu_ids.
-  */
--#define for_each_cpu_and(cpu, mask, and)				\
-+#define for_each_cpu_and(cpu, mask1, mask2)				\
- 	for ((cpu) = -1;						\
--		(cpu) = cpumask_next_and((cpu), (mask), (and)),		\
-+		(cpu) = cpumask_next_and((cpu), (mask1), (mask2)),	\
- 		(cpu) < nr_cpu_ids;)
- #endif /* SMP */
- 
+greg k-h
