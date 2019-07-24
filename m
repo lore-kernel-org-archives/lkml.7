@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FA2C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A500C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7481722BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD95421880
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033634;
-	bh=cBK5525LSgCK1wddEnu+bn2FUdMGGqSQJR998Vsv22Q=;
+	s=default; t=1564033640;
+	bh=S0t3sC77Tgfik/F+fYwdHpd5/+/LozTQp1zITTY+whg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ulfm9Tug31oeEzh6iPGesNvgVBpZBtzqvC5tFsayQv/NSZ8122Pp6FUF7WxvrOwEw
-	 cI576bKHj30v1AjXIh2vnuTnAJmG7NAupi/hA5x3L6heI9PZDd37VPPhPHBQzSjzkt
-	 XPPl8f5sRsgnAUfV+bNs/1jaLfuIDYIDCJB/zQWs=
+	b=pJDkcOHpu5zvYTJ0VzrDzNxGljaTYL9nr4cNwNglBQLix8sT0NxXEycfkv7aeViue
+	 kMdQlsTLgKzh68iKuacB0gESfcapYMym4BZHr+F2w1CtT685uVQd5N0K+KGRmz3dAF
+	 Jo26a2R1+FMRD+fEBIwDsq802WZqKZmAkc6eS3sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405324AbfGYFrN (ORCPT
+        id S2391552AbfGYFrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbfGYFrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:47:10 -0400
+        id S2391525AbfGYFrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:47:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A246A20657;
-        Thu, 25 Jul 2019 05:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 026082075C;
+        Thu, 25 Jul 2019 05:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033630;
-        bh=cBK5525LSgCK1wddEnu+bn2FUdMGGqSQJR998Vsv22Q=;
+        s=default; t=1564033636;
+        bh=S0t3sC77Tgfik/F+fYwdHpd5/+/LozTQp1zITTY+whg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o6WkR9qdzVc9SYU1TghChnIvV8cQFaeb7cgiqFS1IcouIvC11fS9En4QNQMt1/yqM
-         /csfXgqogCp4p4ZFbrw1vm8OcfnYnNCtQss4ztjK5J1PsS5aSWqObCoKbo0/x4SSrS
-         XeAQ7UwPu9vplOhFsuuwrO6pWK9tDKe5N5U/Etd4=
+        b=wziZLSch4UEIhxiM5lRX9uMdnk1Kl1GOBWhYhB5Rhgz08U02E6/T0XCN9kNGtwQCw
+         s8d6QgEr1rrMXelqkWykJxN8VkQo3xN8vvRFvftl8qHA9UWP9kay4GbEDhyUVh1EJv
+         NhzWpAB/0/lYPkU/OqKw0lThU8g95YDnG+FgKbCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 258/271] powerpc/pseries: Fix oops in hotplug memory notifier
-Date:   Wed, 24 Jul 2019 21:22:07 +0200
-Message-Id: <20190724191717.313860720@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Tyler Hicks <tyhicks@canonical.com>
+Subject: [PATCH 4.19 260/271] eCryptfs: fix a couple type promotion bugs
+Date:   Wed, 24 Jul 2019 21:22:09 +0200
+Message-Id: <20190724191717.478612234@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -59,39 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 0aa82c482ab2ece530a6f44897b63b274bb43c8e upstream.
+commit 0bdf8a8245fdea6f075a5fede833a5fcf1b3466c upstream.
 
-During post-migration device tree updates, we can oops in
-pseries_update_drconf_memory() if the source device tree has an
-ibm,dynamic-memory-v2 property and the destination has a
-ibm,dynamic_memory (v1) property. The notifier processes an "update"
-for the ibm,dynamic-memory property but it's really an add in this
-scenario. So make sure the old property object is there before
-dereferencing it.
+ECRYPTFS_SIZE_AND_MARKER_BYTES is type size_t, so if "rc" is negative
+that gets type promoted to a high positive value and treated as success.
 
-Fixes: 2b31e3aec1db ("powerpc/drmem: Add support for ibm, dynamic-memory-v2 property")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 778aeb42a708 ("eCryptfs: Cleanup and optimize ecryptfs_lookup_interpose()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+[tyhicks: Use "if/else if" rather than "if/if"]
+Cc: stable@vger.kernel.org
+Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/ecryptfs/crypto.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -1012,6 +1012,9 @@ static int pseries_update_drconf_memory(
- 	if (!memblock_size)
- 		return -EINVAL;
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -1018,8 +1018,10 @@ int ecryptfs_read_and_validate_header_re
  
-+	if (!pr->old_prop)
-+		return 0;
-+
- 	p = (__be32 *) pr->old_prop->value;
- 	if (!p)
- 		return -EINVAL;
+ 	rc = ecryptfs_read_lower(file_size, 0, ECRYPTFS_SIZE_AND_MARKER_BYTES,
+ 				 inode);
+-	if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
+-		return rc >= 0 ? -EINVAL : rc;
++	if (rc < 0)
++		return rc;
++	else if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
++		return -EINVAL;
+ 	rc = ecryptfs_validate_marker(marker);
+ 	if (!rc)
+ 		ecryptfs_i_size_init(file_size, inode);
+@@ -1381,8 +1383,10 @@ int ecryptfs_read_and_validate_xattr_reg
+ 				     ecryptfs_inode_to_lower(inode),
+ 				     ECRYPTFS_XATTR_NAME, file_size,
+ 				     ECRYPTFS_SIZE_AND_MARKER_BYTES);
+-	if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
+-		return rc >= 0 ? -EINVAL : rc;
++	if (rc < 0)
++		return rc;
++	else if (rc < ECRYPTFS_SIZE_AND_MARKER_BYTES)
++		return -EINVAL;
+ 	rc = ecryptfs_validate_marker(marker);
+ 	if (!rc)
+ 		ecryptfs_i_size_init(file_size, inode);
 
 
