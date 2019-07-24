@@ -2,101 +2,166 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DEAC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C772EC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12772217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eddzfZNZ"
+	by mail.kernel.org (Postfix) with ESMTP id A2C8C21951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfGXPWV (ORCPT
+        id S1728218AbfGXPXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:22:21 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50158 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXPWU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:22:20 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6OFMD9Z064348;
-        Wed, 24 Jul 2019 10:22:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563981733;
-        bh=A6A0bXG2C/Uz5DrM46M0ff+/GH1i3euz7a1rC7d3MCQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eddzfZNZBkv+Tu+z5M30SOSEkjDHFKO4d9jxmIffAurnG/EUEWqou4X8AU2ME1nHu
-         dpI+QL0LfT+N8D8mW9+oH1Ln/w+ms5aitgjyNEzF604CPLXMiTENMkpiOCgcjncV3E
-         oNcoNH2pi9HQC01bvjQnCol/EDvUPp+eHtQL+sAY=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6OFMDfx088896
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jul 2019 10:22:13 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Jul 2019 10:22:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Jul 2019 10:22:13 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6OFMCMW029577;
-        Wed, 24 Jul 2019 10:22:12 -0500
-Subject: Re: Backlight in motorola Droid 4
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <linux-omap@vger.kernel.org>, <tony@atomide.com>, <sre@kernel.org>,
-        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
-        <jacek.anaszewski@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20190722205921.GA24787@amd> <b8fbc94f-c087-2c9d-4532-ea423f1626e6@ti.com>
- <20190724124530.GA30211@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ca69f627-96e2-f982-3a29-18b0127ac6e5@ti.com>
-Date:   Wed, 24 Jul 2019 10:22:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 24 Jul 2019 11:23:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53138 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfGXPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:23:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2EF19B02A;
+        Wed, 24 Jul 2019 15:23:30 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 08:23:23 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     john.stultz@linaro.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH] lib/timerqueue: Rely on rbtree semantics for next timer
+Message-ID: <20190724152323.bojciei3muvfxalm@linux-r8p5>
+References: <20190618204405.27956-1-dave@stgolabs.net>
+ <20190723054808.2nwg5pu3z36uxmq6@linux-r8p5>
+ <alpine.DEB.2.21.1907230844310.1659@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190724124530.GA30211@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1907230844310.1659@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+Simplify the timerqueue code by using cached rbtrees and rely on the tree
+leftmost node semantics to get the timer with earliest expiration time.
+This is a drop in conversion, and therefore semantics remain untouched.
 
-On 7/24/19 7:45 AM, Pavel Machek wrote:
-<snip>
->
-> +
->   static int lm3532_parse_node(struct lm3532_data *priv)
->   {
->   	struct fwnode_handle *child = NULL;
-> @@ -536,11 +579,13 @@ static int lm3532_parse_node(struct lm3532_data *priv)
->   		ret = fwnode_property_read_u32(child, "ti,led-mode",
->   					       &led->mode);
->   		if (ret) {
-> +		  /* FIXME: should just default to non-als mod */
+The runtime overhead of cached rbtrees is be pretty much the same as the
+current head->next method, noting that when removing the leftmost node,
+a common operation for the timerqueue, the rb_next(leftmost) is O(1) as
+well, so the next timer will either be the right node or its parent.
+Therefore no extra pointer chasing. Finally, the size of the struct
+timerqueue_head remains the same.
 
-Looking at the rest of the code.
+Passes several hours of rcutorture.
 
-The DT doc indicated that this was a required child property so this is 
-why it
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+---
+ include/linux/timerqueue.h | 13 ++++++-------
+ lib/timerqueue.c           | 28 +++++++++++-----------------
+ 2 files changed, 17 insertions(+), 24 deletions(-)
 
-errors out.
-
-Dan
-
-<snip>
-
+diff --git a/include/linux/timerqueue.h b/include/linux/timerqueue.h
+index 78b8cc73f12f..aff122f1062a 100644
+--- a/include/linux/timerqueue.h
++++ b/include/linux/timerqueue.h
+@@ -12,8 +12,7 @@ struct timerqueue_node {
+ };
+ 
+ struct timerqueue_head {
+-	struct rb_root head;
+-	struct timerqueue_node *next;
++	struct rb_root_cached rb_root;
+ };
+ 
+ 
+@@ -29,13 +28,14 @@ extern struct timerqueue_node *timerqueue_iterate_next(
+  *
+  * @head: head of timerqueue
+  *
+- * Returns a pointer to the timer node that has the
+- * earliest expiration time.
++ * Returns a pointer to the timer node that has the earliest expiration time.
+  */
+ static inline
+ struct timerqueue_node *timerqueue_getnext(struct timerqueue_head *head)
+ {
+-	return head->next;
++	struct rb_node *leftmost = rb_first_cached(&head->rb_root);
++
++	return rb_entry(leftmost, struct timerqueue_node, node);
+ }
+ 
+ static inline void timerqueue_init(struct timerqueue_node *node)
+@@ -45,7 +45,6 @@ static inline void timerqueue_init(struct timerqueue_node *node)
+ 
+ static inline void timerqueue_init_head(struct timerqueue_head *head)
+ {
+-	head->head = RB_ROOT;
+-	head->next = NULL;
++	head->rb_root = RB_ROOT_CACHED;
+ }
+ #endif /* _LINUX_TIMERQUEUE_H */
+diff --git a/lib/timerqueue.c b/lib/timerqueue.c
+index bc7e64df27df..892d2bdc27f0 100644
+--- a/lib/timerqueue.c
++++ b/lib/timerqueue.c
+@@ -26,9 +26,10 @@
+  */
+ bool timerqueue_add(struct timerqueue_head *head, struct timerqueue_node *node)
+ {
+-	struct rb_node **p = &head->head.rb_node;
++	struct rb_node **p = &head->rb_root.rb_root.rb_node;
+ 	struct rb_node *parent = NULL;
+-	struct timerqueue_node  *ptr;
++	struct timerqueue_node *ptr;
++	bool leftmost = true;
+ 
+ 	/* Make sure we don't add nodes that are already added */
+ 	WARN_ON_ONCE(!RB_EMPTY_NODE(&node->node));
+@@ -38,17 +39,15 @@ bool timerqueue_add(struct timerqueue_head *head, struct timerqueue_node *node)
+ 		ptr = rb_entry(parent, struct timerqueue_node, node);
+ 		if (node->expires < ptr->expires)
+ 			p = &(*p)->rb_left;
+-		else
++		else {
+ 			p = &(*p)->rb_right;
++			leftmost = false;
++		}
+ 	}
+ 	rb_link_node(&node->node, parent, p);
+-	rb_insert_color(&node->node, &head->head);
++	rb_insert_color_cached(&node->node, &head->rb_root, leftmost);
+ 
+-	if (!head->next || node->expires < head->next->expires) {
+-		head->next = node;
+-		return true;
+-	}
+-	return false;
++	return leftmost;
+ }
+ EXPORT_SYMBOL_GPL(timerqueue_add);
+ 
+@@ -65,15 +64,10 @@ bool timerqueue_del(struct timerqueue_head *head, struct timerqueue_node *node)
+ {
+ 	WARN_ON_ONCE(RB_EMPTY_NODE(&node->node));
+ 
+-	/* update next pointer */
+-	if (head->next == node) {
+-		struct rb_node *rbn = rb_next(&node->node);
+-
+-		head->next = rb_entry_safe(rbn, struct timerqueue_node, node);
+-	}
+-	rb_erase(&node->node, &head->head);
++	rb_erase_cached(&node->node, &head->rb_root);
+ 	RB_CLEAR_NODE(&node->node);
+-	return head->next != NULL;
++
++	return !RB_EMPTY_ROOT(&head->rb_root.rb_root);
+ }
+ EXPORT_SYMBOL_GPL(timerqueue_del);
+ 
+-- 
+2.16.4
 
