@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92BCC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8021EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05D9214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541EA22ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997566;
-	bh=EbW4p5thQ4BtvWYbGbLsCmj3+vKyq2vk2u9gGj1OPsU=;
+	s=default; t=1563997570;
+	bh=MK2R2rPOeCr9nONFoatxszOMXFDiMjCww6jnLMbXkVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OzCQ0Gj2l5eLDNfmMFpy0RBxbQ2bD+j3aM0k3aQ5qm2AL+FotJklbDC3thbnzvDHq
-	 O6BffusX4fs3rHR1hLglnd4UOsEjC68yEVXZi0zQhI9GaPSUhiZJbZgoB5KcsL9w+u
-	 VHFF+ob11pHM16/h5udqSp0sdNhu9efgHD108ZtQ=
+	b=0HQ+icEccbD1jF/8SWY2vMRtoFXQpPszGpKHxoruqeZa5IHlJuWINuBXICnjIThWB
+	 AhA/nA/YSIlEBkIY5sEvvwIrPGb+S520IUKu8QX8HQgk0OGN3Scg/yPBMSyLYeJdYZ
+	 kZsIitA6Yv1fgxTjZgllBr+8G53i7TznPkm9LtXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390674AbfGXTqF (ORCPT
+        id S1726691AbfGXTqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390653AbfGXTqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:02 -0400
+        id S2390672AbfGXTqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304EE214AF;
-        Wed, 24 Jul 2019 19:46:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAE5C2083B;
+        Wed, 24 Jul 2019 19:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997561;
-        bh=EbW4p5thQ4BtvWYbGbLsCmj3+vKyq2vk2u9gGj1OPsU=;
+        s=default; t=1563997564;
+        bh=MK2R2rPOeCr9nONFoatxszOMXFDiMjCww6jnLMbXkVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtNc1ogx52CwTKkua7LyNsqXDF5mPZcQVpmUibI4yX4iWxehlWGMSkyhd27VzwZdf
-         lrhykTuNgrNGEA3tdjo8Fciz4aP3RVnutGi4FVMPAwQodP3vRwmk6prPO7wvnhgwP7
-         fkrEywc8B8UYfr29EYZH9QZnE8xyQKN5FDOkggos=
+        b=lOK/IQID4Hiw1QEPuZm1dJaCe6QGI2ufH9mER+xXLFp1+E55tMXA4CC//GzxdZg8H
+         8TNbKz0mHPm0DXXhcQ3stJ1NaC4/yj1vBYdkQNam8aLX/zmye0ehscwIV1AxfymqaF
+         gt2sNEfzGo1V6t560+YsS5e+MqvLUBsc+WoCse8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 064/371] net: stmmac: dwmac4: fix flow control issue
-Date:   Wed, 24 Jul 2019 21:16:56 +0200
-Message-Id: <20190724191729.705153347@linuxfoundation.org>
+Subject: [PATCH 5.1 065/371] net: stmmac: modify default value of tx-frames
+Date:   Wed, 24 Jul 2019 21:16:57 +0200
+Message-Id: <20190724191729.787667008@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,55 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ee326fd01e79dfa42014d55931260b68b9fa3273 ]
+[ Upstream commit d2facb4b3983425f6776c24dd678a82dbe673773 ]
 
-Current dwmac4_flow_ctrl will not clear
-GMAC_RX_FLOW_CTRL_RFE/GMAC_RX_FLOW_CTRL_RFE bits,
-so MAC hw will keep flow control on although expecting
-flow control off by ethtool. Add codes to fix it.
+the default value of tx-frames is 25, it's too late when
+passing tstamp to stack, then the ptp4l will fail:
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+ptp4l -i eth0 -f gPTP.cfg -m
+ptp4l: selected /dev/ptp0 as PTP clock
+ptp4l: port 1: INITIALIZING to LISTENING on INITIALIZE
+ptp4l: port 0: INITIALIZING to LISTENING on INITIALIZE
+ptp4l: port 1: link up
+ptp4l: timed out while polling for tx timestamp
+ptp4l: increasing tx_timestamp_timeout may correct this issue,
+       but it is likely caused by a driver bug
+ptp4l: port 1: send peer delay response failed
+ptp4l: port 1: LISTENING to FAULTY on FAULT_DETECTED (FT_UNSPECIFIED)
+
+ptp4l tests pass when changing the tx-frames from 25 to 1 with
+ethtool -C option.
+It should be fine to set tx-frames default value to 1, so ptp4l will pass
+by default.
+
 Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index a2f3db39221e..d0e6e1503581 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -475,8 +475,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
- 	if (fc & FLOW_RX) {
- 		pr_debug("\tReceive Flow-Control ON\n");
- 		flow |= GMAC_RX_FLOW_CTRL_RFE;
--		writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
- 	}
-+	writel(flow, ioaddr + GMAC_RX_FLOW_CTRL);
-+
- 	if (fc & FLOW_TX) {
- 		pr_debug("\tTransmit Flow-Control ON\n");
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 272b9ca66314..b069b3a2453b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -261,7 +261,7 @@ struct stmmac_safety_stats {
+ #define STMMAC_COAL_TX_TIMER	1000
+ #define STMMAC_MAX_COAL_TX_TICK	100000
+ #define STMMAC_TX_MAX_FRAMES	256
+-#define STMMAC_TX_FRAMES	25
++#define STMMAC_TX_FRAMES	1
  
-@@ -484,7 +485,7 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
- 			pr_debug("\tduplex mode: PAUSE %d\n", pause_time);
- 
- 		for (queue = 0; queue < tx_cnt; queue++) {
--			flow |= GMAC_TX_FLOW_CTRL_TFE;
-+			flow = GMAC_TX_FLOW_CTRL_TFE;
- 
- 			if (duplex)
- 				flow |=
-@@ -492,6 +493,9 @@ static void dwmac4_flow_ctrl(struct mac_device_info *hw, unsigned int duplex,
- 
- 			writel(flow, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
- 		}
-+	} else {
-+		for (queue = 0; queue < tx_cnt; queue++)
-+			writel(0, ioaddr + GMAC_QX_TX_FLOW_CTRL(queue));
- 	}
- }
- 
+ /* Packets types */
+ enum packets_types {
 -- 
 2.20.1
 
