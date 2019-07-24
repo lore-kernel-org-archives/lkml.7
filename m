@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A0C41517
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D417C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D37D2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC072081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999878;
-	bh=sJxehLS+fkKkpj9Yb9H6zpCA9UHzzXe2pzM8y9oENow=;
+	s=default; t=1563999882;
+	bh=nVQ1M0dbv2cOYIrNGrKn3lrQsBhUZGa8T2INGbV6e4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1KBicPgjT+eDpoe5RHVf9TVR4diW1BCrswqzGQlzKI/SvYd6n9rWQZ6JFsS6ceAmM
-	 54A3dE/xm6krdBpOfRQd2T0FLygLtM1cIT3eEm7QdUArmLFhDqplscQ0HMCg56Anhg
-	 krN43sHfNYf2Tl02zWdYL4aJGawRywkt9NXWzf50=
+	b=NLkUXnU0orKBx4ryUr2lKrdM05814FnOf73i8M8DPbfZcDzJcB7Sk/cQkGoHlRndm
+	 9+Exu3ptluCnWkojAsRYfftWxT4uznKFJbaEiPw6nhygJ+DVF1UJATKuTv1BnZM+3u
+	 GBL2ap5Ndyzs88qOsd4ucz4URF1qqJkWdAsCAFO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389482AbfGXTkt (ORCPT
+        id S2390058AbfGXTkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:40:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42000 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390076AbfGXTkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:40:45 -0400
+        id S2390039AbfGXTkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:40:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F422F217D4;
-        Wed, 24 Jul 2019 19:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F246C20665;
+        Wed, 24 Jul 2019 19:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997245;
-        bh=sJxehLS+fkKkpj9Yb9H6zpCA9UHzzXe2pzM8y9oENow=;
+        s=default; t=1563997235;
+        bh=nVQ1M0dbv2cOYIrNGrKn3lrQsBhUZGa8T2INGbV6e4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z7FViWDNiyqZD93lQxV1BL8F5oNanHMLgZEL0I/uIbFu5ucfAH1jGGM4THM10Ytqc
-         /bcWKh3TfSBL8fMyd0+1Ks9WO7+FBai0ONnjoGzPWJiKjThAnoGm5qfY8I946P0CYZ
-         MVw2ccUZKfivEam0wXjLw0fw2x0vwWSn9mliBKJE=
+        b=DNXxMZmijC15wszZ07g3clv7RkIE8j0cpRLVeBvTeCrDzhYiFjpqs8lacNmk05OcN
+         GnXfcnnZzs2CJBFAokSG+l2cHcA61sjULG/TyseK+MSEjE+0xsDEKf7LsMwIbQ6Nm9
+         ILS99oztSDI/VJozXT4+EXQVuj2JziLjLuwlxZOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.2 370/413] Btrfs: add missing inode version, ctime and mtime updates when punching hole
-Date:   Wed, 24 Jul 2019 21:21:01 +0200
-Message-Id: <20190724191801.788096540@linuxfoundation.org>
+Subject: [PATCH 5.2 368/413] Btrfs: fix data loss after inode eviction, renaming it, and fsync it
+Date:   Wed, 24 Jul 2019 21:20:59 +0200
+Message-Id: <20190724191801.694153432@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,40 +61,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filipe Manana <fdmanana@suse.com>
 
-commit 179006688a7e888cbff39577189f2e034786d06a upstream.
+commit d1d832a0b51dd9570429bb4b81b2a6c1759e681a upstream.
 
-If the range for which we are punching a hole covers only part of a page,
-we end up updating the inode item but we skip the update of the inode's
-iversion, mtime and ctime. Fix that by ensuring we update those properties
-of the inode.
+When we log an inode, regardless of logging it completely or only that it
+exists, we always update it as logged (logged_trans and last_log_commit
+fields of the inode are updated). This is generally fine and avoids future
+attempts to log it from having to do repeated work that brings no value.
 
-A patch for fstests test case generic/059 that tests this as been sent
-along with this fix.
+However, if we write data to a file, then evict its inode after all the
+dealloc was flushed (and ordered extents completed), rename the file and
+fsync it, we end up not logging the new extents, since the rename may
+result in logging that the inode exists in case the parent directory was
+logged before. The following reproducer shows and explains how this can
+happen:
 
-Fixes: 2aaa66558172b0 ("Btrfs: add hole punching")
-Fixes: e8c1c76e804b18 ("Btrfs: add missing inode update when punching hole")
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  $ mkdir /mnt/dir
+  $ touch /mnt/dir/foo
+  $ touch /mnt/dir/bar
+
+  # Do a direct IO write instead of a buffered write because with a
+  # buffered write we would need to make sure dealloc gets flushed and
+  # complete before we do the inode eviction later, and we can not do that
+  # from user space with call to things such as sync(2) since that results
+  # in a transaction commit as well.
+  $ xfs_io -d -c "pwrite -S 0xd3 0 4K" /mnt/dir/bar
+
+  # Keep the directory dir in use while we evict inodes. We want our file
+  # bar's inode to be evicted but we don't want our directory's inode to
+  # be evicted (if it were evicted too, we would not be able to reproduce
+  # the issue since the first fsync below, of file foo, would result in a
+  # transaction commit.
+  $ ( cd /mnt/dir; while true; do :; done ) &
+  $ pid=$!
+
+  # Wait a bit to give time for the background process to chdir.
+  $ sleep 0.1
+
+  # Evict all inodes, except the inode for the directory dir because it is
+  # currently in use by our background process.
+  $ echo 2 > /proc/sys/vm/drop_caches
+
+  # fsync file foo, which ends up persisting information about the parent
+  # directory because it is a new inode.
+  $ xfs_io -c fsync /mnt/dir/foo
+
+  # Rename bar, this results in logging that this inode exists (inode item,
+  # names, xattrs) because the parent directory is in the log.
+  $ mv /mnt/dir/bar /mnt/dir/baz
+
+  # Now fsync baz, which ends up doing absolutely nothing because of the
+  # rename operation which logged that the inode exists only.
+  $ xfs_io -c fsync /mnt/dir/baz
+
+  <power failure>
+
+  $ mount /dev/sdb /mnt
+  $ od -t x1 -A d /mnt/dir/baz
+  0000000
+
+    --> Empty file, data we wrote is missing.
+
+Fix this by not updating last_sub_trans of an inode when we are logging
+only that it exists and the inode was not yet logged since it was loaded
+from disk (full_sync bit set), this is enough to make btrfs_inode_in_log()
+return false for this scenario and make us log the inode. The logged_trans
+of the inode is still always setsince that alone is used to track if names
+need to be deleted as part of unlink operations.
+
+Fixes: 257c62e1bce03e ("Btrfs: avoid tree log commit when there are no changes")
 CC: stable@vger.kernel.org # 4.4+
 Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/file.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/tree-log.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2721,6 +2721,11 @@ out_only_mutex:
- 		 * for detecting, at fsync time, if the inode isn't yet in the
- 		 * log tree or it's there but not up to date.
- 		 */
-+		struct timespec64 now = current_time(inode);
-+
-+		inode_inc_iversion(inode);
-+		inode->i_mtime = now;
-+		inode->i_ctime = now;
- 		trans = btrfs_start_transaction(root, 1);
- 		if (IS_ERR(trans)) {
- 			err = PTR_ERR(trans);
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -5420,9 +5420,19 @@ log_extents:
+ 		}
+ 	}
+ 
++	/*
++	 * Don't update last_log_commit if we logged that an inode exists after
++	 * it was loaded to memory (full_sync bit set).
++	 * This is to prevent data loss when we do a write to the inode, then
++	 * the inode gets evicted after all delalloc was flushed, then we log
++	 * it exists (due to a rename for example) and then fsync it. This last
++	 * fsync would do nothing (not logging the extents previously written).
++	 */
+ 	spin_lock(&inode->lock);
+ 	inode->logged_trans = trans->transid;
+-	inode->last_log_commit = inode->last_sub_trans;
++	if (inode_only != LOG_INODE_EXISTS ||
++	    !test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags))
++		inode->last_log_commit = inode->last_sub_trans;
+ 	spin_unlock(&inode->lock);
+ out_unlock:
+ 	mutex_unlock(&inode->log_mutex);
 
 
