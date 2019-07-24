@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B38C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F74C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8569C2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D952166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999825;
-	bh=ikudbIaHF+TQIA27wylt1DWHxq8QWyo2t/AkcsVrBNg=;
+	s=default; t=1563999832;
+	bh=QiKC/VivQIoxmg3yBRcIcOlipW1TBEmJWn+GEtmyBV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pfONEah+oLsz2VeEplqDcHAGMUNBJ3hNRodJe6K5OA7DR1VO2TXYTDEA3kiLGGx5d
-	 EM8O/FswBN2njprwjNUs12QR+S4/T5uzXKrkN0EipcbS3Pm2f9KwUGyTJ9k4FfV79o
-	 bbRuYJs4OsOZpmZ0hgys7q+zuFx1kI6R6RGuWy7g=
+	b=XYeguKwi3d4NTt8cBwrgahHmPdoM6gkCNhiNW86ZBOO4v30QgDpbtfofXSz/Nj46N
+	 M5jkVJ99iT/KxUDOid/4eaVu0pBbPi4TDjEq50K+N1vVG69v7tCK9L+Vim8Jc0EH7Q
+	 Gs56XtqjbAGOm3mOlDzK6/znOBzxIpCyToiiJMvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390980AbfGXUXo (ORCPT
+        id S2390003AbfGXTmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:23:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387897AbfGXTmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:42:31 -0400
+        id S2389972AbfGXTmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:42:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31FEB22ADA;
-        Wed, 24 Jul 2019 19:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E1E922ADA;
+        Wed, 24 Jul 2019 19:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997350;
-        bh=ikudbIaHF+TQIA27wylt1DWHxq8QWyo2t/AkcsVrBNg=;
+        s=default; t=1563997329;
+        bh=QiKC/VivQIoxmg3yBRcIcOlipW1TBEmJWn+GEtmyBV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PhIrYAVlS4FckuEqxmc0B6Gp1R6WOqOpNRoe6ixbeMGHX7BKpTFKsEVP6vs8/ERjl
-         2xhKMm/sowi3qXob8nN5orbHde9tjPzDWcmeH6kwme1/Ds4UtQsFqXTGzAMuBtLV55
-         5x3ClijA+UWZ47QwcRCgOB43y39mnmiZaugB0Ywk=
+        b=2AXGLQNyopUMLcu29kDY59dq8DMMN3few12QNkpJwj/sxFshbLCsAklL+RJtEqcC4
+         eHz2BLlNFdZIFUglKwU6EOxs1FakbyM3edMDyhM57L9U/GPbf+Cg2jJn+6e5Y58ClD
+         GXIGXCbpGYQoQDYcSGnYoIMBOxlUfWYomIOodIaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Josef Bacik <jbacik@fb.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 406/413] blk-iolatency: clear use_delay when io.latency is set to zero
-Date:   Wed, 24 Jul 2019 21:21:37 +0200
-Message-Id: <20190724191803.688554541@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ammy Yi <ammy.yi@intel.com>
+Subject: [PATCH 5.2 400/413] intel_th: msu: Fix single mode with disabled IOMMU
+Date:   Wed, 24 Jul 2019 21:21:31 +0200
+Message-Id: <20190724191803.455107597@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,39 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 5de0073fcd50cc1f150895a7bb04d3cf8067b1d7 upstream.
+commit 918b8646497b5dba6ae82d4a7325f01b258972b9 upstream.
 
-If use_delay was non-zero when the latency target of a cgroup was set
-to zero, it will stay stuck until io.latency is enabled on the cgroup
-again.  This keeps readahead disabled for the cgroup impacting
-performance negatively.
+Commit 4e0eaf239fb3 ("intel_th: msu: Fix single mode with IOMMU") switched
+the single mode code to use dma mapping pages obtained from the page
+allocator, but with IOMMU disabled, that may lead to using SWIOTLB bounce
+buffers and without additional sync'ing, produces empty trace buffers.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <jbacik@fb.com>
-Fixes: d70675121546 ("block: introduce blk-iolatency io controller")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix this by using a DMA32 GFP flag to the page allocation in single mode,
+as the device supports full 32-bit DMA addressing.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 4e0eaf239fb3 ("intel_th: msu: Fix single mode with IOMMU")
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reported-by: Ammy Yi <ammy.yi@intel.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190621161930.60785-4-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-iolatency.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hwtracing/intel_th/msu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -759,8 +759,10 @@ static int iolatency_set_min_lat_nsec(st
+--- a/drivers/hwtracing/intel_th/msu.c
++++ b/drivers/hwtracing/intel_th/msu.c
+@@ -667,7 +667,7 @@ static int msc_buffer_contig_alloc(struc
+ 		goto err_out;
  
- 	if (!oldval && val)
- 		return 1;
--	if (oldval && !val)
-+	if (oldval && !val) {
-+		blkcg_clear_delay(blkg);
- 		return -1;
-+	}
- 	return 0;
- }
+ 	ret = -ENOMEM;
+-	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
++	page = alloc_pages(GFP_KERNEL | __GFP_ZERO | GFP_DMA32, order);
+ 	if (!page)
+ 		goto err_free_sgt;
  
 
 
