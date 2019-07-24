@@ -2,76 +2,106 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60933C76190
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE74C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBC42238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB352238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLv0cVd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfGXBkC (ORCPT
+        id S1728413AbfGXBkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:40:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:39648 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfGXBkB (ORCPT
+        Tue, 23 Jul 2019 21:40:16 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38896 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfGXBkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:40:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id y13so49255662iol.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 18:40:01 -0700 (PDT)
+        Tue, 23 Jul 2019 21:40:16 -0400
+Received: by mail-pl1-f194.google.com with SMTP id az7so21292340plb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 18:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=QhOFU/fISU1StcR5rsBvctRcjsODwkc42KNRg+/GgVY=;
+        b=ZLv0cVd01euJIkkYBcyojTVWvrTWSL+0wg72aMHxNHN9HfkAK6IDIJSF8+H6VfhRLN
+         7gV9go9KgkozhVY4z6hbrBZ0jNbZB3U5VBq0Ui0KB3uHuJnKOIBQM65X1wTvO7O6OHID
+         NuXSE7X5luRWT1nC+w8x1Jf3mosRDAiLG1K0uuU9M/WvL2PtEAr5TgG09tvCvXMSgulC
+         zmaqlub7Dl6p16UAIxDFaSbyA2PPis27+oQ5bEwU99A25TVAX9PqgVjT4mol7f11tsvS
+         d+Y01RfKkDLoFgxRApFikjuddYdkvvvb8h3KW/cJ87uNjkDGYZpBTM8251S+mnmxUrIK
+         93dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=w92/D4APly1S0dijjuo/84NrUKS2JIroIh/+k83Y0Yg=;
-        b=QJ79uSzKvXFQWTi+06Yhd8UkFwdTxrYGYk3nIwNEvmyAjSEhjMK5SDd3ooR/4NbHl+
-         HTalaEt8itfLb+2FbIDDkxJlAp8d5QgbLtP87koWkRW0S2onF8LndBVs7UuX9vSrvM10
-         F+2Kj1UboLAMWSjdjT+y8FiBKAh9O+O4yXyROjjrAJBlYAu7wKsmXWFUpWFYKjCwyCED
-         GIBb1vmMchRrVf3KGVzhVDTei1lpBxcCDLXWXPHAkh4xtOQM51IcggOeF+mMPDDmIASR
-         9Wc+NRY3BvdQQ6ruP8IlP9gSVX2bJEfBS7K0za6uOfEAGCxXoCsQJLuYadqlHZNt/5G8
-         RDIA==
-X-Gm-Message-State: APjAAAVnEUmFdWUZaMi3AJ4H6l0ieDxeDV/LnGbRZxoVhoLBKjm5JEf9
-        b173x/xE9XJ8gMc9PH/JbpuaNuhEPCpzJHm6bhFAQysAlM2N
-X-Google-Smtp-Source: APXvYqxZV7f2M7mWAmPB7Zk6w2/BTeh9n6/BKLJgP5HdF+ftj8Txa1VpP1wlpVLNOViX/+n9pFrEH7CBKE5ifAlRW9n+RxMquc0l
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=QhOFU/fISU1StcR5rsBvctRcjsODwkc42KNRg+/GgVY=;
+        b=RR+8BGGvP1ptB0/0njNXEmyxZ2YBYavex96cPMmSb15WoBkP+7EKqKvWoKyfeYyTZg
+         UcKyFIFFau97023KUiEYKRC98oZAZScDM2lPUZZjMB+TdApgiaiOuci7gBnc4YlcteLI
+         Mz7phlF17c5RoN7v9OOUSkJ0XwZ30wGacglLvIHdzzjV6krRwkPf1QSBiCUyhjx/OdEh
+         xULgfctHUdu8CgBJr1kXKaZUPjC1nQYCBl1CeZhYwepn0RaVXc6vPx5YHVcGM2nvJ6lt
+         gHNgIY8442qveRIkf2+JSykeDPwEIkyyrQmNIs/DbcK9NJcVdm4wjn+buLzFm0dLq1Lu
+         umLA==
+X-Gm-Message-State: APjAAAWUROcwlbaidTP2FBYE7PYmZNOzZgb61yqG17sw9zcpfGOodk70
+        3DZ4+EuLKpkuYWnQD/TbWtHQoR6X
+X-Google-Smtp-Source: APXvYqz+ZWSGTYqOSMnqGmgi8VpqVWhnfcZ+cp3rcSMfkYCjnap01qGpQzv14FIKiY0/97wm62IKqQ==
+X-Received: by 2002:a17:902:1e2:: with SMTP id b89mr85307851plb.7.1563932415149;
+        Tue, 23 Jul 2019 18:40:15 -0700 (PDT)
+Received: from localhost ([220.240.251.33])
+        by smtp.gmail.com with ESMTPSA id n98sm44777325pjc.26.2019.07.23.18.40.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 18:40:14 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 11:40:00 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH] kbuild: clean compressed initramfs image
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Thelen <gthelen@google.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190722063251.55541-1-gthelen@google.com>
+In-Reply-To: <20190722063251.55541-1-gthelen@google.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:691:: with SMTP id i17mr82704018jab.70.1563932401090;
- Tue, 23 Jul 2019 18:40:01 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 18:40:01 -0700
-In-Reply-To: <5d3744ff777cc_436d2adb6bf105c41c@john-XPS-13-9370.notmuch>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000384ae4058e636360@google.com>
-Subject: Re: kernel panic: stack is corrupted in pointer
-From:   syzbot <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, alexander.deucher@amd.com,
-        amd-gfx@lists.freedesktop.org, ast@kernel.org, bpf@vger.kernel.org,
-        christian.koenig@amd.com, daniel@iogearbox.net,
-        david1.zhou@amd.com, dri-devel@lists.freedesktop.org,
-        dvyukov@google.com, john.fastabend@gmail.com, leo.liu@amd.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1563932322.lqg59sj895.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Greg Thelen's on July 22, 2019 4:32 pm:
+> Since commit 9e3596b0c653 ("kbuild: initramfs cleanup, set target from
+> Kconfig") "make clean" leaves behind compressed initramfs images.
+> Example:
+>   $ make defconfig
+>   $ sed -i 's|CONFIG_INITRAMFS_SOURCE=3D""|CONFIG_INITRAMFS_SOURCE=3D"/tm=
+p/ir.cpio"|' .config
+>   $ make olddefconfig
+>   $ make -s
+>   $ make -s clean
+>   $ git clean -ndxf | grep initramfs
+>   Would remove usr/initramfs_data.cpio.gz
+>=20
+> clean rules do not have CONFIG_* context so they do not know which
+> compression format was used.  Thus they don't know which files to
+> delete.
+>=20
+> Tell clean to delete all possible compression formats.
+>=20
+> Once patched usr/initramfs_data.cpio.gz and friends are deleted by
+> "make clean".
+>=20
+> Fixes: 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig"=
+)
+> Signed-off-by: Greg Thelen <gthelen@google.com>
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+Thanks for that, looks good to me.
 
-Reported-and-tested-by:  
-syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         decb705e libbpf: fix using uninitialized ioctl results
-git tree:       bpf
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87305c3ca9c25c70
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Note: testing is done by a robot and is best-effort only.
+Thanks,
+Nick
+=
