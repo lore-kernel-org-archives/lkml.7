@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BC3C761A8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A60C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2A92080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACB722387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KG/F7Sd5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFNUQlsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfGXEZ1 (ORCPT
+        id S1726440AbfGXEZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:25:27 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46538 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfGXEZZ (ORCPT
+        Wed, 24 Jul 2019 00:25:33 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34213 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGXEZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:25:25 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k189so1468509pgk.13;
-        Tue, 23 Jul 2019 21:25:24 -0700 (PDT)
+        Wed, 24 Jul 2019 00:25:29 -0400
+Received: by mail-pl1-f195.google.com with SMTP id i2so21482631plt.1;
+        Tue, 23 Jul 2019 21:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qETbyvDGXmWMmkqN4sOdgKXeFkWOntX3r/NRFgCZoWE=;
-        b=KG/F7Sd5J79dEipElYhdvyhMIk0TxQlRtZu9bi85rUwY/TE5KUGgUZYMnF+3jcDsXr
-         jk+YAZfWVg6gnp2IiqLCse5lUUZrgh27wRKMfQRWXUdRnaO5ZlXDztHkfwCA1gRbK+Qa
-         Vdl/mcDwYDvc/aIthkQn3dHIfadxoz9OGVoTMkITstrb8gRinr4GRivAlsVYAzJkRXx3
-         qijzZ8AyOYgc5Vk4JND+9sG/qLIVyx5s39WeHO+RM9Ey6ODD5O8kuqfL85vwwK9Febym
-         eFolpJZ4Wkv3lsIz5mVKSWu4wewrN05ykT4POz6d2Mi/mkYtEQg5LGvW/0qsyHcM4WB5
-         F1og==
+        bh=CtboR7Ufy9O9fDFcRIuCIk1t8EIvDdcqQ3tCIzPpVTU=;
+        b=BFNUQlsly9hFNZnfDRf69ho0wDvCVUqoj8dGJpNcOiGYgy46obMbORHEMN/I5tUQuy
+         K86xGPjY4b4QO+54v/Zv7nQ40O3fVB4kil84sULCnYrDgJVTXlsEFmALWYldAbZAgMBP
+         fvIXv3sy0T/Ns+lBLfXM4dLPELbccf6aa9owKLeIZQZMk4ea+nMOdmYcBOB36dALtS4z
+         0SnWHD/Ra8zQZlPYXX9NedMId4XeBIsKRL/2j4wXYAsw4ctlt6Th0vAum9effAlS+CNc
+         g0HRax01vlO2YL0JWYjboqvm7PfjfxsTzbm2nbAhIfIebOVYGUr1FquaKAPIEQbTrE+e
+         0YTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qETbyvDGXmWMmkqN4sOdgKXeFkWOntX3r/NRFgCZoWE=;
-        b=mDTylZHWeSo6qrwvCcaaiEvWc5nYOZAPJIEhmSGBd2+3uYQ9fqvcSgOQXKMtWaLtZZ
-         uG+ul3tT5lrgX6P7vY2Oj5dRKQRb3w2JYwJj7edw/TgGdQDx5U+7EXgDS15AuTiRdWTk
-         WlUrHvz5teCYDMTj4yHLxtB3VIfvVkPUOgMcEpm0o/AXgp4Nf9AtwdY11wRmIgIQ4eTs
-         u4m4XHCx3bi1XbDX9QO0tvJNqyMJZBTuRtAIiP1aVOTqpWoZ61IcDRoQzI90qi9Y7dg4
-         D3V+frb/PFrG88bAUa5OArCSScHGnjLLGcIzGtOlUmZCf97hSubyGDV2+DMprowr8dM0
-         1z7g==
-X-Gm-Message-State: APjAAAU4HJTAQZiWrf0O120A4wP01gpn3YeIAagFeudhIO2z3ZfjKqPO
-        WD4CpY+PZSWNwxE4vQ/6mEo=
-X-Google-Smtp-Source: APXvYqxkwpMUKWSZK/4NQcFDw+bDP7yRS/NluRzHQboqTdh3aehK42NKuj/IACv1wat7jP2wWUy+ng==
-X-Received: by 2002:a65:4489:: with SMTP id l9mr81979980pgq.207.1563942324157;
-        Tue, 23 Jul 2019 21:25:24 -0700 (PDT)
+        bh=CtboR7Ufy9O9fDFcRIuCIk1t8EIvDdcqQ3tCIzPpVTU=;
+        b=DGgaTpaQ44/dNT0RGpfVhyiNyCI+atbx/yYS62gUPiAbwoblGbIUKFgBg/SoGrA1OF
+         uURIjf2vKwUIlbIkugvm6g38wHrd0f8tYz+PI8xxW2q6WhAuBGEvU9gcDfAhlQ0/OrRF
+         r9N2hZDAE5jCE/t9tLVnKEkWgF2XuId+x7ydjVMKZrcBvIQW3Lo98Eusvet9vcMvUqxm
+         L+kqwBxzfU28a9Bbu+5rbMtYbkYs9IicGtosyOFG3jbqSp0c7MsW0+si0d36p7mE1j8+
+         AVgRTOasuBzki1TsqYfrZhI2j0YRm+oAh5qG1Xq34yagm5hT4rcPBL+Jxb3z+lMewBXH
+         OHHg==
+X-Gm-Message-State: APjAAAWBro4S/E6UiKux7c7uwvnnT4WqNgGgtj9fuswNTbtHOYwRykGS
+        6Dthta66I8haQq5Nc6AZfEZ5tgx5
+X-Google-Smtp-Source: APXvYqw2fBb16YWxNCvrkJttPP2qps3nLx7+Bn7G811lLUhuqyz8ucaB8iJLC4by+I8yTQYjbx90Ag==
+X-Received: by 2002:a17:902:2ec5:: with SMTP id r63mr82774537plb.21.1563942328383;
+        Tue, 23 Jul 2019 21:25:28 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id a15sm34153364pgw.3.2019.07.23.21.25.22
+        by smtp.gmail.com with ESMTPSA id a15sm34153364pgw.3.2019.07.23.21.25.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 21:25:23 -0700 (PDT)
+        Tue, 23 Jul 2019 21:25:27 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -85,10 +85,11 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Dan Williams <dan.j.williams@intel.com>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>
-Subject: [PATCH 02/12] iov_iter: add helper to test if an iter would use GUP v2
-Date:   Tue, 23 Jul 2019 21:25:08 -0700
-Message-Id: <20190724042518.14363-3-jhubbard@nvidia.com>
+        Dave Chinner <david@fromorbit.com>,
+        Boaz Harrosh <boaz@plexistor.com>
+Subject: [PATCH 05/12] block_dev: convert put_page() to put_user_page*()
+Date:   Tue, 23 Jul 2019 21:25:11 -0700
+Message-Id: <20190724042518.14363-6-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724042518.14363-1-jhubbard@nvidia.com>
 References: <20190724042518.14363-1-jhubbard@nvidia.com>
@@ -103,29 +104,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jérôme Glisse <jglisse@redhat.com>
 
-Add a helper to test if call to iov_iter_get_pages*() with a given
-iter would result in calls to GUP (get_user_pages*()). We want to
-use different tracking of page references if they are coming from
-GUP (get_user_pages*()) and thus  we need to know when GUP is used
-for a given iter.
+For pages that were retained via get_user_pages*(), release those pages
+via the new put_user_page*() routines, instead of via put_page() or
+release_pages().
 
-Changes since Jérôme's original patch:
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
 
-* iov_iter_get_pages_use_gup(): do not return true for the ITER_PIPE
-case, because iov_iter_get_pages() calls pipe_get_pages(), which in
-turn uses get_page(), not get_user_pages().
+Changes from Jérôme's original patch:
 
-* Remove some obsolete code, as part of rebasing onto Linux 5.3.
-
-* Fix up the kerneldoc comment to "Return:" rather than "Returns:",
-and a few other grammatical tweaks.
+* reworked to be compatible with recent bio_release_pages() changes.
 
 Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-block@vger.kernel.org
 Cc: linux-mm@kvack.org
-Cc: John Hubbard <jhubbard@nvidia.com>
 Cc: Jan Kara <jack@suse.cz>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>
@@ -136,32 +130,122 @@ Cc: Ming Lei <ming.lei@redhat.com>
 Cc: Dave Chinner <david@fromorbit.com>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
 Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Boaz Harrosh <boaz@plexistor.com>
 ---
- include/linux/uio.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ block/bio.c         | 13 +++++++++++++
+ fs/block_dev.c      | 22 +++++++++++++++++-----
+ include/linux/bio.h |  8 ++++++++
+ 3 files changed, 38 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index ab5f523bc0df..2a179af8e5a7 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -86,6 +86,17 @@ static inline unsigned char iov_iter_rw(const struct iov_iter *i)
- 	return i->type & (READ | WRITE);
+diff --git a/block/bio.c b/block/bio.c
+index 74f9eba2583b..3b9f66e64bc1 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1746,6 +1746,19 @@ void bio_check_pages_dirty(struct bio *bio)
+ 	__bio_check_pages_dirty(bio, false);
  }
  
-+/**
-+ * iov_iter_get_pages_use_gup - report if iov_iter_get_pages(i) uses GUP
-+ * @i: iterator
-+ * Return: true if a call to iov_iter_get_pages*() with the iter provided in
-+ *          the argument would result in the use of get_user_pages*()
-+ */
-+static inline bool iov_iter_get_pages_use_gup(const struct iov_iter *i)
++enum bio_rp_flags_t bio_rp_flags(struct iov_iter *iter, bool mark_dirty)
 +{
-+	return iov_iter_type(i) == ITER_IOVEC;
++	enum bio_rp_flags_t flags = BIO_RP_NORMAL;
++
++	if (mark_dirty)
++		flags |= BIO_RP_MARK_DIRTY;
++
++	if (iov_iter_get_pages_use_gup(iter))
++		flags |= BIO_RP_FROM_GUP;
++
++	return flags;
 +}
 +
- /*
-  * Total number of bytes covered by an iovec.
-  *
+ void update_io_ticks(struct hd_struct *part, unsigned long now)
+ {
+ 	unsigned long stamp;
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 9fe6616f8788..d53abaf31e54 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -259,7 +259,7 @@ __blkdev_direct_IO_simple(struct kiocb *iocb, struct iov_iter *iter,
+ 	}
+ 	__set_current_state(TASK_RUNNING);
+ 
+-	bio_release_pages(&bio, bio_rp_dirty_flag(should_dirty));
++	bio_release_pages(&bio, bio_rp_flags(iter, should_dirty));
+ 	if (unlikely(bio.bi_status))
+ 		ret = blk_status_to_errno(bio.bi_status);
+ 
+@@ -295,7 +295,7 @@ static int blkdev_iopoll(struct kiocb *kiocb, bool wait)
+ 	return blk_poll(q, READ_ONCE(kiocb->ki_cookie), wait);
+ }
+ 
+-static void blkdev_bio_end_io(struct bio *bio)
++static void _blkdev_bio_end_io(struct bio *bio, bool from_gup)
+ {
+ 	struct blkdev_dio *dio = bio->bi_private;
+ 	bool should_dirty = dio->should_dirty;
+@@ -327,13 +327,23 @@ static void blkdev_bio_end_io(struct bio *bio)
+ 	}
+ 
+ 	if (should_dirty) {
+-		bio_check_pages_dirty(bio);
++		__bio_check_pages_dirty(bio, from_gup);
+ 	} else {
+-		bio_release_pages(bio, BIO_RP_NORMAL);
++		bio_release_pages(bio, bio_rp_gup_flag(from_gup));
+ 		bio_put(bio);
+ 	}
+ }
+ 
++static void blkdev_bio_end_io(struct bio *bio)
++{
++	_blkdev_bio_end_io(bio, false);
++}
++
++static void blkdev_bio_from_gup_end_io(struct bio *bio)
++{
++	_blkdev_bio_end_io(bio, true);
++}
++
+ static ssize_t
+ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ {
+@@ -380,7 +390,9 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
+ 		bio->bi_iter.bi_sector = pos >> 9;
+ 		bio->bi_write_hint = iocb->ki_hint;
+ 		bio->bi_private = dio;
+-		bio->bi_end_io = blkdev_bio_end_io;
++		bio->bi_end_io = iov_iter_get_pages_use_gup(iter) ?
++				 blkdev_bio_from_gup_end_io :
++				 blkdev_bio_end_io;
+ 		bio->bi_ioprio = iocb->ki_ioprio;
+ 
+ 		ret = bio_iov_iter_get_pages(bio, iter);
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index d68a40c2c9d4..b9460d1a4679 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -452,6 +452,13 @@ static inline enum bio_rp_flags_t bio_rp_dirty_flag(bool mark_dirty)
+ 	return mark_dirty ? BIO_RP_MARK_DIRTY : BIO_RP_NORMAL;
+ }
+ 
++static inline enum bio_rp_flags_t bio_rp_gup_flag(bool from_gup)
++{
++	return from_gup ? BIO_RP_FROM_GUP : BIO_RP_NORMAL;
++}
++
++enum bio_rp_flags_t bio_rp_flags(struct iov_iter *iter, bool mark_dirty);
++
+ void bio_release_pages(struct bio *bio, enum bio_rp_flags_t flags);
+ struct rq_map_data;
+ extern struct bio *bio_map_user_iov(struct request_queue *,
+@@ -463,6 +470,7 @@ extern struct bio *bio_copy_kern(struct request_queue *, void *, unsigned int,
+ 				 gfp_t, int);
+ extern void bio_set_pages_dirty(struct bio *bio);
+ extern void bio_check_pages_dirty(struct bio *bio);
++void __bio_check_pages_dirty(struct bio *bio, bool from_gup);
+ 
+ void generic_start_io_acct(struct request_queue *q, int op,
+ 				unsigned long sectors, struct hd_struct *part);
 -- 
 2.22.0
 
