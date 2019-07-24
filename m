@@ -2,174 +2,173 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD581C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4526C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A9121841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB9821841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BTPWbmn2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWuAulp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfGXQze (ORCPT
+        id S1728153AbfGXQ4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:55:34 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46742 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfGXQzd (ORCPT
+        Wed, 24 Jul 2019 12:56:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44351 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfGXQ4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:55:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k189so2478882pgk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:55:33 -0700 (PDT)
+        Wed, 24 Jul 2019 12:56:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so21523034pgl.11;
+        Wed, 24 Jul 2019 09:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qtRJ8Les6/fJJOzs6Q1HmSL5jEWwx9CtarW4mGfG+uo=;
-        b=BTPWbmn22eLQsf31HdTrv2TJjHIDmoOaHSZBJA7dyaIQbt5PSQyqp5JI2d0hsZNtna
-         lZA3mIcRHBU5/IXzk4g3fogGWm3kFZYYsb0oiOADuzmiAhIGFeF7jpO79LypwxjjZzT2
-         x0inbJo35MBl+nOoYn9AV9iowaK/wMdnsPQU2gdUsm/9Qr09F+8PTAKbL+qi9G4VkMDc
-         0y2yoU9eQfWcdiICcsp6AVWE4bOZa9REJbEEfxTD6aAXU9x+cLt8mdptvVAqRvjqvbJn
-         lu3IbrnLImCxCmX8uUJ7X+7CMUlxSz3TokLPq1GApgNIXzPGmRg4rE2Cy7rnfjtfvvjH
-         2WDw==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=PhVb6RN1Ss2cdB2PwVe0HtBm8bfHqYHCMNa/n92glxA=;
+        b=eWuAulp7lVJApkFKE01P2svmwkQSz+xZKBk4ILTbKSTUXwG6JPCNOThPtpZipJJywM
+         fuowmbFRGkDa4VN4iOGrb0ez3a8/f+PT1HLrK2ycWYe5GcKy2PJft0JrgMFUQkF2bieb
+         ynYDQR9OITwdZktFzeBHzKB6sV1c5twRJTSBsPEnRwP0UGx9fodzsh0b20sSvwmvC2Xi
+         cvRh0qC/t6520YdzswKjIplH1tFaH3L80ZrxvZWu8xdOgdPTNrqVsRj2JinU6lrnNAps
+         IQlQV0ZJRP+Jdf9NjxJl5OKKqIQodIiqsGrqolvaBYG528KyU0W6Dhi7ELw8W4uH1nTa
+         KROQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qtRJ8Les6/fJJOzs6Q1HmSL5jEWwx9CtarW4mGfG+uo=;
-        b=ns74xfcaLlqHJCJbrkM0v9FAd/GRYiLx3TJc7MmQgcT/HECL+mzgT1BNZOMYzgmiKO
-         BiVe4qg+gRTJty+e6IcO5witM51b6Kf18Zj9VEbrli2NRFSJKFY7nCh5zxF5Gs7Ngzqh
-         G+nyFsjiLUhY8rRSlVjcUD/2rkcDYHEeQU7Z3T7J2tQicsNL7v6q4Jr+s2mA50GNJ/X0
-         iPIPifVED1xLtvqMJavIJY7Tit0+aRnRxZsGXpjLbX4z3ZoPBTsgagkgpmM8hZ7thicn
-         Ndi+hPQT/b3W+x0kHqV+Olz/TM49OiCLrrvOg2h1BjMRJ47KDpGqz/eTbTHQb7hg6Jnk
-         MLOw==
-X-Gm-Message-State: APjAAAW6llB4xW5qT3w5Q2UCL87GswVsPLB8SiDW/ea+B7iDcwWAf+VB
-        lMQ/eN+uvYFiUS00vI4BC3gvYh/zG/++jhnFThwfaQ==
-X-Google-Smtp-Source: APXvYqyHceoOKYg0KqQem3avJL09umJctFC8dyr4daJC/ttUQhHRfbz+TLbdwzUCRT5ZsKScHEvokIMzKyBHr15vvXQ=
-X-Received: by 2002:a62:2c8e:: with SMTP id s136mr12419121pfs.3.1563987332380;
- Wed, 24 Jul 2019 09:55:32 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=PhVb6RN1Ss2cdB2PwVe0HtBm8bfHqYHCMNa/n92glxA=;
+        b=HAn4nZYWcrHEvrXcBVbTJ6Hm4TNvEBZzjtG7uZHvDqsF93yyQZfakCz29FoYA2w2eU
+         QkT0ndohqlF7VPcul//bDkGcNIhXvYKBBM5GsMrS+jlBOfsDgu/qib2YtjDUQzc+VlQ2
+         PQvKPuX1N47lMSkV3yaFdl/NC4JEpDBJhDoq7HBbKkBwNC5j7yUXJj8E4kP8mXoZXmDX
+         aRaPll7diYV8/qNvw9ZU2cuYZ+u0zwyPHnbYIlpwkb4aBHOgXI3wE1/16dTKNJSAHpFW
+         JZfLSkG4sd5rK9hP5BmYNkvejkjxizbHBMfG0D712BVUiq8/yFQ5lxLbMg5n5vkmroVZ
+         7tiA==
+X-Gm-Message-State: APjAAAXjawygl3KNZTE1NXKW61UhDqKVEmpXpZumHZUNpOsx0pHaxR6W
+        a579BlbHsSGKQK/ZBJn5Mqo=
+X-Google-Smtp-Source: APXvYqy5FhBKIOIqEhIwqKISuGQ+P1R0oDCuSk0WbIIGBn5tah6kKqrwZ+sY9jBZWmTnJ8zO8szXNw==
+X-Received: by 2002:a63:f304:: with SMTP id l4mr81474308pgh.66.1563987370874;
+        Wed, 24 Jul 2019 09:56:10 -0700 (PDT)
+Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
+        by smtp.gmail.com with ESMTPSA id r61sm61815112pjb.7.2019.07.24.09.56.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 09:56:10 -0700 (PDT)
+Subject: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Date:   Wed, 24 Jul 2019 09:54:02 -0700
+Message-ID: <20190724165158.6685.87228.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de>
- <20190724023946.yxsz5im22fz4zxrn@treble> <20190724074732.GJ3402@hirez.programming.kicks-ass.net>
- <20190724125525.kgybu3nnpvwlcz2c@treble> <20190724133516.GB31381@hirez.programming.kicks-ass.net>
- <20190724141040.GA31425@hirez.programming.kicks-ass.net> <20190724164821.GB31425@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190724164821.GB31425@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Jul 2019 09:55:21 -0700
-Message-ID: <CAKwvOdnvqX4YtOaHL+B+1FOjdq-4tLZGKbs7LYQA4_SPTbdSqg@mail.gmail.com>
-Subject: Re: [PATCH] objtool: Improve UACCESS coverage
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 9:48 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Jul 24, 2019 at 04:10:40PM +0200, Peter Zijlstra wrote:
-> > And that most certainly should trigger...
-> >
-> > Let me gdb that objtool thing.
->
-> ---
-> Subject: objtool: Improve UACCESS coverage
->
-> A clang build reported an (obvious) double CLAC while a GCC build did
-> not; it turns out we only re-visit instructions if the first visit was
-> with AC=0. If OTOH the first visit was with AC=1, we completely ignore
-> any subsequent visit, even when it has AC=0.
->
-> Fix this by using a visited mask, instead of boolean and (explicitly)
-> mark the AC state.
->
-> $ ./objtool check -b --no-fp --retpoline --uaccess ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x22: redundant UACCESS disable
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xea: (alt)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   .altinstr_replacement+0xffffffffffffffff: (branch)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xd9: (alt)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xb2: (branch)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0x39: (branch)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0x0: <=== (func)
->
-> Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+This series provides an asynchronous means of hinting to a hypervisor
+that a guest page is no longer in use and can have the data associated
+with it dropped. To do this I have implemented functionality that allows
+for what I am referring to as page hinting
 
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+The functionality for this is fairly simple. When enabled it will allocate
+statistics to track the number of hinted pages in a given free area. When
+the number of free pages exceeds this value plus a high water value,
+currently 32, it will begin performing page hinting which consists of
+pulling pages off of free list and placing them into a scatter list. The
+scatterlist is then given to the page hinting device and it will perform
+the required action to make the pages "hinted", in the case of
+virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+and as such they are forced out of the guest. After this they are placed
+back on the free list, and an additional bit is added if they are not
+merged indicating that they are a hinted buddy page instead of a standard
+buddy page. The cycle then repeats with additional non-hinted pages being
+pulled until the free areas all consist of hinted pages.
 
-> ---
->  tools/objtool/check.c | 7 ++++---
->  tools/objtool/check.h | 3 ++-
->  2 files changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 5f26620f13f5..176f2f084060 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -1946,6 +1946,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->         struct alternative *alt;
->         struct instruction *insn, *next_insn;
->         struct section *sec;
-> +       u8 visited;
->         int ret;
->
->         insn = first;
-> @@ -1972,12 +1973,12 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->                         return 1;
->                 }
->
-> +               visited = 1 << state.uaccess;
->                 if (insn->visited) {
->                         if (!insn->hint && !insn_state_match(insn, &state))
->                                 return 1;
->
-> -                       /* If we were here with AC=0, but now have AC=1, go again */
-> -                       if (insn->state.uaccess || !state.uaccess)
-> +                       if (insn->visited & visited)
->                                 return 0;
->                 }
->
-> @@ -2024,7 +2025,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->                 } else
->                         insn->state = state;
->
-> -               insn->visited = true;
-> +               insn->visited |= visited;
->
->                 if (!insn->ignore_alts) {
->                         bool skip_orig = false;
-> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-> index b881fafcf55d..6d875ca6fce0 100644
-> --- a/tools/objtool/check.h
-> +++ b/tools/objtool/check.h
-> @@ -33,8 +33,9 @@ struct instruction {
->         unsigned int len;
->         enum insn_type type;
->         unsigned long immediate;
-> -       bool alt_group, visited, dead_end, ignore, hint, save, restore, ignore_alts;
-> +       bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
->         bool retpoline_safe;
-> +       u8 visited;
->         struct symbol *call_dest;
->         struct instruction *jump_dest;
->         struct instruction *first_jump_src;
+I am leaving a number of things hard-coded such as limiting the lowest
+order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+determine what the limit is on how many pages it wants to allocate to
+process the hints.
+
+My primary testing has just been to verify the memory is being freed after
+allocation by running memhog 79g on a 80g guest and watching the total
+free memory via /proc/meminfo on the host. With this I have verified most
+of the memory is freed after each iteration. As far as performance I have
+been mainly focusing on the will-it-scale/page_fault1 test running with
+16 vcpus. With that I have seen at most a 2% difference between the base
+kernel without these patches and the patches with virtio-balloon disabled.
+With the patches and virtio-balloon enabled with hinting the results
+largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
+drop in performance as I approached 16 threads, however on the the lastest
+linux-next kernel I saw roughly a 4% to 5% improvement in performance for
+all tests with 8 or more threads. I believe the difference seen is due to
+the overhead for faulting pages back into the guest and zeroing of memory.
+
+Patch 4 is a bit on the large side at about 600 lines of change, however
+I really didn't see a good way to break it up since each piece feeds into
+the next. So I couldn't add the statistics by themselves as it didn't
+really make sense to add them without something that will either read or
+increment/decrement them, or add the Hinted state without something that
+would set/unset it. As such I just ended up adding the entire thing as
+one patch. It makes it a bit bigger but avoids the issues in the previous
+set where I was referencing things before they had been added.
+
+Changes from the RFC:
+https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
+Moved aeration requested flag out of aerator and into zone->flags.
+Moved bounary out of free_area and into local variables for aeration.
+Moved aeration cycle out of interrupt and into workqueue.
+Left nr_free as total pages instead of splitting it between raw and aerated.
+Combined size and physical address values in virtio ring into one 64b value.
+
+Changes from v1:
+https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
+Dropped "waste page treatment" in favor of "page hinting"
+Renamed files and functions from "aeration" to "page_hinting"
+Moved from page->lru list to scatterlist
+Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
+Virtio now uses scatterlist directly instead of intermedate array
+Moved stats out of free_area, now in seperate area and pointed to from zone
+Merged patch 5 into patch 4 to improve reviewability
+Updated various code comments throughout
+
+---
+
+Alexander Duyck (5):
+      mm: Adjust shuffle code to allow for future coalescing
+      mm: Move set/get_pcppage_migratetype to mmzone.h
+      mm: Use zone and order instead of free area in free_list manipulators
+      mm: Introduce Hinted pages
+      virtio-balloon: Add support for providing page hints to host
 
 
+ drivers/virtio/Kconfig              |    1 
+ drivers/virtio/virtio_balloon.c     |   47 ++++++
+ include/linux/mmzone.h              |  116 ++++++++------
+ include/linux/page-flags.h          |    8 +
+ include/linux/page_hinting.h        |  139 ++++++++++++++++
+ include/uapi/linux/virtio_balloon.h |    1 
+ mm/Kconfig                          |    5 +
+ mm/Makefile                         |    1 
+ mm/internal.h                       |   18 ++
+ mm/memory_hotplug.c                 |    1 
+ mm/page_alloc.c                     |  238 ++++++++++++++++++++--------
+ mm/page_hinting.c                   |  298 +++++++++++++++++++++++++++++++++++
+ mm/shuffle.c                        |   24 ---
+ mm/shuffle.h                        |   32 ++++
+ 14 files changed, 796 insertions(+), 133 deletions(-)
+ create mode 100644 include/linux/page_hinting.h
+ create mode 100644 mm/page_hinting.c
 
--- 
-Thanks,
-~Nick Desaulniers
+--
