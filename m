@@ -2,287 +2,323 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81186C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F40C41517
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C26021873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6752182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:22:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTeey+XQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfGXDWG (ORCPT
+        id S1726545AbfGXDWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:22:06 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50514 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbfGXDWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:22:05 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 75780A375791336FA717;
-        Wed, 24 Jul 2019 11:20:52 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Jul 2019 11:20:45 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 11/11] net: hns3: add support for handling IMP error
-Date:   Wed, 24 Jul 2019 11:18:47 +0800
-Message-ID: <1563938327-9865-12-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
+        Tue, 23 Jul 2019 23:22:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45785 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfGXDWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:22:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id r1so20149891pfq.12;
+        Tue, 23 Jul 2019 20:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JncQclGuKJgkDE8+Ru/a7lDAGkLb2eFvcUaGQ4XqB8Q=;
+        b=UTeey+XQYXm1p528GibWFi4sNEohlInS2JCVHsmnqOys+T/8KVMZ+tB15l86UjdyXl
+         oXwwGb7JLkzOxBObkOHDNxO90vKo20/LOfI/+K44N3SriWcAdWqBaI3F9a3msb7rydgP
+         XoO4s+ybjziBvMGOUen4coNMCdhy6FDXcBvFFoklrgkjeMgegFeaB73t65DRgBNjaKyM
+         Xo1HJN/e2YmDrFrO7rkbBmXPKo7nNXpOyCXvzYWONVAnumgtwQT40OdPvwx5P/ceScM9
+         vjXuHVdxNrIPtUWngtfkOaknT26IkS3XSbIUlKvs7M4bUEoCttxSHLFgV4qv4FEusEha
+         wSXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JncQclGuKJgkDE8+Ru/a7lDAGkLb2eFvcUaGQ4XqB8Q=;
+        b=b4obZ5+90xhJK/8oNg18vGS0a5BN5kNGSlM+U3H9nwOX+mCyVjPaKLp+0GPAbBoT6J
+         ERF/tnDYXtJbn3McMSXodMaTl+ifPFOeGmadcbqDDwt7M9VnO05l4S6QOSzvctF2M4IS
+         8ITl4ygBjhVEjsFKVGcU+a14qdoyCdUllKnhzV5WBPLsvpSnkAdSGw538GT6gcuzniAD
+         drQjMaagc4OvWd4ZnAPl4ATvWjFK+ki1tmxeRMRE0blvWhPIGaXTVM1TLS4pyHXYGliC
+         JFIL5069y7Xqbt0Ldf6IliF7seAxP2nVJnRyseOL6Tx/tn3sD47dMTf3cYmgA/mnZixm
+         3wwQ==
+X-Gm-Message-State: APjAAAUBJPVCTy5Vad8+/KDrm1m18cVH979J9AtS7MOBBeuD0fGlU5Aw
+        3HeeLg0pqtbMdkbp0+z3ZiP4zJgeeu7PYnISx6M=
+X-Google-Smtp-Source: APXvYqz4j4yEl1gCpOsPJ+++gVvxNvJJO0oQkYA99yqn/NsdA9Ld4lEP+lnwCEpW+SkNYT08HdpaSv5ZxA4+E9WfxIs=
+X-Received: by 2002:a63:7245:: with SMTP id c5mr65543039pgn.11.1563938559079;
+ Tue, 23 Jul 2019 20:22:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+References: <20190715134655.4076-1-sashal@kernel.org> <20190715134655.4076-39-sashal@kernel.org>
+ <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
+ <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com>
+ <87v9vs43pq.fsf@xmission.com> <CAH2r5mtB=KO+9fxSYQHbjD+0K+5rGL6Q8TSU0_wsHUdqHy1rSw@mail.gmail.com>
+ <CAH2r5mvF-E6_3YLV02Mj0uSaKgHigV6wwU9LsGC-zFs7JnKa-Q@mail.gmail.com> <CAH2r5mupXphkH0c6LVSgBAK1PQihX+h6UruMfPoood9PT+0RrA@mail.gmail.com>
+In-Reply-To: <CAH2r5mupXphkH0c6LVSgBAK1PQihX+h6UruMfPoood9PT+0RrA@mail.gmail.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 23 Jul 2019 22:22:27 -0500
+Message-ID: <CAH2r5mvu50ufcRxWOzbtMd01mQfsufJzgWOqFHi9stqjdnbVUw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session
+ to call send_sig instead of force_sig
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     ronnie sahlberg <ronniesahlberg@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        Jeff Layton <jlayton@poochiereds.net>
+Content-Type: multipart/mixed; boundary="00000000000043dc5e058e64d2f2"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+--00000000000043dc5e058e64d2f2
+Content-Type: text/plain; charset="UTF-8"
 
-When IMP goes errors, the hardware reports a RAS to the driver,
-the driver record this kind of error. Then a IMP reset will happen,
-the driver checks the reason and takes the corresponding action
-when doing IMP reset.
+Patch attached - tests out ok.
 
-So this patch adds imp_err_state field to the struct hclge_dev
-to record the error type, and handle_imp_error ops to handle it.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 37 ++++++++++++++++++++--
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |  4 +++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 29 +++++++++++++++++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  9 ++++++
- 5 files changed, 78 insertions(+), 2 deletions(-)
+On Tue, Jul 23, 2019 at 9:28 PM Steve French <smfrench@gmail.com> wrote:
+>
+> I did some additional testing and it looks like the "allow_signal"
+> change may be safe enough
+>
+> # git diff -a
+> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> index a4830ced0f98..a15a6e738eb5 100644
+> --- a/fs/cifs/connect.c
+> +++ b/fs/cifs/connect.c
+> @@ -1113,6 +1113,7 @@ cifs_demultiplex_thread(void *p)
+>                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+>
+>         set_freezable();
+> +       allow_signal(SIGKILL);
+>         while (server->tcpStatus != CifsExiting) {
+>                 if (try_to_freeze())
+>                         continue;
+>
+> See below:
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# insmod ./cifs.ko
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# mount -t cifs
+> //localhost/scratch /mnt -o username=sfrench
+> Password for sfrench@//localhost/scratch:  ************
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# ps -A | grep cifsd
+>  5176 ?        00:00:00 cifsd
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# kill -9 5176
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# ls /mnt
+> 0444  dir0750  dir0754  newfile
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# umount /mnt
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# ps -A | grep cifsd
+> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# rmmod cifs
+>
+> On Tue, Jul 23, 2019 at 9:19 PM Steve French <smfrench@gmail.com> wrote:
+> >
+> > Pavel noticed I missed a line from the attempt to do a similar patch
+> > to Eric's suggestion
+> > (it still didn't work though - although "allow_signal" does albeit is
+> > possibly dangerous as user space can kill cifsd)
+> >
+> > # git diff -a
+> > diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> > index a4830ced0f98..8758dff18c15 100644
+> > --- a/fs/cifs/connect.c
+> > +++ b/fs/cifs/connect.c
+> > @@ -1104,6 +1104,7 @@ cifs_demultiplex_thread(void *p)
+> >         struct task_struct *task_to_wake = NULL;
+> >         struct mid_q_entry *mids[MAX_COMPOUND];
+> >         char *bufs[MAX_COMPOUND];
+> > +       sigset_t mask, oldmask;
+> >
+> >         current->flags |= PF_MEMALLOC;
+> >         cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
+> > @@ -1113,6 +1114,9 @@ cifs_demultiplex_thread(void *p)
+> >                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+> >
+> >         set_freezable();
+> > +       sigfillset(&mask);
+> > +       sigdelset(&mask, SIGKILL);
+> > +       sigprocmask(SIG_BLOCK, &mask, &oldmask);
+> >         while (server->tcpStatus != CifsExiting) {
+> >                 if (try_to_freeze())
+> >                         continue;
+> >
+> > On Tue, Jul 23, 2019 at 9:02 PM Steve French <smfrench@gmail.com> wrote:
+> > >
+> > > On Tue, Jul 23, 2019 at 8:32 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > > >
+> > > > Steve French <smfrench@gmail.com> writes:
+> > > >
+> > > > > Very easy to see what caused the regression with this global change:
+> > > > >
+> > > > > mount (which launches "cifsd" thread to read the socket)
+> > > > > umount (which kills the "cifsd" thread)
+> > > > > rmmod   (rmmod now fails since "cifsd" thread is still active)
+> > > > >
+> > > > > mount launches a thread to read from the socket ("cifsd")
+> > > > > umount is supposed to kill that thread (but with the patch
+> > > > > "signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of
+> > > > > force_sig" that no longer works).  So the regression is that after
+> > > > > unmount you still see the "cifsd" thread, and the reason that cifsd
+> > > > > thread is still around is that that patch no longer force kills the
+> > > > > process (see line 2652 of fs/cifs/connect.c) which regresses module
+> > > > > removal.
+> > > > >
+> > > > > -               force_sig(SIGKILL, task);
+> > > > > +               send_sig(SIGKILL, task, 1);
+> > > > >
+> > > > > The comment in the changeset indicates "The signal SIGKILL can not be
+> > > > > ignored" but obviously it can be ignored - at least on 5.3-rc1 it is
+> > > > > being ignored.
+> > > > >
+> > > > > If send_sig(SIGKILL ...) doesn't work and if force_sig(SIGKILL, task)
+> > > > > is removed and no longer possible - how do we kill a helper process
+> > > > > ...
+> > > >
+> > > > I think I see what is happening.  It looks like as well as misuinsg
+> > > > force_sig, cifs is also violating the invariant that keeps SIGKILL out
+> > > > of the blocked signal set.
+> > > >
+> > > > For that force_sig will act differently.  I did not consider it because
+> > > > that is never supposed to happen.
+> > > >
+> > > > Can someone test this code below and confirm the issue goes away?
+> > > >
+> > > > diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
+> > > > index 5d6d44bfe10a..2a782ebc7b65 100644
+> > > > --- a/fs/cifs/transport.c
+> > > > +++ b/fs/cifs/transport.c
+> > > > @@ -347,6 +347,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
+> > > >          */
+> > > >
+> > > >         sigfillset(&mask);
+> > > > +       sigdelset(&mask, SIGKILL);
+> > > >         sigprocmask(SIG_BLOCK, &mask, &oldmask);
+> > > >
+> > > >         /* Generate a rfc1002 marker for SMB2+ */
+> > > >
+> > > >
+> > > > Eric
+> > >
+> > > I just tried your suggestion and it didn't work.   I also tried doing
+> > > a similar thing on the thread we are trying to kills ("cifsd" - ie
+> > > which is blocked in the function cifs_demultiplex_thread waiting to
+> > > read from the socket)
+> > > # git diff -a
+> > > diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> > > index a4830ced0f98..b73062520a17 100644
+> > > --- a/fs/cifs/connect.c
+> > > +++ b/fs/cifs/connect.c
+> > > @@ -1104,6 +1104,7 @@ cifs_demultiplex_thread(void *p)
+> > >         struct task_struct *task_to_wake = NULL;
+> > >         struct mid_q_entry *mids[MAX_COMPOUND];
+> > >         char *bufs[MAX_COMPOUND];
+> > > +       sigset_t mask;
+> > >
+> > >         current->flags |= PF_MEMALLOC;
+> > >         cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
+> > > @@ -1113,6 +1114,8 @@ cifs_demultiplex_thread(void *p)
+> > >                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+> > >
+> > >         set_freezable();
+> > > +       sigfillset(&mask);
+> > > +       sigdelset(&mask, SIGKILL);
+> > >         while (server->tcpStatus != CifsExiting) {
+> > >                 if (try_to_freeze())
+> > >                         continue;
+> > >
+> > >
+> > > That also didn't work.     The only thing I have been able to find
+> > > which worked was:
+> > >
+> > > diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> > > index a4830ced0f98..e74f04163fc9 100644
+> > > --- a/fs/cifs/connect.c
+> > > +++ b/fs/cifs/connect.c
+> > > @@ -1113,6 +1113,7 @@ cifs_demultiplex_thread(void *p)
+> > >                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+> > >
+> > >         set_freezable();
+> > > +      allow_signal(SIGKILL);
+> > >         while (server->tcpStatus != CifsExiting) {
+> > >                 if (try_to_freeze())
+> > >                         continue;
+> > >
+> > >
+> > > That fixes the problem ... but ... as Ronnie and others have noted it
+> > > would allow a userspace process to make the mount unusable (all you
+> > > would have to do would be to do a kill -9 of the "cifsd" process from
+> > > some userspace process like bash and the mount would be unusable - so
+> > > this sounds dangerous.
+> > >
+> > > Is there an alternative that, in the process doing the unmount in
+> > > kernel, would allow us to do the equivalent of:
+> > >       "allow_signal(SIGKILL, <the id of the cifsd process>"
+> > > In otherwords, to minimize the risk of some userspace process killing
+> > > cifsd, could we delay enabling allow_signal(SIGKILL) till the unmount
+> > > begins by doing it for a different process (have the unmount process
+> > > enable signals for the cifsd process).   Otherwise is there a way to
+> > > force kill a process from the kernel as we used to do - without
+> > > running the risk of a user space process killing cifsd (which is bad).
+> > >
+> > > --
+> > > Thanks,
+> > >
+> > > Steve
+> >
+> >
+> >
+> > --
+> > Thanks,
+> >
+> > Steve
+>
+>
+>
+> --
+> Thanks,
+>
+> Steve
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index a4624db..3a1d6cc 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -515,6 +515,7 @@ struct hnae3_ae_ops {
- 	int (*mac_connect_phy)(struct hnae3_handle *handle);
- 	void (*mac_disconnect_phy)(struct hnae3_handle *handle);
- 	void (*restore_vlan_table)(struct hnae3_handle *handle);
-+	void (*handle_imp_error)(struct hnae3_handle *handle);
- };
- 
- struct hnae3_dcb_ops {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 0a72438..25df66d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -683,6 +683,28 @@ static int hclge_cmd_query_error(struct hclge_dev *hdev,
- 	return ret;
- }
- 
-+static int hclge_check_imp_poison_err(struct hclge_dev *hdev)
-+{
-+	struct device *dev = &hdev->pdev->dev;
-+	int ras_status;
-+	int ret = false;
-+
-+	ras_status = hclge_read_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG);
-+	if (ras_status & HCLGE_RAS_IMP_RD_POISON_MASK) {
-+		set_bit(HCLGE_IMP_RD_POISON, &hdev->imp_err_state);
-+		/* This error will be handle by IMP reset */
-+		dev_info(dev, "IMP RD poison detected!\n");
-+		ret = true;
-+	} else if (ras_status & HCLGE_RAS_IMP_CMDQ_ERR_MASK) {
-+		set_bit(HCLGE_IMP_CMDQ_ERROR, &hdev->imp_err_state);
-+		/* This error will be handle by IMP reset */
-+		dev_info(dev, "IMP CMDQ error detected!\n");
-+		ret = true;
-+	}
-+
-+	return ret;
-+}
-+
- static int hclge_clear_mac_tnl_int(struct hclge_dev *hdev)
- {
- 	struct hclge_desc desc;
-@@ -1321,10 +1343,12 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
- 	/* log PPU(RCB) errors */
- 	desc_data = (__le32 *)&desc[3];
- 	status = le32_to_cpu(*desc_data) & HCLGE_PPU_PF_INT_RAS_MASK;
--	if (status)
-+	if (status) {
- 		hclge_log_error(dev, "PPU_PF_ABNORMAL_INT_ST0",
- 				&hclge_ppu_pf_abnormal_int[0], status,
- 				&ae_dev->hw_err_reset_req);
-+		hdev->ppu_poison_ras_err = true;
-+	}
- 
- 	/* clear all PF RAS errors */
- 	hclge_cmd_reuse_desc(&desc[0], false);
-@@ -1632,6 +1656,7 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 	struct hclge_dev *hdev = ae_dev->priv;
- 	struct device *dev = &hdev->pdev->dev;
- 	u32 status;
-+	int ret;
- 
- 	if (!test_bit(HCLGE_STATE_SERVICE_INITED, &hdev->state)) {
- 		dev_err(dev,
-@@ -1639,6 +1664,9 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 		return PCI_ERS_RESULT_NONE;
- 	}
- 
-+	if (hclge_check_imp_poison_err(hdev))
-+		return PCI_ERS_RESULT_RECOVERED;
-+
- 	status = hclge_read_dev(&hdev->hw, HCLGE_RAS_PF_OTHER_INT_STS_REG);
- 
- 	if (status & HCLGE_RAS_REG_NFE_MASK ||
-@@ -1652,7 +1680,12 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 		dev_warn(dev,
- 			 "HNS Non-Fatal RAS error(status=0x%x) identified\n",
- 			 status);
--		hclge_handle_all_ras_errors(hdev);
-+		ret = hclge_handle_all_ras_errors(hdev);
-+		if (ret) {
-+			ret = hclge_check_imp_poison_err(hdev);
-+			if (ret)
-+				return PCI_ERS_RESULT_RECOVERED;
-+		}
- 	}
- 
- 	/* Handling Non-fatal Rocee RAS errors */
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index 7ea8bb2..4839fc4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -12,6 +12,10 @@
- #define HCLGE_PF_MSIX_INT_MIN_BD_NUM	4
- 
- #define HCLGE_RAS_PF_OTHER_INT_STS_REG   0x20B00
-+#define HCLGE_RAS_IMP_RD_POISON_MASK \
-+	BIT(HCLGE_VECTOR0_IMP_RD_POISON_B)
-+#define HCLGE_RAS_IMP_CMDQ_ERR_MASK \
-+	BIT(HCLGE_VECTOR0_IMP_CMDQ_ERR_B)
- #define HCLGE_RAS_REG_NFE_MASK   0xFF00
- #define HCLGE_RAS_REG_ROCEE_ERR_MASK   0x3000000
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 45acbc9..36a2b65 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3281,6 +3281,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- {
- #define HCLGE_RESET_SYNC_TIME 100
- 
-+	struct hnae3_handle *handle = &hdev->vport[0].nic;
- 	u32 reg_val;
- 	int ret = 0;
- 
-@@ -3315,6 +3316,8 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- 		hdev->rst_stats.flr_rst_cnt++;
- 		break;
- 	case HNAE3_IMP_RESET:
-+		if (handle && handle->ae_algo->ops->handle_imp_error)
-+			handle->ae_algo->ops->handle_imp_error(handle);
- 		reg_val = hclge_read_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG);
- 		hclge_write_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG,
- 				BIT(HCLGE_VECTOR0_IMP_RESET_INT_B) | reg_val);
-@@ -3517,6 +3520,9 @@ static void hclge_reset_event(struct pci_dev *pdev, struct hnae3_handle *handle)
- 	else if (time_after(jiffies, (hdev->last_reset_time + 4 * 5 * HZ)))
- 		hdev->reset_level = HNAE3_FUNC_RESET;
- 
-+	if (hdev->ppu_poison_ras_err)
-+		hdev->ppu_poison_ras_err = false;
-+
- 	dev_info(&hdev->pdev->dev, "received reset event , reset type is %d",
- 		 hdev->reset_level);
- 
-@@ -3545,6 +3551,27 @@ static void hclge_reset_timer(struct timer_list *t)
- 	hclge_reset_event(hdev->pdev, NULL);
- }
- 
-+void hclge_handle_imp_error(struct hnae3_handle *handle)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	u32 reg_val;
-+
-+	if (test_and_clear_bit(HCLGE_IMP_RD_POISON, &hdev->imp_err_state)) {
-+		dev_err(&hdev->pdev->dev, "Detected IMP RD poison!\n");
-+		reg_val = hclge_read_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG) &
-+			  ~BIT(HCLGE_VECTOR0_IMP_RD_POISON_B);
-+		hclge_write_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG, reg_val);
-+	}
-+
-+	if (test_and_clear_bit(HCLGE_IMP_CMDQ_ERROR, &hdev->imp_err_state)) {
-+		dev_err(&hdev->pdev->dev, "Detected IMP CMDQ error!\n");
-+		reg_val = hclge_read_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG) &
-+			  ~BIT(HCLGE_VECTOR0_IMP_CMDQ_ERR_B);
-+		hclge_write_dev(&hdev->hw, HCLGE_PF_OTHER_INT_REG, reg_val);
-+	}
-+}
-+
- static void hclge_reset_subtask(struct hclge_dev *hdev)
- {
- 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
-@@ -3560,6 +3587,7 @@ static void hclge_reset_subtask(struct hclge_dev *hdev)
- 	 */
- 	hdev->last_reset_time = jiffies;
- 	hdev->reset_type = hclge_get_reset_level(ae_dev, &hdev->reset_pending);
-+
- 	if (hdev->reset_type != HNAE3_NONE_RESET)
- 		hclge_reset(hdev);
- 
-@@ -9516,6 +9544,7 @@ static const struct hnae3_ae_ops hclge_ops = {
- 	.mac_connect_phy = hclge_mac_connect_phy,
- 	.mac_disconnect_phy = hclge_mac_disconnect_phy,
- 	.restore_vlan_table = hclge_restore_vlan_table,
-+	.handle_imp_error = hclge_handle_imp_error,
- };
- 
- static struct hnae3_ae_algo ae_algo = {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 688e425..7b7ba30 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -178,6 +178,8 @@ enum HLCGE_PORT_TYPE {
- #define HCLGE_VECTOR0_RX_CMDQ_INT_B	1
- 
- #define HCLGE_VECTOR0_IMP_RESET_INT_B	1
-+#define HCLGE_VECTOR0_IMP_CMDQ_ERR_B	4
-+#define HCLGE_VECTOR0_IMP_RD_POISON_B	5
- 
- #define HCLGE_MAC_DEFAULT_FRAME \
- 	(ETH_HLEN + ETH_FCS_LEN + 2 * VLAN_HLEN + ETH_DATA_LEN)
-@@ -676,6 +678,11 @@ enum HCLGE_MAC_ADDR_TYPE {
- 	HCLGE_MAC_ADDR_MC
- };
- 
-+enum HCLGE_IMP_ERR_TYPE {
-+	HCLGE_IMP_RD_POISON,
-+	HCLGE_IMP_CMDQ_ERROR,
-+};
-+
- struct hclge_vport_vlan_cfg {
- 	struct list_head node;
- 	int hd_tbl_status;
-@@ -777,6 +784,8 @@ struct hclge_dev {
- 	u8 tc_num_last_time;
- 	enum hclge_fc_mode fc_mode_last_time;
- 	u8 support_sfp_query;
-+	bool ppu_poison_ras_err;
-+	unsigned long imp_err_state;
- 
- #define HCLGE_FLAG_TC_BASE_SCH_MODE		1
- #define HCLGE_FLAG_VNET_BASE_SCH_MODE		2
+
+
 -- 
-2.7.4
+Thanks,
 
+Steve
+
+--00000000000043dc5e058e64d2f2
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-cifs-fix-rmmod-regression-in-cifs.ko-caused-by-force.patch"
+Content-Disposition: attachment; 
+	filename="0001-cifs-fix-rmmod-regression-in-cifs.ko-caused-by-force.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jygomo030>
+X-Attachment-Id: f_jygomo030
+
+RnJvbSA2OTY2YWY1YTE3N2JlN2ZkYWIyOWNkNmU4NzFjMjg1MGMwNzgzODVjIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBTdGV2ZSBGcmVuY2ggPHN0ZnJlbmNoQG1pY3Jvc29mdC5jb20+
+CkRhdGU6IFR1ZSwgMjMgSnVsIDIwMTkgMjI6MTQ6MjkgLTA1MDAKU3ViamVjdDogW1BBVENIXSBj
+aWZzOiBmaXggcm1tb2QgcmVncmVzc2lvbiBpbiBjaWZzLmtvIGNhdXNlZCBieSBmb3JjZV9zaWcK
+IGNoYW5nZXMKCkZpeGVzOiA3MmFiZTNiY2YwOTEgKCJzaWduYWwvY2lmczogRml4IGNpZnNfcHV0
+X3RjcF9zZXNzaW9uIHRvIGNhbGwgc2VuZF9zaWcgaW5zdGVhZCBvZiBmb3JjZV9zaWciKQoKVGhl
+IGdsb2JhbCBjaGFuZ2UgZnJvbSBmb3JjZV9zaWcgY2F1c2VkIG1vZHVsZSB1bmxvYWRpbmcgb2Yg
+Y2lmcy5rbwp0byBmYWlsIChzaW5jZSB0aGUgY2lmc2QgcHJvY2VzcyBjb3VsZCBub3QgYmUga2ls
+bGVkLCAicm1tb2QgY2lmcyIKbm93IHdvdWxkIGFsd2F5cyBmYWlsKQoKU2lnbmVkLW9mZi1ieTog
+U3RldmUgRnJlbmNoIDxzdGZyZW5jaEBtaWNyb3NvZnQuY29tPgpSZXZpZXdlZC1ieTogUm9ubmll
+IFNhaGxiZXJnIDxsc2FobGJlckByZWRoYXQuY29tPgpDQzogRXJpYyBXLiBCaWVkZXJtYW4gPGVi
+aWVkZXJtQHhtaXNzaW9uLmNvbT4KLS0tCiBmcy9jaWZzL2Nvbm5lY3QuYyB8IDEgKwogMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvZnMvY2lmcy9jb25uZWN0LmMg
+Yi9mcy9jaWZzL2Nvbm5lY3QuYwppbmRleCBhNDgzMGNlZDBmOTguLmExNWE2ZTczOGViNSAxMDA2
+NDQKLS0tIGEvZnMvY2lmcy9jb25uZWN0LmMKKysrIGIvZnMvY2lmcy9jb25uZWN0LmMKQEAgLTEx
+MTMsNiArMTExMyw3IEBAIGNpZnNfZGVtdWx0aXBsZXhfdGhyZWFkKHZvaWQgKnApCiAJCW1lbXBv
+b2xfcmVzaXplKGNpZnNfcmVxX3Bvb2xwLCBsZW5ndGggKyBjaWZzX21pbl9yY3YpOwogCiAJc2V0
+X2ZyZWV6YWJsZSgpOworCWFsbG93X3NpZ25hbChTSUdLSUxMKTsKIAl3aGlsZSAoc2VydmVyLT50
+Y3BTdGF0dXMgIT0gQ2lmc0V4aXRpbmcpIHsKIAkJaWYgKHRyeV90b19mcmVlemUoKSkKIAkJCWNv
+bnRpbnVlOwotLSAKMi4yMC4xCgo=
+--00000000000043dc5e058e64d2f2--
