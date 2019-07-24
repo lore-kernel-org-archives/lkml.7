@@ -2,69 +2,135 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C889C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E6CC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6153E21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:59:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G3KNP7bV"
+	by mail.kernel.org (Postfix) with ESMTP id 66B0821926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfGXN7H (ORCPT
+        id S1728306AbfGXN7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:59:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41014 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfGXN7G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:59:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RAl0a6XDBiz9KDbwHW5cZpAX7aqNsCFK4D5fjNEt504=; b=G3KNP7bVg9plKS5fOyhdPIFM9
-        FCUqbYqDja3G744oXtV3DyJdNz9NpPJ/LkXGIVx0fG4F8s4cPNePyGW5UPiGQr096HX+TNnt4N6v+
-        oceg3Cj5KycotFytiEFIpsdxTLiz4WsZRygEt7keJcijolBO0BdW7FzYS/ZVDlaFPwMU8ZuZqJF5R
-        UmUbnSVYgGWDqhfFUS+vBoOTYmeG3aM/fLjdxWdn73OcJxKyJPDQN3jIH5z1uxUMfXsHep6eiSYLF
-        yOCteZLHTcXEOx8p9Sa3r3plfNMIzHxXe+cGiIAVMkItva8kHok7oClOufqb4OeZRC03MLXMuFMTD
-        hPsQ7dARw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqHnL-00052P-7I; Wed, 24 Jul 2019 13:59:03 +0000
-Date:   Wed, 24 Jul 2019 06:59:03 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     davem@davemloft.net, jeffrey.t.kirsher@intel.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] net/ixgbevf: fix a compilation error of skb_frag_t
-Message-ID: <20190724135903.GU363@bombadil.infradead.org>
-References: <1563975157-30691-1-git-send-email-cai@lca.pw>
+        Wed, 24 Jul 2019 09:59:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56804 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726242AbfGXN7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:59:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 93375AFCC;
+        Wed, 24 Jul 2019 13:59:29 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 15:59:27 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
+        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Will Wagner <willw@carallon.com>
+Subject: Re: [RESEND][PATCH v4 3/3] i2c: piix4: add ACPI support
+Message-ID: <20190724155927.17444ab3@endymion>
+In-Reply-To: <20190724145516.342195ac@endymion>
+References: <cover.1519601860.git.andrew.cooks@opengear.com>
+        <d197d95d77afa2054ff1b2c593dae7939030e24b.1519601860.git.andrew.cooks@opengear.com>
+        <20190724145516.342195ac@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1563975157-30691-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 09:32:37AM -0400, Qian Cai wrote:
->  	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
-> -		count += TXD_USE_COUNT(skb_shinfo(skb)->frags[f].size);
-> +		count += TXD_USE_COUNT(skb_shinfo(skb)->frags[f].bv_len);
->  #else
+My attempt looks like that:
 
-No, this is the wrong fix.  Use the fine accessor instead:
+Based on earlier work by Andrew Cooks.
 
-+		count += TXD_USE_COUNT(skb_frag_size(&skb_shinfo(skb)->frags[f]));
+Enable the i2c-piix4 SMBus controller driver to enumerate I2C slave
+devices using ACPI. It builds on the related I2C mux device work
+in commit 8eb5c87a92c0 ("i2c: add ACPI support for I2C mux ports")
 
-although now there's a line length problem.  Most drivers do:
+In the i2c-piix4 driver the adapters are enumerated as:
+ Main SMBus adapter Port 0, Port 2, ..., aux port (i.e., ASF adapter)
 
-		skb_frag_t frag = &skb_shinfo(skb)->frags[f];
-		count += TXD_USE_COUNT(skb_frag_size(frag));
+However, in the AMD BKDG documentation[1], the implied order of ports is:
+ Main SMBus adapter Port 0, ASF adapter, Port 2, Port 3, ...
+
+This ordering difference is unfortunate. We assume that ACPI
+developers will use the AMD documentation ordering, so we have to
+pass an extra parameter to piix4_add_adapter().
+
+[1] 52740 BIOS and Kernel Developer's Guide (BKDG) for AMD Family 16h
+Models 30h-3Fh Processors
+
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+---
+ drivers/i2c/busses/i2c-piix4.c |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+--- linux-5.1.orig/drivers/i2c/busses/i2c-piix4.c	2019-07-24 11:29:49.836450493 +0200
++++ linux-5.1/drivers/i2c/busses/i2c-piix4.c	2019-07-24 15:21:20.166362730 +0200
+@@ -819,7 +819,8 @@ static int piix4_adapter_count;
+ 
+ static int piix4_add_adapter(struct pci_dev *dev, unsigned short smba,
+ 			     bool sb800_main, u8 port, bool notify_imc,
+-			     const char *name, struct i2c_adapter **padap)
++			     u8 hw_port_nr, const char *name,
++			     struct i2c_adapter **padap)
+ {
+ 	struct i2c_adapter *adap;
+ 	struct i2c_piix4_adapdata *adapdata;
+@@ -851,6 +852,12 @@ static int piix4_add_adapter(struct pci_
+ 	/* set up the sysfs linkage to our parent device */
+ 	adap->dev.parent = &dev->dev;
+ 
++	if (has_acpi_companion(&dev->dev)) {
++		acpi_preset_companion(&adap->dev,
++				ACPI_COMPANION(&dev->dev),
++				hw_port_nr);
++	}
++
+ 	snprintf(adap->name, sizeof(adap->name),
+ 		"SMBus PIIX4 adapter%s at %04x", name, smba);
+ 
+@@ -883,7 +890,10 @@ static int piix4_add_adapters_sb800(stru
+ 	}
+ 
+ 	for (port = 0; port < piix4_adapter_count; port++) {
++		u8 hw_port_nr = port == 0 ? 0 : port + 1;
++
+ 		retval = piix4_add_adapter(dev, smba, true, port, notify_imc,
++					   hw_port_nr,
+ 					   piix4_main_port_names_sb800[port],
+ 					   &piix4_main_adapters[port]);
+ 		if (retval < 0)
+@@ -954,8 +964,8 @@ static int piix4_probe(struct pci_dev *d
+ 			return retval;
+ 
+ 		/* Try to register main SMBus adapter, give up if we can't */
+-		retval = piix4_add_adapter(dev, retval, false, 0, false, "",
+-					   &piix4_main_adapters[0]);
++		retval = piix4_add_adapter(dev, retval, false, 0, false, 0,
++					   "", &piix4_main_adapters[0]);
+ 		if (retval < 0)
+ 			return retval;
+ 	}
+@@ -981,7 +991,7 @@ static int piix4_probe(struct pci_dev *d
+ 	if (retval > 0) {
+ 		/* Try to add the aux adapter if it exists,
+ 		 * piix4_add_adapter will clean up if this fails */
+-		piix4_add_adapter(dev, retval, false, 0, false,
++		piix4_add_adapter(dev, retval, false, 0, false, 1,
+ 				  is_sb800 ? piix4_aux_port_name_sb800 : "",
+ 				  &piix4_aux_adapter);
+ 	}
+
+
+-- 
+Jean Delvare
+SUSE L3 Support
