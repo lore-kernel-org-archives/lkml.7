@@ -2,145 +2,126 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAB7C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BD2C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5823321926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CF72184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563989880;
-	bh=HU+UJEwKj7oJ8yx1arDBtwt//GkoHkAe1Tgtv1vNwIE=;
+	s=default; t=1563990094;
+	bh=D4bE665nM5LzWcaA4zQvt4ZilfR5RBc9ne4A65LT40E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yRZF6hZpw8q4cILU8ZRFqf7ogajX2ROD5d8pbC236teavPgZHceuj0LXn+oROBCKk
-	 gZ3IJL3ztlpFM7xJq7rnfhKP5xdP9pvKjXEc0tYYfE1EUvyi4eYinyF0692hYRBVce
-	 ooxVJWeyN3T6Xt+2Ccrg5DP7svTQ3BDQ9WmPDecE=
+	b=u+XJ+igO67WpZ3undhHWzfQ+uYT8yFfNZTPxRwYRfqUej9mmCRWc+ST9Uma0k6Me3
+	 bJwITUOp6bxSMN8bNsoMnrMV1/xWJ+V0V15U+SPyt+kvModCleqyT6nzfWoIrtNr1q
+	 Wxr6KGgguT7tv5DRILMv/noAbrST/VSexvVZuy7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfGXRh7 (ORCPT
+        id S2387549AbfGXRld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:37:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44995 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfGXRh6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:37:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t14so22248469plr.11;
-        Wed, 24 Jul 2019 10:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=210jieYj6x4iDn+RzSO4QMxbDZOJTaHp79XKUEHy4po=;
-        b=hEIOZzj60rL78OaSsU8W3pEv0nJLPBgdwJhBm+OTrlPQ4Dd28EfK2xeqNvC+YGG1iS
-         o7+D047hKFmZkjPSVvrcm81oE1rDcz+IZmg6FJ/axEGwNDZR95o5vSzbXgpbwrf2/mfc
-         z8SddeI9szOe6KIUJ7vMY/XhgwLeyq8qXJzegLuhJRZrhtXpnYfG93bp8qHbj5Z5m+BC
-         eGqOrfAFGREptDwpyg3OOnPOGiQK1kk2OIYuZ8WwuEv+wR1kuDyJz5E4YTlRTomysIRU
-         LP0OHdDIafKLY5KlYpdPJE9e41tYkm7y46iWC3NOVLtZveI4poFnX5aOg9hOiMzgpwn/
-         +9/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=210jieYj6x4iDn+RzSO4QMxbDZOJTaHp79XKUEHy4po=;
-        b=P/C3R4isLq1o+mFXfYrNrFyhzJb4hVbwYxGkWIXXSZE598Jfs1hsROXWBnMwkpWtI2
-         yqJgLry+LuF+QAUoCEkKV7uobc+mZGOiT9I65ptD8lRgnGUyvLHN0+15nT+taQMwQBs1
-         BgUizfAy2AFkgqul34xw8HkSZ+MaOv4adeBKduTBZRGvv6f+LrTIcwYAFEDKmbISm0vl
-         I8++DR39U/1mS9MSdnO1GWXRIszaMWugCZUPNSFR7NtTwf5hUCBvAJrT/F/N50IX/MJQ
-         z6CPnJ2z4ir7JdZFcs/JZQo4ETGnFZP4W9RI1krTU9vQ1oPEgdHQedi4ju/EFP3AnTRA
-         cACQ==
-X-Gm-Message-State: APjAAAWiN4LFYeCtgy40kANFvRQOEp1iBEw0ZZxTKFZ/blGdbFaGhhP8
-        Iv5eTZAVAekj7ABpOejp6V+sY54+
-X-Google-Smtp-Source: APXvYqz22Xp4Bha/kHcoUHwURa5oH9/WA3W1Js1+o3th/+U8OIMfM61Tbdg9ifuIT2cMuqk1plKZQA==
-X-Received: by 2002:a17:902:6a87:: with SMTP id n7mr85600071plk.336.1563989877739;
-        Wed, 24 Jul 2019 10:37:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:c91a])
-        by smtp.gmail.com with ESMTPSA id d15sm82710266pjc.8.2019.07.24.10.37.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 10:37:57 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 10:37:55 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 2/2] blkcg: don't offline parent blkcg first
-Message-ID: <20190724173755.GB569612@devbig004.ftw2.facebook.com>
-References: <20190724173517.GA559934@devbig004.ftw2.facebook.com>
- <20190724173722.GA569612@devbig004.ftw2.facebook.com>
+        Wed, 24 Jul 2019 13:41:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726323AbfGXRld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:41:33 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69D782184B;
+        Wed, 24 Jul 2019 17:41:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563990091;
+        bh=D4bE665nM5LzWcaA4zQvt4ZilfR5RBc9ne4A65LT40E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t3RZcZtsAIaY8XJWpTiq9Gg0sVvqR/5lWoO/5beJQ6sAXhWbWcE7okoi/rDg9cAbw
+         zAdLqiBqnnEwHxJfwW6+tFDsLAuZ/gwWIaFMYb7wP2TNB4CR17FVYMLRPUluzpultO
+         ciyDP2bElxavp3s70irEN6KalhwNoy2ldGpausrI=
+Date:   Wed, 24 Jul 2019 10:41:29 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Tejun Heo <tj@kernel.org>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4d497898effeb1936245@syzkaller.appspotmail.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: linux-next boot error: WARNING: workqueue cpumask: online
+ intersect > possible intersect
+Message-ID: <20190724174129.GE213255@gmail.com>
+Mail-Followup-To: Tejun Heo <tj@kernel.org>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+4d497898effeb1936245@syzkaller.appspotmail.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <000000000000f19676058ab7adc4@google.com>
+ <CACT4Y+ZZy5nqduErU8hjKrwThHiybGpwd3QzOviAWftZFZ4d2A@mail.gmail.com>
+ <20190611185206.GG3341036@devbig004.ftw2.facebook.com>
+ <CACT4Y+ZNTh=t62oj_Y5XyQwjOJp3AWwWi8c-4DrX+jKNCVqzzg@mail.gmail.com>
+ <20190723163126.GB23641@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724173722.GA569612@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190723163126.GB23641@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blkcg->cgwb_refcnt is used to delay blkcg offlining so that blkgs
-don't get offlined while there are active cgwbs on them.  However, it
-ends up making offlining unordered sometimes causing parents to be
-offlined before children.
+On Tue, Jul 23, 2019 at 09:31:27AM -0700, Eric Biggers wrote:
+> On Tue, Jul 23, 2019 at 10:16:24AM +0200, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> > On Tue, Jun 11, 2019 at 8:52 PM Tejun Heo <tj@kernel.org> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Fri, Jun 07, 2019 at 10:45:45AM +0200, Dmitry Vyukov wrote:
+> > > > +workqueue maintainers and Michael who added this WARNING
+> > > >
+> > > > The WARNING was added in 2017, so I guess it's a change somewhere else
+> > > > that triggered it.
+> > > > The WARNING message does not seem to give enough info about the caller
+> > > > (should it be changed to WARN_ONCE to print a stack?). How can be root
+> > > > cause this and unbreak linux-next?
+> > >
+> > > So, during boot, workqueue builds masks of possible cpus of each node
+> > > and stores them on wq_numa_possible_cpumask[] array.  The warning is
+> > > saying that somehow online cpumask of a node became a superset of the
+> > > possible mask, which should never happen.
+> > >
+> > > Dumping all masks in wq_numa_possible_cpumasks[] and cpumask_of_node()
+> > > of each node should show what's going on.
+> > 
+> > This has reached upstream and all subsystem subtrees, now all Linux
+> > trees are boot broken (except for few that still lack behind):
+> > https://syzkaller.appspot.com/upstream
+> > 
+> > No new Linux code is tested by syzbot at this point.
+> > 
+> 
+> AFAICS, what's actually happening is that the boot fails due to a different bug,
+> "general protection fault in dma_direct_max_mapping_size" -- which is a real
+> boot error, not just a warning; see
+> https://lkml.kernel.org/lkml/20190723161425.GA23641@gmail.com/
+> 
+> syzbot then sees "WARNING: workqueue cpumask: online intersect > possible
+> intersect" in the console output prior to that, and uses that as the bug title.
+> 
+> It's not obvious that syzbot would report "WARNING: workqueue cpumask: online
+> intersect > possible intersect" without the real boot error too.
+> 
+> Nevertheless the issue is still there and something needs to be done about it.
+> 
 
-Let's fix this by making child blkcgs pin the parents' online states.
+The real boot error "general protection fault in dma_direct_max_mapping_size" is
+fixed in mainline now.  I believe that unblocks syzbot testing, since it doesn't
+appear to have been blocked by "WARNING: workqueue cpumask: online intersect >
+possible intersect" by itself.
 
-Note that pin/unpin names are chosen over get/put intentionally
-because css uses get/put online for something different.
+Anyway: Tejun and Michael, any other ideas for why "WARNING: workqueue cpumask:
+online intersect > possible intersect" is still happening?
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- block/blk-cgroup.c         |   16 ++++++++++++++++
- include/linux/blk-cgroup.h |    6 +++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
-
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1158,6 +1158,21 @@ unlock:
- 	return ret;
- }
- 
-+static int blkcg_css_online(struct cgroup_subsys_state *css)
-+{
-+	struct blkcg *blkcg = css_to_blkcg(css);
-+	struct blkcg *parent = blkcg_parent(blkcg);
-+
-+	/*
-+	 * blkcg_pin_online() is used to delay blkcg offline so that blkgs
-+	 * don't go offline while cgwbs are still active on them.  Pin the
-+	 * parent so that offline always happens towards the root.
-+	 */
-+	if (parent)
-+		blkcg_pin_online(parent);
-+	return 0;
-+}
-+
- /**
-  * blkcg_init_queue - initialize blkcg part of request queue
-  * @q: request_queue to initialize
-@@ -1300,6 +1315,7 @@ static void blkcg_exit(struct task_struc
- 
- struct cgroup_subsys io_cgrp_subsys = {
- 	.css_alloc = blkcg_css_alloc,
-+	.css_online = blkcg_css_online,
- 	.css_offline = blkcg_css_offline,
- 	.css_free = blkcg_css_free,
- 	.can_attach = blkcg_can_attach,
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -455,8 +455,12 @@ static inline void blkcg_pin_online(stru
-  */
- static inline void blkcg_unpin_online(struct blkcg *blkcg)
- {
--	if (refcount_dec_and_test(&blkcg->online_pin))
-+	do {
-+		if (!refcount_dec_and_test(&blkcg->online_pin))
-+			break;
- 		blkcg_destroy_blkgs(blkcg);
-+		blkcg = blkcg_parent(blkcg);
-+	} while (blkcg);
- }
- 
- /**
+- Eric
