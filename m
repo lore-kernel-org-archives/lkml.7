@@ -2,126 +2,143 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3793C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DD7C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924E3217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="MT7C+GiD"
+	by mail.kernel.org (Postfix) with ESMTP id 9B23B217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbfGXUqG (ORCPT
+        id S1728761AbfGXUqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:46:06 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38234 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfGXUqG (ORCPT
+        Wed, 24 Jul 2019 16:46:12 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38714 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfGXUqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:46:06 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r9so45801008ljg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jchNrpEFta2pR8g8F+xkNJeAvSbMUE7xllhKBLOSK2c=;
-        b=MT7C+GiDQsqfC6X4YF7XxqEjuHYQy6MkJXzY4VC0qhnNA7PObwYrofbT0r598vkaqm
-         tZd01yPjirtGKecjfAo34GEk7/kG/ltr2AkDz4xEN22dwQQmQ4xTWp+vmZg+uRHb7ACL
-         37l+PyATPULqjEz3PWn7dodMVvq3EtqfVP0OHwtsKRWIYMB95cxIP3yBLfwwy5zSPiPa
-         H5fQ0tFczUX9E2hmwBqB5Jwios+1t4mTttpb0hKRTQfCEoQXL+PiHvOhsXknjLaMK4Vc
-         msC92JHlEnCp9cWJnB2PcX/Afmg3RThj36Nl5GOUvXTPeKvth4kwjALe4x/d6e21L9f6
-         Aq+g==
+        Wed, 24 Jul 2019 16:46:12 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n11so46897635qtl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:46:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jchNrpEFta2pR8g8F+xkNJeAvSbMUE7xllhKBLOSK2c=;
-        b=eVzj9sJb6s6AXaMUJS3pUp6n85ZZIzLMKZvN+AoYYkMzZr4qquuF9FdXbkh6P7VSOl
-         loEYrPiK1o+cE/N03UqR0u9ZugS/cHYeyfHkkaMeyITFYLG9/p+i3UqOQeSitv4N3vrf
-         P01YNt5GdrifKtbV6DbeFKYfxns0Yz5lf80UQZil1QIWOFqFy/Yi4At3LsqNvueUkx0O
-         hYnMP23FETM7VWT9A014feSnAJpq4GO93GSeuUoVC0pjwnr/xxaWbK32ZItFSvPagCNX
-         ni1C51rUEOC6ivcxJ3FBWsbXSanbF/82y9KdLQtMmKtWtV6qqCjj49KRtNQkrgjFfm0f
-         ngug==
-X-Gm-Message-State: APjAAAULhoU9lkm+x9bJoD8PltlZqB0EuzqNQOgnt3n0NzTtWf7UkgXE
-        TUf7FqEtozJDEkgQEdiYWWynVVBKN8AS4+oMbw==
-X-Google-Smtp-Source: APXvYqws44gRqgHRNLZfmXyFQsmnH97j7fLY7u2xaxMTGUblpGERsrTI10OKVZzx4H5OjfRs/HLBGzdeE07/cNF9yXE=
-X-Received: by 2002:a2e:9dc1:: with SMTP id x1mr44291493ljj.0.1564001163840;
- Wed, 24 Jul 2019 13:46:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kEmnRIh7eb5SZPPwt0SSGdzpr7hhPeFdagIv+/tAxBM=;
+        b=Gw0xGDVCfpuSMyl2fm340k+ukP7D53VeKuytSeB5yHAV6OK6i49TVgGh/eM28rKMFL
+         nmM7OPaUP2HO4fhhNWuiPzrneBwdSut96RSLLfTY8Y9fd+3Q/5kYVjPXLNh4Ab8epNj/
+         E6fEBRpc0LG5fRvspCa2+MOPR8rEEb1ehRoQiQqEi9LlBAereURlty/k4Nvgx0jjkYsW
+         GLE9cQqRuOhItZPspd7Se8J6Bm/aVFP6VbsCDORD0HLiXGoRqq5jSghEK97T49yoy0Tw
+         awPmHqxTCi4M617ckBSNefki4L4HES3hHk3WHSalNWomEcCPTsBQZJUEwlKOSd1xOfdZ
+         jLVQ==
+X-Gm-Message-State: APjAAAWzDTbDL7VEC0LkUCFRQasfrEsFYm8UpiQcN9wevoxY3yxaK8/W
+        zUVKElayPRTUYa/n+/RXxqDCKQ==
+X-Google-Smtp-Source: APXvYqwbpIKZ55eh/98dX0EXGRSXf9HthV7sKQoo76sbcztNZu/6XKn9qDAYGtrzpMy5Z2naK3MXlQ==
+X-Received: by 2002:ac8:5141:: with SMTP id h1mr59926940qtn.15.1564001170693;
+        Wed, 24 Jul 2019 13:46:10 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
+        by smtp.gmail.com with ESMTPSA id c5sm29604425qta.5.2019.07.24.13.46.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 13:46:09 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 16:46:03 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+Message-ID: <20190724164433-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+ <20190724171050.7888.62199.stgit@localhost.localdomain>
+ <20190724150224-mutt-send-email-mst@kernel.org>
+ <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
 MIME-Version: 1.0
-References: <20190723124951.25713-1-baijiaju1990@gmail.com>
-In-Reply-To: <20190723124951.25713-1-baijiaju1990@gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 24 Jul 2019 16:45:52 -0400
-Message-ID: <CAHC9VhQJwif4NXVydmQkTUXgM8Xnp5rG_zscXmKc5_CSYo-e5w@mail.gmail.com>
-Subject: Re: [PATCH] kernel: auditfilter: Fix a possible null-pointer
- dereference in audit_watch_path()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 8:50 AM Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
-> In audit_find_rule(), there is an if statement on line 894 to check
-> whether entry->rule.watch is NULL:
->     else if (entry->rule.watch)
->
-> If entry->rule.watch is NULL, audit_compare_rule on 910 is called:
->     audit_compare_rule(&entry->rule, &e->rule))
->
-> In audit_compare_rule(), a->watch is used on line 720:
->     if (strcmp(audit_watch_path(a->watch), ...)
->
-> In this case, a->watch is NULL, and audit_watch_path() will use:
->     watch->path
->
-> Thus, a possible null-pointer dereference may occur in this case.
->
-> To fix this possible bug, an if statement is added in
-> audit_compare_rule() to check a->watch before using a->watch.
->
-> This bug is found by a static analysis tool STCheck written by us.
->
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  kernel/auditfilter.c | 2 ++
->  1 file changed, 2 insertions(+)
+On Wed, Jul 24, 2019 at 01:18:00PM -0700, Alexander Duyck wrote:
+> On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
+> > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > 
+> > > Add support for what I am referring to as "bubble hinting". Basically the
+> > > idea is to function very similar to how the balloon works in that we
+> > > basically end up madvising the page as not being used. However we don't
+> > > really need to bother with any deflate type logic since the page will be
+> > > faulted back into the guest when it is read or written to.
+> > > 
+> > > This is meant to be a simplification of the existing balloon interface
+> > > to use for providing hints to what memory needs to be freed. I am assuming
+> > > this is safe to do as the deflate logic does not actually appear to do very
+> > > much other than tracking what subpages have been released and which ones
+> > > haven't.
+> > > 
+> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > ---
+> > >  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
+> > >  include/hw/virtio/virtio-balloon.h              |    2 +
+> > >  include/standard-headers/linux/virtio_balloon.h |    1 +
+> > >  3 files changed, 42 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+> > > index 2112874055fb..70c0004c0f88 100644
+> > > --- a/hw/virtio/virtio-balloon.c
+> > > +++ b/hw/virtio/virtio-balloon.c
+> > > @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
+> > >      balloon_stats_change_timer(s, 0);
+> > >  }
+> > >  
+> > > +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
+> > > +{
+> > > +    VirtQueueElement *elem;
+> > > +
+> > > +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
+> > > +    	unsigned int i;
+> > > +
+> > > +        for (i = 0; i < elem->in_num; i++) {
+> > > +            void *addr = elem->in_sg[i].iov_base;
+> > > +            size_t size = elem->in_sg[i].iov_len;
+> > > +            ram_addr_t ram_offset;
+> > > +            size_t rb_page_size;
+> > > +            RAMBlock *rb;
+> > > +
+> > > +            if (qemu_balloon_is_inhibited())
+> > > +                continue;
+> > > +
+> > > +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
+> > > +            rb_page_size = qemu_ram_pagesize(rb);
+> > > +
+> > > +            /* For now we will simply ignore unaligned memory regions */
+> > > +            if ((ram_offset | size) & (rb_page_size - 1))
+> > > +                continue;
+> > > +
+> > > +            ram_block_discard_range(rb, ram_offset, size);
+> > 
+> > I suspect this needs to do like the migration type of
+> > hinting and get disabled if page poisoning is in effect.
+> > Right?
+> 
+> Shouldn't something like that end up getting handled via
+> qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
+> like that would end up setting qemu_balloon_is_inhibited to true, if that
+> isn't the case then I could add some additional conditions. I would do it
+> in about the same spot as the qemu_balloon_is_inhibited check.
 
-Thank you for taking the time to analyze the kernel's audit subsystem
-and send a report, but I believe this is a false positive.
-
-The only way we can hit the AUDIT_WATCH comparison in
-audit_compare_rules is if both rules are AUDIT_WATCH rules, and when
-we create the audit_krule entries we ensure that the watch field is
-correctly populated for AUDIT_WATCH rules, see the
-audit_data_to_entry() and audit_to_watch() functions.
-
-If you disagree with this, please let us know, but as of right now I
-don't believe there is a problem here.
-
-> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-> index b0126e9c0743..b0ad17b14609 100644
-> --- a/kernel/auditfilter.c
-> +++ b/kernel/auditfilter.c
-> @@ -717,6 +717,8 @@ static int audit_compare_rule(struct audit_krule *a, struct audit_krule *b)
->                                 return 1;
->                         break;
->                 case AUDIT_WATCH:
-> +                       if (!a->watch)
-> +                               break;
->                         if (strcmp(audit_watch_path(a->watch),
->                                    audit_watch_path(b->watch)))
->                                 return 1;
-> --
-> 2.17.0
+Well qemu_balloon_is_inhibited is for the regular ballooning,
+mostly a work-around for limitations is host linux iommu
+APIs when it's used with VFIO.
 
 -- 
-paul moore
-www.paul-moore.com
+MST
