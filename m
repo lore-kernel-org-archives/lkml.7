@@ -2,120 +2,150 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26755C41517
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E348C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FF62070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:01:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="yeYLnMe6"
+	by mail.kernel.org (Postfix) with ESMTP id 7047B227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfGXFBX (ORCPT
+        id S1726215AbfGXFEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:01:23 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:37797 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfGXFBX (ORCPT
+        Wed, 24 Jul 2019 01:04:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59979 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725870AbfGXFEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:01:23 -0400
-Received: by mail-vs1-f66.google.com with SMTP id v6so30546878vsq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 22:01:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L6bmVsqhCrWcP44dNz+ryOiefuDJUbPMuZZHROp2h8o=;
-        b=yeYLnMe6AHfk4GzU5rqIM1QMbCG15Q7n5ovV0MGRY/5YLxQw+pvxOqLscbpUs64eLn
-         qPc1t6Uth7uzIxN5EibV4b60nlofOD+3yha8qaF0nA/QfyPpJZ7QOVlH8QihTRRyed4j
-         Wu/ATEA06t7GeqFFZY8peXscvnC3xYUJ97VZR/nyRQRDUVzRFzzcJwqpZ4UobUoOpiiF
-         ZasxzIlC751HDXsSH9zBwTLX3u+JTG5oDxER7yeXgu69rNQ8yRqCli1Y2slpHEQdZ++q
-         2xG2gZNpiOeM/0aXwCHHrBX/VubD/Pst79FhLlbNoBRdcVkWrrg4bNxfbqb3IfvtbaOK
-         b5Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L6bmVsqhCrWcP44dNz+ryOiefuDJUbPMuZZHROp2h8o=;
-        b=tUbTO4Cqlm9cdV2hit7JnHs/fmKe4mrR+JUSHWEqE0sCMqeOzuZf4RBZk+WNb9wcF8
-         mQiM5BAVc7j6VMgOOQIZ8/9dTbDygWtol5/heddYgKfWhVABB0adZdnCqcN2dyLhxoyI
-         xciIwS/gYOPAqe52OrNLDNyAOne3Bj1sVZG2LOlen8BCFfs3SZJqOX+e3AmO05abowSU
-         zlEY9E4a10nPRRW16QhVO33nWttTG/mac+yK3iihpIvsR8mfD47qpbU2cnGhdmECy0FN
-         woLD4NBMyslSSGAIG9hL+CX3ho875n5x1LtAVzEoGk7WuCPy0ntJZajXXgsCHEVHosSH
-         f+lA==
-X-Gm-Message-State: APjAAAV1nv+bmDjHW6Qp0jkYeikzDGuC4DasJxPRHE/E+JMB193Zkccl
-        tSMpXslMpUxrIlSUEn/DoC5LC7ZknCqEFFNQ3ob2VucmXJM=
-X-Google-Smtp-Source: APXvYqw3yyWPpdCbrOX1pwgsfoztuivUgg/sQFikQTctRLB/C9ty3TU+JpmHdrbtAnjAT5/MlnGoWezxaV8YAJhNPSc=
-X-Received: by 2002:a67:d990:: with SMTP id u16mr51197352vsj.95.1563944482317;
- Tue, 23 Jul 2019 22:01:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724044906.12007-1-vkoul@kernel.org> <20190724044906.12007-3-vkoul@kernel.org>
-In-Reply-To: <20190724044906.12007-3-vkoul@kernel.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 24 Jul 2019 10:31:11 +0530
-Message-ID: <CAHLCerPQXQKrm4njTv3bTTKHFCpQC_TnJ98Jmnr0g+bD_Q3ycw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] arm64: dts: qcom: sdm845: remove unnecessary
- properties for dsi nodes
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
+        Wed, 24 Jul 2019 01:04:11 -0400
+X-UUID: e0f47eec30464f22bd9e18ba89f1f95a-20190724
+X-UUID: e0f47eec30464f22bd9e18ba89f1f95a-20190724
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 29376682; Wed, 24 Jul 2019 13:04:03 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 24 Jul 2019 13:04:02 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 24 Jul 2019 13:04:02 +0800
+Message-ID: <1563944642.13531.0.camel@mtkswgap22>
+Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
+ ARMv8 SoCs
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 24 Jul 2019 13:04:02 +0800
+In-Reply-To: <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
+         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
+         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:20 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> We get a warning about unnecessary properties of
->
-> arch/arm64/boot/dts/qcom/sdm845.dtsi:2211.22-2257.6: Warning (avoid_unnecessary_addr_size): /soc/mdss@ae00000/dsi@ae94000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
-> arch/arm64/boot/dts/qcom/sdm845.dtsi:2278.22-2324.6: Warning (avoid_unnecessary_addr_size): /soc/mdss@ae00000/dsi@ae96000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
->
-> So, remove these properties
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On Tue, 2019-07-23 at 08:35 -0600, Rob Herring wrote:
+> On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
+> >
+> 
+> Please don't top post to lists.
+> 
+> > Dear Rob,
+> >         You can check my driver for detail:
+> >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
+> 
+> I could, or you could just answer my question.
+> 
+> >
+> >         This driver is registered as hardware random number generator, and
+> > combines with rng-core.
+> >         We want to add one rng hw based on the dts. Is this proper or do you
+> > have other suggestion to meet this requirement?
+> 
+> It depends. There doesn't appear to be any resource configuration, so
+> why does it need to be in DT. DT is not the only way instantiate
+> drivers.
+> 
+> Rob
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index e81f4a6d08ce..2985df032179 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2234,9 +2234,6 @@
->
->                                 status = "disabled";
->
-> -                               #address-cells = <1>;
-> -                               #size-cells = <0>;
-> -
->                                 ports {
->                                         #address-cells = <1>;
->                                         #size-cells = <0>;
-> @@ -2301,9 +2298,6 @@
->
->                                 status = "disabled";
->
-> -                               #address-cells = <1>;
-> -                               #size-cells = <0>;
-> -
->                                 ports {
->                                         #address-cells = <1>;
->                                         #size-cells = <0>;
-> --
-> 2.20.1
->
+This hwrng is only supported on some chipsets. It needs DT to identify
+which platform is supported or not. Is there any better idea to meet
+this requirement?
+
+Neal
+
+> >
+> >         Thanks
+> >
+> >
+> > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
+> > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
+> > > > Document the binding used by the MediaTek ARMv8 SoCs random
+> > > > number generator with TrustZone enabled.
+> > > >
+> > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > > ---
+> > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > new file mode 100644
+> > > > index 0000000..c04ce15
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > @@ -0,0 +1,10 @@
+> > > > +MediaTek random number generator with TrustZone enabled
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible : Should be "mediatek,mtk-sec-rng"
+> > >
+> > > What's the interface to access this?
+> > >
+> > > A node with a 'compatible' and nothing else is a sign of something that
+> > > a parent device should instantiate and doesn't need to be in DT. IOW,
+> > > what do complete bindings for firmware functions look like?
+> > >
+> > > > +
+> > > > +Example:
+> > > > +
+> > > > +hwrng: hwrng {
+> > > > +   compatible = "mediatek,mtk-sec-rng";
+> > > > +}
+> > > > --
+> > > > 1.7.9.5
+> > > >
+> > >
+> > > _______________________________________________
+> > > Linux-mediatek mailing list
+> > > Linux-mediatek@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> >
+> >
+
+
