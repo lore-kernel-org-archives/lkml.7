@@ -2,652 +2,517 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79135C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4535AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3259022ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="N9EtOxCV"
+	by mail.kernel.org (Postfix) with ESMTP id 07A4621873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563998277;
+	bh=1otD8bJipzPQajaBeXsTvYYuAQZRLswvtzUv+MELmZ0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ke9X6esKTXJAlqvZ6/BmQxvQ61XZToi2++ORfVhaN5hS4gL1t22bllJhNbODNM2yW
+	 H9Sil9mCMpxbBQzIkOYcoB8pFkyM1q20MBexBkkYBMD4pBqE96Bk+xWekkJmB6ePCv
+	 Li7mKiq60by2p5tso+3vnpyuaKbc2y31qDL4VLKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392120AbfGXT5v (ORCPT
+        id S2392147AbfGXT5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:57:51 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36934 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392098AbfGXT5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so21462760pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GPGMp3Z5tMKTlSIY4+dJ+EwBidIrQV9yOiqz0I+KpuI=;
-        b=N9EtOxCV3Gt0JC1yxlszeEqw4DZKIHiIA8l32BuQmt6ExFUWXDv6AJyIQjTM8DU5E6
-         WlGCmJTIc/L0sDTtjNZTLCUERVUFKeo56J1gnRKLmpGkLlVWz3xVPHcjmnwnLP00mxex
-         Y/jIG/XnMuiZ3JdsPN602FJWmVJvjUg/60aIDIRNhI4FpkSWotFviKfQOVOH6/5Z+eH4
-         bnJUpguzK+BCBSVOgJwHF9u3d4b1Y7hHSUQ6wPZD6xFPzL91Y92+KvS8NZVXx+UAhOeL
-         FiS7oal3j5yx59QRlzs+FTZgnOrJOXl0jG+5z3ShITkjGZ2cCOwxKGGgm252InOtK37e
-         T/Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GPGMp3Z5tMKTlSIY4+dJ+EwBidIrQV9yOiqz0I+KpuI=;
-        b=UcxOpgqPbBNK5kDIFhmX9D8rVVwrGvXJV8jNxlI8IewmV/zmmIZ3gi6GsR08Gl1Qhb
-         OPxXVy1oDrOe/ID6qFCSeo48VaMxDxQoM1yzoRJZXm+e1+eo3IKzHBY+EZkbnnbhx/oa
-         ZTWmQF49MSpLdbz/Yduqy/WbntkGsIJfGXqnIVXwcDt62PqOQcZnjqPsxxiqk0feczRy
-         J+IvSS3kTj70FNfMG6ZvvRGZ979GScaMt81gEAxdjWKaWqFHOKYPPAUkY0vQesiMZn5O
-         jsCZA4NHtNQmLe/OZYJ0rsR6e14sJ1Kf3GtdHKB63DtnwIL57t2RMxt/mTKsMjgyD6tX
-         uXOA==
-X-Gm-Message-State: APjAAAWKZMCByZojh5y/RE8fRtY+36sLLp3mQQEHgBLS414D/BitEHXN
-        BwZpUECDHDxX2ED6UyIYMy4OYUnL
-X-Google-Smtp-Source: APXvYqyJwFQzJLxFbKWVANgLXI/3zYzrbuzCqQk6pCxCVWrScTR3LPgO3aG4qe30g9x4GfYTlkr0bw==
-X-Received: by 2002:a62:ab18:: with SMTP id p24mr13021944pff.113.1563998267434;
-        Wed, 24 Jul 2019 12:57:47 -0700 (PDT)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.gmail.com with ESMTPSA id f88sm46307394pjg.5.2019.07.24.12.57.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 12:57:47 -0700 (PDT)
-From:   Mark Salyzyn <salyzyn@android.com>
+        Wed, 24 Jul 2019 15:57:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392125AbfGXT5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:57:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F0BF206BA;
+        Wed, 24 Jul 2019 19:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563998272;
+        bh=1otD8bJipzPQajaBeXsTvYYuAQZRLswvtzUv+MELmZ0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iA3JDFD4pddJwST2k86zJHVcWgwhM26JvTkGejnZ+VBiz4Iy1mbl+mF9TXoXKj7rL
+         6T+SIWhYnHO1kLCHediJWoV1Jf8GTRiAlQA+W6ebg/ixfmsUKaxDPtuKfGkIdHhCiG
+         YN4wY4s+rUGARBlyy/CqRtOZPapEUtU7SAbdbo2g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-unionfs@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v10 5/5] overlayfs: override_creds=off option bypass creator_cred
-Date:   Wed, 24 Jul 2019 12:57:16 -0700
-Message-Id: <20190724195719.218307-6-salyzyn@android.com>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-In-Reply-To: <20190724195719.218307-1-salyzyn@android.com>
-References: <20190724195719.218307-1-salyzyn@android.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, linux-usb@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.1 308/371] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
+Date:   Wed, 24 Jul 2019 21:21:00 +0200
+Message-Id: <20190724191747.337616550@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default, all access to the upper, lower and work directories is the
-recorded mounter's MAC and DAC credentials.  The incoming accesses are
-checked against the caller's credentials.
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-If the principles of least privilege are applied, the mounter's
-credentials might not overlap the credentials of the caller's when
-accessing the overlayfs filesystem.  For example, a file that a lower
-DAC privileged caller can execute, is MAC denied to the generally
-higher DAC privileged mounter, to prevent an attack vector.
+commit 70f1b0d34bdf03065fe869e93cc17cad1ea20c4a upstream.
 
-We add the option to turn off override_creds in the mount options; all
-subsequent operations after mount on the filesystem will be only the
-caller's credentials.  The module boolean parameter and mount option
-override_creds is also added as a presence check for this "feature",
-existence of /sys/module/overlay/parameters/override_creds.
+The usb support for asyncio encoded one of it's values in the wrong
+field.  It should have used si_value but instead used si_addr which is
+not present in the _rt union member of struct siginfo.
 
-It was not always this way.  Circa 4.6 there was no recorded mounter's
-credentials, instead privileged access to upper or work directories
-were temporarily increased to perform the operations.  The MAC
-(selinux) policies were caller's in all cases.  override_creds=off
-partially returns us to this older access model minus the insecure
-temporary credential increases.  This is to permit use in a system
-with non-overlapping security models for each executable including
-the agent that mounts the overlayfs filesystem.  In Android
-this is the case since init, which performs the mount operations,
-has a minimal MAC set of privileges to reduce any attack surface,
-and services that use the content have a different set of MAC
-privileges (eg: read, for vendor labelled configuration, execute for
-vendor libraries and modules).  The caveats are not a problem in
-the Android usage model, however they should be fixed for
-completeness and for general use in time.
+The practical result of this is that on a 64bit big endian kernel
+when delivering a signal to a 32bit process the si_addr field
+is set to NULL, instead of the expected pointer value.
 
-Signed-off-by: Mark Salyzyn <salyzyn@android.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Smalley <sds@tycho.nsa.gov>
-Cc: linux-unionfs@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@android.com
----
-v10:
-- Rebase (and expand because of increased revert_cred usage)
+This issue can not be fixed in copy_siginfo_to_user32 as the usb
+usage of the the _sigfault (aka si_addr) member of the siginfo
+union when SI_ASYNCIO is set is incompatible with the POSIX and
+glibc usage of the _rt member of the siginfo union.
 
-v9:
-- Add to the caveats
+Therefore replace kill_pid_info_as_cred with kill_pid_usb_asyncio a
+dedicated function for this one specific case.  There are no other
+users of kill_pid_info_as_cred so this specialization should have no
+impact on the amount of code in the kernel.  Have kill_pid_usb_asyncio
+take instead of a siginfo_t which is difficult and error prone, 3
+arguments, a signal number, an errno value, and an address enconded as
+a sigval_t.  The encoding of the address as a sigval_t allows the
+code that reads the userspace request for a signal to handle this
+compat issue along with all of the other compat issues.
 
-v8:
-- drop pr_warn message after straw poll to remove it.
-- added a use case in the commit message
+Add BUILD_BUG_ONs in kernel/signal.c to ensure that we can now place
+the pointer value at the in si_pid (instead of si_addr).  That is the
+code now verifies that si_pid and si_addr always occur at the same
+location.  Further the code veries that for native structures a value
+placed in si_pid and spilling into si_uid will appear in userspace in
+si_addr (on a byte by byte copy of siginfo or a field by field copy of
+siginfo).  The code also verifies that for a 64bit kernel and a 32bit
+userspace the 32bit pointer will fit in si_pid.
 
-v7:
-- change name of internal parameter to ovl_override_creds_def
-- report override_creds only if different than default
+I have used the usbsig.c program below written by Alan Stern and
+slightly tweaked by me to run on a big endian machine to verify the
+issue exists (on sparc64) and to confirm the patch below fixes the issue.
 
-v6:
-- Drop CONFIG_OVERLAY_FS_OVERRIDE_CREDS.
-- Do better with the documentation.
-- pr_warn message adjusted to report consequences.
+ /* usbsig.c -- test USB async signal delivery */
 
-v5:
-- beefed up the caveats in the Documentation
-- Is dependent on
-  "overlayfs: check CAP_DAC_READ_SEARCH before issuing exportfs_decode_fh"
-  "overlayfs: check CAP_MKNOD before issuing vfs_whiteout"
-- Added prwarn when override_creds=off
+ #define _GNU_SOURCE
+ #include <stdio.h>
+ #include <fcntl.h>
+ #include <signal.h>
+ #include <string.h>
+ #include <sys/ioctl.h>
+ #include <unistd.h>
+ #include <endian.h>
+ #include <linux/usb/ch9.h>
+ #include <linux/usbdevice_fs.h>
 
-v4:
-- spelling and grammar errors in text
+ static struct usbdevfs_urb urb;
+ static struct usbdevfs_disconnectsignal ds;
+ static volatile sig_atomic_t done = 0;
 
-v3:
-- Change name from caller_credentials / creator_credentials to the
-  boolean override_creds.
-- Changed from creator to mounter credentials.
-- Updated and fortified the documentation.
-- Added CONFIG_OVERLAY_FS_OVERRIDE_CREDS
-
-v2:
-- Forward port changed attr to stat, resulting in a build error.
-- altered commit message.
-
-a
----
- Documentation/filesystems/overlayfs.txt | 23 +++++++++++++++++++++++
- fs/overlayfs/copy_up.c                  |  2 +-
- fs/overlayfs/dir.c                      | 11 ++++++-----
- fs/overlayfs/file.c                     | 20 ++++++++++----------
- fs/overlayfs/inode.c                    | 18 +++++++++---------
- fs/overlayfs/namei.c                    |  6 +++---
- fs/overlayfs/overlayfs.h                |  1 +
- fs/overlayfs/ovl_entry.h                |  1 +
- fs/overlayfs/readdir.c                  |  4 ++--
- fs/overlayfs/super.c                    | 22 +++++++++++++++++++++-
- fs/overlayfs/util.c                     | 12 ++++++++++--
- 11 files changed, 87 insertions(+), 33 deletions(-)
-
-diff --git a/Documentation/filesystems/overlayfs.txt b/Documentation/filesystems/overlayfs.txt
-index 1da2f1668f08..d48125076602 100644
---- a/Documentation/filesystems/overlayfs.txt
-+++ b/Documentation/filesystems/overlayfs.txt
-@@ -102,6 +102,29 @@ Only the lists of names from directories are merged.  Other content
- such as metadata and extended attributes are reported for the upper
- directory only.  These attributes of the lower directory are hidden.
- 
-+credentials
-+-----------
-+
-+By default, all access to the upper, lower and work directories is the
-+recorded mounter's MAC and DAC credentials.  The incoming accesses are
-+checked against the caller's credentials.
-+
-+In the case where caller MAC or DAC credentials do not overlap, a
-+use case available in older versions of the driver, the
-+override_creds mount flag can be turned off and help when the use
-+pattern has caller with legitimate credentials where the mounter
-+does not.  Several unintended side effects will occur though.  The
-+caller without certain key capabilities or lower privilege will not
-+always be able to delete files or directories, create nodes, or
-+search some restricted directories.  The ability to search and read
-+a directory entry is spotty as a result of the cache mechanism not
-+retesting the credentials because of the assumption, a privileged
-+caller can fill cache, then a lower privilege can read the directory
-+cache.  The uneven security model where cache, upperdir and workdir
-+are opened at privilege, but accessed without creating a form of
-+privilege escalation, should only be used with strict understanding
-+of the side effects and of the security policies.
-+
- whiteouts and opaque directories
- --------------------------------
- 
-diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-index b801c6353100..1311ab4aea00 100644
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -886,7 +886,7 @@ int ovl_copy_up_flags(struct dentry *dentry, int flags)
- 		dput(parent);
- 		dput(next);
- 	}
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return err;
- }
-diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-index 702aa63f6774..c4b061c3a6ef 100644
---- a/fs/overlayfs/dir.c
-+++ b/fs/overlayfs/dir.c
-@@ -563,7 +563,8 @@ static int ovl_create_or_link(struct dentry *dentry, struct inode *inode,
- 		override_cred->fsgid = inode->i_gid;
- 		if (!attr->hardlink) {
- 			err = security_dentry_create_files_as(dentry,
--					attr->mode, &dentry->d_name, old_cred,
-+					attr->mode, &dentry->d_name,
-+					old_cred ? old_cred : current_cred(),
- 					override_cred);
- 			if (err) {
- 				put_cred(override_cred);
-@@ -579,7 +580,7 @@ static int ovl_create_or_link(struct dentry *dentry, struct inode *inode,
- 			err = ovl_create_over_whiteout(dentry, inode, attr);
- 	}
- out_revert_creds:
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	return err;
- }
- 
-@@ -655,7 +656,7 @@ static int ovl_set_link_redirect(struct dentry *dentry)
- 
- 	old_cred = ovl_override_creds(dentry->d_sb);
- 	err = ovl_set_redirect(dentry, false);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return err;
- }
-@@ -851,7 +852,7 @@ static int ovl_do_remove(struct dentry *dentry, bool is_dir)
- 		err = ovl_remove_upper(dentry, is_dir, &list);
- 	else
- 		err = ovl_remove_and_whiteout(dentry, &list);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	if (!err) {
- 		if (is_dir)
- 			clear_nlink(dentry->d_inode);
-@@ -1221,7 +1222,7 @@ static int ovl_rename(struct inode *olddir, struct dentry *old,
- out_unlock:
- 	unlock_rename(new_upperdir, old_upperdir);
- out_revert_creds:
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	if (update_nlink)
- 		ovl_nlink_end(new);
- out_drop_write:
-diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
-index e235a635d9ec..39a50fad9f7f 100644
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -32,7 +32,7 @@ static struct file *ovl_open_realfile(const struct file *file,
- 	old_cred = ovl_override_creds(inode->i_sb);
- 	realfile = open_with_fake_path(&file->f_path, flags, realinode,
- 				       current_cred());
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
- 		 file, file, ovl_whatisit(inode, realinode), file->f_flags,
-@@ -176,7 +176,7 @@ static loff_t ovl_llseek(struct file *file, loff_t offset, int whence)
- 
- 	old_cred = ovl_override_creds(inode->i_sb);
- 	ret = vfs_llseek(real.file, offset, whence);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	file->f_pos = real.file->f_pos;
- 	inode_unlock(inode);
-@@ -242,7 +242,7 @@ static ssize_t ovl_read_iter(struct kiocb *iocb, struct iov_iter *iter)
- 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
- 	ret = vfs_iter_read(real.file, iter, &iocb->ki_pos,
- 			    ovl_iocb_to_rwf(iocb));
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	ovl_file_accessed(file);
- 
-@@ -278,7 +278,7 @@ static ssize_t ovl_write_iter(struct kiocb *iocb, struct iov_iter *iter)
- 	ret = vfs_iter_write(real.file, iter, &iocb->ki_pos,
- 			     ovl_iocb_to_rwf(iocb));
- 	file_end_write(real.file);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	/* Update size */
- 	ovl_copyattr(ovl_inode_real(inode), inode);
-@@ -305,7 +305,7 @@ static int ovl_fsync(struct file *file, loff_t start, loff_t end, int datasync)
- 	if (file_inode(real.file) == ovl_inode_upper(file_inode(file))) {
- 		old_cred = ovl_override_creds(file_inode(file)->i_sb);
- 		ret = vfs_fsync_range(real.file, start, end, datasync);
--		revert_creds(old_cred);
-+		ovl_revert_creds(old_cred);
- 	}
- 
- 	fdput(real);
-@@ -329,7 +329,7 @@ static int ovl_mmap(struct file *file, struct vm_area_struct *vma)
- 
- 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
- 	ret = call_mmap(vma->vm_file, vma);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	if (ret) {
- 		/* Drop reference count from new vm_file value */
-@@ -357,7 +357,7 @@ static long ovl_fallocate(struct file *file, int mode, loff_t offset, loff_t len
- 
- 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
- 	ret = vfs_fallocate(real.file, mode, offset, len);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	/* Update size */
- 	ovl_copyattr(ovl_inode_real(inode), inode);
-@@ -379,7 +379,7 @@ static int ovl_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
- 
- 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
- 	ret = vfs_fadvise(real.file, offset, len, advice);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	fdput(real);
- 
-@@ -399,7 +399,7 @@ static long ovl_real_ioctl(struct file *file, unsigned int cmd,
- 
- 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
- 	ret = vfs_ioctl(real.file, cmd, arg);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	fdput(real);
- 
-@@ -589,7 +589,7 @@ static loff_t ovl_copyfile(struct file *file_in, loff_t pos_in,
- 						flags);
- 		break;
- 	}
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	/* Update size */
- 	ovl_copyattr(ovl_inode_real(inode_out), inode_out);
-diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
-index d3b53849615c..6c11c7af5157 100644
---- a/fs/overlayfs/inode.c
-+++ b/fs/overlayfs/inode.c
-@@ -61,7 +61,7 @@ int ovl_setattr(struct dentry *dentry, struct iattr *attr)
- 		inode_lock(upperdentry->d_inode);
- 		old_cred = ovl_override_creds(dentry->d_sb);
- 		err = notify_change(upperdentry, attr, NULL);
--		revert_creds(old_cred);
-+		ovl_revert_creds(old_cred);
- 		if (!err)
- 			ovl_copyattr(upperdentry->d_inode, dentry->d_inode);
- 		inode_unlock(upperdentry->d_inode);
-@@ -257,7 +257,7 @@ int ovl_getattr(const struct path *path, struct kstat *stat,
- 		stat->nlink = dentry->d_inode->i_nlink;
- 
- out:
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return err;
- }
-@@ -291,7 +291,7 @@ int ovl_permission(struct inode *inode, int mask)
- 		mask |= MAY_READ;
- 	}
- 	err = inode_permission(realinode, mask);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return err;
- }
-@@ -308,7 +308,7 @@ static const char *ovl_get_link(struct dentry *dentry,
- 
- 	old_cred = ovl_override_creds(dentry->d_sb);
- 	p = vfs_get_link(ovl_dentry_real(dentry), done);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	return p;
- }
- 
-@@ -351,7 +351,7 @@ int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char *name,
- 		WARN_ON(flags != XATTR_REPLACE);
- 		err = vfs_removexattr(realdentry, name);
- 	}
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	/* copy c/mtime */
- 	ovl_copyattr(d_inode(realdentry), inode);
-@@ -387,7 +387,7 @@ int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char *name,
- 
- 	old_cred = ovl_override_creds(dentry->d_sb);
- 	res = vfs_getxattr(realdentry, name, value, size);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	return res;
- }
- 
-@@ -411,7 +411,7 @@ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
- 
- 	old_cred = ovl_override_creds(dentry->d_sb);
- 	res = vfs_listxattr(realdentry, list, size);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	if (res <= 0 || size == 0)
- 		return res;
- 
-@@ -446,7 +446,7 @@ struct posix_acl *ovl_get_acl(struct inode *inode, int type)
- 
- 	old_cred = ovl_override_creds(inode->i_sb);
- 	acl = get_acl(realinode, type);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return acl;
- }
-@@ -484,7 +484,7 @@ static int ovl_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- 		filemap_write_and_wait(realinode->i_mapping);
- 
- 	err = realinode->i_op->fiemap(realinode, fieinfo, start, len);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return err;
- }
-diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-index fb6c0cd7b65f..12627018b00a 100644
---- a/fs/overlayfs/namei.c
-+++ b/fs/overlayfs/namei.c
-@@ -1079,7 +1079,7 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
- 			goto out_free_oe;
- 	}
- 
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	if (origin_path) {
- 		dput(origin_path->dentry);
- 		kfree(origin_path);
-@@ -1106,7 +1106,7 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
- 	kfree(upperredirect);
- out:
- 	kfree(d.redirect);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	return ERR_PTR(err);
- }
- 
-@@ -1160,7 +1160,7 @@ bool ovl_lower_positive(struct dentry *dentry)
- 			dput(this);
- 		}
- 	}
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return positive;
- }
-diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-index 82574684a9b6..cdbdb533d3bd 100644
---- a/fs/overlayfs/overlayfs.h
-+++ b/fs/overlayfs/overlayfs.h
-@@ -205,6 +205,7 @@ int ovl_want_write(struct dentry *dentry);
- void ovl_drop_write(struct dentry *dentry);
- struct dentry *ovl_workdir(struct dentry *dentry);
- const struct cred *ovl_override_creds(struct super_block *sb);
-+void ovl_revert_creds(const struct cred *oldcred);
- ssize_t ovl_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
- 			 size_t size);
- struct super_block *ovl_same_sb(struct super_block *sb);
-diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-index 28a2d12a1029..2637c5aadf7f 100644
---- a/fs/overlayfs/ovl_entry.h
-+++ b/fs/overlayfs/ovl_entry.h
-@@ -17,6 +17,7 @@ struct ovl_config {
- 	bool nfs_export;
- 	int xino;
- 	bool metacopy;
-+	bool override_creds;
- };
- 
- struct ovl_sb {
-diff --git a/fs/overlayfs/readdir.c b/fs/overlayfs/readdir.c
-index 47a91c9733a5..f31ef39e5afa 100644
---- a/fs/overlayfs/readdir.c
-+++ b/fs/overlayfs/readdir.c
-@@ -286,7 +286,7 @@ static int ovl_check_whiteouts(struct dentry *dir, struct ovl_readdir_data *rdd)
- 		}
- 		inode_unlock(dir->d_inode);
- 	}
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 
- 	return err;
- }
-@@ -918,7 +918,7 @@ int ovl_check_empty_dir(struct dentry *dentry, struct list_head *list)
- 
- 	old_cred = ovl_override_creds(dentry->d_sb);
- 	err = ovl_dir_read_merged(dentry, list, &root);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
- 	if (err)
- 		return err;
- 
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index 82e1130de206..c2ddce5d488c 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -53,6 +53,11 @@ module_param_named(xino_auto, ovl_xino_auto_def, bool, 0644);
- MODULE_PARM_DESC(xino_auto,
- 		 "Auto enable xino feature");
- 
-+static bool __read_mostly ovl_override_creds_def = true;
-+module_param_named(override_creds, ovl_override_creds_def, bool, 0644);
-+MODULE_PARM_DESC(ovl_override_creds_def,
-+		 "Use mounter's credentials for accesses");
-+
- static void ovl_entry_stack_free(struct ovl_entry *oe)
+ void urb_handler(int sig, siginfo_t *info , void *ucontext)
  {
- 	unsigned int i;
-@@ -362,6 +367,9 @@ static int ovl_show_options(struct seq_file *m, struct dentry *dentry)
- 	if (ofs->config.metacopy != ovl_metacopy_def)
- 		seq_printf(m, ",metacopy=%s",
- 			   ofs->config.metacopy ? "on" : "off");
-+	if (ofs->config.override_creds != ovl_override_creds_def)
-+		seq_show_option(m, "override_creds",
-+				ofs->config.override_creds ? "on" : "off");
+ 	printf("Got signal %d, signo %d errno %d code %d addr: %p urb: %p\n",
+ 	       sig, info->si_signo, info->si_errno, info->si_code,
+ 	       info->si_addr, &urb);
+
+ 	printf("%s\n", (info->si_addr == &urb) ? "Good" : "Bad");
+ }
+
+ void ds_handler(int sig, siginfo_t *info , void *ucontext)
+ {
+ 	printf("Got signal %d, signo %d errno %d code %d addr: %p ds: %p\n",
+ 	       sig, info->si_signo, info->si_errno, info->si_code,
+ 	       info->si_addr, &ds);
+
+ 	printf("%s\n", (info->si_addr == &ds) ? "Good" : "Bad");
+ 	done = 1;
+ }
+
+ int main(int argc, char **argv)
+ {
+ 	char *devfilename;
+ 	int fd;
+ 	int rc;
+ 	struct sigaction act;
+ 	struct usb_ctrlrequest *req;
+ 	void *ptr;
+ 	char buf[80];
+
+ 	if (argc != 2) {
+ 		fprintf(stderr, "Usage: usbsig device-file-name\n");
+ 		return 1;
+ 	}
+
+ 	devfilename = argv[1];
+ 	fd = open(devfilename, O_RDWR);
+ 	if (fd == -1) {
+ 		perror("Error opening device file");
+ 		return 1;
+ 	}
+
+ 	act.sa_sigaction = urb_handler;
+ 	sigemptyset(&act.sa_mask);
+ 	act.sa_flags = SA_SIGINFO;
+
+ 	rc = sigaction(SIGUSR1, &act, NULL);
+ 	if (rc == -1) {
+ 		perror("Error in sigaction");
+ 		return 1;
+ 	}
+
+ 	act.sa_sigaction = ds_handler;
+ 	sigemptyset(&act.sa_mask);
+ 	act.sa_flags = SA_SIGINFO;
+
+ 	rc = sigaction(SIGUSR2, &act, NULL);
+ 	if (rc == -1) {
+ 		perror("Error in sigaction");
+ 		return 1;
+ 	}
+
+ 	memset(&urb, 0, sizeof(urb));
+ 	urb.type = USBDEVFS_URB_TYPE_CONTROL;
+ 	urb.endpoint = USB_DIR_IN | 0;
+ 	urb.buffer = buf;
+ 	urb.buffer_length = sizeof(buf);
+ 	urb.signr = SIGUSR1;
+
+ 	req = (struct usb_ctrlrequest *) buf;
+ 	req->bRequestType = USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE;
+ 	req->bRequest = USB_REQ_GET_DESCRIPTOR;
+ 	req->wValue = htole16(USB_DT_DEVICE << 8);
+ 	req->wIndex = htole16(0);
+ 	req->wLength = htole16(sizeof(buf) - sizeof(*req));
+
+ 	rc = ioctl(fd, USBDEVFS_SUBMITURB, &urb);
+ 	if (rc == -1) {
+ 		perror("Error in SUBMITURB ioctl");
+ 		return 1;
+ 	}
+
+ 	rc = ioctl(fd, USBDEVFS_REAPURB, &ptr);
+ 	if (rc == -1) {
+ 		perror("Error in REAPURB ioctl");
+ 		return 1;
+ 	}
+
+ 	memset(&ds, 0, sizeof(ds));
+ 	ds.signr = SIGUSR2;
+ 	ds.context = &ds;
+ 	rc = ioctl(fd, USBDEVFS_DISCSIGNAL, &ds);
+ 	if (rc == -1) {
+ 		perror("Error in DISCSIGNAL ioctl");
+ 		return 1;
+ 	}
+
+ 	printf("Waiting for usb disconnect\n");
+ 	while (!done) {
+ 		sleep(1);
+ 	}
+
+ 	close(fd);
+ 	return 0;
+ }
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Oliver Neukum <oneukum@suse.com>
+Fixes: v2.3.39
+Cc: stable@vger.kernel.org
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/devio.c     |   48 ++++++++++++++---------------
+ include/linux/sched/signal.h |    2 -
+ kernel/signal.c              |   69 ++++++++++++++++++++++++++++++++++++++-----
+ 3 files changed, 86 insertions(+), 33 deletions(-)
+
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -63,7 +63,7 @@ struct usb_dev_state {
+ 	unsigned int discsignr;
+ 	struct pid *disc_pid;
+ 	const struct cred *cred;
+-	void __user *disccontext;
++	sigval_t disccontext;
+ 	unsigned long ifclaimed;
+ 	u32 disabled_bulk_eps;
+ 	bool privileges_dropped;
+@@ -90,6 +90,7 @@ struct async {
+ 	unsigned int ifnum;
+ 	void __user *userbuffer;
+ 	void __user *userurb;
++	sigval_t userurb_sigval;
+ 	struct urb *urb;
+ 	struct usb_memory *usbm;
+ 	unsigned int mem_usage;
+@@ -582,22 +583,19 @@ static void async_completed(struct urb *
+ {
+ 	struct async *as = urb->context;
+ 	struct usb_dev_state *ps = as->ps;
+-	struct kernel_siginfo sinfo;
+ 	struct pid *pid = NULL;
+ 	const struct cred *cred = NULL;
+ 	unsigned long flags;
+-	int signr;
++	sigval_t addr;
++	int signr, errno;
+ 
+ 	spin_lock_irqsave(&ps->lock, flags);
+ 	list_move_tail(&as->asynclist, &ps->async_completed);
+ 	as->status = urb->status;
+ 	signr = as->signr;
+ 	if (signr) {
+-		clear_siginfo(&sinfo);
+-		sinfo.si_signo = as->signr;
+-		sinfo.si_errno = as->status;
+-		sinfo.si_code = SI_ASYNCIO;
+-		sinfo.si_addr = as->userurb;
++		errno = as->status;
++		addr = as->userurb_sigval;
+ 		pid = get_pid(as->pid);
+ 		cred = get_cred(as->cred);
+ 	}
+@@ -615,7 +613,7 @@ static void async_completed(struct urb *
+ 	spin_unlock_irqrestore(&ps->lock, flags);
+ 
+ 	if (signr) {
+-		kill_pid_info_as_cred(sinfo.si_signo, &sinfo, pid, cred);
++		kill_pid_usb_asyncio(signr, errno, addr, pid, cred);
+ 		put_pid(pid);
+ 		put_cred(cred);
+ 	}
+@@ -1427,7 +1425,7 @@ find_memory_area(struct usb_dev_state *p
+ 
+ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb,
+ 			struct usbdevfs_iso_packet_desc __user *iso_frame_desc,
+-			void __user *arg)
++			void __user *arg, sigval_t userurb_sigval)
+ {
+ 	struct usbdevfs_iso_packet_desc *isopkt = NULL;
+ 	struct usb_host_endpoint *ep;
+@@ -1727,6 +1725,7 @@ static int proc_do_submiturb(struct usb_
+ 	isopkt = NULL;
+ 	as->ps = ps;
+ 	as->userurb = arg;
++	as->userurb_sigval = userurb_sigval;
+ 	if (as->usbm) {
+ 		unsigned long uurb_start = (unsigned long)uurb->buffer;
+ 
+@@ -1801,13 +1800,17 @@ static int proc_do_submiturb(struct usb_
+ static int proc_submiturb(struct usb_dev_state *ps, void __user *arg)
+ {
+ 	struct usbdevfs_urb uurb;
++	sigval_t userurb_sigval;
+ 
+ 	if (copy_from_user(&uurb, arg, sizeof(uurb)))
+ 		return -EFAULT;
+ 
++	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
++	userurb_sigval.sival_ptr = arg;
++
+ 	return proc_do_submiturb(ps, &uurb,
+ 			(((struct usbdevfs_urb __user *)arg)->iso_frame_desc),
+-			arg);
++			arg, userurb_sigval);
+ }
+ 
+ static int proc_unlinkurb(struct usb_dev_state *ps, void __user *arg)
+@@ -1977,7 +1980,7 @@ static int proc_disconnectsignal_compat(
+ 	if (copy_from_user(&ds, arg, sizeof(ds)))
+ 		return -EFAULT;
+ 	ps->discsignr = ds.signr;
+-	ps->disccontext = compat_ptr(ds.context);
++	ps->disccontext.sival_int = ds.context;
  	return 0;
  }
  
-@@ -402,6 +410,8 @@ enum {
- 	OPT_XINO_AUTO,
- 	OPT_METACOPY_ON,
- 	OPT_METACOPY_OFF,
-+	OPT_OVERRIDE_CREDS_ON,
-+	OPT_OVERRIDE_CREDS_OFF,
- 	OPT_ERR,
- };
- 
-@@ -420,6 +430,8 @@ static const match_table_t ovl_tokens = {
- 	{OPT_XINO_AUTO,			"xino=auto"},
- 	{OPT_METACOPY_ON,		"metacopy=on"},
- 	{OPT_METACOPY_OFF,		"metacopy=off"},
-+	{OPT_OVERRIDE_CREDS_ON,		"override_creds=on"},
-+	{OPT_OVERRIDE_CREDS_OFF,	"override_creds=off"},
- 	{OPT_ERR,			NULL}
- };
- 
-@@ -478,6 +490,7 @@ static int ovl_parse_opt(char *opt, struct ovl_config *config)
- 	config->redirect_mode = kstrdup(ovl_redirect_mode_def(), GFP_KERNEL);
- 	if (!config->redirect_mode)
- 		return -ENOMEM;
-+	config->override_creds = ovl_override_creds_def;
- 
- 	while ((p = ovl_next_opt(&opt)) != NULL) {
- 		int token;
-@@ -558,6 +571,14 @@ static int ovl_parse_opt(char *opt, struct ovl_config *config)
- 			config->metacopy = false;
- 			break;
- 
-+		case OPT_OVERRIDE_CREDS_ON:
-+			config->override_creds = true;
-+			break;
-+
-+		case OPT_OVERRIDE_CREDS_OFF:
-+			config->override_creds = false;
-+			break;
-+
- 		default:
- 			pr_err("overlayfs: unrecognized mount option \"%s\" or missing value\n", p);
- 			return -EINVAL;
-@@ -1690,7 +1711,6 @@ static int ovl_fill_super(struct super_block *sb, void *data, int silent)
- 		       ovl_dentry_lower(root_dentry), NULL);
- 
- 	sb->s_root = root_dentry;
--
- 	return 0;
- 
- out_free_oe:
-diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-index 672459c3cff7..320aad599bcd 100644
---- a/fs/overlayfs/util.c
-+++ b/fs/overlayfs/util.c
-@@ -37,9 +37,17 @@ const struct cred *ovl_override_creds(struct super_block *sb)
+@@ -2005,13 +2008,17 @@ static int get_urb32(struct usbdevfs_urb
+ static int proc_submiturb_compat(struct usb_dev_state *ps, void __user *arg)
  {
- 	struct ovl_fs *ofs = sb->s_fs_info;
+ 	struct usbdevfs_urb uurb;
++	sigval_t userurb_sigval;
  
-+	if (!ofs->config.override_creds)
-+		return NULL;
- 	return override_creds(ofs->creator_cred);
+ 	if (get_urb32(&uurb, (struct usbdevfs_urb32 __user *)arg))
+ 		return -EFAULT;
+ 
++	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
++	userurb_sigval.sival_int = ptr_to_compat(arg);
++
+ 	return proc_do_submiturb(ps, &uurb,
+ 			((struct usbdevfs_urb32 __user *)arg)->iso_frame_desc,
+-			arg);
++			arg, userurb_sigval);
  }
  
-+void ovl_revert_creds(const struct cred *old_cred)
-+{
-+	if (old_cred)
-+		revert_creds(old_cred);
-+}
-+
- ssize_t ovl_vfs_getxattr(struct dentry *dentry, const char *name, void *buf,
- 			 size_t size)
+ static int processcompl_compat(struct async *as, void __user * __user *arg)
+@@ -2092,7 +2099,7 @@ static int proc_disconnectsignal(struct
+ 	if (copy_from_user(&ds, arg, sizeof(ds)))
+ 		return -EFAULT;
+ 	ps->discsignr = ds.signr;
+-	ps->disccontext = ds.context;
++	ps->disccontext.sival_ptr = ds.context;
+ 	return 0;
+ }
+ 
+@@ -2614,22 +2621,15 @@ const struct file_operations usbdev_file
+ static void usbdev_remove(struct usb_device *udev)
  {
-@@ -797,7 +805,7 @@ int ovl_nlink_start(struct dentry *dentry)
- 	 * value relative to the upper inode nlink in an upper inode xattr.
- 	 */
- 	err = ovl_set_nlink_upper(dentry);
--	revert_creds(old_cred);
-+	ovl_revert_creds(old_cred);
+ 	struct usb_dev_state *ps;
+-	struct kernel_siginfo sinfo;
  
- out:
- 	if (err)
-@@ -815,7 +823,7 @@ void ovl_nlink_end(struct dentry *dentry)
- 
- 		old_cred = ovl_override_creds(dentry->d_sb);
- 		ovl_cleanup_index(dentry);
--		revert_creds(old_cred);
-+		ovl_revert_creds(old_cred);
+ 	while (!list_empty(&udev->filelist)) {
+ 		ps = list_entry(udev->filelist.next, struct usb_dev_state, list);
+ 		destroy_all_async(ps);
+ 		wake_up_all(&ps->wait);
+ 		list_del_init(&ps->list);
+-		if (ps->discsignr) {
+-			clear_siginfo(&sinfo);
+-			sinfo.si_signo = ps->discsignr;
+-			sinfo.si_errno = EPIPE;
+-			sinfo.si_code = SI_ASYNCIO;
+-			sinfo.si_addr = ps->disccontext;
+-			kill_pid_info_as_cred(ps->discsignr, &sinfo,
+-					ps->disc_pid, ps->cred);
+-		}
++		if (ps->discsignr)
++			kill_pid_usb_asyncio(ps->discsignr, EPIPE, ps->disccontext,
++					     ps->disc_pid, ps->cred);
  	}
+ }
  
- 	ovl_inode_unlock(inode);
--- 
-2.22.0.657.g960e92d24f-goog
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -328,7 +328,7 @@ extern void force_sigsegv(int sig, struc
+ extern int force_sig_info(int, struct kernel_siginfo *, struct task_struct *);
+ extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp);
+ extern int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid);
+-extern int kill_pid_info_as_cred(int, struct kernel_siginfo *, struct pid *,
++extern int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr, struct pid *,
+ 				const struct cred *);
+ extern int kill_pgrp(struct pid *pid, int sig, int priv);
+ extern int kill_pid(struct pid *pid, int sig, int priv);
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1436,13 +1436,44 @@ static inline bool kill_as_cred_perm(con
+ 	       uid_eq(cred->uid, pcred->uid);
+ }
+ 
+-/* like kill_pid_info(), but doesn't use uid/euid of "current" */
+-int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
+-			 const struct cred *cred)
++/*
++ * The usb asyncio usage of siginfo is wrong.  The glibc support
++ * for asyncio which uses SI_ASYNCIO assumes the layout is SIL_RT.
++ * AKA after the generic fields:
++ *	kernel_pid_t	si_pid;
++ *	kernel_uid32_t	si_uid;
++ *	sigval_t	si_value;
++ *
++ * Unfortunately when usb generates SI_ASYNCIO it assumes the layout
++ * after the generic fields is:
++ *	void __user 	*si_addr;
++ *
++ * This is a practical problem when there is a 64bit big endian kernel
++ * and a 32bit userspace.  As the 32bit address will encoded in the low
++ * 32bits of the pointer.  Those low 32bits will be stored at higher
++ * address than appear in a 32 bit pointer.  So userspace will not
++ * see the address it was expecting for it's completions.
++ *
++ * There is nothing in the encoding that can allow
++ * copy_siginfo_to_user32 to detect this confusion of formats, so
++ * handle this by requiring the caller of kill_pid_usb_asyncio to
++ * notice when this situration takes place and to store the 32bit
++ * pointer in sival_int, instead of sival_addr of the sigval_t addr
++ * parameter.
++ */
++int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
++			 struct pid *pid, const struct cred *cred)
+ {
+-	int ret = -EINVAL;
++	struct kernel_siginfo info;
+ 	struct task_struct *p;
+ 	unsigned long flags;
++	int ret = -EINVAL;
++
++	clear_siginfo(&info);
++	info.si_signo = sig;
++	info.si_errno = errno;
++	info.si_code = SI_ASYNCIO;
++	*((sigval_t *)&info.si_pid) = addr;
+ 
+ 	if (!valid_signal(sig))
+ 		return ret;
+@@ -1453,17 +1484,17 @@ int kill_pid_info_as_cred(int sig, struc
+ 		ret = -ESRCH;
+ 		goto out_unlock;
+ 	}
+-	if (si_fromuser(info) && !kill_as_cred_perm(cred, p)) {
++	if (!kill_as_cred_perm(cred, p)) {
+ 		ret = -EPERM;
+ 		goto out_unlock;
+ 	}
+-	ret = security_task_kill(p, info, sig, cred);
++	ret = security_task_kill(p, &info, sig, cred);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+ 	if (sig) {
+ 		if (lock_task_sighand(p, &flags)) {
+-			ret = __send_signal(sig, info, p, PIDTYPE_TGID, 0);
++			ret = __send_signal(sig, &info, p, PIDTYPE_TGID, 0);
+ 			unlock_task_sighand(p, &flags);
+ 		} else
+ 			ret = -ESRCH;
+@@ -1472,7 +1503,7 @@ out_unlock:
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(kill_pid_info_as_cred);
++EXPORT_SYMBOL_GPL(kill_pid_usb_asyncio);
+ 
+ /*
+  * kill_something_info() interprets pid in interesting ways just like kill(2).
+@@ -4411,6 +4442,28 @@ static inline void siginfo_buildtime_che
+ 	CHECK_OFFSET(si_syscall);
+ 	CHECK_OFFSET(si_arch);
+ #undef CHECK_OFFSET
++
++	/* usb asyncio */
++	BUILD_BUG_ON(offsetof(struct siginfo, si_pid) !=
++		     offsetof(struct siginfo, si_addr));
++	if (sizeof(int) == sizeof(void __user *)) {
++		BUILD_BUG_ON(sizeof_field(struct siginfo, si_pid) !=
++			     sizeof(void __user *));
++	} else {
++		BUILD_BUG_ON((sizeof_field(struct siginfo, si_pid) +
++			      sizeof_field(struct siginfo, si_uid)) !=
++			     sizeof(void __user *));
++		BUILD_BUG_ON(offsetofend(struct siginfo, si_pid) !=
++			     offsetof(struct siginfo, si_uid));
++	}
++#ifdef CONFIG_COMPAT
++	BUILD_BUG_ON(offsetof(struct compat_siginfo, si_pid) !=
++		     offsetof(struct compat_siginfo, si_addr));
++	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
++		     sizeof(compat_uptr_t));
++	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
++		     sizeof_field(struct siginfo, si_pid));
++#endif
+ }
+ 
+ void __init signals_init(void)
+
 
