@@ -2,155 +2,119 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D13C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CBEC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDA42189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FE720657
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kuRE7qFm"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="FUqpNoFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388413AbfGXXud (ORCPT
+        id S2388923AbfGXXyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:50:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37189 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388769AbfGXXud (ORCPT
+        Wed, 24 Jul 2019 19:54:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36730 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388894AbfGXXyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:50:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so21715088pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:50:33 -0700 (PDT)
+        Wed, 24 Jul 2019 19:54:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g67so38948206wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:54:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SBjlbYIuuSYtSCBBvyjicZtrQHQMj9xf5Mp+j4uWFAY=;
-        b=kuRE7qFmVRW6wv2rNykvoufyn45i/POSyeWUPXGpZ/AysyFKDppb98RVz7XC3KklfF
-         giLkrxfmnlkwmDBqBr9gDztJzFhIUT/kCxohYaTO37JlSREzIQpz4U+1+WBK/HkkExCP
-         AUUAmlgTnu1eYA/EjwBVv8TUgXorbLCiUL1zY=
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=tj6543EOVuENgGgQ8S37JO7H+aPWdIzff/HjCmUyA78=;
+        b=FUqpNoFE+1fYp1EQmILPIAHdjr+MGQ7sKyU6Rc3kUL0WNuNw9eoaV9iHL0Rvq3e5K/
+         8a2gjva3ePJgWga05Mku984/eXfGDZW1glWiE0TKgDTOrlMYl6B2oXXbLbiXrAFKP3so
+         OV3sWWvqIBjB4rGKAVAEBrGJxgkL1F1wBQT/1Sfi/0/s5bumTi6Bfa/dVtmdr4b1p4wx
+         CTw7KV+Rp7KTpvk729PT/y0D84eDWpF8fnrbyWvYT0eOHH1AjgDhbVGB1i6Uvhu+qPfP
+         +eegXw5wgLku2XPiW4isIt7MdPudQOy0mphOzCT0pcmwyibxGjbVyQA8xUDOF9BQTofm
+         qwuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SBjlbYIuuSYtSCBBvyjicZtrQHQMj9xf5Mp+j4uWFAY=;
-        b=OhWjQFaLeXqbSDLQNtEech76J7ONCl1+oxSF95tNcKaV0jneARCieMpVIIZXkue97D
-         MhouZHPF3CK8YjQYfSu5TX8D5p4NIHzIQb92T4Z/yapBRmxIyae4RLDRu/Q0amz5HfLR
-         LUHOj5y9XCtmZVdOH/AbCs0acr+uW0wC7MwrggtJJiOF/1Ac0dytpfsIyncqToMtzArc
-         j+nLnyAZUZFdS8aQEB/GBeVd0Gn/dqqze/PtA3Q2ukoFfVx5Jz48o1EHid0fWdVg0EgR
-         /Tab2KtYCfuy9ZnBa8oFkDCp5IfbhW9AnRMQvsPIfO8vcmlvMm2lKS7V4W7bll5C++qO
-         7Alw==
-X-Gm-Message-State: APjAAAUPd5+Yayl/IwXIyyDEXZzvvthF7KfDDQ+pZHAsf2Em7CQBYMGy
-        5RpJzmNhrHT6/uhMFH5nS146sw==
-X-Google-Smtp-Source: APXvYqy4SYlFcrJyiKOlKLdpp8NWSaE8TnNaIxq7W/I8S1GJz7au8LilVZAsYmgKaciDe1W0MdV5VA==
-X-Received: by 2002:a62:303:: with SMTP id 3mr13671104pfd.118.1564012232564;
-        Wed, 24 Jul 2019 16:50:32 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s185sm69207899pgs.67.2019.07.24.16.50.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 16:50:31 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Peter Smith <peter.smith@linaro.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] kbuild: Check for unknown options with cc-option and clang in Kbuild
-Date:   Wed, 24 Jul 2019 16:50:30 -0700
-Message-Id: <20190724235030.131144-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=tj6543EOVuENgGgQ8S37JO7H+aPWdIzff/HjCmUyA78=;
+        b=Fkym91LkHb9HHy9LBFxIL+zwL0eZ7O2x75S1P6t7NDDThbKMMbUraDvggy+Kc5nANH
+         p0DdqkToVbolWfKeo9f64QWQNfHg0NrJX054t6ocT6Amna+SEgqYIW+ptoE9DAnMtV19
+         K4bwfM4BiYheIArVMwDAkKUl7urUlTP4KLOdoVWnpclBFppoB7y6JRHjNaraSOOo8h9a
+         uL5iPx9KANWPlZoXmZ8/QT2EY7A5h2eaxqdTFJz0gX2VN+svkqM9/Fc9QR/XZFyTgjcj
+         8h/+apoXz5pJSh0E87A/AeFGwzhppSLYrbpcwdR+EnSKJyTCSADjSfIfBCORFTmWiIie
+         OpCw==
+X-Gm-Message-State: APjAAAWq0ckjF7yqqDABRdYcNTm0bM4kTKPK/DTnOhfL0n/n3MPEXJ27
+        WZ9OokBYAcpcsiGrT1XG5GCxKfU+vjI=
+X-Google-Smtp-Source: APXvYqyCcTh2ltFhIK2HcylO0+ZXKQ8V10x/wTy/ETjgAwbve+oCVMd4wk1wqKvRnwnPgftZHhR5MQ==
+X-Received: by 2002:a05:600c:114f:: with SMTP id z15mr75311961wmz.131.1564012452506;
+        Wed, 24 Jul 2019 16:54:12 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id o6sm92612551wra.27.2019.07.24.16.54.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 16:54:11 -0700 (PDT)
+Message-ID: <5d38efa3.1c69fb81.409b9.9873@mx.google.com>
+Date:   Wed, 24 Jul 2019 16:54:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.19.60-272-g975cffe32ab5
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.19.y
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+References: <20190724191655.268628197@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 000/271] 4.19.61-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the particular version of clang a user has doesn't enable
--Werror=unknown-warning-option by default, even though it is the
-default[1], then make sure to pass the option to the Kconfig cc-option
-command so that testing options from Kconfig files works properly.
-Otherwise, depending on the default values setup in the clang toolchain
-we will silently assume options such as -Wmaybe-uninitialized are
-supported by clang, when they really aren't.
+stable-rc/linux-4.19.y boot: 130 boots: 2 failed, 127 passed with 1 offline=
+ (v4.19.60-272-g975cffe32ab5)
 
-This issue only started happening for me once commit 589834b3a009
-("kbuild: Add -Werror=unknown-warning-option to CLANG_FLAGS") was
-applied on top of commit b303c6df80c9 ("kbuild: compute false-positive
--Wmaybe-uninitialized cases in Kconfig"). This leads kbuild to try and
-test for the existence of the -Wmaybe-uninitialized flag with the
-cc-option command in scripts/Kconfig.include, and it doesn't see an
-error returned from the option test so it sets the config value to Y.
-Then the makefile tries to pass the unknown option on the command line
-and -Werror=unknown-warning-option catches the invalid option and breaks
-the build.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.19.y/kernel/v4.19.60-272-g975cffe32ab5/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.60-272-g975cffe32ab5/
 
-Note: this doesn't change the cc-option tests in Makefiles, because
-those use a different rule that includes KBUILD_CFLAGS by default, and
-the KBUILD_CFLAGS already has -Werror=unknown-warning-option. Thanks to
-Doug for pointing out the different rule.
+Tree: stable-rc
+Branch: linux-4.19.y
+Git Describe: v4.19.60-272-g975cffe32ab5
+Git Commit: 975cffe32ab513d7307a360d34c483c3b53840fd
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 73 unique boards, 27 SoC families, 17 builds out of 206
 
-[1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-Cc: Peter Smith <peter.smith@linaro.org>
-Cc: Nathan Chancellor <natechancellor@gmail.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Boot Failures Detected:
 
-Change-Id: I3bb69d45bb062d1306acbf19bc0adfb60f706442
+arm64:
+    defconfig:
+        gcc-8:
+            meson-gxl-s905x-nexbox-a95x: 1 failed lab
+
+arc:
+    hsdk_defconfig:
+        gcc-8:
+            hsdk: 1 failed lab
+
+Offline Platforms:
+
+arm64:
+
+    defconfig:
+        gcc-8
+            meson-gxbb-odroidc2: 1 offline lab
+
 ---
- Makefile                | 5 +++++
- scripts/Kconfig.include | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 9be5834073f8..28177674178a 100644
---- a/Makefile
-+++ b/Makefile
-@@ -517,6 +517,8 @@ ifdef building_out_of_srctree
- 	{ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
- endif
- 
-+KCONFIG_CC_OPTION_FLAGS := -Werror
-+
- ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
- ifneq ($(CROSS_COMPILE),)
- CLANG_FLAGS	:= --target=$(notdir $(CROSS_COMPILE:%-=%))
-@@ -531,11 +533,14 @@ ifeq ($(shell $(AS) --version 2>&1 | head -n 1 | grep clang),)
- CLANG_FLAGS	+= -no-integrated-as
- endif
- CLANG_FLAGS	+= -Werror=unknown-warning-option
-+KCONFIG_CC_OPTION_FLAGS += -Werror=unknown-warning-option
- KBUILD_CFLAGS	+= $(CLANG_FLAGS)
- KBUILD_AFLAGS	+= $(CLANG_FLAGS)
- export CLANG_FLAGS
- endif
- 
-+export KCONFIG_CC_OPTION_FLAGS
-+
- # The expansion should be delayed until arch/$(SRCARCH)/Makefile is included.
- # Some architectures define CROSS_COMPILE in arch/$(SRCARCH)/Makefile.
- # CC_VERSION_TEXT is referenced from Kconfig (so it needs export),
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index 8a5c4d645eb1..144e83e7cb81 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
- 
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-+cc-option = $(success,$(CC) $(KCONFIG_CC_OPTION_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
- 
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
--- 
-Sent by a computer through tubes
-
+For more info write to <info@kernelci.org>
