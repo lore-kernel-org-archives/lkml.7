@@ -2,134 +2,123 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3CBC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B0C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205CF22ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:09:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YyYI649c"
+	by mail.kernel.org (Postfix) with ESMTP id 223A021BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbfGXOJI (ORCPT
+        id S2387486AbfGXOJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:09:08 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:44373 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfGXOJG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:09:06 -0400
-Received: by mail-vk1-f195.google.com with SMTP id w186so993328vkd.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:09:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wMM/fuc3WiNrMsYpxO4sLYGg6mIGpBm3nkr4euaECOE=;
-        b=YyYI649c5rtIY3S/Tov9vJAujEz+ZdfPE1Sit+Zb1USS0ZxO7aYR7HJ7I9gsd7v19n
-         fTt5OgOfV9kUpe24n/+4iPaReqQNOfwmyuDlt2QW61jbKZXYd0SLicAkXYEJYpEx+UkO
-         e3XlsQ6fZwccPrmcgC7+7UGawS353Gbq6bmEGW8XIeFpSmdu6I2VhWWSZvUF8KaKAxRu
-         PgH6adCiv6dA1bkKiWhKX4sIqv6WS9gNNZnYQkgHN7+Uvs7oU8huJ874QLnULSSbYg10
-         6RNSmHPLESgkGYtTBdIHaUI0MS0MlG5vP5cYYwhztolUv5drWuE2peVkQw2dAavzIVAb
-         QFbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wMM/fuc3WiNrMsYpxO4sLYGg6mIGpBm3nkr4euaECOE=;
-        b=EToY6unZUGC1L0D/8TlrH+xJgjr322EHJ8P4JQn15SN+g3uTTGiZUeThC0lXUUhw76
-         lFbQWx9pemnXoNS86wuRGg3NrPI0xSKLc2o/h3fkWD0+ZNTed8kBmKO+5I2r6EdaAqFA
-         5kuT1alkfHKo+gTYz9YxMpHk5pRTAppIaEH+W0SYT9zHFaL7v+/ZpCIk5lfmKettz2mR
-         5eU/vz58cYSaXUGQQxJ//UcM7S7372sZidBCqIuzorZkNJzNwWKRqzW5HwZ4/PDjGHed
-         Ezgit9ysfxe4EaDUORcR1Jh56zvsUCln4Ec37Q0jbI8PsAjBLRyLgM3TEz+8wDWnWYvE
-         Q9Qw==
-X-Gm-Message-State: APjAAAXB1KtxdyUucX60cHexau9B3ENWayODUQb7DDA9P1A/fSJH+izo
-        gFVloUqxbYXy0VaDb7OYiG2imZoAJPoJsHOwpbYDjQ==
-X-Google-Smtp-Source: APXvYqz6aI9mhe4o48eiASnSqHgsrfHpOq8U3P2uy9ecuXBVqcQYD4NERo0xNJEZjBwrmITSdbMQzAo+udkAzdaIUZU=
-X-Received: by 2002:a1f:f282:: with SMTP id q124mr32103246vkh.4.1563977344697;
- Wed, 24 Jul 2019 07:09:04 -0700 (PDT)
+        Wed, 24 Jul 2019 10:09:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:41720 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727029AbfGXOJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:09:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4428D28;
+        Wed, 24 Jul 2019 07:09:13 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB3973F71A;
+        Wed, 24 Jul 2019 07:09:10 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 15:09:08 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v9 11/21] mm: pagewalk: Add p4d_entry() and pgd_entry()
+Message-ID: <20190724140908.GE2624@lakrids.cambridge.arm.com>
+References: <20190722154210.42799-1-steven.price@arm.com>
+ <20190722154210.42799-12-steven.price@arm.com>
+ <20190723101432.GC8085@lakrids.cambridge.arm.com>
+ <60ee20ef-62a3-5df1-6e24-24973b69be70@arm.com>
 MIME-Version: 1.0
-References: <20190723124707.24782-1-hslester96@gmail.com>
-In-Reply-To: <20190723124707.24782-1-hslester96@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 24 Jul 2019 16:08:28 +0200
-Message-ID: <CAPDyKFpo3P_e1ufxyOLLxdeRLe-z1-1Yx5xERD2Hkf0OQbBh8w@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-pci: Use dev_get_drvdata
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <60ee20ef-62a3-5df1-6e24-24973b69be70@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 at 14:47, Chuhong Yuan <hslester96@gmail.com> wrote:
->
-> Instead of using to_pci_dev + pci_get_drvdata,
-> use dev_get_drvdata to make code simpler.
->
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+On Wed, Jul 24, 2019 at 02:53:04PM +0100, Steven Price wrote:
+> On 23/07/2019 11:14, Mark Rutland wrote:
+> > On Mon, Jul 22, 2019 at 04:42:00PM +0100, Steven Price wrote:
+> >> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+> >> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+> >> no users. We're about to add users so reintroduce them, along with
+> >> p4d_entry() as we now have 5 levels of tables.
+> >>
+> >> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+> >> PUD-sized transparent hugepages") already re-added pud_entry() but with
+> >> different semantics to the other callbacks. Since there have never
+> >> been upstream users of this, revert the semantics back to match the
+> >> other callbacks. This means pud_entry() is called for all entries, not
+> >> just transparent huge pages.
+> >>
+> >> Signed-off-by: Steven Price <steven.price@arm.com>
+> >> ---
+> >>  include/linux/mm.h | 15 +++++++++------
+> >>  mm/pagewalk.c      | 27 ++++++++++++++++-----------
+> >>  2 files changed, 25 insertions(+), 17 deletions(-)
+> >>
+> >> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> >> index 0334ca97c584..b22799129128 100644
+> >> --- a/include/linux/mm.h
+> >> +++ b/include/linux/mm.h
+> >> @@ -1432,15 +1432,14 @@ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+> >>  
+> >>  /**
+> >>   * mm_walk - callbacks for walk_page_range
+> >> - * @pud_entry: if set, called for each non-empty PUD (2nd-level) entry
+> >> - *	       this handler should only handle pud_trans_huge() puds.
+> >> - *	       the pmd_entry or pte_entry callbacks will be used for
+> >> - *	       regular PUDs.
+> >> - * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
+> >> + * @pgd_entry: if set, called for each non-empty PGD (top-level) entry
+> >> + * @p4d_entry: if set, called for each non-empty P4D entry
+> >> + * @pud_entry: if set, called for each non-empty PUD entry
+> >> + * @pmd_entry: if set, called for each non-empty PMD entry
+> > 
+> > How are these expected to work with folding?
+> > 
+> > For example, on arm64 with 64K pages and 42-bit VA, you can have 2-level
+> > tables where the PGD is P4D, PUD, and PMD. IIUC we'd invoke the
+> > callbacks for each of those levels where we found an entry in the pgd.
+> > 
+> > Either the callee handle that, or we should inhibit the callbacks when
+> > levels are folded, and I think that needs to be explcitly stated either
+> > way.
+> > 
+> > IIRC on x86 the p4d folding is dynamic depending on whether the HW
+> > supports 5-level page tables. Maybe that implies the callee has to
+> > handle that.
+> 
+> Yes, my assumption is that it has to be up to the callee to handle that
+> because folding can be dynamic. I believe this also was how these
+> callbacks work before they were removed. However I'll add a comment
+> explaining that here as it's probably non-obvious.
 
-Applied for next, thanks!
+That sounds good to me.
 
-Kind regards
-Uffe
-
-
-> ---
->  drivers/mmc/host/sdhci-pci-core.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-> index 4041878eb0f3..d10aceed5bb7 100644
-> --- a/drivers/mmc/host/sdhci-pci-core.c
-> +++ b/drivers/mmc/host/sdhci-pci-core.c
-> @@ -1759,8 +1759,7 @@ static const struct sdhci_ops sdhci_pci_ops = {
->  #ifdef CONFIG_PM_SLEEP
->  static int sdhci_pci_suspend(struct device *dev)
->  {
-> -       struct pci_dev *pdev = to_pci_dev(dev);
-> -       struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-> +       struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
->
->         if (!chip)
->                 return 0;
-> @@ -1773,8 +1772,7 @@ static int sdhci_pci_suspend(struct device *dev)
->
->  static int sdhci_pci_resume(struct device *dev)
->  {
-> -       struct pci_dev *pdev = to_pci_dev(dev);
-> -       struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-> +       struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
->
->         if (!chip)
->                 return 0;
-> @@ -1789,8 +1787,7 @@ static int sdhci_pci_resume(struct device *dev)
->  #ifdef CONFIG_PM
->  static int sdhci_pci_runtime_suspend(struct device *dev)
->  {
-> -       struct pci_dev *pdev = to_pci_dev(dev);
-> -       struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-> +       struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
->
->         if (!chip)
->                 return 0;
-> @@ -1803,8 +1800,7 @@ static int sdhci_pci_runtime_suspend(struct device *dev)
->
->  static int sdhci_pci_runtime_resume(struct device *dev)
->  {
-> -       struct pci_dev *pdev = to_pci_dev(dev);
-> -       struct sdhci_pci_chip *chip = pci_get_drvdata(pdev);
-> +       struct sdhci_pci_chip *chip = dev_get_drvdata(dev);
->
->         if (!chip)
->                 return 0;
-> --
-> 2.20.1
->
+Thanks,
+Mark.
