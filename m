@@ -2,61 +2,53 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E010C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E73C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6592070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F28221738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfGXOet (ORCPT
+        id S1728083AbfGXOgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:34:49 -0400
-Received: from mga01.intel.com ([192.55.52.88]:18868 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbfGXOet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:34:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 07:34:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="scan'208";a="171518552"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 24 Jul 2019 07:34:47 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 39248130; Wed, 24 Jul 2019 17:34:46 +0300 (EEST)
-Date:   Wed, 24 Jul 2019 17:34:46 +0300
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com, vbabka@suse.cz,
-        yang.shi@linux.alibaba.com, jannh@google.com, walken@google.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm/mmap.c: silence variable 'new_start' set but not used
-Message-ID: <20190724143445.ezii7bwbbxxxtu2k@black.fi.intel.com>
-References: <20190724140739.59532-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724140739.59532-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
+        Wed, 24 Jul 2019 10:36:54 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:33123 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725870AbfGXOgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:36:54 -0400
+Received: from Internal Mail-Server by MTLPINE2 (envelope-from asmaa@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 24 Jul 2019 17:36:48 +0300
+Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x6OEakUh008811;
+        Wed, 24 Jul 2019 10:36:46 -0400
+Received: (from asmaa@localhost)
+        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x6OEaj5X015961;
+        Wed, 24 Jul 2019 10:36:45 -0400
+From:   Asmaa Mnebhi <Asmaa@mellanox.com>
+To:     minyard@acm.org
+Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/1] Fix uninitialized variable in ipmb_dev_int.c
+Date:   Wed, 24 Jul 2019 10:36:41 -0400
+Message-Id: <cover.1563978634.git.Asmaa@mellanox.com>
+X-Mailer: git-send-email 2.1.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 02:07:39PM +0000, YueHaibing wrote:
-> 'new_start' is used in is_hugepage_only_range(),
-> which do nothing in some arch. gcc will warning:
+ret at line 112 of ipmb_dev_int.c is uninitialized which
+results in a warning during build regressions.
 
-Make is_hugepage_only_range() reference the variable on such archs:
+Asmaa Mnebhi (1):
+  Fix uninitialized variable in ipmb_dev_int.c
 
-#define is_hugepage_only_range(mm, addr, len)   ((void) addr, 0)
+ drivers/char/ipmi/ipmb_dev_int.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 -- 
- Kirill A. Shutemov
+2.1.2
+
