@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1091C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B38C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A542166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8569C2081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999813;
-	bh=aKEnaZ7Q19gHsX4lVgdncCYO5iiTFGDI+R4d4ch3Riw=;
+	s=default; t=1563999825;
+	bh=ikudbIaHF+TQIA27wylt1DWHxq8QWyo2t/AkcsVrBNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mV1Q3+5/rNhflzABWLNuOjVYxz6ujeRKV/lAgOgEFI9TAyiGY7SLM/E6WFUnpo9wx
-	 VZ12o9K9wt3FqTRW+RVYSdurj66mlDmIGNcQYF/k70XPWPifjyRF69zgl7nfE66/U5
-	 hvShup9nE7H4GzqQ1T5aCXprWgVgPMrHTzr0BUcI=
+	b=pfONEah+oLsz2VeEplqDcHAGMUNBJ3hNRodJe6K5OA7DR1VO2TXYTDEA3kiLGGx5d
+	 EM8O/FswBN2njprwjNUs12QR+S4/T5uzXKrkN0EipcbS3Pm2f9KwUGyTJ9k4FfV79o
+	 bbRuYJs4OsOZpmZ0hgys7q+zuFx1kI6R6RGuWy7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390414AbfGXTms (ORCPT
+        id S2390980AbfGXUXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390409AbfGXTmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:42:46 -0400
+        id S2387897AbfGXTmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:42:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42AAD20665;
-        Wed, 24 Jul 2019 19:42:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31FEB22ADA;
+        Wed, 24 Jul 2019 19:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997364;
-        bh=aKEnaZ7Q19gHsX4lVgdncCYO5iiTFGDI+R4d4ch3Riw=;
+        s=default; t=1563997350;
+        bh=ikudbIaHF+TQIA27wylt1DWHxq8QWyo2t/AkcsVrBNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KydtvRasS0UhI8RR1N1baE8p+rGN7EXj9Tu2NmNmxZ7LxIlGnIbRj6MhTVeizVMqL
-         zo2ILwDeXd/v34VCjXSrUVYkvvV+7+tt2BKEUXSmoF9z22ELowcanD7OhXcW7KXUk4
-         KmRpOnhc6jSRkbC11DRcfslZKpfcKDVhzoHwE1G0=
+        b=PhIrYAVlS4FckuEqxmc0B6Gp1R6WOqOpNRoe6ixbeMGHX7BKpTFKsEVP6vs8/ERjl
+         2xhKMm/sowi3qXob8nN5orbHde9tjPzDWcmeH6kwme1/Ds4UtQsFqXTGzAMuBtLV55
+         5x3ClijA+UWZ47QwcRCgOB43y39mnmiZaugB0Ywk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.2 411/413] phy: qcom-qmp: Correct READY_STATUS poll break condition
-Date:   Wed, 24 Jul 2019 21:21:42 +0200
-Message-Id: <20190724191803.918536116@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Josef Bacik <jbacik@fb.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 406/413] blk-iolatency: clear use_delay when io.latency is set to zero
+Date:   Wed, 24 Jul 2019 21:21:37 +0200
+Message-Id: <20190724191803.688554541@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,75 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Tejun Heo <tj@kernel.org>
 
-commit 885bd765963b42c380db442db7f1c0f2a26076fa upstream.
+commit 5de0073fcd50cc1f150895a7bb04d3cf8067b1d7 upstream.
 
-After issuing a PHY_START request to the QMP, the hardware documentation
-states that the software should wait for the PCS_READY_STATUS to become
-1.
+If use_delay was non-zero when the latency target of a cgroup was set
+to zero, it will stay stuck until io.latency is enabled on the cgroup
+again.  This keeps readahead disabled for the cgroup impacting
+performance negatively.
 
-With the introduction of commit c9b589791fc1 ("phy: qcom: Utilize UFS
-reset controller") an additional 1ms delay was introduced between the
-start request and the check of the status bit. This greatly increases
-the chances for the hardware to actually becoming ready before the
-status bit is read.
-
-The result can be seen in that UFS PHY enabling is now reported as a
-failure in 10% of the boots on SDM845, which is a clear regression from
-the previous rare/occasional failure.
-
-This patch fixes the "break condition" of the poll to check for the
-correct state of the status bit.
-
-Unfortunately PCIe on 8996 and 8998 does not specify the mask_pcs_ready
-register, which means that the code checks a bit that's always 0. So the
-patch also fixes these, in order to not regress these targets.
-
-Fixes: 73d7ec899bd8 ("phy: qcom-qmp: Add msm8998 PCIe QMP PHY support")
-Fixes: e78f3d15e115 ("phy: qcom-qmp: new qmp phy driver for qcom-chipsets")
-Cc: stable@vger.kernel.org
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Josef Bacik <jbacik@fb.com>
+Fixes: d70675121546 ("block: introduce blk-iolatency io controller")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c |    4 +++-
+ block/blk-iolatency.c |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1074,6 +1074,7 @@ static const struct qmp_phy_cfg msm8996_
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -759,8 +759,10 @@ static int iolatency_set_min_lat_nsec(st
  
- 	.start_ctrl		= PCS_START | PLL_READY_GATE_EN,
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-+	.mask_pcs_ready		= PHYSTATUS,
- 	.mask_com_pcs_ready	= PCS_READY,
+ 	if (!oldval && val)
+ 		return 1;
+-	if (oldval && !val)
++	if (oldval && !val) {
++		blkcg_clear_delay(blkg);
+ 		return -1;
++	}
+ 	return 0;
+ }
  
- 	.has_phy_com_ctrl	= true,
-@@ -1253,6 +1254,7 @@ static const struct qmp_phy_cfg msm8998_
- 
- 	.start_ctrl             = SERDES_START | PCS_START,
- 	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-+	.mask_pcs_ready		= PHYSTATUS,
- 	.mask_com_pcs_ready	= PCS_READY,
- };
- 
-@@ -1547,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct ph
- 	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
- 	mask = cfg->mask_pcs_ready;
- 
--	ret = readl_poll_timeout(status, val, !(val & mask), 1,
-+	ret = readl_poll_timeout(status, val, val & mask, 1,
- 				 PHY_INIT_COMPLETE_TIMEOUT);
- 	if (ret) {
- 		dev_err(qmp->dev, "phy initialization timed-out\n");
 
 
