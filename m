@@ -2,110 +2,89 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81D5C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40B1C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E76721951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFC821951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfGXId7 (ORCPT
+        id S1726410AbfGXIfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:33:59 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:47812 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXId7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:33:59 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C6CE28028C; Wed, 24 Jul 2019 10:33:44 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 10:33:55 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        linux-leds@vger.kernel.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH] Enable backlight when trigger is activated
-Message-ID: <20190724083355.GA27716@amd>
-References: <20190718190849.GA11409@amd>
- <22d7eca4ad8aa2e73933c4f83c92221ce6e0945a.camel@collabora.com>
- <20190722075032.GA27524@amd>
- <6fc6af89-1455-7665-47e7-0568ecd87c9c@gmail.com>
+        Wed, 24 Jul 2019 04:35:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:31625 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfGXIfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:35:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 01:35:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,302,1559545200"; 
+   d="scan'208";a="174813886"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2019 01:35:17 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 24 Jul 2019 01:35:17 -0700
+Received: from hasmsx107.ger.corp.intel.com (10.184.198.27) by
+ FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 24 Jul 2019 01:35:17 -0700
+Received: from hasmsx106.ger.corp.intel.com ([169.254.10.57]) by
+ hasmsx107.ger.corp.intel.com ([169.254.2.129]) with mapi id 14.03.0439.000;
+ Wed, 24 Jul 2019 11:35:14 +0300
+From:   "Usyskin, Alexander" <alexander.usyskin@intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        "Winkler, Tomas" <tomas.winkler@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "C, Ramalingam" <ramalingam.c@intel.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+Subject: RE: [PATCH] mei: Abort writes if incomplete after 1s
+Thread-Topic: [PATCH] mei: Abort writes if incomplete after 1s
+Thread-Index: AQHVQUh9EyPhTupKrUyMtZr0cChB+abX3bwAgAAA/oCAAZPUQA==
+Date:   Wed, 24 Jul 2019 08:35:13 +0000
+Message-ID: <C980C034A53E0646B96866D6CE3D187AD881E2B4@HASMSX106.ger.corp.intel.com>
+References: <20190723111913.20475-1-chris@chris-wilson.co.uk>
+ <5B8DA87D05A7694D9FA63FD143655C1B9DC7C082@hasmsx108.ger.corp.intel.com>
+ <156388132716.31349.11822559564861280475@skylake-alporthouse-com>
+In-Reply-To: <156388132716.31349.11822559564861280475@skylake-alporthouse-com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2I2OTQ0NWUtMmNiOC00NGRlLTkxY2YtYzMyZWM5MGEzMGZiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiemZjbmdUUjBUdUR0eUQ3QjFKb3hXNEFnb3VoeTlxUzFzSDg1RnRINnMwK3FPNWVoREtiMXkxMm85VnBSTTc3cSJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.184.70.11]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
-Content-Disposition: inline
-In-Reply-To: <6fc6af89-1455-7665-47e7-0568ecd87c9c@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> >>> +++ b/drivers/leds/trigger/ledtrig-backlight.c
-> >>> @@ -114,6 +114,8 @@ static int bl_trig_activate(struct led_classdev *=
-led)
-> >>>  	n->old_status =3D UNBLANK;
-> >>>  	n->notifier.notifier_call =3D fb_notifier_callback;
-> >>> =20
-> >>> +	led_set_brightness(led, LED_ON);
-> >>> +
-> >>
-> >> This looks fishy.
-> >>
-> >> Maybe you should use a default-state =3D "keep" instead? (and you'll h=
-ave
-> >> to support it in the LED driver).
-> >>
-> >> That'll give you proper "don't touch the LED if it was turned on" beha=
-vior,
-> >> which is what you seem to want.
-> >=20
-> > Actually no, that's not what I want. LED should go on if the display
-> > is active, as soon as trigger is activated.
-> >=20
-> > Unfortunately, I have see no good way to tell if the display is
-> > active (and display is usually active when trigger is activated).
->=20
-> default-state DT property can be also set to "on"
-> (see Documentation/devicetree/bindings/leds/common.txt).
-
-Yes, except that it does not work with all drivers :-(. In particular,
-it does not work with lm3532.
-
-We should really move more of the device tree parsing into core, so
-that there's one place to fix...
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl04F/MACgkQMOfwapXb+vISagCfdaWbZQ6RjvGQ3Edw3INdzb04
-i5gAoItfTEBcniDsblUC4rEvK/EzZthi
-=NU1f
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDaHJpcyBXaWxzb24gW21haWx0
+bzpjaHJpc0BjaHJpcy13aWxzb24uY28udWtdDQo+IFNlbnQ6IFR1ZXNkYXksIEp1bHkgMjMsIDIw
+MTkgMTQ6MjkNCj4gVG86IFdpbmtsZXIsIFRvbWFzIDx0b21hcy53aW5rbGVyQGludGVsLmNvbT47
+IGludGVsLQ0KPiBnZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+IENjOiBsaW51eC1rZXJuZWxA
+dmdlci5rZXJuZWwub3JnOyBVc3lza2luLCBBbGV4YW5kZXINCj4gPGFsZXhhbmRlci51c3lza2lu
+QGludGVsLmNvbT47IEMsIFJhbWFsaW5nYW0gPHJhbWFsaW5nYW0uY0BpbnRlbC5jb20+DQo+IFN1
+YmplY3Q6IFJFOiBbUEFUQ0hdIG1laTogQWJvcnQgd3JpdGVzIGlmIGluY29tcGxldGUgYWZ0ZXIg
+MXMNCj4gDQo+IFF1b3RpbmcgV2lua2xlciwgVG9tYXMgKDIwMTktMDctMjMgMTI6MjU6MTQpDQo+
+ID4gPg0KPiA+ID4gRHVyaW5nIGk5MTUgdW5sb2FkLCBpdCBhcHBlYXJzIHRoYXQgaXQgbWF5IGdl
+dCBzdHVjayB3YWl0aW5nIG9uIGENCj4gPiA+IHdvcmtxdWV1ZSBiZWluZyBob2dnZWQgYnkgbWVp
+Og0KPiA+DQo+ID4gVGhhbmtzIGZvciB0aGUgYnVnIHJlcG9ydCwgYnV0IHRoaXMgaXMgbm90IGEg
+cHJvcGVyIGZpeCwgd2Ugd2lsbCB0cnkgdG8gd29yayBpdCBvdXQuDQo+IA0KPiBQZXJmZWN0IDop
+DQo+IA0KPiBJdCdzIG9ubHkgaGFwcGVuZWQgYSBjb3VwbGUgb2YgdGltZXMgaW4gdGhlIGxhc3Qg
+d2VlayBvciBzbywgYnV0IGlmIHlvdSB3YW50IHRvDQo+IHRocm93IHBhdGNoZXMgYXQgaW50ZWwt
+Z2Z4LXRyeWJvdEBsaXN0cy5mcmVlZGVza3RvcC5vcmcgdG8gdHJ5IGFuZCBncmFiIG1vcmUNCj4g
+aW5mb3JtYXRpb24sIHBsZWFzZSBmZWVsIGZyZWUgdG8uDQo+IC1DaHJpcw0KDQpEbyB5b3UgaGF2
+ZSBmdWxsIGRtZXNnIGZyb20gYWZmZWN0ZWQgc3lzdGVtPw0KDQpUaGFua3MNCi0tDQpTYXNoYQ0K
+DQoNCg==
