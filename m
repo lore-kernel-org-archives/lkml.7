@@ -2,277 +2,85 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6D0C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A9DC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263462083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GolF7QBQ"
+	by mail.kernel.org (Postfix) with ESMTP id 984852083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfGXQAQ (ORCPT
+        id S1728487AbfGXQBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:00:16 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37942 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfGXQAP (ORCPT
+        Wed, 24 Jul 2019 12:01:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44374 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfGXQBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:00:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f5so12628573pgu.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qsSima7UkQ7OwBOdi4tGVB5ber34uVKcFdXhsr2axdI=;
-        b=GolF7QBQdk3YAZIYlKBGZDmjztWd9K3P5SX/Qzvua3h7HwiD/Nxl6pZo4VhQe1A4H4
-         pqm5VmUcuNYZkIIfjsLhu97KLdTJsCw7C+oFitH7YZqAzYRr8Jq7pbmOukAivEo3F8/z
-         FxTJHtKQVBgyLCrffPSVhNlecYdwqR0vEK8pJmX300h6HP+ZVhGxnWazGyv0LNwgl4DG
-         q7+CPKyCTDybMv81l5JZpESSHKwuwS+8lRY+GJ74Kx0Q8QqZlApurVo4TdHLY9tmYYMK
-         DCDeeVA7DKkScsckRQUL3bH3IJpQUBjvGbebnXtG9pUucuKw4QpnY8oaP/53tYwy71hA
-         eNhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qsSima7UkQ7OwBOdi4tGVB5ber34uVKcFdXhsr2axdI=;
-        b=Whs3lx+d4bFWgARN5HXtEGACGhX23rn5KCdVBXqKi3mVuiuDd+pZw2VxAkjtL9dozv
-         ZavY7rWiCR+EkcKxHIL6iFFv50ETp/2hi0lrTpW01Q/Sp17QSxoeDe+ysog5emYUG9VK
-         QsN+jle1VbjyuAKyh9+/Zz8mIUjsPf03Bbq7zWwMd+vVlAcUeyW8yvANGdEG1S0StPae
-         cUGW/6Krl6Zgx/nDcvm2rqNMJQyKhY5msDfRrzlZabBCBPMtEZF0BqaD/BTWFhe46sHN
-         lQpyk+mIsTODOCuiPYKqBiERM6Oyic7PSkt45IqCfcPmKjQg3rx4clxv1Y9kfeGiVLQn
-         JTPg==
-X-Gm-Message-State: APjAAAXaLM90Zsxr+80yM+SGiD8d7IcLQgy+zcaTWMPnfGRhy1/H02I2
-        c/YCMiL5k40SqWwPTSubzPA=
-X-Google-Smtp-Source: APXvYqz7MmlcY2fmES9Y/ck+2XzpYyCwhYo3EOHzhIyYtN7DbkDrAnyGpjopmctuxiK9Bmv4Fs7JSg==
-X-Received: by 2002:a17:90a:21cc:: with SMTP id q70mr90951538pjc.56.1563984014502;
-        Wed, 24 Jul 2019 09:00:14 -0700 (PDT)
-Received: from ubuntu.localdomain ([104.238.150.158])
-        by smtp.gmail.com with ESMTPSA id b136sm57850207pfb.73.2019.07.24.09.00.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 09:00:14 -0700 (PDT)
-From:   Muchun Song <smuchun@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org, mojha@codeaurora.org
-Cc:     benh@kernel.crashing.org, prsood@codeaurora.org,
-        gkohli@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6] driver core: Fix use-after-free and double free on glue directory
-Date:   Thu, 25 Jul 2019 00:00:06 +0800
-Message-Id: <20190724160006.21013-1-smuchun@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 24 Jul 2019 12:01:12 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqJhR-0004US-3h; Wed, 24 Jul 2019 18:01:05 +0200
+Date:   Wed, 24 Jul 2019 18:01:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     "H.J. Lu" <hjl.tools@gmail.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
+ be reserved
+In-Reply-To: <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907241751240.1791@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de> <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com> <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de> <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com>
+ <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de> <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com> <20190723130513.GA25290@kroah.com>
+ <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de> <20190723134454.GA7260@kroah.com> <20190724153416.GA27117@kroah.com> <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race condition between removing glue directory and adding a new
-device under the glue directory. It can be reproduced in following test:
+On Wed, 24 Jul 2019, Thomas Gleixner wrote:
+> On Wed, 24 Jul 2019, Greg KH wrote:
+> > On Tue, Jul 23, 2019 at 03:44:54PM +0200, Greg KH wrote:
+> > > Sorry, I saw that after writing that.  You are right, if the others
+> > > don't object, that's fine with me.  I'll go poke the various build
+> > > systems that are failing right now on 5.3-rc1 and try to get them fixed
+> > > for this reason.
+> > 
+> > Ok, I dug around and the gold linker is not being used here, only clang
+> > to build the source and GNU ld to link, and I am still seeing this
+> > error.
+> 
+> Odd combo.
 
-path 1: Add the child device under glue dir
-device_add()
-    get_device_parent()
-        mutex_lock(&gdp_mutex);
-        ....
-        /*find parent from glue_dirs.list*/
-        list_for_each_entry(k, &dev->class->p->glue_dirs.list, entry)
-            if (k->parent == parent_kobj) {
-                kobj = kobject_get(k);
-                break;
-            }
-        ....
-        mutex_unlock(&gdp_mutex);
-        ....
-    ....
-    kobject_add()
-        kobject_add_internal()
-            create_dir()
-                sysfs_create_dir_ns()
-                    if (kobj->parent)
-                        parent = kobj->parent->sd;
-                    ....
-                    kernfs_create_dir_ns(parent)
-                        kernfs_new_node()
-                            kernfs_get(parent)
-                        ....
-                        /* link in */
-                        rc = kernfs_add_one(kn);
-                        if (!rc)
-                            return kn;
+Ha. Not really. I did not switch ld with LD=... so it's using the default GNU ld.
 
-                        kernfs_put(kn)
-                            ....
-                            repeat:
-                            kmem_cache_free(kn)
-                            kn = parent;
+> > Hm, clang 8 does not cause this error, but clang 9 does.  Let me go poke
+> > the people who are providing this version of clang to see if there's
+> > something they can figure out.
+> 
+> Let me try that with my clang variant. Which version of GNU ld are you
+> using?
 
-                            if (kn) {
-                                if (atomic_dec_and_test(&kn->count))
-                                    goto repeat;
-                            }
-                        ....
+Works with a very recent build of the clang-9 branch and ld version 2.31.1
 
-path2: Remove last child device under glue dir
-device_del()
-    cleanup_glue_dir()
-        mutex_lock(&gdp_mutex);
-        if (!kobject_has_children(glue_dir))
-            kobject_del(glue_dir);
-        kobject_put(glue_dir);
-        mutex_unlock(&gdp_mutex);
+Thanks,
 
-Before path2 remove last child device under glue dir, If path1 add a new
-device under glue dir, the glue_dir kobject reference count will be
-increase to 2 via kobject_get(k) in get_device_parent(). And path1 has
-been called kernfs_new_node(), but not call kernfs_get(parent).
-Meanwhile, path2 call kobject_del(glue_dir) beacause 0 is returned by
-kobject_has_children(). This result in glue_dir->sd is freed and it's
-reference count will be 0. Then path1 call kernfs_get(parent) will trigger
-a warning in kernfs_get()(WARN_ON(!atomic_read(&kn->count))) and increase
-it's reference count to 1. Because glue_dir->sd is freed by path2, the next
-call kernfs_add_one() by path1 will fail(This is also use-after-free)
-and call atomic_dec_and_test() to decrease reference count. Because the
-reference count is decremented to 0, it will also call kmem_cache_free()
-to free glue_dir->sd again. This will result in double free.
-
-In order to avoid this happening, we also should make sure that kernfs_node
-for glue_dir is released in path2 only when refcount for glue_dir kobj is
-1 to fix this race.
-
-The following calltrace is captured in kernel 4.14 with the following patch
-applied:
-
-commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-
---------------------------------------------------------------------------
-[    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
-                Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
-....
-[    3.633986] Call trace:
-[    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
-[    3.633994]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634001]  kobject_add_internal+0x22c/0x3f0
-[    3.634005]  kobject_add+0xe4/0x118
-[    3.634011]  device_add+0x200/0x870
-[    3.634017]  _request_firmware+0x958/0xc38
-[    3.634020]  request_firmware_into_buf+0x4c/0x70
-....
-[    3.634064] kernel BUG at .../mm/slub.c:294!
-                Here is BUG_ON(object == fp) in set_freepointer().
-....
-[    3.634346] Call trace:
-[    3.634351]  kmem_cache_free+0x504/0x6b8
-[    3.634355]  kernfs_put+0x14c/0x1d8
-[    3.634359]  kernfs_create_dir_ns+0x88/0xb0
-[    3.634362]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634366]  kobject_add_internal+0x22c/0x3f0
-[    3.634370]  kobject_add+0xe4/0x118
-[    3.634374]  device_add+0x200/0x870
-[    3.634378]  _request_firmware+0x958/0xc38
-[    3.634381]  request_firmware_into_buf+0x4c/0x70
---------------------------------------------------------------------------
-
-Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-
-Signed-off-by: Muchun Song <smuchun@gmail.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
----
-
-Change in v6:
-       1. Remove hardcoding "1 "
-Change in v5:
-       1. Revert to the v1 fix.
-       2. Add some comment to explain why we need do this in
-          cleanup_glue_dir().
-Change in v4:
-       1. Add some kerneldoc comment.
-       2. Remove unlock_if_glue_dir().
-       3. Rename get_device_parent_locked_if_glue_dir() to
-          get_device_parent_locked.
-       4. Update commit message.
-Change in v3:
-       Add change log.
-Change in v2:
-       Fix device_move() also.
-
- drivers/base/core.c | 57 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 56 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4aeaa0c92bda..49bcb01e44cd 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1820,12 +1820,67 @@ static inline struct kobject *get_glue_dir(struct device *dev)
-  */
- static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
- {
-+	unsigned int ref;
-+
- 	/* see if we live in a "glue" directory */
- 	if (!live_in_glue_dir(glue_dir, dev))
- 		return;
- 
- 	mutex_lock(&gdp_mutex);
--	if (!kobject_has_children(glue_dir))
-+	/**
-+	 * There is a race condition between removing glue directory
-+	 * and adding a new device under the glue directory.
-+	 *
-+	 * path 1: Add the child device under glue dir
-+	 * device_add()
-+	 *	get_device_parent()
-+	 *		mutex_lock(&gdp_mutex);
-+	 *		....
-+	 *		list_for_each_entry(k, &dev->class->p->glue_dirs.list,
-+	 *				    entry)
-+	 *		if (k->parent == parent_kobj) {
-+	 *			kobj = kobject_get(k);
-+	 *			break;
-+	 *		}
-+	 *		....
-+	 *		mutex_unlock(&gdp_mutex);
-+	 *		....
-+	 *	....
-+	 *	kobject_add()
-+	 *		kobject_add_internal()
-+	 *		create_dir()
-+	 *			....
-+	 *			if (kobj->parent)
-+	 *				parent = kobj->parent->sd;
-+	 *			....
-+	 *			kernfs_create_dir_ns(parent)
-+	 *				....
-+	 *
-+	 * path2: Remove last child device under glue dir
-+	 * device_del()
-+	 *	cleanup_glue_dir()
-+	 *		....
-+	 *		mutex_lock(&gdp_mutex);
-+	 *		if (!kobject_has_children(glue_dir))
-+	 *			kobject_del(glue_dir);
-+	 *		....
-+	 *		mutex_unlock(&gdp_mutex);
-+	 *
-+	 * Before path2 remove last child device under glue dir, if path1 add
-+	 * a new device under glue dir, the glue_dir kobject reference count
-+	 * will be increase to 2 via kobject_get(k) in get_device_parent().
-+	 * And path1 has been called kernfs_create_dir_ns(). Meanwhile,
-+	 * path2 call kobject_del(glue_dir) beacause 0 is returned by
-+	 * kobject_has_children(). This result in glue_dir->sd is freed.
-+	 * Then the path1 will see a stale "empty" but still potentially used
-+	 * glue dir around.
-+	 *
-+	 * In order to avoid this happening, we also should make sure that
-+	 * kernfs_node for glue_dir is released in path2 only when refcount
-+	 * for glue_dir kobj is 1.
-+	 */
-+	ref = kref_read(&glue_dir->kref);
-+	if (!kobject_has_children(glue_dir) && !--ref)
- 		kobject_del(glue_dir);
- 	kobject_put(glue_dir);
- 	mutex_unlock(&gdp_mutex);
--- 
-2.17.1
-
+	tglx
