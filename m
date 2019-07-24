@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A60C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5863FC76194
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACB722387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21372229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFNUQlsl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vK9pooKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfGXEZd (ORCPT
+        id S1726529AbfGXEZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:25:33 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34213 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbfGXEZ3 (ORCPT
+        Wed, 24 Jul 2019 00:25:38 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45281 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfGXEZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:25:29 -0400
-Received: by mail-pl1-f195.google.com with SMTP id i2so21482631plt.1;
-        Tue, 23 Jul 2019 21:25:28 -0700 (PDT)
+        Wed, 24 Jul 2019 00:25:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so20495797pgp.12;
+        Tue, 23 Jul 2019 21:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CtboR7Ufy9O9fDFcRIuCIk1t8EIvDdcqQ3tCIzPpVTU=;
-        b=BFNUQlsly9hFNZnfDRf69ho0wDvCVUqoj8dGJpNcOiGYgy46obMbORHEMN/I5tUQuy
-         K86xGPjY4b4QO+54v/Zv7nQ40O3fVB4kil84sULCnYrDgJVTXlsEFmALWYldAbZAgMBP
-         fvIXv3sy0T/Ns+lBLfXM4dLPELbccf6aa9owKLeIZQZMk4ea+nMOdmYcBOB36dALtS4z
-         0SnWHD/Ra8zQZlPYXX9NedMId4XeBIsKRL/2j4wXYAsw4ctlt6Th0vAum9effAlS+CNc
-         g0HRax01vlO2YL0JWYjboqvm7PfjfxsTzbm2nbAhIfIebOVYGUr1FquaKAPIEQbTrE+e
-         0YTg==
+        bh=KSu4c8K87otioLO5Qi7krPYXd9lfPqD3DBn+R95C1d0=;
+        b=vK9pooKon6/mOtb3SY3teg2KToasteUZ4QJ6ySDYhY+bolLRcoJ0V7EApmOF6ww8+5
+         uA5XzDj5MgYzDTTUihWBvQPudQbRA6pP0Np2RjOxAW+25aABpMhwK96bgYN77XodLsbz
+         TjJmoxROhxmbYmas70jZF8oQ9Vvbm2huGu9ybaSW1Ge8TFjgZCxQqbtBWvoBjF//tpwO
+         vlXCDNjVvcKyqLnAYMUPy1UP+NivsNAfedccjedMaIPaHnlBhFEHQeh7YTlVhbGBE4Ft
+         9r/ZEWoW7VQgYw3mrzI+TQqbyaEji4PuYSqkM7tx8/3qaXyX/w+rFyy3S1NH5tXtFcGX
+         418w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CtboR7Ufy9O9fDFcRIuCIk1t8EIvDdcqQ3tCIzPpVTU=;
-        b=DGgaTpaQ44/dNT0RGpfVhyiNyCI+atbx/yYS62gUPiAbwoblGbIUKFgBg/SoGrA1OF
-         uURIjf2vKwUIlbIkugvm6g38wHrd0f8tYz+PI8xxW2q6WhAuBGEvU9gcDfAhlQ0/OrRF
-         r9N2hZDAE5jCE/t9tLVnKEkWgF2XuId+x7ydjVMKZrcBvIQW3Lo98Eusvet9vcMvUqxm
-         L+kqwBxzfU28a9Bbu+5rbMtYbkYs9IicGtosyOFG3jbqSp0c7MsW0+si0d36p7mE1j8+
-         AVgRTOasuBzki1TsqYfrZhI2j0YRm+oAh5qG1Xq34yagm5hT4rcPBL+Jxb3z+lMewBXH
-         OHHg==
-X-Gm-Message-State: APjAAAWBro4S/E6UiKux7c7uwvnnT4WqNgGgtj9fuswNTbtHOYwRykGS
-        6Dthta66I8haQq5Nc6AZfEZ5tgx5
-X-Google-Smtp-Source: APXvYqw2fBb16YWxNCvrkJttPP2qps3nLx7+Bn7G811lLUhuqyz8ucaB8iJLC4by+I8yTQYjbx90Ag==
-X-Received: by 2002:a17:902:2ec5:: with SMTP id r63mr82774537plb.21.1563942328383;
-        Tue, 23 Jul 2019 21:25:28 -0700 (PDT)
+        bh=KSu4c8K87otioLO5Qi7krPYXd9lfPqD3DBn+R95C1d0=;
+        b=jHvxMcDMmynPvyd3pGflw5xKGBbZUO499eWQv5xoKmArgUCdkEpW7bWsXw7NWuprFO
+         TuHjPI+wZfcw9NzNbevzc61fdqkHqmAuzRNwuBIQXl4TE6f50r8tLVnLreB4gHg5M6CR
+         2dy4eO9or4oqHJDxax/GxpCd7lZGPbAabiBS4cIbRhUZWsiwGWodCrcszDD+KRt63VDx
+         e3Eil3QnUuAzfGGyp3wvWRfcmSTJQWFlyEOyKl35bLgahQFwPNTCAoPGSu4QAX1I0VJ/
+         GqU1xLYtADGTeIKLUsbQV7nSC5u/M9Lwa1IreuwjSwAT6da4hMQCyGie8FKRgvSaszbY
+         bCBA==
+X-Gm-Message-State: APjAAAVZJLZ3wBanbPZC0nDhnq3eOvSsbzzL1tpnaYxpro3NDJwMwaWh
+        /PSon6jtWr9hJvqjSTFev0s=
+X-Google-Smtp-Source: APXvYqxBFutwlAV+HAhH1stPSp3r5XPR8jEYK6DoryZdcZaAiPzxQPw8sNObOsdod3FjgjrDKk14TQ==
+X-Received: by 2002:a17:90a:1b48:: with SMTP id q66mr82032950pjq.83.1563942332936;
+        Tue, 23 Jul 2019 21:25:32 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id a15sm34153364pgw.3.2019.07.23.21.25.27
+        by smtp.gmail.com with ESMTPSA id a15sm34153364pgw.3.2019.07.23.21.25.31
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 21:25:27 -0700 (PDT)
+        Tue, 23 Jul 2019 21:25:32 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -86,10 +86,11 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Ming Lei <ming.lei@redhat.com>,
         Dave Chinner <david@fromorbit.com>,
-        Boaz Harrosh <boaz@plexistor.com>
-Subject: [PATCH 05/12] block_dev: convert put_page() to put_user_page*()
-Date:   Tue, 23 Jul 2019 21:25:11 -0700
-Message-Id: <20190724042518.14363-6-jhubbard@nvidia.com>
+        Boaz Harrosh <boaz@plexistor.com>,
+        Steve French <sfrench@samba.org>
+Subject: [PATCH 08/12] fs/cifs: convert put_page() to put_user_page*()
+Date:   Tue, 23 Jul 2019 21:25:14 -0700
+Message-Id: <20190724042518.14363-9-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724042518.14363-1-jhubbard@nvidia.com>
 References: <20190724042518.14363-1-jhubbard@nvidia.com>
@@ -105,21 +106,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Jérôme Glisse <jglisse@redhat.com>
 
 For pages that were retained via get_user_pages*(), release those pages
-via the new put_user_page*() routines, instead of via put_page() or
-release_pages().
+via the new put_user_page*() routines, instead of via put_page().
 
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
-
-Changes from Jérôme's original patch:
-
-* reworked to be compatible with recent bio_release_pages() changes.
 
 Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-block@vger.kernel.org
 Cc: linux-mm@kvack.org
+Cc: linux-cifs@vger.kernel.org
 Cc: Jan Kara <jack@suse.cz>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Alexander Viro <viro@zeniv.linux.org.uk>
@@ -131,121 +128,146 @@ Cc: Dave Chinner <david@fromorbit.com>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Boaz Harrosh <boaz@plexistor.com>
+Cc: Steve French <sfrench@samba.org>
 ---
- block/bio.c         | 13 +++++++++++++
- fs/block_dev.c      | 22 +++++++++++++++++-----
- include/linux/bio.h |  8 ++++++++
- 3 files changed, 38 insertions(+), 5 deletions(-)
+ fs/cifs/cifsglob.h |  3 +++
+ fs/cifs/file.c     | 22 +++++++++++++++++-----
+ fs/cifs/misc.c     | 19 +++++++++++++++----
+ 3 files changed, 35 insertions(+), 9 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 74f9eba2583b..3b9f66e64bc1 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1746,6 +1746,19 @@ void bio_check_pages_dirty(struct bio *bio)
- 	__bio_check_pages_dirty(bio, false);
+diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
+index fe610e7e3670..e95cb82bfa50 100644
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1283,6 +1283,7 @@ struct cifs_aio_ctx {
+ 	 * If yes, iter is a copy of the user passed iov_iter
+ 	 */
+ 	bool			direct_io;
++	bool			from_gup;
+ };
+ 
+ struct cifs_readdata;
+@@ -1317,6 +1318,7 @@ struct cifs_readdata {
+ 	struct cifs_credits		credits;
+ 	unsigned int			nr_pages;
+ 	struct page			**pages;
++	bool				from_gup;
+ };
+ 
+ struct cifs_writedata;
+@@ -1343,6 +1345,7 @@ struct cifs_writedata {
+ 	struct cifs_credits		credits;
+ 	unsigned int			nr_pages;
+ 	struct page			**pages;
++	bool				from_gup;
+ };
+ 
+ /*
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 97090693d182..84fa7e0a578f 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2571,8 +2571,13 @@ cifs_uncached_writedata_release(struct kref *refcount)
+ 					struct cifs_writedata, refcount);
+ 
+ 	kref_put(&wdata->ctx->refcount, cifs_aio_ctx_release);
+-	for (i = 0; i < wdata->nr_pages; i++)
+-		put_page(wdata->pages[i]);
++	if (wdata->from_gup) {
++		for (i = 0; i < wdata->nr_pages; i++)
++			put_user_page(wdata->pages[i]);
++	} else {
++		for (i = 0; i < wdata->nr_pages; i++)
++			put_page(wdata->pages[i]);
++	}
+ 	cifs_writedata_release(refcount);
  }
  
-+enum bio_rp_flags_t bio_rp_flags(struct iov_iter *iter, bool mark_dirty)
-+{
-+	enum bio_rp_flags_t flags = BIO_RP_NORMAL;
-+
-+	if (mark_dirty)
-+		flags |= BIO_RP_MARK_DIRTY;
-+
-+	if (iov_iter_get_pages_use_gup(iter))
-+		flags |= BIO_RP_FROM_GUP;
-+
-+	return flags;
-+}
-+
- void update_io_ticks(struct hd_struct *part, unsigned long now)
- {
- 	unsigned long stamp;
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 9fe6616f8788..d53abaf31e54 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -259,7 +259,7 @@ __blkdev_direct_IO_simple(struct kiocb *iocb, struct iov_iter *iter,
+@@ -2781,7 +2786,7 @@ cifs_write_from_iter(loff_t offset, size_t len, struct iov_iter *from,
+ 				break;
+ 			}
+ 
+-
++			wdata->from_gup = iov_iter_get_pages_use_gup(from);
+ 			wdata->page_offset = start;
+ 			wdata->tailsz =
+ 				nr_pages > 1 ?
+@@ -2797,6 +2802,7 @@ cifs_write_from_iter(loff_t offset, size_t len, struct iov_iter *from,
+ 				add_credits_and_wake_if(server, credits, 0);
+ 				break;
+ 			}
++			wdata->from_gup = false;
+ 
+ 			rc = cifs_write_allocate_pages(wdata->pages, nr_pages);
+ 			if (rc) {
+@@ -3238,8 +3244,12 @@ cifs_uncached_readdata_release(struct kref *refcount)
+ 	unsigned int i;
+ 
+ 	kref_put(&rdata->ctx->refcount, cifs_aio_ctx_release);
+-	for (i = 0; i < rdata->nr_pages; i++) {
+-		put_page(rdata->pages[i]);
++	if (rdata->from_gup) {
++		for (i = 0; i < rdata->nr_pages; i++)
++			put_user_page(rdata->pages[i]);
++	} else {
++		for (i = 0; i < rdata->nr_pages; i++)
++			put_page(rdata->pages[i]);
  	}
- 	__set_current_state(TASK_RUNNING);
- 
--	bio_release_pages(&bio, bio_rp_dirty_flag(should_dirty));
-+	bio_release_pages(&bio, bio_rp_flags(iter, should_dirty));
- 	if (unlikely(bio.bi_status))
- 		ret = blk_status_to_errno(bio.bi_status);
- 
-@@ -295,7 +295,7 @@ static int blkdev_iopoll(struct kiocb *kiocb, bool wait)
- 	return blk_poll(q, READ_ONCE(kiocb->ki_cookie), wait);
+ 	cifs_readdata_release(refcount);
  }
+@@ -3502,6 +3512,7 @@ cifs_send_async_read(loff_t offset, size_t len, struct cifsFileInfo *open_file,
+ 				break;
+ 			}
  
--static void blkdev_bio_end_io(struct bio *bio)
-+static void _blkdev_bio_end_io(struct bio *bio, bool from_gup)
- {
- 	struct blkdev_dio *dio = bio->bi_private;
- 	bool should_dirty = dio->should_dirty;
-@@ -327,13 +327,23 @@ static void blkdev_bio_end_io(struct bio *bio)
++			rdata->from_gup = iov_iter_get_pages_use_gup(&direct_iov);
+ 			npages = (cur_len + start + PAGE_SIZE-1) / PAGE_SIZE;
+ 			rdata->page_offset = start;
+ 			rdata->tailsz = npages > 1 ?
+@@ -3519,6 +3530,7 @@ cifs_send_async_read(loff_t offset, size_t len, struct cifsFileInfo *open_file,
+ 				rc = -ENOMEM;
+ 				break;
+ 			}
++			rdata->from_gup = false;
+ 
+ 			rc = cifs_read_allocate_pages(rdata, npages);
+ 			if (rc) {
+diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
+index f383877a6511..5a04c34fea05 100644
+--- a/fs/cifs/misc.c
++++ b/fs/cifs/misc.c
+@@ -822,10 +822,18 @@ cifs_aio_ctx_release(struct kref *refcount)
+ 	if (ctx->bv) {
+ 		unsigned i;
+ 
+-		for (i = 0; i < ctx->npages; i++) {
+-			if (ctx->should_dirty)
+-				set_page_dirty(ctx->bv[i].bv_page);
+-			put_page(ctx->bv[i].bv_page);
++		if (ctx->from_gup) {
++			for (i = 0; i < ctx->npages; i++) {
++				if (ctx->should_dirty)
++					set_page_dirty(ctx->bv[i].bv_page);
++				put_user_page(ctx->bv[i].bv_page);
++			}
++		} else {
++			for (i = 0; i < ctx->npages; i++) {
++				if (ctx->should_dirty)
++					set_page_dirty(ctx->bv[i].bv_page);
++				put_page(ctx->bv[i].bv_page);
++			}
+ 		}
+ 		kvfree(ctx->bv);
  	}
+@@ -881,6 +889,9 @@ setup_aio_ctx_iter(struct cifs_aio_ctx *ctx, struct iov_iter *iter, int rw)
  
- 	if (should_dirty) {
--		bio_check_pages_dirty(bio);
-+		__bio_check_pages_dirty(bio, from_gup);
- 	} else {
--		bio_release_pages(bio, BIO_RP_NORMAL);
-+		bio_release_pages(bio, bio_rp_gup_flag(from_gup));
- 		bio_put(bio);
- 	}
- }
+ 	saved_len = count;
  
-+static void blkdev_bio_end_io(struct bio *bio)
-+{
-+	_blkdev_bio_end_io(bio, false);
-+}
++	/* This is only use by cifs_aio_ctx_release() */
++	ctx->from_gup = iov_iter_get_pages_use_gup(iter);
 +
-+static void blkdev_bio_from_gup_end_io(struct bio *bio)
-+{
-+	_blkdev_bio_end_io(bio, true);
-+}
-+
- static ssize_t
- __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
- {
-@@ -380,7 +390,9 @@ __blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter, int nr_pages)
- 		bio->bi_iter.bi_sector = pos >> 9;
- 		bio->bi_write_hint = iocb->ki_hint;
- 		bio->bi_private = dio;
--		bio->bi_end_io = blkdev_bio_end_io;
-+		bio->bi_end_io = iov_iter_get_pages_use_gup(iter) ?
-+				 blkdev_bio_from_gup_end_io :
-+				 blkdev_bio_end_io;
- 		bio->bi_ioprio = iocb->ki_ioprio;
- 
- 		ret = bio_iov_iter_get_pages(bio, iter);
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index d68a40c2c9d4..b9460d1a4679 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -452,6 +452,13 @@ static inline enum bio_rp_flags_t bio_rp_dirty_flag(bool mark_dirty)
- 	return mark_dirty ? BIO_RP_MARK_DIRTY : BIO_RP_NORMAL;
- }
- 
-+static inline enum bio_rp_flags_t bio_rp_gup_flag(bool from_gup)
-+{
-+	return from_gup ? BIO_RP_FROM_GUP : BIO_RP_NORMAL;
-+}
-+
-+enum bio_rp_flags_t bio_rp_flags(struct iov_iter *iter, bool mark_dirty);
-+
- void bio_release_pages(struct bio *bio, enum bio_rp_flags_t flags);
- struct rq_map_data;
- extern struct bio *bio_map_user_iov(struct request_queue *,
-@@ -463,6 +470,7 @@ extern struct bio *bio_copy_kern(struct request_queue *, void *, unsigned int,
- 				 gfp_t, int);
- extern void bio_set_pages_dirty(struct bio *bio);
- extern void bio_check_pages_dirty(struct bio *bio);
-+void __bio_check_pages_dirty(struct bio *bio, bool from_gup);
- 
- void generic_start_io_acct(struct request_queue *q, int op,
- 				unsigned long sectors, struct hd_struct *part);
+ 	while (count && npages < max_pages) {
+ 		rc = iov_iter_get_pages(iter, pages, count, max_pages, &start);
+ 		if (rc < 0) {
 -- 
 2.22.0
 
