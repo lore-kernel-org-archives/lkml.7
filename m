@@ -5,55 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E65C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21710C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0D321734
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34E6206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000526;
-	bh=m6eIVnmoie5rpim9BfCOEBtVArBAcM30e7faLAeTqdg=;
+	s=default; t=1564000529;
+	bh=QibYDCEWMWCyBeR5MW9G3hSGiuU13D55MQrwyNA4rf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQRAyHoGc7zxfP3GYkN8FSLo5lCSPFTUrM1D/YDBx1BMEPl6R/FuorVQdL62Y3fQ0
-	 ws/Lg5P/Om3mXBy7GWhK1H2E9AeqRWKQ9wwRyjVnXvizRHJgtjoJn6Lwza5ewMH2O0
-	 6ZZGCd8SHdQT1VnsYHjfYUvICz6xnoxJRf6Qe6PI=
+	b=OIvPeiX0ktIvNnYgpNGAi4+72DfUvxpWbQAs1TY5L0puFYaR1yKFL3GbjohBfh1mx
+	 K0O8S7I19IUyr1lVrDnqeiiNz1gFU9ObPlE36W0Fy9MoITVIgF/b+ndANPZy6j6eK8
+	 eQKMWxEjffzH2+VL8trw0imA7fTohLzqvhlLuNC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbfGXT17 (ORCPT
+        id S2388348AbfGXUf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45924 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728772AbfGXT14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:56 -0400
+        id S1727737AbfGXT2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC440229F3;
-        Wed, 24 Jul 2019 19:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53DA921951;
+        Wed, 24 Jul 2019 19:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996475;
-        bh=m6eIVnmoie5rpim9BfCOEBtVArBAcM30e7faLAeTqdg=;
+        s=default; t=1563996482;
+        bh=QibYDCEWMWCyBeR5MW9G3hSGiuU13D55MQrwyNA4rf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNnKWqfAkCzKlYQWtpDRBTCmu2w26OMsqYjq6q7kGng8VvR7wrOlv5z50L6SFNmTa
-         rs5gXe+ZXjOTuBaAI/m70HrfZxn9Eve1yTeFf5Le4SEjlXj2Sv89z+kpVdJMQmizNx
-         /arVUe9azodj5aOiNcrCezdMn+K9oecZMS6IhQ8g=
+        b=S8YsiCzRGVpV/jFF7hlUAo+aoj4o0MaKzXdy3dzSX1KJFCZX2nfCZrhU2DCpcc9o/
+         3EDQImDAO42p15/Lz9aLBmCIIqAkDLR54UA0vX7RicdLQCLKo60HCd2TBj4WK9EHss
+         4Fmr3g1IvYRd8LuaXFqlNpoqpFj7Z4IoZbq8Na3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jilong Kou <koujilong@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
+        stable@vger.kernel.org, Tom Vaden <tom.vaden@hpe.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Liang Kan <kan.liang@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Miao Xie <miaoxie@huawei.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 108/413] sched/core: Add __sched tag for io_schedule()
-Date:   Wed, 24 Jul 2019 21:16:39 +0200
-Message-Id: <20190724191743.027532780@linuxfoundation.org>
+Subject: [PATCH 5.2 111/413] perf/x86/intel: Disable check_msr for real HW
+Date:   Wed, 24 Jul 2019 21:16:42 +0200
+Message-Id: <20190724191743.278360099@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -66,45 +67,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e3b929b0a184edb35531153c5afcaebb09014f9d ]
+[ Upstream commit d0e1a507bdc761a14906f03399d933ea639a1756 ]
 
-Non-inline io_schedule() was introduced in:
+Tom Vaden reported false failure of the check_msr() function, because
+some servers can do POST tracing and enable LBR tracing during
+bootup.
 
-  commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+Kan confirmed that check_msr patch was to fix a bug report in
+guest, so it's ok to disable it for real HW.
 
-Keep in line with io_schedule_timeout(), otherwise "/proc/<pid>/wchan" will
-report io_schedule() rather than its callers when waiting for IO.
-
-Reported-by: Jilong Kou <koujilong@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Reported-by: Tom Vaden <tom.vaden@hpe.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Tom Vaden <tom.vaden@hpe.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Liang Kan <kan.liang@linux.intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
-Link: https://lkml.kernel.org/r/20190603091338.2695-1-gaoxiang25@huawei.com
+Link: https://lkml.kernel.org/r/20190616141313.GD2500@krava
+[ Readability edits. ]
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 874c427742a9..4d5962232a55 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5123,7 +5123,7 @@ long __sched io_schedule_timeout(long timeout)
- }
- EXPORT_SYMBOL(io_schedule_timeout);
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index b6cae65aa7ef..f0c14665893b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -20,6 +20,7 @@
+ #include <asm/intel-family.h>
+ #include <asm/apic.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/hypervisor.h>
  
--void io_schedule(void)
-+void __sched io_schedule(void)
+ #include "../perf_event.h"
+ 
+@@ -4054,6 +4055,13 @@ static bool check_msr(unsigned long msr, u64 mask)
  {
- 	int token;
+ 	u64 val_old, val_new, val_tmp;
  
++	/*
++	 * Disable the check for real HW, so we don't
++	 * mess with potentionaly enabled registers:
++	 */
++	if (hypervisor_is_type(X86_HYPER_NATIVE))
++		return true;
++
+ 	/*
+ 	 * Read the current value, change it and read it back to see if it
+ 	 * matches, this is needed to detect certain hardware emulators
 -- 
 2.20.1
 
