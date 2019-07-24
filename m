@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E1EC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26884C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5882083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BFF2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998821;
-	bh=tSd1w0YmOsGs8qHY3IbxqQyAU0LkhGqQaR7/z8zAiao=;
+	s=default; t=1563998825;
+	bh=lgxI0LR00qRyA3YaGTN518XuZEY2K4RnWD2AbaPaGdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CaJSadP8W42wArAaBwz4dvHBE3UUXfkUwl6UtsmAePZgauG3xVM8WowktQO4bGVTs
-	 8CY2LQmm2aqW9q4IhEzsO7GcfTXDNOJXn4vLyqM5qVbrqc/HhYq1EA8UG9lt44L7Ce
-	 LbZbW+zps/firxaiZFMAqntLAaMY1/3F0qdfQIkY=
+	b=yCVw4rgSLtEEIJRMSrTR0GzOkB4ky/LLb81DbFc54AlAMDd7VUXZk58RYhKgTKS+d
+	 l3vF2lLThZ+jB79c9OS63+6VodnhovvEvEd4MX7KyKtTXJFbcenSyiPSR3Oajja7BH
+	 /s4AIAbmxAME+YjVVOOJeb4IHGMIRBfVzyw7Qh78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392510AbfGXUEZ (ORCPT
+        id S2392468AbfGXUEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:04:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392490AbfGXUEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:04:20 -0400
+        id S2392456AbfGXUEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:04:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A09206BA;
-        Wed, 24 Jul 2019 20:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496A32147A;
+        Wed, 24 Jul 2019 20:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998660;
-        bh=tSd1w0YmOsGs8qHY3IbxqQyAU0LkhGqQaR7/z8zAiao=;
+        s=default; t=1563998647;
+        bh=lgxI0LR00qRyA3YaGTN518XuZEY2K4RnWD2AbaPaGdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O20ItNy5as7v9ruzq3YBe3jw+mfFIpEPl2kEn5tyj0XOifrkz7ykikQS1kR4ZbVR4
-         AWyUjq8g5tlPcJzIyfZSY7s92o9Q4WbxVwfva89BexHYxlG1xa5V8EoK9CP6xfAVCF
-         yzWAqLh+k24ET4objvnzb5l/7489xz0ypLq5Gi5w=
+        b=I5yq8Uw50EIAxughepC+xf74JxhFPogfo7Y+9EhQLajk8yk8PQXLPID71rEqUX4G/
+         NMjMmDRe3Jj0EAJjw4oAuLPzeiaih2lv1DFe6PtxB8H6RclycMugRiSWt4Jj/F81G9
+         P6ADdWTQqald252A2tT7C4oP/Uc7f/JEFWcZEZlE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        stable@vger.kernel.org, Kir Kolyshkin <kir@sacred.ru>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/271] rcu: Force inlining of rcu_read_lock()
-Date:   Wed, 24 Jul 2019 21:18:58 +0200
-Message-Id: <20190724191701.100794389@linuxfoundation.org>
+Subject: [PATCH 4.19 066/271] selinux: fix empty write to keycreate file
+Date:   Wed, 24 Jul 2019 21:18:55 +0200
+Message-Id: <20190724191700.851717639@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,53 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
+[ Upstream commit 464c258aa45b09f16aa0f05847ed8895873262d9 ]
 
-When debugging options are turned on, the rcu_read_lock() function
-might not be inlined. This results in lockdep's print_lock() function
-printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
-For example:
+When sid == 0 (we are resetting keycreate_sid to the default value), we
+should skip the KEY__CREATE check.
 
-[   10.579995] =============================
-[   10.584033] WARNING: suspicious RCU usage
-[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
-[   10.593162] -----------------------------
-[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
-RCU read-side critical section!
-[   10.606220]
-[   10.606220] other info that might help us debug this:
-[   10.606220]
-[   10.614280]
-[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
-[   10.620853] 3 locks held by systemd/1:
-[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
-[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+Before this patch, doing a zero-sized write to /proc/self/keycreate
+would check if the current task can create unlabeled keys (which would
+usually fail with -EACCESS and generate an AVC). Now it skips the check
+and correctly sets the task's keycreate_sid to 0.
 
-These "rcu_read_lock+0x0/0x70" strings are not providing any useful
-information.  This commit therefore forces inlining of the rcu_read_lock()
-function so that rcu_read_lock()'s caller is instead shown.
+Bug report: https://bugzilla.redhat.com/show_bug.cgi?id=1719067
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Tested using the reproducer from the report above.
+
+Fixes: 4eb582cf1fbd ("[PATCH] keys: add a way to store the appropriate context for newly-created keys")
+Reported-by: Kir Kolyshkin <kir@sacred.ru>
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcupdate.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/selinux/hooks.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index e102c5bccbb9..68cbe111420b 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -620,7 +620,7 @@ static inline void rcu_preempt_sleep_check(void) { }
-  * read-side critical sections may be preempted and they may also block, but
-  * only when acquiring spinlocks that are subject to priority inheritance.
-  */
--static inline void rcu_read_lock(void)
-+static __always_inline void rcu_read_lock(void)
- {
- 	__rcu_read_lock();
- 	__acquire(RCU);
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 70bad15ed7a0..109ab510bdb1 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -6550,11 +6550,12 @@ static int selinux_setprocattr(const char *name, void *value, size_t size)
+ 	} else if (!strcmp(name, "fscreate")) {
+ 		tsec->create_sid = sid;
+ 	} else if (!strcmp(name, "keycreate")) {
+-		error = avc_has_perm(&selinux_state,
+-				     mysid, sid, SECCLASS_KEY, KEY__CREATE,
+-				     NULL);
+-		if (error)
+-			goto abort_change;
++		if (sid) {
++			error = avc_has_perm(&selinux_state, mysid, sid,
++					     SECCLASS_KEY, KEY__CREATE, NULL);
++			if (error)
++				goto abort_change;
++		}
+ 		tsec->keycreate_sid = sid;
+ 	} else if (!strcmp(name, "sockcreate")) {
+ 		tsec->sockcreate_sid = sid;
 -- 
 2.20.1
 
