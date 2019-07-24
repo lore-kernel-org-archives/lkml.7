@@ -2,89 +2,102 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465C1C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BECC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DABB22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gKoiSrCl";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f5Fhs597"
+	by mail.kernel.org (Postfix) with ESMTP id 5D87622387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfGXLpp (ORCPT
+        id S1727845AbfGXLrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:45:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48448 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfGXLpp (ORCPT
+        Wed, 24 Jul 2019 07:47:05 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52385 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbfGXLrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:45:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C71D160398; Wed, 24 Jul 2019 11:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968744;
-        bh=ZuhfMbHMLI0hvi4ZXIAZVY0yoatWa3wtQrh3+kOQraM=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=gKoiSrClFSy5Oq1FdDOlSjDGtU+is2W55tKdyvMxC9PE8tEMukUQwBPAHDkjs1CVQ
-         3kKd7XRdLFYhSfsU5HHpfuUVAn66yfBhOXuESlzX0lAJABuzWzOhZLCC6cT0AdF+YS
-         lAutrpjjUtm4GSEtNFV7+qu5o4c+sRBPtpYtVBEA=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90F006044E;
-        Wed, 24 Jul 2019 11:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563968742;
-        bh=ZuhfMbHMLI0hvi4ZXIAZVY0yoatWa3wtQrh3+kOQraM=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=f5Fhs597BaWvsfG72SYmLDYsDvVtV9k8KfHjwzlDZSZbFXB33N72RjNH+4i2KvDL1
-         Iy9/Bzen7WJsi8eADsKE+jN+MamFjP0JKwuuuOWTMM7NhJhXPz4Vo2sd8ZifkxBG7q
-         hLDqSX3//7jjdqzfIe/exniGHmjuviqOeHTtVBxM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 90F006044E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 24 Jul 2019 07:47:05 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id BABA580262; Wed, 24 Jul 2019 13:46:51 +0200 (CEST)
+Date:   Wed, 24 Jul 2019 13:47:02 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] coresight: fix typos
+Message-ID: <20190724114702.GB26116@amd>
+References: <20190724100335.GA7373@amd>
+ <7ae7157b-1336-f4a6-59a3-b1ac6307bd8d@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wl3501_cs: remove redundant variable rc
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190705103732.30568-1-colin.king@canonical.com>
-References: <20190705103732.30568-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190724114543.C71D160398@smtp.codeaurora.org>
-Date:   Wed, 24 Jul 2019 11:45:43 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="R3G7APHDIzY6R/pk"
+Content-Disposition: inline
+In-Reply-To: <7ae7157b-1336-f4a6-59a3-b1ac6307bd8d@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable rc is being initialized with a value that is never
-> read and it is being updated later with a new value that is returned.
-> The variable is redundant and can be replaced with a return 0 as
-> there are no other return points in this function.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+--R3G7APHDIzY6R/pk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Patch applied to wireless-drivers-next.git, thanks.
+On Wed 2019-07-24 11:36:23, Suzuki K Poulose wrote:
+>=20
+>=20
+> On 24/07/2019 11:03, Pavel Machek wrote:
+> >
+> >Fix typos in comments.
+> >
+> >Signed-off-by: Pavel Machek <pavel@denx.de>
+> >
+> >diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing=
+/coresight/coresight.c
+> >index 55db77f641..1d66191 100644
+> >--- a/drivers/hwtracing/coresight/coresight.c
+> >+++ b/drivers/hwtracing/coresight/coresight.c
+> >@@ -1001,7 +1001,7 @@ static int coresight_orphan_match(struct device *d=
+ev, void *data)
+> >  	if (!i_csdev->orphan)
+> >  		return 0;
+> >  	/*
+> >-	 * Circle throuch all the connection of that component.  If we find
+> >+	 * Circle through all the connections of that component.  If we find
+> >  	 * an orphan connection whose name matches @csdev, link it.
+>=20
+> We have stopped using name to match the csdev and switched to fwnode
+> handles. Please could you update the comment to reflect this, while you a=
+re
+> at it ?
+> Otherwise looks fine to me.
 
-c032461936de wl3501_cs: remove redundant variable rc
+I guess best way would be to apply this and then fix up the facts in a
+comment... or feel free to just fix it up. I am not best person to fix
+facts there...
 
--- 
-https://patchwork.kernel.org/patch/11032441/
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+--R3G7APHDIzY6R/pk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl04RTYACgkQMOfwapXb+vJ1FACgr4BSo2yIxKfIP9Y0yZCav2IT
+IE8AoLECqSdWmO2GfVfvl7/0bVwXZPqa
+=RqVT
+-----END PGP SIGNATURE-----
+
+--R3G7APHDIzY6R/pk--
