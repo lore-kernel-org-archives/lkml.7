@@ -2,104 +2,130 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838B0C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68F8C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0FF22BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IPH/9AVY"
+	by mail.kernel.org (Postfix) with ESMTP id B030D22BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564033218;
+	bh=djMy0ZkF1cNdzzJkInuRNcFK9iveLhe5RDIiDs8gmkc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QZDiy2Ux2uefUkUO9MPnb5tl//6l/mtSPjmdyKAAc/7YxRAUUqTB1ZCK7C0pYtxwo
+	 DedMQkVYpIxrP6DdrxYPspey7Mir8/1g3o+P33HpYBTd9Ij4UyC7BSLokY2+qBFHCS
+	 FnmcMew5isMWPy66C5v9eR7AJbbCMe4ptmUfWMro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404317AbfGYFkP (ORCPT
+        id S2404333AbfGYFkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:40:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55528 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404241AbfGYFkI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:40:08 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6P5d0Xf078656;
-        Thu, 25 Jul 2019 05:40:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=DIaad5qbirnDkeKlUJE4RYRnrPGQKiec4THTqLDSXrw=;
- b=IPH/9AVYiWVzq6wlgvo3F/88gUEHhrUGkzLM6HKQ3AmDJPgJ8FW1o+LAKoVFyJLNsUwb
- zsrH29WQGuIYFvvrTct1noJAWGP/8qtGXRkEr+gewJ/1f2dvoFCOpy3i9lZck/YnIK61
- jNr2CX38esOUkjQUYt0LsFbgzuHJIPziZ8qxVU66qow2iB++jbx1iY41Mr0DwIl6QHCA
- 2ANpXPrK4JxlnkWQcrPaFf2m5BynwVihkJd0W4F9mSDy3r9CxoRka8aPoGoJUb0uyHbS
- YDvkMJudKzqg3boByZ4sZ9HKCuCpRp//23F3sY3O6NEQ4bNxLWaol7M+3AEhbFvKISaY NA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2tx61c1f6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jul 2019 05:40:01 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6P5bmEi117255;
-        Thu, 25 Jul 2019 05:40:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2tx60yn82x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jul 2019 05:40:01 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6P5dxBH003035;
-        Thu, 25 Jul 2019 05:39:59 GMT
-Received: from [10.159.158.5] (/10.159.158.5)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jul 2019 22:39:56 -0700
-Subject: Re: [PATCH v2 0/1] mm/memory-failure: Poison read receives SIGKILL
- instead of SIGBUS issue
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-References: <1564007603-9655-1-git-send-email-jane.chu@oracle.com>
- <CAPcyv4iqdbL+=boCciMTgUEn-GU1RQQmBJtNU9RHoV84XNMS+g@mail.gmail.com>
-From:   Jane Chu <jane.chu@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <fa353250-2ea2-3be3-5e4d-1ccf7dc06014@oracle.com>
-Date:   Wed, 24 Jul 2019 22:39:38 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 25 Jul 2019 01:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404269AbfGYFkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:40:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0482F22C97;
+        Thu, 25 Jul 2019 05:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564033204;
+        bh=djMy0ZkF1cNdzzJkInuRNcFK9iveLhe5RDIiDs8gmkc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o56kGNCiHeAUCGrnkqOKdKyOhgHRiGhoK8e9h5/OEaWVT70ELg0kuQXhBDfAmUVo0
+         J5SghAuk3rHB7k+xgM8PjS11wmLeAA19h7iBMZdXiAayoxTDMWRTW2GIlMpiHxPlU3
+         9L96mfaP3DBWZdXMWg+NzRTN3YdtO7lV3YA1Tusg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
+        eranian@google.com, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 078/271] perf/x86/intel/uncore: Handle invalid event coding for free-running counter
+Date:   Wed, 24 Jul 2019 21:19:07 +0200
+Message-Id: <20190724191701.880558315@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+References: <20190724191655.268628197@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iqdbL+=boCciMTgUEn-GU1RQQmBJtNU9RHoV84XNMS+g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=986
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907250067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907250067
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/2019 3:52 PM, Dan Williams wrote:
-> On Wed, Jul 24, 2019 at 3:35 PM Jane Chu <jane.chu@oracle.com> wrote:
->>
->> Changes in v2:
->>   - move 'tk' allocations internal to add_to_kill(), suggested by Dan;
-> 
-> Oh, sorry if it wasn't clear, this should move to its own patch that
-> only does the cleanup, and then the follow on fix patch becomes
-> smaller and more straightforward.
-> 
+[ Upstream commit 543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0 ]
 
-Make sense, thanks! I'll split up the patch next.
+Counting with invalid event coding for free-running counter may cause
+OOPs, e.g. uncore_iio_free_running_0/event=1/.
 
-thanks,
--jane
+Current code only validate the event with free-running event format,
+event=0xff,umask=0xXY. Non-free-running event format never be checked
+for the PMU with free-running counters.
+
+Add generic hw_config() to check and reject the invalid event coding
+for free-running PMU.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: acme@kernel.org
+Cc: eranian@google.com
+Fixes: 0f519f0352e3 ("perf/x86/intel/uncore: Support IIO free-running counters on SKX")
+Link: https://lkml.kernel.org/r/1556672028-119221-2-git-send-email-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/events/intel/uncore.h       | 10 ++++++++++
+ arch/x86/events/intel/uncore_snbep.c |  1 +
+ 2 files changed, 11 insertions(+)
+
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index cc6dd4f78158..42fa3974c421 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -402,6 +402,16 @@ static inline bool is_freerunning_event(struct perf_event *event)
+ 	       (((cfg >> 8) & 0xff) >= UNCORE_FREERUNNING_UMASK_START);
+ }
+ 
++/* Check and reject invalid config */
++static inline int uncore_freerunning_hw_config(struct intel_uncore_box *box,
++					       struct perf_event *event)
++{
++	if (is_freerunning_event(event))
++		return 0;
++
++	return -EINVAL;
++}
++
+ static inline void uncore_disable_box(struct intel_uncore_box *box)
+ {
+ 	if (box->pmu->type->ops->disable_box)
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index b10e04387f38..8e4e8e423839 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3585,6 +3585,7 @@ static struct uncore_event_desc skx_uncore_iio_freerunning_events[] = {
+ 
+ static struct intel_uncore_ops skx_uncore_iio_freerunning_ops = {
+ 	.read_counter		= uncore_msr_read_counter,
++	.hw_config		= uncore_freerunning_hw_config,
+ };
+ 
+ static struct attribute *skx_uncore_iio_freerunning_formats_attr[] = {
+-- 
+2.20.1
+
+
+
