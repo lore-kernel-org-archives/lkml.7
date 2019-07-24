@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8825C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10DFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E873214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E242147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999433;
-	bh=VK2FOKVM+mAdFLy+ZkfZrbS9woxb2lUpgS0oIIwKRzQ=;
+	s=default; t=1563999442;
+	bh=EjVHtIDr6i1M2wt9wmyO6dOBhgvXINmUTV7Xf7/qKfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cj9j1Be3z0RqCEVg+MCvCTA0PDHaQz11Ud4dDyqzxk0TKnCvLWcbwOE3i1bPcNBcu
-	 LFLYceUWfqKpl7L4y6Azsd3tOMc3JSAgeCVlv6P1mWtD0Yo8GU7ojtAwwQbOTfRNwV
-	 pg61mlywz7PXLCOidbydfxwSb6Jz67BM1ge7S3Nc=
+	b=C12qCsYvIhe0slpkWYoAMR5ZVI6mGkvKkAT8Amsl+IKVwzhxy90oUmU4MOOZrqZD3
+	 fQN7shhRzSizisWpSY7HFStrlgyinqpP0v+9fHY4Cnl8FDoHdTAk5eGi1n//FltE38
+	 BlRDZ+uSWFk5RUxRz3RgjUuh0JSxXf7m18bj12LA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392877AbfGXURM (ORCPT
+        id S2391379AbfGXTuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:17:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59428 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfGXTug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:36 -0400
+        id S1729007AbfGXTuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D19214AF;
-        Wed, 24 Jul 2019 19:50:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D899205C9;
+        Wed, 24 Jul 2019 19:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997835;
-        bh=VK2FOKVM+mAdFLy+ZkfZrbS9woxb2lUpgS0oIIwKRzQ=;
+        s=default; t=1563997809;
+        bh=EjVHtIDr6i1M2wt9wmyO6dOBhgvXINmUTV7Xf7/qKfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dxV0p87kAZVnGWZ8NH1FQPOb/2hG6vrKMLP8G4QfrURsM7/nethO8lIrJr6E2x0vJ
-         iJtEHuk+TEfQniscx5H2S4tTCV0AXn7NI+qpqWGPGsB51BIUKhaifcooxlExdcQKLu
-         ZFtmrIOoMPkgykx+jhPCoOA4LOAoj7p0oFdA9xC4=
+        b=RKnbaMLkokgwXoVa7etOZ/0gk5hdfzf6pL2OaEnvtYeg2Q7s4jEXcbL+upJxFOYkK
+         ikQyz/HrGkXJfupJ9uCnKFipS9g5jN1Jg6TPRZL+Vjx2s6IGONCX6+Z+DApKURxBnQ
+         D5u+/P59jpDycV99rj3UwORzhVZE+lKaSyfAqeHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 158/371] bpf: fix BPF_ALU32 | BPF_ARSH on BE arches
-Date:   Wed, 24 Jul 2019 21:18:30 +0200
-Message-Id: <20190724191737.066355805@linuxfoundation.org>
+Subject: [PATCH 5.1 150/371] ASoC: Intel: hdac_hdmi: Set ops to NULL on remove
+Date:   Wed, 24 Jul 2019 21:18:22 +0200
+Message-Id: <20190724191736.469271496@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -65,54 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 75672dda27bd00109a84cd975c17949ad9c45663 ]
+[ Upstream commit 0f6ff78540bd1b4df1e0f17806b0ce2e1dff0d78 ]
 
-Yauheni reported the following code do not work correctly on BE arches:
+When we unload Skylake driver we may end up calling
+hdac_component_master_unbind(), it uses acomp->audio_ops, which we set
+in hdmi_codec_probe(), so we need to set it to NULL in hdmi_codec_remove(),
+otherwise we will dereference no longer existing pointer.
 
-       ALU_ARSH_X:
-               DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
-               CONT;
-       ALU_ARSH_K:
-               DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
-               CONT;
-
-and are causing failure of test_verifier test 'arsh32 on imm 2' on BE
-arches.
-
-The code is taking address and interpreting memory directly, so is not
-endianness neutral. We should instead perform standard C type casting on
-the variable. A u64 to s32 conversion will drop the high 32-bit and reserve
-the low 32-bit as signed integer, this is all we want.
-
-Fixes: 2dc6b100f928 ("bpf: interpreter support BPF_ALU | BPF_ARSH")
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 06ba9c5f156b..932fd3fa5a5a 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1367,10 +1367,10 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- 		insn++;
- 		CONT;
- 	ALU_ARSH_X:
--		DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
-+		DST = (u64) (u32) (((s32) DST) >> SRC);
- 		CONT;
- 	ALU_ARSH_K:
--		DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
-+		DST = (u64) (u32) (((s32) DST) >> IMM);
- 		CONT;
- 	ALU64_ARSH_X:
- 		(*(s64 *) &DST) >>= SRC;
+diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
+index 4de1fbfa8827..65177ca64827 100644
+--- a/sound/soc/codecs/hdac_hdmi.c
++++ b/sound/soc/codecs/hdac_hdmi.c
+@@ -1880,6 +1880,12 @@ static void hdmi_codec_remove(struct snd_soc_component *component)
+ {
+ 	struct hdac_hdmi_priv *hdmi = snd_soc_component_get_drvdata(component);
+ 	struct hdac_device *hdev = hdmi->hdev;
++	int ret;
++
++	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
++	if (ret < 0)
++		dev_err(&hdev->dev, "notifier unregister failed: err: %d\n",
++				ret);
+ 
+ 	pm_runtime_disable(&hdev->dev);
+ }
 -- 
 2.20.1
 
