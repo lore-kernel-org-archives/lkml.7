@@ -4,35 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C885C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC36C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E185227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED166229EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbfGXDVG (ORCPT
+        id S1726667AbfGXDVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:21:06 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50692 "EHLO huawei.com"
+        Tue, 23 Jul 2019 23:21:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50726 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726400AbfGXDVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:21:01 -0400
+        id S1726492AbfGXDVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:21:05 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 895FB910E4F29E6103F7;
+        by Forcepoint Email with ESMTP id 99F5DAC77036F7CB971C;
         Wed, 24 Jul 2019 11:20:52 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Jul 2019 11:20:43 +0800
+ 14.3.439.0; Wed, 24 Jul 2019 11:20:44 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/11] net: hns3: remove upgrade reset level when reset fail
-Date:   Wed, 24 Jul 2019 11:18:39 +0800
-Message-ID: <1563938327-9865-4-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 09/11] net: hns3: make hclge_service use delayed workqueue
+Date:   Wed, 24 Jul 2019 11:18:45 +0800
+Message-ID: <1563938327-9865-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
 References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
@@ -45,86 +46,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, hclge_reset_err_handle() will assert a global reset
-when the failing count is smaller than MAX_RESET_FAIL_CNT, which
-will affect other running functions.
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-So this patch removes this upgrading, and uses re-scheduling reset
-task to do it.
+Use delayed work instead of using timers to trigger the
+hclge_serive.
 
+Simplify the code with one less middle function and in order
+to support misc irq affinity.
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 28 +++++++---------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 60 ++++++++--------------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  3 +-
+ 2 files changed, 22 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 3fde5471..3c64d70 100644
+index fe45986..45acbc9 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3305,7 +3305,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
- 	return ret;
+@@ -2524,9 +2524,13 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
+ {
+ 	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
+ 	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
+-	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state))
+-		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
+-			      &hdev->service_task);
++	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state)) {
++		hdev->hw_stats.stats_timer++;
++		hdev->fd_arfs_expire_timer++;
++		mod_delayed_work_on(cpumask_first(&hdev->affinity_mask),
++				    system_wq, &hdev->service_task,
++				    round_jiffies_relative(HZ));
++	}
  }
  
--static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
-+static bool hclge_reset_err_handle(struct hclge_dev *hdev)
- {
- #define MAX_RESET_FAIL_CNT 5
+ static int hclge_get_mac_link_status(struct hclge_dev *hdev)
+@@ -2741,25 +2745,6 @@ static int hclge_get_status(struct hnae3_handle *handle)
+ 	return hdev->hw.mac.link;
+ }
  
-@@ -3322,20 +3322,11 @@ static bool hclge_reset_err_handle(struct hclge_dev *hdev, bool is_timeout)
- 		return false;
- 	} else if (hdev->reset_fail_cnt < MAX_RESET_FAIL_CNT) {
- 		hdev->reset_fail_cnt++;
--		if (is_timeout) {
--			set_bit(hdev->reset_type, &hdev->reset_pending);
--			dev_info(&hdev->pdev->dev,
--				 "re-schedule to wait for hw reset done\n");
--			return true;
--		}
+-static void hclge_service_timer(struct timer_list *t)
+-{
+-	struct hclge_dev *hdev = from_timer(hdev, t, service_timer);
 -
--		dev_info(&hdev->pdev->dev, "Upgrade reset level\n");
--		hclge_clear_reset_cause(hdev);
--		set_bit(HNAE3_GLOBAL_RESET, &hdev->default_reset_request);
--		mod_timer(&hdev->reset_timer,
--			  jiffies + HCLGE_RESET_INTERVAL);
+-	mod_timer(&hdev->service_timer, jiffies + HZ);
+-	hdev->hw_stats.stats_timer++;
+-	hdev->fd_arfs_expire_timer++;
+-	hclge_task_schedule(hdev);
+-}
 -
--		return false;
-+		set_bit(hdev->reset_type, &hdev->reset_pending);
-+		dev_info(&hdev->pdev->dev,
-+			 "re-schedule reset task(%d)\n",
-+			 hdev->reset_fail_cnt);
-+		return true;
+-static void hclge_service_complete(struct hclge_dev *hdev)
+-{
+-	WARN_ON(!test_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state));
+-
+-	/* Flush memory before next watchdog */
+-	smp_mb__before_atomic();
+-	clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
+-}
+-
+ static u32 hclge_check_event_cause(struct hclge_dev *hdev, u32 *clearval)
+ {
+ 	u32 rst_src_reg, cmdq_src_reg, msix_src_reg;
+@@ -2937,9 +2922,6 @@ static void hclge_irq_affinity_notify(struct irq_affinity_notify *notify,
+ 					      affinity_notify);
+ 
+ 	cpumask_copy(&hdev->affinity_mask, mask);
+-	del_timer_sync(&hdev->service_timer);
+-	hdev->service_timer.expires = jiffies + HZ;
+-	add_timer_on(&hdev->service_timer, cpumask_first(&hdev->affinity_mask));
+ }
+ 
+ static void hclge_irq_affinity_release(struct kref *ref)
+@@ -3639,7 +3621,9 @@ static void hclge_update_vport_alive(struct hclge_dev *hdev)
+ static void hclge_service_task(struct work_struct *work)
+ {
+ 	struct hclge_dev *hdev =
+-		container_of(work, struct hclge_dev, service_task);
++		container_of(work, struct hclge_dev, service_task.work);
++
++	clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
+ 
+ 	if (hdev->hw_stats.stats_timer >= HCLGE_STATS_TIMER_INTERVAL) {
+ 		hclge_update_stats_for_all(hdev);
+@@ -3654,7 +3638,8 @@ static void hclge_service_task(struct work_struct *work)
+ 		hclge_rfs_filter_expire(hdev);
+ 		hdev->fd_arfs_expire_timer = 0;
  	}
- 
- 	hclge_clear_reset_cause(hdev);
-@@ -3382,7 +3373,6 @@ static int hclge_reset_stack(struct hclge_dev *hdev)
- static void hclge_reset(struct hclge_dev *hdev)
- {
- 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(hdev->pdev);
--	bool is_timeout = false;
- 	int ret;
- 
- 	/* Initialize ae_dev reset status as well, in case enet layer wants to
-@@ -3410,10 +3400,8 @@ static void hclge_reset(struct hclge_dev *hdev)
- 	if (ret)
- 		goto err_reset;
- 
--	if (hclge_reset_wait(hdev)) {
--		is_timeout = true;
-+	if (hclge_reset_wait(hdev))
- 		goto err_reset;
--	}
- 
- 	hdev->rst_stats.hw_reset_done_cnt++;
- 
-@@ -3465,7 +3453,7 @@ static void hclge_reset(struct hclge_dev *hdev)
- err_reset_lock:
- 	rtnl_unlock();
- err_reset:
--	if (hclge_reset_err_handle(hdev, is_timeout))
-+	if (hclge_reset_err_handle(hdev))
- 		hclge_reset_task_schedule(hdev);
+-	hclge_service_complete(hdev);
++
++	hclge_task_schedule(hdev);
  }
+ 
+ struct hclge_vport *hclge_get_vport(struct hnae3_handle *handle)
+@@ -6193,13 +6178,13 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
+ 	struct hclge_dev *hdev = vport->back;
+ 
+ 	if (enable) {
+-		del_timer_sync(&hdev->service_timer);
+-		hdev->service_timer.expires = jiffies + HZ;
+-		add_timer_on(&hdev->service_timer,
+-			     cpumask_first(&hdev->affinity_mask));
++		hclge_task_schedule(hdev);
+ 	} else {
+-		del_timer_sync(&hdev->service_timer);
+-		cancel_work_sync(&hdev->service_task);
++		/* Set the DOWN flag here to disable the service to be
++		 * scheduled again
++		 */
++		set_bit(HCLGE_STATE_DOWN, &hdev->state);
++		cancel_delayed_work_sync(&hdev->service_task);
+ 		clear_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state);
+ 	}
+ }
+@@ -8638,12 +8623,10 @@ static void hclge_state_uninit(struct hclge_dev *hdev)
+ 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
+ 	set_bit(HCLGE_STATE_REMOVING, &hdev->state);
+ 
+-	if (hdev->service_timer.function)
+-		del_timer_sync(&hdev->service_timer);
+ 	if (hdev->reset_timer.function)
+ 		del_timer_sync(&hdev->reset_timer);
+-	if (hdev->service_task.func)
+-		cancel_work_sync(&hdev->service_task);
++	if (hdev->service_task.work.func)
++		cancel_delayed_work_sync(&hdev->service_task);
+ 	if (hdev->rst_service_task.func)
+ 		cancel_work_sync(&hdev->rst_service_task);
+ 	if (hdev->mbx_service_task.func)
+@@ -8848,9 +8831,8 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 
+ 	hclge_dcb_ops_set(hdev);
+ 
+-	timer_setup(&hdev->service_timer, hclge_service_timer, 0);
+ 	timer_setup(&hdev->reset_timer, hclge_reset_timer, 0);
+-	INIT_WORK(&hdev->service_task, hclge_service_task);
++	INIT_DELAYED_WORK(&hdev->service_task, hclge_service_task);
+ 	INIT_WORK(&hdev->rst_service_task, hclge_reset_service_task);
+ 	INIT_WORK(&hdev->mbx_service_task, hclge_mailbox_service_task);
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 14df23c..688e425 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -806,9 +806,8 @@ struct hclge_dev {
+ 	u16 adminq_work_limit; /* Num of admin receive queue desc to process */
+ 	unsigned long service_timer_period;
+ 	unsigned long service_timer_previous;
+-	struct timer_list service_timer;
+ 	struct timer_list reset_timer;
+-	struct work_struct service_task;
++	struct delayed_work service_task;
+ 	struct work_struct rst_service_task;
+ 	struct work_struct mbx_service_task;
  
 -- 
 2.7.4
