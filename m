@@ -2,268 +2,135 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2335EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360ADC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D034321850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA4421850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SdVMEYL5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdz5Esjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388274AbfGXXJ7 (ORCPT
+        id S2388610AbfGXXKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:09:59 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9465 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387660AbfGXXJ7 (ORCPT
+        Wed, 24 Jul 2019 19:10:16 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34822 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387660AbfGXXKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:09:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d38e5410001>; Wed, 24 Jul 2019 16:09:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 24 Jul 2019 16:09:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 24 Jul 2019 16:09:56 -0700
-Received: from [10.2.167.182] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
- 2019 23:09:54 +0000
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20c1d733-60f5-6375-c03c-639de5e41739@arm.com>
- <0bee8775-756f-adad-4597-8cad53017718@gmail.com>
- <a2ecc3ad-b7e9-9398-d59b-c7d3fbbd10bb@nvidia.com>
- <20190722193838.0d7cd2ad@why>
- <8e9f821c-3717-510d-c64f-8a1cc2452c25@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <78d5af07-2556-b60d-01d7-3684ebe7040b@nvidia.com>
-Date:   Wed, 24 Jul 2019 16:09:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 24 Jul 2019 19:10:16 -0400
+Received: by mail-qk1-f194.google.com with SMTP id r21so35113695qke.2;
+        Wed, 24 Jul 2019 16:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NYfu4BBToJkzHCpkGTGdP9uzED79e2Jr1vPy4Ta8WW8=;
+        b=pdz5Esjgqb/yw/4RlxbxE+BFd5IinIkwR4MdHedDbMV5BHtMvP1WFU/dzS8BHmzJ2e
+         3byDHT9zDSPZopVRSMnu/NYF2xPfMW9PBwmVo0haJEfFhEIZq5ZzRpQc9K4lzTQDKZ3A
+         l/dlYLNcGSrCRfR0Ooj+5+WmnE9pdnqrHykeUG+jJkTdGiKawTW/iqrnDjsRZ/AYSGY5
+         I244Tjv8sYE/Nr0n85gzRTkLtjiD1t13m5bHPNlcJupo3wzppOmLv2as4zkJ066TUBHH
+         p5HJJosMEF1jmZqDXjR90447F2gKcy2IzzmYT1M9m8tnGR4Shy+lbl+zgzKwyAVb4JlP
+         Zdug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NYfu4BBToJkzHCpkGTGdP9uzED79e2Jr1vPy4Ta8WW8=;
+        b=aGmqxvOjnfYNIlnpYnrRqFA+i5AQc+ofFLpIh2OdmT2THzaQ9Np/DX6/L5v5Vz4rIG
+         p5/bpXqcua22M6GrvgxnU6VR2+PtNxGz/eUXoI68ITOoIy8w7mCtgizOK4LkqgsiYQzY
+         9Guc6Wz/JCZGp1ipNRUAqHVtsDHrApdM27UuM1gF5I7mse6LRN5GciY5+cM1eATbNVVY
+         NZ4iv6zB5pdqxcvuH6A7XKXb8Qf8aT+3kOTfrzPFwAsHlbweXgring7a+OkxPrFg0Lrs
+         5fv/c2Z2cHs/MwhbwF/whf20yt3xdoC7u6ruk/vGNi5mkZjxAn9GQ2WQkDRD0Zd6xdsS
+         Ev5w==
+X-Gm-Message-State: APjAAAUvoO/2sUK36jKNeRqgFKDprPhhsboTroSZRFk5b33JqSIx6FM+
+        uumVh6b/okD0qRJHGStt2qFl8ydhj6WzDPyyELE=
+X-Google-Smtp-Source: APXvYqxJV6kR8eWDqRQccHsXqNT8bhd0gcOsWWJl050wcWUaFwcR9DV+coBd6DnJWzn1rT7+QQLxdTPJV4S7EG9eofA=
+X-Received: by 2002:a05:620a:16a6:: with SMTP id s6mr55971937qkj.39.1564009815364;
+ Wed, 24 Jul 2019 16:10:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8e9f821c-3717-510d-c64f-8a1cc2452c25@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1564009793; bh=VLSdAR9+W67zAKWVdoz86+wcbQ6rb1+Uzd1mw8RH294=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=SdVMEYL5emd/8G9K2633IxqV/KN49aMr3dWzJPn2VFIaGFLvcy7dIaYY8AI6Hq/Zz
-         IsYz6f6EzpV/WMOQl7hMBh4xik02UCf/JfxxF580qxgXnwDhWyYvfcYtnpf2O/VpZN
-         3/cSKpxS1B332brBqbohEr1V7AP7smYIokQRft7YbsTBZTIvSxpM5tbiMy2EOQ8gx6
-         fRjv6eAQU3vM31uuAGdUUdjfvIH0viWxEo+Y4Bv9zqGBtA+zrE60kWhl9fdYRFPu6u
-         QEM/biMGUNbU6uP2LCyx9oNEr8nSKoDZDUNUbVGyJMCzRuVTh/T9Yy+VGSy3cXrNRF
-         hkzAWYcj+B0yw==
+References: <20190724165803.87470-1-brianvv@google.com> <20190724165803.87470-4-brianvv@google.com>
+In-Reply-To: <20190724165803.87470-4-brianvv@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 24 Jul 2019 16:10:04 -0700
+Message-ID: <CAEf4BzaCUBA40DKUYm6rSa0v-jQMK7aPu867oYkZhfZGB4wiSA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/6] bpf: keep bpf.h in sync with tools/
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 7/22/19 4:35 PM, Dmitry Osipenko wrote:
-> 22.07.2019 21:38, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On Mon, 22 Jul 2019 09:21:21 -0700
->> Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
->>
->>> On 7/22/19 3:57 AM, Dmitry Osipenko wrote:
->>>> 22.07.2019 13:13, Marc Zyngier =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 22/07/2019 10:54, Dmitry Osipenko wrote:
->>>>>> 21.07.2019 22:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 =
-entry
->>>>>>> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->>>>>>>
->>>>>>> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend seq=
-uence
->>>>>>> for Tegra210.
->>>>>>>
->>>>>>> This patch has fix for leaving the COP IRQ enabled for Tegra210 dur=
-ing
->>>>>>> interrupt controller suspend operation.
->>>>>>>
->>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>> ---
->>>>>>>    drivers/irqchip/irq-tegra.c | 20 ++++++++++++++++++--
->>>>>>>    1 file changed, 18 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegr=
-a.c
->>>>>>> index e1f771c72fc4..851f88cef508 100644
->>>>>>> --- a/drivers/irqchip/irq-tegra.c
->>>>>>> +++ b/drivers/irqchip/irq-tegra.c
->>>>>>> @@ -44,6 +44,7 @@ static unsigned int num_ictlrs;
->>>>>>>   =20
->>>>>>>    struct tegra_ictlr_soc {
->>>>>>>    	unsigned int num_ictlrs;
->>>>>>> +	bool supports_sc7;
->>>>>>>    };
->>>>>>>   =20
->>>>>>>    static const struct tegra_ictlr_soc tegra20_ictlr_soc =3D {
->>>>>>> @@ -56,6 +57,7 @@ static const struct tegra_ictlr_soc tegra30_ictlr=
-_soc =3D {
->>>>>>>   =20
->>>>>>>    static const struct tegra_ictlr_soc tegra210_ictlr_soc =3D {
->>>>>>>    	.num_ictlrs =3D 6,
->>>>>>> +	.supports_sc7 =3D true,
->>>>>>>    };
->>>>>>>   =20
->>>>>>>    static const struct of_device_id ictlr_matches[] =3D {
->>>>>>> @@ -67,6 +69,7 @@ static const struct of_device_id ictlr_matches[] =
-=3D {
->>>>>>>   =20
->>>>>>>    struct tegra_ictlr_info {
->>>>>>>    	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
->>>>>>> +	const struct tegra_ictlr_soc *soc;
->>>>>>>    #ifdef CONFIG_PM_SLEEP
->>>>>>>    	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
->>>>>>>    	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
->>>>>>> @@ -147,8 +150,20 @@ static int tegra_ictlr_suspend(void)
->>>>>>>    		lic->cop_ier[i] =3D readl_relaxed(ictlr + ICTLR_COP_IER);
->>>>>>>    		lic->cop_iep[i] =3D readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS)=
-;
->>>>>>>   =20
->>>>>>> -		/* Disable COP interrupts */
->>>>>>> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>>>>>> +		/*
->>>>>>> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
->>>>>>> +		 *
->>>>>>> +		 * Tegra210 system suspend flow uses sc7entry firmware which
->>>>>>> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
->>>>>>> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
->>>>>>> +		 * system to go to SC7/LP0.
->>>>>>> +		 *
->>>>>>> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
->>>>>>> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
->>>>>>> +		 */
->>>>>>> +		if (!lic->soc->supports_sc7)
->>>>>>> +			/* Disable COP interrupts if SC7 is not supported */
->>>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the comment
->>>>>> doesn't sound correct to me. Something like 'firmware_sc7' should su=
-it
->>>>>> better here.
->>>>> If what you're saying is true, then the whole patch is wrong, and the
->>>>> SC7 property should come from DT.
->>>> It should be safe to assume that all of existing Tegra210 devices use
->>>> the firmware for SC7, hence I wouldn't say that the patch is entirely
->>>> wrong. To me it's not entirely correct.
->>> Yes, all existing Tegra210 platforms uses sc7 entry firmware for SC7 an=
-d
->>> AVP/COP IRQ need to be kept enabled as during suspend ATF triggers IRQ
->>> to COP for SC7 entry fw execution.
-> Okay, as I already wrote before, it looks to me that a more proper
-> solution should be to just remove everything related to COP from this
-> driver instead of adding custom quirks for T210.
+On Wed, Jul 24, 2019 at 10:10 AM Brian Vazquez <brianvv@google.com> wrote:
 >
-> The disabling / restoring of COP interrupts should be relevant only for
-> the multimedia firmware on older Tegra SoCs. That firmware won't be ever
-> supported in the upstream simply because NVIDIA abandoned the support
-> for older hardware in the downstream and because it is not possible due
-> to some legal weirdness (IIUC). The only variant for upstream is
-> reverse-engineering of hardware (not the firmware BLOB) and writing
-> proper opensource drivers for the upstream kernel, which we're already
-> doing and have success to a some extent.
+> Adds bpf_attr.dump structure to libbpf.
 >
->> That's not the question. Dmitry says that the SC7 support is not a
->> property of the SoC, but mostly a platform decision on whether the
->> firmware supports SC7 or not.
->>
->> To me, that's a clear indication that this should not be hardcoded in
->> the driver, but instead obtained dynamically, via DT or otherwise.
-> We already have an nvidia,suspend-mode property in the device-tree of
-> the Power Management Controller node (all Tegra SoCs) which defines what
-> suspending type is supported by a particular board.
+> Suggested-by: Stanislav Fomichev <sdf@google.com>
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> ---
+>  tools/include/uapi/linux/bpf.h | 9 +++++++++
+>  tools/lib/bpf/libbpf.map       | 2 ++
+>  2 files changed, 11 insertions(+)
 >
->>>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
->>>>>> Secondly, I'm also not sure why COP interrupts need to be disabled f=
-or
->>>>>> pre-T210 at all, since COP is unused. This looks to me like it was
->>>>>> cut-n-pasted from downstream kernel without a good reason and could =
-be
->>>>>> simply removed.
->>>>> Please verify that this is actually the case. Tegra-2 definitely need=
-ed
->>>>> some level of poking, and I'm not keen on changing anything there unt=
-il
->>>>> you (or someone else) has verified it on actual HW (see e307cc8941fc)=
-.
->>>> Tested on Tegra20 and Tegra30, LP1 suspend-resume works perfectly fine
->>>> with all COP bits removed from the driver.
->>>>
->>>> AFAIK, the reason why downstream needed that disabling is that it uses
->>>> proprietary firmware which is running on the COP and that firmware is
->>>> usually a BLOB audio/video DEC-ENC driver which doesn't cleanup
->>>> interrupts after itself. That firmware is not applicable for the
->>>> upstream kernel, hence there is no need to care about it.
->>>>  =20
->>>>> Joseph, can you please shed some light here?
->>> SC7 entry flow uses 3rd party ATF (arm-trusted FW) blob which is the
->>> one that actually loads SC7 entry firmware and triggers IRQ to
->>> AVP/COP which causes COP to wakeup and run SC7 entry FW.
->>>
->>> So when SC7 support is enabled, IRQ need to be kept enabled and when
->>> SC7 FW starts execution, it will disable COP IRQ.
->> This looks like a lot of undocumented assumptions on what firmware
->> does, as well as what firmware *is*. What I gather from this thread is
->> that there is at least two versions of firmware (a "proprietary
->> firmware" for "downstream kernels", and another one for mainline), and
->> that they do different things.
->>
->> Given that we cannot know what people actually run, I don't think we
->> can safely remove anything unless this gets tested on the full spectrum
->> of HW/FW combination.
-> I'm not sure whether multiple firmware variations exist in the wild for
-> Tegra210. Maybe Sowjanya or somebody else from NVIDIA could clarify. I
-> think there should be some efforts in regards to a fully opensource
-> firmware on Tegra210, but I'm not following it and have no idea about
-> the status.
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+> index 4e455018da65f..e127f16e4e932 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
+> @@ -106,6 +106,7 @@ enum bpf_cmd {
+>         BPF_TASK_FD_QUERY,
+>         BPF_MAP_LOOKUP_AND_DELETE_ELEM,
+>         BPF_MAP_FREEZE,
+> +       BPF_MAP_DUMP,
+>  };
 >
-> You're right that there are multiple variants of suspend-resuming flow
-> on Tegra SoCs. The older 32bit Tegra SoC generations have a variety of
-> options in regards to suspend-resuming, including firmware-less variants
-> on platforms that are having kernel running in secure mode (dev boards,
-> most of Tegra20 consumer devices) and Trusted-Foundations firmware
-> variant for insecure platforms (consumer devices). And yes, vendor
-> firmware creates a lot of headache in regards to bringing support into
-> upstream because it usually does a lot of odd undocumented things which
-> may also vary depending on a firmware version (bootloader, etc) and it
-> also usually difficult to replace it with an opensource alternative due
-> to a crypto signing.
+>  enum bpf_map_type {
+> @@ -388,6 +389,14 @@ union bpf_attr {
+>                 __u64           flags;
+>         };
+>
+> +       struct { /* struct used by BPF_MAP_DUMP command */
+> +               __aligned_u64   prev_key;
+> +               __aligned_u64   buf;
+> +               __aligned_u64   buf_len; /* input/output: len of buf */
+> +               __u64           flags;
+> +               __u32           map_fd;
+> +       } dump;
+> +
+>         struct { /* anonymous struct used by BPF_PROG_LOAD command */
+>                 __u32           prog_type;      /* one of enum bpf_prog_type */
+>                 __u32           insn_cnt;
+> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+> index f9d316e873d8d..cac3723d5c45c 100644
+> --- a/tools/lib/bpf/libbpf.map
+> +++ b/tools/lib/bpf/libbpf.map
+> @@ -183,4 +183,6 @@ LIBBPF_0.0.4 {
 
-Tried without this patch which keeps COP IRQ disabled and I see SC7=20
-entry FW execution happens still.
+LIBBPF_0.0.4 is closed, this needs to go into LIBBPF_0.0.5.
 
-Digging through the ATF FW code, I see on SC7 entry firmware loading=20
-into IRAM, COP processor is reset with RESET VECTOR set to SC7 entry=20
-firmware location in IRAM and on reset de-assert & unhalt COP, SC7=20
-firmware starts execution.
+>                 perf_buffer__new;
+>                 perf_buffer__new_raw;
+>                 perf_buffer__poll;
+> +               bpf_map_dump;
+> +               bpf_map_dump_flags;
 
-Will remove this patch in next version...
+As the general rule, please keep those lists of functions in alphabetical order.
 
+>  } LIBBPF_0.0.3;
+> --
+> 2.22.0.657.g960e92d24f-goog
+>
