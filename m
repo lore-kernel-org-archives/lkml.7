@@ -2,321 +2,147 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BC9C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F480C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED74E22ADF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD44214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563997656;
+	bh=W6h/1pOSSwoRcvw7rNjxwoX8jdgD0ATu1fsxuOJWkY8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2eVy4+eVyXkOBuuPhxNWCV05TTqqiOfs8mX5XmpCN3CTL/JUpJ12/DUXvtLu6nDg3
+	 fNoxZIk1vk+SbAbp7xnZXMPIm8Uo9WVCzYP08Y7OfNZeDg1CUJpxG3kiMTomy7yGSe
+	 FYbxA6sXWElvgt5l+KUui1pk2z+bfS78XlOCqgm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390346AbfGXTrd (ORCPT
+        id S2403772AbfGXTrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:47:33 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35002 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391250AbfGXTr2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:47:28 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d23so46759722qto.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:47:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zQFfFaN4S19jIM07tkNyIGV4UlSrkqk8y/x0NsRJHfo=;
-        b=gsTVdL8w56Sf87pYIC7aPOzfMDHijVZb3kW+rtWXqmYTt09V5qiQyckILuY9IBwmHJ
-         Gtt+o3A1M6a4innZo+QoUs/JFSE21WLXsz72aq1V40YU6L67zaUEZ2aKFmlQtArS0Yab
-         /RYGQC8RUjIVtKI+8xy5hmBWRefTfqkzpXko5G5Za1hucuZUkNy5K6r25iTB199GWaUY
-         jaTP+jMyeeYgBP3JsZWClbEAd9CiBN0MEZzewJ/zW0RawtU70pVHLCgVip246wJPPxoO
-         QFJfjU0iO1aqRIXS8NwIIjTomqnZc1eRa9JFWi3coNtob/dv0BGoR9Uek9EBv7OyUgpq
-         xKrw==
-X-Gm-Message-State: APjAAAU2UlI5YcbpoIaDZunwfQnN6lSNIYPoNvKlO0I6YyslyZ6qrMSd
-        dXBuGPQHsIkCaXsX7DfC7LsIOA==
-X-Google-Smtp-Source: APXvYqw2dwpoJegyks6v2Bb6MSdjFwoLUS2vTs3LkTq1TKtkmQD76uS9WlH9tR7ttNVa1xL82b37Ag==
-X-Received: by 2002:ad4:55a9:: with SMTP id f9mr60419979qvx.133.1563997646338;
-        Wed, 24 Jul 2019 12:47:26 -0700 (PDT)
-Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id t197sm20634053qke.2.2019.07.24.12.47.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 12:47:25 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 15:47:18 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, pbonzini@redhat.com, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com, yang.zhang.wz@gmail.com,
-        riel@surriel.com, david@redhat.com, dodgen@google.com,
-        konrad.wilk@oracle.com, dhildenb@redhat.com, aarcange@redhat.com,
-        alexander.duyck@gmail.com, john.starks@microsoft.com,
-        dave.hansen@intel.com, mhocko@suse.com
-Subject: Re: [RFC][Patch v11 2/2] virtio-balloon: page_hinting: reporting to
- the host
-Message-ID: <20190724153951-mutt-send-email-mst@kernel.org>
-References: <20190710195158.19640-1-nitesh@redhat.com>
- <20190710195158.19640-3-nitesh@redhat.com>
+        Wed, 24 Jul 2019 15:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390995AbfGXTrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:47:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B75FA214AF;
+        Wed, 24 Jul 2019 19:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997651;
+        bh=W6h/1pOSSwoRcvw7rNjxwoX8jdgD0ATu1fsxuOJWkY8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EjoOnjrOd2CyMWf0mZFNqUUr3VDULQJE4ug6v8dbjvwt79aiJI2B3P+WYO/vuryok
+         H3akGxLiV19ZFTd4woG5J7hAdWOhBuvM2khlTA16uWnOgbd2eXxgnZk84roTjKNiDl
+         LdS67Z4u3GUNwm9lYhsJqsKXLqRUfbgkiOdetyWs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 097/371] block: null_blk: fix race condition for null_del_dev
+Date:   Wed, 24 Jul 2019 21:17:29 +0200
+Message-Id: <20190724191732.140038883@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190710195158.19640-3-nitesh@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 03:51:58PM -0400, Nitesh Narayan Lal wrote:
-> Enables the kernel to negotiate VIRTIO_BALLOON_F_HINTING feature with the
-> host. If it is available and page_hinting_flag is set to true, page_hinting
-> is enabled and its callbacks are configured along with the max_pages count
-> which indicates the maximum number of pages that can be isolated and hinted
-> at a time. Currently, only free pages of order >= (MAX_ORDER - 2) are
-> reported. To prevent any false OOM max_pages count is set to 16.
-> 
-> By default page_hinting feature is enabled and gets loaded as soon
-> as the virtio-balloon driver is loaded. However, it could be disabled
-> by writing the page_hinting_flag which is a virtio-balloon parameter.
-> 
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  drivers/virtio/Kconfig              |  1 +
->  drivers/virtio/virtio_balloon.c     | 91 ++++++++++++++++++++++++++++-
->  include/uapi/linux/virtio_balloon.h | 11 ++++
->  3 files changed, 102 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> index 023fc3bc01c6..dcc0cb4269a5 100644
-> --- a/drivers/virtio/Kconfig
-> +++ b/drivers/virtio/Kconfig
-> @@ -47,6 +47,7 @@ config VIRTIO_BALLOON
->  	tristate "Virtio balloon driver"
->  	depends on VIRTIO
->  	select MEMORY_BALLOON
-> +	select PAGE_HINTING
->  	---help---
->  	 This driver supports increasing and decreasing the amount
->  	 of memory within a KVM guest.
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 44339fc87cc7..1fb0eb0b2c20 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -18,6 +18,7 @@
->  #include <linux/mm.h>
->  #include <linux/mount.h>
->  #include <linux/magic.h>
-> +#include <linux/page_hinting.h>
->  
->  /*
->   * Balloon device works in 4K page units.  So each page is pointed to by
-> @@ -35,6 +36,12 @@
->  /* The size of a free page block in bytes */
->  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
->  	(1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
-> +/* Number of isolated pages to be reported to the host at a time.
-> + * TODO:
-> + * 1. Set it via host.
-> + * 2. Find an optimal value for this.
-> + */
-> +#define PAGE_HINTING_MAX_PAGES	16
->  
->  #ifdef CONFIG_BALLOON_COMPACTION
->  static struct vfsmount *balloon_mnt;
-> @@ -45,6 +52,7 @@ enum virtio_balloon_vq {
->  	VIRTIO_BALLOON_VQ_DEFLATE,
->  	VIRTIO_BALLOON_VQ_STATS,
->  	VIRTIO_BALLOON_VQ_FREE_PAGE,
-> +	VIRTIO_BALLOON_VQ_HINTING,
->  	VIRTIO_BALLOON_VQ_MAX
->  };
->  
-> @@ -54,7 +62,8 @@ enum virtio_balloon_config_read {
->  
->  struct virtio_balloon {
->  	struct virtio_device *vdev;
-> -	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq;
-> +	struct virtqueue *inflate_vq, *deflate_vq, *stats_vq, *free_page_vq,
-> +			 *hinting_vq;
->  
->  	/* Balloon's own wq for cpu-intensive work items */
->  	struct workqueue_struct *balloon_wq;
-> @@ -112,6 +121,9 @@ struct virtio_balloon {
->  
->  	/* To register a shrinker to shrink memory upon memory pressure */
->  	struct shrinker shrinker;
-> +
-> +	/* Array object pointing at the isolated pages ready for hinting */
-> +	struct isolated_memory isolated_pages[PAGE_HINTING_MAX_PAGES];
->  };
->  
->  static struct virtio_device_id id_table[] = {
-> @@ -119,6 +131,66 @@ static struct virtio_device_id id_table[] = {
->  	{ 0 },
->  };
->  
-> +static struct page_hinting_config page_hinting_conf;
-> +bool page_hinting_flag = true;
-> +struct virtio_balloon *hvb;
-> +module_param(page_hinting_flag, bool, 0444);
-> +MODULE_PARM_DESC(page_hinting_flag, "Enable page hinting");
-> +
-> +static int page_hinting_report(void)
-> +{
-> +	struct virtqueue *vq = hvb->hinting_vq;
-> +	struct scatterlist sg;
-> +	int err = 0, unused;
-> +
-> +	mutex_lock(&hvb->balloon_lock);
-> +	sg_init_one(&sg, hvb->isolated_pages, sizeof(hvb->isolated_pages[0]) *
-> +		    PAGE_HINTING_MAX_PAGES);
-> +	err = virtqueue_add_outbuf(vq, &sg, 1, hvb, GFP_KERNEL);
+[ Upstream commit 7602843fd873cae43a444b83b14dfdd114a9659c ]
 
-In Alex's patch, I really like it that he's passing pages as sg
-entries. IMHO that's both cleaner and allows seamless
-support for arbitrary page sizes.
+Dulicate call of null_del_dev() will trigger null pointer error like below.
+The reason is a race condition between nullb_device_power_store() and
+nullb_group_drop_item().
 
-In particular ....
+  CPU#0                         CPU#1
+  ----------------              -----------------
+  do_rmdir()
+   >configfs_rmdir()
+    >client_drop_item()
+     >nullb_group_drop_item()
+                                nullb_device_power_store()
+				>null_del_dev()
 
-> +	if (!err)
-> +		virtqueue_kick(hvb->hinting_vq);
-> +	wait_event(hvb->acked, virtqueue_get_buf(vq, &unused));
-> +	mutex_unlock(&hvb->balloon_lock);
-> +	return err;
-> +}
-> +
-> +void hint_pages(struct list_head *pages)
-> +{
-> +	struct device *dev = &hvb->vdev->dev;
-> +	struct page *page, *next;
-> +	int idx = 0, order, err;
-> +	unsigned long pfn;
-> +
-> +	list_for_each_entry_safe(page, next, pages, lru) {
-> +		pfn = page_to_pfn(page);
-> +		order = page_private(page);
-> +		hvb->isolated_pages[idx].phys_addr = pfn << PAGE_SHIFT;
-> +		hvb->isolated_pages[idx].size = (1 << order) * PAGE_SIZE;
-> +		idx++;
+      >test_and_clear_bit(NULLB_DEV_FL_UP
+       >null_del_dev()
+       ^^^^^
+       Duplicated null_dev_dev() triger null pointer error
 
-... passing native endian-ness values to host creates pain for
-cross-endian configurations.
+				>clear_bit(NULLB_DEV_FL_UP
 
-> +	}
-> +	err = page_hinting_report();
-> +	if (err < 0)
-> +		dev_err(dev, "Failed to hint pages, err = %d\n", err);
-> +}
-> +
-> +static void page_hinting_init(struct virtio_balloon *vb)
-> +{
-> +	struct device *dev = &vb->vdev->dev;
-> +	int err;
-> +
-> +	page_hinting_conf.hint_pages = hint_pages;
-> +	page_hinting_conf.max_pages = PAGE_HINTING_MAX_PAGES;
-> +	err = page_hinting_enable(&page_hinting_conf);
-> +	if (err < 0) {
-> +		dev_err(dev, "Failed to enable page-hinting, err = %d\n", err);
+The fix could be keep the sequnce of clear NULLB_DEV_FL_UP and null_del_dev().
 
-It would be nicer to disable the feature bit then, or fail probe
-completely.
+[  698.613600] BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
+[  698.613608] #PF error: [normal kernel read fault]
+[  698.613611] PGD 0 P4D 0
+[  698.613619] Oops: 0000 [#1] SMP PTI
+[  698.613627] CPU: 3 PID: 6382 Comm: rmdir Not tainted 5.0.0+ #35
+[  698.613631] Hardware name: LENOVO 20LJS2EV08/20LJS2EV08, BIOS R0SET33W (1.17 ) 07/18/2018
+[  698.613644] RIP: 0010:null_del_dev+0xc/0x110 [null_blk]
+[  698.613649] Code: 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 0f 0b eb 97 e8 47 bb 2a e8 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 54 53 <8b> 77 18 48 89 fb 4c 8b 27 48 c7 c7 40 57 1e c1 e8 bf c7 cb e8 48
+[  698.613654] RSP: 0018:ffffb887888bfde0 EFLAGS: 00010286
+[  698.613659] RAX: 0000000000000000 RBX: ffff9d436d92bc00 RCX: ffff9d43a9184681
+[  698.613663] RDX: ffffffffc11e5c30 RSI: 0000000068be6540 RDI: 0000000000000000
+[  698.613667] RBP: ffffb887888bfdf0 R08: 0000000000000001 R09: 0000000000000000
+[  698.613671] R10: ffffb887888bfdd8 R11: 0000000000000f16 R12: ffff9d436d92bc08
+[  698.613675] R13: ffff9d436d94e630 R14: ffffffffc11e5088 R15: ffffffffc11e5000
+[  698.613680] FS:  00007faa68be6540(0000) GS:ffff9d43d14c0000(0000) knlGS:0000000000000000
+[  698.613685] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  698.613689] CR2: 0000000000000018 CR3: 000000042f70c002 CR4: 00000000003606e0
+[  698.613693] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  698.613697] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  698.613700] Call Trace:
+[  698.613712]  nullb_group_drop_item+0x50/0x70 [null_blk]
+[  698.613722]  client_drop_item+0x29/0x40
+[  698.613728]  configfs_rmdir+0x1ed/0x300
+[  698.613738]  vfs_rmdir+0xb2/0x130
+[  698.613743]  do_rmdir+0x1c7/0x1e0
+[  698.613750]  __x64_sys_rmdir+0x17/0x20
+[  698.613759]  do_syscall_64+0x5a/0x110
+[  698.613768]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-> +		page_hinting_flag = false;
-> +		page_hinting_conf.hint_pages = NULL;
-> +		page_hinting_conf.max_pages = 0;
-> +		return;
-> +	}
-> +	hvb = vb;
-> +}
-> +
->  static u32 page_to_balloon_pfn(struct page *page)
->  {
->  	unsigned long pfn = page_to_pfn(page);
-> @@ -475,6 +547,7 @@ static int init_vqs(struct virtio_balloon *vb)
->  	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
->  	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
->  	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-> +	names[VIRTIO_BALLOON_VQ_HINTING] = NULL;
->  
->  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
->  		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-> @@ -486,11 +559,18 @@ static int init_vqs(struct virtio_balloon *vb)
->  		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
->  	}
->  
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING)) {
-> +		names[VIRTIO_BALLOON_VQ_HINTING] = "hinting_vq";
-> +		callbacks[VIRTIO_BALLOON_VQ_HINTING] = balloon_ack;
-> +	}
->  	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
->  					 vqs, callbacks, names, NULL, NULL);
->  	if (err)
->  		return err;
->  
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING))
-> +		vb->hinting_vq = vqs[VIRTIO_BALLOON_VQ_HINTING];
-> +
->  	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
->  	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
->  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-> @@ -929,6 +1009,9 @@ static int virtballoon_probe(struct virtio_device *vdev)
->  		if (err)
->  			goto out_del_balloon_wq;
->  	}
-> +	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_HINTING) &&
-> +	    page_hinting_flag)
-> +		page_hinting_init(vb);
->  	virtio_device_ready(vdev);
->  
->  	if (towards_target(vb))
-> @@ -976,6 +1059,10 @@ static void virtballoon_remove(struct virtio_device *vdev)
->  		destroy_workqueue(vb->balloon_wq);
->  	}
->  
-> +	if (!page_hinting_flag) {
-> +		hvb = NULL;
-> +		page_hinting_disable();
-> +	}
->  	remove_common(vb);
->  #ifdef CONFIG_BALLOON_COMPACTION
->  	if (vb->vb_dev_info.inode)
-> @@ -1030,8 +1117,10 @@ static unsigned int features[] = {
->  	VIRTIO_BALLOON_F_MUST_TELL_HOST,
->  	VIRTIO_BALLOON_F_STATS_VQ,
->  	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
-> +	VIRTIO_BALLOON_F_HINTING,
->  	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
->  	VIRTIO_BALLOON_F_PAGE_POISON,
-> +	VIRTIO_BALLOON_F_HINTING,
->  };
->  
->  static struct virtio_driver virtio_balloon_driver = {
-> diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
-> index a1966cd7b677..29eed0ec83d3 100644
-> --- a/include/uapi/linux/virtio_balloon.h
-> +++ b/include/uapi/linux/virtio_balloon.h
-> @@ -36,6 +36,8 @@
->  #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
->  #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
->  #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-> +/* TODO: Find a better name to avoid any confusion with FREE_PAGE_HINT */
-> +#define VIRTIO_BALLOON_F_HINTING	5 /* Page hinting virtqueue */
->  
->  /* Size of a PFN in the balloon interface. */
->  #define VIRTIO_BALLOON_PFN_SHIFT 12
-> @@ -108,4 +110,13 @@ struct virtio_balloon_stat {
->  	__virtio64 val;
->  } __attribute__((packed));
->  
-> +/*
-> + * struct isolated_memory- holds the pages which will be reported to the host.
-> + * @phys_add:	physical address associated with a page.
-> + * @size:	total size of memory to be reported.
-> + */
-> +struct isolated_memory {
-> +	__virtio64 phys_addr;
-> +	__virtio64 size;
-> +};
->  #endif /* _LINUX_VIRTIO_BALLOON_H */
-> -- 
-> 2.21.0
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/null_blk_main.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index d7ac09c092f2..21d0b651b335 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -326,11 +326,12 @@ static ssize_t nullb_device_power_store(struct config_item *item,
+ 		set_bit(NULLB_DEV_FL_CONFIGURED, &dev->flags);
+ 		dev->power = newp;
+ 	} else if (dev->power && !newp) {
+-		mutex_lock(&lock);
+-		dev->power = newp;
+-		null_del_dev(dev->nullb);
+-		mutex_unlock(&lock);
+-		clear_bit(NULLB_DEV_FL_UP, &dev->flags);
++		if (test_and_clear_bit(NULLB_DEV_FL_UP, &dev->flags)) {
++			mutex_lock(&lock);
++			dev->power = newp;
++			null_del_dev(dev->nullb);
++			mutex_unlock(&lock);
++		}
+ 		clear_bit(NULLB_DEV_FL_CONFIGURED, &dev->flags);
+ 	}
+ 
+-- 
+2.20.1
+
+
+
