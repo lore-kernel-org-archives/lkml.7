@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEC3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B18EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAA82190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DFA2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996982;
-	bh=Kak5/0BK9iP1Hj+5V6tKBmEacMdzyjKBRg2fhLgY8EE=;
+	s=default; t=1563996985;
+	bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJ/Zfy3Agsxc3SQv03Np23oYNqhrO9LWuayqiN8sMcdUuv0/YggArRbocZv39JbkA
-	 L+fBrjYiFO5+sO/eE/CArpPNb+q1ndAt79rTDlzcUkb87+i3nS87lG03Bpv4n2MHW3
-	 BABqk23hS5YUV2ny7S0IY+nGzNOH1r0V82Y8yME0=
+	b=2nVUSHH2P1NR8kjXD5jhwb8giBmJ4SL3dsG93RYq4A9jEV4rSC0oDuqP6tsXao8Ol
+	 M+3GzCOaoUoODStaMcfVr/HCKxmmocLTO1Jo9Iz7/+H6qAa0xkpbomQn2SEo4MB8rG
+	 E+N3+PtzpIQ7GMQru9Tub99HG+31Mb7YtPTuV6hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389317AbfGXTgU (ORCPT
+        id S1728811AbfGXTgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389303AbfGXTgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:17 -0400
+        id S2388989AbfGXTgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 705A422ADA;
-        Wed, 24 Jul 2019 19:36:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 668A020659;
+        Wed, 24 Jul 2019 19:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996976;
-        bh=Kak5/0BK9iP1Hj+5V6tKBmEacMdzyjKBRg2fhLgY8EE=;
+        s=default; t=1563996979;
+        bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZFhC2tTWsFNQFijEk/rzKCe1uR6tIFgL/PdHUmiSj2zN7hyS7E6JxRaxs4zYk3vm
-         gWzHyhFGf9hhPuOzEKrjbMJ7fgW3ZlU6w9ClNg+LTRPltb0Ku2Ze8eYW6sBYRUhVda
-         BN7PPGdLmoB7acSfQFf91uoGnXb6pHGGK45y135g=
+        b=KW8aMPEubHhIRyFzKtjGiKYKLO9HsXrUmToEN07lggzidWySsNb8M2scXYu3Nwk/Y
+         NE0KA2dL0S2pSHyQZUKAdhYYl9tjfZ+d7IzGh6MTGdZDG5/+CoO8uc7kwKGqNAc2qX
+         yzjBPVi6cn2FyyJadu1o8ecI0lJ54fnML7d5CCfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Tang Junhui <tang.junhui.linux@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.2 281/413] bcache: Revert "bcache: fix high CPU occupancy during journal"
-Date:   Wed, 24 Jul 2019 21:19:32 +0200
-Message-Id: <20190724191756.393800729@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.2 255/413] Revert "scsi: ncr5380: Increase register polling limit"
+Date:   Wed, 24 Jul 2019 21:19:06 +0200
+Message-Id: <20190724191754.201080120@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,126 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 249a5f6da57c28a903c75d81505d58ec8c10030d upstream.
+commit 25fcf94a2fa89dd3e73e965ebb0b38a2a4f72aa4 upstream.
 
-This reverts commit c4dc2497d50d9c6fb16aa0d07b6a14f3b2adb1e0.
+This reverts commit 4822827a69d7cd3bc5a07b7637484ebd2cf88db6.
 
-This patch enlarges a race between normal btree flush code path and
-flush_btree_write(), which causes deadlock when journal space is
-exhausted. Reverts this patch makes the race window from 128 btree
-nodes to only 1 btree nodes.
+The purpose of that commit was to suppress a timeout warning message which
+appeared to be caused by target latency. But suppressing the warning is
+undesirable as the warning may indicate a messed up transfer count.
 
-Fixes: c4dc2497d50d ("bcache: fix high CPU occupancy during journal")
-Signed-off-by: Coly Li <colyli@suse.de>
+Another problem with that commit is that 15 ms is too long to keep
+interrupts disabled as interrupt latency can cause system clock drift and
+other problems.
+
+Cc: Michael Schmitz <schmitzmic@gmail.com>
 Cc: stable@vger.kernel.org
-Cc: Tang Junhui <tang.junhui.linux@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 4822827a69d7 ("scsi: ncr5380: Increase register polling limit")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/bcache.h  |    2 -
- drivers/md/bcache/journal.c |   47 ++++++++++++++------------------------------
- drivers/md/bcache/util.h    |    2 -
- 3 files changed, 15 insertions(+), 36 deletions(-)
+ drivers/scsi/NCR5380.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -726,8 +726,6 @@ struct cache_set {
+--- a/drivers/scsi/NCR5380.h
++++ b/drivers/scsi/NCR5380.h
+@@ -235,7 +235,7 @@ struct NCR5380_cmd {
+ #define NCR5380_PIO_CHUNK_SIZE		256
  
- #define BUCKET_HASH_BITS	12
- 	struct hlist_head	bucket_hash[1 << BUCKET_HASH_BITS];
--
--	DECLARE_HEAP(struct btree *, flush_btree);
- };
+ /* Time limit (ms) to poll registers when IRQs are disabled, e.g. during PDMA */
+-#define NCR5380_REG_POLL_TIME		15
++#define NCR5380_REG_POLL_TIME		10
  
- struct bbio {
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -391,12 +391,6 @@ err:
- }
- 
- /* Journalling */
--#define journal_max_cmp(l, r) \
--	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) < \
--	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
--#define journal_min_cmp(l, r) \
--	(fifo_idx(&c->journal.pin, btree_current_write(l)->journal) > \
--	 fifo_idx(&(c)->journal.pin, btree_current_write(r)->journal))
- 
- static void btree_flush_write(struct cache_set *c)
+ static inline struct scsi_cmnd *NCR5380_to_scmd(struct NCR5380_cmd *ncmd_ptr)
  {
-@@ -404,35 +398,25 @@ static void btree_flush_write(struct cac
- 	 * Try to find the btree node with that references the oldest journal
- 	 * entry, best is our current candidate and is locked if non NULL:
- 	 */
--	struct btree *b;
--	int i;
-+	struct btree *b, *best;
-+	unsigned int i;
- 
- 	atomic_long_inc(&c->flush_write);
--
- retry:
--	spin_lock(&c->journal.lock);
--	if (heap_empty(&c->flush_btree)) {
--		for_each_cached_btree(b, c, i)
--			if (btree_current_write(b)->journal) {
--				if (!heap_full(&c->flush_btree))
--					heap_add(&c->flush_btree, b,
--						 journal_max_cmp);
--				else if (journal_max_cmp(b,
--					 heap_peek(&c->flush_btree))) {
--					c->flush_btree.data[0] = b;
--					heap_sift(&c->flush_btree, 0,
--						  journal_max_cmp);
--				}
--			}
--
--		for (i = c->flush_btree.used / 2 - 1; i >= 0; --i)
--			heap_sift(&c->flush_btree, i, journal_min_cmp);
--	}
-+	best = NULL;
- 
--	b = NULL;
--	heap_pop(&c->flush_btree, b, journal_min_cmp);
--	spin_unlock(&c->journal.lock);
-+	for_each_cached_btree(b, c, i)
-+		if (btree_current_write(b)->journal) {
-+			if (!best)
-+				best = b;
-+			else if (journal_pin_cmp(c,
-+					btree_current_write(best)->journal,
-+					btree_current_write(b)->journal)) {
-+				best = b;
-+			}
-+		}
- 
-+	b = best;
- 	if (b) {
- 		mutex_lock(&b->write_lock);
- 		if (!btree_current_write(b)->journal) {
-@@ -874,8 +858,7 @@ int bch_journal_alloc(struct cache_set *
- 	j->w[0].c = c;
- 	j->w[1].c = c;
- 
--	if (!(init_heap(&c->flush_btree, 128, GFP_KERNEL)) ||
--	    !(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
-+	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
- 	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
- 	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
- 		return -ENOMEM;
---- a/drivers/md/bcache/util.h
-+++ b/drivers/md/bcache/util.h
-@@ -113,8 +113,6 @@ do {									\
- 
- #define heap_full(h)	((h)->used == (h)->size)
- 
--#define heap_empty(h)	((h)->used == 0)
--
- #define DECLARE_FIFO(type, name)					\
- 	struct {							\
- 		size_t front, back, size, mask;				\
 
 
