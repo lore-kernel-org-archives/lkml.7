@@ -2,108 +2,139 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8A4C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0F9C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C41F72075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50F220657
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564033753;
+	bh=kkM3PYHvESHIAMs0LP+YjVPBtapyrJucRdUp2CIYp7o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r2eazFRu6KnySVULy7z0+QbvX6k86PiPjsYcbNCqCe0wGc5h5vMauoceCSPI07E1X
+	 3D6sBDQSa5QZ5Hi4r5NWNzC4GV9TaVqLGwkuZ3op1g4WTUM6zl3s8wi7d9sfNgcGU3
+	 Ee3vlgor06fC1ACsyvwJnWLD2Pz6n5omgNFv/pSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfGYFsw (ORCPT
+        id S1728991AbfGYFtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:48:52 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:58705 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfGYFsv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:48:51 -0400
-X-Originating-IP: 81.250.144.103
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 83A0560002;
-        Thu, 25 Jul 2019 05:48:44 +0000 (UTC)
-Subject: Re: [PATCH REBASE v4 05/14] arm64, mm: Make randomization selected by
- generic topdown mmap layout
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Paul Burton <paul.burton@mips.com>,
-        linux-riscv@lists.infradead.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Hogan <jhogan@kernel.org>, linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mips@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190724055850.6232-1-alex@ghiti.fr>
- <20190724055850.6232-6-alex@ghiti.fr>
- <20190724171123.GV19023@42.do-not-panic.com>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <8dd7b018-7f17-0018-0fcf-d0257976d275@ghiti.fr>
-Date:   Thu, 25 Jul 2019 07:48:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 25 Jul 2019 01:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405032AbfGYFoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:44:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D87621850;
+        Thu, 25 Jul 2019 05:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564033485;
+        bh=kkM3PYHvESHIAMs0LP+YjVPBtapyrJucRdUp2CIYp7o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JcqWml9YZR5MhY+UNsihMkVOEaXv7toL3ai5PeT0clCB68RbAaCz6sNRjARTi/SIW
+         4KK5hCitkJzhwakJi6rPaFArcuNrXUhuBqKZ+hNnDZ/QvVax8mwBS7NeggOhji/k5t
+         r5LCk1gz2IYqjs/qkj/eMFfqVXt6qlQQ/6D5b/dc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Gary Hook <Gary.Hook@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Liska <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>, Pu Wen <puwen@hygon.cn>,
+        Stephane Eranian <eranian@google.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 226/271] perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs
+Date:   Wed, 24 Jul 2019 21:21:35 +0200
+Message-Id: <20190724191714.528520010@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+References: <20190724191655.268628197@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190724171123.GV19023@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/19 7:11 PM, Luis Chamberlain wrote:
-> On Wed, Jul 24, 2019 at 01:58:41AM -0400, Alexandre Ghiti wrote:
->> diff --git a/mm/util.c b/mm/util.c
->> index 0781e5575cb3..16f1e56e2996 100644
->> --- a/mm/util.c
->> +++ b/mm/util.c
->> @@ -321,7 +321,15 @@ unsigned long randomize_stack_top(unsigned long stack_top)
->>   }
->>   
->>   #ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
->> -#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
->> +unsigned long arch_randomize_brk(struct mm_struct *mm)
->> +{
->> +	/* Is the current task 32bit ? */
->> +	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
->> +		return randomize_page(mm->brk, SZ_32M);
->> +
->> +	return randomize_page(mm->brk, SZ_1G);
->> +}
->> +
->>   unsigned long arch_mmap_rnd(void)
->>   {
->>   	unsigned long rnd;
->> @@ -335,7 +343,6 @@ unsigned long arch_mmap_rnd(void)
->>   
->>   	return rnd << PAGE_SHIFT;
->>   }
-> So arch_randomize_brk is no longer ifdef'd around
-> CONFIG_ARCH_HAS_ELF_RANDOMIZE either and yet the header
-> still has it. Is that intentional?
->
+From: Kim Phillips <kim.phillips@amd.com>
 
-Yes, CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects 
-CONFIG_ARCH_HAS_ELF_RANDOMIZE, that's what's new about v4: the generic
-functions proposed in this series come with elf randomization.
+commit 2f217d58a8a086d3399fecce39fb358848e799c4 upstream.
+
+Fill in the L3 performance event select register ThreadMask
+bitfield, to enable per hardware thread accounting.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Gary Hook <Gary.Hook@amd.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liska <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/20190628215906.4276-2-kim.phillips@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/events/amd/uncore.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -210,15 +210,22 @@ static int amd_uncore_event_init(struct
+ 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
+ 	hwc->idx = -1;
+ 
++	if (event->cpu < 0)
++		return -EINVAL;
++
+ 	/*
+ 	 * SliceMask and ThreadMask need to be set for certain L3 events in
+ 	 * Family 17h. For other events, the two fields do not affect the count.
+ 	 */
+-	if (l3_mask && is_llc_event(event))
+-		hwc->config |= (AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK);
++	if (l3_mask && is_llc_event(event)) {
++		int thread = 2 * (cpu_data(event->cpu).cpu_core_id % 4);
+ 
+-	if (event->cpu < 0)
+-		return -EINVAL;
++		if (smp_num_siblings > 1)
++			thread += cpu_data(event->cpu).apicid & 1;
++
++		hwc->config |= (1ULL << (AMD64_L3_THREAD_SHIFT + thread) &
++				AMD64_L3_THREAD_MASK) | AMD64_L3_SLICE_MASK;
++	}
+ 
+ 	uncore = event_to_amd_uncore(event);
+ 	if (!uncore)
 
 
-Alex
-
-
->    Luis
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
