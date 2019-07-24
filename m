@@ -2,218 +2,99 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C74C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15DDC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E868E214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000083;
-	bh=Y9Pq0EbIcsS7FR/8qWpRKOO8+pZQLtcLgHAYAnC7vw0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MVtZVx8JAHAebg14vp7sRKpDd6UjfTNVIoIWJSLdUBp+5B1bhvxcWro+gEVLWua9I
-	 FUuMSAG6GwonEDxPHmiygo3AoiHNQLkOUoY8jFmJaHFa9UV8J8FY9ShAWbnX4dQWZ0
-	 ugG82TfKMrjmOMQUTulo6fOw1/QdekC+yYIIAvZ8=
+	by mail.kernel.org (Postfix) with ESMTP id CC889204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389155AbfGXTfM (ORCPT
+        id S2389768AbfGXU2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58384 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:28:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:47085 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389115AbfGXTfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23B3622ADC;
-        Wed, 24 Jul 2019 19:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996903;
-        bh=Y9Pq0EbIcsS7FR/8qWpRKOO8+pZQLtcLgHAYAnC7vw0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBVvgXOmjIPVvlBuaYJKPVREO4xlqlpDmU7LYa5JQ6H4UoIJ5rq3raTkF8JS/JOSq
-         iD8edH7i/eu7G8BD91L8AbU2hXAGL6XdpbLP7af9zkRcb+P7N4KqqXFv0dyVGJ26sb
-         SzdJ8Uggq9UgBPsrsCtkoLkywOA5l5fEGBqHY+8A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 214/413] vxlan: do not destroy fdb if register_netdevice() is failed
-Date:   Wed, 24 Jul 2019 21:18:25 +0200
-Message-Id: <20190724191749.860604568@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2388862AbfGXU2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:28:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:28:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
+   d="scan'208";a="174995764"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2019 13:27:59 -0700
+Received: from fmsmsx116.amr.corp.intel.com ([169.254.2.137]) by
+ FMSMSX105.amr.corp.intel.com ([169.254.4.116]) with mapi id 14.03.0439.000;
+ Wed, 24 Jul 2019 13:27:59 -0700
+From:   "Souza, Jose" <jose.souza@intel.com>
+To:     "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Index: AQHVN8s6u18XhfEo0kuWcj/kjNqW06bGT1sAgAAD6QCAAADBAIAAGPCAgAAIRACAAANRAIAABuIAgAAHAoCAAANkgIAA9aWAgAACeQCABSUwAIAACPCAgAE98wCAAeSegIAAAIsAgArdJICAABICAA==
+Date:   Wed, 24 Jul 2019 20:27:59 +0000
+Message-ID: <d084df248afc1943e06c50d391a775d117064743.camel@intel.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+         <1562876880.2840.12.camel@HansenPartnership.com>
+         <1562882235.13723.1.camel@HansenPartnership.com>
+         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
+         <1562884722.15001.3.camel@HansenPartnership.com>
+         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+         <1562888433.2915.0.camel@HansenPartnership.com>
+         <1562941185.3398.1.camel@HansenPartnership.com>
+         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
+         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
+         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
+         <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
+         <9ef8fc1ae2c3a9bad588899488a781333af4449a.camel@tiscali.nl>
+         <1563398966.3438.5.camel@HansenPartnership.com>
+         <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
+In-Reply-To: <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.121.193.213]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A7957F01B860F9449BFB02718FC3DA75@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c31e54aeee517d1318dfc0bde9fa7de75893dc6 ]
-
-__vxlan_dev_create() destroys FDB using specific pointer which indicates
-a fdb when error occurs.
-But that pointer should not be used when register_netdevice() fails because
-register_netdevice() internally destroys fdb when error occurs.
-
-This patch makes vxlan_fdb_create() to do not link fdb entry to vxlan dev
-internally.
-Instead, a new function vxlan_fdb_insert() is added to link fdb to vxlan
-dev.
-
-vxlan_fdb_insert() is called after calling register_netdevice().
-This routine can avoid situation that ->ndo_uninit() destroys fdb entry
-in error path of register_netdevice().
-Hence, error path of __vxlan_dev_create() routine can have an opportunity
-to destroy default fdb entry by hand.
-
-Test command
-    ip link add bonding_masters type vxlan id 0 group 239.1.1.1 \
-	    dev enp0s9 dstport 4789
-
-Splat looks like:
-[  213.392816] kasan: GPF could be caused by NULL-ptr deref or user memory access
-[  213.401257] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[  213.402178] CPU: 0 PID: 1414 Comm: ip Not tainted 5.2.0-rc5+ #256
-[  213.402178] RIP: 0010:vxlan_fdb_destroy+0x120/0x220 [vxlan]
-[  213.402178] Code: df 48 8b 2b 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 06 01 00 00 4c 8b 63 08 48 b8 00 00 00 00 00 fc d
-[  213.402178] RSP: 0018:ffff88810cb9f0a0 EFLAGS: 00010202
-[  213.402178] RAX: dffffc0000000000 RBX: ffff888101d4a8c8 RCX: 0000000000000000
-[  213.402178] RDX: 1bd5a00000000040 RSI: ffff888101d4a8c8 RDI: ffff888101d4a8d0
-[  213.402178] RBP: 0000000000000000 R08: fffffbfff22b72d9 R09: 0000000000000000
-[  213.402178] R10: 00000000ffffffef R11: 0000000000000000 R12: dead000000000200
-[  213.402178] R13: ffff88810cb9f1f8 R14: ffff88810efccda0 R15: ffff88810efccda0
-[  213.402178] FS:  00007f7f6621a0c0(0000) GS:ffff88811b000000(0000) knlGS:0000000000000000
-[  213.402178] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  213.402178] CR2: 000055746f0807d0 CR3: 00000001123e0000 CR4: 00000000001006f0
-[  213.402178] Call Trace:
-[  213.402178]  __vxlan_dev_create+0x3a9/0x7d0 [vxlan]
-[  213.402178]  ? vxlan_changelink+0x740/0x740 [vxlan]
-[  213.402178]  ? rcu_read_unlock+0x60/0x60 [vxlan]
-[  213.402178]  ? __kasan_kmalloc.constprop.3+0xa0/0xd0
-[  213.402178]  vxlan_newlink+0x8d/0xc0 [vxlan]
-[  213.402178]  ? __vxlan_dev_create+0x7d0/0x7d0 [vxlan]
-[  213.554119]  ? __netlink_ns_capable+0xc3/0xf0
-[  213.554119]  __rtnl_newlink+0xb75/0x1180
-[  213.554119]  ? rtnl_link_unregister+0x230/0x230
-[ ... ]
-
-Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
-Suggested-by: Roopa Prabhu <roopa@cumulusnetworks.com>
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Acked-by: Roopa Prabhu <roopa@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/vxlan.c | 37 +++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 083f3f0bf37f..b4283f52a09d 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -804,6 +804,14 @@ static struct vxlan_fdb *vxlan_fdb_alloc(struct vxlan_dev *vxlan,
- 	return f;
- }
- 
-+static void vxlan_fdb_insert(struct vxlan_dev *vxlan, const u8 *mac,
-+			     __be32 src_vni, struct vxlan_fdb *f)
-+{
-+	++vxlan->addrcnt;
-+	hlist_add_head_rcu(&f->hlist,
-+			   vxlan_fdb_head(vxlan, mac, src_vni));
-+}
-+
- static int vxlan_fdb_create(struct vxlan_dev *vxlan,
- 			    const u8 *mac, union vxlan_addr *ip,
- 			    __u16 state, __be16 port, __be32 src_vni,
-@@ -829,18 +837,13 @@ static int vxlan_fdb_create(struct vxlan_dev *vxlan,
- 		return rc;
- 	}
- 
--	++vxlan->addrcnt;
--	hlist_add_head_rcu(&f->hlist,
--			   vxlan_fdb_head(vxlan, mac, src_vni));
--
- 	*fdb = f;
- 
- 	return 0;
- }
- 
--static void vxlan_fdb_free(struct rcu_head *head)
-+static void __vxlan_fdb_free(struct vxlan_fdb *f)
- {
--	struct vxlan_fdb *f = container_of(head, struct vxlan_fdb, rcu);
- 	struct vxlan_rdst *rd, *nd;
- 
- 	list_for_each_entry_safe(rd, nd, &f->remotes, list) {
-@@ -850,6 +853,13 @@ static void vxlan_fdb_free(struct rcu_head *head)
- 	kfree(f);
- }
- 
-+static void vxlan_fdb_free(struct rcu_head *head)
-+{
-+	struct vxlan_fdb *f = container_of(head, struct vxlan_fdb, rcu);
-+
-+	__vxlan_fdb_free(f);
-+}
-+
- static void vxlan_fdb_destroy(struct vxlan_dev *vxlan, struct vxlan_fdb *f,
- 			      bool do_notify, bool swdev_notify)
- {
-@@ -977,6 +987,7 @@ static int vxlan_fdb_update_create(struct vxlan_dev *vxlan,
- 	if (rc < 0)
- 		return rc;
- 
-+	vxlan_fdb_insert(vxlan, mac, src_vni, f);
- 	rc = vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f), RTM_NEWNEIGH,
- 			      swdev_notify, extack);
- 	if (rc)
-@@ -3571,12 +3582,17 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 	if (err)
- 		goto errout;
- 
--	/* notify default fdb entry */
- 	if (f) {
-+		vxlan_fdb_insert(vxlan, all_zeros_mac,
-+				 vxlan->default_dst.remote_vni, f);
-+
-+		/* notify default fdb entry */
- 		err = vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f),
- 				       RTM_NEWNEIGH, true, extack);
--		if (err)
--			goto errout;
-+		if (err) {
-+			vxlan_fdb_destroy(vxlan, f, false, false);
-+			goto unregister;
-+		}
- 	}
- 
- 	list_add(&vxlan->next, &vn->vxlan_list);
-@@ -3588,7 +3604,8 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
- 	 * destroy the entry by hand here.
- 	 */
- 	if (f)
--		vxlan_fdb_destroy(vxlan, f, false, false);
-+		__vxlan_fdb_free(f);
-+unregister:
- 	if (unregister)
- 		unregister_netdevice(dev);
- 	return err;
--- 
-2.20.1
-
-
-
+SGkgUGF1bA0KDQpXZSBmaXhlZCB0aGUgcGF0Y2ggaW5zdGVhZCBvZiByZXZlcnQgaXQsIGl0IGlz
+IG1lcmdlZCBvbiBkcm0tdGlwIGFuZCBvbg0KaGlzIHdheSB0byBsaW51eC1zdGFibGUuDQoNCkh1
+Z2UgdGhhbmtzIGFnYWluDQoNCk9uIFdlZCwgMjAxOS0wNy0yNCBhdCAyMToyMyArMDIwMCwgUGF1
+bCBCb2xsZSB3cm90ZToNCj4gSGkgSm9zZSwNCj4gDQo+IEphbWVzIEJvdHRvbWxleSBzY2hyZWVm
+IG9wIGRvIDE4LTA3LTIwMTkgb20gMDY6MjkgWyswOTAwXToNCj4gPiBPbiBXZWQsIDIwMTktMDct
+MTcgYXQgMjM6MjcgKzAyMDAsIFBhdWwgQm9sbGUgd3JvdGU6DQo+ID4gPiBJJ3ZlIGp1c3QgcmVh
+Y2hlZCBhIGRheSBvZiB1cHRpbWUgd2l0aCB5b3VyIHJldmVydC4gKFRoZSBwcm9wZXINCj4gPiA+
+IHVwdGltZSBpcyBqdXN0IGEgZnJhY3Rpb24gb2YgYSBkYXksIHRoaXMgYmVpbmcgYSBsYXB0b3Au
+KSBBbnlob3csDQo+ID4gPiBubw0KPiA+ID4gc2NyZWVuIGZyZWV6ZXMgb2NjdXJyZWQgZHVyaW5n
+IHRoaXMgZGF5Lg0KPiA+IA0KPiA+IEknbSBhZnJhaWQgbXkgc3RhdHVzIGlzIHRoYXQgSSdtIGlu
+IFRva3lvIGRvaW5nIGNvbmZlcmVuY2UNCj4gPiBwcmVzZW50YXRpb25zIChhbmQga2VybmVsIGRl
+bW9zKSBzbyBJJ20gYSBiaXQgcmVsdWN0YW50IHRvIG1lc3MNCj4gPiB3aXRoIG15DQo+ID4gc2V0
+dXAgdW50aWwgSSBmaW5pc2ggZXZlcnl0aGluZyBvbiBGcmlkYXksIGJ1dCBJIHdpbGwgdGVzdCBp
+dCBhZnRlcg0KPiA+IHRoZW4sIHByb21pc2UuDQo+IA0KPiBCeSBub3cgSSdtIHRlc3RpbmcgdGhp
+cyBmb3IgYSB3ZWVrIChjdXJyZW50bHkgb24gdG9wIG9mIDUuMi4yKS4gU3RpbGwNCj4gbm8NCj4g
+ZnJlZXplcyB3aGF0c29ldmVyLiANCj4gDQo+IFNvIHdoYXQncyB0aGUgc3RhdHVzIG9mIHRoaXMg
+cmV2ZXJ0PyBVbmxlc3MgdGhpcyBpcyBzb21ldGhpbmcgcHJldHR5DQo+IG9ic2N1cmUNCj4gdGhh
+dCBmb3Igc29tZSBvZGQgcmVhc29uIG9ubHkgSmFtZXMgYW5kIEkgYXJlIGFibGUgdG8gaGl0IGl0
+IHdvdWxkIGJlDQo+IG5pY2UgdG8NCj4gZ2V0IHRoaXMgaW50byBzdGFibGUgYmVmb3JlIHRoZSBt
+YWluIGRpc3Ryb3Mgc3dpdGNoIG92ZXIgdG8gNS4yLnkuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAN
+Cj4gUGF1bCBCb2xsZQ0KPiANCg==
