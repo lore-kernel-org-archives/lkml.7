@@ -2,66 +2,90 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A0DC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEACDC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8632421BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED4C21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfGXHF6 (ORCPT
+        id S1726277AbfGXHHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 03:05:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:48269 "EHLO verein.lst.de"
+        Wed, 24 Jul 2019 03:07:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48704 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbfGXHF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:05:57 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 715E168B20; Wed, 24 Jul 2019 09:05:54 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 09:05:53 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>, Ben Skeggs <bskeggs@redhat.com>
-Subject: Re: [PATCH] mm/hmm: replace hmm_update with mmu_notifier_range
-Message-ID: <20190724070553.GA2523@lst.de>
-References: <20190723210506.25127-1-rcampbell@nvidia.com>
+        id S1725887AbfGXHHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 03:07:13 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A41A3179174;
+        Wed, 24 Jul 2019 07:07:12 +0000 (UTC)
+Received: from [10.72.12.106] (ovpn-12-106.pek2.redhat.com [10.72.12.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC5A260148;
+        Wed, 24 Jul 2019 07:06:59 +0000 (UTC)
+Subject: Re: KASAN: use-after-free Read in finish_task_switch (2)
+To:     syzbot <syzbot+7f067c796eee2acbc57a@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, akpm@linux-foundation.org,
+        christian@brauner.io, davem@davemloft.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, hch@infradead.org,
+        james.bottomley@hansenpartnership.com, jglisse@redhat.com,
+        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-parisc@vger.kernel.org, luto@amacapital.net, mhocko@suse.com,
+        mingo@kernel.org, mst@redhat.com, namit@vmware.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        wad@chromium.org, yuehaibing@huawei.com
+References: <00000000000027494e058e0b4b3f@google.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <fc935344-4f35-3f05-dc33-398655b38330@redhat.com>
+Date:   Wed, 24 Jul 2019 15:06:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723210506.25127-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <00000000000027494e058e0b4b3f@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 24 Jul 2019 07:07:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+On 2019/7/20 上午12:34, syzbot wrote:
+> syzbot has bisected this bug to:
+>
+> commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> Author: Jason Wang <jasowang@redhat.com>
+> Date:   Fri May 24 08:12:18 2019 +0000
+>
+>     vhost: access vq metadata through kernel virtual address
+>
+> bisection log: 
+> https://syzkaller.appspot.com/x/bisect.txt?x=123faf70600000
+> start commit:   22051d9c Merge tag 'platform-drivers-x86-v5.3-2' of 
+> git://..
+> git tree:       upstream
+> final crash: https://syzkaller.appspot.com/x/report.txt?x=113faf70600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=163faf70600000
+> kernel config: https://syzkaller.appspot.com/x/.config?x=135cb826ac59d7fc
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=7f067c796eee2acbc57a
+> syz repro: https://syzkaller.appspot.com/x/repro.syz?x=12c1898fa00000
+>
+> Reported-by: syzbot+7f067c796eee2acbc57a@syzkaller.appspotmail.com
+> Fixes: 7f466032dc9e ("vhost: access vq metadata through kernel virtual 
+> address")
+>
+> For information about bisection process see: 
+> https://goo.gl/tpsmEJ#bisection
 
-One comment on a related cleanup:
 
->  	list_for_each_entry(mirror, &hmm->mirrors, list) {
->  		int rc;
->  
-> -		rc = mirror->ops->sync_cpu_device_pagetables(mirror, &update);
-> +		rc = mirror->ops->sync_cpu_device_pagetables(mirror, nrange);
->  		if (rc) {
-> -			if (WARN_ON(update.blockable || rc != -EAGAIN))
-> +			if (WARN_ON(mmu_notifier_range_blockable(nrange) ||
-> +			    rc != -EAGAIN))
->  				continue;
->  			ret = -EAGAIN;
->  			break;
+#syz dup: WARNING in __mmdrop
 
-This magic handling of error seems odd.  I think we should merge rc and
-ret into one variable and just break out if any error happens instead
-or claiming in the comments -EAGAIN is the only valid error and then
-ignoring all others here.
