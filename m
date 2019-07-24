@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB842C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98B5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05CB217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE75217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000603;
-	bh=8Epo5mX/jfx/Dnfn9i/juu/jynssAskXHtTYW82raC0=;
+	s=default; t=1564000609;
+	bh=/m+OpmSi6461DEttxrd1JK+QUeBO2w8QPWSmaVlv9LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HN4mFgfLvFoOH7r81rT6cfaI36hRDI5B0XnWZAEk/COZI2x1ORNGvyJa06Lvihtli
-	 NmMS0JRYHHOtV9LVPdN3BpjwjL5QmaamHEVwEBMftXjo0mxUkvXJEC3FRGQZ9xBeWY
-	 /HPIjHc3fR8HXtnOwiWrz6qH7czu9+hCGF+ALOCc=
+	b=0ueAhucR/eXixLPzvvYXt0Ah3LVMcURy/sEUh0cDuHXvGQwzGfpDvRtxPDCOvZGcb
+	 QCJn0+iaNfgthHm+Dxr3zbmxrvPBRFa5wINXpebLfrUHjHPXl3ZcOdOA1cTsA5iW2N
+	 GV8yMRswwRh4o+7ESv+zWLms72ttmpn9QeqxN9FU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390864AbfGXUgm (ORCPT
+        id S2387957AbfGXTYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:36:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40952 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:24:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729096AbfGXTYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:36 -0400
+        id S1729056AbfGXTYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4176B22AEC;
-        Wed, 24 Jul 2019 19:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD0522387;
+        Wed, 24 Jul 2019 19:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996275;
-        bh=8Epo5mX/jfx/Dnfn9i/juu/jynssAskXHtTYW82raC0=;
+        s=default; t=1563996270;
+        bh=/m+OpmSi6461DEttxrd1JK+QUeBO2w8QPWSmaVlv9LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7frPnrREQVOGlohAAIEgjEKQrM8GbI98Xd3LsvuX588/yL/YY8g2AhralObN0UXL
-         rT7nSecLL2l9mFhdPLcdftS1+qxFekz4Yn+u+9j+yMZXkVa5yjTugxdMo+7cIDk/e2
-         8xXhSYWXuUDvMbYaAE166LsbqXvU43+CHQylQBCQ=
+        b=lNL7ToT6nIm2yvcR8GOvvohsgvlrrSk6Ub0PNkViwYD+zP8kTdIakLibDhhvpPuf+
+         pEZNHkUcBEWk7+wqom0DKSW1LmACckyvsnvMHSw3BjjTECqwECBRfPhWTyYax0iqgj
+         acpc4sCKeqh/b45DPWBOW7Ievytkxt8lTDUsxpIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sumit Gupta <sumitg@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 042/413] media: v4l2-core: fix use-after-free error
-Date:   Wed, 24 Jul 2019 21:15:33 +0200
-Message-Id: <20190724191738.601822314@linuxfoundation.org>
+Subject: [PATCH 5.2 032/413] ice: Fix couple of issues in ice_vsi_release
+Date:   Wed, 24 Jul 2019 21:15:23 +0200
+Message-Id: <20190724191737.862012030@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,89 +62,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e0f724346e96daae7792262c6767449795ac3b5 ]
+[ Upstream commit aa6ccf3f2d7042f94c4e91538956ce7051e7856e ]
 
-Fixing use-after-free within __v4l2_ctrl_handler_setup().
-Memory is being freed with kfree(new_ref) for duplicate
-control reference entry but ctrl->cluster pointer is still
-referring to freed duplicate entry resulting in error on
-access. Change done to update cluster pointer only when new
-control reference is added.
+Currently the driver is calling ice_napi_del() and then
+unregister_netdev(). The call to unregister_netdev() will result in a
+call to ice_stop() and then ice_vsi_close(). This is where we call
+napi_disable() for all the MSI-X vectors. This flow is reversed so make
+the changes to ensure napi_disable() happens prior to napi_del().
 
- ==================================================================
- BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
- Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
+Before calling napi_del() and free_netdev() make sure
+unregister_netdev() was called. This is done by making sure the
+__ICE_DOWN bit is set in the vsi->state for the interested VSI.
 
- Allocated by task 312:
-
- Freed by task 312:
-
- The buggy address belongs to the object at ffffffc324e78600
-  which belongs to the cache kmalloc-64 of size 64
- The buggy address is located 24 bytes inside of
-  64-byte region [ffffffc324e78600, ffffffc324e78640)
- The buggy address belongs to the page:
- page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
-					(null) index:0xffffffc324e78f80
- flags: 0x4000000000000100(slab)
- raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
- raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
- page dumped because: kasan: bad access detected
-
- Memory state around the buggy address:
-  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                             ^
-  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
- ==================================================================
-
-Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Brett Creeley <brett.creeley@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/intel/ice/ice.h      |  1 -
+ drivers/net/ethernet/intel/ice/ice_lib.c  | 24 ++++++++++++-----------
+ drivers/net/ethernet/intel/ice/ice_main.c |  2 +-
+ 3 files changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 7d3a33258748..3c720f54efa8 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -2149,15 +2149,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
- 	if (size_extra_req)
- 		new_ref->p_req.p = &new_ref[1];
+diff --git a/drivers/net/ethernet/intel/ice/ice.h b/drivers/net/ethernet/intel/ice/ice.h
+index 792e6e42030e..754c7080c3fc 100644
+--- a/drivers/net/ethernet/intel/ice/ice.h
++++ b/drivers/net/ethernet/intel/ice/ice.h
+@@ -451,7 +451,6 @@ int ice_set_rss(struct ice_vsi *vsi, u8 *seed, u8 *lut, u16 lut_size);
+ int ice_get_rss(struct ice_vsi *vsi, u8 *seed, u8 *lut, u16 lut_size);
+ void ice_fill_rss_lut(u8 *lut, u16 rss_table_size, u16 rss_size);
+ void ice_print_link_msg(struct ice_vsi *vsi, bool isup);
+-void ice_napi_del(struct ice_vsi *vsi);
+ #ifdef CONFIG_DCB
+ int ice_pf_ena_all_vsi(struct ice_pf *pf, bool locked);
+ void ice_pf_dis_all_vsi(struct ice_pf *pf, bool locked);
+diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
+index fbf1eba0cc2a..f14fa51cc704 100644
+--- a/drivers/net/ethernet/intel/ice/ice_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_lib.c
+@@ -2754,19 +2754,14 @@ int ice_vsi_release(struct ice_vsi *vsi)
  
--	if (ctrl->handler == hdl) {
--		/* By default each control starts in a cluster of its own.
--		   new_ref->ctrl is basically a cluster array with one
--		   element, so that's perfect to use as the cluster pointer.
--		   But only do this for the handler that owns the control. */
--		ctrl->cluster = &new_ref->ctrl;
--		ctrl->ncontrols = 1;
+ 	if (vsi->type == ICE_VSI_VF)
+ 		vf = &pf->vf[vsi->vf_id];
+-	/* do not unregister and free netdevs while driver is in the reset
+-	 * recovery pending state. Since reset/rebuild happens through PF
+-	 * service task workqueue, its not a good idea to unregister netdev
+-	 * that is associated to the PF that is running the work queue items
+-	 * currently. This is done to avoid check_flush_dependency() warning
+-	 * on this wq
++	/* do not unregister while driver is in the reset recovery pending
++	 * state. Since reset/rebuild happens through PF service task workqueue,
++	 * it's not a good idea to unregister netdev that is associated to the
++	 * PF that is running the work queue items currently. This is done to
++	 * avoid check_flush_dependency() warning on this wq
+ 	 */
+-	if (vsi->netdev && !ice_is_reset_in_progress(pf->state)) {
+-		ice_napi_del(vsi);
++	if (vsi->netdev && !ice_is_reset_in_progress(pf->state))
+ 		unregister_netdev(vsi->netdev);
+-		free_netdev(vsi->netdev);
+-		vsi->netdev = NULL;
 -	}
--
- 	INIT_LIST_HEAD(&new_ref->node);
  
- 	mutex_lock(hdl->lock);
-@@ -2190,6 +2181,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
- 	hdl->buckets[bucket] = new_ref;
- 	if (ctrl_ref)
- 		*ctrl_ref = new_ref;
-+	if (ctrl->handler == hdl) {
-+		/* By default each control starts in a cluster of its own.
-+		 * new_ref->ctrl is basically a cluster array with one
-+		 * element, so that's perfect to use as the cluster pointer.
-+		 * But only do this for the handler that owns the control.
-+		 */
-+		ctrl->cluster = &new_ref->ctrl;
-+		ctrl->ncontrols = 1;
+ 	if (test_bit(ICE_FLAG_RSS_ENA, pf->flags))
+ 		ice_rss_clean(vsi);
+@@ -2799,6 +2794,13 @@ int ice_vsi_release(struct ice_vsi *vsi)
+ 	ice_rm_vsi_lan_cfg(vsi->port_info, vsi->idx);
+ 	ice_vsi_delete(vsi);
+ 	ice_vsi_free_q_vectors(vsi);
++
++	/* make sure unregister_netdev() was called by checking __ICE_DOWN */
++	if (vsi->netdev && test_bit(__ICE_DOWN, vsi->state)) {
++		free_netdev(vsi->netdev);
++		vsi->netdev = NULL;
 +	}
++
+ 	ice_vsi_clear_rings(vsi);
  
- unlock:
- 	mutex_unlock(hdl->lock);
+ 	ice_vsi_put_qs(vsi);
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 7843abf4d44d..dbf3d39ad8b1 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -1667,7 +1667,7 @@ static int ice_req_irq_msix_misc(struct ice_pf *pf)
+  * ice_napi_del - Remove NAPI handler for the VSI
+  * @vsi: VSI for which NAPI handler is to be removed
+  */
+-void ice_napi_del(struct ice_vsi *vsi)
++static void ice_napi_del(struct ice_vsi *vsi)
+ {
+ 	int v_idx;
+ 
 -- 
 2.20.1
 
