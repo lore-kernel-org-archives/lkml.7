@@ -2,139 +2,263 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BC9C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D676C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7828C22AED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B202173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfGXIAm (ORCPT
+        id S1726546AbfGXIBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:00:42 -0400
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:42090 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725826AbfGXIAm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:00:42 -0400
-Received: from unknown (HELO lgemrelse7q.lge.com) (156.147.1.151)
-        by 156.147.23.52 with ESMTP; 24 Jul 2019 17:00:29 +0900
-X-Original-SENDERIP: 156.147.1.151
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.151 with ESMTP; 24 Jul 2019 17:00:29 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Wed, 24 Jul 2019 16:59:20 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Byungchul Park <max.byungchul.park@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@lge.com
-Subject: Re: [PATCH] rcu: Make jiffies_till_sched_qs writable
-Message-ID: <20190724075919.GB14712@X58A-UD3R>
-References: <20190713174111.GG26519@linux.ibm.com>
- <CAEXW_YTcL-nOfJXkChGhvQtqqfSLpAYr327PLu1SmGEEADCevw@mail.gmail.com>
- <20190719003942.GA28226@X58A-UD3R>
- <CAEXW_YQij-N2-NFjUQtsmYxVLtWxcQk_Kb16fGBzzPAZtWg+sg@mail.gmail.com>
- <20190719074329.GY14271@linux.ibm.com>
- <CANrsvRM7ehvqcPtKMV7RyRCiXwe_R_TsLZiNtxBPY_qnSg2LNQ@mail.gmail.com>
- <20190719195728.GF14271@linux.ibm.com>
- <CAEXW_YQADrPRtJW7yJZyROH1_d2yOA7_1HVgm50wxpOC80+=Wg@mail.gmail.com>
- <20190723110521.GA28883@X58A-UD3R>
- <20190723134717.GT14271@linux.ibm.com>
+        Wed, 24 Jul 2019 04:01:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32874 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725826AbfGXIBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:01:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 713EBAD3E;
+        Wed, 24 Jul 2019 08:01:13 +0000 (UTC)
+Subject: Re: [PATCH v4 14/23] drm/tilcdc: Provide ddc symlink in connector
+ sysfs directory
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        dri-devel@lists.freedesktop.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-tegra@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, linux-samsung-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Vincent Abriou <vincent.abriou@st.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dave Airlie <airlied@redhat.com>,
+        freedreno@lists.freedesktop.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Paul <sean@poorly.run>,
+        linux-arm-kernel@lists.infradead.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        amd-gfx@lists.freedesktop.org,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+References: <cover.1562843413.git.andrzej.p@collabora.com>
+ <d1d415022c598fb7acd033f0f322dd67250adaa9.1562843413.git.andrzej.p@collabora.com>
+ <20190723090532.GA787@ravnborg.org>
+ <3ad60be5-49cf-4017-4b74-53a2d6272deb@collabora.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <acfd895d-ab59-0190-e25c-1827bd8d214b@suse.de>
+Date:   Wed, 24 Jul 2019 10:01:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723134717.GT14271@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <3ad60be5-49cf-4017-4b74-53a2d6272deb@collabora.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="3hEKoYM3ihXgipFwLohglgI6I6K0PHVBV"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 06:47:17AM -0700, Paul E. McKenney wrote:
-> On Tue, Jul 23, 2019 at 08:05:21PM +0900, Byungchul Park wrote:
-> > On Fri, Jul 19, 2019 at 04:33:56PM -0400, Joel Fernandes wrote:
-> > > On Fri, Jul 19, 2019 at 3:57 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > > >
-> > > > On Fri, Jul 19, 2019 at 06:57:58PM +0900, Byungchul Park wrote:
-> > > > > On Fri, Jul 19, 2019 at 4:43 PM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
-> > > > > >
-> > > > > > On Thu, Jul 18, 2019 at 08:52:52PM -0400, Joel Fernandes wrote:
-> > > > > > > On Thu, Jul 18, 2019 at 8:40 PM Byungchul Park <byungchul.park@lge.com> wrote:
-> > > > > > > [snip]
-> > > > > > > > > - There is a bug in the CPU stopper machinery itself preventing it
-> > > > > > > > > from scheduling the stopper on Y. Even though Y is not holding up the
-> > > > > > > > > grace period.
-> > > > > > > >
-> > > > > > > > Or any thread on Y is busy with preemption/irq disabled preventing the
-> > > > > > > > stopper from being scheduled on Y.
-> > > > > > > >
-> > > > > > > > Or something is stuck in ttwu() to wake up the stopper on Y due to any
-> > > > > > > > scheduler locks such as pi_lock or rq->lock or something.
-> > > > > > > >
-> > > > > > > > I think what you mentioned can happen easily.
-> > > > > > > >
-> > > > > > > > Basically we would need information about preemption/irq disabled
-> > > > > > > > sections on Y and scheduler's current activity on every cpu at that time.
-> > > > > > >
-> > > > > > > I think all that's needed is an NMI backtrace on all CPUs. An ARM we
-> > > > > > > don't have NMI solutions and only IPI or interrupt based backtrace
-> > > > > > > works which should at least catch and the preempt disable and softirq
-> > > > > > > disable cases.
-> > > > > >
-> > > > > > True, though people with systems having hundreds of CPUs might not
-> > > > > > thank you for forcing an NMI backtrace on each of them.  Is it possible
-> > > > > > to NMI only the ones that are holding up the CPU stopper?
-> > > > >
-> > > > > What a good idea! I think it's possible!
-> > > > >
-> > > > > But we need to think about the case NMI doesn't work when the
-> > > > > holding-up was caused by IRQ disabled.
-> > > > >
-> > > > > Though it's just around the corner of weekend, I will keep thinking
-> > > > > on it during weekend!
-> > > >
-> > > > Very good!
-> > > 
-> > > Me too will think more about it ;-) Agreed with point about 100s of
-> > > CPUs usecase,
-> > > 
-> > > Thanks, have a great weekend,
-> > 
-> > BTW, if there's any long code section with irq/preemption disabled, then
-> > the problem would be not only about RCU stall. And we can also use
-> > latency tracer or something to detect the bad situation.
-> > 
-> > So in this case, sending ipi/nmi to the CPUs where the stoppers cannot
-> > to be scheduled does not give us additional meaningful information.
-> > 
-> > I think Paul started to think about this to solve some real problem. I
-> > seriously love to help RCU and it's my pleasure to dig deep into kind of
-> > RCU stuff, but I've yet to define exactly what problem is. Sorry.
-> > 
-> > Could you share the real issue? I think you don't have to reproduce it.
-> > Just sharing the issue that you got inspired from is enough. Then I
-> > might be able to develop 'how' with Joel! :-) It's our pleasure!
-> 
-> It is unfortunately quite intermittent.  I was hoping to find a way
-> to make it happen more often.  Part of the underlying problem appears
-> to be lock contention, in that reducing contention made it even more
-> intermittent.  Which is good in general, but not for exercising the
-> CPU-stopper issue.
-> 
-> But perhaps your hardware will make this happen more readily than does
-> mine.  The repeat-by is simple, namely run TREE04 on branch "dev" on an
-> eight-CPU system.  It appear that the number of CPUs used by the test
-> should match the number available on the system that you are running on,
-> though perhaps affinity could allow mismatches.
-> 
-> So why not try it and see what happens?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--3hEKoYM3ihXgipFwLohglgI6I6K0PHVBV
+Content-Type: multipart/mixed; boundary="KIKXUXCjxjc3xDRil2vLGI4WFDOmJ9a2q";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+ Sam Ravnborg <sam@ravnborg.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>,
+ Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org,
+ Douglas Anderson <dianders@chromium.org>, linux-tegra@vger.kernel.org,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, kernel@collabora.com,
+ linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ Vincent Abriou <vincent.abriou@st.com>, Krzysztof Kozlowski
+ <krzk@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>,
+ David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+ Kukjin Kim <kgene@kernel.org>, NXP Linux Team <linux-imx@nxp.com>,
+ Dave Airlie <airlied@redhat.com>, freedreno@lists.freedesktop.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Jonas Karlman <jonas@kwiboo.se>, linux-arm-msm@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>,
+ Alexios Zavras <alexios.zavras@intel.com>,
+ Mamta Shukla <mamtashukla555@gmail.com>, linux-mediatek@lists.infradead.org,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Sean Paul <sean@poorly.run>,
+ linux-arm-kernel@lists.infradead.org,
+ Jernej Skrabec <jernej.skrabec@siol.net>, amd-gfx@lists.freedesktop.org,
+ Tomi Valkeinen <tomi.valkeinen@ti.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org,
+ Todor Tomov <todor.tomov@linaro.org>,
+ Kyungmin Park <kyungmin.park@samsung.com>, Huang Rui <ray.huang@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>, Shawn Guo <shawnguo@kernel.org>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ Gerd Hoffmann <kraxel@redhat.com>
+Message-ID: <acfd895d-ab59-0190-e25c-1827bd8d214b@suse.de>
+Subject: Re: [PATCH v4 14/23] drm/tilcdc: Provide ddc symlink in connector
+ sysfs directory
+References: <cover.1562843413.git.andrzej.p@collabora.com>
+ <d1d415022c598fb7acd033f0f322dd67250adaa9.1562843413.git.andrzej.p@collabora.com>
+ <20190723090532.GA787@ravnborg.org>
+ <3ad60be5-49cf-4017-4b74-53a2d6272deb@collabora.com>
+In-Reply-To: <3ad60be5-49cf-4017-4b74-53a2d6272deb@collabora.com>
 
-Thank you. I'll try it too.
+--KIKXUXCjxjc3xDRil2vLGI4WFDOmJ9a2q
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
+Hi
+
+Am 23.07.19 um 14:44 schrieb Andrzej Pietrasiewicz:
+> Hi Sam,
+>=20
+> W dniu 23.07.2019 o=C2=A011:05, Sam Ravnborg pisze:
+>> Hi Andrzej
+>>
+>> On Thu, Jul 11, 2019 at 01:26:41PM +0200, Andrzej Pietrasiewicz wrote:=
+
+>>> Use the ddc pointer provided by the generic connector.
+>>>
+>>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+>>> ---
+>>> =C2=A0 drivers/gpu/drm/tilcdc/tilcdc_tfp410.c | 1 +
+>>> =C2=A0 1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+>>> b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+>>> index 62d014c20988..c373edb95666 100644
+>>> --- a/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+>>> +++ b/drivers/gpu/drm/tilcdc/tilcdc_tfp410.c
+>>> @@ -219,6 +219,7 @@ static struct drm_connector
+>>> *tfp410_connector_create(struct drm_device *dev,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tfp410_connector->mod =3D mod;
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 connector =3D &tfp410_connector=
+->base;
+>>> +=C2=A0=C2=A0=C2=A0 connector->ddc =3D mod->i2c;
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drm_connector_init(dev, connect=
+or, &tfp410_connector_funcs,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 DRM_MODE_CONNECTOR_DVID);
+>>
+>> When reading this code, it looks strange that we set connector->ddc
+>> *before* the call to init the connector.
+>> One could risk that drm_connector_init() used memset(..) to clear all
+>> fields or so, and it would break this order.
+>=20
+> I verified the code of drm_connector_init() and cannot find any memset(=
+)
+> invocations there. What is your actual concern?
+
+I think this echoes my concern about the implicit order of operation. It
+seems too easy to get this wrong. If you don't want to add an additional
+interface for setting the ddc field, why not add a dedicated initializer
+function that sets the ddc field? Something like this.
+
+int drm_connector_init_with_ddc(connector, funcs, ..., ddc)
+{
+	ret =3D drm_connector_init(connector, funcs, ...);
+	if (ret)
+		return ret;
+
+	if (!ddc)
+		return 0;
+
+	connector->ddc =3D ddc;
+	/* set up sysfs */
+
+	return 0;
+}
+
+Best regards
+Thomas
+
+> Andrzej
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--KIKXUXCjxjc3xDRil2vLGI4WFDOmJ9a2q--
+
+--3hEKoYM3ihXgipFwLohglgI6I6K0PHVBV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl04EEEACgkQaA3BHVML
+eiNRWAf8CYxCmH/26EWFNpq9GZQjDMvAU5wdcW44Lnp0dMtgf/nqPvbEtkPYWt1D
+lMAlcSy9rrFFtW3E2HFwK5V9QbW9LvxdRaA7gK0ypMrYgmO5QECHQGMCaRxb/DpK
+02ZW59khdYpqNbLfjZ3toTs6BiHuBS2OF5tHq4SbvHwdva4pzOQtwQ90TVrNcOp+
+8kSGLB/0+CcOvKhgjd1uyw1w5lE/cILPT4sfXYlutlSRsHTCA7FwXHwhoqMyfYK4
+xlDAr72YN6/Lt9gLuKqWSFX9O9vvSpMMjp6nnzFwCguc+Nz53L4ra49cJ8qPP6dY
+wBV/ccooRzGp27r8ENmXR8wKLfTP8g==
+=ol/N
+-----END PGP SIGNATURE-----
+
+--3hEKoYM3ihXgipFwLohglgI6I6K0PHVBV--
