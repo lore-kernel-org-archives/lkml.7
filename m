@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A17C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24A6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062D821841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C125C21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sqj8KFoP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rqq9g03P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfGXQ6h (ORCPT
+        id S2387637AbfGXQ6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:58:37 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:38185 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387619AbfGXQ6e (ORCPT
+        Wed, 24 Jul 2019 12:58:42 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:55181 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbfGXQ6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:58:34 -0400
-Received: by mail-pf1-f202.google.com with SMTP id e25so28950374pfn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:58:34 -0700 (PDT)
+        Wed, 24 Jul 2019 12:58:37 -0400
+Received: by mail-qk1-f201.google.com with SMTP id b139so39812301qkc.21
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=HR+i5k9D3xN0HWRoWeihUWIzPrhjF/a9nve8ODtPhD0=;
-        b=Sqj8KFoPc7hD63y6Ke6KRZCuC892AJWxBiBjXl9lm7e3VHw7v9+2CPKEKkIIGVduBM
-         +RBU0OzJVulCwCav3ICiM0TTFqCVjHo32X+Gfur0MmkdF5f2GDgfrmT1WIagFWh/eLk/
-         TfTRNQzkoI/Rmz8NQgzm6MtkfTWjehevn3uHkGkt71GlOorwiX63MNuUwmdGSK1TELYZ
-         yZsjvh/nyXpdbATi79pq4jnwWfIB3+8JKgOd7lSJg16RSNjIDMyAHd2Wr/9b9d6aEVNe
-         gVfwYSSWh8TBXcNRNU+IBM8ZgPWDd2ZdkP3MJYeVX+vkgj6Oq+OZ2br+9Ddj79zT7PRs
-         HCuQ==
+        bh=glKaPZF0kuawPUQxXbpKIp+157oyf0yYPp3UELzJQsg=;
+        b=rqq9g03PpRhF3ymvIyKsJZzyqpeGHYdT7zGj3bnG5I1MzwqawSR6jYQY47lcFaPh8u
+         AC4HC3jBJ8Q6HPjbVfvzmz4thwjP+kPTjr2j5uQJzkIhru+IeBl/CNrBF8HUEJPBemGj
+         YCZ8sgHUbNal4hCkX93eIDVTkVotYLPT72iFfHt7htZalJIeNAPgZOBv4v1Aggm/iBAF
+         E4vT2Eug6Gz2suAsgF+EumINRAuFJHHIgZphdq8fz7jesmzD+kw6OvLpLQVJ3v4oNRKf
+         6h7BMZEYGDGnq0Cb8crL9rOnzJd0xO2wfJjOb3bwSjthqNd8+O6dl4tNFBv5bU8iEhTG
+         811w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=HR+i5k9D3xN0HWRoWeihUWIzPrhjF/a9nve8ODtPhD0=;
-        b=OVASkMMoqQT8rO8zrQoCZXGLGBOBYExmLeM7iKOnE5t6A0NHQF5fRXsByGXI9GyfZm
-         5/aZvz/KHVTvCx25O6k0WLofwAQqR9WSBjD4GlpBu8Kh82dpjcTH5Azni7THpqvv4thO
-         ySg5K4+1mXM3jUY6HOZtjwNzS2JqKGDfIoGlm1elhnUmwGox1Juto/DZ21IAdCkyBI9S
-         i3/m5rCZjAtyDuezf14RMRmzbOQXL1uEdyJWa83CjLU6noKQbNYHn4w8T8vRZmbl+xZF
-         n9VDjhl5hXOhZmdYXDFScZa8FyWXsgKMmCv7HZAH5s07Z27zdymsPQaASsqy7eNmCbCC
-         Gabg==
-X-Gm-Message-State: APjAAAXw1PpokiI10EILugfkBOWPeCeBr3iNzNn3T5dokvQR2BtBoam4
-        EZrqOTeVZ0/bj+U1zpJkVecDPrTcc6d1
-X-Google-Smtp-Source: APXvYqzu5AQ+mRmZp518hex6IDEIzKbEvvBp9hLrjMi74On/5T8AvUdwkgxhlgx4t6PpiuEpqSWlNkQJPxJ2
-X-Received: by 2002:a63:3009:: with SMTP id w9mr7663984pgw.260.1563987513746;
- Wed, 24 Jul 2019 09:58:33 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 09:58:00 -0700
+        bh=glKaPZF0kuawPUQxXbpKIp+157oyf0yYPp3UELzJQsg=;
+        b=Zla3+6VSZKJhVU45hoZ+hStPlKRc7N3ga0GpgZtAB2jLH2mmARbbikrBWN/aFq9d9+
+         9DmvAKbB3EF0daAvn9grk25V7DO4WqSpQl/tR9ZUFbj7u4r62HJFeCpeD6HwBqxAdqgv
+         01k0dgwoM85HTTpmBodPwccqHTgUgecl/BLBSjQpo33RUTvoF55tNtXNQGvElyCM5/Tj
+         so1E6TyD8nt5S9z0MXEQAWthK7hI0yPTPZaBHwj+0KE87VtAwY3sPAKNSBj5KIKv7ai1
+         ufZO5ZSdao4+R8VmO+gfX+5taI8ZV1I+5WBCc/lDeBrvsIYz8579LV9GPgfoN7QjIyQ2
+         eCVQ==
+X-Gm-Message-State: APjAAAXc9xu0Z2ubMLczTPxvgT8kskIZJJZHH2pGBLWip28bp2uhuLcd
+        Y/sdS1L4PrbVgXcrayYhcTiMoI8YdwFb
+X-Google-Smtp-Source: APXvYqwGhYKsmoggPNt4NsKlJiqWSzOCNjflzOiZPEzbK6MDkFFQIP6wyFXKUEoZQwNfArLV+zvI15TnxLV0
+X-Received: by 2002:a0c:8a76:: with SMTP id 51mr60440819qvu.210.1563987516337;
+ Wed, 24 Jul 2019 09:58:36 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 09:58:01 -0700
 In-Reply-To: <20190724165803.87470-1-brianvv@google.com>
-Message-Id: <20190724165803.87470-4-brianvv@google.com>
+Message-Id: <20190724165803.87470-5-brianvv@google.com>
 Mime-Version: 1.0
 References: <20190724165803.87470-1-brianvv@google.com>
 X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [PATCH bpf-next 3/6] bpf: keep bpf.h in sync with tools/
+Subject: [PATCH bpf-next 4/6] libbpf: support BPF_MAP_DUMP command
 From:   Brian Vazquez <brianvv@google.com>
 To:     Brian Vazquez <brianvv.kernel@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -75,53 +75,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds bpf_attr.dump structure to libbpf.
+Make libbpf aware of new BPF_MAP_DUMP command and add bpf_map_dump and
+bpf_map_dump_flags to use them from the library.
 
 Suggested-by: Stanislav Fomichev <sdf@google.com>
 Signed-off-by: Brian Vazquez <brianvv@google.com>
 ---
- tools/include/uapi/linux/bpf.h | 9 +++++++++
- tools/lib/bpf/libbpf.map       | 2 ++
- 2 files changed, 11 insertions(+)
+ tools/lib/bpf/bpf.c | 28 ++++++++++++++++++++++++++++
+ tools/lib/bpf/bpf.h |  4 ++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 4e455018da65f..e127f16e4e932 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -106,6 +106,7 @@ enum bpf_cmd {
- 	BPF_TASK_FD_QUERY,
- 	BPF_MAP_LOOKUP_AND_DELETE_ELEM,
- 	BPF_MAP_FREEZE,
-+	BPF_MAP_DUMP,
- };
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index c7d7993c44bb0..c1139b7db756a 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -368,6 +368,34 @@ int bpf_map_update_elem(int fd, const void *key, const void *value,
+ 	return sys_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
+ }
  
- enum bpf_map_type {
-@@ -388,6 +389,14 @@ union bpf_attr {
- 		__u64		flags;
- 	};
- 
-+	struct { /* struct used by BPF_MAP_DUMP command */
-+		__aligned_u64	prev_key;
-+		__aligned_u64	buf;
-+		__aligned_u64	buf_len; /* input/output: len of buf */
-+		__u64		flags;
-+		__u32		map_fd;
-+	} dump;
++int bpf_map_dump(int fd, const void *prev_key, void *buf, void *buf_len)
++{
++	union bpf_attr attr;
 +
- 	struct { /* anonymous struct used by BPF_PROG_LOAD command */
- 		__u32		prog_type;	/* one of enum bpf_prog_type */
- 		__u32		insn_cnt;
-diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-index f9d316e873d8d..cac3723d5c45c 100644
---- a/tools/lib/bpf/libbpf.map
-+++ b/tools/lib/bpf/libbpf.map
-@@ -183,4 +183,6 @@ LIBBPF_0.0.4 {
- 		perf_buffer__new;
- 		perf_buffer__new_raw;
- 		perf_buffer__poll;
-+		bpf_map_dump;
-+		bpf_map_dump_flags;
- } LIBBPF_0.0.3;
++	memset(&attr, 0, sizeof(attr));
++	attr.dump.map_fd = fd;
++	attr.dump.prev_key = ptr_to_u64(prev_key);
++	attr.dump.buf = ptr_to_u64(buf);
++	attr.dump.buf_len = ptr_to_u64(buf_len);
++
++	return sys_bpf(BPF_MAP_DUMP, &attr, sizeof(attr));
++}
++
++int bpf_map_dump_flags(int fd, const void *prev_key, void *buf, void *buf_len,
++		       __u64 flags)
++{
++	union bpf_attr attr;
++
++	memset(&attr, 0, sizeof(attr));
++	attr.dump.map_fd = fd;
++	attr.dump.prev_key = ptr_to_u64(prev_key);
++	attr.dump.buf = ptr_to_u64(buf);
++	attr.dump.buf_len = ptr_to_u64(buf_len);
++	attr.dump.flags = flags;
++
++	return sys_bpf(BPF_MAP_DUMP, &attr, sizeof(attr));
++}
++
+ int bpf_map_lookup_elem(int fd, const void *key, void *value)
+ {
+ 	union bpf_attr attr;
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index ff42ca043dc8f..86496443440e9 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -112,6 +112,10 @@ LIBBPF_API int bpf_verify_program(enum bpf_prog_type type,
+ LIBBPF_API int bpf_map_update_elem(int fd, const void *key, const void *value,
+ 				   __u64 flags);
+ 
++LIBBPF_API int bpf_map_dump(int fd, const void *prev_key, void *buf,
++				void *buf_len);
++LIBBPF_API int bpf_map_dump_flags(int fd, const void *prev_key, void *buf,
++				void *buf_len, __u64 flags);
+ LIBBPF_API int bpf_map_lookup_elem(int fd, const void *key, void *value);
+ LIBBPF_API int bpf_map_lookup_elem_flags(int fd, const void *key, void *value,
+ 					 __u64 flags);
 -- 
 2.22.0.657.g960e92d24f-goog
 
