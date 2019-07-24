@@ -2,96 +2,145 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673C8C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFCDC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C79722ADF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B7F21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:30:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TCGu0AHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfGXH3N (ORCPT
+        id S1726352AbfGXHaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 03:29:13 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42542 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfGXH3M (ORCPT
+        Wed, 24 Jul 2019 03:30:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45650 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfGXHaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:29:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x1so30748281wrr.9;
-        Wed, 24 Jul 2019 00:29:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BCmdtnUP7aJRqucr3vaspkGGjkcYN7cm9GbUeSOpXg4=;
-        b=f+FVHAWiw5IxkeUeIF0YCKILd2Gvm/wAjG8F2W3gjNa+sf2gkPVXTYFDVyg+dldStX
-         KO25obr2KDPbmIGe4fvi4wzwBcqfNP8YPYPAEuxxyFe39LA56JK5EcucpHpRb5uQz14G
-         NfWgdildJhzjd/7R/ENzws84x6XVjKjdQ6s30K78sGQIw+RLMSaeqctE3VMeKbhBl5gR
-         vlr1/wvbw2LBBR/dnDRuYz3X7XAi7G02EpnxSSDOoGq5Zc0PeygVm0AFL+GTu3384RmV
-         8WXvdW/M7mogB9NI1DlHS7+sKRh5352pE3g457vcLyWVx6PPcYMfJRk7e5grQL0ywaz8
-         7JYg==
-X-Gm-Message-State: APjAAAX4KROIMaH0kKmX++5u7d/QPfdzKcimEEziMP/6qYtpVYiWHPAg
-        4nfF5oEut/CJobSD6+D12taBByhqi12jDahH6rg=
-X-Google-Smtp-Source: APXvYqzvZJmXGo8K7zyPAWumLL81AOZ5k2RFLEJ80iQmYUwi0sTJbgdZuIX9S087bLR8+VNHitysCdfq+J8rfAU7zb4=
-X-Received: by 2002:adf:ab51:: with SMTP id r17mr59437897wrc.95.1563953350570;
- Wed, 24 Jul 2019 00:29:10 -0700 (PDT)
+        Wed, 24 Jul 2019 03:30:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O7Sok9085679;
+        Wed, 24 Jul 2019 07:29:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=5rHaoPqVyO/Z653y01L3kbFt1bw3GKwSsu1Fgnt7N5k=;
+ b=TCGu0AHUg1f1UAn1Wq2Jy9kqqnlFHRN/VwvZR+lp0hdk0hhqnZbeV4Z2PLWmpXMNN9Pb
+ ne12mjvxm9H7fnhS+1fpaDXS6/gWZ/TzSyTdDUaCrRuFHx5EONlts0tgJ8QsFwr47uOV
+ eVpeICTC1v8fKPeDzxEg/9thV1z0Hfoa0K7bLsfd3Sc1arG1PS7aGs3XptQ6+tr1EZk5
+ FG+l2pHk4vNiG/XHaUGaks5fKr0Nzz2Anqn9dy7A6T7o6DrsDU6DSrYcZ4d8IZnDU+DB
+ qRjBJH3odQ+71VYLEJngFmCauNqwfn8E/k8BMLy++FyYruaQhQgKp4kZqb4dOcF3k0Ry Vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2tx61bue0u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 07:29:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O7RWvn116368;
+        Wed, 24 Jul 2019 07:29:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2tx60xjgcf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 07:29:15 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6O7TAAN016494;
+        Wed, 24 Jul 2019 07:29:11 GMT
+Received: from [10.191.29.208] (/10.191.29.208)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jul 2019 00:29:10 -0700
+Subject: Re: [PATCH v3] locking/spinlocks, paravirt, hyperv: Correct the
+ hv_nopvspin case
+To:     linux-kernel@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-hyperv@vger.kernel.org
+References: <1562120635-9806-1-git-send-email-zhenzhong.duan@oracle.com>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <a3b87a0e-803d-5a28-03be-b9e2b37b94ba@oracle.com>
+Date:   Wed, 24 Jul 2019 15:29:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190723165700.13124-1-jacopo+renesas@jmondi.org>
-In-Reply-To: <20190723165700.13124-1-jacopo+renesas@jmondi.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 24 Jul 2019 09:28:58 +0200
-Message-ID: <CAMuHMdVKiJp0PsuogMo8FZ6NUxi4j09+A2zDXZr4nrtZY-KHaw@mail.gmail.com>
-Subject: Re: [PATCH] drm: rcar_lvds: Fix dual link mode operations
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVERS FOR RENESAS" 
-        <linux-renesas-soc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1562120635-9806-1-git-send-email-zhenzhong.duan@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907240083
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907240083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Hi Maintainers,
 
-On Wed, Jul 24, 2019 at 3:38 AM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> The R-Car LVDS encoder units support dual-link operations by splitting
-> the pixel output between the primary encoder and the companion one.
+Any further comments on this? Thanks
+
+Zhenzhong
+
+On 2019/7/3 10:23, Zhenzhong Duan wrote:
+> With the boot parameter "hv_nopvspin" specified a Hyperv guest should
+> not make use of paravirt spinlocks, but behave as if running on bare
+> metal. This is not true, however, as the qspinlock code will fall back
+> to a test-and-set scheme when it is detecting a hypervisor.
 >
-> In order for the primary encoder to succesfully control the companion's
-> operations this should not fail at probe time and register itself its
-> associated drm bridge so that the primary one can find it.
+> In order to avoid this disable the virt_spin_lock_key.
 >
-> Currently the companion encoder fails at probe time, causing the
-> registration of the primary to fail preventing the whole DU unit to be
-> registered correctly.
+> Same change for XEN is already in Commit e6fd28eb3522
+> ("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
 >
-> Fixes: fa440d870358 ("drm: rcar-du: lvds: Add support for dual-link mode")
-> Reported-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: linux-hyperv@vger.kernel.org
 > ---
-> The "Fixes" tag refers to a patch currently part of the
-> renesas-drivers-2019-07-09-v5.2 branch of Geert's renesas-drivers tree.
-
-The broken commit is also present in v5.3-rc1.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> v3: remove unlikely() as suggested by Sasha
+>
+>   arch/x86/hyperv/hv_spinlock.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+> index 07f21a0..210495b 100644
+> --- a/arch/x86/hyperv/hv_spinlock.c
+> +++ b/arch/x86/hyperv/hv_spinlock.c
+> @@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
+>   
+>   void __init hv_init_spinlocks(void)
+>   {
+> +	if (!hv_pvspin)
+> +		static_branch_disable(&virt_spin_lock_key);
+> +
+>   	if (!hv_pvspin || !apic ||
+>   	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
+>   	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
