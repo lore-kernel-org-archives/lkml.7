@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10E7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589BEC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDB3214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B21214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999726;
-	bh=mA08bsIa9qUiClBl4/jMHshkn1vB+VWZ6+iulIql+V4=;
+	s=default; t=1563999730;
+	bh=G5+9tOKfggG9ArmxDYJRKpm1HlpZ+AmbuewaNhRrSb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWgZ57RXAEuz7rU5QUSerE/oYKlbQXsgiUsUcoUSOoMI7FvgVkHHd0yz3NTtQr0ir
-	 yxtvs5ZpQ+XObycJ8y5vpVUvrg/o4S9/KJTBogjqbw5OtJvwh4xU6hbWPYOY1cwO9S
-	 y4X2Dm2S5vwUlSGcz+81zxykdsUrvJbJ0O3om++c=
+	b=2Sbhi3CAyMhr42iFVR+K/n9lxqP0wQR3yGNGUA3ohTeCtflCJdc4PZ7jc4gmpRpkr
+	 eUFIBLp+Z+qogalqPrX4Sj9QEEBYrZ+bXqDFiCW+zSAxuHFjfNGZfbtqZ4u78HNA19
+	 pNDIj7ACBehTzrBv77yje6ZF8upSzreHtmAX5Wwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391512AbfGXUWF (ORCPT
+        id S2390791AbfGXToR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47344 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390815AbfGXTo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:44:29 -0400
+        id S2390770AbfGXToO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:44:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF9D2083B;
-        Wed, 24 Jul 2019 19:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61B2A214AF;
+        Wed, 24 Jul 2019 19:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997468;
-        bh=mA08bsIa9qUiClBl4/jMHshkn1vB+VWZ6+iulIql+V4=;
+        s=default; t=1563997453;
+        bh=G5+9tOKfggG9ArmxDYJRKpm1HlpZ+AmbuewaNhRrSb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdwHTJQsio7eLb3duxklJC81Ym7O7b5C2Je+eDdF+782/cYFrPUvxtDmvEj641R6b
-         jnF7Bv6OMnUDGhW4fNHAOsgzRwBFqsxkm4E0+Hy2/OqoyoPMd9gkjphTJgI8k4lXJ2
-         hbQSe1+Ur+ehpm9HZgX1ggoRnb4iBYA3e/nj5WL4=
+        b=jmcAVLyrdAfVEhIotQ520ZMjcvKd12oD9YkuHmzGlM24ODNGPJ8795XE8IbLCJVtY
+         bUpAYgTe3I14c5eBvXbaIy8pnIwdNYEHmEwbKBVBikbdpLSYuX5EpHh1Fj57eVftMY
+         E8xh7c38n5cBrNTIvvPWZcSA6N8pi5v4g2mFU8q8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alagu Sankar <alagusankar@silex-india.com>,
-        Wen Gong <wgong@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Jungo Lin <jungo.lin@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 007/371] ath10k: htt: dont use txdone_fifo with SDIO
-Date:   Wed, 24 Jul 2019 21:15:59 +0200
-Message-Id: <20190724191725.051462693@linuxfoundation.org>
+Subject: [PATCH 5.1 029/371] media: media_device_enum_links32: clean a reserved field
+Date:   Wed, 24 Jul 2019 21:16:21 +0200
+Message-Id: <20190724191726.684945920@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,40 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e2a6b711282a371c5153239e0468a48254f17ca6 ]
+[ Upstream commit f49308878d7202e07d8761238e01bd0e5fce2750 ]
 
-HTT High Latency (ATH10K_DEV_TYPE_HL) does not use txdone_fifo at all, we don't
-even initialise it by skipping ath10k_htt_tx_alloc_buf() in
-ath10k_htt_tx_start(). Because of this using QCA6174 SDIO
-ath10k_htt_rx_tx_compl_ind() will crash when it accesses unitialised
-txdone_fifo. So skip txdone_fifo when using High Latency mode.
+In v4l2-compliance utility, test MEDIA_IOC_ENUM_ENTITIES
+will check whether reserved field of media_links_enum filled
+with zero.
 
-Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00007-QCARMSWP-1.
+However, for 32 bit program, the reserved field is missing
+copy from kernel space to user space in media_device_enum_links32
+function.
 
-Co-developed-by: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Alagu Sankar <alagusankar@silex-india.com>
-Signed-off-by: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This patch adds the cleaning a reserved field logic in
+media_device_enum_links32 function.
+
+Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/htt_rx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/media-device.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
-index 1acc622d2183..f22840bbc389 100644
---- a/drivers/net/wireless/ath/ath10k/htt_rx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
-@@ -2277,7 +2277,9 @@ static void ath10k_htt_rx_tx_compl_ind(struct ath10k *ar,
- 		 *  Note that with only one concurrent reader and one concurrent
- 		 *  writer, you don't need extra locking to use these macro.
- 		 */
--		if (!kfifo_put(&htt->txdone_fifo, tx_done)) {
-+		if (ar->bus_param.dev_type == ATH10K_DEV_TYPE_HL) {
-+			ath10k_txrx_tx_unref(htt, &tx_done);
-+		} else if (!kfifo_put(&htt->txdone_fifo, tx_done)) {
- 			ath10k_warn(ar, "txdone fifo overrun, msdu_id %d status %d\n",
- 				    tx_done.msdu_id, tx_done.status);
- 			ath10k_txrx_tx_unref(htt, &tx_done);
+diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
+index b8ec88612df7..6893843edada 100644
+--- a/drivers/media/media-device.c
++++ b/drivers/media/media-device.c
+@@ -502,6 +502,7 @@ static long media_device_enum_links32(struct media_device *mdev,
+ {
+ 	struct media_links_enum links;
+ 	compat_uptr_t pads_ptr, links_ptr;
++	int ret;
+ 
+ 	memset(&links, 0, sizeof(links));
+ 
+@@ -513,7 +514,13 @@ static long media_device_enum_links32(struct media_device *mdev,
+ 	links.pads = compat_ptr(pads_ptr);
+ 	links.links = compat_ptr(links_ptr);
+ 
+-	return media_device_enum_links(mdev, &links);
++	ret = media_device_enum_links(mdev, &links);
++	if (ret)
++		return ret;
++
++	memset(ulinks->reserved, 0, sizeof(ulinks->reserved));
++
++	return 0;
+ }
+ 
+ #define MEDIA_IOC_ENUM_LINKS32		_IOWR('|', 0x02, struct media_links_enum32)
 -- 
 2.20.1
 
