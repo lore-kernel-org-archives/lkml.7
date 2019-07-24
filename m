@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A569C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E09C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610D621855
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D448206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998651;
-	bh=Kbn4v2/0w2c7sGTcWeNpuhPP/lVgXrzZMNCN3lR/Sy8=;
+	s=default; t=1563998659;
+	bh=cXKDB6AufGWoUrk9ygY68OsXQam0L8v3IV6DKgFBW1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJcOBD18s6d99zyvtQFgK8kiFd7M7AgBm5DG508EUxXMtYRgB++AE3mle/n5bX1EX
-	 udK1nUi4aaSf4NiMG5DSMneZXGy7bdBM1k10CU5CEFBPhz4/cwebnGnHashZ/dYuhY
-	 qPGlP5nLJ59x/xlilJSz/71rxGRXBLJiJkV0AlAI=
+	b=BHSJn48S1hx/qKgobxqiaVolJOaCoWwhALbBCheojDMRK8ekuHO85aHc87Ty0CsGt
+	 sdXPnhpuuzOSTqGJGdQB6DK5YzWLTs7aLJ7qTSbjK959coGS8T0C9vce9MmHL/lHF0
+	 70sQPu1BxEIcOUEmgdUJu10EkFS5cSSnd2RgWmC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392461AbfGXUEK (ORCPT
+        id S2392485AbfGXUER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:04:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54882 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:04:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392436AbfGXUEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:04:02 -0400
+        id S2392463AbfGXUEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:04:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3DD8205C9;
-        Wed, 24 Jul 2019 20:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF77A206BA;
+        Wed, 24 Jul 2019 20:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998641;
-        bh=Kbn4v2/0w2c7sGTcWeNpuhPP/lVgXrzZMNCN3lR/Sy8=;
+        s=default; t=1563998650;
+        bh=cXKDB6AufGWoUrk9ygY68OsXQam0L8v3IV6DKgFBW1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8R/+A7TVxmnKl8XXPZ+PT2xpuwhADSZWQ2P8A18R9khbT7gfYkBvIebq/nbNjHYQ
-         LB5J6AytjoR6kqo6vcrOj7l3ElZ3h7Vm67QZsj4TwkEB6hFDjEi0GNJrdztNWtFojO
-         Wgggg8OdG6pHqrGLaMLJAK9sGnO5Bqs0BWIlP0VI=
+        b=vZRVPScsnoQ/zPy6hiKO5nTHBexAEDfK8Zho4F+Cuu7NDCJ0QolQyFgsAfItPK74i
+         pHgtFV7vbvuaqYCgJDLCfEpz7VAiD83tjNzMZdSDvW4zJwM/UDyRc9k1UT93g+ZZ8C
+         aRJGRvzpKHaaUWBIXgA1Ox5yGWnBbjDD5ZxuoikM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/271] bpf: silence warning messages in core
-Date:   Wed, 24 Jul 2019 21:18:53 +0200
-Message-Id: <20190724191700.676131682@linuxfoundation.org>
+Subject: [PATCH 4.19 040/271] media: wl128x: Fix some error handling in fm_v4l2_init_video_device()
+Date:   Wed, 24 Jul 2019 21:18:29 +0200
+Message-Id: <20190724191658.629913689@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,54 +62,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aee450cbe482a8c2f6fa5b05b178ef8b8ff107ca ]
+[ Upstream commit 69fbb3f47327d959830c94bf31893972b8c8f700 ]
 
-Compiling kernel/bpf/core.c with W=1 causes a flood of warnings:
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
+The fm_v4l2_init_video_device() forget to unregister v4l2/video device
+in the error path, it could lead to UAF issue, eg,
 
-kernel/bpf/core.c:1198:65: warning: initialized field overwritten [-Woverride-init]
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
-kernel/bpf/core.c:1198:65: note: (near initialization for 'public_insntable[12]')
- 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
-      |                                                                 ^~~~
-kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
- 1087 |  INSN_3(ALU, ADD,  X),   \
-      |  ^~~~~~
-kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
- 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
-      |   ^~~~~~~~~~~~
+  BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
+  BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
+  BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
+  Read of size 8 at addr ffff8881e84a7c70 by task v4l_id/3659
 
-98 copies of the above.
+  CPU: 1 PID: 3659 Comm: v4l_id Not tainted 5.1.0 #8
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+  Call Trace:
+   __dump_stack lib/dump_stack.c:77 [inline]
+   dump_stack+0xa9/0x10e lib/dump_stack.c:113
+   print_address_description+0x65/0x270 mm/kasan/report.c:187
+   kasan_report+0x149/0x18d mm/kasan/report.c:317
+   atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
+   atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
+   __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
+   fm_v4l2_fops_open+0xac/0x120 [fm_drv]
+   v4l2_open+0x191/0x390 [videodev]
+   chrdev_open+0x20d/0x570 fs/char_dev.c:417
+   do_dentry_open+0x700/0xf30 fs/open.c:777
+   do_last fs/namei.c:3416 [inline]
+   path_openat+0x7c4/0x2a90 fs/namei.c:3532
+   do_filp_open+0x1a5/0x2b0 fs/namei.c:3563
+   do_sys_open+0x302/0x490 fs/open.c:1069
+   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7f8180c17c8e
+  ...
+  Allocated by task 3642:
+   set_track mm/kasan/common.c:87 [inline]
+   __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
+   fm_drv_init+0x13/0x1000 [fm_drv]
+   do_one_initcall+0xbc/0x47d init/main.c:901
+   do_init_module+0x1b5/0x547 kernel/module.c:3456
+   load_module+0x6405/0x8c10 kernel/module.c:3804
+   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The attached patch silences the warnings, because we *know* we're overwriting
-the default initializer. That leaves bpf/core.c with only 6 other warnings,
-which become more visible in comparison.
+  Freed by task 3642:
+   set_track mm/kasan/common.c:87 [inline]
+   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+   slab_free_hook mm/slub.c:1429 [inline]
+   slab_free_freelist_hook mm/slub.c:1456 [inline]
+   slab_free mm/slub.c:3003 [inline]
+   kfree+0xe1/0x270 mm/slub.c:3958
+   fm_drv_init+0x1e6/0x1000 [fm_drv]
+   do_one_initcall+0xbc/0x47d init/main.c:901
+   do_init_module+0x1b5/0x547 kernel/module.c:3456
+   load_module+0x6405/0x8c10 kernel/module.c:3804
+   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Add relevant unregister functions to fix it.
+
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/radio/wl128x/fmdrv_v4l2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-index 0488b8258321..ffc39a7e028d 100644
---- a/kernel/bpf/Makefile
-+++ b/kernel/bpf/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-y := core.o
-+CFLAGS_core.o += $(call cc-disable-warning, override-init)
+diff --git a/drivers/media/radio/wl128x/fmdrv_v4l2.c b/drivers/media/radio/wl128x/fmdrv_v4l2.c
+index dccdf6558e6a..33abc8616ecb 100644
+--- a/drivers/media/radio/wl128x/fmdrv_v4l2.c
++++ b/drivers/media/radio/wl128x/fmdrv_v4l2.c
+@@ -549,6 +549,7 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
  
- obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o helpers.o tnum.o
- obj-$(CONFIG_BPF_SYSCALL) += hashtab.o arraymap.o percpu_freelist.o bpf_lru_list.o lpm_trie.o map_in_map.o
+ 	/* Register with V4L2 subsystem as RADIO device */
+ 	if (video_register_device(&gradio_dev, VFL_TYPE_RADIO, radio_nr)) {
++		v4l2_device_unregister(&fmdev->v4l2_dev);
+ 		fmerr("Could not register video device\n");
+ 		return -ENOMEM;
+ 	}
+@@ -562,6 +563,8 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
+ 	if (ret < 0) {
+ 		fmerr("(fmdev): Can't init ctrl handler\n");
+ 		v4l2_ctrl_handler_free(&fmdev->ctrl_handler);
++		video_unregister_device(fmdev->radio_dev);
++		v4l2_device_unregister(&fmdev->v4l2_dev);
+ 		return -EBUSY;
+ 	}
+ 
 -- 
 2.20.1
 
