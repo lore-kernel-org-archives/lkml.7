@@ -2,198 +2,271 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D84C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4DFC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC7821850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2555D21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mvpW/OrV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ogZBgpU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbfGXWez (ORCPT
+        id S1729455AbfGXWfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:34:55 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39347 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbfGXWez (ORCPT
+        Wed, 24 Jul 2019 18:35:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36354 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfGXWfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:34:55 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u25so32590796wmc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UaaYQjOom/rBedcmfeqJ2SI1/RfkITskc6E8mQACYxM=;
-        b=mvpW/OrV5vZp7+uvzXd/fPQocMFHXoUGw2MBI+s4vyA0vP8Stum++rw4Frwd62MsWx
-         wwPUZAZwQub1YF+hOyMfdfTRT3cBjDSMkrdRa+0Xgg8DO3iNAo300TFZlh9/fxFV74z2
-         bz02tQaihF8DvvWtEvyr6zsPKr0dggJbnfPARqZU5xJp4ZinbSZYPUta0BoMwB0tF7Bw
-         36usvx4LTjvAyd+ANeqxSOkwQbvo6eHoWKtv/GHpr22vFojGBNzMCrQg5mW5ril2K7qV
-         VcnsqU/pz/MMuSGpK3wiKN4PrKy4kifnsIAcDQJGRsUwCfBbG6dUFkNBhu2jNTesysCH
-         lWxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UaaYQjOom/rBedcmfeqJ2SI1/RfkITskc6E8mQACYxM=;
-        b=kHCMwAiYWqincsP9jJo6ubxqujbV7Hqzu80VZcJFXtPsVQtlPT7ihdLSA5icudknQ0
-         obNs7PsHnxN+hDm8ZMhG9c27TkFEb4m4wUP42vwmeeB1perF+iTnqkWulBl2J762Q9WQ
-         sG9GvPUL2z94H3SmM748SaroCyDEn1i9c6zjRQzxKXlaBPmdD5wmSlVtoUk+JwVe8N/Z
-         LbhsT3K3eJ5y1qSGOSP8WKl1Q+gavkFu0G6uKFbXPZ6OZGfMSXAWQmWpZCZHd/vgQ8Bv
-         cTf3xHnPO50WOx+ExG4J53cCU2cucBOU3gD/9Mpn5OSd3NfC1iw7fMK2inEL8pU2JLtN
-         WLLA==
-X-Gm-Message-State: APjAAAX2tPSt0VV5Thd9s4H63eYIYWHoGlT/P0uzMgGa/P8zN/81wF9l
-        rIdHV1a0vrOMd5Of+lvWRzxBNNBbohEkAyRBuVuw1Q==
-X-Google-Smtp-Source: APXvYqw13DzvmJbH/WR3ahTOZdE6oV0KztUziVEs86+1CR7H5FOBEvnfnj/5DVLig0AOSbyiAZOkBhWtFiNn0dOy4Uk=
-X-Received: by 2002:a7b:c106:: with SMTP id w6mr80061933wmi.80.1564007692187;
- Wed, 24 Jul 2019 15:34:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190702065955.165738-1-irogers@google.com> <20190702065955.165738-4-irogers@google.com>
- <20190708163021.GG3419@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190708163021.GG3419@hirez.programming.kicks-ass.net>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 24 Jul 2019 15:34:40 -0700
-Message-ID: <CAP-5=fV4xmK=4ocyfzGzj5avGFZojZn-KXp9xDCATkiFLpCmcg@mail.gmail.com>
-Subject: Re: [PATCH 3/7] perf: order iterators for visit_groups_merge into a min-heap
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 24 Jul 2019 18:35:36 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OMYF5A084308;
+        Wed, 24 Jul 2019 22:35:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=r28z8MC+FBAjy3qs30Pzm+4vXP36lmFOt4duHG2H+q8=;
+ b=ogZBgpU9Dikvu0Xp6hQpACPjL3RUauMXt9dUN3sEovxdJ663/UPFt/zsNj+5V8e5o5zc
+ c+UiAf6a36VyVkQ63gc9z26UFddPly7/n8N1g89q44pxhqELv7y/k89ElUHeaiGM/2/i
+ fULWfumHwYB4VuqJuro9ostK6azHoqR4jGj0okgTowOewarpLU9ue0Y3qnKaDCQMqAw2
+ PuB6qhHhQAEKYm7yVJV4UbWUnWUNRkRLdY7uRIBeShRmBBXxVDoLjlFM7g922mZtDhPF
+ 4C0qeuAYfSTi7CpJwgV8+lTEim1cg5ueY59ssk+m436mxVGbePbKIlIvH+FA17iqCgh3 Lg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2tx61c05p8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 22:35:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OMWLsd036789;
+        Wed, 24 Jul 2019 22:33:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2tx60xys91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 22:33:30 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x6OMXTIB009759;
+        Wed, 24 Jul 2019 22:33:29 GMT
+Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 24 Jul 2019 15:33:29 -0700
+From:   Jane Chu <jane.chu@oracle.com>
+To:     n-horiguchi@ah.jp.nec.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-nvdimm@lists.01.org
+Subject: [PATCH v2 1/1] mm/memory-failure: Poison read receives SIGKILL instead of SIGBUS if mmaped more than once
+Date:   Wed, 24 Jul 2019 16:33:23 -0600
+Message-Id: <1564007603-9655-2-git-send-email-jane.chu@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1564007603-9655-1-git-send-email-jane.chu@oracle.com>
+References: <1564007603-9655-1-git-send-email-jane.chu@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1907240241
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1907240241
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 9:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Jul 01, 2019 at 11:59:51PM -0700, Ian Rogers wrote:
-> > The groups rbtree holding perf events, either for a CPU or a task, needs
-> > to have multiple iterators that visit events in group_index (insertion)
-> > order. Rather than linearly searching the iterators, use a min-heap to go
-> > from a O(#iterators) search to a O(log2(#iterators)) insert cost per event
-> > visited.
->
-> Is this actually faster for the common (very small n) case?
->
-> ISTR 'stupid' sorting algorithms are actually faster when the data fits
-> into L1
+Mmap /dev/dax more than once, then read the poison location using address
+from one of the mappings. The other mappings due to not having the page
+mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
+over SIGBUS, so user process looses the opportunity to handle the UE.
 
-A common case is for there to be 1 cgroup iterator, for which all the
-min_heapify calls will do no work as the event is always a leaf. It'd
-be expected a min-heap to be optimal for a large number of iterators.
-I'm not sure it is worth optimizing the space between small number of
-iterators and large number of iterators.
+Although one may add MAP_POPULATE to mmap(2) to work around the issue,
+MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
+isn't always an option.
 
-Thanks,
-Ian
+Details -
 
+ndctl inject-error --block=10 --count=1 namespace6.0
 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  kernel/events/core.c | 123 +++++++++++++++++++++++++++++++++----------
-> >  1 file changed, 95 insertions(+), 28 deletions(-)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 9a2ad34184b8..396b5ac6dcd4 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -3318,6 +3318,77 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
-> >       ctx_sched_out(&cpuctx->ctx, cpuctx, event_type);
-> >  }
-> >
-> > +/* Data structure used to hold a min-heap, ordered by group_index, of a fixed
-> > + * maximum size.
-> > + */
->
-> Broken comment style.
->
-> > +struct perf_event_heap {
-> > +     struct perf_event **storage;
-> > +     int num_elements;
-> > +     int max_elements;
-> > +};
-> > +
-> > +static void min_heap_swap(struct perf_event_heap *heap,
-> > +                       int pos1, int pos2)
-> > +{
-> > +     struct perf_event *tmp = heap->storage[pos1];
-> > +
-> > +     heap->storage[pos1] = heap->storage[pos2];
-> > +     heap->storage[pos2] = tmp;
-> > +}
-> > +
-> > +/* Sift the perf_event at pos down the heap. */
-> > +static void min_heapify(struct perf_event_heap *heap, int pos)
-> > +{
-> > +     int left_child, right_child;
-> > +
-> > +     while (pos > heap->num_elements / 2) {
-> > +             left_child = pos * 2;
-> > +             right_child = pos * 2 + 1;
-> > +             if (heap->storage[pos]->group_index >
-> > +                 heap->storage[left_child]->group_index) {
-> > +                     min_heap_swap(heap, pos, left_child);
-> > +                     pos = left_child;
-> > +             } else if (heap->storage[pos]->group_index >
-> > +                        heap->storage[right_child]->group_index) {
-> > +                     min_heap_swap(heap, pos, right_child);
-> > +                     pos = right_child;
-> > +             } else {
-> > +                     break;
-> > +             }
-> > +     }
-> > +}
-> > +
-> > +/* Floyd's approach to heapification that is O(n). */
-> > +static void min_heapify_all(struct perf_event_heap *heap)
-> > +{
-> > +     int i;
-> > +
-> > +     for (i = heap->num_elements / 2; i > 0; i--)
-> > +             min_heapify(heap, i);
-> > +}
-> > +
-> > +/* Remove minimum element from the heap. */
-> > +static void min_heap_pop(struct perf_event_heap *heap)
-> > +{
-> > +     WARN_ONCE(heap->num_elements <= 0, "Popping an empty heap");
-> > +     heap->num_elements--;
-> > +     heap->storage[0] = heap->storage[heap->num_elements];
-> > +     min_heapify(heap, 0);
-> > +}
->
-> Is this really the first heap implementation in the kernel?
->
-> > @@ -3378,12 +3453,14 @@ static int visit_groups_merge(struct perf_event_context *ctx,
-> >                       struct cgroup_subsys_state *css;
-> >
-> >                       for (css = &cpuctx->cgrp->css; css; css = css->parent) {
-> > -                             itrs[num_itrs] = perf_event_groups_first(groups,
-> > +                             heap.storage[heap.num_elements] =
-> > +                                             perf_event_groups_first(groups,
-> >                                                                  cpu,
-> >                                                                  css->cgroup);
-> > -                             if (itrs[num_itrs]) {
-> > -                                     num_itrs++;
-> > -                                     if (num_itrs == max_itrs) {
-> > +                             if (heap.storage[heap.num_elements]) {
-> > +                                     heap.num_elements++;
-> > +                                     if (heap.num_elements ==
-> > +                                         heap.max_elements) {
-> >                                               WARN_ONCE(
-> >                                    max_cgroups_with_events_depth,
-> >                                    "Insufficient iterators for cgroup depth");
->
-> That's turning into unreadable garbage due to indentation; surely
-> there's a solution for that.
+./read_poison -x dax6.0 -o 5120 -m 2
+mmaped address 0x7f5bb6600000
+mmaped address 0x7f3cf3600000
+doing local read at address 0x7f3cf3601400
+Killed
+
+Console messages in instrumented kernel -
+
+mce: Uncorrected hardware memory error in user-access at edbe201400
+Memory failure: tk->addr = 7f5bb6601000
+Memory failure: address edbe201: call dev_pagemap_mapping_shift
+dev_pagemap_mapping_shift: page edbe201: no PUD
+Memory failure: tk->size_shift == 0
+Memory failure: Unable to find user space address edbe201 in read_poison
+Memory failure: tk->addr = 7f3cf3601000
+Memory failure: address edbe201: call dev_pagemap_mapping_shift
+Memory failure: tk->size_shift = 21
+Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
+  => to deliver SIGKILL
+Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
+  => to deliver SIGBUS
+
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+Suggested-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+---
+ mm/memory-failure.c | 62 ++++++++++++++++++++++-------------------------------
+ 1 file changed, 26 insertions(+), 36 deletions(-)
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index d9cc660..bd4db33 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -199,7 +199,6 @@ struct to_kill {
+ 	struct task_struct *tsk;
+ 	unsigned long addr;
+ 	short size_shift;
+-	char addr_valid;
+ };
+ 
+ /*
+@@ -304,43 +303,43 @@ static unsigned long dev_pagemap_mapping_shift(struct page *page,
+ /*
+  * Schedule a process for later kill.
+  * Uses GFP_ATOMIC allocations to avoid potential recursions in the VM.
+- * TBD would GFP_NOIO be enough?
+  */
+ static void add_to_kill(struct task_struct *tsk, struct page *p,
+ 		       struct vm_area_struct *vma,
+-		       struct list_head *to_kill,
+-		       struct to_kill **tkc)
++		       struct list_head *to_kill)
+ {
+ 	struct to_kill *tk;
+ 
+-	if (*tkc) {
+-		tk = *tkc;
+-		*tkc = NULL;
+-	} else {
+-		tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
+-		if (!tk) {
+-			pr_err("Memory failure: Out of memory while machine check handling\n");
+-			return;
+-		}
++	tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
++	if (!tk) {
++		pr_err("Memory failure: Out of memory while machine check handling\n");
++		return;
+ 	}
++
+ 	tk->addr = page_address_in_vma(p, vma);
+-	tk->addr_valid = 1;
+ 	if (is_zone_device_page(p))
+ 		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+ 	else
+ 		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+ 
+ 	/*
+-	 * In theory we don't have to kill when the page was
+-	 * munmaped. But it could be also a mremap. Since that's
+-	 * likely very rare kill anyways just out of paranoia, but use
+-	 * a SIGKILL because the error is not contained anymore.
++	 * Send SIGKILL if "tk->addr == -EFAULT". Also, as
++	 * "tk->size_shift" is always non-zero for !is_zone_device_page(),
++	 * so "tk->size_shift == 0" effectively checks no mapping on
++	 * ZONE_DEVICE. Indeed, when a devdax page is mmapped N times
++	 * to a process' address space, it's possible not all N VMAs
++	 * contain mappings for the page, but at least one VMA does.
++	 * Only deliver SIGBUS with payload derived from the VMA that
++	 * has a mapping for the page.
+ 	 */
+-	if (tk->addr == -EFAULT || tk->size_shift == 0) {
++	if (tk->addr == -EFAULT) {
+ 		pr_info("Memory failure: Unable to find user space address %lx in %s\n",
+ 			page_to_pfn(p), tsk->comm);
+-		tk->addr_valid = 0;
++	} else if (tk->size_shift == 0) {
++		kfree(tk);
++		return;
+ 	}
++
+ 	get_task_struct(tsk);
+ 	tk->tsk = tsk;
+ 	list_add_tail(&tk->nd, to_kill);
+@@ -366,7 +365,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill, bool fail,
+ 			 * make sure the process doesn't catch the
+ 			 * signal and then access the memory. Just kill it.
+ 			 */
+-			if (fail || tk->addr_valid == 0) {
++			if (fail || tk->addr == -EFAULT) {
+ 				pr_err("Memory failure: %#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
+ 				       pfn, tk->tsk->comm, tk->tsk->pid);
+ 				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
+@@ -432,7 +431,7 @@ static struct task_struct *task_early_kill(struct task_struct *tsk,
+  * Collect processes when the error hit an anonymous page.
+  */
+ static void collect_procs_anon(struct page *page, struct list_head *to_kill,
+-			      struct to_kill **tkc, int force_early)
++				int force_early)
+ {
+ 	struct vm_area_struct *vma;
+ 	struct task_struct *tsk;
+@@ -457,7 +456,7 @@ static void collect_procs_anon(struct page *page, struct list_head *to_kill,
+ 			if (!page_mapped_in_vma(page, vma))
+ 				continue;
+ 			if (vma->vm_mm == t->mm)
+-				add_to_kill(t, page, vma, to_kill, tkc);
++				add_to_kill(t, page, vma, to_kill);
+ 		}
+ 	}
+ 	read_unlock(&tasklist_lock);
+@@ -468,7 +467,7 @@ static void collect_procs_anon(struct page *page, struct list_head *to_kill,
+  * Collect processes when the error hit a file mapped page.
+  */
+ static void collect_procs_file(struct page *page, struct list_head *to_kill,
+-			      struct to_kill **tkc, int force_early)
++				int force_early)
+ {
+ 	struct vm_area_struct *vma;
+ 	struct task_struct *tsk;
+@@ -492,7 +491,7 @@ static void collect_procs_file(struct page *page, struct list_head *to_kill,
+ 			 * to be informed of all such data corruptions.
+ 			 */
+ 			if (vma->vm_mm == t->mm)
+-				add_to_kill(t, page, vma, to_kill, tkc);
++				add_to_kill(t, page, vma, to_kill);
+ 		}
+ 	}
+ 	read_unlock(&tasklist_lock);
+@@ -501,26 +500,17 @@ static void collect_procs_file(struct page *page, struct list_head *to_kill,
+ 
+ /*
+  * Collect the processes who have the corrupted page mapped to kill.
+- * This is done in two steps for locking reasons.
+- * First preallocate one tokill structure outside the spin locks,
+- * so that we can kill at least one process reasonably reliable.
+  */
+ static void collect_procs(struct page *page, struct list_head *tokill,
+ 				int force_early)
+ {
+-	struct to_kill *tk;
+-
+ 	if (!page->mapping)
+ 		return;
+ 
+-	tk = kmalloc(sizeof(struct to_kill), GFP_NOIO);
+-	if (!tk)
+-		return;
+ 	if (PageAnon(page))
+-		collect_procs_anon(page, tokill, &tk, force_early);
++		collect_procs_anon(page, tokill, force_early);
+ 	else
+-		collect_procs_file(page, tokill, &tk, force_early);
+-	kfree(tk);
++		collect_procs_file(page, tokill, force_early);
+ }
+ 
+ static const char *action_name[] = {
+-- 
+1.8.3.1
+
