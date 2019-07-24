@@ -2,52 +2,52 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDC1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD1DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E4E22C97
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6457922ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998342;
-	bh=H0O5cm5UBcai8xG9md4SjBkoFGGKexpbFnby6BmK+gs=;
+	s=default; t=1563998346;
+	bh=c/YUiKX7SRfLLU+Th0LnAaFxq3iMI4jBQ6r9jQYjmKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/AymO4XgesGi1pxic39uoZBXCLwef0lqyqxLNWkhBjIpnQZyJc9EvZ4Ho7VdfQKP
-	 pqPIIBi39zPCtA7tok2tikQScuu921GJD3BsqteoGDvs88jU0btf/GyFLGVX7urcb5
-	 4lLWYOYyx4SZuKq2C/d0wUXT4EX21Rqktq07iKWM=
+	b=f9gMpz43UB3Z3t7i9NwkyqN2dq4FCBvOeuhNeV1sBlDv93TgZXGDAzgAuD1X/AOUh
+	 Cyjp5b3aouX5qOxTg8Z6cRTFpdza1WPXPfawe5rWTak7pF3NM7mCgVYnnmF/ENQ0ys
+	 Dvmn0sKUqliRcza47YGXAXEOovb5HrpQkn8XWB4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405110AbfGXT7B (ORCPT
+        id S2405127AbfGXT7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45948 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:59:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404346AbfGXT66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:58 -0400
+        id S2405070AbfGXT7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:59:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99A3820665;
-        Wed, 24 Jul 2019 19:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE2C20665;
+        Wed, 24 Jul 2019 19:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998337;
-        bh=H0O5cm5UBcai8xG9md4SjBkoFGGKexpbFnby6BmK+gs=;
+        s=default; t=1563998339;
+        bh=c/YUiKX7SRfLLU+Th0LnAaFxq3iMI4jBQ6r9jQYjmKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GW8e9jQBQouLQDvAkYzTHgY3uYTWS80APP/52Uxd/VzkepHicvEfZsDKUIiW/jlMW
-         M1E+OWQCuGT4ulfyaAbgSLEKCqIfckv+QwUgnQ7zWRCnkcwKzvgcDkhLRQ0KEyGyHw
-         DKj7F9OXCoX70Y8wfDjootcyOni+RfNJhxE5TYzI=
+        b=QpgiU/Nqr2F64T3jo3LgfNPg8IF5bCW/tZaXdEBLHYCmL+MU1by9MJOoF0aLkuci/
+         JTRMDrctY70cEJC501dh6VqTedVUHqbtP1PtWPzcpPh3stf9df6R1n66vMAf8Ta6lS
+         dl+SQZwesj0Lgdeg7k+QFspOTpNVVfO5cSA62f2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.1 329/371] intel_th: pci: Add Ice Lake NNPI support
-Date:   Wed, 24 Jul 2019 21:21:21 +0200
-Message-Id: <20190724191748.573255382@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH 5.1 330/371] PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
+Date:   Wed, 24 Jul 2019 21:21:22 +0200
+Message-Id: <20190724191748.636054199@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,35 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit 4aa5aed2b6f267592705a526f57518a5d715b769 upstream.
+commit 4df591b20b80cb77920953812d894db259d85bd7 upstream.
 
-This adds Ice Lake NNPI support to the Intel(R) Trace Hub.
+Fix a use-after-free in hv_eject_device_work().
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190621161930.60785-5-alexander.shishkin@linux.intel.com
+Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/controller/pci-hyperv.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -170,6 +170,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x02a6),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Ice Lake NNPI */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x45c5),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{ 0 },
- };
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1875,6 +1875,7 @@ static void hv_pci_devices_present(struc
+ static void hv_eject_device_work(struct work_struct *work)
+ {
+ 	struct pci_eject_response *ejct_pkt;
++	struct hv_pcibus_device *hbus;
+ 	struct hv_pci_dev *hpdev;
+ 	struct pci_dev *pdev;
+ 	unsigned long flags;
+@@ -1885,6 +1886,7 @@ static void hv_eject_device_work(struct
+ 	} ctxt;
  
+ 	hpdev = container_of(work, struct hv_pci_dev, wrk);
++	hbus = hpdev->hbus;
+ 
+ 	WARN_ON(hpdev->state != hv_pcichild_ejecting);
+ 
+@@ -1895,8 +1897,7 @@ static void hv_eject_device_work(struct
+ 	 * because hbus->pci_bus may not exist yet.
+ 	 */
+ 	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
+-	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
+-					   wslot);
++	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
+ 	if (pdev) {
+ 		pci_lock_rescan_remove();
+ 		pci_stop_and_remove_bus_device(pdev);
+@@ -1904,9 +1905,9 @@ static void hv_eject_device_work(struct
+ 		pci_unlock_rescan_remove();
+ 	}
+ 
+-	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
++	spin_lock_irqsave(&hbus->device_list_lock, flags);
+ 	list_del(&hpdev->list_entry);
+-	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
++	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
+ 
+ 	if (hpdev->pci_slot)
+ 		pci_destroy_slot(hpdev->pci_slot);
+@@ -1915,7 +1916,7 @@ static void hv_eject_device_work(struct
+ 	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+-	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
++	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+ 			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
+ 			 VM_PKT_DATA_INBAND, 0);
+ 
+@@ -1924,7 +1925,9 @@ static void hv_eject_device_work(struct
+ 	/* For the two refs got in new_pcichild_device() */
+ 	put_pcichild(hpdev);
+ 	put_pcichild(hpdev);
+-	put_hvpcibus(hpdev->hbus);
++	/* hpdev has been freed. Do not use it any more. */
++
++	put_hvpcibus(hbus);
+ }
+ 
+ /**
 
 
