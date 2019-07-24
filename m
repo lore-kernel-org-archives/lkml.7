@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4170DC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E94C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA98204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B48204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033887;
-	bh=IEE+22g5OQ2To3AmLiJfIHdoE2uP0WmmHaHP3ulGDuo=;
+	s=default; t=1564033901;
+	bh=/Z1JG1CgMbXyebsNhIXnAAwZjK7cVjPn0fbsyiMJm34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wql6NGDnTNupio9HWBw33am7WHdczc3cMcAKYA4TiS8L29YQucywfGSHsXuob4EMZ
-	 BOgyoU67AeIoY5NXS9vsxcqOsQUdaAmjQ17JPIbqQgGixlzpKnBIzvtsCphG6CII+v
-	 tcz04oV4uGXXb69XP1ES/5IALvTlKAfVevniEMvM=
+	b=TC66L0PVNB2ufTVEiVoA0DNkAWDZvo0d6I0X8W9onH8ypM05Nj1swj2eBDMa1xSMv
+	 vDowd3lGhPAeK0gWVXgXg/ZT0EaFTtrCkwuqdbOLp8v/82N5pJhwgsXmicGT18ht1P
+	 rdQZsT3RymOUYQ103d0UW5kCUiKYELPoztc7L0Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404639AbfGYFl0 (ORCPT
+        id S1727624AbfGYFvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:41:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404617AbfGYFlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:41:24 -0400
+        id S2390767AbfGYFlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:41:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C3E82054F;
-        Thu, 25 Jul 2019 05:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31BF322C7C;
+        Thu, 25 Jul 2019 05:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033282;
-        bh=IEE+22g5OQ2To3AmLiJfIHdoE2uP0WmmHaHP3ulGDuo=;
+        s=default; t=1564033260;
+        bh=/Z1JG1CgMbXyebsNhIXnAAwZjK7cVjPn0fbsyiMJm34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kw1AKDpZV6Zrq10JHTLuUr+FTIHVc6tHL/YB7sceW1ArGEmL7+SjGJjwLpWxFk30v
-         mmYsllblePBZqbo/IySVSsypbi+DlpiRqZ+DT2kwzEwmmiZOX8kZZAEas7Mmenxm4c
-         Vm6pB0TkK5YeU/TvuSAf8T+CEFR7+I++F4uFVGTI=
+        b=y7Fb6ZpUFfK+A8Ts7n22rFZk9R/ByhW9zFz+S424iOnrpy73eSYXBxQtwRXEJndry
+         3Bajmlx+otWzf5U+JHHXFSYtRByCU/lChEZkzmARSaWd19sIz6ebdlk/7EyNPzkYed
+         X0sG4OIjfV4fW0YUQ2DOsstC++k6LJjVzGVQ+Ht0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 154/271] gtp: fix suspicious RCU usage
-Date:   Wed, 24 Jul 2019 21:20:23 +0200
-Message-Id: <20190724191708.397340523@linuxfoundation.org>
+Subject: [PATCH 4.19 148/271] Bluetooth: Add new 13d3:3501 QCA_ROME device
+Date:   Wed, 24 Jul 2019 21:20:17 +0200
+Message-Id: <20190724191707.862143519@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,90 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e198987e7dd7d3645a53875151cd6f8fc425b706 ]
+[ Upstream commit 881cec4f6b4da78e54b73c046a60f39315964c7d ]
 
-gtp_encap_enable_socket() and gtp_encap_destroy() are not protected
-by rcu_read_lock(). and it's not safe to write sk->sk_user_data.
-This patch make these functions to use lock_sock() instead of
-rcu_dereference_sk_user_data().
+Without the QCA ROME setup routine this adapter fails to establish a SCO
+connection.
 
-Test commands:
-    gtp-link add gtp1
+T:  Bus=01 Lev=01 Prnt=01 Port=04 Cnt=01 Dev#=  2 Spd=12  MxCh= 0
+D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=13d3 ProdID=3501 Rev=00.01
+C:  #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
+I:  If#=0x0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
 
-Splat looks like:
-[   83.238315] =============================
-[   83.239127] WARNING: suspicious RCU usage
-[   83.239702] 5.2.0-rc6+ #49 Not tainted
-[   83.240268] -----------------------------
-[   83.241205] drivers/net/gtp.c:799 suspicious rcu_dereference_check() usage!
-[   83.243828]
-[   83.243828] other info that might help us debug this:
-[   83.243828]
-[   83.246325]
-[   83.246325] rcu_scheduler_active = 2, debug_locks = 1
-[   83.247314] 1 lock held by gtp-link/1008:
-[   83.248523]  #0: 0000000017772c7f (rtnl_mutex){+.+.}, at: __rtnl_newlink+0x5f5/0x11b0
-[   83.251503]
-[   83.251503] stack backtrace:
-[   83.252173] CPU: 0 PID: 1008 Comm: gtp-link Not tainted 5.2.0-rc6+ #49
-[   83.253271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   83.254562] Call Trace:
-[   83.254995]  dump_stack+0x7c/0xbb
-[   83.255567]  gtp_encap_enable_socket+0x2df/0x360 [gtp]
-[   83.256415]  ? gtp_find_dev+0x1a0/0x1a0 [gtp]
-[   83.257161]  ? memset+0x1f/0x40
-[   83.257843]  gtp_newlink+0x90/0xa21 [gtp]
-[   83.258497]  ? __netlink_ns_capable+0xc3/0xf0
-[   83.259260]  __rtnl_newlink+0xb9f/0x11b0
-[   83.260022]  ? rtnl_link_unregister+0x230/0x230
-[ ... ]
-
-Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/bluetooth/btusb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 83488f2bf7a0..f45a806b6c06 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -293,12 +293,14 @@ static void gtp_encap_destroy(struct sock *sk)
- {
- 	struct gtp_dev *gtp;
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index f494fa30a912..75cf605f54e5 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -279,6 +279,7 @@ static const struct usb_device_id blacklist_table[] = {
+ 	{ USB_DEVICE(0x04ca, 0x301a), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x13d3, 0x3491), .driver_info = BTUSB_QCA_ROME },
+ 	{ USB_DEVICE(0x13d3, 0x3496), .driver_info = BTUSB_QCA_ROME },
++	{ USB_DEVICE(0x13d3, 0x3501), .driver_info = BTUSB_QCA_ROME },
  
--	gtp = rcu_dereference_sk_user_data(sk);
-+	lock_sock(sk);
-+	gtp = sk->sk_user_data;
- 	if (gtp) {
- 		udp_sk(sk)->encap_type = 0;
- 		rcu_assign_sk_user_data(sk, NULL);
- 		sock_put(sk);
- 	}
-+	release_sock(sk);
- }
- 
- static void gtp_encap_disable_sock(struct sock *sk)
-@@ -800,7 +802,8 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 		goto out_sock;
- 	}
- 
--	if (rcu_dereference_sk_user_data(sock->sk)) {
-+	lock_sock(sock->sk);
-+	if (sock->sk->sk_user_data) {
- 		sk = ERR_PTR(-EBUSY);
- 		goto out_sock;
- 	}
-@@ -816,6 +819,7 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
- 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
- 
- out_sock:
-+	release_sock(sock->sk);
- 	sockfd_put(sock);
- 	return sk;
- }
+ 	/* Broadcom BCM2035 */
+ 	{ USB_DEVICE(0x0a5c, 0x2009), .driver_info = BTUSB_BCM92035 },
 -- 
 2.20.1
 
