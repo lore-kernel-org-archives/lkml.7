@@ -2,95 +2,86 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF75C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61957C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6410222387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2965722387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="P/Uz1vqQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JsE/PZjj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V4goodYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfGXLsn (ORCPT
+        id S1727959AbfGXLtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:48:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42517 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbfGXLsn (ORCPT
+        Wed, 24 Jul 2019 07:49:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51112 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727570AbfGXLtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:48:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x1so31653613wrr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 04:48:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6ja8qOZBd/+yPpakrfgGOO9Lsjgvj3+ENbjktOu7PQg=;
-        b=P/Uz1vqQq8oTd7cuw88+8LKg4UMpx/GPMqE8FjyIKrALHxccYwxrrS5IA0bnYBWN2z
-         AiPq/PW8v6DI6Rj+Fta0BYE0v7+XUbhdpjc3/s3kijRktL+u6AdV6STGtga6cTCBSiqt
-         k2V2MxsWYugo60P9luWE+sT/58/mo9CpZx1it+vKxBV5qljjcO6F+gIKzTGPCHqa+R/U
-         ga2kJT5ZpI6bXSb6sUsAROUihfuMumxnDD+RA3pNVCZqpMso+DHB/NIIrH3AM4EvcIKX
-         8nqTtsWPpihGh7iIzDYcoCGE1273gk6xYTy865HsxclPsMHiYhBEZUqE6/SwHX+oDrZ6
-         UjFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6ja8qOZBd/+yPpakrfgGOO9Lsjgvj3+ENbjktOu7PQg=;
-        b=bhZkI+ZNGqyf8IAg43x74vfmPKR4AKeBchnrlx1qOhi3CKWYP8JyjVAbjUku+MGZ7b
-         U/bYowKzHRzM/XCJdGuarMaDbDKKCUkOxegj+Tu3KchL8EP7fEkwcxR3mablTcfnRMFr
-         /CPZ1hVWdgiZXvSj6+rNYTQ47I4kB/GuhFXcfsBoi06yPqUu6J2UB5i6glxH+E4t7dg2
-         Y6z/AAz3mzRmpfn9PEeT6y0mrob2hYRlc0SPeCAnIPYLO7TgoPagbVNpQsVEJwt2aQJw
-         vP53DnMMsvFLp2y8ne8xL4oxRKu+LMABjwAjxw4o4kmDRaeoQez7mUtFUOfKQZUeisBK
-         tMig==
-X-Gm-Message-State: APjAAAV3tAAse4ct2H1vpa9r8MnVuQUNkuBms5u5sAxGd4CenJLx5seu
-        HRBT0l505rkzO+rsjvogLa5wjQ==
-X-Google-Smtp-Source: APXvYqxtbimswj1+iqEbPXS+959hF1x39IRwg6ckgQ3h6RiygXt2444TSZdS5jTfDlL37IKCtELZKw==
-X-Received: by 2002:adf:e883:: with SMTP id d3mr91261045wrm.330.1563968921330;
-        Wed, 24 Jul 2019 04:48:41 -0700 (PDT)
-Received: from localhost (static.20.139.203.116.clients.your-server.de. [116.203.139.20])
-        by smtp.gmail.com with ESMTPSA id g11sm46247726wru.24.2019.07.24.04.48.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 04:48:40 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 13:48:39 +0200
-From:   Roland Kammerer <roland.kammerer@linbit.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
-        axboe@kernel.dk, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: Re: [PATCH 1/2] block: drbd: Fix a possible null-pointer dereference
- in receive_protocol()
-Message-ID: <20190724114839.fl3ldycrn3zwfgaw@rck.sh>
-References: <20190724034916.28703-1-baijiaju1990@gmail.com>
+        Wed, 24 Jul 2019 07:49:09 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7B2AC60588; Wed, 24 Jul 2019 11:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563968948;
+        bh=42X7y5jJNRiCroR9vcblJwiwKYId8aMdP1NkVM2G/cM=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=JsE/PZjj9TT6KMcugkuWN6Nr8E417u6Fbi6WoOdVmjvjmukRM2UZAhsuNftLoS26X
+         UJGwi4TxWK7YNaDJ7lJkmFT5nZ5GcOxrEYwbzdOuECTOYCiTlQ2XusKlS/WG7uhIxv
+         jE5O/mROSYw+0E7ofq1IesYuYJLn6XL1AK6FHVz0=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B27D26044E;
+        Wed, 24 Jul 2019 11:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563968946;
+        bh=42X7y5jJNRiCroR9vcblJwiwKYId8aMdP1NkVM2G/cM=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=V4goodYFjZUkBLLOfZJnbzqps9+Gv5bQrb3NHB0izq8zXvcrYQ8MPqzowV6xYho/V
+         cz2lb44YHCgoXnIbwMHfGlea8l2lHRNzEaFCE4d937M/1m/qRZI7FTgqrC4xwB9M6H
+         PjIqNclMdJdc4hCuz6afAyPAxPGwGZugbcd1JTFM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B27D26044E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724034916.28703-1-baijiaju1990@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] libertas: Add missing sentinel at end of if_usb.c fw_table
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190710133138.GA31901@ip-172-31-14-16>
+References: <20190710133138.GA31901@ip-172-31-14-16>
+To:     Kevin Easton <kevin@guarana.org>
+Cc:     linux-wireless@vger.kernel.org, andreyknvl@google.com,
+        davem@davemloft.net, libertas-dev@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        syzbot <syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com>,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190724114908.7B2AC60588@smtp.codeaurora.org>
+Date:   Wed, 24 Jul 2019 11:49:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:49:16AM +0800, Jia-Ju Bai wrote:
-> In receive_protocol(), when crypto_alloc_shash() on line 3754 fails,
-> peer_integrity_tfm is NULL, and error handling code is executed.
-> In this code, crypto_free_shash() is called with NULL, which can cause a
-> null-pointer dereference, because:
-> crypto_free_shash(NULL)
->     crypto_ahash_tfm(NULL)
->         "return &NULL->base"
-> 
-> To fix this bug, peer_integrity_tfm is checked before calling
-> crypto_free_shash().
-> 
-> This bug is found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Kevin Easton <kevin@guarana.org> wrote:
 
-Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
+> This sentinel tells the firmware loading process when to stop.
+> 
+> Reported-and-tested-by: syzbot+98156c174c5a2cad9f8f@syzkaller.appspotmail.com
+> Signed-off-by: Kevin Easton <kevin@guarana.org>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+764f3f1ecffc libertas: Add missing sentinel at end of if_usb.c fw_table
+
+-- 
+https://patchwork.kernel.org/patch/11038493/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
