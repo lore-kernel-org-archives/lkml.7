@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204F0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3EB20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E681F20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998130;
-	bh=BZ03rb4wgKDrHSygldFT+3+zsCVRtCg95khI63e01/c=;
+	s=default; t=1563998134;
+	bh=IEE+22g5OQ2To3AmLiJfIHdoE2uP0WmmHaHP3ulGDuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hXeXey+sCdGPdPDES8nJ+rr6+W9ydVsnPKIqc+b1BdIsC+k2koyi+BMQiaEQ8bvAh
-	 euUhK0Fm2ca1pbK/KCKcvmAdF4jVvdFxN0+3r9ZJGHYTPu41ylf5T5PNgkRr57Y4f8
-	 jXqFRBhjPXfCgwbF9fa31sJG1aARIKJRCT8rIqlI=
+	b=sOkuxhSK8MdCUakEe2sPYIBPNYT/p/OTvyyfNPZV2GssMac3rwUz+iVQEGND1Ci+s
+	 HvL93j4v6Av+3r7OA2J12ro0L/DKxZdySb7QqJgDKUezYjtK8sJl4G0f/VAQqu4hAR
+	 D/tW7OPdrClsFEQOPyLPQRIQPN/+yr9Jrw+g+UZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391969AbfGXTz1 (ORCPT
+        id S2404520AbfGXTzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35788 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391885AbfGXTxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:53:25 -0400
+        id S2404065AbfGXTza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D26205C9;
-        Wed, 24 Jul 2019 19:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61DAA20665;
+        Wed, 24 Jul 2019 19:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998004;
-        bh=BZ03rb4wgKDrHSygldFT+3+zsCVRtCg95khI63e01/c=;
+        s=default; t=1563998128;
+        bh=IEE+22g5OQ2To3AmLiJfIHdoE2uP0WmmHaHP3ulGDuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yVZqZjG2q+4cB0FDKSwrPIOeQlUy5fV3FeC/GGnLvkAKkPClCt0d41kOKeUCBG4zO
-         cinTrhTQ0GiysReq8+2EM+jOUESKbM1NsROxnQWh2UAxASmSkaHEpKbM+YnUcK3BSc
-         +zB+DT2A3Ug/04e/cLvX+SMg78KEiO0VAzHmfrIo=
+        b=ieUBMYCKW3p1ijP76E6/e/deYI5FwcpexjKlqMrMkctxBF95rYc7rGnMmhcindkeU
+         6WniU6izWxNUJ5UGvo3epVacTvqACCZWt5nFZZFOsYZb9bjYTNnYdqYQHHVv9i2oNv
+         xvmopYYzAnkXKRaQOnyNQMi09oqTe0jmB8We3/Zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Michael Scott <mike@foundries.io>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 207/371] Bluetooth: 6lowpan: search for destination address in all peers
-Date:   Wed, 24 Jul 2019 21:19:19 +0200
-Message-Id: <20190724191740.160077036@linuxfoundation.org>
+Subject: [PATCH 5.1 214/371] gtp: fix suspicious RCU usage
+Date:   Wed, 24 Jul 2019 21:19:26 +0200
+Message-Id: <20190724191740.660928847@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,55 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b188b03270b7f8568fc714101ce82fbf5e811c5a ]
+[ Upstream commit e198987e7dd7d3645a53875151cd6f8fc425b706 ]
 
-Handle overlooked case where the target address is assigned to a peer
-and neither route nor gateway exist.
+gtp_encap_enable_socket() and gtp_encap_destroy() are not protected
+by rcu_read_lock(). and it's not safe to write sk->sk_user_data.
+This patch make these functions to use lock_sock() instead of
+rcu_dereference_sk_user_data().
 
-For one peer, no checks are performed to see if it is meant to receive
-packets for a given address.
+Test commands:
+    gtp-link add gtp1
 
-As soon as there is a second peer however, checks are performed
-to deal with routes and gateways for handling complex setups with
-multiple hops to a target address.
-This logic assumed that no route and no gateway imply that the
-destination address can not be reached, which is false in case of a
-direct peer.
+Splat looks like:
+[   83.238315] =============================
+[   83.239127] WARNING: suspicious RCU usage
+[   83.239702] 5.2.0-rc6+ #49 Not tainted
+[   83.240268] -----------------------------
+[   83.241205] drivers/net/gtp.c:799 suspicious rcu_dereference_check() usage!
+[   83.243828]
+[   83.243828] other info that might help us debug this:
+[   83.243828]
+[   83.246325]
+[   83.246325] rcu_scheduler_active = 2, debug_locks = 1
+[   83.247314] 1 lock held by gtp-link/1008:
+[   83.248523]  #0: 0000000017772c7f (rtnl_mutex){+.+.}, at: __rtnl_newlink+0x5f5/0x11b0
+[   83.251503]
+[   83.251503] stack backtrace:
+[   83.252173] CPU: 0 PID: 1008 Comm: gtp-link Not tainted 5.2.0-rc6+ #49
+[   83.253271] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   83.254562] Call Trace:
+[   83.254995]  dump_stack+0x7c/0xbb
+[   83.255567]  gtp_encap_enable_socket+0x2df/0x360 [gtp]
+[   83.256415]  ? gtp_find_dev+0x1a0/0x1a0 [gtp]
+[   83.257161]  ? memset+0x1f/0x40
+[   83.257843]  gtp_newlink+0x90/0xa21 [gtp]
+[   83.258497]  ? __netlink_ns_capable+0xc3/0xf0
+[   83.259260]  __rtnl_newlink+0xb9f/0x11b0
+[   83.260022]  ? rtnl_link_unregister+0x230/0x230
+[ ... ]
 
-Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
-Tested-by: Michael Scott <mike@foundries.io>
-Signed-off-by: Josua Mayer <josua.mayer@jm0.eu>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 1e3a3abd8b28 ("gtp: make GTP sockets in gtp_newlink optional")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/6lowpan.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/gtp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-index a7cd23f00bde..50530561da98 100644
---- a/net/bluetooth/6lowpan.c
-+++ b/net/bluetooth/6lowpan.c
-@@ -187,10 +187,16 @@ static inline struct lowpan_peer *peer_lookup_dst(struct lowpan_btle_dev *dev,
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 83488f2bf7a0..f45a806b6c06 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -293,12 +293,14 @@ static void gtp_encap_destroy(struct sock *sk)
+ {
+ 	struct gtp_dev *gtp;
+ 
+-	gtp = rcu_dereference_sk_user_data(sk);
++	lock_sock(sk);
++	gtp = sk->sk_user_data;
+ 	if (gtp) {
+ 		udp_sk(sk)->encap_type = 0;
+ 		rcu_assign_sk_user_data(sk, NULL);
+ 		sock_put(sk);
+ 	}
++	release_sock(sk);
+ }
+ 
+ static void gtp_encap_disable_sock(struct sock *sk)
+@@ -800,7 +802,8 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 		goto out_sock;
  	}
  
- 	if (!rt) {
--		nexthop = &lowpan_cb(skb)->gw;
--
--		if (ipv6_addr_any(nexthop))
--			return NULL;
-+		if (ipv6_addr_any(&lowpan_cb(skb)->gw)) {
-+			/* There is neither route nor gateway,
-+			 * probably the destination is a direct peer.
-+			 */
-+			nexthop = daddr;
-+		} else {
-+			/* There is a known gateway
-+			 */
-+			nexthop = &lowpan_cb(skb)->gw;
-+		}
- 	} else {
- 		nexthop = rt6_nexthop(rt, daddr);
+-	if (rcu_dereference_sk_user_data(sock->sk)) {
++	lock_sock(sock->sk);
++	if (sock->sk->sk_user_data) {
+ 		sk = ERR_PTR(-EBUSY);
+ 		goto out_sock;
+ 	}
+@@ -816,6 +819,7 @@ static struct sock *gtp_encap_enable_socket(int fd, int type,
+ 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
  
+ out_sock:
++	release_sock(sock->sk);
+ 	sockfd_put(sock);
+ 	return sk;
+ }
 -- 
 2.20.1
 
