@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86A4C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1E0C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916D522BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FB022BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033553;
-	bh=pSryTvXNuUCi9g6Q9rMqN8+KiH/rNRnTJxRRJ5VIlv0=;
+	s=default; t=1564033558;
+	bh=J7andB2/FvMjqKSofEQTJjA8xw4+etPlg/dUUrjmMiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tCWVYckov/usBZcFLN0WGl9t3O0CdRuFFuIAEoHE4+4kPJUikXg2PTAoxp5qN0ZQt
-	 Loq7yJLV0VuppcyV3Btfgi7NFjXpiQIqhhjs2VyEEh36PxpER5DyDevD7d5QIRJoo+
-	 xifXhGU+Epyr74q1icw+MQRYv18Smj2kvuGLVBtY=
+	b=e3eIEE/Pp+u2JKQwsZZj5KApjY9gEVDP8Z8ziDNsN1Qtilft2bAo1+cSJZPTYpKy5
+	 jpBQQTRB/pvlsVPI5pINvgSVRi+R6MBK9v6xYx7ejy8ERMn7YN5K8U+kVdVcMTvZYn
+	 c+4PWo9zt+48DVv11mF3wnMCzEtf7w2nUaI0S//0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388261AbfGYFpw (ORCPT
+        id S2391380AbfGYFp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33240 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:45:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405257AbfGYFpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:45:49 -0400
+        id S2387470AbfGYFpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:45:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CBAC21880;
-        Thu, 25 Jul 2019 05:45:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4165521850;
+        Thu, 25 Jul 2019 05:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033547;
-        bh=pSryTvXNuUCi9g6Q9rMqN8+KiH/rNRnTJxRRJ5VIlv0=;
+        s=default; t=1564033553;
+        bh=J7andB2/FvMjqKSofEQTJjA8xw4+etPlg/dUUrjmMiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDxz6UYYkEvcPR8jWr2UugYPoTLg/paczmzQ+8ltKaQTIldyYwqrF+BrxP5gtQceB
-         uHJ19Da39g1wIzyIbprZBNWy7f3lJOhcrv/tdDC1i+TtWb1fBm6QqW89tl6Wjtwhnu
-         JwdSKs/PTuGDS3RMBUMwvABjB6q/kXjhzwv5WFXI=
+        b=kuTG3WPQqYGD7QketuVug8lngHVSELygDjUKbpepj+NTLo1VCGbOwtSNU8Tkr+B2d
+         08eUPQKrxYh7PIQjufuxNFtaBb8d6+tsb9AGtNIGEk90ZibmTxVeRdYYfSLkNBlGs3
+         RLoVkCY6d8YIKhRq1JL/BAQ2gJYTl8kICEue4rsk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Amir Goldstein <amir73il@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 245/271] xfs: rename m_inotbt_nores to m_finobt_nores
-Date:   Wed, 24 Jul 2019 21:21:54 +0200
-Message-Id: <20190724191716.193047394@linuxfoundation.org>
+Subject: [PATCH 4.19 247/271] xfs: reserve blocks for ifree transaction during log recovery
+Date:   Wed, 24 Jul 2019 21:21:56 +0200
+Message-Id: <20190724191716.361251878@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -64,10 +64,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit e1f6ca11381588e3ef138c10de60eeb34cb8466a upstream.
+commit 15a268d9f263ed3a0601a1296568241a5a3da7aa upstream.
 
-Rename this flag variable to imply more strongly that it's related to
-the free inode btree (finobt) operation.  No functional changes.
+Log recovery frees all the inodes stored in the unlinked list, which can
+cause expansion of the free inode btree.  The ifree code skips block
+reservations if it thinks there's a per-AG space reservation, but we
+don't set up the reservation until after log recovery, which means that
+a finobt expansion blows up in xfs_trans_mod_sb when we exceed the
+transaction's block reservation.
+
+To fix this, we set the "no finobt reservation" flag to true when we
+create the xfs_mount and only set it to false if we confirm that every
+AG had enough free space to put aside for the finobt.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
@@ -77,73 +85,40 @@ Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_ag_resv.c      | 2 +-
- fs/xfs/libxfs/xfs_ialloc_btree.c | 4 ++--
- fs/xfs/xfs_inode.c               | 2 +-
- fs/xfs/xfs_mount.h               | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_fsops.c | 1 +
+ fs/xfs/xfs_super.c | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
-index e701ebc36c06..e2ba2a3b63b2 100644
---- a/fs/xfs/libxfs/xfs_ag_resv.c
-+++ b/fs/xfs/libxfs/xfs_ag_resv.c
-@@ -281,7 +281,7 @@ xfs_ag_resv_init(
- 			 */
- 			ask = used = 0;
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index 7c00b8bedfe3..09fd602507ef 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -534,6 +534,7 @@ xfs_fs_reserve_ag_blocks(
+ 	int			error = 0;
+ 	int			err2;
  
--			mp->m_inotbt_nores = true;
-+			mp->m_finobt_nores = true;
- 
- 			error = xfs_refcountbt_calc_reserves(mp, tp, agno, &ask,
- 					&used);
-diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
-index 86c50208a143..adb2f6df5a11 100644
---- a/fs/xfs/libxfs/xfs_ialloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
-@@ -124,7 +124,7 @@ xfs_finobt_alloc_block(
- 	union xfs_btree_ptr	*new,
- 	int			*stat)
- {
--	if (cur->bc_mp->m_inotbt_nores)
-+	if (cur->bc_mp->m_finobt_nores)
- 		return xfs_inobt_alloc_block(cur, start, new, stat);
- 	return __xfs_inobt_alloc_block(cur, start, new, stat,
- 			XFS_AG_RESV_METADATA);
-@@ -157,7 +157,7 @@ xfs_finobt_free_block(
- 	struct xfs_btree_cur	*cur,
- 	struct xfs_buf		*bp)
- {
--	if (cur->bc_mp->m_inotbt_nores)
-+	if (cur->bc_mp->m_finobt_nores)
- 		return xfs_inobt_free_block(cur, bp);
- 	return __xfs_inobt_free_block(cur, bp, XFS_AG_RESV_METADATA);
++	mp->m_finobt_nores = false;
+ 	for (agno = 0; agno < mp->m_sb.sb_agcount; agno++) {
+ 		pag = xfs_perag_get(mp, agno);
+ 		err2 = xfs_ag_resv_init(pag, NULL);
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 207ee302b1bb..dce8114e3198 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1561,6 +1561,13 @@ xfs_mount_alloc(
+ 	INIT_DELAYED_WORK(&mp->m_eofblocks_work, xfs_eofblocks_worker);
+ 	INIT_DELAYED_WORK(&mp->m_cowblocks_work, xfs_cowblocks_worker);
+ 	mp->m_kobj.kobject.kset = xfs_kset;
++	/*
++	 * We don't create the finobt per-ag space reservation until after log
++	 * recovery, so we must set this to true so that an ifree transaction
++	 * started during log recovery will not depend on space reservations
++	 * for finobt expansion.
++	 */
++	mp->m_finobt_nores = true;
+ 	return mp;
  }
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 05db9540e459..ae07baa7bdbf 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1754,7 +1754,7 @@ xfs_inactive_ifree(
- 	 * now remains allocated and sits on the unlinked list until the fs is
- 	 * repaired.
- 	 */
--	if (unlikely(mp->m_inotbt_nores)) {
-+	if (unlikely(mp->m_finobt_nores)) {
- 		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_ifree,
- 				XFS_IFREE_SPACE_RES(mp), 0, XFS_TRANS_RESERVE,
- 				&tp);
-diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index 7964513c3128..7e0bf952e087 100644
---- a/fs/xfs/xfs_mount.h
-+++ b/fs/xfs/xfs_mount.h
-@@ -127,7 +127,7 @@ typedef struct xfs_mount {
- 	struct mutex		m_growlock;	/* growfs mutex */
- 	int			m_fixedfsid[2];	/* unchanged for life of FS */
- 	uint64_t		m_flags;	/* global mount flags */
--	bool			m_inotbt_nores; /* no per-AG finobt resv. */
-+	bool			m_finobt_nores; /* no per-AG finobt resv. */
- 	int			m_ialloc_inos;	/* inodes in inode allocation */
- 	int			m_ialloc_blks;	/* blocks in inode allocation */
- 	int			m_ialloc_min_blks;/* min blocks in sparse inode
+ 
 -- 
 2.20.1
 
