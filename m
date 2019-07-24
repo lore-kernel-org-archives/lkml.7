@@ -2,79 +2,79 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD8DC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80441C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAE9229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590DD206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563969992;
+	bh=UrvBfSFfdgX3XtYSua8OOkBjNQwRSpuzD+1Mmojd5GM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RldR1cKAXIsoMZ47zGwNlajGDzzr141O1t3QC0py33oDwisEHxPGoXyXyrkTwpLyF
+	 gonMK5ECfhuP8c4jxDbo4Fe1v4J682DDcm7F30TipoGIK4BUF8AI5KMHoNq3Os5bSA
+	 v744RcKsWA1NI55Y1n2/YHQJNifcVQeDFuXEqpik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbfGXMBk (ORCPT
+        id S1727833AbfGXMGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:01:40 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:2488 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfGXMBk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:01:40 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15d384881758-15cfc; Wed, 24 Jul 2019 20:01:07 +0800 (CST)
-X-RM-TRANSID: 2ee15d384881758-15cfc
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost (unknown[223.105.0.241])
-        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85d384882a7d-f1062;
-        Wed, 24 Jul 2019 20:01:07 +0800 (CST)
-X-RM-TRANSID: 2ee85d384882a7d-f1062
-From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        William Tu <u9012063@gmail.com>
-Subject: [PATCH] ip6_gre: reload ipv6h in prepare_ip6gre_xmit_ipv6
-Date:   Wed, 24 Jul 2019 20:00:42 +0800
-Message-Id: <1563969642-11843-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 24 Jul 2019 08:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726256AbfGXMGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 08:06:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E37D229ED;
+        Wed, 24 Jul 2019 12:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563969989;
+        bh=UrvBfSFfdgX3XtYSua8OOkBjNQwRSpuzD+1Mmojd5GM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dy78UkwRpkS7MDo15BwOg/eN8jsHFFWN4nYUzTF/2XKuc7vZ95uysiOASHMgI6opa
+         Vi2+wcTPo8Omx91MynCb5WAQPkkT3edY371PhAOMzYT9DX4vjZHG+j/Sft3U1YEUiE
+         lVSP2UpQ6JKZuKddHdK2mMnvXyh1eTCk/2GwTiiw=
+Date:   Wed, 24 Jul 2019 14:06:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     torvalds@linux-foundation.org, aarcange@redhat.com,
+        hughd@google.com, dave.hansen@intel.com, mgorman@suse.de,
+        riel@redhat.com, mhocko@suse.cz, jannh@google.com,
+        linux-kernel@vger.kernel.org, stable@kernel.org,
+        stable@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        bvikas@vmware.com, srostedt@vmware.com
+Subject: Re: [PATCH 0/8] Backported fixes for 4.4 stable tree
+Message-ID: <20190724120627.GF3244@kroah.com>
+References: <1563880111-19058-1-git-send-email-akaher@vmware.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1563880111-19058-1-git-send-email-akaher@vmware.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since ip6_tnl_parse_tlv_enc_lim() can call pskb_may_pull()
-which may change skb->data, so we need to re-load ipv6h at
-the right place.
+On Tue, Jul 23, 2019 at 04:38:23PM +0530, Ajay Kaher wrote:
+> These patches include few backported fixes for the 4.4 stable
+> tree.
+> I would appreciate if you could kindly consider including them in the
+> next release.
 
-Fixes: 898b29798e36 ("ip6_gre: Refactor ip6gre xmit codes")
-Cc: William Tu <u9012063@gmail.com>
-Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
----
- net/ipv6/ip6_gre.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Why are these needed?  From what I remember, the last patch here is only
+needed for machines that are "HUGE" and for those, you shouldn't be
+using 4.4.y anymore anyway, right?  You just end up saving so much more
+speed and energy using a newer kernel, why would you want to waste it
+using an older one?
 
-diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
-index c2049c7..dd2d0b96 100644
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -660,12 +660,13 @@ static int prepare_ip6gre_xmit_ipv6(struct sk_buff *skb,
- 				    struct flowi6 *fl6, __u8 *dsfield,
- 				    int *encap_limit)
- {
--	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
-+	struct ipv6hdr *ipv6h;
- 	struct ip6_tnl *t = netdev_priv(dev);
- 	__u16 offset;
- 
- 	offset = ip6_tnl_parse_tlv_enc_lim(skb, skb_network_header(skb));
- 	/* ip6_tnl_parse_tlv_enc_lim() might have reallocated skb->head */
-+	ipv6h = ipv6_hdr(skb);
- 
- 	if (offset > 0) {
- 		struct ipv6_tlv_tnl_enc_lim *tel;
--- 
-1.8.3.1
+So I need a really good reason why to accept these :)
 
+thanks,
 
-
+greg k-h
