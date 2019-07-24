@@ -2,120 +2,110 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1197C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE0BC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7D72189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA99F2189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfGXQjf (ORCPT
+        id S1728048AbfGXQkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:39:35 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28345 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbfGXQjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:39:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 09:39:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,303,1559545200"; 
-   d="asc'?scan'208";a="160622639"
-Received: from jtkirshe-desk1.jf.intel.com ([134.134.177.96])
-  by orsmga007.jf.intel.com with ESMTP; 24 Jul 2019 09:39:34 -0700
-Message-ID: <4b5abf35a7b78ceae788ad7c2609d84dd33e5e9e.camel@intel.com>
-Subject: Re: [PATCH -next v2] net/ixgbevf: fix a compilation error of
- skb_frag_t
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Reply-To: jeffrey.t.kirsher@intel.com
-To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 24 Jul 2019 09:39:26 -0700
-In-Reply-To: <1563985079-12888-1-git-send-email-cai@lca.pw>
-References: <1563985079-12888-1-git-send-email-cai@lca.pw>
-Organization: Intel
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-F6fZM87JRmivafPk4uC1"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 24 Jul 2019 12:40:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34202 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGXQkL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:40:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: alyssa)
+        with ESMTPSA id 09C9B284CF8
+Date:   Wed, 24 Jul 2019 09:40:04 -0700
+From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Subject: Re: [PATCH] drm/panfrost: Export all GPU feature registers
+Message-ID: <20190724164004.GA8255@kevin>
+References: <20190724105626.53552-1-steven.price@arm.com>
+ <CAL_JsqLkxKe=feVQDb3VXqOnA7fvDBEKWgLf2suOHhNLnR704Q@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLkxKe=feVQDb3VXqOnA7fvDBEKWgLf2suOHhNLnR704Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-F6fZM87JRmivafPk4uC1
-Content-Type: text/plain; charset="UTF-8"
+--82I3+IH0IqGh5yIs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2019-07-24 at 12:17 -0400, Qian Cai wrote:
-> The linux-next commit "net: Rename skb_frag_t size to bv_len" [1]
-> introduced a compilation error on powerpc as it forgot to deal with
-> the
-> renaming from "size" to "bv_len" for ixgbevf.
->=20
-> [1]=20
-> https://lore.kernel.org/netdev/20190723030831.11879-1-willy@infradead.org=
-/T/#md052f1c7de965ccd1bdcb6f92e1990a52298eac5
->=20
-> In file included from ./include/linux/cache.h:5,
->                  from ./include/linux/printk.h:9,
->                  from ./include/linux/kernel.h:15,
->                  from ./include/linux/list.h:9,
->                  from ./include/linux/module.h:9,
->                  from
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c:12:
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c: In function
-> 'ixgbevf_xmit_frame_ring':
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c:4138:51: error:
-> 'skb_frag_t' {aka 'struct bio_vec'} has no member named 'size'
->    count +=3D TXD_USE_COUNT(skb_shinfo(skb)->frags[f].size);
->                                                    ^
-> ./include/uapi/linux/kernel.h:13:40: note: in definition of macro
-> '__KERNEL_DIV_ROUND_UP'
->  #define __KERNEL_DIV_ROUND_UP(n, d) (((n) + (d) - 1) / (d))
->                                         ^
-> drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c:4138:12: note: in
-> expansion of macro 'TXD_USE_COUNT'
->    count +=3D TXD_USE_COUNT(skb_shinfo(skb)->frags[f].size);
->=20
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->=20
-> v2: Use the fine accessor per Matthew.
->=20
->  drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+This is definitely helpful!
 
-Dave I will pick this up and add it to my queue.
+My one concern is, supposing userspace really does need all of this
+information, is it wasteful to have to do 30+ ioctls just to get this?
+kbase had a single ioctl to grab all of the properties, whether
+userspace wanted them or not. I'm not sure if that's better -- the two
+approaches are rather polar opposites.
 
---=-F6fZM87JRmivafPk4uC1
+Granted this would be on driver init so not a critical path.
+
+On Wed, Jul 24, 2019 at 10:27:03AM -0600, Rob Herring wrote:
+> Adding Alyssa's Collabora email.
+>=20
+> On Wed, Jul 24, 2019 at 4:56 AM Steven Price <steven.price@arm.com> wrote:
+> >
+> > Midgard/Bifrost GPUs have a bunch of feature registers providing details
+> > of what the hardware supports. Panfrost already reads these, this patch
+> > exports them all to user space so that the jobs created by the user spa=
+ce
+> > driver can be tuned for the particular hardware implementation.
+> >
+> > Signed-off-by: Steven Price <steven.price@arm.com>
+> > ---
+> >  drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
+> >  drivers/gpu/drm/panfrost/panfrost_drv.c    | 38 +++++++++++++++++++--
+> >  drivers/gpu/drm/panfrost/panfrost_gpu.c    |  2 ++
+> >  include/uapi/drm/panfrost_drm.h            | 39 ++++++++++++++++++++++
+> >  4 files changed, 77 insertions(+), 3 deletions(-)
+>=20
+> LGTM. I'll give it a bit more time to see if there are any comments
+> before I apply it.
+>=20
+> Rob
+
+--82I3+IH0IqGh5yIs
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl04ib4ACgkQ5W/vlVpL
-7c4wqQ//d5wSgI19pzFA1TS42JBY9kbi3DqHUyu1zqzekCNGU8RHpfOcKtie35Y/
-ZSpYAcCY1M0QiUzJfYzp9RU8rslF5+1lcLe0TPuwkohIS2qPG+nfBy8hWk9iNcCj
-xvbGqikLhFPENbtjvI6td7XgXCBOJ0sFwnRZw4nrloLDQjiLZCvC1YjcgpDMml9b
-rA+qo2YililXXDW5C58F8yd8DgjvWCbWgCxo81pSP6OW8PylcOcgQAgyFhq+P+ap
-yKolY090gtUYgTcnLwZOrH2bWgJ+9mdPxc19qs5KofEMFmNTrqeed2PF50IO4Qoa
-u3JxbrGedZHFGY56GpjUgS0BMvgou4o51yBmfCRkQpJ/jG1GQ2ZwL0d3ZtQzZAQ4
-IYKUUJhxvayILfqenCRhlyYAadxt+TvpGSqUM92NmchNb4/1+MdZk8hzg2N58zf7
-eU4W46tIbmEIK0vCZ7kCrV8oX9HsYmiN41b2VY8bUzenOF7E3p/MBdE9cN274JD2
-mLi/s/m5ze5mPc9HaTST3ugJAgkDk/qhF+69v8rTXEEKptJ9MvgwnCyLJtYgDj4t
-0o78vkW0buBu0/Rm76uZx1jxXwwk9S3nI03UcuVe5nriWqojKyDJH4jfa5wxkN8Q
-dNbXK8LySVrtgFXMgG6FIVs90TIndVIxOFHH82dx87iwyiLOtyk=
-=9hqy
+iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl04id4ACgkQ/v5QWgr1
+WA0lzRAAi1aJutAUzh1Pr9kmsSkjB1v5aMpdDQPOT7W/hfgODztRyqINqZNWuItB
+Mmt45PyXLcFV+S+ZT7rzYtwRlm9HOL+N5iXakC8UgfqlF3lCYmosrAJHNjb3Czmk
+aJ0WAyXZOHpmDQI6p0ATa5H8sNJGy31UbtHVYfT7WO55XW2VH/F+f9nIoOJMA/SF
+L3ktWjzTg7PNBqSIPde/2xy2czZTXHyMwQV4aP8U7U/V0OViYxhXyO6Nyuy9XBsW
+OpO1Q6Ka+DO6o/rEAwWREFOfI/NI4ISeyJhW60gBT2uq6oaLh3ohseET4oM0/EkM
+BI4QcwuB1cwjfUFK7uuCdFR8KNhKRdJeE9iuw6+spU8/BUmBwsJtd6y+k2QVTfOq
+oiD8ebpNoFXdLncQcVYRz85q2idD0BvhNLoslFPRs/pX/kYPax6uppmXRZ98XOEt
+wN0Fg29ph8TmDS+fsyljPUd12pgEtb4EDMouJAwROGqSNqw7IjISYHaGH3oojGSt
+K5+Zx8halrk78aYFh9Wv+0REtrK2bzxPv4vd4pEMnS3oHtc37qNei5WXeL1wvjMa
+/L/cFSAw2cl3NN8Ex2+CKFstI1I702BOQMI0yoGCgbnFTjiWC5QpO1O4VZuFBhJg
+1I6nA8xn4bOUxcrCYKiMmhylTL9BasZ9RDFQKk2ggWvayAR3/l4=
+=+QFJ
 -----END PGP SIGNATURE-----
 
---=-F6fZM87JRmivafPk4uC1--
-
+--82I3+IH0IqGh5yIs--
