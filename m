@@ -2,125 +2,132 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AA9C76190
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854B5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA717229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE6920449
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Je6bXjfv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpmUwRuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbfGXCDB (ORCPT
+        id S1728879AbfGXCGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:03:01 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58356 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbfGXCDB (ORCPT
+        Tue, 23 Jul 2019 22:06:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45934 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726544AbfGXCGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:03:01 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O1wZCE029592;
-        Wed, 24 Jul 2019 02:02:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=aPJ/gz+1htaF0JhpGjhp8e3/McToimuUgnVMZqHte9s=;
- b=Je6bXjfvhms99P77tbjOa/GUP3fCbw+7/Jpcme25tvf+ziqD7j//GF+yZWuPOW+bPSou
- T507xOemfOsA12Rz1jBR01Z4mwJFdAIh8VUMFDueI5M8ZzS6d8EZBA0pub8og66qm4s6
- j7labDK7Ph+mSL7gnwObln3ayUujWHZgha8wIxg/dEZ7YOSzINjWbXLhKGKymEEjc7vW
- kXtNeFjZIsRwrsAWlRPN+C5IONGL/0FAwmfqmRYdX/BJs2gVLG4dgxFJw5A1XQPiiEDU
- OOEWKi26aD60jxZRcWIR6D1owq6Etx/g4CzqgJQjJM3xKwAQK6A8tLVPdaP3OL3WJ7/s lA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2tx61bt601-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:02:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6O1vO96057801;
-        Wed, 24 Jul 2019 02:02:23 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2tx60xk9hy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 02:02:23 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6O22LdJ003994;
-        Wed, 24 Jul 2019 02:02:21 GMT
-Received: from [31.133.156.81] (/31.133.156.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Jul 2019 19:02:21 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] rpcrdma_decode_msg: check xdr_inline_decode result
-From:   Chuck Lever <chuck.lever@oracle.com>
-X-Mailer: iPad Mail (16F203)
-In-Reply-To: <20190724015115.3493-1-navid.emamdoost@gmail.com>
-Date:   Tue, 23 Jul 2019 22:02:09 -0400
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        secalert@redhat.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AE745E5F-63A8-4377-98E8-512828179FC0@oracle.com>
-References: <20190724015115.3493-1-navid.emamdoost@gmail.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240020
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9327 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240020
+        Tue, 23 Jul 2019 22:06:20 -0400
+Received: by mail-pg1-f196.google.com with SMTP id o13so20330081pgp.12;
+        Tue, 23 Jul 2019 19:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eUEsu1aJQ43M1dFiRUsIH0xR8QMlq0eMWSMkix2nG/s=;
+        b=SpmUwRuIct58AB5vD4iMiE7f2Wp/E4iU/jQyuqwEp/xyS9ElMer8ikqdVjtrNj3EkT
+         Z42ODOk1Yi6RlKG6jAwgXhbFKJawYA6q1E2S5mKgw37wmAJ0dbIOR/7Ng5qdm6DqkK3p
+         HkACORz9DtEO0gLLCRp1IhH1j4jhb0lfpavqRe5LVPc7fMLq1BxTMGMwkHh/0JN4zpBE
+         6RgXGsITgVOh8i1Vz3e5ucjLC9x6SeWBoWq9ZrUThpLGAtlh52CwWYJdgCXPUWW5BCPb
+         0VhQPINV/CrfaiEP/V8C2z+Vuz7kYTzXGYtIYijCf0VnuoqEtZBJmf39NE3/tVAcZS36
+         gTnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eUEsu1aJQ43M1dFiRUsIH0xR8QMlq0eMWSMkix2nG/s=;
+        b=qXoh1otb4BlWYQ1SUNmO9p8zBC+0DGuGgenlgna8iyeXhuXiyMvpITdBY5yXPyGfV3
+         f4nTREu2Miq6rIi03aFI/2aZSZeRlwvQ7E0cJHsykPjyScSUZT7s8nA0LJg60dfe6lLk
+         GviYKlDZBk12ylzVZeAJPqh6qKBM07DEgOR52U9n4ma71TaaIT24Yt4NL9e6jMQ4DfcX
+         HhC8CsCNLwsZWDdbAIZnlc9Lcc3AG7tlLISsJJvlerLeibUvV6BbasYMJUyjv83+8Wy/
+         7VJcNX2VqzSf74QwOncmJv0hwMsVkdEu3S3+jinT6IQij1S9+Ownwl8IqfaTtwxGjzEk
+         xv3A==
+X-Gm-Message-State: APjAAAVn2SXA8zlxrQ5Me3oMlUrT+s2p58QGecwPsGkSIcDwmdmjcrNR
+        8rL7uy5VzxZWptcF2jX5JiA=
+X-Google-Smtp-Source: APXvYqyCAo/u0tdEDjAYadfSuXMI69XqXtjzYOL2ostY7UBdmnKxDtc1QPd76Njk33ivnhowdAXeYg==
+X-Received: by 2002:a62:1d8f:: with SMTP id d137mr8975675pfd.207.1563933979631;
+        Tue, 23 Jul 2019 19:06:19 -0700 (PDT)
+Received: from debian.net.fpt ([2405:4800:58f7:33d1:2651:be77:cf4e:952])
+        by smtp.gmail.com with ESMTPSA id 65sm48163919pgf.30.2019.07.23.19.06.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 19:06:18 -0700 (PDT)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com
+Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org, joe@perches.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        louis@kragniz.eu, syzkaller-bugs@googlegroups.com,
+        benquike@gmail.com, linux-kernel-mentees@lists.linuxfoundation.org,
+        Phong Tran <tranmanphong@gmail.com>
+Subject: [PATCH] usb: wusbcore: fix unbalanced get/put cluster_id
+Date:   Wed, 24 Jul 2019 09:06:01 +0700
+Message-Id: <20190724020601.15257-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <000000000000d48965058e589a94@google.com>
+References: <000000000000d48965058e589a94@google.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzboot reported that
+https://syzkaller.appspot.com/bug?extid=fd2bd7df88c606eea4ef
 
+There is not consitency parameter in cluste_id_get/put calling.
+In case of getting the id with result is failure, the wusbhc->cluster_id
+will not be updated and this can not be used for wusb_cluster_id_put().
 
-> On Jul 23, 2019, at 9:51 PM, Navid Emamdoost <navid.emamdoost@gmail.com> w=
-rote:
->=20
-> xdr_inline_decode may return NULL, so the check is necessary. The base
-> pointer will be dereferenced later in rpcrdma_inline_fixup.
+Tested report
+https://groups.google.com/d/msg/syzkaller-bugs/0znZopp3-9k/oxOrhLkLEgAJ
 
-NACK. When xdr_inline_decode is passed a zero =E2=80=9Clength=E2=80=9D argum=
-ent, it can never return NULL.
+Reported-by: syzbot+fd2bd7df88c606eea4ef@syzkaller.appspotmail.com
 
+Reproduce and gdb got the details:
 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> net/sunrpc/xprtrdma/rpc_rdma.c | 3 +++
-> 1 file changed, 3 insertions(+)
->=20
-> diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma=
-.c
-> index 4345e6912392..d0479efe0e72 100644
-> --- a/net/sunrpc/xprtrdma/rpc_rdma.c
-> +++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-> @@ -1160,6 +1160,9 @@ rpcrdma_decode_msg(struct rpcrdma_xprt *r_xprt, stru=
-ct rpcrdma_rep *rep,
->=20
->    /* Build the RPC reply's Payload stream in rqst->rq_rcv_buf */
->    base =3D (char *)xdr_inline_decode(xdr, 0);
-> +    if (!base)
-> +        return -EIO;
-> +
->    rpclen =3D xdr_stream_remaining(xdr);
->    r_xprt->rx_stats.fixup_copy_count +=3D
->        rpcrdma_inline_fixup(rqst, base, rpclen, writelist & 3);
-> --=20
-> 2.17.1
->=20
+139		addr = wusb_cluster_id_get();
+(gdb) n
+140		if (addr == 0)
+(gdb) print addr
+$1 = 254 '\376'
+(gdb) n
+142		result = __hwahc_set_cluster_id(hwahc, addr);
+(gdb) print result
+$2 = -71
+(gdb) break wusb_cluster_id_put
+Breakpoint 3 at 0xffffffff836e3f20: file drivers/usb/wusbcore/wusbhc.c, line 384.
+(gdb) s
+Thread 2 hit Breakpoint 3, wusb_cluster_id_put (id=0 '\000') at drivers/usb/wusbcore/wusbhc.c:384
+384		id = 0xff - id;
+(gdb) n
+385		BUG_ON(id >= CLUSTER_IDS);
+(gdb) print id
+$3 = 255 '\377'
+
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+ drivers/usb/host/hwa-hc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/hwa-hc.c b/drivers/usb/host/hwa-hc.c
+index 09a8ebd95588..6968b9f2b76b 100644
+--- a/drivers/usb/host/hwa-hc.c
++++ b/drivers/usb/host/hwa-hc.c
+@@ -159,7 +159,7 @@ static int hwahc_op_start(struct usb_hcd *usb_hcd)
+ 	return result;
+ 
+ error_set_cluster_id:
+-	wusb_cluster_id_put(wusbhc->cluster_id);
++	wusb_cluster_id_put(addr);
+ error_cluster_id_get:
+ 	goto out;
+ 
+-- 
+2.20.1
 
