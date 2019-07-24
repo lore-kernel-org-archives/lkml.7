@@ -2,159 +2,104 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C390C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCF0C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F42229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8A6229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G8gdkDUl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwYzjHg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfGXKBq (ORCPT
+        id S1726963AbfGXKCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:01:46 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:34610 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfGXKBq (ORCPT
+        Wed, 24 Jul 2019 06:02:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33734 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfGXKCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:01:46 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190724100143epoutp03d7ccabc271a8941a04a18f060a45f8a8~0T5w-Up0l2461424614epoutp03_
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:01:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190724100143epoutp03d7ccabc271a8941a04a18f060a45f8a8~0T5w-Up0l2461424614epoutp03_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1563962503;
-        bh=c5ptV5HA49sNH19sxY9DMgig1lliijWYCMj8k/TIqIM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=G8gdkDUlJGmTWEwPsXs3ZA14lUyjxL7AIdU+3BYrYZMVhO348JB5AukwSIPUpEaJl
-         P7yb34SoxnRWA1f1uQ1gBSdY/onc5r6eJkVyzhJCGHf9KAt2zx+ySGs/6jAEEXr2Db
-         XR990k2AcbokFSthX1FsZP7hu+Jee4DKNySvAYMA=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190724100142epcas1p3eabb061cc801a35fc86f8af3ae0e2e5b~0T5wriZpM1150511505epcas1p3Q;
-        Wed, 24 Jul 2019 10:01:42 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 45trTv5h9czMqYkk; Wed, 24 Jul
-        2019 10:01:39 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CE.27.04066.47C283D5; Wed, 24 Jul 2019 19:01:24 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190724100124epcas1p19d46da4028d1867b2fd02d13f4a90ec9~0T5fPdCgd1979719797epcas1p14;
-        Wed, 24 Jul 2019 10:01:24 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190724100124epsmtrp2c438f08135858e7f655cffab024b05a1~0T5fO0mVW0318803188epsmtrp2e;
-        Wed, 24 Jul 2019 10:01:24 +0000 (GMT)
-X-AuditID: b6c32a37-e27ff70000000fe2-4c-5d382c74ebeb
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        97.E1.03706.37C283D5; Wed, 24 Jul 2019 19:01:23 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190724100123epsmtip2b9a9d037afa2bedcb1db49d892d3d299~0T5fHj5Ar2396923969epsmtip2O;
-        Wed, 24 Jul 2019 10:01:23 +0000 (GMT)
-Subject: Re: [PATCH 1/1] extcon: extcon-max77843: convert to
- i2c_new_dummy_device
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <6bff5707-c460-c7e8-d913-bbc4d8fd5447@samsung.com>
-Date:   Wed, 24 Jul 2019 19:04:27 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190722172601.3506-2-wsa+renesas@sang-engineering.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdlhTV7dExyLWYMEHdYuOv18YLS7vmsNm
-        cbtxBZtF3zl3BxaPvi2rGD2eLVzP4vF5k1wAc1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
-        mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QMiWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJrVJq
-        QUpOgWWBXnFibnFpXrpecn6ulaGBgZEpUGFCdsbcI7wF3VwVy/uusDYwLufoYuTkkBAwkZgy
-        ZTNzFyMXh5DADkaJppmv2SGcT0BO32s2COcbo8SqG/2MMC3LFt9ggkjsZZS4fu8cC4TznlFi
-        1re3TCBVwgLBEv8/tLCB2CICARIT/i9kBbGZBTwl+ma0g8XZBLQk9r+4AWbzCyhKXP3xGGwD
-        r4CdxOv5t8DmsAioSjR8mgrWKyoQIfHpwWFWiBpBiZMzn7CA2JwCrhKXtm6Gmi8ucevJfCYI
-        W16ieetssOckBA6wSfw//4Qd4gUXia3zfkPZwhKvjm+BsqUkPr/bywZhV0usPHmEDaK5g1Fi
-        y/4LrBAJY4n9SycDbeAA2qApsX6XPkRYUWLn77mMEIv5JN597WEFKZEQ4JXoaBOCKFGWuPzg
-        LhOELSmxuL2TbQKj0iwk78xC8sIsJC/MQli2gJFlFaNYakFxbnpqsWGBMXJsb2IEJ0Qt8x2M
-        G875HGIU4GBU4uFVYDCPFWJNLCuuzD3EKMHBrCTCG9hgFivEm5JYWZValB9fVJqTWnyI0RQY
-        2hOZpUST84HJOq8k3tDUyNjY2MLE0MzU0FBJnHfeH81YIYH0xJLU7NTUgtQimD4mDk6pBsbc
-        NWcvCtUb73iU2cP7ZnGlqQsn3x2HTxr3c40eZUt9nLE68e6J52snNSkemnn/e/KJxtzjuQ9v
-        BwZMCTMTeOv+dK9fA3v11Fq56PP9Gz8ITC40UPELcG8/x/LYcfKSh1OXe6mdjeE+FCD9JL+D
-        i/9+K3d9xpPtxg8Ldy1ddWtdzr1j057JisgosRRnJBpqMRcVJwIAtwqq154DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSvG6xjkWswYT/NhYdf78wWlzeNYfN
-        4nbjCjaLvnPuDiwefVtWMXo8W7iexePzJrkA5igum5TUnMyy1CJ9uwSujLlHeAu6uSqW911h
-        bWBcztHFyMkhIWAisWzxDaYuRi4OIYHdjBJNO88zQyQkJaZdPApkcwDZwhKHDxdD1LxllOg/
-        fZkRpEZYIFji/4cWNhBbRMBP4tCyd2C9zAKeEn0z2tkgGi4zSsxdMJcVJMEmoCWx/8UNsAZ+
-        AUWJqz8egw3iFbCTeD3/FhOIzSKgKtHwaSpYvahAhMThHbOgagQlTs58wgJicwq4SlzaupkV
-        Ypm6xJ95l6AWi0vcejKfCcKWl2jeOpt5AqPwLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWG
-        BYZ5qeV6xYm5xaV56XrJ+bmbGMGRoaW5g/HykvhDjAIcjEo8vAoM5rFCrIllxZW5hxglOJiV
-        RHgDG8xihXhTEiurUovy44tKc1KLDzFKc7AoifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamDs
-        /HtskUV0Vm5LfeleT60NE0xmfTlYcGjBfM3KheHNU9946S9TDfinWZ4mf/1u0U1lL6WAqO4v
-        jFVPvK5nF3dskua86JTNXtPBHifqP3dH/KL4fzzyN95eZpp7wM1B8qXF7dg3Av/ywtWD2OVa
-        uOUMv1o86TZ5lnNqy0Zf0URhtRztaVM0HJVYijMSDbWYi4oTAfscDPqIAgAA
-X-CMS-MailID: 20190724100124epcas1p19d46da4028d1867b2fd02d13f4a90ec9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190722172604epcas5p4ce41ff3eda1b28ae07eef332808780ac
-References: <20190722172601.3506-1-wsa+renesas@sang-engineering.com>
-        <CGME20190722172604epcas5p4ce41ff3eda1b28ae07eef332808780ac@epcas5p4.samsung.com>
-        <20190722172601.3506-2-wsa+renesas@sang-engineering.com>
+        Wed, 24 Jul 2019 06:02:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so20698444pfq.0;
+        Wed, 24 Jul 2019 03:02:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2Q3f3xydka7q3ymH0VxHJXXLNdtWTBhTzvay6ryonzE=;
+        b=gwYzjHg8wMJUW0gU6PSlyM/gtX6tHNT93Avn0ySZQkTj2uKOHqd0+eTJbDvJNkgQKR
+         sz4lR15xN1XC3gA8NXCghnts7CY677fukDapKHw+5E2eoZ55k/U0zmtJ4by6fogMqrsg
+         lsDF3kya2tKsNzavMe3sgbNQgp9zHp4KBKVxswIU/BM0d3SvjT1mj4aWpXlvHXfPbgp8
+         VJYjZpH6bJoo6yhxEHuq3pj8CysXP3FJHFl/B4K/NL23JRQRhWhWZqXnULjOPNOgOPPG
+         ycGpOCMTwYGQN1fYsvfR2Q9bSg/jueJvm8bjM/7KrBXtyickJZnrlskdJp3y9365J1xq
+         O1Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2Q3f3xydka7q3ymH0VxHJXXLNdtWTBhTzvay6ryonzE=;
+        b=tMcPDKlgkVhA49UEcoB3snldbttvCWyRBitNMA+Us5Oqxr8ajI+dsSdw/OPu3UvP6C
+         kTj5c/IkQW/mZQolsZIaA0XSwlm6rlDLjmf9gPwXsILY45lXmpYLXOmjjRQYmSyoo9wa
+         U0gD1kzjC0POzNR0CPokDaTo3TkyVuZk/6CNrswWJm+4xF0fKAw0aOu4DB9u/+aIeNOi
+         t06adze10uTiM2pKY08Xd5h+/GuZBjbFV68f/ZwgnIlvqGspKAQdxbCckbpMCro5U1Yv
+         PDCZyfwJfEoIYhbbgTi4ArxCjGQqLm9yiTaJnaT9hW3Ppto0/f8ZNIAzWnV9MPKm2KEW
+         QdVA==
+X-Gm-Message-State: APjAAAVzG1IX+s70flKd+0hGYT1gXWKiTTo1lmztJVY41wOu8zUszDBW
+        xChLebdkZGyOoIMiA5g/cARMmBPaw3M=
+X-Google-Smtp-Source: APXvYqy9h9/h7AcvlkRbZ+l2a5DNDLfouT8ZdbDL1piYeGZBNiVBUwhJfBxxoS03lyvL1Gy4wTxgNg==
+X-Received: by 2002:a17:90a:214e:: with SMTP id a72mr45532046pje.0.1563962531944;
+        Wed, 24 Jul 2019 03:02:11 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id q69sm64083603pjb.0.2019.07.24.03.02.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 03:02:11 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     tytso@mit.edu, jaegeuk@kernel.org, ebiggers@kernel.org
+Cc:     linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] fs: crypto: keyinfo: Fix a possible null-pointer dereference in derive_key_aes()
+Date:   Wed, 24 Jul 2019 18:02:04 +0800
+Message-Id: <20190724100204.2009-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 7. 23. 오전 2:26, Wolfram Sang wrote:
-> Move from i2c_new_dummy() to i2c_new_dummy_device(), so we now get an
-> ERRPTR which we use in error handling.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
-> 
-> Generated with coccinelle. Build tested by me and buildbot. Not tested on HW.
-> 
->  drivers/extcon/extcon-max77843.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-max77843.c b/drivers/extcon/extcon-max77843.c
-> index a343a6ef3506..e6b50ca83008 100644
-> --- a/drivers/extcon/extcon-max77843.c
-> +++ b/drivers/extcon/extcon-max77843.c
-> @@ -774,12 +774,12 @@ static int max77843_init_muic_regmap(struct max77693_dev *max77843)
->  {
->  	int ret;
->  
-> -	max77843->i2c_muic = i2c_new_dummy(max77843->i2c->adapter,
-> +	max77843->i2c_muic = i2c_new_dummy_device(max77843->i2c->adapter,
->  			I2C_ADDR_MUIC);
-> -	if (!max77843->i2c_muic) {
-> +	if (IS_ERR(max77843->i2c_muic)) {
->  		dev_err(&max77843->i2c->dev,
->  				"Cannot allocate I2C device for MUIC\n");
-> -		return -ENOMEM;
-> +		return PTR_ERR(max77843->i2c_muic);
->  	}
->  
->  	i2c_set_clientdata(max77843->i2c_muic, max77843);
-> 
+In derive_key_aes(), tfm is assigned to NULL on line 46, and then
+crypto_free_skcipher(tfm) is executed.
 
-Applied it. Thanks.
+crypto_free_skcipher(tfm)
+    crypto_skcipher_tfm(tfm)
+        return &tfm->base;
 
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, tfm is checked before calling crypto_free_skcipher().
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ fs/crypto/keyinfo.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/crypto/keyinfo.c b/fs/crypto/keyinfo.c
+index 207ebed918c1..b419720cac54 100644
+--- a/fs/crypto/keyinfo.c
++++ b/fs/crypto/keyinfo.c
+@@ -66,7 +66,8 @@ static int derive_key_aes(const u8 *master_key,
+ 	res = crypto_wait_req(crypto_skcipher_encrypt(req), &wait);
+ out:
+ 	skcipher_request_free(req);
+-	crypto_free_skcipher(tfm);
++	if (tfm)
++		crypto_free_skcipher(tfm);
+ 	return res;
+ }
+ 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.17.0
+
