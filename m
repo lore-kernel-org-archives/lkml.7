@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB4C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80139C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07C220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577FA229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996965;
-	bh=jKLAJo9aJTG1ktqV/QZjLsO/1QBD2+lXkS+wx8rR9k0=;
+	s=default; t=1563996969;
+	bh=lBoiH6Nx6mDWJdh3wOy4LLKoi9AR/6mcBcELQLb9lRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11hZ+rAvEwQJ16pKFF0qBV0zFPkD7MqoxyiWR4Vc0h9ZN7E9n1gnLWQguOea5zssM
-	 9dGhiUO95aet9gQiPHNTPqxncFWE0ozD0I7xdcRcJg3xNNeSBqhug3kFYtE5LClZfV
-	 aco+OeOIA0b/+H0uoloV+T5FOjntbtlZHccVpDfU=
+	b=fp/0bDAn8EbCo6yCgdlXTpiapPkoU9hSTMyfgvd4h1zsU42MTejb35wACYsi/iJMX
+	 ZOuYgfnsZyIc9Sj0VEpA+i6vQLClo1uiL6rnUKAlq95AiMNwpExGW/HAsq0gb5Sq3R
+	 5/miT5VAgQCzzByeCp1MZxlyG18mJcf0Ronq9rXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388831AbfGXTgD (ORCPT
+        id S2389273AbfGXTgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35140 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388970AbfGXTgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:00 -0400
+        id S2389243AbfGXTgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A7BE2238C;
-        Wed, 24 Jul 2019 19:35:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B17CF229F3;
+        Wed, 24 Jul 2019 19:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996960;
-        bh=jKLAJo9aJTG1ktqV/QZjLsO/1QBD2+lXkS+wx8rR9k0=;
+        s=default; t=1563996963;
+        bh=lBoiH6Nx6mDWJdh3wOy4LLKoi9AR/6mcBcELQLb9lRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJz/dATwbsXNZNlyubpj+6Je0uPmdajtBVwezKSIXXhwrpArDxrg0/eaKp37csEbX
-         WM0gDk0gPq4aqPeeO45sWgE8ehK4maEPSTg1JZjLxTHoy+fsscMNp7FfQRpVPtzL1j
-         7sr/eb/pP7K/MTLTKIFv9g1d5CNOmy3UVjFZH+Hw=
+        b=qrgmE6oGc+vAIB/1oTCJq6bSTbs2/Onn3IbVWEVbGpkAEOwwvquIwf1CVCDcWZCUL
+         wMnMml/GDOSz+sh8PLRxtQ3sp+G8XVDuSoTNtchw+021HaV85nxfzpqFbpHLwLcY95
+         IBumj4WqrvhNEm8MVLNraVJYkmjPxmE2UnWRUW34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
         Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.2 275/413] cifs: always add credits back for unsolicited PDUs
-Date:   Wed, 24 Jul 2019 21:19:26 +0200
-Message-Id: <20190724191755.948619129@linuxfoundation.org>
+Subject: [PATCH 5.2 276/413] cifs: fix crash in smb2_compound_op()/smb2_set_next_command()
+Date:   Wed, 24 Jul 2019 21:19:27 +0200
+Message-Id: <20190724191756.022155125@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,34 +61,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit 3e2725796cbdfe4efc7eb7b27cacaeac2ddad1a5 upstream.
+commit 88a92c913cef09e70b1744a8877d177aa6cb2189 upstream.
 
-not just if CONFIG_CIFS_DEBUG2 is enabled.
+RHBZ: 1722704
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+In low memory situations the various SMB2_*_init() functions can fail
+to allocate a request PDU and thus leave the request iovector as NULL.
+
+If we don't check the return code for failure we end up calling
+smb2_set_next_command() with a NULL iovector causing a crash when it tries
+to dereference it.
+
 CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/connect.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2inode.c |   12 ++++++++++++
+ fs/cifs/smb2ops.c   |   11 ++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1223,11 +1223,11 @@ next_pdu:
- 					 atomic_read(&midCount));
- 				cifs_dump_mem("Received Data is: ", bufs[i],
- 					      HEADER_SIZE(server));
-+				smb2_add_credits_from_hdr(bufs[i], server);
- #ifdef CONFIG_CIFS_DEBUG2
- 				if (server->ops->dump_detail)
- 					server->ops->dump_detail(bufs[i],
- 								 server);
--				smb2_add_credits_from_hdr(bufs[i], server);
- 				cifs_dump_mids(server);
- #endif /* CIFS_DEBUG2 */
- 			}
+--- a/fs/cifs/smb2inode.c
++++ b/fs/cifs/smb2inode.c
+@@ -120,6 +120,8 @@ smb2_compound_op(const unsigned int xid,
+ 				SMB2_O_INFO_FILE, 0,
+ 				sizeof(struct smb2_file_all_info) +
+ 					  PATH_MAX * 2, 0, NULL);
++		if (rc)
++			goto finished;
+ 		smb2_set_next_command(tcon, &rqst[num_rqst]);
+ 		smb2_set_related(&rqst[num_rqst++]);
+ 		trace_smb3_query_info_compound_enter(xid, ses->Suid, tcon->tid,
+@@ -147,6 +149,8 @@ smb2_compound_op(const unsigned int xid,
+ 					COMPOUND_FID, current->tgid,
+ 					FILE_DISPOSITION_INFORMATION,
+ 					SMB2_O_INFO_FILE, 0, data, size);
++		if (rc)
++			goto finished;
+ 		smb2_set_next_command(tcon, &rqst[num_rqst]);
+ 		smb2_set_related(&rqst[num_rqst++]);
+ 		trace_smb3_rmdir_enter(xid, ses->Suid, tcon->tid, full_path);
+@@ -163,6 +167,8 @@ smb2_compound_op(const unsigned int xid,
+ 					COMPOUND_FID, current->tgid,
+ 					FILE_END_OF_FILE_INFORMATION,
+ 					SMB2_O_INFO_FILE, 0, data, size);
++		if (rc)
++			goto finished;
+ 		smb2_set_next_command(tcon, &rqst[num_rqst]);
+ 		smb2_set_related(&rqst[num_rqst++]);
+ 		trace_smb3_set_eof_enter(xid, ses->Suid, tcon->tid, full_path);
+@@ -180,6 +186,8 @@ smb2_compound_op(const unsigned int xid,
+ 					COMPOUND_FID, current->tgid,
+ 					FILE_BASIC_INFORMATION,
+ 					SMB2_O_INFO_FILE, 0, data, size);
++		if (rc)
++			goto finished;
+ 		smb2_set_next_command(tcon, &rqst[num_rqst]);
+ 		smb2_set_related(&rqst[num_rqst++]);
+ 		trace_smb3_set_info_compound_enter(xid, ses->Suid, tcon->tid,
+@@ -206,6 +214,8 @@ smb2_compound_op(const unsigned int xid,
+ 					COMPOUND_FID, current->tgid,
+ 					FILE_RENAME_INFORMATION,
+ 					SMB2_O_INFO_FILE, 0, data, size);
++		if (rc)
++			goto finished;
+ 		smb2_set_next_command(tcon, &rqst[num_rqst]);
+ 		smb2_set_related(&rqst[num_rqst++]);
+ 		trace_smb3_rename_enter(xid, ses->Suid, tcon->tid, full_path);
+@@ -231,6 +241,8 @@ smb2_compound_op(const unsigned int xid,
+ 					COMPOUND_FID, current->tgid,
+ 					FILE_LINK_INFORMATION,
+ 					SMB2_O_INFO_FILE, 0, data, size);
++		if (rc)
++			goto finished;
+ 		smb2_set_next_command(tcon, &rqst[num_rqst]);
+ 		smb2_set_related(&rqst[num_rqst++]);
+ 		trace_smb3_hardlink_enter(xid, ses->Suid, tcon->tid, full_path);
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -2027,6 +2027,10 @@ smb2_set_related(struct smb_rqst *rqst)
+ 	struct smb2_sync_hdr *shdr;
+ 
+ 	shdr = (struct smb2_sync_hdr *)(rqst->rq_iov[0].iov_base);
++	if (shdr == NULL) {
++		cifs_dbg(FYI, "shdr NULL in smb2_set_related\n");
++		return;
++	}
+ 	shdr->Flags |= SMB2_FLAGS_RELATED_OPERATIONS;
+ }
+ 
+@@ -2041,6 +2045,12 @@ smb2_set_next_command(struct cifs_tcon *
+ 	unsigned long len = smb_rqst_len(server, rqst);
+ 	int i, num_padding;
+ 
++	shdr = (struct smb2_sync_hdr *)(rqst->rq_iov[0].iov_base);
++	if (shdr == NULL) {
++		cifs_dbg(FYI, "shdr NULL in smb2_set_next_command\n");
++		return;
++	}
++
+ 	/* SMB headers in a compound are 8 byte aligned. */
+ 
+ 	/* No padding needed */
+@@ -2080,7 +2090,6 @@ smb2_set_next_command(struct cifs_tcon *
+ 	}
+ 
+  finished:
+-	shdr = (struct smb2_sync_hdr *)(rqst->rq_iov[0].iov_base);
+ 	shdr->NextCommand = cpu_to_le32(len);
+ }
+ 
 
 
