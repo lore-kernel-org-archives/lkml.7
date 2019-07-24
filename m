@@ -2,106 +2,167 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91823C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91019C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A1C2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A69217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:00:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpjg1Mqh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eR8u7qKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfGXI7M (ORCPT
+        id S1726622AbfGXJAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:59:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36670 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfGXI7L (ORCPT
+        Wed, 24 Jul 2019 05:00:14 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37782 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfGXJAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:59:11 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so46123747wrs.3;
-        Wed, 24 Jul 2019 01:59:10 -0700 (PDT)
+        Wed, 24 Jul 2019 05:00:13 -0400
+Received: by mail-io1-f68.google.com with SMTP id q22so87947037iog.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 02:00:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uLD0FIohOIaMjbj7E0OOl2DyS6RV1bLULju5D5/jTY0=;
-        b=lpjg1MqhUsOo7tkaEJrwfY2Sbjfd+C+NxcHvLoN+uP+ea1X5D/LzA8U9UqfIOf+jtp
-         HP37lrCo8XZL9ygrn8K2ciiMXnWIdLfPTCvPTXysPyIzQak6nDvRBsRE5MXh317hrMDp
-         7HE5zV5/sw1DszulN9iEs9PO51bVTkmTqzJ1Kv1mUKVnjvSCGP2PzruV5Z2QRaC0Y5yE
-         gg0ArZ1AmS/yBrz8Yd4t5IH8FE4s5dQQY5AmJkR0mkYc+7LsCI3n50WdVLdpmaoGNPkj
-         7cOk1aBDmK3pohX8ukFNVvHeH3iXs4Iho0dBAesi+OE9/Xe8k1W9RUwyOXknVD6Gz6Mu
-         GlDA==
+        bh=Sm/JL+hP+mCoNP+dMciXgNOdiOkppRY7NGRE3pt521E=;
+        b=eR8u7qKKHElGFqz/S6XlFGERvnoHQyXbSrTscLhR4cXF5w67QuhmRrX3UBFX+2PzYp
+         zue+YvNmVD2e4pHn5m1z278tfusrxNx27FkFVZjnNv4+xPDIqrczT82QqP4+AJ0tp4t4
+         wrk962dTC+xYxkgBh4emaRtesxwwsWWarrwPzp+5uP+Zm7wzbX+ZlQMBGU9ujuw6fUGg
+         LOKnbLSgSx72h5Y1eoMoJkoamvlLadgaYwaW/UMU/K2pI/+5Rb5D/h0aTjScFVDT/KMA
+         oJ1xPeNK/mv6TVaOHTBjrgrd8O6d0fK6U3FJcPi5z8XkRvsVu8bkh28mIH0agUks5NFG
+         e6Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uLD0FIohOIaMjbj7E0OOl2DyS6RV1bLULju5D5/jTY0=;
-        b=ul+1msj1SyRvMw6U+JnApLGXAwnkCfDjJ+Wg9ceKKqQWxJ2rhOyvr7u5bqE5QH0aE3
-         Qjk/BaB+pkqjcaFKXQHr9Mz+Dn7TQ7XntsCtd2rYj/tfm3NNpUzepHvE6tIerrOnTxUF
-         IJuaZO++fcmao2BFRPjYH6oN4fY67kJDGUCXl56tT7sV06QQ1gT08W+58OMkPVTDXnk2
-         AlkKDVG6I/MZ5C5iwjSAkrQZappuGukhYo3Kv8HCkWcmFEQsSAPX4lDPzkrq7u428rTS
-         cLwLrPC2a1tJqZDR/d3UCVjTDXp1wyhsn2cw1QhZW4uxMN/3HWZzj8mW/NlvmgCsc9iR
-         s0Vw==
-X-Gm-Message-State: APjAAAXc+dLzhBaE9wpmZOXmOyVT4eSL+i0mkTxRD7gQFpHoTE7PGrC3
-        Ph5bWRBLJCm+/XuHvl4zA+OZg449KTz8IUPoq70=
-X-Google-Smtp-Source: APXvYqzDa65ZZuqbBz0Y9LKy5ttZgCPxfD6HONFDo1ej5tX89DOctwjYr4B8EOdL7v6XaKJGVXfdSB6Urjocukqv+IY=
-X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr12742240wrx.196.1563958750049;
- Wed, 24 Jul 2019 01:59:10 -0700 (PDT)
+        bh=Sm/JL+hP+mCoNP+dMciXgNOdiOkppRY7NGRE3pt521E=;
+        b=W95DZxAftJKVp+Z5nyBGOW6mdjJEaDdiBkXmE/OQlorN3F64Nz/60x3B4IQUM1J9EV
+         mm5nMOzrnlA1MqR5XCcZpWhKMgD1e9buOWU8ikgpzS81YXks+gRWG2R33tHe5e7G5Lxm
+         smteeJdXsZCPlZYjxij2KRraYvw4KyrMweTKfAYe+T4b24k8VO77zen2DgzmGv9nlCt9
+         MdnsEYDe5V2JvvBB9r/kS77CZD2Lfla0iR5rJH7cNxy1vaZt+TYmWTim/wWxx615rGB4
+         f+G7GqBkpED5LvJxd9kup+rEYVY34YNw6NNi4y+1bwvUAtnkUwvdDOkHJfaqAGHgTfF4
+         Lx3Q==
+X-Gm-Message-State: APjAAAUIXBIaw3B8GgtpNY/CsS7nIvngokI+k0KyU9iu+EfEJS1iSINC
+        ylDzKsPcgHOCMxw2bGAg9+ShEfTIAhvRZU147BI=
+X-Google-Smtp-Source: APXvYqxYMsXuU0YWjK636od6j6zGxjRLMjCkycvx2+POeKyX+OTzKJCK8ADuJ1tC1FER+CWj81OCoIiFMT/gTgh51pU=
+X-Received: by 2002:a5e:9b05:: with SMTP id j5mr12610997iok.75.1563958812549;
+ Wed, 24 Jul 2019 02:00:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-2-daniel.baluta@nxp.com>
- <a5d44d96-4d50-ee46-a6bf-3ce108b1994a@linux.intel.com> <CAEnQRZCuB2QKzz-08K0z+x+p0qCpqR_wDc=q2GChvJiw4E9hBA@mail.gmail.com>
- <1563957164.2311.28.camel@pengutronix.de>
-In-Reply-To: <1563957164.2311.28.camel@pengutronix.de>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 24 Jul 2019 11:58:58 +0300
-Message-ID: <CAEnQRZAEsPFp36hD7XiWihTe2KQOJV6Eq9C8hjn0Z1kiUZjzyQ@mail.gmail.com>
-Subject: Re: [Sound-open-firmware] [PATCH v2 1/5] ASoC: SOF: imx: Add i.MX8 HW support
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Olaru <paul.olaru@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        sound-open-firmware@alsa-project.org
+References: <20190719192954.26481-1-xruppen@gmail.com> <eadcf7ef-4aad-fa4f-3b1b-a5238f394b1e@baylibre.com>
+ <CANAwSgTbvQO5qum1K3q8+J=WO4yLjadnZSZYf_AAhbf+CJm92Q@mail.gmail.com> <cdb986e9-e905-8001-630a-cf3e3f8c5369@baylibre.com>
+In-Reply-To: <cdb986e9-e905-8001-630a-cf3e3f8c5369@baylibre.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Wed, 24 Jul 2019 14:30:01 +0530
+Message-ID: <CANAwSgSwDQdT60N87GrOWNDP0_ZvKnYsKg5QPVP0jJvQ8rKzpg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: meson: odroid-n2: keep SD card regulator
+ always on
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Xavier Ruppen <xruppen@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:32 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Hi Daniel,
->
-> Am Mittwoch, den 24.07.2019, 09:54 +0300 schrieb Daniel Baluta:
-> > On Tue, Jul 23, 2019 at 6:18 PM Pierre-Louis Bossart
-> [...]
-> >
-> > > Also are all the resources device-managed, I don't see a remove()?
-> >
-> > Good catch for pm stuff. We mostly didn't care about remove because
-> > drivers are always Y in our distribution.
->
-> Linux drivers need to be hotplug aware, even if they are not built as a
-> module. You can test things by manually unbinding the driver from the
-> device via sysfs.
+Hi Neil,
 
-Agree. Will take this into consideration when sending next version!
+On Wed, 24 Jul 2019 at 12:19, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Anand,
+>
+> On 24/07/2019 07:30, Anand Moon wrote:
+> > Hi All,
+> >
+> > On Mon, 22 Jul 2019 at 12:51, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>
+> >> On 19/07/2019 21:29, Xavier Ruppen wrote:
+> >>> When powering off the Odroid N2, the tflash_vdd regulator is
+> >>> automatically turned off by the kernel. This is a problem
+> >>> when issuing the "reboot" command while using an SD card.
+> >>> The boot ROM does not power this regulator back on, blocking
+> >>> the reboot process at the boot ROM stage, preventing the
+> >>> SD card from being detected.
+> >>>
+> >>> Adding the "regulator-always-on" property fixes the problem.
+> >>>
+> >>> Signed-off-by: Xavier Ruppen <xruppen@gmail.com>
+> >>> ---
+> >>>
+> >>> Here is what the boot ROM output looks like without this patch:
+> >>>
+> >>>     [root@alarm ~]# reboot
+> >>>     [...]
+> >>>     [   24.275860] shutdown[1]: All loop devices detached.
+> >>>     [   24.278864] shutdown[1]: Detaching DM devices.
+> >>>     [   24.287105] kvm: exiting hardware virtualization
+> >>>     [   24.318776] reboot: Restarting system
+> >>>     bl31 reboot reason: 0xd
+> >>>     bl31 reboot reason: 0x0
+> >>>     system cmd  1.
+> >>>     G12B:BL:6e7c85:7898ac;FEAT:E0F83180:2000;POC:F;RCY:0;
+> >>>     EMMC:800;NAND:81;SD?:0;SD:400;USB:8;LOOP:1;EMMC:800;
+> >>>     NAND:81;SD?:0;SD:400;USB:8;LOOP:2;EMMC:800;NAND:81;
+> >>>     SD?:0;SD:400;USB:8;LOOP:3; [...]
+> >>>
+> >>> Other people can be seen having this problem on the odroid
+> >>> forum [1].
+> >>>
+> >>> The cause of the problem was found by Martin Blumenstingl
+> >>> on #linux-amlogic. We may want to add his Suggested-by tag
+> >>> if he agrees.
+> >>>
+> >>> [1] https://forum.odroid.com/viewtopic.php?f=176&t=33993
+> >>>
+> >>>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
+> >>>  1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> >>> index 81780ffcc7f0..4e916e1f71f7 100644
+> >>> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> >>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> >>> @@ -53,6 +53,7 @@
+> >>>
+> >>>               gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
+> >>>               enable-active-high;
+> >>> +             regulator-always-on;
+> >>>       };
+> >>>
+> >>>       tf_io: gpio-regulator-tf_io {
+> >>>
+> >>
+> >> Surely solves the situation, thanks !
+> >>
+> >> please add a comment on top of "regulator-always-on" to explain why we always enable it,
+> >> note we should always enable it in case of watchdog reboot or other uncontrolled reset,
+> >> this regulator must never be disabled.
+> >>
+> >> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> >>
+> >> Thanks,
+> >> Neil
+> >>
+> >
+> > I am afraid this did not fix the issue I was also facing with
+> > Archlinux on Odroid N2 using mainline u-boot.
+>
+> Seems to be a separate issue, could we start a separate thread with all your
+> setup (branch, git SHAa, configs, board setup, ...) for this ?
+>
+> Thanks,
+> Neil
+>
+
+Ok sorry for the noise.
+
+Best Regards
+-Anand
