@@ -2,77 +2,68 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C85C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4228C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073D121738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C854229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOZBVGQx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4IffpNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfGXGFW (ORCPT
+        id S1726430AbfGXGFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:05:22 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35910 "EHLO
+        Wed, 24 Jul 2019 02:05:38 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38518 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfGXGFW (ORCPT
+        with ESMTP id S1725909AbfGXGFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:05:22 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so20635214pgm.3;
-        Tue, 23 Jul 2019 23:05:22 -0700 (PDT)
+        Wed, 24 Jul 2019 02:05:38 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f5so11813364pgu.5;
+        Tue, 23 Jul 2019 23:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kEit7lAB1Ue2Pj5oh+Mlb7ShDCe+fsz5zjPxqobMIKg=;
-        b=LOZBVGQxyAGRUFVP8mPfnlKQD07SIGGlVfHqkFTEab3aa0FHzBfOCDb58AWG2QNF11
-         KT0/Q5L2+y3O8rh914AlOqnBcMckN/0ycwl1E/FhHjHhxV2wsgtluQ9amIthLTXIZ6KI
-         QVczTYnvho5/2SufK7VAhoSU8moWT1GL6DvExtCg7Lrsdc1SHpVZwkLjiB5eWwS5whNu
-         kcFm5zVqBELbsneoH3jM4hjpxAOvrtK2WlyOrptwVEbr6W1vFe8nIK5Yy/36E2LXxg0k
-         zqShovDJzgsBZsQbU6ER2hMs5AJGkNOEhhKPM1P5aGHDoNZ9thbjTArNYZ0eU6WOP1pG
-         GpSQ==
+        bh=Twevo6sVaaVI2A1vSf1Wr6zgrYSK1ESB5x0Su/v7Gzs=;
+        b=L4IffpNCaLWQdp6NduS2I/CeGI/8IxEc5bIcVNd1Ufqu7dpzl86yM2GAT3AbQJxflM
+         rbTxLMTqmhZQV3jYc3oQVXwZqZJyfRKad0g/Wyk1i+yED2FVHAQVhQD4gao4l7Eo+hjt
+         yeh/rtik6XxgZ5jCIo7xM8Ju/E5lkGubDrba2+4Jm+QqiK+7/7YXxYD+qbhyy+jraUBW
+         cu7V4dsU5A4FbjaNSP03G4+J7ExNxbG65iV6uaDBQZt1dawxPs4xeVYGhQZPrRofUAjm
+         LY2MllpTrYhLU5z5IantJpDlfD2TuQ80NFw/B+aUiO1iHhQZlrQ1awkiMRHiw4ZQEAR0
+         REYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=kEit7lAB1Ue2Pj5oh+Mlb7ShDCe+fsz5zjPxqobMIKg=;
-        b=SXlT0E7jkA0HBX/cW8hyPkN6v4+RrVPfXJVCHWMZZchX7EZmP7WXmw0XgOtMznMtMj
-         HVdZZfKQSzus6EzrT+RNSOXw2QckRkh+k1DKRKUUasDTXIqUK9VYg+GLMmGQjqHsmcJH
-         JSVDv4inN6jb0agBikhIM7Ig5cRU6rhKBnoB+RMSjKgbs7T7VbSoZ56/l1ystjaLfkbo
-         fv/cGIbGNy4Z0lZQFTSF2EwMh/wret5IbTWtLj7oWt34cEnPUPnTlk+pLR8yYSvvSNER
-         Qj/zRkcdso6RYb8LKK3XBNw4ZotKyi0Hm7mz9kvLI94lIhUwBKFRUmPh8zBclTl1OvhG
-         mtXg==
-X-Gm-Message-State: APjAAAUHr9EWJ7anGaHG2YfnYzXKPKeAIzZqnVe0YxFE3r88zWASsDRk
-        V6h3Ryxh2WRdoDvhSbjyXf8=
-X-Google-Smtp-Source: APXvYqzgXdUAYYOPzIp2tCoOz/dnsYdNYa9oDXaK677WPWN4WX5+xa+IElSv4CWN2p4eSe3FBrKanA==
-X-Received: by 2002:a17:90a:220a:: with SMTP id c10mr87503028pje.33.1563948321586;
-        Tue, 23 Jul 2019 23:05:21 -0700 (PDT)
+        bh=Twevo6sVaaVI2A1vSf1Wr6zgrYSK1ESB5x0Su/v7Gzs=;
+        b=UL/Up+OV9UekcLqzBXDD9dj4aUf7TmdOEf1ZviWgFIH1Fy3O78tQaeLv4+0LjlKTho
+         QWlKrWLJX+9yTEQNplhSUR4RCmiEE59G6Tk7rTjF6S9r1MqELNvTHsbcS3dVtUUwwToA
+         bd3rf4zXR450Ogetmwy/iXDTQPyoh8h5euLJLt1yKvjkCUZP9/K6wv+cgY3UtR1a/g3g
+         qNUHlYpuVAnLxjYYUYoml5MBiCc4tgR6wBXH1O4KMpzU4+/+2LDzjaNle3yDRufUfP4X
+         DZ5bQcTI3IzlOjCmuduno6asVptJXn2kk3fWOwyV3YFImwbCTYE7r1TVIGN4WC3CBvm5
+         8bXA==
+X-Gm-Message-State: APjAAAXs6tc46JgbGr8zylXj+1WSeGA3glMRJTnzSkj3rbvBMhsX2bgR
+        8mWn2ExqQ4hl8TFhH+VGzrM=
+X-Google-Smtp-Source: APXvYqx6NzMVRq9UDmtL8rB3rGw5UcM+b/nhEFGqoT+WC2z1naHBnw9aS+KksTy6cfzk3x8qe8O2Fw==
+X-Received: by 2002:a63:b904:: with SMTP id z4mr78435659pge.388.1563948337113;
+        Tue, 23 Jul 2019 23:05:37 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id y8sm42498752pfn.52.2019.07.23.23.05.17
+        by smtp.gmail.com with ESMTPSA id i7sm35722269pjk.24.2019.07.23.23.05.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 23:05:20 -0700 (PDT)
+        Tue, 23 Jul 2019 23:05:36 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     Steffen Klassert <klassert@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Rasesh Mody <rmody@marvell.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Guo-Fu Tseng <cooldavid@cooldavid.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH net-next v2 0/8] Use dev_get_drvdata where possible
-Date:   Wed, 24 Jul 2019 14:05:12 +0800
-Message-Id: <20190724060512.23899-1-hslester96@gmail.com>
+Subject: [PATCH net-next v2 1/8] net: 3com: 3c59x: Use dev_get_drvdata
+Date:   Wed, 24 Jul 2019 14:05:32 +0800
+Message-Id: <20190724060532.23953-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,40 +73,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches use dev_get_drvdata instead of
-using to_pci_dev + pci_get_drvdata to make
-code simpler where possible.
+Instead of using to_pci_dev + pci_get_drvdata,
+use dev_get_drvdata to make code simpler.
 
-Changelog:
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Change pci_set_drvdata to dev_set_drvdata
+    to keep consistency.
 
-v1 -> v2:
-- Change pci_set_drvdata to dev_set_drvdata
-  to keep consistency.
+ drivers/net/ethernet/3com/3c59x.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Chuhong Yuan (8):
-  net: 3com: 3c59x: Use dev_get_drvdata
-  net: atheros: Use dev_get_drvdata
-  net: broadcom: Use dev_get_drvdata
-  e1000e: Use dev_get_drvdata where possible
-  fm10k: Use dev_get_drvdata
-  i40e: Use dev_get_drvdata
-  igb: Use dev_get_drvdata where possible
-  net: jme: Use dev_get_drvdata
-
- drivers/net/ethernet/3com/3c59x.c               |  8 +++-----
- drivers/net/ethernet/atheros/alx/main.c         |  8 +++-----
- drivers/net/ethernet/atheros/atl1c/atl1c_main.c | 10 ++++------
- drivers/net/ethernet/atheros/atlx/atl1.c        |  8 +++-----
- drivers/net/ethernet/broadcom/bnx2.c            |  8 +++-----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c       |  8 +++-----
- drivers/net/ethernet/broadcom/tg3.c             |  8 +++-----
- drivers/net/ethernet/intel/e1000e/netdev.c      |  9 ++++-----
- drivers/net/ethernet/intel/fm10k/fm10k_pci.c    |  6 +++---
- drivers/net/ethernet/intel/i40e/i40e_main.c     | 10 ++++------
- drivers/net/ethernet/intel/igb/igb_main.c       |  5 ++---
- drivers/net/ethernet/jme.c                      |  8 +++-----
- 12 files changed, 38 insertions(+), 58 deletions(-)
-
+diff --git a/drivers/net/ethernet/3com/3c59x.c b/drivers/net/ethernet/3com/3c59x.c
+index 147051404194..a0960c05833d 100644
+--- a/drivers/net/ethernet/3com/3c59x.c
++++ b/drivers/net/ethernet/3com/3c59x.c
+@@ -847,8 +847,7 @@ static void poll_vortex(struct net_device *dev)
+ 
+ static int vortex_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct net_device *ndev = pci_get_drvdata(pdev);
++	struct net_device *ndev = dev_get_drvdata(dev);
+ 
+ 	if (!ndev || !netif_running(ndev))
+ 		return 0;
+@@ -861,8 +860,7 @@ static int vortex_suspend(struct device *dev)
+ 
+ static int vortex_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct net_device *ndev = pci_get_drvdata(pdev);
++	struct net_device *ndev = dev_get_drvdata(dev);
+ 	int err;
+ 
+ 	if (!ndev || !netif_running(ndev))
+@@ -1222,7 +1220,7 @@ static int vortex_probe1(struct device *gendev, void __iomem *ioaddr, int irq,
+ 	/* if we are a PCI driver, we store info in pdev->driver_data
+ 	 * instead of a module list */
+ 	if (pdev)
+-		pci_set_drvdata(pdev, dev);
++		dev_set_drvdata(&pdev->dev, dev);
+ 	if (edev)
+ 		eisa_set_drvdata(edev, dev);
+ 
 -- 
 2.20.1
 
