@@ -2,160 +2,102 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98B5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13417C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE75217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD40217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000609;
-	bh=/m+OpmSi6461DEttxrd1JK+QUeBO2w8QPWSmaVlv9LE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ueAhucR/eXixLPzvvYXt0Ah3LVMcURy/sEUh0cDuHXvGQwzGfpDvRtxPDCOvZGcb
-	 QCJn0+iaNfgthHm+Dxr3zbmxrvPBRFa5wINXpebLfrUHjHPXl3ZcOdOA1cTsA5iW2N
-	 GV8yMRswwRh4o+7ESv+zWLms72ttmpn9QeqxN9FU=
+	s=default; t=1564000619;
+	bh=QZ0PVi4DchCQVnGXd4DtGGjag5onxfOneU2pfZDuASU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oAI7ltTSWcqciqSw5dLC5w/cO0H/yNuAn/LhjfbOcheUf6at6s1Jybq4gQzk/0j/P
+	 1Vc5WflRBSDyTSBloAczto7825+e4jHdTTu5D6kZ/QExvytrW/QZE8smn2b843d+2W
+	 JcIeo0N9JEWkKOjoNsKJfo6q+hVTyPYkvchMH0y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387957AbfGXTYe (ORCPT
+        id S2390900AbfGXUg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbfGXTYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD0522387;
-        Wed, 24 Jul 2019 19:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996270;
-        bh=/m+OpmSi6461DEttxrd1JK+QUeBO2w8QPWSmaVlv9LE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lNL7ToT6nIm2yvcR8GOvvohsgvlrrSk6Ub0PNkViwYD+zP8kTdIakLibDhhvpPuf+
-         pEZNHkUcBEWk7+wqom0DKSW1LmACckyvsnvMHSw3BjjTECqwECBRfPhWTyYax0iqgj
-         acpc4sCKeqh/b45DPWBOW7Ievytkxt8lTDUsxpIk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 032/413] ice: Fix couple of issues in ice_vsi_release
-Date:   Wed, 24 Jul 2019 21:15:23 +0200
-Message-Id: <20190724191737.862012030@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:36:58 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35884 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387422AbfGXUgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:36:55 -0400
+Received: by mail-io1-f65.google.com with SMTP id o9so92538127iom.3;
+        Wed, 24 Jul 2019 13:36:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ezauUXaQEEHVy+2OcDcxOeDrntwiw+XADj/ab5JOeyk=;
+        b=L3BfcWfCFoSyrrt9J3Jv5g1ROUg0JMjyjIaowWHkX0kqo/QLy7yQxT/yRuXubPkc8Q
+         N4iCUjyfmiPp/7DUHJ/xh8MomUhlXbVcY8kAe3BJ8WqHISyz2hVoHTwJwJOmCGPZybg4
+         eAmlrphVY06Qkw58R27q3DgpHCpJQ/39KjuGh4fOSrR63pB9qD3laW6CrfK8k3ctzp/x
+         HH88XvjgVIjRvKXoTSzoS22m2Ci+w37yBOCSWUWIrqonZBpq0L0lHoLhPkSJrHAHt4in
+         eizGcvhYFbwqp9eVrxtyHaWkpc8YLViPe9Xci6hK3VkB/viBgz/fn8VEwZMAAK2sc6t4
+         WsDA==
+X-Gm-Message-State: APjAAAVIOfq8DFxizUEqORjnF7h20BV9pGAF0LUiVd6SdLllWMYnvsjH
+        zfyYCLh65gxBxjJAlufhjA==
+X-Google-Smtp-Source: APXvYqxi6iYl7bDx+4SE5POY1hGXofqijIvqy6IHLDGPzYHohBVh4g3K/4amhnyALZl9eJN0E91egA==
+X-Received: by 2002:a05:6638:201:: with SMTP id e1mr7480694jaq.45.1564000614010;
+        Wed, 24 Jul 2019 13:36:54 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id b8sm38661034ioj.16.2019.07.24.13.36.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 13:36:53 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 14:36:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Hanna Hawa <hannah@marvell.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: iommu/arm,smmu: add compatible
+ string for Marvell
+Message-ID: <20190724203652.GA27065@bogus>
+References: <20190711150242.25290-1-gregory.clement@bootlin.com>
+ <20190711150242.25290-4-gregory.clement@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190711150242.25290-4-gregory.clement@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aa6ccf3f2d7042f94c4e91538956ce7051e7856e ]
+On Thu, 11 Jul 2019 17:02:41 +0200, Gregory CLEMENT wrote:
+> From: Hanna Hawa <hannah@marvell.com>
+> 
+> Add specific compatible string for Marvell usage due errata of
+> accessing 64bits registers of ARM SMMU, in AP806.
+> 
+> AP806 SoC uses the generic ARM-MMU500, and there's no specific
+> implementation of Marvell, this compatible is used for errata only.
+> 
+> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Currently the driver is calling ice_napi_del() and then
-unregister_netdev(). The call to unregister_netdev() will result in a
-call to ice_stop() and then ice_vsi_close(). This is where we call
-napi_disable() for all the MSI-X vectors. This flow is reversed so make
-the changes to ensure napi_disable() happens prior to napi_del().
-
-Before calling napi_del() and free_netdev() make sure
-unregister_netdev() was called. This is done by making sure the
-__ICE_DOWN bit is set in the vsi->state for the interested VSI.
-
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ice/ice.h      |  1 -
- drivers/net/ethernet/intel/ice/ice_lib.c  | 24 ++++++++++++-----------
- drivers/net/ethernet/intel/ice/ice_main.c |  2 +-
- 3 files changed, 14 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice.h b/drivers/net/ethernet/intel/ice/ice.h
-index 792e6e42030e..754c7080c3fc 100644
---- a/drivers/net/ethernet/intel/ice/ice.h
-+++ b/drivers/net/ethernet/intel/ice/ice.h
-@@ -451,7 +451,6 @@ int ice_set_rss(struct ice_vsi *vsi, u8 *seed, u8 *lut, u16 lut_size);
- int ice_get_rss(struct ice_vsi *vsi, u8 *seed, u8 *lut, u16 lut_size);
- void ice_fill_rss_lut(u8 *lut, u16 rss_table_size, u16 rss_size);
- void ice_print_link_msg(struct ice_vsi *vsi, bool isup);
--void ice_napi_del(struct ice_vsi *vsi);
- #ifdef CONFIG_DCB
- int ice_pf_ena_all_vsi(struct ice_pf *pf, bool locked);
- void ice_pf_dis_all_vsi(struct ice_pf *pf, bool locked);
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index fbf1eba0cc2a..f14fa51cc704 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -2754,19 +2754,14 @@ int ice_vsi_release(struct ice_vsi *vsi)
- 
- 	if (vsi->type == ICE_VSI_VF)
- 		vf = &pf->vf[vsi->vf_id];
--	/* do not unregister and free netdevs while driver is in the reset
--	 * recovery pending state. Since reset/rebuild happens through PF
--	 * service task workqueue, its not a good idea to unregister netdev
--	 * that is associated to the PF that is running the work queue items
--	 * currently. This is done to avoid check_flush_dependency() warning
--	 * on this wq
-+	/* do not unregister while driver is in the reset recovery pending
-+	 * state. Since reset/rebuild happens through PF service task workqueue,
-+	 * it's not a good idea to unregister netdev that is associated to the
-+	 * PF that is running the work queue items currently. This is done to
-+	 * avoid check_flush_dependency() warning on this wq
- 	 */
--	if (vsi->netdev && !ice_is_reset_in_progress(pf->state)) {
--		ice_napi_del(vsi);
-+	if (vsi->netdev && !ice_is_reset_in_progress(pf->state))
- 		unregister_netdev(vsi->netdev);
--		free_netdev(vsi->netdev);
--		vsi->netdev = NULL;
--	}
- 
- 	if (test_bit(ICE_FLAG_RSS_ENA, pf->flags))
- 		ice_rss_clean(vsi);
-@@ -2799,6 +2794,13 @@ int ice_vsi_release(struct ice_vsi *vsi)
- 	ice_rm_vsi_lan_cfg(vsi->port_info, vsi->idx);
- 	ice_vsi_delete(vsi);
- 	ice_vsi_free_q_vectors(vsi);
-+
-+	/* make sure unregister_netdev() was called by checking __ICE_DOWN */
-+	if (vsi->netdev && test_bit(__ICE_DOWN, vsi->state)) {
-+		free_netdev(vsi->netdev);
-+		vsi->netdev = NULL;
-+	}
-+
- 	ice_vsi_clear_rings(vsi);
- 
- 	ice_vsi_put_qs(vsi);
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 7843abf4d44d..dbf3d39ad8b1 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -1667,7 +1667,7 @@ static int ice_req_irq_msix_misc(struct ice_pf *pf)
-  * ice_napi_del - Remove NAPI handler for the VSI
-  * @vsi: VSI for which NAPI handler is to be removed
-  */
--void ice_napi_del(struct ice_vsi *vsi)
-+static void ice_napi_del(struct ice_vsi *vsi)
- {
- 	int v_idx;
- 
--- 
-2.20.1
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
