@@ -2,118 +2,128 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B613AC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D42C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1CD229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="hrVbr11+"
+	by mail.kernel.org (Postfix) with ESMTP id 965D222387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfGXLhY (ORCPT
+        id S1727601AbfGXLiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:37:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46367 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfGXLhX (ORCPT
+        Wed, 24 Jul 2019 07:38:10 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43909 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727482AbfGXLiJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:37:23 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z1so46574839wru.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 04:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linbit-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aQfNFiJgGsv9UgTyWY3tUqj/qF9PNqN3A4wyBds+Y/Y=;
-        b=hrVbr11+OiUw0odEuipDamOn+CeA1FYWaQZFMbx5tm88oSpJoJScJfyS/Bu5jYPICg
-         7cDHOGH2yau3gw2mLzSSI03+SpYiwqppzZGErfQ8LHNCVcbsk+x9OsDTPZN1GkUUFfVQ
-         Is1m7ROJqjwHQklsHgWAYs3daEfx7XHTqHrYT0qlBMD7ZLIPF7/GaD0vnSBR8GIxffqs
-         uwMky4QRnl6v1PUjlk1HCJHMPA1ILomAWcsvtMmnEEDyECYgAhyUNqk4WzfYwhiLrSjG
-         aBJG3s83NMAuYcZyCTXDehDYQCVI9rqsxnRzI9R2TyvPOpO+GkiBXBFj3UfQ/fu91tfC
-         jQxA==
+        Wed, 24 Jul 2019 07:38:09 -0400
+Received: by mail-qt1-f196.google.com with SMTP id w17so768345qto.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 04:38:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aQfNFiJgGsv9UgTyWY3tUqj/qF9PNqN3A4wyBds+Y/Y=;
-        b=uXN3up8DMs0jLOEAE2pq8xPQ6+1zj91fdyR6cvvzzsLx2N6uNmsUxx6qts5LokFzGx
-         7v0SZVMumeU1zGhTjMac/EoxcxPnRZJqOzlaj2GXzH7N/XnNG53gaxcF5vs86QnbF6xv
-         1IRO5tZxRce9iAyVxHw8oVuxDni3lk30nalGYfRd5OTVfeUlVtmpdZI8wGZHcZ/nHzz3
-         YDOQX4YG0EOrkfDzXraeIce1lWBEG08TdeqO74F+QWKeXKWkzvEiVxz8EENXwCAhmW/S
-         lPLdrcJX/rPAvlm0JfGQtntlvMR9pKr2arn8UoWSlVPL165wpZBrtEZjHf48tcdwoVZ3
-         ZxmA==
-X-Gm-Message-State: APjAAAUV4W6mg3n8/rlfFKkM+UA52tW/LuhsKawZ8MOPIJSmTXI5A13l
-        9A7AWWvrQ3aU9YkQ7EIG55xSDg==
-X-Google-Smtp-Source: APXvYqyJbaRTnQola4b6eYJh8U7ie0ZzV/HGXTrlrS53rgawi0WhJg+42OgkqSTdv6HOjFzxYcwY/w==
-X-Received: by 2002:a5d:46d1:: with SMTP id g17mr36583242wrs.160.1563968241541;
-        Wed, 24 Jul 2019 04:37:21 -0700 (PDT)
-Received: from localhost (static.20.139.203.116.clients.your-server.de. [116.203.139.20])
-        by smtp.gmail.com with ESMTPSA id u13sm54814133wrq.62.2019.07.24.04.37.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 04:37:20 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 13:37:20 +0200
-From:   Roland Kammerer <roland.kammerer@linbit.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
-        axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com
-Subject: Re: [Drbd-dev] [PATCH 2/2] block: drbd: Fix a possible null-pointer
- dereference in is_valid_state()
-Message-ID: <20190724113720.gis6v2ziltmmv4zt@rck.sh>
-References: <20190724034926.28755-1-baijiaju1990@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OtXsM3EAnHCwOTu8jwk53eaCILY4JLC/RpCVWDNAsAc=;
+        b=e6ENeNoDTjvOwJp34C/A8zpVfqnUuOinnCCRFDcDgkm/vMMsfYhJalVdnH3Mzv2nsC
+         od7xR3EIMPMamLeTDs9NLMYKwAWfyuSEgvr5oy0wqbmGl2zSR6fcmT5KUpBoAAm6sx1O
+         mAuYen2cyu9nl1l8mNXu2DjxHIvhPNOTnR5ypP0O/LrwYj/cF5xTEeWww3bM8hiBkk4T
+         wURyK1dTnQYt94G+EAvttP6N9kJBGRDSITFHmzdsv5gwePyPuTJnn6Xmg9vwZ1KWjXDJ
+         TAywjMJp1XJh83Udy1jZOpHZ9YjFH6Ly90z4HzcQsKvgLoT8dVHXVOGhA/+5l/hBi8Vd
+         oaiQ==
+X-Gm-Message-State: APjAAAVWnbTwRLhzYy01nWpel+nUFoX+py8QwXiI8p7eIMxsLZFyO1LA
+        02GOVtQfeyIWEk2+dD6H0rllqg==
+X-Google-Smtp-Source: APXvYqzZSre9ooa7vDedJRUD+3vOJbH1kq9xA43CbFviCJFtNHcxq5k6YU0WwwH4UdHDqHjv2ASKRw==
+X-Received: by 2002:ac8:2409:: with SMTP id c9mr57284445qtc.145.1563968288928;
+        Wed, 24 Jul 2019 04:38:08 -0700 (PDT)
+Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id 42sm24549812qtm.27.2019.07.24.04.38.07
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 04:38:08 -0700 (PDT)
+Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
+To:     Christoph Hellwig <hch@infradead.org>,
+        John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        butao <butao@hisilicon.com>,
+        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
+        Yudongbin <yudongbin@hisilicon.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20190624194908.121273-1-john.stultz@linaro.org>
+ <20190624194908.121273-5-john.stultz@linaro.org>
+ <20190718100840.GB19666@infradead.org>
+ <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+ <20190724065958.GC16225@infradead.org>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <25353c4f-5389-0352-b34e-78698b35e588@redhat.com>
+Date:   Wed, 24 Jul 2019 07:38:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724034926.28755-1-baijiaju1990@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190724065958.GC16225@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:49:26AM +0800, Jia-Ju Bai wrote:
-> In is_valid_state(), there is an if statement on line 839 to check
-> whether nc is NULL:
->     if (nc)
+On 7/24/19 2:59 AM, Christoph Hellwig wrote:
+> On Mon, Jul 22, 2019 at 10:04:06PM -0700, John Stultz wrote:
+>> Apologies, I'm not sure I'm understanding your suggestion here.
+>> dma_alloc_contiguous() does have some interesting optimizations
+>> (avoiding allocating single page from cma), though its focus on
+>> default area vs specific device area doesn't quite match up the usage
+>> model for dma heaps.  Instead of allocating memory for a single
+>> device, we want to be able to allow userland, for a given usage mode,
+>> to be able to allocate a dmabuf from a specific heap of memory which
+>> will satisfy the usage mode for that buffer pipeline (across multiple
+>> devices).
+>>
+>> Now, indeed, the system and cma heaps in this patchset are a bit
+>> simple/trivial (though useful with my devices that require contiguous
+>> buffers for the display driver), but more complex ION heaps have
+>> traditionally stayed out of tree in vendor code, in many cases making
+>> incompatible tweaks to the ION core dmabuf exporter logic.
 > 
-> When nc is NULL, it is used on line 880:
->     (nc->verify_alg[0] == 0)
+> So what would the more complicated heaps be?
 > 
-> Thus, a possible null-pointer dereference may occur.
+>> That's why
+>> dmabuf heaps is trying to destage ION in a way that allows heaps to
+>> implement their exporter logic themselves, so we can start pulling
+>> those more complicated heaps out of their vendor hidey-holes and get
+>> some proper upstream review.
+>>
+>> But I suspect I just am confused as to what your suggesting. Maybe
+>> could you expand a bit? Apologies for being a bit dense.
 > 
-> To fix this bug, nc is also checked on line 880.
+> My suggestion is to merge the system and CMA heaps.  CMA (at least
+> the system-wide CMA area) is really just an optimization to get
+> large contigous regions more easily.  We should make use of it as
+> transparent as possible, just like we do in the DMA code.
 > 
-> This bug is found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  drivers/block/drbd/drbd_state.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
-> index eeaa3b49b264..3cf477e9cf6a 100644
-> --- a/drivers/block/drbd/drbd_state.c
-> +++ b/drivers/block/drbd/drbd_state.c
-> @@ -877,7 +877,7 @@ is_valid_state(struct drbd_device *device, union drbd_state ns)
->  		rv = SS_CONNECTED_OUTDATES;
->  
->  	else if ((ns.conn == C_VERIFY_S || ns.conn == C_VERIFY_T) &&
-> -		 (nc->verify_alg[0] == 0))
-> +		 (nc && nc->verify_alg[0] == 0))
->  		rv = SS_NO_VERIFY_ALG;
 
-AFAIK it is "impossible" to reach such a DRBD state without having a
-valid net conf. Anyways, a check is a good idea, but the logic is wrong,
-I would propose something like this:
+It's not just an optimization for Ion though. Ion was designed to
+let the callers choose between system and multiple CMA heaps. On other
+systems there may be multiple CMA regions dedicated to a specific
+purpose or placed at a specific address. The callers need to
+be able to choose exactly whether they want a particular CMA region
+or discontiguous regions.
 
- 	else if ((ns.conn == C_VERIFY_S || ns.conn == C_VERIFY_T) &&
--		 (nc->verify_alg[0] == 0))
-+		 (!nc || nc->verify_alg[0] == 0))
- 		rv = SS_NO_VERIFY_ALG;
-
-Regards, rck
+Thanks,
+Laura
