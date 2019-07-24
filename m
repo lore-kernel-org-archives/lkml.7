@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9FFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72520C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DE1229FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4613C229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996940;
-	bh=xCREz+NpzjDnCt8otChgXXHGTnuByINlKgm7R4l8T1k=;
+	s=default; t=1563996945;
+	bh=tUGfxRu2YMxkmJxgngZp/LCB7ckMfZ7RAQfzzTpcoEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2oG5XWwxoAWBfr3caWFIRfGUExjjB0uTA1/9BfhR896wi8kuFUIcogmMD9TnG1BT8
-	 6tZ1B/JV2zaMGIuHuYRikdojlz36FJqzLE6/dWEmLm+nnQZScV16BUcTu3DjplnQPD
-	 zbi6F8KSTg7skIM//uYJXb+1l6CHJE964AgaCPuQ=
+	b=eDBOYOPRQ1uOtiSXPuaaftuqArTOYfhXhiteZ40StWu/PY9o8MOjM9zb/FZYiTPQt
+	 t/k6T1JOzJby+dBXw9lHtVFU26YTZAqmVqm6STA13EqBw9W2jlN27IGNzhRt5f9cA2
+	 UOFVOOYtc6mgn+T0mAfuR4IAVI7RV0eAMlxl1ooc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbfGXTfj (ORCPT
+        id S2389261AbfGXTfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:35:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389214AbfGXTfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:35:32 -0400
+        id S2389241AbfGXTfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:35:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2A6521951;
-        Wed, 24 Jul 2019 19:35:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7F4020659;
+        Wed, 24 Jul 2019 19:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996931;
-        bh=xCREz+NpzjDnCt8otChgXXHGTnuByINlKgm7R4l8T1k=;
+        s=default; t=1563996940;
+        bh=tUGfxRu2YMxkmJxgngZp/LCB7ckMfZ7RAQfzzTpcoEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Au4+PvuNDrvsv237GAeY/3vOptIk64P7OfJXf3KdixFNOsPBUSPlgbZ/o68j7AOkp
-         llx4k7yIMYqwmyUxtKbUJ9vrUKq8b2qFScXvzpoTi7FBP5hWl4c2hjgLQPni6ua0Gv
-         aXXoKOD9qhV+C9xGZxk7miSvXd1iETEeeptq8ffg=
+        b=Zf6ZVDXZxpmuMjUJUeVD1R0wuJBXGxAO+lLRCsXdydPf9Y+0xovInAMWY1pAP7+fL
+         Y722z49788RNDKEaRYGxQ77ulSLXZ116tripqgsywMIy40qGTF73Zyf6tP1TxySG+N
+         HRdAfBI3PGQ4gu44mA7YikBEV5wPI6Z02o5eQJ6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elena Petrova <lenaptr@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 266/413] crypto: arm64/sha1-ce - correct digest for empty data in finup
-Date:   Wed, 24 Jul 2019 21:19:17 +0200
-Message-Id: <20190724191755.221716601@linuxfoundation.org>
+Subject: [PATCH 5.2 269/413] crypto: crypto4xx - fix AES CTR blocksize value
+Date:   Wed, 24 Jul 2019 21:19:20 +0200
+Message-Id: <20190724191755.470207531@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,41 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elena Petrova <lenaptr@google.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 1d4aaf16defa86d2665ae7db0259d6cb07e2091f upstream.
+commit bfa2ba7d9e6b20aca82b99e6842fe18842ae3a0f upstream.
 
-The sha1-ce finup implementation for ARM64 produces wrong digest
-for empty input (len=0). Expected: da39a3ee..., result: 67452301...
-(initial value of SHA internal state). The error is in sha1_ce_finup:
-for empty data `finalize` will be 1, so the code is relying on
-sha1_ce_transform to make the final round. However, in
-sha1_base_do_update, the block function will not be called when
-len == 0.
+This patch fixes a issue with crypto4xx's ctr(aes) that was
+discovered by libcapi's kcapi-enc-test.sh test.
 
-Fix it by setting finalize to 0 if data is empty.
+The some of the ctr(aes) encryptions test were failing on the
+non-power-of-two test:
 
-Fixes: 07eb54d306f4 ("crypto: arm64/sha1-ce - move SHA-1 ARMv8 implementation to base layer")
+kcapi-enc - Error: encryption failed with error 0
+kcapi-enc - Error: decryption failed with error 0
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits):
+original file (1d100e..cc96184c) and generated file (e3b0c442..1b7852b855)
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits)
+(openssl generated CT): original file (e3b0..5) and generated file (3..8e)
+[PASSED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits)
+(openssl generated PT)
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (password):
+original file (1d1..84c) and generated file (e3b..852b855)
+
+But the 16, 32, 512, 65536 tests always worked.
+
+Thankfully, this isn't a hidden hardware problem like previously,
+instead this turned out to be a copy and paste issue.
+
+With this patch, all the tests are passing with and
+kcapi-enc-test.sh gives crypto4xx's a clean bill of health:
+ "Number of failures: 0" :).
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Elena Petrova <lenaptr@google.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: 98e87e3d933b ("crypto: crypto4xx - add aes-ctr support")
+Fixes: f2a13e7cba9e ("crypto: crypto4xx - enable AES RFC3686, ECB, CFB and OFB offloads")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/sha1-ce-glue.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/amcc/crypto4xx_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/crypto/sha1-ce-glue.c
-+++ b/arch/arm64/crypto/sha1-ce-glue.c
-@@ -52,7 +52,7 @@ static int sha1_ce_finup(struct shash_de
- 			 unsigned int len, u8 *out)
- {
- 	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
--	bool finalize = !sctx->sst.count && !(len % SHA1_BLOCK_SIZE);
-+	bool finalize = !sctx->sst.count && !(len % SHA1_BLOCK_SIZE) && len;
- 
- 	if (!crypto_simd_usable())
- 		return crypto_sha1_finup(desc, data, len, out);
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -1243,7 +1243,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_flags = CRYPTO_ALG_NEED_FALLBACK |
+ 				CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
+@@ -1263,7 +1263,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_priority = CRYPTO4XX_CRYPTO_PRIORITY,
+ 			.cra_flags = CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
 
 
