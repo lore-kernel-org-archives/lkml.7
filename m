@@ -2,134 +2,175 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13326C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2335C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D96CC216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B133D2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRCjPwpl"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ZyJ3zgq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfGXTUQ (ORCPT
+        id S2387500AbfGXTV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:20:16 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44607 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfGXTUQ (ORCPT
+        Wed, 24 Jul 2019 15:21:57 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37116 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfGXTV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:20:16 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d79so34572559qke.11;
-        Wed, 24 Jul 2019 12:20:15 -0700 (PDT)
+        Wed, 24 Jul 2019 15:21:57 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d15so34596669qkl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:21:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Jf56Nz05DOfwnERFUQkN8u7zsx4IFXTKejoTcl/rv6g=;
-        b=kRCjPwpl3KV5JZ+jG9MW4RJlkRN421VxJjYbdreISYCOhxnOSwdD3ALzdA46vTmRly
-         b7nqIstNMJQ8CAU19gYGlCqHwmsvkmk1UjR7qooCEt4iAV10ShQ0azpC72pD39vNnuyw
-         5afkxEf2fctjRwkGzb7B1lKceftIqafcwVp1PR7d4PYfUGHL6zbknxbTJ1u+/fugQQQO
-         S2R41s1q5jD1aKjbRJZoPherbeKwf4gyxVXnNxa5E6CyqtACUL4DLzQP6rWZiJ5W+UiS
-         cdZ3IoAO7d2aR5yy0LtprKyxfFDvJvIoqAOBoX+h6zc0t3KdqN9/AXbhVBLEdJSakywZ
-         sYhA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q7VJ5lbRcag+sb2GFiCBi0ogY7ktByen10i6R5SYdYM=;
+        b=ZyJ3zgq6h4cja/hdaLrA6IkzBFDVRDUJUFtWz1fzLJwFO3+4I4Mk/FCq69MWFKhPkn
+         VmJtaQRVCCbTW4B/7vtp3EFV7mKQ0Du9zN1ddOb32MyshNPl6WhBSEDHrm+k6o2CyMMO
+         4KyPGLB4T/6MfLf1NsYTF9rAzr1pU8FsMWEvqr8KtU1D2GgXOl729S0aNG0wyoeil1db
+         UU7GVtf1oaMsSE860psV8LYDQAfcq3WrN/GcPafu+19PCrIlmB/lcCJJ/hsWVBf9sq/S
+         3j9mLwgItOsVezznIUV4U2H56ZO80MnsJTCG1n8+5OJ16YnPZyPc+ck/lacJ5FRZiPcz
+         PO7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jf56Nz05DOfwnERFUQkN8u7zsx4IFXTKejoTcl/rv6g=;
-        b=nYv/2C/FAZbQ9UysrJ366yOSvWKuqog3yU3yb8IzEEGRVJ/WmYQrPvfaFchK4bn8Yp
-         l513bnQnyocfcLWOINoSXj58ViRT6AD7Z9eL6OXflRW5K4sbcFlACTQVZBovdYh+Ev9W
-         Mqco9WqPDRlf6qcjMO8clOEGxYjTGugvNzsa8DSUVpyjOxO3299b00WmdrWmC90xt//u
-         nKNMqvbb1xE6xPq1j0bfJTOfKaTclSTpmCBWa41XGTzUHyBesMb6m+WRa/YKZbgI5I8r
-         ttHvGD69XkTsMBsqcPVvPipO7cjC0uZGkqLW84kcDYbVOWAagl/OwMw7J4+1ntpQ2/JJ
-         1Uzw==
-X-Gm-Message-State: APjAAAUWbHeoaN8ovk49SU+bjjnSYY1BDZefEG7PxYfkT3hJnYgpJugn
-        QiI9XmQme882WyXYav7WZwWLjXTOcdTMH7Knbo8=
-X-Google-Smtp-Source: APXvYqzU4aF1odzauC1/uuwbOPhg53aT8eaLMEi5QIzUZ//jTHnOwWUL6n9AYED8ykJtlRJ2izUgfx4GAeL/H9YNj14=
-X-Received: by 2002:a37:a854:: with SMTP id r81mr56278918qke.378.1563996015218;
- Wed, 24 Jul 2019 12:20:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q7VJ5lbRcag+sb2GFiCBi0ogY7ktByen10i6R5SYdYM=;
+        b=na7fuOC2l2TZNckpq6wNCXkWW6KwpXMA7TW2OzjQFjxuDqF0FZBkVWf0pvmsnmkLAO
+         bgizRmEhNzwClRXo0GrSZnM5YL3FdOGhxaVA9CaxD1xHVyzZWS/Ow1lavJTp/WCYiLP9
+         HmJv4M4tyisFnWkkZEPP+LucK8jHGa0ctVnrUUrQ1yMpZv2UpERXYPDrJ3xarY3+DlO2
+         Lw2k57AWVAW2xwChKCxqX94WEu+C3ObBhZ9rmuANDiYZ+N/HuR3kV7g6SWvnWMyAvrg0
+         3p2JB9V3zFxTM8dntvWtyOfTGDEI93yU6dlcMPklnCtJXAIth9s5f2v2wpudn/r4gAZF
+         CXUQ==
+X-Gm-Message-State: APjAAAWviNie/HEjurBD2qaEeBMKefF5uZEUv5EizySW1dQ3Qx7vgGTS
+        rWY8eVxl5kyazwGrvj2cYFdhFQ==
+X-Google-Smtp-Source: APXvYqxIqRA+0VLqS5/ktYsyx1BSHKocPYVvc0BAedibqfRz0wbPwwvU+Y1GIKj2RSb05TRVjFqKEg==
+X-Received: by 2002:a05:620a:1425:: with SMTP id k5mr56337391qkj.146.1563996116084;
+        Wed, 24 Jul 2019 12:21:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id l19sm27634792qtb.6.2019.07.24.12.21.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 12:21:55 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hqMpn-0006gr-3W; Wed, 24 Jul 2019 16:21:55 -0300
+Date:   Wed, 24 Jul 2019 16:21:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH] mm/hmm: replace hmm_update with mmu_notifier_range
+Message-ID: <20190724192155.GG28493@ziepe.ca>
+References: <20190723210506.25127-1-rcampbell@nvidia.com>
+ <20190724070553.GA2523@lst.de>
+ <20190724152858.GB28493@ziepe.ca>
+ <20190724175858.GC6410@dhcp22.suse.cz>
+ <20190724180837.GF28493@ziepe.ca>
+ <20190724185617.GE6410@dhcp22.suse.cz>
+ <20190724185910.GF6410@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190724165803.87470-1-brianvv@google.com>
-In-Reply-To: <20190724165803.87470-1-brianvv@google.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Wed, 24 Jul 2019 12:20:04 -0700
-Message-ID: <CAPhsuW7PU1PP91e8vD2diwhBAwGJHWu6wAKOoBThT86f4r5OJw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 0/6] bpf: add BPF_MAP_DUMP command to dump more
- than one entry per call
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724185910.GF6410@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:09 AM Brian Vazquez <brianvv@google.com> wrote:
->
-> This introduces a new command to retrieve multiple number of entries
-> from a bpf map.
->
-> This new command can be executed from the existing BPF syscall as
-> follows:
->
-> err =  bpf(BPF_MAP_DUMP, union bpf_attr *attr, u32 size)
-> using attr->dump.map_fd, attr->dump.prev_key, attr->dump.buf,
-> attr->dump.buf_len
-> returns zero or negative error, and populates buf and buf_len on
-> succees
->
-> This implementation is wrapping the existing bpf methods:
-> map_get_next_key and map_lookup_elem
->
-> Note that this implementation can be extended later to do dump and
-> delete by extending map_lookup_and_delete_elem (currently it only works
-> for bpf queue/stack maps) and either use a new flag in map_dump or a new
-> command map_dump_and_delete.
->
-> Results show that even with a 1-elem_size buffer, it runs ~40 faster
+On Wed, Jul 24, 2019 at 08:59:10PM +0200, Michal Hocko wrote:
+> On Wed 24-07-19 20:56:17, Michal Hocko wrote:
+> > On Wed 24-07-19 15:08:37, Jason Gunthorpe wrote:
+> > > On Wed, Jul 24, 2019 at 07:58:58PM +0200, Michal Hocko wrote:
+> > [...]
+> > > > Maybe new users have started relying on a new semantic in the meantime,
+> > > > back then, none of the notifier has even started any action in blocking
+> > > > mode on a EAGAIN bailout. Most of them simply did trylock early in the
+> > > > process and bailed out so there was nothing to do for the range_end
+> > > > callback.
+> > > 
+> > > Single notifiers are not the problem. I tried to make this clear in
+> > > the commit message, but lets be more explicit.
+> > > 
+> > > We have *two* notifiers registered to the mm, A and B:
+> > > 
+> > > A invalidate_range_start: (has no blocking)
+> > >     spin_lock()
+> > >     counter++
+> > >     spin_unlock()
+> > > 
+> > > A invalidate_range_end:
+> > >     spin_lock()
+> > >     counter--
+> > >     spin_unlock()
+> > > 
+> > > And this one:
+> > > 
+> > > B invalidate_range_start: (has blocking)
+> > >     if (!try_mutex_lock())
+> > >         return -EAGAIN;
+> > >     counter++
+> > >     mutex_unlock()
+> > > 
+> > > B invalidate_range_end:
+> > >     spin_lock()
+> > >     counter--
+> > >     spin_unlock()
+> > > 
+> > > So now the oom path does:
+> > > 
+> > > invalidate_range_start_non_blocking:
+> > >  for each mn:
+> > >    a->invalidate_range_start
+> > >    b->invalidate_range_start
+> > >    rc = EAGAIN
+> > > 
+> > > Now we SKIP A's invalidate_range_end even though A had no idea this
+> > > would happen has state that needs to be unwound. A is broken.
+> > > 
+> > > B survived just fine.
+> > > 
+> > > A and B *alone* work fine, combined they fail.
+> > 
+> > But that requires that they share some state, right?
+> > 
+> > > When the commit was landed you can use KVM as an example of A and RDMA
+> > > ODP as an example of B
+> > 
+> > Could you point me where those two share the state please? KVM seems to
+> > be using kvm->mmu_notifier_count but I do not know where to look for the
+> > RDMA...
+> 
+> Scratch that. ELONGDAY... I can see your point. It is all or nothing
+> that doesn't really work here. Looking back at your patch it seems
+> reasonable but I am not sure what is supposed to be a behavior for
+> notifiers that failed.
 
-Why is the new command 40% faster with 1-elem_size buffer?
+Okay, good to know I'm not missing something. The idea was the failed
+notifier would have to handle the mandatory _end callback.
 
-> than the current implementation, improvements of ~85% are reported when
-> the buffer size is increased, although, after the buffer size is around
-> 5% of the total number of entries there's no huge difference in
-> increasing it.
->
-> Tested:
-> Tried different size buffers to handle case where the bulk is bigger, or
-> the elements to retrieve are less than the existing ones, all runs read
-> a map of 100K entries. Below are the results(in ns) from the different
-> runs:
->
-> buf_len_1:       69038725 entry-by-entry: 112384424 improvement
-> 38.569134
-> buf_len_2:       40897447 entry-by-entry: 111030546 improvement
-> 63.165590
-> buf_len_230:     13652714 entry-by-entry: 111694058 improvement
-> 87.776687
-> buf_len_5000:    13576271 entry-by-entry: 111101169 improvement
-> 87.780263
-> buf_len_73000:   14694343 entry-by-entry: 111740162 improvement
-> 86.849542
-> buf_len_100000:  13745969 entry-by-entry: 114151991 improvement
-> 87.958187
-> buf_len_234567:  14329834 entry-by-entry: 114427589 improvement
-> 87.476941
+I've reflected on it some more, and I have a scheme to be able to
+'undo' that is safe against concurrent hlist_del_rcu.
 
-It took me a while to figure out the meaning of 87.476941. It is probably
-a good idea to say 87.5% instead.
+If we change the register to keep the hlist sorted by address then we
+can do a targetted 'undo' of past starts terminated by address
+less-than comparison of the first failing struct mmu_notifier.
+
+It relies on the fact that rcu is only used to remove items, the list
+adds are all protected by mm locks, and the number of mmu notifiers is
+very small.
+
+This seems workable and does not need more driver review/update...
+
+However, hmm's implementation still needs more fixing.
 
 Thanks,
-Song
+Jason
