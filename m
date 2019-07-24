@@ -5,47 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8D6C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6572C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69EE22CB8
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8905922CB8
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033319;
-	bh=2IhI4awjb8zpSmskBquFUnv/YYu8RV4VS6osttvV4k8=;
+	s=default; t=1564033323;
+	bh=LBngP+SYDecVYiJm+t3k/6UP2RSu5ScY0G4AkJwtVNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aWJXjjao3BXBzhCcYi8r2nRb/i+YIMgJyKZ3BKCdLguG22b84Rdf8qdmT0JG1fwDs
-	 SyF3DSV/Igxv3BxzjvwA6+6I5vSgld5apKyQbcuP6YHam/zik5gDptSkvuDg6pXlH9
-	 MHR7Ip0+MVaEubamdiYssbX8z5lKXwp9OH46yYKg=
+	b=pQngi8bLvGedk51DRW3ZrK0OKQzasZxDto76LqCnnBZstMWCCBZKp45j+JdsIYhzN
+	 I81ywkJosgkqQNshkxvdGDCdIbNWeFXr9EiprS41FKzcEMNJgdRjVhRv6R68DAmLuh
+	 pEPYRNXMYDRVCUCcIc/+WfJ+nJouioz2udw59MYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404789AbfGYFl6 (ORCPT
+        id S2404804AbfGYFmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404736AbfGYFl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:41:56 -0400
+        id S2404736AbfGYFl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:41:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30DA32075C;
-        Thu, 25 Jul 2019 05:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C052075C;
+        Thu, 25 Jul 2019 05:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033315;
-        bh=2IhI4awjb8zpSmskBquFUnv/YYu8RV4VS6osttvV4k8=;
+        s=default; t=1564033318;
+        bh=LBngP+SYDecVYiJm+t3k/6UP2RSu5ScY0G4AkJwtVNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CrvFskvZB+qqK4UF4/C+GVaUCXZk7eOs1zHtMSH0aHXf324uj4DgWOckt0ncxvnMv
-         2igbMjkd6Tr+Y4S+HfVagfRbpLwnvh3kFwln1mzV2W1VsjCxZzcTJaQaH9YzyC5zfT
-         b50IK11AQjZEH8k71VVkXC8+DBAo0AsEgTfnuBUU=
+        b=MDmI++poRkEFSX8ic7mbyaJsZA+E3ZyLx+TFzCkgtX0Ly/jX0GstxBDDMOsBLh2iu
+         B1+rKmBa6t4H66lsJOzxYal4iME15p3tjFI/1vAS/+jE6RMgCAsa/ByTEnz/7RDLBC
+         g0J3f+oWtxl8vpYYdPheXN29AXELTjGg2+J2gUYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.19 164/271] xen: let alloc_xenballooned_pages() fail if not enough memory free
-Date:   Wed, 24 Jul 2019 21:20:33 +0200
-Message-Id: <20190724191709.210896989@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 165/271] scsi: NCR5380: Reduce goto statements in NCR5380_select()
+Date:   Wed, 24 Jul 2019 21:20:34 +0200
+Message-Id: <20190724191709.320954138@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -58,70 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit a1078e821b605813b63bf6bca414a85f804d5c66 upstream.
+commit 6a162836997c10bbefb7c7ca772201cc45c0e4a6 upstream.
 
-Instead of trying to allocate pages with GFP_USER in
-add_ballooned_pages() check the available free memory via
-si_mem_available(). GFP_USER is far less limiting memory exhaustion
-than the test via si_mem_available().
+Replace a 'goto' statement with a simple 'return' where possible.  This
+improves readability. No functional change.
 
-This will avoid dom0 running out of memory due to excessive foreign
-page mappings especially on ARM and on x86 in PVH mode, as those don't
-have a pre-ballooned area which can be used for foreign mappings.
-
-As the normal ballooning suffers from the same problem don't balloon
-down more than si_mem_available() pages in one iteration. At the same
-time limit the default maximum number of retries.
-
-This is part of XSA-300.
-
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/balloon.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/scsi/NCR5380.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -527,8 +527,15 @@ static void balloon_process(struct work_
- 				state = reserve_additional_memory();
- 		}
- 
--		if (credit < 0)
--			state = decrease_reservation(-credit, GFP_BALLOON);
-+		if (credit < 0) {
-+			long n_pages;
-+
-+			n_pages = min(-credit, si_mem_available());
-+			state = decrease_reservation(n_pages, GFP_BALLOON);
-+			if (state == BP_DONE && n_pages != -credit &&
-+			    n_pages < totalreserve_pages)
-+				state = BP_EAGAIN;
-+		}
- 
- 		state = update_schedule(state);
- 
-@@ -567,6 +574,9 @@ static int add_ballooned_pages(int nr_pa
- 		}
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -984,7 +984,7 @@ static struct scsi_cmnd *NCR5380_select(
+ 	if (!hostdata->selecting) {
+ 		/* Command was aborted */
+ 		NCR5380_write(MODE_REG, MR_BASE);
+-		goto out;
++		return NULL;
+ 	}
+ 	if (err < 0) {
+ 		NCR5380_write(MODE_REG, MR_BASE);
+@@ -1033,7 +1033,7 @@ static struct scsi_cmnd *NCR5380_select(
+ 	if (!hostdata->selecting) {
+ 		NCR5380_write(MODE_REG, MR_BASE);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+-		goto out;
++		return NULL;
  	}
  
-+	if (si_mem_available() < nr_pages)
-+		return -ENOMEM;
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "won arbitration\n");
+@@ -1116,13 +1116,16 @@ static struct scsi_cmnd *NCR5380_select(
+ 		spin_lock_irq(&hostdata->lock);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+ 		NCR5380_write(SELECT_ENABLE_REG, hostdata->id_mask);
 +
- 	st = decrease_reservation(nr_pages, GFP_USER);
- 	if (st != BP_DONE)
- 		return -ENOMEM;
-@@ -696,7 +706,7 @@ static int __init balloon_init(void)
- 	balloon_stats.schedule_delay = 1;
- 	balloon_stats.max_schedule_delay = 32;
- 	balloon_stats.retry_count = 1;
--	balloon_stats.max_retry_count = RETRY_UNLIMITED;
-+	balloon_stats.max_retry_count = 4;
+ 		/* Can't touch cmd if it has been reclaimed by the scsi ML */
+-		if (hostdata->selecting) {
+-			cmd->result = DID_BAD_TARGET << 16;
+-			complete_cmd(instance, cmd);
+-			dsprintk(NDEBUG_SELECTION, instance, "target did not respond within 250ms\n");
+-			cmd = NULL;
+-		}
++		if (!hostdata->selecting)
++			return NULL;
++
++		cmd->result = DID_BAD_TARGET << 16;
++		complete_cmd(instance, cmd);
++		dsprintk(NDEBUG_SELECTION, instance,
++			"target did not respond within 250ms\n");
++		cmd = NULL;
+ 		goto out;
+ 	}
  
- #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
- 	set_online_page_callback(&xen_online_page);
+@@ -1155,7 +1158,7 @@ static struct scsi_cmnd *NCR5380_select(
+ 	}
+ 	if (!hostdata->selecting) {
+ 		do_abort(instance);
+-		goto out;
++		return NULL;
+ 	}
+ 
+ 	dsprintk(NDEBUG_SELECTION, instance, "target %d selected, going into MESSAGE OUT phase.\n",
 
 
