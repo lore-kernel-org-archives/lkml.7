@@ -2,113 +2,87 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1672C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEA5C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8194227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39997229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563943834;
+	bh=F91DtO4JNX4AcUcw4pU3IX/5Sm5fLNZ7x3U1rYZaif0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Xw8s7WN/fTzPvidDBm/1d3BXj8JulocO0iwmeKDNaOkGm4NvjUIHicn2pcB/JKbop
+	 VI8ykTc5f5S7IZuktfhCyOFDrVuT124d10UQG7Fz1aLHostBzyTzZ7d7Dy5Ru/kw+l
+	 wdx3LBK9rHJ9OZ+QS8an0iRqE9r2hVkvGD8Fcdn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726031AbfGXEs3 (ORCPT
+        id S1726107AbfGXEud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:48:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45908 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfGXEs2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:48:28 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hq9CU-0007m6-Ni
-        for linux-kernel@vger.kernel.org; Wed, 24 Jul 2019 04:48:26 +0000
-Received: by mail-pg1-f199.google.com with SMTP id w5so27473949pgs.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 21:48:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yfzK+CD5lC0fbY3LJShFWmbhqPkImhOP3cc2stxkE2c=;
-        b=KGguBRisVaLa+qyUYsiug6Eq/5pu93CPrXdm641bcIAApmDIYoQRj47x8wiorwY6am
-         Hx70FeUG3MFtqFKUfA3dkW7ENop5q16miWL0MtUHBjTGIUhYd3ikuZ0+fOPM20T7gqmQ
-         iTDVjo7YLhZDlPhtZMn+V3YJQ01ap486GPXznVqyATGR8SQeMilCnU7d0f9W7LF8IrxI
-         LdmyP7KfSrCCaZjGdthraAYQL7UqXp1hXbs4jW//M5eDy/T0zYpN0RAswX7XKBAMMsve
-         3FlpAkzBpOvHunKZqWkpTH+L9mshliyb1GDaGyI0tiwJHFBytdrnWqZ8sLL4z2B189jN
-         iBhA==
-X-Gm-Message-State: APjAAAXEyXR0SRg7b3UBE06DMyY+RHDQo7zJMnXQVFtcIVLXrQUnGg/l
-        BH57O48gfcSFzgY+zGSYMdfDmInswZXpu3AXogylFo1At2rmumiBxwj7/zFQ7cxI7wRyWJ4SUXo
-        m61uPwhQH22VOafmcWWiTr5AzwY7oQtF15euoapnj5g==
-X-Received: by 2002:a17:90a:ff17:: with SMTP id ce23mr85387746pjb.47.1563943705186;
-        Tue, 23 Jul 2019 21:48:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwpPQg9WiyNO1ZuciWHV6XFxN1rkRMp+EjLZh1z8SW7D3P7l0k07rIIMzDqyBTW9T7TfafXjA==
-X-Received: by 2002:a17:90a:ff17:: with SMTP id ce23mr85387728pjb.47.1563943704873;
-        Tue, 23 Jul 2019 21:48:24 -0700 (PDT)
-Received: from 2001-b011-380f-3c20-9d3c-ccd5-c106-ac9d.dynamic-ip6.hinet.net (2001-b011-380f-3c20-9d3c-ccd5-c106-ac9d.dynamic-ip6.hinet.net. [2001:b011:380f:3c20:9d3c:ccd5:c106:ac9d])
-        by smtp.gmail.com with ESMTPSA id k8sm43825030pgm.14.2019.07.23.21.48.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 21:48:24 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: linux-next: build warning after merge of the input-current tree
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190724095416.65450cbf@canb.auug.org.au>
-Date:   Wed, 24 Jul 2019 12:48:21 +0800
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <5463D761-FAFB-4BBE-8EE1-95EF1A52F927@canonical.com>
-References: <20190724095416.65450cbf@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 24 Jul 2019 00:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbfGXEud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 00:50:33 -0400
+Received: from localhost.localdomain (unknown [171.76.105.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F713218D4;
+        Wed, 24 Jul 2019 04:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563943832;
+        bh=F91DtO4JNX4AcUcw4pU3IX/5Sm5fLNZ7x3U1rYZaif0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=K9V7JTZhr6wSkl8rninl630e53iZ8SPt7FoikLHeiZ4qDobrvT0A3YgCg21QaWaag
+         Bb2QBkCQQZFuXBH9IpfRzQ+ptZXpSLTVNYsf4g7Q+bfTfNb9Xw9OyzXWyNPtQhUJSE
+         w1j4quSXREiOnaN+PDXEiXXCyhdzDgSQ/cMc15Zw=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v2 0/5] arm64: dts: qcom: sdm845: Fix DTS warnings
+Date:   Wed, 24 Jul 2019 10:19:01 +0530
+Message-Id: <20190724044906.12007-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+So this is an attempt to fix some warns on sdm845 dts. We still have bunch
+of warnings to fix after this series (duplicate address and node names
+having underscores etc).
 
-at 07:54, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Lets get long hanging ones fixed, we can see the warns with W=1 or W=2
 
-> Hi all,
->
-> After merging the input-current tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->
-> drivers/input/mouse/elantech.c: In function 'elantech_use_host_notify':
-> drivers/input/mouse/elantech.c:1843:6: warning: this statement may fall  
-> through [-Wimplicit-fallthrough=]
->    if (dmi_get_bios_year() >= 2018)
->       ^
-> drivers/input/mouse/elantech.c:1845:2: note: here
->   default:
->   ^~~~~~~
->
-> Introduced by commit
->
->   883a2a80f79c ("Input: elantech - enable SMBus on new (2018+) systems")
->
-> I get these warnings because I am building with -Wimplicit-fallthrough
-> in attempt to catch new additions early.  The gcc warning can be turned
-> off by adding a /* fall through */ comment at the point the fall through
-> happens (assuming that the fall through is intentional).
+Changes since v1:
+	- Fix space after adc node unit address
+	- Fix typo in commit log
+	- Add review tags by Stephen
 
-Yes the fall through is intentional.
+Vinod Koul (5):
+  arm64: dts: qcom: sdm845: Add unit name to soc node
+  arm64: dts: qcom: sdm845: remove unnecessary properties for dsi nodes
+  arm64: dts: qcom: sdm845: remove unit name for thermal trip points
+  arm64: dts: qcom: sdm845: remove macro from unit name
+  arm64: dts: qcom: sdm845-cheza: remove macro from unit name
 
-Kai-Heng
+ arch/arm64/boot/dts/qcom/pm8998.dtsi       |  2 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 ++--
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 66 ++++++++++------------
+ 3 files changed, 36 insertions(+), 42 deletions(-)
 
->
-> -- 
-> Cheers,
-> Stephen Rothwell
-
+-- 
+2.20.1
 
