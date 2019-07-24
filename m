@@ -2,160 +2,144 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BA1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26398C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7983206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF5F2081B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999675;
-	bh=Pq/gww4pZIJwwKlkUf5BoPLMSs2MPmp2kPctMV9N1/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4fG+MAjBJ1m+mMzqdH6Zh/TzUSMKdyeRcmCdRNGYaqoJV1dW/iLjmQ7GhubL1qZK
-	 lb4Rs3UShWLqSFPPy0WayXKF23BLdKAHhVpzqB9e8FclLl2Oh2JW+IGhUw7YIO6lzF
-	 Bb8hdYTT14asDBB6Izv9awvlZmtgK2GUqnsuNpEs=
+	s=default; t=1563999686;
+	bh=4EU19QJuCTP6k4kjUw9UvVVABJ2lyWdKqJWUsvJ4ljU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o99WFE9Q0iDOQ4I8Hur/m26dSMw+PO6GxNyUGEpfrNyw9zemBSz8Z/NHZx+xyljXW
+	 I2Af4/F225Q6qE1J5jZIp/2mOph6eqDUJOYy33KhAE6ZUJnhmJvd85pGGFkawp49CX
+	 B28Gs36AsI0IVxPolf5ToFxTSbMRZBf9WC/2PFVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391792AbfGXUVO (ORCPT
+        id S1728958AbfGXUVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391006AbfGXTpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:45:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDAA821873;
-        Wed, 24 Jul 2019 19:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997532;
-        bh=Pq/gww4pZIJwwKlkUf5BoPLMSs2MPmp2kPctMV9N1/E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l19YFC6EKvnPTChE7+CbFtE6bw1BJ4Nh4KsNnHyjbry8N4Ch/hvgS0so43W1IIQhu
-         WTxJVRY8KPlWZJb9Uf/AHfjJPgOuq2MnPjF2zSX5iSyScbYlNPJFAbFODKSSDUfUXd
-         I6yo7TwqsD2ac3RGSvFp6RgyUOdgg56LFmV7pThY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 056/371] media: wl128x: Fix some error handling in fm_v4l2_init_video_device()
-Date:   Wed, 24 Jul 2019 21:16:48 +0200
-Message-Id: <20190724191729.040101491@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:21:24 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32900 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfGXUVV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:21:21 -0400
+Received: by mail-io1-f65.google.com with SMTP id z3so92420608iog.0;
+        Wed, 24 Jul 2019 13:21:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RJ9nHyNd7LCl6+mSB0G4S2X04kojrU0TsARgzmq3agw=;
+        b=BNIkH6qp4rBtneav00A8EL89rmsoggKpUyuYQ0vsM5uYaURpwi8w4DypecMZfuCTJw
+         cXQgDBPZWPbtZ+2z2UppAf4Tan/7ZbY3AKCYTt6vgjkLTK9MXLV9YRlY609xqmeMawcs
+         7MPKQiDaOnvOWAsVvWLLKHQYkvwOVByAg1pNOeO7PFad90/wAZY9ZmEQP3KhEXUc1OUP
+         Ktj+p7FRQe+MnTro59nU1W0RSj4CIDgldRCHSqM7HbEcUmd/FghCLZjtfTwZJBUsdbbj
+         SDsLcFBOcnatkOE6ZTa3tWbiz91Zf5Zlp3g1rZZ1KtlWuKaSnaIEs6JqX8XSLqLH3qDi
+         EI4g==
+X-Gm-Message-State: APjAAAUdoMwK8Ci6fUS6OX3VlWhUNSNr+5MUpK+tzqOHugmCpR60k6Lg
+        IDxn/BXDrlXa+VMF6D1t8w==
+X-Google-Smtp-Source: APXvYqwprV5ylAQXl6gUtT7NZHmcnqBWl3IgOcCq5QcBmtI4uojyhvDVa9K+DeOobOHPeGdMYTW9+Q==
+X-Received: by 2002:a5e:8a46:: with SMTP id o6mr45348991iom.36.1563999680305;
+        Wed, 24 Jul 2019 13:21:20 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id r24sm34281026ioc.76.2019.07.24.13.21.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 13:21:19 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 14:21:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     bbrezillon@kernel.org, matthias.bgg@gmail.com,
+        mark.rutland@arm.com, linux-i3c@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
+        liguo.zhang@mediatek.com, xinping.qian@mediatek.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+Message-ID: <20190724202119.GA26566@bogus>
+References: <1562677762-24067-1-git-send-email-qii.wang@mediatek.com>
+ <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1562677762-24067-2-git-send-email-qii.wang@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 69fbb3f47327d959830c94bf31893972b8c8f700 ]
+On Tue, Jul 09, 2019 at 09:09:21PM +0800, Qii Wang wrote:
+> Document MediaTek I3C master DT bindings.
+> 
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   48 ++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> new file mode 100644
+> index 0000000..d32eda6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> @@ -0,0 +1,48 @@
+> +Bindings for MediaTek I3C master block
+> +=====================================
+> +
+> +Required properties:
+> +--------------------
+> +- compatible: shall be "mediatek,i3c-master"
 
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
-The fm_v4l2_init_video_device() forget to unregister v4l2/video device
-in the error path, it could lead to UAF issue, eg,
+Needs to be SoC specific.
 
-  BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
-  BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
-  BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
-  Read of size 8 at addr ffff8881e84a7c70 by task v4l_id/3659
-
-  CPU: 1 PID: 3659 Comm: v4l_id Not tainted 5.1.0 #8
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-  Call Trace:
-   __dump_stack lib/dump_stack.c:77 [inline]
-   dump_stack+0xa9/0x10e lib/dump_stack.c:113
-   print_address_description+0x65/0x270 mm/kasan/report.c:187
-   kasan_report+0x149/0x18d mm/kasan/report.c:317
-   atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
-   atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
-   __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
-   fm_v4l2_fops_open+0xac/0x120 [fm_drv]
-   v4l2_open+0x191/0x390 [videodev]
-   chrdev_open+0x20d/0x570 fs/char_dev.c:417
-   do_dentry_open+0x700/0xf30 fs/open.c:777
-   do_last fs/namei.c:3416 [inline]
-   path_openat+0x7c4/0x2a90 fs/namei.c:3532
-   do_filp_open+0x1a5/0x2b0 fs/namei.c:3563
-   do_sys_open+0x302/0x490 fs/open.c:1069
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f8180c17c8e
-  ...
-  Allocated by task 3642:
-   set_track mm/kasan/common.c:87 [inline]
-   __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
-   fm_drv_init+0x13/0x1000 [fm_drv]
-   do_one_initcall+0xbc/0x47d init/main.c:901
-   do_init_module+0x1b5/0x547 kernel/module.c:3456
-   load_module+0x6405/0x8c10 kernel/module.c:3804
-   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  Freed by task 3642:
-   set_track mm/kasan/common.c:87 [inline]
-   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
-   slab_free_hook mm/slub.c:1429 [inline]
-   slab_free_freelist_hook mm/slub.c:1456 [inline]
-   slab_free mm/slub.c:3003 [inline]
-   kfree+0xe1/0x270 mm/slub.c:3958
-   fm_drv_init+0x1e6/0x1000 [fm_drv]
-   do_one_initcall+0xbc/0x47d init/main.c:901
-   do_init_module+0x1b5/0x547 kernel/module.c:3456
-   load_module+0x6405/0x8c10 kernel/module.c:3804
-   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
-   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Add relevant unregister functions to fix it.
-
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/radio/wl128x/fmdrv_v4l2.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/media/radio/wl128x/fmdrv_v4l2.c b/drivers/media/radio/wl128x/fmdrv_v4l2.c
-index e25fd4d4d280..a1eaea19a81c 100644
---- a/drivers/media/radio/wl128x/fmdrv_v4l2.c
-+++ b/drivers/media/radio/wl128x/fmdrv_v4l2.c
-@@ -550,6 +550,7 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
- 
- 	/* Register with V4L2 subsystem as RADIO device */
- 	if (video_register_device(&gradio_dev, VFL_TYPE_RADIO, radio_nr)) {
-+		v4l2_device_unregister(&fmdev->v4l2_dev);
- 		fmerr("Could not register video device\n");
- 		return -ENOMEM;
- 	}
-@@ -563,6 +564,8 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
- 	if (ret < 0) {
- 		fmerr("(fmdev): Can't init ctrl handler\n");
- 		v4l2_ctrl_handler_free(&fmdev->ctrl_handler);
-+		video_unregister_device(fmdev->radio_dev);
-+		v4l2_device_unregister(&fmdev->v4l2_dev);
- 		return -EBUSY;
- 	}
- 
--- 
-2.20.1
-
-
-
+> +- reg: physical base address of the controller and apdma base, length of
+> +  memory mapped region.
+> +- reg-names: shall be "main" for master controller and "dma" for apdma.
+> +- interrupts: the interrupt line connected to this I3C master.
+> +- clocks: shall reference the i3c and apdma clocks.
+> +- clock-names: shall include "main" and "dma".
+> +
+> +Mandatory properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- #address-cells: shall be set to 3
+> +- #size-cells: shall be set to 0
+> +
+> +Optional properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- i2c-scl-hz
+> +- i3c-scl-hz
+> +
+> +I3C device connected on the bus follow the generic description (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> +
+> +Example:
+> +
+> +	i3c0: i3c@1100d000 {
+> +		compatible = "mediatek,i3c-master";
+> +		reg = <0x1100d000 0x1000>,
+> +		      <0x11000300 0x80>;
+> +		reg-names = "main", "dma";
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&infracfg CLK_INFRA_I3C0>,
+> +			 <&infracfg CLK_INFRA_AP_DMA>;
+> +		clock-names = "main", "dma";
+> +		#address-cells = <3>;
+> +		#size-cells = <0>;
+> +		i2c-scl-hz = <100000>;
+> +
+> +		nunchuk: nunchuk@52 {
+> +			compatible = "nintendo,nunchuk";
+> +			reg = <0x52 0x0 0x10>;
+> +		};
+> +	};
+> -- 
+> 1.7.9.5
+> 
