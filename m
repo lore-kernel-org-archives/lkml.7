@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E94C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871CFC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B48204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFAA204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033901;
-	bh=/Z1JG1CgMbXyebsNhIXnAAwZjK7cVjPn0fbsyiMJm34=;
+	s=default; t=1564033909;
+	bh=yFHjtmpuvIfwQiIcPYNCFfLUTLpBwHqEJn/vwJby05U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TC66L0PVNB2ufTVEiVoA0DNkAWDZvo0d6I0X8W9onH8ypM05Nj1swj2eBDMa1xSMv
-	 vDowd3lGhPAeK0gWVXgXg/ZT0EaFTtrCkwuqdbOLp8v/82N5pJhwgsXmicGT18ht1P
-	 rdQZsT3RymOUYQ103d0UW5kCUiKYELPoztc7L0Eg=
+	b=EUWs3Pdr5OpiGzFvufAIY7BJAPSFbaDzoKQPBR25MMhtFdjjZ0pUaxQtnmjyDIXEX
+	 bEYhaK7PX+clJxNpyNmybRRAHNJ4wWGDA5t79ElLa9cRMxiTPRVhgUxdl2Nm1uBjxz
+	 tJV5GJNjaTipUAZgDLXdmeyMX79UmVpXhsMeFOoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfGYFvj (ORCPT
+        id S2404501AbfGYFkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55730 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:40:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390767AbfGYFlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:41:01 -0400
+        id S2404449AbfGYFks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:40:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31BF322C7C;
-        Thu, 25 Jul 2019 05:41:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13E1522C7D;
+        Thu, 25 Jul 2019 05:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033260;
-        bh=/Z1JG1CgMbXyebsNhIXnAAwZjK7cVjPn0fbsyiMJm34=;
+        s=default; t=1564033247;
+        bh=yFHjtmpuvIfwQiIcPYNCFfLUTLpBwHqEJn/vwJby05U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7Fb6ZpUFfK+A8Ts7n22rFZk9R/ByhW9zFz+S424iOnrpy73eSYXBxQtwRXEJndry
-         3Bajmlx+otWzf5U+JHHXFSYtRByCU/lChEZkzmARSaWd19sIz6ebdlk/7EyNPzkYed
-         X0sG4OIjfV4fW0YUQ2DOsstC++k6LJjVzGVQ+Ht0=
+        b=nuN7adTKyQryPzlxgUTtkdIlEvAClJqLOzEFFXf1I+IE7ApwPv+cVKNN9STjD9Xn3
+         i7HQbB4m/DU/VArBdorE23YVXcr/IqlNAbFMoKmnwIci0IRaNXrfJbCZDXNT4yuFyr
+         98KyCjyga+bHIXLjf/aId3P5pPuF11uUA9Yjv1QQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 148/271] Bluetooth: Add new 13d3:3501 QCA_ROME device
-Date:   Wed, 24 Jul 2019 21:20:17 +0200
-Message-Id: <20190724191707.862143519@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 143/271] bonding: validate ip header before check IPPROTO_IGMP
+Date:   Wed, 24 Jul 2019 21:20:12 +0200
+Message-Id: <20190724191707.434605207@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,37 +64,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 881cec4f6b4da78e54b73c046a60f39315964c7d ]
+[ Upstream commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c ]
 
-Without the QCA ROME setup routine this adapter fails to establish a SCO
-connection.
+bond_xmit_roundrobin() checks for IGMP packets but it parses
+the IP header even before checking skb->protocol.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=04 Cnt=01 Dev#=  2 Spd=12  MxCh= 0
-D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
-P:  Vendor=13d3 ProdID=3501 Rev=00.01
-C:  #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=100mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+We should validate the IP header with pskb_may_pull() before
+using iph->protocol.
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
+Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Cc: Veaceslav Falico <vfalico@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/bonding/bond_main.c | 37 ++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index f494fa30a912..75cf605f54e5 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -279,6 +279,7 @@ static const struct usb_device_id blacklist_table[] = {
- 	{ USB_DEVICE(0x04ca, 0x301a), .driver_info = BTUSB_QCA_ROME },
- 	{ USB_DEVICE(0x13d3, 0x3491), .driver_info = BTUSB_QCA_ROME },
- 	{ USB_DEVICE(0x13d3, 0x3496), .driver_info = BTUSB_QCA_ROME },
-+	{ USB_DEVICE(0x13d3, 0x3501), .driver_info = BTUSB_QCA_ROME },
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 7e162fff01ab..be0b785becd0 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3852,8 +3852,8 @@ static netdev_tx_t bond_xmit_roundrobin(struct sk_buff *skb,
+ 					struct net_device *bond_dev)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	struct iphdr *iph = ip_hdr(skb);
+ 	struct slave *slave;
++	int slave_cnt;
+ 	u32 slave_id;
  
- 	/* Broadcom BCM2035 */
- 	{ USB_DEVICE(0x0a5c, 0x2009), .driver_info = BTUSB_BCM92035 },
+ 	/* Start with the curr_active_slave that joined the bond as the
+@@ -3862,23 +3862,32 @@ static netdev_tx_t bond_xmit_roundrobin(struct sk_buff *skb,
+ 	 * send the join/membership reports.  The curr_active_slave found
+ 	 * will send all of this type of traffic.
+ 	 */
+-	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
+-		slave = rcu_dereference(bond->curr_active_slave);
+-		if (slave)
+-			bond_dev_queue_xmit(bond, skb, slave->dev);
+-		else
+-			bond_xmit_slave_id(bond, skb, 0);
+-	} else {
+-		int slave_cnt = READ_ONCE(bond->slave_cnt);
++	if (skb->protocol == htons(ETH_P_IP)) {
++		int noff = skb_network_offset(skb);
++		struct iphdr *iph;
+ 
+-		if (likely(slave_cnt)) {
+-			slave_id = bond_rr_gen_slave_id(bond);
+-			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
+-		} else {
+-			bond_tx_drop(bond_dev, skb);
++		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
++			goto non_igmp;
++
++		iph = ip_hdr(skb);
++		if (iph->protocol == IPPROTO_IGMP) {
++			slave = rcu_dereference(bond->curr_active_slave);
++			if (slave)
++				bond_dev_queue_xmit(bond, skb, slave->dev);
++			else
++				bond_xmit_slave_id(bond, skb, 0);
++			return NETDEV_TX_OK;
+ 		}
+ 	}
+ 
++non_igmp:
++	slave_cnt = READ_ONCE(bond->slave_cnt);
++	if (likely(slave_cnt)) {
++		slave_id = bond_rr_gen_slave_id(bond);
++		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
++	} else {
++		bond_tx_drop(bond_dev, skb);
++	}
+ 	return NETDEV_TX_OK;
+ }
+ 
 -- 
 2.20.1
 
