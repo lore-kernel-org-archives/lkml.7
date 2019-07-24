@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310F2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4029C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE518214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA93022ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998370;
-	bh=hpH3G4a7G/KVsYa4id/3HXxZbpYaTdI/T6rleRNvGhI=;
+	s=default; t=1563998374;
+	bh=kX32MHwNiAOJS5zlY7QwQjiZTmKuh5XWwTr7NoRvoKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F+0wqfvT19QMpYIC7FGOQ2HzPNU5Cbsfa5JgP0+Ztc7KTGndJWTNnKh+tE11bFcAP
-	 SHd7IOEDpku2HH/M6e7GPXkunEsTM7DCA7IA8k+bPyN1+Ndejz7SuASRNsKZvv4MPo
-	 d5xGPOn78wpsIkkt8OsIWN9dzfYye1O42i1f9Qq4=
+	b=vli4nUH4EuUOVzSthTB5th4ikUFhdBr0wBvJSpfpuVnLIYTtj+NAAeAfqF4OBYJhy
+	 vBYsw+YWuOwYK5RF9/yL04XyzAplK0seV0iGH01IPvtNJ43kCrZG4jZ8cCvIRhqhA4
+	 u1Zi/a1v/Spol0aEvioH7fiosu4gQpT2ge6KKKKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405158AbfGXT73 (ORCPT
+        id S2405173AbfGXT7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:59:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404953AbfGXT6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:24 -0400
+        id S2405141AbfGXT72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:59:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8125206BA;
-        Wed, 24 Jul 2019 19:58:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6529922ADF;
+        Wed, 24 Jul 2019 19:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998304;
-        bh=hpH3G4a7G/KVsYa4id/3HXxZbpYaTdI/T6rleRNvGhI=;
+        s=default; t=1563998366;
+        bh=kX32MHwNiAOJS5zlY7QwQjiZTmKuh5XWwTr7NoRvoKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lttrdUFHCogZeR/dCmhsUUwozUmYkPDORmyf2mGhRJVirlH1DzX/1LvTtRrd4BRUk
-         dAlpRCFcebx20W9WcPXHly4JCKh4ZZ/wFtj3LNuIZ2wk/47QWLq7sK2go3xnM7edo4
-         UvPrZwQnJ/j1HpZs4IzYekh8dBvqX7SGJZ6AD9zc=
+        b=Nt5SGChHUala3KCILM0WCkwfPH3xGec7wBd4IVDThEf3VShyNA7fr+SLeCAn/ol/7
+         mW4Iwdmo4Yieuiq/g4Tg8jD9g/1mDY/bjGec27QIq+7QTD1yn1zipNv4EsSiboRyrp
+         sFiI78Y4VDNN+JyKIpLdMQhNv1+JlXiE0a7/vK+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>
-Subject: [PATCH 5.1 318/371] 9p/xen: Add cleanup path in p9_trans_xen_init
-Date:   Wed, 24 Jul 2019 21:21:10 +0200
-Message-Id: <20190724191747.913325425@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.1 338/371] HID: wacom: generic: Correct pad syncing
+Date:   Wed, 24 Jul 2019 21:21:30 +0200
+Message-Id: <20190724191749.129260134@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,46 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Aaron Armstrong Skomra <skomra@gmail.com>
 
-commit 80a316ff16276b36d0392a8f8b2f63259857ae98 upstream.
+commit d4b8efeb46d99a5d02e7f88ac4eaccbe49370770 upstream.
 
-If xenbus_register_frontend() fails in p9_trans_xen_init,
-we should call v9fs_unregister_trans() to do cleanup.
+Only sync the pad once per report, not once per collection.
+Also avoid syncing the pad on battery reports.
 
-Link: http://lkml.kernel.org/r/20190430143933.19368-1-yuehaibing@huawei.com
-Cc: stable@vger.kernel.org
-Fixes: 868eb122739a ("xen/9pfs: introduce Xen 9pfs transport driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Fixes: f8b6a74719b5 ("HID: wacom: generic: Support multiple tools per report")
+Cc: <stable@vger.kernel.org> # v4.17+
+Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/9p/trans_xen.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/hid/wacom_wac.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/net/9p/trans_xen.c
-+++ b/net/9p/trans_xen.c
-@@ -530,13 +530,19 @@ static struct xenbus_driver xen_9pfs_fro
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -2121,14 +2121,12 @@ static void wacom_wac_pad_report(struct
+ 	bool active = wacom_wac->hid_data.inrange_state != 0;
  
- static int p9_trans_xen_init(void)
- {
-+	int rc;
-+
- 	if (!xen_domain())
- 		return -ENODEV;
- 
- 	pr_info("Initialising Xen transport for 9pfs\n");
- 
- 	v9fs_register_trans(&p9_xen_trans);
--	return xenbus_register_frontend(&xen_9pfs_front_driver);
-+	rc = xenbus_register_frontend(&xen_9pfs_front_driver);
-+	if (rc)
-+		v9fs_unregister_trans(&p9_xen_trans);
-+
-+	return rc;
+ 	/* report prox for expresskey events */
+-	if ((wacom_equivalent_usage(field->physical) == HID_DG_TABLETFUNCTIONKEY) &&
+-	    wacom_wac->hid_data.pad_input_event_flag) {
++	if (wacom_wac->hid_data.pad_input_event_flag) {
+ 		input_event(input, EV_ABS, ABS_MISC, active ? PAD_DEVICE_ID : 0);
+ 		input_sync(input);
+ 		if (!active)
+ 			wacom_wac->hid_data.pad_input_event_flag = false;
+ 	}
+-
  }
- module_init(p9_trans_xen_init);
  
+ static void wacom_wac_pen_usage_mapping(struct hid_device *hdev,
+@@ -2704,9 +2702,7 @@ static int wacom_wac_collection(struct h
+ 	if (report->type != HID_INPUT_REPORT)
+ 		return -1;
+ 
+-	if (WACOM_PAD_FIELD(field) && wacom->wacom_wac.pad_input)
+-		wacom_wac_pad_report(hdev, report, field);
+-	else if (WACOM_PEN_FIELD(field) && wacom->wacom_wac.pen_input)
++	if (WACOM_PEN_FIELD(field) && wacom->wacom_wac.pen_input)
+ 		wacom_wac_pen_report(hdev, report);
+ 	else if (WACOM_FINGER_FIELD(field) && wacom->wacom_wac.touch_input)
+ 		wacom_wac_finger_report(hdev, report);
+@@ -2720,7 +2716,7 @@ void wacom_wac_report(struct hid_device
+ 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+ 	struct hid_field *field;
+ 	bool pad_in_hid_field = false, pen_in_hid_field = false,
+-		finger_in_hid_field = false;
++		finger_in_hid_field = false, true_pad = false;
+ 	int r;
+ 	int prev_collection = -1;
+ 
+@@ -2736,6 +2732,8 @@ void wacom_wac_report(struct hid_device
+ 			pen_in_hid_field = true;
+ 		if (WACOM_FINGER_FIELD(field))
+ 			finger_in_hid_field = true;
++		if (wacom_equivalent_usage(field->physical) == HID_DG_TABLETFUNCTIONKEY)
++			true_pad = true;
+ 	}
+ 
+ 	wacom_wac_battery_pre_report(hdev, report);
+@@ -2759,6 +2757,9 @@ void wacom_wac_report(struct hid_device
+ 	}
+ 
+ 	wacom_wac_battery_report(hdev, report);
++
++	if (true_pad && wacom->wacom_wac.pad_input)
++		wacom_wac_pad_report(hdev, report, field);
+ }
+ 
+ static int wacom_bpt_touch(struct wacom_wac *wacom)
 
 
