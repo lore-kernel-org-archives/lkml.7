@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6DBC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB578C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F906218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C4B218F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996230;
-	bh=59oAdaqXgoANAtP6mRYrfJhHDP9x6DwuHpXTdgPNU6A=;
+	s=default; t=1563996234;
+	bh=yzQR5qFdRmj/ohGCBqlXS4151JYe9WbzTKvOIg/rLbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zbHbAB6Z4U5sSUsPwIWZGr9ES/Eq95T0nCDg5fQhCpfklXoIuii0AqpkpKBHL0zAx
-	 AekAxcglXWw0aAYOLP4fs5Tvo8ObRRaanc0Y9HwBwdqfG049tPKfB7szNvQMzIFOeu
-	 56itFdwMqymabXHdp3zhQENZXZzMFSC7UWywB/3I=
+	b=ouJ4K0GX3NAzxiuiDO3JXQC+8aAD4qm21LZfwXYfAvspWf3a4NxEm8AG3Q6iivmMA
+	 PRZiG3+L9IESTPUfQG1iQ4rRWHBUJFRyFw1jVVDUkqFT7wf0PU+9Ii6yCuEM4C7cIf
+	 J4AkXy896Y1dJCK8xJXPH7B54qSuWiI1T9HPuuo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387874AbfGXTXt (ORCPT
+        id S2387886AbfGXTXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387835AbfGXTXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:23:46 -0400
+        id S2387846AbfGXTXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:23:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9BC7229F4;
-        Wed, 24 Jul 2019 19:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24D44218F0;
+        Wed, 24 Jul 2019 19:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996225;
-        bh=59oAdaqXgoANAtP6mRYrfJhHDP9x6DwuHpXTdgPNU6A=;
+        s=default; t=1563996222;
+        bh=yzQR5qFdRmj/ohGCBqlXS4151JYe9WbzTKvOIg/rLbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zZ8aLUvlKtOYH6kuIGUsgC1ezUDiCOBkQ7+7K2GZ1XNXmJ+hNwzNy/Nuijtl5lQnX
-         zUbeGHYXZsFnexgEJGFZVCLYLBL++SWnve3nrEPCIEJdjrksQBvF0vA8b/wlLQcywe
-         CYbOvh1KKkS6PbucaxWb5IXiZUWHfGkIBb5rJuZY=
+        b=slhi2l3ww8Yz0nUf4Ae6CEljlxPLFp9125Tf+KyFulMonciK8xLY2k9n1FPwf6lsQ
+         QJgFP5I7j0vX8Z18duXHPHSPDGfS4EEzGBUwWYoOEU3s0+4q0rgJkJUzswUUtuzxCJ
+         s8Em2rAENHeUdSKZUO8IA6NnH0Q3UnK4F0EZDfGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 023/413] selftests/bpf: adjust verifier scale test
-Date:   Wed, 24 Jul 2019 21:15:14 +0200
-Message-Id: <20190724191737.107564997@linuxfoundation.org>
+Subject: [PATCH 5.2 022/413] media: marvell-ccic: fix DMA s/g desc number calculation
+Date:   Wed, 24 Jul 2019 21:15:13 +0200
+Message-Id: <20190724191737.034896722@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,101 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7c0c6095d48dcd0e67c917aa73cdbb2715aafc36 ]
+[ Upstream commit 0c7aa32966dab0b8a7424e1b34c7f206817953ec ]
 
-Adjust scale tests to check for new jmp sequence limit.
+The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+left dma_desc_nent unset. It previously contained the number of DMA
+descriptors as returned from dma_map_sg().
 
-BPF_JGT had to be changed to BPF_JEQ because the verifier was
-too smart. It tracked the known safe range of R0 values
-and pruned the search earlier before hitting exact 8192 limit.
-bpf_semi_rand_get() was too (un)?lucky.
+We can now (since the commit referred to above) obtain the same value from
+the sg_table and drop dma_desc_nent altogether.
 
-k = 0; was missing in bpf_fill_scale2.
-It was testing a bit shorter sequence of jumps than intended.
+Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
+driver, since that one doesn't do DMA.
 
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+[mchehab+samsung@kernel.org: fix a checkpatch warning]
+
+Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_verifier.c | 31 +++++++++++----------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 288cb740e005..6438d4dc8ae1 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -207,33 +207,35 @@ static void bpf_fill_rand_ld_dw(struct bpf_test *self)
- 	self->retval = (uint32_t)res;
- }
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index f1b301810260..0a6411b877e9 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -200,7 +200,6 @@ struct mcam_vb_buffer {
+ 	struct list_head queue;
+ 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
+ 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
+-	int dma_desc_nent;		/* Number of mapped descriptors */
+ };
  
--/* test the sequence of 1k jumps */
-+#define MAX_JMP_SEQ 8192
-+
-+/* test the sequence of 8k jumps */
- static void bpf_fill_scale1(struct bpf_test *self)
+ static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
+@@ -608,9 +607,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
+ static void mcam_sg_next_buffer(struct mcam_camera *cam)
  {
- 	struct bpf_insn *insn = self->fill_insns;
- 	int i = 0, k = 0;
+ 	struct mcam_vb_buffer *buf;
++	struct sg_table *sg_table;
  
- 	insn[i++] = BPF_MOV64_REG(BPF_REG_6, BPF_REG_1);
--	/* test to check that the sequence of 1024 jumps is acceptable */
--	while (k++ < 1024) {
-+	/* test to check that the long sequence of jumps is acceptable */
-+	while (k++ < MAX_JMP_SEQ) {
- 		insn[i++] = BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
- 					 BPF_FUNC_get_prandom_u32);
--		insn[i++] = BPF_JMP_IMM(BPF_JGT, BPF_REG_0, bpf_semi_rand_get(), 2);
-+		insn[i++] = BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, bpf_semi_rand_get(), 2);
- 		insn[i++] = BPF_MOV64_REG(BPF_REG_1, BPF_REG_10);
- 		insn[i++] = BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
- 					-8 * (k % 64 + 1));
- 	}
--	/* every jump adds 1024 steps to insn_processed, so to stay exactly
--	 * within 1m limit add MAX_TEST_INSNS - 1025 MOVs and 1 EXIT
-+	/* every jump adds 1 step to insn_processed, so to stay exactly
-+	 * within 1m limit add MAX_TEST_INSNS - MAX_JMP_SEQ - 1 MOVs and 1 EXIT
- 	 */
--	while (i < MAX_TEST_INSNS - 1025)
-+	while (i < MAX_TEST_INSNS - MAX_JMP_SEQ - 1)
- 		insn[i++] = BPF_ALU32_IMM(BPF_MOV, BPF_REG_0, 42);
- 	insn[i] = BPF_EXIT_INSN();
- 	self->prog_len = i + 1;
- 	self->retval = 42;
- }
- 
--/* test the sequence of 1k jumps in inner most function (function depth 8)*/
-+/* test the sequence of 8k jumps in inner most function (function depth 8)*/
- static void bpf_fill_scale2(struct bpf_test *self)
- {
- 	struct bpf_insn *insn = self->fill_insns;
-@@ -245,19 +247,20 @@ static void bpf_fill_scale2(struct bpf_test *self)
- 		insn[i++] = BPF_EXIT_INSN();
- 	}
- 	insn[i++] = BPF_MOV64_REG(BPF_REG_6, BPF_REG_1);
--	/* test to check that the sequence of 1024 jumps is acceptable */
--	while (k++ < 1024) {
-+	/* test to check that the long sequence of jumps is acceptable */
-+	k = 0;
-+	while (k++ < MAX_JMP_SEQ) {
- 		insn[i++] = BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
- 					 BPF_FUNC_get_prandom_u32);
--		insn[i++] = BPF_JMP_IMM(BPF_JGT, BPF_REG_0, bpf_semi_rand_get(), 2);
-+		insn[i++] = BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, bpf_semi_rand_get(), 2);
- 		insn[i++] = BPF_MOV64_REG(BPF_REG_1, BPF_REG_10);
- 		insn[i++] = BPF_STX_MEM(BPF_DW, BPF_REG_1, BPF_REG_6,
- 					-8 * (k % (64 - 4 * FUNC_NEST) + 1));
- 	}
--	/* every jump adds 1024 steps to insn_processed, so to stay exactly
--	 * within 1m limit add MAX_TEST_INSNS - 1025 MOVs and 1 EXIT
-+	/* every jump adds 1 step to insn_processed, so to stay exactly
-+	 * within 1m limit add MAX_TEST_INSNS - MAX_JMP_SEQ - 1 MOVs and 1 EXIT
- 	 */
--	while (i < MAX_TEST_INSNS - 1025)
-+	while (i < MAX_TEST_INSNS - MAX_JMP_SEQ - 1)
- 		insn[i++] = BPF_ALU32_IMM(BPF_MOV, BPF_REG_0, 42);
- 	insn[i] = BPF_EXIT_INSN();
- 	self->prog_len = i + 1;
+ 	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
+ 	list_del_init(&buf->queue);
++	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
+ 	/*
+ 	 * Very Bad Not Good Things happen if you don't clear
+ 	 * C1_DESC_ENA before making any descriptor changes.
+@@ -618,7 +619,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
+ 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
+ 	mcam_reg_write(cam, REG_DESC_LEN_Y,
+-			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
++			sg_table->nents * sizeof(struct mcam_dma_desc));
+ 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
+ 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
+ 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
 -- 
 2.20.1
 
