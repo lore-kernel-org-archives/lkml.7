@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7EFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5551EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B9321852
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB86214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000188;
-	bh=qvES8AofnuKpT28/zZ3iEIvmuM4TjFi3lCL+v98rJ3Y=;
+	s=default; t=1564000196;
+	bh=U18OzJ2Hs0BwigfMe9oIT1dXdOHAqd0d66RLb7M4YRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zvdqetXlxgDs6uPSTLXxHRqZKJhmYRsL8tMIqIHWE3PntyL2Ljy9MuXOkjjCjRCac
-	 Te7nlMWBJRrtV/rMyHQwjFgSSXGytA2HVm69DcyiLTYxxkHXuyGZ+bR+7TU+1jgdTH
-	 nUWRunC+BkMred/68b0+R9dF0hVh/dC9IiDaEBbI=
+	b=lg/R2aJiIicKtr2ZkwGWRCs0d1Edxydar+TM40QqqP1BBrz22NvqwSbXccLtuqH9s
+	 b55AE7S57WGANE21EEBa1AYvdMOvH/oX3IH3SjVaBAHyy1BGDZkaCgjOqjG5wVOSxg
+	 YPntdAbioEQkKLw3Wnr1Y5mkb9+ETYwcM1R6aElM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389466AbfGXU3i (ORCPT
+        id S2388630AbfGXU3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54260 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:29:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388704AbfGXTcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:32:47 -0400
+        id S2388693AbfGXTcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:32:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AD3320659;
-        Wed, 24 Jul 2019 19:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C935E20659;
+        Wed, 24 Jul 2019 19:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996766;
-        bh=qvES8AofnuKpT28/zZ3iEIvmuM4TjFi3lCL+v98rJ3Y=;
+        s=default; t=1563996764;
+        bh=U18OzJ2Hs0BwigfMe9oIT1dXdOHAqd0d66RLb7M4YRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrrAcf/qt4wFQ9Pvdz2uB8kAna3F5272VR0f8DGcvC+OQZchQxrBA6E35OTdeeJNR
-         RkwNGDati2FEM77s/1w9/lIUkf8/abOA1vnXP2n4no8+OyoYgDbJ75xxdyK5V+Z682
-         lIutMxp0zLSlzgxRldgunr6yrNgzvj/LeZMV6cuQ=
+        b=PGifrLoArhN7tNcPAl0WtJdhXReHPrCh+T9JnWH6yj7dEmGW5krjBhEcsxBvCrVo8
+         iFdu6xIwhxNq3S2cFBHoJb7URcyy+qeMH4gLHOXsmxFKOfN/Du7rbtLVWwvHTqMQwk
+         xFz95bz3O9X83b3/WUEatBCXXTlb7/h2LA1Zr/ag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        Masato Suzuki <masato.suzuki@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 168/413] libata: dont request sense data on !ZAC ATA devices
-Date:   Wed, 24 Jul 2019 21:17:39 +0200
-Message-Id: <20190724191747.013028053@linuxfoundation.org>
+Subject: [PATCH 5.2 206/413] bnxt_en: Disable bus master during PCI shutdown and driver unload.
+Date:   Wed, 24 Jul 2019 21:18:17 +0200
+Message-Id: <20190724191749.254613245@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,66 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ca156e006add67e4beea7896be395160735e09b0 ]
+[ Upstream commit c20dc142dd7b2884b8570eeab323bcd4a84294fa ]
 
-ZAC support added sense data requesting on error for both ZAC and ATA
-devices. This seems to cause erratic error handling behaviors on some
-SSDs where the device reports sense data availability and then
-delivers the wrong content making EH take the wrong actions.  The
-failure mode was sporadic on a LITE-ON ssd and couldn't be reliably
-reproduced.
+Some chips with older firmware can continue to perform DMA read from
+context memory even after the memory has been freed.  In the PCI shutdown
+method, we need to call pci_disable_device() to shutdown DMA to prevent
+this DMA before we put the device into D3hot.  DMA memory request in
+D3hot state will generate PCI fatal error.  Similarly, in the driver
+remove method, the context memory should only be freed after DMA has
+been shutdown for correctness.
 
-There is no value in requesting sense data from non-ZAC ATA devices
-while there's a significant risk of introducing EH misbehaviors which
-are difficult to reproduce and fix.  Let's do the sense data dancing
-only for ZAC devices.
-
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Tested-by: Masato Suzuki <masato.suzuki@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 98f04cf0f1fc ("bnxt_en: Check context memory requirements from firmware.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-eh.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
-index 9d687e1d4325..3bfd9da58473 100644
---- a/drivers/ata/libata-eh.c
-+++ b/drivers/ata/libata-eh.c
-@@ -1469,7 +1469,7 @@ static int ata_eh_read_log_10h(struct ata_device *dev,
- 	tf->hob_lbah = buf[10];
- 	tf->nsect = buf[12];
- 	tf->hob_nsect = buf[13];
--	if (ata_id_has_ncq_autosense(dev->id))
-+	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
- 		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index f758b2e0591f..b9bc829aa9da 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -10262,10 +10262,10 @@ static void bnxt_remove_one(struct pci_dev *pdev)
+ 	bnxt_dcb_free(bp);
+ 	kfree(bp->edev);
+ 	bp->edev = NULL;
++	bnxt_cleanup_pci(bp);
+ 	bnxt_free_ctx_mem(bp);
+ 	kfree(bp->ctx);
+ 	bp->ctx = NULL;
+-	bnxt_cleanup_pci(bp);
+ 	bnxt_free_port_stats(bp);
+ 	free_netdev(dev);
+ }
+@@ -10859,6 +10859,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
  
- 	return 0;
-@@ -1716,7 +1716,8 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
- 	memcpy(&qc->result_tf, &tf, sizeof(tf));
- 	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
- 	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
--	if ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary) {
-+	if (dev->class == ATA_DEV_ZAC &&
-+	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
- 		char sense_key, asc, ascq;
- 
- 		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
-@@ -1770,10 +1771,11 @@ static unsigned int ata_eh_analyze_tf(struct ata_queued_cmd *qc,
+ 	if (system_state == SYSTEM_POWER_OFF) {
+ 		bnxt_clear_int_mode(bp);
++		pci_disable_device(pdev);
+ 		pci_wake_from_d3(pdev, bp->wol);
+ 		pci_set_power_state(pdev, PCI_D3hot);
  	}
- 
- 	switch (qc->dev->class) {
--	case ATA_DEV_ATA:
- 	case ATA_DEV_ZAC:
- 		if (stat & ATA_SENSE)
- 			ata_eh_request_sense(qc, qc->scsicmd);
-+		/* fall through */
-+	case ATA_DEV_ATA:
- 		if (err & ATA_ICRC)
- 			qc->err_mask |= AC_ERR_ATA_BUS;
- 		if (err & (ATA_UNC | ATA_AMNF))
 -- 
 2.20.1
 
