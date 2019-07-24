@@ -2,140 +2,99 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF19C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3D1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FF32083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQHeAiyX"
+	by mail.kernel.org (Postfix) with ESMTP id F22C120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563999263;
+	bh=YT/Ya2QuCV54Ta5zpV7aCETVkK9+itqi5z18Zxh8/2Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FLMTvl+qkf0EVWT1HSwBhXwWGVX+4yDN6sZ4cMoHR+fYiEuEBMKgM/BoyqYlXAir0
+	 fwQEehvR7H+Q+MJsZJjteS9EEiJ7bLVUBfK+v8dD2zUU2soDvSoXMNOOP/tug5kNGJ
+	 cOnsidYFNxiqyBHbRYikqKYOj4/HaCV6DP8OetOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391995AbfGXUON (ORCPT
+        id S2392339AbfGXUOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:14:13 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37030 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404068AbfGXTza (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:55:30 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w13so48179881eds.4;
-        Wed, 24 Jul 2019 12:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dgiQF2cvC8jfXzt5HL3uJMfZaBJ8NW3XQoRQC8ii038=;
-        b=vQHeAiyXQ/fCWx93RMqspZg1DqWs3Ss8caJgC5JiNt1q2PzivWVm84dLQmP+XWPMBJ
-         wiM8lTSMXvxMkz5oJReFb1oqB5mBoC0dfhceBItUItDfaKYJuiQuwzJQIp9MHNmubDnM
-         Hds5/qNqyc8M+MnlPxI4ary5YddYAtlyLSbFFgcR5W/TTXYK6PlvEwlRN2OuFo9tO3E0
-         vGkFfsvGiINEUILt8rxNw2oCJPkB3cbjEeOIVoGHkQJPpucIBZWG53bDgkWZR8gLCwRb
-         IKvmqXEZEfLxA2ClNvYwQrE/YOQr7QqRX90PgnXj/7aHOC81GSClCaAVu7UTdbjzOZtg
-         Az/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dgiQF2cvC8jfXzt5HL3uJMfZaBJ8NW3XQoRQC8ii038=;
-        b=V59YyzLW4j4i4sPf+gLYnGFxtm9Q2iG+Ij1DwNU90qKoagLKVYGRZvyew2iicc17nK
-         dGWCRRIYvwDaP0LYVq8vA+igDBGF/oR0zfRSUyHvsgkzUw6a2lwxfW6QDTT+ZyYvoes1
-         Tyjfvg4HyxUCQUw8XZCWvwEKQL90Kffk4g+v7B8m7JCQEU0KSn9WuHlcM167ruGMHNhD
-         HoueKZVjIrRCWW+mErF+dIDcckv52VDC16kLv+9NtgLe4oh5qGLgezdFjr0a47WPgkCe
-         pIIVxtndjG/ag9LQCsbLArXJFWGbg6Fzia5CZR0fHdtHAe/MteLz76/OGltraUBX3a81
-         JKPQ==
-X-Gm-Message-State: APjAAAVL95xc01TZtrLi97XVX7ZW6bGzTmXlMYYbzbLTaVgNL4DIufEi
-        OmgFg6oVPsKb3aAH1NibahwVwGkp1J/VDPLXEJss+w==
-X-Google-Smtp-Source: APXvYqxlAArBe8lODQMcY4CpIrmB367EyP3gjRlWspBDi7tNnt9o7OTfGDWGL3ZxZG4lQwVNWoGp9sIGlniTSexzPB4=
-X-Received: by 2002:a50:eb92:: with SMTP id y18mr72682568edr.245.1563998128385;
- Wed, 24 Jul 2019 12:55:28 -0700 (PDT)
+        Wed, 24 Jul 2019 16:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391937AbfGXTzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C472E20665;
+        Wed, 24 Jul 2019 19:55:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563998123;
+        bh=YT/Ya2QuCV54Ta5zpV7aCETVkK9+itqi5z18Zxh8/2Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XwiqL3uPB7HZ2cmxexelD+ja3R4sdLUTZYwnsd4rMpBZ1PrUkoeLnMDglcHjtsK9r
+         T3xC/p7TNPYdBPuCklwYmdqff5t12HgqjZbdM7aMgn2smlhvuOVb/aUYPgWiK7/Ov3
+         4DR+sw+65WxGhyARmwoupVMitsOyyqCEs1MfGDPc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 212/371] gtp: add missing gtp_encap_disable_sock() in gtp_encap_enable()
+Date:   Wed, 24 Jul 2019 21:19:24 +0200
+Message-Id: <20190724191740.529229336@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190724165803.87470-1-brianvv@google.com> <20190724165803.87470-3-brianvv@google.com>
-In-Reply-To: <20190724165803.87470-3-brianvv@google.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Wed, 24 Jul 2019 15:54:52 -0400
-Message-ID: <CAF=yD-+a=t_YizdJpb_Q+zxR7iP-V-EarNsp9tjnFTRBjOtFvA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/6] bpf: add BPF_MAP_DUMP command to dump more
- than one entry per call
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 1:10 PM Brian Vazquez <brianvv@google.com> wrote:
->
-> This introduces a new command to retrieve multiple number of entries
-> from a bpf map, wrapping the existing bpf methods:
-> map_get_next_key and map_lookup_elem
->
-> To start dumping the map from the beginning you must specify NULL as
-> the prev_key.
->
-> The new API returns 0 when it successfully copied all the elements
-> requested or it copied less because there weren't more elements to
-> retrieved (i.e err == -ENOENT). In last scenario err will be masked to 0.
+[ Upstream commit e30155fd23c9c141cbe7d99b786e10a83a328837 ]
 
-I think I understand this, but perhaps it can be explained a bit more
-concisely without reference to ENOENT and error masking. The function
-returns the min of the number of requested elements and the number of
-remaining elements in the map from the given starting point
-(prev_key).
+If an invalid role is sent from user space, gtp_encap_enable() will fail.
+Then, it should call gtp_encap_disable_sock() but current code doesn't.
+It makes memory leak.
 
-> On a successful call buf and buf_len will contain correct data and in
-> case prev_key was provided (not for the first walk, since prev_key is
-> NULL) it will contain the last_key copied into the prev_key which will
-> simplify next call.
->
-> Only when it can't find a single element it will return -ENOENT meaning
-> that the map has been entirely walked. When an error is return buf,
-> buf_len and prev_key shouldn't be read nor used.
+Fixes: 91ed81f9abc7 ("gtp: support SGSN-side tunnels")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/gtp.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-That's common for error handling. No need to state explicitly.
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 7a145172d503..83488f2bf7a0 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -847,8 +847,13 @@ static int gtp_encap_enable(struct gtp_dev *gtp, struct nlattr *data[])
+ 
+ 	if (data[IFLA_GTP_ROLE]) {
+ 		role = nla_get_u32(data[IFLA_GTP_ROLE]);
+-		if (role > GTP_ROLE_SGSN)
++		if (role > GTP_ROLE_SGSN) {
++			if (sk0)
++				gtp_encap_disable_sock(sk0);
++			if (sk1u)
++				gtp_encap_disable_sock(sk1u);
+ 			return -EINVAL;
++		}
+ 	}
+ 
+ 	gtp->sk0 = sk0;
+-- 
+2.20.1
 
-> Because maps can be called from userspace and kernel code, this function
-> can have a scenario where the next_key was found but by the time we
-> try to retrieve the value the element is not there, in this case the
-> function continues and tries to get a new next_key value, skipping the
-> deleted key. If at some point the function find itself trap in a loop,
-> it will return -EINTR.
 
-Good to point this out! I don't think that unbounded continue;
-statements until an interrupt happens is sufficient. Please bound the
-number of retries to a low number.
 
-> The function will try to fit as much as possible in the buf provided and
-> will return -EINVAL if buf_len is smaller than elem_size.
->
-> QUEUE and STACK maps are not supported.
->
-> Note that map_dump doesn't guarantee that reading the entire table is
-> consistent since this function is always racing with kernel and user code
-> but the same behaviour is found when the entire table is walked using
-> the current interfaces: map_get_next_key + map_lookup_elem.
-
-> It is also important to note that with  a locked map, the lock is grabbed
-> for 1 entry at the time, meaning that the returned buf might or might not
-> be consistent.
-
-Would it be informative to signal to the caller if the read was
-complete and consistent (because the entire table was read while the
-lock was held)?
-
->
-> Suggested-by: Stanislav Fomichev <sdf@google.com>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
