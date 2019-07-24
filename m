@@ -2,106 +2,157 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3173DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D38C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C24229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oYm1pUYm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OmBT2s8+"
+	by mail.kernel.org (Postfix) with ESMTP id 875E4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563997003;
+	bh=Gol6qUUSwO5qNPzGI3xflBF2e729mBDqdTgeySrquU0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nLsFRlT2FXEnTBT5Y9ywFCQAXQmsWrJ83Zc0hqYS2INhjjurL6yHdEyGF98lK/pl8
+	 bJBjI6JYPsETmj1Udg1STpXzqqiyUcxxP9n9jTjd7w4pF4WB739oB5hD05y7qH7Sb5
+	 BwH77yWbtpi7bWu3xOBLQqOH3KChb0/4MdSpAwOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388864AbfGXTgi (ORCPT
+        id S2389129AbfGXTgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:38 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36736 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389113AbfGXTgf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:35 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BDEC76063F; Wed, 24 Jul 2019 19:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563996993;
-        bh=6rZFV4H+AtnrEFItZHF83yeAsV8YoILKdR1b4gFLTD0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oYm1pUYmMQEqee4K2snbkxIwLdZKMKnU2ZPM69OR5lDW8bIH6IWxr9WdInRQP7O6C
-         4vLRSH0pHNFexcI4nBZzmGds23jHKFQuAmVMsYZiTihczGihsZszaEMIrbcowJqY2b
-         wuLsVCY2Rsqf+tc+hrcB5J2vDnVK/0dsnRb9wuPo=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        Wed, 24 Jul 2019 15:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389013AbfGXTgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3921A605A0;
-        Wed, 24 Jul 2019 19:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1563996991;
-        bh=6rZFV4H+AtnrEFItZHF83yeAsV8YoILKdR1b4gFLTD0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OmBT2s8++wGXxO4N8+Dyj8Hi+INE6p4Lu/FR8W5b5iZt0AoxuGShf0IA8G6tdjdJC
-         QRNS+TEllVKYDkuDDbyoZPZtulDxLwreq5FoKvQ7aDNKs7rQjkOrDKIoLNQAkPjbFI
-         cyS92Zs4FeRn3XJ2Tw5Y4IotnQVbkKBpK0fDKKRI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3921A605A0
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Wed, 24 Jul 2019 13:36:30 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-Subject: Re: [PATCH V2 1/4] drivers: qcom: rpmh-rsc: simplify TCS locking
-Message-ID: <20190724193630.GD18620@codeaurora.org>
-References: <20190722215340.3071-1-ilina@codeaurora.org>
- <5d375054.1c69fb81.7ce3f.3591@mx.google.com>
- <20190723192159.GA18620@codeaurora.org>
- <5d376bb3.1c69fb81.2bb4e.7771@mx.google.com>
- <20190724145452.GC18620@codeaurora.org>
- <5d38a430.1c69fb81.6e696.9e6f@mx.google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF71214AF;
+        Wed, 24 Jul 2019 19:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996998;
+        bh=Gol6qUUSwO5qNPzGI3xflBF2e729mBDqdTgeySrquU0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WvoPcazGq7VGqmVzl1yVbczfQ7E23LCyb7dhF/T0QgIymiS945QRn4hWLpa1tiz+L
+         URQxkzl7FE3CZjJ8KHQN7hgNxTi72b/PYN8X2sx/K0P8YSf+OTJLF8E6pnkMISxQzG
+         V56dBgbEa3yO7U4yKyYAGe5SikpJTm7Mh5AMjquM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.2 287/413] Input: alps - dont handle ALPS cs19 trackpoint-only device
+Date:   Wed, 24 Jul 2019 21:19:38 +0200
+Message-Id: <20190724191756.789488011@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5d38a430.1c69fb81.6e696.9e6f@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24 2019 at 12:32 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-07-24 07:54:52)
->> On Tue, Jul 23 2019 at 14:19 -0600, Stephen Boyd wrote:
->> >Quoting Lina Iyer (2019-07-23 12:21:59)
->> >> On Tue, Jul 23 2019 at 12:22 -0600, Stephen Boyd wrote:
->> >> >Can you keep irq saving and restoring in this patch and then remove that
->> >> >in the next patch with reasoning? It probably isn't safe if the lock is
->> >> >taken in interrupt context anyway.
->> >> >
->> >> Yes, the drv->lock should have been irqsave/irqrestore, but it hasn't
->> >> been changed by this patch.
->> >
->> >It needs to be changed to maintain the irqsaving/restoring of the code.
->> >
->> May be I should club this with the following patch. Instead of adding
->> irqsave and restore to drv->lock and then remvoing them again in the
->> following patch.
->>
->
->I suspect that gets us back to v1 of this patch series? I'd prefer you
->just keep the save/restore of irqs in this patch and then remove them
->later. Or if the order can be the other way, where we remove grabbing
->the lock in irq context comes first and then consolidate the locks into
->one it might work.
->
-Patches 1 and 3 need not be bundled. We can keep them separate to help
-understand the change better.
-This patch order - #2, #1, #3, #4 would work.
+From: Hui Wang <hui.wang@canonical.com>
 
---Lina
+commit 7e4935ccc3236751e5fe4bd6846f86e46bb2e427 upstream.
+
+On a latest Lenovo laptop, the trackpoint and 3 buttons below it
+don't work at all, when we move the trackpoint or press those 3
+buttons, the kernel will print out:
+"Rejected trackstick packet from non DualPoint device"
+
+This device is identified as an alps touchpad but the packet has
+trackpoint format, so the alps.c drops the packet and prints out
+the message above.
+
+According to XiaoXiao's explanation, this device is named cs19 and
+is trackpoint-only device, its firmware is only for trackpoint, it
+is independent of touchpad and is a device completely different from
+DualPoint ones.
+
+To drive this device with mininal changes to the existing driver, we
+just let the alps driver not handle this device, then the trackpoint.c
+will be the driver of this device if the trackpoint driver is enabled.
+(if not, this device will fallback to a bare PS/2 device)
+
+With the trackpoint.c, this trackpoint and 3 buttons all work well,
+they have all features that the trackpoint should have, like
+scrolling-screen, drag-and-drop and frame-selection.
+
+Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/input/mouse/alps.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+--- a/drivers/input/mouse/alps.c
++++ b/drivers/input/mouse/alps.c
+@@ -21,6 +21,7 @@
+ 
+ #include "psmouse.h"
+ #include "alps.h"
++#include "trackpoint.h"
+ 
+ /*
+  * Definitions for ALPS version 3 and 4 command mode protocol
+@@ -2861,6 +2862,23 @@ static const struct alps_protocol_info *
+ 	return NULL;
+ }
+ 
++static bool alps_is_cs19_trackpoint(struct psmouse *psmouse)
++{
++	u8 param[2] = { 0 };
++
++	if (ps2_command(&psmouse->ps2dev,
++			param, MAKE_PS2_CMD(0, 2, TP_READ_ID)))
++		return false;
++
++	/*
++	 * param[0] contains the trackpoint device variant_id while
++	 * param[1] contains the firmware_id. So far all alps
++	 * trackpoint-only devices have their variant_ids equal
++	 * TP_VARIANT_ALPS and their firmware_ids are in 0x20~0x2f range.
++	 */
++	return param[0] == TP_VARIANT_ALPS && (param[1] & 0x20);
++}
++
+ static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
+ {
+ 	const struct alps_protocol_info *protocol;
+@@ -3162,6 +3180,20 @@ int alps_detect(struct psmouse *psmouse,
+ 		return error;
+ 
+ 	/*
++	 * ALPS cs19 is a trackpoint-only device, and uses different
++	 * protocol than DualPoint ones, so we return -EINVAL here and let
++	 * trackpoint.c drive this device. If the trackpoint driver is not
++	 * enabled, the device will fall back to a bare PS/2 mouse.
++	 * If ps2_command() fails here, we depend on the immediately
++	 * followed psmouse_reset() to reset the device to normal state.
++	 */
++	if (alps_is_cs19_trackpoint(psmouse)) {
++		psmouse_dbg(psmouse,
++			    "ALPS CS19 trackpoint-only device detected, ignoring\n");
++		return -EINVAL;
++	}
++
++	/*
+ 	 * Reset the device to make sure it is fully operational:
+ 	 * on some laptops, like certain Dell Latitudes, we may
+ 	 * fail to properly detect presence of trackstick if device
+
 
