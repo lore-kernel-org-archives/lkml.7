@@ -2,139 +2,114 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0E5C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CD8C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAFC22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA03521911
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563985819;
-	bh=aXnST1Zy+5dz8CWNsZfcAqojaBnHYTD1OJuzvi9y2o4=;
+	s=default; t=1563986064;
+	bh=y3wbn5DZyk5ePvAGBeCifCShVGEBIaWPBwKrtZ9mcAs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zaf16RHxg0iQEZt0PYV+XsIL8Usa6eBWb90naqpggOdeeMDm+K2uOh39FwYDxHOhd
-	 1Rg7esyd8fPX/klZYurI8pRdCSf+Bmzufj6ZKy5A+Gwa6QOsD5Wx3si0uVDmhxCKB4
-	 JyhKvdYbYHrFaC7ltzLLFRhjrr4flu0Bfxt7MgZo=
+	b=uQREKyrOywfnAANcX3SHZaFmkkOb8AL5RKiap3BBdGpq23BrLSXjzI45UvQK+/w5y
+	 J5Vr+aIKX09ZcUr67Qg04q3olBTsjtk+gjBixvGxA+Ius7LUf7vBhsYekXuLX4e+y2
+	 k9+Tu5zC2r5GzZZdg2ARi4YFXMBgrUF3loPULsKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfGXQaR (ORCPT
+        id S2387453AbfGXQeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfGXQaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:30:17 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC44A21871;
-        Wed, 24 Jul 2019 16:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563985816;
-        bh=aXnST1Zy+5dz8CWNsZfcAqojaBnHYTD1OJuzvi9y2o4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sxl6AmiyJogEutNkMx10bst2DtY9JXT9gevPqUof4Qqo6HT+y160gFdVne+tUl+/C
-         8V5Cjhpk8lxry7d5JIRYedRvu2W5dfAv7kaKt3gVkoEbpo3Cix1mZSwcTtlmtHZDKI
-         hjuujCEhJIvlBksjwJOOhFW6fQhlXigF4uZem8M0=
-Date:   Wed, 24 Jul 2019 09:30:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>,
-        Ilya Maximets <i.maximets@samsung.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-Message-ID: <20190724163014.GC673@sol.localdomain>
-Mail-Followup-To: Eric Dumazet <eric.dumazet@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>,
-        Ilya Maximets <i.maximets@samsung.com>,
-        Eric Dumazet <edumazet@google.com>, David Ahern <dsahern@gmail.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <20190724013813.GB643@sol.localdomain>
- <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
+        Wed, 24 Jul 2019 12:34:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42581 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGXQeV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:34:21 -0400
+Received: by mail-io1-f66.google.com with SMTP id e20so60547492iob.9;
+        Wed, 24 Jul 2019 09:34:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/PlH4vZ2Uin7/bl42iN+WjnHNv+woMCrYa8NnQ7gWTo=;
+        b=aHuZkcNuMGMHD5BigUYhgH0LoZx3tXMinOI0MDXWoUEVQS+3MsFvrST9rSLnUfSZzY
+         T15zbPoE0y4Z+DGcmGikEyDxSGiD/dscrBWBm/YgV2unlICq/TRvgjOvO7pqOaovF9Du
+         Fbp/rWiQRwz6/cbo/CcFiNfVP3usTNDZZcCvXZQjT5ibFrpW0k2JFqQKlN+wICrlJlWN
+         h7eTwcNMzZypO0UPU8jqMQqGu61Cvwj+t1jr3X5rT6cHstZHv2vGRCNRKdpFNn7cR0wx
+         TUwpcgMV8zjXcCKVQIP8C722Um3+8xGTlAIw+RT1Hp/nrx2qgbB9qeST/u1MTCMADdWy
+         EhXg==
+X-Gm-Message-State: APjAAAXzpVc/m6ne/IGjLgg7aw2VTWdapv7x+DqBpgh4P4zXVYCd/7Oy
+        QxtMTs6SaApJTSgkEJC7ug==
+X-Google-Smtp-Source: APXvYqzjl58aQwxUq65IuKOZ/HpEXrjN4r3zsKMfMya48Uu06RIYqPgzl9UQEH9sk+bryVsjmlT/zg==
+X-Received: by 2002:a02:29ce:: with SMTP id p197mr24690823jap.139.1563986060805;
+        Wed, 24 Jul 2019 09:34:20 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id l2sm33217795ioh.20.2019.07.24.09.34.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 09:34:19 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 10:34:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Tony Lindgren <tony@atomide.com>,
+        "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        David Lechner <david@lechnology.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller
+ bindings
+Message-ID: <20190724163419.GA29254@bogus>
+References: <20190708035243.12170-1-s-anna@ti.com>
+ <20190708035243.12170-2-s-anna@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190708035243.12170-2-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 08:39:05AM +0200, Eric Dumazet wrote:
+On Sun, 7 Jul 2019 22:52:38 -0500, Suman Anna wrote:
+> The Programmable Real-Time Unit Subsystem (PRUSS) contains an interrupt
+> controller (INTC) that can handle various system input events and post
+> interrupts back to the device-level initiators. The INTC can support
+> upto 64 input events on most SoCs with individual control configuration
+> and hardware prioritization. These events are mapped onto 10 interrupt
+> lines through two levels of many-to-one mapping support. Different
+> interrupt lines are routed to the individual PRU cores or to the
+> host CPU or to other PRUSS instances.
 > 
+> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
+> commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
+> a higher number of host interrupts (20 vs 10) and can handle an increased
+> number of input events (160 vs 64) from various SoC interrupt sources.
 > 
-> On 7/24/19 3:38 AM, Eric Biggers wrote:
-> > [This email was generated by a script.  Let me know if you have any suggestions
-> > to make it better, or if you want it re-generated with the latest status.]
-> > 
-> > Of the currently open syzbot reports against the upstream kernel, I've manually
-> > marked 99 of them as possibly being bugs in the net subsystem.  This category
-> > only includes the networking bugs that I couldn't assign to a more specific
-> > component (bpf, xfrm, bluetooth, tls, tipc, sctp, wireless, etc.).  I've listed
-> > these reports below, sorted by an algorithm that tries to list first the reports
-> > most likely to be still valid, important, and actionable.
-> > 
-> > Of these 99 bugs, 17 were seen in mainline in the last week.
-> > 
-> > Of these 99 bugs, 4 were bisected to commits from the following people:
-> > 
-> > 	Florian Westphal <fw@strlen.de>
-> > 	Ilya Maximets <i.maximets@samsung.com>
-> > 	Eric Dumazet <edumazet@google.com>
-> > 	David Ahern <dsahern@gmail.com>
-> > 
-> > If you believe a bug is no longer valid, please close the syzbot report by
-> > sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-> > original thread, as explained at https://goo.gl/tpsmEJ#status
-> > 
-> > If you believe I misattributed a bug to the net subsystem, please let me know,
-> > and if possible forward the report to the correct people or mailing list.
-> >
+> Add the bindings document for these interrupt controllers on all the
+> applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
+> and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
+> architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
+> and J721E SoCs.
 > 
-> Some of the bugs have been fixed already, before syzbot found them.
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+> Prior version: https://patchwork.kernel.org/patch/10795771/
 > 
-> Why force human to be gentle to bots and actually replying to them ?
-> 
-> I usually simply wait that syzbot is finding the bug does not repro anymore,
-> but now if you send these emails, we will have even more pressure on us.
+>  .../interrupt-controller/ti,pruss-intc.txt    | 92 +++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
 > 
 
-First, based on experience, I'd guess about 30-45 of these are still valid.  17
-were seen in mainline in the last week, but some others are valid too.  The ones
-most likely to still be valid are at the beginning of the list.  So let's try
-not use the presence of outdated bugs as an excuse not to fix current bugs.
-
-Second, all these bug reports are still open, regardless of whether reminders
-are sent or not.  I think you're really suggesting that possibly outdated bug
-reports should be automatically invalidated by syzbot.
-
-syzbot already does that for bugs with no reproducer.  However, that still
-leaves a lot of outdated bugs with reproducers.
-
-Since the kernel community is basically in continuous bug bankruptcy and lots of
-syzbot reports are being ignored anyway, I'm in favor of making the invalidation
-criteria more aggressive, so we can best focus people's efforts.  I understand
-that Dmitry has been against this though, since a significant fraction of bugs
-that syzbot stopped hitting for some reason actually turn out to be still valid.
-
-But we probably have no choice.  So I suggest we agree on new criteria for
-invalidating bugs.  I'd suggest assigning a timeout to each bug, based on
-attributes like "seen in mainline?", "reproducer type", "bisected?", "does it
-look like a 'bad' crash (e.g. use-after-free)"; similar to the algorithm I'm
-using to sort the bugs when sorting these reminders.  I.e., bugs most likely to
-still be valid, important, and actionable get longest timeouts.
-
-Then if no crash or activity was seen in the timeout, the bug is closed.
-
-Any thoughts from anyone?
-
-- Eric
+Reviewed-by: Rob Herring <robh@kernel.org>
