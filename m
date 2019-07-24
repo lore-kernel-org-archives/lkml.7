@@ -2,201 +2,137 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97138C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00F8C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A89218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EA4227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ANsJayOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbfGXFtg (ORCPT
+        id S1726267AbfGXFt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:49:36 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57594 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725870AbfGXFtf (ORCPT
+        Wed, 24 Jul 2019 01:49:56 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43178 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfGXFtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:49:35 -0400
-X-UUID: 7b0d746f9a1e43baa37d1ba9f08a1fb6-20190724
-X-UUID: 7b0d746f9a1e43baa37d1ba9f08a1fb6-20190724
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 758720907; Wed, 24 Jul 2019 13:49:28 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 24 Jul 2019 13:49:27 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 24 Jul 2019 13:49:27 +0800
-Message-ID: <1563947367.1070.7.camel@mtksdaap41>
-Subject: Re: [PATCH] drm/mediatek: make imported PRIME buffers contiguous
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Tomasz Figa <tfiga@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Wed, 24 Jul 2019 13:49:27 +0800
-In-Reply-To: <20190723053421.179679-1-acourbot@chromium.org>
-References: <20190723053421.179679-1-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 24 Jul 2019 01:49:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6O5nmT0056452;
+        Wed, 24 Jul 2019 00:49:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563947388;
+        bh=RYvjllr1MbBnFqdxeJVEJPyJo8N8D3fjWqMgHX3/a70=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ANsJayOXjU9T6zfjwbV79COTPIaGWu62G+kPNspPZ7F8Z3s5rafzy8qgjA4wNr5z8
+         jGNw6iVPi9DChYFrviB8zY9cOdXI4bRNFpk49qhW6yJgcMZO197ENF5qFxh395ADtM
+         4u8nisFq8n+mzlPQrIg2Y3JtIgsEf+8w2vWTSKVA=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6O5nmKP099923
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jul 2019 00:49:48 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
+ Jul 2019 00:49:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 24 Jul 2019 00:49:47 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6O5nheF016972;
+        Wed, 24 Jul 2019 00:49:44 -0500
+Subject: Re: [PATCH 2/8] ARM: OMAP2+: Remove unconfigured midlemode for am3
+ lcdc
+To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>,
+        <linux-omap@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>
+CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-3-tony@atomide.com>
+ <bcc130a5-f7e0-e182-9f4b-5a48fc3d6e17@ti.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <52328e14-58b2-2ea1-8b0a-33548a1c6a7a@ti.com>
+Date:   Wed, 24 Jul 2019 11:20:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <bcc130a5-f7e0-e182-9f4b-5a48fc3d6e17@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Alexandre:
 
-On Tue, 2019-07-23 at 14:34 +0900, Alexandre Courbot wrote:
-> This driver requires imported PRIME buffers to appear contiguously in
-> its IO address space. Make sure this is the case by setting the maximum
-> DMA segment size to a better value than the default 64K on the DMA
-> device, and use said DMA device when importing PRIME buffers.
+
+On 24/07/19 12:33 AM, Suman Anna wrote:
+> + Jyri
 > 
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 47 ++++++++++++++++++++++++--
->  drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
->  2 files changed, 46 insertions(+), 3 deletions(-)
+> On 7/23/19 6:28 AM, Tony Lindgren wrote:
+>> We currently get a warning for lcdc because of a difference
+>> with dts provided configuration compared to the legacy platform
+>> data. This is because lcdc has SYSC_HAS_MIDLEMODE configured in
+>> the platform data without configuring the modes.
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index 95fdbd0fbcac..4ad4770fab13 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -213,6 +213,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
->  	struct mtk_drm_private *private = drm->dev_private;
->  	struct platform_device *pdev;
->  	struct device_node *np;
-> +	struct device *dma_dev;
->  	int ret;
->  
->  	if (!iommu_present(&platform_bus_type))
-> @@ -275,7 +276,27 @@ static int mtk_drm_kms_init(struct drm_device *drm)
->  		goto err_component_unbind;
->  	}
->  
-> -	private->dma_dev = &pdev->dev;
-> +	dma_dev = &pdev->dev;
-> +	private->dma_dev = dma_dev;
-> +
-> +	/*
-> +	 * Configure the DMA segment size to make sure we get contiguous IOVA
-> +	 * when importing PRIME buffers.
-> +	 */
-> +	if (!dma_dev->dma_parms) {
-> +		private->dma_parms_allocated = true;
-> +		dma_dev->dma_parms =
-> +			devm_kzalloc(drm->dev, sizeof(*dma_dev->dma_parms),
-> +				     GFP_KERNEL);
-> +	}
-> +	if (!dma_dev->dma_parms)
-> +		goto err_component_unbind;
+> Hi Tony,
+> While I understand that you are trying to match the DT data with the
+> existing legacy data, do you know if there was a reason why this was
+> omitted in the first place? Should we be really adding the MSTANDBY_
+> flags and fix up the DTS node accordingly? I tried looking through the
+> git log, and the initial commit itself didn't add the MSTANDBY_ flags
+> but used the SYSC_HAS_MIDLEMODE.
+> 
+> Jyri,
+> Do you know the history?
 
-return with ret = 0?
+Tony/Suman,
 
-> +
-> +	ret = dma_set_max_seg_size(dma_dev, (unsigned int)DMA_BIT_MASK(32));
-> +	if (ret) {
-> +		dev_err(dma_dev, "Failed to set DMA segment size\n");
-> +		goto err_unset_dma_parms;
-> +	}
->  
->  	/*
->  	 * We don't use the drm_irq_install() helpers provided by the DRM
-> @@ -285,13 +306,16 @@ static int mtk_drm_kms_init(struct drm_device *drm)
->  	drm->irq_enabled = true;
->  	ret = drm_vblank_init(drm, MAX_CRTC);
->  	if (ret < 0)
-> -		goto err_component_unbind;
-> +		goto err_unset_dma_parms;
->  
->  	drm_kms_helper_poll_init(drm);
->  	drm_mode_config_reset(drm);
->  
->  	return 0;
->  
-> +err_unset_dma_parms:
-> +	if (private->dma_parms_allocated)
-> +		dma_dev->dma_parms = NULL;
->  err_component_unbind:
->  	component_unbind_all(drm->dev, drm);
->  err_config_cleanup:
-> @@ -302,9 +326,14 @@ static int mtk_drm_kms_init(struct drm_device *drm)
->  
->  static void mtk_drm_kms_deinit(struct drm_device *drm)
->  {
-> +	struct mtk_drm_private *private = drm->dev_private;
-> +
->  	drm_kms_helper_poll_fini(drm);
->  	drm_atomic_helper_shutdown(drm);
->  
-> +	if (private->dma_parms_allocated)
-> +		private->dma_dev->dma_parms = NULL;
-> +
->  	component_unbind_all(drm->dev, drm);
->  	drm_mode_config_cleanup(drm);
->  }
-> @@ -320,6 +349,18 @@ static const struct file_operations mtk_drm_fops = {
->  	.compat_ioctl = drm_compat_ioctl,
->  };
->  
-> +/*
-> + * We need to override this because the device used to import the memory is
-> + * not dev->dev, as drm_gem_prime_import() expects.
-> + */
-> +struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
-> +						struct dma_buf *dma_buf)
-> +{
-> +	struct mtk_drm_private *private = dev->dev_private;
-> +
-> +	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
-> +}
-> +
+This patch breaks DS0 on am3.
 
-I think this part should be an independent patch which fixup
-119f5173628aa ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+- Keerthy
 
-Regards,
-CK
-
->  static struct drm_driver mtk_drm_driver = {
->  	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
->  			   DRIVER_ATOMIC,
-> @@ -331,7 +372,7 @@ static struct drm_driver mtk_drm_driver = {
->  	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
->  	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
->  	.gem_prime_export = drm_gem_prime_export,
-> -	.gem_prime_import = drm_gem_prime_import,
-> +	.gem_prime_import = mtk_drm_gem_prime_import,
->  	.gem_prime_get_sg_table = mtk_gem_prime_get_sg_table,
->  	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
->  	.gem_prime_mmap = mtk_drm_gem_mmap_buf,
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> index 598ff3e70446..e03fea12ff59 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> @@ -51,6 +51,8 @@ struct mtk_drm_private {
->  	} commit;
->  
->  	struct drm_atomic_state *suspend_state;
-> +
-> +	bool dma_parms_allocated;
->  };
->  
->  extern struct platform_driver mtk_ddp_driver;
-
-
+> 
+> regards
+> Suman
+> 
+>>
+>> Let's fix the warning by removing SYSC_HAS_MIDLEMODE. Note that
+>> the am335x TRM lists SYSC_HAS_MIDLEMODE, but it is unused.
+> 
+> 
+> 
+>>
+>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>> ---
+>>   arch/arm/mach-omap2/omap_hwmod_33xx_data.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+>> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+>> @@ -231,7 +231,7 @@ static struct omap_hwmod am33xx_control_hwmod = {
+>>   static struct omap_hwmod_class_sysconfig lcdc_sysc = {
+>>   	.rev_offs	= 0x0,
+>>   	.sysc_offs	= 0x54,
+>> -	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE),
+>> +	.sysc_flags	= SYSC_HAS_SIDLEMODE,
+>>   	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+>>   	.sysc_fields	= &omap_hwmod_sysc_type2,
+>>   };
+>>
+> 
