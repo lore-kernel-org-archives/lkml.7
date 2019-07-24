@@ -2,84 +2,84 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FFFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD3C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C7521670
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB9921670
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfGXD5r (ORCPT
+        id S1726585AbfGXD6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:57:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2745 "EHLO huawei.com"
+        Tue, 23 Jul 2019 23:58:54 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2710 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725855AbfGXD5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:57:47 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CEE496E40C58B4D5EB37;
-        Wed, 24 Jul 2019 11:57:45 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Jul 2019 11:57:39 +0800
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-To:     <robert.jarzmik@free.fr>, <axboe@fb.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH resend v2] lib: scatterlist: Fix to support no mapped sg
-Date:   Wed, 24 Jul 2019 11:54:23 +0800
-Message-ID: <1563940463-95597-1-git-send-email-wangzhou1@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        id S1725855AbfGXD6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:58:53 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 098302A12B22F6B5C30E;
+        Wed, 24 Jul 2019 11:58:52 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 11:58:42 +0800
+Subject: Re: [PATCH v2] RDMA/hns: Fix build error for hip06
+To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>, <leon@kernel.org>
+References: <20190723024535.61412-1-yuehaibing@huawei.com>
+ <20190724034428.13944-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <62e79055-948e-155f-19eb-b216a540458a@huawei.com>
+Date:   Wed, 24 Jul 2019 11:58:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
+In-Reply-To: <20190724034428.13944-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function sg_split, the second sg_calculate_split will return -EINVAL
-when in_mapped_nents is 0.
 
-Indeed there is no need to do second sg_calculate_split and sg_split_mapped
-when in_mapped_nents is 0, as in_mapped_nents indicates no mapped entry in
-original sgl.
+Pls ignore this, I will fix it.
 
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
-v2: Just add Acked-by from Robert.
-
- lib/sg_split.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/lib/sg_split.c b/lib/sg_split.c
-index 9982c63..60a0bab 100644
---- a/lib/sg_split.c
-+++ b/lib/sg_split.c
-@@ -176,11 +176,13 @@ int sg_split(struct scatterlist *in, const int in_mapped_nents,
- 	 * The order of these 3 calls is important and should be kept.
- 	 */
- 	sg_split_phys(splitters, nb_splits);
--	ret = sg_calculate_split(in, in_mapped_nents, nb_splits, skip,
--				 split_sizes, splitters, true);
--	if (ret < 0)
--		goto err;
--	sg_split_mapped(splitters, nb_splits);
-+	if (in_mapped_nents) {
-+		ret = sg_calculate_split(in, in_mapped_nents, nb_splits, skip,
-+					 split_sizes, splitters, true);
-+		if (ret < 0)
-+			goto err;
-+		sg_split_mapped(splitters, nb_splits);
-+	}
- 
- 	for (i = 0; i < nb_splits; i++) {
- 		out[i] = splitters[i].out_sg;
--- 
-2.8.1
+On 2019/7/24 11:44, YueHaibing wrote:
+> If INFINIBAND_HNS_HIP06 is selected and HNS_DSAF
+> is m, but INFINIBAND_HNS is y, building fails:
+> 
+> drivers/infiniband/hw/hns/hns_roce_hw_v1.o: In function `hns_roce_v1_reset':
+> hns_roce_hw_v1.c:(.text+0x39fa): undefined reference to `hns_dsaf_roce_reset'
+> hns_roce_hw_v1.c:(.text+0x3a25): undefined reference to `hns_dsaf_roce_reset'
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 08805fdbeb2d ("RDMA/hns: Split hw v1 driver from hns roce driver")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> v2: use select instead of depends
+> ---
+>  drivers/infiniband/hw/hns/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+> index b9dfac0..5f6d750 100644
+> --- a/drivers/infiniband/hw/hns/Kconfig
+> +++ b/drivers/infiniband/hw/hns/Kconfig
+> @@ -12,7 +12,8 @@ config INFINIBAND_HNS
+>  
+>  config INFINIBAND_HNS_HIP06
+>  	bool "Hisilicon Hip06 Family RoCE support"
+> -	depends on INFINIBAND_HNS && HNS && HNS_DSAF && HNS_ENET
+> +	depends on INFINIBAND_HNS && HNS && HNS_ENET
+> +	select HNS_DSAF
+>  	---help---
+>  	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip06 and
+>  	  Hip07 SoC. These RoCE engines are platform devices.
+> 
 
