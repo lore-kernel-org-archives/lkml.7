@@ -2,121 +2,113 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAFFC76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265BDC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9261022ADF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ry15thyx"
+	by mail.kernel.org (Postfix) with ESMTP id EDA6421873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563997641;
+	bh=6gqoSKVRBOlG/2nj8pdniFeBf4g78OxMQX5BzuQQ0pA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mblm2wxbtzUFFEoR5Fr9/U1yC43wkg1uWnmJoAJGBeJ08JIFxHwhqpd+kLk3fgl27
+	 W5sr+jLsElMDG+S0vebyqXl+eUzMxtaasEwv3JE/ILqaO8T/MF2yYDhnAYM1HWIH4F
+	 w418wxnOxUWLfKTwhT1nNCqtk+n4Ww/H8/BfqZTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390948AbfGXTrQ (ORCPT
+        id S2391231AbfGXTrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:47:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43384 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391184AbfGXTrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:47:06 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f25so21714508pgv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d+g/CVDDe6lBhitrwf0p1AVCDLXIza7GgdLv5G5rGBQ=;
-        b=Ry15thyxO+qEHeX3A7H4d3046HlgvQwv7DrTLIdooSku2s5oV/JD/3aSPlCFSkhfNm
-         BZBHdboUeWjI8os3SSePn+p9YwkbM2vVf5daTCPRlTS0IbG9FHPBCFXWS235e/8suW/e
-         oh3SbJ1bN5kg1lamTYuqWq24ui76z0iEsZYdA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d+g/CVDDe6lBhitrwf0p1AVCDLXIza7GgdLv5G5rGBQ=;
-        b=TMOn3w54JDa7hHXPqIwiZ7Y84O8Fy2OBlbC0XRYIIQYRH7E1TP1uxDzf7gHBeAPP68
-         HNVMAM5cYZfXU/OUN2YfCIbxmbhP9ttjyC4TTjEKQiNNnTpJc3KHNUvwY9sorXgC0dya
-         pCPzxVWG24gXo0WxhN4R2UBpgMyw+Zvx1baf4EQHb7T0m9fqKqPCuG1HHhSa7zXwTUjr
-         8x9CFsQLcIgsBf0IQa2ybMr7dxhd6C0H5gNtGp9mhPgd2aCqBdrKkiUbZIWGnfJpraCq
-         9oP47BnzWfDbwJGcKOGb/iLlf+0hVcjDJawa7MLKNGwpEZXJ/skxnayreWVRfmLzD9Aq
-         XJvw==
-X-Gm-Message-State: APjAAAV2KfJYxqy6wqE3vwzxOaS/PV9Wq840W8dmewbHknBiQeq7XuRu
-        sbDhIBv0+vifwS1xF6HDx7FRgw==
-X-Google-Smtp-Source: APXvYqyP16x2iGwpIlzIeQw77qWct3WHjt+nequp2zIzVsOfzCvJFuoXqx/5RSrVAR3R0U0+hJWs0Q==
-X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr86633772pjb.138.1563997626076;
-        Wed, 24 Jul 2019 12:47:06 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id k5sm36971202pjl.32.2019.07.24.12.47.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 12:47:05 -0700 (PDT)
-From:   Brian Norris <briannorris@chromium.org>
-To:     Ganapathi Bhat <gbhat@marvell.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Brian Norris <briannorris@chromium.org>, stable@vger.kernel.org
-Subject: [PATCH 5.3] mwifiex: fix 802.11n/WPA detection
-Date:   Wed, 24 Jul 2019 12:46:34 -0700
-Message-Id: <20190724194634.205718-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
+        Wed, 24 Jul 2019 15:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391186AbfGXTrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:47:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75B03217D4;
+        Wed, 24 Jul 2019 19:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997631;
+        bh=6gqoSKVRBOlG/2nj8pdniFeBf4g78OxMQX5BzuQQ0pA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pYIUpbw92sdAF7duX2wV1Lap8AMjfCvEgQ3Ep/HWMXyMDb/zd43BY1zYg+IGpgqfW
+         b/ppXyNkKEyGJgcKBKL1044eZj/N7qdnAdbld2NEqU/WaJED0LNaFsLGhuX4wSf819
+         8n2/a9v1y2/67lg36Khv0kejO+EG50KvtIKtqWlY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 091/371] rcu: Force inlining of rcu_read_lock()
+Date:   Wed, 24 Jul 2019 21:17:23 +0200
+Message-Id: <20190724191731.682084832@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant
-vendor IEs") adjusted the ieee_types_vendor_header struct, which
-inadvertently messed up the offsets used in
-mwifiex_is_wpa_oui_present(). Add that offset back in, mirroring
-mwifiex_is_rsn_oui_present().
+[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
 
-As it stands, commit 63d7ef36103d breaks compatibility with WPA (not
-WPA2) 802.11n networks, since we hit the "info: Disable 11n if AES is
-not supported by AP" case in mwifiex_is_network_compatible().
+When debugging options are turned on, the rcu_read_lock() function
+might not be inlined. This results in lockdep's print_lock() function
+printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
+For example:
 
-Fixes: 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant vendor IEs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
+[   10.579995] =============================
+[   10.584033] WARNING: suspicious RCU usage
+[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
+[   10.593162] -----------------------------
+[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
+RCU read-side critical section!
+[   10.606220]
+[   10.606220] other info that might help us debug this:
+[   10.606220]
+[   10.614280]
+[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
+[   10.620853] 3 locks held by systemd/1:
+[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
+[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+
+These "rcu_read_lock+0x0/0x70" strings are not providing any useful
+information.  This commit therefore forces inlining of the rcu_read_lock()
+function so that rcu_read_lock()'s caller is instead shown.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/main.h | 1 +
- drivers/net/wireless/marvell/mwifiex/scan.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ include/linux/rcupdate.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
-index 3e442c7f7882..095837fba300 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -124,6 +124,7 @@ enum {
- 
- #define MWIFIEX_MAX_TOTAL_SCAN_TIME	(MWIFIEX_TIMER_10S - MWIFIEX_TIMER_1S)
- 
-+#define WPA_GTK_OUI_OFFSET				2
- #define RSN_GTK_OUI_OFFSET				2
- 
- #define MWIFIEX_OUI_NOT_PRESENT			0
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index 0d6d41727037..21dda385f6c6 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -181,7 +181,8 @@ mwifiex_is_wpa_oui_present(struct mwifiex_bssdescriptor *bss_desc, u32 cipher)
- 	u8 ret = MWIFIEX_OUI_NOT_PRESENT;
- 
- 	if (has_vendor_hdr(bss_desc->bcn_wpa_ie, WLAN_EID_VENDOR_SPECIFIC)) {
--		iebody = (struct ie_body *) bss_desc->bcn_wpa_ie->data;
-+		iebody = (struct ie_body *)((u8 *)bss_desc->bcn_wpa_ie->data +
-+					    WPA_GTK_OUI_OFFSET);
- 		oui = &mwifiex_wpa_oui[cipher][0];
- 		ret = mwifiex_search_oui_in_ie(iebody, oui);
- 		if (ret)
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index b25d20822e75..3508f4508a11 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -586,7 +586,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+  * read-side critical sections may be preempted and they may also block, but
+  * only when acquiring spinlocks that are subject to priority inheritance.
+  */
+-static inline void rcu_read_lock(void)
++static __always_inline void rcu_read_lock(void)
+ {
+ 	__rcu_read_lock();
+ 	__acquire(RCU);
 -- 
-2.22.0.657.g960e92d24f-goog
+2.20.1
+
+
 
