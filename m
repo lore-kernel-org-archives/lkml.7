@@ -6,61 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3ADC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62049C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 004AE22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308FB21911
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563988222;
-	bh=xAhl0C0csUV8JTXFW2xkr4vyIY3HtsxxZk+pzzR9NyM=;
+	s=default; t=1563988228;
+	bh=8Iv1KNyqx9qxX4tBWmO2qXBdCa/7Mtdy+eUFXutnc2k=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=pFJ7D7qo5nfmndGt6p44mCKSulcZccogQ1U3vO7CzS5EusvU6y5ffBOV4KVHByg4z
-	 KmLn1s9z/yinz0OvQMbIqPyTi0UJTIK/FgYvq20nA272LRnu1waUX1VHn0bQxw+EqG
-	 +9F4hPJrxwKxnjSpCPebRS0IBTNcvyNSAhL+Rql4=
+	b=2MtGA7wpyc4XMbke2s/9djDAQUJp3dptzxdOS98iXlFGx4wUki7Xeoiz6RoZ8mLY6
+	 H4RqL08ccqzKzzTe1kM0j/MHsxG7rNKOSsAZX9pI956nlRGjfh/Vz43DntBPNHAJvW
+	 YqQnUZPGw2qmq7+EJn9h3G62o4n/bpUL/3hCWXlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfGXRKV (ORCPT
+        id S1728574AbfGXRK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53112 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 13:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726031AbfGXRKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:10:20 -0400
-Subject: Re: [GIT PULL] KVM fixes for Linux 5.3-rc2
+        id S1726031AbfGXRKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:10:21 -0400
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.3-2 tag
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563988220;
-        bh=xAhl0C0csUV8JTXFW2xkr4vyIY3HtsxxZk+pzzR9NyM=;
+        s=default; t=1563988221;
+        bh=8Iv1KNyqx9qxX4tBWmO2qXBdCa/7Mtdy+eUFXutnc2k=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1+NlSG6k/RJZ8sVwO+m8XK8z02aYybIA8kDaxUmz84SOcgkADpJVN6lCpPmnecZkw
-         CMSM3YzdU15eYmGSJA2H3jowPy+0GP4l9mjPACliROPhkWfw6iZz6OkWQrA4nP5EC2
-         K3gAiQC1RmfcLUG83GUDE7JPt6WEAAaP4UTUhMOU=
+        b=gnNuMHvb3zY+RHCONcmiUO5vAwOOLzOxxX6bLB0XbQSyScyNRHUvxB6kuv6jDj6Ay
+         rpUIDdogUAjCCK31LSRCkFogRUQtdSHXNGLSW2T8bCuzNT+ExYeVDl4hb7SGEpRwgD
+         92Y3ay6PmZocijx8K3Jzx4ELhB57zQDrCYvlzy1c=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1563970561-44925-1-git-send-email-pbonzini@redhat.com>
-References: <1563970561-44925-1-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <87o91j5z20.fsf@concordia.ellerman.id.au>
+References: <87o91j5z20.fsf@concordia.ellerman.id.au>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1563970561-44925-1-git-send-email-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
- tags/for-linus
-X-PR-Tracked-Commit-Id: 266e85a5ec9100dcd9ae03601453bbc96fefee5d
+X-PR-Tracked-Message-Id: <87o91j5z20.fsf@concordia.ellerman.id.au>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+ tags/powerpc-5.3-2
+X-PR-Tracked-Commit-Id: 3a855b7ac7d5021674aa3e1cc9d3bfd6b604e9c0
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 76260774575c0ff7464bf5a4beabc9852180799f
-Message-Id: <156398822001.2764.12907694831246058752.pr-tracker-bot@kernel.org>
-Date:   Wed, 24 Jul 2019 17:10:20 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        rkrcmar@redhat.com, kvm@vger.kernel.org
+X-PR-Merge-Commit-Id: bed38c3e2dca01b358a62b5e73b46e875742fd75
+Message-Id: <156398822120.2764.10514051840491932120.pr-tracker-bot@kernel.org>
+Date:   Wed, 24 Jul 2019 17:10:21 +0000
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        aarcange@redhat.com, clg@kaod.org, ego@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        mikey@neuling.org, shawn@anastas.io, sjitindarsingh@gmail.com,
+        vaibhav@linux.ibm.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 24 Jul 2019 14:16:01 +0200:
+The pull request you sent on Wed, 24 Jul 2019 23:42:31 +1000:
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.3-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/76260774575c0ff7464bf5a4beabc9852180799f
+https://git.kernel.org/torvalds/c/bed38c3e2dca01b358a62b5e73b46e875742fd75
 
 Thank you!
 
