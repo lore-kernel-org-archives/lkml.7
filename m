@@ -2,68 +2,81 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2A2C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D091BC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79EA922387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26F022387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfGXLCT (ORCPT
+        id S1727360AbfGXLDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:02:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43619 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbfGXLCT (ORCPT
+        Wed, 24 Jul 2019 07:03:51 -0400
+Received: from smtprelay0228.hostedemail.com ([216.40.44.228]:52747 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726070AbfGXLDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:02:19 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hqF2G-00053o-Rh; Wed, 24 Jul 2019 13:02:16 +0200
-Date:   Wed, 24 Jul 2019 13:02:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Rui Salvaterra <rsalvaterra@gmail.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Daniel Drake <drake@endlessm.com>
-Subject: Re: [BUG] Linux 5.3-rc1: timer problem on x86-64 (Pentium D)
-In-Reply-To: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1907241257240.1791@nanos.tec.linutronix.de>
-References: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 24 Jul 2019 07:03:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id A888718037D48;
+        Wed, 24 Jul 2019 11:03:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tax54_21268d0501225
+X-Filterd-Recvd-Size: 2072
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 24 Jul 2019 11:03:47 +0000 (UTC)
+Message-ID: <54692f19e845a74650c1d24cbe7b79c5dad7b061.camel@perches.com>
+Subject: Re: [PATCH v1 5/6] mt76: fix some checkpatch warnings
+From:   Joe Perches <joe@perches.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 24 Jul 2019 04:03:46 -0700
+In-Reply-To: <0afa87cc70b34ee17d6c2247dfc8dac92c36852f.1563944758.git.ryder.lee@mediatek.com>
+References: <cover.1563944758.git.ryder.lee@mediatek.com>
+         <0afa87cc70b34ee17d6c2247dfc8dac92c36852f.1563944758.git.ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rui,
+On Wed, 2019-07-24 at 16:58 +0800, Ryder Lee wrote:
+> This fixes the following checkpatch warnings:
+[]
+> diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+[]
+> @@ -74,15 +75,14 @@ mt76_rx_aggr_check_release(struct mt76_rx_tid *tid, struct sk_buff_head *frames)
+>  	for (idx = (tid->head + 1) % tid->size;
+>  	     idx != start && nframes;
+>  	     idx = (idx + 1) % tid->size) {
+> -
+>  		skb = tid->reorder_buf[idx];
+>  		if (!skb)
+>  			continue;
+>  
+>  		nframes--;
+> -		status = (struct mt76_rx_status *) skb->cb;
+> +		status = (struct mt76_rx_status *)skb->cb;
+>  		if (!time_after(jiffies, status->reorder_time +
+> -					 REORDER_TIMEOUT))
+> +				REORDER_TIMEOUT))
 
-On Wed, 24 Jul 2019, Rui Salvaterra wrote:
-> I don't know if this has been reported before, but from a cursory
-> search it doesn't seem to be the case.
-> I have a x86-64 Pentium (4) D machine which always worked perfectly
-> with Linux 5.2 using the TSC as the clock source. With Linux 5.3-rc1 I
-> can't, for the life of me, boot it with anything other than
-> clocksource=jiffies, it completely hangs without even a backtrace.
+trivia/bikeshedding:  perhaps better slightly differently:
 
-The obvious candidate for this is the following section:
+ 		if (!time_after(jiffies,
+				status->reorder_time + REORDER_TIMEOUT))
 
-c8c4076723da ("x86/timer: Skip PIT initialization on modern chipsets")
-dde3626f815e ("x86/apic: Use non-atomic operations when possible")
-748b170ca19a ("x86/apic: Make apic_bsp_setup() static")
-2420a0b1798d ("x86/tsc: Set LAPIC timer period to crystal clock frequency")
-52ae346bd26c ("x86/apic: Rename 'lapic_timer_frequency' to 'lapic_timer_period'")
-604dc9170f24 ("x86/tsc: Use CPUID.0x16 to calculate missing crystal frequency")
 
-Thanks,
-
-	tglx
