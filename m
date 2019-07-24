@@ -2,133 +2,175 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFE9C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B43C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E3F216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563995897;
-	bh=cUUy+a+B1QBy1Ylf79j8dA5nYvO7KkGPOUlA6dpTOFk=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=YFfGcwdoFxNNLvOypeaFRHcfNEaE9JokqmH0jXky6Bw7K9VEjLCz+EDOXSnfAnm8b
-	 E7mMuRVeWmyiPszwvaLBIu7OkOdOK5sU6fnTb9mE05MKMPFqSXdPgVzcdG1cSQtUi9
-	 6M1ICwm0TQNhbEXtX0TQuYlDvl4rtl6QWwx8wDf8=
+	by mail.kernel.org (Postfix) with ESMTP id 7EF9921951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387608AbfGXTSP (ORCPT
+        id S1729026AbfGXTSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:18:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34716 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbfGXTSK (ORCPT
+        Wed, 24 Jul 2019 15:18:14 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:45932 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728971AbfGXTSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:18:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=tTy5/+/M3pVI1lUjGhlSClg1xxdvNbhQX6OC/ZBOaJs=; b=PWr2AHlizcnQ
-        3/MS25b18uecwwYcvHHqvXyrO+t27sRaH8xy3NNUwP+uedjp4vGhAhqdE8TkMt+gma4tgX6bUBcy4
-        6SG0DRJOspB5qjFSm6cKV0fINAqVz3rtitad6nqt1gBwslYUhyrpysI9FI38mZIzMi//N75qviJ4c
-        vO/ek=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqMlt-0008W1-1t; Wed, 24 Jul 2019 19:17:53 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8368A27429A0; Wed, 24 Jul 2019 20:17:52 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        gustavo@embeddedor.com, kernel-janitors@vger.kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com,
-        perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: wm8955: Fix a typo in 'wm8995_pll_factors()' function name" to the asoc tree
-In-Reply-To: <20190724052632.30476-1-christophe.jaillet@wanadoo.fr>
-X-Patchwork-Hint: ignore
-Message-Id: <20190724191752.8368A27429A0@ypsilon.sirena.org.uk>
-Date:   Wed, 24 Jul 2019 20:17:52 +0100 (BST)
+        Wed, 24 Jul 2019 15:18:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id e20so51759578ioe.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:18:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=+12BGyfj5tbWX5WuoPOq9y3PhelyQ+8mPqbDPnhEVzo=;
+        b=gZQOmAm474cEsGFHhlEJz0iGx9cGbljzy5kozJ0LHj404hjEMrdbpvbgKNTJydlAsZ
+         nKl9GP6mclbU8d6fB9eHrz3v2ccbQqdHVzH3rrlBmBA6ROJTOrNw3OYAyP4VngvYH7gG
+         QzdV8QjBGydijI7Ch6ThgHITwvVTQXSi+TZz/xElxf0P4HHVFKyCS9oujPVy7bkQEmV1
+         EFmxfzbF3d/Q8s3ycOxNYEheMzDWZJJ35kFbSV7g4dv3VqTMf3QBvmj5msxOJn52Luuh
+         b89vYFSlS2uql8or7qb6DnpLZFRRMaZSi7RZ8bJHWum78+Pl3FBwQ1DIyoVwXDIr+jZ8
+         0bsw==
+X-Gm-Message-State: APjAAAUSd81WpJb9JrwCjsGGVgwIMccc6kRdiOtCMY26Fn9HAwC4cUEp
+        Q1ZCDghbQZw7q4ncS1abyFOvj0ab9rP8qK+dyv0d11PRBOw/
+X-Google-Smtp-Source: APXvYqzrveDnVjWnhpRCtNoBbE6aQKt12eCs95S1sUGbzWHPCDnySGIySR0fc/DvrPbVKh2/fY3zZXKGAAKFP9BkQi2Ea14TJJKw
+MIME-Version: 1.0
+X-Received: by 2002:a6b:b497:: with SMTP id d145mr54785605iof.17.1563995888091;
+ Wed, 24 Jul 2019 12:18:08 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 12:18:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000057102e058e722bba@google.com>
+Subject: INFO: task hung in perf_event_free_task
+From:   syzbot <syzbot+7692cea7450c97fa2a0a@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        jolsa@redhat.com, kafai@fb.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hello,
 
-   ASoC: wm8955: Fix a typo in 'wm8995_pll_factors()' function name
+syzbot found the following crash on:
 
-has been applied to the asoc tree at
+HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b33b58600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7937b718ddac333b
+dashboard link: https://syzkaller.appspot.com/bug?extid=7692cea7450c97fa2a0a
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e888cc600000
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7692cea7450c97fa2a0a@syzkaller.appspotmail.com
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+INFO: task syz-executor.0:9658 blocked for more than 143 seconds.
+       Not tainted 5.2.0+ #37
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor.0  D25992  9658   7837 0x00004006
+Call Trace:
+  context_switch kernel/sched/core.c:3254 [inline]
+  __schedule+0x8b7/0xcd0 kernel/sched/core.c:3880
+  schedule+0x12f/0x1d0 kernel/sched/core.c:3944
+  perf_event_free_task+0x52a/0x630 kernel/events/core.c:11606
+  copy_process+0x39bb/0x5a00 kernel/fork.c:2283
+  _do_fork+0x179/0x630 kernel/fork.c:2369
+  __do_sys_clone kernel/fork.c:2524 [inline]
+  __se_sys_clone kernel/fork.c:2505 [inline]
+  __x64_sys_clone+0x247/0x2b0 kernel/fork.c:2505
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459829
+Code: dd fe ff ff cc cc cc cc cc cc cc cc cc cc cc cc cc 64 48 8b 0c 25 f8  
+ff ff ff 48 3b 61 10 76 68 48 83 ec 28 48 89 6c 24 20 48 <8d> 6c 24 20 48  
+8b 44 24 30 48 89 04 24 48 8b 4c 24 38 48 89 4c 24
+RSP: 002b:00007f2b371d8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000459829
+RDX: 9999999999999999 RSI: 0000000000000000 RDI: 0000002102001ffe
+RBP: 000000000075bf20 R08: ffffffffffffffff R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2b371d96d4
+R13: 00000000004bfce6 R14: 00000000004d17f8 R15: 00000000ffffffff
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Showing all locks held in the system:
+1 lock held by khungtaskd/1056:
+  #0: 000000004ef21d86 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0x30  
+include/linux/rcupdate.h:207
+1 lock held by rsyslogd/7708:
+  #0: 000000001dbc8cee (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x243/0x2e0  
+fs/file.c:801
+2 locks held by getty/7798:
+  #0: 00000000ad2eb6b3 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 0000000067bda1b9 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/7799:
+  #0: 00000000e86f0102 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 00000000f10c3522 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/7800:
+  #0: 00000000f4a9ed02 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 00000000759669da (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/7801:
+  #0: 00000000c998e0d2 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 000000007c9ea7de (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/7802:
+  #0: 00000000398be820 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 00000000deef3632 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/7803:
+  #0: 00000000fa979d44 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 000000003715a25d (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
+2 locks held by getty/7804:
+  #0: 000000009d01c162 (&tty->ldisc_sem){++++}, at:  
+tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:272
+  #1: 0000000010022d29 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x2ee/0x1c80 drivers/tty/n_tty.c:2156
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+=============================================
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+NMI backtrace for cpu 0
+CPU: 0 PID: 1056 Comm: khungtaskd Not tainted 5.2.0+ #37
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  nmi_cpu_backtrace+0xb0/0x1a0 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x14c/0x240 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace+0x17/0x20 include/linux/nmi.h:146
+  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+  watchdog+0xbcc/0xbe0 kernel/hung_task.c:289
+  kthread+0x332/0x350 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1 skipped: idling at native_safe_halt+0xe/0x10  
+arch/x86/include/asm/irqflags.h:60
 
-Thanks,
-Mark
 
-From e8758a5ed2783c417be1f5aab5af9fe4be60956f Mon Sep 17 00:00:00 2001
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Date: Wed, 24 Jul 2019 07:26:32 +0200
-Subject: [PATCH] ASoC: wm8955: Fix a typo in 'wm8995_pll_factors()' function
- name
-
-This should be 'wm8955_pll_factors()' instead.
-Fix it and use it.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190724052632.30476-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/wm8955.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/sound/soc/codecs/wm8955.c b/sound/soc/codecs/wm8955.c
-index 66a5f1827aa9..9c7e2892c8cb 100644
---- a/sound/soc/codecs/wm8955.c
-+++ b/sound/soc/codecs/wm8955.c
-@@ -140,7 +140,7 @@ struct pll_factors {
-  * to allow rounding later */
- #define FIXED_FLL_SIZE ((1 << 22) * 10)
- 
--static int wm8995_pll_factors(struct device *dev,
-+static int wm8955_pll_factors(struct device *dev,
- 			      int Fref, int Fout, struct pll_factors *pll)
- {
- 	u64 Kpart;
-@@ -279,7 +279,7 @@ static int wm8955_configure_clocking(struct snd_soc_component *component)
- 
- 		/* Use the last divider configuration we saw for the
- 		 * sample rate. */
--		ret = wm8995_pll_factors(component->dev, wm8955->mclk_rate,
-+		ret = wm8955_pll_factors(component->dev, wm8955->mclk_rate,
- 					 clock_cfgs[sr].mclk, &pll);
- 		if (ret != 0) {
- 			dev_err(component->dev,
--- 
-2.20.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
