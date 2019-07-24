@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E66C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4E5C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21FF21849
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A272420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999369;
-	bh=cwq16jz7nLRUNDqyIV/3dXIsmxHUY21qkdc9gx0tpSo=;
+	s=default; t=1563999372;
+	bh=xYfy7NagE+0MKM9wCvijktJzJvuOZlOeISoZwsyBxqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YexmpqMREz7kuEJi0QMIaq+/EKjl2XZzhWlEu8Ytdk9FlweLFq+Y2mxwgFRf9LVaX
-	 AP+tcgI5+SclkuJneXP7LEfpZvUvIYHmv1n+t5ualD2hqJuutoLoQcaW/CnVrSssL8
-	 F2tKyM0rqUFOpIYRPDMLLeiLZOMzVt9iqGAHS1yg=
+	b=eeirWPodaMNh75xr4VcOmfOMYUBP0AhlLpH+9Ts1bX7wvW/q4J2UraJkg+TCMWnkx
+	 RkqmazAx+fQPNMxR7EfmEvAmiXUAwDBQLUQG+fjo68ZZ1dyQoytWPyzmH4iC/R57i6
+	 WiXDbOqBzgX+a6R9gbW24YDpkJUCSDerpOoN5gzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404035AbfGXTvz (ORCPT
+        id S2391710AbfGXTvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:51:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:51:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391699AbfGXTvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:50 -0400
+        id S2391685AbfGXTvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:51:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38BE020665;
-        Wed, 24 Jul 2019 19:51:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 958AF20665;
+        Wed, 24 Jul 2019 19:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997909;
-        bh=cwq16jz7nLRUNDqyIV/3dXIsmxHUY21qkdc9gx0tpSo=;
+        s=default; t=1563997907;
+        bh=xYfy7NagE+0MKM9wCvijktJzJvuOZlOeISoZwsyBxqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j0JMed0No03g3Bm7/6mpwbxGOSEbwHy2Nkymt1gUx3IJDvPd+0e03RUQgG3uaUIJC
-         +MwQ4hmrzRab5QJSecueFtQ/q8uFukkGEwCkugqtcckpNUP86/g4xlMODgRPTpHj4i
-         Wnqkp26xXwc7elfxEYikZqRsVLDG20UDvapgTp5M=
+        b=RXR8k+guW8bVrA22XEiGmk+RIrJUEbDMf2R/YY4ff49f0p4hn46G7zDSwxKaVqdaq
+         PpZMHOB2DFWgo2mQHHPzTaQqc5lger98Pm+TvFT0R47+1tdrGXctK5JRAzdYoqiGv1
+         4EwDTq5JLxEKpOOr+hULsm+QTlxzz5Qp90iqmgx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 185/371] bnxt_en: Disable bus master during PCI shutdown and driver unload.
-Date:   Wed, 24 Jul 2019 21:18:57 +0200
-Message-Id: <20190724191739.000763144@linuxfoundation.org>
+Subject: [PATCH 5.1 184/371] iwlwifi: dbg: fix debug monitor stop and restart delays
+Date:   Wed, 24 Jul 2019 21:18:56 +0200
+Message-Id: <20190724191738.950578036@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,48 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c20dc142dd7b2884b8570eeab323bcd4a84294fa ]
+[ Upstream commit fc838c775f35e272e5cc7ef43853f0b55babbe37 ]
 
-Some chips with older firmware can continue to perform DMA read from
-context memory even after the memory has been freed.  In the PCI shutdown
-method, we need to call pci_disable_device() to shutdown DMA to prevent
-this DMA before we put the device into D3hot.  DMA memory request in
-D3hot state will generate PCI fatal error.  Similarly, in the driver
-remove method, the context memory should only be freed after DMA has
-been shutdown for correctness.
+The driver should delay only in recording stop flow between writing to
+DBGC_IN_SAMPLE register and DBGC_OUT_CTRL register. Any other delay is
+not needed.
 
-Fixes: 98f04cf0f1fc ("bnxt_en: Check context memory requirements from firmware.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Change the following:
+1. Remove any unnecessary delays in the flow
+2. Increase the delay in the stop recording flow since 100 micro is
+   not enough
+3. Use usleep_range instead of delay since the driver is allowed to
+   sleep in this flow.
+
+Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+Fixes: 5cfe79c8d92a ("iwlwifi: fw: stop and start debugging using host command")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 2 --
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.h | 6 ++++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 30cafe4cdb6e..bf1fd513fa02 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -10165,10 +10165,10 @@ static void bnxt_remove_one(struct pci_dev *pdev)
- 	bnxt_dcb_free(bp);
- 	kfree(bp->edev);
- 	bp->edev = NULL;
-+	bnxt_cleanup_pci(bp);
- 	bnxt_free_ctx_mem(bp);
- 	kfree(bp->ctx);
- 	bp->ctx = NULL;
--	bnxt_cleanup_pci(bp);
- 	bnxt_free_port_stats(bp);
- 	free_netdev(dev);
- }
-@@ -10730,6 +10730,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
- 
- 	if (system_state == SYSTEM_POWER_OFF) {
- 		bnxt_clear_int_mode(bp);
-+		pci_disable_device(pdev);
- 		pci_wake_from_d3(pdev, bp->wol);
- 		pci_set_power_state(pdev, PCI_D3hot);
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+index d7380016f1c0..c30f626b1602 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -2146,8 +2146,6 @@ void iwl_fw_dbg_collect_sync(struct iwl_fw_runtime *fwrt)
+ 	/* start recording again if the firmware is not crashed */
+ 	if (!test_bit(STATUS_FW_ERROR, &fwrt->trans->status) &&
+ 	    fwrt->fw->dbg.dest_tlv) {
+-		/* wait before we collect the data till the DBGC stop */
+-		udelay(500);
+ 		iwl_fw_dbg_restart_recording(fwrt, &params);
  	}
+ }
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
+index a199056234d3..97fcd57e17d8 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
+@@ -297,7 +297,10 @@ _iwl_fw_dbg_stop_recording(struct iwl_trans *trans,
+ 	}
+ 
+ 	iwl_write_umac_prph(trans, DBGC_IN_SAMPLE, 0);
+-	udelay(100);
++	/* wait for the DBGC to finish writing the internal buffer to DRAM to
++	 * avoid halting the HW while writing
++	 */
++	usleep_range(700, 1000);
+ 	iwl_write_umac_prph(trans, DBGC_OUT_CTRL, 0);
+ #ifdef CONFIG_IWLWIFI_DEBUGFS
+ 	trans->dbg_rec_on = false;
+@@ -327,7 +330,6 @@ _iwl_fw_dbg_restart_recording(struct iwl_trans *trans,
+ 		iwl_set_bits_prph(trans, MON_BUFF_SAMPLE_CTL, 0x1);
+ 	} else {
+ 		iwl_write_umac_prph(trans, DBGC_IN_SAMPLE, params->in_sample);
+-		udelay(100);
+ 		iwl_write_umac_prph(trans, DBGC_OUT_CTRL, params->out_ctrl);
+ 	}
+ }
 -- 
 2.20.1
 
