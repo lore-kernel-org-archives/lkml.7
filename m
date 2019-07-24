@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18AFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8620C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D2721873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A001D21873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997029;
-	bh=i4iMC2HiM7ZuKWoLUuWdkdM6DFGBX4uCqEqwHSAD19c=;
+	s=default; t=1563997031;
+	bh=bVoWQeAj3bCosk4IPCszsS0GH2qnu2Ait/MZtiHsA+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1jOrXJjdS+oYy2Dcjl7ZSVyx7d3IVY9TydsKlWzZlHhHgOrK53s7X9bkTGBdz1x6L
-	 6pAuyfqa6o9wYDMEQauMGeRfBfpRbEjhwFMNj/dsqh3VnzO1tZsf0qZJsuGjHLAv0k
-	 yg6SB2N0rz0FqbrtGOTtqLqNsut8wACRpVfQCO2Q=
+	b=pzG40ZZgJaUcUY95FC5mcJW+36w+x/9e7fOpudU9XzDHAdEZPNl4C3yBC/rOxdp/N
+	 w1bpnOTAxBTMzEF7a1JL+YHb6Yim/p9uS0TgCQvrCwvLvsyLWqpqhukC7I3QECotFw
+	 SN3uUr8BoneN9ogTt2dQoVsU1N0no1moL2aCmnXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388840AbfGXThI (ORCPT
+        id S2389410AbfGXThK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:37:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37060 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfGXThG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:37:06 -0400
+        id S2389398AbfGXThI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:37:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8081B21873;
-        Wed, 24 Jul 2019 19:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20926214AF;
+        Wed, 24 Jul 2019 19:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997025;
-        bh=i4iMC2HiM7ZuKWoLUuWdkdM6DFGBX4uCqEqwHSAD19c=;
+        s=default; t=1563997027;
+        bh=bVoWQeAj3bCosk4IPCszsS0GH2qnu2Ait/MZtiHsA+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oTrOTvxxKjdQ7pYLI2LLe4LfDxbhyrv59PekjsUBF2+511Py5+W0w/AHdvxVx5mBH
-         lNM4rM7AAR/QAOp+Lzahvk6TOGIBsKKuw9RzZuJqPVDeKS+05W1SQZ/LpsjGBt69vj
-         1zLVML9Ac2WN9pueDUANCn3xpK9VnkBNrDFuXFTg=
+        b=Ol47cOVyY6p7X9y8jPGsi/IOYJKXougdWw/2ZDZzKeh1oIY0jtB61eVkmIkKLfZ/E
+         go5HvNs7PMmJNiCESRazF/NuzEAhjfmAG8f6nzyw8Z6V0UD5UqHg3VjRMcIwQk1LnX
+         cJXG0DkCyGhXgFTeNhxQdxE9BQa8PTWuYeXz5KSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oren Givon <oren.givon@intel.com>,
-        Luciano Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.2 294/413] iwlwifi: add support for hr1 RF ID
-Date:   Wed, 24 Jul 2019 21:19:45 +0200
-Message-Id: <20190724191757.170286760@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.2 257/413] scsi: sd_zbc: Fix compilation warning
+Date:   Wed, 24 Jul 2019 21:19:08 +0200
+Message-Id: <20190724191754.404270441@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,51 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oren Givon <oren.givon@intel.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit 498d3eb5bfbb2e05e40005152976a7b9eadfb59c upstream.
+commit 0cdc58580b37a160fac4b884266b8b7cb096f539 upstream.
 
-The 22000 series FW that was meant to be used with hr is
-also the FW that is used for hr1 and has a different RF ID.
-Add support to load the hr FW when hr1 RF ID is detected.
+kbuild test robot gets the following compilation warning using gcc 7.4
+cross compilation for c6x (GCC_VERSION=7.4.0 make.cross ARCH=c6x).
 
-Cc: stable@vger.kernel.org # 5.1+
-Signed-off-by: Oren Givon <oren.givon@intel.com>
-Signed-off-by: Luciano Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+   In file included from include/asm-generic/bug.h:18:0,
+                    from arch/c6x/include/asm/bug.h:12,
+                    from include/linux/bug.h:5,
+                    from include/linux/thread_info.h:12,
+                    from include/asm-generic/current.h:5,
+                    from ./arch/c6x/include/generated/asm/current.h:1,
+                    from include/linux/sched.h:12,
+                    from include/linux/blkdev.h:5,
+                    from drivers//scsi/sd_zbc.c:11:
+   drivers//scsi/sd_zbc.c: In function 'sd_zbc_read_zones':
+>> include/linux/kernel.h:62:48: warning: 'zone_blocks' may be used
+   uninitialized in this function [-Wmaybe-uninitialized]
+    #define __round_mask(x, y) ((__typeof__(x))((y)-1))
+                                                   ^
+   drivers//scsi/sd_zbc.c:464:6: note: 'zone_blocks' was declared here
+     u32 zone_blocks;
+         ^~~~~~~~~~~
+
+This is a false-positive report. The variable zone_blocks is always
+initialized in sd_zbc_check_zones() before use. It is not initialized
+only and only if sd_zbc_check_zones() fails.
+
+Avoid this warning by initializing the zone_blocks variable to 0.
+
+Fixes: 5f832a395859 ("scsi: sd_zbc: Fix sd_zbc_check_zones() error checks")
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-csr.h    |    1 +
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c |    8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/scsi/sd_zbc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
-@@ -336,6 +336,7 @@ enum {
- /* RF_ID value */
- #define CSR_HW_RF_ID_TYPE_JF		(0x00105100)
- #define CSR_HW_RF_ID_TYPE_HR		(0x0010A000)
-+#define CSR_HW_RF_ID_TYPE_HR1		(0x0010c100)
- #define CSR_HW_RF_ID_TYPE_HRCDB		(0x00109F00)
- #define CSR_HW_RF_ID_TYPE_GF		(0x0010D000)
- #define CSR_HW_RF_ID_TYPE_GF4		(0x0010E000)
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3575,9 +3575,11 @@ struct iwl_trans *iwl_trans_pcie_alloc(s
- 			trans->cfg = &iwlax210_2ax_cfg_so_gf4_a0;
- 		}
- 	} else if (cfg == &iwl_ax101_cfg_qu_hr) {
--		if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
--		    CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
--		    trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0) {
-+		if ((CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+		     CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
-+		     trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0) ||
-+		    (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+		     CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR1))) {
- 			trans->cfg = &iwl22000_2ax_cfg_qnj_hr_b0;
- 		} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
- 		    CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR)) {
+--- a/drivers/scsi/sd_zbc.c
++++ b/drivers/scsi/sd_zbc.c
+@@ -417,7 +417,7 @@ int sd_zbc_read_zones(struct scsi_disk *
+ {
+ 	struct gendisk *disk = sdkp->disk;
+ 	unsigned int nr_zones;
+-	u32 zone_blocks;
++	u32 zone_blocks = 0;
+ 	int ret;
+ 
+ 	if (!sd_is_zoned(sdkp))
 
 
