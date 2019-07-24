@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D0AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69B8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8422520693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C5B20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999639;
-	bh=B/a/saQfp7Q4y10UrOnIt6CO08RsA+Ah0RPdbEOPbDQ=;
+	s=default; t=1563999642;
+	bh=zXjWuJSiQyQuBUGfrVJx4UZkVsNgruFId2k+c1ocwcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+BGOfVUWyrpVKy2iSjVs7ISkoKS5lo6ZA6e5e/UDp3LvnAcAVziBkrUI5zjf3Rxt
-	 dJh8KQjoOP+8bTE8w1zy4ZoBcWqu0eGiA5V08Pa9ZeWka74t5OMFNuK1IhfLMdkNL5
-	 snsebLdTOlh7q4RH5UwVdPy3cJAbIfX7aOn2EG0s=
+	b=NL4lSOIFBuOyT0rAxase8vLMJ40LPuWYV3Yu5/cc9T75eb6KH3L5xEoD/6vIimdXb
+	 bcW2UlYJ0Rm4p9qp7LRzuYLMl2P3kQGENCh6WG3ibL71EnBgccRaw4hy8i2yCRW4cd
+	 CDO2rhZELAKL4nXlxcp+uIh7QX2esNWacPJQs5M8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390798AbfGXTqS (ORCPT
+        id S2390686AbfGXTqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:46:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51388 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390672AbfGXTqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:16 -0400
+        id S2387977AbfGXTqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:46:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D1092083B;
-        Wed, 24 Jul 2019 19:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92D5C2083B;
+        Wed, 24 Jul 2019 19:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997575;
-        bh=B/a/saQfp7Q4y10UrOnIt6CO08RsA+Ah0RPdbEOPbDQ=;
+        s=default; t=1563997567;
+        bh=zXjWuJSiQyQuBUGfrVJx4UZkVsNgruFId2k+c1ocwcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hgZmnaxHv3mdm9Dgc8HUt7O55hklgZ2tAYpiRyD68wIXt2U1IWBBIrEddpeV3JOGX
-         Zq/86O1PFSoj8AIuCd+DHFDivn9WKXDhG7O39/RF+6Kkbs8t+01xp2r9Yj0eC7MoFq
-         NYjj8YWV/5Ko62uFFcSUJUJT5wKUbbWMYfh4lUrw=
+        b=Z6lf9SBkWzpZE8Wvp7/khZ4gGCKl7ISgKl1h2tLHsQjpfLPuYUYwciDp6mb4lo6gv
+         ZpCYzoS3TBqn5dEA2LYzbwm/P66aMGERcMKkTJeYvfAi5wkW0FWQA9i+qcrtRxQ1YC
+         fwLOUYzP5799mu5ZRtJ95ZuYM14XwWb9g4QGwee0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 069/371] s390/qdio: handle PENDING state for QEBSM devices
-Date:   Wed, 24 Jul 2019 21:17:01 +0200
-Message-Id: <20190724191730.096269906@linuxfoundation.org>
+Subject: [PATCH 5.1 066/371] crypto: inside-secure - do not rely on the hardware last bit for result descriptors
+Date:   Wed, 24 Jul 2019 21:16:58 +0200
+Message-Id: <20190724191729.864723540@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,37 +61,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
+[ Upstream commit 89332590427235680236b9470e851afc49b3caa1 ]
 
-When a CQ-enabled device uses QEBSM for SBAL state inspection,
-get_buf_states() can return the PENDING state for an Output Queue.
-get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
-buffer will permanently stall all further completion processing on this
-Queue.
+When performing a transformation the hardware is given result
+descriptors to save the result data. Those result descriptors are
+batched using a 'first' and a 'last' bit. There are cases were more
+descriptors than needed are given to the engine, leading to the engine
+only using some of them, and not setting the last bit on the last
+descriptor we gave. This causes issues were the driver and the hardware
+aren't in sync anymore about the number of result descriptors given (as
+the driver do not give a pool of descriptor to use for any
+transformation, but a pool of descriptors to use *per* transformation).
 
-This isn't a concern for non-QEBSM devices, as get_buf_states() for such
-devices will manually turn PENDING buffers into EMPTY ones.
+This patch fixes it by attaching the number of given result descriptors
+to the requests, and by using this number instead of the 'last' bit
+found on the descriptors to process them.
 
-Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../crypto/inside-secure/safexcel_cipher.c    | 24 ++++++++++++++-----
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index 9537e656e927..06b94b2ee199 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -738,6 +738,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
+diff --git a/drivers/crypto/inside-secure/safexcel_cipher.c b/drivers/crypto/inside-secure/safexcel_cipher.c
+index 7ef30a98cb24..23fb85f4b3cc 100644
+--- a/drivers/crypto/inside-secure/safexcel_cipher.c
++++ b/drivers/crypto/inside-secure/safexcel_cipher.c
+@@ -51,6 +51,8 @@ struct safexcel_cipher_ctx {
  
- 	switch (state) {
- 	case SLSB_P_OUTPUT_EMPTY:
-+	case SLSB_P_OUTPUT_PENDING:
- 		/* the adapter got it */
- 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
- 			"out empty:%1d %02x", q->nr, count);
+ struct safexcel_cipher_req {
+ 	enum safexcel_cipher_direction direction;
++	/* Number of result descriptors associated to the request */
++	unsigned int rdescs;
+ 	bool needs_inv;
+ };
+ 
+@@ -333,7 +335,10 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
+ 
+ 	*ret = 0;
+ 
+-	do {
++	if (unlikely(!sreq->rdescs))
++		return 0;
++
++	while (sreq->rdescs--) {
+ 		rdesc = safexcel_ring_next_rptr(priv, &priv->ring[ring].rdr);
+ 		if (IS_ERR(rdesc)) {
+ 			dev_err(priv->dev,
+@@ -346,7 +351,7 @@ static int safexcel_handle_req_result(struct safexcel_crypto_priv *priv, int rin
+ 			*ret = safexcel_rdesc_check_errors(priv, rdesc);
+ 
+ 		ndesc++;
+-	} while (!rdesc->last_seg);
++	}
+ 
+ 	safexcel_complete(priv, ring);
+ 
+@@ -501,6 +506,7 @@ static int safexcel_send_req(struct crypto_async_request *base, int ring,
+ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 				      int ring,
+ 				      struct crypto_async_request *base,
++				      struct safexcel_cipher_req *sreq,
+ 				      bool *should_complete, int *ret)
+ {
+ 	struct safexcel_cipher_ctx *ctx = crypto_tfm_ctx(base->tfm);
+@@ -509,7 +515,10 @@ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 
+ 	*ret = 0;
+ 
+-	do {
++	if (unlikely(!sreq->rdescs))
++		return 0;
++
++	while (sreq->rdescs--) {
+ 		rdesc = safexcel_ring_next_rptr(priv, &priv->ring[ring].rdr);
+ 		if (IS_ERR(rdesc)) {
+ 			dev_err(priv->dev,
+@@ -522,7 +531,7 @@ static int safexcel_handle_inv_result(struct safexcel_crypto_priv *priv,
+ 			*ret = safexcel_rdesc_check_errors(priv, rdesc);
+ 
+ 		ndesc++;
+-	} while (!rdesc->last_seg);
++	}
+ 
+ 	safexcel_complete(priv, ring);
+ 
+@@ -564,7 +573,7 @@ static int safexcel_skcipher_handle_result(struct safexcel_crypto_priv *priv,
+ 
+ 	if (sreq->needs_inv) {
+ 		sreq->needs_inv = false;
+-		err = safexcel_handle_inv_result(priv, ring, async,
++		err = safexcel_handle_inv_result(priv, ring, async, sreq,
+ 						 should_complete, ret);
+ 	} else {
+ 		err = safexcel_handle_req_result(priv, ring, async, req->src,
+@@ -587,7 +596,7 @@ static int safexcel_aead_handle_result(struct safexcel_crypto_priv *priv,
+ 
+ 	if (sreq->needs_inv) {
+ 		sreq->needs_inv = false;
+-		err = safexcel_handle_inv_result(priv, ring, async,
++		err = safexcel_handle_inv_result(priv, ring, async, sreq,
+ 						 should_complete, ret);
+ 	} else {
+ 		err = safexcel_handle_req_result(priv, ring, async, req->src,
+@@ -633,6 +642,8 @@ static int safexcel_skcipher_send(struct crypto_async_request *async, int ring,
+ 		ret = safexcel_send_req(async, ring, sreq, req->src,
+ 					req->dst, req->cryptlen, 0, 0, req->iv,
+ 					commands, results);
++
++	sreq->rdescs = *results;
+ 	return ret;
+ }
+ 
+@@ -655,6 +666,7 @@ static int safexcel_aead_send(struct crypto_async_request *async, int ring,
+ 					req->cryptlen, req->assoclen,
+ 					crypto_aead_authsize(tfm), req->iv,
+ 					commands, results);
++	sreq->rdescs = *results;
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
