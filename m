@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17DAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D980EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7058621855
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A182321852
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998495;
-	bh=k7obKKqlAkIYwKC6eR3tddu+08+X5r047EbyTzv6Ksg=;
+	s=default; t=1563998500;
+	bh=q2BFDv3iDVWl4Msu9udLMdzZC+uFVSti61JvrUsQYXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MoHBUIICZYkBGtGcHS53k6iDuu2EIkcdxByBAjpvsJCQ8LDTYzCoaG62+HrF31rkj
-	 YIoin0gsGm1R48FTDjn5aPyU3FedY3+oSkiW0OUow75DphfVgjzjvPlUjGTaEdg5r2
-	 UL3IgLEyhJ2+8Xc5IFX0C63L1hcoYr1eR70VU1oI=
+	b=xD80ZH0O6GLGq149NdtcqREaQzrNXdGuq2fGQj3EWC0yCcq1RxQ9twtqBL+dIxSUi
+	 pF+heZMw4uf8oitZSM+Au9NYTK+S5Ft0NXsWCROH827uve5AVn+DilUcD4q4DAC+XW
+	 04tuL9i6E6QoQWIy69E1J7IDvpYEiHQurFdOSxhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404968AbfGXUBe (ORCPT
+        id S2392293AbfGXUBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50426 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405431AbfGXUBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:30 -0400
+        id S2405441AbfGXUBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855F42184B;
-        Wed, 24 Jul 2019 20:01:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29F2F21852;
+        Wed, 24 Jul 2019 20:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998490;
-        bh=k7obKKqlAkIYwKC6eR3tddu+08+X5r047EbyTzv6Ksg=;
+        s=default; t=1563998492;
+        bh=q2BFDv3iDVWl4Msu9udLMdzZC+uFVSti61JvrUsQYXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WoERNgEo9kqbIXCV0iI13gl5MxsQvi8jKYteWtrWXId/IIt9b8pIH+v/+s4scAzSh
-         Xp9KCNP4KKGfHdA0iClfBj5QV+C1Ds5Xe2UsyWD3xdL0fxLAohhCxhNWvezuUQJFHO
-         1fTg4pE0vBs+RAcBPUVLZ7R7BifATaGEqkhKVyfM=
+        b=gV2SbY0PphrWoNKdsb0vVPQ+pBXVVrUnbC68QIrELDOMKTVepVXz3LvQTupI7hxul
+         kEq2yz1G8Ml034U+Jv9AySsskrWrjNK2HkbLtumUh2ibpmcHwecB+xbViQ6LgLzIE+
+         uyKDAJexJJIyuq20/yzh02JqQQO47el2L9RA6glc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
-        Anilkumar Kolli <akolli@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 012/271] ath: DFS JP domain W56 fixed pulse type 3 RADAR detection
-Date:   Wed, 24 Jul 2019 21:18:01 +0200
-Message-Id: <20190724191656.316792261@linuxfoundation.org>
+Subject: [PATCH 4.19 013/271] regmap: debugfs: Fix memory leak in regmap_debugfs_init
+Date:   Wed, 24 Jul 2019 21:18:02 +0200
+Message-Id: <20190724191656.398983402@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,42 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8792393a783158cbb2c39939cb897dc5e5299b6 ]
+[ Upstream commit 2899872b627e99b7586fe3b6c9f861da1b4d5072 ]
 
-Increase pulse width range from 1-2usec to 0-4usec.
-During data traffic HW occasionally fails detecting radar pulses,
-so that SW cannot get enough radar reports to achieve the success rate.
+As detected by kmemleak running on i.MX6ULL board:
 
-Tested ath10k hw and fw:
-	* QCA9888(10.4-3.5.1-00052)
-	* QCA4019(10.4-3.2.1.1-00017)
-	* QCA9984(10.4-3.6-00104)
-	* QCA988X(10.2.4-1.0-00041)
+nreferenced object 0xd8366600 (size 64):
+  comm "swapper/0", pid 1, jiffies 4294937370 (age 933.220s)
+  hex dump (first 32 bytes):
+    64 75 6d 6d 79 2d 69 6f 6d 75 78 63 2d 67 70 72  dummy-iomuxc-gpr
+    40 32 30 65 34 30 30 30 00 e3 f3 ab fe d1 1b dd  @20e4000........
+  backtrace:
+    [<b0402aec>] kasprintf+0x2c/0x54
+    [<a6fbad2c>] regmap_debugfs_init+0x7c/0x31c
+    [<9c8d91fa>] __regmap_init+0xb5c/0xcf4
+    [<5b1c3d2a>] of_syscon_register+0x164/0x2c4
+    [<596a5d80>] syscon_node_to_regmap+0x64/0x90
+    [<49bd597b>] imx6ul_init_machine+0x34/0xa0
+    [<250a4dac>] customize_machine+0x1c/0x30
+    [<2d19fdaf>] do_one_initcall+0x7c/0x398
+    [<e6084469>] kernel_init_freeable+0x328/0x448
+    [<168c9101>] kernel_init+0x8/0x114
+    [<913268aa>] ret_from_fork+0x14/0x20
+    [<ce7b131a>] 0x0
 
-Tested ath9k hw: AR9300
+Root cause is that map->debugfs_name is allocated using kasprintf
+and then the pointer is lost by assigning it other memory address.
 
-Tested-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/dfs_pattern_detector.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/regmap/regmap-debugfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
-index d52b31b45df7..a274eb0d1968 100644
---- a/drivers/net/wireless/ath/dfs_pattern_detector.c
-+++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
-@@ -111,7 +111,7 @@ static const struct radar_detector_specs jp_radar_ref_types[] = {
- 	JP_PATTERN(0, 0, 1, 1428, 1428, 1, 18, 29, false),
- 	JP_PATTERN(1, 2, 3, 3846, 3846, 1, 18, 29, false),
- 	JP_PATTERN(2, 0, 1, 1388, 1388, 1, 18, 50, false),
--	JP_PATTERN(3, 1, 2, 4000, 4000, 1, 18, 50, false),
-+	JP_PATTERN(3, 0, 4, 4000, 4000, 1, 18, 50, false),
- 	JP_PATTERN(4, 0, 5, 150, 230, 1, 23, 50, false),
- 	JP_PATTERN(5, 6, 10, 200, 500, 1, 16, 50, false),
- 	JP_PATTERN(6, 11, 20, 200, 500, 1, 12, 50, false),
+diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
+index 87b562e49a43..c9687c8b2347 100644
+--- a/drivers/base/regmap/regmap-debugfs.c
++++ b/drivers/base/regmap/regmap-debugfs.c
+@@ -575,6 +575,8 @@ void regmap_debugfs_init(struct regmap *map, const char *name)
+ 	}
+ 
+ 	if (!strcmp(name, "dummy")) {
++		kfree(map->debugfs_name);
++
+ 		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
+ 						dummy_index);
+ 		name = map->debugfs_name;
 -- 
 2.20.1
 
