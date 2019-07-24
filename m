@@ -2,82 +2,76 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D051C41517
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFA3C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F328320644
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60AD2253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:53:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oT1UkxwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfGXGvs (ORCPT
+        id S1726370AbfGXGxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:51:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:48150 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbfGXGvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:51:48 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6DD4768B02; Wed, 24 Jul 2019 08:51:46 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 08:51:46 +0200
+        Wed, 24 Jul 2019 02:53:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39240 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfGXGxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:53:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nxIVoCpennKVcI7DbytWW21ua/k9dOz1onbRbm1cQCE=; b=oT1UkxwATR3uNfX9nvhPpejPy
+        pzG4vC6QYUYgAgXlECubEZvLZDF5K+eNlTayweVvSxyqIO3v6nw9O4EZdfU+CvQWHVB71+n9N5k87
+        MvKaAKSxHDWIO0SYlWaDUwo7zo9qYmIU6TX6Tzzj7Dyez5Rd9Obt8H4+L8SM2mtrm3UZG7AkYcWGp
+        zzslZfgg8CUU/FA1z4RFQkBt8uCYQivm2n5RUam8BYNfDFwDlM8WYlubmQPRS2u+yDI9vScOTUpJo
+        rwqpUvywoSh1seqL1wWx5ykh9VGgCyI5jt61j9WRluuS2LAkxLkB+HC8fjlVw/aeppuLqe6jgBNW9
+        0YbLXShAg==;
+Received: from 089144207240.atnat0016.highway.bob.at ([89.144.207.240] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqB94-0004Hw-C9; Wed, 24 Jul 2019 06:53:02 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 2/2] mm/hmm: make full use of walk_page_range()
-Message-ID: <20190724065146.GA2061@lst.de>
-References: <20190723233016.26403-1-rcampbell@nvidia.com> <20190723233016.26403-3-rcampbell@nvidia.com>
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: hmm_range_fault related fixes and legacy API removal v3
+Date:   Wed, 24 Jul 2019 08:52:51 +0200
+Message-Id: <20190724065258.16603-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723233016.26403-3-rcampbell@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 04:30:16PM -0700, Ralph Campbell wrote:
-> hmm_range_snapshot() and hmm_range_fault() both call find_vma() and
-> walk_page_range() in a loop. This is unnecessary duplication since
-> walk_page_range() calls find_vma() in a loop already.
-> Simplify hmm_range_snapshot() and hmm_range_fault() by defining a
-> walk_test() callback function to filter unhandled vmas.
+Hi Jérôme, Ben and Jason,
 
-I like the approach a lot!
+below is a series against the hmm tree which fixes up the mmap_sem
+locking in nouveau and while at it also removes leftover legacy HMM APIs
+only used by nouveau.
 
-But we really need to sort out the duplication between hmm_range_fault
-and hmm_range_snapshot first, as they are basically the same code.  I
-have patches here:
+The first 4 patches are a bug fix for nouveau, which I suspect should
+go into this merge window even if the code is marked as staging, just
+to avoid people copying the breakage.
 
-http://git.infradead.org/users/hch/misc.git/commitdiff/a34ccd30ee8a8a3111d9e91711c12901ed7dea74
+Changes since v2:
+ - new patch from Jason to document FAULT_FLAG_ALLOW_RETRY semantics
+   better
+ - remove -EAGAIN handling in nouveau earlier
 
-http://git.infradead.org/users/hch/misc.git/commitdiff/81f442ebac7170815af7770a1efa9c4ab662137e
-
-That being said we don't really have any users for the snapshot mode
-or non-blocking faults, and I don't see any in the immediate pipeline
-either.  It might actually be a better idea to just kill that stuff off
-for now until we have a user, as code without users is per definition
-untested and will just bitrot and break.
-
-> +	const unsigned long device_vma = VM_IO | VM_PFNMAP | VM_MIXEDMAP;
-> +	struct hmm_vma_walk *hmm_vma_walk = walk->private;
-> +	struct hmm_range *range = hmm_vma_walk->range;
-> +	struct vm_area_struct *vma = walk->vma;
-> +
-> +	/* If range is no longer valid, force retry. */
-> +	if (!range->valid)
-> +		return -EBUSY;
-> +
-> +	if (vma->vm_flags & device_vma)
-
-Can we just kill off this odd device_vma variable?
-
-	if (vma->vm_flags & (VM_IO | VM_PFNMAP | VM_MIXEDMAP))
-
-and maybe add a comment on why we are skipping them (because they
-don't have struct page backing I guess..)
+Changes since v1:
+ - don't return the valid state from hmm_range_unregister
+ - additional nouveau cleanups
