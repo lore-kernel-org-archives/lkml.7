@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5D9C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F96C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC587206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAAD20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998214;
-	bh=hHoy37aCFdmmPLY5kqzFHCwHE1tIq9qSaOS1bN6/aj8=;
+	s=default; t=1563998217;
+	bh=2HnvleEuQXWEcpKX9BILP/+xkRxnVYQLF0R4G6X7+yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lxSJzHvTv2IvvHQ/HiWuOZNiagc+SyL7r8opIjdm1p6GVBkXbNSaCHNOPqvBNcnK8
-	 e4q2nlKd9tZDBVyOC0A3UEVnlslWn2fmQo3V80ZxQntpmuR1aJY0cXZTt3f8/GyCxY
-	 MRhgfTSycr8Yzd9dUkpb7cA5yZP4JHr18u1Xng5U=
+	b=EhxvbbQt4eTFDFK4lGfcBc3bVap8+GGjwc9KjDaGnx52A+wH525uxbyuRcKEgspX3
+	 zUoOsNSSywhHkxCGFiyQuui3vYbtUM2sZq5sWWTykaWfktRSiikdKwNe6fVT/BiVZR
+	 rd0Jfv9slSi/LrZ93WIz49+hRMk43NyY7VbYkvms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404714AbfGXT4x (ORCPT
+        id S2404727AbfGXT44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404706AbfGXT4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:45 -0400
+        id S2404466AbfGXT4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F7CE205C9;
-        Wed, 24 Jul 2019 19:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B8421873;
+        Wed, 24 Jul 2019 19:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998204;
-        bh=hHoy37aCFdmmPLY5kqzFHCwHE1tIq9qSaOS1bN6/aj8=;
+        s=default; t=1563998213;
+        bh=2HnvleEuQXWEcpKX9BILP/+xkRxnVYQLF0R4G6X7+yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ou7vLlD71VDBIJv8Yhwze2L+FnylZlQr0RKt74y7XSEfbJseW2paaS5EPmqThWeN3
-         PND7C/lkapKeZbu5YqnSHfSYM9Nw9u2+qLHEppFBrd/ecKVbJyQnhythCXNPfN8M9z
-         1VysL8fR6GBXoqn/bctyiXrOvhtgxyTjjl198pGE=
+        b=evZ4iP3StSPWUZe4K+vPQgpU0LdSOVEfo4GtI3T5XVvEnSsS4uptWfj4rMEUSrtC1
+         FAketQ58xTWv1K440HFRDVSWo30cqjSrpkOOt6vfAuMfk8VPQbdnj8ySpWcyDN/hpw
+         PYP9C0CXuutrcANpB7UG5LBXRntS9nPctElhB+Ro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.1 282/371] SUNRPC: Ensure the bvecs are reset when we re-encode the RPC request
-Date:   Wed, 24 Jul 2019 21:20:34 +0200
-Message-Id: <20190724191745.495058345@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.1 285/371] ASoC: core: Adapt for debugfs API change
+Date:   Wed, 24 Jul 2019 21:20:37 +0200
+Message-Id: <20190724191745.736560057@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,63 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Mark Brown <broonie@kernel.org>
 
-commit 75369089820473eac45e9ddd970081901a373c08 upstream.
+commit c2c928c93173f220955030e8440517b87ec7df92 upstream.
 
-The bvec tracks the list of pages, so if the number of pages changes
-due to a re-encode, we need to reset the bvec as well.
+Back in ff9fb72bc07705c (debugfs: return error values, not NULL) the
+debugfs APIs were changed to return error pointers rather than NULL
+pointers on error, breaking the error checking in ASoC. Update the
+code to use IS_ERR() and log the codes that are returned as part of
+the error messages.
 
-Fixes: 277e4ab7d530 ("SUNRPC: Simplify TCP receive code by switching...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.20+
+Fixes: ff9fb72bc07705c (debugfs: return error values, not NULL)
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/clnt.c     |    3 +--
- net/sunrpc/xprt.c     |    2 ++
- net/sunrpc/xprtsock.c |    1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ sound/soc/soc-core.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1767,6 +1767,7 @@ rpc_xdr_encode(struct rpc_task *task)
- 	req->rq_snd_buf.head[0].iov_len = 0;
- 	xdr_init_encode(&xdr, &req->rq_snd_buf,
- 			req->rq_snd_buf.head[0].iov_base, req);
-+	xdr_free_bvec(&req->rq_snd_buf);
- 	if (rpc_encode_header(task, &xdr))
- 		return;
- 
-@@ -1799,8 +1800,6 @@ call_encode(struct rpc_task *task)
- 			rpc_exit(task, task->tk_status);
- 		}
- 		return;
--	} else {
--		xprt_request_prepare(task->tk_rqstp);
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -158,9 +158,10 @@ static void soc_init_component_debugfs(s
+ 				component->card->debugfs_card_root);
  	}
  
- 	/* Add task to reply queue before transmission to avoid races */
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1006,6 +1006,8 @@ xprt_request_enqueue_receive(struct rpc_
- 
- 	if (!xprt_request_need_enqueue_receive(task, req))
+-	if (!component->debugfs_root) {
++	if (IS_ERR(component->debugfs_root)) {
+ 		dev_warn(component->dev,
+-			"ASoC: Failed to create component debugfs directory\n");
++			"ASoC: Failed to create component debugfs directory: %ld\n",
++			PTR_ERR(component->debugfs_root));
  		return;
-+
-+	xprt_request_prepare(task->tk_rqstp);
- 	spin_lock(&xprt->queue_lock);
+ 	}
  
- 	/* Update the softirq receive buffer */
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -909,6 +909,7 @@ static int xs_nospace(struct rpc_rqst *r
- static void
- xs_stream_prepare_request(struct rpc_rqst *req)
- {
-+	xdr_free_bvec(&req->rq_rcv_buf);
- 	req->rq_task->tk_status = xdr_alloc_bvec(&req->rq_rcv_buf, GFP_KERNEL);
+@@ -212,18 +213,21 @@ static void soc_init_card_debugfs(struct
+ 
+ 	card->debugfs_card_root = debugfs_create_dir(card->name,
+ 						     snd_soc_debugfs_root);
+-	if (!card->debugfs_card_root) {
++	if (IS_ERR(card->debugfs_card_root)) {
+ 		dev_warn(card->dev,
+-			 "ASoC: Failed to create card debugfs directory\n");
++			 "ASoC: Failed to create card debugfs directory: %ld\n",
++			 PTR_ERR(card->debugfs_card_root));
++		card->debugfs_card_root = NULL;
+ 		return;
+ 	}
+ 
+ 	card->debugfs_pop_time = debugfs_create_u32("dapm_pop_time", 0644,
+ 						    card->debugfs_card_root,
+ 						    &card->pop_time);
+-	if (!card->debugfs_pop_time)
++	if (IS_ERR(card->debugfs_pop_time))
+ 		dev_warn(card->dev,
+-			 "ASoC: Failed to create pop time debugfs file\n");
++			 "ASoC: Failed to create pop time debugfs file: %ld\n",
++			 PTR_ERR(card->debugfs_pop_time));
  }
  
+ static void soc_cleanup_card_debugfs(struct snd_soc_card *card)
 
 
