@@ -2,71 +2,61 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10DCC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D52AC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864C322387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1293E20840
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbQtZPpm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nNv4CdDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfGXRQ6 (ORCPT
+        id S1728379AbfGXRRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:16:58 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52827 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728175AbfGXRQ4 (ORCPT
+        Wed, 24 Jul 2019 13:17:02 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49362 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbfGXRRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:16:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so42516427wms.2;
-        Wed, 24 Jul 2019 10:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tFaTqUdBSzB8R4SmwVYkKYMxu10gvhixEpWzdUiL5RA=;
-        b=GbQtZPpmr7Z4yMvQnxNd+wONzoC6q1HW4srQROtZieW5QAjxXNh3WaW/vT12jLnJms
-         pjvr+VU843f5VOziLR68Xn7wa5uWpTDXQyVGS5ABjnn3Agws2YL8hwdLTEAQifgL/2Op
-         vW4lbVUlZffBDOGkEpHnayK8hYkRHjnNKepV3vFe6LmZowb2oRyTVjRNASemRvvKJ1Hi
-         PJ2TZP9sEoJZj86R7lfwRUCE2tZWHP66nKN+vIjrxCT83sNz5bUEsh5jN6kJ0+lPifq1
-         qQemrNo6Kul/DTRChxyHsgMjzsuEt6WCHUauPXiO4zCYsPOy1KyhWcNQ1/WpTHEYUT0y
-         n5/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tFaTqUdBSzB8R4SmwVYkKYMxu10gvhixEpWzdUiL5RA=;
-        b=jFoGaQC+wI4dRVIgEbu7nWXV/ZwGCOcMs+NUkWAV6qrEPZWabA/33s9cqwN7gZPAIG
-         0emxO/S4vulEn5L/Awoo0LiICWmKNbIXCzwGSJJdKbVxcfeC+537+OM4ULomyXpFLHB/
-         hjOWU4eVtCGTGsH7YN2Hrhd1a9HX2mqTiXT5AncOIj1f28Belocehs1dR2N77s39SBip
-         sQpXHR9+aKa1iqZqx39rAkJbmpRlN38K5lnjcx759NEgY49hFgusjcMJoIHc0sfw3/tN
-         OKmCsu8EYQHbM8YAJ7qLyALd4Vkx6MZa4+EDVWwp+ITiCU3zZT8fGBW+a0UJxMUHwFQq
-         jrLA==
-X-Gm-Message-State: APjAAAWASJcTF3e9h7anTLeyneGd8IBhkF7w3qmKlAcdBaCvz9mZX1kH
-        aXXIGi4CKLXtCUwMwYezFqhLakuD5Jo=
-X-Google-Smtp-Source: APXvYqwNGYGdsXoSsoWVMsqpiFqsPByMx5twgEVxz1Qstui53GCAqPW2amhUPifjO4sV+cstIDkyEg==
-X-Received: by 2002:a1c:9dc5:: with SMTP id g188mr77103884wme.93.1563988614716;
-        Wed, 24 Jul 2019 10:16:54 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.147.168])
-        by smtp.gmail.com with ESMTPSA id e7sm43753256wmd.0.2019.07.24.10.16.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 10:16:54 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH 1/1] locks: Fix procfs output for file leases
-Date:   Wed, 24 Jul 2019 20:16:31 +0300
-Message-Id: <68a58eb885e32c1d7be0b4a531709ba2f33a758e.1563988369.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 24 Jul 2019 13:17:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1563988615; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/3Ah8FKXnjzRiOWf3wczuIH2HmTLx+HtvIJLBEWIgPQ=;
+        b=nNv4CdDIpER41aTP6dFPkZcunw7px4KoQ+XqesgDrN83plO/tOBEU6zdJHiRVylgxwigXO
+        DKMC4zaNj15reDjvGl6eRcUrIXDFXxpfnX32u+QTcrUbAPqAThq78hh2s8VyrmTTQYWfeh
+        xYasc+CnAWA2uZ4gc3UsH3xbIq6uZe4=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-clk@vger.kernel.org, od@zcrc.me,
+        Mathieu Malaterre <malat@debian.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v15 04/13] mfd/syscon: Add device_node_to_regmap()
+Date:   Wed, 24 Jul 2019 13:16:06 -0400
+Message-Id: <20190724171615.20774-5-paul@crapouillou.net>
+In-Reply-To: <20190724171615.20774-1-paul@crapouillou.net>
+References: <20190724171615.20774-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,48 +64,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+device_node_to_regmap() is exactly like syscon_node_to_regmap(), but it
+does not check that the node is compatible with "syscon", and won't
+attach the first clock it finds to the regmap.
 
-Since commit 778fc546f749c588aa2f ("locks: fix tracking of inprogress
-lease breaks"), leases break don't change @fl_type but modifies
-@fl_flags. However, procfs's part haven't been updated.
+The rationale behind this, is that one device node with a standard
+compatible string "foo,bar" can be covered by multiple drivers sharing a
+regmap, or by a single driver doing all the job without a regmap, but
+these are implementation details which shouldn't reflect on the
+devicetree.
 
-Previously, for a breaking lease the target type was printed (see
-target_leasetype()), as returns fcntl(F_GETLEASE). But now it's always
-"READ", as F_UNLCK no longer means "breaking". Unlike the previous
-one, this behaviour don't provide a complete description of the lease.
-
-There are /proc/pid/fdinfo/ outputs for a lease (the same for READ and
-WRITE) breaked by O_WRONLY.
--- before:
-lock:   1: LEASE  BREAKING  READ  2558 08:03:815793 0 EOF
--- after:
-lock:   1: LEASE  BREAKING  UNLCK  2558 08:03:815793 0 EOF
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- fs/locks.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 686eae21daf6..24d1db632f6c 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -2784,10 +2784,10 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
- 			       ? (fl->fl_type & LOCK_WRITE) ? "RW   " : "READ "
- 			       : (fl->fl_type & LOCK_WRITE) ? "WRITE" : "NONE ");
- 	} else {
--		seq_printf(f, "%s ",
--			       (lease_breaking(fl))
--			       ? (fl->fl_type == F_UNLCK) ? "UNLCK" : "READ "
--			       : (fl->fl_type == F_WRLCK) ? "WRITE" : "READ ");
-+		int type = IS_LEASE(fl) ? target_leasetype(fl) : fl->fl_type;
-+
-+		seq_printf(f, "%s ", (type == F_WRLCK) ? "WRITE" :
-+				     (type == F_RDLCK) ? "READ" : "UNLCK");
+Notes:
+    v15: New patch
+
+ drivers/mfd/syscon.c       | 46 +++++++++++++++++++++++++-------------
+ include/linux/mfd/syscon.h |  6 +++++
+ 2 files changed, 36 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index b65e585fc8c6..660723276481 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -40,7 +40,7 @@ static const struct regmap_config syscon_regmap_config = {
+ 	.reg_stride = 4,
+ };
+ 
+-static struct syscon *of_syscon_register(struct device_node *np)
++static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
+ {
+ 	struct clk *clk;
+ 	struct syscon *syscon;
+@@ -51,9 +51,6 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 	struct regmap_config syscon_config = syscon_regmap_config;
+ 	struct resource res;
+ 
+-	if (!of_device_is_compatible(np, "syscon"))
+-		return ERR_PTR(-EINVAL);
+-
+ 	syscon = kzalloc(sizeof(*syscon), GFP_KERNEL);
+ 	if (!syscon)
+ 		return ERR_PTR(-ENOMEM);
+@@ -117,16 +114,18 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 		goto err_regmap;
  	}
- 	if (inode) {
- 		/* userspace relies on this representation of dev_t */
+ 
+-	clk = of_clk_get(np, 0);
+-	if (IS_ERR(clk)) {
+-		ret = PTR_ERR(clk);
+-		/* clock is optional */
+-		if (ret != -ENOENT)
+-			goto err_clk;
+-	} else {
+-		ret = regmap_mmio_attach_clk(regmap, clk);
+-		if (ret)
+-			goto err_attach;
++	if (check_clk) {
++		clk = of_clk_get(np, 0);
++		if (IS_ERR(clk)) {
++			ret = PTR_ERR(clk);
++			/* clock is optional */
++			if (ret != -ENOENT)
++				goto err_clk;
++		} else {
++			ret = regmap_mmio_attach_clk(regmap, clk);
++			if (ret)
++				goto err_attach;
++		}
+ 	}
+ 
+ 	syscon->regmap = regmap;
+@@ -150,7 +149,8 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 	return ERR_PTR(ret);
+ }
+ 
+-struct regmap *syscon_node_to_regmap(struct device_node *np)
++static struct regmap *device_node_get_regmap(struct device_node *np,
++					     bool check_clk)
+ {
+ 	struct syscon *entry, *syscon = NULL;
+ 
+@@ -165,13 +165,27 @@ struct regmap *syscon_node_to_regmap(struct device_node *np)
+ 	spin_unlock(&syscon_list_slock);
+ 
+ 	if (!syscon)
+-		syscon = of_syscon_register(np);
++		syscon = of_syscon_register(np, check_clk);
+ 
+ 	if (IS_ERR(syscon))
+ 		return ERR_CAST(syscon);
+ 
+ 	return syscon->regmap;
+ }
++
++struct regmap *device_node_to_regmap(struct device_node *np)
++{
++	return device_node_get_regmap(np, false);
++}
++EXPORT_SYMBOL_GPL(device_node_to_regmap);
++
++struct regmap *syscon_node_to_regmap(struct device_node *np)
++{
++	if (!of_device_is_compatible(np, "syscon"))
++		return ERR_PTR(-EINVAL);
++
++	return device_node_get_regmap(np, true);
++}
+ EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
+ 
+ struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index 8cfda0554381..112dc66262cc 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -17,12 +17,18 @@
+ struct device_node;
+ 
+ #ifdef CONFIG_MFD_SYSCON
++extern struct regmap *device_node_to_regmap(struct device_node *np);
+ extern struct regmap *syscon_node_to_regmap(struct device_node *np);
+ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+ extern struct regmap *syscon_regmap_lookup_by_phandle(
+ 					struct device_node *np,
+ 					const char *property);
+ #else
++static inline struct regmap *device_node_to_regmap(struct device_node *np)
++{
++	return ERR_PTR(-ENOTSUPP);
++}
++
+ static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
+ {
+ 	return ERR_PTR(-ENOTSUPP);
 -- 
-2.22.0
+2.21.0.593.g511ec345e18
 
