@@ -2,108 +2,218 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697CBC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408F3C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D06822ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fLHGrJOe"
+	by mail.kernel.org (Postfix) with ESMTP id 146412182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbfGXHAA (ORCPT
+        id S1726238AbfGXHBw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 03:00:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43726 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfGXHAA (ORCPT
+        Wed, 24 Jul 2019 03:01:52 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:41967 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfGXHBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:00:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Iel7fa10X1Lb5ApMGEcSQp7sPKev2RbX5/u2NRwHx3k=; b=fLHGrJOeI/ZhfIHGvbawf55je
-        gnfcwpRzGzsv0MaMfv0cVZjR2c9d5HXHji9TyC4y8HRwap9A5mSIlX1+k7HOuSPhyEr2SiCw+9XsV
-        j/J3ZzHky7ib7eOz49PEitBP2ewRzzyXnuIWGE9NQoNeXPCSzJeAJNJNTL3xpv9ze4OKH52hq8czI
-        CCVXJQEECcbRSqTmAIbGEZB90M7z8/foA0MMj9iMZAPrrlw0UtesKbeP7w/SL4hQ8cNJ96M9HTzmO
-        tZI7dDsyK/D7H0ZVbQLPSA1Jx+d1fQqLiasVoXgyxhmayk67StgtJqhewQIW9aKtF2NSkKRSxllqD
-        +p2ugcoTg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hqBFn-00075Q-L3; Wed, 24 Jul 2019 06:59:59 +0000
-Date:   Tue, 23 Jul 2019 23:59:59 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-Message-ID: <20190724065958.GC16225@infradead.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
+        Wed, 24 Jul 2019 03:01:52 -0400
+X-Greylist: delayed 741 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jul 2019 03:01:50 EDT
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x6O6nG5d021120
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 24 Jul 2019 15:49:16 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6O6nGFx009426;
+        Wed, 24 Jul 2019 15:49:16 +0900
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6O6dSsL017998;
+        Wed, 24 Jul 2019 15:49:16 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.150] [10.38.151.150]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-2404595; Wed, 24 Jul 2019 15:48:55 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC22GP.gisp.nec.co.jp ([10.38.151.150]) with mapi id 14.03.0439.000; Wed,
+ 24 Jul 2019 15:48:55 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Jane Chu <jane.chu@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH] mm/memory-failure: Poison read receives SIGKILL instead
+ of SIGBUS if mmaped more than once
+Thread-Topic: [PATCH] mm/memory-failure: Poison read receives SIGKILL
+ instead of SIGBUS if mmaped more than once
+Thread-Index: AQHVQbAJYBnoCgkSO0yo1OfL2uazvqbYZaaAgABXyAA=
+Date:   Wed, 24 Jul 2019 06:48:54 +0000
+Message-ID: <20190724064846.GA17567@hori.linux.bs1.fc.nec.co.jp>
+References: <1563925110-19359-1-git-send-email-jane.chu@oracle.com>
+ <CAPcyv4hyvHFnSE4AUbXooxX_Ug-raxAJgzC7jzkHp_mSg_sCmg@mail.gmail.com>
+In-Reply-To: <CAPcyv4hyvHFnSE4AUbXooxX_Ug-raxAJgzC7jzkHp_mSg_sCmg@mail.gmail.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.96]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <A8D19D1E94905D479DFEEA8EADF01457@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 10:04:06PM -0700, John Stultz wrote:
-> Apologies, I'm not sure I'm understanding your suggestion here.
-> dma_alloc_contiguous() does have some interesting optimizations
-> (avoiding allocating single page from cma), though its focus on
-> default area vs specific device area doesn't quite match up the usage
-> model for dma heaps.  Instead of allocating memory for a single
-> device, we want to be able to allow userland, for a given usage mode,
-> to be able to allocate a dmabuf from a specific heap of memory which
-> will satisfy the usage mode for that buffer pipeline (across multiple
-> devices).
+Hi Jane, Dan,
+
+On Tue, Jul 23, 2019 at 06:34:35PM -0700, Dan Williams wrote:
+> On Tue, Jul 23, 2019 at 4:49 PM Jane Chu <jane.chu@oracle.com> wrote:
+> >
+> > Mmap /dev/dax more than once, then read the poison location using address
+> > from one of the mappings. The other mappings due to not having the page
+> > mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
+> > over SIGBUS, so user process looses the opportunity to handle the UE.
+> >
+> > Although one may add MAP_POPULATE to mmap(2) to work around the issue,
+> > MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
+> > isn't always an option.
+> >
+> > Details -
+> >
+> > ndctl inject-error --block=10 --count=1 namespace6.0
+> >
+> > ./read_poison -x dax6.0 -o 5120 -m 2
+> > mmaped address 0x7f5bb6600000
+> > mmaped address 0x7f3cf3600000
+> > doing local read at address 0x7f3cf3601400
+> > Killed
+> >
+> > Console messages in instrumented kernel -
+> >
+> > mce: Uncorrected hardware memory error in user-access at edbe201400
+> > Memory failure: tk->addr = 7f5bb6601000
+> > Memory failure: address edbe201: call dev_pagemap_mapping_shift
+> > dev_pagemap_mapping_shift: page edbe201: no PUD
+> > Memory failure: tk->size_shift == 0
+> > Memory failure: Unable to find user space address edbe201 in read_poison
+> > Memory failure: tk->addr = 7f3cf3601000
+> > Memory failure: address edbe201: call dev_pagemap_mapping_shift
+> > Memory failure: tk->size_shift = 21
+> > Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
+> >   => to deliver SIGKILL
+> > Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
+> >   => to deliver SIGBUS
+> >
+> > Signed-off-by: Jane Chu <jane.chu@oracle.com>
+> > ---
+> >  mm/memory-failure.c | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> > index d9cc660..7038abd 100644
+> > --- a/mm/memory-failure.c
+> > +++ b/mm/memory-failure.c
+> > @@ -315,7 +315,6 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+> >
+> >         if (*tkc) {
+> >                 tk = *tkc;
+> > -               *tkc = NULL;
+> >         } else {
+> >                 tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
+> >                 if (!tk) {
+> > @@ -331,16 +330,21 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+> >                 tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+> >
+> >         /*
+> > -        * In theory we don't have to kill when the page was
+> > -        * munmaped. But it could be also a mremap. Since that's
+> > -        * likely very rare kill anyways just out of paranoia, but use
+> > -        * a SIGKILL because the error is not contained anymore.
+> > +        * Indeed a page could be mmapped N times within a process. And it's possible
+> > +        * that not all of those N VMAs contain valid mapping for the page. In which
+> > +        * case we don't want to send SIGKILL to the process on behalf of the VMAs
+> > +        * that don't have the valid mapping, because doing so will eclipse the SIGBUS
+> > +        * delivered on behalf of the active VMA.
+> >          */
+> >         if (tk->addr == -EFAULT || tk->size_shift == 0) {
+> >                 pr_info("Memory failure: Unable to find user space address %lx in %s\n",
+> >                         page_to_pfn(p), tsk->comm);
+> > -               tk->addr_valid = 0;
+> > +               if (tk != *tkc)
+> > +                       kfree(tk);
+> > +               return;
+
+The immediate return bypasses list_add_tail() below, so we might lose
+the chance of sending SIGBUS to the process.
+
+tk->size_shift is always non-zero for !is_zone_device_page(), so
+"tk->size_shift == 0" effectively checks "no mapping on ZONE_DEVICE" now.
+As you mention above, "no mapping" doesn't means "invalid address"
+so we can drop "tk->size_shift == 0" check from this if-statement.
+Going forward in this direction, "tk->addr_valid == 0" is equivalent to
+"tk->addr == -EFAULT", so we seems to be able to remove ->addr_valid.
+This observation leads me to the following change, does it work for you?
+
+  --- a/mm/memory-failure.c
+  +++ b/mm/memory-failure.c
+  @@ -199,7 +199,6 @@ struct to_kill {
+   	struct task_struct *tsk;
+   	unsigned long addr;
+   	short size_shift;
+  -	char addr_valid;
+   };
+   
+   /*
+  @@ -324,7 +323,6 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+   		}
+   	}
+   	tk->addr = page_address_in_vma(p, vma);
+  -	tk->addr_valid = 1;
+   	if (is_zone_device_page(p))
+   		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+   	else
+  @@ -336,11 +334,9 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+   	 * likely very rare kill anyways just out of paranoia, but use
+   	 * a SIGKILL because the error is not contained anymore.
+   	 */
+  -	if (tk->addr == -EFAULT || tk->size_shift == 0) {
+  +	if (tk->addr == -EFAULT)
+   		pr_info("Memory failure: Unable to find user space address %lx in %s\n",
+   			page_to_pfn(p), tsk->comm);
+  -		tk->addr_valid = 0;
+  -	}
+   	get_task_struct(tsk);
+   	tk->tsk = tsk;
+   	list_add_tail(&tk->nd, to_kill);
+  @@ -366,7 +362,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill, bool fail,
+   			 * make sure the process doesn't catch the
+   			 * signal and then access the memory. Just kill it.
+   			 */
+  -			if (fail || tk->addr_valid == 0) {
+  +			if (fail || tk->addr == -EFAULT) {
+   				pr_err("Memory failure: %#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
+   				       pfn, tk->tsk->comm, tk->tsk->pid);
+   				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
+
+> >         }
+> > +       if (tk == *tkc)
+> > +               *tkc = NULL;
+> >         get_task_struct(tsk);
+> >         tk->tsk = tsk;
+> >         list_add_tail(&tk->nd, to_kill);
 > 
-> Now, indeed, the system and cma heaps in this patchset are a bit
-> simple/trivial (though useful with my devices that require contiguous
-> buffers for the display driver), but more complex ION heaps have
-> traditionally stayed out of tree in vendor code, in many cases making
-> incompatible tweaks to the ION core dmabuf exporter logic.
-
-So what would the more complicated heaps be?
-
-> That's why
-> dmabuf heaps is trying to destage ION in a way that allows heaps to
-> implement their exporter logic themselves, so we can start pulling
-> those more complicated heaps out of their vendor hidey-holes and get
-> some proper upstream review.
 > 
-> But I suspect I just am confused as to what your suggesting. Maybe
-> could you expand a bit? Apologies for being a bit dense.
+> Concept and policy looks good to me, and I never did understand what
+> the mremap() case was trying to protect against.
+> 
+> The patch is a bit difficult to read (not your fault) because of the
+> odd way that add_to_kill() expects the first 'tk' to be pre-allocated.
+> May I ask for a lead-in cleanup that moves all the allocation internal
+> to add_to_kill() and drops the **tk argument?
 
-My suggestion is to merge the system and CMA heaps.  CMA (at least
-the system-wide CMA area) is really just an optimization to get
-large contigous regions more easily.  We should make use of it as
-transparent as possible, just like we do in the DMA code.
+I totally agree with this cleanup. Thanks for the comment.
+
+Thanks,
+Naoya Horiguchi
