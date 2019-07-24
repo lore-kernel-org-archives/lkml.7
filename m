@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4BEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FB1C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE65522BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C4321880
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033392;
-	bh=vlTIogb9tzHAuBPAyMF4RNDmYm61QUR+7qMqccJAo1Y=;
+	s=default; t=1564033398;
+	bh=yA9ysoe2+02dUcjSy3X7DhoALMGRuDZ5yC0Luj3KLHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RjM9INsOwaXps4bA9RCG5KEW3r3b1RSq3t4gOn3zu/hwLnz/6dZRmhVp9DmcO3Pgh
-	 6vyFv8ONYjKqJM0ob8UhzGG3tEP0CYgy+mLCUQYdZmICeBNXXsgMuXIOpeQaR3p3b6
-	 FyAfz4ZXkUvbUeKuu8CsX/dAJbtSPI7gajX9t06w=
+	b=TOUZpg7fMGxfRevO6SP+4uSoq3PmZBraloljC+Zlh6ownkmAxzXpKff3Zqfr02JAp
+	 0oSL/Mxx+UQCpRWajlnhNv7G0wPiSnjI6N6vNk1LGQFtkCAMkRZ5+JxzDfqdT5XoCy
+	 xmmS35rAhFvOZZpk1/5A8JFlFNDL9IevFpy7om8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404899AbfGYFnK (ORCPT
+        id S2404907AbfGYFnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:43:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58084 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:43:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390992AbfGYFnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:43:07 -0400
+        id S2390998AbfGYFnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:43:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E46322CD1;
-        Thu, 25 Jul 2019 05:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F9F22BEB;
+        Thu, 25 Jul 2019 05:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033386;
-        bh=vlTIogb9tzHAuBPAyMF4RNDmYm61QUR+7qMqccJAo1Y=;
+        s=default; t=1564033394;
+        bh=yA9ysoe2+02dUcjSy3X7DhoALMGRuDZ5yC0Luj3KLHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FfHrpTNjEBP/auz1S6VSMYnovzB7y6l9eYgJQoh+N4qMWMQqowTPsd9vmDsyMHOvy
-         jsAvYfpgFSp+GzXcteBo6Wu0f0l2bxKTMRmhL4l7LN20ODJuRUWBIC+RWyHTqROtpE
-         WKwAWcaE/YKYtvjm+BkT/ALTwbVn9fmXkiF8nE80=
+        b=h/1iUU4vA3eexE6wsFcYJxpdK4tMQ3q1Lx9EPyyzX37HWbcMvX5pGJj4YDm4UN4YI
+         l7RdSqpOvWZ8lF+COsKs7z5e6tD8C7fgTma0aXX4irukTKGn6zLAMFrW653F4K95q6
+         6ccRibtXA/MXD7fP1+X0ydPabEjcAqgupkDCK7BE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 190/271] Input: alps - dont handle ALPS cs19 trackpoint-only device
-Date:   Wed, 24 Jul 2019 21:20:59 +0200
-Message-Id: <20190724191711.395880096@linuxfoundation.org>
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 193/271] regulator: s2mps11: Fix buck7 and buck8 wrong voltages
+Date:   Wed, 24 Jul 2019 21:21:02 +0200
+Message-Id: <20190724191711.643359511@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,98 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 7e4935ccc3236751e5fe4bd6846f86e46bb2e427 upstream.
+commit 16da0eb5ab6ef2dd1d33431199126e63db9997cc upstream.
 
-On a latest Lenovo laptop, the trackpoint and 3 buttons below it
-don't work at all, when we move the trackpoint or press those 3
-buttons, the kernel will print out:
-"Rejected trackstick packet from non DualPoint device"
+On S2MPS11 device, the buck7 and buck8 regulator voltages start at 750
+mV, not 600 mV.  Using wrong minimal value caused shifting of these
+regulator values by 150 mV (e.g. buck7 usually configured to v1.35 V was
+reported as 1.2 V).
 
-This device is identified as an alps touchpad but the packet has
-trackpoint format, so the alps.c drops the packet and prints out
-the message above.
+On most of the boards these regulators are left in default state so this
+was only affecting reported voltage.  However if any driver wanted to
+change them, then effectively it would set voltage 150 mV higher than
+intended.
 
-According to XiaoXiao's explanation, this device is named cs19 and
-is trackpoint-only device, its firmware is only for trackpoint, it
-is independent of touchpad and is a device completely different from
-DualPoint ones.
-
-To drive this device with mininal changes to the existing driver, we
-just let the alps driver not handle this device, then the trackpoint.c
-will be the driver of this device if the trackpoint driver is enabled.
-(if not, this device will fallback to a bare PS/2 device)
-
-With the trackpoint.c, this trackpoint and 3 buttons all work well,
-they have all features that the trackpoint should have, like
-scrolling-screen, drag-and-drop and frame-selection.
-
-Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: <stable@vger.kernel.org>
+Fixes: cb74685ecb39 ("regulator: s2mps11: Add samsung s2mps11 regulator driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/alps.c |   32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/regulator/s2mps11.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/input/mouse/alps.c
-+++ b/drivers/input/mouse/alps.c
-@@ -24,6 +24,7 @@
- 
- #include "psmouse.h"
- #include "alps.h"
-+#include "trackpoint.h"
- 
- /*
-  * Definitions for ALPS version 3 and 4 command mode protocol
-@@ -2864,6 +2865,23 @@ static const struct alps_protocol_info *
- 	return NULL;
- }
- 
-+static bool alps_is_cs19_trackpoint(struct psmouse *psmouse)
-+{
-+	u8 param[2] = { 0 };
-+
-+	if (ps2_command(&psmouse->ps2dev,
-+			param, MAKE_PS2_CMD(0, 2, TP_READ_ID)))
-+		return false;
-+
-+	/*
-+	 * param[0] contains the trackpoint device variant_id while
-+	 * param[1] contains the firmware_id. So far all alps
-+	 * trackpoint-only devices have their variant_ids equal
-+	 * TP_VARIANT_ALPS and their firmware_ids are in 0x20~0x2f range.
-+	 */
-+	return param[0] == TP_VARIANT_ALPS && (param[1] & 0x20);
-+}
-+
- static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
- {
- 	const struct alps_protocol_info *protocol;
-@@ -3165,6 +3183,20 @@ int alps_detect(struct psmouse *psmouse,
- 		return error;
- 
- 	/*
-+	 * ALPS cs19 is a trackpoint-only device, and uses different
-+	 * protocol than DualPoint ones, so we return -EINVAL here and let
-+	 * trackpoint.c drive this device. If the trackpoint driver is not
-+	 * enabled, the device will fall back to a bare PS/2 mouse.
-+	 * If ps2_command() fails here, we depend on the immediately
-+	 * followed psmouse_reset() to reset the device to normal state.
-+	 */
-+	if (alps_is_cs19_trackpoint(psmouse)) {
-+		psmouse_dbg(psmouse,
-+			    "ALPS CS19 trackpoint-only device detected, ignoring\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
- 	 * Reset the device to make sure it is fully operational:
- 	 * on some laptops, like certain Dell Latitudes, we may
- 	 * fail to properly detect presence of trackstick if device
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -373,8 +373,8 @@ static const struct regulator_desc s2mps
+ 	regulator_desc_s2mps11_buck1_4(4),
+ 	regulator_desc_s2mps11_buck5,
+ 	regulator_desc_s2mps11_buck67810(6, MIN_600_MV, STEP_6_25_MV),
+-	regulator_desc_s2mps11_buck67810(7, MIN_600_MV, STEP_12_5_MV),
+-	regulator_desc_s2mps11_buck67810(8, MIN_600_MV, STEP_12_5_MV),
++	regulator_desc_s2mps11_buck67810(7, MIN_750_MV, STEP_12_5_MV),
++	regulator_desc_s2mps11_buck67810(8, MIN_750_MV, STEP_12_5_MV),
+ 	regulator_desc_s2mps11_buck9,
+ 	regulator_desc_s2mps11_buck67810(10, MIN_750_MV, STEP_12_5_MV),
+ };
 
 
