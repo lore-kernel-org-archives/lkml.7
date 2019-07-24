@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B6FC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 883B8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E88121911
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4231D2189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:38:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XmXePXfJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WUwCVBwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387712AbfGXWif (ORCPT
+        id S2387920AbfGXWii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:38:35 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:38328 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387405AbfGXWie (ORCPT
+        Wed, 24 Jul 2019 18:38:38 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:45393 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387405AbfGXWih (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:38:34 -0400
-Received: by mail-qt1-f201.google.com with SMTP id r58so42861303qtb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:38:33 -0700 (PDT)
+        Wed, 24 Jul 2019 18:38:37 -0400
+Received: by mail-pg1-f201.google.com with SMTP id n3so19423984pgh.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=BHNx3fxgIAaIZGtj0Y4teHviUd3zpJGTp0ZxFmiQ/M0=;
-        b=XmXePXfJ2+b7OUYzjP8p2v6gnrwa5zdmWN8+PDRLb8CqPxvZ22ID60Gv59vneL7oTf
-         KckiJ5iuorOO5+NLBP3dzRW4snrMCDzGoSE15J1dBmz1xhbCSIm5c4OZLnquNY15UrUq
-         lImHlPD5pLZCsxebTLqvl44y8N+f9qOm9FJJBG5KseIbB5i9R/tsWo7fCSyRB4bCsgVv
-         Uybu1AXXlMuebS8GiNjJ/sxQFpn4yHDnikQCckjHWRUkEPRtnwlw61ZwIx8eNwK0fK2p
-         mK8Mq9GF97FXQpHNVs20nzs/xHIVFZA2wCw4V/uZAGOG0nqbz/44qxrmmgyOEMbF+Vwg
-         jCXw==
+        bh=KDcIEWapVHh0yMAvEeT2/OJQEfMO7NyyE5Z1U7roqv0=;
+        b=WUwCVBwe5wGSA1H9goEcLEDXvRONStXYMsln4zN/YMrwe1WB++/yYYnzfNWFlobXuk
+         U1LCOZZxcPpl4rXhSOuOPkbjI8T3cR7Qncw2uGYODOCJQR7jizki9X4BZzreEYvoZHGz
+         MnniCQa2mqJSlEREWTJmvYK0BrcDqUGEj3IVxrBOElZXQ6mnPvnCBQTxYgjPkhOX1f91
+         vauIm/z7Yy86tcf4NbLz8DmduJcdIXhEDK4VLpMQhHPAyzCo4kbtiRAh1KrpjBUYsaLO
+         HLldy5hQUHuoai2b426bP2gC7xPB5Bm1pQ9jkvIXiPVt7pK+iIwkCjFSw+Fb8l+SXJpj
+         A2pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=BHNx3fxgIAaIZGtj0Y4teHviUd3zpJGTp0ZxFmiQ/M0=;
-        b=O4l5DT+i3ou9aO2dpeXh+yE+4VR+tQPMZaDGL7LF5DfAvzMm9gEr3duX2Bb1Oy1EdS
-         hH5rUZtQYJ2NaP3E/qINSfABnH3heHunGnoDzeXbCGULEczvoKIXsaNCw0JJGr2uG9wf
-         8XEqs2/OxY/h2DjleN5aSuG+/4YhKFYRRRa6EhkSp8y7bV9IHxaeIZ/v6CrOnrGO9o+j
-         krdnFwUQzlEAAk6y7MVYoe1G+nPnIg7g7W3+DAbzJETXZPBkfVZzWcVHd9tuoirqGdvl
-         aDDeA0eiRJih4iJKgJ0FPPjf7TMW+AI0FrLM5AnoQL//ooGdz9Rbq+TyBZsYeaQkGpas
-         mLrA==
-X-Gm-Message-State: APjAAAWQWYx6umn4Veo7qTmSq1kkjChX14xplK8chwuUZLSUyhqR0aqx
-        i3V8WMA2CoyHmSD4eOKnlYsXiFXylKgI
-X-Google-Smtp-Source: APXvYqzS8EaBfAyHfmhTPGBmLpocc3q6DpRU2TN+O6nBia67EsTg1jvOZNjuKclRFnUX5YSY/7abG8O0GWqZ
-X-Received: by 2002:a0c:ba0b:: with SMTP id w11mr61057366qvf.71.1564007913001;
- Wed, 24 Jul 2019 15:38:33 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 15:37:40 -0700
+        bh=KDcIEWapVHh0yMAvEeT2/OJQEfMO7NyyE5Z1U7roqv0=;
+        b=VJ4LmeFID2+IcXwpV4hq8xRUZsi19zEMIALlVDDosmMs4Qtjl7k21psOXfndjA3tK6
+         RwBQh/G7Z3d1VdMpHdiTed7bcjfVyFDWZbqbZ3ZMs7LlZdjbk241M9ouXJeXJbi586Ae
+         R9EgDJyB1Rm9PvqE9ne3VdBIum1z6/ubDa4rhj7s+OjlvvNG/egrLjfXlCOahTXuJaGf
+         WK397UF70Q4e5KAVl5mArLqa0EBWwVi4EDmWDPcGojA4CPSM2Bc7Jnm4lxSM4d6NMjsJ
+         b86jZwdVrSRHtib7RHJ6LQI7bGeM8cievz46y5FlhJjJwVjTK2/5Ms6f+lSoai6Ugef8
+         Hg6A==
+X-Gm-Message-State: APjAAAUOOUzdgeeQuoAqJwn3COsEUFYHDgfWMuSFxAlHwF11u3zpCgAm
+        Df1QknHPOMUxy694ZuWKOr8fEiKURMZu
+X-Google-Smtp-Source: APXvYqzzfQHWur6XD0anyha5wy1Ns/6D+JiZI2kSPLkIVxQCnk1kFi7k7qSHYf9f4GR2oP8fJ6mrvcFoqvqM
+X-Received: by 2002:a65:4b89:: with SMTP id t9mr14445535pgq.55.1564007916548;
+ Wed, 24 Jul 2019 15:38:36 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 15:37:41 -0700
 In-Reply-To: <20190724223746.153620-1-irogers@google.com>
-Message-Id: <20190724223746.153620-2-irogers@google.com>
+Message-Id: <20190724223746.153620-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20190702065955.165738-1-irogers@google.com> <20190724223746.153620-1-irogers@google.com>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v2 1/7] perf: propagate perf_install_in_context errors up
+Subject: [PATCH v2 2/7] perf/cgroup: order events in RB tree by cgroup id
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -76,153 +76,366 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current __perf_install_in_context can fail and the error is ignored.
-Changing __perf_install_in_context can add new failure modes that need
-errors propagating up. This change prepares for this.
+If one is monitoring 6 events on 20 cgroups the per-CPU RB tree will
+hold 120 events. The scheduling in of the events currently iterates
+over all events looking to see which events match the task's cgroup or
+its cgroup hierarchy. If a task is in 1 cgroup with 6 events, then 114
+events are considered unnecessarily.
+
+This change orders events in the RB tree by cgroup id if it is present.
+This means scheduling in may go directly to events associated with the
+task's cgroup if one is present. The patch extends the 2 iterators in
+visit_groups_merge to a set of iterators, where different iterators are
+needed for the task's cgroup and parent cgroups. By considering the set
+of iterators when visiting, the lowest group_index event may be selected
+and the insertion order group_index property is maintained. This also
+allows event rotation to function correctly, as although events are
+grouped into a cgroup, rotation always selects the lowest group_index
+event to rotate (delete/insert into the tree) and the set of iterators
+make it so that the group_index order is maintained.
+
+Cgroups can form a hierarchy with an unbounded number of events being
+monitored in a child's parent's cgroup and their parent's parent's
+cgroup and so on. This change limits the depth of cgroups that can have
+monitored events to a constant (16). The change also scans the list of
+events when considering the lowest group_index. Later patches will
+improve the data structure to remove the constant limit and avoid a
+linear search.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- kernel/events/core.c | 39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+ kernel/events/core.c | 232 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 168 insertions(+), 64 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index eea9d52b010c..84a22a5c88b0 100644
+index 84a22a5c88b0..47df9935de0b 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2561,11 +2561,12 @@ static bool exclusive_event_installable(struct perf_event *event,
-  *
-  * Very similar to event_function_call, see comment there.
-  */
--static void
-+static int
- perf_install_in_context(struct perf_event_context *ctx,
- 			struct perf_event *event,
- 			int cpu)
- {
-+	int err;
- 	struct task_struct *task = READ_ONCE(ctx->task);
+@@ -1530,6 +1530,30 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
+ 	if (left->cpu > right->cpu)
+ 		return false;
  
- 	lockdep_assert_held(&ctx->mutex);
-@@ -2582,15 +2583,15 @@ perf_install_in_context(struct perf_event_context *ctx,
- 	smp_store_release(&event->ctx, ctx);
- 
- 	if (!task) {
--		cpu_function_call(cpu, __perf_install_in_context, event);
--		return;
-+		err = cpu_function_call(cpu, __perf_install_in_context, event);
-+		return err;
- 	}
- 
- 	/*
- 	 * Should not happen, we validate the ctx is still alive before calling.
- 	 */
- 	if (WARN_ON_ONCE(task == TASK_TOMBSTONE))
--		return;
-+		return 0;
- 
- 	/*
- 	 * Installing events is tricky because we cannot rely on ctx->is_active
-@@ -2624,9 +2625,11 @@ perf_install_in_context(struct perf_event_context *ctx,
- 	 */
- 	smp_mb();
- again:
--	if (!task_function_call(task, __perf_install_in_context, event))
--		return;
-+	err = task_function_call(task, __perf_install_in_context, event);
-+	if (!err)
-+		return 0;
- 
-+	WARN_ON_ONCE(err != -ESRCH);
- 	raw_spin_lock_irq(&ctx->lock);
- 	task = ctx->task;
- 	if (WARN_ON_ONCE(task == TASK_TOMBSTONE)) {
-@@ -2636,7 +2639,7 @@ perf_install_in_context(struct perf_event_context *ctx,
- 		 * against perf_event_exit_task_context().
- 		 */
- 		raw_spin_unlock_irq(&ctx->lock);
--		return;
-+		return 0;
- 	}
- 	/*
- 	 * If the task is not running, ctx->lock will avoid it becoming so,
-@@ -2648,6 +2651,7 @@ perf_install_in_context(struct perf_event_context *ctx,
- 	}
- 	add_event_to_ctx(event, ctx);
- 	raw_spin_unlock_irq(&ctx->lock);
-+	return 0;
++#ifdef CONFIG_CGROUP_PERF
++	if (left->cgrp != right->cgrp) {
++		if (!left->cgrp || !left->cgrp->css.cgroup) {
++			/*
++			 * Left has no cgroup but right does, no cgroups come
++			 * first.
++			 */
++			return true;
++		}
++		if (!right->cgrp || right->cgrp->css.cgroup) {
++			/*
++			 * Right has no cgroup but left does, no cgroups come
++			 * first.
++			 */
++			return false;
++		}
++		/* Two dissimilar cgroups, order by id. */
++		if (left->cgrp->css.cgroup->id < right->cgrp->css.cgroup->id)
++			return true;
++
++		return false;
++	}
++#endif
++
+ 	if (left->group_index < right->group_index)
+ 		return true;
+ 	if (left->group_index > right->group_index)
+@@ -1609,25 +1633,48 @@ del_event_from_groups(struct perf_event *event, struct perf_event_context *ctx)
  }
  
  /*
-@@ -11130,7 +11134,9 @@ SYSCALL_DEFINE5(perf_event_open,
- 		 */
- 		for_each_sibling_event(sibling, group_leader) {
- 			perf_event__state_init(sibling);
--			perf_install_in_context(ctx, sibling, sibling->cpu);
-+			err = perf_install_in_context(ctx, sibling,
-+						      sibling->cpu);
-+			WARN_ON_ONCE(err);
- 			get_ctx(ctx);
+- * Get the leftmost event in the @cpu subtree.
++ * Get the leftmost event in the cpu/cgroup subtree.
+  */
+ static struct perf_event *
+-perf_event_groups_first(struct perf_event_groups *groups, int cpu)
++perf_event_groups_first(struct perf_event_groups *groups, int cpu,
++			struct cgroup *cgrp)
+ {
+ 	struct perf_event *node_event = NULL, *match = NULL;
+ 	struct rb_node *node = groups->tree.rb_node;
++#ifdef CONFIG_CGROUP_PERF
++	int node_cgrp_id, cgrp_id = 0;
++
++	if (cgrp)
++		cgrp_id = cgrp->id;
++#endif
+ 
+ 	while (node) {
+ 		node_event = container_of(node, struct perf_event, group_node);
+ 
+ 		if (cpu < node_event->cpu) {
+ 			node = node->rb_left;
+-		} else if (cpu > node_event->cpu) {
++			continue;
++		}
++		if (cpu > node_event->cpu) {
+ 			node = node->rb_right;
+-		} else {
+-			match = node_event;
++			continue;
++		}
++#ifdef CONFIG_CGROUP_PERF
++		node_cgrp_id = 0;
++		if (node_event->cgrp && node_event->cgrp->css.cgroup)
++			node_cgrp_id = node_event->cgrp->css.cgroup->id;
++
++		if (cgrp_id < node_cgrp_id) {
+ 			node = node->rb_left;
++			continue;
  		}
- 
-@@ -11140,7 +11146,9 @@ SYSCALL_DEFINE5(perf_event_open,
- 		 * startup state, ready to be add into new context.
- 		 */
- 		perf_event__state_init(group_leader);
--		perf_install_in_context(ctx, group_leader, group_leader->cpu);
-+		err = perf_install_in_context(ctx, group_leader,
-+					      group_leader->cpu);
-+		WARN_ON_ONCE(err);
- 		get_ctx(ctx);
++		if (cgrp_id > node_cgrp_id) {
++			node = node->rb_right;
++			continue;
++		}
++#endif
++		match = node_event;
++		node = node->rb_left;
  	}
  
-@@ -11155,7 +11163,8 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	return match;
+@@ -1640,12 +1687,26 @@ static struct perf_event *
+ perf_event_groups_next(struct perf_event *event)
+ {
+ 	struct perf_event *next;
++#ifdef CONFIG_CGROUP_PERF
++	int curr_cgrp_id = 0;
++	int next_cgrp_id = 0;
++#endif
  
- 	event->owner = current;
+ 	next = rb_entry_safe(rb_next(&event->group_node), typeof(*event), group_node);
+-	if (next && next->cpu == event->cpu)
+-		return next;
++	if (next == NULL || next->cpu != event->cpu)
++		return NULL;
  
--	perf_install_in_context(ctx, event, event->cpu);
-+	err = perf_install_in_context(ctx, event, event->cpu);
-+	WARN_ON_ONCE(err);
- 	perf_unpin_context(ctx);
+-	return NULL;
++#ifdef CONFIG_CGROUP_PERF
++	if (event->cgrp && event->cgrp->css.cgroup)
++		curr_cgrp_id = event->cgrp->css.cgroup->id;
++
++	if (next->cgrp && next->cgrp->css.cgroup)
++		next_cgrp_id = next->cgrp->css.cgroup->id;
++
++	if (curr_cgrp_id != next_cgrp_id)
++		return NULL;
++#endif
++	return next;
+ }
  
- 	if (move_group)
-@@ -11274,7 +11283,8 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 		goto err_unlock;
+ /*
+@@ -3261,28 +3322,81 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
+ 	ctx_sched_out(&cpuctx->ctx, cpuctx, event_type);
+ }
+ 
+-static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+-			      int (*func)(struct perf_event *, void *), void *data)
+-{
+-	struct perf_event **evt, *evt1, *evt2;
+-	int ret;
++static int visit_groups_merge(struct perf_event_context *ctx,
++			      struct perf_cpu_context *cpuctx,
++			      struct perf_event_groups *groups,
++			      int (*func)(struct perf_event_context *,
++					  struct perf_cpu_context *,
++					  struct perf_event *,
++					  int *),
++			      int *data)
++{
++	/* The number of iterators in use. */
++	int num_itrs;
++	/*
++	 * A set of iterators, the iterator for the visit is chosen by the
++	 * group_index. The size of the array is sized such that there is space:
++	 * - for task contexts per-CPU and any-CPU events can be iterated.
++	 * - for CPU contexts:
++	 *   - without cgroups, global events can be iterated.
++	 *   - with cgroups, global events can be iterated and 16 sets of cgroup
++	 *     events. Cgroup events may monitor a cgroup at an arbitrary
++	 *     location within the cgroup hierarchy. An iterator is needed for
++	 *     each cgroup with events in the hierarchy. Potentially this is
++	 *     only limited by MAX_PATH.
++	 */
++	struct perf_event *itrs[IS_ENABLED(CONFIG_CGROUP_PERF) ? 17 : 2];
++	/* A reference to the selected iterator. */
++	struct perf_event **evt;
++	int ret, i, cpu = smp_processor_id();
++
++	itrs[0] = perf_event_groups_first(groups, cpu, NULL);
++
++	if (ctx != &cpuctx->ctx) {
++		/*
++		 * A task context only ever has an iterator for CPU or any CPU
++		 * events.
++		 */
++		itrs[1] = perf_event_groups_first(groups, -1, NULL);
++		num_itrs = 2;
++	} else {
++		/* Per-CPU events are by definition not on any CPU. */
++		num_itrs = 1;
++#ifdef CONFIG_CGROUP_PERF
++		/*
++		 * For itrs[1..MAX] add an iterator for each cgroup parent that
++		 * has events.
++		 */
++		if (cpuctx->cgrp) {
++			struct cgroup_subsys_state *css;
++
++			for (css = &cpuctx->cgrp->css; css; css = css->parent) {
++				itrs[num_itrs] = perf_event_groups_first(groups,
++								   cpu,
++								   css->cgroup);
++				if (itrs[num_itrs] &&
++				    WARN_ONCE(++num_itrs == ARRAY_SIZE(iters)
++				     "Insufficient iterators for cgroup depth"))
++					break;
++			}
++		}
++#endif
++	}
+ 
+-	evt1 = perf_event_groups_first(groups, -1);
+-	evt2 = perf_event_groups_first(groups, cpu);
+-
+-	while (evt1 || evt2) {
+-		if (evt1 && evt2) {
+-			if (evt1->group_index < evt2->group_index)
+-				evt = &evt1;
+-			else
+-				evt = &evt2;
+-		} else if (evt1) {
+-			evt = &evt1;
+-		} else {
+-			evt = &evt2;
++	while (true) {
++		/* Find lowest group_index event. */
++		evt = NULL;
++		for (i = 0; i < num_itrs; ++i) {
++			if (itrs[i] == NULL)
++				continue;
++			if (evt == NULL ||
++			    itrs[i]->group_index < (*evt)->group_index)
++				evt = &itrs[i];
+ 		}
++		if (evt == NULL)
++			break;
+ 
+-		ret = func(*evt, data);
++		ret = func(ctx, cpuctx, *evt, data);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -3292,25 +3406,20 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+ 	return 0;
+ }
+ 
+-struct sched_in_data {
+-	struct perf_event_context *ctx;
+-	struct perf_cpu_context *cpuctx;
+-	int can_add_hw;
+-};
+-
+-static int pinned_sched_in(struct perf_event *event, void *data)
++static int pinned_sched_in(struct perf_event_context *ctx,
++			   struct perf_cpu_context *cpuctx,
++			   struct perf_event *event,
++			   int *unused)
+ {
+-	struct sched_in_data *sid = data;
+-
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+ 
+ 	if (!event_filter_match(event))
+ 		return 0;
+ 
+-	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+-		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
+-			list_add_tail(&event->active_list, &sid->ctx->pinned_active);
++	if (group_can_go_on(event, cpuctx, 1)) {
++		if (!group_sched_in(event, cpuctx, ctx))
++			list_add_tail(&event->active_list, &ctx->pinned_active);
  	}
  
--	perf_install_in_context(ctx, event, cpu);
-+	err = perf_install_in_context(ctx, event, cpu);
-+	WARN_ON_ONCE(err);
- 	perf_unpin_context(ctx);
- 	mutex_unlock(&ctx->mutex);
+ 	/*
+@@ -3323,24 +3432,25 @@ static int pinned_sched_in(struct perf_event *event, void *data)
+ 	return 0;
+ }
  
-@@ -11297,6 +11307,7 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
- 	struct perf_event_context *dst_ctx;
- 	struct perf_event *event, *tmp;
- 	LIST_HEAD(events);
-+	int err;
+-static int flexible_sched_in(struct perf_event *event, void *data)
++static int flexible_sched_in(struct perf_event_context *ctx,
++			     struct perf_cpu_context *cpuctx,
++			     struct perf_event *event,
++			     int *can_add_hw)
+ {
+-	struct sched_in_data *sid = data;
+-
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
  
- 	src_ctx = &per_cpu_ptr(pmu->pmu_cpu_context, src_cpu)->ctx;
- 	dst_ctx = &per_cpu_ptr(pmu->pmu_cpu_context, dst_cpu)->ctx;
-@@ -11335,7 +11346,8 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
- 		if (event->state >= PERF_EVENT_STATE_OFF)
- 			event->state = PERF_EVENT_STATE_INACTIVE;
- 		account_event_cpu(event, dst_cpu);
--		perf_install_in_context(dst_ctx, event, dst_cpu);
-+		err = perf_install_in_context(dst_ctx, event, dst_cpu);
-+		WARN_ON_ONCE(err);
- 		get_ctx(dst_ctx);
+ 	if (!event_filter_match(event))
+ 		return 0;
+ 
+-	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
+-		int ret = group_sched_in(event, sid->cpuctx, sid->ctx);
++	if (group_can_go_on(event, cpuctx, *can_add_hw)) {
++		int ret = group_sched_in(event, cpuctx, ctx);
+ 		if (ret) {
+-			sid->can_add_hw = 0;
+-			sid->ctx->rotate_necessary = 1;
++			*can_add_hw = 0;
++			ctx->rotate_necessary = 1;
+ 			return 0;
+ 		}
+-		list_add_tail(&event->active_list, &sid->ctx->flexible_active);
++		list_add_tail(&event->active_list, &ctx->flexible_active);
  	}
  
-@@ -11348,7 +11360,8 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
- 		if (event->state >= PERF_EVENT_STATE_OFF)
- 			event->state = PERF_EVENT_STATE_INACTIVE;
- 		account_event_cpu(event, dst_cpu);
--		perf_install_in_context(dst_ctx, event, dst_cpu);
-+		err = perf_install_in_context(dst_ctx, event, dst_cpu);
-+		WARN_ON_ONCE(err);
- 		get_ctx(dst_ctx);
- 	}
- 	mutex_unlock(&dst_ctx->mutex);
+ 	return 0;
+@@ -3350,30 +3460,24 @@ static void
+ ctx_pinned_sched_in(struct perf_event_context *ctx,
+ 		    struct perf_cpu_context *cpuctx)
+ {
+-	struct sched_in_data sid = {
+-		.ctx = ctx,
+-		.cpuctx = cpuctx,
+-		.can_add_hw = 1,
+-	};
+-
+-	visit_groups_merge(&ctx->pinned_groups,
+-			   smp_processor_id(),
+-			   pinned_sched_in, &sid);
++	visit_groups_merge(ctx,
++			   cpuctx,
++			   &ctx->pinned_groups,
++			   pinned_sched_in,
++			   NULL);
+ }
+ 
+ static void
+ ctx_flexible_sched_in(struct perf_event_context *ctx,
+ 		      struct perf_cpu_context *cpuctx)
+ {
+-	struct sched_in_data sid = {
+-		.ctx = ctx,
+-		.cpuctx = cpuctx,
+-		.can_add_hw = 1,
+-	};
++	int can_add_hw = 1;
+ 
+-	visit_groups_merge(&ctx->flexible_groups,
+-			   smp_processor_id(),
+-			   flexible_sched_in, &sid);
++	visit_groups_merge(ctx,
++			   cpuctx,
++			   &ctx->flexible_groups,
++			   flexible_sched_in,
++			   &can_add_hw);
+ }
+ 
+ static void
 -- 
 2.22.0.709.g102302147b-goog
 
