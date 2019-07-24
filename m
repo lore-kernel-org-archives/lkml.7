@@ -2,91 +2,125 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E314C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD721C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE112084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F212084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563984243;
+	bh=SQR9NGAk3g+uutR+WGX2e1bRCxTt5T+KOcif1M2eGR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sgOXdniQ33h4VYXAdnAhV9AGhq3XXsIfQCyfv4mm/JicNSxjbj3CQ3HY1jc/1V+1o
+	 roYYqrE5RauJ9TxL6zFAl8VqJ0mTPg3AquNbk2sLwzhTJMtJwH1/bbgmz6EVB+k51T
+	 IPM3V/jsIrGzpl0KOsLVvdAHP4ksLDVda0e4ft+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfGXQDs (ORCPT
+        id S1728620AbfGXQEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:03:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44387 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbfGXQDs (ORCPT
+        Wed, 24 Jul 2019 12:04:02 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43967 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfGXQEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:03:48 -0400
-Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hqJjy-0004Xi-MD; Wed, 24 Jul 2019 18:03:42 +0200
-Date:   Wed, 24 Jul 2019 18:03:41 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-cc:     "H.J. Lu" <hjl.tools@gmail.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
- be reserved
-In-Reply-To: <20190724155735.GC5571@kroah.com>
-Message-ID: <alpine.DEB.2.21.1907241801320.1791@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de> <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com> <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de>
- <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com> <20190723130513.GA25290@kroah.com> <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de> <20190723134454.GA7260@kroah.com> <20190724153416.GA27117@kroah.com>
- <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de> <20190724155735.GC5571@kroah.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 24 Jul 2019 12:04:02 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so90675124ios.10;
+        Wed, 24 Jul 2019 09:04:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RIcJtepW5SbcfF+LiygeiBx7jJNlGPWMOmmQrsLTmRQ=;
+        b=qhUCgp+e+5zS0HXPwzXAZL89koL7YPSpxfSkkc0bLa007Ucw/ti3a2GVmYhCwdgEPf
+         JcRXdspjuFy4cL6/hdDDOGnHMjE2soVBTDcywXm6Ire69neEOzl1YBWIkab8E4JqHBXq
+         2MTjRQFnotDy0HJWCftHp6t1xa676RB/K15f8RrXUJsstGP0f7CNqWUYImr0AgZ+Uu51
+         NOloyPbsICJCoBErdoJqc6odVDSFim+QXrLOZw2tG1fn1pqzmduxiyCKctEtsT1zYxIR
+         5piiGrrZJWwfPt7Ya91DNL0MBtLPTN0n6HU9+NutZ2AgE03b3U7u3/1R/ugdzWJ7biKC
+         d2dQ==
+X-Gm-Message-State: APjAAAUHngIJmwGrUX79q8/iJnCzo5sJtOtsxWa0cfEZhuXME7uY6Xnp
+        Jr4a1Cqh9pOiCOzLibDg+wKm/zY=
+X-Google-Smtp-Source: APXvYqzrgInPMnaXzJdtgj8Jcq9ver6WG+45y2sE5vAfKJszqQFf+gX9pP0NAZ63WyASWT15x2Rh+Q==
+X-Received: by 2002:a02:13c3:: with SMTP id 186mr84298115jaz.30.1563984240969;
+        Wed, 24 Jul 2019 09:04:00 -0700 (PDT)
+Received: from localhost ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id t133sm69197601iof.21.2019.07.24.09.04.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 09:04:00 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 10:03:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/13] dt-bindings: opp: Add qcom-opp bindings with
+ properties needed for CPR
+Message-ID: <20190724160359.GA32565@bogus>
+References: <20190705095726.21433-1-niklas.cassel@linaro.org>
+ <20190705095726.21433-9-niklas.cassel@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190705095726.21433-9-niklas.cassel@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019, Greg KH wrote:
-> On Wed, Jul 24, 2019 at 05:49:45PM +0200, Thomas Gleixner wrote:
-> > > Ok, I dug around and the gold linker is not being used here, only clang
-> > > to build the source and GNU ld to link, and I am still seeing this
-> > > error.
-> > 
-> > Odd combo.
+On Fri, Jul 05, 2019 at 11:57:19AM +0200, Niklas Cassel wrote:
+> Add qcom-opp bindings with properties needed for Core Power Reduction
+> (CPR).
 > 
-> I'm not disagreeing :)
+> CPR is included in a great variety of Qualcomm SoCs, e.g. msm8916 and
+> msm8996. CPR was first introduced in msm8974.
 > 
-> Wait, does clang link things itself and not need ld?
-
-Nah.
-
-> > > Hm, clang 8 does not cause this error, but clang 9 does.  Let me go poke
-> > > the people who are providing this version of clang to see if there's
-> > > something they can figure out.
-> > 
-> > Let me try that with my clang variant. Which version of GNU ld are you
-> > using?
+> Changes since RFC:
+> -Removed opp-hz. It is already an optional property in opp.txt
+> so no need to specify it with the same definition here.
 > 
-> I think it is 2.27:
-> $ ./ld --version
-> GNU ld (binutils-2.27-44492f8) 2.27.0.20170315
+> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+>  .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
 > 
-> Which does feel old to me.
+> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> new file mode 100644
+> index 000000000000..f204685d029c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+> @@ -0,0 +1,19 @@
+> +Qualcomm OPP bindings to describe OPP nodes
+> +
+> +The bindings are based on top of the operating-points-v2 bindings
+> +described in Documentation/devicetree/bindings/opp/opp.txt
+> +Additional properties are described below.
+> +
+> +* OPP Table Node
+> +
+> +Required properties:
+> +- compatible: Allow OPPs to express their compatibility. It should be:
+> +  "operating-points-v2-qcom-level"
+> +
+> +* OPP Node
+> +
+> +Optional properties:
+> +- qcom,opp-fuse-level: A positive value representing the fuse corner/level
+> +  associated with this OPP node. Sometimes several corners/levels shares
+> +  a certain fuse corner/level. A fuse corner/level contains e.g. ref uV,
+> +  min uV, and max uV.
+
+Doesn't match the example in patch 5.
+
+> -- 
+> 2.21.0
 > 
-> I know 2.32 works fine.
-
-2.31 works fine as well.
-
-> Gotta love old tool-chains :(
-
-Oh yes. /me does archaeology to find a VM with old stuff
