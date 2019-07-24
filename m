@@ -2,118 +2,105 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B713C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF86C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA8820828
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563936336;
-	bh=FM5WJ2YozE39AY96Ha2UJA4Or7QT4hTxQlKQwzRGuvQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=oqfznoQXT1dVnsT45nyS7ILSqdiCxGqbEdUEeXy0Q+v2t3nS2WYJdk9MU5aojFY80
-	 +vfELmWlLUbUpBbvBY06jxq+BDooOq5JqXQnrJJFg7WObHWDIVyMgaxagJqzOWEVRi
-	 ajRGqbuSkRmU++InXLocBFoZCX10ChaFcFMonB6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 09BC920828
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:47:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQMb5ADm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfGXCpf (ORCPT
+        id S1726139AbfGXCrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfGXCpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:45:35 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D6D20828;
-        Wed, 24 Jul 2019 02:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563936334;
-        bh=FM5WJ2YozE39AY96Ha2UJA4Or7QT4hTxQlKQwzRGuvQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fZYCZE1PZkDy8RzcDb7zw6i84fsfhAQ2ocwKRBtO07Glu0mk5T+Vg3BofIYYQP9NE
-         S/e1Bnl8bT63SG5M811vQIJ/Z358VECqRImXyrcVLCCDKTMvOIJ6tqFyUuazhY55OZ
-         bsu33/gbhUqDta90YLxY7IJi0s8t/1CuOa5IuVIU=
-Date:   Tue, 23 Jul 2019 19:45:32 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 2 open syzbot bugs in "net/l2tp" subsystem
-Message-ID: <20190724024532.GH643@sol.localdomain>
-Mail-Followup-To: netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 23 Jul 2019 22:47:06 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41115 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfGXCrF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:47:05 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so10047018pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 19:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jBTk1hrNk+mwNzaYgR/1ZCf8cY2MU3CovpAv/pz3LXk=;
+        b=EQMb5ADmcEHu05TNX6WPacxDeLfNc5iFh75wjjsxdhpxpLV0GetY9P2xNAjtYBGax7
+         YxNhm277uugFSVCl2Pase2oKI4ZkxzFtYP1IDgctmJwFkfq5uFfyDKDt2wmi9br/YP9g
+         HjURdQ5wwRjQeIIDC+oJrruD0y3rI1CaTQTIIcZbJR+fP+7Ybnx0XfymzMXti7S+w6By
+         VMTx3sOoA3urPyhXz+hezoXDhSZLfEXehWnnRSf1taoRy5AR0KZ4XcxwMZ4Gwug1uzJQ
+         pDoSiGv/gpXLxy/S1hxZpxT2RK/xyst4TyGPQRJmiOjSfae3YDYBhQrm02z9M8/BbEvD
+         S+cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jBTk1hrNk+mwNzaYgR/1ZCf8cY2MU3CovpAv/pz3LXk=;
+        b=J9/ypI/v416u1XoxzPJcg/Do6YZi5/LiKhj82JmgRo9ofl2W1kAUFYXDCeN/UcYMfw
+         jsPdfs2AeyuDfzwht9AvEE5UUf2j+QymCduYNVTQhVetCR1g5QnfhMtgH+jSc2TBT9wp
+         9BYHP+K6bkuQI17qb5YkvONy3S/UE06xaEMHi5dPrgHBYwK8UQ42tTbi8y2bueR95HnU
+         NlBnuaMAVx7QWuTeSWH/kRzPk0wO+pl4byOqMP+dZplgNZtwMtep8urF+vJJealfROJy
+         J00b1P89xLXDHNOkBqdyCMGWFi0Jq90pFpgGKrU5Vs9pI/oKAqGAQYVYxr61HgghzgMo
+         Vq1A==
+X-Gm-Message-State: APjAAAU1GyMsLhLRH6xatGNiDq6DaSddA1R4o68OqL4QMYOZ1TSJvK0B
+        K83xf2rC6z1h7deDnAvopu8=
+X-Google-Smtp-Source: APXvYqzljyqxqRrlCFHMqxEOclzeWh/TVTapUPxvESWXNFbY9TNSova2LH7dpR2YRyCCgWuaerqfxA==
+X-Received: by 2002:a62:ce07:: with SMTP id y7mr8559601pfg.12.1563936424998;
+        Tue, 23 Jul 2019 19:47:04 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id l124sm45063616pgl.54.2019.07.23.19.47.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 19:47:04 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     dwmw2@infradead.org, richard@nod.at
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] fs: jffs2: Fix possible null-pointer dereferences in jffs2_add_frag_to_fragtree()
+Date:   Wed, 24 Jul 2019 10:46:58 +0800
+Message-Id: <20190724024658.27623-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+In jffs2_add_frag_to_fragtree(), there is an if statement on line 223 to
+check whether "this" is NULL:
+    if (this)
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 2 of them as possibly being bugs in the "net/l2tp" subsystem.  I've
-listed these reports below, sorted by an algorithm that tries to list first the
-reports most likely to be still valid, important, and actionable.
+When "this" is NULL, it is used at several places, such as on line 249:
+    if (this->node)
+and on line 260:
+    if (newfrag->ofs > this->ofs)
 
-Of these 2 bugs, 1 was seen in mainline in the last week.
+Thus possible null-pointer dereferences may occur.
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
+To fix these bugs, -EINVAL is returned when "this" is NULL.
 
-If you believe I misattributed a bug to the "net/l2tp" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
+These bugs are found by a static analysis tool STCheck written by us.
 
-Here are the bugs:
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ fs/jffs2/nodelist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---------------------------------------------------------------------------------
-Title:              WARNING: locking bug in inet_autobind
-Last occurred:      1 day ago
-Reported:           68 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a7d678fba80c34b5770cc1b5638b8a2709ae9f3f
-Original thread:    https://lkml.kernel.org/lkml/00000000000033a0120588fac894@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+94cc2a66fc228b23f360@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000033a0120588fac894@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: locking bug in do_ipv6_setsockopt
-Last occurred:      4 days ago
-Reported:           62 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=6a970baf20aa5a64455be86fb920f468def703c6
-Original thread:    https://lkml.kernel.org/lkml/000000000000f7707805897c071f@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f28170ca1ee366e97283@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000f7707805897c071f@google.com
+diff --git a/fs/jffs2/nodelist.c b/fs/jffs2/nodelist.c
+index b86c78d178c6..021a4a2190ee 100644
+--- a/fs/jffs2/nodelist.c
++++ b/fs/jffs2/nodelist.c
+@@ -226,7 +226,7 @@ static int jffs2_add_frag_to_fragtree(struct jffs2_sb_info *c, struct rb_root *r
+ 		lastend = this->ofs + this->size;
+ 	} else {
+ 		dbg_fragtree2("lookup gave no frag\n");
+-		lastend = 0;
++		return -EINVAL;
+ 	}
+ 
+ 	/* See if we ran off the end of the fragtree */
+-- 
+2.17.0
 
