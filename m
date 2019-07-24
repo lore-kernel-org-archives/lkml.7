@@ -2,125 +2,270 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3D8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C50C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B2C218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVgAaFcP"
+	by mail.kernel.org (Postfix) with ESMTP id CACC721880
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388164AbfGXXpR (ORCPT
+        id S2388342AbfGXXpV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:45:17 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:42520 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387978AbfGXXpN (ORCPT
+        Wed, 24 Jul 2019 19:45:21 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:50123 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387978AbfGXXpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:45:13 -0400
-Received: by mail-qk1-f202.google.com with SMTP id 199so40874958qkj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=VQaWcfe07h7xkPV4srIxPAegZrqwtOuxXwp48xMCRFw=;
-        b=JVgAaFcP4BXC+4Nk6aWkGbBNbormFNb7B2J2uLoqHwsOLu0+A9xD2RsQs7Jj7XcDz0
-         GWagGjRxlDZK3/Ovx7o5c7c8ffOh8AdWIj6eumKSiSYIy4AXuQDI2YB3HJ6SsJ6Esxgq
-         sGam93Bf/ar1WP2KpXBe4WS8c0gusArStRpbSLDQ3xanZdaFy0k+VBUfhl/nir8kPlDs
-         LB0sWJyIZ3Fh9hqJOkO6/7YzmpjvR52IOA6CzztS5Bl+zY1BcUT+pzJUYJnkWIlanmcl
-         O0C3Xkh6Ema6NvFIGt8IVZuLkrLZ4sO3r3WprP4U6/0qKEQ4qRNRTUd7Q1seDttF8BBI
-         cbOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=VQaWcfe07h7xkPV4srIxPAegZrqwtOuxXwp48xMCRFw=;
-        b=iYrDXYiVNn1NhywQk1DrMm65PoLcNu9ogkU2q1cbmeqTuBO/E0HdGO99DkU+AX4/yJ
-         I3aHQVcRS6MlbDuxrhJuskxGetMFEMHN9QCo+siEs9EcBGl0U4deQzFNaRxXg4Ev5S/N
-         ChzkAl/Wjz6lgd06BYuRhKQ2u0bXYkv65YeRyhfyfBSNN+maleGOOVcrZPNGn5DAKJT5
-         VaB82OWpo72RlRH5CdTWsHHk8zGd+eXZX+1kB4GTHEOOazd6crUiXImVlt9TXUB38Mz+
-         3T2tOqTgVZ0DFUguIjm5BLL4b2hlQciiWKLxhfgdQO5wyzMrkd8GJkQTroE71zW8NLny
-         Mi3g==
-X-Gm-Message-State: APjAAAXGXLc3bAo0wMzBeA5yDUHqTdy2tOAEdr/iazhgl5THTOtdP5se
-        YKhCrdxfRW5GIU4KUZlRjnnwYEgP
-X-Google-Smtp-Source: APXvYqyaU8l40Dg9ugxvYn7JyOeLkVyu0WKdTJ6MCa5Vbl46pXV5IDHVJ5swXoEwQp2v7+3MuJSuNppK
-X-Received: by 2002:a37:b0c6:: with SMTP id z189mr56205530qke.208.1564011911372;
- Wed, 24 Jul 2019 16:45:11 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 16:45:00 -0700
-In-Reply-To: <20190724234500.253358-1-nums@google.com>
-Message-Id: <20190724234500.253358-4-nums@google.com>
-Mime-Version: 1.0
-References: <20190724234500.253358-1-nums@google.com>
-X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [PATCH 3/3] Fix sched-messaging.c use of uninitialized value errors
-From:   Numfor Mbiziwo-Tiapo <nums@google.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, songliubraving@fb.com, mbd@fb.com
-Cc:     linux-kernel@vger.kernel.org, irogers@google.com,
-        eranian@google.com, Numfor Mbiziwo-Tiapo <nums@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 24 Jul 2019 19:45:20 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x6ONj90V029079
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 25 Jul 2019 08:45:09 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6ONj9Vd028359;
+        Thu, 25 Jul 2019 08:45:09 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x6ONe3aT011021;
+        Thu, 25 Jul 2019 08:45:09 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-7087570; Thu, 25 Jul 2019 08:43:26 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Thu,
+ 25 Jul 2019 08:43:25 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Jane Chu <jane.chu@oracle.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH v2 1/1] mm/memory-failure: Poison read receives SIGKILL
+ instead of SIGBUS if mmaped more than once
+Thread-Topic: [PATCH v2 1/1] mm/memory-failure: Poison read receives SIGKILL
+ instead of SIGBUS if mmaped more than once
+Thread-Index: AQHVQnAjSKtp5HUwfEeIsgIKjFcsrqbZ12MA
+Date:   Wed, 24 Jul 2019 23:43:25 +0000
+Message-ID: <20190724234318.GA21820@hori.linux.bs1.fc.nec.co.jp>
+References: <1564007603-9655-1-git-send-email-jane.chu@oracle.com>
+ <1564007603-9655-2-git-send-email-jane.chu@oracle.com>
+In-Reply-To: <1564007603-9655-2-git-send-email-jane.chu@oracle.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.150]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <1F5511DB107F864C919C1A6A91C4628E@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our local MSAN (Memory Sanitizer) build of perf throws use of
-uninitialized value warnings in "tools/perf/bench/sched-messaging.c"
-when running perf bench.
+On Wed, Jul 24, 2019 at 04:33:23PM -0600, Jane Chu wrote:
+> Mmap /dev/dax more than once, then read the poison location using address
+> from one of the mappings. The other mappings due to not having the page
+> mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
+> over SIGBUS, so user process looses the opportunity to handle the UE.
+> 
+> Although one may add MAP_POPULATE to mmap(2) to work around the issue,
+> MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
+> isn't always an option.
+> 
+> Details -
+> 
+> ndctl inject-error --block=10 --count=1 namespace6.0
+> 
+> ./read_poison -x dax6.0 -o 5120 -m 2
+> mmaped address 0x7f5bb6600000
+> mmaped address 0x7f3cf3600000
+> doing local read at address 0x7f3cf3601400
+> Killed
+> 
+> Console messages in instrumented kernel -
+> 
+> mce: Uncorrected hardware memory error in user-access at edbe201400
+> Memory failure: tk->addr = 7f5bb6601000
+> Memory failure: address edbe201: call dev_pagemap_mapping_shift
+> dev_pagemap_mapping_shift: page edbe201: no PUD
+> Memory failure: tk->size_shift == 0
+> Memory failure: Unable to find user space address edbe201 in read_poison
+> Memory failure: tk->addr = 7f3cf3601000
+> Memory failure: address edbe201: call dev_pagemap_mapping_shift
+> Memory failure: tk->size_shift = 21
+> Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
+>   => to deliver SIGKILL
+> Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
+>   => to deliver SIGBUS
+> 
+> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+> Suggested-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> ---
+>  mm/memory-failure.c | 62 ++++++++++++++++++++++-------------------------------
+>  1 file changed, 26 insertions(+), 36 deletions(-)
+> 
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index d9cc660..bd4db33 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -199,7 +199,6 @@ struct to_kill {
+>  	struct task_struct *tsk;
+>  	unsigned long addr;
+>  	short size_shift;
+> -	char addr_valid;
+>  };
+>  
+>  /*
+> @@ -304,43 +303,43 @@ static unsigned long dev_pagemap_mapping_shift(struct page *page,
+>  /*
+>   * Schedule a process for later kill.
+>   * Uses GFP_ATOMIC allocations to avoid potential recursions in the VM.
+> - * TBD would GFP_NOIO be enough?
+>   */
+>  static void add_to_kill(struct task_struct *tsk, struct page *p,
+>  		       struct vm_area_struct *vma,
+> -		       struct list_head *to_kill,
+> -		       struct to_kill **tkc)
+> +		       struct list_head *to_kill)
+>  {
+>  	struct to_kill *tk;
+>  
+> -	if (*tkc) {
+> -		tk = *tkc;
+> -		*tkc = NULL;
+> -	} else {
+> -		tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
+> -		if (!tk) {
+> -			pr_err("Memory failure: Out of memory while machine check handling\n");
+> -			return;
+> -		}
+> +	tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
+> +	if (!tk) {
+> +		pr_err("Memory failure: Out of memory while machine check handling\n");
+> +		return;
 
-The first warning comes from the "ready" function where the "dummy" char
-is declared and then passed into "write" without being initialized.
-Initializing "dummy" to any character silences the warning.
+As Dan pointed out, the cleanup part can be delivered as a separate patch.
 
-The second warning comes from the "sender" function where a "write" call
-is made to write the contents from the "data" char array when it has not
-yet been initialized. Calling memset on "data" silences the warning.
+>  	}
+> +
+>  	tk->addr = page_address_in_vma(p, vma);
+> -	tk->addr_valid = 1;
+>  	if (is_zone_device_page(p))
+>  		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+>  	else
+>  		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+>  
+>  	/*
+> -	 * In theory we don't have to kill when the page was
+> -	 * munmaped. But it could be also a mremap. Since that's
+> -	 * likely very rare kill anyways just out of paranoia, but use
+> -	 * a SIGKILL because the error is not contained anymore.
+> +	 * Send SIGKILL if "tk->addr == -EFAULT". Also, as
+> +	 * "tk->size_shift" is always non-zero for !is_zone_device_page(),
+> +	 * so "tk->size_shift == 0" effectively checks no mapping on
+> +	 * ZONE_DEVICE. Indeed, when a devdax page is mmapped N times
+> +	 * to a process' address space, it's possible not all N VMAs
+> +	 * contain mappings for the page, but at least one VMA does.
+> +	 * Only deliver SIGBUS with payload derived from the VMA that
+> +	 * has a mapping for the page.
 
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
+OK, so SIGBUSs are sent M times (where M is the number of mappings
+for the page). Then I'm convinced that we need "else if" block below.
 
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
+Thanks,
+Naoya Horiguchi
 
-then running: tools/perf/perf bench sched all
-
-Please see the cover letter for why false positive warnings may be
-generated.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
----
- tools/perf/bench/sched-messaging.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/bench/sched-messaging.c b/tools/perf/bench/sched-messaging.c
-index f9d7641ae833..d22d7b7b591d 100644
---- a/tools/perf/bench/sched-messaging.c
-+++ b/tools/perf/bench/sched-messaging.c
-@@ -69,7 +69,7 @@ static void fdpair(int fds[2])
- /* Block until we're ready to go */
- static void ready(int ready_out, int wakefd)
- {
--	char dummy;
-+	char dummy = 'N';
- 	struct pollfd pollfd = { .fd = wakefd, .events = POLLIN };
- 
- 	/* Tell them we're ready. */
-@@ -87,6 +87,7 @@ static void *sender(struct sender_context *ctx)
- 	char data[DATASIZE];
- 	unsigned int i, j;
- 
-+	memset(data, 'N', DATASIZE);
- 	ready(ctx->ready_out, ctx->wakefd);
- 
- 	/* Now pump to every receiver. */
--- 
-2.22.0.657.g960e92d24f-goog
-
+>  	 */
+> -	if (tk->addr == -EFAULT || tk->size_shift == 0) {
+> +	if (tk->addr == -EFAULT) {
+>  		pr_info("Memory failure: Unable to find user space address %lx in %s\n",
+>  			page_to_pfn(p), tsk->comm);
+> -		tk->addr_valid = 0;
+> +	} else if (tk->size_shift == 0) {
+> +		kfree(tk);
+> +		return;
+>  	}
+> +
+>  	get_task_struct(tsk);
+>  	tk->tsk = tsk;
+>  	list_add_tail(&tk->nd, to_kill);
+> @@ -366,7 +365,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill, bool fail,
+>  			 * make sure the process doesn't catch the
+>  			 * signal and then access the memory. Just kill it.
+>  			 */
+> -			if (fail || tk->addr_valid == 0) {
+> +			if (fail || tk->addr == -EFAULT) {
+>  				pr_err("Memory failure: %#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
+>  				       pfn, tk->tsk->comm, tk->tsk->pid);
+>  				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
+> @@ -432,7 +431,7 @@ static struct task_struct *task_early_kill(struct task_struct *tsk,
+>   * Collect processes when the error hit an anonymous page.
+>   */
+>  static void collect_procs_anon(struct page *page, struct list_head *to_kill,
+> -			      struct to_kill **tkc, int force_early)
+> +				int force_early)
+>  {
+>  	struct vm_area_struct *vma;
+>  	struct task_struct *tsk;
+> @@ -457,7 +456,7 @@ static void collect_procs_anon(struct page *page, struct list_head *to_kill,
+>  			if (!page_mapped_in_vma(page, vma))
+>  				continue;
+>  			if (vma->vm_mm == t->mm)
+> -				add_to_kill(t, page, vma, to_kill, tkc);
+> +				add_to_kill(t, page, vma, to_kill);
+>  		}
+>  	}
+>  	read_unlock(&tasklist_lock);
+> @@ -468,7 +467,7 @@ static void collect_procs_anon(struct page *page, struct list_head *to_kill,
+>   * Collect processes when the error hit a file mapped page.
+>   */
+>  static void collect_procs_file(struct page *page, struct list_head *to_kill,
+> -			      struct to_kill **tkc, int force_early)
+> +				int force_early)
+>  {
+>  	struct vm_area_struct *vma;
+>  	struct task_struct *tsk;
+> @@ -492,7 +491,7 @@ static void collect_procs_file(struct page *page, struct list_head *to_kill,
+>  			 * to be informed of all such data corruptions.
+>  			 */
+>  			if (vma->vm_mm == t->mm)
+> -				add_to_kill(t, page, vma, to_kill, tkc);
+> +				add_to_kill(t, page, vma, to_kill);
+>  		}
+>  	}
+>  	read_unlock(&tasklist_lock);
+> @@ -501,26 +500,17 @@ static void collect_procs_file(struct page *page, struct list_head *to_kill,
+>  
+>  /*
+>   * Collect the processes who have the corrupted page mapped to kill.
+> - * This is done in two steps for locking reasons.
+> - * First preallocate one tokill structure outside the spin locks,
+> - * so that we can kill at least one process reasonably reliable.
+>   */
+>  static void collect_procs(struct page *page, struct list_head *tokill,
+>  				int force_early)
+>  {
+> -	struct to_kill *tk;
+> -
+>  	if (!page->mapping)
+>  		return;
+>  
+> -	tk = kmalloc(sizeof(struct to_kill), GFP_NOIO);
+> -	if (!tk)
+> -		return;
+>  	if (PageAnon(page))
+> -		collect_procs_anon(page, tokill, &tk, force_early);
+> +		collect_procs_anon(page, tokill, force_early);
+>  	else
+> -		collect_procs_file(page, tokill, &tk, force_early);
+> -	kfree(tk);
+> +		collect_procs_file(page, tokill, force_early);
+>  }
+>  
+>  static const char *action_name[] = {
+> -- 
+> 1.8.3.1
+> 
+> 
