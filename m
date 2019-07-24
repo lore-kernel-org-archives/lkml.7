@@ -2,55 +2,51 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B46C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15FAC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F9C21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9914E20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997280;
-	bh=Ii5Hng9bB7hkNR5FEREtXLqS8OrCl3P6l6VAqgsU6wg=;
+	s=default; t=1563997286;
+	bh=umptgDMJtNhneGaoTDOXdRurRf8fDTFuJGUd/2Z2I84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BaXgUcZDPUX14dEM2kQ5RYxLjQZLkztHu535xX7yCdqjaq8KoX6VXfbCjGvYeKuZU
-	 33/AC8WrWXeKnnWwjAsUx+TmeKItjG2SLYUWttqSGdBy6bM56vOEzHmDn8XjUicCQU
-	 q2s98Pyou8xdxw7yYaDevKNr/bkeL9RzTw8gSJdo=
+	b=nsSsxp4qESeSYncyOIyom46vJEPy6tfJysw8/z9Q3yhnlXKGGt7Sbl0Buw5RfCwyc
+	 R2/76lwRNM5WhtOAuxfbr6B+4IAhkjc6PblLoCw/q2uQ+DAqwtYhOc1sDNbNLf4NEs
+	 OKUORV8M69sUnhbndq9DOO5oQMZJ+71onIJliTPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389915AbfGXTlT (ORCPT
+        id S2390180AbfGXTlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:41:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42514 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:41:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389559AbfGXTlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:41:13 -0400
+        id S2390162AbfGXTlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:41:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2258214AF;
-        Wed, 24 Jul 2019 19:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96DF521873;
+        Wed, 24 Jul 2019 19:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997273;
-        bh=Ii5Hng9bB7hkNR5FEREtXLqS8OrCl3P6l6VAqgsU6wg=;
+        s=default; t=1563997279;
+        bh=umptgDMJtNhneGaoTDOXdRurRf8fDTFuJGUd/2Z2I84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GdMb9I+SK1GddRoGSKx9pmjH+gEL2shpThshvJd83u+Dw9H5oRAlpZnGO6Wr3LJa6
-         kDse9QL+sQg8h8EQCpcA+QlyLfjTPDbhtMquNDJ6mqPXlLK8eU2NyolgL4pcHR0/vn
-         FbbVMJXgURTzh1q5FpC30u0iHzuKCVy6khhzMiog=
+        b=NfrCfx0wG++WEwXWIcsL9cDWycU5IHP8oU+TSzYw3vHxKasCOkiq8abyBDjJClxXC
+         GkzkczN0+5dj6ViTgPKtxruucS9dl5JclDQ9dKDDzG6MWV4NDmWmsHDj6P4AZh43sA
+         FksTg1mZ5lYA2EXMZFfK2YuX3VA80Ka9EsDsI4M4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Yafang Shao <shaoyafang@didiglobal.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 378/413] mm/memcontrol: fix wrong statistics in memory.stat
-Date:   Wed, 24 Jul 2019 21:21:09 +0200
-Message-Id: <20190724191802.201754427@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>
+Subject: [PATCH 5.2 344/413] ARM: dts: gemini: Set DIR-685 SPI CS as active low
+Date:   Wed, 24 Jul 2019 21:20:35 +0200
+Message-Id: <20190724191800.440137342@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,47 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yafang Shao <laoar.shao@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit dd9239900e12db84c198855b262ae7796db1123b upstream.
+commit f90b8fda3a9d72a9422ea80ae95843697f94ea4a upstream.
 
-When we calculate total statistics for memcg1_stats and memcg1_events,
-we use the the index 'i' in the for loop as the events index.  Actually
-we should use memcg1_stats[i] and memcg1_events[i] as the events index.
+The SPI to the display on the DIR-685 is active low, we were
+just saved by the SPI library enforcing active low on everything
+before, so set it as active low to avoid ambiguity.
 
-Link: http://lkml.kernel.org/r/1562116978-19539-1-git-send-email-laoar.shao@gmail.com
-Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty").
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Yafang Shao <shaoyafang@didiglobal.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20190715202101.16060-1-linus.walleij@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/gemini-dlink-dir-685.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3530,12 +3530,13 @@ static int memcg_stat_show(struct seq_fi
- 		if (memcg1_stats[i] == MEMCG_SWAP && !do_memsw_account())
- 			continue;
- 		seq_printf(m, "total_%s %llu\n", memcg1_stat_names[i],
--			   (u64)memcg_page_state(memcg, i) * PAGE_SIZE);
-+			   (u64)memcg_page_state(memcg, memcg1_stats[i]) *
-+			   PAGE_SIZE);
- 	}
+--- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
++++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+@@ -64,7 +64,7 @@
+ 		gpio-sck = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+ 		gpio-miso = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+ 		gpio-mosi = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+-		cs-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+ 		num-chipselects = <1>;
  
- 	for (i = 0; i < ARRAY_SIZE(memcg1_events); i++)
- 		seq_printf(m, "total_%s %llu\n", memcg1_event_names[i],
--			   (u64)memcg_events(memcg, i));
-+			   (u64)memcg_events(memcg, memcg1_events[i]));
- 
- 	for (i = 0; i < NR_LRU_LISTS; i++)
- 		seq_printf(m, "total_%s %llu\n", mem_cgroup_lru_names[i],
+ 		panel: display@0 {
 
 
