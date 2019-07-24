@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF795C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10E7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853C4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDB3214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999720;
-	bh=gYH5yrW6GexiAJGiJu0kgjoNRCvlT+6tT2XM5q6PdiE=;
+	s=default; t=1563999726;
+	bh=mA08bsIa9qUiClBl4/jMHshkn1vB+VWZ6+iulIql+V4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BRUQLYke67cWYPSRpmpkxkN1t0U0LqnmCjuXBXdx3l8P5ZAj/2uWnFFr0/CPscYDb
-	 +iDAQ/17t27cRoIR2x7xZt2ryzMIkTyYSontzU6/jul9bv95cQSk/G1ebvz80tKF/1
-	 4vm6zA/cEoCjyZgkkZHPT2PmIX1AJW/gWRTp2MMg=
+	b=MWgZ57RXAEuz7rU5QUSerE/oYKlbQXsgiUsUcoUSOoMI7FvgVkHHd0yz3NTtQr0ir
+	 yxtvs5ZpQ+XObycJ8y5vpVUvrg/o4S9/KJTBogjqbw5OtJvwh4xU6hbWPYOY1cwO9S
+	 y4X2Dm2S5vwUlSGcz+81zxykdsUrvJbJ0O3om++c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391247AbfGXUV7 (ORCPT
+        id S2391512AbfGXUWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:21:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:22:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbfGXTop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:44:45 -0400
+        id S2390815AbfGXTo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7BA8217D4;
-        Wed, 24 Jul 2019 19:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BF9D2083B;
+        Wed, 24 Jul 2019 19:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997485;
-        bh=gYH5yrW6GexiAJGiJu0kgjoNRCvlT+6tT2XM5q6PdiE=;
+        s=default; t=1563997468;
+        bh=mA08bsIa9qUiClBl4/jMHshkn1vB+VWZ6+iulIql+V4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uB73VmYN+pKj2kA94ko2QelCKbq1/A7j8dI2i7UvgpM3ahQPBpHVOpIWZ/KBcFUbY
-         VZutWVq2HAfEhieIveRA6xjRLdezl6bS7UVzQwMpyKcSvwU/SRL+4dv80kXMySO64G
-         bCRiNkif6vY26ZxFUrELc2f00kMTHfwm1TbrOxZs=
+        b=rdwHTJQsio7eLb3duxklJC81Ym7O7b5C2Je+eDdF+782/cYFrPUvxtDmvEj641R6b
+         jnF7Bv6OMnUDGhW4fNHAOsgzRwBFqsxkm4E0+Hy2/OqoyoPMd9gkjphTJgI8k4lXJ2
+         hbQSe1+Ur+ehpm9HZgX1ggoRnb4iBYA3e/nj5WL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Alagu Sankar <alagusankar@silex-india.com>,
+        Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 041/371] media: vim2m: fix two double-free issues
-Date:   Wed, 24 Jul 2019 21:16:33 +0200
-Message-Id: <20190724191727.641331214@linuxfoundation.org>
+Subject: [PATCH 5.1 007/371] ath10k: htt: dont use txdone_fifo with SDIO
+Date:   Wed, 24 Jul 2019 21:15:59 +0200
+Message-Id: <20190724191725.051462693@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -64,55 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 20059cbbf981ca954be56f7963ae494d18e2dda1 ]
+[ Upstream commit e2a6b711282a371c5153239e0468a48254f17ca6 ]
 
-vim2m_device_release() will be called by video_unregister_device() to release
-various objects.
+HTT High Latency (ATH10K_DEV_TYPE_HL) does not use txdone_fifo at all, we don't
+even initialise it by skipping ath10k_htt_tx_alloc_buf() in
+ath10k_htt_tx_start(). Because of this using QCA6174 SDIO
+ath10k_htt_rx_tx_compl_ind() will crash when it accesses unitialised
+txdone_fifo. So skip txdone_fifo when using High Latency mode.
 
-There are two double-free issue,
-1. dev->m2m_dev will be freed twice in error_m2m path/vim2m_device_release
-2. the error_v4l2 and error_free path in vim2m_probe() will release
-   same objects, since vim2m_device_release has done.
+Tested with QCA6174 SDIO with firmware WLAN.RMH.4.4.1-00007-QCARMSWP-1.
 
-Fixes: ea6c7e34f3b2 ("media: vim2m: replace devm_kzalloc by kzalloc")
-
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Co-developed-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Alagu Sankar <alagusankar@silex-india.com>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vim2m.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/htt_rx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
-index dd47821fc661..240327d2a3ad 100644
---- a/drivers/media/platform/vim2m.c
-+++ b/drivers/media/platform/vim2m.c
-@@ -1355,7 +1355,7 @@ static int vim2m_probe(struct platform_device *pdev)
- 						 MEDIA_ENT_F_PROC_VIDEO_SCALER);
- 	if (ret) {
- 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem media controller\n");
--		goto error_m2m;
-+		goto error_dev;
- 	}
- 
- 	ret = media_device_register(&dev->mdev);
-@@ -1369,11 +1369,11 @@ static int vim2m_probe(struct platform_device *pdev)
- #ifdef CONFIG_MEDIA_CONTROLLER
- error_m2m_mc:
- 	v4l2_m2m_unregister_media_controller(dev->m2m_dev);
--error_m2m:
--	v4l2_m2m_release(dev->m2m_dev);
- #endif
- error_dev:
- 	video_unregister_device(&dev->vfd);
-+	/* vim2m_device_release called by video_unregister_device to release various objects */
-+	return ret;
- error_v4l2:
- 	v4l2_device_unregister(&dev->v4l2_dev);
- error_free:
+diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
+index 1acc622d2183..f22840bbc389 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_rx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
+@@ -2277,7 +2277,9 @@ static void ath10k_htt_rx_tx_compl_ind(struct ath10k *ar,
+ 		 *  Note that with only one concurrent reader and one concurrent
+ 		 *  writer, you don't need extra locking to use these macro.
+ 		 */
+-		if (!kfifo_put(&htt->txdone_fifo, tx_done)) {
++		if (ar->bus_param.dev_type == ATH10K_DEV_TYPE_HL) {
++			ath10k_txrx_tx_unref(htt, &tx_done);
++		} else if (!kfifo_put(&htt->txdone_fifo, tx_done)) {
+ 			ath10k_warn(ar, "txdone fifo overrun, msdu_id %d status %d\n",
+ 				    tx_done.msdu_id, tx_done.status);
+ 			ath10k_txrx_tx_unref(htt, &tx_done);
 -- 
 2.20.1
 
