@@ -6,47 +6,49 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5692AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A4EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D39B229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409ED229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563935261;
-	bh=eTh0noPArsakC5G0F3y+on2ZSDAd0Q6PKfpd7QqmvWE=;
+	s=default; t=1563935295;
+	bh=qRnYI20f7tBlqy9FXpjvfsG4bvRrXLB6Ly1oWBEPrd0=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=CLLrX/bWEmqUCGQSHi2lRxy/9N0UAxwQyqvp7dY3tHcF3NB3BRwLxUoqhUUBfJ33E
-	 FZWR2RFVKLUTd0S7h3eckH2wnU5iMmHvhTkfB8aidOtIDbIqS7mXB/5NjLG8VIgFn8
-	 LArf9CQv6dPIJJ/VAKBJFwA/Fa1c/uPuT34OqHs0=
+	b=xV7sCe+8zZ+wN9wN81ZUnsKGVPjx7HE6wuPnVFTNqmamJjoaZNr3+c0kjgIMqqK/T
+	 Tj4OZ95tjdPcNbitGrCbiys3av2HX02ynE/ExBsiemcLYv+zWb68FHEu5M4esOzJVf
+	 //irY3V8vs4nTiHiHHVKcbuawfh/CJeAajmPfY1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfGXC1j (ORCPT
+        id S2387473AbfGXC2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41986 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 22:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfGXC1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:27:39 -0400
+        id S1726070AbfGXC2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:28:13 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964E6229ED;
-        Wed, 24 Jul 2019 02:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5062D229ED;
+        Wed, 24 Jul 2019 02:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563935258;
-        bh=eTh0noPArsakC5G0F3y+on2ZSDAd0Q6PKfpd7QqmvWE=;
+        s=default; t=1563935292;
+        bh=qRnYI20f7tBlqy9FXpjvfsG4bvRrXLB6Ly1oWBEPrd0=;
         h=Date:From:To:Cc:Subject:From;
-        b=dxMnAgcHg7wtATx9HC0+yL8/iqu7GdLnyVkDmIZc5Jrl2F6qE6+TYnjNAlj90k3aT
-         d/DBnJIsieOikeemcxDICRYTLUmek+wZMelPFzIiisNI+Q0xoY8hQDGtBjTW5VRVfD
-         JQro1tRmGvfCPQ/Zh1Kc62xpKR1VCoihJ+1C8wLk=
-Date:   Tue, 23 Jul 2019 19:27:37 -0700
+        b=hS0NFAOlxFzO9Oss8e3w+LXOpOg60X5sNXxnME+YntqmRZsOfm8mx0TD024l5fXew
+         whnGn+AdSel5T2QtqvGuhzhygoYHOaS53xUmVCuts8W5YxHV/iaIPafpNTdc0V0u9i
+         vvSVZ6jLchhJOGij35TDVALgO3zOiY4z525Sy9ek=
+Date:   Tue, 23 Jul 2019 19:28:10 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-input@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     dccp@vger.kernel.org, netdev@vger.kernel.org,
+        Gerrit Renker <gerrit@erg.abdn.ac.uk>,
+        "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 8 open syzbot bugs in input subsystem
-Message-ID: <20190724022737.GO643@sol.localdomain>
-Mail-Followup-To: linux-input@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Subject: Reminder: 6 open syzbot bugs in "net/dccp" subsystem
+Message-ID: <20190724022810.GP643@sol.localdomain>
+Mail-Followup-To: dccp@vger.kernel.org, netdev@vger.kernel.org,
+        Gerrit Renker <gerrit@erg.abdn.ac.uk>,
+        "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,194 +63,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 8 of them as possibly being bugs in the input subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
-
-Of these 8 bugs, 6 were seen in mainline in the last week.
+marked 6 of them as possibly being bugs in the "net/dccp" subsystem.  I've
+listed these reports below, sorted by an algorithm that tries to list first the
+reports most likely to be still valid, important, and actionable.
 
 If you believe a bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed a bug to the input subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
+If you believe I misattributed a bug to the "net/dccp" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
 
 Here are the bugs:
 
 --------------------------------------------------------------------------------
-Title:              WARNING in aiptek_open/usb_submit_urb
-Last occurred:      0 days ago
-Reported:           46 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0e35393fd821f0570b2a1663a01ac7bdcd15046a
-Original thread:    https://lkml.kernel.org/lkml/0000000000001abc1c058ab95b3e@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in an input USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+75cccf2b7da87fb6f84b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001abc1c058ab95b3e@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: trying to register non-static key in usbtouch_open
-Last occurred:      0 days ago
-Reported:           0 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=19bb4d1c56f91465a4a9f5396f0607d487947838
-Original thread:    https://lkml.kernel.org/lkml/000000000000b69261058e589a1b@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in an input USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f9c21a30eb9d374e30c1@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000b69261058e589a1b@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in kbtab_open/usb_submit_urb
-Last occurred:      0 days ago
-Reported:           0 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ad3a473cad38ce6fbd413eac666501abdc471d31
-Original thread:    https://lkml.kernel.org/lkml/000000000000fa7ce2058e5c8318@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in an input USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000fa7ce2058e5c8318@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in iforce_get_id_packet/usb_submit_urb
-Last occurred:      4 days ago
-Reported:           13 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=bd1dc4784ff2c89f9d35cd17b02a4a0e1baa1df4
-Original thread:    https://lkml.kernel.org/lkml/000000000000a901ed058d51adc3@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in an input USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+9584b712baf1965b590c@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000a901ed058d51adc3@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in usb_anchor_resume_wakeups
-Last occurred:      0 days ago
-Reported:           14 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=21616f648e5fb8ca17de9b869fec3b27270b9edb
-Original thread:    https://lkml.kernel.org/lkml/000000000000e9312b058d3eadb8@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in an input USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+58e201002fe1e775e1ae@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e9312b058d3eadb8@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Write in usb_anchor_resume_wakeups
-Last occurred:      2 days ago
-Reported:           14 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f51395a36f8f9cc43f9538a1c961b87ff7dff3d3
-Original thread:    https://lkml.kernel.org/lkml/000000000000ede4ad058d3ead9e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in an input USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6c355f8d5f11884fa38e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ede4ad058d3ead9e@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: trying to register non-static key in usbtouch_reset_resume
-Last occurred:      33 days ago
-Reported:           57 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=64fd387d8358406dc0037511ee44db159f6f1605
-Original thread:    https://lkml.kernel.org/lkml/0000000000005463aa0589dcfb85@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in an input USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+933daad9be4e67ba91a9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005463aa0589dcfb85@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in evdev_release
-Last occurred:      273 days ago
-Reported:           280 days ago
+Title:              KASAN: use-after-free Read in ccid2_hc_tx_packet_recv
+Last occurred:      26 days ago
+Reported:           477 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ebbbff1dcac574b81f9fd5e07100a4879e5bf53d
-Original thread:    https://lkml.kernel.org/lkml/000000000000f1be430578524a20@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=31f032fe94df7aca6ce5d45455f6acefa26515e4
+Original thread:    https://lkml.kernel.org/lkml/0000000000003872fd0568da185f@google.com/T/#u
 
-This bug has a syzkaller reproducer only.
+This bug has a C reproducer.
 
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 113 days ago.
+No one replied to the original thread for this bug.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+a979743610b4755d4d57@syzkaller.appspotmail.com
+    Reported-by: syzbot+554ccde221001ab5479a@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000f1be430578524a20@google.com
+https://lkml.kernel.org/r/0000000000003872fd0568da185f@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: please report to dccp@vger.kernel.org => prev = 0, last = 0 at net/dccp/ccids/lib/packet_history.c:LINE/tfrc_rx_hist_sample_rtt()
+Last occurred:      21 days ago
+Reported:           625 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0881c535c265ca965edc49c0ac3d0a9850d26eb1
+Original thread:    https://groups.google.com/d/msgid/syzkaller-bugs/94eb2c05611406f6a5055d38a272%40google.com
+
+This bug has a C reproducer.
+
+For some reason the original report email for this bug is missing from the LKML
+archive at lore.kernel.org, so my script couldn't check whether anyone has
+replied to it or not.  The Google Groups link above should still work, though. 
+Also try searching for the bug title.
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in ccid_hc_tx_delete
+Last occurred:      66 days ago
+Reported:           330 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=3e769c60cb2d1cab692fd541dae957b1fd31bde4
+Original thread:    https://lkml.kernel.org/lkml/000000000000de3c7705746dcbb7@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+3967c1caf256f4d5aefe@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000de3c7705746dcbb7@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: uninit-value in dccp_invalid_packet
+Last occurred:      458 days ago
+Reported:           460 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=89916fdba284272cdbd0bf00de942f41d052c3f4
+Original thread:    https://lkml.kernel.org/lkml/0000000000000e2bf3056a36962d@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+00763607efc31f91b276@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000000e2bf3056a36962d@google.com
+
+--------------------------------------------------------------------------------
+Title:              suspicious RCU usage at ./include/net/inet_sock.h:LINE
+Last occurred:      535 days ago
+Reported:           625 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=78f9fe251de26a75a60690bc2384d62d2db32299
+Original thread:    https://groups.google.com/d/msgid/syzkaller-bugs/001a1140ad88c4f006055d3836d2%40google.com
+
+This bug has a C reproducer.
+
+For some reason the original report email for this bug is missing from the LKML
+archive at lore.kernel.org, so my script couldn't check whether anyone has
+replied to it or not.  The Google Groups link above should still work, though. 
+Also try searching for the bug title.
+
+--------------------------------------------------------------------------------
+Title:              WARNING: suspicious RCU usage in pid_task
+Last occurred:      302 days ago
+Reported:           402 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=5b9f20bfdfb67155f627c5e13c258ca56eff026a
+Original thread:    https://lkml.kernel.org/lkml/0000000000002b532a056ebcb3eb@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 1 reply, 323 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+c2d4c3ae3fd90bbaf059@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000002b532a056ebcb3eb@google.com
 
