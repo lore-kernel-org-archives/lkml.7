@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCFDC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDB5C76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12F421880
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8754221880
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033467;
-	bh=YeaONwwOYtzz3Ca9+yCTMwQL28bim9Ud+LLFomi6VwM=;
+	s=default; t=1564033469;
+	bh=AqHiGBYn3HleXsZMlRknDwFCCAMU0XQioeXh1aikw0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrhO6eoyyjgRO360eacm3hAojbNKjjvp5W1eiadF5gm5ISQLYSsf3zdlkPeahUpti
-	 kJsGLUZ3pahsBUccvm4+FZjt4dMNHZLK8ZFKx7lufKnR/3pGLIQ0zv4Z677psfmIHb
-	 djJzCjcdpj4azaIazbgrq4DFlyxHrQN6lkXfGPNE=
+	b=XJjjxW9NFOqs/GU00UviKuDE00pfn8J3lxSq37AZb97f94VtMLVBdMp+ptrkGUjsR
+	 0wJc3bY/0NvHo/CUVo1NpDXrqo4S0AkkLTDGTuJJF7oUMw4Y6sw7HjAGW7K9/T2lOL
+	 ZLmLwId79i5Snqk/O0nkV0eDjSvuwcQupw1snxFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391260AbfGYFo0 (ORCPT
+        id S2404934AbfGYFo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:44:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391230AbfGYFoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:44:19 -0400
+        id S2391253AbfGYFoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:44:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085A122BF5;
-        Thu, 25 Jul 2019 05:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64A6922BF5;
+        Thu, 25 Jul 2019 05:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033458;
-        bh=YeaONwwOYtzz3Ca9+yCTMwQL28bim9Ud+LLFomi6VwM=;
+        s=default; t=1564033464;
+        bh=AqHiGBYn3HleXsZMlRknDwFCCAMU0XQioeXh1aikw0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8/OwJQGkYmo+EL+OtoO7i+6O9Eq985kWgCsg5tOf9yYof6so7lFdtrZUFJA798fO
-         j24Wk1M8Q0E30b7fMxzsyz38z9uTEG+L2+qLrUKOlaEgbrHmHBeOTxGhk2R0COb/RO
-         lrjSKATaMgfPqH3+7AhzeCh6V7XmIdbOB8vJq0pE=
+        b=W+tHN0OYoeQ/COtqsP5NV5jXluXvpIur1JliTgCrJUw45qaK8Pf3SQouL1T5hdxPe
+         ON12kefUdrzhH0htONc4UY1VzbDBNQAx/ZjqNFdSig9k8g+A1toH6m8fJhUU6zllHK
+         OSA3DkmVPSzDrgNZvyfPV15ue0c7j1gvvrzIGtD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Elena Petrova <lenaptr@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 175/271] crypto: arm64/sha2-ce - correct digest for empty data in finup
-Date:   Wed, 24 Jul 2019 21:20:44 +0200
-Message-Id: <20190724191710.171073562@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 210/271] media: coda: Remove unbalanced and unneeded mutex unlock
+Date:   Wed, 24 Jul 2019 21:21:19 +0200
+Message-Id: <20190724191713.071665484@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,41 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Elena Petrova <lenaptr@google.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-commit 6bd934de1e393466b319d29c4427598fda096c57 upstream.
+commit 766b9b168f6c75c350dd87c3e0bc6a9b322f0013 upstream.
 
-The sha256-ce finup implementation for ARM64 produces wrong digest
-for empty input (len=0). Expected: the actual digest, result: initial
-value of SHA internal state. The error is in sha256_ce_finup:
-for empty data `finalize` will be 1, so the code is relying on
-sha2_ce_transform to make the final round. However, in
-sha256_base_do_update, the block function will not be called when
-len == 0.
+The mutex unlock in the threaded interrupt handler is not paired
+with any mutex lock. Remove it.
 
-Fix it by setting finalize to 0 if data is empty.
+This bug has been here for a really long time, so it applies
+to any stable repo.
 
-Fixes: 03802f6a80b3a ("crypto: arm64/sha2-ce - move SHA-224/256 ARMv8 implementation to base layer")
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Cc: stable@vger.kernel.org
-Signed-off-by: Elena Petrova <lenaptr@google.com>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/sha2-ce-glue.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/coda/coda-bit.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/arm64/crypto/sha2-ce-glue.c
-+++ b/arch/arm64/crypto/sha2-ce-glue.c
-@@ -59,7 +59,7 @@ static int sha256_ce_finup(struct shash_
- 			   unsigned int len, u8 *out)
- {
- 	struct sha256_ce_state *sctx = shash_desc_ctx(desc);
--	bool finalize = !sctx->sst.count && !(len % SHA256_BLOCK_SIZE);
-+	bool finalize = !sctx->sst.count && !(len % SHA256_BLOCK_SIZE) && len;
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -2309,7 +2309,6 @@ irqreturn_t coda_irq_handler(int irq, vo
+ 	if (ctx == NULL) {
+ 		v4l2_err(&dev->v4l2_dev,
+ 			 "Instance released before the end of transaction\n");
+-		mutex_unlock(&dev->coda_mutex);
+ 		return IRQ_HANDLED;
+ 	}
  
- 	if (!may_use_simd()) {
- 		if (len)
 
 
