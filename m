@@ -4,48 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC9DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CDFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AF0205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C97A205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998280;
-	bh=tYhMCD5qtmkjP1Q4w67G4pB6CPy15S17nFVaUeW9plA=;
+	s=default; t=1563998283;
+	bh=AILK7DP9X50hhJTzq8VqHW7fZk/yuQgyTU9wiXDKOBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vp7BGGdL3Xzxt8Szc/epaP3p5H56taFcW/W7LY/smZrcaeqh9KAQNskuxRVxwTrgq
-	 Q2YmXSr6tYWMiL10A4/n4yilDMRQRUEdZul+V9a2TatNQv2IDPIEI30692Y/Ztb74y
-	 SfjKqYKnyb2JaglCcJTSHMBN5zjiJB5TA+Rhgg5I=
+	b=TdX7AUC6TjcLbNb0QEBe5Bsak9DgG7naZJzEPTFWEW1ATCDuCRATmbiN1+xLTpwBA
+	 7qOlszcYgSnaR6vAmHtI7UToalpbyLj9MDA1PEuRfiyW9bDibHs1mLQX+5HiH61JB2
+	 kBB5BcdBlIp8D9m9SRfRrF/dDPmziIQ7o4XF1a8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392160AbfGXT57 (ORCPT
+        id S2392173AbfGXT6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43918 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392125AbfGXT55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:57 -0400
+        id S2392151AbfGXT57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:57:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5557214AF;
-        Wed, 24 Jul 2019 19:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B0E122ADC;
+        Wed, 24 Jul 2019 19:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998276;
-        bh=tYhMCD5qtmkjP1Q4w67G4pB6CPy15S17nFVaUeW9plA=;
+        s=default; t=1563998278;
+        bh=AILK7DP9X50hhJTzq8VqHW7fZk/yuQgyTU9wiXDKOBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xD/fL79Ib32Z8yHm12NateTqcbPQUt/YmoYdODw/78TePXNQGy1+wsROxpiB8HTMt
-         CM0GEkM24hItDckuYze266/KzJZByewHrXhy/51VfjqyGjLhEp3qMujRx5XvHFAgm9
-         4aqyqjycnO9PYzGWICb6dBsFwygH0OHZ+VteKIx4=
+        b=PWFNIlClTfxLYIfVHiWlMDj/X90V64fI+w0s7DQBkPQ06szAXdYIg7CvYBQwlIt4u
+         fvNK+P1mEFhYo4HqzDwk8Z8X5x1n+YuRvKtvKJ+VM9Pm3IbrFgcwFpUx868Y326mPu
+         USRmyr4P3/v7YlhPN5xaTpy1umhqchhXWszsTTw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 5.1 309/371] signal: Correct namespace fixups of si_pid and si_uid
-Date:   Wed, 24 Jul 2019 21:21:01 +0200
-Message-Id: <20190724191747.390218951@linuxfoundation.org>
+        stable@vger.kernel.org, Radoslaw Burny <rburny@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        John Sperbeck <jsperbeck@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 310/371] fs/proc/proc_sysctl.c: fix the default values of i_uid/i_gid on /proc/sys inodes.
+Date:   Wed, 24 Jul 2019 21:21:02 +0200
+Message-Id: <20190724191747.441574900@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -58,142 +66,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Radoslaw Burny <rburny@google.com>
 
-commit 7a0cf094944e2540758b7f957eb6846d5126f535 upstream.
+commit 5ec27ec735ba0477d48c80561cc5e856f0c5dfaf upstream.
 
-The function send_signal was split from __send_signal so that it would
-be possible to bypass the namespace logic based upon current[1].  As it
-turns out the si_pid and the si_uid fixup are both inappropriate in
-the case of kill_pid_usb_asyncio so move that logic into send_signal.
+Normally, the inode's i_uid/i_gid are translated relative to s_user_ns,
+but this is not a correct behavior for proc.  Since sysctl permission
+check in test_perm is done against GLOBAL_ROOT_[UG]ID, it makes more
+sense to use these values in u_[ug]id of proc inodes.  In other words:
+although uid/gid in the inode is not read during test_perm, the inode
+logically belongs to the root of the namespace.  I have confirmed this
+with Eric Biederman at LPC and in this thread:
+  https://lore.kernel.org/lkml/87k1kzjdff.fsf@xmission.com
 
-It is difficult to arrange but possible for a signal with an si_code
-of SI_TIMER or SI_SIGIO to be sent across namespace boundaries.  In
-which case tests for when it is ok to change si_pid and si_uid based
-on SI_FROMUSER are incorrect.  Replace the use of SI_FROMUSER with a
-new test has_si_pid_and_used based on siginfo_layout.
+Consequences
+============
 
-Now that the uid fixup is no longer present after expanding
-SEND_SIG_NOINFO properly calculate the si_uid that the target
-task needs to read.
+Since the i_[ug]id values of proc nodes are not used for permissions
+checks, this change usually makes no functional difference.  However, it
+causes an issue in a setup where:
 
-[1] 7978b567d315 ("signals: add from_ancestor_ns parameter to send_signal()")
-Cc: stable@vger.kernel.org
-Fixes: 6588c1e3ff01 ("signals: SI_USER: Masquerade si_pid when crossing pid ns boundary")
-Fixes: 6b550f949594 ("user namespace: make signal.c respect user namespaces")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+ * a namespace container is created without root user in container -
+   hence the i_[ug]id of proc nodes are set to INVALID_[UG]ID
+
+ * container creator tries to configure it by writing /proc/sys files,
+   e.g. writing /proc/sys/kernel/shmmax to configure shared memory limit
+
+Kernel does not allow to open an inode for writing if its i_[ug]id are
+invalid, making it impossible to write shmmax and thus - configure the
+container.
+
+Using a container with no root mapping is apparently rare, but we do use
+this configuration at Google.  Also, we use a generic tool to configure
+the container limits, and the inability to write any of them causes a
+failure.
+
+History
+=======
+
+The invalid uids/gids in inodes first appeared due to 81754357770e (fs:
+Update i_[ug]id_(read|write) to translate relative to s_user_ns).
+However, AFAIK, this did not immediately cause any issues.  The
+inability to write to these "invalid" inodes was only caused by a later
+commit 0bd23d09b874 (vfs: Don't modify inodes with a uid or gid unknown
+to the vfs).
+
+Tested: Used a repro program that creates a user namespace without any
+mapping and stat'ed /proc/$PID/root/proc/sys/kernel/shmmax from outside.
+Before the change, it shows the overflow uid, with the change it's 0.
+The overflow uid indicates that the uid in the inode is not correct and
+thus it is not possible to open the file for writing.
+
+Link: http://lkml.kernel.org/r/20190708115130.250149-1-rburny@google.com
+Fixes: 0bd23d09b874 ("vfs: Don't modify inodes with a uid or gid unknown to the vfs")
+Signed-off-by: Radoslaw Burny <rburny@google.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "Eric W . Biederman" <ebiederm@xmission.com>
+Cc: Seth Forshee <seth.forshee@canonical.com>
+Cc: John Sperbeck <jsperbeck@google.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/signal.c |   67 +++++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 40 insertions(+), 27 deletions(-)
+ fs/proc/proc_sysctl.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1053,27 +1053,6 @@ static inline bool legacy_queue(struct s
- 	return (sig < SIGRTMIN) && sigismember(&signals->signal, sig);
- }
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -498,6 +498,10 @@ static struct inode *proc_sys_make_inode
  
--#ifdef CONFIG_USER_NS
--static inline void userns_fixup_signal_uid(struct kernel_siginfo *info, struct task_struct *t)
--{
--	if (current_user_ns() == task_cred_xxx(t, user_ns))
--		return;
--
--	if (SI_FROMKERNEL(info))
--		return;
--
--	rcu_read_lock();
--	info->si_uid = from_kuid_munged(task_cred_xxx(t, user_ns),
--					make_kuid(current_user_ns(), info->si_uid));
--	rcu_read_unlock();
--}
--#else
--static inline void userns_fixup_signal_uid(struct kernel_siginfo *info, struct task_struct *t)
--{
--	return;
--}
--#endif
--
- static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
- 			enum pid_type type, int from_ancestor_ns)
- {
-@@ -1131,7 +1110,11 @@ static int __send_signal(int sig, struct
- 			q->info.si_code = SI_USER;
- 			q->info.si_pid = task_tgid_nr_ns(current,
- 							task_active_pid_ns(t));
--			q->info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
-+			rcu_read_lock();
-+			q->info.si_uid =
-+				from_kuid_munged(task_cred_xxx(t, user_ns),
-+						 current_uid());
-+			rcu_read_unlock();
- 			break;
- 		case (unsigned long) SEND_SIG_PRIV:
- 			clear_siginfo(&q->info);
-@@ -1143,13 +1126,8 @@ static int __send_signal(int sig, struct
- 			break;
- 		default:
- 			copy_siginfo(&q->info, info);
--			if (from_ancestor_ns)
--				q->info.si_pid = 0;
- 			break;
- 		}
--
--		userns_fixup_signal_uid(&q->info, t);
--
- 	} else if (!is_si_special(info)) {
- 		if (sig >= SIGRTMIN && info->si_code != SI_USER) {
- 			/*
-@@ -1193,6 +1171,28 @@ ret:
- 	return ret;
- }
- 
-+static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
-+{
-+	bool ret = false;
-+	switch (siginfo_layout(info->si_signo, info->si_code)) {
-+	case SIL_KILL:
-+	case SIL_CHLD:
-+	case SIL_RT:
-+		ret = true;
-+		break;
-+	case SIL_TIMER:
-+	case SIL_POLL:
-+	case SIL_FAULT:
-+	case SIL_FAULT_MCEERR:
-+	case SIL_FAULT_BNDERR:
-+	case SIL_FAULT_PKUERR:
-+	case SIL_SYS:
-+		ret = false;
-+		break;
+ 	if (root->set_ownership)
+ 		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
++	else {
++		inode->i_uid = GLOBAL_ROOT_UID;
++		inode->i_gid = GLOBAL_ROOT_GID;
 +	}
-+	return ret;
-+}
-+
- static int send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
- 			enum pid_type type)
- {
-@@ -1202,7 +1202,20 @@ static int send_signal(int sig, struct k
- 	from_ancestor_ns = si_fromuser(info) &&
- 			   !task_pid_nr_ns(current, task_active_pid_ns(t));
- #endif
-+	if (!is_si_special(info) && has_si_pid_and_uid(info)) {
-+		struct user_namespace *t_user_ns;
-+
-+		rcu_read_lock();
-+		t_user_ns = task_cred_xxx(t, user_ns);
-+		if (current_user_ns() != t_user_ns) {
-+			kuid_t uid = make_kuid(current_user_ns(), info->si_uid);
-+			info->si_uid = from_kuid_munged(t_user_ns, uid);
-+		}
-+		rcu_read_unlock();
  
-+		if (!task_pid_nr_ns(current, task_active_pid_ns(t)))
-+			info->si_pid = 0;
-+	}
- 	return __send_signal(sig, info, t, type, from_ancestor_ns);
+ 	return inode;
  }
- 
 
 
