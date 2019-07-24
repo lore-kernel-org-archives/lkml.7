@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E70C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F038C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D25E214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F28120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998807;
-	bh=NFkFRIwreOSnCR1vC8YOMvLJ+63nA0WPzzDhF9pxoIc=;
+	s=default; t=1563998809;
+	bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IcpJOw2HAXyG+Mt/UhJuxqkjOE2TaQJ8x6C5jYs2exv+HmOnJ0C3R2byZ8KSgAkQB
-	 yn3F2PPzl5zWy+TspZLq3nRVKJC8A+AY2VbTqgblmfYgRRCQBtXM0VuVA245+xk2GA
-	 9tJOTSpilPOwpG0HBC1IbMJMO6SMm5JC+XpvyAOo=
+	b=FKGrF+stFRSDKN17C/FkKp/YzlhUJcz1WrdsycNr6J1K0qeHz5/xa2Ip9Cty0gilb
+	 v4vRYNqPJc88w5eMkVvyXag8BR7ubUy0lhVpEaE2dSsApWSZ/ryNf69F7pACneTY7e
+	 Qhn3OZfgPN5aS+hhHlxrMyuwMJcD8Lv1FoMrBeNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392567AbfGXUEy (ORCPT
+        id S2405510AbfGXUEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56126 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405399AbfGXUEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:04:49 -0400
+        id S2405177AbfGXUEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:04:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C435C214AF;
-        Wed, 24 Jul 2019 20:04:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FA6A21855;
+        Wed, 24 Jul 2019 20:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998688;
-        bh=NFkFRIwreOSnCR1vC8YOMvLJ+63nA0WPzzDhF9pxoIc=;
+        s=default; t=1563998685;
+        bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LjRUJhdFldO5b7gCN6H0E4Sqrl4gIhMCta6vesnQboH1wJo/HdqgWmBIP4aWVfNNU
-         Me9EC8VSEoZyoU71GvddTMiyABQ/LluCwrxDyoG9mX/iatoOhkmWWD5fnQHEAERuXc
-         oP2JW+/y4Nagq4U6hgdNj49CxB31TX+Jt226g6bs=
+        b=MZ2EVzZr0zFWXpaYQZxoAcX7t6WkPL0f1rI7WKCjR/lMXNAqFeEEnkFf4ErRP32gT
+         s7hKsujkYwx5lo2jwIjm5JO1eGdKeGV76UpI7+KGv2i6gZPYxkoQ7TF7e4QMKipUK4
+         NoVjSk6HrmpPEoCD/1R2TNFYXXD5T0LAW0TgP3Ns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhishek Goel <huntbag@linux.vnet.ibm.com>,
-        Thomas Renninger <trenn@suse.de>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/271] cpupower : frequency-set -r option misses the last cpu in related cpu list
-Date:   Wed, 24 Jul 2019 21:18:31 +0200
-Message-Id: <20190724191658.786585578@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 077/271] sched/fair: Fix "runnable_avg_yN_inv" not used warnings
+Date:   Wed, 24 Jul 2019 21:19:06 +0200
+Message-Id: <20190724191701.804865862@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,38 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04507c0a9385cc8280f794a36bfff567c8cc1042 ]
+[ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
 
-To set frequency on specific cpus using cpupower, following syntax can
-be used :
-cpupower -c #i frequency-set -f #f -r
+runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+included in several other places because they need other macros all
+came from kernel/sched/sched-pelt.h which was generated by
+Documentation/scheduler/sched-pelt. As the result, it causes compilation
+a lot of warnings,
 
-While setting frequency using cpupower frequency-set command, if we use
-'-r' option, it is expected to set frequency for all cpus related to
-cpu #i. But it is observed to be missing the last cpu in related cpu
-list. This patch fixes the problem.
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  ...
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Reviewed-by: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Silence it by appending the __maybe_unused attribute for it, so all
+generated variables and macros can still be kept in the same file.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/cpufreq-set.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/scheduler/sched-pelt.c | 3 ++-
+ kernel/sched/sched-pelt.h            | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/cpufreq-set.c b/tools/power/cpupower/utils/cpufreq-set.c
-index 1eef0aed6423..08a405593a79 100644
---- a/tools/power/cpupower/utils/cpufreq-set.c
-+++ b/tools/power/cpupower/utils/cpufreq-set.c
-@@ -306,6 +306,8 @@ int cmd_freq_set(int argc, char **argv)
- 				bitmask_setbit(cpus_chosen, cpus->cpu);
- 				cpus = cpus->next;
- 			}
-+			/* Set the last cpu in related cpus list */
-+			bitmask_setbit(cpus_chosen, cpus->cpu);
- 			cpufreq_put_related_cpus(cpus);
- 		}
- 	}
+diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+index e4219139386a..7238b355919c 100644
+--- a/Documentation/scheduler/sched-pelt.c
++++ b/Documentation/scheduler/sched-pelt.c
+@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+ 	int i;
+ 	unsigned int x;
+ 
+-	printf("static const u32 runnable_avg_yN_inv[] = {");
++	/* To silence -Wunused-but-set-variable warnings. */
++	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+ 	for (i = 0; i < HALFLIFE; i++) {
+ 		x = ((1UL<<32)-1)*pow(y, i);
+ 
+diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+index a26473674fb7..c529706bed11 100644
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+ 
+-static const u32 runnable_avg_yN_inv[] = {
++static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+ 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+ 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
 -- 
 2.20.1
 
