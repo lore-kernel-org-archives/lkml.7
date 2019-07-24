@@ -2,54 +2,61 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98032C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F20DC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DC422CC0
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720C822C7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 07:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564038070;
-	bh=ugyMF2EfQY4MlJK2bPQNjgsKvD78Jc/idypvrZesNVQ=;
+	s=default; t=1564038073;
+	bh=86HcYU9n0mFTGn6uNTIrrfgOLIWTZfG6iObg0q1mcx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QNnA0IycGKNdpbRd7Pfc9xdx/Ciu1mr+wOlMSZNSx6fDjdhDNZYM5HnPwZcPJ28/b
-	 yshCjqTBW2qKZs929u6YvHfJ8QZWTcZN/M9danCvmtjSlxDj4aFC7pUBk1Q2abc2V3
-	 A+Pn8A67zkdPMoWKM98QZWU58S+YWIkzXY+a0GWQ=
+	b=IimcN4siheGBsWiemwUtZ/L6QWY/GeMHZ7tHYvBe/1LLzWVhuAtt9Yg+g/cMYMJZc
+	 Y+uhWSGfvhlRL/REwJzqp6KGGou1AdKYkWBTKx07KAu1gdMncdvlwze4Wq55bdrmPs
+	 Ms/bWOitC49I2SKvwhP7ZYh8kwA/V03hxYOx/QxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbfGYHBJ (ORCPT
+        id S1729404AbfGYHBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 03:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34168 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 03:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbfGYHBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:01:08 -0400
+        id S1725808AbfGYHBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 03:01:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B13ED22ADA;
-        Thu, 25 Jul 2019 07:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 348012070B;
+        Thu, 25 Jul 2019 07:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564038067;
-        bh=ugyMF2EfQY4MlJK2bPQNjgsKvD78Jc/idypvrZesNVQ=;
+        s=default; t=1564038069;
+        bh=86HcYU9n0mFTGn6uNTIrrfgOLIWTZfG6iObg0q1mcx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kycfTpfBmvARacsQG9IVBCWiyzC6Ue2lqAtycEGURBprWehi/vMk9WajY3/tRS+LC
-         9z09gLWKcGOdHBvybm1zEuIfPqt1QBd2T3VYK4GRwmvzZj50fetoxyWCTdJD0a3/4N
-         9E4TVy3DJwlZmLdqJ6lQY7mpm9VHSMJPZPiZC/24=
+        b=cePPolY7UxQpBhZF3A4pxWoR4DEAj9TOgo09xWL4qYU0P1YcYfN0FIjWq6KD6MeaO
+         HT+URvLxe4C3Ehahsb7McKVQ/La4nnrZ6GrKOAxWHXxTYWMTEoKxUu4Z4zMOrgqu0o
+         a7yxCoeiIQjMb1U62hD02dWnSIKiR5ve66tamdiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 091/413] media: davinci: vpif_capture: fix memory leak in vpif_probe()
-Date:   Wed, 24 Jul 2019 21:16:22 +0200
-Message-Id: <20190724191741.555720549@linuxfoundation.org>
+        stable@vger.kernel.org, "Yi, Ammy" <ammy.yi@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.2 354/413] perf/x86/intel: Fix spurious NMI on fixed counter
+Date:   Wed, 24 Jul 2019 21:20:45 +0200
+Message-Id: <20190724191801.057976495@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,73 +69,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 64f883cd98c6d43013fb0cea788b63e50ebc068c ]
+From: Kan Liang <kan.liang@linux.intel.com>
 
-If vpif_probe() fails on v4l2_device_register() and vpif_probe_complete(),
-then memory allocated at initialize_vpif() for global vpif_obj.dev[i]
-become unreleased.
+commit e4557c1a46b0d32746bd309e1941914b5a6912b4 upstream.
 
-The patch adds deallocation of vpif_obj.dev[i] on the error path.
+If a user first sample a PEBS event on a fixed counter, then sample a
+non-PEBS event on the same fixed counter on Icelake, it will trigger
+spurious NMI. For example:
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  perf record -e 'cycles:p' -a
+  perf record -e 'cycles' -a
+
+The error message for spurious NMI:
+
+  [June 21 15:38] Uhhuh. NMI received for unknown reason 30 on CPU 2.
+  [    +0.000000] Do you have a strange power saving mode enabled?
+  [    +0.000000] Dazed and confused, but trying to continue
+
+The bug was introduced by the following commit:
+
+  commit 6f55967ad9d9 ("perf/x86/intel: Fix race in intel_pmu_disable_event()")
+
+The commit moves the intel_pmu_pebs_disable() after intel_pmu_disable_fixed(),
+which returns immediately.  The related bit of PEBS_ENABLE MSR will never be
+cleared for the fixed counter. Then a non-PEBS event runs on the fixed counter,
+but the bit on PEBS_ENABLE is still set, which triggers spurious NMIs.
+
+Check and disable PEBS for fixed counters after intel_pmu_disable_fixed().
+
+Reported-by: Yi, Ammy <ammy.yi@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: 6f55967ad9d9 ("perf/x86/intel: Fix race in intel_pmu_disable_event()")
+Link: https://lkml.kernel.org/r/20190625142135.22112-1-kan.liang@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/platform/davinci/vpif_capture.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/core.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-index 61809d2050fa..f0f7ef638c56 100644
---- a/drivers/media/platform/davinci/vpif_capture.c
-+++ b/drivers/media/platform/davinci/vpif_capture.c
-@@ -1376,6 +1376,14 @@ static int initialize_vpif(void)
- 	return err;
- }
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2161,12 +2161,10 @@ static void intel_pmu_disable_event(stru
+ 	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
+ 	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
  
-+static inline void free_vpif_objs(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < VPIF_CAPTURE_MAX_DEVICES; i++)
-+		kfree(vpif_obj.dev[i]);
-+}
-+
- static int vpif_async_bound(struct v4l2_async_notifier *notifier,
- 			    struct v4l2_subdev *subdev,
- 			    struct v4l2_async_subdev *asd)
-@@ -1645,7 +1653,7 @@ static __init int vpif_probe(struct platform_device *pdev)
- 	err = v4l2_device_register(vpif_dev, &vpif_obj.v4l2_dev);
- 	if (err) {
- 		v4l2_err(vpif_dev->driver, "Error registering v4l2 device\n");
--		goto cleanup;
-+		goto vpif_free;
- 	}
+-	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
++	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL))
+ 		intel_pmu_disable_fixed(hwc);
+-		return;
+-	}
+-
+-	x86_pmu_disable_event(event);
++	else
++		x86_pmu_disable_event(event);
  
- 	while ((res = platform_get_resource(pdev, IORESOURCE_IRQ, res_idx))) {
-@@ -1692,7 +1700,9 @@ static __init int vpif_probe(struct platform_device *pdev)
- 				  "registered sub device %s\n",
- 				   subdevdata->name);
- 		}
--		vpif_probe_complete();
-+		err = vpif_probe_complete();
-+		if (err)
-+			goto probe_subdev_out;
- 	} else {
- 		vpif_obj.notifier.ops = &vpif_async_ops;
- 		err = v4l2_async_notifier_register(&vpif_obj.v4l2_dev,
-@@ -1711,6 +1721,8 @@ static __init int vpif_probe(struct platform_device *pdev)
- 	kfree(vpif_obj.sd);
- vpif_unregister:
- 	v4l2_device_unregister(&vpif_obj.v4l2_dev);
-+vpif_free:
-+	free_vpif_objs();
- cleanup:
- 	v4l2_async_notifier_cleanup(&vpif_obj.notifier);
- 
--- 
-2.20.1
-
+ 	/*
+ 	 * Needs to be called after x86_pmu_disable_event,
 
 
