@@ -2,108 +2,89 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0E2C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C43C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77FB622ADB
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGsmj29n"
+	by mail.kernel.org (Postfix) with ESMTP id D85F322ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfGXOQB (ORCPT
+        id S1727296AbfGXOQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:16:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44449 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXOQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:16:01 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t16so21009327pfe.11;
-        Wed, 24 Jul 2019 07:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D2niVLsdZKtUu10jdvC8RdtEQjbdxPl6wlDVDqafru4=;
-        b=mGsmj29nBng8l3G9WUE6TqeL5PhM7V5sw7PQDuNqCPdg7k7t6yLaidwBZlFCYe/ZkU
-         0pU64QjvMfcd/cDOmR3jRMVfxtXCnV8p4PyAlmcjF75KjEu341B+FpHXG57SC5VChmcl
-         Jm65sd2ShUaA8ApPk4qoOSn4nLIMYlvejCioknX0xdVUxFdRzHLu62nE75JtptFYJwpb
-         y83NAxY1U0h80mKZ+msygNKGuzhhh8ixZ68wJXhvSXsNZBslzGQuktcY3c7pmbKd9vPw
-         fZlvBNJBZ9e++J0qM+aCLIT2x+jJlSD1q3nGm9eKgIR1bB2AmjusGMejBp6eMXudnS72
-         G4wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D2niVLsdZKtUu10jdvC8RdtEQjbdxPl6wlDVDqafru4=;
-        b=GQeAeOo0mW6La5GMHT5T2itJbLf+0fuMnn+j49rj5CqEJOwlLfK2KvEYK9Fe//9wXj
-         h8PipzFTMj9S909msHIy2jpelVf646X7sBZha9VwTAb4WnwXvzXrWT+4xRffM4QXKFzA
-         9zwPbKaU3LKA8vGdSdSQZHK9dt+5LULQeULDa3gJBw6HKeUJM9bzN4mqP+5/hi8NF5Om
-         Ykz9pbwd7iUhEkNEp91oyLskC/0346WvH5Olf/3y5xYcsPUWWSrZSbisIslPYTqDNoSY
-         f7nAHIUaSGe28B0j+k672OJ6zSqT94K4pkMVTFWVW7b2Xe1zjiDWwajTXiXp5gL0IBoG
-         rmcQ==
-X-Gm-Message-State: APjAAAUB64GTnDg1d6kt7rjiX4fWThN2Tcb9HYTrbP7QKx7yOepilENJ
-        GLbXlRAOzHQjN7zxLDFljdo=
-X-Google-Smtp-Source: APXvYqwSAT17fwPwcWVMVT9/K/beHWmtX06kb53WhP7hy4B580mMpmO7dwD3E2Cyf5G55e6B3R4MLw==
-X-Received: by 2002:a65:60d3:: with SMTP id r19mr56459815pgv.91.1563977760057;
-        Wed, 24 Jul 2019 07:16:00 -0700 (PDT)
-Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
-        by smtp.gmail.com with ESMTPSA id f88sm45672023pjg.5.2019.07.24.07.15.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 07:15:59 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id DC3CA201374; Wed, 24 Jul 2019 23:15:56 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     shuah@kernel.org, linux-kernel@vger.kernel.org, jiri@mellanox.com,
-        idosch@mellanox.com, linux-kselftest@vger.kernel.org,
-        rdunlap@infradead.org
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] selftests: mlxsw: Fix typo in qos_mc_aware.sh
-Date:   Wed, 24 Jul 2019 23:15:54 +0900
-Message-Id: <20190724141554.31723-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.22.0.545.g9c9b961d7eb1
+        Wed, 24 Jul 2019 10:16:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2754 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfGXOQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:16:10 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 69C3A31B2A1EFBD16A29;
+        Wed, 24 Jul 2019 22:16:08 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 22:15:59 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <akpm@linux-foundation.org>, <jglisse@redhat.com>,
+        <kirill.shutemov@linux.intel.com>, <mike.kravetz@oracle.com>,
+        <rcampbell@nvidia.com>, <ktkhai@virtuozzo.com>,
+        <colin.king@canonical.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] mm/rmap.c: remove set but not used variable 'cstart'
+Date:   Wed, 24 Jul 2019 22:14:53 +0800
+Message-ID: <20190724141453.38536-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes some spelling typo in qos_mc_aware.sh
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+mm/rmap.c: In function page_mkclean_one:
+mm/rmap.c:906:17: warning: variable cstart set but not used [-Wunused-but-set-variable]
+
+It is not used any more since
+commit cdb07bdea28e ("mm/rmap.c: remove redundant variable cend")
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/rmap.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-index 71231ad2dbfb..47315fe48d5a 100755
---- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-+++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-@@ -262,7 +262,7 @@ test_mc_aware()
+diff --git a/mm/rmap.c b/mm/rmap.c
+index ec1af8b..40e4def 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -903,10 +903,9 @@ static bool page_mkclean_one(struct page *page, struct vm_area_struct *vma,
+ 	mmu_notifier_invalidate_range_start(&range);
  
- 	stop_traffic
+ 	while (page_vma_mapped_walk(&pvmw)) {
+-		unsigned long cstart;
+ 		int ret = 0;
  
--	log_test "UC performace under MC overload"
-+	log_test "UC performance under MC overload"
- 
- 	echo "UC-only throughput  $(humanize $ucth1)"
- 	echo "UC+MC throughput    $(humanize $ucth2)"
-@@ -316,7 +316,7 @@ test_uc_aware()
- 
- 	stop_traffic
- 
--	log_test "MC performace under UC overload"
-+	log_test "MC performance under UC overload"
- 	echo "    ingress UC throughput $(humanize ${uc_ir})"
- 	echo "    egress UC throughput  $(humanize ${uc_er})"
- 	echo "    sent $attempts BC ARPs, got $passes responses"
+-		cstart = address = pvmw.address;
++		address = pvmw.address;
+ 		if (pvmw.pte) {
+ 			pte_t entry;
+ 			pte_t *pte = pvmw.pte;
+@@ -933,7 +932,6 @@ static bool page_mkclean_one(struct page *page, struct vm_area_struct *vma,
+ 			entry = pmd_wrprotect(entry);
+ 			entry = pmd_mkclean(entry);
+ 			set_pmd_at(vma->vm_mm, address, pmd, entry);
+-			cstart &= PMD_MASK;
+ 			ret = 1;
+ #else
+ 			/* unexpected pmd-mapped page? */
 -- 
-2.22.0.545.g9c9b961d7eb1
+2.7.4
+
 
