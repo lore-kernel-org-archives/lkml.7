@@ -2,58 +2,56 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2696C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632F5C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF21220665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E3720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998934;
-	bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+	s=default; t=1563998937;
+	bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NOOjECytlYbVKYtaG0OYMam2MKMg+2rT3oUrt5YqhdJyBYvJVcOzUA+7b7It2U0pW
-	 ctHe9bjJOCoqBo2f74+aZAjP7/tIaslM/fT6BjW9qP5d4z4z60WxgaI/0jTruzEGRq
-	 oXIVvx7+ud7cwOJ3PHqcRG8jBrPmetbPPNnuiH5M=
+	b=PlE4I0UmFfT4H7LNaNewROs2p4Ib6P/84L7fQh2nrU5LDnEgNTL89nxMNbDlaSDzT
+	 cBVPtucS5LlTAao/stRV8Jwb44A6m/lDjAz6lX2fRHgA5CptvZAd+45/Ne+Z9mFSeP
+	 Dd8eiuBUe7YF/eYRnjuC1bnIpXy02iaHH73/c0Tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405413AbfGXUBZ (ORCPT
+        id S2405394AbfGXUBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50086 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405403AbfGXUBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:21 -0400
+        id S2405360AbfGXUBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218A622ADC;
-        Wed, 24 Jul 2019 20:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73597206BA;
+        Wed, 24 Jul 2019 20:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998480;
-        bh=HP3/a2oZIL74Jk6LrFo/J/9++kAyvAYs/l+UguAunkM=;
+        s=default; t=1563998471;
+        bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqGjFEgb+xmJFaMxvNLwQROwYJukh2E0ptcje7+TkJh6B3RvZWeUazgkBvrwINwe8
-         kXX/IDD07+cX5+NMoIx2jzqbLRhiiYlqrGiP7omq/Gdqoj0NBx9UW4b4WJbR5usaHQ
-         gnNlJyVEy4YtvSYjKZp6Mn/V0MAZuL3osAxW++9E=
+        b=pt3OxYLHlKzxKtn+T7Qx56kT/CIbYUYEXQCHCYTJHmBrJfZGR1IZmXqXSP+qK9aOZ
+         kYDu2kyuu8XFhMR3nfDvL1vYQPCecIyi27ZCV9bN++DmYFhj7RgEB7+nZxZ8GN/ZXz
+         bVLunFnnLHQGxJ1zWJJE1kPn8ZvyDfSLfEQQlM+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Hellermann <stefan@the2masters.de>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 001/271] MIPS: ath79: fix ar933x uart parity mode
-Date:   Wed, 24 Jul 2019 21:17:50 +0200
-Message-Id: <20190724191655.386114701@linuxfoundation.org>
+        stable@vger.kernel.org, Jeroen Roovers <jer@gentoo.org>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.1 348/371] parisc: Fix kernel panic due invalid values in IAOQ0 or IAOQ1
+Date:   Wed, 24 Jul 2019 21:21:40 +0200
+Message-Id: <20190724191749.917694361@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
-References: <20190724191655.268628197@linuxfoundation.org>
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,40 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit db13a5ba2732755cf13320f3987b77cf2a71e790 ]
+From: Helge Deller <deller@gmx.de>
 
-While trying to get the uart with parity working I found setting even
-parity enabled odd parity insted. Fix the register settings to match
-the datasheet of AR9331.
+commit 10835c854685393a921b68f529bf740fa7c9984d upstream.
 
-A similar patch was created by 8devices, but not sent upstream.
-https://github.com/8devices/openwrt-8devices/commit/77c5586ade3bb72cda010afad3f209ed0c98ea7c
+On parisc the privilege level of a process is stored in the lowest two bits of
+the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
+for the kernel and privilege level 3 for user-space. So userspace should not be
+allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
+level to e.g. 0 to try to gain kernel privileges.
 
-Signed-off-by: Stefan Hellermann <stefan@the2masters.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch prevents such modifications by always setting the two lowest bits to
+one (which relates to privilege level 3 for user-space) if IAOQ0 or IAOQ1 are
+modified via ptrace calls in the native and compat ptrace paths.
+
+Link: https://bugs.gentoo.org/481768
+Reported-by: Jeroen Roovers <jer@gentoo.org>
+Cc: <stable@vger.kernel.org>
+Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
+Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/mips/include/asm/mach-ath79/ar933x_uart.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/parisc/kernel/ptrace.c |   28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/arch/mips/include/asm/mach-ath79/ar933x_uart.h b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-index c2917b39966b..bba2c8837951 100644
---- a/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-+++ b/arch/mips/include/asm/mach-ath79/ar933x_uart.h
-@@ -27,8 +27,8 @@
- #define AR933X_UART_CS_PARITY_S		0
- #define AR933X_UART_CS_PARITY_M		0x3
- #define	  AR933X_UART_CS_PARITY_NONE	0
--#define	  AR933X_UART_CS_PARITY_ODD	1
--#define	  AR933X_UART_CS_PARITY_EVEN	2
-+#define	  AR933X_UART_CS_PARITY_ODD	2
-+#define	  AR933X_UART_CS_PARITY_EVEN	3
- #define AR933X_UART_CS_IF_MODE_S	2
- #define AR933X_UART_CS_IF_MODE_M	0x3
- #define	  AR933X_UART_CS_IF_MODE_NONE	0
--- 
-2.20.1
-
+--- a/arch/parisc/kernel/ptrace.c
++++ b/arch/parisc/kernel/ptrace.c
+@@ -167,6 +167,9 @@ long arch_ptrace(struct task_struct *chi
+ 		if ((addr & (sizeof(unsigned long)-1)) ||
+ 		     addr >= sizeof(struct pt_regs))
+ 			break;
++		if (addr == PT_IAOQ0 || addr == PT_IAOQ1) {
++			data |= 3; /* ensure userspace privilege */
++		}
+ 		if ((addr >= PT_GR1 && addr <= PT_GR31) ||
+ 				addr == PT_IAOQ0 || addr == PT_IAOQ1 ||
+ 				(addr >= PT_FR0 && addr <= PT_FR31 + 4) ||
+@@ -228,16 +231,18 @@ long arch_ptrace(struct task_struct *chi
+ 
+ static compat_ulong_t translate_usr_offset(compat_ulong_t offset)
+ {
+-	if (offset < 0)
+-		return sizeof(struct pt_regs);
+-	else if (offset <= 32*4)	/* gr[0..31] */
+-		return offset * 2 + 4;
+-	else if (offset <= 32*4+32*8)	/* gr[0..31] + fr[0..31] */
+-		return offset + 32*4;
+-	else if (offset < sizeof(struct pt_regs)/2 + 32*4)
+-		return offset * 2 + 4 - 32*8;
++	compat_ulong_t pos;
++
++	if (offset < 32*4)	/* gr[0..31] */
++		pos = offset * 2 + 4;
++	else if (offset < 32*4+32*8)	/* fr[0] ... fr[31] */
++		pos = (offset - 32*4) + PT_FR0;
++	else if (offset < sizeof(struct pt_regs)/2 + 32*4) /* sr[0] ... ipsw */
++		pos = (offset - 32*4 - 32*8) * 2 + PT_SR0 + 4;
+ 	else
+-		return sizeof(struct pt_regs);
++		pos = sizeof(struct pt_regs);
++
++	return pos;
+ }
+ 
+ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+@@ -281,9 +286,12 @@ long compat_arch_ptrace(struct task_stru
+ 			addr = translate_usr_offset(addr);
+ 			if (addr >= sizeof(struct pt_regs))
+ 				break;
++			if (addr == PT_IAOQ0+4 || addr == PT_IAOQ1+4) {
++				data |= 3; /* ensure userspace privilege */
++			}
+ 			if (addr >= PT_FR0 && addr <= PT_FR31 + 4) {
+ 				/* Special case, fp regs are 64 bits anyway */
+-				*(__u64 *) ((char *) task_regs(child) + addr) = data;
++				*(__u32 *) ((char *) task_regs(child) + addr) = data;
+ 				ret = 0;
+ 			}
+ 			else if ((addr >= PT_GR1+4 && addr <= PT_GR31+4) ||
 
 
