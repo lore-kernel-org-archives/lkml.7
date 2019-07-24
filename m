@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FDBC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09EFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435D122BE8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9C72083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997550;
-	bh=VmdVzvNLDWTZS6jg+c0EZupz56i7q1ENXH+Qqd8hAjs=;
+	s=default; t=1563997554;
+	bh=PQQ4zdOibTf1/2BVN4RCUWGIip6pZVmCxeYVcAFnBzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlyqXvBsGOqr55A0PJucxcnRw+AE0gAgaOWBiSM+vDjqQhAPMCBf22s5eHxEB3U3G
-	 wl4YKtkaOVIRYYV1kH8L/DicM5ZScfnV8F/XGR33tnuRGq1NwngWXD5RftBmD+HQep
-	 wT7stKEw0Bzh1iDz1FeSUKX+JThs7z3L8nVqZimI=
+	b=0QF7GuTrdBAN3EG+/znAJdqQp4jzVvgR0CzxXwVoVf/mdaSMs2v2mepZtSh3ShmPF
+	 tOyMDg/iC10BuZ+diMplP1bRYwx0AiqDt8zQQFKxXyyVXgF7ebgVt266Vce44wNqxI
+	 JZIslBGidJ0uQlmhzo1/g98L07X6NI25XQdzVVAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390598AbfGXTpt (ORCPT
+        id S2389638AbfGXTpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:45:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390581AbfGXTpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:45:45 -0400
+        id S2390599AbfGXTpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:45:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 594B22083B;
-        Wed, 24 Jul 2019 19:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03146217D4;
+        Wed, 24 Jul 2019 19:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997544;
-        bh=VmdVzvNLDWTZS6jg+c0EZupz56i7q1ENXH+Qqd8hAjs=;
+        s=default; t=1563997548;
+        bh=PQQ4zdOibTf1/2BVN4RCUWGIip6pZVmCxeYVcAFnBzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jkAhoKc2KOuhdnhzm4ybglgf+Uq8NSVIhrUzF5tn0vxmqmIBlsIivHTwpxYT107tu
-         XNQHGneh+ulYVcB4VnxVGqj8qy9QBYSI05XabtXrOcykmYgYhB4cIFt13mfpYhGJ66
-         ipRIjoHW2gXdja04C2nGbUjl5EVNi620bmmVX+Fk=
+        b=mf2JikTlAiEJ5Zjk7LoYsA26mIeedFGRjX8YsSx0JGeYABFMsRuf8qDswlU0JwSt9
+         wDJpIamWrA8uW9iUYXLnpJiReRM0k6SUCv64ogbmKAvwxxsElhtgfqAjQ4xwv4bqvh
+         bmDhCKQ37aDtdY+OudNOxt2++9Pb8tLWtKT5NlAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 033/371] net: stmmac: dwmac4/5: Clear unused address entries
-Date:   Wed, 24 Jul 2019 21:16:25 +0200
-Message-Id: <20190724191727.003720273@linuxfoundation.org>
+Subject: [PATCH 5.1 060/371] arm64: mm: make CONFIG_ZONE_DMA32 configurable
+Date:   Wed, 24 Jul 2019 21:16:52 +0200
+Message-Id: <20190724191729.388098882@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,51 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
+[ Upstream commit 0c1f14ed12262f45a3af1d588e4d7bd12438b8f5 ]
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+This change makes CONFIG_ZONE_DMA32 defuly y and allows users
+to overwrite it only when CONFIG_EXPERT=y.
 
-Found out while running stmmac selftests.
+For the SoCs that do not need CONFIG_ZONE_DMA32, this is the
+first step to manage all available memory by a single
+zone(normal zone) to reduce the overhead of multiple zones.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The change also fixes a build error when CONFIG_NUMA=y and
+CONFIG_ZONE_DMA32=n.
+
+arch/arm64/mm/init.c:195:17: error: use of undeclared identifier 'ZONE_DMA32'
+                max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
+
+Change since v1:
+1. only expose CONFIG_ZONE_DMA32 when CONFIG_EXPERT=y
+2. remove redundant IS_ENABLED(CONFIG_ZONE_DMA32)
+
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm64/Kconfig   | 3 ++-
+ arch/arm64/mm/init.c | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 7e5d5db0d516..a2f3db39221e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -444,14 +444,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		 * are required
- 		 */
- 		value |= GMAC_PACKET_FILTER_PR;
--	} else if (!netdev_uc_empty(dev)) {
--		int reg = 1;
-+	} else {
- 		struct netdev_hw_addr *ha;
-+		int reg = 1;
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index d218729ec852..dc3e62a18b62 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -258,7 +258,8 @@ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
  
- 		netdev_for_each_uc_addr(ha, dev) {
- 			dwmac4_set_umac_addr(hw, ha->addr, reg);
- 			reg++;
- 		}
-+
-+		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
- 	}
+ config ZONE_DMA32
+-	def_bool y
++	bool "Support DMA32 zone" if EXPERT
++	default y
  
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
+ config HAVE_GENERIC_GUP
+ 	def_bool y
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 7cae155e81a5..fff8c61ff608 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -191,8 +191,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
+ 
+-	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-		max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
++#ifdef CONFIG_ZONE_DMA32
++	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
++#endif
+ 	max_zone_pfns[ZONE_NORMAL] = max;
+ 
+ 	free_area_init_nodes(max_zone_pfns);
 -- 
 2.20.1
 
