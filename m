@@ -2,114 +2,105 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A62C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D39C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86A322387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563993436;
-	bh=tb1yBoYnFaWG6mahNMfY72POj83PUfuPV2T0fEbS7EI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=obe3I0qLYatttWLuXgNKsBHpwzWMqnwJfLPz/kVI0X7IHLvPrOwWIVak+Sws3TJrv
-	 ArRVHPWhK6go/NwAhlTBeGgshpXhhBC9W+i892kPRs/1sj6ZdL+ymGNgofrwrVzL6S
-	 qFIVY6kMy6pp/2DfMEg7xQKuNyoz0BnMGaUk0ADY=
+	by mail.kernel.org (Postfix) with ESMTP id 3CE2B2173B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfGXShP (ORCPT
+        id S1728132AbfGXSjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727499AbfGXShP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:37:15 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECBA42173B;
-        Wed, 24 Jul 2019 18:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563993434;
-        bh=tb1yBoYnFaWG6mahNMfY72POj83PUfuPV2T0fEbS7EI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SsBk6ptk456duEqnAc2K2yrM4uGu1DHk0/jUojwW79I7W6NLqiTJZD7/0yzzeFrwC
-         ON2aK2A9wxisiOSqnQg9P70VDEuHRMuqIEha+ZjBnTj7InD2s59uJt3wBzDDHq7ZK/
-         UGNZAFoEaOx0QY5rAu0sIJr3LIWvIuNCFHWPjVsU=
-Date:   Wed, 24 Jul 2019 11:37:12 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
-        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
-        dsahern@gmail.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-Message-ID: <20190724183710.GF213255@gmail.com>
-Mail-Followup-To: David Miller <davem@davemloft.net>,
-        eric.dumazet@gmail.com, dvyukov@google.com, netdev@vger.kernel.org,
-        fw@strlen.de, i.maximets@samsung.com, edumazet@google.com,
-        dsahern@gmail.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <20190724013813.GB643@sol.localdomain>
- <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
- <20190724163014.GC673@sol.localdomain>
- <20190724.111225.2257475150626507655.davem@davemloft.net>
+        Wed, 24 Jul 2019 14:39:08 -0400
+Received: from smtprelay0129.hostedemail.com ([216.40.44.129]:40636 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727499AbfGXSjI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:39:08 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id DF68618038B74;
+        Wed, 24 Jul 2019 18:39:06 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: force89_4f51dc7767217
+X-Filterd-Recvd-Size: 2931
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 24 Jul 2019 18:39:04 +0000 (UTC)
+Message-ID: <90a8807311ba434a63c9ab6331396d7094492323.camel@perches.com>
+Subject: Re: [PATCH 11/12] staging: media: cedrus: Fix misuse of GENMASK
+ macro
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 24 Jul 2019 11:39:03 -0700
+In-Reply-To: <20190724183522.GA30299@kroah.com>
+References: <cover.1562734889.git.joe@perches.com>
+         <cd543a5f26b031a0bbd3baa55e1f15813f59f107.1562734889.git.joe@perches.com>
+         <be536d37a3b58557cdacd33943915d397bcb5037.camel@perches.com>
+         <20190724183522.GA30299@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724.111225.2257475150626507655.davem@davemloft.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 11:12:25AM -0700, David Miller wrote:
-> From: Eric Biggers <ebiggers@kernel.org>
-> Date: Wed, 24 Jul 2019 09:30:14 -0700
-> 
-> > On Wed, Jul 24, 2019 at 08:39:05AM +0200, Eric Dumazet wrote:
-> >> Some of the bugs have been fixed already, before syzbot found them.
-> >> 
-> >> Why force human to be gentle to bots and actually replying to them ?
-> >> 
-> >> I usually simply wait that syzbot is finding the bug does not repro anymore,
-> >> but now if you send these emails, we will have even more pressure on us.
-> >> 
+On Wed, 2019-07-24 at 20:35 +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jul 24, 2019 at 10:09:44AM -0700, Joe Perches wrote:
+> > On Tue, 2019-07-09 at 22:04 -0700, Joe Perches wrote:
+> > > Arguments are supposed to be ordered high then low.
+> > > 
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > ---
+> > >  drivers/staging/media/sunxi/cedrus/cedrus_regs.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > > index 3e9931416e45..ddd29788d685 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > > @@ -110,7 +110,7 @@
+> > >  #define VE_DEC_MPEG_MBADDR			(VE_ENGINE_DEC_MPEG + 0x10)
+> > >  
+> > >  #define VE_DEC_MPEG_MBADDR_X(w)			(((w) << 8) & GENMASK(15, 8))
+> > > -#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(0, 7))
+> > > +#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(7, 0))
+> > >  
+> > >  #define VE_DEC_MPEG_CTRL			(VE_ENGINE_DEC_MPEG + 0x14)
 > > 
-> > First, based on experience, I'd guess about 30-45 of these are still valid.  17
-> > were seen in mainline in the last week, but some others are valid too.  The ones
-> > most likely to still be valid are at the beginning of the list.  So let's try
-> > not use the presence of outdated bugs as an excuse not to fix current bugs.
+> > Greg?  ping?
+> >  
+> > 
 > 
-> So about half of the bugs we are to look at are already fixed and thus
-> noise, even as estimated by you.
-> 
-> I agree with Eric, these "reminders" are bad for the people you
-> actually want to work on fixing these bugs.
+> I am not the maintainer of drivers/staging/media, that is Mauro.
 
-Well, the problem is that no one knows for sure which bugs are fixed and which
-aren't.  To be certain, a human needs to review each bug.  A bot can only guess.
+Maybe you want:
+---
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f7dc5bad396a..2fb95ad6ebef 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15312,6 +15312,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+ L:	devel@driverdev.osuosl.org
+ S:	Supported
+ F:	drivers/staging/
++X:	drivers/staging/media/
+ 
+ STARFIRE/DURALAN NETWORK DRIVER
+ M:	Ion Badulescu <ionut@badula.org>
 
-Note that the bugs in my reminders are already automatically prioritized by how
-likely they are to still be valid, important, actionable.  So one simply needs
-to start at the beginning of the list if they want to focus on those types of
-bugs.  Isn't this helpful?
 
-> 
-> > Since the kernel community is basically in continuous bug bankruptcy and lots of
-> 
-> I don't like this hyperbole.  Please present facts and information we
-> can actually use to improve the kernel development and bug fixing
-> process.
-> 
 
-A huge number of valid open bugs are not being fixed, which is a fact.  We can
-argue about what words to use to describe this situation, but it doesn't change
-the situation itself.
-
-What is your proposed solution?
-
-- Eric
