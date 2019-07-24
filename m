@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EFEC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C2CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5BF20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA6821951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996783;
-	bh=PpDkzkmxeohIc8Eg/mw5PCrRq/RfsPMNsjVx7ZAKai0=;
+	s=default; t=1563996789;
+	bh=fGViM72xunB7ZwdcjFaAKYyenVrGpIvI/BwNCmWQzEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypw3YSzpv1U39jgFTnea3bA0k2EZ529k6aAujeiQlBZYUrFTCEoy7r6iJ0wpkrD8V
-	 xPyn5xCasFtcasXn6bRCy/yMF8clB90pYwCg4V7ls725Iu/tFMOcgnbzBpBhdAFrmC
-	 mHIIZsXfTK3MKryEGIUchmAQKYs9qvwpwEHrPa0Y=
+	b=wBgvLRD0FX/zuvHYfzj0+F3quhefgCKtk18o05i+8WXKQq5xrFK35wqvVvQ7reyyM
+	 4wXS/WMnHOSfq1yvmgbCCteFdDyL704+agAAbWofAnUkDzxoFBkJ+K5sGE9DcFtNYR
+	 /66wCs74Cmm1x4uugN1dkdDYH+NUDXQYlT/IlzIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388762AbfGXTdC (ORCPT
+        id S2388782AbfGXTdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54468 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:33:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388712AbfGXTcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:32:55 -0400
+        id S2388019AbfGXTdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:33:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F48921951;
-        Wed, 24 Jul 2019 19:32:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E9A420659;
+        Wed, 24 Jul 2019 19:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996775;
-        bh=PpDkzkmxeohIc8Eg/mw5PCrRq/RfsPMNsjVx7ZAKai0=;
+        s=default; t=1563996784;
+        bh=fGViM72xunB7ZwdcjFaAKYyenVrGpIvI/BwNCmWQzEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6BqHxwl+pkIie2HjsuA8IncHGwmM0HFnEvWzRtIROs+anBeEAa4hFRNjbzlMlu0X
-         H4q5ikH93pwIEH24ylv7CgDLPETMU2d+/Zf5sVAwQJs5jEEto15xnX6e3+zQQ5qy+u
-         l/e6Y4G7BM3cep5eehkVcy0u3kXlUuyxLX643suE=
+        b=cpFajIzUa8AWJAya7xpwmNosQMNSeeE1QHwTEz9Qe5nZlHPB5aGywnAeVLlNttKJM
+         vYkGagLBK+DdNaD4KOErEtWpHlUt+kIJCOatnKGLEe1uHvgXVk5dkORMuUPqEqDoRa
+         XXQ0ViVOppQ632OEb+6HYDrJegeXkc6KkQNyRMHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Felix Kaechele <felix@kaechele.ca>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 171/413] netfilter: ctnetlink: Fix regression in conntrack entry deletion
-Date:   Wed, 24 Jul 2019 21:17:42 +0200
-Message-Id: <20190724191747.193826392@linuxfoundation.org>
+Subject: [PATCH 5.2 208/413] bnxt_en: Cap the returned MSIX vectors to the RDMA driver.
+Date:   Wed, 24 Jul 2019 21:18:19 +0200
+Message-Id: <20190724191749.380049060@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,62 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e7600865db32b69deb0109b8254244dca592adcf ]
+[ Upstream commit 1dbc59fa4bbaa108b641cd65a54f662b75e4ed36 ]
 
-Commit f8e608982022 ("netfilter: ctnetlink: Resolve conntrack
-L3-protocol flush regression") introduced a regression in which deletion
-of conntrack entries would fail because the L3 protocol information
-is replaced by AF_UNSPEC. As a result the search for the entry to be
-deleted would turn up empty due to the tuple used to perform the search
-is now different from the tuple used to initially set up the entry.
+In an earlier commit to improve NQ reservations on 57500 chips, we
+set the resv_irqs on the 57500 VFs to the fixed value assigned by
+the PF regardless of how many are actually used.  The current
+code assumes that resv_irqs minus the ones used by the network driver
+must be the ones for the RDMA driver.  This is no longer true and
+we may return more MSIX vectors than requested, causing inconsistency.
+Fix it by capping the value.
 
-For flushing the conntrack table we do however want to keep the option
-for nfgenmsg->version to have a non-zero value to allow for newer
-user-space tools to request treatment under the new behavior. With that
-it is possible to independently flush tables for a defined L3 protocol.
-This was introduced with the enhancements in in commit 59c08c69c278
-("netfilter: ctnetlink: Support L3 protocol-filter on flush").
-
-Older user-space tools will retain the behavior of flushing all tables
-regardless of defined L3 protocol.
-
-Fixes: f8e608982022 ("netfilter: ctnetlink: Resolve conntrack L3-protocol flush regression")
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Felix Kaechele <felix@kaechele.ca>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 01989c6b69d9 ("bnxt_en: Improve NQ reservations.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_netlink.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index 7db79c1b8084..1b77444d5b52 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -1256,7 +1256,6 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
- 	struct nf_conntrack_tuple tuple;
- 	struct nf_conn *ct;
- 	struct nfgenmsg *nfmsg = nlmsg_data(nlh);
--	u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
- 	struct nf_conntrack_zone zone;
- 	int err;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+index bfa342a98d08..fc77caf0a076 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+@@ -157,8 +157,10 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
  
-@@ -1266,11 +1265,13 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
+ 	if (BNXT_NEW_RM(bp)) {
+ 		struct bnxt_hw_resc *hw_resc = &bp->hw_resc;
++		int resv_msix;
  
- 	if (cda[CTA_TUPLE_ORIG])
- 		err = ctnetlink_parse_tuple(cda, &tuple, CTA_TUPLE_ORIG,
--					    u3, &zone);
-+					    nfmsg->nfgen_family, &zone);
- 	else if (cda[CTA_TUPLE_REPLY])
- 		err = ctnetlink_parse_tuple(cda, &tuple, CTA_TUPLE_REPLY,
--					    u3, &zone);
-+					    nfmsg->nfgen_family, &zone);
- 	else {
-+		u_int8_t u3 = nfmsg->version ? nfmsg->nfgen_family : AF_UNSPEC;
-+
- 		return ctnetlink_flush_conntrack(net, cda,
- 						 NETLINK_CB(skb).portid,
- 						 nlmsg_report(nlh), u3);
+-		avail_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
++		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
++		avail_msix = min_t(int, resv_msix, avail_msix);
+ 		edev->ulp_tbl[ulp_id].msix_requested = avail_msix;
+ 	}
+ 	bnxt_fill_msix_vecs(bp, ent);
 -- 
 2.20.1
 
