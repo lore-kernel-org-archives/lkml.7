@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2529C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDF3C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A745021951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C5B22ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996513;
-	bh=q/PP4wEmBuwNZos+xIzrwifTyzw3b6/QtHSmRi3p/48=;
+	s=default; t=1563996516;
+	bh=79wgBEdS+tTSwk3MNTN/5WnJD5bRp8HjE21Rnpe/NEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YkePyKuCA4WXcfJf5dZo2lrZAa2LZVJTZDAPL9RYlEIMYJkg1TUMxDZxbKWH+8idU
-	 QlN9PdKOmWtb8ueUv8+A67eDawZgp1QpPr5s9N2eWDphvMnfMrX99WDsgkQgKPn4/b
-	 RsfNUBmAe9YWbISvEyPPngX54q+lI6NuIJTNQ+ts=
+	b=SsCX+gaIVyu1JS+WJoNr1h0rVH28snFszQVt68qUyD2dO+hJJImY1Xub3/KviovRw
+	 aTHE4jSj7ufYpCc1eb8hQshqlFtVTOqm4wNfCC1AyF/GWlzSSyweimFxpBpS8Y034v
+	 O5JaDukdRzHjmCYySx+WaDkRo7Gri8wIXPuepeos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388268AbfGXT2c (ORCPT
+        id S1728594AbfGXT2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:28:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388332AbfGXT20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:26 -0400
+        id S2388238AbfGXT2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C43921951;
-        Wed, 24 Jul 2019 19:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67E1C20659;
+        Wed, 24 Jul 2019 19:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996505;
-        bh=q/PP4wEmBuwNZos+xIzrwifTyzw3b6/QtHSmRi3p/48=;
+        s=default; t=1563996510;
+        bh=79wgBEdS+tTSwk3MNTN/5WnJD5bRp8HjE21Rnpe/NEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgZ0HbQCAw37ygQVk+0tjKnRnn3JPZ0gu2JeFCD6Vu/Ev0uLJLZqgVgg13aOML8x/
-         /bNQvGLIbBqPtuYgh1k0CjO3D2fx/v+36m0Kd2ioTrXC1FAMFOPGuRJqeK3XWepZcY
-         ZNxK7orAFCDzb1PhClJDoBiOuaS0NZe0rOG323jk=
+        b=EorSSQtbCBXhO9yhIrhbZ9Ms4Q0KxDARW6HWacBDViWYhrVNa+5RPbzJHS8g0ksSJ
+         V1him3ZyZkup03B1xvcxIYdiG5Z9SBRXltopVgP2oMG0eJQhGUdKc/RBaHdcA2T0by
+         GSOSpekaJeyrRWj8qvxUfSv3/RoYq7IE7l10aMPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 118/413] ipoib: correcly show a VF hardware address
-Date:   Wed, 24 Jul 2019 21:16:49 +0200
-Message-Id: <20190724191743.712150851@linuxfoundation.org>
+Subject: [PATCH 5.2 081/413] perf report: Fix OOM error in TUI mode on s390
+Date:   Wed, 24 Jul 2019 21:16:12 +0200
+Message-Id: <20190724191740.910760822@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,55 +63,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 64d701c608fea362881e823b666327f5d28d7ffd ]
+[ Upstream commit 8a07aa4e9b7b0222129c07afff81634a884b2866 ]
 
-in the case of IPoIB with SRIOV enabled hardware
-ip link show command incorrecly prints
-0 instead of a VF hardware address.
+Debugging a OOM error using the TUI interface revealed this issue
+on s390:
 
-Before:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0 MAC 00:00:00:00:00:00, spoof checking off, link-state disable,
-trust off, query_rss off
-...
-After:
-11: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc pfifo_fast
-state UP mode DEFAULT group default qlen 256
-    link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
-    vf 0     link/infiniband
-80:00:00:66:fe:80:00:00:00:00:00:00:24:8a:07:03:00:a4:3e:7c brd
-00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff, spoof
-checking off, link-state disable, trust off, query_rss off
+[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
+....
+00000001119b7158 B radix_tree_node_cachep
+00000001119b8000 B __bss_stop
+00000001119b8000 B _end
+000003ff80002850 t autofs_mount	[autofs4]
+000003ff80002868 t autofs_show_options	[autofs4]
+000003ff80002a98 t autofs_evict_inode	[autofs4]
+....
 
-v1->v2: just copy an address without modifing ifla_vf_mac
-v2->v3: update the changelog
+There is a huge gap between the last kernel symbol
+__bss_stop/_end and the first kernel module symbol
+autofs_mount (from autofs4 module).
 
-Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
-Acked-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+After reading the kernel symbol table via functions:
+
+ dso__load()
+ +--> dso__load_kernel_sym()
+      +--> dso__load_kallsyms()
+	   +--> __dso_load_kallsyms()
+	        +--> symbols__fixup_end()
+
+the symbol __bss_stop has a start address of 1119b8000 and
+an end address of 3ff80002850, as can be seen by this debug statement:
+
+  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
+
+The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
+It is the last kernel symbol and fills up the space until
+the first kernel module symbol.
+
+This size kills the TUI interface when executing the following
+code:
+
+  process_sample_event()
+    hist_entry_iter__add()
+      hist_iter__report_callback()
+        hist_entry__inc_addr_samples()
+          symbol__inc_addr_samples(symbol = __bss_stop)
+            symbol__cycles_hist()
+               annotated_source__alloc_histograms(...,
+				                symbol__size(sym),
+		                                ...)
+
+This function allocates memory to save sample histograms.
+The symbol_size() marco is defined as sym->end - sym->start, which
+results in above value of 0x3fe6e64a850 bytes and
+the call to calloc() in annotated_source__alloc_histograms() fails.
+
+The histgram memory allocation might fail, make this failure
+no-fatal and continue processing.
+
+Output before:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
+		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
+		func: 0
+problem adding hist entry, skipping event
+0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
+[tmricht@m83lp54 perf]$
+
+Output after:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
+   symbol__hists notes->src:0x2aa2a70 nr_hists:1
+   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
+   __symbol__inc_addr_samples: addr=0x11094c69e
+   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
+   	=> nr_samples: 1, period: 526008
+[tmricht@m83lp54 perf]$
+
+There is no error about failed memory allocation and the TUI interface
+shows all entries.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/90cb5607-3e12-5167-682d-978eba7dafa8@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/annotate.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 9b5e11d3fb85..04ea7db08e87 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1998,6 +1998,7 @@ static int ipoib_get_vf_config(struct net_device *dev, int vf,
- 		return err;
- 
- 	ivf->vf = vf;
-+	memcpy(ivf->mac, dev->dev_addr, dev->addr_len);
- 
- 	return 0;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 79db038b56f2..c8ce13419d9b 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -931,9 +931,8 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
+ 	if (sym == NULL)
+ 		return 0;
+ 	src = symbol__hists(sym, evsel->evlist->nr_entries);
+-	if (src == NULL)
+-		return -ENOMEM;
+-	return __symbol__inc_addr_samples(sym, map, src, evsel->idx, addr, sample);
++	return (src) ?  __symbol__inc_addr_samples(sym, map, src, evsel->idx,
++						   addr, sample) : 0;
  }
+ 
+ static int symbol__account_cycles(u64 addr, u64 start,
 -- 
 2.20.1
 
