@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A1EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4964FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD58227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16356227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfGXDVH (ORCPT
+        id S1726692AbfGXDVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:21:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50728 "EHLO huawei.com"
+        Tue, 23 Jul 2019 23:21:13 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50542 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726461AbfGXDVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:21:01 -0400
+        id S1726397AbfGXDVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:21:06 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9EDD0AF284D8CD6EC3E7;
+        by Forcepoint Email with ESMTP id 8037A1016804BB4912D4;
         Wed, 24 Jul 2019 11:20:52 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
@@ -29,12 +29,12 @@ From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
+        <linuxarm@huawei.com>, Yufeng Mo <moyufeng@huawei.com>,
         Peng Li <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 08/11] net: hns3: add interrupt affinity support for misc interrupt
-Date:   Wed, 24 Jul 2019 11:18:44 +0800
-Message-ID: <1563938327-9865-9-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 06/11] net: hns3: modify firmware version display format
+Date:   Wed, 24 Jul 2019 11:18:42 +0800
+Message-ID: <1563938327-9865-7-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
 References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,159 +47,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Yufeng Mo <moyufeng@huawei.com>
 
-The misc interrupt is used to schedule the reset and mailbox
-subtask, and a 1 sec timer is used to schedule the service
-subtask, which does periodic work.
+This patch modifies firmware version display format in
+hclge(vf)_cmd_init() and hns3_get_drvinfo(). Also, adds
+some optimizations for firmware version display format.
 
-This patch sets the above three subtask's affinity using the
-misc interrupt' affinity.
-
-Also this patch setups a affinity notify for misc interrupt to
-allow user to change the above three subtask's affinity.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 59 ++++++++++++++++++++--
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 ++
- 2 files changed, 59 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h              |  9 +++++++++
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c       | 15 +++++++++++++--
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c   | 10 +++++++++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 11 +++++++++--
+ 4 files changed, 40 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index f345095..fe45986 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1270,6 +1270,12 @@ static int hclge_configure(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index 48c7b70..a4624db 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -179,6 +179,15 @@ struct hnae3_vector_info {
+ #define HNAE3_RING_GL_RX 0
+ #define HNAE3_RING_GL_TX 1
  
- 	hclge_init_kdump_kernel_config(hdev);
- 
-+	/* Set the init affinity based on pci func number */
-+	i = cpumask_weight(cpumask_of_node(dev_to_node(&hdev->pdev->dev)));
-+	i = i ? PCI_FUNC(hdev->pdev->devfn) % i : 0;
-+	cpumask_set_cpu(cpumask_local_spread(i, dev_to_node(&hdev->pdev->dev)),
-+			&hdev->affinity_mask);
++#define HNAE3_FW_VERSION_BYTE3_SHIFT	24
++#define HNAE3_FW_VERSION_BYTE3_MASK	GENMASK(31, 24)
++#define HNAE3_FW_VERSION_BYTE2_SHIFT	16
++#define HNAE3_FW_VERSION_BYTE2_MASK	GENMASK(23, 16)
++#define HNAE3_FW_VERSION_BYTE1_SHIFT	8
++#define HNAE3_FW_VERSION_BYTE1_MASK	GENMASK(15, 8)
++#define HNAE3_FW_VERSION_BYTE0_SHIFT	0
++#define HNAE3_FW_VERSION_BYTE0_MASK	GENMASK(7, 0)
 +
- 	return ret;
- }
- 
-@@ -2502,14 +2508,16 @@ static void hclge_mbx_task_schedule(struct hclge_dev *hdev)
+ struct hnae3_ring_chain_node {
+ 	struct hnae3_ring_chain_node *next;
+ 	u32 tqp_index;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 5bff98a..e71c92b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -527,6 +527,7 @@ static void hns3_get_drvinfo(struct net_device *netdev,
  {
- 	if (!test_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state) &&
- 	    !test_and_set_bit(HCLGE_STATE_MBX_SERVICE_SCHED, &hdev->state))
--		schedule_work(&hdev->mbx_service_task);
-+		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-+			      &hdev->mbx_service_task);
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+ 	struct hnae3_handle *h = priv->ae_handle;
++	u32 fw_version;
+ 
+ 	if (!h->ae_algo->ops->get_fw_version) {
+ 		netdev_err(netdev, "could not get fw version!\n");
+@@ -545,8 +546,18 @@ static void hns3_get_drvinfo(struct net_device *netdev,
+ 		sizeof(drvinfo->bus_info));
+ 	drvinfo->bus_info[ETHTOOL_BUSINFO_LEN - 1] = '\0';
+ 
+-	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version), "0x%08x",
+-		 priv->ae_handle->ae_algo->ops->get_fw_version(h));
++	fw_version = priv->ae_handle->ae_algo->ops->get_fw_version(h);
++
++	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
++		 "%lu.%lu.%lu.%lu",
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE3_MASK,
++				 HNAE3_FW_VERSION_BYTE3_SHIFT),
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE2_MASK,
++				 HNAE3_FW_VERSION_BYTE2_SHIFT),
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE1_MASK,
++				 HNAE3_FW_VERSION_BYTE1_SHIFT),
++		 hnae3_get_field(fw_version, HNAE3_FW_VERSION_BYTE0_MASK,
++				 HNAE3_FW_VERSION_BYTE0_SHIFT));
  }
  
- static void hclge_reset_task_schedule(struct hclge_dev *hdev)
- {
- 	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
- 	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
--		schedule_work(&hdev->rst_service_task);
-+		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-+			      &hdev->rst_service_task);
- }
+ static u32 hns3_get_link(struct net_device *netdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 22f6acd..c2320bf 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -419,7 +419,15 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+ 	}
+ 	hdev->fw_version = version;
  
- static void hclge_task_schedule(struct hclge_dev *hdev)
-@@ -2517,7 +2525,8 @@ static void hclge_task_schedule(struct hclge_dev *hdev)
- 	if (!test_bit(HCLGE_STATE_DOWN, &hdev->state) &&
- 	    !test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
- 	    !test_and_set_bit(HCLGE_STATE_SERVICE_SCHED, &hdev->state))
--		(void)schedule_work(&hdev->service_task);
-+		queue_work_on(cpumask_first(&hdev->affinity_mask), system_wq,
-+			      &hdev->service_task);
- }
+-	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
++	pr_info_once("The firmware version is %lu.%lu.%lu.%lu\n",
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
++				     HNAE3_FW_VERSION_BYTE3_SHIFT),
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
++				     HNAE3_FW_VERSION_BYTE2_SHIFT),
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
++				     HNAE3_FW_VERSION_BYTE1_SHIFT),
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
++				     HNAE3_FW_VERSION_BYTE0_SHIFT));
  
- static int hclge_get_mac_link_status(struct hclge_dev *hdev)
-@@ -2921,6 +2930,39 @@ static void hclge_get_misc_vector(struct hclge_dev *hdev)
- 	hdev->num_msi_used += 1;
- }
+ 	return 0;
  
-+static void hclge_irq_affinity_notify(struct irq_affinity_notify *notify,
-+				      const cpumask_t *mask)
-+{
-+	struct hclge_dev *hdev = container_of(notify, struct hclge_dev,
-+					      affinity_notify);
-+
-+	cpumask_copy(&hdev->affinity_mask, mask);
-+	del_timer_sync(&hdev->service_timer);
-+	hdev->service_timer.expires = jiffies + HZ;
-+	add_timer_on(&hdev->service_timer, cpumask_first(&hdev->affinity_mask));
-+}
-+
-+static void hclge_irq_affinity_release(struct kref *ref)
-+{
-+}
-+
-+static void hclge_misc_affinity_setup(struct hclge_dev *hdev)
-+{
-+	irq_set_affinity_hint(hdev->misc_vector.vector_irq,
-+			      &hdev->affinity_mask);
-+
-+	hdev->affinity_notify.notify = hclge_irq_affinity_notify;
-+	hdev->affinity_notify.release = hclge_irq_affinity_release;
-+	irq_set_affinity_notifier(hdev->misc_vector.vector_irq,
-+				  &hdev->affinity_notify);
-+}
-+
-+static void hclge_misc_affinity_teardown(struct hclge_dev *hdev)
-+{
-+	irq_set_affinity_notifier(hdev->misc_vector.vector_irq, NULL);
-+	irq_set_affinity_hint(hdev->misc_vector.vector_irq, NULL);
-+}
-+
- static int hclge_misc_irq_init(struct hclge_dev *hdev)
- {
- 	int ret;
-@@ -6151,7 +6193,10 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
- 	struct hclge_dev *hdev = vport->back;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 652b796..004125b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -405,8 +405,15 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	}
+ 	hdev->fw_version = version;
  
- 	if (enable) {
--		mod_timer(&hdev->service_timer, jiffies + HZ);
-+		del_timer_sync(&hdev->service_timer);
-+		hdev->service_timer.expires = jiffies + HZ;
-+		add_timer_on(&hdev->service_timer,
-+			     cpumask_first(&hdev->affinity_mask));
- 	} else {
- 		del_timer_sync(&hdev->service_timer);
- 		cancel_work_sync(&hdev->service_task);
-@@ -8809,6 +8854,11 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
- 	INIT_WORK(&hdev->rst_service_task, hclge_reset_service_task);
- 	INIT_WORK(&hdev->mbx_service_task, hclge_mailbox_service_task);
+-	dev_info(&hdev->pdev->dev, "The firmware version is %08x\n", version);
+-
++	pr_info_once("The firmware version is %lu.%lu.%lu.%lu\n",
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE3_MASK,
++				     HNAE3_FW_VERSION_BYTE3_SHIFT),
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE2_MASK,
++				     HNAE3_FW_VERSION_BYTE2_SHIFT),
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE1_MASK,
++				     HNAE3_FW_VERSION_BYTE1_SHIFT),
++		     hnae3_get_field(version, HNAE3_FW_VERSION_BYTE0_MASK,
++				     HNAE3_FW_VERSION_BYTE0_SHIFT));
+ 	return 0;
  
-+	/* Setup affinity after service timer setup because add_timer_on
-+	 * is called in affinity notify.
-+	 */
-+	hclge_misc_affinity_setup(hdev);
-+
- 	hclge_clear_all_event_cause(hdev);
- 	hclge_clear_resetting_state(hdev);
- 
-@@ -8970,6 +9020,7 @@ static void hclge_uninit_ae_dev(struct hnae3_ae_dev *ae_dev)
- 	struct hclge_dev *hdev = ae_dev->priv;
- 	struct hclge_mac *mac = &hdev->hw.mac;
- 
-+	hclge_misc_affinity_teardown(hdev);
- 	hclge_state_uninit(hdev);
- 
- 	if (mac->phydev)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 6a12285..14df23c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -864,6 +864,10 @@ struct hclge_dev {
- 
- 	DECLARE_KFIFO(mac_tnl_log, struct hclge_mac_tnl_stats,
- 		      HCLGE_MAC_TNL_LOG_SIZE);
-+
-+	/* affinity mask and notify for misc interrupt */
-+	cpumask_t affinity_mask;
-+	struct irq_affinity_notify affinity_notify;
- };
- 
- /* VPort level vlan tag configuration for TX direction */
+ err_cmd_init:
 -- 
 2.7.4
 
