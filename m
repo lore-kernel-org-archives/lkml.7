@@ -2,52 +2,54 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632F5C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370E5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E3720665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D9C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998937;
-	bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
+	s=default; t=1563998944;
+	bh=KO1mmfrXB/4Qi6kQgaa12CkoQHiEMULINy7lqSaWw2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PlE4I0UmFfT4H7LNaNewROs2p4Ib6P/84L7fQh2nrU5LDnEgNTL89nxMNbDlaSDzT
-	 cBVPtucS5LlTAao/stRV8Jwb44A6m/lDjAz6lX2fRHgA5CptvZAd+45/Ne+Z9mFSeP
-	 Dd8eiuBUe7YF/eYRnjuC1bnIpXy02iaHH73/c0Tc=
+	b=Ft4AJvdC+NXsNySNRGleBvzMXljTN7QCar3VdHLkxgQ5oyd/claqK7tF0+JrxcHfa
+	 BQm1XuniooJRIeAuV5gijuJB9rMM3pv2hCTFt2+VeQpikZLQVBWFPw+wI4N8FHBuGB
+	 oPiqg63SzvEPVwpNv9KPVB7u0DuHafB8UG058mOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405394AbfGXUBT (ORCPT
+        id S2405344AbfGXUBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49804 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405360AbfGXUBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:13 -0400
+        id S2405328AbfGXUBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73597206BA;
-        Wed, 24 Jul 2019 20:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 921D9205C9;
+        Wed, 24 Jul 2019 20:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998471;
-        bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
+        s=default; t=1563998464;
+        bh=KO1mmfrXB/4Qi6kQgaa12CkoQHiEMULINy7lqSaWw2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pt3OxYLHlKzxKtn+T7Qx56kT/CIbYUYEXQCHCYTJHmBrJfZGR1IZmXqXSP+qK9aOZ
-         kYDu2kyuu8XFhMR3nfDvL1vYQPCecIyi27ZCV9bN++DmYFhj7RgEB7+nZxZ8GN/ZXz
-         bVLunFnnLHQGxJ1zWJJE1kPn8ZvyDfSLfEQQlM+w=
+        b=fbrbQmZPxJEHNQC0+bducLxv9X5adm2K4mWHN0sO11NSMj3S5tfXgsv+8fg3RwSgF
+         p5hW7We75zU1/p+LEo7hP+ODIho1C7ujienEP7Dnl4EvBl6hbYi6wTGLbwVl9T1Ifw
+         QyLpb2LLVaIUsu5fV02QmMuCBEXpmId/yZFYAtJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeroen Roovers <jer@gentoo.org>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.1 348/371] parisc: Fix kernel panic due invalid values in IAOQ0 or IAOQ1
-Date:   Wed, 24 Jul 2019 21:21:40 +0200
-Message-Id: <20190724191749.917694361@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 345/371] xfs: abort unaligned nowait directio early
+Date:   Wed, 24 Jul 2019 21:21:37 +0200
+Message-Id: <20190724191749.638151167@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,84 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+[ Upstream commit 1fdeaea4d92c69fb9f871a787af6ad00f32eeea7 ]
 
-commit 10835c854685393a921b68f529bf740fa7c9984d upstream.
+Dave Chinner noticed that xfs_file_dio_aio_write returns EAGAIN without
+dropping the IOLOCK when its deciding not to wait, which means that we
+leak the IOLOCK there.  Since we now make unaligned directio always
+wait, we have the opportunity to bail out before trying to take the
+lock, which should reduce the overhead of this never-gonna-work case
+considerably while also solving the dropped lock problem.
 
-On parisc the privilege level of a process is stored in the lowest two bits of
-the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
-for the kernel and privilege level 3 for user-space. So userspace should not be
-allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
-level to e.g. 0 to try to gain kernel privileges.
-
-This patch prevents such modifications by always setting the two lowest bits to
-one (which relates to privilege level 3 for user-space) if IAOQ0 or IAOQ1 are
-modified via ptrace calls in the native and compat ptrace paths.
-
-Link: https://bugs.gentoo.org/481768
-Reported-by: Jeroen Roovers <jer@gentoo.org>
-Cc: <stable@vger.kernel.org>
-Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
-Signed-off-by: Helge Deller <deller@gmx.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/kernel/ptrace.c |   28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ fs/xfs/xfs_file.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -167,6 +167,9 @@ long arch_ptrace(struct task_struct *chi
- 		if ((addr & (sizeof(unsigned long)-1)) ||
- 		     addr >= sizeof(struct pt_regs))
- 			break;
-+		if (addr == PT_IAOQ0 || addr == PT_IAOQ1) {
-+			data |= 3; /* ensure userspace privilege */
-+		}
- 		if ((addr >= PT_GR1 && addr <= PT_GR31) ||
- 				addr == PT_IAOQ0 || addr == PT_IAOQ1 ||
- 				(addr >= PT_FR0 && addr <= PT_FR31 + 4) ||
-@@ -228,16 +231,18 @@ long arch_ptrace(struct task_struct *chi
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index a7ceae90110e..76748255f843 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -517,6 +517,9 @@ xfs_file_dio_aio_write(
+ 	}
  
- static compat_ulong_t translate_usr_offset(compat_ulong_t offset)
- {
--	if (offset < 0)
--		return sizeof(struct pt_regs);
--	else if (offset <= 32*4)	/* gr[0..31] */
--		return offset * 2 + 4;
--	else if (offset <= 32*4+32*8)	/* gr[0..31] + fr[0..31] */
--		return offset + 32*4;
--	else if (offset < sizeof(struct pt_regs)/2 + 32*4)
--		return offset * 2 + 4 - 32*8;
-+	compat_ulong_t pos;
-+
-+	if (offset < 32*4)	/* gr[0..31] */
-+		pos = offset * 2 + 4;
-+	else if (offset < 32*4+32*8)	/* fr[0] ... fr[31] */
-+		pos = (offset - 32*4) + PT_FR0;
-+	else if (offset < sizeof(struct pt_regs)/2 + 32*4) /* sr[0] ... ipsw */
-+		pos = (offset - 32*4 - 32*8) * 2 + PT_SR0 + 4;
- 	else
--		return sizeof(struct pt_regs);
-+		pos = sizeof(struct pt_regs);
-+
-+	return pos;
- }
- 
- long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
-@@ -281,9 +286,12 @@ long compat_arch_ptrace(struct task_stru
- 			addr = translate_usr_offset(addr);
- 			if (addr >= sizeof(struct pt_regs))
- 				break;
-+			if (addr == PT_IAOQ0+4 || addr == PT_IAOQ1+4) {
-+				data |= 3; /* ensure userspace privilege */
-+			}
- 			if (addr >= PT_FR0 && addr <= PT_FR31 + 4) {
- 				/* Special case, fp regs are 64 bits anyway */
--				*(__u64 *) ((char *) task_regs(child) + addr) = data;
-+				*(__u32 *) ((char *) task_regs(child) + addr) = data;
- 				ret = 0;
- 			}
- 			else if ((addr >= PT_GR1+4 && addr <= PT_GR31+4) ||
+ 	if (iocb->ki_flags & IOCB_NOWAIT) {
++		/* unaligned dio always waits, bail */
++		if (unaligned_io)
++			return -EAGAIN;
+ 		if (!xfs_ilock_nowait(ip, iolock))
+ 			return -EAGAIN;
+ 	} else {
+@@ -536,9 +539,6 @@ xfs_file_dio_aio_write(
+ 	 * xfs_file_aio_write_checks() for other reasons.
+ 	 */
+ 	if (unaligned_io) {
+-		/* unaligned dio always waits, bail */
+-		if (iocb->ki_flags & IOCB_NOWAIT)
+-			return -EAGAIN;
+ 		inode_dio_wait(inode);
+ 	} else if (iolock == XFS_IOLOCK_EXCL) {
+ 		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
+-- 
+2.20.1
+
 
 
