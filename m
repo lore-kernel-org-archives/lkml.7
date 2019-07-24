@@ -2,128 +2,100 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C676C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0C3C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010CB218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:51:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m4UD7L77"
+	by mail.kernel.org (Postfix) with ESMTP id D65AE218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfGXFvt (ORCPT
+        id S1726193AbfGXFyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:51:49 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57028 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXFvt (ORCPT
+        Wed, 24 Jul 2019 01:54:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2868 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725870AbfGXFyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:51:49 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6O5pht6095860;
-        Wed, 24 Jul 2019 00:51:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563947503;
-        bh=/ukI6z7MwTgGEJKQ7FloIKRXPBiEaTOaKdMkfX0Lm6c=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=m4UD7L77PYQorEIAvyPJXNXpMcdziaU0iCvOD5nB0J7WeSorpyHJ0hPoQ5Izkuy41
-         8rC5e+CxYsvXn61rik6QU+PHVOY/kTTaPoJw91Kz/OPSsvVb2sUNgy+/WXwfuwp6FS
-         irwpJYjRBGts224etehfvcSvo4Me7NT5Yv4U8KfU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6O5phYB048370
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jul 2019 00:51:43 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Jul 2019 00:51:42 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Jul 2019 00:51:42 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6O5pcdZ000559;
-        Wed, 24 Jul 2019 00:51:39 -0500
-Subject: Re: [PATCH 0/8] ti-sysc related warning fixes for v5.3-rc cycle
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190723112811.44381-1-tony@atomide.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <84de9487-761f-2f66-0227-97615e240477@ti.com>
-Date:   Wed, 24 Jul 2019 11:22:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 24 Jul 2019 01:54:21 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6O5q3sm056431
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:54:20 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2txgyq9qfa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:54:20 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 24 Jul 2019 06:54:18 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 24 Jul 2019 06:54:15 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6O5rwXq38273368
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 05:53:58 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C617252050;
+        Wed, 24 Jul 2019 05:54:13 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 85AAC52052;
+        Wed, 24 Jul 2019 05:54:13 +0000 (GMT)
+Date:   Wed, 24 Jul 2019 07:54:12 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: linux-next: Fixes tag needs some work in the s390-fixes tree
+References: <20190724074227.63abe116@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190723112811.44381-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724074227.63abe116@canb.auug.org.au>
+X-TM-AS-GCONF: 00
+x-cbid: 19072405-0012-0000-0000-000003359E68
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072405-0013-0000-0000-0000216F30E4
+Message-Id: <20190724055412.GB4412@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=7 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=996 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907240067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
 
+On Wed, Jul 24, 2019 at 07:42:27AM +1000, Stephen Rothwell wrote:
+> In commit
+>   8b515be512a2 ("vfio-ccw: Fix memory leak and don't call cp_free in cp_init")
+> Fixes tag
+>   Fixes: 812271b910 ("s390/cio: Squash cp_free() and cp_unpin_free()")
+>   - SHA1 should be at least 12 digits long
+>     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+>     or later) just making sure it is not set (or set to "auto").
 
-On 23/07/19 4:58 PM, Tony Lindgren wrote:
-> Hi all,
-> 
-> I noticed that with recent ti-sysc driver changes some new warnings
-> have crept in. Mostly they are caused by having different configuration
-> in the dts compared to the legacy platform data. Let's fix these first
-> before we continue dropping the legacy platform data.
-> 
-> I also noticed we need two fixes for the ti-sysc driver while looking
-> at the warnings.
+Yes, I noticed this when merging the vfio tree, but decided to not
+ask for a rebase to fix this.
 
-Tony,
+Are your scripts that do sanity checks available somewhere? I'm
+wondering since I would also like to do some sanity checks before
+pushing updates to kernel.org like
 
-Apart from Patch 2(breaks DS0 on AM3). Rest all work fine.
+- has the git author signed off the patch?
+- has the git committer signed off the patch?
+- are "fixes" tags sane: does commit exist and is format ok?
 
-Tested for DS0/RTC+ddr on AM4, DS0 on AM3 Boneblack.
-
-You can add my:
-
-Tested-by: Keerthy <j-keerthy@ti.com>
-
-For all the 7 patches except Patch 2.
-
-Regards,
-Keerthy
-
-> 
-> Regards,
-> 
-> Tony
-> 
-> Tony Lindgren (8):
->    ARM: OMAP2+: Fix missing SYSC_HAS_RESET_STATUS for dra7 epwmss
->    ARM: OMAP2+: Remove unconfigured midlemode for am3 lcdc
->    bus: ti-sysc: Fix handling of forced idle
->    bus: ti-sysc: Fix using configured sysc mask value
->    ARM: dts: Drop bogus ahclkr clocks for dra7 mcasp 3 to 8
->    ARM: dts: Fix flags for gpio7
->    ARM: dts: Fix incorrect dcan register mapping for am3, am4 and dra7
->    ARM: dts: Fix lcdc sysc flags for am3
-> 
->   arch/arm/boot/dts/am33xx-l4.dtsi              |  6 +++-
->   arch/arm/boot/dts/am437x-l4.dtsi              |  4 +++
->   .../boot/dts/am57xx-beagle-x15-common.dtsi    |  2 +-
->   arch/arm/boot/dts/dra7-evm.dts                |  2 +-
->   arch/arm/boot/dts/dra7-l4.dtsi                | 31 ++++++++-----------
->   arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  2 +-
->   arch/arm/mach-omap2/omap_hwmod_7xx_data.c     |  3 +-
->   drivers/bus/ti-sysc.c                         | 10 +++---
->   8 files changed, 31 insertions(+), 29 deletions(-)
-> 
