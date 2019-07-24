@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB307C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E65C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81F3721841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0D321734
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000523;
-	bh=m33R6dhHb2VmmyzYBxUc5e1BtHoU4ndX6Brej0xYZtU=;
+	s=default; t=1564000526;
+	bh=m6eIVnmoie5rpim9BfCOEBtVArBAcM30e7faLAeTqdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGhAuo0MzvzGIlmU6fwxPN2OQ2vSazSI/8wEutu8J+rRj6Vff1nVHtDIfAGX/AnCi
-	 /5mA77pfQBMFyGpsi2m86aL9/62+5zC4BzuwY0z+LW76GkwoAjXtlkQu68I9QtOWSP
-	 q1hLadTc9/t33HFyNba4+mzFV2RYX7qc+92wDCxE=
+	b=wQRAyHoGc7zxfP3GYkN8FSLo5lCSPFTUrM1D/YDBx1BMEPl6R/FuorVQdL62Y3fQ0
+	 ws/Lg5P/Om3mXBy7GWhK1H2E9AeqRWKQ9wwRyjVnXvizRHJgtjoJn6Lwza5ewMH2O0
+	 6ZZGCd8SHdQT1VnsYHjfYUvICz6xnoxJRf6Qe6PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbfGXTZ5 (ORCPT
+        id S2388157AbfGXT17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42736 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729205AbfGXTZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:51 -0400
+        id S1728772AbfGXT14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0362622387;
-        Wed, 24 Jul 2019 19:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC440229F3;
+        Wed, 24 Jul 2019 19:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996350;
-        bh=m33R6dhHb2VmmyzYBxUc5e1BtHoU4ndX6Brej0xYZtU=;
+        s=default; t=1563996475;
+        bh=m6eIVnmoie5rpim9BfCOEBtVArBAcM30e7faLAeTqdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSyzWraMCquUJUifG44TtAVrQT82SWW7ma8bo9tKyl86eERFuY+Oc4n+s69zU8VPO
-         JKSSdhjG0UYRlZIy2gDEuVvUmhHNxzBoJJFeYyzk2w0WOavFnOXZensjvklOANX+yg
-         o54uvpvy6O/K58PzSII4XOLWwJbnv6kJrSsGdPRI=
+        b=ZNnKWqfAkCzKlYQWtpDRBTCmu2w26OMsqYjq6q7kGng8VvR7wrOlv5z50L6SFNmTa
+         rs5gXe+ZXjOTuBaAI/m70HrfZxn9Eve1yTeFf5Le4SEjlXj2Sv89z+kpVdJMQmizNx
+         /arVUe9azodj5aOiNcrCezdMn+K9oecZMS6IhQ8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 065/413] media: imx7-mipi-csis: Propagate the error if clock enabling fails
-Date:   Wed, 24 Jul 2019 21:15:56 +0200
-Message-Id: <20190724191739.849499604@linuxfoundation.org>
+        stable@vger.kernel.org, Jilong Kou <koujilong@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 108/413] sched/core: Add __sched tag for io_schedule()
+Date:   Wed, 24 Jul 2019 21:16:39 +0200
+Message-Id: <20190724191743.027532780@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,56 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b393f91c651c16d5c09f5c7aa689e58a79df34e ]
+[ Upstream commit e3b929b0a184edb35531153c5afcaebb09014f9d ]
 
-Currently the return value from clk_bulk_prepare_enable() is checked,
-but it is not propagate it in the case of failure.
+Non-inline io_schedule() was introduced in:
 
-Fix it and also move the error message to the caller of
-mipi_csis_clk_enable().
+  commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Keep in line with io_schedule_timeout(), otherwise "/proc/<pid>/wchan" will
+report io_schedule() rather than its callers when waiting for IO.
+
+Reported-by: Jilong Kou <koujilong@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+Link: https://lkml.kernel.org/r/20190603091338.2695-1-gaoxiang25@huawei.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx7-mipi-csis.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 19455f425416..7d7bdfdd852a 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -456,13 +456,9 @@ static void mipi_csis_set_params(struct csi_state *state)
- 			MIPI_CSIS_CMN_CTRL_UPDATE_SHADOW_CTRL);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 874c427742a9..4d5962232a55 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5123,7 +5123,7 @@ long __sched io_schedule_timeout(long timeout)
  }
+ EXPORT_SYMBOL(io_schedule_timeout);
  
--static void mipi_csis_clk_enable(struct csi_state *state)
-+static int mipi_csis_clk_enable(struct csi_state *state)
+-void io_schedule(void)
++void __sched io_schedule(void)
  {
--	int ret;
--
--	ret = clk_bulk_prepare_enable(state->num_clks, state->clks);
--	if (ret < 0)
--		dev_err(state->dev, "failed to enable clocks\n");
-+	return clk_bulk_prepare_enable(state->num_clks, state->clks);
- }
+ 	int token;
  
- static void mipi_csis_clk_disable(struct csi_state *state)
-@@ -973,7 +969,11 @@ static int mipi_csis_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
--	mipi_csis_clk_enable(state);
-+	ret = mipi_csis_clk_enable(state);
-+	if (ret < 0) {
-+		dev_err(state->dev, "failed to enable clocks: %d\n", ret);
-+		return ret;
-+	}
- 
- 	ret = devm_request_irq(dev, state->irq, mipi_csis_irq_handler,
- 			       0, dev_name(dev), state);
 -- 
 2.20.1
 
