@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9406C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFAFC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B942A20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E7C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998953;
-	bh=C3Ji68M2HvbT4xXP9wITpbyHdwCYmlngudHd4n2hFY8=;
+	s=default; t=1563998959;
+	bh=GxwN1mmkCycNO3fHNV+ZrdYXA6d6xmqH0Z4BO14KspE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=irY76Ng93PmLwiTs5rEix4MV9dHYD4ok4Jm95zBvtLyYHFelidUHVFDdjMSUUzfFk
-	 8mh3nlvnsSmZVcquB54d0R1p5jm1aPeOZs2700JSRyZfqttmfO/a4hNobo4vSv3axD
-	 gC+vNXU9+uuBs0bk0LBQLr6o3rdC/+KjBHoplT8k=
+	b=a9r/HDVapR1hT4uPKsbIsNg9ngw0aehWWFOxjz1bGHXgXb8wGay/8S4QXKf+0Lzi1
+	 2NhApwK1zprOKulgOZbW/7gc+Gaxr4N+970O9cQnHSkkiwbVxr9T/sbV5ECUB3zcOw
+	 N5ajSsGsZ+l1P3xvteBBR5x40pRJ4M0s6SpUUsNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392501AbfGXUJN (ORCPT
+        id S2392474AbfGXUJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49322 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405298AbfGXUA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:00:56 -0400
+        id S2404932AbfGXUAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:00:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7DE3205C9;
-        Wed, 24 Jul 2019 20:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36B30205C9;
+        Wed, 24 Jul 2019 20:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998455;
-        bh=C3Ji68M2HvbT4xXP9wITpbyHdwCYmlngudHd4n2hFY8=;
+        s=default; t=1563998452;
+        bh=GxwN1mmkCycNO3fHNV+ZrdYXA6d6xmqH0Z4BO14KspE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=arTfTNMQRaL71B+nH/jerY3IaUHGlBz260V23XYgFXafV+GkvJDTAWe2iiCHpeE22
-         TLFrUSuZhsyMrzIendc1KJAfsjdzLN5dDmpZkJQZR1LaLMdSAji/etQvdiStCcjf57
-         TSHwKXAjMXzlhShUZzx6zNx8DyDkMWKBqo0qqnzI=
+        b=tUP2sQSfY6PbRFU0hoGEWTxM2JRLfDV+9OhFHI+mw31+yzd59HtWCjMVgBlysPAYH
+         OLBlOTPLRw0o4rkS6xzzC5CB+7POtBR4sXTpFp2lJ20+CsT089XOfi7xd6KtjUrFJ4
+         1E3fWHun/Do2FV+IVH4wLkxTy4294/3Iha3mH6WE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Norbert Manthey <nmanthey@amazon.de>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.1 370/371] pstore: Fix double-free in pstore_mkfile() failure path
-Date:   Wed, 24 Jul 2019 21:22:02 +0200
-Message-Id: <20190724191752.233895887@linuxfoundation.org>
+        stable@vger.kernel.org, Drew Davenport <ddavenport@chromium.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 343/371] include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures
+Date:   Wed, 24 Jul 2019 21:21:35 +0200
+Message-Id: <20190724191749.483685257@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,73 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Norbert Manthey <nmanthey@amazon.de>
+From: Drew Davenport <ddavenport@chromium.org>
 
-commit 4c6d80e1144bdf48cae6b602ae30d41f3e5c76a9 upstream.
+commit 6b15f678fb7d5ef54e089e6ace72f007fe6e9895 upstream.
 
-The pstore_mkfile() function is passed a pointer to a struct
-pstore_record. On success it consumes this 'record' pointer and
-references it from the created inode.
+For architectures using __WARN_TAINT, the WARN_ON macro did not print
+out the "cut here" string.  The other WARN_XXX macros would print "cut
+here" inside __warn_printk, which is not called for WARN_ON since it
+doesn't have a message to print.
 
-On failure, however, it may or may not free the record. There are even
-two different code paths which return -ENOMEM -- one of which does and
-the other doesn't free the record.
-
-Make the behaviour deterministic by never consuming and freeing the
-record when returning failure, allowing the caller to do the cleanup
-consistently.
-
-Signed-off-by: Norbert Manthey <nmanthey@amazon.de>
-Link: https://lore.kernel.org/r/1562331960-26198-1-git-send-email-nmanthey@amazon.de
-Fixes: 83f70f0769ddd ("pstore: Do not duplicate record metadata")
-Fixes: 1dfff7dd67d1a ("pstore: Pass record contents instead of copying")
-Cc: stable@vger.kernel.org
-[kees: also move "private" allocation location, rename inode cleanup label]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: http://lkml.kernel.org/r/20190624154831.163888-1-ddavenport@chromium.org
+Fixes: a7bed27af194 ("bug: fix "cut here" location for __WARN_TAINT architectures")
+Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/inode.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ include/asm-generic/bug.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -330,22 +330,21 @@ int pstore_mkfile(struct dentry *root, s
- 		goto fail;
- 	inode->i_mode = S_IFREG | 0444;
- 	inode->i_fop = &pstore_file_operations;
--	private = kzalloc(sizeof(*private), GFP_KERNEL);
--	if (!private)
--		goto fail_alloc;
--	private->record = record;
--
- 	scnprintf(name, sizeof(name), "%s-%s-%llu%s",
- 			pstore_type_to_name(record->type),
- 			record->psi->name, record->id,
- 			record->compressed ? ".enc.z" : "");
- 
-+	private = kzalloc(sizeof(*private), GFP_KERNEL);
-+	if (!private)
-+		goto fail_inode;
-+
- 	dentry = d_alloc_name(root, name);
- 	if (!dentry)
- 		goto fail_private;
- 
-+	private->record = record;
- 	inode->i_size = private->total_size = size;
--
- 	inode->i_private = private;
- 
- 	if (record->time.tv_sec)
-@@ -361,7 +360,7 @@ int pstore_mkfile(struct dentry *root, s
- 
- fail_private:
- 	free_pstore_private(private);
--fail_alloc:
-+fail_inode:
- 	iput(inode);
- 
- fail:
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -104,8 +104,10 @@ extern void warn_slowpath_null(const cha
+ 	warn_slowpath_fmt_taint(__FILE__, __LINE__, taint, arg)
+ #else
+ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+-#define __WARN()		__WARN_TAINT(TAINT_WARN)
+-#define __WARN_printf(arg...)	do { __warn_printk(arg); __WARN(); } while (0)
++#define __WARN() do { \
++	printk(KERN_WARNING CUT_HERE); __WARN_TAINT(TAINT_WARN); \
++} while (0)
++#define __WARN_printf(arg...)	__WARN_printf_taint(TAINT_WARN, arg)
+ #define __WARN_printf_taint(taint, arg...)				\
+ 	do { __warn_printk(arg); __WARN_TAINT(taint); } while (0)
+ #endif
 
 
