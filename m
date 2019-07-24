@@ -2,174 +2,127 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA46DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBA2C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCAB22ADF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997384;
-	bh=mDjN+Z1VmDl7mwSz/U0tOshdJiX3R2K7Z5GNzu54bcs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sJyMJWWsRQtbIoohPJ23YC4uaOYmhb/nGo9r6Kmi6ABlAEImUjfD3xhBwHjObWyKB
-	 ZHDKDeXpP0yb6zwYB5KYlYfOFpgUB016Mknx3b1sTtYe7N0jh7eK1sf1TuV/GmwmZr
-	 PsTUkIEa+F9ffp9r6tAfNYep0Gn15KEoBiapm3pE=
+	by mail.kernel.org (Postfix) with ESMTP id 8EB3622ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6HuK98L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390464AbfGXTnC (ORCPT
+        id S2390484AbfGXTnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390102AbfGXTm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:42:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 083D8214AF;
-        Wed, 24 Jul 2019 19:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997378;
-        bh=mDjN+Z1VmDl7mwSz/U0tOshdJiX3R2K7Z5GNzu54bcs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UqlDVasY1ylJPvisZLyxGP6hfR3gm6RT1LYWPjgZPrYeyO9B3SY8m3pMlBmy57gwW
-         Vq5DMVhlpKCOMJ9WqDw7GDzidkBruU86yZorDae5HBvhsFWKLFxUxOUIvUVr46Hyi1
-         a8Rvs7CdnEq+3P9yapmHmg9I2SmIJP6nmzvNpzCc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 389/413] powerpc/watchpoint: Restore NV GPRs while returning from exception
-Date:   Wed, 24 Jul 2019 21:21:20 +0200
-Message-Id: <20190724191802.747416195@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 15:43:06 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34091 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390462AbfGXTnD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:03 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n5so49149379otk.1;
+        Wed, 24 Jul 2019 12:43:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QjSdWDTJogyq8S7mZs7e3CcybE/Qyo4+rR9MEOHtmug=;
+        b=o6HuK98LM2PourpLrfOXA9tnYn/CKdQI2hdLQrkUfzkb1jy6E00k50kTtogJtwlvv2
+         57+lXOamDe30b8BogWXuiJtzUKWcGaJV6sEulXuVmyujuwypbLlkUWQeztRy/gZ05fri
+         rpYo12797NrIwUuayvg+Z4ES91GZ8cBBa8IbQ1jTT3Bg7RFxYzNSIl7vwRhqeYbhq+0M
+         H9F6O+Ekj4pVyD82SnQrijpG1v/GYtQkU3UidTzWXAJFkpesh8y/WJ2Jqfnu2rgDzLum
+         E4VD/T+1+B1OLCrWBhROAXd8QBVFbq5XAdTD6CPrapWuSOZSBBM9dWVUdOTJhNGQozY8
+         mffg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QjSdWDTJogyq8S7mZs7e3CcybE/Qyo4+rR9MEOHtmug=;
+        b=PAePG3mA3YcwPyRksNB4gvjWUw7dxPbUukvPp2v3A9EUO3mKaIXCfzchVPXSzEqWRO
+         Ge8McQGvO8KuznCnJsh6+6STswtAE8/zkvwUkboeq6o0VOcLf35qTXIgNH2jenpXhMXg
+         PlcUFu5P6oRZThiZJCzDCb0cx210KG7gPFCGoti0Du3Dx/eC5JnuyRca+RInp/t31ERi
+         Iao3KxojsuGZZ2gyBhOxCuoaRPuI0++lQFODSwQYDTXYCopIRL/vfWfGISqxVW3Kprl/
+         Is0r41BgZgBQpFFSq0ZEqihEaRDzJO8roa/uKGudaAE5Lp8HLqcXNnIToa2iwllOVDeE
+         UC/w==
+X-Gm-Message-State: APjAAAWXgW/e7Vdig8dLRt4jJUZBMCX7+RoRX/My5L+LFluThzbS8lAd
+        mNR7FQv/ZMt+Eci5M9QgS2h9o86M0+kJHsPYjmw=
+X-Google-Smtp-Source: APXvYqwGZraz9ZuMPAHtLv4av8XeMxMtRcV2ny/mkglBe9Iigbt3FbbIW4gbqH1rL+ysvtoWDs7Yddme7mzuJsK+3f4=
+X-Received: by 2002:a9d:590d:: with SMTP id t13mr2409952oth.281.1563997381856;
+ Wed, 24 Jul 2019 12:43:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190724015411.66525-1-yuehaibing@huawei.com>
+In-Reply-To: <20190724015411.66525-1-yuehaibing@huawei.com>
+From:   Christian Lamparter <chunkeey@gmail.com>
+Date:   Wed, 24 Jul 2019 21:42:48 +0200
+Message-ID: <CAAd0S9BvTfRyUVkQzcczyNkU_oeU5hNdK3KVQzLsU21b4JGNTQ@mail.gmail.com>
+Subject: Re: [PATCH] carl9170: remove set but not used variable 'udev'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+On Wed, Jul 24, 2019 at 3:48 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/net/wireless/ath/carl9170/usb.c: In function 'carl9170_usb_disconnect':
+> drivers/net/wireless/ath/carl9170/usb.c:1110:21: warning:
+>  variable 'udev' set but not used [-Wunused-but-set-variable]
+>
+> It is not used, so can be removed.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+Isn't this the same patch you sent earlier:
 
-commit f474c28fbcbe42faca4eb415172c07d76adcb819 upstream.
+https://patchwork.kernel.org/patch/11027909/
 
-powerpc hardware triggers watchpoint before executing the instruction.
-To make trigger-after-execute behavior, kernel emulates the
-instruction. If the instruction is 'load something into non-volatile
-register', exception handler should restore emulated register state
-while returning back, otherwise there will be register state
-corruption. eg, adding a watchpoint on a list can corrput the list:
+From what I can tell, it's the same but with an extra [-next], I
+remember that I've acked that one
+but your patch now does not have it? Is this an oversight, because I'm
+the maintainer for this
+driver. So, in my opinion at least the "ack" should have some value
+and shouldn't be "ignored".
 
-  # cat /proc/kallsyms | grep kthread_create_list
-  c00000000121c8b8 d kthread_create_list
+Look, from what I know, Kalle is not ignoring you, It's just that
+carl9170 is no longer top priority.
+So please be patient. As long as its queued in the patchwork it will
+get considered.
 
-Add watchpoint on kthread_create_list->prev:
+Cheers,
+Christian
 
-  # perf record -e mem:0xc00000000121c8c0
-
-Run some workload such that new kthread gets invoked. eg, I just
-logged out from console:
-
-  list_add corruption. next->prev should be prev (c000000001214e00), \
-	but was c00000000121c8b8. (next=c00000000121c8b8).
-  WARNING: CPU: 59 PID: 309 at lib/list_debug.c:25 __list_add_valid+0xb4/0xc0
-  CPU: 59 PID: 309 Comm: kworker/59:0 Kdump: loaded Not tainted 5.1.0-rc7+ #69
-  ...
-  NIP __list_add_valid+0xb4/0xc0
-  LR __list_add_valid+0xb0/0xc0
-  Call Trace:
-  __list_add_valid+0xb0/0xc0 (unreliable)
-  __kthread_create_on_node+0xe0/0x260
-  kthread_create_on_node+0x34/0x50
-  create_worker+0xe8/0x260
-  worker_thread+0x444/0x560
-  kthread+0x160/0x1a0
-  ret_from_kernel_thread+0x5c/0x70
-
-List corruption happened because it uses 'load into non-volatile
-register' instruction:
-
-Snippet from __kthread_create_on_node:
-
-  c000000000136be8:     addis   r29,r2,-19
-  c000000000136bec:     ld      r29,31424(r29)
-        if (!__list_add_valid(new, prev, next))
-  c000000000136bf0:     mr      r3,r30
-  c000000000136bf4:     mr      r5,r28
-  c000000000136bf8:     mr      r4,r29
-  c000000000136bfc:     bl      c00000000059a2f8 <__list_add_valid+0x8>
-
-Register state from WARN_ON():
-
-  GPR00: c00000000059a3a0 c000007ff23afb50 c000000001344e00 0000000000000075
-  GPR04: 0000000000000000 0000000000000000 0000001852af8bc1 0000000000000000
-  GPR08: 0000000000000001 0000000000000007 0000000000000006 00000000000004aa
-  GPR12: 0000000000000000 c000007ffffeb080 c000000000137038 c000005ff62aaa00
-  GPR16: 0000000000000000 0000000000000000 c000007fffbe7600 c000007fffbe7370
-  GPR20: c000007fffbe7320 c000007fffbe7300 c000000001373a00 0000000000000000
-  GPR24: fffffffffffffef7 c00000000012e320 c000007ff23afcb0 c000000000cb8628
-  GPR28: c00000000121c8b8 c000000001214e00 c000007fef5b17e8 c000007fef5b17c0
-
-Watchpoint hit at 0xc000000000136bec.
-
-  addis   r29,r2,-19
-   => r29 = 0xc000000001344e00 + (-19 << 16)
-   => r29 = 0xc000000001214e00
-
-  ld      r29,31424(r29)
-   => r29 = *(0xc000000001214e00 + 31424)
-   => r29 = *(0xc00000000121c8c0)
-
-0xc00000000121c8c0 is where we placed a watchpoint and thus this
-instruction was emulated by emulate_step. But because handle_dabr_fault
-did not restore emulated register state, r29 still contains stale
-value in above register state.
-
-Fixes: 5aae8a5370802 ("powerpc, hw_breakpoints: Implement hw_breakpoints for 64-bit server processors")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: stable@vger.kernel.org # 2.6.36+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/kernel/exceptions-64s.S |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
---- a/arch/powerpc/kernel/exceptions-64s.S
-+++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1746,7 +1746,7 @@ handle_page_fault:
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
- 	bl	do_page_fault
- 	cmpdi	r3,0
--	beq+	12f
-+	beq+	ret_from_except_lite
- 	bl	save_nvgprs
- 	mr	r5,r3
- 	addi	r3,r1,STACK_FRAME_OVERHEAD
-@@ -1761,7 +1761,12 @@ handle_dabr_fault:
- 	ld      r5,_DSISR(r1)
- 	addi    r3,r1,STACK_FRAME_OVERHEAD
- 	bl      do_break
--12:	b       ret_from_except_lite
-+	/*
-+	 * do_break() may have changed the NV GPRS while handling a breakpoint.
-+	 * If so, we need to restore them with their updated values. Don't use
-+	 * ret_from_except_lite here.
-+	 */
-+	b       ret_from_except
- 
- 
- #ifdef CONFIG_PPC_BOOK3S_64
-
-
+>  drivers/net/wireless/ath/carl9170/usb.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
+> index 99f1897a775d..486957a04bd1 100644
+> --- a/drivers/net/wireless/ath/carl9170/usb.c
+> +++ b/drivers/net/wireless/ath/carl9170/usb.c
+> @@ -1107,12 +1107,10 @@ static int carl9170_usb_probe(struct usb_interface *intf,
+>  static void carl9170_usb_disconnect(struct usb_interface *intf)
+>  {
+>         struct ar9170 *ar = usb_get_intfdata(intf);
+> -       struct usb_device *udev;
+>
+>         if (WARN_ON(!ar))
+>                 return;
+>
+> -       udev = ar->udev;
+>         wait_for_completion(&ar->fw_load_wait);
+>
+>         if (IS_INITIALIZED(ar)) {
+>
+>
+>
