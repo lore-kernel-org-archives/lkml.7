@@ -2,150 +2,120 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7253CC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C85C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542EF229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073D121738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOZBVGQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfGXGEf (ORCPT
+        id S1726402AbfGXGFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:04:35 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:37863 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXGEe (ORCPT
+        Wed, 24 Jul 2019 02:05:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35910 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfGXGFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:04:34 -0400
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B5FF6200008;
-        Wed, 24 Jul 2019 06:04:26 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH REBASE v4 05/14] arm64, mm: Make randomization selected by generic topdown mmap layout
-Date:   Wed, 24 Jul 2019 01:58:41 -0400
-Message-Id: <20190724055850.6232-6-alex@ghiti.fr>
+        Wed, 24 Jul 2019 02:05:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so20635214pgm.3;
+        Tue, 23 Jul 2019 23:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kEit7lAB1Ue2Pj5oh+Mlb7ShDCe+fsz5zjPxqobMIKg=;
+        b=LOZBVGQxyAGRUFVP8mPfnlKQD07SIGGlVfHqkFTEab3aa0FHzBfOCDb58AWG2QNF11
+         KT0/Q5L2+y3O8rh914AlOqnBcMckN/0ycwl1E/FhHjHhxV2wsgtluQ9amIthLTXIZ6KI
+         QVczTYnvho5/2SufK7VAhoSU8moWT1GL6DvExtCg7Lrsdc1SHpVZwkLjiB5eWwS5whNu
+         kcFm5zVqBELbsneoH3jM4hjpxAOvrtK2WlyOrptwVEbr6W1vFe8nIK5Yy/36E2LXxg0k
+         zqShovDJzgsBZsQbU6ER2hMs5AJGkNOEhhKPM1P5aGHDoNZ9thbjTArNYZ0eU6WOP1pG
+         GpSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kEit7lAB1Ue2Pj5oh+Mlb7ShDCe+fsz5zjPxqobMIKg=;
+        b=SXlT0E7jkA0HBX/cW8hyPkN6v4+RrVPfXJVCHWMZZchX7EZmP7WXmw0XgOtMznMtMj
+         HVdZZfKQSzus6EzrT+RNSOXw2QckRkh+k1DKRKUUasDTXIqUK9VYg+GLMmGQjqHsmcJH
+         JSVDv4inN6jb0agBikhIM7Ig5cRU6rhKBnoB+RMSjKgbs7T7VbSoZ56/l1ystjaLfkbo
+         fv/cGIbGNy4Z0lZQFTSF2EwMh/wret5IbTWtLj7oWt34cEnPUPnTlk+pLR8yYSvvSNER
+         Qj/zRkcdso6RYb8LKK3XBNw4ZotKyi0Hm7mz9kvLI94lIhUwBKFRUmPh8zBclTl1OvhG
+         mtXg==
+X-Gm-Message-State: APjAAAUHr9EWJ7anGaHG2YfnYzXKPKeAIzZqnVe0YxFE3r88zWASsDRk
+        V6h3Ryxh2WRdoDvhSbjyXf8=
+X-Google-Smtp-Source: APXvYqzgXdUAYYOPzIp2tCoOz/dnsYdNYa9oDXaK677WPWN4WX5+xa+IElSv4CWN2p4eSe3FBrKanA==
+X-Received: by 2002:a17:90a:220a:: with SMTP id c10mr87503028pje.33.1563948321586;
+        Tue, 23 Jul 2019 23:05:21 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id y8sm42498752pfn.52.2019.07.23.23.05.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 23:05:20 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Steffen Klassert <klassert@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Rasesh Mody <rmody@marvell.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Siva Reddy Kallam <siva.kallam@broadcom.com>,
+        Prashant Sreedharan <prashant@broadcom.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Guo-Fu Tseng <cooldavid@cooldavid.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH net-next v2 0/8] Use dev_get_drvdata where possible
+Date:   Wed, 24 Jul 2019 14:05:12 +0800
+Message-Id: <20190724060512.23899-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
-References: <20190724055850.6232-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commits selects ARCH_HAS_ELF_RANDOMIZE when an arch uses the generic
-topdown mmap layout functions so that this security feature is on by
-default.
-Note that this commit also removes the possibility for arm64 to have elf
-randomization and no MMU: without MMU, the security added by randomization
-is worth nothing.
+These patches use dev_get_drvdata instead of
+using to_pci_dev + pci_get_drvdata to make
+code simpler where possible.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- arch/Kconfig                |  1 +
- arch/arm64/Kconfig          |  1 -
- arch/arm64/kernel/process.c |  8 --------
- mm/util.c                   | 11 +++++++++--
- 4 files changed, 10 insertions(+), 11 deletions(-)
+Changelog:
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index a0bb6fa4d381..d4c1f0551dfe 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -705,6 +705,7 @@ config HAVE_ARCH_COMPAT_MMAP_BASES
- config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
- 	bool
- 	depends on MMU
-+	select ARCH_HAS_ELF_RANDOMIZE
- 
- config HAVE_COPY_THREAD_TLS
- 	bool
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 14a194e63458..399f595ef852 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -16,7 +16,6 @@ config ARM64
- 	select ARCH_HAS_DMA_MMAP_PGPROT
- 	select ARCH_HAS_DMA_PREP_COHERENT
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE if ACPI
--	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_FAST_MULTIPLIER
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 6a869d9f304f..3f59d0d1632e 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -524,14 +524,6 @@ unsigned long arch_align_stack(unsigned long sp)
- 	return sp & ~0xf;
- }
- 
--unsigned long arch_randomize_brk(struct mm_struct *mm)
--{
--	if (is_compat_task())
--		return randomize_page(mm->brk, SZ_32M);
--	else
--		return randomize_page(mm->brk, SZ_1G);
--}
--
- /*
-  * Called from setup_new_exec() after (COMPAT_)SET_PERSONALITY.
-  */
-diff --git a/mm/util.c b/mm/util.c
-index 0781e5575cb3..16f1e56e2996 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -321,7 +321,15 @@ unsigned long randomize_stack_top(unsigned long stack_top)
- }
- 
- #ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
--#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
-+unsigned long arch_randomize_brk(struct mm_struct *mm)
-+{
-+	/* Is the current task 32bit ? */
-+	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
-+		return randomize_page(mm->brk, SZ_32M);
-+
-+	return randomize_page(mm->brk, SZ_1G);
-+}
-+
- unsigned long arch_mmap_rnd(void)
- {
- 	unsigned long rnd;
-@@ -335,7 +343,6 @@ unsigned long arch_mmap_rnd(void)
- 
- 	return rnd << PAGE_SHIFT;
- }
--#endif /* CONFIG_ARCH_HAS_ELF_RANDOMIZE */
- 
- static int mmap_is_legacy(struct rlimit *rlim_stack)
- {
+v1 -> v2:
+- Change pci_set_drvdata to dev_set_drvdata
+  to keep consistency.
+
+Chuhong Yuan (8):
+  net: 3com: 3c59x: Use dev_get_drvdata
+  net: atheros: Use dev_get_drvdata
+  net: broadcom: Use dev_get_drvdata
+  e1000e: Use dev_get_drvdata where possible
+  fm10k: Use dev_get_drvdata
+  i40e: Use dev_get_drvdata
+  igb: Use dev_get_drvdata where possible
+  net: jme: Use dev_get_drvdata
+
+ drivers/net/ethernet/3com/3c59x.c               |  8 +++-----
+ drivers/net/ethernet/atheros/alx/main.c         |  8 +++-----
+ drivers/net/ethernet/atheros/atl1c/atl1c_main.c | 10 ++++------
+ drivers/net/ethernet/atheros/atlx/atl1.c        |  8 +++-----
+ drivers/net/ethernet/broadcom/bnx2.c            |  8 +++-----
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c       |  8 +++-----
+ drivers/net/ethernet/broadcom/tg3.c             |  8 +++-----
+ drivers/net/ethernet/intel/e1000e/netdev.c      |  9 ++++-----
+ drivers/net/ethernet/intel/fm10k/fm10k_pci.c    |  6 +++---
+ drivers/net/ethernet/intel/i40e/i40e_main.c     | 10 ++++------
+ drivers/net/ethernet/intel/igb/igb_main.c       |  5 ++---
+ drivers/net/ethernet/jme.c                      |  8 +++-----
+ 12 files changed, 38 insertions(+), 58 deletions(-)
+
 -- 
 2.20.1
 
