@@ -2,203 +2,162 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F41C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5082C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C15218B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F230218B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ce8M4Sl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387448AbfGXM41 (ORCPT
+        id S1727265AbfGXM6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:56:27 -0400
-Received: from mga14.intel.com ([192.55.52.115]:14394 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726312AbfGXM40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:56:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 05:56:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,302,1559545200"; 
-   d="scan'208";a="345093126"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by orsmga005.jf.intel.com with ESMTP; 24 Jul 2019 05:56:23 -0700
-Subject: Re: [PATCH v4] mmc: host: sdhci-sprd: Fix the incorrect soft reset
- operation when runtime resuming
-To:     Baolin Wang <baolin.wang@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <89c3ef495c367d58ca3abe99a1f82c48f8c08705.1563274904.git.baolin.wang@linaro.org>
- <CAPDyKFq1y6xVfA=b1ybWvA1+e9h9aSteHAHjBbXvXGVJx95FQA@mail.gmail.com>
- <CAMz4kuKraOb_o0LFWnqkS7m0Xd3QGrw1P+md0YBNbbbp1967OA@mail.gmail.com>
- <CAPDyKFpy5JeGZ2w1KJN0ECB6jPG=UTZXbPRjMQQs8+NdK4rxuQ@mail.gmail.com>
- <CAMz4ku+ZTtnJdonZVAPVuvAiGCmCESvM8SbYKjwpNUgE4bO3gA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <d9e90c5f-1939-b07a-ba85-8b61e3df10c6@intel.com>
-Date:   Wed, 24 Jul 2019 15:55:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAMz4ku+ZTtnJdonZVAPVuvAiGCmCESvM8SbYKjwpNUgE4bO3gA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 24 Jul 2019 08:58:20 -0400
+Received: from mail-eopbgr10047.outbound.protection.outlook.com ([40.107.1.47]:11520
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726312AbfGXM6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 08:58:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cUH3H2QUTpXwS3EbtI7kLpcwMHIy3xN8mOqPDDMdzdYIpKnRyhF+cEkgbKrCuQdfa054LOMRLNAIuOENiRRABsd/4DSthVRG/HbuR7HuWqnVovq8YvxNtyOrxMaYvsE4ENk2UKSn8uQu55s/V8E5sKH+vC2Utq+t/XcKObNJxSKAuFI0twZU8skpwgOSN3XKoeVhvUu2E4iFRsWrOprMaD1dMrNU2DUioO2kgjEHIE4uphkex/glJ/vTrBbY15iXTwH4mMOToVBID5gqppuCvf5kQPR85VlPp7gq2eiz7Jalmpr2GRKKoSVLyck6Kk7ccToEfw0/SKAFrk+RbrJaCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4gg3nbfX4/OTj+hDFORoETRsxHqWTPPGVuLxxyXqr0g=;
+ b=QX0rTbAO9e/i3oGjcLuCIkaOUeoCsUHW/ki3AcaFB9JaggE6vaiDBWBqpmvM8SZ3aHJudkryOp0kGf24nIorMfMSDXYvEx0NR4rOtwdSXERbIaA6MiEy198zLmcyb1X4V98Sx1KfXkrzkOZtVmz5QSiF2Emo/xHILM+V1scNCXt83cAe1NYPvrfhpUdvnYW/S6i9QyxYBhBeWqAxo6fUMI/tY89wAN3XWMU5cEzGFvgwYoNsN3/GtEz9/SxNAbPOfCBAJH6+mM8nVUPZOQ125V33s37ffNgGx4NsU3Bfra+M/BU0hL8lv9U7P5VP8YY1NMrJz4Guo21HWO8o3BBlgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4gg3nbfX4/OTj+hDFORoETRsxHqWTPPGVuLxxyXqr0g=;
+ b=Ce8M4Sl/Rfu5iq1YH5Rvds0/kssFfhNzf6P7pYmjtdJf1rYquHwIBgwrHV4tDYBTT1T+t6HLkyNx1wpVMqq6AcsGr5Wns9WmA14goF0d8e04cVUMKa453b8oTG6PIB4HyNr6KVmyN6NywhWVEOmD4GQJgB6TJiPuagqwm1zu6cU=
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
+ VI1PR04MB6127.eurprd04.prod.outlook.com (20.179.26.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.16; Wed, 24 Jul 2019 12:57:35 +0000
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::e401:6546:3729:47c0]) by VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::e401:6546:3729:47c0%6]) with mapi id 15.20.2115.005; Wed, 24 Jul 2019
+ 12:57:35 +0000
+From:   Claudiu Manoil <claudiu.manoil@nxp.com>
+To:     Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe MDIO
+ endpoint
+Thread-Topic: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe
+ MDIO endpoint
+Thread-Index: AQHVQWmTb9jG7sYluUe4Xi/RkNWlU6bYyBMAgAC+B+CAABpsgA==
+Date:   Wed, 24 Jul 2019 12:57:34 +0000
+Message-ID: <VI1PR04MB48805982F057B8DE4DF9FCAE96C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <1563894955-545-1-git-send-email-claudiu.manoil@nxp.com>
+ <1563894955-545-2-git-send-email-claudiu.manoil@nxp.com>
+ <20190723222454.GE13517@lunn.ch>
+ <VI1PR04MB4880DAE881769F6DC845CEEF96C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB4880DAE881769F6DC845CEEF96C60@VI1PR04MB4880.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=claudiu.manoil@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 40a94704-a5cb-4a19-9fe9-08d710367f97
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6127;
+x-ms-traffictypediagnostic: VI1PR04MB6127:
+x-microsoft-antispam-prvs: <VI1PR04MB61270C80716D77F5645EFAAC96C60@VI1PR04MB6127.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0108A997B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(13464003)(199004)(189003)(5660300002)(6506007)(99286004)(66066001)(2940100002)(14454004)(186003)(33656002)(8936002)(81166006)(9686003)(74316002)(55016002)(6436002)(110136005)(53936002)(4326008)(478600001)(316002)(102836004)(76176011)(81156014)(7696005)(44832011)(54906003)(68736007)(26005)(8676002)(3846002)(6116002)(486006)(11346002)(476003)(6246003)(66556008)(14444005)(305945005)(66946007)(256004)(25786009)(2906002)(7736002)(446003)(66446008)(76116006)(66476007)(64756008)(71200400001)(86362001)(71190400001)(229853002)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6127;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: n8LkT78yAf/E4aT9iTlQkdmxXKH/awpw5Bi89+pI/xU417TBhmH5H4s8L22SmfCNa+b8mTWr/Lr7xLJ/SaF5u2T4spATK+SpxeX+dUBsU0EEQ1ggk8hFG4xBCChEO7V6x9BOE3atNHcCMQGZ1hAz4mPqaJ71WN7heWlhSwBu84GJP99ltvg8b96RWrBvB0b1rgksyFRvuoOlgrVsboHUV6uPCDoKMwvRjJ9vdDe1SWzJQJfL4WoGyjklA1tjSvKkVTM7qgyUBeSZIwQH08dLt/ExOp6DrCOb9P8G6gIuxyNYdjMYC20FS+Lz+MGN9278FusRHRl+l/RfYzIIR5bjH0VpHFS2uO+puCGa077a2juAnCI+OGC/TXCe8UsssZqa+pe/18SFJD471c10xusrcwmj/SezK20L12Kfaym/mh8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40a94704-a5cb-4a19-9fe9-08d710367f97
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 12:57:34.9487
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.manoil@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/07/19 5:21 AM, Baolin Wang wrote:
-> On Tue, 23 Jul 2019 at 20:39, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>
->> On Tue, 23 Jul 2019 at 05:05, Baolin Wang <baolin.wang@linaro.org> wrote:
->>>
->>> Hi Ulf,
->>>
->>> On Mon, 22 Jul 2019 at 19:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>>
->>>> On Wed, 17 Jul 2019 at 04:29, Baolin Wang <baolin.wang@linaro.org> wrote:
->>>>>
->>>>> In sdhci_runtime_resume_host() function, we will always do software reset
->>>>> for all, which will cause Spreadtrum host controller work abnormally after
->>>>> resuming.
->>>>
->>>> What does "software reset for all" means?
->>>
->>> The SD host controller specification defines 3 types software reset:
->>> software reset for data line, software reset for command line and
->>> software reset for all.
->>> Software reset for all means this reset affects the entire Host
->>> controller except for the card detection circuit.
->>
->> Thanks for clarifying, please update the changelog accordingly.
-> 
-> Sure, sorry for confusing.
-> 
->>
->>>
->>>>
->>>>>
->>>>> Thus for Spreadtrum platform that will not power down the SD/eMMC card during
->>>>> runtime suspend, we should not do software reset for all.
->>>>
->>>> Normally, sdhci hosts that enters runtime suspend doesn't power off
->>>> the card (there are some exceptions like PCI variants).
->>>
->>> Yes, same as our controller.
->>>
->>>>
->>>> So, what's so special here and how does the reset come into play? I
->>>> don't see sdhci doing a reset in sdhci_runtime_suspend|resume_host()
->>>> and nor doesn the callback from the sdhci-sprd.c variant doing it.
->>>
->>> In sdhci_runtime_resume_host(), it will issue sdhci_init(host, 0) to
->>> issue software reset for all.
->>
->> Aha, I didn't read the code carefully enough. Apologize for the noise.
-> 
-> No worries :)
-> 
->>>
->>>>
->>>>> To fix this
->>>>> issue, adding a specific reset operation that adds one condition to validate
->>>>> the power mode to decide if we can do software reset for all or just reset
->>>>> command and data lines.
->>>>>
->>>>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->>>>> ---
->>>>> Changess from v3:
->>>>>  - Use ios.power_mode to validate if the card is power down or not.
->>>>>
->>>>> Changes from v2:
->>>>>  - Simplify the sdhci_sprd_reset() by issuing sdhci_reset().
->>>>>
->>>>> Changes from v1:
->>>>>  - Add a specific reset operation instead of changing the core to avoid
->>>>>  affecting other hardware.
->>>>> ---
->>>>>  drivers/mmc/host/sdhci-sprd.c |   19 ++++++++++++++++++-
->>>>>  1 file changed, 18 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
->>>>> index 603a5d9..94f9726 100644
->>>>> --- a/drivers/mmc/host/sdhci-sprd.c
->>>>> +++ b/drivers/mmc/host/sdhci-sprd.c
->>>>> @@ -373,6 +373,23 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
->>>>>         return 1 << 31;
->>>>>  }
->>>>>
->>>>> +static void sdhci_sprd_reset(struct sdhci_host *host, u8 mask)
->>>>> +{
->>>>> +       struct mmc_host *mmc = host->mmc;
->>>>> +
->>>>> +       /*
->>>>> +        * When try to reset controller after runtime suspend, we should not
->>>>> +        * reset for all if the SD/eMMC card is not power down, just reset
->>>>> +        * command and data lines instead. Otherwise will meet some strange
->>>>> +        * behaviors for Spreadtrum host controller.
->>>>> +        */
->>>>> +       if (host->runtime_suspended && (mask & SDHCI_RESET_ALL) &&
->>>>> +           mmc->ios.power_mode == MMC_POWER_ON)
->>>>> +               mask = SDHCI_RESET_CMD | SDHCI_RESET_DATA;
->>>>
->>>> Can sdhci_sprd_reset() be called when the host is runtime suspended?
->>>
->>> When host tries to runtime resume in sdhci_runtime_resume_host(), it
->>> will call reset operation to do software reset.
->>
->> Right, I see that now, thanks for clarifying.
->>
->> However, there are still some weird things going on in
->> sdhci_runtime_resume_host(). Like why is host->ops->enable_dma()
->> called first, directly from sdhci_runtime_resume_host(), then again in
->> sdhci_do_reset(), after host->ops->reset() has been called. Looks like
->> the first call to ->enable_dma() doesn't make sense?
-> 
-> I am mot sure, since our host did not supply enable_dma() operation.
-> This logic was used by some other hardware and worked well, I am not
-> sure if it can reveal some issues if we change the logic here.
-> 
-> Adrian, could you help to explain why we put enable_dma() in front of
-> software reset?
 
-No reason I can see.  But if you add a parameter to avoid a full reset, then
-the ->enable_dma will be needed in that case.
 
-> 
+>-----Original Message-----
+>From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
+>Behalf Of Claudiu Manoil
+>Sent: Wednesday, July 24, 2019 12:53 PM
+>To: Andrew Lunn <andrew@lunn.ch>
+>Cc: David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
+>netdev@vger.kernel.org; Alexandru Marginean
+><alexandru.marginean@nxp.com>; linux-kernel@vger.kernel.org; Leo Li
+><leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; linux-arm-
+>kernel@lists.infradead.org
+>Subject: RE: [PATCH net-next 1/3] enetc: Add mdio bus driver for the PCIe =
+MDIO
+>endpoint
+>
+>>-----Original Message-----
+>>From: Andrew Lunn <andrew@lunn.ch>
+>>Sent: Wednesday, July 24, 2019 1:25 AM
+>>To: Claudiu Manoil <claudiu.manoil@nxp.com>
+>>Cc: David S . Miller <davem@davemloft.net>; devicetree@vger.kernel.org;
+>>netdev@vger.kernel.org; Alexandru Marginean
+>><alexandru.marginean@nxp.com>; linux-kernel@vger.kernel.org; Leo Li
+>><leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; linux-arm-
+>>kernel@lists.infradead.org
+>>Subject: Re: [PATCH net-next 1/3] enetc: Add mdio bus driver for the
+>>PCIe MDIO endpoint
 >>
->>>
->>>> That sounds like a bug to me, no?
->>>
->>> Since our controller will meet some strange behaviors if we do
->>> software reset for all in sdhci_runtime_resume_host(), and try to
->>> avoid changing the core logic of sdhci_runtime_resume_host() used by
->>> other hardware controllers, thus I introduced a specific reset ops and
->>> added some condition to make sure we just do software reset command
->>> and data lines from runtime suspend state.
+>>> +	bus =3D mdiobus_alloc_size(sizeof(u32 *));
+>>> +	if (!bus)
+>>> +		return -ENOMEM;
+>>> +
 >>
->> I understand, but perhaps it would become more clear if
->> sdhci_runtime_resume_host() is re-factored a bit. Maybe the caller can
->> give it some new parameter to let it decide if a SDHCI_RESET_ALL shall
->> be done or not.
-> 
-> Yes, sounds reasonable, but need change other host drivers which
-> issued the sdhci_runtime_resume_host().
-> 
-> Adrian, if you also agree with Ulf's suggestion, then I will post new
-> patches to add a parameter to decide the reset mode. Thanks.
+>>> +	bus->priv =3D pci_iomap_range(pdev, 0, ENETC_MDIO_REG_OFFSET, 0);
+>>
+>>This got me confused for a while. You allocate space for a u32 pointer.
+>>bus->priv will point to this space. However, you are not using this
+>>space, you {ab}use the pointer to directly hold the return from
+>>pci_iomap_range(). This works, but sparse is probably unhappy, and you
+>>are wasting the space the u32 pointer takes.
+>>
+>
+>Thanks Andrew,
+>This is not what I wanted to do, don't ask me how I got to this, it's conf=
+using
+>indeed.
+>What's needed here is mdiobus_alloc() or better, devm_mdiobus_alloc().
+>I've got to do some cleanup in the local mdio bus probing too.
+>Will send v2.
+>
 
-Sounds fine.
-
+This is tricky actually, mdiobus_alloc won't do it, I still need to allocat=
+e space
+for the pointer.
+So it's not ok to store the register space pointer directly into priv
+(even if iomap returns void *), it's unusual.
+Looks like I will have to use double pointers!
