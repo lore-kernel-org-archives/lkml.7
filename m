@@ -2,54 +2,73 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E172EC76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E05C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9413229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864FF22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:08:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/1DcqJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfGXGHu (ORCPT
+        id S1726391AbfGXGIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:07:50 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:46337 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfGXGHu (ORCPT
+        Wed, 24 Jul 2019 02:08:20 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44693 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfGXGIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:07:50 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 389EFE0007;
-        Wed, 24 Jul 2019 06:07:43 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH REBASE v4 08/14] arm: Use generic mmap top-down layout and brk randomization
-Date:   Wed, 24 Jul 2019 01:58:44 -0400
-Message-Id: <20190724055850.6232-9-alex@ghiti.fr>
+        Wed, 24 Jul 2019 02:08:19 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so86973792iob.11;
+        Tue, 23 Jul 2019 23:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YDk5LUlpe3ysfAT5OqSj5FwvlMLI+GX+8vcuIiOGrxI=;
+        b=D/1DcqJnqZhoAAisXhEa4TclRHbrKwelJKoQ/+ULJ8XvaRhtBy7OLVIpIW8rneITml
+         RzJOrhhksEKAtGgXLjDxC+aW/lsajC2Jo5hTObIcEAqaCJBWAJ1XhG0fHKvh9vFphDWf
+         zEFY2QAWTfUBADk6kPsI7CPZFfM3FjrZev+y4/DwwKLzeUgMOYJQJB4uXerKlSX2U854
+         2ForQ6vtgqXpCnXRqOx+eDVnQnplf9oA89ZYiuVX5T7w6E31x+t7RcTLKQrjrZBbIw8u
+         GY3gFTTe7zfmx/Sno4B8rdpDvcfZ0pkOCvvGKowPvDtITBv8doG8SvBCbXoommQlCU7d
+         GYKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YDk5LUlpe3ysfAT5OqSj5FwvlMLI+GX+8vcuIiOGrxI=;
+        b=hH0tGeJAjiZrTxoPz0F7VSvxVCw97YaQPUd04Aj1ygSr+6zuv2IaRMSaegOb4AwA4h
+         8M5DRtgnfis5Cnn25HisiTl+x+9uRvPd2PDg8HdmGRIzcGPxEIiAIMs61e4FRPpzGfn4
+         2aIgsKfxHox/H7S1xodAxmT/p4Q1jGdj+oKblEo3FMGsebB/SHeHjEkbKF3mxy7M8Anr
+         5mtLv45ioN9lGkhplRnfaYaYlBtXDFxKebTTdcFQ6fcbNm1NYJfZ8iR2Er3BahPpfS6F
+         qRZ4tKvd+f9HkpOUTvyiPx1id//HHoE8FS6ySVaMFpbM1VKXlcGnKJXl6M89nF7DrA1e
+         2a6Q==
+X-Gm-Message-State: APjAAAWRb8oU0PwzvzGva4N5q1AySCf9cAJNvR02/CC4NcJTTWptGlAE
+        wHTSgMiGekbSVrBYFxnT8fU=
+X-Google-Smtp-Source: APXvYqyY2mboFz8cpwu4jM7KIEHCvEDvrl0oB8lS4KEtd1/it9Zo0Pc46OEwq3HAauajG1VvS72Xpw==
+X-Received: by 2002:a02:aa0d:: with SMTP id r13mr83123955jam.129.1563948498756;
+        Tue, 23 Jul 2019 23:08:18 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id z26sm45034296ioi.85.2019.07.23.23.08.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 23:08:18 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     iyappan@os.amperecomputing.com, keyur@os.amperecomputing.com,
+        quan@os.amperecomputing.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     skunberg.kelsey@gmail.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v3] drivers: net: xgene: Remove acpi_has_method() calls
+Date:   Wed, 24 Jul 2019 00:06:59 -0600
+Message-Id: <20190724060659.105292-1-skunberg.kelsey@gmail.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
-References: <20190724055850.6232-1-alex@ghiti.fr>
+In-Reply-To: <20190723185811.8548-1-skunberg.kelsey@gmail.com>
+References: <20190723185811.8548-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,155 +76,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm uses a top-down mmap layout by default that exactly fits the generic
-functions, so get rid of arch specific code and use the generic version
-by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
-As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
-use the generic version of arch_randomize_brk since it also fits.
-Note that this commit also removes the possibility for arm to have elf
-randomization and no MMU: without MMU, the security added by randomization
-is worth nothing.
-Note that it is safe to remove STACK_RND_MASK since it matches the default
-value.
+acpi_evaluate_object will already return an error if the needed method
+does not exist. Remove unnecessary acpi_has_method() calls and check the
+returned acpi_status for failure instead.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- arch/arm/Kconfig                 |  2 +-
- arch/arm/include/asm/processor.h |  2 --
- arch/arm/kernel/process.c        |  5 ---
- arch/arm/mm/mmap.c               | 62 --------------------------------
- 4 files changed, 1 insertion(+), 70 deletions(-)
+Changes in v2:
+	- Fixed white space warnings and errors
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 33b00579beff..81b08b027e4e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -7,7 +7,6 @@ config ARM
- 	select ARCH_HAS_BINFMT_FLAT
- 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
--	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_KEEPINITRD
- 	select ARCH_HAS_KCOV
-@@ -30,6 +29,7 @@ config ARM
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
- 	select BUILDTIME_EXTABLE_SORT if MMU
-diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
-index 20c2f42454b8..614bf829e454 100644
---- a/arch/arm/include/asm/processor.h
-+++ b/arch/arm/include/asm/processor.h
-@@ -140,8 +140,6 @@ static inline void prefetchw(const void *ptr)
+Changes in v3:
+	- Resolved build errors caused by missing bracket
+
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c    | 9 ++++-----
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c | 9 +++++----
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c | 9 ++++-----
+ 3 files changed, 13 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+index 61a465097cb8..79924efd4ab7 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+@@ -694,6 +694,7 @@ bool xgene_ring_mgr_init(struct xgene_enet_pdata *p)
+ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ {
+ 	struct device *dev = &pdata->pdev->dev;
++	acpi_status status;
+ 
+ 	if (!xgene_ring_mgr_init(pdata))
+ 		return -ENODEV;
+@@ -712,11 +713,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ 		udelay(5);
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
+-			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
+-					 "_INI")) {
++		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
++					      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+ 					     "_INI", NULL, NULL);
+ 		}
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+index 6453fc2ebb1f..3b3dc5b25b29 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c
+@@ -437,6 +437,7 @@ static void xgene_sgmac_tx_disable(struct xgene_enet_pdata *p)
+ static int xgene_enet_reset(struct xgene_enet_pdata *p)
+ {
+ 	struct device *dev = &p->pdev->dev;
++	acpi_status status;
+ 
+ 	if (!xgene_ring_mgr_init(p))
+ 		return -ENODEV;
+@@ -460,12 +461,12 @@ static int xgene_enet_reset(struct xgene_enet_pdata *p)
+ 		}
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_RST"))
+-			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		else if (acpi_has_method(ACPI_HANDLE(&p->pdev->dev), "_INI"))
++		status = acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
++					      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&p->pdev->dev),
+ 					     "_INI", NULL, NULL);
++		}
  #endif
- #endif
+ 	}
  
--#define HAVE_ARCH_PICK_MMAP_LAYOUT
--
- #endif
+diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
+index 133eb91c542e..78584089d76d 100644
+--- a/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
++++ b/drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
+@@ -380,6 +380,7 @@ static void xgene_xgmac_tx_disable(struct xgene_enet_pdata *pdata)
+ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ {
+ 	struct device *dev = &pdata->pdev->dev;
++	acpi_status status;
  
- #endif /* __ASM_ARM_PROCESSOR_H */
-diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
-index f934a6739fc0..9485acc520a4 100644
---- a/arch/arm/kernel/process.c
-+++ b/arch/arm/kernel/process.c
-@@ -319,11 +319,6 @@ unsigned long get_wchan(struct task_struct *p)
- 	return 0;
- }
- 
--unsigned long arch_randomize_brk(struct mm_struct *mm)
--{
--	return randomize_page(mm->brk, 0x02000000);
--}
--
- #ifdef CONFIG_MMU
- #ifdef CONFIG_KUSER_HELPERS
- /*
-diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
-index 0b94b674aa91..b8d912ac9e61 100644
---- a/arch/arm/mm/mmap.c
-+++ b/arch/arm/mm/mmap.c
-@@ -17,43 +17,6 @@
- 	((((addr)+SHMLBA-1)&~(SHMLBA-1)) +	\
- 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
- 
--/* gap between mmap and stack */
--#define MIN_GAP		(128*1024*1024UL)
--#define MAX_GAP		((STACK_TOP)/6*5)
--#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
--
--static int mmap_is_legacy(struct rlimit *rlim_stack)
--{
--	if (current->personality & ADDR_COMPAT_LAYOUT)
--		return 1;
--
--	if (rlim_stack->rlim_cur == RLIM_INFINITY)
--		return 1;
--
--	return sysctl_legacy_va_layout;
--}
--
--static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
--{
--	unsigned long gap = rlim_stack->rlim_cur;
--	unsigned long pad = stack_guard_gap;
--
--	/* Account for stack randomization if necessary */
--	if (current->flags & PF_RANDOMIZE)
--		pad += (STACK_RND_MASK << PAGE_SHIFT);
--
--	/* Values close to RLIM_INFINITY can overflow. */
--	if (gap + pad > gap)
--		gap += pad;
--
--	if (gap < MIN_GAP)
--		gap = MIN_GAP;
--	else if (gap > MAX_GAP)
--		gap = MAX_GAP;
--
--	return PAGE_ALIGN(STACK_TOP - gap - rnd);
--}
--
- /*
-  * We need to ensure that shared mappings are correctly aligned to
-  * avoid aliasing issues with VIPT caches.  We need to ensure that
-@@ -181,31 +144,6 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
- 	return addr;
- }
- 
--unsigned long arch_mmap_rnd(void)
--{
--	unsigned long rnd;
--
--	rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
--
--	return rnd << PAGE_SHIFT;
--}
--
--void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
--{
--	unsigned long random_factor = 0UL;
--
--	if (current->flags & PF_RANDOMIZE)
--		random_factor = arch_mmap_rnd();
--
--	if (mmap_is_legacy(rlim_stack)) {
--		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
--		mm->get_unmapped_area = arch_get_unmapped_area;
--	} else {
--		mm->mmap_base = mmap_base(random_factor, rlim_stack);
--		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
--	}
--}
--
- /*
-  * You really shouldn't be using read() or write() on /dev/mem.  This
-  * might go away in the future.
+ 	if (!xgene_ring_mgr_init(pdata))
+ 		return -ENODEV;
+@@ -393,11 +394,9 @@ static int xgene_enet_reset(struct xgene_enet_pdata *pdata)
+ 		udelay(5);
+ 	} else {
+ #ifdef CONFIG_ACPI
+-		if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev), "_RST")) {
+-			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+-					     "_RST", NULL, NULL);
+-		} else if (acpi_has_method(ACPI_HANDLE(&pdata->pdev->dev),
+-					   "_INI")) {
++		status = acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
++					      "_RST", NULL, NULL);
++		if (ACPI_FAILURE(status)) {
+ 			acpi_evaluate_object(ACPI_HANDLE(&pdata->pdev->dev),
+ 					     "_INI", NULL, NULL);
+ 		}
 -- 
 2.20.1
 
