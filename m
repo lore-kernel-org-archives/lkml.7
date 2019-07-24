@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CF4C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A8FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2C120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463F620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999172;
-	bh=JLHNKPN0UpWv5Ars4n9ZfXOXJBOrMrfJGsdj7n1P1S4=;
+	s=default; t=1563999187;
+	bh=sekeUZsFe40A6R5S9zKi9lEAV1KgH2ez1/bzAXZ8O9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eVPsHnIFBkF+gCY7mSRPDMfmrltIhkYgW9pKydFhFAbiWDRbUZhUSOPNEXoopdUHy
-	 QZgMIGgAMOvWYcOruYhT8T65evDfIXogoY33CQlxAbHruSBQ+yKm1CgVAY71KMse2f
-	 6uQBIJHkNmJXAQ/eL+bq13VQgGXUrisxrgGgA2c0=
+	b=n9w2pFclfOoTFnGH7yi3v+CxndR92Ab4u6Yth4DatH2AJTp6vm/91elGaGR6sHtHp
+	 0/AhvLk5VQFIKuYxYczg2iM3/T1CKInfkqW0ifwzBt9jugreiQi+WEPjF6fsiSn8No
+	 EAv/zoadsw/ED98uiSWP/sVcRlTPo6AwfkxCZ4d8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391909AbfGXUMu (ORCPT
+        id S2391979AbfGXUNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404739AbfGXT5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:06 -0400
+        id S2404450AbfGXT4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:56:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 319BD205C9;
-        Wed, 24 Jul 2019 19:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2992205C9;
+        Wed, 24 Jul 2019 19:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998225;
-        bh=JLHNKPN0UpWv5Ars4n9ZfXOXJBOrMrfJGsdj7n1P1S4=;
+        s=default; t=1563998210;
+        bh=sekeUZsFe40A6R5S9zKi9lEAV1KgH2ez1/bzAXZ8O9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fBHhc1mkUxQA3xGVK+zdkUIN5ZT2UVPvd82DDFGVO7a+TcCOnnFf6MAnxxYgOTc1M
-         5p5NqX01lqnmZobZW7LR6ZMS0XXYKBJmrRgdvb4lB0IjfIMDD0Nc1Zs1PkFPI0+bwU
-         YOKsggpOHP3EpiO3aRq7ztIg7XutkjtM7MEJbPIM=
+        b=mYIEsNRvCDF8YpGkySy8BNonyxjsdNtnBvNobxW6Vdh9bFTOsIXwV3r3/HM6rwm5y
+         JcS+LVVVkzNHKGT9QNzZilvxg4vxoHZUJ9Qx3ivxoOstKZHw93RTyYEikB9i5I4QL8
+         mKXmL3MejLUri/cRVpxmrAqYx6I3u/IuiY1MbtRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 289/371] ALSA: hda/realtek - Fixed Headphone Mic cant record on Dell platform
-Date:   Wed, 24 Jul 2019 21:20:41 +0200
-Message-Id: <20190724191746.081404491@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.1 284/371] ASoC: dapm: Adapt for debugfs API change
+Date:   Wed, 24 Jul 2019 21:20:36 +0200
+Message-Id: <20190724191745.653534180@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,37 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Mark Brown <broonie@kernel.org>
 
-commit fbc571290d9f7bfe089c50f4ac4028dd98ebfe98 upstream.
+commit ceaea851b9ea75f9ea2bbefb53ff0d4b27cd5a6e upstream.
 
-It assigned to wrong model. So, The headphone Mic can't work.
+Back in ff9fb72bc07705c (debugfs: return error values, not NULL) the
+debugfs APIs were changed to return error pointers rather than NULL
+pointers on error, breaking the error checking in ASoC. Update the
+code to use IS_ERR() and log the codes that are returned as part of
+the error messages.
 
-Fixes: 3f640970a414 ("ALSA: hda - Fix headset mic detection problem for several Dell laptops")
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: ff9fb72bc07705c (debugfs: return error values, not NULL)
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/soc/soc-dapm.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7614,9 +7614,12 @@ static const struct snd_hda_pin_quirk al
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
- 		{0x21, 0x03211020}),
--	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL4_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x04211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL4_MIC_NO_PRESENCE,
-+		{0x14, 0x90170110},
-+		{0x21, 0x04211030}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		ALC295_STANDARD_PINS,
- 		{0x17, 0x21014020},
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -2154,23 +2154,25 @@ void snd_soc_dapm_debugfs_init(struct sn
+ {
+ 	struct dentry *d;
+ 
+-	if (!parent)
++	if (!parent || IS_ERR(parent))
+ 		return;
+ 
+ 	dapm->debugfs_dapm = debugfs_create_dir("dapm", parent);
+ 
+-	if (!dapm->debugfs_dapm) {
++	if (IS_ERR(dapm->debugfs_dapm)) {
+ 		dev_warn(dapm->dev,
+-		       "ASoC: Failed to create DAPM debugfs directory\n");
++			 "ASoC: Failed to create DAPM debugfs directory %ld\n",
++			 PTR_ERR(dapm->debugfs_dapm));
+ 		return;
+ 	}
+ 
+ 	d = debugfs_create_file("bias_level", 0444,
+ 				dapm->debugfs_dapm, dapm,
+ 				&dapm_bias_fops);
+-	if (!d)
++	if (IS_ERR(d))
+ 		dev_warn(dapm->dev,
+-			 "ASoC: Failed to create bias level debugfs file\n");
++			 "ASoC: Failed to create bias level debugfs file: %ld\n",
++			 PTR_ERR(d));
+ }
+ 
+ static void dapm_debugfs_add_widget(struct snd_soc_dapm_widget *w)
+@@ -2184,10 +2186,10 @@ static void dapm_debugfs_add_widget(stru
+ 	d = debugfs_create_file(w->name, 0444,
+ 				dapm->debugfs_dapm, w,
+ 				&dapm_widget_power_fops);
+-	if (!d)
++	if (IS_ERR(d))
+ 		dev_warn(w->dapm->dev,
+-			"ASoC: Failed to create %s debugfs file\n",
+-			w->name);
++			 "ASoC: Failed to create %s debugfs file: %ld\n",
++			 w->name, PTR_ERR(d));
+ }
+ 
+ static void dapm_debugfs_cleanup(struct snd_soc_dapm_context *dapm)
 
 
