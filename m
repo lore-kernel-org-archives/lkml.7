@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF909C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDA3C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967DD2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CBF02147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997969;
-	bh=wicaEYmtIV5y6GmC0+a9QH9oZedC4bhe34jblgb4bnw=;
+	s=default; t=1563997973;
+	bh=m0fTq+hjHtyh+NTukjYK0o8EVFrit1Qv2qvErHTld2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NEzB6SJy45KMKjGyexjN7NVcsXe8Du3xMY9jravzTg11A1H3tCo4X64rYiS+RTyHf
-	 GbYr2tGPHwlxpjwi2XRC5fNllXxk2iQ9ApMKxZH6DOjWqAPVqxxyU2owg9A3oRKSQh
-	 E1C8unUt0zqlGwcC+bd6yO8gZBsvVqhGjfGvXUDY=
+	b=ZFJlekW1JOqk+VELNfcLr8uF2V0VUT/CE+Nczl4ilHH/HfQ9P2E8R6gx9hLhwGF9b
+	 dVW68Hdeu720/rIMtytGGUNatIDBpf1kx+OPF/FUcnTc1D1O/InjDfYzLrWG1hXYfD
+	 6Vm4OLRtieHYe3DXxdM0tVTr+l9958V1Z2s9n8nU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391786AbfGXTws (ORCPT
+        id S2391796AbfGXTww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:52:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34822 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391769AbfGXTwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:52:46 -0400
+        id S2391050AbfGXTwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:52:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE10F20665;
-        Wed, 24 Jul 2019 19:52:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A600620665;
+        Wed, 24 Jul 2019 19:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997965;
-        bh=wicaEYmtIV5y6GmC0+a9QH9oZedC4bhe34jblgb4bnw=;
+        s=default; t=1563997969;
+        bh=m0fTq+hjHtyh+NTukjYK0o8EVFrit1Qv2qvErHTld2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xW8MOp2RA2c5Tkri2pZwV/LhA0RA3D3qpbJNzf04vB4IvUD3T31EONE3HIYLzOeCd
-         rhGsM0wg0neTJ736VHZI7xBEfiVWzYpl5/Xby4hhOnAermnnvNBZpecXnXpy8XBW88
-         HGjZ9YJweE5uTbA8OBzd9yIKVWDoHcZSBtfirsTA=
+        b=QGAACST2c85X6uRn6dmq/6tRaK5idferzGYMwBXqrsw0Ta7k2w9ArNuhtolaNHvei
+         T0O2YpcvPsxNCYigK6msduaEqNUGDLDvL2c3SaZkBpfs63gvf1jedCbCkgvTjBX9Lu
+         UsqXXlIbKHsiEXYpW8MRMRRb7RaCks2pZ58mcuMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Masri <amasri@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 166/371] wil6210: drop old event after wmi_call timeout
-Date:   Wed, 24 Jul 2019 21:18:38 +0200
-Message-Id: <20190724191737.695395668@linuxfoundation.org>
+Subject: [PATCH 5.1 202/371] tools: bpftool: Fix json dump crash on powerpc
+Date:   Wed, 24 Jul 2019 21:19:14 +0200
+Message-Id: <20190724191739.875701494@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,54 +63,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a276003111c0404f6bfeffe924c5a21f482428b ]
+[ Upstream commit aa52bcbe0e72fac36b1862db08b9c09c4caefae3 ]
 
-This change fixes a rare race condition of handling WMI events after
-wmi_call expires.
+Michael reported crash with by bpf program in json mode on powerpc:
 
-wmi_recv_cmd immediately handles an event when reply_buf is defined and
-a wmi_call is waiting for the event.
-However, in case the wmi_call has already timed-out, there will be no
-waiting/running wmi_call and the event will be queued in WMI queue and
-will be handled later in wmi_event_handle.
-Meanwhile, a new similar wmi_call for the same command and event may
-be issued. In this case, when handling the queued event we got WARN_ON
-printed.
+  # bpftool prog -p dump jited id 14
+  [{
+        "name": "0xd00000000a9aa760",
+        "insns": [{
+                "pc": "0x0",
+                "operation": "nop",
+                "operands": [null
+                ]
+            },{
+                "pc": "0x4",
+                "operation": "nop",
+                "operands": [null
+                ]
+            },{
+                "pc": "0x8",
+                "operation": "mflr",
+  Segmentation fault (core dumped)
 
-Fixing this case as a valid timeout and drop the unexpected event.
+The code is assuming char pointers in format, which is not always
+true at least for powerpc. Fixing this by dumping the whole string
+into buffer based on its format.
 
-Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Please note that libopcodes code does not check return values from
+fprintf callback, but as per Jakub suggestion returning -1 on allocation
+failure so we do the best effort to propagate the error.
+
+Fixes: 107f041212c1 ("tools: bpftool: add JSON output for `bpftool prog dump jited *` command")
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/wmi.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ tools/bpf/bpftool/jit_disasm.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 63116f4b62c7..de52e532c105 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -3211,7 +3211,18 @@ static void wmi_event_handle(struct wil6210_priv *wil,
- 		/* check if someone waits for this event */
- 		if (wil->reply_id && wil->reply_id == id &&
- 		    wil->reply_mid == mid) {
--			WARN_ON(wil->reply_buf);
-+			if (wil->reply_buf) {
-+				/* event received while wmi_call is waiting
-+				 * with a buffer. Such event should be handled
-+				 * in wmi_recv_cmd function. Handling the event
-+				 * here means a previous wmi_call was timeout.
-+				 * Drop the event and do not handle it.
-+				 */
-+				wil_err(wil,
-+					"Old event (%d, %s) while wmi_call is waiting. Drop it and Continue waiting\n",
-+					id, eventid2name(id));
-+				return;
-+			}
+diff --git a/tools/bpf/bpftool/jit_disasm.c b/tools/bpf/bpftool/jit_disasm.c
+index 3ef3093560ba..bfed711258ce 100644
+--- a/tools/bpf/bpftool/jit_disasm.c
++++ b/tools/bpf/bpftool/jit_disasm.c
+@@ -11,6 +11,8 @@
+  * Licensed under the GNU General Public License, version 2.0 (GPLv2)
+  */
  
- 			wmi_evt_call_handler(vif, id, evt_data,
- 					     len - sizeof(*wmi));
++#define _GNU_SOURCE
++#include <stdio.h>
+ #include <stdarg.h>
+ #include <stdint.h>
+ #include <stdio.h>
+@@ -44,11 +46,13 @@ static int fprintf_json(void *out, const char *fmt, ...)
+ 	char *s;
+ 
+ 	va_start(ap, fmt);
++	if (vasprintf(&s, fmt, ap) < 0)
++		return -1;
++	va_end(ap);
++
+ 	if (!oper_count) {
+ 		int i;
+ 
+-		s = va_arg(ap, char *);
+-
+ 		/* Strip trailing spaces */
+ 		i = strlen(s) - 1;
+ 		while (s[i] == ' ')
+@@ -61,11 +65,10 @@ static int fprintf_json(void *out, const char *fmt, ...)
+ 	} else if (!strcmp(fmt, ",")) {
+ 		   /* Skip */
+ 	} else {
+-		s = va_arg(ap, char *);
+ 		jsonw_string(json_wtr, s);
+ 		oper_count++;
+ 	}
+-	va_end(ap);
++	free(s);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
