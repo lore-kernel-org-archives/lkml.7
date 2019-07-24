@@ -2,174 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD87C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF15C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71B7229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563935599;
-	bh=z0C6szy6fykWm2kIMSM/3XAQ9Ybulmlh7ZVN7CL90+4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=EU/6UenvQdnVBIwvIpNu88TAUR33RgXXJOqrTOpl/pT5LF8QdwBdjJT4+RIK+SVu1
-	 TcJdGpvb4zFNGCuUyQVh/kzuYhhfhP4slNRoP0eMD2r7+y3AOXm+XY+SU5xGfxfIyS
-	 NXuBvrzS+QbQfRmu/PkqdrJtrWg7uf98B6Y/Nwik=
+	by mail.kernel.org (Postfix) with ESMTP id B80D1227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:33:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAc6uNbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbfGXCdR (ORCPT
+        id S1728938AbfGXCdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:33:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbfGXCdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:33:17 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A8FD227BF;
-        Wed, 24 Jul 2019 02:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563935595;
-        bh=z0C6szy6fykWm2kIMSM/3XAQ9Ybulmlh7ZVN7CL90+4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nf51RhWH9oDm7kxVNXxAW6AJy1oqVCKicKh+ayUDouWU1jCrjU7+q6nHQM6csWtTs
-         3vISp29T1GieRsejFscE2iaT+It00Ku0CoJ8d81Xr80rsK3jtFfJl5REmguDNbFrhx
-         Z0EUcOcqjVOzclEEFrFwS/TjJk295CkhbF4uLrJw=
-Date:   Tue, 23 Jul 2019 19:33:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        DaeRyong Jeong <threeearcat@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 4 open syzbot bugs in tty subsystem
-Message-ID: <20190724023314.GV643@sol.localdomain>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        DaeRyong Jeong <threeearcat@gmail.com>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        Tue, 23 Jul 2019 22:33:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34341 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfGXCdv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:33:51 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so14154285pgc.1;
+        Tue, 23 Jul 2019 19:33:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=PG5Fjwwrk0QuD+sTgYEYYGjOti0OiQdq1uV5NO/0c8Y=;
+        b=AAc6uNbrMbXFMcL3MnGZRdvGr23b+I7A8qHl2fitW/UP1nyjy8tBU1FkWAY193tSIY
+         zPRChdZEayDulJTZS+1ewNcZY29Oldm0zo2EoQEO8NAZkwGWSpvAloicBvcrVbFaBVjl
+         RmW2WwT00t4W+QRVAXHTm5SPKx09wyvkMuV/mmjP0/wlKagHVVjK5pDEmRXe92mu6Zfy
+         hr1xJVst4mHX32dPWcAiFRsQNwblgmnnwXP3pg3ycebY3OcxECO3IxFDgRCzFmDccVIB
+         nSA+2sS77AFpvay66K18dlgw4RGp5CrN3/Br4bXRPZ2y30/BBMNoPcaqrl4ZKPHiPFgJ
+         9R8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=PG5Fjwwrk0QuD+sTgYEYYGjOti0OiQdq1uV5NO/0c8Y=;
+        b=OrJbFxk7CvlqTa1mvISHU4hSZtTJTU1cHpiiNDB/Ej4MvmB83ltP3XFaeCGqv+MDo6
+         +ddGPFqDbj4LzbrbRgTF+a8eAhR7q2ZIAKpIbGE2dQ06vc/gj87M0eu0ZSsnQ4aBQJMQ
+         zbJXk+Bum0xYPejD4kJrWOdpT7KZK4tfzgC4fZj/ZKlDU9B8fIjFK9I8kiluDYplEqsX
+         wiOXLS4dgdWCpk/DjF+jqdLr9TnSSO20BkuzkQJcVYu3FlKzq1NneQn0JChCI23cJn6B
+         HUBnXBOpht8wdCyIzd3/jS0MSsX8dEJyodiZPxo4Xy3qE5uC/S/fjSCgF9YONvq0zOoD
+         r4jQ==
+X-Gm-Message-State: APjAAAW4MzhvEkBGrxocNeCJPWN01fQCMts5+QX5hvm2g6T6O28CK2aX
+        40+GSsFYUp0LV9FxsBNMO+WH0p0m
+X-Google-Smtp-Source: APXvYqxSqfZOC7vaEUmBkXSL8+tgg9fFUHQDwWkNEhKzUNDpfhkEivfM5Ae4Np1l/uYn+5Ti8d7FVA==
+X-Received: by 2002:a65:5144:: with SMTP id g4mr26835599pgq.202.1563935630873;
+        Tue, 23 Jul 2019 19:33:50 -0700 (PDT)
+Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
+        by smtp.gmail.com with ESMTPSA id 23sm48509918pfn.176.2019.07.23.19.33.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 19:33:50 -0700 (PDT)
+Subject: Re: [PATCH] fs: btrfs: Fix a possible null-pointer dereference in
+ insert_inline_extent()
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190724021132.27378-1-baijiaju1990@gmail.com>
+ <df4b5d21-0983-3ca2-44de-ea9f1616df7f@gmx.com>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <800ae777-928f-2969-d4dd-6f358a039e48@gmail.com>
+Date:   Wed, 24 Jul 2019 10:33:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <df4b5d21-0983-3ca2-44de-ea9f1616df7f@gmx.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 4 of them as possibly being bugs in the tty subsystem.  I've listed these
-reports below, sorted by an algorithm that tries to list first the reports most
-likely to be still valid, important, and actionable.
 
-Of these 4 bugs, 2 were seen in mainline in the last week.
+On 2019/7/24 10:21, Qu Wenruo wrote:
+>
+> On 2019/7/24 ä¸Šåˆ10:11, Jia-Ju Bai wrote:
+>> In insert_inline_extent(), there is an if statement on line 181 to check
+>> whether compressed_pages is NULL:
+>>      if (compressed_size && compressed_pages)
+>>
+>> When compressed_pages is NULL, compressed_pages is used on line 215:
+>>      cpage = compressed_pages[i];
+>>
+>> Thus, a possible null-pointer dereference may occur.
+>>
+>> To fix this possible bug, compressed_pages is checked on line 214.
+> This can only be hit with compressed_size > 0 and compressed_pages != NULL.
+>
+> It would be better to have an extra ASSERT() to warn developers about
+> the impossible case.
 
-Of these 4 bugs, 1 was bisected to a commit from the following person:
+Thanks for the reply :)
+So I should add ASSERT(compressed_size > 0 & compressed_pages) at the 
+beginning of the function, and remove "if (compressed_size && 
+compressed_pages)"?
 
-	DaeRyong Jeong <threeearcat@gmail.com>
 
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the tty subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in console_unlock
-Last occurred:      0 days ago
-Reported:           412 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=39ea6caa479af471183997376dc7e90bc7d64a6a
-Original thread:    https://lkml.kernel.org/lkml/00000000000087008b056df8fbb3@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 19 replies; the last was 153 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+43e93968b964e369db0b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000087008b056df8fbb3@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in console_lock_spinning_enable
-Last occurred:      0 days ago
-Reported:           33 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=2820deb61d92a8d7ab17a56ced58e963e65d76d0
-Original thread:    https://lkml.kernel.org/lkml/0000000000006c95c1058bbf7c3d@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit b6da31b2c07c46f2dcad1d86caa835227a16d9ff
-	Author: DaeRyong Jeong <threeearcat@gmail.com>
-	Date:   Mon Apr 30 15:27:04 2018 +0000
-
-	  tty: Fix data race in tty_insert_flip_string_fixed_flag
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+3ed715090790806d8b18@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006c95c1058bbf7c3d@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in cfserl_create
-Last occurred:      48 days ago
-Reported:           48 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=62bc71b5fa73349e2e6b6280eca9c9615ddeb585
-Original thread:    https://lkml.kernel.org/lkml/00000000000053d7e9058a97f4ca@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+7ec324747ce876a29db6@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000053d7e9058a97f4ca@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: unable to handle kernel paging request in slhc_free
-Last occurred:      89 days ago
-Reported:           206 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ca98e815aabdd1494eacb048d649ffd4fc916e2e
-Original thread:    https://lkml.kernel.org/lkml/000000000000675cea057e201cbb@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 129 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6c5d567447bfa30f78e2@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000675cea057e201cbb@google.com
-
+Best wishes,
+Jia-Ju Bai
