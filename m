@@ -2,93 +2,195 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EA8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E296C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942A0214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999545;
-	bh=RsIV7nCwd4cu6oT4XPd5FAmVMrrYSWNhIvH2E9GPtaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OwoFDv7CqBAofVKrVu/Go5G5y/PbSSKZLtaYxznKzGHRTErd/UIcdT3sbBiCVHHav
-	 xPijmKBIXgYD5rozT2JUWLuXSaJ/jKynPtGezanGBRfsAh1tueO1OvDBXpWhlLD4Zz
-	 +Bh1/jfkFbd+B6SON+GPac6ucDQTp/7c4dG5DA1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1B330206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MMFhBM5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392303AbfGXUTE (ORCPT
+        id S2392900AbfGXUTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:19:04 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40672 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388983AbfGXUTB (ORCPT
+        Wed, 24 Jul 2019 16:19:09 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36362 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388998AbfGXUTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:19:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so5786802iom.7;
-        Wed, 24 Jul 2019 13:19:00 -0700 (PDT)
+        Wed, 24 Jul 2019 16:19:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so38617573wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uCyHvJVkRZumARLm11LdjYU2wgRDrjk7Xpd2Pm/4CUM=;
+        b=MMFhBM5Pt5Bu3rS3QrPnpjTF3l1IJpk1QmQmjGaPFr5PvBQwNLRpzX+5/gr6aNSdCZ
+         vvEAbsdi+zHpVh40gCBAf96lB7k/+P16YkMaax7BCa3VCjo20+sJY/pvmfXxP7jDAlzc
+         AWhRW16LHsMMAlx9kYR+te6xxCZz9DYQkUb9cIX+Eig3VWNu65JSMjOmny0yf4uDVhLR
+         DU2YrYMoOP8itf1qPvplk8lYCeENSprEH141M2gm8iDVRP/7Xr9nbG+sdjrPUHqfrU+6
+         3k8U622iHi2XDVcsN54oFxmrEi6aL45ohjJEk/gDD0CN++uyO007eaD6Cs6hCiJ9dklQ
+         2oNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ApQotHQxWJr5zyqbEl1C9NpdXsHo5uhr1/je6Huq+bI=;
-        b=NqlLMQzTzcPx9v5G9pwHgv4DssgL3rdJXDK0N3kNiZHw80bZW9/HDDXM572fhL/5ZF
-         SvW0zaoIFkjcNHPvHhFL5+bY/Dr2ZrMtVRZukNucY4giAQ51AWd77YWVx3EKjTqLvy/c
-         vF2TNnzXapH26V15y8iHNzL4+Y/0edcMW2XfyUlkC1vbqvXoBuG9EfTta5XyMeTz4i+/
-         FsyFIGMHS6pWjTTC59lJ2wbf60VFxm9jrMCCIlnnkiwwgbgs35f+zCAKOFLaAcOKuD6h
-         BaAWDQ9TsG8y/A0DnQ2kEb/pkZ3RFVAddplsmpdTRyXJWZavjNbNd+oSUBM+oLjXxcLl
-         UIbA==
-X-Gm-Message-State: APjAAAUFM3vMfJN7kg+0pvfkn2amAYqiV5KS2tK6cEVVtAP3wVHrlhUY
-        Q3G7OTHc0rWSSxkrHDn1sA==
-X-Google-Smtp-Source: APXvYqxZ9dmUz3ZXKBjOYJnBYyOwokAXvh0AFf4QNJLoM+DksevICYOosUh4VFPZzV82gw2GdpbfrA==
-X-Received: by 2002:a6b:fb02:: with SMTP id h2mr53385887iog.289.1563999540221;
-        Wed, 24 Jul 2019 13:19:00 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id r5sm43517794iom.42.2019.07.24.13.18.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:18:59 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:18:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, p.zabel@pengutronix.de, ping.bai@nxp.com,
-        daniel.baluta@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com,
-        angus@akkea.ca, andrew.smirnov@gmail.com, ccaione@baylibre.com,
-        agx@sigxcpu.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/4] dt-bindings: opp: Support multiple opp-suspend
- properties
-Message-ID: <20190724201858.GA25048@bogus>
-References: <20190709080015.43442-1-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uCyHvJVkRZumARLm11LdjYU2wgRDrjk7Xpd2Pm/4CUM=;
+        b=uAS2lWttSHHL9u89LW731jVHkzkoE2rUJsmJjKa4OpREXKQBUhVT0YJnUmzdLKvbRK
+         vvJUMFsvsmIXLpdxfFgKYAIIzgsU0bepa4zrL0dZX2BfNq/lK8Fdyu6bhc3WyW1WTGtr
+         QW5O+0cpjG1JPhT37gFGmC8eJwi/pt4UsnFAhGi2GfAx5p7W/Uuwb6pPDyq6Ccysv7jh
+         mF2lyI3rY61E/sYKNWHrZFqHwVKpn2fzZQnqox0Glsr4LtsTrSxDUwklEm+j/wwFSZaV
+         Ic+MfEbhArfPU7Acq1nfxhHxS9uHZOw6iCol1n9phm8j/YUaR3GkXbSF/a4IPHUBGonh
+         3DPQ==
+X-Gm-Message-State: APjAAAVUoi/dkqmgkHyq2HZmCj1sGxuc2sCx1IRrW+XXbSj5qVPzZyED
+        4t8ydpNs4sgF0mKCzqiyMFEOCZlP4BpoegYuavxjjQ==
+X-Google-Smtp-Source: APXvYqzne6wuqU7LConXTs0S6lFIYeqa69IIJz0V4W6ONH7N7hOznm+a/z9PghQX0bLW04gOZC7ziRyCGieZewzto2s=
+X-Received: by 2002:a1c:d10c:: with SMTP id i12mr75821649wmg.152.1563999540296;
+ Wed, 24 Jul 2019 13:19:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190709080015.43442-1-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <3b922aa4-c6d4-e4a4-766d-f324ff77f7b5@linux.com> <40f8b7d8-fafa-ad99-34fb-9c63e34917e2@redhat.com>
+In-Reply-To: <40f8b7d8-fafa-ad99-34fb-9c63e34917e2@redhat.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 24 Jul 2019 13:18:47 -0700
+Message-ID: <CALAqxLU199ATrMFa2ARmHOZ3K6ZnOuDLSAqNrTfwOWJaYiW7Yg@mail.gmail.com>
+Subject: Re: Limits for ION Memory Allocator
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     alex.popov@linux.com, Sumit Semwal <sumit.semwal@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Riley Andrews <riandrews@android.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Alistair Delva <adelva@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  9 Jul 2019 16:00:12 +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Update opp-suspend property's description to support multiple
-> opp-suspend properties defined in DT, the OPP with highest opp-hz
-> and with opp-suspend property present will be used as suspend opp.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> New patch.
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+On Wed, Jul 24, 2019 at 12:36 PM Laura Abbott <labbott@redhat.com> wrote:
+>
+> On 7/17/19 12:31 PM, Alexander Popov wrote:
+> > Hello!
+> >
+> > The syzkaller [1] has a trouble with fuzzing the Linux kernel with ION Memory
+> > Allocator.
+> >
+> > Syzkaller uses several methods [2] to limit memory consumption of the userspace
+> > processes calling the syscalls for testing the kernel:
+> >   - setrlimit(),
+> >   - cgroups,
+> >   - various sysctl.
+> > But these methods don't work for ION Memory Allocator, so any userspace process
+> > that has access to /dev/ion can bring the system to the out-of-memory state.
+> >
+> > An example of a program doing that:
+> >
+> >
+> > #include <sys/types.h>
+> > #include <sys/stat.h>
+> > #include <fcntl.h>
+> > #include <stdio.h>
+> > #include <linux/types.h>
+> > #include <sys/ioctl.h>
+> >
+> > #define ION_IOC_MAGIC         'I'
+> > #define ION_IOC_ALLOC         _IOWR(ION_IOC_MAGIC, 0, \
+> >                                     struct ion_allocation_data)
+> >
+> > struct ion_allocation_data {
+> >       __u64 len;
+> >       __u32 heap_id_mask;
+> >       __u32 flags;
+> >       __u32 fd;
+> >       __u32 unused;
+> > };
+> >
+> > int main(void)
+> > {
+> >       unsigned long i = 0;
+> >       int fd = -1;
+> >       struct ion_allocation_data data = {
+> >               .len = 0x13f65d8c,
+> >               .heap_id_mask = 1,
+> >               .flags = 0,
+> >               .fd = -1,
+> >               .unused = 0
+> >       };
+> >
+> >       fd = open("/dev/ion", 0);
+> >       if (fd == -1) {
+> >               perror("[-] open /dev/ion");
+> >               return 1;
+> >       }
+> >
+> >       while (1) {
+> >               printf("iter %lu\n", i);
+> >               ioctl(fd, ION_IOC_ALLOC, &data);
+> >               i++;
+> >       }
+> >
+> >       return 0;
+> > }
+> >
+> >
+> > I looked through the code of ion_alloc() and didn't find any limit checks.
+> > Is it currently possible to limit ION kernel allocations for some process?
+> >
+> > If not, is it a right idea to do that?
+> > Thanks!
+> >
+>
+> Yes, I do think that's the right approach. We're working on moving Ion
+> out of staging and this is something I mentioned to John Stultz. I don't
+> think we've thought too hard about how to do the actual limiting so
+> suggestions are welcome.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+In part the dmabuf heaps allow for separate heap devices, so we can
+have finer grained permissions to the specific heaps.  But that
+doesn't provide any controls on how much memory one process could
+allocate using the device if it has permission.
+
+I suspect the same issue is present with any of the dmabuf exporters
+(gpu/display drivers, etc), so this is less of an ION/dmabuf heap
+issue and more of a dmabuf core accounting issue.
+
+Another practical complication is that with Android these days, I
+believe the gralloc code lives in the HIDL-ized
+android.hardware.graphics.allocator@2.0-service HAL, which does the
+buffer allocations on behalf of requests sent over the binder IPC
+interface. So with all dma-buf allocations effectively going through
+that single process, I'm not sure we would want to put per-process
+limits on the allocator.  Instead, I suspect we'd want the memory
+covered by the dmabuf to be accounted against processes that have the
+dmabuf fd still open?
+
+I know Android has some logic with their memtrack HAL to I believe try
+to do accounting of gpu memory against various processes, but I've not
+looked at that in detail recently.
+
+Todd/Joel: Any input here?
+
+thanks
+-john
