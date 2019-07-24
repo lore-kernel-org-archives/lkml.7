@@ -2,144 +2,161 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A1C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A520BC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00BDA21926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0A621951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:29:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="jghycSNj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qJvAUJJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387637AbfGXS2V (ORCPT
+        id S2387642AbfGXS3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:28:21 -0400
-Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:38882
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387457AbfGXS2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:28:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iBQBATGZgR9MsGys5wMI30ICiEb9wSLY2ldfaOU3Q04TQcL8Q5llxMzA8rn0NM+JVlhWBx3TKMIV0XkKXqfdJV84kOXC6WaZvCxUzOK+tj7yg24Fszna8TRyM6djkJWtBttmMSwzMvoDzH/IrNuZ4e7e4XWRZcKHGZjbpewdNINWtozvrjLfBw8sl8p3ENb0zrzYSp5P02ueA+J3SkIgTOc+gfCOjepcJn6VzUZJCqCLcHjC+rA1qTaNyxvzS9a4d89wBzeSQeeW68CBS5/VpyF+uzxwZ5Mb/ngzFPiV3j2lQSDcSnaPBQF5ZieMEEHZQENsA18KocLzGIw7h98qUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ml47vXl5Jzb4mvqWGKNPO0NrHzgtAh4hAc0oq7khqRw=;
- b=GzoKtXv6539sosD0kpHybwJrzU92yPpZX6u1yNHledo9D5ToFsq9jEYAS5UTQyZUtnnuKEycz3mtswsXklEhRMicWJMt95mMcBHHNU97d+G6LrLRi9/tl7lGotI8uDohuB4UKGX0dhPy5CAp+vRUmVaAreelnJWtKvxXYPyXvRatprELFhJ5k4sjCHR/QTmSFOu/W/duiFKWSa5mI9ovZoyG01iakxcylEGTWXeVtyC1iORTMmoh2B/iv9cPtTWVRdiVLrvmnYtenUKxhGt+dur/6n2+jjW7FcitvcNZIdUjOqCfKQCHPROcYL9AGkJCdW/eWFE+Qx0doxk81ApxJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=mellanox.com;dmarc=pass action=none
- header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ml47vXl5Jzb4mvqWGKNPO0NrHzgtAh4hAc0oq7khqRw=;
- b=jghycSNjyGcHs1IEv/O6DxBqqh5FTIYqrjmr7pkj/KEbzmG7bsCTIgdyXrHdidVBRLQFMAHR6OlmNizOjagbv5HPhaLI53jkets4NGzNHhLJJdUf/qt5bJx6vbqo/dYBA68rfeHFHZBCFF5lt9EO7U5ArQousR4uIHyyl0YCvmU=
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
- DB6PR0501MB2216.eurprd05.prod.outlook.com (10.168.55.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.16; Wed, 24 Jul 2019 18:28:16 +0000
-Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::7148:ecd4:3a7f:f3f]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
- ([fe80::7148:ecd4:3a7f:f3f%11]) with mapi id 15.20.2094.011; Wed, 24 Jul 2019
- 18:28:16 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "tanhuazhong@huawei.com" <tanhuazhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "lipeng321@huawei.com" <lipeng321@huawei.com>,
-        "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>,
-        "salil.mehta@huawei.com" <salil.mehta@huawei.com>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "liuyonglong@huawei.com" <liuyonglong@huawei.com>
-Subject: Re: [PATCH net-next 04/11] net: hns3: fix mis-counting IRQ vector
- numbers issue
-Thread-Topic: [PATCH net-next 04/11] net: hns3: fix mis-counting IRQ vector
- numbers issue
-Thread-Index: AQHVQc72nLGYBxjpckW1H3I719D/4abaF34A
-Date:   Wed, 24 Jul 2019 18:28:16 +0000
-Message-ID: <ad63b46dfb7e36d63d95866a023ef181af40aa76.camel@mellanox.com>
-References: <1563938327-9865-1-git-send-email-tanhuazhong@huawei.com>
-         <1563938327-9865-5-git-send-email-tanhuazhong@huawei.com>
-In-Reply-To: <1563938327-9865-5-git-send-email-tanhuazhong@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 778e746b-017f-4d3b-7a4f-08d71064b213
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2216;
-x-ms-traffictypediagnostic: DB6PR0501MB2216:
-x-microsoft-antispam-prvs: <DB6PR0501MB221673B70E96AF87A377BED7BEC60@DB6PR0501MB2216.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0108A997B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(376002)(366004)(346002)(189003)(199004)(54906003)(3846002)(6116002)(81156014)(81166006)(316002)(256004)(5660300002)(110136005)(4326008)(2906002)(6246003)(58126008)(446003)(7736002)(11346002)(305945005)(8676002)(186003)(8936002)(53936002)(25786009)(14454004)(118296001)(476003)(2501003)(2616005)(66066001)(66476007)(76176011)(64756008)(66556008)(66446008)(91956017)(36756003)(76116006)(71200400001)(71190400001)(6486002)(478600001)(99286004)(102836004)(86362001)(26005)(6512007)(6436002)(6506007)(229853002)(66946007)(486006)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2216;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JOob6rrAiTn7qwETu63IKOXmfno2rbUsir3US1GvGrQ1m54uRvGpr5UwO+VO+Er4HcgBzs5aZZS9265HR6RNN8KWpseBZO+rdAHWBGPN1Zczxx42GsC3d/PLk+954fR9rOSmQuQ2JRH7sPl6a5fxMqrQ1e/8IUiTXnkPjvNxKsBLsLng0qBuSV/ZCeZiLylqX96+50lEZs9G+rO7iNs5rygRxMn4nKca9dU32636uZPg0bjMtGGvqPUiqOhw92rG2KCFka3l6FXDlnWZjTLA7LAQDOlV2QJlwTqdBkRIaeY3fJ27XdCYNiw9GcRbRMwKHl/akobMBrLNUWQbFtPU2Sqe4AEwYBr90DQLQ5bYXjZdOYgLguSs6LqbavzLiEsL8N6XNSdIGl/9LZgcXYn8mYewSTa1b3Z4c83ijPx3kfk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7550FD708C620240BBD2106205BEFD72@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Jul 2019 14:29:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52626 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387457AbfGXS3D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:29:03 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6OISwE4043548;
+        Wed, 24 Jul 2019 13:28:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1563992938;
+        bh=kkHnXtzzzeveag6HtGf6rzEhUFlSnwH+G6IbEdhhZHs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qJvAUJJ6BeXA3d+1gnFjvUjokpSVTurr0c9Tq44x+BEZ5CoT+T7qPDcWwKAEqTTNI
+         +5domutxZZBkM0+fCW9sjH0kJA6p2g4Fs7kVPDtuaX8RrvgA0trYWQRuCnuzpIQjAx
+         ZbhBV/3NfgIJOGbQHj65sQmhNOzKQt1F903KSewA=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6OISw5P019356
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 24 Jul 2019 13:28:58 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
+ Jul 2019 13:28:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 24 Jul 2019 13:28:57 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6OISvcL125813;
+        Wed, 24 Jul 2019 13:28:57 -0500
+Subject: Re: [PATCH 2/8] ARM: OMAP2+: Remove unconfigured midlemode for am3
+ lcdc
+To:     Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
+CC:     <linux-omap@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-3-tony@atomide.com>
+ <bcc130a5-f7e0-e182-9f4b-5a48fc3d6e17@ti.com>
+ <52328e14-58b2-2ea1-8b0a-33548a1c6a7a@ti.com>
+ <20190724063110.GT5447@atomide.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <d2414422-3ca5-4883-c94a-d3acdca70c87@ti.com>
+Date:   Wed, 24 Jul 2019 13:28:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 778e746b-017f-4d3b-7a4f-08d71064b213
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 18:28:16.4590
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2216
+In-Reply-To: <20190724063110.GT5447@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA3LTI0IGF0IDExOjE4ICswODAwLCBIdWF6aG9uZyBUYW4gd3JvdGU6DQo+
-IEZyb206IFlvbmdsb25nIExpdSA8bGl1eW9uZ2xvbmdAaHVhd2VpLmNvbT4NCj4gDQo+IFRoZSBu
-dW1fbXNpX2xlZnQgbWVhbnMgdGhlIHZlY3RvciBudW1iZXJzIG9mIE5JQywgYnV0IGlmIHRoZQ0K
-PiBQRiBzdXBwb3J0ZWQgUm9DRSwgaXQgY29udGFpbnMgdGhlIHZlY3RvciBudW1iZXJzIG9mIE5J
-QyBhbmQNCj4gUm9DRShOb3QgZXhwZWN0ZWQpLg0KPiANCj4gVGhpcyBtYXkgY2F1c2UgaW50ZXJy
-dXB0cyBsb3N0IGluIHNvbWUgY2FzZSwgYmVjYXVzZSBvZiB0aGUNCj4gTklDIG1vZHVsZSB1c2Vk
-IHRoZSB2ZWN0b3IgcmVzb3VyY2VzIHdoaWNoIGJlbG9uZ3MgdG8gUm9DRS4NCj4gDQo+IFRoaXMg
-cGF0Y2ggY29ycmVjdHMgdGhlIHZhbHVlIG9mIG51bV9tc2lfbGVmdCB0byBiZSBlcXVhbHMgdG8N
-Cj4gdGhlIHZlY3RvciBudW1iZXJzIG9mIE5JQywgYW5kIGFkanVzdCB0aGUgZGVmYXVsdCB0cXAg
-bnVtYmVycw0KPiBhY2NvcmRpbmcgdG8gdGhlIHZhbHVlIG9mIG51bV9tc2lfbGVmdC4NCj4gDQo+
-IEZpeGVzOiA0NmEzZGY5Zjk3MTggKCJuZXQ6IGhuczM6IEFkZCBITlMzIEFjY2VsZXJhdGlvbiBF
-bmdpbmUgJg0KPiBDb21wYXRpYmlsaXR5IExheWVyIFN1cHBvcnQiKQ0KPiBTaWduZWQtb2ZmLWJ5
-OiBZb25nbG9uZyBMaXUgPGxpdXlvbmdsb25nQGh1YXdlaS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6
-IFBlbmcgTGkgPGxpcGVuZzMyMUBodWF3ZWkuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBIdWF6aG9u
-ZyBUYW4gPHRhbmh1YXpob25nQGh1YXdlaS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvaGlzaWxpY29uL2huczMvaG5zM3BmL2hjbGdlX21haW4uYyAgIHwgIDUgKysrKy0NCj4g
-IGRyaXZlcnMvbmV0L2V0aGVybmV0L2hpc2lsaWNvbi9obnMzL2huczN2Zi9oY2xnZXZmX21haW4u
-YyB8IDEyDQo+ICsrKysrKysrKystLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVy
-bmV0L2hpc2lsaWNvbi9obnMzL2huczNwZi9oY2xnZV9tYWluLmMNCj4gYi9kcml2ZXJzL25ldC9l
-dGhlcm5ldC9oaXNpbGljb24vaG5zMy9obnMzcGYvaGNsZ2VfbWFpbi5jDQo+IGluZGV4IDNjNjRk
-NzAuLmE1OWQxM2YgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2hpc2lsaWNv
-bi9obnMzL2huczNwZi9oY2xnZV9tYWluLmMNCj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-aGlzaWxpY29uL2huczMvaG5zM3BmL2hjbGdlX21haW4uYw0KPiBAQCAtMTQ3MCwxMyArMTQ3MCwx
-NiBAQCBzdGF0aWMgaW50IGhjbGdlX3Zwb3J0X3NldHVwKHN0cnVjdA0KPiBoY2xnZV92cG9ydCAq
-dnBvcnQsIHUxNiBudW1fdHFwcykNCj4gIHsNCj4gIAlzdHJ1Y3QgaG5hZTNfaGFuZGxlICpuaWMg
-PSAmdnBvcnQtPm5pYzsNCj4gIAlzdHJ1Y3QgaGNsZ2VfZGV2ICpoZGV2ID0gdnBvcnQtPmJhY2s7
-DQo+ICsJdTE2IGFsbG9jX3RxcHM7DQo+ICAJaW50IHJldDsNCj4gIA0KPiAgCW5pYy0+cGRldiA9
-IGhkZXYtPnBkZXY7DQo+ICAJbmljLT5hZV9hbGdvID0gJmFlX2FsZ287DQo+ICAJbmljLT5udW1h
-X25vZGVfbWFzayA9IGhkZXYtPm51bWFfbm9kZV9tYXNrOw0KPiAgDQo+IC0JcmV0ID0gaGNsZ2Vf
-a25pY19zZXR1cCh2cG9ydCwgbnVtX3RxcHMsDQo+ICsJYWxsb2NfdHFwcyA9IG1pbl90KHUxNiwg
-aGRldi0+cm9jZV9iYXNlX21zaXhfb2Zmc2V0IC0gMSwgDQoNCg0KV2h5IGRvIHlvdSBuZWVkIHRo
-ZSBleHRyYSBhbGxvY190cXBzID8ganVzdCBvdmVyd3JpdGUgbnVtX3RxcHMsIHRoZQ0Kb3JpZ2lu
-YWwgdmFsdWUgaXMgbm90IG5lZWRlZCBhZnRlcndhcmRzLg0KDQo+IG51bV90cXBzKTsNCj4gKw0K
-PiArCXJldCA9IGhjbGdlX2tuaWNfc2V0dXAodnBvcnQsIGFsbG9jX3RxcHMsDQo+ICAJCQkgICAg
-ICAgaGRldi0+bnVtX3R4X2Rlc2MsIGhkZXYtPm51bV9yeF9kZXNjKTsNCj4gIAlpZiAocmV0KQ0K
-PiAgCQlkZXZfZXJyKCZoZGV2LT5wZGV2LT5kZXYsICJrbmljIHNldHVwIGZhaWxlZCAlZFxuIiwN
-Cj4gcmV0KTsNCj4gDQo=
+On 7/24/19 1:31 AM, Tony Lindgren wrote:
+> * Keerthy <j-keerthy@ti.com> [190724 05:50]:
+>>
+>> On 24/07/19 12:33 AM, Suman Anna wrote:
+>>> + Jyri
+>>>
+>>> On 7/23/19 6:28 AM, Tony Lindgren wrote:
+>>>> We currently get a warning for lcdc because of a difference
+>>>> with dts provided configuration compared to the legacy platform
+>>>> data. This is because lcdc has SYSC_HAS_MIDLEMODE configured in
+>>>> the platform data without configuring the modes.
+>>>
+>>> Hi Tony,
+>>> While I understand that you are trying to match the DT data with the
+>>> existing legacy data, do you know if there was a reason why this was
+>>> omitted in the first place? Should we be really adding the MSTANDBY_
+>>> flags and fix up the DTS node accordingly? I tried looking through the
+>>> git log, and the initial commit itself didn't add the MSTANDBY_ flags
+>>> but used the SYSC_HAS_MIDLEMODE.
+> 
+> Yes the goal is to get rid of all errors and warnings in dmesg output
+> so we can spot the real issues.
+> 
+>>> Jyri,
+>>> Do you know the history?
+>>
+>> Tony/Suman,
+>>
+>> This patch breaks DS0 on am3.
+> 
+> OK thanks for testing. Let's drop this for now, sounds like there is
+> some midlemode configuration happening even with no flags set.
+
+You were dropping the ti,sysc-midle property in patch 8, is that still
+ok without this patch?
+
+> 
+> Probably the right fix is to configure the usable midlemodes instead
+> both for platform data and dts data and then drop the platform data.
+
+Yeah, that's probably better and more accurate unless we actually have
+some h/w issues that require them to be dropped.
+
+regards
+Suman
+
+> 
+> Regards,
+> 
+> Tony
+> 
+> 
+> 
+>>>> Let's fix the warning by removing SYSC_HAS_MIDLEMODE. Note that
+>>>> the am335x TRM lists SYSC_HAS_MIDLEMODE, but it is unused.
+>>>
+>>>
+>>>
+>>>>
+>>>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>>>> ---
+>>>>   arch/arm/mach-omap2/omap_hwmod_33xx_data.c | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+>>>> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+>>>> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+>>>> @@ -231,7 +231,7 @@ static struct omap_hwmod am33xx_control_hwmod = {
+>>>>   static struct omap_hwmod_class_sysconfig lcdc_sysc = {
+>>>>   	.rev_offs	= 0x0,
+>>>>   	.sysc_offs	= 0x54,
+>>>> -	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE),
+>>>> +	.sysc_flags	= SYSC_HAS_SIDLEMODE,
+>>>>   	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+>>>>   	.sysc_fields	= &omap_hwmod_sysc_type2,
+>>>>   };
+>>>>
+>>>
+
