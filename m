@@ -2,225 +2,158 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E7CC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA0CC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F1F229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29FC206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:31:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K3qMn/Oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfGXI3i (ORCPT
+        id S1726388AbfGXIbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:29:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2746 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfGXI3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:29:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 58B05B3F612EF878FD0E;
-        Wed, 24 Jul 2019 16:29:35 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 16:29:32 +0800
-Subject: Re: [PATCH v12 1/2] mm: page_alloc: introduce
- memblock_next_valid_pfn() (again) for arm64
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Jia He" <hejianet@gmail.com>, Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1563861073-47071-1-git-send-email-guohanjun@huawei.com>
- <1563861073-47071-2-git-send-email-guohanjun@huawei.com>
- <20190723083027.GB4896@rapoport-lnx>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <e4668d2a-23d9-c089-c713-a4a0495e8c9e@huawei.com>
-Date:   Wed, 24 Jul 2019 16:29:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Wed, 24 Jul 2019 04:31:01 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33649 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfGXIbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:31:00 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so87863683iog.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AaokkSIB8T6rCvGVztgZrAXJru2rWZPyc4+sjVG3Rlg=;
+        b=K3qMn/OeMIMWIjZ9ESuP3Mbr2IoaW+ya8WAVIZo7hVgWKsF0wYm4Zs/WY23VkHpiHz
+         MSQiPrS0LExa2cu+qH0917BNNinG4hma4fEuEj+kdN5TQinrpXignDNCLsQpJmuweYbh
+         6IjgBg1BHpDTKB+LYWKwCgHAUjwP1nkunkhPmtgtsZJILj1FNJZwZ4Xs63kGZRh+oba1
+         xuteJ2KnBlW2GP2ukGM6O2WFyOVJpQTI+hdTREb3XE4i6W44X/jKWY0Om1te6XcY7d0b
+         abTSzaWlVNvcp2hucBZx303o5SzyTNvW3qNcMo/BN4bTdm32VK9nUm2gLD3cp6/0DWM9
+         iwOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AaokkSIB8T6rCvGVztgZrAXJru2rWZPyc4+sjVG3Rlg=;
+        b=eMs/4QIjKrcbvK+W2DXxo+i8uyic071DaOcCGOM3tzpAdtDzoSMLEzeEm2C4rCPYTN
+         BNueREWSEh2Vg960nQtf3Yemq2vZTV5MOWz5oXcTt7J6auv/h2/wJMz1lt0OnNKM0fLO
+         NQv5R8cJjexh6LOYLIR3OTfKSlw94sO/0XVoYipF10LzD6hax+EK2OfYfcV52h2T2Wfj
+         WbUpwZYexuDAIii8VhA83qfLnxClpbRfpOfSUJPKWCp0j3VfrBFSxC5GYiwG1QA5YUhy
+         4hNJ4WmHWmLWg3LBfZODoCZgZSALfgkWAgYDLVTlwW5nbnZMNIfQOzddrU+gCQUilLWz
+         GLkQ==
+X-Gm-Message-State: APjAAAVoJtdeQS4o4tI6XrlTSkrw/mdfUiFWwa7gaZfr/Ux439udAAb5
+        L78945HukdXLZMAXVZ1u4mfUdmm3MxCAryKLLyOttg==
+X-Google-Smtp-Source: APXvYqxSlDUBj64fQa2XUD/GFRZKvTb+/OT1nJmyxCu9j1MOu5lLRDAbNSt995Cq9Nvar/xA7x1tOCdXOH7MllC/CCs=
+X-Received: by 2002:a6b:b556:: with SMTP id e83mr73258880iof.94.1563957059834;
+ Wed, 24 Jul 2019 01:30:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190723083027.GB4896@rapoport-lnx>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+References: <0000000000001a51c4058ddcb1b6@google.com> <CACT4Y+ZGwKP+f4esJdx60AywO9b3Y5Bxb4zLtH6EEkaHpP6Zag@mail.gmail.com>
+ <5d37433a832d_3aba2ae4f6ec05bc3a@john-XPS-13-9370.notmuch>
+In-Reply-To: <5d37433a832d_3aba2ae4f6ec05bc3a@john-XPS-13-9370.notmuch>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 24 Jul 2019 10:30:48 +0200
+Message-ID: <CACT4Y+ZbPmRB9T9ZzhE79VnKKD3+ieHeLpaDGRkcQ72nADKH_g@mail.gmail.com>
+Subject: Re: kernel panic: stack is corrupted in pointer
+To:     John Fastabend <john.fastabend@gmail.com>
+Cc:     syzbot <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com>,
+        bpf <bpf@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        alexander.deucher@amd.com, amd-gfx@lists.freedesktop.org,
+        Alexei Starovoitov <ast@kernel.org>, christian.koenig@amd.com,
+        Daniel Borkmann <daniel@iogearbox.net>, david1.zhou@amd.com,
+        DRI <dri-devel@lists.freedesktop.org>, leo.liu@amd.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/23 16:30, Mike Rapoport wrote:
-> On Tue, Jul 23, 2019 at 01:51:12PM +0800, Hanjun Guo wrote:
->> From: Jia He <hejianet@gmail.com>
->>
->> Commit b92df1de5d28 ("mm: page_alloc: skip over regions of invalid pfns
->> where possible") optimized the loop in memmap_init_zone(). But it causes
->> possible panic on x86 due to specific memory mapping on x86_64 which will
->> skip valid pfns as well, so Daniel Vacek reverted it later.
->>
->> But as suggested by Daniel Vacek, it is fine to using memblock to skip
->> gaps and finding next valid frame with CONFIG_HAVE_ARCH_PFN_VALID.
->>
->> Daniel said:
->> "On arm and arm64, memblock is used by default. But generic version of
->> pfn_valid() is based on mem sections and memblock_next_valid_pfn() does
->> not always return the next valid one but skips more resulting in some
->> valid frames to be skipped (as if they were invalid). And that's why
->> kernel was eventually crashing on some !arm machines."
-> 
-> I think that the crash on x86 was not related to CONFIG_HAVE_ARCH_PFN_VALID
-> but rather to the x86 way to setup memblock.  Some of the x86 reserved
-> memory areas were never added to memblock.memory, which makes memblock's
-> view of the physical memory incomplete and that's why
-> memblock_next_valid_pfn() could skip valid PFNs on x86.
+On Tue, Jul 23, 2019 at 7:26 PM John Fastabend <john.fastabend@gmail.com> wrote:
+>
+> Dmitry Vyukov wrote:
+> > On Wed, Jul 17, 2019 at 10:58 AM syzbot
+> > <syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    1438cde7 Add linux-next specific files for 20190716
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13988058600000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3430a151e1452331
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=79f5f028005a77ecb6bb
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=111fc8afa00000
+> >
+> > From the repro it looks like the same bpf stack overflow bug. +John
+> > We need to dup them onto some canonical report for this bug, or this
+> > becomes unmanageable.
+>
+> Fixes in bpf tree should fix this. Hopefully, we will squash this once fixes
+> percolate up.
+>
+> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
 
-Thank you for kindly clarify, I will update the patch with your comments
-in next version.
+Cool! What is the fix?
+We don't need to wait for the fix to percolate up (and then down
+too!). syzbot gracefully handles when a patch is not yet present
+everywhere (it happens all the time).
 
-> 
->> Introduce a new config option CONFIG_HAVE_MEMBLOCK_PFN_VALID and only
->> selected for arm64, using the new config option to guard the
->> memblock_next_valid_pfn().
->  
-> As far as I can tell, the memblock_next_valid_pfn() should work on most
-> architectures and not only on ARM. For sure there is should be no
-> dependency between CONFIG_HAVE_ARCH_PFN_VALID and memblock_next_valid_pfn().
-> 
-> I believe that the configuration option to guard memblock_next_valid_pfn()
-> should be opt-out and that only x86 will require it.
+Btw, this was due to a stack overflow, right? Or something else?
+We are trying to make KASAN configuration detect stack overflows too,
+so that it does not cause havoc next time. But it turns out to be
+non-trivial and our current attempt seems to fail:
+https://groups.google.com/forum/#!topic/kasan-dev/IhYv7QYhLfY
 
-So how about introduce a configuration option, say, CONFIG_HAVE_ARCH_PFN_INVALID,
-selected by x86 and keep it default unselected for all other architecture?
 
-> 
->> This was tested on a HiSilicon Kunpeng920 based ARM64 server, the speedup
->> is pretty impressive for bootmem_init() at boot:
->>
->> with 384G memory,
->> before: 13310ms
->> after:  1415ms
->>
->> with 1T memory,
->> before: 20s
->> after:  2s
->>
->> Suggested-by: Daniel Vacek <neelx@redhat.com>
->> Signed-off-by: Jia He <hejianet@gmail.com>
->> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
->> ---
->>  arch/arm64/Kconfig     |  1 +
->>  include/linux/mmzone.h |  9 +++++++++
->>  mm/Kconfig             |  3 +++
->>  mm/memblock.c          | 31 +++++++++++++++++++++++++++++++
->>  mm/page_alloc.c        |  4 +++-
->>  5 files changed, 47 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 697ea0510729..058eb26579be 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -893,6 +893,7 @@ config ARCH_FLATMEM_ENABLE
->>  
->>  config HAVE_ARCH_PFN_VALID
->>  	def_bool y
->> +	select HAVE_MEMBLOCK_PFN_VALID
->>
->>  config HW_PERF_EVENTS
->>  	def_bool y
->> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->> index 70394cabaf4e..24cb6bdb1759 100644
->> --- a/include/linux/mmzone.h
->> +++ b/include/linux/mmzone.h
->> @@ -1325,6 +1325,10 @@ static inline int pfn_present(unsigned long pfn)
->>  #endif
->>  
->>  #define early_pfn_valid(pfn)	pfn_valid(pfn)
->> +#ifdef CONFIG_HAVE_MEMBLOCK_PFN_VALID
->> +extern unsigned long memblock_next_valid_pfn(unsigned long pfn);
->> +#define next_valid_pfn(pfn)	memblock_next_valid_pfn(pfn)
-> 
-> Please make it 'static inline' and move out of '#ifdef CONFIG_SPARSEMEM'
-
-Will do.
-
-> 
->> +#endif
->>  void sparse_init(void);
->>  #else
->>  #define sparse_init()	do {} while (0)
->> @@ -1347,6 +1351,11 @@ struct mminit_pfnnid_cache {
->>  #define early_pfn_valid(pfn)	(1)
->>  #endif
->>  
->> +/* fallback to default definitions */
->> +#ifndef next_valid_pfn
->> +#define next_valid_pfn(pfn)	(pfn + 1)
-> 
-> static inline as well.
-
-OK.
-
-> 
->> +#endif
->> +
->>  void memory_present(int nid, unsigned long start, unsigned long end);
->>  
->>  /*
->> diff --git a/mm/Kconfig b/mm/Kconfig
->> index f0c76ba47695..c578374b6413 100644
->> --- a/mm/Kconfig
->> +++ b/mm/Kconfig
->> @@ -132,6 +132,9 @@ config HAVE_MEMBLOCK_NODE_MAP
->>  config HAVE_MEMBLOCK_PHYS_MAP
->>  	bool
->>  
->> +config HAVE_MEMBLOCK_PFN_VALID
->> +	bool
->> +
->>  config HAVE_GENERIC_GUP
->>  	bool
->>  
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 7d4f61ae666a..d57ba51bb9cd 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -1251,6 +1251,37 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
->>  	return 0;
->>  }
->>  #endif /* CONFIG_HAVE_MEMBLOCK_NODE_MAP */
->> +
->> +#ifdef CONFIG_HAVE_MEMBLOCK_PFN_VALID
->> +unsigned long __init_memblock memblock_next_valid_pfn(unsigned long pfn)
->> +{
->> +	struct memblock_type *type = &memblock.memory;
->> +	unsigned int right = type->cnt;
->> +	unsigned int mid, left = 0;
->> +	phys_addr_t addr = PFN_PHYS(++pfn);
->> +
->> +	do {
->> +		mid = (right + left) / 2;
->> +
->> +		if (addr < type->regions[mid].base)
->> +			right = mid;
->> +		else if (addr >= (type->regions[mid].base +
->> +				  type->regions[mid].size))
->> +			left = mid + 1;
->> +		else {
->> +			/* addr is within the region, so pfn is valid */
->> +			return pfn;
->> +		}
->> +	} while (left < right);
->> +
-> 
-> We have memblock_search() for this.
-
-I will update my patch as you suggested.
-
-Thanks
-Hanjun
-
+> > #syz dup: kernel panic: corrupted stack end in dput
+> >
+> > > The bug was bisected to:
+> > >
+> > > commit 96a5d8d4915f3e241ebb48d5decdd110ab9c7dcf
+> > > Author: Leo Liu <leo.liu@amd.com>
+> > > Date:   Fri Jul 13 15:26:28 2018 +0000
+> > >
+> > >      drm/amdgpu: Make sure IB tests flushed after IP resume
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a46200600000
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=16a46200600000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=12a46200600000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+79f5f028005a77ecb6bb@syzkaller.appspotmail.com
+> > > Fixes: 96a5d8d4915f ("drm/amdgpu: Make sure IB tests flushed after IP
+> > > resume")
+> > >
+> > > Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
+> > > pointer+0x702/0x750 lib/vsprintf.c:2187
+> > > Shutting down cpus with NMI
+> > > Kernel Offset: disabled
+> > >
+> > >
+> > > ---
+> > > This bug is generated by a bot. It may contain errors.
+> > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > >
+> > > syzbot will keep track of this bug report. See:
+> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> > > syzbot can test patches for this bug, for details see:
+> > > https://goo.gl/tpsmEJ#testing-patches
+>
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/5d37433a832d_3aba2ae4f6ec05bc3a%40john-XPS-13-9370.notmuch.
