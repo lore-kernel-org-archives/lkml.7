@@ -3,120 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCC0C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E71C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FBC21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F5D21880
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfGXWIi (ORCPT
+        id S1728838AbfGXWLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:08:38 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40676 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbfGXWIh (ORCPT
+        Wed, 24 Jul 2019 18:11:01 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38348 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727366AbfGXWLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:08:37 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s145so34969188qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:08:37 -0700 (PDT)
+        Wed, 24 Jul 2019 18:11:00 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n11so47120788qtl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:10:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gF6WF5oKZcAh8lsxIGa4A4qCFkeXLAddUJBeCVn/yGw=;
-        b=FVmRCLX3iYSS1x0QBXtyUV/Ld3F8PyVdHfg9MZHvhrTCD58xbeGUgDZeYb98+tmFaF
-         6BxIKYGuF+SlHlGusLyZuDKDuPd5XiSCjl4ndTIXasRFyJVY+ZaPti4N1aD49FvJdPlh
-         omc9dFf6Q0xciDMOrjz3flOLgzgOtrHOp4h4Nhwd1ow076rScwm3eRQokaYSGUcRwMPi
-         Qv3+98ayxbd9lij0bOGe6Hg8NltFAy/s1zgTRTjD+Luql7tOXoieLxMmhmEn90vSlOU9
-         QLPmyV4IjsbiKSJA3rYvlPgNCER9zj3iFVzQPJwlsy38OdLGyDhlv10H1LKNf/iIKu0a
-         tfDA==
-X-Gm-Message-State: APjAAAVFqSwPc6q7Vzbd5KcSH8lYrujWQGCmiQb3X+45yn9ckaBDg3zL
-        DAsJZt27XlIIProgktk9XZ+k+A==
-X-Google-Smtp-Source: APXvYqxVJCQ2dlAvvn87eBVVAsdbP4o5lFQJIQ8dJsrhL7h4rGVMj3kyCjifB4jGqlYkUi6EmUay0w==
-X-Received: by 2002:a37:4781:: with SMTP id u123mr51143171qka.263.1564006116973;
-        Wed, 24 Jul 2019 15:08:36 -0700 (PDT)
+        bh=ZiT1oQ3le6gupTI0pwbmKNqZ9qeZj4CLKlZRplQnTAY=;
+        b=LSAuPTNTddZAq11CV6juSDpR+59sYlFeW9uiUcpiYSFyxyth1tsl3zPWGvkh7hC78P
+         4J8LZyQ14qxuNhhwNI8bPqBDk/XlAb+UAy9YXbeaXj5zE+YhatLmv/zpgl+Dtu+rgxCz
+         GZTzYMseQpVM38RZDdQW4BJprQIIxEJfUnp8gDek9FS6GkFkR9Lt2eA5WYHJBeU4kj9z
+         lVcvj9BslU1VTHSK+nRmHzjZdMhkvEabplYCbb/bnrl9ykzJj8k+Qp9z1Ru/mITExptz
+         bsrsHIt/qxU4o1Rv3OPo48M9ylb4vtcuRBoCleYwqTCZF3reQjCFWoENI3abeS8s8wlN
+         3KQw==
+X-Gm-Message-State: APjAAAXsmkO34PyjaYq0PGtUMd4pfpY3aKBc6VIUmZ9vIg9GrUEA1FuU
+        nKPNLXVfG/XzpV0DSXL9ILSqew==
+X-Google-Smtp-Source: APXvYqwsl34mAeI1ycJq/WD6DI4M1e7pIzRNfVQKDNOWFybfH6EBHoRGki9/ggsy5dsu/ZaP8T89Pw==
+X-Received: by 2002:ac8:3014:: with SMTP id f20mr59384146qte.69.1564006259498;
+        Wed, 24 Jul 2019 15:10:59 -0700 (PDT)
 Received: from redhat.com (bzq-79-181-91-42.red.bezeqint.net. [79.181.91.42])
-        by smtp.gmail.com with ESMTPSA id i62sm22082669qke.52.2019.07.24.15.08.31
+        by smtp.gmail.com with ESMTPSA id g54sm28199760qtc.61.2019.07.24.15.10.56
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 15:08:35 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 18:08:28 -0400
+        Wed, 24 Jul 2019 15:10:58 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 18:10:53 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
-        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
- hinting"
-Message-ID: <20190724180552-mutt-send-email-mst@kernel.org>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
- <20190724171050.7888.62199.stgit@localhost.localdomain>
- <20190724173403-mutt-send-email-mst@kernel.org>
- <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        m.szyprowski@samsung.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] virtio/virtio_ring: Fix the dma_max_mapping_size call
+Message-ID: <20190723114750-mutt-send-email-mst@kernel.org>
+References: <20190722145509.1284-1-eric.auger@redhat.com>
+ <20190722145509.1284-3-eric.auger@redhat.com>
+ <e4a288f2-a93a-5ce4-32da-f5434302551f@arm.com>
+ <20190723153851.GE720@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
+In-Reply-To: <20190723153851.GE720@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 03:03:56PM -0700, Alexander Duyck wrote:
-> On Wed, 2019-07-24 at 17:38 -0400, Michael S. Tsirkin wrote:
-> > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
-> > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > 
-> > > Add support for what I am referring to as "bubble hinting". Basically the
-> > > idea is to function very similar to how the balloon works in that we
-> > > basically end up madvising the page as not being used. However we don't
-> > > really need to bother with any deflate type logic since the page will be
-> > > faulted back into the guest when it is read or written to.
-> > > 
-> > > This is meant to be a simplification of the existing balloon interface
-> > > to use for providing hints to what memory needs to be freed. I am assuming
-> > > this is safe to do as the deflate logic does not actually appear to do very
-> > > much other than tracking what subpages have been released and which ones
-> > > haven't.
-> > > 
-> > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > BTW I wonder about migration here.  When we migrate we lose all hints
-> > right?  Well destination could be smarter, detect that page is full of
-> > 0s and just map a zero page. Then we don't need a hint as such - but I
-> > don't think it's done like that ATM.
+On Tue, Jul 23, 2019 at 05:38:51PM +0200, Christoph Hellwig wrote:
+> On Mon, Jul 22, 2019 at 04:36:09PM +0100, Robin Murphy wrote:
+> >> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> >> index c8be1c4f5b55..37c143971211 100644
+> >> --- a/drivers/virtio/virtio_ring.c
+> >> +++ b/drivers/virtio/virtio_ring.c
+> >> @@ -262,7 +262,7 @@ size_t virtio_max_dma_size(struct virtio_device *vdev)
+> >>   {
+> >>   	size_t max_segment_size = SIZE_MAX;
+> >>   -	if (vring_use_dma_api(vdev))
+> >> +	if (vring_use_dma_api(vdev) && vdev->dev.dma_mask)
+> >
+> > Hmm, might it make sense to roll that check up into vring_use_dma_api() 
+> > itself? After all, if the device has no mask then it's likely that other 
+> > DMA API ops wouldn't really work as expected either.
 > 
-> I was wondering about that a bit myself. If you migrate with a balloon
-> active what currently happens with the pages in the balloon? Do you
-> actually migrate them, or do you ignore them and just assume a zero page?
+> Makes sense to me.
 
-Ignore and assume zero page.
+Christoph - would a documented API wrapping dma_mask make sense?
+With the documentation explaining how users must
+desist from using DMA APIs if that returns false ...
 
-> I'm just reusing the ram_block_discard_range logic that was being used for
-> the balloon inflation so I would assume the behavior would be the same.
-> 
-> > I also wonder about interaction with deflate.  ATM deflate will add
-> > pages to the free list, then balloon will come right back and report
-> > them as free.
-> 
-> I don't know how likely it is that somebody who is getting the free page
-> reporting is likely to want to also use the balloon to take up memory.
-
-Why not?
-
-> However hinting on a page that came out of deflate might make sense when
-> you consider that the balloon operates on 4K pages and the hints are on 2M
-> pages. You are likely going to lose track of it all anyway as you have to
-> work to merge the 4K pages up to the higher order page.
-
-Right - we need to fix inflate/deflate anyway.
-When we do, we can do whatever :)
 
 -- 
 MST
