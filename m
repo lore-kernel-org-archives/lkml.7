@@ -2,101 +2,68 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7E3C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2A2C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764E322387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563965985;
-	bh=+SLeYzBrFqrvQlKq8tfptWG7tfjTeB0dYCaKxtC/F1U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RMWI0l4wHpBSbIAhdIKUurzIqdeI0NmhAQ2L2L+26cI+lsyn9ND0moDd8cofQO9t9
-	 MS55/KiyfC30W2ntAk9bdwguJxsXQq4K+13NvJFtgWrhkEYV8meBrCT1CLUkfZak7g
-	 Y8oL72l0aHBQWQqY9ZPlWvxJ8z5fGAi0tUkXesEQ=
+	by mail.kernel.org (Postfix) with ESMTP id 79EA922387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfGXK7o (ORCPT
+        id S1727357AbfGXLCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbfGXK7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:59:44 -0400
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2274B22ADA;
-        Wed, 24 Jul 2019 10:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563965983;
-        bh=+SLeYzBrFqrvQlKq8tfptWG7tfjTeB0dYCaKxtC/F1U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HAv7AF0ukKxL6GYXk1xun6fguFyzJ7NapvsVooizJX9ii0nisFl4Rz0JDEw9Ab3b2
-         gjhffA7s31ujpM4iPuY1BfjQqGmT7Si1Mt7OOeRQKdz6lfzkth32MAzg0mglg73Xf/
-         Eg1AX/SsYMKjTrWI+PEW4oeXPwa7OZ0/SydEoASs=
-Received: by mail-lj1-f178.google.com with SMTP id i21so44091342ljj.3;
-        Wed, 24 Jul 2019 03:59:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAX/Wjj51n2DoamswMECmf3ZxItO2kkPNKeMg2uNkA9FIjjHnDeU
-        nNw6i4Br02m4FHWGmnFnhBjQftgj9EX0NxNCzl4=
-X-Google-Smtp-Source: APXvYqwezSx0YMy1Onv2nAziBZ5h3uvoLRSWEZ6B72J6vovOVKzX95DIdnPlSg9aaez+CQYQ18XozsjqXWS11kg092g=
-X-Received: by 2002:a2e:124b:: with SMTP id t72mr43113386lje.143.1563965981368;
- Wed, 24 Jul 2019 03:59:41 -0700 (PDT)
+        Wed, 24 Jul 2019 07:02:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43619 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbfGXLCT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:02:19 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqF2G-00053o-Rh; Wed, 24 Jul 2019 13:02:16 +0200
+Date:   Wed, 24 Jul 2019 13:02:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Rui Salvaterra <rsalvaterra@gmail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Daniel Drake <drake@endlessm.com>
+Subject: Re: [BUG] Linux 5.3-rc1: timer problem on x86-64 (Pentium D)
+In-Reply-To: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1907241257240.1791@nanos.tec.linutronix.de>
+References: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190722185938.9043-1-linux.amoon@gmail.com> <20190722185938.9043-2-linux.amoon@gmail.com>
-In-Reply-To: <20190722185938.9043-2-linux.amoon@gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 24 Jul 2019 12:59:30 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPch9i0GBLLTQFNF=jPSJ++ZUJeE+Y5MCA7zFLFYO79R4Q@mail.gmail.com>
-Message-ID: <CAJKOXPch9i0GBLLTQFNF=jPSJ++ZUJeE+Y5MCA7zFLFYO79R4Q@mail.gmail.com>
-Subject: Re: [RFC/RFT 1/5] phy: exynos5-usbdrd: read from correct offset of
- xhci linksystem
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jul 2019 at 20:59, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Read from linksystem offset to update the xhci version.
+Rui,
 
-But why? As many times before, you do not specify why you are doing
-things. What problem are you solving? What feature are you adding?
+On Wed, 24 Jul 2019, Rui Salvaterra wrote:
+> I don't know if this has been reported before, but from a cursory
+> search it doesn't seem to be the case.
+> I have a x86-64 Pentium (4) D machine which always worked perfectly
+> with Linux 5.2 using the TSC as the clock source. With Linux 5.3-rc1 I
+> can't, for the life of me, boot it with anything other than
+> clocksource=jiffies, it completely hangs without even a backtrace.
 
-Best regards,
-Krzysztof
+The obvious candidate for this is the following section:
 
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  drivers/phy/samsung/phy-exynos5-usbdrd.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> index 646259bee909..3c14bf7718c1 100644
-> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-> @@ -397,7 +397,8 @@ static int exynos5_usbdrd_phy_init(struct phy *phy)
->          * Setting the Frame length Adj value[6:1] to default 0x20
->          * See xHCI 1.0 spec, 5.2.4
->          */
-> -       reg =   LINKSYSTEM_XHCI_VERSION_CONTROL |
-> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
-> +       reg |=  LINKSYSTEM_XHCI_VERSION_CONTROL |
->                 LINKSYSTEM_FLADJ(0x20);
->         writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
->
-> --
-> 2.22.0
->
+c8c4076723da ("x86/timer: Skip PIT initialization on modern chipsets")
+dde3626f815e ("x86/apic: Use non-atomic operations when possible")
+748b170ca19a ("x86/apic: Make apic_bsp_setup() static")
+2420a0b1798d ("x86/tsc: Set LAPIC timer period to crystal clock frequency")
+52ae346bd26c ("x86/apic: Rename 'lapic_timer_frequency' to 'lapic_timer_period'")
+604dc9170f24 ("x86/tsc: Use CPUID.0x16 to calculate missing crystal frequency")
+
+Thanks,
+
+	tglx
