@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B18EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB022C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DFA2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7893B22ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996985;
-	bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+	s=default; t=1563996989;
+	bh=bS0+cZVBNXT5EHX0ujiCyDSgPNBBhbRO0aYOZsxFEcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2nVUSHH2P1NR8kjXD5jhwb8giBmJ4SL3dsG93RYq4A9jEV4rSC0oDuqP6tsXao8Ol
-	 M+3GzCOaoUoODStaMcfVr/HCKxmmocLTO1Jo9Iz7/+H6qAa0xkpbomQn2SEo4MB8rG
-	 E+N3+PtzpIQ7GMQru9Tub99HG+31Mb7YtPTuV6hw=
+	b=LlRhOOEZDV2hiDznLSa0Y3+RaH7BF/rxJQlkOwL/w0gwh/Jhm24XAlzcDgOX1/oUa
+	 mcTAi9ASu53UeaGHAoLGk2DQBvkb19XC/dlMJjlDitSbedBMfwZTmPpW8F6j+3uXOI
+	 mWyTkP3sIm8tcIeVUxbk0Y4UwWkDa1xnTeBZWax0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfGXTgX (ORCPT
+        id S1728964AbfGXTg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35986 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388989AbfGXTgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:20 -0400
+        id S1728151AbfGXTgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 668A020659;
-        Wed, 24 Jul 2019 19:36:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 086CF20449;
+        Wed, 24 Jul 2019 19:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996979;
-        bh=LOARK0T404+azY1suHxq6Tt9I+LxkICd8FbLI+35sfo=;
+        s=default; t=1563996982;
+        bh=bS0+cZVBNXT5EHX0ujiCyDSgPNBBhbRO0aYOZsxFEcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KW8aMPEubHhIRyFzKtjGiKYKLO9HsXrUmToEN07lggzidWySsNb8M2scXYu3Nwk/Y
-         NE0KA2dL0S2pSHyQZUKAdhYYl9tjfZ+d7IzGh6MTGdZDG5/+CoO8uc7kwKGqNAc2qX
-         yzjBPVi6cn2FyyJadu1o8ecI0lJ54fnML7d5CCfE=
+        b=RS4xcazwpiQtsh5z3XSVYRc4o0HANoionLRhT2FpKYWmG46iS+WE2JdIpQxEfNLXJ
+         daIWs1a1+vI+k6mq8rvHvQwMzQQKzomvCzxiiI2IkP47v3Pmjlr++ihb1ihwEGZsj4
+         2wr2IDwNaA0mbFCwj6J+XCxM7NJKOO2HebzKecTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.2 255/413] Revert "scsi: ncr5380: Increase register polling limit"
-Date:   Wed, 24 Jul 2019 21:19:06 +0200
-Message-Id: <20190724191754.201080120@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Shenghui Wang <shhuiw@foxmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 282/413] bcache: Revert "bcache: free heap cache_set->flush_btree in bch_journal_free"
+Date:   Wed, 24 Jul 2019 21:19:33 +0200
+Message-Id: <20190724191756.459354778@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Coly Li <colyli@suse.de>
 
-commit 25fcf94a2fa89dd3e73e965ebb0b38a2a4f72aa4 upstream.
+commit ba82c1ac1667d6efb91a268edb13fc9cdaecec9b upstream.
 
-This reverts commit 4822827a69d7cd3bc5a07b7637484ebd2cf88db6.
+This reverts commit 6268dc2c4703aabfb0b35681be709acf4c2826c6.
 
-The purpose of that commit was to suppress a timeout warning message which
-appeared to be caused by target latency. But suppressing the warning is
-undesirable as the warning may indicate a messed up transfer count.
+This patch depends on commit c4dc2497d50d ("bcache: fix high CPU
+occupancy during journal") which is reverted in previous patch. So
+revert this one too.
 
-Another problem with that commit is that 15 ms is too long to keep
-interrupts disabled as interrupt latency can cause system clock drift and
-other problems.
-
-Cc: Michael Schmitz <schmitzmic@gmail.com>
+Fixes: 6268dc2c4703 ("bcache: free heap cache_set->flush_btree in bch_journal_free")
+Signed-off-by: Coly Li <colyli@suse.de>
 Cc: stable@vger.kernel.org
-Fixes: 4822827a69d7 ("scsi: ncr5380: Increase register polling limit")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/NCR5380.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/journal.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/scsi/NCR5380.h
-+++ b/drivers/scsi/NCR5380.h
-@@ -235,7 +235,7 @@ struct NCR5380_cmd {
- #define NCR5380_PIO_CHUNK_SIZE		256
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -843,7 +843,6 @@ void bch_journal_free(struct cache_set *
+ 	free_pages((unsigned long) c->journal.w[1].data, JSET_BITS);
+ 	free_pages((unsigned long) c->journal.w[0].data, JSET_BITS);
+ 	free_fifo(&c->journal.pin);
+-	free_heap(&c->flush_btree);
+ }
  
- /* Time limit (ms) to poll registers when IRQs are disabled, e.g. during PDMA */
--#define NCR5380_REG_POLL_TIME		15
-+#define NCR5380_REG_POLL_TIME		10
- 
- static inline struct scsi_cmnd *NCR5380_to_scmd(struct NCR5380_cmd *ncmd_ptr)
- {
+ int bch_journal_alloc(struct cache_set *c)
 
 
