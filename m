@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2A8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54E5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9308217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F6621852
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000548;
-	bh=bxec5w9zV1i7q5BKF/WWYgqOx3tA4v5sBaOkTcJ4HAU=;
+	s=default; t=1564000559;
+	bh=zLFxTxhnG49erBlRYzNuFoVZ8lbdUCFGPgbMPYLNtgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHGOEEIWlVTw4Bq8WcpEaQcEfp9bb91d+Oe8RnKof9cm7IDdRVoiIdlVbToBJklKF
-	 2LocxIdb2iCXgpCbdlkToQZVkT6GsA4fkOVhEGICBUj94dlk+olrHMIMhyrAAqT5Zv
-	 81JcTtwQDSx3yA2/vJoY/YF218PRbZFIABJKEKho=
+	b=HCuFSwfFkIAMNnQxmub3fmdKYe/ijQVAgkc2CT6GR9BJvYxIwqQcs1V2akTHQb4hO
+	 S+vCJ4RFH1SDzW2IEKgKW7mKROEKyf99eGUzvdOmWRYzXHOEMlmu2Q2GRmf1lVe17H
+	 7FkaWduQOY9cpDImVXfXsJ0ItTng+h5qBGCQh+No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389092AbfGXUfr (ORCPT
+        id S2387593AbfGXUf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42466 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:35:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388047AbfGXTZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:37 -0400
+        id S1727529AbfGXTZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:25:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 414B9218F0;
-        Wed, 24 Jul 2019 19:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D7B229ED;
+        Wed, 24 Jul 2019 19:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996336;
-        bh=bxec5w9zV1i7q5BKF/WWYgqOx3tA4v5sBaOkTcJ4HAU=;
+        s=default; t=1563996314;
+        bh=zLFxTxhnG49erBlRYzNuFoVZ8lbdUCFGPgbMPYLNtgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2H0g9pAA5fQVSFwV1j550jk3e4B86I3axfrP1JKucPsS2jIVn1uJm3kT9cxJZNmay
-         MEGZ4caIwMXHbZl9a+0EXZ+Y419xZhujIfRRG6LegBB8kpd9cUWzJXH/kYbdO4uJ4K
-         fFdvLI101gEn+Xmqs5P0uf48fBcFbWXbQfUuC5ZA=
+        b=TXlEc8rL4ZT1QUtHQBOZmNqKF6qGTn10b/ZC2+usnCj1+0wq+aLXyvp+PMK8qXRkI
+         +2xqwkAvfLKs7wZUoqk4Xdud43xT3SLEmtYS00OBGWrUOaXq9X+u7ORH2EnOWDsb3f
+         Y/jqqid+tkM3FKKad17oR1n3kKoLSuOouHsQPZqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 034/413] net: hns3: initialize CPU reverse mapping
-Date:   Wed, 24 Jul 2019 21:15:25 +0200
-Message-Id: <20190724191738.039776401@linuxfoundation.org>
+Subject: [PATCH 5.2 053/413] crypto: talitos - properly handle split ICV.
+Date:   Wed, 24 Jul 2019 21:15:44 +0200
+Message-Id: <20190724191739.240321326@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,173 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ffab9691bcb2fe2594f4c38bfceb4d9685b93b87 ]
+[ Upstream commit eae55a586c3c8b50982bad3c3426e9c9dd7a0075 ]
 
-Allocate CPU rmap and add entry for each irq. CPU rmap is
-used in aRFS to get the queue number of the rx completion
-interrupts.
+The driver assumes that the ICV is as a single piece in the last
+element of the scatterlist. This assumption is wrong.
 
-In additional, remove the calling of
-irq_set_affinity_notifier() in hns3_nic_init_irq(), because
-we have registered notifier in irq_cpu_rmap_add() for each
-vector, otherwise it may cause use-after-free issue.
+This patch ensures that the ICV is properly handled regardless of
+the scatterlist layout.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 77 ++++++++++++-------
- 1 file changed, 48 insertions(+), 29 deletions(-)
+ drivers/crypto/talitos.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index f326805543a4..cd59c0cc636a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -4,6 +4,9 @@
- #include <linux/dma-mapping.h>
- #include <linux/etherdevice.h>
- #include <linux/interrupt.h>
-+#ifdef CONFIG_RFS_ACCEL
-+#include <linux/cpu_rmap.h>
-+#endif
- #include <linux/if_vlan.h>
- #include <linux/ip.h>
- #include <linux/ipv6.h>
-@@ -79,23 +82,6 @@ static irqreturn_t hns3_irq_handle(int irq, void *vector)
- 	return IRQ_HANDLED;
- }
+diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+index 396199b2db7d..fb852727ee1a 100644
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1036,7 +1036,6 @@ static void ipsec_esp_encrypt_done(struct device *dev,
+ 	unsigned int authsize = crypto_aead_authsize(authenc);
+ 	unsigned int ivsize = crypto_aead_ivsize(authenc);
+ 	struct talitos_edesc *edesc;
+-	struct scatterlist *sg;
+ 	void *icvdata;
  
--/* This callback function is used to set affinity changes to the irq affinity
-- * masks when the irq_set_affinity_notifier function is used.
-- */
--static void hns3_nic_irq_affinity_notify(struct irq_affinity_notify *notify,
--					 const cpumask_t *mask)
--{
--	struct hns3_enet_tqp_vector *tqp_vectors =
--		container_of(notify, struct hns3_enet_tqp_vector,
--			     affinity_notify);
--
--	tqp_vectors->affinity_mask = *mask;
--}
--
--static void hns3_nic_irq_affinity_release(struct kref *ref)
--{
--}
--
- static void hns3_nic_uninit_irq(struct hns3_nic_priv *priv)
- {
- 	struct hns3_enet_tqp_vector *tqp_vectors;
-@@ -107,8 +93,7 @@ static void hns3_nic_uninit_irq(struct hns3_nic_priv *priv)
- 		if (tqp_vectors->irq_init_flag != HNS3_VECTOR_INITED)
- 			continue;
- 
--		/* clear the affinity notifier and affinity mask */
--		irq_set_affinity_notifier(tqp_vectors->vector_irq, NULL);
-+		/* clear the affinity mask */
- 		irq_set_affinity_hint(tqp_vectors->vector_irq, NULL);
- 
- 		/* release the irq resource */
-@@ -161,12 +146,6 @@ static int hns3_nic_init_irq(struct hns3_nic_priv *priv)
- 			return ret;
- 		}
- 
--		tqp_vectors->affinity_notify.notify =
--					hns3_nic_irq_affinity_notify;
--		tqp_vectors->affinity_notify.release =
--					hns3_nic_irq_affinity_release;
--		irq_set_affinity_notifier(tqp_vectors->vector_irq,
--					  &tqp_vectors->affinity_notify);
- 		irq_set_affinity_hint(tqp_vectors->vector_irq,
- 				      &tqp_vectors->affinity_mask);
- 
-@@ -340,6 +319,40 @@ static void hns3_tqp_disable(struct hnae3_queue *tqp)
- 	hns3_write_dev(tqp, HNS3_RING_EN_REG, rcb_reg);
- }
- 
-+static void hns3_free_rx_cpu_rmap(struct net_device *netdev)
-+{
-+#ifdef CONFIG_RFS_ACCEL
-+	free_irq_cpu_rmap(netdev->rx_cpu_rmap);
-+	netdev->rx_cpu_rmap = NULL;
-+#endif
-+}
-+
-+static int hns3_set_rx_cpu_rmap(struct net_device *netdev)
-+{
-+#ifdef CONFIG_RFS_ACCEL
-+	struct hns3_nic_priv *priv = netdev_priv(netdev);
-+	struct hns3_enet_tqp_vector *tqp_vector;
-+	int i, ret;
-+
-+	if (!netdev->rx_cpu_rmap) {
-+		netdev->rx_cpu_rmap = alloc_irq_cpu_rmap(priv->vector_num);
-+		if (!netdev->rx_cpu_rmap)
-+			return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < priv->vector_num; i++) {
-+		tqp_vector = &priv->tqp_vector[i];
-+		ret = irq_cpu_rmap_add(netdev->rx_cpu_rmap,
-+				       tqp_vector->vector_irq);
-+		if (ret) {
-+			hns3_free_rx_cpu_rmap(netdev);
-+			return ret;
-+		}
-+	}
-+#endif
-+	return 0;
-+}
-+
- static int hns3_nic_net_up(struct net_device *netdev)
- {
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
-@@ -351,11 +364,16 @@ static int hns3_nic_net_up(struct net_device *netdev)
- 	if (ret)
- 		return ret;
- 
-+	/* the device can work without cpu rmap, only aRFS needs it */
-+	ret = hns3_set_rx_cpu_rmap(netdev);
-+	if (ret)
-+		netdev_warn(netdev, "set rx cpu rmap fail, ret=%d!\n", ret);
-+
- 	/* get irq resource for all vectors */
- 	ret = hns3_nic_init_irq(priv);
- 	if (ret) {
- 		netdev_err(netdev, "hns init irq failed! ret=%d\n", ret);
--		return ret;
-+		goto free_rmap;
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+@@ -1050,9 +1049,8 @@ static void ipsec_esp_encrypt_done(struct device *dev,
+ 		else
+ 			icvdata = &edesc->link_tbl[edesc->src_nents +
+ 						   edesc->dst_nents + 2];
+-		sg = sg_last(areq->dst, edesc->dst_nents);
+-		memcpy((char *)sg_virt(sg) + sg->length - authsize,
+-		       icvdata, authsize);
++		sg_pcopy_from_buffer(areq->dst, edesc->dst_nents ? : 1, icvdata,
++				     authsize, areq->assoclen + areq->cryptlen);
  	}
  
- 	clear_bit(HNS3_NIC_STATE_DOWN, &priv->state);
-@@ -384,7 +402,8 @@ static int hns3_nic_net_up(struct net_device *netdev)
- 		hns3_vector_disable(&priv->tqp_vector[j]);
+ 	dma_unmap_single(dev, edesc->iv_dma, ivsize, DMA_TO_DEVICE);
+@@ -1070,7 +1068,6 @@ static void ipsec_esp_decrypt_swauth_done(struct device *dev,
+ 	struct crypto_aead *authenc = crypto_aead_reqtfm(req);
+ 	unsigned int authsize = crypto_aead_authsize(authenc);
+ 	struct talitos_edesc *edesc;
+-	struct scatterlist *sg;
+ 	char *oicv, *icv;
+ 	struct talitos_private *priv = dev_get_drvdata(dev);
+ 	bool is_sec1 = has_ftr_sec1(priv);
+@@ -1080,9 +1077,18 @@ static void ipsec_esp_decrypt_swauth_done(struct device *dev,
+ 	ipsec_esp_unmap(dev, edesc, req);
  
- 	hns3_nic_uninit_irq(priv);
--
-+free_rmap:
-+	hns3_free_rx_cpu_rmap(netdev);
- 	return ret;
- }
- 
-@@ -467,6 +486,8 @@ static void hns3_nic_net_down(struct net_device *netdev)
- 	if (ops->stop)
- 		ops->stop(priv->ae_handle);
- 
-+	hns3_free_rx_cpu_rmap(netdev);
+ 	if (!err) {
++		char icvdata[SHA512_DIGEST_SIZE];
++		int nents = edesc->dst_nents ? : 1;
++		unsigned int len = req->assoclen + req->cryptlen;
 +
- 	/* free irq resources */
- 	hns3_nic_uninit_irq(priv);
+ 		/* auth check */
+-		sg = sg_last(req->dst, edesc->dst_nents ? : 1);
+-		icv = (char *)sg_virt(sg) + sg->length - authsize;
++		if (nents > 1) {
++			sg_pcopy_to_buffer(req->dst, nents, icvdata, authsize,
++					   len - authsize);
++			icv = icvdata;
++		} else {
++			icv = (char *)sg_virt(req->dst) + len - authsize;
++		}
  
-@@ -3331,8 +3352,6 @@ static void hns3_nic_uninit_vector_data(struct hns3_nic_priv *priv)
- 		hns3_free_vector_ring_chain(tqp_vector, &vector_ring_chain);
+ 		if (edesc->dma_len) {
+ 			if (is_sec1)
+@@ -1498,7 +1504,6 @@ static int aead_decrypt(struct aead_request *req)
+ 	struct talitos_ctx *ctx = crypto_aead_ctx(authenc);
+ 	struct talitos_private *priv = dev_get_drvdata(ctx->dev);
+ 	struct talitos_edesc *edesc;
+-	struct scatterlist *sg;
+ 	void *icvdata;
  
- 		if (tqp_vector->irq_init_flag == HNS3_VECTOR_INITED) {
--			irq_set_affinity_notifier(tqp_vector->vector_irq,
--						  NULL);
- 			irq_set_affinity_hint(tqp_vector->vector_irq, NULL);
- 			free_irq(tqp_vector->vector_irq, tqp_vector);
- 			tqp_vector->irq_init_flag = HNS3_VECTOR_NOT_INITED;
+ 	req->cryptlen -= authsize;
+@@ -1532,9 +1537,8 @@ static int aead_decrypt(struct aead_request *req)
+ 	else
+ 		icvdata = &edesc->link_tbl[0];
+ 
+-	sg = sg_last(req->src, edesc->src_nents ? : 1);
+-
+-	memcpy(icvdata, (char *)sg_virt(sg) + sg->length - authsize, authsize);
++	sg_pcopy_to_buffer(req->src, edesc->src_nents ? : 1, icvdata, authsize,
++			   req->assoclen + req->cryptlen - authsize);
+ 
+ 	return ipsec_esp(edesc, req, ipsec_esp_decrypt_swauth_done);
+ }
 -- 
 2.20.1
 
