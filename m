@@ -2,113 +2,92 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02E7C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6728FC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A91227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdS7ifxw"
+	by mail.kernel.org (Postfix) with ESMTP id 401A2229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfGXGGj (ORCPT
+        id S1726643AbfGXGGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:06:39 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41921 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbfGXGGi (ORCPT
+        Wed, 24 Jul 2019 02:06:45 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:60469 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfGXGGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:06:38 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x15so10292574pgg.8;
-        Tue, 23 Jul 2019 23:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+1HMfJjTxMmt6yq++N5V1yBpZofp5uwv8IyU21fY09c=;
-        b=JdS7ifxwE5qDaTMSddnrdpqo9R9gPEQj/gz1fqKljkmbd2SaAplf3F0DSQKVQEO4FS
-         QAK4ELOErHgMoo2VKVENGOz9dzr4hHEApog1mJWsE0Bn58E0kOVyhNSf+M3rNiEkdJRc
-         fkNctifv/t8AvuNwjL88aNZbbTJT09gAPeprHC28MywLmXm0Aty32f7lQP/b5HdJk79g
-         jNpn9GkZ3p7kCNuI28jLl2wP6qv6fMZQeLx/vegsNS9LJ+3Gvh65hQUJuvezhf8LoWvv
-         6k/h5/9USe7Y6iLNRmS2H1/fLPtb5CN7Ygea19y1sEhER5TlS65gRL/3/FXBaYjxEznW
-         07mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+1HMfJjTxMmt6yq++N5V1yBpZofp5uwv8IyU21fY09c=;
-        b=p9OUDrHduXtqS4zVmIwBz2eMksk4j4tYw1i3NFv1ve3Y2T7EABPpPvyyT7bHpKpNji
-         D21d6O+hHoLiSWy07fwKLQxUmp78d3loe1Rhnd123dythsHc5QQ/A1b5RDvlhjLQBMYY
-         YibujAccT7YlI02WM383h5EiVQnptyt29f2n5Vg0v7OkqAuNQMnu7bxdCmJhl1foMrXl
-         AdQCyvyBYxtnmydCJu2tOYHSTxuvaXvAgMxeuacj/Lf8G4BhIWfQ/fsD+j3hW/wRsDdy
-         bc7ohkrH4HUsotmOaIeL13rxn305RGopK2VV5S2pYtiDsOYGkn0L90EgyO5W7vavwFy3
-         3u5w==
-X-Gm-Message-State: APjAAAUpGAL1PofnOEeNKBdwlOntyQaMA5wZhm1E2EbRPeuertoRlRqr
-        uzb+PEJ0ASP0iqCwscBrB9/3ijkO19M=
-X-Google-Smtp-Source: APXvYqzOXgXuZYtmgP1MoJxtOZOC9ioO4gK6RyHz2B7lwyoIGdQG/TTs7Wpl4gfJbhuIGrYlQYXzfA==
-X-Received: by 2002:a17:90a:258b:: with SMTP id k11mr82378025pje.110.1563948398256;
-        Tue, 23 Jul 2019 23:06:38 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id c23sm31909568pgj.62.2019.07.23.23.06.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 23:06:37 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH net-next v2 7/8] igb: Use dev_get_drvdata where possible
-Date:   Wed, 24 Jul 2019 14:06:33 +0800
-Message-Id: <20190724060633.24280-1-hslester96@gmail.com>
+        Wed, 24 Jul 2019 02:06:44 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 45F331C0007;
+        Wed, 24 Jul 2019 06:06:36 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH REBASE v4 07/14] arm: Use STACK_TOP when computing mmap base address
+Date:   Wed, 24 Jul 2019 01:58:43 -0400
+Message-Id: <20190724055850.6232-8-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
+References: <20190724055850.6232-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using to_pci_dev + pci_get_drvdata,
-use dev_get_drvdata to make code simpler.
+mmap base address must be computed wrt stack top address, using TASK_SIZE
+is wrong since STACK_TOP and TASK_SIZE are not equivalent.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
 ---
-Changes in v2:
-  - Change pci_set_drvdata to dev_set_drvdata
-    to keep consistency.
+ arch/arm/mm/mmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/net/ethernet/intel/igb/igb_main.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index b4df3e319467..ed301428c0ce 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -3048,7 +3048,7 @@ static int igb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+index bff3d00bda5b..0b94b674aa91 100644
+--- a/arch/arm/mm/mmap.c
++++ b/arch/arm/mm/mmap.c
+@@ -19,7 +19,7 @@
  
- 	SET_NETDEV_DEV(netdev, &pdev->dev);
+ /* gap between mmap and stack */
+ #define MIN_GAP		(128*1024*1024UL)
+-#define MAX_GAP		((TASK_SIZE)/6*5)
++#define MAX_GAP		((STACK_TOP)/6*5)
+ #define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
  
--	pci_set_drvdata(pdev, netdev);
-+	dev_set_drvdata(&pdev->dev, netdev);
- 	adapter = netdev_priv(netdev);
- 	adapter->netdev = netdev;
- 	adapter->pdev = pdev;
-@@ -8879,8 +8879,7 @@ static int __maybe_unused igb_resume(struct device *dev)
+ static int mmap_is_legacy(struct rlimit *rlim_stack)
+@@ -51,7 +51,7 @@ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+ 	else if (gap > MAX_GAP)
+ 		gap = MAX_GAP;
  
- static int __maybe_unused igb_runtime_idle(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct net_device *netdev = pci_get_drvdata(pdev);
-+	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct igb_adapter *adapter = netdev_priv(netdev);
+-	return PAGE_ALIGN(TASK_SIZE - gap - rnd);
++	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+ }
  
- 	if (!igb_has_link(adapter))
+ /*
 -- 
 2.20.1
 
