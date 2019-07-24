@@ -2,105 +2,130 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD81C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A327CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E026227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741672253D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563938038;
+	bh=AXiCpbshNYcz7VQFZBfLifrrHxAILqoy+ggfj5ZCmDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eVCzws/ZWdYbdZq04zbkyoTYaWRMFyazOmkZJcFV8VJ4mI3x7LO4DFYM4BUhmJ/SC
+	 VhDF/h2C7SeOcOXm5JvGdNETQt3ZuP6G315VNVWfe7DEcTozYcB1zDbpgrryoP1T6A
+	 3EYhId41qx2UhA/L/MRXW9FbVMTKO/0Oj7+B8ecM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfGXDKO (ORCPT
+        id S1726386AbfGXDN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:10:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2709 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725468AbfGXDKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:10:14 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CF1FEE77B2783C2E79F0;
-        Wed, 24 Jul 2019 11:10:11 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 11:10:05 +0800
-Subject: Re: [PATCH] RDMA/hns: Fix build error for hip08
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-References: <20190723024908.11876-1-yuehaibing@huawei.com>
- <20190723074339.GJ5125@mtr-leonro.mtl.com> <20190723123402.GA15357@ziepe.ca>
- <20190723133540.GM5125@mtr-leonro.mtl.com> <20190723133739.GC15357@ziepe.ca>
-CC:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
-        <dledford@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <75865ec7-443e-f65a-2221-8fbc57fedb6b@huawei.com>
-Date:   Wed, 24 Jul 2019 11:10:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Tue, 23 Jul 2019 23:13:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfGXDN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:13:57 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 831122253D;
+        Wed, 24 Jul 2019 03:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563938035;
+        bh=AXiCpbshNYcz7VQFZBfLifrrHxAILqoy+ggfj5ZCmDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YYqG5d7XafM9NmvZ4tQSMuyhPB6Om9BauPTfY7VtmNBKE9oXbBMLR94LluniH220H
+         d8TfVk5IaFIPml09gcFbL9EEjjwHx0tHWW6EXhnI9IqFiPKSjcqSo2gGXK5Njn+sxY
+         COIS9ZxjWXe9b6ABW3LDtSeAxjhnfnJ6gIVZsLL0=
+Date:   Tue, 23 Jul 2019 20:13:54 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: Reminder: 3 open syzbot bugs in vhost subsystem
+Message-ID: <20190724031354.GV643@sol.localdomain>
+Mail-Followup-To: Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <20190724023835.GY643@sol.localdomain>
+ <fabf96ac-e472-c7fd-07ff-486fe03e6433@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190723133739.GC15357@ziepe.ca>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fabf96ac-e472-c7fd-07ff-486fe03e6433@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/7/23 21:37, Jason Gunthorpe wrote:
-> On Tue, Jul 23, 2019 at 04:35:40PM +0300, Leon Romanovsky wrote:
->> On Tue, Jul 23, 2019 at 09:34:02AM -0300, Jason Gunthorpe wrote:
->>> On Tue, Jul 23, 2019 at 10:43:39AM +0300, Leon Romanovsky wrote:
->>>> On Tue, Jul 23, 2019 at 10:49:08AM +0800, YueHaibing wrote:
->>>>> If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
->>>>> but INFINIBAND_HNS is y, building fails:
->>>>>
->>>>> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
->>>>> hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
->>>>> drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
->>>>> hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
->>>>
->>>> It means that you have a problem with header files of your hns3.
->>>>
->>>>>
->>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>>> Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
->>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>>  drivers/infiniband/hw/hns/Kconfig | 3 ++-
->>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
->>>>> index b59da5d..4371c80 100644
->>>>> +++ b/drivers/infiniband/hw/hns/Kconfig
->>>>> @@ -23,7 +23,8 @@ config INFINIBAND_HNS_HIP06
->>>>>
->>>>>  config INFINIBAND_HNS_HIP08
->>>>>  	bool "Hisilicon Hip08 Family RoCE support"
->>>>> -	depends on INFINIBAND_HNS && PCI && HNS3
->>>>> +	depends on INFINIBAND_HNS && (INFINIBAND_HNS = HNS3)
->>>>
->>>> This is wrong.
->>>
->>> It is tricky. It is asserting that the IB side is built as a module if
->>> the ethernet side is a module..
->>>
->>> It is kind of a weird pattern as the module config is INFINIBAND_HNS
->>> and these others are just bool opens what to include, but I think it
->>> is OK..
->>
->> select ???
+On Wed, Jul 24, 2019 at 11:05:14AM +0800, Jason Wang wrote:
+> > --------------------------------------------------------------------------------
+> > Title:              KASAN: use-after-free Write in tlb_finish_mmu
+> > Last occurred:      5 days ago
+> > Reported:           4 days ago
+> > Branches:           Mainline
+> > Dashboard link:     https://syzkaller.appspot.com/bug?id=d57b94f89e48c85ef7d95acc208209ea4bdc10de
+> > Original thread:    https://lkml.kernel.org/lkml/00000000000045e7a1058e02458a@google.com/T/#u
+> > 
+> > This bug has a syzkaller reproducer only.
+> > 
+> > This bug was bisected to:
+> > 
+> > 	commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> > 	Author: Jason Wang <jasowang@redhat.com>
+> > 	Date:   Fri May 24 08:12:18 2019 +0000
+> > 
+> > 	  vhost: access vq metadata through kernel virtual address
+> > 
+> > No one has replied to the original thread for this bug yet.
+> > 
+> > If you fix this bug, please add the following tag to the commit:
+> >      Reported-by: syzbot+8267e9af795434ffadad@syzkaller.appspotmail.com
+> > 
+> > If you send any email or patch for this bug, please reply to the original
+> > thread.  For the git send-email command to use, or tips on how to reply if the
+> > thread isn't in your mailbox, see the "Reply instructions" at
+> > https://lkml.kernel.org/r/00000000000045e7a1058e02458a@google.com
+> > 
+> > --------------------------------------------------------------------------------
+> > Title:              KASAN: use-after-free Read in finish_task_switch (2)
+> > Last occurred:      5 days ago
+> > Reported:           4 days ago
+> > Branches:           Mainline
+> > Dashboard link:     https://syzkaller.appspot.com/bug?id=9a98fcad6c8bd31f5c3afbdc6c75de9f082c0ffa
+> > Original thread:    https://lkml.kernel.org/lkml/000000000000490679058e0245ee@google.com/T/#u
+> > 
+> > This bug has a syzkaller reproducer only.
+> > 
+> > This bug was bisected to:
+> > 
+> > 	commit 7f466032dc9e5a61217f22ea34b2df932786bbfc
+> > 	Author: Jason Wang <jasowang@redhat.com>
+> > 	Date:   Fri May 24 08:12:18 2019 +0000
+> > 
+> > 	  vhost: access vq metadata through kernel virtual address
+> > 
+> > No one has replied to the original thread for this bug yet.
 > 
-> select doesn't influence module or not any different from depeends
-
-Ok, it seems select is a better solution, it allows HNS3 is y while INFINIBAND_HNS is m,
-
-Will send v2, Thanks!
-
 > 
-> Jason
+> Hi:
 > 
-> .
+> We believe above two bugs are duplicated with the report "WARNING in
+> __mmdrop". Can I just dup them with
+> 
+> #syz dup "WARNING in __mmdrop"
+> 
+> (If yes, just wonder how syzbot differ bugs, technically, several different
+> bug can hit the same warning).
 > 
 
+Yes, please mark them as duplicates; see https://goo.gl/tpsmEJ#status for
+correct syntax.  You need to send the command to the syzbot email address
+specific to each bug.  Easiest way is to reply to the original threads.
+
+- Eric
