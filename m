@@ -2,155 +2,126 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1609BC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAEAC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD58321738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:18:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="aD9gCEO/"
+	by mail.kernel.org (Postfix) with ESMTP id 1CA5121743
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387578AbfGXPSM (ORCPT
+        id S2387592AbfGXPTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:18:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34626 "EHLO vps0.lunn.ch"
+        Wed, 24 Jul 2019 11:19:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47626 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387503AbfGXPSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:18:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=HhOq85evkFM/y15ZM/uScRYpMDK7uIWdehOeEOZxwf4=; b=aD9gCEO/FuimjgYQZxJxnzZ4v1
-        SEPBl3v97IkgN4q2SfajCnLPZCPyb9eAUvSJCSsM/ceXh7w22MSJIGZYynurXwVFVmUsi6Qkb6gy4
-        numZoJbK/AWNh/CnvIzhqder6Q5qnPPyuV1qWrQqWUAjRrDjAC982P5hwYPoiIoAFa8U=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hqJ1n-000061-9c; Wed, 24 Jul 2019 17:18:03 +0200
-Date:   Wed, 24 Jul 2019 17:18:03 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        alexandru.marginean@nxp.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v1 1/4] enetc: Clean up local mdio bus allocation
-Message-ID: <20190724151803.GR25635@lunn.ch>
-References: <1563979301-596-1-git-send-email-claudiu.manoil@nxp.com>
- <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
+        id S2387503AbfGXPTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:19:45 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A76E6C024AF3;
+        Wed, 24 Jul 2019 15:19:44 +0000 (UTC)
+Received: from redhat.com (ovpn-123-65.rdu2.redhat.com [10.10.123.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A5D95D9DE;
+        Wed, 24 Jul 2019 15:19:43 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 11:19:42 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: kprobes, livepatch and FTRACE_OPS_FL_IPMODIFY
+Message-ID: <20190724151942.GA7205@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1563979301-596-2-git-send-email-claudiu.manoil@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 24 Jul 2019 15:19:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 05:41:38PM +0300, Claudiu Manoil wrote:
-> Though it works, this is not how it should have been.
-> What's needed is a pointer to the mdio registers.
-> Store it properly inside bus->priv allocated space.
-> Use devm_* variant to further clean up the init error /
-> remove paths.
-> 
-> Fixes following sparse warning:
->  warning: incorrect type in assignment (different address spaces)
->     expected void *priv
->     got struct enetc_mdio_regs [noderef] <asn:2>*[assigned] regs
-> 
-> Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
-> 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> ---
-> v1 - added this patch
-> 
->  .../net/ethernet/freescale/enetc/enetc_mdio.c | 31 +++++++------------
->  1 file changed, 12 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-> index 77b9cd10ba2b..1e3cd21c13ee 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_mdio.c
-> @@ -15,7 +15,8 @@ struct enetc_mdio_regs {
->  	u32	mdio_addr;	/* MDIO address */
->  };
->  
-> -#define bus_to_enetc_regs(bus)	(struct enetc_mdio_regs __iomem *)((bus)->priv)
-> +#define bus_to_enetc_regs(bus)	(*(struct enetc_mdio_regs __iomem **) \
-> +				((bus)->priv))
->  
->  #define ENETC_MDIO_REG_OFFSET	0x1c00
->  #define ENETC_MDC_DIV		258
-> @@ -146,12 +147,12 @@ static int enetc_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
->  int enetc_mdio_probe(struct enetc_pf *pf)
->  {
->  	struct device *dev = &pf->si->pdev->dev;
-> -	struct enetc_mdio_regs __iomem *regs;
-> +	struct enetc_mdio_regs __iomem **regsp;
->  	struct device_node *np;
->  	struct mii_bus *bus;
-> -	int ret;
-> +	int err;
->  
-> -	bus = mdiobus_alloc_size(sizeof(regs));
-> +	bus = devm_mdiobus_alloc_size(dev, sizeof(*regsp));
->  	if (!bus)
->  		return -ENOMEM;
->  
-> @@ -159,41 +160,33 @@ int enetc_mdio_probe(struct enetc_pf *pf)
->  	bus->read = enetc_mdio_read;
->  	bus->write = enetc_mdio_write;
->  	bus->parent = dev;
-> +	regsp = bus->priv;
->  	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", dev_name(dev));
->  
->  	/* store the enetc mdio base address for this bus */
-> -	regs = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
-> -	bus->priv = regs;
-> +	*regsp = pf->si->hw.port + ENETC_MDIO_REG_OFFSET;
+Hi Masami,
 
-This is all very odd and different to every other driver.
+I wanted to revisit FTRACE_OPS_FL_IPMODIFY blocking of kprobes and
+livepatch, at least in cases where kprobe pre_handlers don't modify
+regs->ip.
 
-If i get the code write, there are 4 registers, each u32 in size,
-starting at pf->si->hw.port + ENETC_MDIO_REG_OFFSET?
+(We've discussed this previously at part of a kpatch github issue #47:
+https://github.com/dynup/kpatch/issues/47)
 
-There are macros like enetc_port_wr() and enetc_global_wr(). It think
-it would be much cleaner to add a macro enet_mdio_wr() which takes
-hw, off, val.
+The particular use case I was wondering about was perf probing a
+particular function, then attempting to livepatch that same function:
 
-#define enet_mdio_wr(hw, off, val) enet_port_wr(hw, off + ENETC_MDIO_REG_OFFSET, val)
+  % uname -r
+  5.3.0-rc1+
 
-struct enetc_mdio_priv {
-       struct enetc_hw *hw;
-}
+  % dmesg -C
+  % perf probe --add cmdline_proc_show
+  Added new event:
+    probe:cmdline_proc_show (on cmdline_proc_show)
 
-	struct enetc_mdio_priv *mdio_priv;
+  You can now use it in all perf tools, such as:
 
-	bus = devm_mdiobus_alloc_size(dev, sizeof(*mdio_priv));
+          perf record -e probe:cmdline_proc_show -aR sleep 1
 
-	mdio_priv = bus->priv;
-	mdio_priv->hw = pf->si->hw;
+  % perf record -e probe:cmdline_proc_show -aR sleep 30 &
+  [1] 1007
+  % insmod samples/livepatch/livepatch-sample.ko
+  insmod: ERROR: could not insert module samples/livepatch/livepatch-sample.ko: Device or resource busy
+  % dmesg
+  [  440.913962] livepatch_sample: tainting kernel with TAINT_LIVEPATCH
+  [  440.917123] livepatch_sample: module verification failed: signature and/or required key missing - tainting kernel
+  [  440.942493] livepatch: enabling patch 'livepatch_sample'
+  [  440.943445] livepatch: failed to register ftrace handler for function 'cmdline_proc_show' (-16)
+  [  440.944576] livepatch: failed to patch object 'vmlinux'
+  [  440.945270] livepatch: failed to enable patch 'livepatch_sample'
+  [  440.946085] livepatch: 'livepatch_sample': unpatching complete
+
+This same behavior holds in reverse, if we want to probe a livepatched
+function:
+
+  % insmod samples/livepatch/livepatch-sample.ko
+  % perf probe --add cmdline_proc_show
+  Added new event:
+    probe:cmdline_proc_show (on cmdline_proc_show)
+
+  You can now use it in all perf tools, such as:
+
+          perf record -e probe:cmdline_proc_show -aR sleep 1
+
+  % perf record -e probe:cmdline_proc_show -aR sleep 30
+  Error:
+  The sys_perf_event_open() syscall returned with 16 (Device or resource busy) for event (probe:cmdline_proc_show).
+  /bin/dmesg | grep -i perf may provide additional information.
 
 
-static int enetc_mdio_write(struct mii_bus *bus, int phy_id, int regnum,
-                            u16 value)
-{
-	struct enetc_mdio_priv *mdio_priv = bus->priv;
-...
-	enet_mdio_wr(priv->hw, ENETC_MDIO_CFG, mdio_cfg);
-}
-			    	
-All the horrible casts go away, the driver is structured like every
-other driver, sparse is probably happy, etc.
+Now, if I read kernel/trace/trace_kprobe.c :: kprobe_dispatcher()
+correctly, it's only going to return !0 (indicating a modified regs->ip)
+when kprobe_perf_func() returns !0, i.e. regs->ip changes over a call to
+trace_call_bpf().
 
-      Andrew
+Aside: should kprobe_ftrace_handler() check that FTRACE_OPS_FL_IPMODIFY
+is set when a pre_handler returns !0?
+
+In kpatch #47, Josh suggested:
+
+- If a kprobe handler needs to modify IP, user sets KPROBE_FLAG_IPMODIFY
+  flag to register_kprobe, and then kprobes sets FTRACE_OPS_FL_IPMODIFY
+  when registering with ftrace for that probe.
+
+- If KPROBE_FLAG_IPMODIFY is not used, kprobe_ftrace_handler() can
+  detect when a kprobe handler changes regs->ip and restore it to its
+  original value (regs->ip = ip).
+
+Is this something that could still be supported?  In cases like perf
+probe, could we get away with not setting FTRACE_OPS_FL_IPMODIFY?  The
+current way that we're applying that flag, kprobes and livepatch are
+mutually exclusive (for the same function).
+
+Regards,
+
+-- Joe
