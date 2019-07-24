@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7DFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C73C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D549E20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D56A821873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998384;
-	bh=Ngj/6pvjKZW/raTWO60ugt8+TssqU8ljcYQSAYAJuHU=;
+	s=default; t=1563998389;
+	bh=x5cBvB+ePUbEneL3+6RDnFsAOd6tOD2Z+cdqbyRCV1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSDbJKLs5kXeyvT0Lgw05MbX/WwsUDcBlAZ4fLp1a0DqEI+NIBuK8NZdF/Pz9t7A8
-	 pV92eU12HwMAlo8iK4g4rxh2G12qgU4iHaa3NH5Rg+mPtppEudARjngdWNVCKAPmdG
-	 upFLn/PvWlVucHu5KGYhr9G6+/N+h3gyH/Vj+Xww=
+	b=rJY0HZd04DhLp5yDGjqYPYC3KNjvdidUGeeGM3f1giMYMkIJBFJpk+fQo2RRy8Ade
+	 +Z+yh4Ya27iB1begQ1wB4Kql0iNBzqObcIloxTEaXw5vnL8B+xvpAOy326O1TCrEjf
+	 +2dODXLK0A/8Bkg4mqXCkTQPNS59vkwazYbxjP9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388243AbfGXT7o (ORCPT
+        id S2405050AbfGXT7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405016AbfGXT7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:59:41 -0400
+        id S2405003AbfGXT7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:59:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF80820665;
-        Wed, 24 Jul 2019 19:59:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A9D205C9;
+        Wed, 24 Jul 2019 19:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998380;
-        bh=Ngj/6pvjKZW/raTWO60ugt8+TssqU8ljcYQSAYAJuHU=;
+        s=default; t=1563998386;
+        bh=x5cBvB+ePUbEneL3+6RDnFsAOd6tOD2Z+cdqbyRCV1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZUI9LHZzkWTTHINUdc6vu3f9yFm1Qw8e1pW21NgBZoiShFYMomzfShUjdMhJtHFj
-         fxZr7LTVWnpK6ZMP5Ywgc0vYYp12Zx/IRA0zYQtyAYP9WzPOnTmnBPoAilAFW7j3j1
-         NzPx9ijk5wk0/Kd75rtu/p2DW6R5MF7IO6oCDmM4=
+        b=REqqK5DZJdh9yu9Gtw7QdPDSoFFob3kSf238qQptleWFaArYcWGMjwFRRKMuoVmNR
+         5f1oh1VDlor7Y44v4IdBQxJ/B82IAm4Qny5VUmeZL1rTc2YtdLvswDhxFVYDdqLxGk
+         dwS8KbiCuTTZIe040Js1ArU28Eg0jbU1xSiqFBTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.1 304/371] KVM: PPC: Book3S HV: Fix CR0 setting in TM emulation
-Date:   Wed, 24 Jul 2019 21:20:56 +0200
-Message-Id: <20190724191747.099345936@linuxfoundation.org>
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.1 296/371] media: videobuf2-core: Prevent size alignment wrapping buffer size to 0
+Date:   Wed, 24 Jul 2019 21:20:48 +0200
+Message-Id: <20190724191746.613133033@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,59 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Neuling <mikey@neuling.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-commit 3fefd1cd95df04da67c83c1cb93b663f04b3324f upstream.
+commit defcdc5d89ced780fb45196d539d6570ec5b1ba5 upstream.
 
-When emulating tsr, treclaim and trechkpt, we incorrectly set CR0. The
-code currently sets:
-    CR0 <- 00 || MSR[TS]
-but according to the ISA it should be:
-    CR0 <-  0 || MSR[TS] || 0
+PAGE_ALIGN() may wrap the buffer size around to 0. Prevent this by
+checking that the aligned value is not smaller than the unaligned one.
 
-This fixes the bit shift to put the bits in the correct location.
+Note on backporting to stable: the file used to be under
+drivers/media/v4l2-core, it was moved to the current location after 4.14.
 
-This is a data integrity issue as CR0 is corrupted.
-
-Fixes: 4bb3c7a0208f ("KVM: PPC: Book3S HV: Work around transactional memory bugs in POWER9")
-Cc: stable@vger.kernel.org # v4.17+
-Tested-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Signed-off-by: Michael Neuling <mikey@neuling.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv_tm.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/common/videobuf2/videobuf2-core.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/powerpc/kvm/book3s_hv_tm.c
-+++ b/arch/powerpc/kvm/book3s_hv_tm.c
-@@ -131,7 +131,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcp
- 		}
- 		/* Set CR0 to indicate previous transactional state */
- 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
--			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
-+			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
- 		/* L=1 => tresume, L=0 => tsuspend */
- 		if (instr & (1 << 21)) {
- 			if (MSR_TM_SUSPENDED(msr))
-@@ -175,7 +175,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcp
+--- a/drivers/media/common/videobuf2/videobuf2-core.c
++++ b/drivers/media/common/videobuf2/videobuf2-core.c
+@@ -207,6 +207,10 @@ static int __vb2_buf_mem_alloc(struct vb
+ 	for (plane = 0; plane < vb->num_planes; ++plane) {
+ 		unsigned long size = PAGE_ALIGN(vb->planes[plane].length);
  
- 		/* Set CR0 to indicate previous transactional state */
- 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
--			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
-+			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
- 		vcpu->arch.shregs.msr &= ~MSR_TS_MASK;
- 		return RESUME_GUEST;
- 
-@@ -205,7 +205,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcp
- 
- 		/* Set CR0 to indicate previous transactional state */
- 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
--			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
-+			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
- 		vcpu->arch.shregs.msr = msr | MSR_TS_S;
- 		return RESUME_GUEST;
- 	}
++		/* Did it wrap around? */
++		if (size < vb->planes[plane].length)
++			goto free;
++
+ 		mem_priv = call_ptr_memop(vb, alloc,
+ 				q->alloc_devs[plane] ? : q->dev,
+ 				q->dma_attrs, size, q->dma_dir, q->gfp_flags);
 
 
