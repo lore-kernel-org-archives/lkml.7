@@ -2,87 +2,119 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6093DC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E92C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4F7229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563950125;
-	bh=Pi+VKac//YeSaPe2w+Iospd+tpAQMymBglU3stnrNHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kuwmEDymrpUDPNC/VnXgLlEZimGvIpyDz7o2EQwgEq9eeO9YjAfLr+9zYeNl+TXO+
-	 7npcanyCMb4KdhD6CDUDv3Jjqv+HU+aNhsvfdA9/nCokeiBwraXVC7gwpwn5yrEpbR
-	 WCNMTKpKhf6JcR5Dq2aLrcI773OgFHzhvsdMa5MY=
+	by mail.kernel.org (Postfix) with ESMTP id A6A1021738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:39:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCaCMDu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfGXGfX (ORCPT
+        id S1726305AbfGXGjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:35:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbfGXGfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:35:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67554229ED;
-        Wed, 24 Jul 2019 06:35:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563950122;
-        bh=Pi+VKac//YeSaPe2w+Iospd+tpAQMymBglU3stnrNHs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IENQEMwTMB+Mw7Lh7xPyHgf5dE8Doq4/+aJujiWGsLEHA5WsZAV8QV3WYfSgHu8Mp
-         oxn2nUQXVGTq3Rzy2ihldV36K1eRZArX6pN4Isz55RT2+F9xj6m+dzjDUQ/vBngwPh
-         y5uvNDy/60OC9Rm3ipRRGkSe+1TP5yxYCrm7r6ao=
-Date:   Wed, 24 Jul 2019 08:35:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 2/3] treewide: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190724063520.GA21280@kroah.com>
-References: <20190723181624.203864-1-swboyd@chromium.org>
- <20190723181624.203864-3-swboyd@chromium.org>
+        Wed, 24 Jul 2019 02:39:10 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46442 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfGXGjJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:39:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so45554366wru.13;
+        Tue, 23 Jul 2019 23:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=/y6MHQMi0uRYJAaIjnjQQh3pn0f7uiR3QmjPcFFx2Lc=;
+        b=cCaCMDu3U+xeDIVPHhXHIcg0BSKgwue1aGbyObTDGMEw/pE0NpFrPGMBWSvxwMEnG+
+         vM00ad5W9L1lMPL+5UdYLuzLDgGk+f74M0EnX+Rk3m/rLvBs9/JGhSM8CVX5hDt7MFcF
+         C6nw6M7dUmtH70sZIlpS+uE9VUBEJjaFWyZGk6D1haR8X9KNUWMKx3PcjpHp/H7qKLfQ
+         r2oeusSwRerYDxapkYV938NeS+Nm8wgBlmXtA7n8epBNqaoIarLcMVut+t2jsCOZ7etr
+         RBsMSCC5iyzm4+PBt4sdRn1mThXOWyiRDi9aY7dT90xhmIGl5/QEM+F1zFzj/iKjJD8P
+         oP3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/y6MHQMi0uRYJAaIjnjQQh3pn0f7uiR3QmjPcFFx2Lc=;
+        b=myyCWNiI77jzgFmhZbbakidXmYn0myt0X2Bumle0GtBClFayvFRfQAjYVz4gtrLCl2
+         vxLU5PmK8C2uBkXNyHs4SjaEeyWRm/ysX1zJlkpzi8BwZY2Q9iayOUFpdu/zSV9LOtHZ
+         nd3QIJZQId/N4ygj8eofGlpL65EASXH3B3hTremf3VbTe9Cq2WQqfAoK6pLQgiYqYeTC
+         ie+u2riH1MhkGvSmH5lcWVurSTyRxa6Z001rUapllO/pNFiH7Uw4SjtrmP2+iRTl9m9S
+         54Vaym6NMb4s7KqJlBwYsm23e7WHCHL6WzZAmH+wq/xKfEtu+2pmLo+jsqTyvsalwpfq
+         +Yxw==
+X-Gm-Message-State: APjAAAXw9xZiFXYcxKBjl2T7iBNYLcjB7LhKYqkyhpx/mf7O8VlFdB3a
+        GxqWa8SerYMNwzQCFAS7eDc=
+X-Google-Smtp-Source: APXvYqxFY3S/zD4Km/ZPveZ0YEEBG9PHJ5COp5MPaK6V0jO3f0sD2R6AHHFoxa8H2IrGHkxmyMIMFA==
+X-Received: by 2002:adf:f888:: with SMTP id u8mr55728658wrp.238.1563950347445;
+        Tue, 23 Jul 2019 23:39:07 -0700 (PDT)
+Received: from [192.168.8.147] (200.150.22.93.rev.sfr.net. [93.22.150.200])
+        by smtp.gmail.com with ESMTPSA id x20sm100561441wrg.10.2019.07.23.23.39.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 23:39:06 -0700 (PDT)
+Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
+To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Ilya Maximets <i.maximets@samsung.com>,
+        Eric Dumazet <edumazet@google.com>,
+        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <20190724013813.GB643@sol.localdomain>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
+Date:   Wed, 24 Jul 2019 08:39:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723181624.203864-3-swboyd@chromium.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190724013813.GB643@sol.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 11:16:23AM -0700, Stephen Boyd wrote:
-> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> index 9b2232908b65..40e4e8e03428 100644
-> --- a/sound/soc/sunxi/sun4i-i2s.c
-> +++ b/sound/soc/sunxi/sun4i-i2s.c
-> @@ -1088,7 +1088,6 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> -		dev_err(&pdev->dev, "Can't retrieve our interrupt\n");
->  		return irq;
->  	}
->  
 
-Just one example here, but you really want to remove those { } now as
-well.
 
-That's in this patch a lot, so as-is, I don't think this is ok, sorry.
+On 7/24/19 3:38 AM, Eric Biggers wrote:
+> [This email was generated by a script.  Let me know if you have any suggestions
+> to make it better, or if you want it re-generated with the latest status.]
+> 
+> Of the currently open syzbot reports against the upstream kernel, I've manually
+> marked 99 of them as possibly being bugs in the net subsystem.  This category
+> only includes the networking bugs that I couldn't assign to a more specific
+> component (bpf, xfrm, bluetooth, tls, tipc, sctp, wireless, etc.).  I've listed
+> these reports below, sorted by an algorithm that tries to list first the reports
+> most likely to be still valid, important, and actionable.
+> 
+> Of these 99 bugs, 17 were seen in mainline in the last week.
+> 
+> Of these 99 bugs, 4 were bisected to commits from the following people:
+> 
+> 	Florian Westphal <fw@strlen.de>
+> 	Ilya Maximets <i.maximets@samsung.com>
+> 	Eric Dumazet <edumazet@google.com>
+> 	David Ahern <dsahern@gmail.com>
+> 
+> If you believe a bug is no longer valid, please close the syzbot report by
+> sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+> original thread, as explained at https://goo.gl/tpsmEJ#status
+> 
+> If you believe I misattributed a bug to the net subsystem, please let me know,
+> and if possible forward the report to the correct people or mailing list.
+>
 
-greg k-h
+Some of the bugs have been fixed already, before syzbot found them.
+
+Why force human to be gentle to bots and actually replying to them ?
+
+I usually simply wait that syzbot is finding the bug does not repro anymore,
+but now if you send these emails, we will have even more pressure on us.
+
+
