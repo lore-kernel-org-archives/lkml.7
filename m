@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA59C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152E6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADB0205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E1B205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998454;
-	bh=Imh51isZT2drzGlUwJKWk7XtSEG4yh7bkKWU/He7j2U=;
+	s=default; t=1563998457;
+	bh=K8tCOehphzHY0IO/sbGLCbhffAbFe0XqUIVhEKI7KQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epEQtsGsU6yzj5fSdqz5HyNfm1p5O6xp9IVSBUKb2lpNez2cPy2ezweIDFULRuFcC
-	 2lN0RRk4G+e+I0QqkGJvoapwTRQ8ktE4vQCZXq4BI7npTOl1Wd7s2LZ8ktRAs4ZitP
-	 /XokI0WKXfygFz52K+seEvvMOQDRhnrVrhmtIZs4=
+	b=CPuVKn+9Lqi+ZmJIsdNNxDk/J+/h2uyPMAVftDMb8KjIJqLpVsrirHKtAB5/pwP7M
+	 /6Yq8Zw6jysHdaQEjTI3d8m6+lz0On4sNpf4b2KzxQNTFBcBylTRkZE5mI17v6d1AO
+	 oA/XoGjWeN2ZtSwn0wC1n0OaXVn/dWu9McntYcG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405296AbfGXUAx (ORCPT
+        id S2405301AbfGXUA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:00:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:00:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404950AbfGXUAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:00:40 -0400
+        id S2405276AbfGXUAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:00:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15FCA205C9;
-        Wed, 24 Jul 2019 20:00:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167F1205C9;
+        Wed, 24 Jul 2019 20:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998440;
-        bh=Imh51isZT2drzGlUwJKWk7XtSEG4yh7bkKWU/He7j2U=;
+        s=default; t=1563998446;
+        bh=K8tCOehphzHY0IO/sbGLCbhffAbFe0XqUIVhEKI7KQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L96R8ybIVsIcNIkO9Gi7iC4SfP3aSRs5jV/SMF39ypaPRUxRCyiqTQBksnCF7brMu
-         Tkbyr20x7dg2u6UBc81h94D++4rFyUyiGwqFqKh0xUrVygpVuSPJ8E47zsL0aRY27I
-         hONsN/ngv4NbcDZv+t0vfN+Y/syF/4wWUGHPzZJY=
+        b=fLV+/0hCtsFqKYvKJV4PVGkL1pGoJzIpe7WUbvgwJGkPTaghY6mknGKQBrPlZ/2iR
+         n3qdFHQT+qs9phh9SD7N6f4ccsE/Mnmug48jSxwy3x/2vLdxQzkufciTAf3FxJUslr
+         Ip9JJsQurTEE/zmb/9EYv4FDYi386ydnEXSUf1LM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Josef Bacik <jbacik@fb.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 366/371] blk-iolatency: clear use_delay when io.latency is set to zero
-Date:   Wed, 24 Jul 2019 21:21:58 +0200
-Message-Id: <20190724191751.788091643@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Josua Mayer <josua@solid-run.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 368/371] net: mvmdio: allow up to four clocks to be specified for orion-mdio
+Date:   Wed, 24 Jul 2019 21:22:00 +0200
+Message-Id: <20190724191752.010682758@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,39 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Josua Mayer <josua@solid-run.com>
 
-commit 5de0073fcd50cc1f150895a7bb04d3cf8067b1d7 upstream.
+commit 4aabed699c400810981d3dda170f05fa4d782905 upstream.
 
-If use_delay was non-zero when the latency target of a cgroup was set
-to zero, it will stay stuck until io.latency is enabled on the cgroup
-again.  This keeps readahead disabled for the cgroup impacting
-performance negatively.
+Allow up to four clocks to be specified and enabled for the orion-mdio
+interface, which are required by the Armada 8k and defined in
+armada-cp110.dtsi.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <jbacik@fb.com>
-Fixes: d70675121546 ("block: introduce blk-iolatency io controller")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes a hang in probing the mvmdio driver that was encountered on the
+Clearfog GT 8K with all drivers built as modules, but also affects other
+boards such as the MacchiatoBIN.
+
+Cc: stable@vger.kernel.org
+Fixes: 96cb43423822 ("net: mvmdio: allow up to three clocks to be specified for orion-mdio")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-iolatency.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvmdio.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -758,8 +758,10 @@ static int iolatency_set_min_lat_nsec(st
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -64,7 +64,7 @@
  
- 	if (!oldval && val)
- 		return 1;
--	if (oldval && !val)
-+	if (oldval && !val) {
-+		blkcg_clear_delay(blkg);
- 		return -1;
-+	}
- 	return 0;
- }
- 
+ struct orion_mdio_dev {
+ 	void __iomem *regs;
+-	struct clk *clk[3];
++	struct clk *clk[4];
+ 	/*
+ 	 * If we have access to the error interrupt pin (which is
+ 	 * somewhat misnamed as it not only reflects internal errors
 
 
