@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0D3C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E849C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47F221873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B602217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997375;
-	bh=GHmAGkLOrHLzPUBhHXMeYPkixSMgbRwCjktYV+PyNWc=;
+	s=default; t=1563997379;
+	bh=7tM9bLfvzoGlxoDeHD5SYEf9qyYESu5gDnss8AGdf8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ld1PlHu3n9R2fc8XVIzNXK/mQ2JaZwGJAokP+bUELRtWAot6NI0qNY6mGaBSkjI6D
-	 ARjnidjuFB1zi5fsmZnB70vJJDsB+o71vL8UWH6ZJ7lnNqAx6QNgNwLFz47xolazPh
-	 KPzjfPDSqrkOqX8JsYMp7OyNHjpJIDRoziGhU7pM=
+	b=Cu+trC009dKhf/VzbRK9bCLbBGwXUIUJGQDP3V7BO43Af7c4TocfaggUME92yo870
+	 mNzegWKQqQugSbBfckS9IEgt/r3/JksY2MfMExPQTqHM0F+YV6TmjGgwYGLqs3jB1+
+	 zWaY1cbrHiUS31MJDEoMKVX7YjxoEHQ2+OyAvV3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390431AbfGXTmy (ORCPT
+        id S2390442AbfGXTm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:42:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389203AbfGXTmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:42:51 -0400
+        id S2390102AbfGXTmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:42:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DAF920665;
-        Wed, 24 Jul 2019 19:42:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF8A5214AF;
+        Wed, 24 Jul 2019 19:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997370;
-        bh=GHmAGkLOrHLzPUBhHXMeYPkixSMgbRwCjktYV+PyNWc=;
+        s=default; t=1563997373;
+        bh=7tM9bLfvzoGlxoDeHD5SYEf9qyYESu5gDnss8AGdf8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=09ID5DDzGpd4269YO+75JzNPAq5s+d0tIIjj1ndGrUdsEZ4LEvzljHSjU+8DeqkG3
-         397YZ8rbxBsQ2OnqoZZW0uwEyQeoN5nw5zHoKatwfc54GbsRelwX+yBKb6/w46CYkq
-         7Wen/6RNWBw21WquukaRZdwjlV+f/2zApOKdW1xg=
+        b=APKl5zKYZs7uDxZLf1mZDKjlat58FDDg4MV/GIBuNNXo4jddX8Jv2ZU7KrDJOEi2T
+         6jmOnkdnv1RFdZQMDdwQiP2inK85Tl/THnKlUfdN6I/CUg4uO1kn+awm+8azOoM/Eg
+         S610PTJ14uHFRcNaApims2kZ8oub1jgy2LjexsFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.2 413/413] dm bufio: fix deadlock with loop device
-Date:   Wed, 24 Jul 2019 21:21:44 +0200
-Message-Id: <20190724191804.013853130@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 387/413] powerpc/32s: fix suspend/resume when IBATs 4-7 are used
+Date:   Wed, 24 Jul 2019 21:21:18 +0200
+Message-Id: <20190724191802.647758416@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,47 +60,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit bd293d071ffe65e645b4d8104f9d8fe15ea13862 upstream.
+commit 6ecb78ef56e08d2119d337ae23cb951a640dc52d upstream.
 
-When thin-volume is built on loop device, if available memory is low,
-the following deadlock can be triggered:
+Previously, only IBAT1 and IBAT2 were used to map kernel linear mem.
+Since commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
+STRICT_KERNEL_RWX"), we may have all 8 BATs used for mapping
+kernel text. But the suspend/restore functions only save/restore
+BATs 0 to 3, and clears BATs 4 to 7.
 
-One process P1 allocates memory with GFP_FS flag, direct alloc fails,
-memory reclaim invokes memory shrinker in dm_bufio, dm_bufio_shrink_scan()
-runs, mutex dm_bufio_client->lock is acquired, then P1 waits for dm_buffer
-IO to complete in __try_evict_buffer().
+Make suspend and restore functions respectively save and reload
+the 8 BATs on CPUs having MMU_FTR_USE_HIGH_BATS feature.
 
-But this IO may never complete if issued to an underlying loop device
-that forwards it using direct-IO, which allocates memory using
-GFP_KERNEL (see: do_blockdev_direct_IO()).  If allocation fails, memory
-reclaim will invoke memory shrinker in dm_bufio, dm_bufio_shrink_scan()
-will be invoked, and since the mutex is already held by P1 the loop
-thread will hang, and IO will never complete.  Resulting in ABBA
-deadlock.
-
+Reported-by: Andreas Schwab <schwab@linux-m68k.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-bufio.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/powerpc/kernel/swsusp_32.S         |   73 ++++++++++++++++++++++++++++----
+ arch/powerpc/platforms/powermac/sleep.S |   68 +++++++++++++++++++++++++++--
+ 2 files changed, 128 insertions(+), 13 deletions(-)
 
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1599,9 +1599,7 @@ dm_bufio_shrink_scan(struct shrinker *sh
- 	unsigned long freed;
+--- a/arch/powerpc/kernel/swsusp_32.S
++++ b/arch/powerpc/kernel/swsusp_32.S
+@@ -25,11 +25,19 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_LR		0x70
+-#define SL_R12		0x74	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_LR		0xb0
++#define SL_R12		0xb4	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
  
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (sc->gfp_mask & __GFP_FS)
--		dm_bufio_lock(c);
--	else if (!dm_bufio_trylock(c))
-+	if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
+ 	.section .data
+@@ -114,6 +122,41 @@ _GLOBAL(swsusp_arch_suspend)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r11)
  
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
++BEGIN_MMU_FTR_SECTION
++	mfspr	r4,SPRN_DBAT4U
++	stw	r4,SL_DBAT4(r11)
++	mfspr	r4,SPRN_DBAT4L
++	stw	r4,SL_DBAT4+4(r11)
++	mfspr	r4,SPRN_DBAT5U
++	stw	r4,SL_DBAT5(r11)
++	mfspr	r4,SPRN_DBAT5L
++	stw	r4,SL_DBAT5+4(r11)
++	mfspr	r4,SPRN_DBAT6U
++	stw	r4,SL_DBAT6(r11)
++	mfspr	r4,SPRN_DBAT6L
++	stw	r4,SL_DBAT6+4(r11)
++	mfspr	r4,SPRN_DBAT7U
++	stw	r4,SL_DBAT7(r11)
++	mfspr	r4,SPRN_DBAT7L
++	stw	r4,SL_DBAT7+4(r11)
++	mfspr	r4,SPRN_IBAT4U
++	stw	r4,SL_IBAT4(r11)
++	mfspr	r4,SPRN_IBAT4L
++	stw	r4,SL_IBAT4+4(r11)
++	mfspr	r4,SPRN_IBAT5U
++	stw	r4,SL_IBAT5(r11)
++	mfspr	r4,SPRN_IBAT5L
++	stw	r4,SL_IBAT5+4(r11)
++	mfspr	r4,SPRN_IBAT6U
++	stw	r4,SL_IBAT6(r11)
++	mfspr	r4,SPRN_IBAT6L
++	stw	r4,SL_IBAT6+4(r11)
++	mfspr	r4,SPRN_IBAT7U
++	stw	r4,SL_IBAT7(r11)
++	mfspr	r4,SPRN_IBAT7L
++	stw	r4,SL_IBAT7+4(r11)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++
+ #if  0
+ 	/* Backup various CPU config stuffs */
+ 	bl	__save_cpu_setup
+@@ -279,27 +322,41 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	mtibatu	3,r4
+ 	lwz	r4,SL_IBAT3+4(r11)
+ 	mtibatl	3,r4
+-#endif
+-
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
++	lwz	r4,SL_DBAT4(r11)
+ 	mtspr	SPRN_DBAT4U,r4
++	lwz	r4,SL_DBAT4+4(r11)
+ 	mtspr	SPRN_DBAT4L,r4
++	lwz	r4,SL_DBAT5(r11)
+ 	mtspr	SPRN_DBAT5U,r4
++	lwz	r4,SL_DBAT5+4(r11)
+ 	mtspr	SPRN_DBAT5L,r4
++	lwz	r4,SL_DBAT6(r11)
+ 	mtspr	SPRN_DBAT6U,r4
++	lwz	r4,SL_DBAT6+4(r11)
+ 	mtspr	SPRN_DBAT6L,r4
++	lwz	r4,SL_DBAT7(r11)
+ 	mtspr	SPRN_DBAT7U,r4
++	lwz	r4,SL_DBAT7+4(r11)
+ 	mtspr	SPRN_DBAT7L,r4
++	lwz	r4,SL_IBAT4(r11)
+ 	mtspr	SPRN_IBAT4U,r4
++	lwz	r4,SL_IBAT4+4(r11)
+ 	mtspr	SPRN_IBAT4L,r4
++	lwz	r4,SL_IBAT5(r11)
+ 	mtspr	SPRN_IBAT5U,r4
++	lwz	r4,SL_IBAT5+4(r11)
+ 	mtspr	SPRN_IBAT5L,r4
++	lwz	r4,SL_IBAT6(r11)
+ 	mtspr	SPRN_IBAT6U,r4
++	lwz	r4,SL_IBAT6+4(r11)
+ 	mtspr	SPRN_IBAT6L,r4
++	lwz	r4,SL_IBAT7(r11)
+ 	mtspr	SPRN_IBAT7U,r4
++	lwz	r4,SL_IBAT7+4(r11)
+ 	mtspr	SPRN_IBAT7L,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++#endif
+ 
+ 	/* Flush all TLBs */
+ 	lis	r4,0x1000
+--- a/arch/powerpc/platforms/powermac/sleep.S
++++ b/arch/powerpc/platforms/powermac/sleep.S
+@@ -33,10 +33,18 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_R12		0x70	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_R12		0xb0	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
+ 
+ 	.section .text
+@@ -121,6 +129,41 @@ _GLOBAL(low_sleep_handler)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r1)
+ 
++BEGIN_MMU_FTR_SECTION
++	mfspr	r4,SPRN_DBAT4U
++	stw	r4,SL_DBAT4(r1)
++	mfspr	r4,SPRN_DBAT4L
++	stw	r4,SL_DBAT4+4(r1)
++	mfspr	r4,SPRN_DBAT5U
++	stw	r4,SL_DBAT5(r1)
++	mfspr	r4,SPRN_DBAT5L
++	stw	r4,SL_DBAT5+4(r1)
++	mfspr	r4,SPRN_DBAT6U
++	stw	r4,SL_DBAT6(r1)
++	mfspr	r4,SPRN_DBAT6L
++	stw	r4,SL_DBAT6+4(r1)
++	mfspr	r4,SPRN_DBAT7U
++	stw	r4,SL_DBAT7(r1)
++	mfspr	r4,SPRN_DBAT7L
++	stw	r4,SL_DBAT7+4(r1)
++	mfspr	r4,SPRN_IBAT4U
++	stw	r4,SL_IBAT4(r1)
++	mfspr	r4,SPRN_IBAT4L
++	stw	r4,SL_IBAT4+4(r1)
++	mfspr	r4,SPRN_IBAT5U
++	stw	r4,SL_IBAT5(r1)
++	mfspr	r4,SPRN_IBAT5L
++	stw	r4,SL_IBAT5+4(r1)
++	mfspr	r4,SPRN_IBAT6U
++	stw	r4,SL_IBAT6(r1)
++	mfspr	r4,SPRN_IBAT6L
++	stw	r4,SL_IBAT6+4(r1)
++	mfspr	r4,SPRN_IBAT7U
++	stw	r4,SL_IBAT7(r1)
++	mfspr	r4,SPRN_IBAT7L
++	stw	r4,SL_IBAT7+4(r1)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++
+ 	/* Backup various CPU config stuffs */
+ 	bl	__save_cpu_setup
+ 
+@@ -321,22 +364,37 @@ grackle_wake_up:
+ 	mtibatl	3,r4
+ 
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
++	lwz	r4,SL_DBAT4(r1)
+ 	mtspr	SPRN_DBAT4U,r4
++	lwz	r4,SL_DBAT4+4(r1)
+ 	mtspr	SPRN_DBAT4L,r4
++	lwz	r4,SL_DBAT5(r1)
+ 	mtspr	SPRN_DBAT5U,r4
++	lwz	r4,SL_DBAT5+4(r1)
+ 	mtspr	SPRN_DBAT5L,r4
++	lwz	r4,SL_DBAT6(r1)
+ 	mtspr	SPRN_DBAT6U,r4
++	lwz	r4,SL_DBAT6+4(r1)
+ 	mtspr	SPRN_DBAT6L,r4
++	lwz	r4,SL_DBAT7(r1)
+ 	mtspr	SPRN_DBAT7U,r4
++	lwz	r4,SL_DBAT7+4(r1)
+ 	mtspr	SPRN_DBAT7L,r4
++	lwz	r4,SL_IBAT4(r1)
+ 	mtspr	SPRN_IBAT4U,r4
++	lwz	r4,SL_IBAT4+4(r1)
+ 	mtspr	SPRN_IBAT4L,r4
++	lwz	r4,SL_IBAT5(r1)
+ 	mtspr	SPRN_IBAT5U,r4
++	lwz	r4,SL_IBAT5+4(r1)
+ 	mtspr	SPRN_IBAT5L,r4
++	lwz	r4,SL_IBAT6(r1)
+ 	mtspr	SPRN_IBAT6U,r4
++	lwz	r4,SL_IBAT6+4(r1)
+ 	mtspr	SPRN_IBAT6L,r4
++	lwz	r4,SL_IBAT7(r1)
+ 	mtspr	SPRN_IBAT7U,r4
++	lwz	r4,SL_IBAT7+4(r1)
+ 	mtspr	SPRN_IBAT7L,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 
 
 
