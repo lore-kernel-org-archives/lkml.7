@@ -2,127 +2,120 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBA2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7477BC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB3622ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6HuK98L"
+	by mail.kernel.org (Postfix) with ESMTP id 48259217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563997391;
+	bh=IzjadQGVOj+uXoZGqo4UPhonMgPcLs056rrdRIz1HRI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=prFcNYvgx8B83rnuQKEpvR6BmOcgmBP7SMBUVuWD4hJgFb90RFM7vZksVgCkt7gnr
+	 nLqJdyAyJyh9De91ZVnYRFbi4bTUf/dPRNOe973N0PZJqtGtbJfKRo6ItPzX+hY62T
+	 n0RkwBGxxnqODceLKFbA4lPQsM7maEmdeqEtFMMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390484AbfGXTnG (ORCPT
+        id S2390492AbfGXTnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:43:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34091 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390462AbfGXTnD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:03 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so49149379otk.1;
-        Wed, 24 Jul 2019 12:43:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QjSdWDTJogyq8S7mZs7e3CcybE/Qyo4+rR9MEOHtmug=;
-        b=o6HuK98LM2PourpLrfOXA9tnYn/CKdQI2hdLQrkUfzkb1jy6E00k50kTtogJtwlvv2
-         57+lXOamDe30b8BogWXuiJtzUKWcGaJV6sEulXuVmyujuwypbLlkUWQeztRy/gZ05fri
-         rpYo12797NrIwUuayvg+Z4ES91GZ8cBBa8IbQ1jTT3Bg7RFxYzNSIl7vwRhqeYbhq+0M
-         H9F6O+Ekj4pVyD82SnQrijpG1v/GYtQkU3UidTzWXAJFkpesh8y/WJ2Jqfnu2rgDzLum
-         E4VD/T+1+B1OLCrWBhROAXd8QBVFbq5XAdTD6CPrapWuSOZSBBM9dWVUdOTJhNGQozY8
-         mffg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QjSdWDTJogyq8S7mZs7e3CcybE/Qyo4+rR9MEOHtmug=;
-        b=PAePG3mA3YcwPyRksNB4gvjWUw7dxPbUukvPp2v3A9EUO3mKaIXCfzchVPXSzEqWRO
-         Ge8McQGvO8KuznCnJsh6+6STswtAE8/zkvwUkboeq6o0VOcLf35qTXIgNH2jenpXhMXg
-         PlcUFu5P6oRZThiZJCzDCb0cx210KG7gPFCGoti0Du3Dx/eC5JnuyRca+RInp/t31ERi
-         Iao3KxojsuGZZ2gyBhOxCuoaRPuI0++lQFODSwQYDTXYCopIRL/vfWfGISqxVW3Kprl/
-         Is0r41BgZgBQpFFSq0ZEqihEaRDzJO8roa/uKGudaAE5Lp8HLqcXNnIToa2iwllOVDeE
-         UC/w==
-X-Gm-Message-State: APjAAAWXgW/e7Vdig8dLRt4jJUZBMCX7+RoRX/My5L+LFluThzbS8lAd
-        mNR7FQv/ZMt+Eci5M9QgS2h9o86M0+kJHsPYjmw=
-X-Google-Smtp-Source: APXvYqwGZraz9ZuMPAHtLv4av8XeMxMtRcV2ny/mkglBe9Iigbt3FbbIW4gbqH1rL+ysvtoWDs7Yddme7mzuJsK+3f4=
-X-Received: by 2002:a9d:590d:: with SMTP id t13mr2409952oth.281.1563997381856;
- Wed, 24 Jul 2019 12:43:01 -0700 (PDT)
+        Wed, 24 Jul 2019 15:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390462AbfGXTnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E11A229F4;
+        Wed, 24 Jul 2019 19:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997386;
+        bh=IzjadQGVOj+uXoZGqo4UPhonMgPcLs056rrdRIz1HRI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DbcsDlF82X71CWOnH686LbT5SaJbSQSdjyWNKiq8bUvPW1GvSklqiejtswtvPvjx0
+         +iz3AdS13dSx0/cV1Z3rIxuj/mia7xKYRPLQ3Y6jb/lRgY8zC/hpIeqVqxuHZcT2e+
+         ersnMy4VP9L5nSi7V0sanSSNupkI3MvABYQpg9xc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 392/413] powerpc/powernv: Fix stale iommu table base after VFIO
+Date:   Wed, 24 Jul 2019 21:21:23 +0200
+Message-Id: <20190724191802.899562363@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190724015411.66525-1-yuehaibing@huawei.com>
-In-Reply-To: <20190724015411.66525-1-yuehaibing@huawei.com>
-From:   Christian Lamparter <chunkeey@gmail.com>
-Date:   Wed, 24 Jul 2019 21:42:48 +0200
-Message-ID: <CAAd0S9BvTfRyUVkQzcczyNkU_oeU5hNdK3KVQzLsU21b4JGNTQ@mail.gmail.com>
-Subject: Re: [PATCH] carl9170: remove set but not used variable 'udev'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 3:48 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/net/wireless/ath/carl9170/usb.c: In function 'carl9170_usb_disconnect':
-> drivers/net/wireless/ath/carl9170/usb.c:1110:21: warning:
->  variable 'udev' set but not used [-Wunused-but-set-variable]
->
-> It is not used, so can be removed.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-Isn't this the same patch you sent earlier:
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-https://patchwork.kernel.org/patch/11027909/
+commit 5636427d087a55842c1a199dfb839e6545d30e5d upstream.
 
-From what I can tell, it's the same but with an extra [-next], I
-remember that I've acked that one
-but your patch now does not have it? Is this an oversight, because I'm
-the maintainer for this
-driver. So, in my opinion at least the "ack" should have some value
-and shouldn't be "ignored".
+The powernv platform uses @dma_iommu_ops for non-bypass DMA. These ops
+need an iommu_table pointer which is stored in
+dev->archdata.iommu_table_base. It is initialized during
+pcibios_setup_device() which handles boot time devices. However when a
+device is taken from the system in order to pass it through, the
+default IOMMU table is destroyed but the pointer in a device is not
+updated; also when a device is returned back to the system, a new
+table pointer is not stored in dev->archdata.iommu_table_base either.
+So when a just returned device tries using IOMMU, it crashes on
+accessing stale iommu_table or its members.
 
-Look, from what I know, Kalle is not ignoring you, It's just that
-carl9170 is no longer top priority.
-So please be patient. As long as its queued in the patchwork it will
-get considered.
+This calls set_iommu_table_base() when the default window is created.
+Note it used to be there before but was wrongly removed (see "fixes").
+It did not appear before as these days most devices simply use bypass.
 
-Cheers,
-Christian
+This adds set_iommu_table_base(NULL) when a device is taken from the
+system to make it clear that IOMMU DMA cannot be used past that point.
 
->  drivers/net/wireless/ath/carl9170/usb.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
-> index 99f1897a775d..486957a04bd1 100644
-> --- a/drivers/net/wireless/ath/carl9170/usb.c
-> +++ b/drivers/net/wireless/ath/carl9170/usb.c
-> @@ -1107,12 +1107,10 @@ static int carl9170_usb_probe(struct usb_interface *intf,
->  static void carl9170_usb_disconnect(struct usb_interface *intf)
->  {
->         struct ar9170 *ar = usb_get_intfdata(intf);
-> -       struct usb_device *udev;
->
->         if (WARN_ON(!ar))
->                 return;
->
-> -       udev = ar->udev;
->         wait_for_completion(&ar->fw_load_wait);
->
->         if (IS_INITIALIZED(ar)) {
->
->
->
+Fixes: c4e9d3c1e65a ("powerpc/powernv/pseries: Rework device adding to IOMMU groups")
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/platforms/powernv/pci-ioda.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2456,6 +2456,14 @@ static long pnv_pci_ioda2_setup_default_
+ 	if (!pnv_iommu_bypass_disabled)
+ 		pnv_pci_ioda2_set_bypass(pe, true);
+ 
++	/*
++	 * Set table base for the case of IOMMU DMA use. Usually this is done
++	 * from dma_dev_setup() which is not called when a device is returned
++	 * from VFIO so do it here.
++	 */
++	if (pe->pdev)
++		set_iommu_table_base(&pe->pdev->dev, tbl);
++
+ 	return 0;
+ }
+ 
+@@ -2543,6 +2551,8 @@ static void pnv_ioda2_take_ownership(str
+ 	pnv_pci_ioda2_unset_window(&pe->table_group, 0);
+ 	if (pe->pbus)
+ 		pnv_ioda_setup_bus_dma(pe, pe->pbus);
++	else if (pe->pdev)
++		set_iommu_table_base(&pe->pdev->dev, NULL);
+ 	iommu_tce_table_put(tbl);
+ }
+ 
+
+
