@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB12C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE2AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA6220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C639420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997772;
-	bh=gtvJN7MIEK/3TEqklNZ6YhsEMZ3Ad+PXfZKy/p5tSLU=;
+	s=default; t=1563997774;
+	bh=Kkvq8HF2PdQJOysh0E/srbZf1ptLqlyUIzHkyNKcgBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LTQG/ga2FQ8C2R1Obdm4Bi2wYzxm+lyr3HlAs8qt+vqq+UPgPW261iDPWg2m3JvwF
-	 ZMNpEg8NmAoZ+yjaV2kVisZc5YNtkaHVo1GuOUPsR+BWXIONc4zW4YWZZknxfBFw7M
-	 JzmxkkqYgIhahV7KCvmbPFoVKhdNEzd1TOiDMkCI=
+	b=cK1Jm9/SDte5C1lUeoI4b8NDJJTnTFd6fXITPOFLQRR4EZeyqq668i68rV0uauUDB
+	 CCgeDRjwBWXOd82uop174V2m3g3+7X9Ci4DkA3DKd5tTu5nomHv4YHyswu2eST3COr
+	 IWyTDuraST8/CqA9H+r2pBXkzshOmlCPTyHjEedU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391532AbfGXTtb (ORCPT
+        id S2403752AbfGXTtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57394 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391497AbfGXTtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:49:20 -0400
+        id S2391503AbfGXTtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:49:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E7D205C9;
-        Wed, 24 Jul 2019 19:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 449F520659;
+        Wed, 24 Jul 2019 19:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997759;
-        bh=gtvJN7MIEK/3TEqklNZ6YhsEMZ3Ad+PXfZKy/p5tSLU=;
+        s=default; t=1563997761;
+        bh=Kkvq8HF2PdQJOysh0E/srbZf1ptLqlyUIzHkyNKcgBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaxaqFVaPBx69hjZ2vWKLmTUQFggDWjub8anjSNRM+WP/K+xsUUAmMG/Jtv/kp1bs
-         INwxeVl9YRmN5eI5GMqAC7HN5B2hU0y9KG22t+og0yAW0n62efRbPaHdEkIKCYXXIs
-         Nr+JK9ALfiHDBI8XQj0G3tG+o/1XbkIKPx/7aONw=
+        b=fTvLdFehdm6TY5ELhI2sRIgskV9TyN8RFc//1ql1oQgWZqKNFVCdLWh6M+pZ89PTd
+         armyCwvhbPF5ERMpjKlY+rUNjFSq4I08aCo6khEdBh6//dTEwCbC+GURsU2rzqZt9B
+         C8lTeVF8I16qeAPyMWVVqa4z9g+4L5XUXH9FMh3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Graeme Gregory <graeme.gregory@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 134/371] acpi/arm64: ignore 5.1 FADTs that are reported as 5.0
-Date:   Wed, 24 Jul 2019 21:18:06 +0200
-Message-Id: <20190724191734.989292836@linuxfoundation.org>
+Subject: [PATCH 5.1 135/371] media: coda: fix mpeg2 sequence number handling
+Date:   Wed, 24 Jul 2019 21:18:07 +0200
+Message-Id: <20190724191735.070786550@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -65,50 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2af22f3ec3ca452f1e79b967f634708ff01ced8a ]
+[ Upstream commit 56d159a4ec6d8da7313aac6fcbb95d8fffe689ba ]
 
-Some Qualcomm Snapdragon based laptops built to run Microsoft Windows
-are clearly ACPI 5.1 based, given that that is the first ACPI revision
-that supports ARM, and introduced the FADT 'arm_boot_flags' field,
-which has a non-zero field on those systems.
+Sequence number handling assumed that the BIT processor frame number
+starts counting at 1, but this is not true for the MPEG-2 decoder,
+which starts at 0. Fix the sequence counter offset detection to handle
+this.
 
-So in these cases, infer from the ARM boot flags that the FADT must be
-5.1 or later, and treat it as 5.1.
-
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Tested-by: Lee Jones <lee.jones@linaro.org>
-Reviewed-by: Graeme Gregory <graeme.gregory@linaro.org>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/acpi.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/media/platform/coda/coda-bit.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index 803f0494dd3e..7722e85fb69c 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -155,10 +155,14 @@ static int __init acpi_fadt_sanity_check(void)
- 	 */
- 	if (table->revision < 5 ||
- 	   (table->revision == 5 && fadt->minor_revision < 1)) {
--		pr_err("Unsupported FADT revision %d.%d, should be 5.1+\n",
-+		pr_err(FW_BUG "Unsupported FADT revision %d.%d, should be 5.1+\n",
- 		       table->revision, fadt->minor_revision);
--		ret = -EINVAL;
--		goto out;
-+
-+		if (!fadt->arm_boot_flags) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+		pr_err("FADT has ARM boot flags set, assuming 5.1\n");
+diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
+index eaa86737fa04..5eb93ac060d5 100644
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -1743,6 +1743,7 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
+ 		v4l2_err(&dev->v4l2_dev, "CODA_COMMAND_SEQ_INIT timeout\n");
+ 		return ret;
  	}
++	ctx->sequence_offset = ~0U;
+ 	ctx->initialized = 1;
  
- 	if (!(fadt->flags & ACPI_FADT_HW_REDUCED)) {
+ 	/* Update kfifo out pointer from coda bitstream read pointer */
+@@ -2155,7 +2156,9 @@ static void coda_finish_decode(struct coda_ctx *ctx)
+ 		v4l2_err(&dev->v4l2_dev,
+ 			 "decoded frame index out of range: %d\n", decoded_idx);
+ 	} else {
+-		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM) - 1;
++		val = coda_read(dev, CODA_RET_DEC_PIC_FRAME_NUM);
++		if (ctx->sequence_offset == -1)
++			ctx->sequence_offset = val;
+ 		val -= ctx->sequence_offset;
+ 		spin_lock(&ctx->buffer_meta_lock);
+ 		if (!list_empty(&ctx->buffer_meta_list)) {
 -- 
 2.20.1
 
