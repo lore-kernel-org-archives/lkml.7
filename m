@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431B8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D7AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F7A22AED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C392218EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996666;
-	bh=B/MRkndD4KINmC0kypX/wNiPqJQbmlsj1gSgqJmCGME=;
+	s=default; t=1563996668;
+	bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iopyj5O2Hmj7uBpT23/ViUeIaSTOrH8Uiiwl06ncjXbsLHRKvm/t3nnISTJbvJstT
-	 dGWSwrokVJ6KQsNeO93QUAAm+emU8ZMi2n8w0nC6nyauVco2zJuFSsCCBBvqmF3hLd
-	 40Dp4P03qdt10GClfgIfv+B1gFuWTVq+pW1oreAs=
+	b=obd2Ke/BrGLrH2pJ+Z9nunwNaj9/4+pOiWBfJ6ROJAQylaRZmmtbtw5q6xCWEFBC3
+	 MumxfNHmxnGjFMqxsyk3Nn+7QvKTAa7QEpTm7CvdZ3or0EmDYtJCfUP0QAL9Yp1AXn
+	 MlLYaEiZBuiJ2jtMljavlOOv4yAAHqQ9zzlZMOrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbfGXTbE (ORCPT
+        id S1729263AbfGXTbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbfGXTbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:02 -0400
+        id S1729004AbfGXTbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C260D21951;
-        Wed, 24 Jul 2019 19:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 585882238C;
+        Wed, 24 Jul 2019 19:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996661;
-        bh=B/MRkndD4KINmC0kypX/wNiPqJQbmlsj1gSgqJmCGME=;
+        s=default; t=1563996663;
+        bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=caZfpW8p9vFU3xIYdfgiOiAg+D3YRuJpNWl1mBPxjJannJJ4ex6L9D6B0z3CU2ofA
-         6iRUkDslxf1XiiwrIC8TWru/702Zw8swiMBJOgCrGXk7H0mwDrApz6cgq7vUElnNfG
-         kDmoGpkVuoH7Rt82ledq9JBdq7ONqWFzb+BaG508=
+        b=MT1x5qNM1O5c1xbEOIwW3cHT72DSBmV7PTuuptR5pM3jcLzXH6HYn8WL97lZUp6Ld
+         HfdTEAM/k8k1BW/22sTAmKnRA2xB/Oulut7akD2WU9usKjEEMX+yIhaxAx+IEJ8Rqb
+         sa4RXi5YIGxB7jk3bizICDUoQkbfaOY0mzy8oYF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 174/413] bpf: fix BPF_ALU32 | BPF_ARSH on BE arches
-Date:   Wed, 24 Jul 2019 21:17:45 +0200
-Message-Id: <20190724191747.374500795@linuxfoundation.org>
+Subject: [PATCH 5.2 175/413] rslib: Fix handling of of caller provided syndrome
+Date:   Wed, 24 Jul 2019 21:17:46 +0200
+Message-Id: <20190724191747.423104356@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -65,54 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 75672dda27bd00109a84cd975c17949ad9c45663 ]
+[ Upstream commit ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9 ]
 
-Yauheni reported the following code do not work correctly on BE arches:
+Check if the syndrome provided by the caller is zero, and act
+accordingly.
 
-       ALU_ARSH_X:
-               DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
-               CONT;
-       ALU_ARSH_K:
-               DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
-               CONT;
-
-and are causing failure of test_verifier test 'arsh32 on imm 2' on BE
-arches.
-
-The code is taking address and interpreting memory directly, so is not
-endianness neutral. We should instead perform standard C type casting on
-the variable. A u64 to s32 conversion will drop the high 32-bit and reserve
-the low 32-bit as signed integer, this is all we want.
-
-Fixes: 2dc6b100f928 ("bpf: interpreter support BPF_ALU | BPF_ARSH")
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 080e2bb644cc..f2148db91439 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1364,10 +1364,10 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- 		insn++;
- 		CONT;
- 	ALU_ARSH_X:
--		DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
-+		DST = (u64) (u32) (((s32) DST) >> SRC);
- 		CONT;
- 	ALU_ARSH_K:
--		DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
-+		DST = (u64) (u32) (((s32) DST) >> IMM);
- 		CONT;
- 	ALU64_ARSH_X:
- 		(*(s64 *) &DST) >>= SRC;
+diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
+index 3313bf944ff1..121beb2f0930 100644
+--- a/lib/reed_solomon/decode_rs.c
++++ b/lib/reed_solomon/decode_rs.c
+@@ -42,8 +42,18 @@
+ 	BUG_ON(pad < 0 || pad >= nn);
+ 
+ 	/* Does the caller provide the syndrome ? */
+-	if (s != NULL)
+-		goto decode;
++	if (s != NULL) {
++		for (i = 0; i < nroots; i++) {
++			/* The syndrome is in index form,
++			 * so nn represents zero
++			 */
++			if (s[i] != nn)
++				goto decode;
++		}
++
++		/* syndrome is zero, no errors to correct  */
++		return 0;
++	}
+ 
+ 	/* form the syndromes; i.e., evaluate data(x) at roots of
+ 	 * g(x) */
 -- 
 2.20.1
 
