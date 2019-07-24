@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54415C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0964C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2754A214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8461D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997193;
-	bh=7o9Xv4v/8OR4iBMokihUSGoUMDyYGMEQWGUjEZbY+mM=;
+	s=default; t=1563997196;
+	bh=hRYKJrh/aEOINyYXSOz+/SEqwqSZyDF63QUZ78IxELA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yro+hhVqDMd5LYQW0ZxSxA0i/tNZMeF9gwEdQjT0jEt9mwPWtuS8wKeKF2n+hJy6R
-	 MVEJMBb0CGV+zfRaaBqAd5pOvAWZ0AC7wyKFoO1xGbAk+RvpMOZo5eRqAuSmth0gp8
-	 jb3XTChIKBXUBVyrHP4KRQczKBvBQngp0zcrP5Ig=
+	b=z6HlDMGyjQfDaJ+ZNoCKdhVMb4SFhRuNAPtolZ//JsI4AKn0Gn5w9e9V0yxec4C3D
+	 nVAvNi82MQ4nE9QmcJlKeZejU45ohi2zmAyRziPJXJWToUPlkOhkKDIRQ9pxR5XL+t
+	 izchOoiipYJ7ESefxvUjbZLj0svrW/Ddgc2p9OuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389698AbfGXTjw (ORCPT
+        id S2389694AbfGXTjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:39:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40814 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:39:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387968AbfGXTjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:39:45 -0400
+        id S2389672AbfGXTjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:39:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCBD21873;
-        Wed, 24 Jul 2019 19:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C99C1229F4;
+        Wed, 24 Jul 2019 19:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997184;
-        bh=7o9Xv4v/8OR4iBMokihUSGoUMDyYGMEQWGUjEZbY+mM=;
+        s=default; t=1563997188;
+        bh=hRYKJrh/aEOINyYXSOz+/SEqwqSZyDF63QUZ78IxELA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNrWeM5EljRSuKjkz1X+ZtNXQsyXqSOYCOpf5/i7Rh+ptFlF/azK2F/6SqgRHFLlW
-         IMDybr+b/+hmGg9Gt3EBJnwE6XHQdSS+H1jfiC+PfakF5TvBaDFpUkz+KaTGOzOVgQ
-         RQaRKVV7KccH1qzYUnkIlp20OVBJoga0X8lIktME=
+        b=NvJp8jlKOyjkKx3bClt8iTj799fiv9yZkuPgbbTKGHQRzAjh2Pu20bkf71r7ehGg2
+         WUF6d/mwB3j2B1zIsrt0ULtC6iwQ9MVv6mAOOmBOJNfDyN7KIXN1iD/XqFbmiye0W9
+         AfGJ9YswV/0fd0iy1A2iSOwWcnPbd4Y1LW37Yk2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Soeren Moch <smoch@web.de>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.2 351/413] rt2x00usb: fix rx queue hang
-Date:   Wed, 24 Jul 2019 21:20:42 +0200
-Message-Id: <20190724191800.898100343@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.2 352/413] x86/hyper-v: Zero out the VP ASSIST PAGE on allocation
+Date:   Wed, 24 Jul 2019 21:20:43 +0200
+Message-Id: <20190724191800.948573938@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,73 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Soeren Moch <smoch@web.de>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit 41a531ffa4c5aeb062f892227c00fabb3b4a9c91 upstream.
+commit e320ab3cec7dd8b1606964d81ae1e14391ff8e96 upstream.
 
-Since commit ed194d136769 ("usb: core: remove local_irq_save() around
- ->complete() handler") the handler rt2x00usb_interrupt_rxdone() is
-not running with interrupts disabled anymore. So this completion handler
-is not guaranteed to run completely before workqueue processing starts
-for the same queue entry.
-Be sure to set all other flags in the entry correctly before marking
-this entry ready for workqueue processing. This way we cannot miss error
-conditions that need to be signalled from the completion handler to the
-worker thread.
-Note that rt2x00usb_work_rxdone() processes all available entries, not
-only such for which queue_work() was called.
+The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
+5.2.1 "GPA Overlay Pages" for the details) and here is an excerpt:
 
-This patch is similar to what commit df71c9cfceea ("rt2x00: fix order
-of entry flags modification") did for TX processing.
+"The hypervisor defines several special pages that "overlay" the guest's
+ Guest Physical Addresses (GPA) space. Overlays are addressed GPA but are
+ not included in the normal GPA map maintained internally by the hypervisor.
+ Conceptually, they exist in a separate map that overlays the GPA map.
 
-This fixes a regression on a RT5370 based wifi stick in AP mode, which
-suddenly stopped data transmission after some period of heavy load. Also
-stopping the hanging hostapd resulted in the error message "ieee80211
-phy0: rt2x00queue_flush_queue: Warning - Queue 14 failed to flush".
-Other operation modes are probably affected as well, this just was
-the used testcase.
+ If a page within the GPA space is overlaid, any SPA page mapped to the
+ GPA page is effectively "obscured" and generally unreachable by the
+ virtual processor through processor memory accesses.
 
-Fixes: ed194d136769 ("usb: core: remove local_irq_save() around ->complete() handler")
-Cc: stable@vger.kernel.org # 4.20+
-Signed-off-by: Soeren Moch <smoch@web.de>
-Acked-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+ If an overlay page is disabled, the underlying GPA page is "uncovered",
+ and an existing mapping becomes accessible to the guest."
+
+SPA = System Physical Address = the final real physical address.
+
+When a CPU (e.g. CPU1) is onlined, hv_cpu_init() allocates the VP ASSIST
+PAGE and enables the EOI optimization for this CPU by writing the MSR
+HV_X64_MSR_VP_ASSIST_PAGE. From now on, hvp->apic_assist belongs to the
+special SPA page, and this CPU *always* uses hvp->apic_assist (which is
+shared with the hypervisor) to decide if it needs to write the EOI MSR.
+
+When a CPU is offlined then on the outgoing CPU:
+1. hv_cpu_die() disables the EOI optimizaton for this CPU, and from
+   now on hvp->apic_assist belongs to the original "normal" SPA page;
+2. the remaining work of stopping this CPU is done
+3. this CPU is completely stopped.
+
+Between 1 and 3, this CPU can still receive interrupts (e.g. reschedule
+IPIs from CPU0, and Local APIC timer interrupts), and this CPU *must* write
+the EOI MSR for every interrupt received, otherwise the hypervisor may not
+deliver further interrupts, which may be needed to completely stop the CPU.
+
+So, after the EOI optimization is disabled in hv_cpu_die(), it's required
+that the hvp->apic_assist's bit0 is zero, which is not guaranteed by the
+current allocation mode because it lacks __GFP_ZERO. As a consequence the
+bit might be set and interrupt handling would not write the EOI MSR causing
+interrupt delivery to become stuck.
+
+Add the missing __GFP_ZERO to the allocation.
+
+Note 1: after the "normal" SPA page is allocted and zeroed out, neither the
+hypervisor nor the guest writes into the page, so the page remains with
+zeros.
+
+Note 2: see Section 10.3.5 "EOI Assist" for the details of the EOI
+optimization. When the optimization is enabled, the guest can still write
+the EOI MSR register irrespective of the "No EOI required" value, but
+that's slower than the optimized assist based variant.
+
+Fixes: ba696429d290 ("x86/hyper-v: Implement EOI assist")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/ <PU1P153MB0169B716A637FABF07433C04BFCB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ralink/rt2x00/rt2x00usb.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/hyperv/hv_init.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-@@ -372,15 +372,10 @@ static void rt2x00usb_interrupt_rxdone(s
- 	struct queue_entry *entry = (struct queue_entry *)urb->context;
- 	struct rt2x00_dev *rt2x00dev = entry->queue->rt2x00dev;
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -111,8 +111,17 @@ static int hv_cpu_init(unsigned int cpu)
+ 	if (!hv_vp_assist_page)
+ 		return 0;
  
--	if (!test_and_clear_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags))
-+	if (!test_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags))
- 		return;
- 
- 	/*
--	 * Report the frame as DMA done
--	 */
--	rt2x00lib_dmadone(entry);
--
--	/*
- 	 * Check if the received data is simply too small
- 	 * to be actually valid, or if the urb is signaling
- 	 * a problem.
-@@ -389,6 +384,11 @@ static void rt2x00usb_interrupt_rxdone(s
- 		set_bit(ENTRY_DATA_IO_FAILED, &entry->flags);
- 
- 	/*
-+	 * Report the frame as DMA done
-+	 */
-+	rt2x00lib_dmadone(entry);
-+
+-	if (!*hvp)
+-		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL);
 +	/*
- 	 * Schedule the delayed work for reading the RX status
- 	 * from the device.
- 	 */
++	 * The VP ASSIST PAGE is an "overlay" page (see Hyper-V TLFS's Section
++	 * 5.2.1 "GPA Overlay Pages"). Here it must be zeroed out to make sure
++	 * we always write the EOI MSR in hv_apic_eoi_write() *after* the
++	 * EOI optimization is disabled in hv_cpu_die(), otherwise a CPU may
++	 * not be stopped in the case of CPU offlining and the VM will hang.
++	 */
++	if (!*hvp) {
++		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO,
++				 PAGE_KERNEL);
++	}
+ 
+ 	if (*hvp) {
+ 		u64 val;
 
 
