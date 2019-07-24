@@ -2,184 +2,111 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1B4C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB29DC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C054229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7704921873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="rugvQIZI"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="k+q7UAhc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GFIe5u//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfGXIK1 (ORCPT
+        id S1726193AbfGXINO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:10:27 -0400
-Received: from mail-eopbgr1400091.outbound.protection.outlook.com ([40.107.140.91]:46142
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725882AbfGXIK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:10:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IYPW3I89QXai2O/mdhW0K2hgeEW7sQUWZooDGmv5YS9KRIyp/ujmAP3Cb2aDKCKtLMK8p3MLqOgulW2P3OVjZRBK0j92/ua1Lv8rg7+uUPsBWzOz24vkFyTXg3KiqfII9g+Pn/iXMnCUsDRa1oRMyLdgH0BMyoh/7F6TfghCmWbmSoRhH+l/eVWCiC+Iuw0PjRBVcPZCojQJu7Kb9AcJ0adMAUX+g7Eq7cdpG14//78IP00wvFh/6zdCU7swQj83V/SDNETKF/Y4PeUioMwgtnAGt+S1NBxg7nyK8Uiw5vFLKN6q/7rPq5nS2iqiRls/Gs/UzEmle9wnlgg83qdmGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uqwEVaEIv32gUYLSeGQxUIQJawQRamlZQxy38lzmfO0=;
- b=jLQpuTyGXSMeV3LE8XsEixEA0djxq7lASvWJHgwEAoa3qubF6qMK84rVQXaKSPhWKQB79608JtxoRCJzbm+3pLoXdFj6XgObxFjHnc7LbULuZgutiIGMOWJZG32EhBFjw2qrwM9wgjziCYHR2lbIOHRMNbGmH4TKu0cBK+fpdd9MsT+1jzSMf8MkrPRclbSmNj2IZpqa3iVfP6NNvG0ROjaAMnl3nFXI+k4PtjClwRw2qm3zkDhtMnraW4IhA3xSDM3ebfwdgBRn/dMo0Lvt70ns/McnrcUotWWMkNkTx42kq80VIJAwYsID8i3OhaqzfL58KV1BqJYQLYSblVOPOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=bp.renesas.com;dmarc=pass action=none
- header.from=bp.renesas.com;dkim=pass header.d=bp.renesas.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uqwEVaEIv32gUYLSeGQxUIQJawQRamlZQxy38lzmfO0=;
- b=rugvQIZI0b45pjyHGjvQbX4x85ARR7ykgjwH+DRTfHRgIvCSbD/sk0rcOA32BbZ+DwEDpzKXaAdE1+vrcggBcs6do90T4Rx0mwQ8HJriVoUiR/sE1C2XePssyIlXd0AwC3FW3s5Qt16a9m2l1Er+AovvzchQabI+fXBsXHD4j6g=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1706.jpnprd01.prod.outlook.com (52.133.160.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2094.17; Wed, 24 Jul 2019 08:10:23 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::d881:cb74:8277:5a16%7]) with mapi id 15.20.2094.013; Wed, 24 Jul 2019
- 08:10:23 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVERS FOR RENESAS" 
-        <linux-renesas-soc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drm: rcar_lvds: Fix dual link mode operations
-Thread-Topic: [PATCH] drm: rcar_lvds: Fix dual link mode operations
-Thread-Index: AQHVQXeAkekjE12GhEmxi27aP7D6DKbZarTw
-Date:   Wed, 24 Jul 2019 08:10:22 +0000
-Message-ID: <TY1PR01MB1770980628C5914BC796C47FC0C60@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <20190723165700.13124-1-jacopo+renesas@jmondi.org>
-In-Reply-To: <20190723165700.13124-1-jacopo+renesas@jmondi.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2f64e23a-c273-4972-62f2-08d7100e608c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1706;
-x-ms-traffictypediagnostic: TY1PR01MB1706:
-x-microsoft-antispam-prvs: <TY1PR01MB1706342FC0346FB144E852B9C0C60@TY1PR01MB1706.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0108A997B2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(199004)(189003)(305945005)(66066001)(54906003)(256004)(14444005)(74316002)(33656002)(6116002)(81166006)(8676002)(86362001)(7736002)(476003)(446003)(68736007)(110136005)(53546011)(8936002)(3846002)(316002)(71200400001)(81156014)(26005)(66476007)(186003)(2906002)(5660300002)(6436002)(52536014)(6506007)(64756008)(66556008)(11346002)(55016002)(71190400001)(66446008)(66946007)(478600001)(9686003)(102836004)(6246003)(76116006)(4326008)(53936002)(486006)(44832011)(14454004)(25786009)(76176011)(229853002)(7696005)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1706;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jUDIBD/0U0ETu4VQ6bZ/+R4WWKWsQcGwzKEuJvL9/ReXeqzl0l69KuoMSCTjBwfkdOgG4TGdetYaQPwmNkLd5lrfn2bhpr0N0YKDKJyy5mryfeC83SetqA+N0GTSwmjveHasyCmAeRQJ9DmWIw+EKe2kmEXVWMR371ZFo5JTqyUAaoPxhvf/ie2Z2Yauz+1vzyw95Ti1BV3WmWuhRtts0MojXFrkOsY+LLm5L5hA3rX7IQjSRqgKaUvdxzEvTsbdjy2VAcSoOWuBrFN5HKvoq3nEaSa/s5XtXzdIV0nbs/8RlU+Q8v53hk6rmJSiK0kaL3fKPREQS1DtjaU6s7VRMa9lr/ePzwv0SwqovBa6ZicdraFv1dcq1c1SxebkvgBxa9WlGyGMQ6CMa8LYBWREI8PCGbpHXYV0dGlniRFv870=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 24 Jul 2019 04:13:14 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:51279 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725826AbfGXINO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:13:14 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A211B1BE7;
+        Wed, 24 Jul 2019 04:13:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 24 Jul 2019 04:13:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=Z9cu/jAfTLPXGSW6gAaNx3qAdg
+        J+sFyDlgrk5M8Y63Q=; b=k+q7UAhcAM26oYO9hUAagwzL+hrHSR5s1p4h3DUQVf
+        U3oIxLHjx4rde1dUZb3afCorQ47ps3UvIeWll38clz3gIQSrUXZLsTcKduGXhJig
+        M5TDhditvHG6Wpop8EwwNbYeJOnupyh8HCP8xRxD7xR1W4bdWBlh+HnWy14AWr1a
+        ehnYd/38CqNYPW1mhoKfUl+eL3Wu+4+BY5YQgXq+KptsKc2Vi5XE7KfpAnEC7S0n
+        7u12uMdmE7Z+VlUwF/3clczCW9aT8DZDgvBVyEZVgOpT7E1wUXoR3kc0DR6CAO6M
+        ChGbhsmZvMPQGfJ5ueLDxtjr9VYqFbbY7H2CC5W3lUoQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Z9cu/jAfTLPXGSW6g
+        AaNx3qAdgJ+sFyDlgrk5M8Y63Q=; b=GFIe5u//MOSehrg4pLFa6fzeaefHTTHsC
+        KcE4DtVvZqDdLSceuqsQt74U+Fx+UA3axFB9xLje/Zb6P1GbPk/I4g4I1j561/1r
+        JzAKtd/Ra8UErE38HeG12g3eV73lZy4jnhHUYVIb64bSM0gfwDAUphRHwrYKXtrJ
+        qcXBgtxmr8wPK7lxymd27AgKja3OcGk3WvlTLUm+8pw0XePcfUqVQmuW8hVszxgf
+        J94UMeUPDWMiSyGdSwbJgC5+VrurGAoy2Dr65wseWzAuvVyQ+1rQWo6KnC3C8iIt
+        wWnie7Fzf/Nf5il8bON/iYJWq8WO2hRRaXvbAUjIdQaZKVncbKs5Q==
+X-ME-Sender: <xms:FhM4XdYl6s_v0frgxQfX-eAxBSB57mw8dBAcmK27Bs_7YjhXcUg_pQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrjeelgdduvdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrghilh
+    hfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:FhM4XToB9bhuKD6ybOqqYrcDVYdn-dvk50NL61v-LwO7mQPfIfvx3Q>
+    <xmx:FhM4XcI2RIvOldexMpK96YaIO-5G9jytay0HYhfJ-Ztm1QwL-a8F_A>
+    <xmx:FhM4XWbVBuikG1oH89_lRhBz9FV561KMHpeEQTIfLsvmUBKtopUwqA>
+    <xmx:GBM4XVPmw2y04_DCBD8HGgbOG8QP_NcgdJT1ysI4NMLMBin7QWcMMg>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 97BA080060;
+        Wed, 24 Jul 2019 04:13:06 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 0/3] ARM: dts: aspeed: Deprecate g[45]-style compatibles
+Date:   Wed, 24 Jul 2019 17:43:10 +0930
+Message-Id: <20190724081313.12934-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f64e23a-c273-4972-62f2-08d7100e608c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 08:10:23.0075
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fabrizio.castro@bp.renesas.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1706
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+Hello,
 
-Thank you for your patch!
+Joel and I decided that going forward we're not going to name compatibles along
+the lines of SoC generations, so discourage any further attempts by removing
+the remaining instances.
 
-> From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vg=
-er.kernel.org> On Behalf Of Jacopo Mondi
-> Sent: 23 July 2019 17:57
-> Subject: [PATCH] drm: rcar_lvds: Fix dual link mode operations
->=20
-> The R-Car LVDS encoder units support dual-link operations by splitting
-> the pixel output between the primary encoder and the companion one.
->=20
-> In order for the primary encoder to succesfully control the companion's
-> operations this should not fail at probe time and register itself its
-> associated drm bridge so that the primary one can find it.
->=20
-> Currently the companion encoder fails at probe time, causing the
-> registration of the primary to fail preventing the whole DU unit to be
-> registered correctly.
->=20
-> Fixes: fa440d870358 ("drm: rcar-du: lvds: Add support for dual-link mode"=
-)
-> Reported-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+It's probably best if we push the three patches all through one tree rather
+than fragmenting. Is everyone happy if Joel applies them to the aspeed tree?
 
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Tested-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cheers,
 
->=20
-> ---
-> The "Fixes" tag refers to a patch currently part of the
-> renesas-drivers-2019-07-09-v5.2 branch of Geert's renesas-drivers tree.
->=20
->  drivers/gpu/drm/rcar-du/rcar_lvds.c | 31 +++++++++++++++++++++--------
->  1 file changed, 23 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-d=
-u/rcar_lvds.c
-> index bada7ee98544..8b015ba95895 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> @@ -767,14 +767,29 @@ static int rcar_lvds_parse_dt(struct rcar_lvds *lvd=
-s)
->  	of_node_put(remote_input);
->  	of_node_put(remote);
->=20
-> -	/*
-> -	 * On D3/E3 the LVDS encoder provides a clock to the DU, which can be
-> -	 * used for the DPAD output even when the LVDS output is not connected.
-> -	 * Don't fail probe in that case as the DU will need the bridge to
-> -	 * control the clock.
-> -	 */
-> -	if (lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)
-> -		return ret =3D=3D -ENODEV ? 0 : ret;
-> +	switch (ret) {
-> +	case -ENODEV:
-> +		/*
-> +		 * On D3/E3 the LVDS encoder provides a clock to the DU, which
-> +		 * can be used for the DPAD output even when the LVDS output is
-> +		 * not connected. Don't fail probe in that case as the DU will
-> +		 * need the bridge to control the clock.
-> +		 */
-> +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_EXT_PLL)
-> +			ret =3D 0;
-> +		break;
-> +	case -ENXIO:
-> +		/*
-> +		 * When the LVDS output is used in dual link mode, the
-> +		 * companion encoder fails at
-> +		 * 'rcar_lvds_parse_dt_companion()'. Don't fail probe in
-> +		 * that case as the master encoder will need the companion's
-> +		 * bridge to control its operations.
-> +		 */
-> +		if (lvds->info->quirks & RCAR_LVDS_QUIRK_DUAL_LINK)
-> +			ret =3D 0;
-> +		break;
-> +	}
->=20
->  	return ret;
->  }
-> --
-> 2.22.0
+Andrew
+
+Andrew Jeffery (3):
+  dts: ARM: aspeed: Migrate away from aspeed,g[45].* compatibles
+  pinctrl: aspeed: Document existence of deprecated compatibles
+  dt-bindings: aspeed: Remove mention of deprecated compatibles
+
+ Documentation/devicetree/bindings/mfd/aspeed-scu.txt         | 2 --
+ Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt   | 2 --
+ .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml  | 5 +----
+ .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml  | 4 +---
+ arch/arm/boot/dts/aspeed-g4.dtsi                             | 2 +-
+ arch/arm/boot/dts/aspeed-g5.dtsi                             | 2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c                   | 4 ++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c                   | 4 ++++
+ 8 files changed, 12 insertions(+), 13 deletions(-)
+
+-- 
+2.20.1
 
