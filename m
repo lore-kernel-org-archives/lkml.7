@@ -2,167 +2,141 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09B6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8768CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E6D218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vR6lpzMI"
+	by mail.kernel.org (Postfix) with ESMTP id 54ACA21926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563995268;
+	bh=CHVJh9K7ZQptFPowFVNdpt0/XiL4yyZHMyfptvh0d/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jtMv8oS2crVx9xti1nM1gq0pGyO/bDCPOp7deFt4pK/QB04YCoWbfq7A/DsF6ZVDk
+	 rzrITLJXUy2W6BhXlpo86N3+t7f95Z01Te6BWab39IZjw/q3DCpZZSCEBGiTCOa0ws
+	 NT6B3jWNWyy5mOasnYLwwOMtUjN2xF0JB9Zrm4yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfGXTHP (ORCPT
+        id S1728860AbfGXTHr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:07:15 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.125]:29242 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726622AbfGXTHP (ORCPT
+        Wed, 24 Jul 2019 15:07:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34958 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfGXTHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:07:15 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id D619E60C56
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 14:07:13 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id qMbZh2gV2YTGMqMbZhreYf; Wed, 24 Jul 2019 14:07:13 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XR5l2R5403x9HbGhSkc/3+oeLIBtnSNWvSzon/O73IE=; b=vR6lpzMIwAWGFX+I37y0guwREU
-        1CB++/P0/wSFMOCuYiV2mwWnmKu9tjas104oS1p/KbBE0gY3KI7zX869agYLl+oSEGubatR+VHEmv
-        yTwzjbKORU1BY9Ed+9e+TUs/MtQs0CSVXKjou5l1i0K+uHvsK4UKOzzbSkwegbaTPBzn5NCj+HWVB
-        mOkAUMviKTFQ7JPcDHKNAm+3RVMsCvpQzK6Dm5XfAMeoHLxYnNuDvhDVFz4+rF/imLoRbVTErxm4u
-        2Uiv5pNJqWSEP/JY+GzTZnX0l+bkxtRkiVNwX+vICJn2w7D106oeGYjMMuYUPO8KCwcOcgYb/+xh/
-        i3WzA9PQ==;
-Received: from cablelink-187-160-61-189.pcs.intercable.net ([187.160.61.189]:45756 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hqMbY-001Rqt-QL; Wed, 24 Jul 2019 14:07:12 -0500
-Date:   Wed, 24 Jul 2019 14:07:12 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [GIT PULL] Wimplicit-fallthrough patches for 5.3-rc2
-Message-ID: <20190724190712.GA11634@embeddedor>
+        Wed, 24 Jul 2019 15:07:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so42561120wmg.0;
+        Wed, 24 Jul 2019 12:07:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jtQSPuZ1QzMs99js7V9Wo2RTLphiNzuGhsELT//GEEg=;
+        b=q7WyBGiVaCx5zfiZXWWNePnxq2V8kdF+At38cApdo9WIgMtWVzeorGDfmE2mSdqKUS
+         8slYk5rh5ZcIPEmOSPzdDq/3WjYYoM9cFC1s1ZDZYagfVGQ6Iq7Bdqea5N39Zx/FAsa5
+         szF0mpUcDM3SWpJEWynYqY1oD1eIHl1BV+wDd063l3gEzuKxTqGUfwILWkSn1iCooBde
+         UqFNTNcXspiAK38An6RJIFkj+1lokybzjm8873pVBsUOKcsVu9mv+5sPChUfsDNnq/i0
+         cXJdvMEKpmIWz0a9nsPJlAVyOYD9lau589X+Y11kULsSmD5wNWJyEKjF3DKRGRplLCyZ
+         0Q+Q==
+X-Gm-Message-State: APjAAAWmzndQIqbCCVKBwMKE0YLxwaYFjj5/EbN28/NNl8Tpek2Z1l1+
+        I5AeB4Gr5DeLWzuzzrvzG70=
+X-Google-Smtp-Source: APXvYqzW5J/UxiwCLKihWU+W6v0QY2SUnZdcHCLGNhpwuL3J4T0/WFqdxk7zt2m7BHrB78puwFES8w==
+X-Received: by 2002:a05:600c:212:: with SMTP id 18mr25939276wmi.88.1563995264126;
+        Wed, 24 Jul 2019 12:07:44 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.239])
+        by smtp.googlemail.com with ESMTPSA id w23sm48058527wmi.45.2019.07.24.12.07.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 12:07:43 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 21:07:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, m.szyprowski@samsung.com
+Subject: Re: [RFC PATCH 01/11] devfreq: exynos-bus: Extract
+ exynos_bus_profile_init()
+Message-ID: <20190724190741.GD14346@kozik-lap>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122022eucas1p1266d90873d564894bd852c20140f8474@eucas1p1.samsung.com>
+ <20190723122016.30279-2-a.swigon@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190723122016.30279-2-a.swigon@partner.samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.160.61.189
-X-Source-L: No
-X-Exim-ID: 1hqMbY-001Rqt-QL
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-187-160-61-189.pcs.intercable.net (embeddedor) [187.160.61.189]:45756
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Jul 23, 2019 at 02:20:06PM +0200, Artur Świgoń wrote:
+> This patch adds a new static function, exynos_bus_profile_init(), extracted
+> from exynos_bus_probe().
+> 
+> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> ---
+>  drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++---------------
+>  1 file changed, 60 insertions(+), 46 deletions(-)
+> 
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index d9f377912c10..d8f1efaf2d49 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -372,12 +372,69 @@ static int exynos_bus_parse_of(struct device_node *np,
+>  	return ret;
+>  }
+>  
+> +static int exynos_bus_profile_init(struct exynos_bus *bus,
+> +				   struct devfreq_dev_profile *profile)
+> +{
+> +	struct device *dev = bus->dev;
+> +	struct devfreq_simple_ondemand_data *ondemand_data;
+> +	int ret;
+> +
+> +	/* Initialize the struct profile and governor data for parent device */
+> +	profile->polling_ms = 50;
+> +	profile->target = exynos_bus_target;
+> +	profile->get_dev_status = exynos_bus_get_dev_status;
+> +	profile->exit = exynos_bus_exit;
+> +
+> +	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
+> +	if (!ondemand_data) {
+> +		ret = -ENOMEM;
+> +		goto err;
 
-I was having some problem with SPF record and it seems that you were
-not getting my emails. So, I'm sending you this pull-request again.
+Just return proper error code. Less lines, obvious code since you do not
+have any cleanup in error path.
 
-Thanks
+> +	}
+> +	ondemand_data->upthreshold = 40;
+> +	ondemand_data->downdifferential = 5;
+> +
+> +	/* Add devfreq device to monitor and handle the exynos bus */
+> +	bus->devfreq = devm_devfreq_add_device(dev, profile,
+> +						DEVFREQ_GOV_SIMPLE_ONDEMAND,
+> +						ondemand_data);
+> +	if (IS_ERR(bus->devfreq)) {
+> +		dev_err(dev, "failed to add devfreq device\n");
+> +		ret = PTR_ERR(bus->devfreq);
+> +		goto err;
+> +	}
+> +
+> +	/* Register opp_notifier to catch the change of OPP  */
+> +	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to register opp notifier\n");
+> +		goto err;
 
--Gustavo
+The same - return err.
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+Best regards,
+Krzysztof
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.3-rc2
-
-for you to fetch changes up to bc512fd704a92e1be700c941c137d73c0f222eed:
-
-  Makefile: Globally enable fall-through warning (2019-07-22 14:50:20 -0500)
-
-----------------------------------------------------------------
-Wimplicit-fallthrough patches for 5.3-rc2
-
-Hi Linus,
-
-Please, pull the following patches that mark switch cases where we are
-expecting to fall through. These patches are part of the ongoing efforts
-to enable -Wimplicit-fallthrough. Most of them have been baking in linux-next
-for a whole development cycle.
-
-Also, pull the Makefile patch that globally enables the
--Wimplicit-fallthrough option.
-
-Finally, some missing-break fixes that have been tagged for -stable:
-
- - drm/amdkfd: Fix missing break in switch statement
- - drm/amdgpu/gfx10: Fix missing break in switch statement
-
-Notice that with these changes, we completely get rid of all the
-fall-through warnings in the kernel.
-
-Thanks
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (11):
-      firewire: mark expected switch fall-throughs
-      can: mark expected switch fall-throughs
-      afs: yfsclient: Mark expected switch fall-throughs
-      afs: fsclient: Mark expected switch fall-throughs
-      mtd: onenand_base: Mark expected switch fall-through
-      perf/x86/intel: Mark expected switch fall-throughs
-      drm/amdkfd: Fix missing break in switch statement
-      drm/amdgpu/gfx10: Fix missing break in switch statement
-      drm/amdkfd/kfd_mqd_manager_v10: Avoid fall-through warning
-      drm/i915: Mark expected switch fall-throughs
-      Makefile: Globally enable fall-through warning
-
- Documentation/process/deprecated.rst             | 14 ++++++
- Makefile                                         |  3 ++
- arch/x86/events/intel/core.c                     |  2 +
- drivers/firewire/core-device.c                   |  2 +-
- drivers/firewire/core-iso.c                      |  2 +-
- drivers/firewire/core-topology.c                 |  1 +
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c           |  1 +
- drivers/gpu/drm/amd/amdkfd/kfd_crat.c            |  1 +
- drivers/gpu/drm/amd/amdkfd/kfd_mqd_manager_v10.c |  1 -
- drivers/gpu/drm/i915/Makefile                    |  1 -
- drivers/gpu/drm/i915/display/intel_display.c     |  2 +-
- drivers/gpu/drm/i915/display/intel_dp.c          |  1 +
- drivers/gpu/drm/i915/gem/i915_gem_mman.c         |  2 +-
- drivers/gpu/drm/i915/gem/i915_gem_pages.c        |  2 +-
- drivers/gpu/drm/i915/i915_gpu_error.c            |  1 +
- drivers/mtd/nand/onenand/onenand_base.c          |  1 +
- drivers/net/can/at91_can.c                       |  6 ++-
- drivers/net/can/peak_canfd/peak_pciefd_main.c    |  2 +-
- drivers/net/can/spi/mcp251x.c                    |  3 +-
- drivers/net/can/usb/peak_usb/pcan_usb.c          |  2 +-
- fs/afs/fsclient.c                                | 51 ++++++++++++++--------
- fs/afs/yfsclient.c                               | 54 +++++++++++++++---------
- 22 files changed, 106 insertions(+), 49 deletions(-)
