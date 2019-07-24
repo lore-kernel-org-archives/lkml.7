@@ -2,123 +2,107 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF89C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9BAC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECF3206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64372206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563999493;
+	bh=hGM5dwc1nx3svMCBmeXexp4BS03qmOeo5AiQFguF6+U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CMDO99i1AE9h38Lxhw74bgn6ZMV4N+I6qLapEHJ/E3BOWhgwo0+YR2fbZdOJLLvYq
+	 smUJ8YXehS5aLmD66mJVQ52o+RpRht7ktoljxBMg6jE/eLyHytN90ztu88y0aY9+GP
+	 Y5umCATcPeSiuEtuNCNSPRTj+vQUTnVzftyURqDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392250AbfGXUSF (ORCPT
+        id S2392892AbfGXUSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:18:05 -0400
-Received: from mga07.intel.com ([134.134.136.100]:47880 "EHLO mga07.intel.com"
+        Wed, 24 Jul 2019 16:18:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387976AbfGXUSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:18:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:18:00 -0700
-X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
-   d="scan'208";a="174993771"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:18:00 -0700
-Message-ID: <6218af96d7d55935f2cf607d47680edc9b90816e.camel@linux.intel.com>
-Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
- hinting"
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com
-Date:   Wed, 24 Jul 2019 13:18:00 -0700
-In-Reply-To: <20190724150224-mutt-send-email-mst@kernel.org>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-         <20190724171050.7888.62199.stgit@localhost.localdomain>
-         <20190724150224-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S2403764AbfGXTte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:49:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5853A20659;
+        Wed, 24 Jul 2019 19:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997773;
+        bh=hGM5dwc1nx3svMCBmeXexp4BS03qmOeo5AiQFguF6+U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=drge6BOzEv/l/7BbzEjC7EhL0zWfIGD1pL1U70ABB2Ireq+aYFDiX9s1A5mNx0gbO
+         388+SaBrFde1KxQnv66fO0aCrwuPdjdBNSbX95OPLX/yLaldPzhz6BjcrOrTXz7Pgq
+         AZhk57Od9PUNIe4GvJXlpyCa73hfV79PS93JecL4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 138/371] media: vimc: cap: check v4l2_fill_pixfmt return value
+Date:   Wed, 24 Jul 2019 21:18:10 +0200
+Message-Id: <20190724191735.339416272@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-24 at 15:02 -0400, Michael S. Tsirkin wrote:
-> On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > Add support for what I am referring to as "bubble hinting". Basically the
-> > idea is to function very similar to how the balloon works in that we
-> > basically end up madvising the page as not being used. However we don't
-> > really need to bother with any deflate type logic since the page will be
-> > faulted back into the guest when it is read or written to.
-> > 
-> > This is meant to be a simplification of the existing balloon interface
-> > to use for providing hints to what memory needs to be freed. I am assuming
-> > this is safe to do as the deflate logic does not actually appear to do very
-> > much other than tracking what subpages have been released and which ones
-> > haven't.
-> > 
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >  hw/virtio/virtio-balloon.c                      |   40 +++++++++++++++++++++++
-> >  include/hw/virtio/virtio-balloon.h              |    2 +
-> >  include/standard-headers/linux/virtio_balloon.h |    1 +
-> >  3 files changed, 42 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-> > index 2112874055fb..70c0004c0f88 100644
-> > --- a/hw/virtio/virtio-balloon.c
-> > +++ b/hw/virtio/virtio-balloon.c
-> > @@ -328,6 +328,39 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-> >      balloon_stats_change_timer(s, 0);
-> >  }
-> >  
-> > +static void virtio_bubble_handle_output(VirtIODevice *vdev, VirtQueue *vq)
-> > +{
-> > +    VirtQueueElement *elem;
-> > +
-> > +    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
-> > +    	unsigned int i;
-> > +
-> > +        for (i = 0; i < elem->in_num; i++) {
-> > +            void *addr = elem->in_sg[i].iov_base;
-> > +            size_t size = elem->in_sg[i].iov_len;
-> > +            ram_addr_t ram_offset;
-> > +            size_t rb_page_size;
-> > +            RAMBlock *rb;
-> > +
-> > +            if (qemu_balloon_is_inhibited())
-> > +                continue;
-> > +
-> > +            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
-> > +            rb_page_size = qemu_ram_pagesize(rb);
-> > +
-> > +            /* For now we will simply ignore unaligned memory regions */
-> > +            if ((ram_offset | size) & (rb_page_size - 1))
-> > +                continue;
-> > +
-> > +            ram_block_discard_range(rb, ram_offset, size);
-> 
-> I suspect this needs to do like the migration type of
-> hinting and get disabled if page poisoning is in effect.
-> Right?
+[ Upstream commit 77ae46e11df5c96bb4582633851f838f5d954df4 ]
 
-Shouldn't something like that end up getting handled via
-qemu_balloon_is_inhibited, or did I miss something there? I assumed cases
-like that would end up setting qemu_balloon_is_inhibited to true, if that
-isn't the case then I could add some additional conditions. I would do it
-in about the same spot as the qemu_balloon_is_inhibited check.
+v4l2_fill_pixfmt() returns -EINVAL if the pixelformat used as parameter is
+invalid or if the user is trying to use a multiplanar format with the
+singleplanar API. Currently, the vimc_cap_try_fmt_vid_cap() returns such
+value, but vimc_cap_s_fmt_vid_cap() is ignoring it. Fix that and returns
+an error value if vimc_cap_try_fmt_vid_cap() has failed.
+
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Suggested-by: Helen Koike <helen.koike@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/vimc/vimc-capture.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+index ea869631a3f6..bbc16072ec16 100644
+--- a/drivers/media/platform/vimc/vimc-capture.c
++++ b/drivers/media/platform/vimc/vimc-capture.c
+@@ -130,12 +130,15 @@ static int vimc_cap_s_fmt_vid_cap(struct file *file, void *priv,
+ 				  struct v4l2_format *f)
+ {
+ 	struct vimc_cap_device *vcap = video_drvdata(file);
++	int ret;
+ 
+ 	/* Do not change the format while stream is on */
+ 	if (vb2_is_busy(&vcap->queue))
+ 		return -EBUSY;
+ 
+-	vimc_cap_try_fmt_vid_cap(file, priv, f);
++	ret = vimc_cap_try_fmt_vid_cap(file, priv, f);
++	if (ret)
++		return ret;
+ 
+ 	dev_dbg(vcap->dev, "%s: format update: "
+ 		"old:%dx%d (0x%x, %d, %d, %d, %d) "
+-- 
+2.20.1
+
 
 
