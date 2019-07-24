@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D15C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1176FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68B6218D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91032189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oALzStox"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDBKGPEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfGXXjy (ORCPT
+        id S2388708AbfGXXjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:39:54 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44081 "EHLO
+        Wed, 24 Jul 2019 19:39:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33924 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388743AbfGXXjf (ORCPT
+        with ESMTP id S2388079AbfGXXjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:39:35 -0400
-Received: by mail-io1-f67.google.com with SMTP id s7so93183522iob.11;
-        Wed, 24 Jul 2019 16:39:35 -0700 (PDT)
+        Wed, 24 Jul 2019 19:39:25 -0400
+Received: by mail-io1-f67.google.com with SMTP id k8so93374083iot.1;
+        Wed, 24 Jul 2019 16:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PMejsUr9K8/BuCWQx6vgffGUCxlWl6FVyv+Mq0t5PyY=;
-        b=oALzStoxBDoSIlWbN6YPeEuD/T0n8vprngDcpk7Wdx026sDFtVNYqA0fCLFfy8XRW0
-         5YCmBMinTsiPjB5jXmUFg/uJIbptOD+pMSOeyRUN9UM6sXpY6+7RYh4VQkctaUk3caYv
-         rtfcA+4Bb/VuD3oRTg6XxmWR2iv/MZd3i8kkzFOVoBZGQLg3iN3O5jqeYEB1D7gYmVUt
-         WgDYXv4HBPR8WTTCeq5PTeceotDsx6TQUq5T1RHWDtJl2l5fjkISAjHsIVAxdXBX6SWd
-         HgAFuWI8KWDuRVh7DQNfSNcwghqvDUmtrAIYHx0CL4n02dilRSLe1ph/56ncBpOyYtqu
-         JNpA==
+        bh=Jv+5h9zsvocG3vmZUV+laGAVtUTGR/TP9VTvdDmoTz8=;
+        b=EDBKGPEY8gNRIm6GLz7eEQXiloyjwA5nE4eDL//MPGFDqxgacSpuOhKqx1np8mzPjs
+         hGPgyPBtOiMtQbL89K8Ug1fDzeYWb0PHZKX1ElGv6Yn8GHj1pudjK7I4EOojcsumedxh
+         SuqZBv4w1zbhY1SWJDXbMk7HhlML90c3SitDL/ZpvuKOQjsPtC2n4cfr0ydXVadI23Wf
+         /Dge/VY8EnTjx0YhHHkygpYLKooF/AXfLEwN30Y90ibKxoXliOAYZPBU/rsKoaARWmmX
+         MYaEtzx/s7ztxFTmAGHbGQrzvwvDladSnJ8Qd2GjLgdqTAvDV/qyCiIjKxvRkJJWu98s
+         Nttg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PMejsUr9K8/BuCWQx6vgffGUCxlWl6FVyv+Mq0t5PyY=;
-        b=VllsBGc1fU1rEt4MRx4A9LKnyxKSdY6sWRTJLaL6m0QjpGRvTTY1BKUl2uP6X2f7jp
-         H/CQNw48E6VK/1uFjFvmq0i35msYatfSVptn0pWMXbOtm81eMRFY9DKNg5orqkYztzuG
-         fGOkAzqjO6BSHNa0ldwsNykE3WgsASY5dq9jrk9celtT5dLn7If2aCAMiOmd99u3U1w4
-         rMEasuYTY8mOxD+R0EDeMsqS5AK98AbSScRAR/jh21kmv0zt4pStFAVGKDAXefv9p6/H
-         JfbajGaqrH46CU3qmmNjqn1n7rj6giJkzjLNsNcWJpTqXz8DpdpUo5+vEqBf1rh+3Dh7
-         Oo5g==
-X-Gm-Message-State: APjAAAWsSt8XDNFYJFjsuIe+Uz4UQd/jDNKOZMTMC+1S5yPU5dm8x1z6
-        ysmd6I0ISpfvaTav2vb4hkw=
-X-Google-Smtp-Source: APXvYqyArnMIGaLRu1YF0B/3Kg2tyhDsqsLvvZ/MgLRe2voM0nZtj/FUXNEnuExWm3h0sXW6r6ooLQ==
-X-Received: by 2002:a05:6602:2183:: with SMTP id b3mr67144703iob.249.1564011574860;
-        Wed, 24 Jul 2019 16:39:34 -0700 (PDT)
+        bh=Jv+5h9zsvocG3vmZUV+laGAVtUTGR/TP9VTvdDmoTz8=;
+        b=YhrxyMMY/kmXf27tnuxnNkMtoIm89yv43KlLfbDgJatLk4Nt5saNgDZS4eOqljZoCd
+         uYum3BLHA9WlglhgnE09DQ5qr0kAqGAnGofJMvlAjwdVKXifyvRwI9XZAkMg8Ousa85x
+         1P1IwKslH1884xnKaDrCAb6U+4M+EHR6qVzWRAHBiXrZi2H33Sm5gWNQVSu5JEsQ1nsb
+         CvXxdre05hkkp4xxe0uZq14zVMtgJxqwzicmTAenlI73zWhZLZ3DUv2jFkD96Uf7gBrm
+         3lhTU3ZSlY5sXLnCQD8jbYSvKC+hbCmoHxviQt/gdJYdoMqtob4P16UHvzirxbf3YRum
+         Y/8g==
+X-Gm-Message-State: APjAAAU88ONLtZv2BeyLBbTEJFfZ9EY+BFCKbn13wW1B73FK8OZCzIEs
+        ioxIZXqBk/TVrjTmTRf/AC8Ki7u2c+hKSw==
+X-Google-Smtp-Source: APXvYqzL6oW/Clg2J47PQR1aH5O41FAHwJVYA5fEhLrRB3MVj8DyKnXYMYiW7k2oON2cgNcwRQyxjg==
+X-Received: by 2002:a6b:3102:: with SMTP id j2mr13169207ioa.5.1564011564997;
+        Wed, 24 Jul 2019 16:39:24 -0700 (PDT)
 Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id b14sm51612959iod.33.2019.07.24.16.39.33
+        by smtp.gmail.com with ESMTPSA id b14sm51612959iod.33.2019.07.24.16.39.23
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 16:39:34 -0700 (PDT)
+        Wed, 24 Jul 2019 16:39:24 -0700 (PDT)
 From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
 To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     skunberg.kelsey@gmail.com,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org
-Subject: [PATCH v2 10/11] PCI: Move PTM declaration to drivers/pci/pci.h
-Date:   Wed, 24 Jul 2019 17:38:47 -0600
-Message-Id: <20190724233848.73327-11-skunberg.kelsey@gmail.com>
+Subject: [PATCH v2 04/11] PCI: Move PCI Virtual Channel declarations to drivers/pci/pci.h
+Date:   Wed, 24 Jul 2019 17:38:41 -0600
+Message-Id: <20190724233848.73327-5-skunberg.kelsey@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190724233848.73327-1-skunberg.kelsey@gmail.com>
 References: <20190711222341.111556-1-skunberg.kelsey@gmail.com>
@@ -77,50 +77,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci_enable_ptm() is only called within drivers/pci/. Since declaration
-does not need to be visible to the rest of the kernel, move to
-drivers/pci/pci.h.
+PCI Virtual Channel declarations are only called within drivers/pci/.
+Since declarations do not need to be visible to the rest of the kernel,
+move to drivers/pci/pci.h.
 
 Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- drivers/pci/pci.h   | 3 +++
- include/linux/pci.h | 7 -------
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ drivers/pci/pci.h   | 5 +++++
+ include/linux/pci.h | 5 -----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 5e5ce04bda59..6cdc3500de15 100644
+index f41dde136648..0eb0fb7ad353 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -551,8 +551,11 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+@@ -133,6 +133,11 @@ void pci_vpd_release(struct pci_dev *dev);
+ void pcie_vpd_create_sysfs_dev_files(struct pci_dev *dev);
+ void pcie_vpd_remove_sysfs_dev_files(struct pci_dev *dev);
  
- #ifdef CONFIG_PCIE_PTM
- void pci_ptm_init(struct pci_dev *dev);
-+int pci_enable_ptm(struct pci_dev *dev, u8 *granularity);
- #else
- static inline void pci_ptm_init(struct pci_dev *dev) { }
-+static inline int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
-+{ return -EINVAL; }
- #endif
- 
- struct pci_dev_reset_methods {
++/* PCI Virtual Channel */
++int pci_save_vc_state(struct pci_dev *dev);
++void pci_restore_vc_state(struct pci_dev *dev);
++void pci_allocate_vc_save_buffers(struct pci_dev *dev);
++
+ /* PCI /proc functions */
+ #ifdef CONFIG_PROC_FS
+ int pci_proc_attach_device(struct pci_dev *dev);
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 5dd4abeef8b0..a483b7598059 100644
+index cd49427e198e..d1944e3e7eb2 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -1561,13 +1561,6 @@ static inline bool pci_aer_available(void) { return false; }
+@@ -1239,11 +1239,6 @@ bool pcie_relaxed_ordering_enabled(struct pci_dev *dev);
+ void pci_wakeup_bus(struct pci_bus *bus);
+ void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state);
  
- bool pci_ats_disabled(void);
- 
--#ifdef CONFIG_PCIE_PTM
--int pci_enable_ptm(struct pci_dev *dev, u8 *granularity);
--#else
--static inline int pci_enable_ptm(struct pci_dev *dev, u8 *granularity)
--{ return -EINVAL; }
--#endif
+-/* PCI Virtual Channel */
+-int pci_save_vc_state(struct pci_dev *dev);
+-void pci_restore_vc_state(struct pci_dev *dev);
+-void pci_allocate_vc_save_buffers(struct pci_dev *dev);
 -
- void pci_cfg_access_lock(struct pci_dev *dev);
- bool pci_cfg_access_trylock(struct pci_dev *dev);
- void pci_cfg_access_unlock(struct pci_dev *dev);
+ /* For use by arch with custom probe code */
+ void set_pcie_port_type(struct pci_dev *pdev);
+ void set_pcie_hotplug_bridge(struct pci_dev *pdev);
 -- 
 2.20.1
 
