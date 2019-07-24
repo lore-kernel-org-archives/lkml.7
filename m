@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2C4C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3889EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6639D2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5A421855
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998528;
-	bh=VmdVzvNLDWTZS6jg+c0EZupz56i7q1ENXH+Qqd8hAjs=;
+	s=default; t=1563998533;
+	bh=T4Ooa1Tmscf5kqM4+KgE3fcKVgvPXVyUzmyx4lIU80I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XFyjDBSslfc/zoj4VUutZTHkTcwFmIuzScjzSb4wnssfnIrpT8GJbFzFo2YZUmhcN
-	 puZfplQ+7jFdLL5X8bkccN05lVh8J60pPvZ2bjC5+vMK+nN7H3f04cR4TqgHAGecjk
-	 J0jvFyc4xFstNTX4BKqSosi2CI5Cou6It43IqutE=
+	b=XVYT+4HL1/T6FfHr0UQ7okl7T3uPIvc1D4YI9wovcYyjYV/1bZse8oFq+BqSV6yLr
+	 u7/klW3dddFcV5LG2snddyvkdyjyCCoolB+PeFA9N4yQYjuDhL0UK5wSPujhVZSDzm
+	 VIs0SvsANqRu0glysR7t3W1Ax1jL4HITAry5pgkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405087AbfGXUCH (ORCPT
+        id S2405463AbfGXUCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51406 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404996AbfGXUCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:02:03 -0400
+        id S2404996AbfGXUCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:02:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5153120665;
-        Wed, 24 Jul 2019 20:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC03520665;
+        Wed, 24 Jul 2019 20:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998522;
-        bh=VmdVzvNLDWTZS6jg+c0EZupz56i7q1ENXH+Qqd8hAjs=;
+        s=default; t=1563998528;
+        bh=T4Ooa1Tmscf5kqM4+KgE3fcKVgvPXVyUzmyx4lIU80I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mSuopzIt3DZJuz7YnuN5n/dZgnQFA0DOMRdoabUr4lFFHkliHTRgrVXdhbX48yWqD
-         SCpYfuFgQQb9j3/Y5XJ2jOXHYWwRJI/DFRgV5ZWDnLMyJInHtBKZ0ZQTan1JLidTJN
-         57W0SgeZ5kVhEVvsM+aJzjygsPJhm4AmFhZPAetM=
+        b=KOwe4DYHEKmgeGu30Cq7P/WVOM7yC+tXOdjpyw2HlUTxGT3L+InWVFz17yGqpGgG2
+         rG/4GF21NoFH0uH3pSX7ATqpqonAu7PvlN7D6UJNN/wpY/85YyBKnOXMBP5TM1j1Lc
+         Ma7yhXvAlK7AdiXzr4bJkH7snjKtxgQZ9tZf3F2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+        stable@vger.kernel.org, Daniel Lezcano <daniel.lezcano@free.fr>,
+        Serge Hallyn <serge@hallyn.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/271] net: stmmac: dwmac4/5: Clear unused address entries
-Date:   Wed, 24 Jul 2019 21:18:12 +0200
-Message-Id: <20190724191657.203178536@linuxfoundation.org>
+Subject: [PATCH 4.19 025/271] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
+Date:   Wed, 24 Jul 2019 21:18:14 +0200
+Message-Id: <20190724191657.361782706@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -63,51 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0620ec6c62a5a07625b65f699adc5d1b90394ee6 ]
+[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
 
-In case we don't use a given address entry we need to clear it because
-it could contain previous values that are no longer valid.
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
 
-Found out while running stmmac selftests.
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
+
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
+
+Cc: Daniel Lezcano <daniel.lezcano@free.fr>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/pid_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 7e5d5db0d516..a2f3db39221e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -444,14 +444,20 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		 * are required
- 		 */
- 		value |= GMAC_PACKET_FILTER_PR;
--	} else if (!netdev_uc_empty(dev)) {
--		int reg = 1;
-+	} else {
- 		struct netdev_hw_addr *ha;
-+		int reg = 1;
- 
- 		netdev_for_each_uc_addr(ha, dev) {
- 			dwmac4_set_umac_addr(hw, ha->addr, reg);
- 			reg++;
- 		}
-+
-+		while (reg <= GMAC_MAX_PERFECT_ADDRESSES) {
-+			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
-+			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
-+			reg++;
-+		}
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index 2a2ac53d8b8b..95271f180687 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -325,7 +325,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
  	}
  
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
+ 	read_lock(&tasklist_lock);
+-	force_sig(SIGKILL, pid_ns->child_reaper);
++	send_sig(SIGKILL, pid_ns->child_reaper, 1);
+ 	read_unlock(&tasklist_lock);
+ 
+ 	do_exit(0);
 -- 
 2.20.1
 
