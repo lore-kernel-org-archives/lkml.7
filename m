@@ -2,89 +2,128 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D50C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA644C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A91B2081B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9132B214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999782;
-	bh=sVb0TPGD0vsMrafPCtounu/bHf9+SRAH1Y7R+naXAZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=thGT2APfwI+/RNoSZmYsKXtBNPrD+wIfp33hE4ePT+LTSELXb4ui+18umEdCLD8oM
-	 OK5Rq/54cKumWY7HBnDslGN7JqzCmzKEkeHaoMlgkkHlpkX+i209kV9VV1Wh+sCCkQ
-	 7AlmqSaz51L96luqXckl50KNM0QIXbNese4eSE8k=
+	s=default; t=1563999796;
+	bh=VltBhbdy74LnTiTl4GmMoLuBwsHAQoHiannhCfbtOuc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=j2KUmiYp6Jq1b2+Do5hkoRudm1CpqltdXelNIkGMVS/ZaViEz8iGCrbhEpl4vvuUX
+	 gumb5/3HkuscaN/49h/7SfFjbsyeejOZ38Ed7B9ACU4pQK2Vka7VpFQkXmaEY0jhla
+	 bIyu6RKF4tn3/LxBZyzzImBsIx068dACsMcmN7jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390765AbfGXUXA (ORCPT
+        id S2392870AbfGXUXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:23:00 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33842 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391354AbfGXUW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:22:58 -0400
-Received: by mail-io1-f65.google.com with SMTP id k8so92431374iot.1;
-        Wed, 24 Jul 2019 13:22:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uDWllbWAHHQJMizorbNWUIyq7E6utwVtniA+GguMM1I=;
-        b=cVjchWWIPFWeJj0wCibDHhpTCz1Gx11DShGuSE5VxPS3HbJFVJltsdvEjwsLa4/Q92
-         vv319caU6V2UVTpKM9qyHiEqeOzbfZcBmN/G/4RNfbJabTBLVsjazpDrvnT6b2W+IB2S
-         TH1/aHMZF9eKcnXbW/9LZmK31ztD8zyIlP/06JK19JL3D/HWRFPeEqgYU4Ggc2vbgIBM
-         FdueCtFEQjkLLUMt/UzQS9lr6KC/KqQIbtUW9wELbEVY/KVgPEP/xRDcbmKzwfLtfqoH
-         CvGjkQrQ+aioaooiJG7KSKLUryto2F9j1TradUYfRgM0NEW1sB8QkI1c2acFt9ey1u1l
-         H3ig==
-X-Gm-Message-State: APjAAAWrtE8ye0lyUTUNBJWYnrd1SKQpAZiMHMJdB2a6uY+w7QbU4pTA
-        ipSU6Dhfhon+5h1UzTCuVw==
-X-Google-Smtp-Source: APXvYqyQ9siwx0xN6aEL1lklrUj+Z5DeRx/7MB4ml1qvejrwmjU2V5SRYjuEr3YtGaU4tpxw1zPF8g==
-X-Received: by 2002:a6b:c98c:: with SMTP id z134mr39825656iof.276.1563999776985;
-        Wed, 24 Jul 2019 13:22:56 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id l14sm42995882iob.1.2019.07.24.13.22.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:22:56 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:22:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Eugen.Hristev@microchip.com
-Cc:     wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        Nicolas.Ferre@microchip.com, Eugen.Hristev@microchip.com
-Subject: Re: [PATCH v3 2/9] dt-bindings: i2c: add bindings for i2c analog and
-  digital filter
-Message-ID: <20190724202255.GA32633@bogus>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
- <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
+        Wed, 24 Jul 2019 16:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390455AbfGXTnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D975217D4;
+        Wed, 24 Jul 2019 19:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997381;
+        bh=VltBhbdy74LnTiTl4GmMoLuBwsHAQoHiannhCfbtOuc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZV0qC7SCOrMi4MzSdUXa1jdfmfhdzMfjYRPyjl975k9s6dF3O/vv2wjBT7uWl06+Q
+         UIQKenXUAmCeqJhZKhmg3NBWhEQahEKmPa8WGKnl3RL3y3h4P/1q8e4KlZc7ODeOdI
+         TBBSLLa16Ip82mC5SWB4fCC8zxwEXigX/uHsDEjU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 390/413] powerpc/powernv/npu: Fix reference leak
+Date:   Wed, 24 Jul 2019 21:21:21 +0200
+Message-Id: <20190724191802.795248602@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jul 2019 13:19:33 +0000, <Eugen.Hristev@microchip.com> wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Some i2c controllers have a built-in digital or analog filter.
-> This is specifically required depending on the hardware PCB/board.
-> Some controllers also allow specifying the maximum width of the
-> spikes that can be filtered. The width length can be specified in nanoseconds.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
+From: Greg Kurz <groug@kaod.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+commit 02c5f5394918b9b47ff4357b1b18335768cd867d upstream.
+
+Since 902bdc57451c, get_pci_dev() calls pci_get_domain_bus_and_slot(). This
+has the effect of incrementing the reference count of the PCI device, as
+explained in drivers/pci/search.c:
+
+ * Given a PCI domain, bus, and slot/function number, the desired PCI
+ * device is located in the list of PCI devices. If the device is
+ * found, its reference count is increased and this function returns a
+ * pointer to its data structure.  The caller must decrement the
+ * reference count by calling pci_dev_put().  If no device is found,
+ * %NULL is returned.
+
+Nothing was done to call pci_dev_put() and the reference count of GPU and
+NPU PCI devices rockets up.
+
+A natural way to fix this would be to teach the callers about the change,
+so that they call pci_dev_put() when done with the pointer. This turns
+out to be quite intrusive, as it affects many paths in npu-dma.c,
+pci-ioda.c and vfio_pci_nvlink2.c. Also, the issue appeared in 4.16 and
+some affected code got moved around since then: it would be problematic
+to backport the fix to stable releases.
+
+All that code never cared for reference counting anyway. Call pci_dev_put()
+from get_pci_dev() to revert to the previous behavior.
+
+Fixes: 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary pcidev from pci_dn")
+Cc: stable@vger.kernel.org # v4.16
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/powerpc/platforms/powernv/npu-dma.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+--- a/arch/powerpc/platforms/powernv/npu-dma.c
++++ b/arch/powerpc/platforms/powernv/npu-dma.c
+@@ -28,9 +28,22 @@ static DEFINE_SPINLOCK(npu_context_lock)
+ static struct pci_dev *get_pci_dev(struct device_node *dn)
+ {
+ 	struct pci_dn *pdn = PCI_DN(dn);
++	struct pci_dev *pdev;
+ 
+-	return pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
++	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
+ 					   pdn->busno, pdn->devfn);
++
++	/*
++	 * pci_get_domain_bus_and_slot() increased the reference count of
++	 * the PCI device, but callers don't need that actually as the PE
++	 * already holds a reference to the device. Since callers aren't
++	 * aware of the reference count change, call pci_dev_put() now to
++	 * avoid leaks.
++	 */
++	if (pdev)
++		pci_dev_put(pdev);
++
++	return pdev;
+ }
+ 
+ /* Given a NPU device get the associated PCI device. */
+
+
