@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BC2C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DF0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC43206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9297A20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999565;
-	bh=lDWU2RUlt7qpyt4uDsyAnM9kfhkxyzaZS/6NI2empQw=;
+	s=default; t=1563999573;
+	bh=EzkKUuaEp7qjK4fm/shaNJujSptQQlsYiCZmVZUkz7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLaOea8vQXioCg291f0hWMKKPsN8pxCCpzoiM8D34idprvKYHaCikKhvLR4LqTEkC
-	 5l65YH2SjF+sqTBxN0oEimY2NSmpPXMGZ7j5kZP4IBJix/inSEddTVRA2gigX8gCQl
-	 ec63G63yBMqGgj7uLRkAeLwsmN80e2Tgs48l+IQY=
+	b=RZ835GOtMDcHGNPMHaMb85MWhAIS9FGS+6Vc1QV28ibiYspRfrQjXlTv/PJzVvwzl
+	 +i5i+Ts2nEKi1mHi90UpBXcdi5PiQ+h2+ARDSk+7nJ8ZUHIkY/DLmmLHQbf9lcm27J
+	 sfjSnBFZfoxUWCDSsbAivlkBTkNBWuOsQBByJem0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392880AbfGXUTX (ORCPT
+        id S2391295AbfGXTrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:19:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391140AbfGXTtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:49:01 -0400
+        id S2390118AbfGXTrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:47:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C20214AF;
-        Wed, 24 Jul 2019 19:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA98217D4;
+        Wed, 24 Jul 2019 19:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997740;
-        bh=lDWU2RUlt7qpyt4uDsyAnM9kfhkxyzaZS/6NI2empQw=;
+        s=default; t=1563997660;
+        bh=EzkKUuaEp7qjK4fm/shaNJujSptQQlsYiCZmVZUkz7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vl0EKzI9f+W8yjXBZsLRIx4kQef3QNpSRrS9MJv51Z0zjeN/3qsDPamIh08aZkyq9
-         cfDPXMvkn4dgfDFLpYPx0DsvgTSwkKqVTBEIRZ86b1d2y3CgLJP/EilfH0ds3eXvFR
-         JBRMiNdXoGr/7OzG37zC6tsi5ynQArWlVnmDtIGc=
+        b=jHS8pNDuWukfxuQiqtXoUpekzaKiNhJhnF2YCmszpJYdghFnrXHf2q9eLDPI8qxLz
+         8t8VFKPux/cWdqI+FmFWreGcX9ThALM9ZfK9Xw0rRycOG46PGM8FC4hJ4dQj+hIW5i
+         h9v4LC2FJ24T9BjIASA+4sGmPLCmxu9Rhxp7xNXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com,
-        Julian Anastasov <ja@ssi.bg>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 127/371] ipvs: defer hook registration to avoid leaks
-Date:   Wed, 24 Jul 2019 21:17:59 +0200
-Message-Id: <20190724191734.436972041@linuxfoundation.org>
+        stable@vger.kernel.org, Jilong Kou <koujilong@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 100/371] sched/core: Add __sched tag for io_schedule()
+Date:   Wed, 24 Jul 2019 21:17:32 +0200
+Message-Id: <20190724191732.360972400@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -63,115 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cf47a0b882a4e5f6b34c7949d7b293e9287f1972 ]
+[ Upstream commit e3b929b0a184edb35531153c5afcaebb09014f9d ]
 
-syzkaller reports for memory leak when registering hooks [1]
+Non-inline io_schedule() was introduced in:
 
-As we moved the nf_unregister_net_hooks() call into
-__ip_vs_dev_cleanup(), defer the nf_register_net_hooks()
-call, so that hooks are allocated and freed from same
-pernet_operations (ipvs_core_dev_ops).
+  commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
 
-[1]
-BUG: memory leak
-unreferenced object 0xffff88810acd8a80 (size 96):
- comm "syz-executor073", pid 7254, jiffies 4294950560 (age 22.250s)
- hex dump (first 32 bytes):
-   02 00 00 00 00 00 00 00 50 8b bb 82 ff ff ff ff  ........P.......
-   00 00 00 00 00 00 00 00 00 77 bb 82 ff ff ff ff  .........w......
- backtrace:
-   [<0000000013db61f1>] kmemleak_alloc_recursive include/linux/kmemleak.h:55 [inline]
-   [<0000000013db61f1>] slab_post_alloc_hook mm/slab.h:439 [inline]
-   [<0000000013db61f1>] slab_alloc_node mm/slab.c:3269 [inline]
-   [<0000000013db61f1>] kmem_cache_alloc_node_trace+0x15b/0x2a0 mm/slab.c:3597
-   [<000000001a27307d>] __do_kmalloc_node mm/slab.c:3619 [inline]
-   [<000000001a27307d>] __kmalloc_node+0x38/0x50 mm/slab.c:3627
-   [<0000000025054add>] kmalloc_node include/linux/slab.h:590 [inline]
-   [<0000000025054add>] kvmalloc_node+0x4a/0xd0 mm/util.c:431
-   [<0000000050d1bc00>] kvmalloc include/linux/mm.h:637 [inline]
-   [<0000000050d1bc00>] kvzalloc include/linux/mm.h:645 [inline]
-   [<0000000050d1bc00>] allocate_hook_entries_size+0x3b/0x60 net/netfilter/core.c:61
-   [<00000000e8abe142>] nf_hook_entries_grow+0xae/0x270 net/netfilter/core.c:128
-   [<000000004b94797c>] __nf_register_net_hook+0x9a/0x170 net/netfilter/core.c:337
-   [<00000000d1545cbc>] nf_register_net_hook+0x34/0xc0 net/netfilter/core.c:464
-   [<00000000876c9b55>] nf_register_net_hooks+0x53/0xc0 net/netfilter/core.c:480
-   [<000000002ea868e0>] __ip_vs_init+0xe8/0x170 net/netfilter/ipvs/ip_vs_core.c:2280
-   [<000000002eb2d451>] ops_init+0x4c/0x140 net/core/net_namespace.c:130
-   [<000000000284ec48>] setup_net+0xde/0x230 net/core/net_namespace.c:316
-   [<00000000a70600fa>] copy_net_ns+0xf0/0x1e0 net/core/net_namespace.c:439
-   [<00000000ff26c15e>] create_new_namespaces+0x141/0x2a0 kernel/nsproxy.c:107
-   [<00000000b103dc79>] copy_namespaces+0xa1/0xe0 kernel/nsproxy.c:165
-   [<000000007cc008a2>] copy_process.part.0+0x11fd/0x2150 kernel/fork.c:2035
-   [<00000000c344af7c>] copy_process kernel/fork.c:1800 [inline]
-   [<00000000c344af7c>] _do_fork+0x121/0x4f0 kernel/fork.c:2369
+Keep in line with io_schedule_timeout(), otherwise "/proc/<pid>/wchan" will
+report io_schedule() rather than its callers when waiting for IO.
 
-Reported-by: syzbot+722da59ccb264bc19910@syzkaller.appspotmail.com
-Fixes: 719c7d563c17 ("ipvs: Fix use-after-free in ip_vs_in")
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: Jilong Kou <koujilong@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miao Xie <miaoxie@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+Link: https://lkml.kernel.org/r/20190603091338.2695-1-gaoxiang25@huawei.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_core.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index 8ebf21149ec3..e72b51157cbb 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2250,7 +2250,6 @@ static const struct nf_hook_ops ip_vs_ops[] = {
- static int __net_init __ip_vs_init(struct net *net)
- {
- 	struct netns_ipvs *ipvs;
--	int ret;
- 
- 	ipvs = net_generic(net, ip_vs_net_id);
- 	if (ipvs == NULL)
-@@ -2282,17 +2281,11 @@ static int __net_init __ip_vs_init(struct net *net)
- 	if (ip_vs_sync_net_init(ipvs) < 0)
- 		goto sync_fail;
- 
--	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
--	if (ret < 0)
--		goto hook_fail;
--
- 	return 0;
- /*
-  * Error handling
-  */
- 
--hook_fail:
--	ip_vs_sync_net_cleanup(ipvs);
- sync_fail:
- 	ip_vs_conn_net_cleanup(ipvs);
- conn_fail:
-@@ -2322,6 +2315,19 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
- 	net->ipvs = NULL;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a75ad50b5e2f..242233490a49 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5175,7 +5175,7 @@ long __sched io_schedule_timeout(long timeout)
  }
+ EXPORT_SYMBOL(io_schedule_timeout);
  
-+static int __net_init __ip_vs_dev_init(struct net *net)
-+{
-+	int ret;
-+
-+	ret = nf_register_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
-+	if (ret < 0)
-+		goto hook_fail;
-+	return 0;
-+
-+hook_fail:
-+	return ret;
-+}
-+
- static void __net_exit __ip_vs_dev_cleanup(struct net *net)
+-void io_schedule(void)
++void __sched io_schedule(void)
  {
- 	struct netns_ipvs *ipvs = net_ipvs(net);
-@@ -2341,6 +2347,7 @@ static struct pernet_operations ipvs_core_ops = {
- };
- 
- static struct pernet_operations ipvs_core_dev_ops = {
-+	.init = __ip_vs_dev_init,
- 	.exit = __ip_vs_dev_cleanup,
- };
+ 	int token;
  
 -- 
 2.20.1
