@@ -2,143 +2,255 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD53C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCDDC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B3F217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKSuVhkA"
+	by mail.kernel.org (Postfix) with ESMTP id 3FE79217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfGXI6S (ORCPT
+        id S1726723AbfGXI6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:58:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42202 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfGXI6R (ORCPT
+        Wed, 24 Jul 2019 04:58:30 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22342 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725999AbfGXI63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:58:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x1so31054883wrr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 01:58:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+RGbZm1eciu20PQ8K6tF6H+QNRIWNrVYIPAsS3IZOGw=;
-        b=gKSuVhkAPXEHjSfyv7hCFaAwcimAC12QQb//SoVNMVfDYgdlJh0/u6za13CaJi1KNK
-         Yhe88wKGs1Fbw0gsRtEV6VwOjTePgaWP/LBYhE4HSiflOGU6ocw7DnSkFBw1tJ2s0VSx
-         tEydSi1ZE1R1YiURro6utx0GyKHQRRMB0pLSWCLDMj9Qyx6eY+pyAW1J5EfnmGFYg3bF
-         SrnWQ9tzbl4Kj2f79Yhig7nDPqX6Dnvre4xtHcPQyGLjuYeL78NLKifDFMaFaJUSHVOw
-         RK/dqeONWggH88EXgWfSIM15ssSrMYL82V7or3/mdcA2sb8ZPv5NlG+UwtSmYOB0Mxhd
-         bZMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+RGbZm1eciu20PQ8K6tF6H+QNRIWNrVYIPAsS3IZOGw=;
-        b=IfnI6dnzm5hWJo4RPWYH2F33/mzgISqe23DPkPhiRTvl8lo7uf3pE6Ql9YYyurBSYl
-         kHDKrWBqSO8gmRoEuS/99s8Nf2ogOJOuMfLvpnRdIWxNT8m4mdCbaxSN3l+yFlDb3Hy5
-         kd8ZG5zq3WBbYd2QYdhp9g/UEwzvv8+/6L6+4Bnbk3OA89/rS/7MF443Qkpif2sCtwX7
-         obgETlsC4k832RghNfMutLm1naefz+qQvPy7ZBYdlGFDQxVPruhGeAesIuMgNbdCxs9F
-         IOiAGpPYZN02BRw0DjAmRPj+kbgcSpx93PC7GfJ9HU4i8qQYX2bUHL+qe9R3nEZcmNHm
-         6vOQ==
-X-Gm-Message-State: APjAAAVbeS1Ae+8gp0f3f3RByQ31I7skOwsK01IIgv9gZhg9Q4FBZY9t
-        LLLgokraXGHFk8O56svZkEjBnI+oPt/k/UK3mUo=
-X-Google-Smtp-Source: APXvYqyPfV+wRoNminVBPIYU0k3mTByronNa0d5GsaFz0875MLgxFgsfvzSD0QjUkklYPTRcf4r/DD3UHxMnXvpGh2w=
-X-Received: by 2002:adf:db46:: with SMTP id f6mr35916182wrj.212.1563958695456;
- Wed, 24 Jul 2019 01:58:15 -0700 (PDT)
+        Wed, 24 Jul 2019 04:58:29 -0400
+X-UUID: f6a6ca004bcc44e3ad3a0567367f55b7-20190724
+X-UUID: f6a6ca004bcc44e3ad3a0567367f55b7-20190724
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1920702467; Wed, 24 Jul 2019 16:58:25 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 24 Jul 2019 16:58:23 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 24 Jul 2019 16:58:23 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v1 2/6] mt76: mt7603: fix some checkpatch warnings
+Date:   Wed, 24 Jul 2019 16:58:16 +0800
+Message-ID: <5e7d187a7dfa55ceb58ea721596865e0d529c4ee.1563944758.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <cover.1563944758.git.ryder.lee@mediatek.com>
+References: <cover.1563944758.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-References: <20190722124833.28757-1-daniel.baluta@nxp.com> <20190722124833.28757-6-daniel.baluta@nxp.com>
- <1563800148.2311.9.camel@pengutronix.de>
-In-Reply-To: <1563800148.2311.9.camel@pengutronix.de>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 24 Jul 2019 11:58:04 +0300
-Message-ID: <CAEnQRZB+g0pmv_Kkf37Vj_Ln_gPSc6cq77yAZQQ+9yUzhhMT5A@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH 05/10] ASoC: fsl_sai: Add support to enable
- multiple data lines
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Takashi Iwai <tiwai@suse.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 22, 2019 at 3:58 PM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Am Montag, den 22.07.2019, 15:48 +0300 schrieb Daniel Baluta:
-> > SAI supports up to 8 Rx/Tx data lines which can be enabled
-> > using TCE/RCE bits of TCR3/RCR3 registers.
-> >
-> > Data lines to be enabled are read from DT fsl,dl_mask property.
-> > By default (if no DT entry is provided) only data line 0 is enabled.
-> >
-> > Note:
-> > We can only enable consecutive data lines starting with data line #0.
->
-> Why is the property a bitmask then? To me this sounds like we want to
-> have the number of lanes in the DT and convert to the bitmask inside
-> the driver.
+This fixes the following checkpatch warnings:
 
-Actually my comment might be wrong. I have read the documentation again
-and it seems that: We can only enable consecutive data lines
-*ONLY* if combine mode is enabled.
+WARNING: Improper SPDX comment style
+CHECK: No space is necessary after a cast
 
-Thus, if combine mode is disabled we can independently enable any data
-line. I will clarify this with IP owner and correct the patch accordingly.
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7603/beacon.c  | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/core.c    | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/debugfs.c | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/dma.c     | 7 ++++---
+ drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c  | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/init.c    | 3 +--
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c     | 6 +++---
+ drivers/net/wireless/mediatek/mt76/mt7603/main.c    | 7 ++++---
+ drivers/net/wireless/mediatek/mt76/mt7603/mcu.c     | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/pci.c     | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/soc.c     | 2 +-
+ 11 files changed, 19 insertions(+), 18 deletions(-)
 
->
-> > > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  sound/soc/fsl/fsl_sai.c | 10 +++++++++-
-> >  sound/soc/fsl/fsl_sai.h |  6 ++++--
-> >  2 files changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> > index 768341608695..d0fa02188b7c 100644
-> > --- a/sound/soc/fsl/fsl_sai.c
-> > +++ b/sound/soc/fsl/fsl_sai.c
-> > @@ -601,7 +601,7 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
-> >
-> > >     regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-> > >                        FSL_SAI_CR3_TRCE_MASK,
-> > > -                      FSL_SAI_CR3_TRCE);
-> > > +                      FSL_SAI_CR3_TRCE(sai->soc_data->dl_mask[tx]);
-> >
-> > >     ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
-> > >                     SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
-> > @@ -887,6 +887,14 @@ static int fsl_sai_probe(struct platform_device *pdev)
-> > >             }
-> > >     }
-> >
-> > > +   /* active data lines mask for TX/RX, defaults to 1 (only the first
-> > > +    * data line is enabled
-> > +      */
->
-> Comment style not in line with Linux coding style.
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c b/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c
+index 58e68fbdbf75..7a41cdf1c4ae 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/beacon.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include "mt7603.h"
+ 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/core.c b/drivers/net/wireless/mediatek/mt76/mt7603/core.c
+index e7ee58e3379c..e5af4f3389cc 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/core.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/core.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include "mt7603.h"
+ 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7603/debugfs.c
+index a1bc3103cbe9..5942fe76c6e9 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/debugfs.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/debugfs.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include "mt7603.h"
+ 
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
+index 58dc511f93c5..79dc3b97dfe8 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include "mt7603.h"
+ #include "mac.h"
+@@ -63,7 +63,7 @@ mt7603_rx_loopback_skb(struct mt7603_dev *dev, struct sk_buff *skb)
+ 	txd[0] = cpu_to_le32(val);
+ 
+ 	sta = container_of(priv, struct ieee80211_sta, drv_priv);
+-	hdr = (struct ieee80211_hdr *) &skb->data[MT_TXD_SIZE];
++	hdr = (struct ieee80211_hdr *)&skb->data[MT_TXD_SIZE];
+ 	tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
+ 	ieee80211_sta_set_buffered(sta, tid, true);
+ 
+@@ -181,7 +181,8 @@ int mt7603_dma_init(struct mt7603_dev *dev)
+ 	init_waitqueue_head(&dev->mt76.mmio.mcu.wait);
+ 	skb_queue_head_init(&dev->mt76.mmio.mcu.res_q);
+ 
+-	tasklet_init(&dev->mt76.tx_tasklet, mt7603_tx_tasklet, (unsigned long)dev);
++	tasklet_init(&dev->mt76.tx_tasklet, mt7603_tx_tasklet,
++		     (unsigned long)dev);
+ 
+ 	mt76_clear(dev, MT_WPDMA_GLO_CFG,
+ 		   MT_WPDMA_GLO_CFG_TX_DMA_EN |
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c b/drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c
+index 8c120e4461b0..2b6a4d8a8dc7 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include "mt7603.h"
+ #include "eeprom.h"
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/init.c b/drivers/net/wireless/mediatek/mt76/mt7603/init.c
+index 568e57e1d69c..ad2ccdbe7258 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/init.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/init.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include <linux/etherdevice.h>
+ #include "mt7603.h"
+@@ -506,7 +506,6 @@ mt7603_init_txpower(struct mt7603_dev *dev,
+ 	}
+ }
+ 
+-
+ int mt7603_register_device(struct mt7603_dev *dev)
+ {
+ 	struct mt76_bus_ops *bus_ops;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+index 81fb4276e742..a532676a1175 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include <linux/etherdevice.h>
+ #include <linux/timekeeping.h>
+@@ -644,7 +644,6 @@ void mt7603_wtbl_set_rates(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 
+ 			rates[i].idx--;
+ 		}
+-
+ 	}
+ 
+ 	w9 &= MT_WTBL2_W9_SHORT_GI_20 | MT_WTBL2_W9_SHORT_GI_40 |
+@@ -1017,8 +1016,9 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 			sta->rate_probe = false;
+ 		}
+ 		spin_unlock_bh(&dev->mt76.lock);
+-	} else
++	} else {
+ 		info->status.rates[0] = rs->rates[first_idx / 2];
++	}
+ 	info->status.rates[0].count = 0;
+ 
+ 	for (i = 0, idx = first_idx; count && idx <= last_idx; idx++) {
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/main.c b/drivers/net/wireless/mediatek/mt76/mt7603/main.c
+index d70f42dac923..34dd05a36de9 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/main.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include <linux/etherdevice.h>
+ #include <linux/platform_device.h>
+@@ -399,7 +399,7 @@ mt7603_ps_set_more_data(struct sk_buff *skb)
+ {
+ 	struct ieee80211_hdr *hdr;
+ 
+-	hdr = (struct ieee80211_hdr *) &skb->data[MT_TXD_SIZE];
++	hdr = (struct ieee80211_hdr *)&skb->data[MT_TXD_SIZE];
+ 	hdr->frame_control |= cpu_to_le16(IEEE80211_FCTL_MOREDATA);
+ }
+ 
+@@ -647,7 +647,8 @@ mt7603_set_coverage_class(struct ieee80211_hw *hw, s16 coverage_class)
+ 	mt7603_mac_set_timing(dev);
+ }
+ 
+-static void mt7603_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
++static void mt7603_tx(struct ieee80211_hw *hw,
++		      struct ieee80211_tx_control *control,
+ 		      struct sk_buff *skb)
+ {
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c
+index 343ddc5543c2..02b2bd60d04d 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mcu.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include <linux/firmware.h>
+ #include "mt7603.h"
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/pci.c b/drivers/net/wireless/mediatek/mt76/mt7603/pci.c
+index 4acdbf5d8968..2f2f337e2201 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/pci.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/soc.c b/drivers/net/wireless/mediatek/mt76/mt7603/soc.c
+index b920be1f5718..b7138485844a 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/soc.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/soc.c
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: ISC */
++// SPDX-License-Identifier: ISC
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-- 
+2.18.0
 
-Will fix. Thanks Lucas for review.
-Should be like this, right?
-/*
- * comment
- */
-
-checkpatch.pl warned me only about the end of the comment :).
