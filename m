@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BBDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941E0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D60206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F4E20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999388;
-	bh=OMIEmC5y38l87lwjmF+MWWlsfb57JJMC0HeRUrSKT10=;
+	s=default; t=1563999393;
+	bh=5sL5sNipRlKuOhvsrpXGDhQ+5j45f7ZCdwTRlXdn5II=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OyCZRmw+iBEwnXXqeCbY3OqA3SOIUHXIISK7FnXwEE/I9eSl9ObfKhGNjE8Ae2oZH
-	 C7Wz7E/S4jmlshmpMmJs830ruAmEe1OmuPuWzlMl9jpZvzc7uAUlKssxz/s5XXlmwE
-	 WwC8me/mjsXMrYN9lDAYaoFSTeclKEUV0+jN0kvc=
+	b=BpSDg79voYXXSI1h/APhrN6JYCiZsbBgonp+bou0qilcFFpebvo2gfUQ7VAWxSds7
+	 8jJX2sY6zNFRhOkRki1Et7J1sYF5l/dqtxZcbPMgS5ITNomB9nPzTN4F7HnTrB55rt
+	 O2I6uqVBzutECmi8AyDWeHZNR2AsE4J9jiclWp3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404354AbfGXUQ0 (ORCPT
+        id S2391628AbfGXTvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:16:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388222AbfGXTvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:23 -0400
+        id S2391471AbfGXTvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:51:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01B5220578;
-        Wed, 24 Jul 2019 19:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 659A022ADA;
+        Wed, 24 Jul 2019 19:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997882;
-        bh=OMIEmC5y38l87lwjmF+MWWlsfb57JJMC0HeRUrSKT10=;
+        s=default; t=1563997862;
+        bh=5sL5sNipRlKuOhvsrpXGDhQ+5j45f7ZCdwTRlXdn5II=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jfaoh+1om2ko8e1wtMtwyKKdPAwI1hxN8mMuGa8hrCKgZ4+EMiyLGC/GskYx4ZTH1
-         JP3e/opGaCvukB5EGjyt3lT7Pkul3g4y2Zw/TacBllq1Io3Hib2ifCRrKmQeXXZ49E
-         PFPz+4KF97MFUT0JasODyvdjcI+gUl0tJaTCEeWw=
+        b=mDvyyy1vUoH9ej0MEAiCt3kF672T2Pd0i7Bliq4VzO8+ay+VJSfkMn2eJ5m5XOx3g
+         /0j63NrLW+Zb72/g6FBNQ6UPn2MPdp6Hp1ETO2j1nlgJ25CJArF5WfcPyJAQEcBpqh
+         s/Vq4PXBsaXeYEiRvDQBqIH9+45WpS3/0BWOxTho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Winkowski <walan@marvell.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 177/371] net: mvpp2: prs: Dont override the sign bit in SRAM parser shift
-Date:   Wed, 24 Jul 2019 21:18:49 +0200
-Message-Id: <20190724191738.532830430@linuxfoundation.org>
+Subject: [PATCH 5.1 117/371] spi: fix ctrl->num_chipselect constraint
+Date:   Wed, 24 Jul 2019 21:17:49 +0200
+Message-Id: <20190724191733.628145439@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,44 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ec3ede559956f8ad58db7b57d25ac724bab69e9 ]
+[ Upstream commit f9481b08220d7dc1ff21e296a330ee8b721b44e4 ]
 
-The Header Parser allows identifying various fields in the packet
-headers, used for various kind of filtering and classification
-steps.
+at91sam9g25ek showed the following error at probe:
+atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx)
+for DMA transfers
+atmel_spi: probe of f0000000.spi failed with error -22
 
-This is a re-entrant process, where the offset in the packet header
-depends on the previous lookup results. This offset is represented in
-the SRAM results of the TCAM, as a shift to be operated.
+Commit 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
+moved the calling of spi_get_gpio_descs() after ctrl->dev is set,
+but didn't move the !ctrl->num_chipselect check. When there are
+chip selects in the device tree, the spi-atmel driver lets the
+SPI core discover them when registering the SPI master.
+The ctrl->num_chipselect is thus expected to be set by
+spi_get_gpio_descs().
 
-This shift can be negative in some cases, such as in IPv6 parsing.
+Move the !ctlr->num_chipselect after spi_get_gpio_descs() as it was
+before the aforementioned commit. While touching this block, get rid
+of the explicit comparison with 0 and update the commenting style.
 
-This commit prevents overriding the sign bit when setting the shift
-value, which could cause instabilities when parsing IPv6 flows.
-
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Suggested-by: Alan Winkowski <walan@marvell.com>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-index ae2240074d8e..5692c6087bbb 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-@@ -312,7 +312,8 @@ static void mvpp2_prs_sram_shift_set(struct mvpp2_prs_entry *pe, int shift,
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index a83fcddf1dad..7f6fb383d7a7 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2281,11 +2281,6 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	if (status)
+ 		return status;
+ 
+-	/* even if it's just one always-selected device, there must
+-	 * be at least one chipselect
+-	 */
+-	if (ctlr->num_chipselect == 0)
+-		return -EINVAL;
+ 	if (ctlr->bus_num >= 0) {
+ 		/* devices with a fixed bus num must check-in with the num */
+ 		mutex_lock(&board_lock);
+@@ -2356,6 +2351,13 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		}
  	}
  
- 	/* Set value */
--	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] = shift & MVPP2_PRS_SRAM_SHIFT_MASK;
-+	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] |=
-+		shift & MVPP2_PRS_SRAM_SHIFT_MASK;
- 
- 	/* Reset and set operation */
- 	mvpp2_prs_sram_bits_clear(pe, MVPP2_PRS_SRAM_OP_SEL_SHIFT_OFFS,
++	/*
++	 * Even if it's just one always-selected device, there must
++	 * be at least one chipselect.
++	 */
++	if (!ctlr->num_chipselect)
++		return -EINVAL;
++
+ 	status = device_add(&ctlr->dev);
+ 	if (status < 0) {
+ 		/* free bus id */
 -- 
 2.20.1
 
