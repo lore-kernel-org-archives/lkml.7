@@ -2,363 +2,642 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BE0C76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F163C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2734229F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:42:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GLzeC8O2"
+	by mail.kernel.org (Postfix) with ESMTP id 253B12238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563932566;
+	bh=PWWvvoDYGJhCU6icN3vhpl50qWw7l2eWPVbXo9ps/4w=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=KajZkoYnmSTbyjY/QGhFWSYE9Dyb+zBlVNdeUJEaz/2Sgy2bAoEDxYesaXzcvOVEH
+	 IeIG48Lc6G4I8P6YWIJgnK9ebbmowS/E+/gfBFjTEajQDAjui3zFu/ixG5eqtfXDYu
+	 jqoyyNPmtqLbGamiguZNs5vL3ni/8DzhGF3Zhrlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbfGXBml (ORCPT
+        id S1728559AbfGXBmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:42:41 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:42084 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbfGXBmg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:42:36 -0400
-Received: by mail-pg1-f201.google.com with SMTP id q10so4009560pgi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 18:42:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=SEZs2jCYZVWtwNC2TIXQwixIlhahYNp/FR94S5BAgLI=;
-        b=GLzeC8O2RxI0vi+5KBEE/tj5Pt9sRQLtQpwXGEaiVTr3ksjh9xyVh0hkvPXlX6ghHD
-         LY892stmN/RwLry2XliiTDP72x05E9GeA7Ekd3YRz9qyOx0Gj6EiRMt/r6eHhMHkLTRu
-         HDePkjuNqOMo5HK82ePKcn0UjaUkTiXcDKXBgSCENMQ/scKEF6fRWfWYCgcfxSNVAyMb
-         4+8VwxE2OxutYYs68sJliGL+ZnwiMBa0ObCoTY6mqSxwTRxpds2dXSicjJTGSzm8tO8e
-         jv6nGP+acXMj1JE1h7mjBkFPr2KTds0aAduOscYxCANeN5e0A0FwVbod6jWFJM/FuaMd
-         yniA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=SEZs2jCYZVWtwNC2TIXQwixIlhahYNp/FR94S5BAgLI=;
-        b=bpGqtSQY3mRjqWy5BnTZEjo5grjGssXA/sMRc64exY5uiXw4onWpukSMWRa8Ulom2i
-         9I8KPXzW4JvpdsIV0AyRg0s7Pm4+FgT334Nat8/PG6IQerOGeJ0RZ9ToKix4AWHBbY+9
-         PzU4c/2CDz89I3Ui6vNYWmGQC/ejSORY9IBkHp0NGeyWHvq51UiDBHQgIiO9wXc1URM8
-         CaOiOWYUFuqH3t5mwZz0oP6X1g/VmgfoepWisBBRtfwiVJqt8Is/SqIGSc4ETswSD7zN
-         r3tF9jFrhFrtfNWGxQMxrlhljhF45xPrRGnXLwLok5YuBd1HQJ+RBDzUKt/gc6I9bvWH
-         9Kxg==
-X-Gm-Message-State: APjAAAXcgr6uBqm/x8PnK0BSft9K6O24owUtXpPbM72UuYMNH/2peUQC
-        aF7J2r6JL5hJraOd3go+tXT5SjK77lEphjg=
-X-Google-Smtp-Source: APXvYqx4miufCPfOh/OX7LGdgKZNTHriSMVQIat7T8l+We+el8Wt8FvO5jww/CDSgEBmVa0tGfpT+475WuM2aMU=
-X-Received: by 2002:a63:20a:: with SMTP id 10mr78418083pgc.226.1563932555775;
- Tue, 23 Jul 2019 18:42:35 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 18:42:19 -0700
-In-Reply-To: <20190724014222.110767-1-saravanak@google.com>
-Message-Id: <20190724014222.110767-4-saravanak@google.com>
-Mime-Version: 1.0
-References: <20190724014222.110767-1-saravanak@google.com>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v4 3/5] OPP: Improve required-opps linking
-From:   Saravana Kannan <saravanak@google.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Sibi Sankar <sibis@codeaurora.org>, kernel-team@android.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Jul 2019 21:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728523AbfGXBmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 21:42:39 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB47F2238C;
+        Wed, 24 Jul 2019 01:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563932558;
+        bh=PWWvvoDYGJhCU6icN3vhpl50qWw7l2eWPVbXo9ps/4w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jmRfGLz8fP+YAqscR4J+JdFW8let9SeGnUIhUckoSZekt8Tw8MLgP1L7RMZKnCtG8
+         At/qCwShfU2ttxX/KL8a6750xr96jvizagOsLlHPsturWDqpt6t5rszfiQyCOR8p/x
+         QcSfZdZzqZMKp9P32W+68Yqiy9kVsUexn16QTgIA=
+Date:   Tue, 23 Jul 2019 18:42:36 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     netdev@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 26 open syzbot bugs in "net/xfrm" subsystem
+Message-ID: <20190724014236.GE643@sol.localdomain>
+Mail-Followup-To: netdev@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Su Yanjun <suyj.fnst@cn.fujitsu.com>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the linking of required-opps fails silently if the
-destination OPP table hasn't been added before the source OPP table is
-added. This puts an unnecessary requirement that the destination table
-be added before the source table is added.
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-In reality, the destination table is needed only when we try to
-translate from source OPP to destination OPP. So, instead of
-completely failing, retry linking the tables when the translation is
-attempted.
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 26 of them as possibly being bugs in the "net/xfrm" subsystem.  I've
+listed these reports below, sorted by an algorithm that tries to list first the
+reports most likely to be still valid, important, and actionable.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/opp/core.c |  30 ++++++++++----
- drivers/opp/of.c   | 101 ++++++++++++++++++++++++---------------------
- drivers/opp/opp.h  |   5 +++
- 3 files changed, 80 insertions(+), 56 deletions(-)
+Of these 26 bugs, 1 was seen in mainline in the last week.
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 5460b7da110e..01c71d145ec7 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -706,6 +706,9 @@ static int _set_required_opps(struct device *dev,
- 	if (!required_opp_tables)
- 		return 0;
- 
-+	if (!_of_lazy_link_required_tables(opp_table))
-+		return -EPROBE_DEFER;
-+
- 	/* Single genpd case */
- 	if (!genpd_virt_devs && required_opp_tables[0]->is_genpd) {
- 		pstate = likely(opp) ? opp->required_opps[0]->pstate : 0;
-@@ -726,11 +729,16 @@ static int _set_required_opps(struct device *dev,
- 	mutex_lock(&opp_table->genpd_virt_dev_lock);
- 
- 	for (i = 0; i < opp_table->required_opp_count; i++) {
--		pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
--
- 		if (!genpd_virt_devs[i])
- 			continue;
- 
-+		if (!opp->required_opps[i]) {
-+			ret = -ENODEV;
-+			break;
-+		}
-+
-+		pstate = likely(opp) ? opp->required_opps[i]->pstate : 0;
-+
- 		ret = dev_pm_genpd_set_performance_state(genpd_virt_devs[i], pstate);
- 		if (ret) {
- 			dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
-@@ -1906,8 +1914,11 @@ struct dev_pm_opp *dev_pm_opp_xlate_required_opp(struct opp_table *src_table,
- 	if (!src_table || !dst_table || !src_opp)
- 		return NULL;
- 
-+	_of_lazy_link_required_tables(src_table);
-+
- 	for (i = 0; i < src_table->required_opp_count; i++) {
--		if (src_table->required_opp_tables[i]->np == dst_table->np)
-+		if (src_table->required_opp_tables[i]
-+		    && src_table->required_opp_tables[i]->np == dst_table->np)
- 			break;
- 	}
- 
-@@ -1970,6 +1981,8 @@ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table,
- 	if (!src_table->required_opp_count)
- 		return pstate;
- 
-+	_of_lazy_link_required_tables(src_table);
-+
- 	for (i = 0; i < src_table->required_opp_count; i++) {
- 		if (src_table->required_opp_tables[i]->np == dst_table->np)
- 			break;
-@@ -1985,15 +1998,16 @@ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table,
- 
- 	list_for_each_entry(opp, &src_table->opp_list, node) {
- 		if (opp->pstate == pstate) {
--			dest_pstate = opp->required_opps[i]->pstate;
--			goto unlock;
-+			if (opp->required_opps[i])
-+				dest_pstate = opp->required_opps[i]->pstate;
-+			break;
- 		}
- 	}
- 
--	pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__, src_table,
--	       dst_table);
-+	if (dest_pstate < 0)
-+		pr_err("%s: Couldn't find matching OPP (%p: %p)\n", __func__,
-+		       src_table, dst_table);
- 
--unlock:
- 	mutex_unlock(&src_table->lock);
- 
- 	return dest_pstate;
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index ff88eaf66b56..1f2860b2d6e5 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -145,7 +145,7 @@ static void _opp_table_free_required_tables(struct opp_table *opp_table)
- 
- 	for (i = 0; i < opp_table->required_opp_count; i++) {
- 		if (IS_ERR_OR_NULL(required_opp_tables[i]))
--			break;
-+			continue;
- 
- 		dev_pm_opp_put_opp_table(required_opp_tables[i]);
- 	}
-@@ -165,8 +165,8 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
- 					     struct device_node *opp_np)
- {
- 	struct opp_table **required_opp_tables;
--	struct device_node *required_np, *np;
--	int count, i;
-+	struct device_node *np;
-+	int count;
- 
- 	/* Traversing the first OPP node is all we need */
- 	np = of_get_next_available_child(opp_np, NULL);
-@@ -176,35 +176,65 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
- 	}
- 
- 	count = of_count_phandle_with_args(np, "required-opps", NULL);
-+	of_node_put(np);
- 	if (!count)
--		goto put_np;
-+		return;
- 
- 	required_opp_tables = kcalloc(count, sizeof(*required_opp_tables),
- 				      GFP_KERNEL);
- 	if (!required_opp_tables)
--		goto put_np;
-+		return;
- 
- 	opp_table->required_opp_tables = required_opp_tables;
- 	opp_table->required_opp_count = count;
-+}
-+
-+/*
-+ * Try to link all required tables and return true if all of them have been
-+ * linked. Otherwise, return false.
-+ */
-+bool _of_lazy_link_required_tables(struct opp_table *src)
-+{
-+	struct dev_pm_opp *src_opp, *tmp_opp;
-+	struct opp_table *req_table;
-+	struct device_node *req_np;
-+	int i, num_linked = 0;
- 
--	for (i = 0; i < count; i++) {
--		required_np = of_parse_required_opp(np, i);
--		if (!required_np)
--			goto free_required_tables;
-+	mutex_lock(&src->lock);
- 
--		required_opp_tables[i] = _find_table_of_opp_np(required_np);
--		of_node_put(required_np);
-+	if (list_empty(&src->opp_list))
-+		goto out;
- 
--		if (IS_ERR(required_opp_tables[i]))
--			goto free_required_tables;
--	}
-+	src_opp = list_first_entry(&src->opp_list, struct dev_pm_opp, node);
- 
--	goto put_np;
-+	for (i = 0; i < src->required_opp_count; i++) {
-+		if (src->required_opp_tables[i]) {
-+			num_linked++;
-+			continue;
-+		}
- 
--free_required_tables:
--	_opp_table_free_required_tables(opp_table);
--put_np:
--	of_node_put(np);
-+		req_np = of_parse_required_opp(src_opp->np, i);
-+		if (!req_np)
-+			continue;
-+
-+		req_table = _find_table_of_opp_np(req_np);
-+		of_node_put(req_np);
-+		if (!req_table)
-+			continue;
-+
-+		src->required_opp_tables[i] = req_table;
-+		list_for_each_entry(tmp_opp, &src->opp_list, node) {
-+			req_np = of_parse_required_opp(tmp_opp->np, i);
-+			tmp_opp->required_opps[i] = _find_opp_of_np(req_table,
-+								    req_np);
-+			of_node_put(req_np);
-+		}
-+		num_linked++;
-+	}
-+
-+out:
-+	mutex_unlock(&src->lock);
-+	return num_linked == src->required_opp_count;
- }
- 
- void _of_init_opp_table(struct opp_table *opp_table, struct device *dev,
-@@ -267,7 +297,7 @@ void _of_opp_free_required_opps(struct opp_table *opp_table,
- 
- 	for (i = 0; i < opp_table->required_opp_count; i++) {
- 		if (!required_opps[i])
--			break;
-+			continue;
- 
- 		/* Put the reference back */
- 		dev_pm_opp_put(required_opps[i]);
-@@ -282,9 +312,7 @@ static int _of_opp_alloc_required_opps(struct opp_table *opp_table,
- 				       struct dev_pm_opp *opp)
- {
- 	struct dev_pm_opp **required_opps;
--	struct opp_table *required_table;
--	struct device_node *np;
--	int i, ret, count = opp_table->required_opp_count;
-+	int count = opp_table->required_opp_count;
- 
- 	if (!count)
- 		return 0;
-@@ -295,32 +323,7 @@ static int _of_opp_alloc_required_opps(struct opp_table *opp_table,
- 
- 	opp->required_opps = required_opps;
- 
--	for (i = 0; i < count; i++) {
--		required_table = opp_table->required_opp_tables[i];
--
--		np = of_parse_required_opp(opp->np, i);
--		if (unlikely(!np)) {
--			ret = -ENODEV;
--			goto free_required_opps;
--		}
--
--		required_opps[i] = _find_opp_of_np(required_table, np);
--		of_node_put(np);
--
--		if (!required_opps[i]) {
--			pr_err("%s: Unable to find required OPP node: %pOF (%d)\n",
--			       __func__, opp->np, i);
--			ret = -ENODEV;
--			goto free_required_opps;
--		}
--	}
--
- 	return 0;
--
--free_required_opps:
--	_of_opp_free_required_opps(opp_table, opp);
--
--	return ret;
- }
- 
- static bool _opp_is_supported(struct device *dev, struct opp_table *opp_table,
-@@ -687,6 +690,8 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
- 	if (pstate_count)
- 		opp_table->genpd_performance_state = true;
- 
-+	_of_lazy_link_required_tables(opp_table);
-+
- 	opp_table->parsed_static_opps = true;
- 
- 	return 0;
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 01a500e2c40a..77e8394fd0fe 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -223,12 +223,17 @@ void _put_opp_list_kref(struct opp_table *opp_table);
- void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index);
- void _of_clear_opp_table(struct opp_table *opp_table);
- struct opp_table *_managed_opp(struct device *dev, int index);
-+bool _of_lazy_link_required_tables(struct opp_table *src);
- void _of_opp_free_required_opps(struct opp_table *opp_table,
- 				struct dev_pm_opp *opp);
- #else
- static inline void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index) {}
- static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
- static inline struct opp_table *_managed_opp(struct device *dev, int index) { return NULL; }
-+bool _of_lazy_link_required_tables(struct opp_table *src)
-+{
-+	return true;
-+}
- static inline void _of_opp_free_required_opps(struct opp_table *opp_table,
- 					      struct dev_pm_opp *opp) {}
- #endif
--- 
-2.22.0.709.g102302147b-goog
+Of these 26 bugs, 4 were bisected to commits from the following person:
+
+	Su Yanjun <suyj.fnst@cn.fujitsu.com>
+
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
+
+If you believe I misattributed a bug to the "net/xfrm" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
+
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              WARNING in __vunmap
+Last occurred:      2 days ago
+Reported:           157 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=8c0c68130548c7ec737d9ccc018a7589a768c0a9
+Original thread:    https://lkml.kernel.org/lkml/00000000000092839d0581fd74ad@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+5ec9bb042ddfe9644773@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000092839d0581fd74ad@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in _decode_session4
+Last occurred:      480 days ago
+Reported:           480 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=341e1a2a55b389e54cc07624ed40eb3ecca577db
+Original thread:    https://lkml.kernel.org/lkml/001a113fe6d081698f0568a5dcac@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+a7db9083ed4017ba4423@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a113fe6d081698f0568a5dcac@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in _decode_session6
+Last occurred:      252 days ago
+Reported:           320 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ecf3e152769bdad66c297986d83561adea6ae155
+Original thread:    https://lkml.kernel.org/lkml/0000000000008d5a360575368e31@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e8c1d30881266e47eb33@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000008d5a360575368e31@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Write in xfrm_policy_flush
+Last occurred:      26 days ago
+Reported:           26 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9018a3b2d6605dec5a0e145825918d2b5826d227
+Original thread:    https://lkml.kernel.org/lkml/0000000000007d52ea058c489235@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2daeb7ae5e8245095f65@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007d52ea058c489235@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: uninit-value in xfrm_state_find
+Last occurred:      198 days ago
+Reported:           403 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=4d9dc4ec10e0d7b004645eadc3e99bbc2af67a74
+Original thread:    https://lkml.kernel.org/lkml/0000000000001f31eb056ea92fcb@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 1 reply, 403 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+131cd4c6d21724b99a26@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000001f31eb056ea92fcb@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in xfrm_sk_policy_lookup (2)
+Last occurred:      23 days ago
+Reported:           91 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=23b4b8906a588cf0a27f879e53827067bfc5f197
+Original thread:    https://lkml.kernel.org/lkml/000000000000282a870587350077@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+edb62c973ff9f07e408d@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000282a870587350077@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in get_work_pool
+Last occurred:      104 days ago
+Reported:           507 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=849bd5710811bd19cad5b2f32ae863cfd6fe1c58
+Original thread:    https://lkml.kernel.org/lkml/001a1149c7ba03500d05667a1d4f@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+880087058dbc131a2703@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a1149c7ba03500d05667a1d4f@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: uninit-value in _decode_session6
+Last occurred:      267 days ago
+Reported:           471 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=7202296b7d7edf5d61e8c1f2c113d36ecd493a6a
+Original thread:    https://lkml.kernel.org/lkml/000000000000311cdd0569510cc7@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2974b85346f85b586f4d@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000311cdd0569510cc7@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in _decode_session6 (2)
+Last occurred:      245 days ago
+Reported:           266 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=afc5098c1a0cb7cda8aa7fdb402153ff24fcf31c
+Original thread:    https://lkml.kernel.org/lkml/000000000000c4ba820579737025@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+The original thread for this bug received 1 reply, 124 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+240f9766d6be3d69431e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000c4ba820579737025@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: uninit-value in _decode_session4
+Last occurred:      194 days ago
+Reported:           450 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=31621ad0bdf6fd9c055769fb33f56423d7c6545b
+Original thread:    https://lkml.kernel.org/lkml/000000000000e4758d056aff4604@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e7fec512bc2eb4ae0781@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000e4758d056aff4604@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in xfrm_policy_insert
+Last occurred:      239 days ago
+Reported:           524 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=17486feafe3890260729f5fe75a25f8d865bdd5d
+Original thread:    https://lkml.kernel.org/lkml/001a11405628bb07410565279f4a@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+5cfc132a76d844973259@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a11405628bb07410565279f4a@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: stack-out-of-bounds Read in xfrm_state_find (5)
+Last occurred:      175 days ago
+Reported:           477 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=44fa54548362cb84e26da7c1bbd356c86c54f36d
+Original thread:    https://lkml.kernel.org/lkml/000000000000a5390a0568d7508a@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+d90468452f685a0b28eb@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000a5390a0568d7508a@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Write in __xfrm_policy_unlink (2)
+Last occurred:      22 days ago
+Reported:           68 days ago
+Branches:           net-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ceba0c97b0c5a5803c8fa3a7c100edbca4faa06f
+Original thread:    https://lkml.kernel.org/lkml/000000000000cd5fdf0588fed11c@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+0025447b4cb6f208558f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000cd5fdf0588fed11c@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in pppol2tp_sendmsg
+Last occurred:      26 days ago
+Reported:           315 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a7452f862c05dd695baf590d4f164bd089e636d8
+Original thread:    https://lkml.kernel.org/lkml/000000000000b8e87005759244ec@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+0925ea3f5745e9005733@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000b8e87005759244ec@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in xfrm_policy_fini
+Last occurred:      81 days ago
+Reported:           337 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=c92d61bdd289b3550d8dbd6a970c2f34995a22b4
+Original thread:    https://lkml.kernel.org/lkml/000000000000c5745b0573d62311@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+9bce6db6c82f06b85d8b@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000c5745b0573d62311@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: suspicious RCU usage in xfrm_get_sadinfo
+Last occurred:      125 days ago
+Reported:           126 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=106319f5d94ac049166744eee79e455ce4d0435c
+Original thread:    https://lkml.kernel.org/lkml/0000000000009c1aca058474a076@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit f10e0010fae8174dc20bdc872bcaa85baa925cb7
+	Author: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+	Date:   Thu Mar 7 01:54:08 2019 +0000
+
+	  net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2792672c6a63f1dc867c@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000009c1aca058474a076@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: suspicious RCU usage in xfrm_get_spdinfo
+Last occurred:      124 days ago
+Reported:           126 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=4db14afc80049c484903a7cf4d36d9cb1618469f
+Original thread:    https://lkml.kernel.org/lkml/0000000000008a14a5058474a025@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit f10e0010fae8174dc20bdc872bcaa85baa925cb7
+	Author: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+	Date:   Thu Mar 7 01:54:08 2019 +0000
+
+	  net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+bfb3cbc2e9467b566c8b@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000008a14a5058474a025@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in igmp_ifc_timer_expire
+Last occurred:      59 days ago
+Reported:           204 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=330ce4f7626354cc6444c457c9a5e82d8a8c5055
+Original thread:    https://lkml.kernel.org/lkml/000000000000a26437057e4915ff@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000a26437057e4915ff@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: suspicious RCU usage in xfrm_alloc_userspi
+Last occurred:      124 days ago
+Reported:           126 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=cf86490d75109a7648fc749a4c9a8d59fabe398d
+Original thread:    https://lkml.kernel.org/lkml/0000000000007783a2058474a0b9@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit f10e0010fae8174dc20bdc872bcaa85baa925cb7
+	Author: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+	Date:   Thu Mar 7 01:54:08 2019 +0000
+
+	  net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
+
+The original thread for this bug received 2 replies; the last was 126 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+59752237f7ab21c3f3c3@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000007783a2058474a0b9@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: suspicious RCU usage in xfrm_get_policy
+Last occurred:      126 days ago
+Reported:           126 days ago
+Branches:           linux-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=02bde0600a225e8efa31bdce2e7f1b822542fef1
+Original thread:    https://lkml.kernel.org/lkml/0000000000009ed0ce058474a0c1@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+This bug was bisected to:
+
+	commit f10e0010fae8174dc20bdc872bcaa85baa925cb7
+	Author: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+	Date:   Thu Mar 7 01:54:08 2019 +0000
+
+	  net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+670c11fba80a72c50a6a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000009ed0ce058474a0c1@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in __vunmap
+Last occurred:      158 days ago
+Reported:           157 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=7151fc2080bde02d5f074c3e7fde2684cd514d11
+Original thread:    https://lkml.kernel.org/lkml/0000000000009a0bd40581fd747b@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+39d3a56f2f717d237007@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000009a0bd40581fd747b@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in xfrm_init_replay
+Last occurred:      494 days ago
+Reported:           494 days ago
+Branches:           net-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=63c86d9f895ad63bb85474b7d0cb04940da24395
+Original thread:    https://lkml.kernel.org/lkml/001a113ea6d880f10e05679064d3@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+f14c1ee2dbd16782dcc2@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a113ea6d880f10e05679064d3@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in xfrm_lookup_with_ifid
+Last occurred:      100 days ago
+Reported:           134 days ago
+Branches:           net and net-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=c6085af89fc64682ed88b083355c296e2f530a90
+Original thread:    https://lkml.kernel.org/lkml/000000000000973c550583cb8562@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2a7531cd068ddc9932f9@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000973c550583cb8562@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in __xfrm_policy_check
+Last occurred:      147 days ago
+Reported:           147 days ago
+Branches:           net
+Dashboard link:     https://syzkaller.appspot.com/bug?id=7ebcd3969f71317db080af582c18c5456c674662
+Original thread:    https://lkml.kernel.org/lkml/000000000000f41ad40582cc632d@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+4ea28a8b817ee28bf324@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000f41ad40582cc632d@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in xfrmi_rcv_cb
+Last occurred:      145 days ago
+Reported:           313 days ago
+Branches:           net and net-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=970bf3d270407aea29acd9fe1676d99371f07e5a
+Original thread:    https://lkml.kernel.org/lkml/000000000000defd200575c0b7dd@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+af91688fec2b033aa620@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000defd200575c0b7dd@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: rcu detected stall in inet_dgram_connect
+Last occurred:      175 days ago
+Reported:           204 days ago
+Branches:           net and net-next
+Dashboard link:     https://syzkaller.appspot.com/bug?id=efb40f930f737583bc3d4c047300e52d2dbac017
+Original thread:    https://lkml.kernel.org/lkml/0000000000009f9349057e4915b4@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+94683b47a87718b5dff7@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000009f9349057e4915b4@google.com
 
