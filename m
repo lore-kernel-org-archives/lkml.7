@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300DBC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B426C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F109A2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4ADA2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998913;
-	bh=n6jo13Xzf1F/u/wDvFxu1/huCHM/JnEWMVmTrCAzpu8=;
+	s=default; t=1563998917;
+	bh=DQtB6ZPjk3Dv4VIyCVItFwygJ3J3xRlKQFFSM/g2vtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NfOQxfm84jPe97BG1A0B/BHSpyTxHcbuowaNQYLLxzoApzXwlbvaYl2Z0e2tMX2M2
-	 RFPzqeslVl7URQ7k4MRk1+t8WOXlQ40Z16gCa6e8X/CEJEHLV5aqyKoghzHxEBkd7G
-	 gMTA7mti+X46ocKWsCLG/7KBdhMrxgHdmXlPvI2s=
+	b=YTMG3rad0eoBGc/G3y+1TXdTAo4TGR1GvHQxp71s/yn0CrAgwonoocSefJ7sOTRbq
+	 a8Asxr+9LMGoL3UGXGDrUoJjWMLOZtS9PtCmgThkNLd23Z2RjCaDVebumUsu+WDQ9b
+	 kIO26fhA8CAq2oXmpiVwDYF8qGe2J7V2a0ltxfh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392598AbfGXUI0 (ORCPT
+        id S2405453AbfGXUCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405489AbfGXUCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:02:21 -0400
+        id S2405025AbfGXUCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:02:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D6B214AF;
-        Wed, 24 Jul 2019 20:02:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3C22147A;
+        Wed, 24 Jul 2019 20:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998540;
-        bh=n6jo13Xzf1F/u/wDvFxu1/huCHM/JnEWMVmTrCAzpu8=;
+        s=default; t=1563998525;
+        bh=DQtB6ZPjk3Dv4VIyCVItFwygJ3J3xRlKQFFSM/g2vtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z/D0k9a/dRqsP/pi+0PfNUCt8mBJVWHesHgmgXh20tYHG+ZdhF0ELl+L+1bPTlQlf
-         /ergPE3OsHzN6KKWxHM9enPj7JGEKWix70KuZYIZm5FnjS8SgSuhx1W7tEInWZM3q5
-         YoxzW9AQ1mlPAozCvqbXY2c08EcQSYT2TJJp/jwQ=
+        b=s3B0ZtG2ifHn0KHzleSJmbpl2haQ4WBzpk2IRrLQ1GNS4I2DCLMwRHdO2YgdwlszB
+         b2Sl3aUTGgoiRjkzGQheVvnPo/sFc8t671x/BLUJE6omwrizB4LfjX1zNO2wAqJX87
+         QUYN6ETMlX2+5yBLrTWqOxn/dD54M8Qk/O2DguRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chandan Rajendra <chandan@linux.ibm.com>,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 029/271] fscrypt: clean up some BUG_ON()s in block encryption/decryption
-Date:   Wed, 24 Jul 2019 21:18:18 +0200
-Message-Id: <20190724191657.682862679@linuxfoundation.org>
+Subject: [PATCH 4.19 024/271] qed: Set the doorbell address correctly
+Date:   Wed, 24 Jul 2019 21:18:13 +0200
+Message-Id: <20190724191657.280828166@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,67 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eeacfdc68a104967162dfcba60f53f6f5b62a334 ]
+[ Upstream commit 8366d520019f366fabd6c7a13032bdcd837e18d4 ]
 
-Replace some BUG_ON()s with WARN_ON_ONCE() and returning an error code,
-and move the check for len divisible by FS_CRYPTO_BLOCK_SIZE into
-fscrypt_crypt_block() so that it's done for both encryption and
-decryption, not just encryption.
+In 100g mode the doorbell bar is united for both engines. Set
+the correct offset in the hwfn so that the doorbell returned
+for RoCE is in the affined hwfn.
 
-Reviewed-by: Chandan Rajendra <chandan@linux.ibm.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Denis Bolotin <denis.bolotin@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/crypto/crypto.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c  | 29 ++++++++++++++--------
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c |  2 +-
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-index 0f46cf550907..c83ddff3ff4a 100644
---- a/fs/crypto/crypto.c
-+++ b/fs/crypto/crypto.c
-@@ -149,7 +149,10 @@ int fscrypt_do_page_crypto(const struct inode *inode, fscrypt_direction_t rw,
- 	struct crypto_skcipher *tfm = ci->ci_ctfm;
- 	int res = 0;
- 
--	BUG_ON(len == 0);
-+	if (WARN_ON_ONCE(len <= 0))
-+		return -EINVAL;
-+	if (WARN_ON_ONCE(len % FS_CRYPTO_BLOCK_SIZE != 0))
-+		return -EINVAL;
- 
- 	BUILD_BUG_ON(sizeof(iv) != FS_IV_SIZE);
- 	BUILD_BUG_ON(AES_BLOCK_SIZE != FS_IV_SIZE);
-@@ -241,8 +244,6 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
- 	struct page *ciphertext_page = page;
- 	int err;
- 
--	BUG_ON(len % FS_CRYPTO_BLOCK_SIZE != 0);
--
- 	if (inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES) {
- 		/* with inplace-encryption we just encrypt the page */
- 		err = fscrypt_do_page_crypto(inode, FS_ENCRYPT, lblk_num, page,
-@@ -254,7 +255,8 @@ struct page *fscrypt_encrypt_page(const struct inode *inode,
- 		return ciphertext_page;
- 	}
- 
--	BUG_ON(!PageLocked(page));
-+	if (WARN_ON_ONCE(!PageLocked(page)))
-+		return ERR_PTR(-EINVAL);
- 
- 	ctx = fscrypt_get_ctx(inode, gfp_flags);
- 	if (IS_ERR(ctx))
-@@ -302,8 +304,9 @@ EXPORT_SYMBOL(fscrypt_encrypt_page);
- int fscrypt_decrypt_page(const struct inode *inode, struct page *page,
- 			unsigned int len, unsigned int offs, u64 lblk_num)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index 4dd82a1612aa..a6a9688db307 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -3096,6 +3096,7 @@ static void qed_nvm_info_free(struct qed_hwfn *p_hwfn)
+ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 				 void __iomem *p_regview,
+ 				 void __iomem *p_doorbells,
++				 u64 db_phys_addr,
+ 				 enum qed_pci_personality personality)
  {
--	if (!(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES))
--		BUG_ON(!PageLocked(page));
-+	if (WARN_ON_ONCE(!PageLocked(page) &&
-+			 !(inode->i_sb->s_cop->flags & FS_CFLG_OWN_PAGES)))
-+		return -EINVAL;
+ 	int rc = 0;
+@@ -3103,6 +3104,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 	/* Split PCI bars evenly between hwfns */
+ 	p_hwfn->regview = p_regview;
+ 	p_hwfn->doorbells = p_doorbells;
++	p_hwfn->db_phys_addr = db_phys_addr;
  
- 	return fscrypt_do_page_crypto(inode, FS_DECRYPT, lblk_num, page, page,
- 				      len, offs, GFP_NOFS);
+ 	if (IS_VF(p_hwfn->cdev))
+ 		return qed_vf_hw_prepare(p_hwfn);
+@@ -3198,7 +3200,9 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the first hwfn - will learn number of hwfns */
+ 	rc = qed_hw_prepare_single(p_hwfn,
+ 				   cdev->regview,
+-				   cdev->doorbells, personality);
++				   cdev->doorbells,
++				   cdev->db_phys_addr,
++				   personality);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -3207,22 +3211,25 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the rest of the hwfns */
+ 	if (cdev->num_hwfns > 1) {
+ 		void __iomem *p_regview, *p_doorbell;
+-		u8 __iomem *addr;
++		u64 db_phys_addr;
++		u32 offset;
+ 
+ 		/* adjust bar offset for second engine */
+-		addr = cdev->regview +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_0) / 2;
+-		p_regview = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_0) / 2;
++		p_regview = cdev->regview + offset;
+ 
+-		addr = cdev->doorbells +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_1) / 2;
+-		p_doorbell = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_1) / 2;
++
++		p_doorbell = cdev->doorbells + offset;
++
++		db_phys_addr = cdev->db_phys_addr + offset;
+ 
+ 		/* prepare second hw function */
+ 		rc = qed_hw_prepare_single(&cdev->hwfns[1], p_regview,
+-					   p_doorbell, personality);
++					   p_doorbell, db_phys_addr,
++					   personality);
+ 
+ 		/* in case of error, need to free the previously
+ 		 * initiliazed hwfn 0.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+index 7873d6dfd91f..13802b825d65 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+@@ -803,7 +803,7 @@ static int qed_rdma_add_user(void *rdma_cxt,
+ 				     dpi_start_offset +
+ 				     ((out_params->dpi) * p_hwfn->dpi_size));
+ 
+-	out_params->dpi_phys_addr = p_hwfn->cdev->db_phys_addr +
++	out_params->dpi_phys_addr = p_hwfn->db_phys_addr +
+ 				    dpi_start_offset +
+ 				    ((out_params->dpi) * p_hwfn->dpi_size);
+ 
 -- 
 2.20.1
 
