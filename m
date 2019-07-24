@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F470C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A26C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333652238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB8D2238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996849;
-	bh=Jp7I9JI9gHKzOWH5RRf8+aoRdq0+E3CVjbZ3MX7sVLQ=;
+	s=default; t=1563996852;
+	bh=OeIkqK8Y0XklASlo+vRxyTqQThrrZsRCUX3HADXzfXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wd/WlevRItUAuCr1zsxzI3vmrPGYKfdTNKoJibHDJdOk7CLIwel/1xW2+SvZcTyfr
-	 0Xb+pGhBcW268iiiMJkTELv0yZO6InxwQBAzPGt8w9RHS+TZMeB3/bKyfxjU9W+T03
-	 3iOz8U1z/wSbW8AM1MpaSohMEFaX3ALpHTcpNJcA=
+	b=FnhQNr8phBd9aFqj5GLdxOjIQ7bF3W6IHHrKT8XmNUVbNMM5QvRncWV/2zsqkoFNZ
+	 /Ab/mQdzlCYGtyD6f2kAXpfXocgan0t2bSyIokBbTLgYx3Lz5+gM8UrMxqXDzbEo/e
+	 yG7BJckdG1YJFELa0624cxMoWy5PucrUMPgFSvM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389059AbfGXTeH (ORCPT
+        id S2388628AbfGXTeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:34:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56246 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:34:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389042AbfGXTeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:03 -0400
+        id S2389054AbfGXTeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:34:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 055B42238C;
-        Wed, 24 Jul 2019 19:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA2A21951;
+        Wed, 24 Jul 2019 19:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996843;
-        bh=Jp7I9JI9gHKzOWH5RRf8+aoRdq0+E3CVjbZ3MX7sVLQ=;
+        s=default; t=1563996847;
+        bh=OeIkqK8Y0XklASlo+vRxyTqQThrrZsRCUX3HADXzfXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2aJecCK6a/Q89sK5vhv2ENUSeh3Z3ZjImUBz8E4kTVYdbPx31FcDZC725r52Gpf8G
-         eqlgLoMxTDMa4V2BwlO6wGDWWZPaoPIJZ/XFeti1lO+rUReIWycKFUbe2OvrWrIrF0
-         IjmXjQACqt0SRTQvZUouYM46kLuGvxyI0YF8jplU=
+        b=HsbHgn8Ny2K4b/ETNJ9NZ5fEkQYZddupRiW/vxgD2zFd1YHLAGGAG6fo5Rv/xQtVp
+         iEIPc7nSH/7NK28dNx1+bEyxDlD+eITXeWiJFYvMMleeaPkOPq2O44V34tp37oIyNa
+         hvzxpxboWtgkwbeQrPP9QGtKPjdEwmyjf7IiXgHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 236/413] gtp: add missing gtp_encap_disable_sock() in gtp_encap_enable()
-Date:   Wed, 24 Jul 2019 21:18:47 +0200
-Message-Id: <20190724191752.167045447@linuxfoundation.org>
+Subject: [PATCH 5.2 210/413] perf stat: Make metric event lookup more robust
+Date:   Wed, 24 Jul 2019 21:18:21 +0200
+Message-Id: <20190724191749.531014367@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,39 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e30155fd23c9c141cbe7d99b786e10a83a328837 ]
+[ Upstream commit 145c407c808352acd625be793396fd4f33c794f8 ]
 
-If an invalid role is sent from user space, gtp_encap_enable() will fail.
-Then, it should call gtp_encap_disable_sock() but current code doesn't.
-It makes memory leak.
+After setting up metric groups through the event parser, the metricgroup
+code looks them up again in the event list.
 
-Fixes: 91ed81f9abc7 ("gtp: support SGSN-side tunnels")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Make sure we only look up events that haven't been used by some other
+metric. The data structures currently cannot handle more than one metric
+per event. This avoids problems with multiple events partially
+overlapping.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190624193711.35241-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index fc45b749db46..01fc51892e48 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -843,8 +843,13 @@ static int gtp_encap_enable(struct gtp_dev *gtp, struct nlattr *data[])
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 83d8094be4fe..e545e2a8ae71 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -303,7 +303,7 @@ static struct perf_evsel *perf_stat__find_event(struct perf_evlist *evsel_list,
+ 	struct perf_evsel *c2;
  
- 	if (data[IFLA_GTP_ROLE]) {
- 		role = nla_get_u32(data[IFLA_GTP_ROLE]);
--		if (role > GTP_ROLE_SGSN)
-+		if (role > GTP_ROLE_SGSN) {
-+			if (sk0)
-+				gtp_encap_disable_sock(sk0);
-+			if (sk1u)
-+				gtp_encap_disable_sock(sk1u);
- 			return -EINVAL;
-+		}
+ 	evlist__for_each_entry (evsel_list, c2) {
+-		if (!strcasecmp(c2->name, name))
++		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
+ 			return c2;
  	}
- 
- 	gtp->sk0 = sk0;
+ 	return NULL;
+@@ -342,7 +342,8 @@ void perf_stat__collect_metric_expr(struct perf_evlist *evsel_list)
+ 			if (leader) {
+ 				/* Search in group */
+ 				for_each_group_member (oc, leader) {
+-					if (!strcasecmp(oc->name, metric_names[i])) {
++					if (!strcasecmp(oc->name, metric_names[i]) &&
++						!oc->collect_stat) {
+ 						found = true;
+ 						break;
+ 					}
 -- 
 2.20.1
 
