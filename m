@@ -2,236 +2,397 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B646FC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D2DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A1D20840
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEF52189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563989723;
-	bh=qxfrAz/oCN+LYLiWGVCs207H4awBoTJEDskVIhTJOdw=;
-	h=Date:From:Cc:Subject:To:List-ID:From;
-	b=YA6RYPytNaTotLZGJZyd/Z6nJPfASxLjns+53JGBmANqC/aacOM7Dfghk+gmVGxDT
-	 3TVsd8U+7v5FQkpJZg1kNnMvrjMAQAG+9qFGLx3p3NAhsfBIIEIDVH4ApB6eBXbE3h
-	 ZE5MZ1LV/xBmuXRfchW0Eq7O12yWME97ydTNh5QM=
+	s=default; t=1563989749;
+	bh=G4HOoVGuAJ6lKUV5wkSPaAg7GoRucYXTZk1gDZ+7big=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=umH2rOQbOxISC1DVE0WMCz9nxZLoL36GNhk9znun/NlW+hpHsfnN1RLctoCgvSN8F
+	 tu6i9d5W4KZ5lPFHEZnAcbDST9U56yVRSN9cqaQUxipdINN5hwUbm7hXK7oCfR9PB+
+	 eVbw8j2XSYHp1IYQLktXnSfLct47QlO1+7N64lbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfGXRfW (ORCPT
+        id S2387554AbfGXRfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:35:22 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37205 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbfGXRfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:35:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so21295889pfa.4;
-        Wed, 24 Jul 2019 10:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=8RQRpxikwiuWC4OpfiWsZAC2vrJJElg4wu6sWoYszZI=;
-        b=sOJfZ06V7ejN/9i8fpp/cdoSscwWicyjRlh+pMD/TjNdnQ2HDBoCFeUSamK4uoEdC7
-         m0lC6463xWV5YcFl7FPoJFwI6gysOkof2xy4mt9ueCdaFm9A98ZTOOPFk+f4UcJFcYXs
-         H9ECm1szgWP/LyFYg6KnD2wHRINDmmBtRrTwdzrqtjaLDY53avYI/rVZUuUdRyuzpO3y
-         VbxTnsjlRlE1IC/bXPtSI+S2szVuwcx9RzcaR1njXKRwypROI56kpBDNmlEGGlb/tqrz
-         SGJGby9iJ0eT4Q8D6m0l3RksHwVqhUtabu28+7DINMeGOSH8sDoH7hGMem7r7d1Q4GrH
-         cf+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=8RQRpxikwiuWC4OpfiWsZAC2vrJJElg4wu6sWoYszZI=;
-        b=MAhY6yP5sHmQSmCFiiAtSWZzQuT/v0QqDEAmO88ojfFYUwI8G7GF2B0MTb7/3yaM5l
-         Z9fuSnaXMPxfFTYlRvSvGD6Cd2IgVuTy6CCw9wWYuOorxYUq6CwRW/PHdDsJn9DI+rSI
-         wWTvgve2sWE1rPvC9Kd42K96zJRJW/wJLIp/fPGcBPMhZvWkFA42TGAFRYne599jEoTM
-         LwrUaClBhmPPPHlkLgFzkuD54GkWhd0Y10sQzdrNaIrnt9QeKKKGgaRPepxRDzgUePiE
-         Q7mX/TsCxuMOitXjPhCp0dBfzOoV8rc2kmFCyJ3KjAXAvMRttepstZ3cEypNi2VHkx8M
-         PkKg==
-X-Gm-Message-State: APjAAAV9uNRMjJWva80MleXGmAuTjGeaxBbVRFa4juCmlik4W69JiV/S
-        rIAI/dSfEuHaygrZJzEe11STI1JL
-X-Google-Smtp-Source: APXvYqy/45xbVWCxW+UkluVuSTVF+aqyq3asyDnKB4CgboplhcFJTPArsIlNrywOkJTzGkKNPyk3Vw==
-X-Received: by 2002:a17:90a:2627:: with SMTP id l36mr90862845pje.71.1563989720109;
-        Wed, 24 Jul 2019 10:35:20 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:c91a])
-        by smtp.gmail.com with ESMTPSA id l25sm57901670pff.143.2019.07.24.10.35.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 10:35:19 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 10:35:17 -0700
-From:   Tejun Heo <tj@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH 1/2] blkcg: rename blkcg->cgwb_refcnt to ->online_pin and
- always use it
-Message-ID: <20190724173517.GA559934@devbig004.ftw2.facebook.com>
+        Wed, 24 Jul 2019 13:35:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726323AbfGXRfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:35:47 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BCEE21852;
+        Wed, 24 Jul 2019 17:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563989745;
+        bh=G4HOoVGuAJ6lKUV5wkSPaAg7GoRucYXTZk1gDZ+7big=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uJP9x254L3Hc/8Dx1Gh4/RU4apchF33hpHel53eSWtSk4sbLEfH5sxC+nMdqcSKJA
+         ouQDtvvmrEp2k8nx1Pnu1KthLaBz3aHYobODzCTW594Gq4SBAucjpVZU343Z+hNby1
+         QAEzZfELyOwOIiLurya7zS90rmpXVdBh9srGRaFk=
+Date:   Wed, 24 Jul 2019 10:35:44 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     syzbot <syzbot+3055cb4fd9eb553bd76c@syzkaller.appspotmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: net-next boot error: WARNING: workqueue cpumask: online
+ intersect > possible intersect (2)
+Message-ID: <20190724173542.GA213255@gmail.com>
+Mail-Followup-To: syzbot <syzbot+3055cb4fd9eb553bd76c@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <00000000000073c94b058e536fc4@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <00000000000073c94b058e536fc4@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blkcg->cgwb_refcnt is used to delay blkcg offlining so that blkgs
-don't get offlined while there are active cgwbs on them.  However, it
-ends up making offlining unordered sometimes causing parents to be
-offlined before children.
+On Mon, Jul 22, 2019 at 11:38:06PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    7b5cf701 Merge branch 'sched-urgent-for-linus' of git://gi..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=145c4d34600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9aec8cb13b5f7389
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3055cb4fd9eb553bd76c
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+3055cb4fd9eb553bd76c@syzkaller.appspotmail.com
+> 
+> smpboot: CPU0: Intel(R) Xeon(R) CPU @ 2.30GHz (family: 0x6, model: 0x3f,
+> stepping: 0x0)
+> Performance Events: unsupported p6 CPU model 63 no PMU driver, software
+> events only.
+> rcu: Hierarchical SRCU implementation.
+> NMI watchdog: Perf NMI watchdog permanently disabled
+> smp: Bringing up secondary CPUs ...
+> x86: Booting SMP configuration:
+> .... node  #0, CPUs:      #1
+> MDS CPU bug present and SMT on, data leak possible. See
+> https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html for more
+> details.
+> smp: Brought up 2 nodes, 2 CPUs
+> smpboot: Max logical packages: 1
+> smpboot: Total of 2 processors activated (9200.00 BogoMIPS)
+> devtmpfs: initialized
+> clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns:
+> 19112604462750000 ns
+> futex hash table entries: 512 (order: 4, 65536 bytes, vmalloc)
+> xor: automatically using best checksumming function   avx
+> PM: RTC time: 20:26:57, date: 2019-07-22
+> NET: Registered protocol family 16
+> audit: initializing netlink subsys (disabled)
+> cpuidle: using governor menu
+> ACPI: bus type PCI registered
+> dca service started, version 1.12.1
+> PCI: Using configuration type 1 for base access
+> WARNING: workqueue cpumask: online intersect > possible intersect
+> HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+> HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+> cryptd: max_cpu_qlen set to 1000
+> raid6: avx2x4   gen() 10942 MB/s
+> raid6: avx2x4   xor()  6383 MB/s
+> raid6: avx2x2   gen()  6482 MB/s
+> raid6: avx2x2   xor()  3541 MB/s
+> raid6: avx2x1   gen()  3326 MB/s
+> raid6: avx2x1   xor()  1978 MB/s
+> raid6: sse2x4   gen()  5350 MB/s
+> raid6: sse2x4   xor()  3129 MB/s
+> raid6: sse2x2   gen()  3754 MB/s
+> raid6: sse2x2   xor()  1760 MB/s
+> raid6: sse2x1   gen()  1702 MB/s
+> raid6: sse2x1   xor()   988 MB/s
+> raid6: using algorithm avx2x4 gen() 10942 MB/s
+> raid6: .... xor() 6383 MB/s, rmw enabled
+> raid6: using avx2x2 recovery algorithm
+> ACPI: Added _OSI(Module Device)
+> ACPI: Added _OSI(Processor Device)
+> ACPI: Added _OSI(3.0 _SCP Extensions)
+> ACPI: Added _OSI(Processor Aggregator Device)
+> ACPI: Added _OSI(Linux-Dell-Video)
+> ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
+> ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
+> ACPI: 2 ACPI AML tables successfully acquired and loaded
+> ACPI: Interpreter enabled
+> ACPI: (supports S0 S3 S4 S5)
+> ACPI: Using IOAPIC for interrupt routing
+> PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and
+> report a bug
+> ACPI: Enabled 16 GPEs in block 00 to 0F
+> ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+> acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI HPX-Type3]
+> acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI
+> configuration space under this bridge.
+> PCI host bridge to bus 0000:00
+> pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+> pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+> pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+> pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+> pci_bus 0000:00: root bus resource [bus 00-ff]
+> pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
+> pci 0000:00:01.0: [8086:7110] type 00 class 0x060100
+> pci 0000:00:01.3: [8086:7113] type 00 class 0x068000
+> pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
+> pci 0000:00:03.0: [1af4:1004] type 00 class 0x000000
+> pci 0000:00:03.0: reg 0x10: [io  0xc000-0xc03f]
+> pci 0000:00:03.0: reg 0x14: [mem 0xfebfe000-0xfebfe07f]
+> pci 0000:00:04.0: [1af4:1000] type 00 class 0x020000
+> pci 0000:00:04.0: reg 0x10: [io  0xc040-0xc07f]
+> pci 0000:00:04.0: reg 0x14: [mem 0xfebff000-0xfebff07f]
+> ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
+> ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
+> ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
+> ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
+> ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+> vgaarb: loaded
+> SCSI subsystem initialized
+> ACPI: bus type USB registered
+> usbcore: registered new interface driver usbfs
+> usbcore: registered new interface driver hub
+> usbcore: registered new device driver usb
+> mc: Linux media interface: v0.10
+> videodev: Linux video capture interface: v2.00
+> pps_core: LinuxPPS API ver. 1 registered
+> pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti
+> <giometti@linux.it>
+> PTP clock support registered
+> EDAC MC: Ver: 3.0.0
+> Advanced Linux Sound Architecture Driver Initialized.
+> PCI: Using ACPI for IRQ routing
+> Bluetooth: Core ver 2.22
+> NET: Registered protocol family 31
+> Bluetooth: HCI device and connection manager initialized
+> Bluetooth: HCI socket layer initialized
+> Bluetooth: L2CAP socket layer initialized
+> Bluetooth: SCO socket layer initialized
+> NET: Registered protocol family 8
+> NET: Registered protocol family 20
+> NetLabel: Initializing
+> NetLabel:  domain hash size = 128
+> NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+> NetLabel:  unlabeled traffic allowed by default
+> nfc: nfc_init: NFC Core ver 0.1
+> NET: Registered protocol family 39
+> clocksource: Switched to clocksource kvm-clock
+> VFS: Disk quotas dquot_6.6.0
+> VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+> FS-Cache: Loaded
+> *** VALIDATE hugetlbfs ***
+> CacheFiles: Loaded
+> TOMOYO: 2.6.0
+> Mandatory Access Control activated.
+> AppArmor: AppArmor Filesystem Enabled
+> pnp: PnP ACPI init
+> pnp: PnP ACPI: found 7 devices
+> thermal_sys: Registered thermal governor 'step_wise'
+> thermal_sys: Registered thermal governor 'user_space'
+> clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns:
+> 2085701024 ns
+> pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+> pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+> pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+> pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfffff window]
+> NET: Registered protocol family 2
+> tcp_listen_portaddr_hash hash table entries: 4096 (order: 6, 294912 bytes,
+> vmalloc)
+> TCP established hash table entries: 65536 (order: 7, 524288 bytes, vmalloc)
+> TCP bind hash table entries: 65536 (order: 10, 4194304 bytes, vmalloc)
+> TCP: Hash tables configured (established 65536 bind 65536)
+> UDP hash table entries: 4096 (order: 7, 655360 bytes, vmalloc)
+> UDP-Lite hash table entries: 4096 (order: 7, 655360 bytes, vmalloc)
+> NET: Registered protocol family 1
+> RPC: Registered named UNIX socket transport module.
+> RPC: Registered udp transport module.
+> RPC: Registered tcp transport module.
+> RPC: Registered tcp NFSv4.1 backchannel transport module.
+> NET: Registered protocol family 44
+> pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+> PCI: CLS 0 bytes, default 64
+> PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+> software IO TLB: mapped [mem 0xaa800000-0xae800000] (64MB)
+> RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl
+> timer
+> kvm: already loaded the other module
+> clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x212735223b2,
+> max_idle_ns: 440795277976 ns
+> clocksource: Switched to clocksource tsc
+> mce: Machine check injector initialized
+> check: Scanning for low memory corruption every 60 seconds
+> Initialise system trusted keyrings
+> workingset: timestamp_bits=40 max_order=21 bucket_order=0
+> zbud: loaded
+> DLM installed
+> squashfs: version 4.0 (2009/01/31) Phillip Lougher
+> FS-Cache: Netfs 'nfs' registered for caching
+> NFS: Registering the id_resolver key type
+> Key type id_resolver registered
+> Key type id_legacy registered
+> nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+> Installing knfsd (copyright (C) 1996 okir@monad.swb.de).
+> ntfs: driver 2.1.32 [Flags: R/W].
+> fuse: init (API version 7.31)
+> JFS: nTxBlock = 8192, nTxLock = 65536
+> SGI XFS with ACLs, security attributes, realtime, no debug enabled
+> 9p: Installing v9fs 9p2000 file system support
+> FS-Cache: Netfs '9p' registered for caching
+> gfs2: GFS2 installed
+> FS-Cache: Netfs 'ceph' registered for caching
+> ceph: loaded (mds proto 32)
+> NET: Registered protocol family 38
+> async_tx: api initialized (async)
+> Key type asymmetric registered
+> Asymmetric key parser 'x509' registered
+> Asymmetric key parser 'pkcs8' registered
+> Key type pkcs7_test registered
+> Asymmetric key parser 'tpm_parser' registered
+> Block layer SCSI generic (bsg) driver version 0.4 loaded (major 246)
+> io scheduler mq-deadline registered
+> io scheduler kyber registered
+> io scheduler bfq registered
+> input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+> ACPI: Power Button [PWRF]
+> input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+> ACPI: Sleep Button [SLPF]
+> ioatdma: Intel(R) QuickData Technology Driver 5.00
+> PCI Interrupt Link [LNKC] enabled at IRQ 11
+> virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
+> PCI Interrupt Link [LNKD] enabled at IRQ 10
+> virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
+> HDLC line discipline maxframe=4096
+> N_HDLC line discipline registered.
+> Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+> 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+> 00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
+> 00:05: ttyS2 at I/O 0x3e8 (irq = 6, base_baud = 115200) is a 16550A
+> 00:06: ttyS3 at I/O 0x2e8 (irq = 7, base_baud = 115200) is a 16550A
+> Non-volatile memory driver v1.3
+> Linux agpgart interface v0.103
+> [drm] Initialized vgem 1.0.0 20120112 for vgem on minor 0
+> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> [drm] Driver supports precise vblank timestamp query.
+> [drm] Initialized vkms 1.0.0 20180514 for vkms on minor 1
+> usbcore: registered new interface driver udl
+> brd: module loaded
+> loop: module loaded
+> zram: Added device: zram0
+> null: module loaded
+> nfcsim 0.2 initialized
+> Loading iSCSI transport class v2.0-870.
+> scsi host0: Virtio SCSI HBA
+> st: Version 20160209, fixed bufsize 32768, s/g segs 256
+> kobject: 'st' (000000004c8d7e58): fill_kobj_path: path =
+> '/bus/scsi/drivers/st'
+> kobject: 'scsi_disk' (00000000bdfbce9c): kobject_add_internal: parent:
+> 'class', set: 'class'
+> kobject: 'scsi_disk' (00000000bdfbce9c): kobject_uevent_env
+> kobject: 'scsi_disk' (00000000bdfbce9c): fill_kobj_path: path =
+> '/class/scsi_disk'
+> kobject: 'sd' (0000000055985a2d): kobject_add_internal: parent: 'drivers',
+> set: 'drivers'
+> kobject: 'sd' (0000000055985a2d): kobject_uevent_env
+> kobject: 'sd' (0000000055985a2d): fill_kobj_path: path =
+> '/bus/scsi/drivers/sd'
+> kobject: 'sr' (000000004054170b): kobject_add_internal: parent: 'drivers',
+> set: 'drivers'
+> kobject: 'sr' (000000004054170b): kobject_uevent_env
+> kobject: 'sr' (000000004054170b): fill_kobj_path: path =
+> '/bus/scsi/drivers/sr'
+> kobject: 'scsi_generic' (0000000098f3b229): kobject_add_internal: parent:
+> 'class', set: 'class'
+> kobject: 'scsi_generic' (0000000098f3b229): kobject_uevent_env
+> kobject: 'scsi_generic' (0000000098f3b229): fill_kobj_path: path =
+> '/class/scsi_generic'
+> kobject: 'nvme-wq' (00000000270c2331): kobject_add_internal: parent:
+> 'workqueue', set: 'devices'
+> kobject: 'nvme-wq' (00000000270c2331): kobject_uevent_env
+> kobject: 'nvme-wq' (00000000270c2331): kobject_uevent_env: uevent_suppress
+> caused the event to drop!
+> kobject: 'nvme-wq' (00000000270c2331): kobject_uevent_env
+> kobject: 'nvme-wq' (00000000270c2331): fill_kobj_path: path =
+> '/devices/virtual/workqueue/nvme-wq'
+> kobject: 'nvme-reset-wq' (000000003e1ba3d5): kobject_add_internal: parent:
+> 'workqueue', set: 'devices'
+> kobject: 'nvme-reset-wq' (000000003e1ba3d5): kobject_uevent_env
+> kobject: 'nvme-reset-wq' (000000003e1ba3d5): kobject_uevent_env:
+> uevent_suppress caused the event to drop!
+> kobject: 'nvme-reset-wq' (000000003e1ba3d5): kobject_uevent_env
+> kobject: 'nvme-reset-wq' (000000003e1ba3d5): fill_kobj_path: path =
+> '/devices/virtual/workqueue/nvme-reset-wq'
+> kobject: 'nvme-delete-wq' (000000005497d244): kobject_add_internal: parent:
+> 'workqueue', set: 'devices'
+> kobject: 'nvme-delete-wq' (000000005497d244): kobject_uevent_env
+> kobject: 'nvme-delete-wq' (000000005497d244): kobject_uevent_env:
+> uevent_suppress caused the event to drop!
+> kobject: 'nvme-delete-wq' (000000005497d244): kobject_uevent_env
+> kobject: 'nvme-delete-wq' (000000005497d244): fill_kobj_path: path =
+> '/devices/virtual/workqueue/nvme-delete-wq'
+> kobject: 'nvme' (000000008e6a29d7): kobject_add_internal: parent: 'class',
+> set: 'class'
+> kobject: 'nvme' (000000008e6a29d7): kobject_uevent_env
+> kobject: 'nvme' (000000008e6a29d7): fill_kobj_path: path = '/class/nvme'
+> kobject: 'nvme-subsystem' (000000001563dbee): kobject_add_internal: parent:
+> 'class', set: 'class'
+> kobject: 'nvme-subsystem' (000000001563dbee): kobject_uevent_env
+> kobject: 'nvme-subsystem' (000000001563dbee): fill_kobj_path: path =
+> '/class/nvme-subsystem'
+> kobject: 'nvme' (00000000c52b7e0e): kobject_add_internal: parent: 'drivers',
+> set: 'drivers'
+> kobject: 'drivers' (00000000f6d3710d): kobject_add_internal: parent: 'nvme',
+> set: '<NULL>'
+> kobject: 'nvme' (00000000c52b7e0e): kobject_uevent_env
+> kobject: 'nvme' (00000000c52b7e0e): fill_kobj_path: path =
+> '/bus/pci/drivers/nvme'
+> kobject: 'ahci' (00000000a29e777d): kobject_add_internal: parent: 'drivers',
+> set: 'drivers'
+> kobject: 'drivers' (000000003ed63ce6): kobject_add_internal: parent: 'ahci',
+> set: '<NULL>'
+> kobject: 'ahci' (00000000a29e777d): kobject_uevent_env
+> kobject: 'ahci' (00000000a29e777d): fill_kobj_path: path =
+> '/bus/pci/drivers/ahci'
+> kobject: 'ata_piix' (0000000087185d26): kobject_add_internal: parent:
+> 'drivers', set: 'drivers'
+> kobject: 'drivers' (000000004a065e79): kobject_add_internal: parent:
+> 'ata_piix', set: '<NULL>'
+> kobject: 'ata_piix' (0000000087185d26): kobject_uevent_env
+> kobject: 'ata_piix' (0000000087185d26): fill_kobj_path: path =
+> '/bus/pci/drivers/ata_piix'
+> kobject: 'pata_amd' (00000000519c7b49): kobject_add_internal: parent:
+> 'drivers', set: 'drivers'
+> kobject: 'drivers' (00000000cb24f8fd): kobject_add_internal: parent:
+> 'pata_amd', set: '<NULL>'
+> kobject: 'pata_amd' (00000000519c7b49): kobject_uevent_env
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000073c94b058e536fc4%40google.com.
 
-To fix it, we want child blkcgs to pin the parents' online states
-turning the refcnt into a more generic online pinning mechanism.
-
-In prepartion,
-
-* blkcg->cgwb_refcnt -> blkcg->online_pin
-* blkcg_cgwb_get/put() -> blkcg_pin/unpin_online()
-* Take them out of CONFIG_CGROUP_WRITEBACK
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
-Hello,
-
-The asynchronous blkcg offlining can break offline ordering.  This
-doesn't affect any of in-kernel users but it broke an assumption that
-the pending io.cost controller was making and is generally nasty.
-These two patches fix the offlining ordering by making children pin
-parents.
-
-Thanks.
-
- block/blk-cgroup.c         |    6 +++---
- include/linux/blk-cgroup.h |   39 +++++++++++++--------------------------
- mm/backing-dev.c           |    6 +++---
- 3 files changed, 19 insertions(+), 32 deletions(-)
-
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1035,8 +1035,8 @@ static void blkcg_css_offline(struct cgr
- 	/* this prevents anyone from attaching or migrating to this blkcg */
- 	wb_blkcg_offline(blkcg);
- 
--	/* put the base cgwb reference allowing step 2 to be triggered */
--	blkcg_cgwb_put(blkcg);
-+	/* put the base online pin allowing step 2 to be triggered */
-+	blkcg_unpin_online(blkcg);
- }
- 
- /**
-@@ -1135,11 +1135,11 @@ blkcg_css_alloc(struct cgroup_subsys_sta
- 	}
- 
- 	spin_lock_init(&blkcg->lock);
-+	refcount_set(&blkcg->online_pin, 1);
- 	INIT_RADIX_TREE(&blkcg->blkg_tree, GFP_NOWAIT | __GFP_NOWARN);
- 	INIT_HLIST_HEAD(&blkcg->blkg_list);
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	INIT_LIST_HEAD(&blkcg->cgwb_list);
--	refcount_set(&blkcg->cgwb_refcnt, 1);
- #endif
- 	list_add_tail(&blkcg->all_blkcgs_node, &all_blkcgs);
- 
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -47,6 +47,7 @@ struct blkcg_gq;
- struct blkcg {
- 	struct cgroup_subsys_state	css;
- 	spinlock_t			lock;
-+	refcount_t			online_pin;
- 
- 	struct radix_tree_root		blkg_tree;
- 	struct blkcg_gq	__rcu		*blkg_hint;
-@@ -57,7 +58,6 @@ struct blkcg {
- 	struct list_head		all_blkcgs_node;
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	struct list_head		cgwb_list;
--	refcount_t			cgwb_refcnt;
- #endif
- };
- 
-@@ -431,47 +431,34 @@ static inline struct blkcg *cpd_to_blkcg
- 
- extern void blkcg_destroy_blkgs(struct blkcg *blkcg);
- 
--#ifdef CONFIG_CGROUP_WRITEBACK
--
- /**
-- * blkcg_cgwb_get - get a reference for blkcg->cgwb_list
-+ * blkcg_pin_online - pin online state
-  * @blkcg: blkcg of interest
-  *
-- * This is used to track the number of active wb's related to a blkcg.
-+ * While pinned, a blkcg is kept online.  This is primarily used to
-+ * impedance-match blkg and cgwb lifetimes so that blkg doesn't go offline
-+ * while an associated cgwb is still active.
-  */
--static inline void blkcg_cgwb_get(struct blkcg *blkcg)
-+static inline void blkcg_pin_online(struct blkcg *blkcg)
- {
--	refcount_inc(&blkcg->cgwb_refcnt);
-+	refcount_inc(&blkcg->online_pin);
- }
- 
- /**
-- * blkcg_cgwb_put - put a reference for @blkcg->cgwb_list
-+ * blkcg_unpin_online - unpin online state
-  * @blkcg: blkcg of interest
-  *
-- * This is used to track the number of active wb's related to a blkcg.
-- * When this count goes to zero, all active wb has finished so the
-+ * This is primarily used to impedance-match blkg and cgwb lifetimes so
-+ * that blkg doesn't go offline while an associated cgwb is still active.
-+ * When this count goes to zero, all active cgwbs have finished so the
-  * blkcg can continue destruction by calling blkcg_destroy_blkgs().
-- * This work may occur in cgwb_release_workfn() on the cgwb_release
-- * workqueue.
-  */
--static inline void blkcg_cgwb_put(struct blkcg *blkcg)
-+static inline void blkcg_unpin_online(struct blkcg *blkcg)
- {
--	if (refcount_dec_and_test(&blkcg->cgwb_refcnt))
-+	if (refcount_dec_and_test(&blkcg->online_pin))
- 		blkcg_destroy_blkgs(blkcg);
- }
- 
--#else
--
--static inline void blkcg_cgwb_get(struct blkcg *blkcg) { }
--
--static inline void blkcg_cgwb_put(struct blkcg *blkcg)
--{
--	/* wb isn't being accounted, so trigger destruction right away */
--	blkcg_destroy_blkgs(blkcg);
--}
--
--#endif
--
- /**
-  * blkg_path - format cgroup path of blkg
-  * @blkg: blkg of interest
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -487,8 +487,8 @@ static void cgwb_release_workfn(struct w
- 	css_put(wb->blkcg_css);
- 	mutex_unlock(&wb->bdi->cgwb_release_mutex);
- 
--	/* triggers blkg destruction if cgwb_refcnt becomes zero */
--	blkcg_cgwb_put(blkcg);
-+	/* triggers blkg destruction if no online users left */
-+	blkcg_unpin_online(blkcg);
- 
- 	fprop_local_destroy_percpu(&wb->memcg_completions);
- 	percpu_ref_exit(&wb->refcnt);
-@@ -588,7 +588,7 @@ static int cgwb_create(struct backing_de
- 			list_add_tail_rcu(&wb->bdi_node, &bdi->wb_list);
- 			list_add(&wb->memcg_node, memcg_cgwb_list);
- 			list_add(&wb->blkcg_node, blkcg_cgwb_list);
--			blkcg_cgwb_get(blkcg);
-+			blkcg_pin_online(blkcg);
- 			css_get(memcg_css);
- 			css_get(blkcg_css);
- 		}
+#syz dup: linux-next boot error: WARNING: workqueue cpumask: online intersect > possible intersect
