@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C7CC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40543C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E5922BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C0022BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033338;
-	bh=37X1Wmkz2niaasL0mxqxDwuAND03i84ksVWBL6nOflA=;
+	s=default; t=1564033341;
+	bh=l9gRyO9IidlNojMDzg1+eyqr6O5J4ZzI0DHcDuMu6wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQubNljVurBfI9DVdc5uC+w8cVW+87GYrhbSIcMEDBv4K3xNWuU3zqqce7YMWG4mK
-	 j1BlAxPGvgam+3V16EKlIzzT19nA8gadPqaoGGlq9MrkXXw6C5HggoTPMTdkOx/rzh
-	 5xT4BfTYht41Ud3n1N6mTa8miOsWLzprfIztZgFY=
+	b=v5vTYXJASJbz4sZhpTBbl/KI+6hYtXLH5h+14gQDgy+tbrngTO3+da1+mrPL6gA9v
+	 vPu9FgU4KojA4EbFV4tQBQR3k8OAa+n2TOYPgqTe1QxCuU/UDMCAsqfNCaUmB+qghB
+	 TbF/gsk3PtMtudXLnshGchdQtdYXZ2rVrJ8PisVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390803AbfGYFmQ (ORCPT
+        id S2390819AbfGYFmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:42:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404830AbfGYFmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:42:14 -0400
+        id S2390802AbfGYFmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89CBC21880;
-        Thu, 25 Jul 2019 05:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2A222BEB;
+        Thu, 25 Jul 2019 05:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033334;
-        bh=37X1Wmkz2niaasL0mxqxDwuAND03i84ksVWBL6nOflA=;
+        s=default; t=1564033336;
+        bh=l9gRyO9IidlNojMDzg1+eyqr6O5J4ZzI0DHcDuMu6wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GO7tqOHlf5VovJxQ170mg0ZZUFYQ0Nm3kTIEyeeVYt8f3oVhKkKfNsUpvRerfOTqe
-         M9rV2poTCPhtbc24wT7moH9BT/0hlWWlG20d/MwBK/isAESK5cqm+N4ZkFNALQlvIo
-         tRy4vaEBbiiB7CHnB2shxJfO3wz8ay3Xj97Z93CE=
+        b=gM8/Yf2o7PnG46GYpj2W2tA7SeppZZkK0Uqe3Hixx2Jc580w5XyqB4qV/stpPloWJ
+         k+qhFUx3FFjuMCAuHDX5XGMRmenbxj+ErO2Bl9pCZ1EYwYA18bTQuJCqYrNZm3XklB
+         eAoIXVPShZBOmuhAcUcuNmb0Hh5MgnOC/mcVag8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 130/271] net: hns3: add some error checking in hclge_tm module
-Date:   Wed, 24 Jul 2019 21:19:59 +0200
-Message-Id: <20190724191706.375089488@linuxfoundation.org>
+Subject: [PATCH 4.19 121/271] crypto: asymmetric_keys - select CRYPTO_HASH where needed
+Date:   Wed, 24 Jul 2019 21:19:50 +0200
+Message-Id: <20190724191705.645389360@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,52 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04f25edb48c441fc278ecc154c270f16966cbb90 ]
+[ Upstream commit 90acc0653d2bee203174e66d519fbaaa513502de ]
 
-When hdev->tx_sch_mode is HCLGE_FLAG_VNET_BASE_SCH_MODE, the
-hclge_tm_schd_mode_vnet_base_cfg calls hclge_tm_pri_schd_mode_cfg
-with vport->vport_id as pri_id, which is used as index for
-hdev->tm_info.tc_info, it will cause out of bound access issue
-if vport_id is equal to or larger than HNAE3_MAX_TC.
+Build testing with some core crypto options disabled revealed
+a few modules that are missing CRYPTO_HASH:
 
-Also hardware only support maximum speed of HCLGE_ETHER_MAX_RATE.
+crypto/asymmetric_keys/x509_public_key.o: In function `x509_get_sig_params':
+x509_public_key.c:(.text+0x4c7): undefined reference to `crypto_alloc_shash'
+x509_public_key.c:(.text+0x5e5): undefined reference to `crypto_shash_digest'
+crypto/asymmetric_keys/pkcs7_verify.o: In function `pkcs7_digest.isra.0':
+pkcs7_verify.c:(.text+0xab): undefined reference to `crypto_alloc_shash'
+pkcs7_verify.c:(.text+0x1b2): undefined reference to `crypto_shash_digest'
+pkcs7_verify.c:(.text+0x3c1): undefined reference to `crypto_shash_update'
+pkcs7_verify.c:(.text+0x411): undefined reference to `crypto_shash_finup'
 
-So this patch adds two checks for above cases.
+This normally doesn't show up in randconfig tests because there is
+a large number of other options that select CRYPTO_HASH.
 
-Fixes: 848440544b41 ("net: hns3: Add support of TX Scheduler & Shaper to HNS3 driver")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ crypto/asymmetric_keys/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-index 48235dc2dd56..11e9259ca040 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
-@@ -54,7 +54,8 @@ static int hclge_shaper_para_calc(u32 ir, u8 shaper_level,
- 	u32 tick;
- 
- 	/* Calc tick */
--	if (shaper_level >= HCLGE_SHAPER_LVL_CNT)
-+	if (shaper_level >= HCLGE_SHAPER_LVL_CNT ||
-+	    ir > HCLGE_ETHER_MAX_RATE)
- 		return -EINVAL;
- 
- 	tick = tick_array[shaper_level];
-@@ -1057,6 +1058,9 @@ static int hclge_tm_schd_mode_vnet_base_cfg(struct hclge_vport *vport)
- 	int ret;
- 	u8 i;
- 
-+	if (vport->vport_id >= HNAE3_MAX_TC)
-+		return -EINVAL;
-+
- 	ret = hclge_tm_pri_schd_mode_cfg(hdev, vport->vport_id);
- 	if (ret)
- 		return ret;
+diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
+index f3702e533ff4..d8a73d94bb30 100644
+--- a/crypto/asymmetric_keys/Kconfig
++++ b/crypto/asymmetric_keys/Kconfig
+@@ -15,6 +15,7 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+ 	select MPILIB
+ 	select CRYPTO_HASH_INFO
+ 	select CRYPTO_AKCIPHER
++	select CRYPTO_HASH
+ 	help
+ 	  This option provides support for asymmetric public key type handling.
+ 	  If signature generation and/or verification are to be used,
+@@ -34,6 +35,7 @@ config X509_CERTIFICATE_PARSER
+ config PKCS7_MESSAGE_PARSER
+ 	tristate "PKCS#7 message parser"
+ 	depends on X509_CERTIFICATE_PARSER
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
+@@ -56,6 +58,7 @@ config SIGNED_PE_FILE_VERIFICATION
+ 	bool "Support for PE file signature verification"
+ 	depends on PKCS7_MESSAGE_PARSER=y
+ 	depends on SYSTEM_DATA_VERIFICATION
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
 -- 
 2.20.1
 
