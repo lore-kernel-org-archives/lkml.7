@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8916C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2398DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B77205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBD7206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998299;
-	bh=Vax62tHC2q2vWRdRMEAKXHwMW8ilLjfLVc3SadFx3+o=;
+	s=default; t=1563998303;
+	bh=jCXGdMDV83SSi0RMcl/cTH0AX2saeysAkpPWqNnn6r8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ao26aiY9conzRJ1jQiFntYHazHHt+r0s1tRhNsCiwC113FNVjvzKG9/oANrVCjzs2
-	 k21hlf3FwteYtmlXcUo7HJ44WcC/oAU9ACfwcQff7F3JMHBb1YO7vetRssieapusTb
-	 yoWTNDDm5+u9VNcVQGAcOh07on6t5ghVXulpWL0c=
+	b=JP6nCgz/EM0oYBrfve4nigdu/qr4IvFf32bUdzrWnLKYaCBfHbQtafO0GK8vFXytM
+	 xaPq7XkRRn8JngHsMt5ORc8zUWXbS5PeNN8SiYHpHvw2Z2+KFOT8gpcqZ4PqjCL+7p
+	 iWfSMowrqltqOmx3F7McFu1bV1OjlP8AiHvR8hp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404914AbfGXT6S (ORCPT
+        id S2404941AbfGXT6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44624 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404492AbfGXT6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:16 -0400
+        id S2404931AbfGXT6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:58:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16B39205C9;
-        Wed, 24 Jul 2019 19:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBB4214AF;
+        Wed, 24 Jul 2019 19:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998295;
-        bh=Vax62tHC2q2vWRdRMEAKXHwMW8ilLjfLVc3SadFx3+o=;
+        s=default; t=1563998298;
+        bh=jCXGdMDV83SSi0RMcl/cTH0AX2saeysAkpPWqNnn6r8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cpLb10wXglm/50D0yYxYoY2hLbfXolvFyqEoGJgtlkH+pZMqRy8I6N5mtVV+P+7gN
-         W1akWEX6twV331c7ajiNbVouaPsbvj/hYLlszMiQf8AsE4Uj2d6W3ru+1Dz6ZdlmBm
-         XnrA7qqa5mZgiPuST/bB1Zp2HUrAbUG3Va/LrCWo=
+        b=2WXehhtQkuoPdzw/j/dQbSQebKs+B351qQzO70uj/MqHsIIS1PD8j1/GD5nxesWpm
+         4aZU5EIC9LpiFjDf6tlYsh1aMcXq4zHyN4gVdgEr8VJ9G+MR7XCyPWiS5Ywo7d4oVE
+         C8fF8UYokWozQEa78TyTeRm4be/GtK7sz0/t/4AI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 5.1 298/371] KVM: nVMX: Dont dump VMCS if virtual APIC page cant be mapped
-Date:   Wed, 24 Jul 2019 21:20:50 +0200
-Message-Id: <20190724191746.740511100@linuxfoundation.org>
+        stable@vger.kernel.org, Masato Suzuki <masato.suzuki@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.1 316/371] dm zoned: fix zone state management race
+Date:   Wed, 24 Jul 2019 21:21:08 +0200
+Message-Id: <20190724191747.805533618@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,36 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit 73cb85568433feadb79e963bf2efba9b3e9ae3df upstream.
+commit 3b8cafdd5436f9298b3bf6eb831df5eef5ee82b6 upstream.
 
-... as a malicious userspace can run a toy guest to generate invalid
-virtual-APIC page addresses in L1, i.e. flood the kernel log with error
-messages.
+dm-zoned uses the zone flag DMZ_ACTIVE to indicate that a zone of the
+backend device is being actively read or written and so cannot be
+reclaimed. This flag is set as long as the zone atomic reference
+counter is not 0. When this atomic is decremented and reaches 0 (e.g.
+on BIO completion), the active flag is cleared and set again whenever
+the zone is reused and BIO issued with the atomic counter incremented.
+These 2 operations (atomic inc/dec and flag set/clear) are however not
+always executed atomically under the target metadata mutex lock and
+this causes the warning:
 
-Fixes: 690908104e39d ("KVM: nVMX: allow tests to use bad virtual-APIC page address")
+WARN_ON(!test_bit(DMZ_ACTIVE, &zone->flags));
+
+in dmz_deactivate_zone() to be displayed. This problem is regularly
+triggered with xfstests generic/209, generic/300, generic/451 and
+xfs/077 with XFS being used as the file system on the dm-zoned target
+device. Similarly, xfstests ext4/303, ext4/304, generic/209 and
+generic/300 trigger the warning with ext4 use.
+
+This problem can be easily fixed by simply removing the DMZ_ACTIVE flag
+and managing the "ACTIVE" state by directly looking at the reference
+counter value. To do so, the functions dmz_activate_zone() and
+dmz_deactivate_zone() are changed to inline functions respectively
+calling atomic_inc() and atomic_dec(), while the dmz_is_active() macro
+is changed to an inline function calling atomic_read().
+
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
 Cc: stable@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Masato Suzuki <masato.suzuki@wdc.com>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/md/dm-zoned-metadata.c |   24 ------------------------
+ drivers/md/dm-zoned.h          |   28 ++++++++++++++++++++++++----
+ 2 files changed, 24 insertions(+), 28 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2891,9 +2891,6 @@ static void nested_get_vmcs12_pages(stru
- 			 */
- 			vmcs_clear_bits(CPU_BASED_VM_EXEC_CONTROL,
- 					CPU_BASED_TPR_SHADOW);
--		} else {
--			printk("bad virtual-APIC page address\n");
--			dump_vmcs();
- 		}
- 	}
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1594,30 +1594,6 @@ struct dm_zone *dmz_get_zone_for_reclaim
+ }
  
+ /*
+- * Activate a zone (increment its reference count).
+- */
+-void dmz_activate_zone(struct dm_zone *zone)
+-{
+-	set_bit(DMZ_ACTIVE, &zone->flags);
+-	atomic_inc(&zone->refcount);
+-}
+-
+-/*
+- * Deactivate a zone. This decrement the zone reference counter
+- * and clears the active state of the zone once the count reaches 0,
+- * indicating that all BIOs to the zone have completed. Returns
+- * true if the zone was deactivated.
+- */
+-void dmz_deactivate_zone(struct dm_zone *zone)
+-{
+-	if (atomic_dec_and_test(&zone->refcount)) {
+-		WARN_ON(!test_bit(DMZ_ACTIVE, &zone->flags));
+-		clear_bit_unlock(DMZ_ACTIVE, &zone->flags);
+-		smp_mb__after_atomic();
+-	}
+-}
+-
+-/*
+  * Get the zone mapping a chunk, if the chunk is mapped already.
+  * If no mapping exist and the operation is WRITE, a zone is
+  * allocated and used to map the chunk.
+--- a/drivers/md/dm-zoned.h
++++ b/drivers/md/dm-zoned.h
+@@ -115,7 +115,6 @@ enum {
+ 	DMZ_BUF,
+ 
+ 	/* Zone internal state */
+-	DMZ_ACTIVE,
+ 	DMZ_RECLAIM,
+ 	DMZ_SEQ_WRITE_ERR,
+ };
+@@ -128,7 +127,6 @@ enum {
+ #define dmz_is_empty(z)		((z)->wp_block == 0)
+ #define dmz_is_offline(z)	test_bit(DMZ_OFFLINE, &(z)->flags)
+ #define dmz_is_readonly(z)	test_bit(DMZ_READ_ONLY, &(z)->flags)
+-#define dmz_is_active(z)	test_bit(DMZ_ACTIVE, &(z)->flags)
+ #define dmz_in_reclaim(z)	test_bit(DMZ_RECLAIM, &(z)->flags)
+ #define dmz_seq_write_err(z)	test_bit(DMZ_SEQ_WRITE_ERR, &(z)->flags)
+ 
+@@ -188,8 +186,30 @@ void dmz_unmap_zone(struct dmz_metadata
+ unsigned int dmz_nr_rnd_zones(struct dmz_metadata *zmd);
+ unsigned int dmz_nr_unmap_rnd_zones(struct dmz_metadata *zmd);
+ 
+-void dmz_activate_zone(struct dm_zone *zone);
+-void dmz_deactivate_zone(struct dm_zone *zone);
++/*
++ * Activate a zone (increment its reference count).
++ */
++static inline void dmz_activate_zone(struct dm_zone *zone)
++{
++	atomic_inc(&zone->refcount);
++}
++
++/*
++ * Deactivate a zone. This decrement the zone reference counter
++ * indicating that all BIOs to the zone have completed when the count is 0.
++ */
++static inline void dmz_deactivate_zone(struct dm_zone *zone)
++{
++	atomic_dec(&zone->refcount);
++}
++
++/*
++ * Test if a zone is active, that is, has a refcount > 0.
++ */
++static inline bool dmz_is_active(struct dm_zone *zone)
++{
++	return atomic_read(&zone->refcount);
++}
+ 
+ int dmz_lock_zone_reclaim(struct dm_zone *zone);
+ void dmz_unlock_zone_reclaim(struct dm_zone *zone);
 
 
