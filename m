@@ -2,140 +2,88 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A55C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3DAC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40A722BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36A1229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:42:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DX7bo1lZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aE0JQf/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfGXLl5 (ORCPT
+        id S1727776AbfGXLm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:41:57 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16210 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727378AbfGXLl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:41:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 04:41:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,302,1559545200"; 
-   d="scan'208";a="160538152"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga007.jf.intel.com with ESMTP; 24 Jul 2019 04:41:52 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hqFeZ-0006Bz-1K; Wed, 24 Jul 2019 14:41:51 +0300
-Date:   Wed, 24 Jul 2019 14:41:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 7/7] backlight: gpio: use a helper variable for
- &pdev->dev
-Message-ID: <20190724114151.GW9224@smile.fi.intel.com>
-References: <20190724082508.27617-1-brgl@bgdev.pl>
- <20190724082508.27617-8-brgl@bgdev.pl>
+        Wed, 24 Jul 2019 07:42:28 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43544 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbfGXLm2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:42:28 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6E28B6030E; Wed, 24 Jul 2019 11:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563968547;
+        bh=Uj6bHH9J1QBhVoLHfDFia5OvNywCdSUTIRC08X6jefU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=DX7bo1lZwNatRYRHjUO529lJ29AuBu/3NiLFe1JhzYY0P6LqymAiPZ5bCNET6Y5HD
+         5kOt18cUO5fC+QEbHOxNaId/+zb/V0XDFFxLTYNBrR8xHA2NueeuVChIg+heiQcqtk
+         l4t2YifZPJXuSrqLn2HTyk6T3IxCrEHoh8tA7JUs=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC6BE6030E;
+        Wed, 24 Jul 2019 11:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1563968547;
+        bh=Uj6bHH9J1QBhVoLHfDFia5OvNywCdSUTIRC08X6jefU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=aE0JQf/iJq3ixyzmik3CFhTROh2ewK3iUh9EZMoPzPfpK2neS6GPjZfrHftH2eAvr
+         W3bq6hpuLa4pr23urhGwzOC5tRKsHdq+6hvqGFYd05IxEmEokoMI/o4pfFzUZ5d9Gl
+         zHoSPFmqXnaxgqVNP/GLNWwt1MGHjZ2Bdq+3SySM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC6BE6030E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724082508.27617-8-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rsi: return explicit error values
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1561645802-1279-1-git-send-email-info@metux.net>
+References: <1561645802-1279-1-git-send-email-info@metux.net>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, amitkarwar@gmail.com,
+        siva8118@gmail.com, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190724114227.6E28B6030E@smtp.codeaurora.org>
+Date:   Wed, 24 Jul 2019 11:42:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:25:08AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Instead of dereferencing pdev each time, use a helper variable for
-> the associated device pointer.
+"Enrico Weigelt, metux IT consult" <info@metux.net> wrote:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> From: Enrico Weigelt <info@metux.net>
+> 
+> Explicitly return constants instead of variable (and rely on
+> it to be explicitly initialized), if the value is supposed
+> to be fixed anyways. Align it with the rest of the driver,
+> which does it the same way.
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
 
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/video/backlight/gpio_backlight.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-> index cd6a75bca9cc..7dc4f90d926b 100644
-> --- a/drivers/video/backlight/gpio_backlight.c
-> +++ b/drivers/video/backlight/gpio_backlight.c
-> @@ -54,29 +54,29 @@ static const struct backlight_ops gpio_backlight_ops = {
->  
->  static int gpio_backlight_probe(struct platform_device *pdev)
->  {
-> -	struct gpio_backlight_platform_data *pdata =
-> -		dev_get_platdata(&pdev->dev);
-> +	struct device *dev = &pdev->dev;
-> +	struct gpio_backlight_platform_data *pdata = dev_get_platdata(dev);
->  	struct backlight_properties props;
->  	struct backlight_device *bl;
->  	struct gpio_backlight *gbl;
->  	enum gpiod_flags flags;
->  	int ret, def_value;
->  
-> -	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
-> +	gbl = devm_kzalloc(dev, sizeof(*gbl), GFP_KERNEL);
->  	if (gbl == NULL)
->  		return -ENOMEM;
->  
->  	if (pdata)
->  		gbl->fbdev = pdata->fbdev;
->  
-> -	def_value = device_property_read_bool(&pdev->dev, "default-on");
-> +	def_value = device_property_read_bool(dev, "default-on");
->  	flags = def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
->  
-> -	gbl->gpiod = devm_gpiod_get(&pdev->dev, NULL, flags);
-> +	gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
->  	if (IS_ERR(gbl->gpiod)) {
->  		ret = PTR_ERR(gbl->gpiod);
->  		if (ret != -EPROBE_DEFER) {
-> -			dev_err(&pdev->dev,
-> +			dev_err(dev,
->  				"Error: The gpios parameter is missing or invalid.\n");
->  		}
->  		return ret;
-> @@ -85,11 +85,10 @@ static int gpio_backlight_probe(struct platform_device *pdev)
->  	memset(&props, 0, sizeof(props));
->  	props.type = BACKLIGHT_RAW;
->  	props.max_brightness = 1;
-> -	bl = devm_backlight_device_register(&pdev->dev, dev_name(&pdev->dev),
-> -					&pdev->dev, gbl, &gpio_backlight_ops,
-> -					&props);
-> +	bl = devm_backlight_device_register(dev, dev_name(dev), dev, gbl,
-> +					    &gpio_backlight_ops, &props);
->  	if (IS_ERR(bl)) {
-> -		dev_err(&pdev->dev, "failed to register backlight\n");
-> +		dev_err(dev, "failed to register backlight\n");
->  		return PTR_ERR(bl);
->  	}
->  
-> -- 
-> 2.21.0
-> 
+Patch applied to wireless-drivers-next.git, thanks.
+
+231e83fdcd03 rsi: return explicit error values
 
 -- 
-With Best Regards,
-Andy Shevchenko
+https://patchwork.kernel.org/patch/11019801/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
