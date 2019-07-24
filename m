@@ -2,86 +2,151 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FB5C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC07C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D6522ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E47A20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8Kx6mdN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfGXJX2 (ORCPT
+        id S1726690AbfGXJ17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:23:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:9124 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfGXJX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:23:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 02:23:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,302,1559545200"; 
-   d="scan'208";a="368729447"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Jul 2019 02:23:25 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hqDUb-00025B-DB; Wed, 24 Jul 2019 17:23:25 +0800
-Date:   Wed, 24 Jul 2019 17:22:36 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Maarten ter Huurne <maarten@treewalker.org>
-Cc:     kbuild-all@01.org, Mark Brown <broonie@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: act8865: fix ptr_ret.cocci warnings
-Message-ID: <20190724092236.witxtfmubun25l2t@1905cc33b6dd>
-References: <201907241733.CiD9KMGa%lkp@intel.com>
+        Wed, 24 Jul 2019 05:27:59 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33363 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfGXJ16 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:27:58 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x3so31553700lfc.0;
+        Wed, 24 Jul 2019 02:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/lxoFTV2NP07iGG4lrW/6fB0F5OOcDNXPeCFzJNVz7Q=;
+        b=L8Kx6mdNwCiNdks/Ub1/XRaxPlBWUyUA6Z7rOLPfTJv3ob+28AWMKZOeaulfXRDStb
+         580dKVEKg5WA3d9k9xXFv8ksCo5tm5FPTFpkinNvmJA0h7++UKQt8gvTdQ5Wn95V6tDC
+         PTt0au5EZ3nPeVlKH49pqPWLytt9k5oW4RWTBE/FdITkrhEsenT6ApGSeO8efK8RU0uf
+         tBbI9QEL7Ie8n3bkSGLVIfVOknRxHYkaOQ0KSPjT2hEgQn2tgXfKEMeCx90myDYuGTLg
+         l6UP5Qv+b3VvSwj5lB1Uq9XhDBQN6xLkLKlg0eEWr0Wx7kol8EOTOCYwnEXMp6qOO5Dy
+         13ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/lxoFTV2NP07iGG4lrW/6fB0F5OOcDNXPeCFzJNVz7Q=;
+        b=r+qKAEKTePxh4nDY/v05i1Rg7tdXW7ylFSwusiV+KtBz7Hu66qb30EdBfRqRWPm7RP
+         w2bs2PSmDEV/ZEX9fm8tpX0279wQ7+6rjacQ2HdcZVw8TZMqjrLWtHIY2sFVkOVA6fvy
+         dRwe80o8OGUureCq4vS/U3lzXrq3aBcB5Sug/CLRuvJCZhUxqCZiz8uvyY61+iMhHrY/
+         u1bN80Vbysy+BGI63BU9PibELtI3I5q4UhtLQz06wfTDP5SiR7fpwdRT5X4KUIkjl4ly
+         p6bwG4kmloKHOOiVX77pdqZfURBQ/zXC0wTK4ZmaeshXiH4TiS4Xfm46PughzXjdV+/W
+         kJjQ==
+X-Gm-Message-State: APjAAAVjrr0QbHtGrKeK510qoaSWmSj5/vCTkav0EB87SOuYbOxVD5lv
+        1cC5zz4K5uy1hdCKQKIRXGJ0oFO1
+X-Google-Smtp-Source: APXvYqxkdfUPCviiU+7pkuJRFja9wGYPlnRqvkcXlLqCZbpgvZrsXKxAar2CS3a4ltu5Twt5BsrlMA==
+X-Received: by 2002:ac2:5dfb:: with SMTP id z27mr37827658lfq.128.1563960475646;
+        Wed, 24 Jul 2019 02:27:55 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id z22sm8561005ljz.20.2019.07.24.02.27.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 02:27:54 -0700 (PDT)
+Subject: Re: [PATCH v3] drm/tegra: sor: Enable HDA interrupts at plug-in
+To:     Viswanath L <viswanathl@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <1563885610-27198-1-git-send-email-viswanathl@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0ba35efb-44ec-d56c-b559-59f1daa3e6e4@gmail.com>
+Date:   Wed, 24 Jul 2019 12:27:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201907241733.CiD9KMGa%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1563885610-27198-1-git-send-email-viswanathl@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+23.07.2019 15:40, Viswanath L пишет:
+> HDMI plugout calls runtime suspend, which clears interrupt registers
+> and causes audio functionality to break on subsequent plug-in; setting
+> interrupt registers in sor_audio_prepare() solves the issue.
+> 
+> Signed-off-by: Viswanath L <viswanathl@nvidia.com>
 
-drivers/regulator/act8865-regulator.c:447:8-14: WARNING: PTR_ERR_OR_ZERO can be used
+Yours signed-off-by always should be the last line of the commit's
+message because the text below it belongs to a person who applies this
+patch, Thierry in this case. This is not a big deal at all and Thierry
+could make a fixup while applying the patch if will deem that as necessary.
 
+Secondly, there is no need to add "stable@vger.kernel.org" to the
+email's recipients because the patch will flow into stable kernel
+versions from the mainline once it will get applied. That happens based
+on the stable tag presence, hence it's enough to add the 'Cc' tag to the
+commit's message in order to get patch backported.
 
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+Lastly, next time please add everyone to the email's recipients whom
+you're expecting to get a reply. Otherwise there is a chance that patch
+will be left unnoticed.
 
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
+Everything else looks good to me, thanks!
 
-Fixes: 2d09a79bf637 ("regulator: act8865: Add support for act8600 charger")
-CC: Maarten ter Huurne <maarten@treewalker.org>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 
-tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git master
-head:   9e6dfe8045f85f9b5aade47e4192482927e2791a
-commit: 2d09a79bf637f91d1bbfcfd4520e3639dd15897c [2115/2398] regulator: act8865: Add support for act8600 charger
+> Fixes: 8e2988a76c26 ("drm/tegra: sor: Support for audio over HDMI")
+> Cc: <stable@vger.kernel.org>
+> ---
+>  drivers/gpu/drm/tegra/sor.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
+> index 5be5a08..0470cfe 100644
+> --- a/drivers/gpu/drm/tegra/sor.c
+> +++ b/drivers/gpu/drm/tegra/sor.c
+> @@ -2164,6 +2164,15 @@ static void tegra_sor_audio_prepare(struct tegra_sor *sor)
+>  
+>  	value = SOR_AUDIO_HDA_PRESENSE_ELDV | SOR_AUDIO_HDA_PRESENSE_PD;
+>  	tegra_sor_writel(sor, value, SOR_AUDIO_HDA_PRESENSE);
+> +
+> +	/*
+> +	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
+> +	 * is used for interoperability between the HDA codec driver and the
+> +	 * HDMI/DP driver.
+> +	 */
+> +	value = SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
+> +	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
+> +	tegra_sor_writel(sor, value, SOR_INT_MASK);
+>  }
+>  
+>  static void tegra_sor_audio_unprepare(struct tegra_sor *sor)
+> @@ -2913,15 +2922,6 @@ static int tegra_sor_init(struct host1x_client *client)
+>  	if (err < 0)
+>  		return err;
+>  
+> -	/*
+> -	 * Enable and unmask the HDA codec SCRATCH0 register interrupt. This
+> -	 * is used for interoperability between the HDA codec driver and the
+> -	 * HDMI/DP driver.
+> -	 */
+> -	value = SOR_INT_CODEC_SCRATCH1 | SOR_INT_CODEC_SCRATCH0;
+> -	tegra_sor_writel(sor, value, SOR_INT_ENABLE);
+> -	tegra_sor_writel(sor, value, SOR_INT_MASK);
+> -
+>  	return 0;
+>  }
+>  
+> 
 
- act8865-regulator.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -444,7 +444,7 @@ static int act8600_charger_probe(struct
- 
- 	charger = devm_power_supply_register(dev, &act8600_charger_desc, &cfg);
- 
--	return IS_ERR(charger) ? PTR_ERR(charger) : 0;
-+	return PTR_ERR_OR_ZERO(charger);
- }
- 
- static int act8865_pmic_probe(struct i2c_client *client,
