@@ -2,145 +2,199 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33101C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967E8C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051DB2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65072229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfGXJsG (ORCPT
+        id S1726384AbfGXJsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:48:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:35479 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfGXJsG (ORCPT
+        Wed, 24 Jul 2019 05:48:43 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41219 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfGXJsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:48:06 -0400
-Received: by mail-io1-f70.google.com with SMTP id w17so50446974iom.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 02:48:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=o0dG1ubL2ZUcRk/zh9N4n0goHb/laQk2v/DI7BLceg0=;
-        b=EZcI+SCSovO5oxIunwoYk9l68PGrSSIHrhIca3dHE6mSTlZnZUXbcHa3kOjW7E5Tm9
-         oBnkGJptgEaLmjCzomZDFzfXVhgW2FYVnaGbRQgoHIfqDBbv+npZ8KbVo91YXpOiob99
-         I1sy01uEpiZQGFUpb7vxDik13eydmB5yW0Vm7cJ1OH8XCNw0lbF7pJ3x5JpUGi/gWeM3
-         nCcSdgnpLeSaiQZX2B1s9O/onqp0YUxKZ+ACLMnR/lSWIOXeBFHEhBqT3jBilNDBUnut
-         tAFW0T+FxZRUyleAK9NM+VrczND82ScxxpmaOgG+R07TTBWhEJFCcdTZ/zXM7hobTBlN
-         tY1Q==
-X-Gm-Message-State: APjAAAXakEJOd9um5bZa9Afn6e7H4Vzg2qxByOdFfT0gPhr+1FfxBBGA
-        ufXPUHcWKobqCkxGV+eYJY3V2uKGit0jcM1oIL8QWVkQ4wrO
-X-Google-Smtp-Source: APXvYqxzhDxmXCu2dUR/YZFrg+W8K0nZkLszX2g0brJAb8wwwbzHzWKXDmOmpWpl64suFARwVsgaIAEKqSln52bm/erqyb6CJKPo
+        Wed, 24 Jul 2019 05:48:43 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1hqDt1-0001h1-Gx; Wed, 24 Jul 2019 11:48:39 +0200
+Received: from [IPv6:2003:c7:729:c703:c9d4:83d5:b99:4f4d] (unknown [IPv6:2003:c7:729:c703:c9d4:83d5:b99:4f4d])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id D498B437BC0;
+        Wed, 24 Jul 2019 09:48:37 +0000 (UTC)
+To:     Andrejs Cainikovs <Andrejs.Cainikovs@netmodule.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Patrick Zysset <Patrick.Zysset@netmodule.com>
+References: <20190208131738.27668-1-andrejs.cainikovs@netmodule.com>
+ <20190208131738.27668-2-andrejs.cainikovs@netmodule.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH 1/2] can: c_can: support 64 message objects for D_CAN
+Message-ID: <080346c5-eace-f0bc-ef3a-0354988b9fb4@pengutronix.de>
+Date:   Wed, 24 Jul 2019 11:48:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8447:: with SMTP id w7mr79198813ior.197.1563961685607;
- Wed, 24 Jul 2019 02:48:05 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 02:48:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b68e04058e6a3421@google.com>
-Subject: memory leak in dma_buf_ioctl
-From:   syzbot <syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190208131738.27668-2-andrejs.cainikovs@netmodule.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="L8Cw1XMGI72qJhJ4eicrbChBaG8O2hc47"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--L8Cw1XMGI72qJhJ4eicrbChBaG8O2hc47
+Content-Type: multipart/mixed; boundary="v1QXW5jEeOizdY2Gf64dDD33bLn4mSlJh";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Andrejs Cainikovs <Andrejs.Cainikovs@netmodule.com>,
+ Wolfgang Grandegger <wg@grandegger.com>,
+ "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Patrick Zysset <Patrick.Zysset@netmodule.com>
+Message-ID: <080346c5-eace-f0bc-ef3a-0354988b9fb4@pengutronix.de>
+Subject: Re: [PATCH 1/2] can: c_can: support 64 message objects for D_CAN
+References: <20190208131738.27668-1-andrejs.cainikovs@netmodule.com>
+ <20190208131738.27668-2-andrejs.cainikovs@netmodule.com>
+In-Reply-To: <20190208131738.27668-2-andrejs.cainikovs@netmodule.com>
 
-syzbot found the following crash on:
+--v1QXW5jEeOizdY2Gf64dDD33bLn4mSlJh
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    abdfd52a Merge tag 'armsoc-defconfig' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=131441d0600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d31de3d88059b7fa
-dashboard link: https://syzkaller.appspot.com/bug?extid=b2098bc44728a4efb3e9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12526e58600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161784f0600000
+On 2/8/19 2:17 PM, Andrejs Cainikovs wrote:
+> D_CAN supports up to 128 message objects, comparing to 32 on C_CAN.
+> However, some CPUs with D_CAN controller have their own limits:
+> TI AM335x Sitara CPU, for example, supports max of 64 message objects.
+>=20
+> This patch extends max D_CAN message objects up to 64.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com
+Please don't make this a kconfig option.
 
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff888114034680 (size 32):
-   comm "syz-executor110", pid 6894, jiffies 4294947136 (age 13.580s)
-   hex dump (first 32 bytes):
-     00 64 6d 61 62 75 66 3a 00 00 00 00 00 00 00 00  .dmabuf:........
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000d259834b>] kmemleak_alloc_recursive  
-/./include/linux/kmemleak.h:43 [inline]
-     [<00000000d259834b>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-     [<00000000d259834b>] slab_alloc /mm/slab.c:3319 [inline]
-     [<00000000d259834b>] __do_kmalloc /mm/slab.c:3653 [inline]
-     [<00000000d259834b>] __kmalloc_track_caller+0x165/0x300 /mm/slab.c:3670
-     [<00000000ab207ec1>] memdup_user+0x26/0xa0 /mm/util.c:165
-     [<00000000c0909d36>] strndup_user+0x62/0x80 /mm/util.c:224
-     [<00000000a34a2d25>] dma_buf_set_name /drivers/dma-buf/dma-buf.c:331  
-[inline]
-     [<00000000a34a2d25>] dma_buf_ioctl+0x60/0x1b0  
-/drivers/dma-buf/dma-buf.c:391
-     [<00000000d7817662>] vfs_ioctl /fs/ioctl.c:46 [inline]
-     [<00000000d7817662>] file_ioctl /fs/ioctl.c:509 [inline]
-     [<00000000d7817662>] do_vfs_ioctl+0x62a/0x810 /fs/ioctl.c:696
-     [<00000000d24a671a>] ksys_ioctl+0x86/0xb0 /fs/ioctl.c:713
-     [<00000000bd810f5d>] __do_sys_ioctl /fs/ioctl.c:720 [inline]
-     [<00000000bd810f5d>] __se_sys_ioctl /fs/ioctl.c:718 [inline]
-     [<00000000bd810f5d>] __x64_sys_ioctl+0x1e/0x30 /fs/ioctl.c:718
-     [<000000005a8e86d5>] do_syscall_64+0x76/0x1a0  
-/arch/x86/entry/common.c:296
-     [<000000007d83529f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+According to you description this is a HW feature, so please add the max
+number of messe objects to "struct c_can_driver_data" and adjust the
+drvdata accordingly.
 
-BUG: memory leak
-unreferenced object 0xffff888113b044a0 (size 32):
-   comm "syz-executor110", pid 6895, jiffies 4294947728 (age 7.660s)
-   hex dump (first 32 bytes):
-     00 64 6d 61 62 75 66 3a 00 00 00 00 00 00 00 00  .dmabuf:........
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000d259834b>] kmemleak_alloc_recursive  
-/./include/linux/kmemleak.h:43 [inline]
-     [<00000000d259834b>] slab_post_alloc_hook /mm/slab.h:522 [inline]
-     [<00000000d259834b>] slab_alloc /mm/slab.c:3319 [inline]
-     [<00000000d259834b>] __do_kmalloc /mm/slab.c:3653 [inline]
-     [<00000000d259834b>] __kmalloc_track_caller+0x165/0x300 /mm/slab.c:3670
-     [<00000000ab207ec1>] memdup_user+0x26/0xa0 /mm/util.c:165
-     [<00000000c0909d36>] strndup_user+0x62/0x80 /mm/util.c:224
-     [<00000000a34a2d25>] dma_buf_set_name /drivers/dma-buf/dma-buf.c:331  
-[inline]
-     [<00000000a34a2d25>] dma_buf_ioctl+0x60/0x1b0  
-/drivers/dma-buf/dma-buf.c:391
-     [<00000000d7817662>] vfs_ioctl /fs/ioctl.c:46 [inline]
-     [<00000000d7817662>] file_ioctl /fs/ioctl.c:509 [inline]
-     [<00000000d7817662>] do_vfs_ioctl+0x62a/0x810 /fs/ioctl.c:696
-     [<00000000d24a671a>] ksys_ioctl+0x86/0xb0 /fs/ioctl.c:713
-     [<00000000bd810f5d>] __do_sys_ioctl /fs/ioctl.c:720 [inline]
-     [<00000000bd810f5d>] __se_sys_ioctl /fs/ioctl.c:718 [inline]
-     [<00000000bd810f5d>] __x64_sys_ioctl+0x1e/0x30 /fs/ioctl.c:718
-     [<000000005a8e86d5>] do_syscall_64+0x76/0x1a0  
-/arch/x86/entry/common.c:296
-     [<000000007d83529f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> static const struct of_device_id c_can_of_table[] =3D {
+> 	{ .compatible =3D "bosch,c_can", .data =3D &c_can_drvdata },
+> 	{ .compatible =3D "bosch,d_can", .data =3D &d_can_drvdata },
+> 	{ .compatible =3D "ti,dra7-d_can", .data =3D &dra7_dcan_drvdata },
+> 	{ .compatible =3D "ti,am3352-d_can", .data =3D &am3352_dcan_drvdata },=
+
+> 	{ .compatible =3D "ti,am4372-d_can", .data =3D &am3352_dcan_drvdata },=
+
+> 	{ /* sentinel */ },
+> };
+
+You probably have to pass it via "struct c_can_priv" so that it's
+available in the c_can.c
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
+--v1QXW5jEeOizdY2Gf64dDD33bLn4mSlJh--
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--L8Cw1XMGI72qJhJ4eicrbChBaG8O2hc47
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl04KWMACgkQWsYho5Hk
+nSBWkgf/ewd8pvUqq2juUWx2Y5InHfSxIly9r0t5CyhJUYiBGy6etdKBVK6BUQTn
+hAqK6D+NVLOweN95M9IOA5h721FYtN/5f4T7FbahooZFgHWWapwOETBX2q9Nipby
+Fobu45M/ZBu4t5vkHAAXl3nHPat/gqpA0t19zz6eZzgAP7mze0GTIJZyfyfcMk54
+LvrKBxSv0XxBKS+fSBLIDV/QLyuXngGG/wZRELpY9gHdND3pvu0d/eipxVovVDPj
+mgMdDC+fJRhgNmnisPtpLLgqfdL5GCenFxQtTxB/y5i+d5HINTGjYy6yNdwqrmJ8
+CVkYqFNxFFD10Zis4v0pQrAbDzpXgA==
+=vEUi
+-----END PGP SIGNATURE-----
+
+--L8Cw1XMGI72qJhJ4eicrbChBaG8O2hc47--
