@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524CEC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2393C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B90220665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F5E229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563935424;
-	bh=I6xU4Bba6/b9aIQZV8vUAsvaMvs/uXHp/07ER6LIAOw=;
+	s=default; t=1563935453;
+	bh=AvFDvRbEqQ6kVr1F3yE0oyIcq6MoknP0WTni6CBefdw=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=UB1MU1AVP9Gjgx6NaEtHVS57cxqhYVk0C0CUBPu0eKFy/LrjK4UN0DBr9kNL4qRRz
-	 TPW0K/q9BJssYgEhuoqvS5dNcLzogS4r+3UfJL53T3jNWwv9Cdvkf1d+RUlKxRAGND
-	 ryYfeVMUjZ5vHFfusgKAING87+yKckZDmsmHhvlQ=
+	b=cisqCxbFDQQTy4kwSd93vbjIC4ww/ZziWVLR1pU8uuTcDz8pjQFIqHPn6LyVp77gK
+	 lWV5CgDzcGzKJ0EeaU8TKiaSjPBng34U6WUVHOsw0BGhorSv4Ate6gCOJp2NMdu/0s
+	 e6z6M8D9kL71Ps9uOeIHXTsnaz/6L/ixuZdNzuz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfGXCaW (ORCPT
+        id S2387478AbfGXCav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43042 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 22:30:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfGXCaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:30:22 -0400
+        id S1726400AbfGXCav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:30:51 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1789520665;
-        Wed, 24 Jul 2019 02:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAB5820665;
+        Wed, 24 Jul 2019 02:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563935421;
-        bh=I6xU4Bba6/b9aIQZV8vUAsvaMvs/uXHp/07ER6LIAOw=;
+        s=default; t=1563935450;
+        bh=AvFDvRbEqQ6kVr1F3yE0oyIcq6MoknP0WTni6CBefdw=;
         h=Date:From:To:Cc:Subject:From;
-        b=xQ7fURql4Uxhc/VwXKBqbr/jwhKihCmqONo63/I17Zrvo02bGvWx0ctW3tingw1eF
-         IWJpV4gtLkbDyvz1lUSmsV/oE1vlZ7og+LHx42GBEHB9V2G+DEcu6XkXk5kvzdY5tI
-         xWjNKDz2xIr6p1DD4zTKhk4G92Ge23q4MNITRV+o=
-Date:   Tue, 23 Jul 2019 19:30:19 -0700
+        b=jpzT5y8fC7JrQROjChZq1Tn6Be54ygFdq+d1SM5qPgRQxvD7mLnIjV8VEeGj9p8E3
+         VrgceaAsS9qS/4mZiTUdtgJkk4lWEppskeSOad1vJbhFsGgiHiBydu/iQP2Zr45TjH
+         r1spgYbvzYMrrU8mMcs9uVzG+6WyxreLMzLM4nN4=
+Date:   Tue, 23 Jul 2019 19:30:48 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     reiserfs-devel@vger.kernel.org
+To:     linux-ntfs-dev@lists.sourceforge.net,
+        Anton Altaparmakov <anton@tuxera.com>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 5 open syzbot bugs in "fs/reiserfs" subsystem
-Message-ID: <20190724023019.GS643@sol.localdomain>
-Mail-Followup-To: reiserfs-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 5 open syzbot bugs in "fs/ntfs" subsystem
+Message-ID: <20190724023048.GT643@sol.localdomain>
+Mail-Followup-To: linux-ntfs-dev@lists.sourceforge.net,
+        Anton Altaparmakov <anton@tuxera.com>, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -59,117 +61,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 5 of them as possibly being bugs in the "fs/reiserfs" subsystem.  I've
-listed these reports below, sorted by an algorithm that tries to list first the
-reports most likely to be still valid, important, and actionable.
+marked 5 of them as possibly being bugs in the "fs/ntfs" subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
+
+Of these 5 bugs, 2 were seen in mainline in the last week.
 
 If you believe a bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed a bug to the "fs/reiserfs" subsystem, please let
-me know, and if possible forward the report to the correct people or mailing
-list.
+If you believe I misattributed a bug to the "fs/ntfs" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
 
 Here are the bugs:
 
 --------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in blkdev_get
-Last occurred:      33 days ago
-Reported:           405 days ago
+Title:              WARNING: bad unlock balance in rcu_core
+Last occurred:      0 days ago
+Reported:           100 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=00965426fe7ceec1fd2d8756770d4c7c3cacdc4b
-Original thread:    https://lkml.kernel.org/lkml/000000000000e59aab056e8873ae@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 1 reply, 230 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+eaeb616d85c9a0afec7d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e59aab056e8873ae@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: unable to handle kernel paging request in cleanup_bitmap_list
-Last occurred:      27 days ago
-Reported:           478 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f7a51e226194a72ab7364a64af1b8fb1e80e94bb
-Original thread:    https://lkml.kernel.org/lkml/001a1140e9201dd16b0568cc6beb@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+008ac33be9dec51e0ca3@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a1140e9201dd16b0568cc6beb@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in unlock_new_inode
-Last occurred:      460 days ago
-Reported:           460 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ef79070d08a744686c4db202d9ba6817bba86ebb
-Original thread:    https://lkml.kernel.org/lkml/0000000000002ab8c5056a35b12b@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+187510916eb6a14598f7@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000002ab8c5056a35b12b@google.com
-
---------------------------------------------------------------------------------
-Title:              kernel BUG at fs/reiserfs/journal.c:LINE!
-Last occurred:      459 days ago
-Reported:           479 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4f66f3287ba3341410ff35b736339628173a5aaa
-Original thread:    https://lkml.kernel.org/lkml/001a113eba282f2ffc0568b76123@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6820505ae5978f4f8f2f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/001a113eba282f2ffc0568b76123@google.com
-
---------------------------------------------------------------------------------
-Title:              kernel BUG at fs/reiserfs/lock.c:LINE!
-Last occurred:      92 days ago
-Reported:           378 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=633d4e446a638abe31cc3054b5a69a42a4cd25d6
-Original thread:    https://lkml.kernel.org/lkml/0000000000002bd65e0570aa16f2@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=0d5bdaf028e4283ad7404609d17e5077f48ff26d
+Original thread:    https://lkml.kernel.org/lkml/000000000000c0bffa0586795098@google.com/T/#u
 
 Unfortunately, this bug does not have a reproducer.
 
 No one replied to the original thread for this bug.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+66d2c2155ece8b6d3fc0@syzkaller.appspotmail.com
+    Reported-by: syzbot+36baa6c2180e959e19b1@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000002bd65e0570aa16f2@google.com
+https://lkml.kernel.org/r/000000000000c0bffa0586795098@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: bad unlock balance in rcu_lock_release
+Last occurred:      0 days ago
+Reported:           30 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a939746456c0350d6a368a9d30a4dcfcafa800be
+Original thread:    https://lkml.kernel.org/lkml/000000000000fdd3f3058bfcf369@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+f9545ab3e9f85cd43a3a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000fdd3f3058bfcf369@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in ntfs_read_locked_inode
+Last occurred:      474 days ago
+Reported:           474 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=5c5466347d4969ec80f5000c5e049056f48e3e2e
+Original thread:    https://lkml.kernel.org/lkml/001a11441b6c6cb96c0569120042@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+19b469021157c136116a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a11441b6c6cb96c0569120042@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in ntfs_attr_find
+Last occurred:      477 days ago
+Reported:           477 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=731ba1daa85050266cef2836e917da1cc785f50a
+Original thread:    https://lkml.kernel.org/lkml/001a11447acae6b4560568e08829@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+aed06913f36eff9b544e@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/001a11447acae6b4560568e08829@google.com
+
+--------------------------------------------------------------------------------
+Title:              kernel BUG at fs/ntfs/aops.c:LINE!
+Last occurred:      460 days ago
+Reported:           460 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=86d590f642a6d325d2f9dc9571e6702bed1a77ee
+Original thread:    https://lkml.kernel.org/lkml/000000000000c4b45a056a36872f@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+6a5a7672f663cce8b156@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000c4b45a056a36872f@google.com
 
