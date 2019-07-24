@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4F4C76191
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6948BC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7261122C7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3414D22C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033370;
-	bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
+	s=default; t=1564033375;
+	bh=2/S1hdU4cTruU/hKmKnpGuGjMHYqBrbHfZvNHrsHGH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9LrRHEW0vM9GK1e33OTn0l4dKYSwpHdBW03cb+sSNKWyZ8NtzJWVkkW7eMLtWQ8+
-	 4Xbk/YKsE54cayhqAAc18NbrjcrNJ43cPpredoWgkPDgnRDQb/odwtIu4VLmIhTItN
-	 r6Rsz8JwcSsKiGulx8OgJIhX2JuENv37fIQKHDII=
+	b=nm2RciJoWADv7V4zH+Yv7gUxz3GB70gWL+4Qc/JHwC5S06TIh3jTyWcczEOS2Y0Js
+	 dP7VDgl97uO7xBbZcgdFqGWEvo72gGETSOPYbzXEeXZhla5MhvyRa9fjDCUkGt7qJR
+	 o7lzZROmyk0/VWfF13XAeLTHBl98qe8F+N8b7R3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390953AbfGYFmt (ORCPT
+        id S2390972AbfGYFmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390918AbfGYFml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:42:41 -0400
+        id S2390954AbfGYFmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F10CE22CB8;
-        Thu, 25 Jul 2019 05:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662AF21850;
+        Thu, 25 Jul 2019 05:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033360;
-        bh=ANVUNEMAe1jn6TZ1TL+1KmUas0lezeRrXvXkB9h6ki8=;
+        s=default; t=1564033368;
+        bh=2/S1hdU4cTruU/hKmKnpGuGjMHYqBrbHfZvNHrsHGH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQ7H4HYNkuERzU6iLwlAmPgucZhfFIPhdWz9dPd2u/NW/+WDZCebY+9wVo+mbqhYj
-         AWg2SEYGU6ihCyWjMaZzMACrvepJZ1s6AIrXWHzzJYgf1V7nlnz+FLyee/U3YDQLkb
-         RNhhHzad4rXWjv8wrhzSED67WVivmqnh7oiHCy+Q=
+        b=qEps97Fg4f5FxG2oDx6HUc+98Id6IfbNlxtc8SHmK4XZKGhEhJYrJrgI3k7KKTQJO
+         0qA+9q/xnwnzv2z2cx+NDZaAGWE4eVcYaztatG8oOFaQSaSE7flpiwR4RYGHW3F+JN
+         cATMvNLjytPDrPVcxUD+3BFIuLPkhHvlf46D+/34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        linux-crypto@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 182/271] crypto: crypto4xx - fix a potential double free in ppc4xx_trng_probe
-Date:   Wed, 24 Jul 2019 21:20:51 +0200
-Message-Id: <20190724191710.728178886@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Shenghui Wang <shhuiw@foxmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 185/271] bcache: Revert "bcache: free heap cache_set->flush_btree in bch_journal_free"
+Date:   Wed, 24 Jul 2019 21:20:54 +0200
+Message-Id: <20190724191710.984600453@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -65,52 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Coly Li <colyli@suse.de>
 
-commit 95566aa75cd6b3b404502c06f66956b5481194b3 upstream.
+commit ba82c1ac1667d6efb91a268edb13fc9cdaecec9b upstream.
 
-There is a possible double free issue in ppc4xx_trng_probe():
+This reverts commit 6268dc2c4703aabfb0b35681be709acf4c2826c6.
 
-85:	dev->trng_base = of_iomap(trng, 0);
-86:	of_node_put(trng);          ---> released here
-87:	if (!dev->trng_base)
-88:		goto err_out;
-...
-110:	ierr_out:
-111:		of_node_put(trng);  ---> double released here
-...
+This patch depends on commit c4dc2497d50d ("bcache: fix high CPU
+occupancy during journal") which is reverted in previous patch. So
+revert this one too.
 
-This issue was detected by using the Coccinelle software.
-We fix it by removing the unnecessary of_node_put().
-
-Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: <stable@vger.kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Armijn Hemel <armijn@tjaldur.nl>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 6268dc2c4703 ("bcache: free heap cache_set->flush_btree in bch_journal_free")
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Cc: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/amcc/crypto4xx_trng.c |    1 -
+ drivers/md/bcache/journal.c |    1 -
  1 file changed, 1 deletion(-)
 
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -111,7 +111,6 @@ void ppc4xx_trng_probe(struct crypto4xx_
- 	return;
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -842,7 +842,6 @@ void bch_journal_free(struct cache_set *
+ 	free_pages((unsigned long) c->journal.w[1].data, JSET_BITS);
+ 	free_pages((unsigned long) c->journal.w[0].data, JSET_BITS);
+ 	free_fifo(&c->journal.pin);
+-	free_heap(&c->flush_btree);
+ }
  
- err_out:
--	of_node_put(trng);
- 	iounmap(dev->trng_base);
- 	kfree(rng);
- 	dev->trng_base = NULL;
+ int bch_journal_alloc(struct cache_set *c)
 
 
