@@ -8,64 +8,62 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9F3C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05D1C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F77721926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E50521926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uolqLFiJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gw+tu5F7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfGXNRv (ORCPT
+        id S1728540AbfGXNSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:17:51 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42632 "EHLO
+        Wed, 24 Jul 2019 09:18:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40824 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbfGXNRv (ORCPT
+        with ESMTP id S1726514AbfGXNSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:17:51 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so20944627pff.9;
-        Wed, 24 Jul 2019 06:17:50 -0700 (PDT)
+        Wed, 24 Jul 2019 09:18:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so20945328pfp.7;
+        Wed, 24 Jul 2019 06:18:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ynlMYwwbUrHc4SOrISDzcpXFXjwRYIJ/NcSOEUlhS+4=;
-        b=uolqLFiJouhYH33CRrKgT+//sVZzPIrfc59iUU6EgZhr00v4l0ptOaDu0hPc/o53ar
-         JZj8TTCyFEPxSh4IbMhxTQPCNR9ipqji3s6auZzfK791eBXTBiBs3gguqcYHBBozrHiO
-         W/HqJYp5H/1iQycbJ1Wpy0ZgNnFmvHyspQOT2z8E2W6ViulHCH/ANPwCvlwVuqWzgp1v
-         zDAOQuScR4t07QwfXSmBD4F/lUQexdNp9KWNKzwmbYXIDOhu57YXEtttk1lxL4c/RXq2
-         NUInL4ZGIogVQqnGOmM6Ly/AxqhqdA0RrNWOdXUgUEE8QKXW5AwBQ7m8tC26h6QogKTy
-         GkTg==
+        bh=IGVoS35C4loNzLjDedtQfBKQUut8ZAbe4JqEpeR9UYE=;
+        b=Gw+tu5F79d77Dwe5b0k7vepXMUNwjz60OAA4HK2OI7Um2S4WTauQ3iALzPuxXwMS6g
+         rqIuyi0YvF4/nHdeRq/lUdpQVup8lfrira/SLWZYFuwSDiIaLi5zTx40vlqSCdXyqehM
+         fbdEVy1nn2dT+/e3WLvU2G9aDmp60vcvv0t5OYWJznlbrLIre3IUBwQiPGQPYTMJ4kMh
+         z1oq84ygowM1sbIi3Dfb4p9OZQCWvmztzEmAG9HF13u+LNnkdMgyIo9yamraIxnls6yy
+         Q0z1142QyUT/1pXukEJ578Rnb/PYDps5cVFkNmKlR2ZnMrNxNEodrXM4ioAA5CeFrXax
+         GWvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ynlMYwwbUrHc4SOrISDzcpXFXjwRYIJ/NcSOEUlhS+4=;
-        b=YUV7a+LqwrHSmLbFTdLVLpyb/1CBJQ9g3JimJWND6YghInlhuBenraz2IOPSSBlRIh
-         t64MNcRB3uYT8/ZKo0e/rp1eX07DSf/Dq9iaTK3nhAQxev4AGRgbOYHdIy4HKTtbbNbS
-         aX8b1LvFjGKXWkUh7McyDlyJpWLmXAM3Hz8ZFVROFZytN7+0ZLMKwKbh64JxwmFdAKCR
-         gSIkmwCuGo/8Pgi73QVyZYCLjSr0mj1Kpi4XCstXBR2tAKQl4W8jmzshvPIUAPo+o4OF
-         iLBshK5QDZSiVWfDFbxaW9ooti0RMDRyOGAaiJnMXxPEpJLQgQNEMtnOIZckbOLXN8Pm
-         j9Pg==
-X-Gm-Message-State: APjAAAXOrcovfnymutJHIWF6HSd5xJNa0HbT7nIV81D57vSZ36XoUysy
-        uwTd52ViFBCZDxMnPX0siFw=
-X-Google-Smtp-Source: APXvYqxe+3Q32Rp5kuQ5S3t50hpt5vPn7SU/JGnCM+q6dfXdaWCHHt6DzrAraogN/MLgkzva0xgd5A==
-X-Received: by 2002:a63:8a43:: with SMTP id y64mr80625585pgd.104.1563974270480;
-        Wed, 24 Jul 2019 06:17:50 -0700 (PDT)
+        bh=IGVoS35C4loNzLjDedtQfBKQUut8ZAbe4JqEpeR9UYE=;
+        b=V3h4xIwcbOrATSEQkHja0OuhobWtN2GRt4bF00O5Gq0jV0zo+92gx/EZiYpyXtfgLY
+         1X1qo0QM5YQdmwj/24fvizwdTZKAPvjyb8uIXcOMeSsezEao8Dxuw8ORzg+ruVzHxFyV
+         y/+/bXE1AAJvgEbMtWy/OfA7xgFecIKmwAxXrcxU/gFKUuT0iaAvr2JC6xmt97m8k6eK
+         VLFjPvEnb2Xb0oL4ZsvUmi7rYc/EIFrqdW+vXGDjnyoNF4hIEthjR/LxgoETtsiZKMYU
+         cnLF3GEjrFsdGS8ORAT8tYh2RNMMsmGwSqA8IsNDyX/sQXyf9CeHquQXjwFp9Y0osvVr
+         dCRA==
+X-Gm-Message-State: APjAAAVRgq/wQAyvZOw2zhiKm/2cnBC53FImHGKxCSQzX5cuveKFEHGI
+        rewyaerL/1T2bxR0D7qqw6RdA4GyJyk=
+X-Google-Smtp-Source: APXvYqzM63OwNIGX7R4MXw34+9wybS1L4xU90DDOgtEk22ezf2BoDdccGvAEkDqtliBPLfKQRtA+ng==
+X-Received: by 2002:aa7:90d4:: with SMTP id k20mr2243254pfk.78.1563974283397;
+        Wed, 24 Jul 2019 06:18:03 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id 143sm67567613pgc.6.2019.07.24.06.17.47
+        by smtp.gmail.com with ESMTPSA id p187sm71011976pfg.89.2019.07.24.06.18.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 06:17:49 -0700 (PDT)
+        Wed, 24 Jul 2019 06:18:02 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] fbdev: sm712fb: Use dev_get_drvdata
-Date:   Wed, 24 Jul 2019 21:17:44 +0800
-Message-Id: <20190724131744.1709-1-hslester96@gmail.com>
+Subject: [PATCH] serial: 8250: Use dev_get_drvdata where possible
+Date:   Wed, 24 Jul 2019 21:17:58 +0800
+Message-Id: <20190724131758.1764-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,37 +78,38 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/video/fbdev/sm712fb.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c | 3 +--
+ drivers/tty/serial/8250/8250_pci.c  | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index 7b1b0d8d27a7..207d0add684b 100644
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1694,10 +1694,8 @@ static void smtcfb_pci_remove(struct pci_dev *pdev)
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index edd6dfe055bf..03b347afd46c 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -561,8 +561,7 @@ static int __maybe_unused exar_suspend(struct device *dev)
  
- static int __maybe_unused smtcfb_pci_suspend(struct device *device)
+ static int __maybe_unused exar_resume(struct device *dev)
  {
--	struct pci_dev *pdev = to_pci_dev(device);
--	struct smtcfb_info *sfb;
-+	struct smtcfb_info *sfb = dev_get_drvdata(device);
+-	struct pci_dev *pcidev = to_pci_dev(dev);
+-	struct exar8250 *priv = pci_get_drvdata(pcidev);
++	struct exar8250 *priv = dev_get_drvdata(dev);
+ 	unsigned int i;
  
--	sfb = pci_get_drvdata(pdev);
- 
- 	/* set the hw in sleep mode use external clock and self memory refresh
- 	 * so that we can turn off internal PLLs later on
-@@ -1717,10 +1715,8 @@ static int __maybe_unused smtcfb_pci_suspend(struct device *device)
- 
- static int __maybe_unused smtcfb_pci_resume(struct device *device)
+ 	for (i = 0; i < priv->nr; i++)
+diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+index 7f740b37700b..b714d8d0e161 100644
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -3859,8 +3859,7 @@ static void pciserial_remove_one(struct pci_dev *dev)
+ #ifdef CONFIG_PM_SLEEP
+ static int pciserial_suspend_one(struct device *dev)
  {
--	struct pci_dev *pdev = to_pci_dev(device);
--	struct smtcfb_info *sfb;
-+	struct smtcfb_info *sfb = dev_get_drvdata(device);
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct serial_private *priv = pci_get_drvdata(pdev);
++	struct serial_private *priv = dev_get_drvdata(dev);
  
--	sfb = pci_get_drvdata(pdev);
- 
- 	/* reinit hardware */
- 	sm7xx_init_hw();
+ 	if (priv)
+ 		pciserial_suspend_ports(priv);
 -- 
 2.20.1
 
