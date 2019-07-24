@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB308C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFC5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80192147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0025321738
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998478;
-	bh=MF8rD2QGHB9J0ZLkwA0r7YPIlLeoGOqpJ0E+xa3tB/E=;
+	s=default; t=1563998483;
+	bh=8hB8GEYwwsBCWI9E/TaVGO1DZZahcDjnJqvJxAcZX8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPN6yJxfnMFpS7nu3XgusuOtEw9Ds1tQe6YKkr4dfjM3lNDJnJLjbwzIW8MqaCL78
-	 60Gxx1KRWOqzuDfkjyCXRqC5x+5SlRE9Z6FYB0CGY0CEJhSqWCVkTGcZl0XPhCyAeV
-	 OjKVe0au248RlUlzUSq6G7WhPo8BFkAFEWhiLybM=
+	b=rICldLc2gHSupD+EZiXNmj3xNwVGx40GSMKuV50NulvVTKxiU+84rdpSvpYLy+R4A
+	 lixiV7BYpxI6Um0mHVSkE5GOTMoCvwnOszPRrPA9OhS8eve9OZDswTgnKv7ZV7mpSx
+	 G/d4Zv4QtCHRgv6cG+buc6T8LFXA/Wqp1gobJlKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405380AbfGXUBR (ORCPT
+        id S2405404AbfGXUBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388390AbfGXUBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:15 -0400
+        id S2405386AbfGXUBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 135FD2147A;
-        Wed, 24 Jul 2019 20:01:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8223422ADC;
+        Wed, 24 Jul 2019 20:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998474;
-        bh=MF8rD2QGHB9J0ZLkwA0r7YPIlLeoGOqpJ0E+xa3tB/E=;
+        s=default; t=1563998478;
+        bh=8hB8GEYwwsBCWI9E/TaVGO1DZZahcDjnJqvJxAcZX8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdDojLmHYzy4IxOg+7z7mOeBfVKc1QkThqptF1Nf2bPaFRKTLnl+xwQn9Cldc2XQs
-         c84UsSMpwz+028U9kD7UZzQXiWlogHTQpDpGi8+DVNurnJduXHgn5DVcpl3rDpI274
-         U0bsSufkkyKSp7kpnij444yMnarBUX9HvTW1GZlc=
+        b=Ef/xdnOETZK0rDfRw+Lvb/cqI+hnue1Axo+frqMu4haWZi1mwFI+PabInvv92Q06r
+         3cJmq9SZTyNjWw1nd57lpVsuajK/vojBf+FWRHmr/RCFg12tr+pagd1NK7Sp34bsf5
+         KSpAjP4TVIGQteurjcTG90Hl8cUA9zIIGDe9LOp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.1 349/371] powerpc/32s: fix suspend/resume when IBATs 4-7 are used
-Date:   Wed, 24 Jul 2019 21:21:41 +0200
-Message-Id: <20190724191750.045555914@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 340/371] mm/nvdimm: add is_ioremap_addr and use that to check ioremap address
+Date:   Wed, 24 Jul 2019 21:21:32 +0200
+Message-Id: <20190724191749.276584347@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,249 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit 6ecb78ef56e08d2119d337ae23cb951a640dc52d upstream.
+commit 9bd3bb6703d8c0a5fb8aec8e3287bd55b7341dcd upstream.
 
-Previously, only IBAT1 and IBAT2 were used to map kernel linear mem.
-Since commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
-STRICT_KERNEL_RWX"), we may have all 8 BATs used for mapping
-kernel text. But the suspend/restore functions only save/restore
-BATs 0 to 3, and clears BATs 4 to 7.
+Architectures like powerpc use different address range to map ioremap
+and vmalloc range.  The memunmap() check used by the nvdimm layer was
+wrongly using is_vmalloc_addr() to check for ioremap range which fails
+for ppc64.  This result in ppc64 not freeing the ioremap mapping.  The
+side effect of this is an unbind failure during module unload with
+papr_scm nvdimm driver
 
-Make suspend and restore functions respectively save and reload
-the 8 BATs on CPUs having MMU_FTR_USE_HIGH_BATS feature.
-
-Reported-by: Andreas Schwab <schwab@linux-m68k.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: http://lkml.kernel.org/r/20190701134038.14165-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Fixes: b5beae5e224f ("powerpc/pseries: Add driver for PAPR SCM regions")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/swsusp_32.S         |   73 ++++++++++++++++++++++++++++----
- arch/powerpc/platforms/powermac/sleep.S |   68 +++++++++++++++++++++++++++--
- 2 files changed, 128 insertions(+), 13 deletions(-)
+ arch/powerpc/include/asm/pgtable.h |   14 ++++++++++++++
+ include/linux/mm.h                 |    5 +++++
+ kernel/iomem.c                     |    2 +-
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kernel/swsusp_32.S
-+++ b/arch/powerpc/kernel/swsusp_32.S
-@@ -25,11 +25,19 @@
- #define SL_IBAT2	0x48
- #define SL_DBAT3	0x50
- #define SL_IBAT3	0x58
--#define SL_TB		0x60
--#define SL_R2		0x68
--#define SL_CR		0x6c
--#define SL_LR		0x70
--#define SL_R12		0x74	/* r12 to r31 */
-+#define SL_DBAT4	0x60
-+#define SL_IBAT4	0x68
-+#define SL_DBAT5	0x70
-+#define SL_IBAT5	0x78
-+#define SL_DBAT6	0x80
-+#define SL_IBAT6	0x88
-+#define SL_DBAT7	0x90
-+#define SL_IBAT7	0x98
-+#define SL_TB		0xa0
-+#define SL_R2		0xa8
-+#define SL_CR		0xac
-+#define SL_LR		0xb0
-+#define SL_R12		0xb4	/* r12 to r31 */
- #define SL_SIZE		(SL_R12 + 80)
+--- a/arch/powerpc/include/asm/pgtable.h
++++ b/arch/powerpc/include/asm/pgtable.h
+@@ -137,6 +137,20 @@ static inline void pte_frag_set(mm_conte
+ }
+ #endif
  
- 	.section .data
-@@ -114,6 +122,41 @@ _GLOBAL(swsusp_arch_suspend)
- 	mfibatl	r4,3
- 	stw	r4,SL_IBAT3+4(r11)
- 
-+BEGIN_MMU_FTR_SECTION
-+	mfspr	r4,SPRN_DBAT4U
-+	stw	r4,SL_DBAT4(r11)
-+	mfspr	r4,SPRN_DBAT4L
-+	stw	r4,SL_DBAT4+4(r11)
-+	mfspr	r4,SPRN_DBAT5U
-+	stw	r4,SL_DBAT5(r11)
-+	mfspr	r4,SPRN_DBAT5L
-+	stw	r4,SL_DBAT5+4(r11)
-+	mfspr	r4,SPRN_DBAT6U
-+	stw	r4,SL_DBAT6(r11)
-+	mfspr	r4,SPRN_DBAT6L
-+	stw	r4,SL_DBAT6+4(r11)
-+	mfspr	r4,SPRN_DBAT7U
-+	stw	r4,SL_DBAT7(r11)
-+	mfspr	r4,SPRN_DBAT7L
-+	stw	r4,SL_DBAT7+4(r11)
-+	mfspr	r4,SPRN_IBAT4U
-+	stw	r4,SL_IBAT4(r11)
-+	mfspr	r4,SPRN_IBAT4L
-+	stw	r4,SL_IBAT4+4(r11)
-+	mfspr	r4,SPRN_IBAT5U
-+	stw	r4,SL_IBAT5(r11)
-+	mfspr	r4,SPRN_IBAT5L
-+	stw	r4,SL_IBAT5+4(r11)
-+	mfspr	r4,SPRN_IBAT6U
-+	stw	r4,SL_IBAT6(r11)
-+	mfspr	r4,SPRN_IBAT6L
-+	stw	r4,SL_IBAT6+4(r11)
-+	mfspr	r4,SPRN_IBAT7U
-+	stw	r4,SL_IBAT7(r11)
-+	mfspr	r4,SPRN_IBAT7L
-+	stw	r4,SL_IBAT7+4(r11)
-+END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++#ifdef CONFIG_PPC64
++#define is_ioremap_addr is_ioremap_addr
++static inline bool is_ioremap_addr(const void *x)
++{
++#ifdef CONFIG_MMU
++	unsigned long addr = (unsigned long)x;
 +
- #if  0
- 	/* Backup various CPU config stuffs */
- 	bl	__save_cpu_setup
-@@ -279,27 +322,41 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
- 	mtibatu	3,r4
- 	lwz	r4,SL_IBAT3+4(r11)
- 	mtibatl	3,r4
--#endif
--
- BEGIN_MMU_FTR_SECTION
--	li	r4,0
-+	lwz	r4,SL_DBAT4(r11)
- 	mtspr	SPRN_DBAT4U,r4
-+	lwz	r4,SL_DBAT4+4(r11)
- 	mtspr	SPRN_DBAT4L,r4
-+	lwz	r4,SL_DBAT5(r11)
- 	mtspr	SPRN_DBAT5U,r4
-+	lwz	r4,SL_DBAT5+4(r11)
- 	mtspr	SPRN_DBAT5L,r4
-+	lwz	r4,SL_DBAT6(r11)
- 	mtspr	SPRN_DBAT6U,r4
-+	lwz	r4,SL_DBAT6+4(r11)
- 	mtspr	SPRN_DBAT6L,r4
-+	lwz	r4,SL_DBAT7(r11)
- 	mtspr	SPRN_DBAT7U,r4
-+	lwz	r4,SL_DBAT7+4(r11)
- 	mtspr	SPRN_DBAT7L,r4
-+	lwz	r4,SL_IBAT4(r11)
- 	mtspr	SPRN_IBAT4U,r4
-+	lwz	r4,SL_IBAT4+4(r11)
- 	mtspr	SPRN_IBAT4L,r4
-+	lwz	r4,SL_IBAT5(r11)
- 	mtspr	SPRN_IBAT5U,r4
-+	lwz	r4,SL_IBAT5+4(r11)
- 	mtspr	SPRN_IBAT5L,r4
-+	lwz	r4,SL_IBAT6(r11)
- 	mtspr	SPRN_IBAT6U,r4
-+	lwz	r4,SL_IBAT6+4(r11)
- 	mtspr	SPRN_IBAT6L,r4
-+	lwz	r4,SL_IBAT7(r11)
- 	mtspr	SPRN_IBAT7U,r4
-+	lwz	r4,SL_IBAT7+4(r11)
- 	mtspr	SPRN_IBAT7L,r4
- END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++	return addr >= IOREMAP_BASE && addr < IOREMAP_END;
++#else
++	return false;
 +#endif
- 
- 	/* Flush all TLBs */
- 	lis	r4,0x1000
---- a/arch/powerpc/platforms/powermac/sleep.S
-+++ b/arch/powerpc/platforms/powermac/sleep.S
-@@ -38,10 +38,18 @@
- #define SL_IBAT2	0x48
- #define SL_DBAT3	0x50
- #define SL_IBAT3	0x58
--#define SL_TB		0x60
--#define SL_R2		0x68
--#define SL_CR		0x6c
--#define SL_R12		0x70	/* r12 to r31 */
-+#define SL_DBAT4	0x60
-+#define SL_IBAT4	0x68
-+#define SL_DBAT5	0x70
-+#define SL_IBAT5	0x78
-+#define SL_DBAT6	0x80
-+#define SL_IBAT6	0x88
-+#define SL_DBAT7	0x90
-+#define SL_IBAT7	0x98
-+#define SL_TB		0xa0
-+#define SL_R2		0xa8
-+#define SL_CR		0xac
-+#define SL_R12		0xb0	/* r12 to r31 */
- #define SL_SIZE		(SL_R12 + 80)
- 
- 	.section .text
-@@ -126,6 +134,41 @@ _GLOBAL(low_sleep_handler)
- 	mfibatl	r4,3
- 	stw	r4,SL_IBAT3+4(r1)
- 
-+BEGIN_MMU_FTR_SECTION
-+	mfspr	r4,SPRN_DBAT4U
-+	stw	r4,SL_DBAT4(r1)
-+	mfspr	r4,SPRN_DBAT4L
-+	stw	r4,SL_DBAT4+4(r1)
-+	mfspr	r4,SPRN_DBAT5U
-+	stw	r4,SL_DBAT5(r1)
-+	mfspr	r4,SPRN_DBAT5L
-+	stw	r4,SL_DBAT5+4(r1)
-+	mfspr	r4,SPRN_DBAT6U
-+	stw	r4,SL_DBAT6(r1)
-+	mfspr	r4,SPRN_DBAT6L
-+	stw	r4,SL_DBAT6+4(r1)
-+	mfspr	r4,SPRN_DBAT7U
-+	stw	r4,SL_DBAT7(r1)
-+	mfspr	r4,SPRN_DBAT7L
-+	stw	r4,SL_DBAT7+4(r1)
-+	mfspr	r4,SPRN_IBAT4U
-+	stw	r4,SL_IBAT4(r1)
-+	mfspr	r4,SPRN_IBAT4L
-+	stw	r4,SL_IBAT4+4(r1)
-+	mfspr	r4,SPRN_IBAT5U
-+	stw	r4,SL_IBAT5(r1)
-+	mfspr	r4,SPRN_IBAT5L
-+	stw	r4,SL_IBAT5+4(r1)
-+	mfspr	r4,SPRN_IBAT6U
-+	stw	r4,SL_IBAT6(r1)
-+	mfspr	r4,SPRN_IBAT6L
-+	stw	r4,SL_IBAT6+4(r1)
-+	mfspr	r4,SPRN_IBAT7U
-+	stw	r4,SL_IBAT7(r1)
-+	mfspr	r4,SPRN_IBAT7L
-+	stw	r4,SL_IBAT7+4(r1)
-+END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++}
++#endif /* CONFIG_PPC64 */
 +
- 	/* Backup various CPU config stuffs */
- 	bl	__save_cpu_setup
+ #endif /* __ASSEMBLY__ */
  
-@@ -326,22 +369,37 @@ grackle_wake_up:
- 	mtibatl	3,r4
+ #endif /* _ASM_POWERPC_PGTABLE_H */
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -590,6 +590,11 @@ static inline bool is_vmalloc_addr(const
+ 	return false;
+ #endif
+ }
++
++#ifndef is_ioremap_addr
++#define is_ioremap_addr(x) is_vmalloc_addr(x)
++#endif
++
+ #ifdef CONFIG_MMU
+ extern int is_vmalloc_or_module_addr(const void *x);
+ #else
+--- a/kernel/iomem.c
++++ b/kernel/iomem.c
+@@ -121,7 +121,7 @@ EXPORT_SYMBOL(memremap);
  
- BEGIN_MMU_FTR_SECTION
--	li	r4,0
-+	lwz	r4,SL_DBAT4(r1)
- 	mtspr	SPRN_DBAT4U,r4
-+	lwz	r4,SL_DBAT4+4(r1)
- 	mtspr	SPRN_DBAT4L,r4
-+	lwz	r4,SL_DBAT5(r1)
- 	mtspr	SPRN_DBAT5U,r4
-+	lwz	r4,SL_DBAT5+4(r1)
- 	mtspr	SPRN_DBAT5L,r4
-+	lwz	r4,SL_DBAT6(r1)
- 	mtspr	SPRN_DBAT6U,r4
-+	lwz	r4,SL_DBAT6+4(r1)
- 	mtspr	SPRN_DBAT6L,r4
-+	lwz	r4,SL_DBAT7(r1)
- 	mtspr	SPRN_DBAT7U,r4
-+	lwz	r4,SL_DBAT7+4(r1)
- 	mtspr	SPRN_DBAT7L,r4
-+	lwz	r4,SL_IBAT4(r1)
- 	mtspr	SPRN_IBAT4U,r4
-+	lwz	r4,SL_IBAT4+4(r1)
- 	mtspr	SPRN_IBAT4L,r4
-+	lwz	r4,SL_IBAT5(r1)
- 	mtspr	SPRN_IBAT5U,r4
-+	lwz	r4,SL_IBAT5+4(r1)
- 	mtspr	SPRN_IBAT5L,r4
-+	lwz	r4,SL_IBAT6(r1)
- 	mtspr	SPRN_IBAT6U,r4
-+	lwz	r4,SL_IBAT6+4(r1)
- 	mtspr	SPRN_IBAT6L,r4
-+	lwz	r4,SL_IBAT7(r1)
- 	mtspr	SPRN_IBAT7U,r4
-+	lwz	r4,SL_IBAT7+4(r1)
- 	mtspr	SPRN_IBAT7L,r4
- END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
- 
+ void memunmap(void *addr)
+ {
+-	if (is_vmalloc_addr(addr))
++	if (is_ioremap_addr(addr))
+ 		iounmap((void __iomem *) addr);
+ }
+ EXPORT_SYMBOL(memunmap);
 
 
