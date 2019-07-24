@@ -2,108 +2,127 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D85C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E029EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3698A21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000567;
-	bh=TD9CeuCD1yg7COD4KIQ1mU61LXL0u/g7kCGYzuGd4h8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AnZEyYiEVT8sjZ77NRylLdVG1AO6UGqA1XvTk5A+zk1LmX9IRvEr64/ZAz5v3TQAG
-	 N0hUFTYTvg2yiEW5CJYukAkcjHbumKTv7rytMKyeCKTNzLrdxb0NeCLz3eCd5Zxp/S
-	 wTInGmGkg+x3J7bZ+siQAfRBN2cxRsY6Zkg3AfdE=
+	by mail.kernel.org (Postfix) with ESMTP id B5797206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:36:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e+1uovH+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a7cYdd2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389577AbfGXUgG (ORCPT
+        id S2389684AbfGXUgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbfGXTZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 24 Jul 2019 16:36:15 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52914 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfGXUgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:36:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4F28560588; Wed, 24 Jul 2019 20:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564000573;
+        bh=LeXYBF4XZF+Eab2E7VFMqCpPAbcHZ5qGNQCkNioMI04=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e+1uovH+DfPEa13HCBRKq6kYXCNe6BUY6BmVLWd3OKIn8uKQvdwzAsfQWJOsWBzQo
+         3pvyITvUwHHKKGVn2H9TVqF4fswgAvsjnPVfGJHJrwFaAxji7ZtNGamZ99JAUT88Z6
+         5jWTHlmS8r64iMczX1k0rRZfF/s0hfElDANZnM5c=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D17218F0;
-        Wed, 24 Jul 2019 19:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996308;
-        bh=TD9CeuCD1yg7COD4KIQ1mU61LXL0u/g7kCGYzuGd4h8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzD3v3JBZ3cBEhfG1FwLGoflxSJZTUJ7MZ4bY0P+T0oMdCqb2fQEHuyc6Uvo+/rg8
-         9ElZJ2CNLJLSr759a3Bqo7G4L7/gTTN+6KHWOj+JkqtDPkYC4/mZHXPTADJhpcIlaJ
-         f8eEBWDsZ0tlnbC/knq0RJE2B93fiBBjISd3jlG4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 051/413] net: phy: Check against net_device being NULL
-Date:   Wed, 24 Jul 2019 21:15:42 +0200
-Message-Id: <20190724191739.147182446@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B4F460392;
+        Wed, 24 Jul 2019 20:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1564000572;
+        bh=LeXYBF4XZF+Eab2E7VFMqCpPAbcHZ5qGNQCkNioMI04=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a7cYdd2xjX2abQ5f3LG+OcGurndQp/AjKXZLkjoyWEbhzmCKz5cGH9RYpwbVgNul3
+         DXzxFpU9IaTIG/TbQawoIbIfm78gJR8tDStF9ih2Mr3HYMPS5o2h5Yt5g6r/4sKjZM
+         ieya17n3ksapj9vhBRNQYj6TdCHqcfu4GSdYaPg0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B4F460392
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Wed, 24 Jul 2019 14:36:10 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        mkshah@codeaurora.org
+Subject: Re: [PATCH V2 2/4] drivers: qcom: rpmh-rsc: avoid locking in the
+ interrupt handler
+Message-ID: <20190724203610.GE18620@codeaurora.org>
+References: <20190722215340.3071-1-ilina@codeaurora.org>
+ <20190722215340.3071-2-ilina@codeaurora.org>
+ <5d3769df.1c69fb81.55d03.aa33@mx.google.com>
+ <20190724145251.GB18620@codeaurora.org>
+ <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <5d38b38e.1c69fb81.e8e5d.035b@mx.google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 82c76aca81187b3d28a6fb3062f6916450ce955e ]
+On Wed, Jul 24 2019 at 13:38 -0600, Stephen Boyd wrote:
+>Quoting Lina Iyer (2019-07-24 07:52:51)
+>> On Tue, Jul 23 2019 at 14:11 -0600, Stephen Boyd wrote:
+>> >Quoting Lina Iyer (2019-07-22 14:53:38)
+>> >> Avoid locking in the interrupt context to improve latency. Since we
+>> >> don't lock in the interrupt context, it is possible that we now could
+>> >> race with the DRV_CONTROL register that writes the enable register and
+>> >> cleared by the interrupt handler. For fire-n-forget requests, the
+>> >> interrupt may be raised as soon as the TCS is triggered and the IRQ
+>> >> handler may clear the enable bit before the DRV_CONTROL is read back.
+>> >>
+>> >> Use the non-sync variant when enabling the TCS register to avoid reading
+>> >> back a value that may been cleared because the interrupt handler ran
+>> >> immediately after triggering the TCS.
+>> >>
+>> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> >> ---
+>> >
+>> >I have to read this patch carefully. The commit text isn't convincing me
+>> >that it is actually safe to make this change. It mostly talks about the
+>> >performance improvements and how we need to fix __tcs_trigger(), which
+>> >is good, but I was hoping to be convinced that not grabbing the lock
+>> >here is safe.
+>> >
+>> >How do we ensure that drv->tcs_in_use is cleared before we call
+>> >tcs_write() and try to look for a free bit? Isn't it possible that we'll
+>> >get into a situation where the bitmap is all used up but the hardware
+>> >has just received an interrupt and is going to clear out a bit and then
+>> >an rpmh write fails with -EBUSY?
+>> >
+>> If we have a situation where there are no available free bits, we retry
+>> and that is part of the function. Since we have only 2 TCSes avaialble
+>> to write to the hardware and there could be multiple requests coming in,
+>> it is a very common situation. We try and acquire the drv->lock and if
+>> there are free TCS available and if available mark them busy and send
+>> our requests. If there are none available, we keep retrying.
+>>
+>
+>Ok. I wonder if we need some sort of barriers here too, like an
+>smp_mb__after_atomic()? That way we can make sure that the write to
+>clear the bit is seen by another CPU that could be spinning forever
+>waiting for that bit to be cleared? Before this change the spinlock
+>would be guaranteed to make these barriers for us, but now that doesn't
+>seem to be the case. I really hope that this whole thing can be changed
+>to be a mutex though, in which case we can use the bit_wait() API, etc.
+>to put tasks to sleep while RPMh is processing things.
+>
+We have drivers that want to send requests in atomic contexts and
+therefore mutex locks would not work.
 
-In general, we don't want MAC drivers calling phy_attach_direct with the
-net_device being NULL. Add checks against this in all the functions
-calling it: phy_attach() and phy_connect_direct().
-
-Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/phy/phy_device.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index dcc93a873174..a3f8740c6163 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -948,6 +948,9 @@ int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
- {
- 	int rc;
- 
-+	if (!dev)
-+		return -EINVAL;
-+
- 	rc = phy_attach_direct(dev, phydev, phydev->dev_flags, interface);
- 	if (rc)
- 		return rc;
-@@ -1290,6 +1293,9 @@ struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
- 	struct device *d;
- 	int rc;
- 
-+	if (!dev)
-+		return ERR_PTR(-EINVAL);
-+
- 	/* Search the list of PHY devices on the mdio bus for the
- 	 * PHY with the requested name
- 	 */
--- 
-2.20.1
-
-
+--Lina
 
