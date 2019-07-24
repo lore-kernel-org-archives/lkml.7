@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18A4C76194
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4507C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2262147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E5F20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033616;
-	bh=OHY45QRpXu1HCZQbI71bkzY4SYnlrOcQiaYTULCw7/c=;
+	s=default; t=1564033621;
+	bh=ZoxoJX3JIBSKtw7+QATylHzz1N3zv5WldLucO3PBzVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AP/n/RX0lugCkdNsEuA58H/01u3E/5Xjtu63ZqXZI00NTRn93xBgzZcTDPa5RP+xD
-	 QEw422g9QTiMKIQ9F8jf3M4hnVh5W2NI45Pa9IyI1Ug+Xg/QPalNbRGunTcKT3Gihz
-	 4vYoHHpDt9pMnnv0iclemvwxdRaoa2/BlWVCBpsE=
+	b=UQQepnkYTUV5pEbi457JmHf3e4Q4bBclqE67wJalWA4y1g06Ow8hZntyTIYKiHsQf
+	 XmMQz+F8mpVjNGPgj3IxneSOTUogaaTjeENmne8/YIyausCdYu8fo2Fbq2DHeu2NwP
+	 zYj8V67bgiuCTiJqztSv/3lfchxSNJ3czAxDc51E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391499AbfGYFqz (ORCPT
+        id S1726673AbfGYFrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34644 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729015AbfGYFqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:46:50 -0400
+        id S2391500AbfGYFq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:46:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE72422BEB;
-        Thu, 25 Jul 2019 05:46:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205C021880;
+        Thu, 25 Jul 2019 05:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033610;
-        bh=OHY45QRpXu1HCZQbI71bkzY4SYnlrOcQiaYTULCw7/c=;
+        s=default; t=1564033615;
+        bh=ZoxoJX3JIBSKtw7+QATylHzz1N3zv5WldLucO3PBzVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bVv4fW8Sb3xB9/ZTwEBHAoW6e8THVw6tXHabmYnW7xauUhW8v+oKouuZD5NjkqBcr
-         7xgxjpLTXetygoPJ0Tb/5o088CBRGbFnuVEfXj8AEjxxOpRCSUM1X0OYYVe6ZmVczM
-         cl/2+YwUCPNJREdm9fNVUlMqHdFCrNxJAMoo9k68=
+        b=y2FnXq2Ofl4oSFhaBPyKIkrGTa4mlIkgyzv0fTNT/1MUKejS9kerXhEA1BHWRu8oe
+         O9nyxDlMeC2MNWZZZzdHWK2+Mo9eIqCToozol1UHmjvsl/Lxs3QbwS1lU/jfuPEW0g
+         TxjGdiyGjLC6I7lzb8aYP4KO28FowKapbpE5YBmQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Josef Bacik <jbacik@fb.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 268/271] blkcg: update blkcg_print_stat() to handle larger outputs
-Date:   Wed, 24 Jul 2019 21:22:17 +0200
-Message-Id: <20190724191718.218353974@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Josua Mayer <josua@solid-run.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 270/271] dt-bindings: allow up to four clocks for orion-mdio
+Date:   Wed, 24 Jul 2019 21:22:19 +0200
+Message-Id: <20190724191718.388923343@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -59,44 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Josua Mayer <josua@solid-run.com>
 
-commit f539da82f2158916e154d206054e0efd5df7ab61 upstream.
+commit 80785f5a22e9073e2ded5958feb7f220e066d17b upstream.
 
-Depending on the number of devices, blkcg stats can go over the
-default seqfile buf size.  seqfile normally retries with a larger
-buffer but since the ->pd_stat() addition, blkcg_print_stat() doesn't
-tell seqfile that overflow has happened and the output gets printed
-truncated.  Fix it by calling seq_commit() w/ -1 on possible
-overflows.
+Armada 8040 needs four clocks to be enabled for MDIO accesses to work.
+Update the binding to allow the extra clock to be specified.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 903d23f0a354 ("blk-cgroup: allow controllers to output their own stats")
-Cc: stable@vger.kernel.org # v4.19+
-Cc: Josef Bacik <jbacik@fb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: stable@vger.kernel.org
+Fixes: 6d6a331f44a1 ("dt-bindings: allow up to three clocks for orion-mdio")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-cgroup.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/marvell-orion-mdio.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1016,8 +1016,12 @@ static int blkcg_print_stat(struct seq_f
- 		}
- next:
- 		if (has_stats) {
--			off += scnprintf(buf+off, size-off, "\n");
--			seq_commit(sf, off);
-+			if (off < size - 1) {
-+				off += scnprintf(buf+off, size-off, "\n");
-+				seq_commit(sf, off);
-+			} else {
-+				seq_commit(sf, -1);
-+			}
- 		}
- 	}
+--- a/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
++++ b/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
+@@ -16,7 +16,7 @@ Required properties:
  
+ Optional properties:
+ - interrupts: interrupt line number for the SMI error/done interrupt
+-- clocks: phandle for up to three required clocks for the MDIO instance
++- clocks: phandle for up to four required clocks for the MDIO instance
+ 
+ The child nodes of the MDIO driver are the individual PHY devices
+ connected to this MDIO bus. They must have a "reg" property given the
 
 
