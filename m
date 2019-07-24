@@ -5,61 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1107C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54965C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48812083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A56720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998832;
-	bh=JQKSJ1jhwu21v74Y60lwYJZUJ6awPSfOEu+ZXl0FSWs=;
+	s=default; t=1563998843;
+	bh=FseExNQ32xhK79d3eEXl5HTDqbLRl4K50b1utmIFb+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=znYYALrIxUsYl867DkcPO5nnfow2JyUIG1PTIR9RPorCxa1qgyOxglhXBxxWSUAOZ
-	 IsbOgEY6sRXn3zSyyG6ah6GkcGt4f9bNxBLTD0DUtLPOKroQPxyt4LXUf1/O3qUXn3
-	 MFLm3K5DcbeDiQAOSX85s/GMAcrWn3JKWNgDWx6s=
+	b=On7E8gRzUlPtlOrn/F+duX8qt5qNFtsRONmGXGO7UjzXoJF3ButwafeTWNnZGAtmA
+	 tJET5bAPADlaQNef6BH1HZzLbU7CqZ3jQs3V1yMa9REyk/EYSwnLZzAxkExgpidBec
+	 jmQgQt1cgdyLzPyETkPDlq9qisjpYhKQDBz+vpRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392554AbfGXUHF (ORCPT
+        id S2392802AbfGXUHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55232 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392474AbfGXUEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:04:15 -0400
+        id S2388200AbfGXUEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:04:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8947F21855;
-        Wed, 24 Jul 2019 20:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90462206BA;
+        Wed, 24 Jul 2019 20:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998654;
-        bh=JQKSJ1jhwu21v74Y60lwYJZUJ6awPSfOEu+ZXl0FSWs=;
+        s=default; t=1563998644;
+        bh=FseExNQ32xhK79d3eEXl5HTDqbLRl4K50b1utmIFb+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pc8z/fGvWUFXiacqNEa1f5XieIsYxA5iEvseuaySLBukPPyXMs5FOpN+VzmuMcInY
-         bVlqajzrbdg7yfqqmRTZKrTPFlE9s5KHDltLBg8uJ8nJZameiRRNf/Aad85hYbPQNg
-         H7t8yqbx0pwvem8Ph1E62N6nkbZ+lKL+hS1Icfn8=
+        b=jZhNoHepiiAD1Nh3XMEcks4Yzto2I4smiRmqZEHbnPwr3qzdmdGiu7gnWJROteKOP
+         m/UqUAPkz0bu6AW2kluQY2ifP0ux65tPURqJZjXzxDfzDtA6dPGyz4ptdWay+xTvtG
+         ZpBvQlpY7riifAcKh9zw1eaVcxwKhZ8jSS4h4C6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@suse.de,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 067/271] x86/cpu: Add Ice Lake NNPI to Intel family
-Date:   Wed, 24 Jul 2019 21:18:56 +0200
-Message-Id: <20190724191700.928300974@linuxfoundation.org>
+Subject: [PATCH 4.19 065/271] media: s5p-mfc: fix reading min scratch buffer size on MFC v6/v7
+Date:   Wed, 24 Jul 2019 21:18:54 +0200
+Message-Id: <20190724191700.760650475@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -72,45 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e32d045cd4ba06b59878323e434bad010e78e658 ]
+[ Upstream commit be22203aec440c1761ce8542c2636ac6c8951e3a ]
 
-Add the CPUID model number of Ice Lake Neural Network Processor for Deep
-Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
-model number 0x9D and this will be documented in a future version of Intel
-Software Development Manual.
+MFC v6 and v7 has no register to read min scratch buffer size, so it has
+to be read conditionally only if hardware supports it. This fixes following
+NULL pointer exception on SoCs with MFC v6/v7:
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@suse.de
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
+8<--- cut here ---
+Unable to handle kernel NULL pointer dereference at virtual address 00000000
+pgd = f25837f9
+[00000000] *pgd=bd93d835
+Internal error: Oops: 17 [#1] PREEMPT SMP ARM
+Modules linked in: btmrvl_sdio btmrvl bluetooth mwifiex_sdio mwifiex ecdh_generic ecc
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+PC is at s5p_mfc_get_min_scratch_buf_size+0x30/0x3c
+LR is at s5p_mfc_get_min_scratch_buf_size+0x28/0x3c
+...
+[<c074f998>] (s5p_mfc_get_min_scratch_buf_size) from [<c0745bc0>] (s5p_mfc_irq+0x814/0xa5c)
+[<c0745bc0>] (s5p_mfc_irq) from [<c019a218>] (__handle_irq_event_percpu+0x64/0x3f8)
+[<c019a218>] (__handle_irq_event_percpu) from [<c019a5d8>] (handle_irq_event_percpu+0x2c/0x7c)
+[<c019a5d8>] (handle_irq_event_percpu) from [<c019a660>] (handle_irq_event+0x38/0x5c)
+[<c019a660>] (handle_irq_event) from [<c019ebc4>] (handle_fasteoi_irq+0xc4/0x180)
+[<c019ebc4>] (handle_fasteoi_irq) from [<c0199270>] (generic_handle_irq+0x24/0x34)
+[<c0199270>] (generic_handle_irq) from [<c0199888>] (__handle_domain_irq+0x7c/0xec)
+[<c0199888>] (__handle_domain_irq) from [<c04ac298>] (gic_handle_irq+0x58/0x9c)
+[<c04ac298>] (gic_handle_irq) from [<c0101ab0>] (__irq_svc+0x70/0xb0)
+Exception stack(0xe73ddc60 to 0xe73ddca8)
+...
+[<c0101ab0>] (__irq_svc) from [<c01967d8>] (console_unlock+0x5a8/0x6a8)
+[<c01967d8>] (console_unlock) from [<c01981d0>] (vprintk_emit+0x118/0x2d8)
+[<c01981d0>] (vprintk_emit) from [<c01983b0>] (vprintk_default+0x20/0x28)
+[<c01983b0>] (vprintk_default) from [<c01989b4>] (printk+0x30/0x54)
+[<c01989b4>] (printk) from [<c07500b8>] (s5p_mfc_init_decode_v6+0x1d4/0x284)
+[<c07500b8>] (s5p_mfc_init_decode_v6) from [<c07230d0>] (vb2_start_streaming+0x24/0x150)
+[<c07230d0>] (vb2_start_streaming) from [<c0724e4c>] (vb2_core_streamon+0x11c/0x15c)
+[<c0724e4c>] (vb2_core_streamon) from [<c07478b8>] (vidioc_streamon+0x64/0xa0)
+[<c07478b8>] (vidioc_streamon) from [<c0709640>] (__video_do_ioctl+0x28c/0x45c)
+[<c0709640>] (__video_do_ioctl) from [<c0709bc8>] (video_usercopy+0x260/0x8a4)
+[<c0709bc8>] (video_usercopy) from [<c02b3820>] (do_vfs_ioctl+0xb0/0x9fc)
+[<c02b3820>] (do_vfs_ioctl) from [<c02b41a0>] (ksys_ioctl+0x34/0x58)
+[<c02b41a0>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xe73ddfa8 to 0xe73ddff0)
+...
+---[ end trace 376cf5ba6e0bee93 ]---
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/s5p-mfc/s5p_mfc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 2e38fb82b91d..aebedbaf5260 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -56,6 +56,7 @@
- #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
- #define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+#define INTEL_FAM6_ICELAKE_NNPI		0x9D
- 
- /* "Small Core" Processors (Atom) */
- 
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+index ca11f8a7569d..4b8516c35bc2 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+@@ -527,7 +527,8 @@ static void s5p_mfc_handle_seq_done(struct s5p_mfc_ctx *ctx,
+ 				dev);
+ 		ctx->mv_count = s5p_mfc_hw_call(dev->mfc_ops, get_mv_count,
+ 				dev);
+-		ctx->scratch_buf_size = s5p_mfc_hw_call(dev->mfc_ops,
++		if (FW_HAS_E_MIN_SCRATCH_BUF(dev))
++			ctx->scratch_buf_size = s5p_mfc_hw_call(dev->mfc_ops,
+ 						get_min_scratch_buf_size, dev);
+ 		if (ctx->img_width == 0 || ctx->img_height == 0)
+ 			ctx->state = MFCINST_ERROR;
 -- 
 2.20.1
 
