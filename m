@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045A6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC56C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB51322ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816E121873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998156;
-	bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
+	s=default; t=1563998159;
+	bh=vlTIogb9tzHAuBPAyMF4RNDmYm61QUR+7qMqccJAo1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E71b5llm/XEQXNYLnH9xnYWyGmdbFm9JyIOAVZTdRvLbWYdLZfqk2uTPE2BjW9UZQ
-	 Aks1/qqxSXFUEiKGcWAYlYja7Qwsoq9fRh7KiRbB+9/AF894XWsqBbMvcmyj+J88Ce
-	 wyCEHdfnRB+lfxOZZ3zVftXHs2l4tpvXqa0sh830=
+	b=kpXj+HP/qTlrPb/v+WCeW7wT/1z/Zx9rDj7tWIzBbYtWLywETlLvIXsCLHOriiihX
+	 JDbZQ70DHYb325xi3vRJ4ClVbzkNcZgPnViJVgrasNIjdTv+5UhLWFdBsdfOmv9neb
+	 u0kQ18yRGwKw764D73+22bFCoNYJG7S0dFfyNrOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391782AbfGXTzz (ORCPT
+        id S2404575AbfGXTz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39614 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391743AbfGXTzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:55:44 -0400
+        id S2404541AbfGXTzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5421205C9;
-        Wed, 24 Jul 2019 19:55:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EBB622ADA;
+        Wed, 24 Jul 2019 19:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998143;
-        bh=OgzOyEycRsQ5tZXTbgiVPzNADZxiQiXmkuy7t8sX45E=;
+        s=default; t=1563998145;
+        bh=vlTIogb9tzHAuBPAyMF4RNDmYm61QUR+7qMqccJAo1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qgge97N5DnfMrzcxoPrLPXH5FvrB17Q6P1mTN/ZFsLcWhI+Tok5qojbrBmFA4Y+Il
-         obbwEl/QXT2CPAsic7Cq5FCBBMF4FThVrcnyZNdrMJRf8vgu1UBbuSvywjLmhrUXhA
-         63PWofvwHCxJeB2vq9fv9QMrMrs/FSIIdPyOYLSs=
+        b=Nkxw5sCiMkC1/QOw2Oou89OY8WDjdZdsuYp+sVM0TBo8OxdBie64ZaLIsGft/37fE
+         F5jIgqugq2UynMHedFF2ShjkJA5UTUTSo5lClHrZRolTHJJONG202EtvoCULX3pBmh
+         hoFR8LQLH3Qd8VFDZ0wjowQCNgwTR8rXWTS5Te44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grant Hernandez <granthernandez@google.com>,
+        stable@vger.kernel.org, XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.1 262/371] Input: gtco - bounds check collection indent level
-Date:   Wed, 24 Jul 2019 21:20:14 +0200
-Message-Id: <20190724191744.165701375@linuxfoundation.org>
+Subject: [PATCH 5.1 263/371] Input: alps - dont handle ALPS cs19 trackpoint-only device
+Date:   Wed, 24 Jul 2019 21:20:15 +0200
+Message-Id: <20190724191744.220827547@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,79 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grant Hernandez <granthernandez@google.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 2a017fd82c5402b3c8df5e3d6e5165d9e6147dc1 upstream.
+commit 7e4935ccc3236751e5fe4bd6846f86e46bb2e427 upstream.
 
-The GTCO tablet input driver configures itself from an HID report sent
-via USB during the initial enumeration process. Some debugging messages
-are generated during the parsing. A debugging message indentation
-counter is not bounds checked, leading to the ability for a specially
-crafted HID report to cause '-' and null bytes be written past the end
-of the indentation array. As long as the kernel has CONFIG_DYNAMIC_DEBUG
-enabled, this code will not be optimized out.  This was discovered
-during code review after a previous syzkaller bug was found in this
-driver.
+On a latest Lenovo laptop, the trackpoint and 3 buttons below it
+don't work at all, when we move the trackpoint or press those 3
+buttons, the kernel will print out:
+"Rejected trackstick packet from non DualPoint device"
 
-Signed-off-by: Grant Hernandez <granthernandez@google.com>
+This device is identified as an alps touchpad but the packet has
+trackpoint format, so the alps.c drops the packet and prints out
+the message above.
+
+According to XiaoXiao's explanation, this device is named cs19 and
+is trackpoint-only device, its firmware is only for trackpoint, it
+is independent of touchpad and is a device completely different from
+DualPoint ones.
+
+To drive this device with mininal changes to the existing driver, we
+just let the alps driver not handle this device, then the trackpoint.c
+will be the driver of this device if the trackpoint driver is enabled.
+(if not, this device will fallback to a bare PS/2 device)
+
+With the trackpoint.c, this trackpoint and 3 buttons all work well,
+they have all features that the trackpoint should have, like
+scrolling-screen, drag-and-drop and frame-selection.
+
+Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/gtco.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/input/mouse/alps.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---- a/drivers/input/tablet/gtco.c
-+++ b/drivers/input/tablet/gtco.c
-@@ -78,6 +78,7 @@ Scott Hill shill@gtcocalcomp.com
+--- a/drivers/input/mouse/alps.c
++++ b/drivers/input/mouse/alps.c
+@@ -24,6 +24,7 @@
  
- /* Max size of a single report */
- #define REPORT_MAX_SIZE       10
-+#define MAX_COLLECTION_LEVELS  10
+ #include "psmouse.h"
+ #include "alps.h"
++#include "trackpoint.h"
  
+ /*
+  * Definitions for ALPS version 3 and 4 command mode protocol
+@@ -2864,6 +2865,23 @@ static const struct alps_protocol_info *
+ 	return NULL;
+ }
  
- /* Bitmask whether pen is in range */
-@@ -223,8 +224,7 @@ static void parse_hid_report_descriptor(
- 	char  maintype = 'x';
- 	char  globtype[12];
- 	int   indent = 0;
--	char  indentstr[10] = "";
--
-+	char  indentstr[MAX_COLLECTION_LEVELS + 1] = { 0 };
- 
- 	dev_dbg(ddev, "======>>>>>>PARSE<<<<<<======\n");
- 
-@@ -350,6 +350,13 @@ static void parse_hid_report_descriptor(
- 			case TAG_MAIN_COL_START:
- 				maintype = 'S';
- 
-+				if (indent == MAX_COLLECTION_LEVELS) {
-+					dev_err(ddev, "Collection level %d would exceed limit of %d\n",
-+						indent + 1,
-+						MAX_COLLECTION_LEVELS);
-+					break;
-+				}
++static bool alps_is_cs19_trackpoint(struct psmouse *psmouse)
++{
++	u8 param[2] = { 0 };
 +
- 				if (data == 0) {
- 					dev_dbg(ddev, "======>>>>>> Physical\n");
- 					strcpy(globtype, "Physical");
-@@ -369,8 +376,15 @@ static void parse_hid_report_descriptor(
- 				break;
++	if (ps2_command(&psmouse->ps2dev,
++			param, MAKE_PS2_CMD(0, 2, TP_READ_ID)))
++		return false;
++
++	/*
++	 * param[0] contains the trackpoint device variant_id while
++	 * param[1] contains the firmware_id. So far all alps
++	 * trackpoint-only devices have their variant_ids equal
++	 * TP_VARIANT_ALPS and their firmware_ids are in 0x20~0x2f range.
++	 */
++	return param[0] == TP_VARIANT_ALPS && (param[1] & 0x20);
++}
++
+ static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
+ {
+ 	const struct alps_protocol_info *protocol;
+@@ -3165,6 +3183,20 @@ int alps_detect(struct psmouse *psmouse,
+ 		return error;
  
- 			case TAG_MAIN_COL_END:
--				dev_dbg(ddev, "<<<<<<======\n");
- 				maintype = 'E';
+ 	/*
++	 * ALPS cs19 is a trackpoint-only device, and uses different
++	 * protocol than DualPoint ones, so we return -EINVAL here and let
++	 * trackpoint.c drive this device. If the trackpoint driver is not
++	 * enabled, the device will fall back to a bare PS/2 mouse.
++	 * If ps2_command() fails here, we depend on the immediately
++	 * followed psmouse_reset() to reset the device to normal state.
++	 */
++	if (alps_is_cs19_trackpoint(psmouse)) {
++		psmouse_dbg(psmouse,
++			    "ALPS CS19 trackpoint-only device detected, ignoring\n");
++		return -EINVAL;
++	}
 +
-+				if (indent == 0) {
-+					dev_err(ddev, "Collection level already at zero\n");
-+					break;
-+				}
-+
-+				dev_dbg(ddev, "<<<<<<======\n");
-+
- 				indent--;
- 				for (x = 0; x < indent; x++)
- 					indentstr[x] = '-';
++	/*
+ 	 * Reset the device to make sure it is fully operational:
+ 	 * on some laptops, like certain Dell Latitudes, we may
+ 	 * fail to properly detect presence of trackstick if device
 
 
