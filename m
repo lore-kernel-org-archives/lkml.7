@@ -2,100 +2,138 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29062C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15E1C76190
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E749520651
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8233229EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlQ7oTFW"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rgxIEaoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbfGXBvd (ORCPT
+        id S1728814AbfGXBxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:51:33 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35002 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfGXBvd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:51:33 -0400
-Received: by mail-io1-f67.google.com with SMTP id m24so86178385ioo.2;
-        Tue, 23 Jul 2019 18:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1VazidXBzwwvgKrkltEbhe85rbEwNvTQ8zjEVjoM56Q=;
-        b=IlQ7oTFWgQqpWLR9bzEHX58gA0YOUxxvxu7TrawjU4uRhn8WkcDmJDF6MbMfQzQ7PK
-         1cZ946o4DoQGjwwWy0Q0S7GvMklc4sapjcukQdoMY8kNoifE36+r2SgTfudKono3EMnh
-         0DQuKbWPRJas0BO/wqkYeT5d6u/RtTC3cWannVEEsaFN/3SaqsG1WbdWDPFoJmEUloi0
-         u9i8kwANQBhRMml/mLHclKoDp4LzH6dZCaeviKxex6U690Pc8gAscBE+pToCqCFprXZ4
-         RZvjiWZ3PyzxauQBT0EDKt/UEvrcNieJo6HqD3962tYz8WTGxm0hNrQo3aXzHj149iYF
-         EpVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1VazidXBzwwvgKrkltEbhe85rbEwNvTQ8zjEVjoM56Q=;
-        b=O5gSS62Wzydlm+6qR/rz8EoLtDaGd2cKMZst59LP/LvdUv0rK0YAJ2bPtNqN9QobGp
-         C2mxYwZo6m8ycR6mHX6iRaDdt5juPdFurE+2vSVLJqehsqCLnTBKp8ncjYvhbK0UJ/8d
-         me17AD0xsPcarNSEbXGuI6za6fDJNY18KAaOlqX8nhGtHYbHpZsNs01hn3PL7d8/xfxv
-         I1OpZaxVM99cJvPF6mdvR3kbMKaaMtV1zTeLyTzcpauQB5OJ8fxbOKuGWdUVY2iGWmEo
-         dl9A+9GgCMjUzktjjXX2dgQ8XH+5Xn89Qgj1csrPYRw723PQhFCkTfVrRnveCDGn+nkU
-         YfEg==
-X-Gm-Message-State: APjAAAVbyEHrZ6WjOlzuBfvO4N7GcdNhdDsx5EstHUt26EPVVDzG2KkV
-        RPBWUwjyQ/MjLTEOzo2WWeY=
-X-Google-Smtp-Source: APXvYqzyixL9gx5oZfe67P+25eJ53Dndx+lIIuJWgA3Lp2n7+ufHNQD1bMOd+5hLfViXG56ltZu4kQ==
-X-Received: by 2002:a6b:7109:: with SMTP id q9mr68279157iog.30.1563933092175;
-        Tue, 23 Jul 2019 18:51:32 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id e26sm38223271iod.10.2019.07.23.18.51.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 18:51:31 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        secalert@redhat.com, Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rpcrdma_decode_msg: check xdr_inline_decode result
-Date:   Tue, 23 Jul 2019 20:51:14 -0500
-Message-Id: <20190724015115.3493-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 23 Jul 2019 21:53:05 -0400
+Received: from mail-eopbgr140083.outbound.protection.outlook.com ([40.107.14.83]:20858
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725837AbfGXBxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 21:53:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KQTOEWBkE04IY+YAyrzfpgwlv93BC/UfmnlY4I5Rnnu69m5crFIR3nMuozpmwShzXM0ZsO1TXuRI0kR4p2NnbGb/xSff8gpIlfCzRJ3sIRESxaSX8M9cm2e5ACvSYq0QKFf7CgIjTVs7IYsxDs80WRjL8+mnFVCogfVOgywjLniGkFndmxZesC8nd1CE/5WIkpUasqSCz0fX8IVPQ8ZaqWU9xXPviX82tNXbgLGfE9jh6cMaQ9yljidhpmBAtxqnb7J3p7WnGbfryBK0/VNMF++ppbC2zQTAKDzpo0Gl5BNQCe9mD28SRJzcyKql5QwTWnVV1/dHMWUe2Vd65naxNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XVRTQOJR8hUnc7CckOKhDvoVieXPJrdfQhUMUFZtr60=;
+ b=mLO0BAXB5arqC6QvgNlnmklpthF2TszeSehQTJAPXTbf44gy0I4pNoEDGmimL2FkGP1H4XLKfssl8IDuZrMx8peRxw0uTDI6GSiBXrx39VBCbqQ8JsRrdwNN9O8lSSsUJ2sF0H+QMvoLVxqHukuUXesNfXZBANNjKFO3perFZdeWUdPX2LbuJfg9EGR8QY3bEB/1ttHFCLjrUY1iYd2D5Suymwjm3d8itf+M40os8k6xO+8yUF6OYTu1hbnXbG4V50ShUN2cJS3f8F5MhacFj63IuJDZ/ukoWPk3oB0ioj1giOIdONMCDIKgP5w336lCCFCiutvT2aPuUZURQ/6isA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XVRTQOJR8hUnc7CckOKhDvoVieXPJrdfQhUMUFZtr60=;
+ b=rgxIEaoJ9pJjqTGIRqLjPk5AgUK6+HScSwjGq6hxjrRC1a69OpSMGZZkT9E2QYDsmuBDzlTTdy1S7WIIpurQiNVixdHwgmjh/lRs/zH/sEtimmv3XHwCr28oPKhPbtqyVX2U6Wr8SokWXAEgAnlmpH2/bbs3u/s1gMA1PDiQjfI=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
+ VE1SPR01MB0007.eurprd04.prod.outlook.com (20.179.193.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2094.17; Wed, 24 Jul 2019 01:53:01 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::905c:a110:72fc:3a49]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::905c:a110:72fc:3a49%7]) with mapi id 15.20.2094.017; Wed, 24 Jul 2019
+ 01:53:01 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v5 12/15] ARM: dts: imx6ul: add dma support on ecspi
+Thread-Topic: [PATCH v5 12/15] ARM: dts: imx6ul: add dma support on ecspi
+Thread-Index: AQHVH2TVoxrocaPAG0GbhXUgE95pRabOlrSAgAmbW7CAAQJGgIAAEIzw
+Date:   Wed, 24 Jul 2019 01:53:00 +0000
+Message-ID: <VE1PR04MB6638F60965CD3D5CE47F26C489C60@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <20190610081753.11422-13-yibin.gong@nxp.com> <20190717064204.GA3738@dragon>
+ <VE1PR04MB663894FA5BC88B130C70AC0789C70@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20190724004848.GV15632@dragon>
+In-Reply-To: <20190724004848.GV15632@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 153fc810-43c0-4ffa-be34-08d70fd9a8e4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1SPR01MB0007;
+x-ms-traffictypediagnostic: VE1SPR01MB0007:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VE1SPR01MB0007C7C8F79C9966AFE4CB7589C60@VE1SPR01MB0007.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 0108A997B2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(346002)(396003)(376002)(136003)(199004)(189003)(6436002)(33656002)(55016002)(966005)(66066001)(4001150100001)(6306002)(486006)(9686003)(53936002)(2906002)(102836004)(8936002)(6116002)(68736007)(25786009)(6506007)(53546011)(76176011)(7696005)(478600001)(186003)(11346002)(66556008)(66476007)(81166006)(4326008)(8676002)(99286004)(64756008)(14454004)(26005)(305945005)(316002)(7736002)(256004)(4744005)(476003)(76116006)(5660300002)(229853002)(66946007)(54906003)(52536014)(3846002)(446003)(71200400001)(74316002)(66446008)(6916009)(7416002)(81156014)(86362001)(71190400001)(6246003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1SPR01MB0007;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GHJD73MEUaC/tMFOsrJaSUhVSGrdVXLWUG8i8gVF083Z8djAh+aZH4AtLNofEPr0hzxubHDvFE9hsUYLtaOphE2LSOSpTmvH/hyoOT+XB0/KgcvV2wM+sdv1iBhL8Oamhv4eLMqMy+2gELHLrwfReLZbwU4OJ03bPguINsp85dYeUjQxPG7y9A9w+OgbKx67F1fkZ3WlLEahuwtTAkc6rEw3Dr1mVqa1oQ9+BP8eUJwNRSt7Tp8wSCl/eq+XbpmlBEhKy8OtxIA861rYfjEObHNznoESU20iz7eWqpsCoeyn27Y60JQ3/SaAX/UaQ3TYavsDlIBNovRFIeadrZFm7nt2gB8CRV+krHmZZMrx4OSC1QgQBVkurTCtBFpOEDz0Pw/T4c3t1+T4eAi8FZGmUnjbENxAGbTv7yK4eiwC3UQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 153fc810-43c0-4ffa-be34-08d70fd9a8e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2019 01:53:01.0358
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1SPR01MB0007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xdr_inline_decode may return NULL, so the check is necessary. The base
-pointer will be dereferenced later in rpcrdma_inline_fixup.
-
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- net/sunrpc/xprtrdma/rpc_rdma.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
-index 4345e6912392..d0479efe0e72 100644
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -1160,6 +1160,9 @@ rpcrdma_decode_msg(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep,
- 
- 	/* Build the RPC reply's Payload stream in rqst->rq_rcv_buf */
- 	base = (char *)xdr_inline_decode(xdr, 0);
-+	if (!base)
-+		return -EIO;
-+
- 	rpclen = xdr_stream_remaining(xdr);
- 	r_xprt->rx_stats.fixup_copy_count +=
- 		rpcrdma_inline_fixup(rqst, base, rpclen, writelist & 3);
--- 
-2.17.1
-
+On 2019-7-24 at 08:49 Shawn Guo <shawnguo@kernel.org> wrote:
+> On Tue, Jul 23, 2019 at 09:39:38AM +0000, Robin Gong wrote:
+> > On 2019-7-17 at 14:42 Shawn Guo <shawnguo@kernel.org> wrote:
+> > > On Mon, Jun 10, 2019 at 04:17:50PM +0800, yibin.gong@nxp.com wrote:
+> > > > From: Robin Gong <yibin.gong@nxp.com>
+> > > >
+> > > > Add dma support on ecspi.
+> > > >
+> > > > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > >
+> > > Applied, thanks.
+> > Thanks Shawn, but how about other dts patches such as 01/15,02/15?
+>=20
+> I need the authors of the commits being reverted agree on the reverting.
+>=20
+>   Sean Nyekjaer <sean.nyekjaer@prevas.dk>
+>   Sascha Hauer <s.hauer@pengutronix.de>
+Seems Sean's mail can't be reached.
+Hello Sacha, Could you please help test if my patch set could fix your issu=
+e even
+I revert your patch?
+https://patchwork.kernel.org/cover/10984301/
+>=20
+> Shawn
