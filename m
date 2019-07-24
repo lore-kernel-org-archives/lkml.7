@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A33C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F2DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0AE22ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70C721951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996974;
-	bh=JyVWWgTru0+hhOtXI5G3CuzzTpgTucTPxwcbyHaOmug=;
+	s=default; t=1563996979;
+	bh=RZF6pczoDE+ECSyhSrsIvaMiv8QM8pyPTvmmdIM9CMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QsPLrU/kNdTGKiM3pT/rCxDXy6100moFFAJj1oI01RiYVNeAXEHRxpBfSKZWcc93h
-	 /04wHta8f/W6sqzGbi/YcN1GI9rQfcxS4unMsC6Tb90z4TiC/OovxixotRo9PCzVdy
-	 ssIeX9Y8WWUXtZgKDfzXZJKJ597b1oYVxCMUnTeo=
+	b=AQ0Jtk1G9sA+MR0SylbHk571V4v4oknAPlXbQLIwTeKtK7d56NCTmpSAurS9ixthy
+	 Kc+WGm7VX0c5BeZAAboO0DZwxe0CmrD8yZzFHLt4ojzESp8PrpYU7UbHe++eBE9nzX
+	 Ob/CtaC6bfnr4p7pnOH0ithPNU6tvEXVtak91zFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388828AbfGXTgN (ORCPT
+        id S2389308AbfGXTgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389284AbfGXTgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:10 -0400
+        id S2389297AbfGXTgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E382238C;
-        Wed, 24 Jul 2019 19:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEA462238C;
+        Wed, 24 Jul 2019 19:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996969;
-        bh=JyVWWgTru0+hhOtXI5G3CuzzTpgTucTPxwcbyHaOmug=;
+        s=default; t=1563996974;
+        bh=RZF6pczoDE+ECSyhSrsIvaMiv8QM8pyPTvmmdIM9CMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jjXRN4/rxsEC4O1MAfBqgpKitfcH5814TzVf1cLJrcSoFy1/ATUxgjfgs5P4tDDCW
-         bGig3ucANeU4vhvoQVN5rAqObohH4tqTA2rbRiqh8qmEQzIR+mR0HuAqcvUZwE+A1B
-         HUX4X3YV5TRzVPYFYffKQhVdzYIdklxx5QPwRX6A=
+        b=OFyuJvVjjssT11vyS/J/Gi8l6qCf1Ig0RmJswkPVwOmBSvsjr0cztsiY3Lk1XXw/8
+         BmV0+RVpgz92tNHu+ZrDYsChL3QHWOvHfpyFoBevYJ7D6BeCX9/MScCFZBqRWQTRsQ
+         3hudJOScEsdCxmi5qm8ipv4RThngqbLPA8WznWe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.2 278/413] cifs: flush before set-info if we have writeable handles
-Date:   Wed, 24 Jul 2019 21:19:29 +0200
-Message-Id: <20190724191756.193439255@linuxfoundation.org>
+        stable@vger.kernel.org, Yong Li <mr.liyong@qq.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.2 280/413] Revert "bcache: set CACHE_SET_IO_DISABLE in bch_cached_dev_error()"
+Date:   Wed, 24 Jul 2019 21:19:31 +0200
+Message-Id: <20190724191756.325326548@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,61 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Coly Li <colyli@suse.de>
 
-commit aa081859b10c5d8b19f5c525c78883a59d73c2b8 upstream.
+commit 695277f16b3a102fcc22c97fdf2de77c7b19f0b3 upstream.
 
-Servers can defer destaging any data and updating the mtime until close().
-This means that if we do a setinfo to modify the mtime while other handles
-are open for write the server may overwrite our setinfo timestamps when
-if flushes the file on close() of the writeable handle.
+This reverts commit 6147305c73e4511ca1a975b766b97a779d442567.
 
-To solve this we add an explicit flush when the mtime is about to
-be updated.
+Although this patch helps the failed bcache device to stop faster when
+too many I/O errors detected on corresponding cached device, setting
+CACHE_SET_IO_DISABLE bit to cache set c->flags was not a good idea. This
+operation will disable all I/Os on cache set, which means other attached
+bcache devices won't work neither.
 
-This fixes "cp -p" to preserve mtime when copying a file onto an SMB2 share.
+Without this patch, the failed bcache device can also be stopped
+eventually if internal I/O accomplished (e.g. writeback). Therefore here
+I revert it.
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 6147305c73e4 ("bcache: set CACHE_SET_IO_DISABLE in bch_cached_dev_error()")
+Reported-by: Yong Li <mr.liyong@qq.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/md/bcache/super.c |   17 -----------------
+ 1 file changed, 17 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -2408,6 +2408,8 @@ cifs_setattr_nounix(struct dentry *diren
- 	struct inode *inode = d_inode(direntry);
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
- 	struct cifsInodeInfo *cifsInode = CIFS_I(inode);
-+	struct cifsFileInfo *wfile;
-+	struct cifs_tcon *tcon;
- 	char *full_path = NULL;
- 	int rc = -EACCES;
- 	__u32 dosattr = 0;
-@@ -2454,6 +2456,20 @@ cifs_setattr_nounix(struct dentry *diren
- 	mapping_set_error(inode->i_mapping, rc);
- 	rc = 0;
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1437,8 +1437,6 @@ int bch_flash_dev_create(struct cache_se
  
-+	if (attrs->ia_valid & ATTR_MTIME) {
-+		rc = cifs_get_writable_file(cifsInode, false, &wfile);
-+		if (!rc) {
-+			tcon = tlink_tcon(wfile->tlink);
-+			rc = tcon->ses->server->ops->flush(xid, tcon, &wfile->fid);
-+			cifsFileInfo_put(wfile);
-+			if (rc)
-+				return rc;
-+		} else if (rc != -EBADF)
-+			return rc;
-+		else
-+			rc = 0;
-+	}
-+
- 	if (attrs->ia_valid & ATTR_SIZE) {
- 		rc = cifs_set_file_size(inode, attrs, xid, full_path);
- 		if (rc != 0)
+ bool bch_cached_dev_error(struct cached_dev *dc)
+ {
+-	struct cache_set *c;
+-
+ 	if (!dc || test_bit(BCACHE_DEV_CLOSING, &dc->disk.flags))
+ 		return false;
+ 
+@@ -1449,21 +1447,6 @@ bool bch_cached_dev_error(struct cached_
+ 	pr_err("stop %s: too many IO errors on backing device %s\n",
+ 		dc->disk.disk->disk_name, dc->backing_dev_name);
+ 
+-	/*
+-	 * If the cached device is still attached to a cache set,
+-	 * even dc->io_disable is true and no more I/O requests
+-	 * accepted, cache device internal I/O (writeback scan or
+-	 * garbage collection) may still prevent bcache device from
+-	 * being stopped. So here CACHE_SET_IO_DISABLE should be
+-	 * set to c->flags too, to make the internal I/O to cache
+-	 * device rejected and stopped immediately.
+-	 * If c is NULL, that means the bcache device is not attached
+-	 * to any cache set, then no CACHE_SET_IO_DISABLE bit to set.
+-	 */
+-	c = dc->disk.c;
+-	if (c && test_and_set_bit(CACHE_SET_IO_DISABLE, &c->flags))
+-		pr_info("CACHE_SET_IO_DISABLE already set");
+-
+ 	bcache_device_stop(&dc->disk);
+ 	return true;
+ }
 
 
