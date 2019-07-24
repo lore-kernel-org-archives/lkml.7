@@ -6,54 +6,50 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9ABC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B713C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7A2229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA8820828
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563936272;
-	bh=otF0m5YFhRfZ2LQNcGhr+Exepj6iQf16VoZOqyMzPag=;
+	s=default; t=1563936336;
+	bh=FM5WJ2YozE39AY96Ha2UJA4Or7QT4hTxQlKQwzRGuvQ=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=pefe4/7hV1Hp0Ct5+o1XdUfnYoVjibMXvKFoIkTi+24PjybZoW9Jat9y7WZFROf4h
-	 w0LfASw4RJxKS00jytWUBIRTgYnOOtS7ELDKfv7kAgDdiE0EXyqfITXOWpMNeNuw1I
-	 kWcG49e19bJf4+wXf5ngqr9FwynHFhXMqT6ONZQw=
+	b=oqfznoQXT1dVnsT45nyS7ILSqdiCxGqbEdUEeXy0Q+v2t3nS2WYJdk9MU5aojFY80
+	 +vfELmWlLUbUpBbvBY06jxq+BDooOq5JqXQnrJJFg7WObHWDIVyMgaxagJqzOWEVRi
+	 ajRGqbuSkRmU++InXLocBFoZCX10ChaFcFMonB6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbfGXCob (ORCPT
+        id S1726256AbfGXCpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46566 "EHLO mail.kernel.org"
+        Tue, 23 Jul 2019 22:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfGXCoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:44:30 -0400
+        id S1725776AbfGXCpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:45:35 -0400
 Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 542DA20828;
-        Wed, 24 Jul 2019 02:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2D6D20828;
+        Wed, 24 Jul 2019 02:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563936269;
-        bh=otF0m5YFhRfZ2LQNcGhr+Exepj6iQf16VoZOqyMzPag=;
+        s=default; t=1563936334;
+        bh=FM5WJ2YozE39AY96Ha2UJA4Or7QT4hTxQlKQwzRGuvQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=QQaWMfeU0RI3fiEQHD9mKME89ksu8wtqJmUEUgKJ4FCxgoXRsJKk/RYeZaDvgJW7t
-         g474b/DMKq7oRamYy+EUG17PoZujElylMNtw+vEsg/hMk68WEfvIFbqLW9X6qb9xn2
-         penUoO6quE8bFHFbiE6Xp4ESBiZEuIAfiRFGi1ng=
-Date:   Tue, 23 Jul 2019 19:44:27 -0700
+        b=fZYCZE1PZkDy8RzcDb7zw6i84fsfhAQ2ocwKRBtO07Glu0mk5T+Vg3BofIYYQP9NE
+         S/e1Bnl8bT63SG5M811vQIJ/Z358VECqRImXyrcVLCCDKTMvOIJ6tqFyUuazhY55OZ
+         bsu33/gbhUqDta90YLxY7IJi0s8t/1CuOa5IuVIU=
+Date:   Tue, 23 Jul 2019 19:45:32 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
+To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 2 open syzbot bugs in "net/rxrpc" subsystem
-Message-ID: <20190724024427.GG643@sol.localdomain>
-Mail-Followup-To: linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
+Subject: Reminder: 2 open syzbot bugs in "net/l2tp" subsystem
+Message-ID: <20190724024532.GH643@sol.localdomain>
+Mail-Followup-To: netdev@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,71 +60,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 to make it better, or if you want it re-generated with the latest status.]
 
 Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 2 of them as possibly being bugs in the "net/rxrpc" subsystem.  I've
+marked 2 of them as possibly being bugs in the "net/l2tp" subsystem.  I've
 listed these reports below, sorted by an algorithm that tries to list first the
 reports most likely to be still valid, important, and actionable.
 
 Of these 2 bugs, 1 was seen in mainline in the last week.
 
-Of these 2 bugs, 1 was bisected to a commit from the following person:
-
-	David Howells <dhowells@redhat.com>
-
 If you believe a bug is no longer valid, please close the syzbot report by
 sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
 original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you believe I misattributed a bug to the "net/rxrpc" subsystem, please let me
+If you believe I misattributed a bug to the "net/l2tp" subsystem, please let me
 know, and if possible forward the report to the correct people or mailing list.
 
 Here are the bugs:
 
 --------------------------------------------------------------------------------
-Title:              kernel BUG at net/rxrpc/local_object.c:LINE!
-Last occurred:      2 days ago
-Reported:           25 days ago
+Title:              WARNING: locking bug in inet_autobind
+Last occurred:      1 day ago
+Reported:           68 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=53b6555b27af2cae74e2fbdac6cadc73f9cb18aa
-Original thread:    https://lkml.kernel.org/lkml/0000000000004c2416058c594b30@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a7d678fba80c34b5770cc1b5638b8a2709ae9f3f
+Original thread:    https://lkml.kernel.org/lkml/00000000000033a0120588fac894@google.com/T/#u
 
 This bug has a syzkaller reproducer only.
 
-This bug was bisected to:
+syzbot has bisected this bug, but I think the bisection result is incorrect.
 
-	commit 46894a13599a977ac35411b536fb3e0b2feefa95
-	Author: David Howells <dhowells@redhat.com>
-	Date:   Thu Oct 4 08:32:28 2018 +0000
-
-	  rxrpc: Use IPv4 addresses throught the IPv6
-
-The original thread for this bug has received 3 replies; the last was 18 days
-ago.
+No one has replied to the original thread for this bug yet.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+1e0edc4b8b7494c28450@syzkaller.appspotmail.com
+    Reported-by: syzbot+94cc2a66fc228b23f360@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000004c2416058c594b30@google.com
+https://lkml.kernel.org/r/00000000000033a0120588fac894@google.com
 
 --------------------------------------------------------------------------------
-Title:              WARNING: locking bug in flush_workqueue_prep_pwqs
-Last occurred:      30 days ago
-Reported:           158 days ago
+Title:              WARNING: locking bug in do_ipv6_setsockopt
+Last occurred:      4 days ago
+Reported:           62 days ago
 Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4ae48f9c43f87ccf9f2f270b14d5b9284dadd05c
-Original thread:    https://lkml.kernel.org/lkml/0000000000005c7e6f0581f1b86a@google.com/T/#u
+Dashboard link:     https://syzkaller.appspot.com/bug?id=6a970baf20aa5a64455be86fb920f468def703c6
+Original thread:    https://lkml.kernel.org/lkml/000000000000f7707805897c071f@google.com/T/#u
 
-Unfortunately, this bug does not have a reproducer.
+This bug has a syzkaller reproducer only.
 
-No one replied to the original thread for this bug.
+No one has replied to the original thread for this bug yet.
 
 If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0c4264acb66ea0484d11@syzkaller.appspotmail.com
+    Reported-by: syzbot+f28170ca1ee366e97283@syzkaller.appspotmail.com
 
 If you send any email or patch for this bug, please consider replying to the
 original thread.  For the git send-email command to use, or tips on how to reply
 if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005c7e6f0581f1b86a@google.com
+https://lkml.kernel.org/r/000000000000f7707805897c071f@google.com
 
