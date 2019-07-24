@@ -4,50 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C794C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F0CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EBD22ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A0C22ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998319;
-	bh=umCl6dFR14+uVHcFjKurp7A+kE3J7+NoohuECceKeLg=;
+	s=default; t=1563998323;
+	bh=aifZp4BXJj5+g3jEPThGLFnCHa8i5rwkfpbpb85+iyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ciMQOpWj0R3juULb7IoOqfErgR+zs0Ft0w5I7zf9J0t65TqqhDqwveSiz2LXRBC8y
-	 y/sWqSIKKYbcL8uJcmnVXoby3I1BryCBwF75Ep8vVRqVH+AVo60A5/V5A1JSk/8yeL
-	 tt3os6uHabgEYukEMaJxUNLj90J2wT7cbXUrWb6s=
+	b=1UrJvunpHdbOpimadC72MuPDm1KJRsbrgFyg1RLUvVsXvXMEVjdHFVIUV8Ts8MUR4
+	 k6LP6s7SZih5sORc7IJkneRyHjFxFRlgIS/geeJvcSdQogeusXjS84+g9xl6/I3fsx
+	 dFpmKbX1rTV/9bdPsshRqiATZhJDciqyB6vLZvsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405101AbfGXT6h (ORCPT
+        id S2405115AbfGXT6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45106 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405088AbfGXT6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:58:33 -0400
+        id S2405098AbfGXT6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:58:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B49D206BA;
-        Wed, 24 Jul 2019 19:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0779F205C9;
+        Wed, 24 Jul 2019 19:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998312;
-        bh=umCl6dFR14+uVHcFjKurp7A+kE3J7+NoohuECceKeLg=;
+        s=default; t=1563998316;
+        bh=aifZp4BXJj5+g3jEPThGLFnCHa8i5rwkfpbpb85+iyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pr3kAImsnppfwqfLAbLS6ZT+kQc1vHvq02/l7g1lrwHadbmKlXVtpcJ9MG0gdaLg3
-         Gujvftm1f7Iw4WazJv+A0LjSOUv6NdvSXwjaGygMRV7+z75HzqTBhI58eQb8331T8J
-         toOhD218u2Bsgwb1wIAGLI33WkYVVm4hnNH0qzKY=
+        b=Yl6RmorPe1aPCQDS8ye7sBn2ClD+5cNhZRuygzscQhfyFFBCrPtUk5lvISscnI9wI
+         jaO4Zwmv9G8/dY4LS23cHt0knPu03GBp/DvUPlAmKYfKAPdqNgP17quxQNbvizqO16
+         675jneFWYSi5v5/FUlyzg6+GJ4e/N7W2Jhev9M64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.1 321/371] x86/boot: Fix memory leak in default_get_smp_config()
-Date:   Wed, 24 Jul 2019 21:21:13 +0200
-Message-Id: <20190724191748.088772676@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Gary Hook <Gary.Hook@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Liska <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>, Pu Wen <puwen@hygon.cn>,
+        Stephane Eranian <eranian@google.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 323/371] perf/x86/amd/uncore: Do not set ThreadMask and SliceMask for non-L3 PMCs
+Date:   Wed, 24 Jul 2019 21:21:15 +0200
+Message-Id: <20190724191748.220448833@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,59 +73,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit e74bd96989dd42a51a73eddb4a5510a6f5e42ac3 upstream.
+commit 16f4641166b10e199f0d7b68c2c5f004fef0bda3 upstream.
 
-When default_get_smp_config() is called with early == 1 and mpf->feature1
-is non-zero, mpf is leaked because the return path does not do
-early_memunmap().
+The following commit:
 
-Fix this and share a common exit routine.
+  d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events")
 
-Fixes: 5997efb96756 ("x86/boot: Use memremap() to map the MPF and MPC data")
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1907091942570.28240@chino.kir.corp.google.com
+enables L3 PMC events for all threads and slices by writing 1's in
+'ChL3PmcCfg' (L3 PMC PERF_CTL) register fields.
+
+Those bitfields overlap with high order event select bits in the Data
+Fabric PMC control register, however.
+
+So when a user requests raw Data Fabric events (-e amd_df/event=0xYYY/),
+the two highest order bits get inadvertently set, changing the counter
+select to events that don't exist, and for which no counts are read.
+
+This patch changes the logic to write the L3 masks only when dealing
+with L3 PMC counters.
+
+AMD Family 16h and below Northbridge (NB) counters were not affected.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Gary Hook <Gary.Hook@amd.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liska <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask for L3 Cache perf events")
+Link: https://lkml.kernel.org/r/20190628215906.4276-1-kim.phillips@amd.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/mpparse.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ arch/x86/events/amd/uncore.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -546,17 +546,15 @@ void __init default_get_smp_config(unsig
- 			 * local APIC has default address
- 			 */
- 			mp_lapic_addr = APIC_DEFAULT_PHYS_BASE;
--			return;
-+			goto out;
- 		}
- 
- 		pr_info("Default MP configuration #%d\n", mpf->feature1);
- 		construct_default_ISA_mptable(mpf->feature1);
- 
- 	} else if (mpf->physptr) {
--		if (check_physptr(mpf, early)) {
--			early_memunmap(mpf, sizeof(*mpf));
--			return;
--		}
-+		if (check_physptr(mpf, early))
-+			goto out;
- 	} else
- 		BUG();
- 
-@@ -565,7 +563,7 @@ void __init default_get_smp_config(unsig
- 	/*
- 	 * Only use the first configuration found.
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -209,7 +209,7 @@ static int amd_uncore_event_init(struct
+ 	 * SliceMask and ThreadMask need to be set for certain L3 events in
+ 	 * Family 17h. For other events, the two fields do not affect the count.
  	 */
--
-+out:
- 	early_memunmap(mpf, sizeof(*mpf));
- }
+-	if (l3_mask)
++	if (l3_mask && is_llc_event(event))
+ 		hwc->config |= (AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK);
  
+ 	if (event->cpu < 0)
 
 
