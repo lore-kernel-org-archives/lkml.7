@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4987C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2766CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7692054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47802054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000414;
-	bh=/it1GCteT40XgRSWhv3xmwTSLL74B9D9MY67Mmiouc0=;
+	s=default; t=1564000419;
+	bh=S0E1UF06q68jC3495q+jItdIe+mk+gE5PVWPHXe/fOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jrCTp2bfmXwTsuunec/WcHhwKU2sWPKbIRK5fLlN42PCJljCk0vH4rPNfFrmQFnp2
-	 8pzCEZp9HuFB1X5DmEQMlXj9pWdPYAP/nQk59kQL51nJD/kAy2n+htdwfothbYvMKR
-	 16g4bWg6zGHdK5UNDIEMi4HCuwUPFjWMoUoZMVgo=
+	b=JgB8yhRPNSaTUklOu4kaIMl6TG70KRYaXSHufCTAn7TeU+V7uwp8mwXEH0PvmVFP5
+	 lwMFarkxbkG86hgFpwQBw8U2svp5jpTouv22NSKhWmY9w0ZnEtyvOi5aZXn5RjNGL0
+	 2Q3jGfRPLGXCiqV45Hc/jwruh+GZOBGQsl/2ZvR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfGXT14 (ORCPT
+        id S2390741AbfGXUdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbfGXT1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:52 -0400
+        id S1728690AbfGXT1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 524C6218EA;
-        Wed, 24 Jul 2019 19:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A62C5218EA;
+        Wed, 24 Jul 2019 19:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996471;
-        bh=/it1GCteT40XgRSWhv3xmwTSLL74B9D9MY67Mmiouc0=;
+        s=default; t=1563996469;
+        bh=S0E1UF06q68jC3495q+jItdIe+mk+gE5PVWPHXe/fOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RFkF+9bd4qBpSBAnT6nTCflNBXw3lsqtZEXPjZlDE2KUF3oJkTurXKLAEijAxjORa
-         vFfSqD+U+bgPdKhdsP8dH7PguRxlTh1j11uH0bYsRauWz5zXLXMplI6U2YGjRgI2uN
-         Y6mZtmlmgv2K/lls1QJFNNHmQcKiBrD9eptwXyfg=
+        b=Jlzz/8gEPdLJZGUegcxQHh+IbFfgO9Oay771K0IM9UG8PEqqRIOCnAQkgr3cfOsh5
+         G4HbM028oHMbf/yNy+rmIUVFLyRPNKFEKzI6uvrole5Ze0irQo0ydARxsHJbPKe7Az
+         a5cEQpXIxjMwTfCbZT0FW5ykh5g3ooHeSOZ0csIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 107/413] xfrm: fix sa selector validation
-Date:   Wed, 24 Jul 2019 21:16:38 +0200
-Message-Id: <20190724191742.938612665@linuxfoundation.org>
+Subject: [PATCH 5.2 106/413] blkcg, writeback: dead memcgs shouldnt contribute to writeback ownership arbitration
+Date:   Wed, 24 Jul 2019 21:16:37 +0200
+Message-Id: <20190724191742.860548714@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,40 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
+[ Upstream commit 6631142229005e1b1c311a09efe9fb3cfdac8559 ]
 
-After commit b38ff4075a80, the following command does not work anymore:
-$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
-  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
-  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
+wbc_account_io() collects information on cgroup ownership of writeback
+pages to determine which cgroup should own the inode.  Pages can stay
+associated with dead memcgs but we want to avoid attributing IOs to
+dead blkcgs as much as possible as the association is likely to be
+stale.  However, currently, pages associated with dead memcgs
+contribute to the accounting delaying and/or confusing the
+arbitration.
 
-In fact, the selector is not mandatory, allow the user to provide an empty
-selector.
+Fix it by ignoring pages associated with dead memcgs.
 
-Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
-CC: Anirudh Gupta <anirudh.gupta@sophos.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/fs-writeback.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 76ad7e201626..b88ba45ff1ac 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -167,6 +167,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
- 	}
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index e41cbe8e81b9..9ebfb1b28430 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -715,6 +715,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 		    size_t bytes)
+ {
++	struct cgroup_subsys_state *css;
+ 	int id;
  
- 	switch (p->sel.family) {
-+	case AF_UNSPEC:
-+		break;
+ 	/*
+@@ -726,7 +727,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+ 	if (!wbc->wb)
+ 		return;
+ 
+-	id = mem_cgroup_css_from_page(page)->id;
++	css = mem_cgroup_css_from_page(page);
++	/* dead cgroups shouldn't contribute to inode ownership arbitration */
++	if (!(css->flags & CSS_ONLINE))
++		return;
 +
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
++	id = css->id;
+ 
+ 	if (id == wbc->wb_id) {
+ 		wbc->wb_bytes += bytes;
 -- 
 2.20.1
 
