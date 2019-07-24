@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00A7C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515E7C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C4021880
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2978821880
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 23:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nm8Sm35W"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XXwWy+39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387885AbfGXXpK (ORCPT
+        id S2388046AbfGXXpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 19:45:10 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:34597 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfGXXpH (ORCPT
+        Wed, 24 Jul 2019 19:45:13 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:55823 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387818AbfGXXpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 19:45:07 -0400
-Received: by mail-vk1-f202.google.com with SMTP id g68so17754612vkb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:45:07 -0700 (PDT)
+        Wed, 24 Jul 2019 19:45:09 -0400
+Received: by mail-pf1-f202.google.com with SMTP id i26so29528733pfo.22
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 16:45:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=fusILKOLmxx77CwhoKkqEXw680POTmXlnL5bfavBpig=;
-        b=nm8Sm35Wuj9GgaNhssIt+yIV7CWagKfpNNEb4SzzakBwRekGAqxrjYZx3fFRUtpPuI
-         uu04M2hSUulDXjHYLoA6oAuNmAWTT8StE8xjpTg4E4V3O57H+FtJLbbad3H5aAsKWn6O
-         7VtFi/wfaygew9Ni77sRRK9asQhzRwa4l/8lUf1OLwLnrQaAOSpX71N47ezsXgavUn2G
-         sEdp7IlTeJ92OfMJWQY3uyDss/RSNdYKDrx36ihUeOPgZGeQ9HUACb6qTiT1drIKFx1A
-         gmTHanGNbbKG/5TiGqFF0KDkWMlb95X5T1Ugsasp6VbIE3xU10NQslK0OWZTi2EHWLby
-         5w0w==
+        bh=MwRccX2MBD2s53mippQSnbtUA99Ul/BghITn/o0J/7s=;
+        b=XXwWy+39F2zSYwp+44oymQtRU9nfFSYpzoyOW3zyX87oNyHUSpeayXgtkJDadzqAKj
+         xw0YEiesKneQ/x27MqvOSqM81x/32LffuS8z8PQIT8CEilihzPKm1GoA052p698xdVrT
+         iSkjwFx1v2YstV0a8sUkjWm9RLInR5TgKMcaIsMJcLLTXK7CkyBTMD4QhW9DxFfXjpxm
+         WFn0xRaLgZlWqwKD1DVYu2wXEXaUpOzr85lYBz9Rtq/bk6M26ASqX0OWsGHsHpj8Vqz5
+         3zHQ00GMq4GV4l7OmHFkZvtEW4COcOudGLDNFk6z1X+KmpmJJP22tRBq3LQHIO2D6rNz
+         fxEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=fusILKOLmxx77CwhoKkqEXw680POTmXlnL5bfavBpig=;
-        b=Ma4fwvzJEwRkB9f9Ut7iaXS+v1YHHa7ZcVhtzpfUBPyK9WWcRVUB/9ceapaOP+wVyi
-         bf+cH+h8KMiVCmCXFTVQDb5aIU9FQvnq9lXqcs19pQrdCcDJettn+xy+GZqGmHES9mic
-         ZDqbE+z5kZcT002/4QDB4BDRcLNbGv2KYVDXiee+ZBrbMrjrDym0KlKe83USzCmeSvtX
-         eS8FFS5L1MnroQ4q/1+CLtGDlVlpvZcv9aENMTp+L7KYGMidnxT58EZRm6zs+w06ae9p
-         oHvoAKOdjDTY6k3XOFG2YD8jvuzY7wg5OsujHHyPOAWq2g9vet1OipwDTM0u+r9sReh+
-         s9cw==
-X-Gm-Message-State: APjAAAWWnmz7GiS8guYZzr95EvEY5oYERP1i5IU1a9gbyFzOh3+aJPLo
-        eC5R1OUPw9oESJTH//dQ69kDSRNA
-X-Google-Smtp-Source: APXvYqwTAcCTJZUoDGOnxC/GWgsUF79qOLZvdB7JPxRH3YIU4xKd6bdMNBd/be9QlRC+NvJ3MwsYVLba
-X-Received: by 2002:a1f:19ce:: with SMTP id 197mr33942308vkz.60.1564011906611;
- Wed, 24 Jul 2019 16:45:06 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 16:44:58 -0700
+        bh=MwRccX2MBD2s53mippQSnbtUA99Ul/BghITn/o0J/7s=;
+        b=J5RcLSpb8q9wNcAkNM+pNNPaIE8WCBZhNoymRRAmJz/Ia9gMJ3MlGd/JYEMc5xAafj
+         /oCkc8Od2BwJxoEavTqDFkJHwwJ5sjueBKvVG9KQo5Mi4f8qXt1MmxENxPaDerXteh8g
+         FM61wwCL3JTXm6zy9zBg0x+JT+uZW0gPfGz/J59aJ/2In11eJ1RutRrItRvKV+VFaaBV
+         QRWc9KZpoR0KwXToLLgZVK7aVsQYsWCuxcLkWBghqMkhU9s0Nv8Bxa8Q2JcS88damo7s
+         VZhzdlZq0Uu61G8CpLqPmDVoDYqRtf0EYdBv5M2bs59u42+Ln3M/RK78WhbkelZyh9Xi
+         svjQ==
+X-Gm-Message-State: APjAAAVtuAi4WIA0fLVfPX9knjY0Oebx8SZQZuUvUfk68NyItiwwCQFN
+        rBLnB64chYBYsuyZs7R3aV32P1Ip
+X-Google-Smtp-Source: APXvYqyRcHTgXyIjEqH4UKcQSEn1sTT4owsSpoPJ1qS1eyz0030j9XqW5ri/juR5wOxZ4G4eZoOBhS/j
+X-Received: by 2002:a65:57ca:: with SMTP id q10mr86291825pgr.52.1564011908747;
+ Wed, 24 Jul 2019 16:45:08 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 16:44:59 -0700
 In-Reply-To: <20190724234500.253358-1-nums@google.com>
-Message-Id: <20190724234500.253358-2-nums@google.com>
+Message-Id: <20190724234500.253358-3-nums@google.com>
 Mime-Version: 1.0
 References: <20190724234500.253358-1-nums@google.com>
 X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
-Subject: [PATCH 1/3] Fix util.c use of unitialized value warning
+Subject: [PATCH 2/3] Fix annotate.c use of uninitialized value error
 From:   Numfor Mbiziwo-Tiapo <nums@google.com>
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
@@ -71,21 +71,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building our local version of perf with MSAN (Memory Sanitizer)
-and running the perf record command, MSAN throws a use of uninitialized
-value warning in "tools/perf/util/util.c:333:6".
+Our local MSAN (Memory Sanitizer) build of perf throws a warning
+that comes from the "dso__disassemble_filename" function in
+"tools/perf/util/annotate.c" when running perf record.
 
-This warning stems from the "buf" variable being passed into "write".
-It originated as the variable "ev" with the type union perf_event*
-defined in the "perf_event__synthesize_attr" function in
-"tools/perf/util/header.c".
-
-In the "perf_event__synthesize_attr" function they allocate space with
-a malloc call using ev, then go on to only assign some of the member
-variables before passing "ev" on as a parameter to the "process" function
-therefore "ev" contains uninitialized memory. Changing the malloc call
-to calloc initializes all the members of "ev" which gets rid of the
-warning.
+The warning stems from the call to readlink, in which "build_id_path"
+was being read into "linkname". Since readlink does not null terminate,
+an uninitialized memory access would later occur when "linkname" is
+passed into the strstr function. This is simply fixed by null-terminating
+"linkname" after the call to readlink.
 
 To reproduce this warning, build perf by running:
 make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
@@ -103,22 +97,42 @@ generated.
 
 Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index dec6d218c31c..b9c71fc45ac1 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3427,7 +3427,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 70de8f6b3aee..d8bfb561bc35 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1627,6 +1627,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 	char *build_id_filename;
+ 	char *build_id_path = NULL;
+ 	char *pos;
++	int len;
  
--	ev = malloc(size);
-+	ev = calloc(1, size);
+ 	if (dso->symtab_type == DSO_BINARY_TYPE__KALLSYMS &&
+ 	    !dso__is_kcore(dso))
+@@ -1655,10 +1656,16 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 	if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
+ 		dirname(build_id_path);
  
- 	if (ev == NULL)
- 		return -ENOMEM;
+-	if (dso__is_kcore(dso) ||
+-	    readlink(build_id_path, linkname, sizeof(linkname)) < 0 ||
+-	    strstr(linkname, DSO__NAME_KALLSYMS) ||
+-	    access(filename, R_OK)) {
++	if (dso__is_kcore(dso))
++		goto fallback;
++
++	len = readlink(build_id_path, linkname, sizeof(linkname));
++	if (len < 0)
++		goto fallback;
++
++	linkname[len] = '\0';
++	if (strstr(linkname, DSO__NAME_KALLSYMS) ||
++		access(filename, R_OK)) {
+ fallback:
+ 		/*
+ 		 * If we don't have build-ids or the build-id file isn't in the
 -- 
 2.22.0.657.g960e92d24f-goog
 
