@@ -2,118 +2,79 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190D9C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A950C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDBAF21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7463021850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccqbYRrV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bJ7ghFzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfGXOsz (ORCPT
+        id S2387488AbfGXOt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:48:55 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41156 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfGXOsz (ORCPT
+        Wed, 24 Jul 2019 10:49:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53278 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfGXOt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:48:55 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so85989793ioj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HwPqXIBxuHIER7tZJnlecipE0woOms8twNHrVL6AxIQ=;
-        b=ccqbYRrVXkWfyYKmh7Upb9MbsCYPBan3zydRkRaUhEuI5q6tIR1OzPPTtiWL1m/Sk6
-         VVlxwoUUxsSWzk7Ocec0lrH4P+knZmoHlZ28dnYxtdP6208JaloU2ZgabooDnZc++gUq
-         mKQ2OOVqz4iwFU7dOb6lfzOFILxwYUIYjrsmdGb3xl2ZNtkglK9bXsqZdbr///lbzOnY
-         5ieqzTE6od5Wha1JVuKZL42DmPA1XuEUe7bzOYdEiPNhTSml/7UmuqVSLYFK4vt3V3wy
-         tD/Cr7ZXVjLRxzIpELo3KZHP576woP4R/lg5T2yMv6VA5ZJAJ25HeBzdn2jkPEfsWpzF
-         mkaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HwPqXIBxuHIER7tZJnlecipE0woOms8twNHrVL6AxIQ=;
-        b=FUCqFdMnB4mpOSNnoKH+PfdsxkXMSGfhbvBEHdMVezplTKmdgPh792R7XxE2T7rPnA
-         f9ITO9ITIiROhVGVyoSawNu/yld2drMNKnIkG79I1RuZ1lF4jahoaaTdstYkG48g8K60
-         iUe/xulh69dFboY8X3OPJ7J7H2+niDTZIs+wIEBMFdJYBY96y3Ly6UBOtt0eILFbxHsK
-         B8duiNH8xkKsON/F204NgovIGpYZKdx4bQEBDM9vk8jRWxKiAuZhQTzwXrjv4zHkReeP
-         lrR89RwblIbYO6ztn+0riOofr4oZq2zibV55MmMEIinHWqepAaU14m/2P5UQzykjUBgK
-         fPXw==
-X-Gm-Message-State: APjAAAUN828X4b693MjP4ECgsw/JzrhA6Wzs1yMEF+NxJlH4+KGSXrbA
-        8pdQQVlrEO17KuNE/9MHFG8=
-X-Google-Smtp-Source: APXvYqybxf0p/pRKzwGgO28J2Y6iMki/RDBF//ojjPz80URKoUjc81TTfDxmFdfx6YAwy9bj8g8P4Q==
-X-Received: by 2002:a5e:a712:: with SMTP id b18mr75486828iod.220.1563979734599;
-        Wed, 24 Jul 2019 07:48:54 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id e26sm39596961iod.10.2019.07.24.07.48.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 07:48:54 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     sam@ravnborg.org
-Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        secalert@redhat.com, Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/panel: check failure cases in the probe func
-Date:   Wed, 24 Jul 2019 09:48:44 -0500
-Message-Id: <20190724144845.4791-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190724051700.GA22730@ravnborg.org>
-References: <20190724051700.GA22730@ravnborg.org>
+        Wed, 24 Jul 2019 10:49:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Gj6vhBjXAzGh9jRMU6YR+yrj0IdWgFMq59EQg/9k+u8=; b=bJ7ghFzSFQMsTBd0wP3AqBV5KZ
+        o8+R3qyOWbW/2i67yT4bnvLvsRttMcjNaaGGX9m9HsdLJYPh4oqUX+MuTncF56xAEolcxzQSybgqI
+        GAFF0myGqKoKvI/P30X0SvuyGFHHvd4ZuJqykpUU2asA85NN3Ynx5qh895L5OuKw0NlF93Pzk4Dvp
+        CfW19KczHwFJWzph29RVu4RDAybG5+FGrn5y3v9ihDLQRI/HN9ik5Be8VIGLyUnsjZL1iXUn8n/kw
+        soljA8t5+voJS/ZgzC5peplaw0NUa6G6AkDp2lNkSYrvZUIoBvHABaydRJKHuwOHqNOq1jHbSygDD
+        zJZhFirg==;
+Received: from [46.183.103.8] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hqIaZ-00039s-5G; Wed, 24 Jul 2019 14:49:57 +0000
+Date:   Wed, 24 Jul 2019 16:49:42 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] dma-mapping fix for 5.3
+Message-ID: <20190724144942.GA7893@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following function calls may fail and return NULL, so the null check
-is added.
-of_graph_get_next_endpoint
-of_graph_get_remote_port_parent
-of_graph_get_remote_port
+The following changes since commit 7b5cf701ea9c395c792e2a7e3b7caf4c68b87721:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+  Merge branch 'sched-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2019-07-22 09:30:34 -0700)
 
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index 28c0620dfe0f..9484fdb60f68 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -399,7 +399,13 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 
- 	/* Look up the DSI host.  It needs to probe before we do. */
- 	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (!endpoint)
-+		return -ENODEV;
-+
- 	dsi_host_node = of_graph_get_remote_port_parent(endpoint);
-+	if (!dsi_host_node)
-+		return -ENODEV;
-+
- 	host = of_find_mipi_dsi_host_by_node(dsi_host_node);
- 	of_node_put(dsi_host_node);
- 	if (!host) {
-@@ -408,6 +414,9 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 	}
- 
- 	info.node = of_graph_get_remote_port(endpoint);
-+	if (!info.node)
-+		return -ENODEV;
-+
- 	of_node_put(endpoint);
- 
- 	ts->dsi = mipi_dsi_device_register_full(host, &info);
--- 
-2.17.1
+are available in the Git repository at:
 
+  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.3-2
+
+for you to fetch changes up to 06532750010e06dd4b6d69983773677df7fc5291:
+
+  dma-mapping: use dma_get_mask in dma_addressing_limited (2019-07-23 17:43:58 +0200)
+
+----------------------------------------------------------------
+dma-mapping regression fix for 5.3
+
+ - ensure that dma_addressing_limited doesn't crash on devices
+   without a dma mask (Eric Auger)
+
+----------------------------------------------------------------
+Eric Auger (1):
+      dma-mapping: use dma_get_mask in dma_addressing_limited
+
+ include/linux/dma-mapping.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
