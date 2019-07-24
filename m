@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F39BC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EEFC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C61721926
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB86421926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xxjy88ue"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8bju59P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfGXNSz (ORCPT
+        id S1728603AbfGXNTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:18:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40898 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbfGXNSy (ORCPT
+        Wed, 24 Jul 2019 09:19:06 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39188 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbfGXNTG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:18:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p184so20946439pfp.7;
-        Wed, 24 Jul 2019 06:18:54 -0700 (PDT)
+        Wed, 24 Jul 2019 09:19:06 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so21230409pgi.6;
+        Wed, 24 Jul 2019 06:19:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=30qJDnmCZ4/uvVlJ+Clx3gFmvQD0xujSfEYRo/JqAkM=;
-        b=Xxjy88ue/S0k3dOrtCWTrdLRFLhpaxvyecCyQNVQR83iuol49E+cry9FaW+ccHNTsq
-         to9scdoCVuEZJmvWtzodOB4kZOyDhn3Sh7IzCsRvYIPjhS4SHYzR7BjVZ8JA9hNoxtQE
-         jE83AjBB2kV/MfqS8I0HEArR6rfBjAV2RarGp0KESkT2n87Lmm0+mgr0uevcWYoslfMs
-         E4BAjxAqvGthv5KhEkU7+438c0OLGHR5J94owMT3XCHC4F2Sv/ZJzhkrpns0Rk+gQ6dO
-         Dq9wde94GaspO+IwxxaRXO1/PSHbMTtV9zhS1SJSiLEfWXBtYrIOglyq9qEZRFvQwyyR
-         mbvQ==
+        bh=187+tifTVmT8+OOjO9Brc7YUyKXShVPSiDjBCP8NPi4=;
+        b=N8bju59PXmAonbSc85iXGzLL6y3xg2uZwJKtZPnFLv2O7xjuyo9lHS8oDnWzmq4ncq
+         0o8YIkXVsfExVs9ti4kRZJ3/TCeFj37VJoH6+hI0pGlIgW3mkjTuiZNpKxltae0N6KiL
+         RXKBrP2eZX5p1zCL/os4C9yuaav6QIabBWUAOfjrmiZplNtGdFLaCFalUkp6TumrfJrP
+         81AMW8WP9t9LQ487Y2BP/a4Ip3pQqkZkLJ317FXDwta6EUMVlnFTuW1e6hQpF2lW501Z
+         4oN2b2VSNda87QCtFOHyKWHS/jmg7bCH/GIUI/zgfN6A1xNFvWEkMssC6kwI+u3fWG8g
+         QQfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=30qJDnmCZ4/uvVlJ+Clx3gFmvQD0xujSfEYRo/JqAkM=;
-        b=Bv7B3mqXnmidnIKcJDfrERGtZfUsjUl4w01RKv5D3RLyRQNxy8uoULiPVt0sFsia1h
-         fRH3DBATK1PV0B92p5w1L4ePrmpbWrtH33Imqmsvyw7R4u+p0+cicpYgMA/AHbwJE2Hn
-         PJSlk/9r+wNuyESaNJ0POyMMjIkBMSVrfl5jrNp7JwHOJsxOrRnLxRtDvCUb16UGj0m9
-         f05iiqwzG4RTRLqisMW/RWWa5WZ7hsz4Q+vPahcJDEVcCnaXZJZJBsSV8cGx2xW7RNpx
-         q82xvd6uGXQuHg7qI+rKEogx8Kf8Q8SJAMAk5FH33CjuRdG6JSC7hYZ17mXWit7IKkMK
-         T9ng==
-X-Gm-Message-State: APjAAAXnkjFiOgXYNtjiVK5n7AjtF0O1HEj3FFXhH0OArU69stcI9sRA
-        8aYZM27RGoUcN5wetCFtyPU=
-X-Google-Smtp-Source: APXvYqyzNuuvEeMRhwcWD6GBRIgZpBTcto6ixVYxiQ9UYrCMa+pEkUn2ULLgJeq/ummR6jbPAqkdfA==
-X-Received: by 2002:a63:6f81:: with SMTP id k123mr83112839pgc.12.1563974334092;
-        Wed, 24 Jul 2019 06:18:54 -0700 (PDT)
+        bh=187+tifTVmT8+OOjO9Brc7YUyKXShVPSiDjBCP8NPi4=;
+        b=e05SLjwj0eVf+IjVyOkXy6WBeVtY/yxB/Eu4vYzKWJNaFC/Uj5oMwxeV/mS7j+eHaR
+         hh4iJEyXuMCiicCCR5bS+TONXBppUWs7+/KpgPWL3i4pkFfNesYtttcEzXfpjvXEcBtl
+         ZJDUxUGdDZumpCwiGBZDS0buxWIbW4rsBqcWjJVF7NUuP+ce7c2cmx9mfojRCQIYmEhk
+         kWyJrLHfDbuIuP/EoGM5or308lCQ+tiF/+x3UtC0jUtGFMw4NfQuyLxVyRvQsivwHJMl
+         la9ALEUw2iF1yozU7kavo8r/FkasKu32/RvY6ZYHgJSQbdh+fZ7ok+OhURwdNKQ0QdvT
+         A2Og==
+X-Gm-Message-State: APjAAAWUtOqVmarkGVNnEWg5E5W/k6VyS/GEOc9wxl1jyvDUckDetN9k
+        jh0tjIEWaWY8V3v+vZVPwA0=
+X-Google-Smtp-Source: APXvYqx0xnEr8N9RRGfndLrAHVr4nivY1lnSIq0jSryfTg4ogib6Ugw9VmUngELr/aWPiMAGKtw5SQ==
+X-Received: by 2002:a17:90a:3344:: with SMTP id m62mr87950008pjb.135.1563974345617;
+        Wed, 24 Jul 2019 06:19:05 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id y23sm48371791pfo.106.2019.07.24.06.18.51
+        by smtp.gmail.com with ESMTPSA id a5sm39888253pjv.21.2019.07.24.06.19.03
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 06:18:53 -0700 (PDT)
+        Wed, 24 Jul 2019 06:19:05 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] usb: gadget: pch_udc: Use dev_get_drvdata
-Date:   Wed, 24 Jul 2019 21:18:49 +0800
-Message-Id: <20190724131849.1985-1-hslester96@gmail.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] video: fbdev: aty: Use dev_get_drvdata
+Date:   Wed, 24 Jul 2019 21:19:00 +0800
+Message-Id: <20190724131900.2039-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,23 +79,33 @@ use dev_get_drvdata to make code simpler.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/usb/gadget/udc/pch_udc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/video/fbdev/aty/radeon_base.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
-index cded51f36fc1..265dab2bbfac 100644
---- a/drivers/usb/gadget/udc/pch_udc.c
-+++ b/drivers/usb/gadget/udc/pch_udc.c
-@@ -3046,8 +3046,7 @@ static void pch_udc_remove(struct pci_dev *pdev)
- #ifdef CONFIG_PM_SLEEP
- static int pch_udc_suspend(struct device *d)
+diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
+index 6f891d82eebe..5d042653e9bd 100644
+--- a/drivers/video/fbdev/aty/radeon_base.c
++++ b/drivers/video/fbdev/aty/radeon_base.c
+@@ -2217,8 +2217,7 @@ static ssize_t radeon_show_edid1(struct file *filp, struct kobject *kobj,
+ 				 char *buf, loff_t off, size_t count)
  {
--	struct pci_dev *pdev = to_pci_dev(d);
--	struct pch_udc_dev *dev = pci_get_drvdata(pdev);
-+	struct pch_udc_dev *dev = dev_get_drvdata(d);
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-        struct fb_info *info = pci_get_drvdata(pdev);
++		struct fb_info *info = dev_get_drvdata(dev);
+         struct radeonfb_info *rinfo = info->par;
  
- 	pch_udc_disable_interrupts(dev, UDC_DEVINT_MSK);
- 	pch_udc_disable_ep_interrupts(dev, UDC_EPINT_MSK_DISABLE_ALL);
+ 	return radeon_show_one_edid(buf, off, count, rinfo->mon1_EDID);
+@@ -2230,8 +2229,7 @@ static ssize_t radeon_show_edid2(struct file *filp, struct kobject *kobj,
+ 				 char *buf, loff_t off, size_t count)
+ {
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-        struct fb_info *info = pci_get_drvdata(pdev);
++		struct fb_info *info = dev_get_drvdata(dev);
+         struct radeonfb_info *rinfo = info->par;
+ 
+ 	return radeon_show_one_edid(buf, off, count, rinfo->mon2_EDID);
 -- 
 2.20.1
 
