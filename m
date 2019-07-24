@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC56C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E344C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A48520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE1A22ADB
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997021;
-	bh=7Y9poKPEgUGuoZRHPAlC4esT87CFOv4Dtq1zAnbwfYQ=;
+	s=default; t=1563997024;
+	bh=eBZ62cRWa9VRaFzG4EcxN3DST27SeKFUtLhOrnP5MaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xfxs9AceSO7Oh+GJDsSmHr/uYo961wK6n7nQCiJAm5Xibq15b/Jtx/EWy7kF7Im+2
-	 1mBlLl4mmdMNbZspS2FboSMGXd6nZXTEVyVGrmUTSpqT6+4w/TGQeV04BYv6m+GRQF
-	 sTeZudaGnSwhGWfnKQFtBQKzOajbYBb/7pBiQFP4=
+	b=BuRCFBSqvzuQZjDhSld5Uk8PzY+ZLsika9J9TKpztPglvjqP9LA/24ZGCx8Lq0rPA
+	 8m6T/Hxygi2QGJ+Y2RXmKxqQ5YPH4f3mkFbzC8yvV3zXuxXKx/F6myLkySwaCf5alQ
+	 IpBk7gPzCISGx94Il2BpBzaYZZuLeE4k1cUvdcRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389375AbfGXThA (ORCPT
+        id S2389387AbfGXThC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:37:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389365AbfGXTg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:36:58 -0400
+        id S2388478AbfGXTgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:36:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3465720665;
-        Wed, 24 Jul 2019 19:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9511214AF;
+        Wed, 24 Jul 2019 19:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997017;
-        bh=7Y9poKPEgUGuoZRHPAlC4esT87CFOv4Dtq1zAnbwfYQ=;
+        s=default; t=1563997014;
+        bh=eBZ62cRWa9VRaFzG4EcxN3DST27SeKFUtLhOrnP5MaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFcMLwJDl4IMjXxG8NwzIIxuf8KniAoHK7guU7duwfXkZvEv4PCdH/ImmYtJeJ8Gs
-         K954RKz08WTkZjy8l7EDiCEdvPB0z3jagmAAXl8O25Ul3Jc6HaU0k0apYB/MvnA3jV
-         AMV75UyRtQVJquGdjXoz8nGIDlvBMXNJsha27bZ4=
+        b=AcT+KDkjLmu5dwmyYxnT/L9qusgdkzC2JKmVWBNZ1z3VzzJyp3xgwg4R1/BiT1c6T
+         1juUNwOMC+eIJJkS45VXFC8y2ppQeNK878UhYPYu3Zej2elA2rZhzre/P7yFpOY5Do
+         F//JSH4FaMtKGa8y2gD2ypI0F4jLC8jIkZ5vim4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.2 292/413] arm64: tegra: Update Jetson TX1 GPU regulator timings
-Date:   Wed, 24 Jul 2019 21:19:43 +0200
-Message-Id: <20190724191757.075181627@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.2 256/413] scsi: core: Fix race on creating sense cache
+Date:   Wed, 24 Jul 2019 21:19:07 +0200
+Message-Id: <20190724191754.319591458@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,38 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-commit ece6031ece2dd64d63708cfe1088016cee5b10c0 upstream.
+commit f9b0530fa02e0c73f31a49ef743e8f44eb8e32cc upstream.
 
-The GPU regulator enable ramp delay for Jetson TX1 is set to 1ms which
-not sufficient because the enable ramp delay has been measured to be
-greater than 1ms. Furthermore, the downstream kernels released by NVIDIA
-for Jetson TX1 are using a enable ramp delay 2ms and a settling delay of
-160us. Update the GPU regulator enable ramp delay for Jetson TX1 to be
-2ms and add a settling delay of 160us.
+When scsi_init_sense_cache(host) is called concurrently from different
+hosts, each code path may find that no cache has been created and
+allocate a new one. The lack of locking can lead to potentially
+overriding a cache allocated by a different host.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Fixes: 5e6b9a89afce ("arm64: tegra: Add VDD_GPU regulator to Jetson TX1")
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fix the issue by moving 'mutex_lock(&scsi_sense_cache_mutex)' before
+scsi_select_sense_cache().
+
+Fixes: 0a6ac4ee7c21 ("scsi: respect unchecked_isa_dma for blk-mq")
+Cc: Stable <stable@vger.kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -328,7 +328,8 @@
- 			regulator-max-microvolt = <1320000>;
- 			enable-gpios = <&pmic 6 GPIO_ACTIVE_HIGH>;
- 			regulator-ramp-delay = <80>;
--			regulator-enable-ramp-delay = <1000>;
-+			regulator-enable-ramp-delay = <2000>;
-+			regulator-settling-time-us = <160>;
- 		};
- 	};
- };
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -72,11 +72,11 @@ int scsi_init_sense_cache(struct Scsi_Ho
+ 	struct kmem_cache *cache;
+ 	int ret = 0;
+ 
++	mutex_lock(&scsi_sense_cache_mutex);
+ 	cache = scsi_select_sense_cache(shost->unchecked_isa_dma);
+ 	if (cache)
+-		return 0;
++		goto exit;
+ 
+-	mutex_lock(&scsi_sense_cache_mutex);
+ 	if (shost->unchecked_isa_dma) {
+ 		scsi_sense_isadma_cache =
+ 			kmem_cache_create("scsi_sense_cache(DMA)",
+@@ -92,7 +92,7 @@ int scsi_init_sense_cache(struct Scsi_Ho
+ 		if (!scsi_sense_cache)
+ 			ret = -ENOMEM;
+ 	}
+-
++ exit:
+ 	mutex_unlock(&scsi_sense_cache_mutex);
+ 	return ret;
+ }
 
 
