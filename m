@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C8FC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1137EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0A620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91BC20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997141;
-	bh=7aBdbD0pAZ7cT7Z1XWB4rwLOq1yj8nUthLML5JV9tDI=;
+	s=default; t=1563997145;
+	bh=ORC6eTDK2VYgx5goqOcD4F+nOhoZY/xvzPSzuNIr0xQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q4S5ij1y3CGWVwpwqEk2q6vRu0KVuPAG3ZoC3PmFk5a3SM8KzKqMF3MJqlWlCDwBE
-	 xV11OPz3dV7jZ7ycGi/TLcQmYYSBX3uLty63Qopv/5baomIMdkgA5tBmCDn8dpXhtt
-	 istn9ipnEg8yT0mszDvXh55+G6ib+3YljqegGXtw=
+	b=T+paftZ1K//e02/H0hTuBiFtYvmUWsU5unY+fzu2/zZM2RgWtv5FHc0PM6B560RDI
+	 pnObGEGVkBrLsBn9XF751x0OInKiQlLvmMY3FAqQEYXvWBmg+gHEAu75Hf7UaTIqVF
+	 EcK/8zZu8wdMdbSbJBkvaxbfhSkCZJRtf5fzXygs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389840AbfGXTjA (ORCPT
+        id S2389852AbfGXTjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:39:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:39:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389063AbfGXTi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:38:59 -0400
+        id S2389063AbfGXTjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:39:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01170217D4;
-        Wed, 24 Jul 2019 19:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D25822ADA;
+        Wed, 24 Jul 2019 19:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997139;
-        bh=7aBdbD0pAZ7cT7Z1XWB4rwLOq1yj8nUthLML5JV9tDI=;
+        s=default; t=1563997142;
+        bh=ORC6eTDK2VYgx5goqOcD4F+nOhoZY/xvzPSzuNIr0xQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QR3Fr5E5MiA/fy0FLI+SuGS9S7ruhBsMmHbLYWGhROtSK41M0cxbjQ/xLzRBoxGEk
-         TLC1tnHjdDheggylgiK9Ym2K6l0rm+QQ2RezmQOankdLSNxuQyBSrYeDURlhfjL8j4
-         +9vx1NrumRofinFqDKb4bsNQ+BHxKJ6BafaQwU08=
+        b=dMP5qTl3ZjK3iefyVDvo9qYqWyf020UriZPHavkiPoQ3vu+Bty23XORtbRer7cnBA
+         HyZPzy13YQPxitRrge1Nzg1UuFGEFTqKSeEq6cb43q1uLtkrPmFj0GR5onZ6X7ULmA
+         v9Q80f4OkI8BB8BId3MMc9uQz7upjZ3sotOCs1Ec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 333/413] KVM: PPC: Book3S HV: Clear pending decrementer exceptions on nested guest entry
-Date:   Wed, 24 Jul 2019 21:20:24 +0200
-Message-Id: <20190724191759.646814518@linuxfoundation.org>
+Subject: [PATCH 5.2 334/413] KVM: PPC: Book3S HV: Fix CR0 setting in TM emulation
+Date:   Wed, 24 Jul 2019 21:20:25 +0200
+Message-Id: <20190724191759.719826993@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,60 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+From: Michael Neuling <mikey@neuling.org>
 
-commit 3c25ab35fbc8526ac0c9b298e8a78e7ad7a55479 upstream.
+commit 3fefd1cd95df04da67c83c1cb93b663f04b3324f upstream.
 
-If we enter an L1 guest with a pending decrementer exception then this
-is cleared on guest exit if the guest has writtien a positive value
-into the decrementer (indicating that it handled the decrementer
-exception) since there is no other way to detect that the guest has
-handled the pending exception and that it should be dequeued. In the
-event that the L1 guest tries to run a nested (L2) guest immediately
-after this and the L2 guest decrementer is negative (which is loaded
-by L1 before making the H_ENTER_NESTED hcall), then the pending
-decrementer exception isn't cleared and the L2 entry is blocked since
-L1 has a pending exception, even though L1 may have already handled
-the exception and written a positive value for it's decrementer. This
-results in a loop of L1 trying to enter the L2 guest and L0 blocking
-the entry since L1 has an interrupt pending with the outcome being
-that L2 never gets to run and hangs.
+When emulating tsr, treclaim and trechkpt, we incorrectly set CR0. The
+code currently sets:
+    CR0 <- 00 || MSR[TS]
+but according to the ISA it should be:
+    CR0 <-  0 || MSR[TS] || 0
 
-Fix this by clearing any pending decrementer exceptions when L1 makes
-the H_ENTER_NESTED hcall since it won't do this if it's decrementer
-has gone negative, and anyway it's decrementer has been communicated
-to L0 in the hdec_expires field and L0 will return control to L1 when
-this goes negative by delivering an H_DECREMENTER exception.
+This fixes the bit shift to put the bits in the correct location.
 
-Fixes: 95a6432ce903 ("KVM: PPC: Book3S HV: Streamlined guest entry/exit path on P9 for radix guests")
-Cc: stable@vger.kernel.org # v4.20+
-Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+This is a data integrity issue as CR0 is corrupted.
+
+Fixes: 4bb3c7a0208f ("KVM: PPC: Book3S HV: Work around transactional memory bugs in POWER9")
+Cc: stable@vger.kernel.org # v4.17+
+Tested-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s_hv_tm.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -4124,8 +4124,15 @@ int kvmhv_run_single_vcpu(struct kvm_run
+--- a/arch/powerpc/kvm/book3s_hv_tm.c
++++ b/arch/powerpc/kvm/book3s_hv_tm.c
+@@ -128,7 +128,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcp
+ 		}
+ 		/* Set CR0 to indicate previous transactional state */
+ 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
+-			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
++			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
+ 		/* L=1 => tresume, L=0 => tsuspend */
+ 		if (instr & (1 << 21)) {
+ 			if (MSR_TM_SUSPENDED(msr))
+@@ -172,7 +172,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcp
  
- 	preempt_enable();
+ 		/* Set CR0 to indicate previous transactional state */
+ 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
+-			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
++			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
+ 		vcpu->arch.shregs.msr &= ~MSR_TS_MASK;
+ 		return RESUME_GUEST;
  
--	/* cancel pending decrementer exception if DEC is now positive */
--	if (get_tb() < vcpu->arch.dec_expires && kvmppc_core_pending_dec(vcpu))
-+	/*
-+	 * cancel pending decrementer exception if DEC is now positive, or if
-+	 * entering a nested guest in which case the decrementer is now owned
-+	 * by L2 and the L1 decrementer is provided in hdec_expires
-+	 */
-+	if (kvmppc_core_pending_dec(vcpu) &&
-+			((get_tb() < vcpu->arch.dec_expires) ||
-+			 (trap == BOOK3S_INTERRUPT_SYSCALL &&
-+			  kvmppc_get_gpr(vcpu, 3) == H_ENTER_NESTED)))
- 		kvmppc_core_dequeue_dec(vcpu);
+@@ -202,7 +202,7 @@ int kvmhv_p9_tm_emulation(struct kvm_vcp
  
- 	trace_kvm_guest_exit(vcpu);
+ 		/* Set CR0 to indicate previous transactional state */
+ 		vcpu->arch.regs.ccr = (vcpu->arch.regs.ccr & 0x0fffffff) |
+-			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 28);
++			(((msr & MSR_TS_MASK) >> MSR_TS_S_LG) << 29);
+ 		vcpu->arch.shregs.msr = msr | MSR_TS_S;
+ 		return RESUME_GUEST;
+ 	}
 
 
