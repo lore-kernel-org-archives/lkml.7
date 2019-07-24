@@ -7,103 +7,98 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF15C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E571FC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80D1227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBC5227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:34:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAc6uNbr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1c4BoDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbfGXCdw (ORCPT
+        id S1728948AbfGXCeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:33:52 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34341 "EHLO
+        Tue, 23 Jul 2019 22:34:15 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36387 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfGXCdv (ORCPT
+        with ESMTP id S1726130AbfGXCeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:33:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so14154285pgc.1;
-        Tue, 23 Jul 2019 19:33:51 -0700 (PDT)
+        Tue, 23 Jul 2019 22:34:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so20376272pgm.3;
+        Tue, 23 Jul 2019 19:34:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=PG5Fjwwrk0QuD+sTgYEYYGjOti0OiQdq1uV5NO/0c8Y=;
-        b=AAc6uNbrMbXFMcL3MnGZRdvGr23b+I7A8qHl2fitW/UP1nyjy8tBU1FkWAY193tSIY
-         zPRChdZEayDulJTZS+1ewNcZY29Oldm0zo2EoQEO8NAZkwGWSpvAloicBvcrVbFaBVjl
-         RmW2WwT00t4W+QRVAXHTm5SPKx09wyvkMuV/mmjP0/wlKagHVVjK5pDEmRXe92mu6Zfy
-         hr1xJVst4mHX32dPWcAiFRsQNwblgmnnwXP3pg3ycebY3OcxECO3IxFDgRCzFmDccVIB
-         nSA+2sS77AFpvay66K18dlgw4RGp5CrN3/Br4bXRPZ2y30/BBMNoPcaqrl4ZKPHiPFgJ
-         9R8g==
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zLRKL/gPs+H8SY77w9eVBrRyeHltVjkGP2Avoqt8jdk=;
+        b=A1c4BoDRmx0ORVvKKiL72V4Q6T65Dly7SwVr7+L8Z8PoVqhMCd5V+h3oDgzqhF0xlS
+         ZlJ7J9Vbr41LsJCV46TKMxMdiUav5iiRAbeEW/goapwL0PE8/kp5UbsQvCBCFPT9AORV
+         ICxXCjOC7KafO89PTQnfamcfZyvnOoOzc5Vk4qJApDpd/DZ7jt0f1yv5HmyrBnRAvxbg
+         9WcDNJcPQlLP1RXjnZv75dsEtr8g2WFQW8t2lkASc9U59F5Iy2iO0w06QmL0AUt8Ld5l
+         gkr5ubVzpi9i9wOrQlgbqdhZY7wz4td7IbR3XYK+nSJEdjyTBIdz88jnWffHhRwNeibw
+         GcNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=PG5Fjwwrk0QuD+sTgYEYYGjOti0OiQdq1uV5NO/0c8Y=;
-        b=OrJbFxk7CvlqTa1mvISHU4hSZtTJTU1cHpiiNDB/Ej4MvmB83ltP3XFaeCGqv+MDo6
-         +ddGPFqDbj4LzbrbRgTF+a8eAhR7q2ZIAKpIbGE2dQ06vc/gj87M0eu0ZSsnQ4aBQJMQ
-         zbJXk+Bum0xYPejD4kJrWOdpT7KZK4tfzgC4fZj/ZKlDU9B8fIjFK9I8kiluDYplEqsX
-         wiOXLS4dgdWCpk/DjF+jqdLr9TnSSO20BkuzkQJcVYu3FlKzq1NneQn0JChCI23cJn6B
-         HUBnXBOpht8wdCyIzd3/jS0MSsX8dEJyodiZPxo4Xy3qE5uC/S/fjSCgF9YONvq0zOoD
-         r4jQ==
-X-Gm-Message-State: APjAAAW4MzhvEkBGrxocNeCJPWN01fQCMts5+QX5hvm2g6T6O28CK2aX
-        40+GSsFYUp0LV9FxsBNMO+WH0p0m
-X-Google-Smtp-Source: APXvYqxSqfZOC7vaEUmBkXSL8+tgg9fFUHQDwWkNEhKzUNDpfhkEivfM5Ae4Np1l/uYn+5Ti8d7FVA==
-X-Received: by 2002:a65:5144:: with SMTP id g4mr26835599pgq.202.1563935630873;
-        Tue, 23 Jul 2019 19:33:50 -0700 (PDT)
-Received: from ?IPv6:2402:f000:4:72:808::177e? ([2402:f000:4:72:808::177e])
-        by smtp.gmail.com with ESMTPSA id 23sm48509918pfn.176.2019.07.23.19.33.48
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zLRKL/gPs+H8SY77w9eVBrRyeHltVjkGP2Avoqt8jdk=;
+        b=OTJt7pqUw+4qxm8fCFdeIOwWJWlSCn9vR3YdtDOJv5rA3myV+iS3AqXsqXCwrX4bpF
+         yZ0w1myAgfu+3IRH2oujhwgy0tIf5Vvn3TYDCnVmeWV19l1d9BLNsB+TerI3jJqEpa1F
+         K3C+NNXMvCqCPEDLwCVCfcg9FK4nXeDoGM2iZE4vBgU5OstIGwpQekrkLtaHqIrulgT9
+         BK5M3moFgPMByIExEN67N2jP0TRGEB7GT/KR2wM10mvTgo4qEMgGxpH4YqnF6g+C2qYM
+         ONngGNkTSruunPLmJvZPIKRXMvxtjsWPfE0Rk4CRENBTldFvHeXlS9uFtWdh7sMWg9dQ
+         5TLg==
+X-Gm-Message-State: APjAAAWVV27wd62xMnnwVAha2ychwlpPx/DOSJFvad6NmEC6xtTbXSY6
+        LuLRpNqiG20Y1HSC6CTonfM=
+X-Google-Smtp-Source: APXvYqzfA83c3TncrVOHNCO4gafJ0pOTxGRqj3ih5x1kS51UKLt8voYTdn970u/vx83IkL0x3MjUow==
+X-Received: by 2002:a63:5a4d:: with SMTP id k13mr76810401pgm.174.1563935654132;
+        Tue, 23 Jul 2019 19:34:14 -0700 (PDT)
+Received: from [192.168.1.5] ([110.78.179.210])
+        by smtp.googlemail.com with ESMTPSA id s66sm48054058pfs.8.2019.07.23.19.34.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 19:33:50 -0700 (PDT)
-Subject: Re: [PATCH] fs: btrfs: Fix a possible null-pointer dereference in
- insert_inline_extent()
-To:     Qu Wenruo <quwenruo.btrfs@gmx.com>, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190724021132.27378-1-baijiaju1990@gmail.com>
- <df4b5d21-0983-3ca2-44de-ea9f1616df7f@gmx.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <800ae777-928f-2969-d4dd-6f358a039e48@gmail.com>
-Date:   Wed, 24 Jul 2019 10:33:51 +0800
+        Tue, 23 Jul 2019 19:34:13 -0700 (PDT)
+Subject: Re: [PATCH] USB: serial: option: Add Motorola modem UARTs
+To:     Tony Lindgren <tony@atomide.com>, Johan Hovold <johan@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>
+References: <20190723144956.55753-1-tony@atomide.com>
+From:   Lars Melin <larsm17@gmail.com>
+Message-ID: <75e9bccc-d76d-2bc6-f9f3-a0efc25e8238@gmail.com>
+Date:   Wed, 24 Jul 2019 09:34:09 +0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <df4b5d21-0983-3ca2-44de-ea9f1616df7f@gmx.com>
+In-Reply-To: <20190723144956.55753-1-tony@atomide.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 7/23/2019 21:49, Tony Lindgren wrote:
+
+> +#define MOTOROLA_VENDOR_ID			0x22b8
+> +#define MOTOROLA_PRODUCT_MDM6600		0x2a70
+> +#define MOTOROLA_PRODUCT_MDM9600		0x2e0a
+> +#define MOTOROLA_PRODUCT_MDM_RAM_DL		0x4281
+> +#define MOTOROLA_PRODUCT_MDM_QC_DL		0x900e
+> +
+
+Johan, when he is back from vacation, will tell you to drop those 
+defines and instead use the values directly in the list with a comment 
+behind reflecting the device model.
+Just telling you so you can save time by sending out your v2 early..
 
 
-On 2019/7/24 10:21, Qu Wenruo wrote:
->
-> On 2019/7/24 上午10:11, Jia-Ju Bai wrote:
->> In insert_inline_extent(), there is an if statement on line 181 to check
->> whether compressed_pages is NULL:
->>      if (compressed_size && compressed_pages)
->>
->> When compressed_pages is NULL, compressed_pages is used on line 215:
->>      cpage = compressed_pages[i];
->>
->> Thus, a possible null-pointer dereference may occur.
->>
->> To fix this possible bug, compressed_pages is checked on line 214.
-> This can only be hit with compressed_size > 0 and compressed_pages != NULL.
->
-> It would be better to have an extra ASSERT() to warn developers about
-> the impossible case.
-
-Thanks for the reply :)
-So I should add ASSERT(compressed_size > 0 & compressed_pages) at the 
-beginning of the function, and remove "if (compressed_size && 
-compressed_pages)"?
-
-
-Best wishes,
-Jia-Ju Bai
+best rgds
+/Lars
