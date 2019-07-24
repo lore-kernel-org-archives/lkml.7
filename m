@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279CAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FD8C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9B7206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A78920693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999447;
-	bh=s0/aSiakoN1afCX/3HrsVhB1VWD5uK6b+N50eKLyzdo=;
+	s=default; t=1563999450;
+	bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yPI7husRPRED1E5aBa22ONGXgb3HPHiF75aeNsd6UbIyl2Eag8jcSbGCJ1UpzvfUy
-	 ggdyTBqj6aDQQdowHULSG4u09YJPpleMvDgS0710HFDWPaxH4o2EQSAQkiIolymyg0
-	 XpgObCfqFkvJQaoBexrI1IX/ebzRzSOlMv27BpIg=
+	b=rm17Fs3HiKpPM2bhl1w0CclRYv0kr17CQ0zeNJaiMDUP6uZIOEf+YChv9KXEXt3Da
+	 SZqZpYWuLADwufN+OMjVcuHfbmUD2sxBKqxpXN8T4No2P62a4f929jZ1cytFwIIrbE
+	 URasUhEbCEuvkh1TgRNhjdZnyYuQe/IlQIZBXO5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392883AbfGXURZ (ORCPT
+        id S1729012AbfGXTuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58784 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfGXTuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:13 -0400
+        id S2391517AbfGXTuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7B7205C9;
-        Wed, 24 Jul 2019 19:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6104E205C9;
+        Wed, 24 Jul 2019 19:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997812;
-        bh=s0/aSiakoN1afCX/3HrsVhB1VWD5uK6b+N50eKLyzdo=;
+        s=default; t=1563997800;
+        bh=sMDzDsnV3Rj9WChVW7MF4eabmz6uCc1sudHPf2bTMmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=feBtSjrZ7F3wH7DjRcDYIV5e5jEUN7KcIUzS5EBvaOGNzojX9cdCwWrfsPEhbiFgr
-         HJ3B4XJ+HFZJUHyC63W9gbV4GZC0/l2C1FNuGGFv1elUzeiFpFONZh82+sUW7iwfAb
-         OLE/DIchIhT0ehpqID5HwqklyYcISXH/O2Z41RXI=
+        b=eGv468M+qcgmSi35vMBMkrjsO1jleCg41/b3PbN5FZBlM7QZnvODA+fJIcc2UUi4p
+         so82k5hGQuzj3fDEKUpgyIZNBmpRzwS8TLKoa9Is7tyv/DtjUJXngEBcy3kmo8+wii
+         0dfdISPrC9Ys0llJ8f6mI9ygYcwjjd7NXTQT7RwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 151/371] clocksource/drivers/tegra: Release all IRQs on request_irq() error
-Date:   Wed, 24 Jul 2019 21:18:23 +0200
-Message-Id: <20190724191736.545955774@linuxfoundation.org>
+Subject: [PATCH 5.1 147/371] ath10k: fix fw crash by moving chip reset after napi disabled
+Date:   Wed, 24 Jul 2019 21:18:19 +0200
+Message-Id: <20190724191736.199080212@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,42 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7a3916706e858ad0bc3b5629c68168e1449de26a ]
+[ Upstream commit 08d80e4cd27ba19f9bee9e5f788f9a9fc440a22f ]
 
-Release all requested IRQ's on the request error to properly clean up
-allocated resources.
+On SMP platform, when continuously running wifi up/down, the napi
+poll can be scheduled during chip reset, which will call
+ath10k_pci_has_fw_crashed() to check the fw status. But in the reset
+period, the value from FW_INDICATOR_ADDRESS register will return
+0xdeadbeef, which also be treated as fw crash. Fix the issue by
+moving chip reset after napi disabled.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+ath10k_pci 0000:01:00.0: firmware crashed! (guid 73b30611-5b1e-4bdd-90b4-64c81eb947b6)
+ath10k_pci 0000:01:00.0: qca9984/qca9994 hw1.0 target 0x01000000 chip_id 0x00000000 sub 168c:cafe
+ath10k_pci 0000:01:00.0: htt-ver 2.2 wmi-op 6 htt-op 4 cal otp max-sta 512 raw 0 hwcrypto 1
+ath10k_pci 0000:01:00.0: failed to get memcpy hi address for firmware address 4: -16
+ath10k_pci 0000:01:00.0: failed to read firmware dump area: -16
+ath10k_pci 0000:01:00.0: Copy Engine register dump:
+ath10k_pci 0000:01:00.0: [00]: 0x0004a000   0   0   0   0
+ath10k_pci 0000:01:00.0: [01]: 0x0004a400   0   0   0   0
+ath10k_pci 0000:01:00.0: [02]: 0x0004a800   0   0   0   0
+ath10k_pci 0000:01:00.0: [03]: 0x0004ac00   0   0   0   0
+ath10k_pci 0000:01:00.0: [04]: 0x0004b000   0   0   0   0
+ath10k_pci 0000:01:00.0: [05]: 0x0004b400   0   0   0   0
+ath10k_pci 0000:01:00.0: [06]: 0x0004b800   0   0   0   0
+ath10k_pci 0000:01:00.0: [07]: 0x0004bc00   1   0   1   0
+ath10k_pci 0000:01:00.0: [08]: 0x0004c000   0   0   0   0
+ath10k_pci 0000:01:00.0: [09]: 0x0004c400   0   0   0   0
+ath10k_pci 0000:01:00.0: [10]: 0x0004c800   0   0   0   0
+ath10k_pci 0000:01:00.0: [11]: 0x0004cc00   0   0   0   0
+
+Tested HW: QCA9984,QCA9887,WCN3990
+
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-tegra20.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index fdb3d795a409..cc18bb135a17 100644
---- a/drivers/clocksource/timer-tegra20.c
-+++ b/drivers/clocksource/timer-tegra20.c
-@@ -310,7 +310,7 @@ static int __init tegra_init_timer(struct device_node *np)
- 			pr_err("%s: can't map IRQ for CPU%d\n",
- 			       __func__, cpu);
- 			ret = -EINVAL;
--			goto out;
-+			goto out_irq;
- 		}
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 2c27f407a851..6e5f7ae00253 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -2059,6 +2059,11 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
  
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
-@@ -320,7 +320,8 @@ static int __init tegra_init_timer(struct device_node *np)
- 		if (ret) {
- 			pr_err("%s: cannot setup irq %d for CPU%d\n",
- 				__func__, cpu_to->clkevt.irq, cpu);
--			ret = -EINVAL;
-+			irq_dispose_mapping(cpu_to->clkevt.irq);
-+			cpu_to->clkevt.irq = 0;
- 			goto out_irq;
- 		}
- 	}
+ 	ath10k_dbg(ar, ATH10K_DBG_BOOT, "boot hif stop\n");
+ 
++	ath10k_pci_irq_disable(ar);
++	ath10k_pci_irq_sync(ar);
++	napi_synchronize(&ar->napi);
++	napi_disable(&ar->napi);
++
+ 	/* Most likely the device has HTT Rx ring configured. The only way to
+ 	 * prevent the device from accessing (and possible corrupting) host
+ 	 * memory is to reset the chip now.
+@@ -2072,10 +2077,6 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+ 	 */
+ 	ath10k_pci_safe_chip_reset(ar);
+ 
+-	ath10k_pci_irq_disable(ar);
+-	ath10k_pci_irq_sync(ar);
+-	napi_synchronize(&ar->napi);
+-	napi_disable(&ar->napi);
+ 	ath10k_pci_flush(ar);
+ 
+ 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
 -- 
 2.20.1
 
