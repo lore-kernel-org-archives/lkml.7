@@ -2,92 +2,100 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE24AC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29062C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBE42238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E749520651
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 01:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlQ7oTFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbfGXBtX (ORCPT
+        id S1728789AbfGXBvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 21:49:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38678 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728675AbfGXBtX (ORCPT
+        Tue, 23 Jul 2019 21:51:33 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35002 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfGXBvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 21:49:23 -0400
-X-UUID: 517c04dad5a54f7aa85127aa0890d8b9-20190724
-X-UUID: 517c04dad5a54f7aa85127aa0890d8b9-20190724
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1467029798; Wed, 24 Jul 2019 09:49:16 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 24 Jul 2019 09:49:15 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 24 Jul 2019 09:49:15 +0800
-Message-ID: <1563932955.26104.0.camel@mtksdaap41>
-Subject: Re: [PATCH -next] drm/mediatek: Remove duplicated include from
- mtk_drm_drv.c
-From:   CK Hu <ck.hu@mediatek.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Date:   Wed, 24 Jul 2019 09:49:15 +0800
-In-Reply-To: <20190724013348.153144-1-yuehaibing@huawei.com>
-References: <20190724013348.153144-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+        Tue, 23 Jul 2019 21:51:33 -0400
+Received: by mail-io1-f67.google.com with SMTP id m24so86178385ioo.2;
+        Tue, 23 Jul 2019 18:51:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1VazidXBzwwvgKrkltEbhe85rbEwNvTQ8zjEVjoM56Q=;
+        b=IlQ7oTFWgQqpWLR9bzEHX58gA0YOUxxvxu7TrawjU4uRhn8WkcDmJDF6MbMfQzQ7PK
+         1cZ946o4DoQGjwwWy0Q0S7GvMklc4sapjcukQdoMY8kNoifE36+r2SgTfudKono3EMnh
+         0DQuKbWPRJas0BO/wqkYeT5d6u/RtTC3cWannVEEsaFN/3SaqsG1WbdWDPFoJmEUloi0
+         u9i8kwANQBhRMml/mLHclKoDp4LzH6dZCaeviKxex6U690Pc8gAscBE+pToCqCFprXZ4
+         RZvjiWZ3PyzxauQBT0EDKt/UEvrcNieJo6HqD3962tYz8WTGxm0hNrQo3aXzHj149iYF
+         EpVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1VazidXBzwwvgKrkltEbhe85rbEwNvTQ8zjEVjoM56Q=;
+        b=O5gSS62Wzydlm+6qR/rz8EoLtDaGd2cKMZst59LP/LvdUv0rK0YAJ2bPtNqN9QobGp
+         C2mxYwZo6m8ycR6mHX6iRaDdt5juPdFurE+2vSVLJqehsqCLnTBKp8ncjYvhbK0UJ/8d
+         me17AD0xsPcarNSEbXGuI6za6fDJNY18KAaOlqX8nhGtHYbHpZsNs01hn3PL7d8/xfxv
+         I1OpZaxVM99cJvPF6mdvR3kbMKaaMtV1zTeLyTzcpauQB5OJ8fxbOKuGWdUVY2iGWmEo
+         dl9A+9GgCMjUzktjjXX2dgQ8XH+5Xn89Qgj1csrPYRw723PQhFCkTfVrRnveCDGn+nkU
+         YfEg==
+X-Gm-Message-State: APjAAAVbyEHrZ6WjOlzuBfvO4N7GcdNhdDsx5EstHUt26EPVVDzG2KkV
+        RPBWUwjyQ/MjLTEOzo2WWeY=
+X-Google-Smtp-Source: APXvYqzyixL9gx5oZfe67P+25eJ53Dndx+lIIuJWgA3Lp2n7+ufHNQD1bMOd+5hLfViXG56ltZu4kQ==
+X-Received: by 2002:a6b:7109:: with SMTP id q9mr68279157iog.30.1563933092175;
+        Tue, 23 Jul 2019 18:51:32 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id e26sm38223271iod.10.2019.07.23.18.51.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 18:51:31 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        secalert@redhat.com, Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rpcrdma_decode_msg: check xdr_inline_decode result
+Date:   Tue, 23 Jul 2019 20:51:14 -0500
+Message-Id: <20190724015115.3493-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, YueHaibing:
+xdr_inline_decode may return NULL, so the check is necessary. The base
+pointer will be dereferenced later in rpcrdma_inline_fixup.
 
-On Wed, 2019-07-24 at 01:33 +0000, YueHaibing wrote:
-> Remove duplicated include.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ net/sunrpc/xprtrdma/rpc_rdma.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index 2ee809a6f3dc..e3b64a266dcf 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -23,7 +23,6 @@
->  
->  #include "mtk_drm_crtc.h"
->  #include "mtk_drm_ddp.h"
-> -#include "mtk_drm_ddp.h"
->  #include "mtk_drm_ddp_comp.h"
->  #include "mtk_drm_drv.h"
->  #include "mtk_drm_fb.h"
-> 
-> 
-> 
-> 
-> 
-
+diff --git a/net/sunrpc/xprtrdma/rpc_rdma.c b/net/sunrpc/xprtrdma/rpc_rdma.c
+index 4345e6912392..d0479efe0e72 100644
+--- a/net/sunrpc/xprtrdma/rpc_rdma.c
++++ b/net/sunrpc/xprtrdma/rpc_rdma.c
+@@ -1160,6 +1160,9 @@ rpcrdma_decode_msg(struct rpcrdma_xprt *r_xprt, struct rpcrdma_rep *rep,
+ 
+ 	/* Build the RPC reply's Payload stream in rqst->rq_rcv_buf */
+ 	base = (char *)xdr_inline_decode(xdr, 0);
++	if (!base)
++		return -EIO;
++
+ 	rpclen = xdr_stream_remaining(xdr);
+ 	r_xprt->rx_stats.fixup_copy_count +=
+ 		rpcrdma_inline_fixup(rqst, base, rpclen, writelist & 3);
+-- 
+2.17.1
 
