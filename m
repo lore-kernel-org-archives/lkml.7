@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1474EC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD28C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D130F21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6062238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996503;
-	bh=ZSl1scnxr/Ellro7+dGi0kPGRZ6BnpwAw0+kHm4KKkU=;
+	s=default; t=1563996508;
+	bh=+E7l2ji47+QPKyzCYtnJU/gcwcZY0L7QrDYr5U6InH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPGRKeANo8c5FG68SruBS6+EWg3ZG629GxNSvufin96VtXQwSzrcaTbYPnns5aOXN
-	 4CowSwX+dwRwKC+NuqInwafZ0E55BzCIcm+VChjs9SWMe1zKvUlTq+d3EJpGUb9Dp4
-	 kR6S6VhnfjWd8d2QcpIwM1DixZ2A/Xkrb85FtBEc=
+	b=mpJfRERVSW8XANgjy7gIzpQdoK77ANh/piZmntfASDOVAkjx4KvU+SgOFPd0zVe7U
+	 536wbaRoSWihLjHW9NMekXuToQpC1C1Q3fxpPM5bdytRK+rrDjqw/8YKHC1oE7YOva
+	 e1JHRTPuGAJOM7lKYiKjXL7GtWWbWFg5p82LzJKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388206AbfGXT2S (ORCPT
+        id S2388330AbfGXT2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387564AbfGXT2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:15 -0400
+        id S2388233AbfGXT2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C1F218EA;
-        Wed, 24 Jul 2019 19:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D48B321951;
+        Wed, 24 Jul 2019 19:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996494;
-        bh=ZSl1scnxr/Ellro7+dGi0kPGRZ6BnpwAw0+kHm4KKkU=;
+        s=default; t=1563996500;
+        bh=+E7l2ji47+QPKyzCYtnJU/gcwcZY0L7QrDYr5U6InH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fVDBkkmxtqzlEhy+7WQtWRToQDEgkYkMJ/wmvxE6oQBJfJSHyw2LzFhQLJcf+3JFT
-         cPAbahQAJS1dFygr8tJbmRTwTXMGu1zeJDGXxSf5Tfut8kLa8xwrGFxC56d9M2fm4e
-         UwQFZAxrxARSyNAcpPXEMPuXif1IjkgezfPlsZ4Q=
+        b=CBtYh1A4Cf46UhJmYjGAQG1UhwDgmt8EjzO4TkSMfPuQxrLxHSUvg7FGlftOMTK23
+         8pDRHct3Z6oRzcNJkdC71kXj+ZSJ5MUk9SB3vqMrmVFF2bGw72CqmKQXrJ2LkM7Y6J
+         hf32G2FSgdfelruvVYzZfJuDg3bS7cyQO7jgyE9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 079/413] perf cs-etm: Properly set the value of old and head in snapshot mode
-Date:   Wed, 24 Jul 2019 21:16:10 +0200
-Message-Id: <20190724191740.754985059@linuxfoundation.org>
+Subject: [PATCH 5.2 116/413] vhost_net: disable zerocopy by default
+Date:   Wed, 24 Jul 2019 21:16:47 +0200
+Message-Id: <20190724191743.595313393@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -67,203 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e45c48a9a4d20ebc7b639a62c3ef8f4b08007027 ]
+[ Upstream commit 098eadce3c622c07b328d0a43dda379b38cf7c5e ]
 
-This patch adds the necessary intelligence to properly compute the value
-of 'old' and 'head' when operating in snapshot mode.  That way we can
-get the latest information in the AUX buffer and be compatible with the
-generic AUX ring buffer mechanic.
+Vhost_net was known to suffer from HOL[1] issues which is not easy to
+fix. Several downstream disable the feature by default. What's more,
+the datapath was split and datacopy path got the support of batching
+and XDP support recently which makes it faster than zerocopy part for
+small packets transmission.
 
-Tester notes:
+It looks to me that disable zerocopy by default is more
+appropriate. It cold be enabled by default again in the future if we
+fix the above issues.
 
-> Leo, have you had the chance to test/review this one? Suzuki?
+[1] https://patchwork.kernel.org/patch/3787671/
 
-Sure.  I applied this patch on the perf/core branch (with latest
-commit 3e4fbf36c1e3 'perf augmented_raw_syscalls: Move reading
-filename to the loop') and passed testing with below steps:
-
-  # perf record -e cs_etm/@tmc_etr0/ -S -m,64 --per-thread ./sort &
-  [1] 19097
-  Bubble sorting array of 30000 elements
-
-  # kill -USR2 19097
-  # kill -USR2 19097
-  # kill -USR2 19097
-  [ perf record: Woken up 4 times to write data ]
-  [ perf record: Captured and wrote 0.753 MB perf.data ]
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190605161633.12245-1-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 127 +++++++++++++++++++++++++++++-
- 1 file changed, 123 insertions(+), 4 deletions(-)
+ drivers/vhost/net.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 911426721170..0a278bbcaba6 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -31,6 +31,8 @@ struct cs_etm_recording {
- 	struct auxtrace_record	itr;
- 	struct perf_pmu		*cs_etm_pmu;
- 	struct perf_evlist	*evlist;
-+	int			wrapped_cnt;
-+	bool			*wrapped;
- 	bool			snapshot_mode;
- 	size_t			snapshot_size;
- };
-@@ -536,16 +538,131 @@ static int cs_etm_info_fill(struct auxtrace_record *itr,
- 	return 0;
- }
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index d57ebdd616d9..247e5585af5d 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -35,7 +35,7 @@
  
--static int cs_etm_find_snapshot(struct auxtrace_record *itr __maybe_unused,
-+static int cs_etm_alloc_wrapped_array(struct cs_etm_recording *ptr, int idx)
-+{
-+	bool *wrapped;
-+	int cnt = ptr->wrapped_cnt;
-+
-+	/* Make @ptr->wrapped as big as @idx */
-+	while (cnt <= idx)
-+		cnt++;
-+
-+	/*
-+	 * Free'ed in cs_etm_recording_free().  Using realloc() to avoid
-+	 * cross compilation problems where the host's system supports
-+	 * reallocarray() but not the target.
-+	 */
-+	wrapped = realloc(ptr->wrapped, cnt * sizeof(bool));
-+	if (!wrapped)
-+		return -ENOMEM;
-+
-+	wrapped[cnt - 1] = false;
-+	ptr->wrapped_cnt = cnt;
-+	ptr->wrapped = wrapped;
-+
-+	return 0;
-+}
-+
-+static bool cs_etm_buffer_has_wrapped(unsigned char *buffer,
-+				      size_t buffer_size, u64 head)
-+{
-+	u64 i, watermark;
-+	u64 *buf = (u64 *)buffer;
-+	size_t buf_size = buffer_size;
-+
-+	/*
-+	 * We want to look the very last 512 byte (chosen arbitrarily) in
-+	 * the ring buffer.
-+	 */
-+	watermark = buf_size - 512;
-+
-+	/*
-+	 * @head is continuously increasing - if its value is equal or greater
-+	 * than the size of the ring buffer, it has wrapped around.
-+	 */
-+	if (head >= buffer_size)
-+		return true;
-+
-+	/*
-+	 * The value of @head is somewhere within the size of the ring buffer.
-+	 * This can be that there hasn't been enough data to fill the ring
-+	 * buffer yet or the trace time was so long that @head has numerically
-+	 * wrapped around.  To find we need to check if we have data at the very
-+	 * end of the ring buffer.  We can reliably do this because mmap'ed
-+	 * pages are zeroed out and there is a fresh mapping with every new
-+	 * session.
-+	 */
-+
-+	/* @head is less than 512 byte from the end of the ring buffer */
-+	if (head > watermark)
-+		watermark = head;
-+
-+	/*
-+	 * Speed things up by using 64 bit transactions (see "u64 *buf" above)
-+	 */
-+	watermark >>= 3;
-+	buf_size >>= 3;
-+
-+	/*
-+	 * If we find trace data at the end of the ring buffer, @head has
-+	 * been there and has numerically wrapped around at least once.
-+	 */
-+	for (i = watermark; i < buf_size; i++)
-+		if (buf[i])
-+			return true;
-+
-+	return false;
-+}
-+
-+static int cs_etm_find_snapshot(struct auxtrace_record *itr,
- 				int idx, struct auxtrace_mmap *mm,
--				unsigned char *data __maybe_unused,
-+				unsigned char *data,
- 				u64 *head, u64 *old)
- {
-+	int err;
-+	bool wrapped;
-+	struct cs_etm_recording *ptr =
-+			container_of(itr, struct cs_etm_recording, itr);
-+
-+	/*
-+	 * Allocate memory to keep track of wrapping if this is the first
-+	 * time we deal with this *mm.
-+	 */
-+	if (idx >= ptr->wrapped_cnt) {
-+		err = cs_etm_alloc_wrapped_array(ptr, idx);
-+		if (err)
-+			return err;
-+	}
-+
-+	/*
-+	 * Check to see if *head has wrapped around.  If it hasn't only the
-+	 * amount of data between *head and *old is snapshot'ed to avoid
-+	 * bloating the perf.data file with zeros.  But as soon as *head has
-+	 * wrapped around the entire size of the AUX ring buffer it taken.
-+	 */
-+	wrapped = ptr->wrapped[idx];
-+	if (!wrapped && cs_etm_buffer_has_wrapped(data, mm->len, *head)) {
-+		wrapped = true;
-+		ptr->wrapped[idx] = true;
-+	}
-+
- 	pr_debug3("%s: mmap index %d old head %zu new head %zu size %zu\n",
- 		  __func__, idx, (size_t)*old, (size_t)*head, mm->len);
+ #include "vhost.h"
  
--	*old = *head;
--	*head += mm->len;
-+	/* No wrap has occurred, we can just use *head and *old. */
-+	if (!wrapped)
-+		return 0;
-+
-+	/*
-+	 * *head has wrapped around - adjust *head and *old to pickup the
-+	 * entire content of the AUX buffer.
-+	 */
-+	if (*head >= mm->len) {
-+		*old = *head - mm->len;
-+	} else {
-+		*head += mm->len;
-+		*old = *head - mm->len;
-+	}
- 
- 	return 0;
- }
-@@ -586,6 +703,8 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
- {
- 	struct cs_etm_recording *ptr =
- 			container_of(itr, struct cs_etm_recording, itr);
-+
-+	zfree(&ptr->wrapped);
- 	free(ptr);
- }
- 
+-static int experimental_zcopytx = 1;
++static int experimental_zcopytx = 0;
+ module_param(experimental_zcopytx, int, 0444);
+ MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
+ 		                       " 1 -Enable; 0 - Disable");
 -- 
 2.20.1
 
