@@ -2,133 +2,173 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC57DC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02FCC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81612190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6AB2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 07:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="Mugaxw5x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsS7ZfMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfGXHtk (ORCPT
+        id S1726410AbfGXH4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 03:49:40 -0400
-Received: from mickerik.phytec.de ([195.145.39.210]:49594 "EHLO
-        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfGXHtg (ORCPT
+        Wed, 24 Jul 2019 03:56:55 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39353 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfGXH4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:49:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
-        q=dns/txt; i=@phytec.de; t=1563954574; x=1566546574;
-        h=From:Sender:Reply-To:Subject:Date:Message-Id:To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=EqQWA7dLtCGI8kCRV8d94HFWhGW2KPLYNClP0pwmpPY=;
-        b=Mugaxw5xkyEXDda8a7GPEveEXMpOl9ZZFt5S3xlVD7BNp/r5iQ4CUE11WGvWknp3
-        lVzR8ATHvYRpZYPir8Kc6se1LO/falAaulCn9cMri5dtW2KcAWCDkGeM6QU2N6iE
-        vjkiiU7+iv+pOu7UncgHqfPDADoiCto/Tz6tqjdqnAk=;
-X-AuditID: c39127d2-193ff70000001aee-b5-5d380d8dab5e
-Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 1D.CA.06894.D8D083D5; Wed, 24 Jul 2019 09:49:33 +0200 (CEST)
-Received: from augenblix2.phytec.de ([172.16.21.122])
-          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
-          with ESMTP id 2019072409493350-408985 ;
-          Wed, 24 Jul 2019 09:49:33 +0200 
-From:   Stefan Riedmueller <s.riedmueller@phytec.de>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Andrew Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-imx@nxp.com, Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: [PATCH 2/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 devicetree bindings
-Date:   Wed, 24 Jul 2019 09:49:33 +0200
-Message-Id: <1563954573-370205-2-git-send-email-s.riedmueller@phytec.de>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
-References: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
-X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 24.07.2019 09:49:33,
-        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
- 24.07.2019 09:49:33,
-        Serialize complete at 24.07.2019 09:49:33
-X-TNEFEvaluated: 1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHLMWRmVeSWpSXmKPExsWyRoCBS7eX1yLW4P11a4vmDluL+UfOsVo8
-        vOpvsenxNVaLrl8rmS0u75rDZnG3pZPVYun1i0wWrXuPsFv83b6JxeLFFnEHbo8189Yweuyc
-        dZfdY9OqTjaPO9f2sHlsXlLvsfHdDiaP/r8GHp83yQVwRHHZpKTmZJalFunbJXBlPDrpWjBb
-        rOLc92aWBsY9/F2MnBwSAiYSRw5vYO1i5OIQEtjBKDGl4wwjhHORUaL9XxMzSBWbgJHEgmmN
-        TCC2iICGxJSux+wgRcwCU5klGv8sZQVJCAsESKz9tJEdxGYRUJU4vOAVI4jNK+AhcezwVkaI
-        dXISN891gg3lFPCUWLpvMRuILQRUs/jYZyaQoRICjUwS7R9Ps0M0CEmcXnyWeQIj3wJGhlWM
-        QrmZydmpRZnZegUZlSWpyXopqZsYgWF6eKL6pR2MfXM8DjEycTAeYpTgYFYS4Q1sMIsV4k1J
-        rKxKLcqPLyrNSS0+xCjNwaIkzruBtyRMSCA9sSQ1OzW1ILUIJsvEwSnVwFg/64NylO1Oxhsl
-        kpcc1+lIum7v/3VvzfIPxnFXMu86Wqa8P1nO6FHevHH3xLSq129yK75fOlRQ1TbD7Kftl6yF
-        PFvO6Plcc53y/8i/Mw3pdSK5P2quzty4yL284ON9dubGqZeWGrw8uG69+HWlexarXD8q/1/8
-        2+NYT8q5bdn3PT/tPrJr/74CJZbijERDLeai4kQAGH3RWkECAAA=
+        Wed, 24 Jul 2019 03:56:54 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x4so45793315wrt.6;
+        Wed, 24 Jul 2019 00:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CWKOul5zWyLvmCqcEFdL6klVQupyTa972P0CGXCFiyo=;
+        b=HsS7ZfMTiCjuA0EPZ+ReU3GePJSQredYd4jUYk6T9eSw5or0YFHI58qK19SCPg87Cd
+         PodmffNoAu+ZyZd1syzNTZY8cPf9Kwd6m1Rrk89eYTToMQKEd1tVqYL1qB1hT7+vSxHe
+         6sTtQFV6zUcoVdDxXJPA0B/j+w3wdIo1Z0fiEJYMd+4RUuw9UuT2+wQiE7RSp6CY0acs
+         I5nqdkcC3s1XAXW/JBwNdunWtqoz33q4kQCBmuIyE210csXY6q12TGvCVpL6b3kxAzEv
+         KCE7E4PDpBYsDiruIy5h9YSYQRWAQmAxj44EjELBDEdFb0DfB87iC22XMYntolXqDs7M
+         TwIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CWKOul5zWyLvmCqcEFdL6klVQupyTa972P0CGXCFiyo=;
+        b=C0/ig37m06vDEUJ4eb3bQHM7BZA5zPkH6TcAPrb24o1TR36XYKsmurPKWT0uNDs186
+         T/5emOx5AdJHrl5gOo0FmQlxsMv2egb0fNRwaFoINCrxvUaF04tU6YIf/tWH4IksOPHp
+         zJ114GXqBtBGJdw/eJb2Uh26jULU+tZMY+iASjIM3HWOoLwauh/LOPJRhojWylU3h1Ct
+         +9Vb3QUmZUwq5Q35N63dTDf7DVz1NwDmUwwnzvIfiXKfv1wc8w70no7lf8nNxG+8d1z6
+         78dd+C8qj+sjEGcFrvz8+o25cCMA7FK3MIL7N/Nd0LlwFomfPpITjNLut8/gYB+P3e9+
+         0zxQ==
+X-Gm-Message-State: APjAAAVbnLvEkg0h76SPoldugm/ml5PPibd1VRPEAvM/JxZgc32o0b9i
+        L5ZUvix9cvditibcn+8Vd5EgcbspICD7gWE5a74=
+X-Google-Smtp-Source: APXvYqz3HVcRTUHwTARLhdDsaaeCmGC91o6UnC25yshx3nImhY6HzZDxOBK6H7v1N346b+TEj1v4R0M50x7JySNR5bM=
+X-Received: by 2002:a5d:50d1:: with SMTP id f17mr34700608wrt.124.1563955012063;
+ Wed, 24 Jul 2019 00:56:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190602034429.6888-1-hdanton@sina.com> <20190602105133.GA16948@hmswarspite.think-freely.org>
+ <CADvbK_dUDjK3UAF49uo+DZv+QiuEsaMmZeqDwBJ0suRwu4yXJw@mail.gmail.com>
+In-Reply-To: <CADvbK_dUDjK3UAF49uo+DZv+QiuEsaMmZeqDwBJ0suRwu4yXJw@mail.gmail.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Wed, 24 Jul 2019 15:56:40 +0800
+Message-ID: <CADvbK_ddFyO2iz-QS3bHevHN7Q29VUS4joK3Kxam3Y4tEqHFKA@mail.gmail.com>
+Subject: Re: [PATCH] net: sctp: fix memory leak in sctp_send_reset_streams
+To:     Neil Horman <nhorman@tuxdriver.com>
+Cc:     Hillf Danton <hdanton@sina.com>, linux-sctp@vger.kernel.org,
+        network dev <netdev@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree bindings for i.MX6 based phyCORE-i.MX6, phyBOARD-Mira and
-phyFLEX-i.MX6.
-
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 40f007859092..00a037cf5c86 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -112,6 +112,13 @@ properties:
-               - fsl,imx6q-sabreauto
-               - fsl,imx6q-sabrelite
-               - fsl,imx6q-sabresd
-+              - phytec,imx6qdl-pcm058     # PHYTEC phyCORE-i.MX6
-+              - phytec,imx6q-pbab01       # PHYTEC phyFLEX carrier board
-+              - phytec,imx6q-pbab01-nand  # PHYTEC phyFLEX eval Kit
-+              - phytec,imx6q-pbac06       # PHYTEC phyBOARD-Mira with i.MX6 Quad
-+              - phytec,imx6q-pbac06-emmc  # PHYTEC phyBOARD-Mira eMMC RDK
-+              - phytec,imx6q-pbac06-nand  # PHYTEC phyBOARD-Mira NAND RDK
-+              - phytec,imx6q-pfla02       # PHYTEC phyFLEX-i.MX6 Quad
-               - technologic,imx6q-ts4900
-               - technologic,imx6q-ts7970
-           - const: fsl,imx6q
-@@ -121,6 +128,9 @@ properties:
-           - enum:
-               - fsl,imx6qp-sabreauto      # i.MX6 Quad Plus SABRE Automotive Board
-               - fsl,imx6qp-sabresd        # i.MX6 Quad Plus SABRE Smart Device Board
-+              - phytec,imx6qdl-pcm058     # PHYTEC phyCORE-i.MX6
-+              - phytec,imx6qp-pbac06      # PHYTEC phyBOARD-Mira with i.MX6 QuadPlus
-+              - phytec,imx6qp-pbac06-nand # PHYTEC phyBOARD-Mira NAND RDK
-           - const: fsl,imx6qp
- 
-       - description: i.MX6DL based Boards
-@@ -131,6 +141,13 @@ properties:
-               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
-               - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
-               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
-+              - phytec,imx6qdl-pcm058     # PHYTEC phyCORE-i.MX6
-+              - phytec,imx6dl-pbab01      # PHYTEC phyFLEX carrier board
-+              - phytec,imx6dl-pbab01-nand # PHYTEC phyFLEX eval Kit
-+              - phytec,imx6dl-pbac06      # PHYTEC phyBOARD-Mira with i.MX6 DL
-+              - phytec,imx6dl-pbac06-emmc # PHYTEC phyBOARD-Mira eMMC RDK
-+              - phytec,imx6dl-pbac06-nand # PHYTEC phyBOARD-Mira NAND RDK
-+              - phytec,imx6dl-pfla02      # PHYTEC phyFLEX-i.MX6 DL
-               - technologic,imx6dl-ts4900
-               - technologic,imx6dl-ts7970
-               - ysoft,imx6dl-yapp4-draco  # i.MX6 DualLite Y Soft IOTA Draco board
--- 
-2.7.4
-
+On Sun, Jun 2, 2019 at 9:36 PM Xin Long <lucien.xin@gmail.com> wrote:
+>
+> On Sun, Jun 2, 2019 at 6:52 PM Neil Horman <nhorman@tuxdriver.com> wrote:
+> >
+> > On Sun, Jun 02, 2019 at 11:44:29AM +0800, Hillf Danton wrote:
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    036e3431 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=153cff12a00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f0f63a62bb5b13c
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=6ad9c3bd0a218a2ab41d
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12561c86a00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15b76fd8a00000
+> > >
+> > > executing program
+> > > executing program
+> > > executing program
+> > > executing program
+> > > executing program
+> > > BUG: memory leak
+> > > unreferenced object 0xffff888123894820 (size 32):
+> > >   comm "syz-executor045", pid 7267, jiffies 4294943559 (age 13.660s)
+> > >   hex dump (first 32 bytes):
+> > >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > >   backtrace:
+> > >     [<00000000c7e71c69>] kmemleak_alloc_recursive
+> > > include/linux/kmemleak.h:55 [inline]
+> > >     [<00000000c7e71c69>] slab_post_alloc_hook mm/slab.h:439 [inline]
+> > >     [<00000000c7e71c69>] slab_alloc mm/slab.c:3326 [inline]
+> > >     [<00000000c7e71c69>] __do_kmalloc mm/slab.c:3658 [inline]
+> > >     [<00000000c7e71c69>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+> > >     [<000000003250ed8e>] kmalloc_array include/linux/slab.h:670 [inline]
+> > >     [<000000003250ed8e>] kcalloc include/linux/slab.h:681 [inline]
+> > >     [<000000003250ed8e>] sctp_send_reset_streams+0x1ab/0x5a0 net/sctp/stream.c:302
+> > >     [<00000000cd899c6e>] sctp_setsockopt_reset_streams net/sctp/socket.c:4314 [inline]
+> > >     [<00000000cd899c6e>] sctp_setsockopt net/sctp/socket.c:4765 [inline]
+> > >     [<00000000cd899c6e>] sctp_setsockopt+0xc23/0x2bf0 net/sctp/socket.c:4608
+> > >     [<00000000ff3a21a2>] sock_common_setsockopt+0x38/0x50 net/core/sock.c:3130
+> > >     [<000000009eb87ae7>] __sys_setsockopt+0x98/0x120 net/socket.c:2078
+> > >     [<00000000e0ede6ca>] __do_sys_setsockopt net/socket.c:2089 [inline]
+> > >     [<00000000e0ede6ca>] __se_sys_setsockopt net/socket.c:2086 [inline]
+> > >     [<00000000e0ede6ca>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2086
+> > >     [<00000000c61155f5>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+> > >     [<00000000e540958c>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > >
+> > >
+> > > It was introduced in commit d570a59c5b5f ("sctp: only allow the out stream
+> > > reset when the stream outq is empty"), in orde to check stream outqs before
+> > > sending SCTP_STRRESET_IN_PROGRESS back to the peer of the stream. EAGAIN is
+> > > returned, however, without the nstr_list slab released, if any outq is found
+> > > to be non empty.
+> > >
+> > > Freeing the slab in question before bailing out fixes it.
+> > >
+> > > Fixes: d570a59c5b5f ("sctp: only allow the out stream reset when the stream outq is empty")
+> > > Reported-by: syzbot <syzbot+6ad9c3bd0a218a2ab41d@syzkaller.appspotmail.com>
+> > > Reported-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> > > Tested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> > > Cc: Xin Long <lucien.xin@gmail.com>
+> > > Cc: Neil Horman <nhorman@tuxdriver.com>
+> > > Cc: Vlad Yasevich <vyasevich@gmail.com>
+> > > Cc: Eric Dumazet <edumazet@google.com>
+> > > Signed-off-by: Hillf Danton <hdanton@sina.com>
+> > > ---
+> > > net/sctp/stream.c | 1 +
+> > > 1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+> > > index 93ed078..d3e2f03 100644
+> > > --- a/net/sctp/stream.c
+> > > +++ b/net/sctp/stream.c
+> > > @@ -310,6 +310,7 @@ int sctp_send_reset_streams(struct sctp_association *asoc,
+> > >
+> > >       if (out && !sctp_stream_outq_is_empty(stream, str_nums, nstr_list)) {
+> > >               retval = -EAGAIN;
+> > > +             kfree(nstr_list);
+> > >               goto out;
+> > >       }
+> > >
+> > > --
+> > >
+> > >
+> > Acked-by: Neil Horman <nhorman@tuxdriver.com>
+> Reviewed-by: Xin Long <lucien.xin@gmail.com>
+This fix is not applied, pls resend it with:
+to = network dev <netdev@vger.kernel.org>
+cc = davem@davemloft.net
+to = linux-sctp@vger.kernel.org
+cc = Neil Horman <nhorman@tuxdriver.com>
+cc = Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
