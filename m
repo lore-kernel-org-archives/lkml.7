@@ -2,275 +2,82 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED90C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71806C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD5622387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5431221BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 03:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfGXDfS (ORCPT
+        id S1726380AbfGXDlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 23:35:18 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:45071 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfGXDfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 23:35:17 -0400
-X-Greylist: delayed 7353 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Jul 2019 23:35:15 EDT
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hq83d-0005OI-8R; Tue, 23 Jul 2019 21:35:13 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hq83c-0007ZL-12; Tue, 23 Jul 2019 21:35:13 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Steve French <smfrench@gmail.com>
-Cc:     ronnie sahlberg <ronniesahlberg@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
-        <20190715134655.4076-39-sashal@kernel.org>
-        <CAN05THSdj8m5g-xG5abYAZ=_PE2xT-RwLtVhKrtxPevJGCSxag@mail.gmail.com>
-        <CAH2r5mu9ncYa1WTHuuMEk3=4TU5-RBH6nBKME4Bm+dntOtORTQ@mail.gmail.com>
-        <87v9vs43pq.fsf@xmission.com>
-        <CAH2r5mtB=KO+9fxSYQHbjD+0K+5rGL6Q8TSU0_wsHUdqHy1rSw@mail.gmail.com>
-        <CAH2r5mvF-E6_3YLV02Mj0uSaKgHigV6wwU9LsGC-zFs7JnKa-Q@mail.gmail.com>
-        <CAH2r5mupXphkH0c6LVSgBAK1PQihX+h6UruMfPoood9PT+0RrA@mail.gmail.com>
-Date:   Tue, 23 Jul 2019 22:35:07 -0500
-In-Reply-To: <CAH2r5mupXphkH0c6LVSgBAK1PQihX+h6UruMfPoood9PT+0RrA@mail.gmail.com>
-        (Steve French's message of "Tue, 23 Jul 2019 21:28:31 -0500")
-Message-ID: <87blxk3y1g.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Tue, 23 Jul 2019 23:41:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725888AbfGXDlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 23:41:36 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EFDCE8128F21CF914753;
+        Wed, 24 Jul 2019 11:41:34 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 11:41:24 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <oulijun@huawei.com>, <xavier.huwei@huawei.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>, <leon@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] RDMA/hns: Fix build error for hip08
+Date:   Wed, 24 Jul 2019 11:40:16 +0800
+Message-ID: <20190724034016.15048-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190723024908.11876-1-yuehaibing@huawei.com>
+References: <20190723024908.11876-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1hq83c-0007ZL-12;;;mid=<87blxk3y1g.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+9lgk1YztBX2M0RyG6u/ajVR0q2Y5VVmw=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH AUTOSEL 5.2 039/249] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steve French <smfrench@gmail.com> writes:
+If INFINIBAND_HNS_HIP08 is selected and HNS3 is m,
+but INFINIBAND_HNS is y, building fails:
 
-> I did some additional testing and it looks like the "allow_signal"
-> change may be safe enough
->
-> # git diff -a
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index a4830ced0f98..a15a6e738eb5 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -1113,6 +1113,7 @@ cifs_demultiplex_thread(void *p)
->                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
->
->         set_freezable();
-> +       allow_signal(SIGKILL);
->         while (server->tcpStatus != CifsExiting) {
->                 if (try_to_freeze())
->                         continue;
->
-> See below:
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# insmod ./cifs.ko
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# mount -t cifs
-> //localhost/scratch /mnt -o username=sfrench
-> Password for sfrench@//localhost/scratch:  ************
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# ps -A | grep cifsd
->  5176 ?        00:00:00 cifsd
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# kill -9 5176
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# ls /mnt
-> 0444  dir0750  dir0754  newfile
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# umount /mnt
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# ps -A | grep cifsd
-> root@smf-Thinkpad-P51:~/cifs-2.6/fs/cifs# rmmod cifs
+drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_exit':
+hns_roce_hw_v2.c:(.exit.text+0xd): undefined reference to `hnae3_unregister_client'
+drivers/infiniband/hw/hns/hns_roce_hw_v2.o: In function `hns_roce_hw_v2_init':
+hns_roce_hw_v2.c:(.init.text+0xd): undefined reference to `hnae3_register_client'
 
-Yes.  I just discovered that kthreadd calls a function named
-ignore_signals that set all signals to SIG_IGN.  Which becomes
-the default for all kernel threads.  So something like allow_signal
-to change the signal handler is necessary.  The blocking of SIGKILL is
-also concerning but apparently that is not the issue here.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Leon Romanovsky <leon@kernel.org>
+Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: select HNS3 to fix this
+---
+ drivers/infiniband/hw/hns/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Ideally I think cifs should use kthread_stop, instead of signals for
-this purpose.  The logic is convoluted enough that reading through the
-cifs code quickly I don't see how sending SIGKILL to the daemon causes
-it to stop.
-
-Eric
+diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
+index 8bf847b..b9dfac0 100644
+--- a/drivers/infiniband/hw/hns/Kconfig
++++ b/drivers/infiniband/hw/hns/Kconfig
+@@ -22,7 +22,8 @@ config INFINIBAND_HNS_HIP06
+ 
+ config INFINIBAND_HNS_HIP08
+ 	bool "Hisilicon Hip08 Family RoCE support"
+-	depends on INFINIBAND_HNS && PCI && HNS3
++	depends on INFINIBAND_HNS && PCI
++	select HNS3
+ 	---help---
+ 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
+ 	  The RoCE engine is a PCI device.
+-- 
+2.7.4
 
 
-> On Tue, Jul 23, 2019 at 9:19 PM Steve French <smfrench@gmail.com> wrote:
->>
->> Pavel noticed I missed a line from the attempt to do a similar patch
->> to Eric's suggestion
->> (it still didn't work though - although "allow_signal" does albeit is
->> possibly dangerous as user space can kill cifsd)
->>
->> # git diff -a
->> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
->> index a4830ced0f98..8758dff18c15 100644
->> --- a/fs/cifs/connect.c
->> +++ b/fs/cifs/connect.c
->> @@ -1104,6 +1104,7 @@ cifs_demultiplex_thread(void *p)
->>         struct task_struct *task_to_wake = NULL;
->>         struct mid_q_entry *mids[MAX_COMPOUND];
->>         char *bufs[MAX_COMPOUND];
->> +       sigset_t mask, oldmask;
->>
->>         current->flags |= PF_MEMALLOC;
->>         cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
->> @@ -1113,6 +1114,9 @@ cifs_demultiplex_thread(void *p)
->>                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
->>
->>         set_freezable();
->> +       sigfillset(&mask);
->> +       sigdelset(&mask, SIGKILL);
->> +       sigprocmask(SIG_BLOCK, &mask, &oldmask);
->>         while (server->tcpStatus != CifsExiting) {
->>                 if (try_to_freeze())
->>                         continue;
->>
->> On Tue, Jul 23, 2019 at 9:02 PM Steve French <smfrench@gmail.com> wrote:
->> >
->> > On Tue, Jul 23, 2019 at 8:32 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->> > >
->> > > Steve French <smfrench@gmail.com> writes:
->> > >
->> > > > Very easy to see what caused the regression with this global change:
->> > > >
->> > > > mount (which launches "cifsd" thread to read the socket)
->> > > > umount (which kills the "cifsd" thread)
->> > > > rmmod   (rmmod now fails since "cifsd" thread is still active)
->> > > >
->> > > > mount launches a thread to read from the socket ("cifsd")
->> > > > umount is supposed to kill that thread (but with the patch
->> > > > "signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of
->> > > > force_sig" that no longer works).  So the regression is that after
->> > > > unmount you still see the "cifsd" thread, and the reason that cifsd
->> > > > thread is still around is that that patch no longer force kills the
->> > > > process (see line 2652 of fs/cifs/connect.c) which regresses module
->> > > > removal.
->> > > >
->> > > > -               force_sig(SIGKILL, task);
->> > > > +               send_sig(SIGKILL, task, 1);
->> > > >
->> > > > The comment in the changeset indicates "The signal SIGKILL can not be
->> > > > ignored" but obviously it can be ignored - at least on 5.3-rc1 it is
->> > > > being ignored.
->> > > >
->> > > > If send_sig(SIGKILL ...) doesn't work and if force_sig(SIGKILL, task)
->> > > > is removed and no longer possible - how do we kill a helper process
->> > > > ...
->> > >
->> > > I think I see what is happening.  It looks like as well as misuinsg
->> > > force_sig, cifs is also violating the invariant that keeps SIGKILL out
->> > > of the blocked signal set.
->> > >
->> > > For that force_sig will act differently.  I did not consider it because
->> > > that is never supposed to happen.
->> > >
->> > > Can someone test this code below and confirm the issue goes away?
->> > >
->> > > diff --git a/fs/cifs/transport.c b/fs/cifs/transport.c
->> > > index 5d6d44bfe10a..2a782ebc7b65 100644
->> > > --- a/fs/cifs/transport.c
->> > > +++ b/fs/cifs/transport.c
->> > > @@ -347,6 +347,7 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
->> > >          */
->> > >
->> > >         sigfillset(&mask);
->> > > +       sigdelset(&mask, SIGKILL);
->> > >         sigprocmask(SIG_BLOCK, &mask, &oldmask);
->> > >
->> > >         /* Generate a rfc1002 marker for SMB2+ */
->> > >
->> > >
->> > > Eric
->> >
->> > I just tried your suggestion and it didn't work.   I also tried doing
->> > a similar thing on the thread we are trying to kills ("cifsd" - ie
->> > which is blocked in the function cifs_demultiplex_thread waiting to
->> > read from the socket)
->> > # git diff -a
->> > diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
->> > index a4830ced0f98..b73062520a17 100644
->> > --- a/fs/cifs/connect.c
->> > +++ b/fs/cifs/connect.c
->> > @@ -1104,6 +1104,7 @@ cifs_demultiplex_thread(void *p)
->> >         struct task_struct *task_to_wake = NULL;
->> >         struct mid_q_entry *mids[MAX_COMPOUND];
->> >         char *bufs[MAX_COMPOUND];
->> > +       sigset_t mask;
->> >
->> >         current->flags |= PF_MEMALLOC;
->> >         cifs_dbg(FYI, "Demultiplex PID: %d\n", task_pid_nr(current));
->> > @@ -1113,6 +1114,8 @@ cifs_demultiplex_thread(void *p)
->> >                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
->> >
->> >         set_freezable();
->> > +       sigfillset(&mask);
->> > +       sigdelset(&mask, SIGKILL);
->> >         while (server->tcpStatus != CifsExiting) {
->> >                 if (try_to_freeze())
->> >                         continue;
->> >
->> >
->> > That also didn't work.     The only thing I have been able to find
->> > which worked was:
->> >
->> > diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
->> > index a4830ced0f98..e74f04163fc9 100644
->> > --- a/fs/cifs/connect.c
->> > +++ b/fs/cifs/connect.c
->> > @@ -1113,6 +1113,7 @@ cifs_demultiplex_thread(void *p)
->> >                 mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
->> >
->> >         set_freezable();
->> > +      allow_signal(SIGKILL);
->> >         while (server->tcpStatus != CifsExiting) {
->> >                 if (try_to_freeze())
->> >                         continue;
->> >
->> >
->> > That fixes the problem ... but ... as Ronnie and others have noted it
->> > would allow a userspace process to make the mount unusable (all you
->> > would have to do would be to do a kill -9 of the "cifsd" process from
->> > some userspace process like bash and the mount would be unusable - so
->> > this sounds dangerous.
->> >
->> > Is there an alternative that, in the process doing the unmount in
->> > kernel, would allow us to do the equivalent of:
->> >       "allow_signal(SIGKILL, <the id of the cifsd process>"
->> > In otherwords, to minimize the risk of some userspace process killing
->> > cifsd, could we delay enabling allow_signal(SIGKILL) till the unmount
->> > begins by doing it for a different process (have the unmount process
->> > enable signals for the cifsd process).   Otherwise is there a way to
->> > force kill a process from the kernel as we used to do - without
->> > running the risk of a user space process killing cifsd (which is bad).
->> >
->> > --
->> > Thanks,
->> >
->> > Steve
->>
->>
->>
->> --
->> Thanks,
->>
->> Steve
