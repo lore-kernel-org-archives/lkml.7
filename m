@@ -2,106 +2,170 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C070C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D63EC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6121217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563982906;
-	bh=rqy4inXJX4EStiJqMCkbOxZevjFiaHCLGF8JG3FIjXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2tWvIWxe4+qfw0Oe6mct2qYnHCX7Gd07sRQZxtsguEMiDKAzlmQOGwsM4XeIXZozK
-	 +RzGqreAxhBj2Rjf6y3z7EKR+LvYwgeDPUf4I9A0IvhGuIuVLjYNgwDOme9bzsEuR4
-	 cnHey5hQ1GOeT4MM5m0qBaVgsbWpmc/eY87P9T68=
+	by mail.kernel.org (Postfix) with ESMTP id 5239721951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:42:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsTHX61J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfGXPlp (ORCPT
+        id S1728269AbfGXPmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:41:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726958AbfGXPlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:41:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8025F217F4;
-        Wed, 24 Jul 2019 15:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563982904;
-        bh=rqy4inXJX4EStiJqMCkbOxZevjFiaHCLGF8JG3FIjXg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=04SEi1WZ7Su1Ya4b2dDRG5xUM7J3cw3ngsNjHx3hvSlPmRVIMUbgDc2jv/EWnDBVf
-         HzYw19+alfLSSwVNi5dxFxprFjEaPAALIkhggpEIaPOada67HMXQrDVBXtG6CAY74Z
-         8KXBoamfZ2pxP8VyjrgTI7+b1Y91EjbmfaaQDT98=
-Date:   Wed, 24 Jul 2019 17:41:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org
-Subject: Re: [GIT PULL] FPGA Manager fix for 5.3
-Message-ID: <20190724154141.GA3171@kroah.com>
-References: <20190724052012.GA3140@archbox>
- <20190724072056.GA27472@kroah.com>
- <20190724145513.GA24455@archbox>
+        Wed, 24 Jul 2019 11:42:07 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40815 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfGXPmH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:42:07 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a15so45910591qtn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 08:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vVyZTG8u3gaswKVijwL4UC2Gmmd6ViElRBT/CwEJHWs=;
+        b=CsTHX61J1VqWOm3LtgLKci72XeuqSHm8DYkKn5FmDP52JsYVg46ssWOeh9wxkcOxuR
+         zHkb2aAMqj05AaQx7CESFPDQodufHgtNcj2q2+nZfE+/fjwzEaurp0WBFNm7ul1BtuOx
+         f3Umyq+5xRWvJ528Cm2bbcrESz7bDtOwYmLPwuTEcFIXKZbaVbV35yZgA3Cj1nSfxhW/
+         Wjt4sLWO0rTLvcMQsNRl9n8ZnjoLI93jhOq8qmfQc/VmnvzYBjDXa1Q9z91vGXm4cJAW
+         QHWASdQZwumQ1r1GhFJntNtDQDKp0Oue9xHTYSMfqqvVJK2H0dK+HhosnrA7e3jABxi5
+         8Q9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vVyZTG8u3gaswKVijwL4UC2Gmmd6ViElRBT/CwEJHWs=;
+        b=F9fBf3nur6gF7y4d5yz0/PKVqgytdMU44uq790iJNwibKzV5br6pHdLw2yZ/DsNc8V
+         UpGlecg3fVnabK7IKWtcDR4xn+2myiVhIDK/mMl5cTBdsXeAAWjHXa6aKGzCwjNMTtma
+         W+9a+Eusb33N+WBa30Yn7AWjD3Kr5QMw8AYC5EBdh2pkmx6OTp+oIBqO2WXAJQK5Ofgr
+         cI2K/AqqrtfWFAgcLHC6o0sG4uHtdjFXO8SJWl6C2NF/Pf0z/IVrnpoTIobws7UewuOt
+         rf9B+9CHrg4sLrvtkUxBrBX3tnYuEf0eLD+rKZPYxRvAc6FTsI4VaChjBj7UXDFbbJQu
+         VRMg==
+X-Gm-Message-State: APjAAAXxYoeorFyEWpf4Hq6+vzaj5G5Qq+gcMFxFomGWJWYQhOZnUmwB
+        +U0QcELhbodzDIcSN+Ht+pg=
+X-Google-Smtp-Source: APXvYqwTr7SlrxkT6/pdY7vyb/4oZLjuZrnx8/WncwtFgKWL/QU18AgmouXt+jIc1vPsxbyRsDobVg==
+X-Received: by 2002:a0c:bd1f:: with SMTP id m31mr59859553qvg.54.1563982926018;
+        Wed, 24 Jul 2019 08:42:06 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id q3sm20872509qkq.133.2019.07.24.08.42.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 08:42:05 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 77A0740340; Wed, 24 Jul 2019 12:42:02 -0300 (-03)
+Date:   Wed, 24 Jul 2019 12:42:02 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 47/79] libperf: Add perf_evlist__for_each_evsel macro
+Message-ID: <20190724154202.GD5727@kernel.org>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+ <20190721112506.12306-48-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724145513.GA24455@archbox>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190721112506.12306-48-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 07:55:13AM -0700, Moritz Fischer wrote:
-> On Wed, Jul 24, 2019 at 09:20:56AM +0200, Greg KH wrote:
-> > On Tue, Jul 23, 2019 at 10:20:12PM -0700, Moritz Fischer wrote:
-> > > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-> > > 
-> > >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-> > > 
-> > > are available in the Git repository at:
-> > > 
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/mdf/linux-fpga.git tags/fixes-for-5.3
-> > > 
-> > > for you to fetch changes up to c3aefa0b8f54e8c7967191e546a11019bc060fe6:
-> > > 
-> > >   fpga-manager: altera-ps-spi: Fix build error (2019-07-23 17:29:17 -0700)
-> > > 
-> > > ----------------------------------------------------------------
-> > > FPGA Manager fixes for 5.3
-> > > 
-> > > Hi Greg,
-> > > 
-> > > this is only one (late) bugfix for 5.3 that fixes a build error,
-> > > when altera-ps-spi is built as builtin while a dependency is built as a
-> > > module.
-> > > 
-> > > This has been on the list for a while and I've reviewed it.
-> > > 
-> > > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > 
-> > This message is not in the signed tag in the repo, are you sure you make
-> > this correctly?  All I see is the first line:
-> > 	FPGA Manager fixes for 5.3
-> > 
-> > And it's a singluar "fix" :)
+Em Sun, Jul 21, 2019 at 01:24:34PM +0200, Jiri Olsa escreveu:
+> Adding perf_evlist__for_each_evsel macro to iterate
+> perf_evsel objects in evlist.
 > 
-> Yeah, over the top. I wanted to figure out the workflow with an easy
-> example ... and ... learned something again :)
+> Adding perf_evlist__next function to do that.
+
+Replaced the above line in the cset commit log with:
+
+    Introduce the perf_evlist__next() function to do that without exposing
+    'struct perf_evlist' internals.
+
+ 
+> Link: http://lkml.kernel.org/n/tip-usi0zxyxmai1ld94nrbum43i@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/lib/evlist.c              | 20 ++++++++++++++++++++
+>  tools/perf/lib/include/perf/evlist.h |  7 +++++++
+>  tools/perf/lib/libperf.map           |  1 +
+>  3 files changed, 28 insertions(+)
 > 
-> So basically the message above is what is supposed to go into the tag
-> message?
+> diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+> index 0517deb4cb1c..8c26ebf290f0 100644
+> --- a/tools/perf/lib/evlist.c
+> +++ b/tools/perf/lib/evlist.c
+> @@ -34,3 +34,23 @@ struct perf_evlist *perf_evlist__new(void)
+>  
+>  	return evlist;
+>  }
+> +
+> +struct perf_evsel*
+> +perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
+> +{
+> +	struct perf_evsel *next;
+> +
+> +	if (!prev) {
+> +		next = list_first_entry(&evlist->entries,
+> +					struct perf_evsel,
+> +					node);
+> +	} else {
+> +		next = list_next_entry(prev, node);
+> +	}
+> +
+> +	/* Empty list is noticed here so don't need checking on entry. */
+> +	if (&next->node == &evlist->entries)
+> +		return NULL;
+> +
+> +	return next;
+> +}
+> diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
+> index 7255a60869a1..5092b622935b 100644
+> --- a/tools/perf/lib/include/perf/evlist.h
+> +++ b/tools/perf/lib/include/perf/evlist.h
+> @@ -13,5 +13,12 @@ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
+>  LIBPERF_API void perf_evlist__remove(struct perf_evlist *evlist,
+>  				     struct perf_evsel *evsel);
+>  LIBPERF_API struct perf_evlist *perf_evlist__new(void);
+> +LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
+> +						 struct perf_evsel *evsel);
+> +
+> +#define perf_evlist__for_each_evsel(evlist, pos)	\
+> +	for ((pos) = perf_evlist__next((evlist), NULL);	\
+> +	     (pos) != NULL;				\
+> +	     (pos) = perf_evlist__next((evlist), (pos)))
+>  
+>  #endif /* __LIBPERF_EVLIST_H */
+> diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+> index e3eac9b60726..c0968226f7b6 100644
+> --- a/tools/perf/lib/libperf.map
+> +++ b/tools/perf/lib/libperf.map
+> @@ -17,6 +17,7 @@ LIBPERF_0.0.1 {
+>  		perf_evlist__init;
+>  		perf_evlist__add;
+>  		perf_evlist__remove;
+> +		perf_evlist__next;
+>  	local:
+>  		*;
+>  };
+> -- 
+> 2.21.0
 
-Yes, and then git pull-request takes that and puts it into the message
-to send me.
+-- 
 
-thanks,
-
-greg k-h
+- Arnaldo
