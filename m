@@ -2,207 +2,123 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7DAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6924DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C4A20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998184;
-	bh=RekJmt4P3VwYWask21t40jH6pmqmpa2CiSzNj2xKwLo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GS+Qzaqqy/bI/Y88Sw1st8VDaLETf61ARwyk/kEMXxJg8EH857cjgJRIzVW5+sihH
-	 7EBQL5M2HpaDqyizBr4m0iSKmknY/PPt85SPUTJyUtuKJxyRVC3z323tAwXiPKR78U
-	 a5mPgsZnISgIZfYhN6hBpI5ph/wwtkMO3AeQruX4=
+	by mail.kernel.org (Postfix) with ESMTP id 3F5C6214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:56:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NEeZ+uUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404632AbfGXT4W (ORCPT
+        id S2404205AbfGXT4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Jul 2019 15:56:25 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32864 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404628AbfGXT4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 15:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404219AbfGXT4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:56:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7654A205C9;
-        Wed, 24 Jul 2019 19:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998180;
-        bh=RekJmt4P3VwYWask21t40jH6pmqmpa2CiSzNj2xKwLo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjzgw5AncFRsGR7mmcmrPyF7A7DlbEMUwYE0+Jhv5a1srJvLzWoHdmbVudz2E19cc
-         T+HcF4HUOMpj7/4VlMugG6ZxnR204+aQ+2VhMZtQAIgyHifE5CfTayxlmCiUSQ21QN
-         oFKodmk49/h8pbiCErq+ho8RECx600FKjexfLhwo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.1 274/371] iwlwifi: mvm: delay GTK setting in FW in AP mode
-Date:   Wed, 24 Jul 2019 21:20:26 +0200
-Message-Id: <20190724191744.956439706@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-io1-f65.google.com with SMTP id z3so92266208iog.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XZt1VFBsfyDW8nwLopR3h8XPP4tphNg4YLYc8AkW2ho=;
+        b=NEeZ+uUa6lhQAWD9vkktfpJZVl4pMOSxYJSXNt2bByMieaXwfzGB10mfQ6B2Li1wNw
+         T4ZeKK3COOk1QFOqYMlmOLF4sOFI7nhmu+ImME1jtsxAS6J4BoCFBhU62jYMBtSqHVp7
+         P2xLgUNJJoxlvGHXSm6CvOipxxbi6Jik9Btus=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XZt1VFBsfyDW8nwLopR3h8XPP4tphNg4YLYc8AkW2ho=;
+        b=LmbRLUKTaI7yRt/vGIX7YIdMWpKF15qFBCJtKPBrWM5P2xQ+sxP5C9eNF+JmAEI3fM
+         zX3bYC6YyluBihUaumpXcVZt5xBva35kmxGycanhfUXum/xl68rff8CralDRNm+iCGS8
+         prwPzhxZimNdOX0pVtgdExB2iec4JLybaZUCkQ4J9AYezufUdpv05hMPKaK4hmLBuiy5
+         pQV4fPzjkERfXpdqvZaLD9QIJ+mMb3UN8aOZRIYtbwKPmNOceTmT6DBe9t2OUpitiB4x
+         2m/EsD7bPj2plKKA7wAvJh6ym57xGhmj+jx+hVAdrAMFm7BC1GP8SyubG4FGgpo7gYID
+         Uy3A==
+X-Gm-Message-State: APjAAAUGzmveElqnjIsWaMBK6T/VCGPTQt1GqyZ4oR6jONRYME/h0w9g
+        MEhzsFRQQ7ZrD2SJYoiEtRSZ4RSGTS8=
+X-Google-Smtp-Source: APXvYqyJuaBLqCmzYhiiGjaUUiNJ0Ew1rGFY0G4F/tzNqehLmQxAokZ+kpNF4qntd+g4oCI3UfmfkA==
+X-Received: by 2002:a02:13c3:: with SMTP id 186mr85329078jaz.30.1563998181709;
+        Wed, 24 Jul 2019 12:56:21 -0700 (PDT)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
+        by smtp.gmail.com with ESMTPSA id c23sm39411896iod.11.2019.07.24.12.56.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 12:56:21 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id g20so92183302ioc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:56:20 -0700 (PDT)
+X-Received: by 2002:a02:c6a9:: with SMTP id o9mr30860288jan.90.1563998180575;
+ Wed, 24 Jul 2019 12:56:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190723225258.93058-1-mka@chromium.org>
+In-Reply-To: <20190723225258.93058-1-mka@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 24 Jul 2019 12:56:08 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Wk2meLxa6AszjFs=Mfp_wML_7OMsn81FLA5tcdEx=1kg@mail.gmail.com>
+Message-ID: <CAD=FV=Wk2meLxa6AszjFs=Mfp_wML_7OMsn81FLA5tcdEx=1kg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: Limit WiFi TX power on rk3288-veyron-jerry
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+Hi,
 
-commit c56e00a3feaee2b46b7d33875fb7f52efd30241f upstream.
+On Tue, Jul 23, 2019 at 3:53 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> The downstream Chrome OS 3.14 kernel for jerry limits WiFi TX power
+> through calibration data in the device tree [1]. Add a DT node for
+> the WiFi chip and use the downstream calibration data.
+>
+> Not all calibration data entries have the length specified in the
+> binding (Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt),
+> however this is the data used by the downstream ('official') kernel
+> and the binding mentions that "the length can vary between hw
+> versions".
+>
+> [1] https://crrev.com/c/271237
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  arch/arm/boot/dts/rk3288-veyron-jerry.dts | 147 ++++++++++++++++++++++
+>  1 file changed, 147 insertions(+)
 
-In AP (and IBSS) mode, we can only set GTKs to firmware after we have
-sent down the multicast station, but this we can only do after we've
-enabled beaconing, etc.
+I agree that this matches what's downstream and seems right.
 
-However, during rfkill exit, hostapd will configure the keys before
-starting the AP, and cfg80211/mac80211 accept it happily.
+As you pointed out the bindings are a bit on the sketchy side,
+claiming a certain length in one place but then saying that the length
+depends on the HW version in another place.  I'll also point out that
+the bindings are inconsistent about the name that should be used.
+AKA:
 
-On earlier devices, this didn't bother us as GTK TX wasn't really
-handled in firmware, we just put the key material into the TX cmd
-and thus it only mattered when we actually transmitted a frame.
+marvell,caldata-txpwrlimit-2g
+ -vs-
+marvell,caldata_00_txpwrlimit_2g_cfg_set
 
-On newer devices, however, the firmware needs to track all of this
-and that doesn't work if we add the key before the (multicast) sta
-it belongs to.
-
-To fix this, keep a list of keys to add during AP enable, and call
-the function there.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c |   53 +++++++++++++++++++++-
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h      |    3 +
- 2 files changed, 54 insertions(+), 2 deletions(-)
-
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -207,6 +207,12 @@ static const struct cfg80211_pmsr_capabi
- 	},
- };
- 
-+static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
-+			       enum set_key_cmd cmd,
-+			       struct ieee80211_vif *vif,
-+			       struct ieee80211_sta *sta,
-+			       struct ieee80211_key_conf *key);
-+
- void iwl_mvm_ref(struct iwl_mvm *mvm, enum iwl_mvm_ref_type ref_type)
- {
- 	if (!iwl_mvm_is_d0i3_supported(mvm))
-@@ -2535,7 +2541,7 @@ static int iwl_mvm_start_ap_ibss(struct
- {
- 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
- 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
--	int ret;
-+	int ret, i;
- 
- 	/*
- 	 * iwl_mvm_mac_ctxt_add() might read directly from the device
-@@ -2609,6 +2615,20 @@ static int iwl_mvm_start_ap_ibss(struct
- 	/* must be set before quota calculations */
- 	mvmvif->ap_ibss_active = true;
- 
-+	/* send all the early keys to the device now */
-+	for (i = 0; i < ARRAY_SIZE(mvmvif->ap_early_keys); i++) {
-+		struct ieee80211_key_conf *key = mvmvif->ap_early_keys[i];
-+
-+		if (!key)
-+			continue;
-+
-+		mvmvif->ap_early_keys[i] = NULL;
-+
-+		ret = iwl_mvm_mac_set_key(hw, SET_KEY, vif, NULL, key);
-+		if (ret)
-+			goto out_quota_failed;
-+	}
-+
- 	if (vif->type == NL80211_IFTYPE_AP && !vif->p2p) {
- 		iwl_mvm_vif_set_low_latency(mvmvif, true,
- 					    LOW_LATENCY_VIF_TYPE);
-@@ -3378,11 +3398,12 @@ static int iwl_mvm_mac_set_key(struct ie
- 			       struct ieee80211_sta *sta,
- 			       struct ieee80211_key_conf *key)
- {
-+	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
- 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
- 	struct iwl_mvm_sta *mvmsta;
- 	struct iwl_mvm_key_pn *ptk_pn;
- 	int keyidx = key->keyidx;
--	int ret;
-+	int ret, i;
- 	u8 key_offset;
- 
- 	if (iwlwifi_mod_params.swcrypto) {
-@@ -3455,6 +3476,22 @@ static int iwl_mvm_mac_set_key(struct ie
- 				key->hw_key_idx = STA_KEY_IDX_INVALID;
- 				break;
- 			}
-+
-+			if (!mvmvif->ap_ibss_active) {
-+				for (i = 0;
-+				     i < ARRAY_SIZE(mvmvif->ap_early_keys);
-+				     i++) {
-+					if (!mvmvif->ap_early_keys[i]) {
-+						mvmvif->ap_early_keys[i] = key;
-+						break;
-+					}
-+				}
-+
-+				if (i >= ARRAY_SIZE(mvmvif->ap_early_keys))
-+					ret = -ENOSPC;
-+
-+				break;
-+			}
- 		}
- 
- 		/* During FW restart, in order to restore the state as it was,
-@@ -3523,6 +3560,18 @@ static int iwl_mvm_mac_set_key(struct ie
- 
- 		break;
- 	case DISABLE_KEY:
-+		ret = -ENOENT;
-+		for (i = 0; i < ARRAY_SIZE(mvmvif->ap_early_keys); i++) {
-+			if (mvmvif->ap_early_keys[i] == key) {
-+				mvmvif->ap_early_keys[i] = NULL;
-+				ret = 0;
-+			}
-+		}
-+
-+		/* found in pending list - don't do anything else */
-+		if (ret == 0)
-+			break;
-+
- 		if (key->hw_key_idx == STA_KEY_IDX_INVALID) {
- 			ret = 0;
- 			break;
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -498,6 +498,9 @@ struct iwl_mvm_vif {
- 	netdev_features_t features;
- 
- 	struct iwl_probe_resp_data __rcu *probe_resp_data;
-+
-+	/* we can only have 2 GTK + 2 IGTK active at a time */
-+	struct ieee80211_key_conf *ap_early_keys[4];
- };
- 
- static inline struct iwl_mvm_vif *
+...but I think the answer is that it doesn't matter at all from a
+practical point of view.  The code seems to just find everything that
+starts with "marvell,caldata" and send the binary blindly to the WiFi
+card.  Presumably there is enough of a header in the opaque binary
+data that the card can make sense of what it's being sent.
 
 
+So it seems like this is the best we can do given the current state of
+the world.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
