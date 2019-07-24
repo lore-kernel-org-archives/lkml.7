@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A98C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49368C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFDC20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCDF218EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996651;
-	bh=6/ZdEZJo5ChseS0KXOgOxgb3G8chUGu4rgGVPCC4dWM=;
+	s=default; t=1563996654;
+	bh=UYhVJVotaj7fsqpZY+NOnNwcCkeqGoDS+hWkdm5bLjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cI3Kf79He8VJBlXu/J1kZQauUbQeDeb4JDZef8Qb65XmgW62EOI6EvTKTvz+7DRNN
-	 kVdPsJ0YRQ2JWet3WRsY2i3zNGIjqb2TvB2lwTfZvK7xWj+88/kYc2BmSUoyncFMME
-	 3hyDynwHqmU2qFNph6j2XhxKo1sJJg16yUlGMGJA=
+	b=J/IpVE1ZW+XoK94uxQwDGGC+sDZJ4Kme7LiQJSN+7Qj99hGHVvW4oDWGN3xK54L+v
+	 2OdTs8pec3ZWz+n0rYIuxTlBlTChDdjOFNcvVcSwxSXOHknIrNvD1UK0TgCubuZbJy
+	 fxNUpNOY/ET+MwQWAgvnf6jUTZ8zaenxpkXu2u3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388418AbfGXTau (ORCPT
+        id S2388428AbfGXTax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388409AbfGXTaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:46 -0400
+        id S2388007AbfGXTas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF43C21951;
-        Wed, 24 Jul 2019 19:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7844E229F3;
+        Wed, 24 Jul 2019 19:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996645;
-        bh=6/ZdEZJo5ChseS0KXOgOxgb3G8chUGu4rgGVPCC4dWM=;
+        s=default; t=1563996648;
+        bh=UYhVJVotaj7fsqpZY+NOnNwcCkeqGoDS+hWkdm5bLjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D199ksdx/WdOvoqISd7cmSFbuiCeyH+IR4yWq8blH6iA3Emgg6aBpfKcMHCNpgugy
-         7EIZ65lmFbdYIzrysn+7D4lmcBEPfbkqttj6WWDiMph9ihr9VARapucIJ4Q9DFQSui
-         p/aa6sHaPQNUzBPcr8GHq5OAtgzXLL9ov6NFpPGE=
+        b=oDxROgpGrxEAzJcL2CgHkghbcuHeuuPqk2ddq9ElA8PYjCH/45q6k9grg3AlqpcVJ
+         pmZHouCqjHYMGqHUDKegtwyrQxKQnz10WhCt/KuNWlXxcSiKxLuQ8T3iOQK6pQQM4z
+         5o9JRflDxbnmLiSWJQJ+P9uBuYnCWVKtc8mzCagk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Furquan Shaikh <furquan@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 127/413] ACPICA: Clear status of GPEs on first direct enable
-Date:   Wed, 24 Jul 2019 21:16:58 +0200
-Message-Id: <20190724191744.203633217@linuxfoundation.org>
+Subject: [PATCH 5.2 128/413] spi: fix ctrl->num_chipselect constraint
+Date:   Wed, 24 Jul 2019 21:16:59 +0200
+Message-Id: <20190724191744.262506567@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,131 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44758bafa53602f2581a6857bb20b55d4d8ad5b2 ]
+[ Upstream commit f9481b08220d7dc1ff21e296a330ee8b721b44e4 ]
 
-ACPI GPEs (other than the EC one) can be enabled in two situations.
-First, the GPEs with existing _Lxx and _Exx methods are enabled
-implicitly by ACPICA during system initialization.  Second, the
-GPEs without these methods (like GPEs listed by _PRW objects for
-wakeup devices) need to be enabled directly by the code that is
-going to use them (e.g. ACPI power management or device drivers).
+at91sam9g25ek showed the following error at probe:
+atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx)
+for DMA transfers
+atmel_spi: probe of f0000000.spi failed with error -22
 
-In the former case, if the status of a given GPE is set to start
-with, its handler method (either _Lxx or _Exx) needs to be invoked
-to take care of the events (possibly) signaled before the GPE was
-enabled.  In the latter case, however, the first caller of
-acpi_enable_gpe() for a given GPE should not be expected to care
-about any events that might be signaled through it earlier.  In
-that case, it is better to clear the status of the GPE before
-enabling it, to prevent stale events from triggering unwanted
-actions (like spurious system resume, for example).
+Commit 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
+moved the calling of spi_get_gpio_descs() after ctrl->dev is set,
+but didn't move the !ctrl->num_chipselect check. When there are
+chip selects in the device tree, the spi-atmel driver lets the
+SPI core discover them when registering the SPI master.
+The ctrl->num_chipselect is thus expected to be set by
+spi_get_gpio_descs().
 
-For this reason, modify acpi_ev_add_gpe_reference() to take an
-additional boolean argument indicating whether or not the GPE
-status needs to be cleared when its reference counter changes from
-zero to one and make acpi_enable_gpe() pass TRUE to it through
-that new argument.
+Move the !ctlr->num_chipselect after spi_get_gpio_descs() as it was
+before the aforementioned commit. While touching this block, get rid
+of the explicit comparison with 0 and update the commenting style.
 
-Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
-Reported-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/acevents.h | 3 ++-
- drivers/acpi/acpica/evgpe.c    | 8 +++++++-
- drivers/acpi/acpica/evgpeblk.c | 2 +-
- drivers/acpi/acpica/evxface.c  | 2 +-
- drivers/acpi/acpica/evxfgpe.c  | 2 +-
- 5 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/spi/spi.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
-index 831660179662..c8652f91054e 100644
---- a/drivers/acpi/acpica/acevents.h
-+++ b/drivers/acpi/acpica/acevents.h
-@@ -69,7 +69,8 @@ acpi_status
- acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked);
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 5e4654032bfa..29916e446143 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2286,11 +2286,6 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	if (status)
+ 		return status;
  
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable);
+-	/* even if it's just one always-selected device, there must
+-	 * be at least one chipselect
+-	 */
+-	if (ctlr->num_chipselect == 0)
+-		return -EINVAL;
+ 	if (ctlr->bus_num >= 0) {
+ 		/* devices with a fixed bus num must check-in with the num */
+ 		mutex_lock(&board_lock);
+@@ -2361,6 +2356,13 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		}
+ 	}
  
- acpi_status
- acpi_ev_remove_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
-index 62d3aa74277b..344feba29063 100644
---- a/drivers/acpi/acpica/evgpe.c
-+++ b/drivers/acpi/acpica/evgpe.c
-@@ -146,6 +146,7 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
-  * FUNCTION:    acpi_ev_add_gpe_reference
-  *
-  * PARAMETERS:  gpe_event_info          - Add a reference to this GPE
-+ *              clear_on_enable         - Clear GPE status before enabling it
-  *
-  * RETURN:      Status
-  *
-@@ -155,7 +156,8 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
-  ******************************************************************************/
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable)
- {
- 	acpi_status status = AE_OK;
- 
-@@ -170,6 +172,10 @@ acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
- 
- 		/* Enable on first reference */
- 
-+		if (clear_on_enable) {
-+			(void)acpi_hw_clear_gpe(gpe_event_info);
-+		}
++	/*
++	 * Even if it's just one always-selected device, there must
++	 * be at least one chipselect.
++	 */
++	if (!ctlr->num_chipselect)
++		return -EINVAL;
 +
- 		status = acpi_ev_update_gpe_enable_mask(gpe_event_info);
- 		if (ACPI_SUCCESS(status)) {
- 			status = acpi_ev_enable_gpe(gpe_event_info);
-diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
-index 328d1d6123ad..fb15e9e2373b 100644
---- a/drivers/acpi/acpica/evgpeblk.c
-+++ b/drivers/acpi/acpica/evgpeblk.c
-@@ -453,7 +453,7 @@ acpi_ev_initialize_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
- 				continue;
- 			}
- 
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 			if (ACPI_FAILURE(status)) {
- 				ACPI_EXCEPTION((AE_INFO, status,
- 					"Could not enable GPE 0x%02X",
-diff --git a/drivers/acpi/acpica/evxface.c b/drivers/acpi/acpica/evxface.c
-index 3df00eb6621b..279ef0557aa3 100644
---- a/drivers/acpi/acpica/evxface.c
-+++ b/drivers/acpi/acpica/evxface.c
-@@ -971,7 +971,7 @@ acpi_remove_gpe_handler(acpi_handle gpe_device,
- 	      ACPI_GPE_DISPATCH_METHOD) ||
- 	     (ACPI_GPE_DISPATCH_TYPE(handler->original_flags) ==
- 	      ACPI_GPE_DISPATCH_NOTIFY)) && handler->originally_enabled) {
--		(void)acpi_ev_add_gpe_reference(gpe_event_info);
-+		(void)acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 		if (ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
- 			/* Poll edge triggered GPEs to handle existing events */
-diff --git a/drivers/acpi/acpica/evxfgpe.c b/drivers/acpi/acpica/evxfgpe.c
-index 30a083902f52..710488ec59e9 100644
---- a/drivers/acpi/acpica/evxfgpe.c
-+++ b/drivers/acpi/acpica/evxfgpe.c
-@@ -108,7 +108,7 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
- 	if (gpe_event_info) {
- 		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
- 		    ACPI_GPE_DISPATCH_NONE) {
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
- 			if (ACPI_SUCCESS(status) &&
- 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
+ 	status = device_add(&ctlr->dev);
+ 	if (status < 0) {
+ 		/* free bus id */
 -- 
 2.20.1
 
