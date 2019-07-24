@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F11C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3074C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBD9204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FD3204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033960;
-	bh=OMIEmC5y38l87lwjmF+MWWlsfb57JJMC0HeRUrSKT10=;
+	s=default; t=1564033970;
+	bh=6vHvRQBtyfYp/zt+ZKBcm/GfCCmNfiJ/IJqu3vk8oD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tASVcZ6qvQbWEqugPYFTrLFzyG+gEFuNgyPJnwIfbgfih6kyou/WL8ltn0o+oODQS
-	 xpKD72P5x7oQ9OlxqQ+RwG7NX3ZZK+fjpLZgJ5ETxOri59dQQMkbfswSnPXc3Z4B3q
-	 NaA7iNxZHqN6njbSYf7/uan1r0MchSkPvcl4HmD4=
+	b=mn4c+7mad4LK4uQmRbZ1sCOMn5v4S6piH1yTN2nyAIh5f/WFqfPmXBTQoeDc2gN8q
+	 5qs5obQvu/V7o2xNOG1jcMUkbcenpvC4pS+8QvGHE3qBdUeuvs5jKHeEPgf6PdQoJc
+	 FEyNxDZ0ZQtIXPAOq9iLcidbdbyjXvWMeQjsCNvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfGYFwj (ORCPT
+        id S2404197AbfGYFjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:39:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404307AbfGYFkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:40:14 -0400
+        id S2404156AbfGYFjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:39:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5F922BEF;
-        Thu, 25 Jul 2019 05:40:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9670922BF3;
+        Thu, 25 Jul 2019 05:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033213;
-        bh=OMIEmC5y38l87lwjmF+MWWlsfb57JJMC0HeRUrSKT10=;
+        s=default; t=1564033188;
+        bh=6vHvRQBtyfYp/zt+ZKBcm/GfCCmNfiJ/IJqu3vk8oD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAsjqo8wikRgFcSzVptP3S1cVnydOZyJePR9dmnaOUHeEqTtJB0xRHWEtW01EoYSG
-         KxutNy4NcxgT4KluglhskNBSsW8zTlM8Nb/hqQk44zhwsHfDyJ3cfe/Nwn65E9FGDY
-         TnjUL1BEAi7AruMJOnyozWrkVnM98UGp7W2u0nH0=
+        b=DO+H+CKOWqhTjWeemV1w3loGNfRVKhU24xcq6k834tkDr+jln96FMf7gm1c3P+Zyg
+         SCZKshGo1JzfsZoniGij1S/Zof7KKnKSOrVZwLP+94t2K/w/WgxobhWEDE/XnGvKKp
+         80/3UtgYuOzDoShve8RKih+JPs9/sTwzS+cqG7QA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Winkowski <walan@marvell.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 132/271] net: mvpp2: prs: Dont override the sign bit in SRAM parser shift
-Date:   Wed, 24 Jul 2019 21:20:01 +0200
-Message-Id: <20190724191706.545925787@linuxfoundation.org>
+Subject: [PATCH 4.19 120/271] crypto: serpent - mark __serpent_setkey_sbox noinline
+Date:   Wed, 24 Jul 2019 21:19:49 +0200
+Message-Id: <20190724191705.563020760@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,44 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ec3ede559956f8ad58db7b57d25ac724bab69e9 ]
+[ Upstream commit 473971187d6727609951858c63bf12b0307ef015 ]
 
-The Header Parser allows identifying various fields in the packet
-headers, used for various kind of filtering and classification
-steps.
+The same bug that gcc hit in the past is apparently now showing
+up with clang, which decides to inline __serpent_setkey_sbox:
 
-This is a re-entrant process, where the offset in the packet header
-depends on the previous lookup results. This offset is represented in
-the SRAM results of the TCAM, as a shift to be operated.
+crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
 
-This shift can be negative in some cases, such as in IPv6 parsing.
+Marking it 'noinline' reduces the stack usage from 2112 bytes to
+192 and 96 bytes, respectively, and seems to generate more
+useful object code.
 
-This commit prevents overriding the sign bit when setting the shift
-value, which could cause instabilities when parsing IPv6 flows.
-
-Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-Suggested-by: Alan Winkowski <walan@marvell.com>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ crypto/serpent_generic.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-index ae2240074d8e..5692c6087bbb 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-@@ -312,7 +312,8 @@ static void mvpp2_prs_sram_shift_set(struct mvpp2_prs_entry *pe, int shift,
- 	}
+diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
+index 7c3382facc82..600bd288881d 100644
+--- a/crypto/serpent_generic.c
++++ b/crypto/serpent_generic.c
+@@ -229,7 +229,13 @@
+ 	x4 ^= x2;					\
+ 	})
  
- 	/* Set value */
--	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] = shift & MVPP2_PRS_SRAM_SHIFT_MASK;
-+	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] |=
-+		shift & MVPP2_PRS_SRAM_SHIFT_MASK;
- 
- 	/* Reset and set operation */
- 	mvpp2_prs_sram_bits_clear(pe, MVPP2_PRS_SRAM_OP_SEL_SHIFT_OFFS,
+-static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
++/*
++ * both gcc and clang have misoptimized this function in the past,
++ * producing horrible object code from spilling temporary variables
++ * on the stack. Forcing this part out of line avoids that.
++ */
++static noinline void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2,
++					   u32 r3, u32 r4, u32 *k)
+ {
+ 	k += 100;
+ 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
 -- 
 2.20.1
 
