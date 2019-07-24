@@ -2,103 +2,88 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA96C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA548C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B8F21871
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8383B21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563984435;
+	bh=96FrxNUCXMvPogW3TwPyyX6qG00JpbqSZqT2kyR9gdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iY8qmmJt16MeKOse5C96D2sVzGw1QGZRp5D+qtzpBdIdFtX/mqywUWtEB6P3G8Nzw
+	 3BowxkRC98smPKOVWKlUd86c/PdGnN3vkYoodVNFM+OJF95SgRsRun9eyvw9sEvBBy
+	 apwxLuf/X9CArmMah4Oo3kwW/HqnI+vO98e47Zn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfGXQGj (ORCPT
+        id S1728636AbfGXQHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:06:39 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:43632 "EHLO ale.deltatee.com"
+        Wed, 24 Jul 2019 12:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfGXQGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:06:39 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hqJmb-0005ZT-8c; Wed, 24 Jul 2019 10:06:26 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190722230859.5436-1-logang@deltatee.com>
- <20190722230859.5436-15-logang@deltatee.com> <20190724063235.GC1804@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <57e8fc1a-de70-fb65-5ef1-ffa2b95c73a6@deltatee.com>
-Date:   Wed, 24 Jul 2019 10:06:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726099AbfGXQHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 12:07:13 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1443D21850;
+        Wed, 24 Jul 2019 16:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563984433;
+        bh=96FrxNUCXMvPogW3TwPyyX6qG00JpbqSZqT2kyR9gdA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m8T+w3Zz3mHDzPZOVJL0jgJ6TYRTby1WvDsg8LPEhI5rWbN/NQFaOz1wpdVMAGvkI
+         jDEIalJDJWvBEK95Gbdt17sFToFIFRVzb94JsjkqDnV/KlqPgPkY+E+qARKeJYiwNy
+         K9VZLZDnOtG9A0HuNX1ZeRl5TFoR1QUps2bvI17k=
+Date:   Wed, 24 Jul 2019 09:07:11 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     tytso@mit.edu, jaegeuk@kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] fs: crypto: keyinfo: Fix a possible null-pointer
+ dereference in derive_key_aes()
+Message-ID: <20190724160711.GB673@sol.localdomain>
+Mail-Followup-To: Jia-Ju Bai <baijiaju1990@gmail.com>, tytso@mit.edu,
+        jaegeuk@kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+References: <20190724100204.2009-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190724063235.GC1804@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, epilmore@gigaio.com, dan.j.williams@intel.com, axboe@fb.com, kbusch@kernel.org, sagi@grimberg.me, jgg@mellanox.com, Christian.Koenig@amd.com, bhelgaas@google.com, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 14/14] PCI/P2PDMA: Introduce pci_p2pdma_[un]map_resource()
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724100204.2009-1-baijiaju1990@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[+Cc linux-crypto]
 
-
-On 2019-07-24 12:32 a.m., Christoph Hellwig wrote:
->> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->> index baf476039396..20c834cfd2d3 100644
->> --- a/drivers/pci/p2pdma.c
->> +++ b/drivers/pci/p2pdma.c
->> @@ -874,6 +874,91 @@ void pci_p2pdma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
->>  }
->>  EXPORT_SYMBOL_GPL(pci_p2pdma_unmap_sg_attrs);
->>  
->> +static pci_bus_addr_t pci_p2pdma_phys_to_bus(struct pci_dev *dev,
->> +		phys_addr_t start, size_t size)
->> +{
->> +	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->> +	phys_addr_t end = start + size;
->> +	struct resource_entry *window;
->> +
->> +	resource_list_for_each_entry(window, &bridge->windows) {
->> +		if (window->res->start <= start && window->res->end >= end)
->> +			return start - window->offset;
->> +	}
->> +
->> +	return DMA_MAPPING_ERROR;
+On Wed, Jul 24, 2019 at 06:02:04PM +0800, Jia-Ju Bai wrote:
+> In derive_key_aes(), tfm is assigned to NULL on line 46, and then
+> crypto_free_skcipher(tfm) is executed.
 > 
-> This does once again look very expensive for something called in the
-> hot path.
+> crypto_free_skcipher(tfm)
+>     crypto_skcipher_tfm(tfm)
+>         return &tfm->base;
+> 
+> Thus, a possible null-pointer dereference may occur.
 
-Yes. This is the downside of dealing only with a phys_addr_t: we have to
-look up against it. Unfortunately, I believe it's possible for different
-BARs on a device to be in different windows, so something like this is
-necessary unless we already know the BAR the phys_addr_t belongs to. It
-might probably be sped up a bit by storing the offsets of each bar
-instead of looping through all the bridge windows, but I don't think it
-will get you *that* much.
+This analysis is incorrect because only the address &tfm->base is taken.
+There's no pointer dereference.
 
-As this is an example with no users, the answer here will really depend
-on what the use-case is doing. If they can lookup, ahead of time, the
-mapping type and offset then they don't have to do this work on the hot
-path and it means that pci_p2pdma_map_resource() is simply not a
-suitable API.
+In fact all the crypto_free_*() functions are no-ops on NULL pointers, and many
+other callers rely on it.  So there's no bug here.
 
-Logan
+It appears you've sent the same patch for some of these other callers
+(https://lore.kernel.org/lkml/?q=%22fix+a+possible+null-pointer%22), but none
+are Cc'ed to linux-crypto or another mailing list I'm subscribed to, so I can't
+respond to them.  But this feedback applies equally to them too.
 
+Note also that if there actually were a bug here (which again, there doesn't
+appear to be), we'd need to fix it in crypto_free_*(), not in the callers.
+
+- Eric
