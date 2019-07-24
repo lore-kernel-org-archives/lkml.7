@@ -2,56 +2,57 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57853C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56194C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282E1204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228DF204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000168;
-	bh=9ji9QypqW4jWQNsf1EAynUSKTtksVznp7CxGOF3dS28=;
+	s=default; t=1564000173;
+	bh=JVcpgmCylcWuI9DLT7H8HRMJh+8lE2N6MMG34QLX4UM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bm1TTNDcRJ5SEJVTT2dRlp0iD4ljA5ShqE18VMwePYvZCw3uj3Wjm4XAlkO2eznXA
-	 8S5dtikXNp6ylvNeKKOV3UUwqXM2ZfUw5oGGYWKmGVmBECX/fjPacEOOsb7VmYKWnw
-	 mae6n9HxmCv6ecQ9jGvLrlm4dGu0g7eLks5+TNzQ=
+	b=d9NzjMiC+gfLRRjOUlRZsrT/TZSCSAebNelv6+CC5BO4VyaeGGeuubAJeL13VntXB
+	 eDErrvQpcxcOamPxrmCWfupJYAmpmviSWFDEGKQFCyw6HCXKYDQfEaLKD6Bhy++ZAm
+	 FZSp0iSKGjpz6BURvz/ygmQc/yxxH/W7cpRHjffo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388773AbfGXTdG (ORCPT
+        id S2388750AbfGXTdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388751AbfGXTdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 15:33:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388725AbfGXTc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:32:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8551820659;
-        Wed, 24 Jul 2019 19:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE2AC2238C;
+        Wed, 24 Jul 2019 19:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996781;
-        bh=9ji9QypqW4jWQNsf1EAynUSKTtksVznp7CxGOF3dS28=;
+        s=default; t=1563996778;
+        bh=JVcpgmCylcWuI9DLT7H8HRMJh+8lE2N6MMG34QLX4UM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bS8+c7SbbiqWhry2m1hNSOGmWKeAzULaxWXdvLaS7I/iTrPWaioeD1RRVgL9ANaMb
-         jSsemFADNMQz3Snr2t4tVChuYfvYFhA6q+H3ws/VaMapPPKQYaR0/0ouLi22mqPzHL
-         /fGppzKBagt5h/Mrk+qiV/WpAzJyEGLutSleYr+o=
+        b=mFJr+QzPZ8/CoRTIwiSIqsyEaYGP9PZGJ2U1GZI7xX9CKXlz/xdjL+8OWFch0fFkd
+         3nQRQVosqp1o5wPeZ1Cy7bi7N9IE7Gld5pLdQ/oSmt25hPRPCVHZZwOv9GaD0WeuJE
+         F89+2HryyYrkR8mPS5u7o8u4FCmZauhE6855uhoc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 163/413] ALSA: hdac: Fix codec name after machine driver is unloaded and reloaded
-Date:   Wed, 24 Jul 2019 21:17:34 +0200
-Message-Id: <20190724191746.722753187@linuxfoundation.org>
+Subject: [PATCH 5.2 172/413] xsk: Properly terminate assignment in xskq_produce_flush_desc
+Date:   Wed, 24 Jul 2019 21:17:43 +0200
+Message-Id: <20190724191747.251791334@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -64,54 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8a5b0177a7f6099ff534a4d9ce72673af5c3cade ]
+[ Upstream commit f7019b7b0ad14bde732b8953161994edfc384953 ]
 
-Currently on each driver reload internal counter is being increased. It
-causes failure to enumerate driver devices, as they have hardcoded:
-.codec_name = "ehdaudio0D2",
-As there is currently no devices with multiple hda codecs and there is
-currently no established way to reliably differentiate, between them,
-always assign bus->idx = 0;
+Clang warns:
 
-This fixes a problem when we unload and reload machine driver idx gets
-incremented, so .codec_name would've needed to be set to "ehdaudio1D2"
-after first reload and so on.
+In file included from net/xdp/xsk_queue.c:10:
+net/xdp/xsk_queue.h:292:2: warning: expression result unused
+[-Wunused-value]
+        WRITE_ONCE(q->ring->producer, q->prod_tail);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
+        __u.__val;                                      \
+        ~~~ ^~~~~
+1 warning generated.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Acked-by: Takashi Iwai <tiwai@suse.de>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The q->prod_tail assignment has a comma at the end, not a semi-colon.
+Fix that so clang no longer warns and everything works as expected.
+
+Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+Link: https://github.com/ClangBuiltLinux/linux/issues/544
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/ext/hdac_ext_bus.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/xdp/xsk_queue.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/hda/ext/hdac_ext_bus.c b/sound/hda/ext/hdac_ext_bus.c
-index a3a113ef5d56..4f9f1d2a2ec5 100644
---- a/sound/hda/ext/hdac_ext_bus.c
-+++ b/sound/hda/ext/hdac_ext_bus.c
-@@ -85,7 +85,6 @@ int snd_hdac_ext_bus_init(struct hdac_bus *bus, struct device *dev,
- 			const struct hdac_ext_bus_ops *ext_ops)
- {
- 	int ret;
--	static int idx;
+diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
+index 88b9ae24658d..cba4a640d5e8 100644
+--- a/net/xdp/xsk_queue.h
++++ b/net/xdp/xsk_queue.h
+@@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
+ 	/* Order producer and data */
+ 	smp_wmb(); /* B, matches C */
  
- 	/* check if io ops are provided, if not load the defaults */
- 	if (io_ops == NULL)
-@@ -96,7 +95,12 @@ int snd_hdac_ext_bus_init(struct hdac_bus *bus, struct device *dev,
- 		return ret;
+-	q->prod_tail = q->prod_head,
++	q->prod_tail = q->prod_head;
+ 	WRITE_ONCE(q->ring->producer, q->prod_tail);
+ }
  
- 	bus->ext_ops = ext_ops;
--	bus->idx = idx++;
-+	/* FIXME:
-+	 * Currently only one bus is supported, if there is device with more
-+	 * buses, bus->idx should be greater than 0, but there needs to be a
-+	 * reliable way to always assign same number.
-+	 */
-+	bus->idx = 0;
- 	bus->cmd_dma_state = true;
- 
- 	return 0;
 -- 
 2.20.1
 
