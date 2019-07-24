@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE491C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698C8C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F6122BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CC322C7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033443;
-	bh=UuliqgOTkTmntToZ81rjcCYcGZUswTVPwrY3Yz1BCyw=;
+	s=default; t=1564033449;
+	bh=0E4DbpNziFF5TT1Yhr8r5i2JsWFoSRYRS5q2wDKAeQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MOrEByR0VS2c1CXy4sIzMTXvG9Zqn5CYnRaliBMb3UB3DWxmpKeS5ifpJu9CJI8xo
-	 zzlH2PJo0BB542A1sYv3kD1gOamLj/DZfJsdxJwee8RraGciNZaOVBV0aWAoWsLGsl
-	 s12EkbBQrHsLxxxXMkWm4Z2rfhVRHdSlIqJtPOyM=
+	b=Sa8z7nMo9LFfDArRQYX9bK7dcP8O+KUw1zehFpjCi/K/Ioo8i8ZRFmGBRELB7iiBs
+	 lmIrr/RBsqcAVxn3++ZugF9SerGTQumRU9EkXVFa8ESVUIYs5kmEBuBKPUeUOuz44l
+	 cJ8z3BsUPrBvHAtRBRGB41MUED6EuAUsxtyadlYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391149AbfGYFoC (ORCPT
+        id S2391177AbfGYFoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58972 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391125AbfGYFn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:43:56 -0400
+        id S2391160AbfGYFoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:44:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 491A222BF5;
-        Thu, 25 Jul 2019 05:43:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AA5221850;
+        Thu, 25 Jul 2019 05:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033435;
-        bh=UuliqgOTkTmntToZ81rjcCYcGZUswTVPwrY3Yz1BCyw=;
+        s=default; t=1564033443;
+        bh=0E4DbpNziFF5TT1Yhr8r5i2JsWFoSRYRS5q2wDKAeQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRVBcNrMZAGfibLqHm+R4+D3bTyQRFP65wKCakL3sT6wyqWDx7DkDXOzAdZnZWNOZ
-         5P02VfNAcOTXh+/4ETA2O6JImgTojip9Ve5STWbAkMsPpQyzeiW0b9E3YFZGT1OPcb
-         OO5+GQYjWsMnN8Yvd53xuFNiWp7Wm4NZt/YaMSic=
+        b=vGGN8Av4MlHmDUj5hkK+adj56zH6G4D9hkylEVhbmd0wLv4mhPnmcJ+pql/NAzyMq
+         vsc+s+ZfcE2JEt86y70V5Wl70p3WWUSud8RYj4BCDjwkR8cjj6QmM/1fDIXbMPT1Ek
+         GD9Gkw5WGbS/E9WpXUv0XCgAt42l9/VI/keqLXEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 170/271] scsi: mac_scsi: Increase PIO/PDMA transfer length threshold
-Date:   Wed, 24 Jul 2019 21:20:39 +0200
-Message-Id: <20190724191709.747624205@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 208/271] ALSA: hda/realtek: apply ALC891 headset fixup to one Dell machine
+Date:   Wed, 24 Jul 2019 21:21:17 +0200
+Message-Id: <20190724191712.898430299@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,62 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 7398cee4c3e6aea1ba07a6449e5533ecd0b92cdd upstream.
+commit 4b4e0e32e4b09274dbc9d173016c1a026f44608c upstream.
 
-Some targets introduce delays when handshaking the response to certain
-commands. For example, a disk may send a 96-byte response to an INQUIRY
-command (or a 24-byte response to a MODE SENSE command) too slowly.
+Without this patch, the headset-mic and headphone-mic don't work.
 
-Apparently the first 12 or 14 bytes are handshaked okay but then the system
-bus error timeout is reached while transferring the next word.
-
-Since the scsi bus phase hasn't changed, the driver then sets the target
-borken flag to prevent further PDMA transfers. The driver also logs the
-warning, "switching to slow handshake".
-
-Raise the PDMA threshold to 512 bytes so that PIO transfers will be used
-for these commands. This default is sufficiently low that PDMA will still
-be used for READ and WRITE commands.
-
-The existing threshold (16 bytes) was chosen more or less at random.
-However, best performance requires the threshold to be as low as possible.
-Those systems that don't need the PIO workaround at all may benefit from
-mac_scsi.setup_use_pdma=1
-
-Cc: Michael Schmitz <schmitzmic@gmail.com>
-Cc: stable@vger.kernel.org # v4.14+
-Fixes: 3a0f64bfa907 ("mac_scsi: Fix pseudo DMA implementation")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/mac_scsi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/scsi/mac_scsi.c
-+++ b/drivers/scsi/mac_scsi.c
-@@ -52,7 +52,7 @@ static int setup_cmd_per_lun = -1;
- module_param(setup_cmd_per_lun, int, 0);
- static int setup_sg_tablesize = -1;
- module_param(setup_sg_tablesize, int, 0);
--static int setup_use_pdma = -1;
-+static int setup_use_pdma = 512;
- module_param(setup_use_pdma, int, 0);
- static int setup_hostid = -1;
- module_param(setup_hostid, int, 0);
-@@ -305,7 +305,7 @@ static int macscsi_dma_xfer_len(struct N
-                                 struct scsi_cmnd *cmd)
- {
- 	if (hostdata->flags & FLAG_NO_PSEUDO_DMA ||
--	    cmd->SCp.this_residual < 16)
-+	    cmd->SCp.this_residual < setup_use_pdma)
- 		return 0;
- 
- 	return cmd->SCp.this_residual;
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8657,6 +8657,11 @@ static const struct snd_hda_pin_quirk al
+ 		{0x18, 0x01a19030},
+ 		{0x1a, 0x01813040},
+ 		{0x21, 0x01014020}),
++	SND_HDA_PIN_QUIRK(0x10ec0867, 0x1028, "Dell", ALC891_FIXUP_DELL_MIC_NO_PRESENCE,
++		{0x16, 0x01813030},
++		{0x17, 0x02211010},
++		{0x18, 0x01a19040},
++		{0x21, 0x01014020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0662, 0x1028, "Dell", ALC662_FIXUP_DELL_MIC_NO_PRESENCE,
+ 		{0x14, 0x01014010},
+ 		{0x18, 0x01a19020},
 
 
