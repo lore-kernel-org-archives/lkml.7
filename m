@@ -2,88 +2,118 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C983C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B613AC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA5B22387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1CD229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 11:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linbit-com.20150623.gappssmtp.com header.i=@linbit-com.20150623.gappssmtp.com header.b="hrVbr11+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfGXLhP (ORCPT
+        id S1727592AbfGXLhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 07:37:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59446 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfGXLhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 07:37:14 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 748FC30BD1B1;
-        Wed, 24 Jul 2019 11:37:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 53FB760BCE;
-        Wed, 24 Jul 2019 11:37:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 24 Jul 2019 13:37:14 +0200 (CEST)
-Date:   Wed, 24 Jul 2019 13:37:11 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, matthew.wilcox@oracle.com,
-        kirill.shutemov@linux.intel.com, peterz@infradead.org,
-        rostedt@goodmis.org, kernel-team@fb.com,
-        william.kucharski@oracle.com
-Subject: Re: [PATCH v8 2/4] uprobe: use original page when all uprobes are
- removed
-Message-ID: <20190724113711.GE21599@redhat.com>
-References: <20190724083600.832091-1-songliubraving@fb.com>
- <20190724083600.832091-3-songliubraving@fb.com>
+        Wed, 24 Jul 2019 07:37:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46367 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbfGXLhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 07:37:23 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so46574839wru.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 04:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linbit-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aQfNFiJgGsv9UgTyWY3tUqj/qF9PNqN3A4wyBds+Y/Y=;
+        b=hrVbr11+OiUw0odEuipDamOn+CeA1FYWaQZFMbx5tm88oSpJoJScJfyS/Bu5jYPICg
+         7cDHOGH2yau3gw2mLzSSI03+SpYiwqppzZGErfQ8LHNCVcbsk+x9OsDTPZN1GkUUFfVQ
+         Is1m7ROJqjwHQklsHgWAYs3daEfx7XHTqHrYT0qlBMD7ZLIPF7/GaD0vnSBR8GIxffqs
+         uwMky4QRnl6v1PUjlk1HCJHMPA1ILomAWcsvtMmnEEDyECYgAhyUNqk4WzfYwhiLrSjG
+         aBJG3s83NMAuYcZyCTXDehDYQCVI9rqsxnRzI9R2TyvPOpO+GkiBXBFj3UfQ/fu91tfC
+         jQxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aQfNFiJgGsv9UgTyWY3tUqj/qF9PNqN3A4wyBds+Y/Y=;
+        b=uXN3up8DMs0jLOEAE2pq8xPQ6+1zj91fdyR6cvvzzsLx2N6uNmsUxx6qts5LokFzGx
+         7v0SZVMumeU1zGhTjMac/EoxcxPnRZJqOzlaj2GXzH7N/XnNG53gaxcF5vs86QnbF6xv
+         1IRO5tZxRce9iAyVxHw8oVuxDni3lk30nalGYfRd5OTVfeUlVtmpdZI8wGZHcZ/nHzz3
+         YDOQX4YG0EOrkfDzXraeIce1lWBEG08TdeqO74F+QWKeXKWkzvEiVxz8EENXwCAhmW/S
+         lPLdrcJX/rPAvlm0JfGQtntlvMR9pKr2arn8UoWSlVPL165wpZBrtEZjHf48tcdwoVZ3
+         ZxmA==
+X-Gm-Message-State: APjAAAUV4W6mg3n8/rlfFKkM+UA52tW/LuhsKawZ8MOPIJSmTXI5A13l
+        9A7AWWvrQ3aU9YkQ7EIG55xSDg==
+X-Google-Smtp-Source: APXvYqyJbaRTnQola4b6eYJh8U7ie0ZzV/HGXTrlrS53rgawi0WhJg+42OgkqSTdv6HOjFzxYcwY/w==
+X-Received: by 2002:a5d:46d1:: with SMTP id g17mr36583242wrs.160.1563968241541;
+        Wed, 24 Jul 2019 04:37:21 -0700 (PDT)
+Received: from localhost (static.20.139.203.116.clients.your-server.de. [116.203.139.20])
+        by smtp.gmail.com with ESMTPSA id u13sm54814133wrq.62.2019.07.24.04.37.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 04:37:20 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 13:37:20 +0200
+From:   Roland Kammerer <roland.kammerer@linbit.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     philipp.reisner@linbit.com, lars.ellenberg@linbit.com,
+        axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com
+Subject: Re: [Drbd-dev] [PATCH 2/2] block: drbd: Fix a possible null-pointer
+ dereference in is_valid_state()
+Message-ID: <20190724113720.gis6v2ziltmmv4zt@rck.sh>
+References: <20190724034926.28755-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190724083600.832091-3-songliubraving@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 24 Jul 2019 11:37:14 +0000 (UTC)
+In-Reply-To: <20190724034926.28755-1-baijiaju1990@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/24, Song Liu wrote:
->
->  	lock_page(old_page);
-> @@ -177,15 +180,24 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
->  	mmu_notifier_invalidate_range_start(&range);
->  	err = -EAGAIN;
->  	if (!page_vma_mapped_walk(&pvmw)) {
-> -		mem_cgroup_cancel_charge(new_page, memcg, false);
-> +		if (!orig)
-> +			mem_cgroup_cancel_charge(new_page, memcg, false);
->  		goto unlock;
->  	}
->  	VM_BUG_ON_PAGE(addr != pvmw.address, old_page);
+On Wed, Jul 24, 2019 at 11:49:26AM +0800, Jia-Ju Bai wrote:
+> In is_valid_state(), there is an if statement on line 839 to check
+> whether nc is NULL:
+>     if (nc)
+> 
+> When nc is NULL, it is used on line 880:
+>     (nc->verify_alg[0] == 0)
+> 
+> Thus, a possible null-pointer dereference may occur.
+> 
+> To fix this bug, nc is also checked on line 880.
+> 
+> This bug is found by a static analysis tool STCheck written by us.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  drivers/block/drbd/drbd_state.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
+> index eeaa3b49b264..3cf477e9cf6a 100644
+> --- a/drivers/block/drbd/drbd_state.c
+> +++ b/drivers/block/drbd/drbd_state.c
+> @@ -877,7 +877,7 @@ is_valid_state(struct drbd_device *device, union drbd_state ns)
+>  		rv = SS_CONNECTED_OUTDATES;
 >  
->  	get_page(new_page);
-> -	page_add_new_anon_rmap(new_page, vma, addr, false);
-> -	mem_cgroup_commit_charge(new_page, memcg, false, false);
-> -	lru_cache_add_active_or_unevictable(new_page, vma);
-> +	if (orig) {
-> +		lock_page(new_page);  /* for page_add_file_rmap() */
-> +		page_add_file_rmap(new_page, false);
+>  	else if ((ns.conn == C_VERIFY_S || ns.conn == C_VERIFY_T) &&
+> -		 (nc->verify_alg[0] == 0))
+> +		 (nc && nc->verify_alg[0] == 0))
+>  		rv = SS_NO_VERIFY_ALG;
 
+AFAIK it is "impossible" to reach such a DRBD state without having a
+valid net conf. Anyways, a check is a good idea, but the logic is wrong,
+I would propose something like this:
 
-Shouldn't we re-check new_page->mapping after lock_page() ? Or we can't
-race with truncate?
+ 	else if ((ns.conn == C_VERIFY_S || ns.conn == C_VERIFY_T) &&
+-		 (nc->verify_alg[0] == 0))
++		 (!nc || nc->verify_alg[0] == 0))
+ 		rv = SS_NO_VERIFY_ALG;
 
-
-and I am worried this code can try to lock the same page twice...
-Say, the probed application does MADV_DONTNEED and then writes "int3"
-into vma->vm_file at the same address to fool verify_opcode().
-
-Oleg.
-
+Regards, rck
