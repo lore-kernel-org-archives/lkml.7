@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BFEC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0388BC76191
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C1B22BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D120422BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1564033597;
-	bh=0EXiVRQprOa1BBEp7xxVWxJuzXshJ6Rjs1C2cOfpuGQ=;
+	bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DaHnhrxyve8jY0GQkiRErDVpTwzBZL6zUiHbcvqXcqJYMmYW1MXo+7CinW6R9Fxei
-	 UadpQfUjspV0PoyRoxNu0d3FXgq+IUfU7yDkrHKHyorFlhiA6MxeO9FF6siWI/G/do
-	 YH/Zz9Xko8SvjvUgRDboCCFNNFpE6BqlSqWkoxtY=
+	b=hgo4325L8a9AVbbHmv77yeW1zmzsr+r/HA02CpERstw0crKEB8P+78bGa4tQiksUb
+	 Aa8Hvg2kFrLdHmWM/EixvyGUOrr887FEWcLBhZy/PyB8kwjADysP2DPWVWdDx1eTEZ
+	 Lgvz6OyeaDg+0k+VxkjhZArVDSg0vpocJALCBLmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391451AbfGYFqf (ORCPT
+        id S2391442AbfGYFqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:46:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388109AbfGYFqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:46:30 -0400
+        id S2391418AbfGYFqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:46:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3679C22CBA;
-        Thu, 25 Jul 2019 05:46:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D98420657;
+        Thu, 25 Jul 2019 05:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033589;
-        bh=0EXiVRQprOa1BBEp7xxVWxJuzXshJ6Rjs1C2cOfpuGQ=;
+        s=default; t=1564033583;
+        bh=C3mhXCl2ZWYBLwyb38j1K9FbAQ3C3952L957kgeENwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JmYUdFL4FNtWUR6sB9t9LxFAPXPfmsAE4r6dozg0UJxBRSFCIaLG6TIYRMLWpZXkf
-         zNRpHAZ/u74WUwvVgFcWusShgJXY7IiE8VI8bARv+61fVhwrSVj4G9SFv6Gxq0nvzx
-         3VU4q/zRX7ldMEMDQG8LRPMDlaY0ErBv4DtYBueY=
+        b=i3uP1aIUzNM+0jDtaBuqCLYaSYI3HUaLWqHk1keklPFQs5g+EmCwYa0bQ1gRrecGh
+         D9sdZbwmMeffD3U227w0rjaw9Fzvv8oWpqru6ofhqrKzs+n7P7d42SYGStjMdepxew
+         soMpxEy+0RvhV5npedHJrbmsFR5/Wudf9tPplVRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 209/271] media: v4l2: Test type instead of cfg->type in v4l2_ctrl_new_custom()
-Date:   Wed, 24 Jul 2019 21:21:18 +0200
-Message-Id: <20190724191712.976431042@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Marc Meledandri <m.meledandri@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: [PATCH 4.19 217/271] drm/nouveau/i2c: Enable i2c pads & busses during preinit
+Date:   Wed, 24 Jul 2019 21:21:26 +0200
+Message-Id: <20190724191713.683472423@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,47 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit 07d89227a983df957a6a7c56f7c040cde9ac571f upstream.
+commit 7cb95eeea6706c790571042a06782e378b2561ea upstream.
 
-cfg->type can be overridden by v4l2_ctrl_fill() and the new value is
-stored in the local type var. Fix the tests to use this local var.
+It turns out that while disabling i2c bus access from software when the
+GPU is suspended was a step in the right direction with:
 
-Fixes: 0996517cf8ea ("V4L/DVB: v4l2: Add new control handling framework")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-[hverkuil-cisco@xs4all.nl: change to !qmenu and !qmenu_int (checkpatch)]
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
+->fini()")
+
+We also ended up accidentally breaking the vbios init scripts on some
+older Tesla GPUs, as apparently said scripts can actually use the i2c
+bus. Since these scripts are executed before initializing any
+subdevices, we end up failing to acquire access to the i2c bus which has
+left a number of cards with their fan controllers uninitialized. Luckily
+this doesn't break hardware - it just means the fan gets stuck at 100%.
+
+This also means that we've always been using our i2c busses before
+initializing them during the init scripts for older GPUs, we just didn't
+notice it until we started preventing them from being used until init.
+It's pretty impressive this never caused us any issues before!
+
+So, fix this by initializing our i2c pad and busses during subdev
+pre-init. We skip initializing aux busses during pre-init, as those are
+guaranteed to only ever be used by nouveau for DP aux transactions.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Tested-by: Marc Meledandri <m.meledandri@gmail.com>
+Fixes: 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after ->fini()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -2249,16 +2249,15 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(s
- 		v4l2_ctrl_fill(cfg->id, &name, &type, &min, &max, &step,
- 								&def, &flags);
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
+@@ -185,6 +185,25 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev
+ }
  
--	is_menu = (cfg->type == V4L2_CTRL_TYPE_MENU ||
--		   cfg->type == V4L2_CTRL_TYPE_INTEGER_MENU);
-+	is_menu = (type == V4L2_CTRL_TYPE_MENU ||
-+		   type == V4L2_CTRL_TYPE_INTEGER_MENU);
- 	if (is_menu)
- 		WARN_ON(step);
- 	else
- 		WARN_ON(cfg->menu_skip_mask);
--	if (cfg->type == V4L2_CTRL_TYPE_MENU && qmenu == NULL)
-+	if (type == V4L2_CTRL_TYPE_MENU && !qmenu) {
- 		qmenu = v4l2_ctrl_get_menu(cfg->id);
--	else if (cfg->type == V4L2_CTRL_TYPE_INTEGER_MENU &&
--		 qmenu_int == NULL) {
-+	} else if (type == V4L2_CTRL_TYPE_INTEGER_MENU && !qmenu_int) {
- 		handler_set_err(hdl, -EINVAL);
- 		return NULL;
- 	}
+ static int
++nvkm_i2c_preinit(struct nvkm_subdev *subdev)
++{
++	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
++	struct nvkm_i2c_bus *bus;
++	struct nvkm_i2c_pad *pad;
++
++	/*
++	 * We init our i2c busses as early as possible, since they may be
++	 * needed by the vbios init scripts on some cards
++	 */
++	list_for_each_entry(pad, &i2c->pad, head)
++		nvkm_i2c_pad_init(pad);
++	list_for_each_entry(bus, &i2c->bus, head)
++		nvkm_i2c_bus_init(bus);
++
++	return 0;
++}
++
++static int
+ nvkm_i2c_init(struct nvkm_subdev *subdev)
+ {
+ 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
+@@ -238,6 +257,7 @@ nvkm_i2c_dtor(struct nvkm_subdev *subdev
+ static const struct nvkm_subdev_func
+ nvkm_i2c = {
+ 	.dtor = nvkm_i2c_dtor,
++	.preinit = nvkm_i2c_preinit,
+ 	.init = nvkm_i2c_init,
+ 	.fini = nvkm_i2c_fini,
+ 	.intr = nvkm_i2c_intr,
 
 
