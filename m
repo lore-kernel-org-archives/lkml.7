@@ -2,52 +2,51 @@ Return-Path: <SRS0=6YJq=VW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB60EC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D91C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B062075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5E820657
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033849;
-	bh=jMcefBxLFaoYMKd4VwmvofWNMZWR6VtwFsw+KOPPfxY=;
+	s=default; t=1564033863;
+	bh=y1R75sxReldnngdrbYdnNVe6DrFX8YCVqJ1SCqXFoCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOia1YPxL1mqrcG2+Ho6XrXiqSxkuv5CjznVOMTW9Q7f6ZSd4HdKXSphBzg1PXii5
-	 JJeKN9f6X6/szj5b+zwy2ocCcAJKmsRdpxyASW9WAXTksGx8u3eQr+ZVReMef3+yMb
-	 ILWMHjRJpeY8u+Xy/xToabLZFEDuePex/QKOq8+E=
+	b=bS9489GG2XtXWlyPX/71CV0wlHSU8xLyjaXs1Fe/SR383U2WWyA7JzGnrbN34fqxG
+	 c/oFcNCD/+mFFkq1H5ZHK8pd0qQFRnWpARE8CxoLo5Gd+rhCDODYUKHtxEwFIWXQfa
+	 xs4dx9wZaKiB08WoA6NOXuTy7+CyCGq8jDl6jHEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390853AbfGYFm1 (ORCPT
+        id S1727924AbfGYFvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:42:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57328 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390831AbfGYFmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:42:24 -0400
+        id S2404801AbfGYFmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:42:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B541622CB9;
-        Thu, 25 Jul 2019 05:42:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 211BC21880;
+        Thu, 25 Jul 2019 05:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033343;
-        bh=jMcefBxLFaoYMKd4VwmvofWNMZWR6VtwFsw+KOPPfxY=;
+        s=default; t=1564033323;
+        bh=y1R75sxReldnngdrbYdnNVe6DrFX8YCVqJ1SCqXFoCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=egiL+7ssq4ywI4ms9o/IAS9cGnyH7SdvUGfmX5OhKQdIFa0YQNJFA8jBzBGtfrmp3
-         C4//6dlDZDrbednf3Hm9JfkGwi0mJluVWiIiuWDDHf3ZSXPOzfLnJvjgELnZLZue41
-         4M5kN7KiMgUUcnyNU7fOlwm16/62n4UIpIaAacCE=
+        b=WlXEt4HITMZyidTVkEIqi9xhT6tQSCs4MRq+HSkB+mQfbgD9YScuoFbAq7YYPEkoG
+         cjtJAdg6Qub54OP2ICX2kekWwxKf5fTRT934b5NCch2BNLsWDEXm2NiQXnMKS7mmqD
+         wqBj3bp3WSD9bMupz1geouBTsO0+59RshBtRq8x4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 176/271] crypto: chacha20poly1305 - fix atomic sleep when using async algorithm
-Date:   Wed, 24 Jul 2019 21:20:45 +0200
-Message-Id: <20190724191710.248237474@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 127/271] bcache: check c->gc_thread by IS_ERR_OR_NULL in cache_set_flush()
+Date:   Wed, 24 Jul 2019 21:19:56 +0200
+Message-Id: <20190724191706.145301264@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,195 +59,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+[ Upstream commit b387e9b58679c60f5b1e4313939bd4878204fc37 ]
 
-commit 7545b6c2087f4ef0287c8c9b7eba6a728c67ff8e upstream.
+When system memory is in heavy pressure, bch_gc_thread_start() from
+run_cache_set() may fail due to out of memory. In such condition,
+c->gc_thread is assigned to -ENOMEM, not NULL pointer. Then in following
+failure code path bch_cache_set_error(), when cache_set_flush() gets
+called, the code piece to stop c->gc_thread is broken,
+         if (!IS_ERR_OR_NULL(c->gc_thread))
+                 kthread_stop(c->gc_thread);
 
-Clear the CRYPTO_TFM_REQ_MAY_SLEEP flag when the chacha20poly1305
-operation is being continued from an async completion callback, since
-sleeping may not be allowed in that context.
+And KASAN catches such NULL pointer deference problem, with the warning
+information:
 
-This is basically the same bug that was recently fixed in the xts and
-lrw templates.  But, it's always been broken in chacha20poly1305 too.
-This was found using syzkaller in combination with the updated crypto
-self-tests which actually test the MAY_SLEEP flag now.
+[  561.207881] ==================================================================
+[  561.207900] BUG: KASAN: null-ptr-deref in kthread_stop+0x3b/0x440
+[  561.207904] Write of size 4 at addr 000000000000001c by task kworker/15:1/313
 
-Reproducer:
+[  561.207913] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G        W         5.0.0-vanilla+ #3
+[  561.207916] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
+[  561.207935] Workqueue: events cache_set_flush [bcache]
+[  561.207940] Call Trace:
+[  561.207948]  dump_stack+0x9a/0xeb
+[  561.207955]  ? kthread_stop+0x3b/0x440
+[  561.207960]  ? kthread_stop+0x3b/0x440
+[  561.207965]  kasan_report+0x176/0x192
+[  561.207973]  ? kthread_stop+0x3b/0x440
+[  561.207981]  kthread_stop+0x3b/0x440
+[  561.207995]  cache_set_flush+0xd4/0x6d0 [bcache]
+[  561.208008]  process_one_work+0x856/0x1620
+[  561.208015]  ? find_held_lock+0x39/0x1d0
+[  561.208028]  ? drain_workqueue+0x380/0x380
+[  561.208048]  worker_thread+0x87/0xb80
+[  561.208058]  ? __kthread_parkme+0xb6/0x180
+[  561.208067]  ? process_one_work+0x1620/0x1620
+[  561.208072]  kthread+0x326/0x3e0
+[  561.208079]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[  561.208090]  ret_from_fork+0x3a/0x50
+[  561.208110] ==================================================================
+[  561.208113] Disabling lock debugging due to kernel taint
+[  561.208115] irq event stamp: 11800231
+[  561.208126] hardirqs last  enabled at (11800231): [<ffffffff83008538>] do_syscall_64+0x18/0x410
+[  561.208127] BUG: unable to handle kernel NULL pointer dereference at 000000000000001c
+[  561.208129] #PF error: [WRITE]
+[  561.312253] hardirqs last disabled at (11800230): [<ffffffff830052ff>] trace_hardirqs_off_thunk+0x1a/0x1c
+[  561.312259] softirqs last  enabled at (11799832): [<ffffffff850005c7>] __do_softirq+0x5c7/0x8c3
+[  561.405975] PGD 0 P4D 0
+[  561.442494] softirqs last disabled at (11799821): [<ffffffff831add2c>] irq_exit+0x1ac/0x1e0
+[  561.791359] Oops: 0002 [#1] SMP KASAN NOPTI
+[  561.791362] CPU: 15 PID: 313 Comm: kworker/15:1 Tainted: G    B   W         5.0.0-vanilla+ #3
+[  561.791363] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE136T-2.10]- 03/22/2019
+[  561.791371] Workqueue: events cache_set_flush [bcache]
+[  561.791374] RIP: 0010:kthread_stop+0x3b/0x440
+[  561.791376] Code: 00 00 65 8b 05 26 d5 e0 7c 89 c0 48 0f a3 05 ec aa df 02 0f 82 dc 02 00 00 4c 8d 63 20 be 04 00 00 00 4c 89 e7 e8 65 c5 53 00 <f0> ff 43 20 48 8d 7b 24 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48
+[  561.791377] RSP: 0018:ffff88872fc8fd10 EFLAGS: 00010286
+[  561.838895] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838916] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838934] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838948] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838966] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838979] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  561.838996] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  563.067028] RAX: 0000000000000000 RBX: fffffffffffffffc RCX: ffffffff832dd314
+[  563.067030] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000297
+[  563.067032] RBP: ffff88872fc8fe88 R08: fffffbfff0b8213d R09: fffffbfff0b8213d
+[  563.067034] R10: 0000000000000001 R11: fffffbfff0b8213c R12: 000000000000001c
+[  563.408618] R13: ffff88dc61cc0f68 R14: ffff888102b94900 R15: ffff88dc61cc0f68
+[  563.408620] FS:  0000000000000000(0000) GS:ffff888f7dc00000(0000) knlGS:0000000000000000
+[  563.408622] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  563.408623] CR2: 000000000000001c CR3: 0000000f48a1a004 CR4: 00000000007606e0
+[  563.408625] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  563.408627] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  563.904795] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  563.915796] PKRU: 55555554
+[  563.915797] Call Trace:
+[  563.915807]  cache_set_flush+0xd4/0x6d0 [bcache]
+[  563.915812]  process_one_work+0x856/0x1620
+[  564.001226] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.033563]  ? find_held_lock+0x39/0x1d0
+[  564.033567]  ? drain_workqueue+0x380/0x380
+[  564.033574]  worker_thread+0x87/0xb80
+[  564.062823] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.118042]  ? __kthread_parkme+0xb6/0x180
+[  564.118046]  ? process_one_work+0x1620/0x1620
+[  564.118048]  kthread+0x326/0x3e0
+[  564.118050]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[  564.167066] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.252441]  ret_from_fork+0x3a/0x50
+[  564.252447] Modules linked in: msr rpcrdma sunrpc rdma_ucm ib_iser ib_umad rdma_cm ib_ipoib i40iw configfs iw_cm ib_cm libiscsi scsi_transport_iscsi mlx4_ib ib_uverbs mlx4_en ib_core nls_iso8859_1 nls_cp437 vfat fat intel_rapl skx_edac x86_pkg_temp_thermal coretemp iTCO_wdt iTCO_vendor_support crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel ses raid0 aesni_intel cdc_ether enclosure usbnet ipmi_ssif joydev aes_x86_64 i40e scsi_transport_sas mii bcache md_mod crypto_simd mei_me ioatdma crc64 ptp cryptd pcspkr i2c_i801 mlx4_core glue_helper pps_core mei lpc_ich dca wmi ipmi_si ipmi_devintf nd_pmem dax_pmem nd_btt ipmi_msghandler device_dax pcc_cpufreq button hid_generic usbhid mgag200 i2c_algo_bit drm_kms_helper syscopyarea sysfillrect xhci_pci sysimgblt fb_sys_fops xhci_hcd ttm megaraid_sas drm usbcore nfit libnvdimm sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua efivarfs
+[  564.299390] bcache: bch_count_io_errors() nvme0n1: IO error on writing btree.
+[  564.348360] CR2: 000000000000001c
+[  564.348362] ---[ end trace b7f0e5cc7b2103b0 ]---
 
-    python -c 'import socket; socket.socket(socket.AF_ALG, 5, 0).bind(
-    	       ("aead", "rfc7539(cryptd(chacha20-generic),poly1305-generic)"))'
+Therefore, it is not enough to only check whether c->gc_thread is NULL,
+we should use IS_ERR_OR_NULL() to check both NULL pointer and error
+value.
 
-Kernel output:
+This patch changes the above buggy code piece in this way,
+         if (!IS_ERR_OR_NULL(c->gc_thread))
+                 kthread_stop(c->gc_thread);
 
-    BUG: sleeping function called from invalid context at include/crypto/algapi.h:426
-    in_atomic(): 1, irqs_disabled(): 0, pid: 1001, name: kworker/2:2
-    [...]
-    CPU: 2 PID: 1001 Comm: kworker/2:2 Not tainted 5.2.0-rc2 #5
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-    Workqueue: crypto cryptd_queue_worker
-    Call Trace:
-     __dump_stack lib/dump_stack.c:77 [inline]
-     dump_stack+0x4d/0x6a lib/dump_stack.c:113
-     ___might_sleep kernel/sched/core.c:6138 [inline]
-     ___might_sleep.cold.19+0x8e/0x9f kernel/sched/core.c:6095
-     crypto_yield include/crypto/algapi.h:426 [inline]
-     crypto_hash_walk_done+0xd6/0x100 crypto/ahash.c:113
-     shash_ahash_update+0x41/0x60 crypto/shash.c:251
-     shash_async_update+0xd/0x10 crypto/shash.c:260
-     crypto_ahash_update include/crypto/hash.h:539 [inline]
-     poly_setkey+0xf6/0x130 crypto/chacha20poly1305.c:337
-     poly_init+0x51/0x60 crypto/chacha20poly1305.c:364
-     async_done_continue crypto/chacha20poly1305.c:78 [inline]
-     poly_genkey_done+0x15/0x30 crypto/chacha20poly1305.c:369
-     cryptd_skcipher_complete+0x29/0x70 crypto/cryptd.c:279
-     cryptd_skcipher_decrypt+0xcd/0x110 crypto/cryptd.c:339
-     cryptd_queue_worker+0x70/0xa0 crypto/cryptd.c:184
-     process_one_work+0x1ed/0x420 kernel/workqueue.c:2269
-     worker_thread+0x3e/0x3a0 kernel/workqueue.c:2415
-     kthread+0x11f/0x140 kernel/kthread.c:255
-     ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Fixes: 71ebc4d1b27d ("crypto: chacha20poly1305 - Add a ChaCha20-Poly1305 AEAD construction, RFC7539")
-Cc: <stable@vger.kernel.org> # v4.2+
-Cc: Martin Willi <martin@strongswan.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/chacha20poly1305.c |   30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ drivers/md/bcache/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/chacha20poly1305.c
-+++ b/crypto/chacha20poly1305.c
-@@ -67,6 +67,8 @@ struct chachapoly_req_ctx {
- 	unsigned int cryptlen;
- 	/* Actual AD, excluding IV */
- 	unsigned int assoclen;
-+	/* request flags, with MAY_SLEEP cleared if needed */
-+	u32 flags;
- 	union {
- 		struct poly_req poly;
- 		struct chacha_req chacha;
-@@ -76,8 +78,12 @@ struct chachapoly_req_ctx {
- static inline void async_done_continue(struct aead_request *req, int err,
- 				       int (*cont)(struct aead_request *))
- {
--	if (!err)
-+	if (!err) {
-+		struct chachapoly_req_ctx *rctx = aead_request_ctx(req);
-+
-+		rctx->flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
- 		err = cont(req);
-+	}
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index ca39cf20aa96..be8054c04eb7 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1552,7 +1552,7 @@ static void cache_set_flush(struct closure *cl)
+ 	kobject_put(&c->internal);
+ 	kobject_del(&c->kobj);
  
- 	if (err != -EINPROGRESS && err != -EBUSY)
- 		aead_request_complete(req, err);
-@@ -144,7 +150,7 @@ static int chacha_decrypt(struct aead_re
- 		dst = scatterwalk_ffwd(rctx->dst, req->dst, req->assoclen);
- 	}
+-	if (c->gc_thread)
++	if (!IS_ERR_OR_NULL(c->gc_thread))
+ 		kthread_stop(c->gc_thread);
  
--	skcipher_request_set_callback(&creq->req, aead_request_flags(req),
-+	skcipher_request_set_callback(&creq->req, rctx->flags,
- 				      chacha_decrypt_done, req);
- 	skcipher_request_set_tfm(&creq->req, ctx->chacha);
- 	skcipher_request_set_crypt(&creq->req, src, dst,
-@@ -188,7 +194,7 @@ static int poly_tail(struct aead_request
- 	memcpy(&preq->tail.cryptlen, &len, sizeof(len));
- 	sg_set_buf(preq->src, &preq->tail, sizeof(preq->tail));
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_tail_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src,
-@@ -219,7 +225,7 @@ static int poly_cipherpad(struct aead_re
- 	sg_init_table(preq->src, 1);
- 	sg_set_buf(preq->src, &preq->pad, padlen);
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_cipherpad_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src, NULL, padlen);
-@@ -250,7 +256,7 @@ static int poly_cipher(struct aead_reque
- 	sg_init_table(rctx->src, 2);
- 	crypt = scatterwalk_ffwd(rctx->src, crypt, req->assoclen);
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_cipher_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, crypt, NULL, rctx->cryptlen);
-@@ -280,7 +286,7 @@ static int poly_adpad(struct aead_reques
- 	sg_init_table(preq->src, 1);
- 	sg_set_buf(preq->src, preq->pad, padlen);
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_adpad_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src, NULL, padlen);
-@@ -304,7 +310,7 @@ static int poly_ad(struct aead_request *
- 	struct poly_req *preq = &rctx->u.poly;
- 	int err;
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_ad_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, req->src, NULL, rctx->assoclen);
-@@ -331,7 +337,7 @@ static int poly_setkey(struct aead_reque
- 	sg_init_table(preq->src, 1);
- 	sg_set_buf(preq->src, rctx->key, sizeof(rctx->key));
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_setkey_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 	ahash_request_set_crypt(&preq->req, preq->src, NULL, sizeof(rctx->key));
-@@ -355,7 +361,7 @@ static int poly_init(struct aead_request
- 	struct poly_req *preq = &rctx->u.poly;
- 	int err;
- 
--	ahash_request_set_callback(&preq->req, aead_request_flags(req),
-+	ahash_request_set_callback(&preq->req, rctx->flags,
- 				   poly_init_done, req);
- 	ahash_request_set_tfm(&preq->req, ctx->poly);
- 
-@@ -393,7 +399,7 @@ static int poly_genkey(struct aead_reque
- 
- 	chacha_iv(creq->iv, req, 0);
- 
--	skcipher_request_set_callback(&creq->req, aead_request_flags(req),
-+	skcipher_request_set_callback(&creq->req, rctx->flags,
- 				      poly_genkey_done, req);
- 	skcipher_request_set_tfm(&creq->req, ctx->chacha);
- 	skcipher_request_set_crypt(&creq->req, creq->src, creq->src,
-@@ -433,7 +439,7 @@ static int chacha_encrypt(struct aead_re
- 		dst = scatterwalk_ffwd(rctx->dst, req->dst, req->assoclen);
- 	}
- 
--	skcipher_request_set_callback(&creq->req, aead_request_flags(req),
-+	skcipher_request_set_callback(&creq->req, rctx->flags,
- 				      chacha_encrypt_done, req);
- 	skcipher_request_set_tfm(&creq->req, ctx->chacha);
- 	skcipher_request_set_crypt(&creq->req, src, dst,
-@@ -451,6 +457,7 @@ static int chachapoly_encrypt(struct aea
- 	struct chachapoly_req_ctx *rctx = aead_request_ctx(req);
- 
- 	rctx->cryptlen = req->cryptlen;
-+	rctx->flags = aead_request_flags(req);
- 
- 	/* encrypt call chain:
- 	 * - chacha_encrypt/done()
-@@ -472,6 +479,7 @@ static int chachapoly_decrypt(struct aea
- 	struct chachapoly_req_ctx *rctx = aead_request_ctx(req);
- 
- 	rctx->cryptlen = req->cryptlen - POLY1305_DIGEST_SIZE;
-+	rctx->flags = aead_request_flags(req);
- 
- 	/* decrypt call chain:
- 	 * - poly_genkey/done()
+ 	if (!IS_ERR_OR_NULL(c->root))
+-- 
+2.20.1
+
 
 
