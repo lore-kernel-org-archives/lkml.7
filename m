@@ -2,115 +2,165 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA14DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040D5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F2F22ADC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998260;
-	bh=QtlBSosPIGx7NyC+f4ToTQU3coh+S8xMK3YXpkL+5Qc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRvRY/G+5eOiIYmN21XOT7C826I5qWe0fiEXSrJTcyMa940KSFGeSZTjZPwhnv6A5
-	 SB7Ps9UYb1qJP/zTPAUpmkAjCW3+XJn1FyCQRSj+4fhrcX5fr0+8OuARlguXARDAGO
-	 4vYYGnFDLiqKCLfWRyxdvANetZmNGmsynURIKDBs=
+	by mail.kernel.org (Postfix) with ESMTP id C8BEC22ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:57:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="GJbaZyZr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392048AbfGXT5j (ORCPT
+        id S2392068AbfGXT5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392032AbfGXT5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:57:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 574DD22BED;
-        Wed, 24 Jul 2019 19:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998255;
-        bh=QtlBSosPIGx7NyC+f4ToTQU3coh+S8xMK3YXpkL+5Qc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WuA/iYWk32XlLVV2rjoFniHxiiL7sH6fIrDEGJYtIvcS7uSFkRWZPYIpOQVBJBdwn
-         QPTn7o33sLjFKajSwND5/ueVPt8uplU6VioghKqz5Kt378Jk5myOXB1zjGpDrF7w1J
-         V0bBdRtkMH79ZHFzYGqaB2FfQ9wq6UfSLfLnHdJs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Wed, 24 Jul 2019 15:57:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36924 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390673AbfGXT5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:57:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so21462601pfa.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=L1oMJfrLOhz58HDhVH6CDl46g8rPXC84FR3jYEnwlGc=;
+        b=GJbaZyZrN284EZaMgoaqSAtkOaiXvAl2Jzk1NdlCcJt1i+MCIStLfk4VLsZ2eWeOwL
+         aSM/E1tfLEiFAK3NdeyIcFcVvjWjGQQ+uWIHDhmkk8M/SBs1ETRAFe+LkroYUjhXTbx0
+         SkMLhttcCwzaCdxowZTuk5Ud6qZm6p8qg32R93rtYmLzltdBctyeCSeLDBsi9u5+AWER
+         AV37Ol3qJnqTXl7pm5LrCVzP3JTx6e+lFViT2UYI+qcEHJtGCnuRImT8Uk41RoR0AH0M
+         s96Qe7uf+LFZFOV7uPbHX2OtrfWq4tbzx0fZ8BaY8r6/+WWWq9K6m7m/ZjrazNSZSFZT
+         6e/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=L1oMJfrLOhz58HDhVH6CDl46g8rPXC84FR3jYEnwlGc=;
+        b=SngP38YhGH9zZ6yty1E0fPPm4O6A1W4EwPIQ0ssgrZs45xtttZ5duDM3P1pJZUfX1K
+         0ughe9WA14RT2ixdZ+EV+wABf/3gPo24CF67HBrMKVgvTwaqUlWiPu3mIpfgNrvlACxy
+         r50AfYfWxv+5GQVf1waWfdGRkx2arbYsX6X7KRybk9rwYwBPW+lQUuC6rwI7ybT6xhDq
+         gm5a35jQhsxFPNIOfyOLHaCygibimq9x5qUFHCuL92PIbyAnbaGFeJ4Gd2ZtnqIo2GF1
+         PjFDJ3aa90xXxfD8GolZKUaigwqJQ2KkbieQnLarbf/+q+f93pHAZvFT27ey3LCQIGET
+         P1bw==
+X-Gm-Message-State: APjAAAUsq5oXqF/PeDecylJubLgQGQclYuwYdjJaC1i1Ba1MZ5K7kkAb
+        0cJGDP8S8tOAktC3Z9E9X8SxelnZ
+X-Google-Smtp-Source: APXvYqy7X7TyygDWC4aF4AtmXyrL0XzYUXo6uIcdD2u7K60Xp3HzR54ZYiPqDmuME7OVT8NPmFC2Nw==
+X-Received: by 2002:a63:3147:: with SMTP id x68mr19151426pgx.212.1563998258943;
+        Wed, 24 Jul 2019 12:57:38 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.gmail.com with ESMTPSA id f88sm46307394pjg.5.2019.07.24.12.57.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 12:57:38 -0700 (PDT)
+From:   Mark Salyzyn <salyzyn@android.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Thorsten Knabe <linux@thorsten-knabe.de>
-Subject: [PATCH 5.1 259/371] bcache: ignore read-ahead request failure on backing device
-Date:   Wed, 24 Jul 2019 21:20:11 +0200
-Message-Id: <20190724191743.995394816@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-unionfs@vger.kernel.org, linux-doc@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mark Salyzyn <salyzyn@google.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v10 2/5] Add optional __get xattr method paired to __vfs_getxattr
+Date:   Wed, 24 Jul 2019 12:57:13 -0700
+Message-Id: <20190724195719.218307-3-salyzyn@android.com>
+X-Mailer: git-send-email 2.22.0.657.g960e92d24f-goog
+In-Reply-To: <20190724195719.218307-1-salyzyn@android.com>
+References: <20190724195719.218307-1-salyzyn@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+Add an optional __get xattr method that would be called, if set, only
+in __vfs_getxattr instead of the regular get xattr method.
 
-commit 578df99b1b0531d19af956530fe4da63d01a1604 upstream.
-
-When md raid device (e.g. raid456) is used as backing device, read-ahead
-requests on a degrading and recovering md raid device might be failured
-immediately by md raid code, but indeed this md raid array can still be
-read or write for normal I/O requests. Therefore such failed read-ahead
-request are not real hardware failure. Further more, after degrading and
-recovering accomplished, read-ahead requests will be handled by md raid
-array again.
-
-For such condition, I/O failures of read-ahead requests don't indicate
-real health status (because normal I/O still be served), they should not
-be counted into I/O error counter dc->io_errors.
-
-Since there is no simple way to detect whether the backing divice is a
-md raid device, this patch simply ignores I/O failures for read-ahead
-bios on backing device, to avoid bogus backing device failure on a
-degrading md raid array.
-
-Suggested-and-tested-by: Thorsten Knabe <linux@thorsten-knabe.de>
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Smalley <sds@tycho.nsa.gov>
+Cc: linux-unionfs@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-team@android.com
 ---
- drivers/md/bcache/io.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+v10 - added to patch series
+---
+ fs/xattr.c            | 11 ++++++++++-
+ include/linux/xattr.h |  7 +++++--
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
---- a/drivers/md/bcache/io.c
-+++ b/drivers/md/bcache/io.c
-@@ -58,6 +58,18 @@ void bch_count_backing_io_errors(struct
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 90dd78f0eb27..b8f4734e222f 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -306,6 +306,9 @@ __vfs_getxattr(struct dentry *dentry, struct inode *inode, const char *name,
+ 	handler = xattr_resolve_name(inode, &name);
+ 	if (IS_ERR(handler))
+ 		return PTR_ERR(handler);
++	if (unlikely(handler->__get))
++		return handler->__get(handler, dentry, inode, name, value,
++				      size);
+ 	if (!handler->get)
+ 		return -EOPNOTSUPP;
+ 	return handler->get(handler, dentry, inode, name, value, size);
+@@ -317,6 +320,7 @@ vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
+ {
+ 	struct inode *inode = dentry->d_inode;
+ 	int error;
++	const struct xattr_handler *handler;
  
- 	WARN_ONCE(!dc, "NULL pointer of struct cached_dev");
+ 	error = xattr_permission(inode, name, MAY_READ);
+ 	if (error)
+@@ -339,7 +343,12 @@ vfs_getxattr(struct dentry *dentry, const char *name, void *value, size_t size)
+ 		return ret;
+ 	}
+ nolsm:
+-	return __vfs_getxattr(dentry, inode, name, value, size);
++	handler = xattr_resolve_name(inode, &name);
++	if (IS_ERR(handler))
++		return PTR_ERR(handler);
++	if (!handler->get)
++		return -EOPNOTSUPP;
++	return handler->get(handler, dentry, inode, name, value, size);
+ }
+ EXPORT_SYMBOL_GPL(vfs_getxattr);
  
-+	/*
-+	 * Read-ahead requests on a degrading and recovering md raid
-+	 * (e.g. raid6) device might be failured immediately by md
-+	 * raid code, which is not a real hardware media failure. So
-+	 * we shouldn't count failed REQ_RAHEAD bio to dc->io_errors.
-+	 */
-+	if (bio->bi_opf & REQ_RAHEAD) {
-+		pr_warn_ratelimited("%s: Read-ahead I/O failed on backing device, ignore",
-+				    dc->backing_dev_name);
-+		return;
-+	}
-+
- 	errors = atomic_add_return(1, &dc->io_errors);
- 	if (errors < dc->error_limit)
- 		pr_err("%s: IO error on backing device, unrecoverable",
-
+diff --git a/include/linux/xattr.h b/include/linux/xattr.h
+index 6dad031be3c2..30f25e1ac571 100644
+--- a/include/linux/xattr.h
++++ b/include/linux/xattr.h
+@@ -30,10 +30,13 @@ struct xattr_handler {
+ 	const char *prefix;
+ 	int flags;      /* fs private flags */
+ 	bool (*list)(struct dentry *dentry);
+-	int (*get)(const struct xattr_handler *, struct dentry *dentry,
++	int (*get)(const struct xattr_handler *handler, struct dentry *dentry,
+ 		   struct inode *inode, const char *name, void *buffer,
+ 		   size_t size);
+-	int (*set)(const struct xattr_handler *, struct dentry *dentry,
++	int (*__get)(const struct xattr_handler *handler, struct dentry *dentry,
++		     struct inode *inode, const char *name, void *buffer,
++		     size_t size);
++	int (*set)(const struct xattr_handler *handler, struct dentry *dentry,
+ 		   struct inode *inode, const char *name, const void *buffer,
+ 		   size_t size, int flags);
+ };
+-- 
+2.22.0.657.g960e92d24f-goog
 
