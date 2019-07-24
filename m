@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD954C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542DEC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94376204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22EEF204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000094;
-	bh=Vv7PMWwrHlb6sDO2fUuMs105uz3gcvWzktxHE1gGFdE=;
+	s=default; t=1564000109;
+	bh=9aeB6NRZVdSP5RGshcwkg63BhAw+StrHy+O20RXgD+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fz1CNPTbZsRVoLQTx5+pAuZvvEQRKEFaDz76td8WR2ViSEOB5oF1igok+GWilltsF
-	 zh+6cnoIXcKNUgJ5eWxMIiDI7z1mGF4lsQpTeGys7IjzaoE5evGftOOxAuz4IftAnX
-	 3fkN8RHCc9F5dKHWlNAq8si/rbRYnVMH4N9fG0LI=
+	b=qED2ru9+tYBMMa0dyNZtsGfbBBjHp9Azloy4RnkfzRBkG9go3Zax+jjGK5AF/pQO4
+	 x0dls/1UiE/pjkbTYEhdYTA1i1Fntu357OZYgVqsZqnCAJWcyG7GqUb/SQYGbFaYdm
+	 Z2/0Aiwu+1DAtZsZrVxR8YrMQQdaBbjj6VtEpMgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389256AbfGXU2N (ORCPT
+        id S2388744AbfGXTee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:28:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57950 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:34:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388328AbfGXTe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:57 -0400
+        id S1728514AbfGXTec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:34:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0131422AED;
-        Wed, 24 Jul 2019 19:34:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 678BB20659;
+        Wed, 24 Jul 2019 19:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996897;
-        bh=Vv7PMWwrHlb6sDO2fUuMs105uz3gcvWzktxHE1gGFdE=;
+        s=default; t=1563996870;
+        bh=9aeB6NRZVdSP5RGshcwkg63BhAw+StrHy+O20RXgD+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0b5wYl2WGAMfT22fGP48lpu7amr6779eE10aT1n9klPh8DyrkPsncpdw8uoeY2muF
-         HR11451yniEYKh6bMBaXC2t/mnD//nsdcFg/E3K//O3t2TbVAoqF/IaLj+m3aI4CM9
-         Z0EdhNcFA4IPaTMVgwbTm/AbibVCKp1eQiq9YKTc=
+        b=wFhSbnlL+hBaQmabA5Odx06+P9naOC6+yZV+ENJPkkP65UJvb2rDxh0qgicVTQWAP
+         9y8cuSsGVkjE2GgSKWVHB8Lx8yK5vEIvMdeOZhdgHZc2JQ+SfGDDuN+PvwR0j3bid3
+         hLal4LGglm46USyHAfVJwK4HGzLltWNIBykG7p10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 212/413] perf stat: Dont merge events in the same PMU
-Date:   Wed, 24 Jul 2019 21:18:23 +0200
-Message-Id: <20190724191749.688567692@linuxfoundation.org>
+Subject: [PATCH 5.2 244/413] net: hns3: fix __QUEUE_STATE_STACK_XOFF not cleared issue
+Date:   Wed, 24 Jul 2019 21:18:55 +0200
+Message-Id: <20190724191752.917807392@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,51 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6c5f4e5cb35b4694dc035d91092d23f596ecd06a ]
+[ Upstream commit f96315f2f17e7b2580d2fec7c4d6a706a131d904 ]
 
-Event merging is mainly to collapse similar events in lots of different
-duplicated PMUs.
+When change MTU or other operations, which just calling .reset_notify
+to do HNAE3_DOWN_CLIENT and HNAE3_UP_CLIENT, then
+the netdev_tx_reset_queue() in the hns3_clear_all_ring() will be
+ignored. So the dev_watchdog() may misdiagnose a TX timeout.
 
-It can break metric displaying. It's possible for two metrics to have
-the same event, and when the two events happen in a row the second
-wouldn't be displayed.  This would also not show the second metric.
+This patch separates netdev_tx_reset_queue() from
+hns3_clear_all_ring(), and unifies hns3_clear_all_ring() and
+hns3_force_clear_all_ring into one, since they are doing
+similar things.
 
-To avoid this don't merge events in the same PMU. This makes sense, if
-we have multiple events in the same PMU there is likely some reason for
-it (e.g. using multiple groups) and we better not merge them.
-
-While in theory it would be possible to construct metrics that have
-events with the same name in different PMU no current metrics have this
-problem.
-
-This is the fix for perf stat -M UPI,IPC (needs also another bug fix to
-completely work)
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Fixes: 430daf2dc7af ("perf stat: Collapse identically named events")
-Link: http://lkml.kernel.org/r/20190624193711.35241-3-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 3a30964a2eef ("net: hns3: delay ring buffer clearing during reset")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/stat-display.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../net/ethernet/hisilicon/hns3/hns3_enet.c   | 54 +++++++++----------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 4c53bae5644b..94bed4031def 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -542,7 +542,8 @@ static void collect_all_aliases(struct perf_stat_config *config, struct perf_evs
- 		    alias->scale != counter->scale ||
- 		    alias->cgrp != counter->cgrp ||
- 		    strcmp(alias->unit, counter->unit) ||
--		    perf_evsel__is_clock(alias) != perf_evsel__is_clock(counter))
-+		    perf_evsel__is_clock(alias) != perf_evsel__is_clock(counter) ||
-+		    !strcmp(alias->pmu_name, counter->pmu_name))
- 			break;
- 		alias->merged_stat = true;
- 		cb(config, alias, data, false);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index e0d3e2f9801d..66b691b7221f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -27,8 +27,7 @@
+ #define hns3_set_field(origin, shift, val)	((origin) |= ((val) << (shift)))
+ #define hns3_tx_bd_count(S)	DIV_ROUND_UP(S, HNS3_MAX_BD_SIZE)
+ 
+-static void hns3_clear_all_ring(struct hnae3_handle *h);
+-static void hns3_force_clear_all_ring(struct hnae3_handle *h);
++static void hns3_clear_all_ring(struct hnae3_handle *h, bool force);
+ static void hns3_remove_hw_addr(struct net_device *netdev);
+ 
+ static const char hns3_driver_name[] = "hns3";
+@@ -466,6 +465,20 @@ static int hns3_nic_net_open(struct net_device *netdev)
+ 	return 0;
+ }
+ 
++static void hns3_reset_tx_queue(struct hnae3_handle *h)
++{
++	struct net_device *ndev = h->kinfo.netdev;
++	struct hns3_nic_priv *priv = netdev_priv(ndev);
++	struct netdev_queue *dev_queue;
++	u32 i;
++
++	for (i = 0; i < h->kinfo.num_tqps; i++) {
++		dev_queue = netdev_get_tx_queue(ndev,
++						priv->ring_data[i].queue_index);
++		netdev_tx_reset_queue(dev_queue);
++	}
++}
++
+ static void hns3_nic_net_down(struct net_device *netdev)
+ {
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+@@ -496,7 +509,9 @@ static void hns3_nic_net_down(struct net_device *netdev)
+ 	 * to disable the ring through firmware when downing the netdev.
+ 	 */
+ 	if (!hns3_nic_resetting(netdev))
+-		hns3_clear_all_ring(priv->ae_handle);
++		hns3_clear_all_ring(priv->ae_handle, false);
++
++	hns3_reset_tx_queue(priv->ae_handle);
+ }
+ 
+ static int hns3_nic_net_stop(struct net_device *netdev)
+@@ -3888,7 +3903,7 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
+ 
+ 	hns3_del_all_fd_rules(netdev, true);
+ 
+-	hns3_force_clear_all_ring(handle);
++	hns3_clear_all_ring(handle, true);
+ 
+ 	hns3_uninit_phy(netdev);
+ 
+@@ -4060,43 +4075,26 @@ static void hns3_force_clear_rx_ring(struct hns3_enet_ring *ring)
+ 	}
+ }
+ 
+-static void hns3_force_clear_all_ring(struct hnae3_handle *h)
+-{
+-	struct net_device *ndev = h->kinfo.netdev;
+-	struct hns3_nic_priv *priv = netdev_priv(ndev);
+-	struct hns3_enet_ring *ring;
+-	u32 i;
+-
+-	for (i = 0; i < h->kinfo.num_tqps; i++) {
+-		ring = priv->ring_data[i].ring;
+-		hns3_clear_tx_ring(ring);
+-
+-		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
+-		hns3_force_clear_rx_ring(ring);
+-	}
+-}
+-
+-static void hns3_clear_all_ring(struct hnae3_handle *h)
++static void hns3_clear_all_ring(struct hnae3_handle *h, bool force)
+ {
+ 	struct net_device *ndev = h->kinfo.netdev;
+ 	struct hns3_nic_priv *priv = netdev_priv(ndev);
+ 	u32 i;
+ 
+ 	for (i = 0; i < h->kinfo.num_tqps; i++) {
+-		struct netdev_queue *dev_queue;
+ 		struct hns3_enet_ring *ring;
+ 
+ 		ring = priv->ring_data[i].ring;
+ 		hns3_clear_tx_ring(ring);
+-		dev_queue = netdev_get_tx_queue(ndev,
+-						priv->ring_data[i].queue_index);
+-		netdev_tx_reset_queue(dev_queue);
+ 
+ 		ring = priv->ring_data[i + h->kinfo.num_tqps].ring;
+ 		/* Continue to clear other rings even if clearing some
+ 		 * rings failed.
+ 		 */
+-		hns3_clear_rx_ring(ring);
++		if (force)
++			hns3_force_clear_rx_ring(ring);
++		else
++			hns3_clear_rx_ring(ring);
+ 	}
+ }
+ 
+@@ -4305,8 +4303,8 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
+ 		return 0;
+ 	}
+ 
+-	hns3_clear_all_ring(handle);
+-	hns3_force_clear_all_ring(handle);
++	hns3_clear_all_ring(handle, true);
++	hns3_reset_tx_queue(priv->ae_handle);
+ 
+ 	hns3_nic_uninit_vector_data(priv);
+ 
 -- 
 2.20.1
 
