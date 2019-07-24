@@ -2,195 +2,119 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8A8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494BBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC7322AED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9BE22387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996276;
-	bh=PpqXpKTFW4DTdTvVxGSXSjeBAVG2Y2g67kOcQGPRllY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zYd8NJEupya1i3wbYhuHmhCTbFXqP1vRyO0Y1ytRZVfhJzTJItiQ5zLZBhNlc0VxR
-	 ZF7JmNPoHn95h7CqKGNeEt4HpiF7BUv0yzJQ/rNX1Dp7d0OFWdwcogAg+AJdTUG7R/
-	 HdXOEjMCqz1y7IkyM7XPL6hSYM4hk1ofj8axCUwI=
+	s=default; t=1563996280;
+	bh=z4Oacyr6gfrrDcPTUMschTDgCCpcNUMEoJIVQ8Kzt/U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TX2/eMkSAzk45iZQghdyShVsFHzuHYiWQoPowy3YPD9chs2nkTK3kyRIuvFsjeWEv
+	 9PIuBx2yP5Ti+ana/OWIo/unhXDHTBUvs3XGbASiQM1eY7ao+mtdJPvabLBozhoMiV
+	 VqoeTLDWfkaUI+7+hPBpDETlkhL6uvBFaVnqMOSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfGXTYf convert rfc822-to-8bit (ORCPT
+        id S1729111AbfGXTYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33749 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfGXTYb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so48256611wru.0;
-        Wed, 24 Jul 2019 12:24:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lfXxMsdfj3/069jvw/iy7OsZv8+UN7ABTGl62C7QKYA=;
-        b=KLLLaPbbO8eBii32cX5LOLTw947XYtHea0krdZtddLVAbCJq3zgEvX7KZSrvFeFiOn
-         REt/zdFIOh9DOTYmmIClMDgVilFbTKEXSL/L+W7X+QJFQZHN3C8Qax/2lZgRAnnpCUBS
-         Ao8WrJ7/5BebbGC+jobo7W5z9cRz7nPWtvcgF3lY4e2q1388+BQf/y3u0HywZHa3JzEZ
-         Ik7k1prk7lnTrMdtp6EafMdwaaw2wAR8iMTcZLDEKctSAk19vGTDcjnkm5/sHLUorBdP
-         GIW2mSo3ZLDspEQK3ORYLHyotRCrUgXLmulfoC69xJ0vs9lpLMmdeL6bYs4nLJofaCeL
-         p2nA==
-X-Gm-Message-State: APjAAAU/RoLqKcXiSeqKQ3hwto3eCPPZ+KurFnauN7NUGGqGij+Tnc+M
-        1eoISvJ5U+izgM0EZxRwER8=
-X-Google-Smtp-Source: APXvYqxsoh43HV2OpAyo0WN3mesXUKeJis1EeqQpdnzoRNCOZlfiNYz32Xds+Ra9u+/5tu5G/kpe4w==
-X-Received: by 2002:adf:80e6:: with SMTP id 93mr51827758wrl.298.1563996269437;
-        Wed, 24 Jul 2019 12:24:29 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.239])
-        by smtp.googlemail.com with ESMTPSA id o6sm91244088wra.27.2019.07.24.12.24.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 12:24:28 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 21:24:26 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, m.szyprowski@samsung.com
-Subject: Re: [RFC PATCH 08/11] arm: dts: exynos: Add parents and
- #interconnect-cells to Exynos4412
-Message-ID: <20190724192426.GJ14346@kozik-lap>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122027eucas1p24b1d76e3139f7cc52614d7613ff9ba98@eucas1p2.samsung.com>
- <20190723122016.30279-9-a.swigon@partner.samsung.com>
+        Wed, 24 Jul 2019 15:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387949AbfGXTYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D65FD21951;
+        Wed, 24 Jul 2019 19:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996273;
+        bh=z4Oacyr6gfrrDcPTUMschTDgCCpcNUMEoJIVQ8Kzt/U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rFAsKYgmrsx686CSJ+sa/8nq+QzBK0eBleNXIUic47JNkZh9/QqUfFTcWeoX26mKi
+         fhpqKGb0op4m3XMHvzbXYjitFPTozuTaq389wD7B90eamxq0u1hNKJyKaYucJofec6
+         ADUH6NigAWifrIAJ2Kv2jcxQHwkBAFBF9FCQ9iIs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 041/413] media: vim2m: fix two double-free issues
+Date:   Wed, 24 Jul 2019 21:15:32 +0200
+Message-Id: <20190724191738.538383857@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190723122016.30279-9-a.swigon@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:20:13PM +0200, Artur Świgoń wrote:
-> This patch adds two fields tp the Exynos4412 DTS:
+[ Upstream commit 20059cbbf981ca954be56f7963ae494d18e2dda1 ]
 
-tp->to
+vim2m_device_release() will be called by video_unregister_device() to release
+various objects.
 
->   - parent: to declare connections between nodes that are not in a
->     parent-child relation in devfreq;
+There are two double-free issue,
+1. dev->m2m_dev will be freed twice in error_m2m path/vim2m_device_release
+2. the error_v4l2 and error_free path in vim2m_probe() will release
+   same objects, since vim2m_device_release has done.
 
-Is it a standard property?
-The explanation needs some improvement... why are you adding parent to a
-devices which are not child-parent?
+Fixes: ea6c7e34f3b2 ("media: vim2m: replace devm_kzalloc by kzalloc")
 
-Best regards,
-Krzysztof
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/vim2m.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->   - #interconnect-cells: required by the interconnect framework.
-> 
-> Please note that #interconnect-cells is always zero and node IDs are not
-> hardcoded anywhere.
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
->  arch/arm/boot/dts/exynos4412.dtsi               | 9 +++++++++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index ea55f377d17c..bdd61ae86103 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -106,6 +106,7 @@
->  &bus_leftbus {
->  	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
->  	vdd-supply = <&buck3_reg>;
-> +	parent = <&bus_dmc>;
->  	status = "okay";
->  };
->  
-> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> index d20db2dfe8e2..a70a671acacd 100644
-> --- a/arch/arm/boot/dts/exynos4412.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> @@ -390,6 +390,7 @@
->  			clocks = <&clock CLK_DIV_DMC>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_dmc_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -398,6 +399,7 @@
->  			clocks = <&clock CLK_DIV_ACP>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_acp_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -406,6 +408,7 @@
->  			clocks = <&clock CLK_DIV_C2C>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_dmc_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -459,6 +462,7 @@
->  			clocks = <&clock CLK_DIV_GDL>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_leftbus_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -467,6 +471,7 @@
->  			clocks = <&clock CLK_DIV_GDR>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_leftbus_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -475,6 +480,7 @@
->  			clocks = <&clock CLK_ACLK160>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_display_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -483,6 +489,7 @@
->  			clocks = <&clock CLK_ACLK133>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_fsys_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -491,6 +498,7 @@
->  			clocks = <&clock CLK_ACLK100>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_peri_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> @@ -499,6 +507,7 @@
->  			clocks = <&clock CLK_SCLK_MFC>;
->  			clock-names = "bus";
->  			operating-points-v2 = <&bus_leftbus_opp_table>;
-> +			#interconnect-cells = <0>;
->  			status = "disabled";
->  		};
->  
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
+index 243c82b5d537..acd3bd48c7e2 100644
+--- a/drivers/media/platform/vim2m.c
++++ b/drivers/media/platform/vim2m.c
+@@ -1359,7 +1359,7 @@ static int vim2m_probe(struct platform_device *pdev)
+ 						 MEDIA_ENT_F_PROC_VIDEO_SCALER);
+ 	if (ret) {
+ 		v4l2_err(&dev->v4l2_dev, "Failed to init mem2mem media controller\n");
+-		goto error_m2m;
++		goto error_dev;
+ 	}
+ 
+ 	ret = media_device_register(&dev->mdev);
+@@ -1373,11 +1373,11 @@ static int vim2m_probe(struct platform_device *pdev)
+ #ifdef CONFIG_MEDIA_CONTROLLER
+ error_m2m_mc:
+ 	v4l2_m2m_unregister_media_controller(dev->m2m_dev);
+-error_m2m:
+-	v4l2_m2m_release(dev->m2m_dev);
+ #endif
+ error_dev:
+ 	video_unregister_device(&dev->vfd);
++	/* vim2m_device_release called by video_unregister_device to release various objects */
++	return ret;
+ error_v4l2:
+ 	v4l2_device_unregister(&dev->v4l2_dev);
+ error_free:
+-- 
+2.20.1
+
+
+
