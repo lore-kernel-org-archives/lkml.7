@@ -2,196 +2,118 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66597C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46986C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF2B20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563935379;
-	bh=xyGI4uCYWEr2lO836/ICxA9AvTBNnIvsvCU3AJm+6ow=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=h3T0V0c9V+NKufQzYiEf4F11XkJ28J8OZj5wMN/rnUo7Cww9LPsoD0oNtY8DtmAvN
-	 SZVVfeCWwKd/YJOqbcVEwe1TYkD14gSG73jlUzoBqsOXK2FOGRzzogwOgkZnLloc8Z
-	 P7MhIiGkqA4EtVG4Gybg73c1ihzAymsdPOSU9qg4=
+	by mail.kernel.org (Postfix) with ESMTP id 1718020665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 02:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDOr7PQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbfGXC3h (ORCPT
+        id S1727197AbfGXC3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 22:29:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbfGXC3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:29:33 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B6FD20665;
-        Wed, 24 Jul 2019 02:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563935372;
-        bh=xyGI4uCYWEr2lO836/ICxA9AvTBNnIvsvCU3AJm+6ow=;
-        h=Date:From:To:Cc:Subject:From;
-        b=siMBMDy9vo2/jHG7hKJgJJAIF63RyFm5VmvVvih+a/uIdcP8nC6sxn+s/R8bRDxPF
-         V0ZcIyiWwdZ6588JvXLI6kYcLdxcg3RNQ+33M/0NiISfDFNlWMon+r4oz18dS7xQ7m
-         W/shP0qUi5OExLMrQIK98gXpw2aA3rkCbl87m8IY=
-Date:   Tue, 23 Jul 2019 19:29:30 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 5 open syzbot bugs in "net/smc" subsystem
-Message-ID: <20190724022930.GR643@sol.localdomain>
-Mail-Followup-To: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        Tue, 23 Jul 2019 22:29:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46579 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387566AbfGXC3l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:29:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z1so45108799wru.13;
+        Tue, 23 Jul 2019 19:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TLtx0N0iTDt+TcQGK6XUkJYJ0+fHixleXGl8p31XVfo=;
+        b=eDOr7PQIbMwNaNWyIQeyHtYiT3PKoptD3mkASWB4ZLU3CFxrEdigBWsSZ0DDJkrsfn
+         kSH+HmOYLdxHBx+MjSB4cyqGVjt8s5oaKjQKMxro/szqtGiwEM5YkEwirejbFsHZGhGW
+         NiBGOOS3m8KKvMJYEIbBg6j8nHeWg86FR60Ecds00gikp9ANCQgbhxnWyGh1nT4MW+YO
+         RyLe30sjKXyhLRvgrbYnKnRWbjI650SmFes+psMidJUMmCTAoYOFvK0v8/ovEJ4CThy/
+         JrXGHCzFy8ZlqLcEmdsukJNJMxahDxImt8cl/YaUsxsVb2GyAcTDInd5xjU3y3D4qcbn
+         cJkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TLtx0N0iTDt+TcQGK6XUkJYJ0+fHixleXGl8p31XVfo=;
+        b=P3pO5AwfWQgdFou+tUo9vszZ5kiB/BxsF4s/293YaDr5wE380bZpTlvPiF1zB0xQlG
+         Up6/dCciv57YAqVhgdtjUu5ViZrbDbJ/r2amNyzPZ5GlCSqJm87yzOwcEuJcy6jaOqe/
+         EhEIPyg34DbDq0uO/kWbKJ3IUMsagCM2N94xtgI+YD2LfHZb73O75zHehmPPcnt75beJ
+         4P2BwGOkdz5V+Y6OSZxwlitoDNOJu35+wh4uDw+6uQ51GY+F/6UoNCk8TipPI+yIHNAO
+         BZr91JyVtUXm3vMDK62GpzkaM3PO8YZZa+MNm9V/4oVTXuleR8UuYd7qBqd+aexPm5Q7
+         5hzg==
+X-Gm-Message-State: APjAAAX4IciYyk77EKWxOakL1vX8rHtSGyd7z6P9SCerAPClu9EYGbGY
+        SU5vICrvtRZ4v4dsDdsgtYI=
+X-Google-Smtp-Source: APXvYqxP82OlR+xwzksHk3Bqw3NSV0ilSAxJ/JRHknHnb7OTFiah0RTA+6+ucX6uPJv/uDNiZAdhZg==
+X-Received: by 2002:adf:f348:: with SMTP id e8mr87051410wrp.76.1563935379043;
+        Tue, 23 Jul 2019 19:29:39 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id w14sm34548442wrk.44.2019.07.23.19.29.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 23 Jul 2019 19:29:38 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 19:29:36 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, davem@davemloft.net, arnd@arndb.de,
+        dhowells@redhat.com, jakub@redhat.com, ndesaulniers@google.com,
+        morbo@google.com, jyknight@google.com, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] asm-generic: fix -Wtype-limits compiler warnings
+Message-ID: <20190724022936.GA73305@archlinux-threadripper>
+References: <1563914986-26502-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1563914986-26502-1-git-send-email-cai@lca.pw>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+On Tue, Jul 23, 2019 at 04:49:46PM -0400, Qian Cai wrote:
+> The commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+> compilation warning because "rx_frag_size" is an "ushort" while
+> PAGE_SHIFT here is 16. The commit changed the get_order() to be a
+> multi-line macro where compilers insist to check all statements in the
+> macro even when __builtin_constant_p(rx_frag_size) will return false as
+> "rx_frag_size" is a module parameter.
+> 
+> In file included from ./arch/powerpc/include/asm/page_64.h:107,
+>                  from ./arch/powerpc/include/asm/page.h:242,
+>                  from ./arch/powerpc/include/asm/mmu.h:132,
+>                  from ./arch/powerpc/include/asm/lppaca.h:47,
+>                  from ./arch/powerpc/include/asm/paca.h:17,
+>                  from ./arch/powerpc/include/asm/current.h:13,
+>                  from ./include/linux/thread_info.h:21,
+>                  from ./arch/powerpc/include/asm/processor.h:39,
+>                  from ./include/linux/prefetch.h:15,
+>                  from drivers/net/ethernet/emulex/benet/be_main.c:14:
+> drivers/net/ethernet/emulex/benet/be_main.c: In function
+> 'be_rx_cqs_create':
+> ./include/asm-generic/getorder.h:54:9: warning: comparison is always
+> true due to limited range of data type [-Wtype-limits]
+>    (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+>          ^
+> drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+> of macro 'get_order'
+>   adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+>                                  ^~~~~~~~~
+> 
+> Fix it by moving almost all of this multi-line macro into a proper
+> function __get_order(), and leave get_order() as a single-line macro in
+> order to avoid compilation errors.
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 5 of them as possibly being bugs in the "net/smc" subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
+Wouldn't it just be better to rename __get_order to get_order?
 
-Of these 5 bugs, 4 were seen in mainline in the last week.
+> Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Of these 5 bugs, 1 was bisected to a commit from the following person:
+Other than that, LGTM.
 
-	Ursula Braun <ubraun@linux.ibm.com>
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the "net/smc" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              WARNING in smc_unhash_sk (2)
-Last occurred:      0 days ago
-Reported:           101 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f650845a184aed6947c0dd0f4d99d561335a7c31
-Original thread:    https://lkml.kernel.org/lkml/000000000000ac48ed05866bbc2c@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 50717a37db032ce783f50685a73bb2ac68471a5a
-	Author: Ursula Braun <ubraun@linux.ibm.com>
-	Date:   Fri Apr 12 10:57:23 2019 +0000
-
-	  net/smc: nonblocking connect rework
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ac48ed05866bbc2c@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: ODEBUG bug in __sk_destruct
-Last occurred:      0 days ago
-Reported:           450 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=591666b46bf0d9e2fbb8dbb386982d12ba804648
-Original thread:    https://lkml.kernel.org/lkml/000000000000451f9d056aff4397@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+92209502e7aab127c75f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000451f9d056aff4397@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in new_inode_pseudo (2)
-Last occurred:      1 day ago
-Reported:           7 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=911dac8eb1de0c09979e8e0054cb6cbe198cd5bb
-Original thread:    https://lkml.kernel.org/lkml/000000000000111cbe058dc7754d@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e682cca30bc101a4d9d9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000111cbe058dc7754d@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in debug_check_no_obj_freed
-Last occurred:      0 days ago
-Reported:           33 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=83687867d4a435fce7c6045b34425b1cfb3bf2d6
-Original thread:    https://lkml.kernel.org/lkml/00000000000090ae7a058bc12946@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000090ae7a058bc12946@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: workqueue leaked lock or atomic in smc_tx_work
-Last occurred:      27 days ago
-Reported:           29 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=dd71ec2acfdd198626ec8e914f70afc70cf35c72
-Original thread:    https://lkml.kernel.org/lkml/0000000000006a28b5058c0d7e17@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+8759e3927fd85a7c520a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006a28b5058c0d7e17@google.com
-
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
