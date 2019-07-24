@@ -2,105 +2,162 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B41CC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486ACC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90DA21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FEC21926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfGXOaW (ORCPT
+        id S1727455AbfGXObf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:30:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33864 "EHLO mx1.redhat.com"
+        Wed, 24 Jul 2019 10:31:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:42096 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbfGXOaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:30:22 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E9CCEC055673;
-        Wed, 24 Jul 2019 14:30:21 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-47.ams2.redhat.com [10.36.117.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE2B060A9F;
-        Wed, 24 Jul 2019 14:30:17 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v1] ACPI / scan: Acquire device_hotplug_lock in acpi_scan_init()
-Date:   Wed, 24 Jul 2019 16:30:17 +0200
-Message-Id: <20190724143017.12841-1-david@redhat.com>
+        id S1726422AbfGXObf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 10:31:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A11B28;
+        Wed, 24 Jul 2019 07:31:34 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E7A43F71A;
+        Wed, 24 Jul 2019 07:31:33 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 15:31:31 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH] perf/core: Fix creating kernel counters for PMUs that
+ override event->cpu
+Message-ID: <20190724143130.GF2624@lakrids.cambridge.arm.com>
+References: <c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 24 Jul 2019 14:30:22 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We end up calling __add_memory() without the device hotplug lock held.
-(I used a local patch to assert in __add_memory() that the
- device_hotplug_lock is held - I might upstream that as well soon)
+On Wed, Jul 24, 2019 at 03:53:24PM +0300, Leonard Crestez wrote:
+> Some hardware PMU drivers will override perf_event.cpu inside their
+> event_init callback. This causes a lockdep splat when initialized through
+> the kernel API:
+> 
+> WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
+> CPU: 0 PID: 250 Comm: systemd-udevd Not tainted 5.3.0-rc1-next-20190723-00024-g94e04593c88a #80
+> Hardware name: FSL i.MX8MM EVK board (DT)
+> pstate: 40000085 (nZcv daIf -PAN -UAO)
+> pc : ctx_sched_out+0x78/0x208
+> lr : ctx_sched_out+0x78/0x208
+> sp : ffff0000127a3750
+> x29: ffff0000127a3750 x28: 0000000000000000
+> x27: ffff00001162bf20 x26: ffff000008cf3310
+> x25: ffff0000127a3de0 x24: ffff0000115ff808
+> x23: ffff7dffbff851b8 x22: 0000000000000004
+> x21: ffff7dffbff851b0 x20: 0000000000000000
+> x19: ffff7dffbffc51b0 x18: 0000000000000010
+> x17: 0000000000000001 x16: 0000000000000007
+> x15: 2e8ba2e8ba2e8ba3 x14: 0000000000005114
+> x13: ffff0000117d5e30 x12: ffff000011898378
+> x11: 0000000000000000 x10: ffff0000117d5000
+> x9 : 0000000000000045 x8 : 0000000000000000
+> x7 : ffff000010168194 x6 : ffff0000117d59d0
+> x5 : 0000000000000001 x4 : ffff80007db56128
+> x3 : ffff80007db56128 x2 : 0d9c118347a77600
+> x1 : 0000000000000000 x0 : 0000000000000024
+> Call trace:
+>  ctx_sched_out+0x78/0x208
+>  __perf_install_in_context+0x160/0x248
+>  remote_function+0x58/0x68
+>  generic_exec_single+0x100/0x180
+>  smp_call_function_single+0x174/0x1b8
+>  perf_install_in_context+0x178/0x188
+>  perf_event_create_kernel_counter+0x118/0x160
+> 
+> Fix by calling perf_install_in_context with event->cpu, just like
+> perf_event_open
 
-[   26.771684]        create_memory_block_devices+0xa4/0x140
-[   26.772952]        add_memory_resource+0xde/0x200
-[   26.773987]        __add_memory+0x6e/0xa0
-[   26.775161]        acpi_memory_device_add+0x149/0x2b0
-[   26.776263]        acpi_bus_attach+0xf1/0x1f0
-[   26.777247]        acpi_bus_attach+0x66/0x1f0
-[   26.778268]        acpi_bus_attach+0x66/0x1f0
-[   26.779073]        acpi_bus_attach+0x66/0x1f0
-[   26.780143]        acpi_bus_scan+0x3e/0x90
-[   26.780844]        acpi_scan_init+0x109/0x257
-[   26.781638]        acpi_init+0x2ab/0x30d
-[   26.782248]        do_one_initcall+0x58/0x2cf
-[   26.783181]        kernel_init_freeable+0x1bd/0x247
-[   26.784345]        kernel_init+0x5/0xf1
-[   26.785314]        ret_from_fork+0x3a/0x50
+Ouch; good spot!
 
-So perform the locking just like in acpi_device_hotplug().
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+> I don't understand why PMUs outside the core are bound to a CPU anyway,
+> all this patch does is attempt to satisfy the assumptions made by
+> __perf_install_in_context and ctx_sched_out at init time so that lockdep
+> no longer complains.
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/acpi/scan.c | 3 +++
- 1 file changed, 3 insertions(+)
+If you care about the background:
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 0e28270b0fd8..cbc9d64b48dd 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -2204,7 +2204,9 @@ int __init acpi_scan_init(void)
- 	acpi_gpe_apply_masked_gpes();
- 	acpi_update_all_gpes();
- 
-+	lock_device_hotplug();
- 	mutex_lock(&acpi_scan_lock);
-+
- 	/*
- 	 * Enumerate devices in the ACPI namespace.
- 	 */
-@@ -2232,6 +2234,7 @@ int __init acpi_scan_init(void)
- 
-  out:
- 	mutex_unlock(&acpi_scan_lock);
-+	unlock_device_hotplug();
- 	return result;
- }
- 
--- 
-2.21.0
+It's necessary because portions of the perf core code rely on
+serialization that can only be ensured when all management of the PMU
+occurs on the same CPU. e.g. for the per-cpu ringbuffers.
 
+There are also some system/uncore PMUs that exist for groups of CPUs
+(e.g. clusters or sockets), but are exposed as a single logical PMU,
+assocaited with one CPU per group.
+
+> 
+> ctx_sched_out asserts ctx->lock which seems to be taken by
+> __perf_install_in_context:
+> 
+> 	struct perf_event_context *ctx = event->ctx;
+> 	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+> 	...
+> 	raw_spin_lock(&cpuctx->ctx.lock);
+> 
+> The lockdep warning happens when ctx != &cpuctx->ctx which can happen if
+> __perf_install_in_context is called on a cpu other than event->cpu.
+> 
+> Found while working on this patch:
+> https://patchwork.kernel.org/patch/11056785/
+> 
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 026a14541a38..0463c1151bae 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11272,11 +11272,11 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+>  	if (!exclusive_event_installable(event, ctx)) {
+>  		err = -EBUSY;
+>  		goto err_unlock;
+>  	}
+>  
+> -	perf_install_in_context(ctx, event, cpu);
+> +	perf_install_in_context(ctx, event, event->cpu);
+>  	perf_unpin_context(ctx);
+>  	mutex_unlock(&ctx->mutex);
+>  
+>  	return event;
+
+This matches what we in a regular perf_event_open() syscall, and I
+believe this is sane. I think we should also update the comment a few
+lines above that refers to @cpu, since that's potentially misleading.
+Could we change that from:
+
+  Check if the @cpu we're creating an event for is online.
+
+... to:
+
+  Check if the new event's CPU is online.
+
+With that:
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks,
+Mark.
