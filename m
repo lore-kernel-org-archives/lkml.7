@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48130C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAF6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEF0206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E95206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000453;
-	bh=gnOSOLYEj45vkm7VxpJ725rQmdijs34Mxubc2vn+YD0=;
+	s=default; t=1564000459;
+	bh=s1ShSWgebvUNJCPU9j+HSOIcpreMd5pjkTlQ7PKLUaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KtdDRC2xOiM0MIQMGyji/gPx6briqEJdvODJFiG6OW1oeP/FlaHtChAE/6pxkhVzF
-	 Z3AGvA0kyQ1WRKetbm3UWglxx8tO+mKsyqq91EV4IEGxLxShhdxUT94/BkLNTPDMJa
-	 Yf1j+axXwl8wcPnpzB7S3PhmPQgfhTK2mmKv9A94=
+	b=OQUlUjDKa3MWF/AEp9vUcM4YzdnrwyqJVQYuRHpEyIM6k8zJsSnbhessseTE6jYs8
+	 dXXbnYL8o4aBECYfMQ8Uuc47OgAoAvotMCX+7vRVgPK/uYKuGMS5ayWE1aaslHb2lh
+	 LxPxmzFQae/BDVBwhU5LrSAJZF/LW0yHMh37HX9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388662AbfGXUeL (ORCPT
+        id S2387510AbfGXT1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:34:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44716 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728546AbfGXT1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:27:12 -0400
+        id S1727296AbfGXT1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D76620659;
-        Wed, 24 Jul 2019 19:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13006218EA;
+        Wed, 24 Jul 2019 19:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996431;
-        bh=gnOSOLYEj45vkm7VxpJ725rQmdijs34Mxubc2vn+YD0=;
+        s=default; t=1563996423;
+        bh=s1ShSWgebvUNJCPU9j+HSOIcpreMd5pjkTlQ7PKLUaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HlyUrXvF0kRvt6IDPnb9ZeF3JJLeYR3Ztb6c+iYfegPpDeVi2McMuT1c6qUpGOPRY
-         D553UKUQ6dBAcqa+OPc64u+8lkY9cwwJGsF5sFfIdDFHY9E2g55pfp0NAtKwRTDZw4
-         Yyh+A//+z3pmw59c+DHqsyg+NJwhUZ5pjULfgLcM=
+        b=Zp9LWXSx7eCZ5I3Bnmd0ilnFl76gTg5BO5GYFpxGpkUE2VzNWC3GVyaOvPfFs1dDa
+         amBwrPLEbWacemrMLdMXarWTcR4I1HyOC1LTNMj4XvVFNdYWkvCtaxEFVAnBqH1MpT
+         yVr62U9ukRHHqQKZanr5VxkXf8DrXUt5N5LXuyuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 077/413] netfilter: ipset: fix a missing check of nla_parse
-Date:   Wed, 24 Jul 2019 21:16:08 +0200
-Message-Id: <20190724191740.609212216@linuxfoundation.org>
+Subject: [PATCH 5.2 092/413] bpf: silence warning messages in core
+Date:   Wed, 24 Jul 2019 21:16:23 +0200
+Message-Id: <20190724191741.611088051@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,41 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f4f5748bfec94cf418e49bf05f0c81a1b9ebc950 ]
+[ Upstream commit aee450cbe482a8c2f6fa5b05b178ef8b8ff107ca ]
 
-When nla_parse fails, we should not use the results (the first
-argument). The fix checks if it fails, and if so, returns its error code
-upstream.
+Compiling kernel/bpf/core.c with W=1 causes a flood of warnings:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+kernel/bpf/core.c:1198:65: warning: initialized field overwritten [-Woverride-init]
+ 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
+      |                                                                 ^~~~
+kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
+ 1087 |  INSN_3(ALU, ADD,  X),   \
+      |  ^~~~~~
+kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
+ 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
+      |   ^~~~~~~~~~~~
+kernel/bpf/core.c:1198:65: note: (near initialization for 'public_insntable[12]')
+ 1198 | #define BPF_INSN_3_TBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = true
+      |                                                                 ^~~~
+kernel/bpf/core.c:1087:2: note: in expansion of macro 'BPF_INSN_3_TBL'
+ 1087 |  INSN_3(ALU, ADD,  X),   \
+      |  ^~~~~~
+kernel/bpf/core.c:1202:3: note: in expansion of macro 'BPF_INSN_MAP'
+ 1202 |   BPF_INSN_MAP(BPF_INSN_2_TBL, BPF_INSN_3_TBL),
+      |   ^~~~~~~~~~~~
+
+98 copies of the above.
+
+The attached patch silences the warnings, because we *know* we're overwriting
+the default initializer. That leaves bpf/core.c with only 6 other warnings,
+which become more visible in comparison.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_core.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ kernel/bpf/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
-index 3cdf171cd468..16afa0df4004 100644
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -1541,10 +1541,14 @@ call_ad(struct sock *ctnl, struct sk_buff *skb, struct ip_set *set,
- 		memcpy(&errmsg->msg, nlh, nlh->nlmsg_len);
- 		cmdattr = (void *)&errmsg->msg + min_len;
+diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
+index 4c2fa3ac56f6..29d781061cd5 100644
+--- a/kernel/bpf/Makefile
++++ b/kernel/bpf/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-y := core.o
++CFLAGS_core.o += $(call cc-disable-warning, override-init)
  
--		nla_parse_deprecated(cda, IPSET_ATTR_CMD_MAX, cmdattr,
--				     nlh->nlmsg_len - min_len,
--				     ip_set_adt_policy, NULL);
-+		ret = nla_parse_deprecated(cda, IPSET_ATTR_CMD_MAX, cmdattr,
-+					   nlh->nlmsg_len - min_len,
-+					   ip_set_adt_policy, NULL);
- 
-+		if (ret) {
-+			nlmsg_free(skb2);
-+			return ret;
-+		}
- 		errline = nla_data(cda[IPSET_ATTR_LINENO]);
- 
- 		*errline = lineno;
+ obj-$(CONFIG_BPF_SYSCALL) += syscall.o verifier.o inode.o helpers.o tnum.o
+ obj-$(CONFIG_BPF_SYSCALL) += hashtab.o arraymap.o percpu_freelist.o bpf_lru_list.o lpm_trie.o map_in_map.o
 -- 
 2.20.1
 
