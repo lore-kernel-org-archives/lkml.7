@@ -6,54 +6,43 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CB1C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB27BC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3779C214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C7E214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfGXNsT (ORCPT
+        id S1727276AbfGXNtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:48:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:41130 "EHLO foss.arm.com"
+        Wed, 24 Jul 2019 09:49:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:41172 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfGXNsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:48:18 -0400
+        id S1726422AbfGXNto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:49:44 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6868828;
-        Wed, 24 Jul 2019 06:48:17 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A85F23F71A;
-        Wed, 24 Jul 2019 06:48:14 -0700 (PDT)
-Subject: Re: [PATCH v9 10/21] mm: Add generic p?d_leaf() macros
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190722154210.42799-1-steven.price@arm.com>
- <20190722154210.42799-11-steven.price@arm.com>
- <20190723094113.GA8085@lakrids.cambridge.arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <4366c0d8-6175-88d0-8cf2-938dff56f1ac@arm.com>
-Date:   Wed, 24 Jul 2019 14:48:13 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE10E28;
+        Wed, 24 Jul 2019 06:49:43 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88C793F71A;
+        Wed, 24 Jul 2019 06:49:42 -0700 (PDT)
+Subject: Re: [PATCH] media: staging: ipu3: Enable IOVA API only when IOMMU
+ support is enabled
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, hverkuil-cisco@xs4all.nl,
+        digetx@gmail.com, mchehab@kernel.org, yong.zhi@intel.com
+References: <20190722134749.21580-1-yuehaibing@huawei.com>
+ <20190724103027.GD21370@paasikivi.fi.intel.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e48fc180-06cc-eac7-d8ca-9be1699c8677@arm.com>
+Date:   Wed, 24 Jul 2019 14:49:41 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190723094113.GA8085@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190724103027.GD21370@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,67 +50,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2019 10:41, Mark Rutland wrote:
-> On Mon, Jul 22, 2019 at 04:41:59PM +0100, Steven Price wrote:
->> Exposing the pud/pgd levels of the page tables to walk_page_range() means
->> we may come across the exotic large mappings that come with large areas
->> of contiguous memory (such as the kernel's linear map).
->>
->> For architectures that don't provide all p?d_leaf() macros, provide
->> generic do nothing default that are suitable where there cannot be leaf
->> pages that that level.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
+On 24/07/2019 11:30, Sakari Ailus wrote:
+> Hi Yue,
 > 
-> Not a big deal, but it would probably make sense for this to be patch 1
-> in the series, given it defines the semantic of p?d_leaf(), and they're
-> not used until we provide all the architectural implemetnations anyway.
-
-Sure, I'll move it. When it was named p?d_large() this had to come after
-some architectures that implement p?d_large() as static inline. But
-p?d_leaf() doesn't have that issue.
-
-> It might also be worth pointing out the reasons for this naming, e.g.
-> p?d_large() aren't currently generic, and this name minimizes potential
-> confusion between p?d_{large,huge}().
-
-Ok, how about:
-
-The name p?d_leaf() is chosen because to minimize the confusion with
-existing uses of "large" pages and "huge" pages which do not necessary
-mean that the entry is a leaf (for example it may be a set of contiguous
-entries that only take 1 TLB slot). For the purpose of walking the page
-tables we don't need to know how it will be represented in the TLB, but
-we do need to know for sure if it is a leaf of the tree.
-
+> On Mon, Jul 22, 2019 at 09:47:49PM +0800, YueHaibing wrote:
+>> If IOMMU_SUPPORT is not set, ipu3 driver may select IOMMU_IOVA to m.
+>> But for many drivers, they use "select IOMMU_IOVA if IOMMU_SUPPORT"
+>> in the Kconfig, for example, CONFIG_TEGRA_VDE is set to y but IOMMU_IOVA
+>> is m, then the building fails like this:
+>>
+>> drivers/staging/media/tegra-vde/iommu.o: In function `tegra_vde_iommu_map':
+>> iommu.c:(.text+0x41): undefined reference to `alloc_iova'
+>> iommu.c:(.text+0x56): undefined reference to `__free_iova'
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 >> ---
->>  include/asm-generic/pgtable.h | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
+>>   drivers/staging/media/ipu3/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
->> index 75d9d68a6de7..46275896ca66 100644
->> --- a/include/asm-generic/pgtable.h
->> +++ b/include/asm-generic/pgtable.h
->> @@ -1188,4 +1188,23 @@ static inline bool arch_has_pfn_modify_check(void)
->>  #define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
->>  #endif
->>  
->> +/*
->> + * p?d_leaf() - true if this entry is a final mapping to a physical address.
->> + * This differs from p?d_huge() by the fact that they are always available (if
->> + * the architecture supports large pages at the appropriate level) even
->> + * if CONFIG_HUGETLB_PAGE is not defined.
->> + */
+>> diff --git a/drivers/staging/media/ipu3/Kconfig b/drivers/staging/media/ipu3/Kconfig
+>> index 4b51c67..b7df18f 100644
+>> --- a/drivers/staging/media/ipu3/Kconfig
+>> +++ b/drivers/staging/media/ipu3/Kconfig
+>> @@ -4,7 +4,7 @@ config VIDEO_IPU3_IMGU
+>>   	depends on PCI && VIDEO_V4L2
+>>   	depends on MEDIA_CONTROLLER && VIDEO_V4L2_SUBDEV_API
+>>   	depends on X86
+>> -	select IOMMU_IOVA
+>> +	select IOMMU_IOVA if IOMMU_SUPPORT
 > 
-> I assume it's only safe to call these on valid entries? I think it would
-> be worth calling that out explicitly.
-
-Yes only meaningful on valid entries - I'll add that as a comment.
-
-> Otherwise, this looks sound to me:
+> This doesn't seem right: the ipu3-cio2 driver needs IOMMU_IOVA
+> independently of IOMMU_SUPPORT.
 > 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Looking at tegra-vde, it seems to depend on IOMMU_SUPPORT but that's not
+> declared in its Kconfig entry. I wonder if adding that would be the right
+> way to fix this.
+> 
+> Cc'ing the IOMMU list.
 
-Thanks for the review
+Right, I also had the impression that we'd made the IOVA library 
+completely standalone. And what does the IPU3 driver's Kconfig have to 
+do with some *other* driver failing to link anyway?
 
-Steve
+Robin.
+
+> 
+>>   	select VIDEOBUF2_DMA_SG
+>>   	help
+>>   	  This is the Video4Linux2 driver for Intel IPU3 image processing unit,
+> 
