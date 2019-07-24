@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C10C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4E0C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9772238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECBE229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996885;
-	bh=1Nh50vKEexZMWd+KixQL71kdPX+j490QmeNW7ODNh1w=;
+	s=default; t=1563996889;
+	bh=Nkas8Jif7pWemiGlAUKYyku8WRki+sdH/VZpZLAoFuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=acRDy4PhXPdtBc0xeXohzENiwGBWf3OLrNpMgibxTI5pPxvtXV782eF0IaUYXOEyw
-	 lNjoM6h+HX04tz2ulILKmdfN9QoA+maLqg8sU/PJA1cb3hSQVWbfcHcHm2E1xBEyDy
-	 1ZhG3BCT+cILJeAjM4WXVv/F/rTU2lZ2UMDAkOOM=
+	b=NcK+h9/TrwSqnWHNsRkirF77V5czs4GUUP9w4TCgrrKJA4TcOVzaYhNVng6hTuKNM
+	 WlpLekm2m2IlTtxRwYkOyQTDPr9VcwnliQQa0RW6v0W2OhcTxcRZLQI1JJE3Z31lt8
+	 0CJ/k1n5nmTx/liSjxpMStx9bjukCoogfu7q62HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389108AbfGXTeo (ORCPT
+        id S2389117AbfGXTes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57292 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:34:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389095AbfGXTem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:42 -0400
+        id S2388566AbfGXTep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:34:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB9F720659;
-        Wed, 24 Jul 2019 19:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C8A520659;
+        Wed, 24 Jul 2019 19:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996881;
-        bh=1Nh50vKEexZMWd+KixQL71kdPX+j490QmeNW7ODNh1w=;
+        s=default; t=1563996885;
+        bh=Nkas8Jif7pWemiGlAUKYyku8WRki+sdH/VZpZLAoFuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHL0ZTmMvbx+Z3/v7xNDFeiEPzBAk8bOeFHmAADFxxAzMUOKRctkP2gFfJhU5GP6f
-         aA/gXeRlqOVaI6Ed63A8CkikGGhNKVgQ7Ignv9qlM4Y9YAU6Qx1axoggrT/4ROujCr
-         /VFZuGpclCY0nMm7lyQeaqCHN/f+dQnUKpZ3Ny7Y=
+        b=JlRI4dPUfn9Waioctaovko/17KsxG+8jHOAhlrwhILX0HBcf94Zk2SJGx0oJYxBO3
+         kzWkIaC23kqQUJnZjmySwnc1naTxDF+BEWtht4DfVgESOF3LH9BMRfa7MDKuPvLYok
+         XbGOCVGKOsVGdl2F4wQEsrBKqEGYmVblBRSdMGoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Denis Efremov <efremov@ispras.ru>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 247/413] libbpf: fix another GCC8 warning for strncpy
-Date:   Wed, 24 Jul 2019 21:18:58 +0200
-Message-Id: <20190724191753.239368712@linuxfoundation.org>
+Subject: [PATCH 5.2 248/413] floppy: fix div-by-zero in setup_format_params
+Date:   Wed, 24 Jul 2019 21:18:59 +0200
+Message-Id: <20190724191753.333671252@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,34 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 763ff0e7d9c72e7094b31e7fb84a859be9325635 ]
+[ Upstream commit f3554aeb991214cbfafd17d55e2bfddb50282e32 ]
 
-Similar issue was fixed in cdfc7f888c2a ("libbpf: fix GCC8 warning for
-strncpy") already. This one was missed. Fixing now.
+This fixes a divide by zero error in the setup_format_params function of
+the floppy driver.
 
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Two consecutive ioctls can trigger the bug: The first one should set the
+drive geometry with such .sect and .rate values for the F_SECT_PER_TRACK
+to become zero.  Next, the floppy format operation should be called.
+
+A floppy disk is not required to be inserted.  An unprivileged user
+could trigger the bug if the device is accessible.
+
+The patch checks F_SECT_PER_TRACK for a non-zero value in the
+set_geometry function.  The proper check should involve a reasonable
+upper limit for the .sect and .rate fields, but it could change the
+UAPI.
+
+The patch also checks F_SECT_PER_TRACK in the setup_format_params, and
+cancels the formatting operation in case of zero.
+
+The bug was found by syzkaller.
+
+Signed-off-by: Denis Efremov <efremov@ispras.ru>
+Tested-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/xsk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/floppy.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-index 8a7a05bc657d..ca272c5b67f4 100644
---- a/tools/lib/bpf/xsk.c
-+++ b/tools/lib/bpf/xsk.c
-@@ -562,7 +562,8 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
- 		err = -errno;
- 		goto out_socket;
- 	}
--	strncpy(xsk->ifname, ifname, IFNAMSIZ);
-+	strncpy(xsk->ifname, ifname, IFNAMSIZ - 1);
-+	xsk->ifname[IFNAMSIZ - 1] = '\0';
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 9fb9b312ab6b..51246bc9709a 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -2120,6 +2120,9 @@ static void setup_format_params(int track)
+ 	raw_cmd->kernel_data = floppy_track_buffer;
+ 	raw_cmd->length = 4 * F_SECT_PER_TRACK;
  
- 	err = xsk_set_xdp_socket_config(&xsk->config, usr_config);
- 	if (err)
++	if (!F_SECT_PER_TRACK)
++		return;
++
+ 	/* allow for about 30ms for data transport per track */
+ 	head_shift = (F_SECT_PER_TRACK + 5) / 6;
+ 
+@@ -3232,6 +3235,8 @@ static int set_geometry(unsigned int cmd, struct floppy_struct *g,
+ 	/* sanity checking for parameters. */
+ 	if (g->sect <= 0 ||
+ 	    g->head <= 0 ||
++	    /* check for zero in F_SECT_PER_TRACK */
++	    (unsigned char)((g->sect << 2) >> FD_SIZECODE(g)) == 0 ||
+ 	    g->track <= 0 || g->track > UDP->tracks >> STRETCH(g) ||
+ 	    /* check if reserved bits are set */
+ 	    (g->stretch & ~(FD_STRETCH | FD_SWAPSIDES | FD_SECTBASEMASK)) != 0)
 -- 
 2.20.1
 
