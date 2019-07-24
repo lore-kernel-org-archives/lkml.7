@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2E6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CDAC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E6520665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4061F2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999276;
-	bh=zQcjsPz9w6oUvjkZNUWQFrnvNiX/hs4lk5lTh3MC5KQ=;
+	s=default; t=1563999283;
+	bh=1Bzannfh7ohEEvOUXBuSAGFlPT20QPXAz8sCMm5sO3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mctT6Pir0N2ZgPgaUb3yPsqUlANqXf+dUCkT+7l58Y+KoI/ffxIHDExbFZGS6tZtS
-	 sLpCjrCtF7mvs5kFwN89gWYJXKz+S5qSG8quoRwBVmtATw0W5XPJmCRoCu/LZFwnIg
-	 oqufjxft8KiGp4w8P1SRIcy+mCVGRKaAUwMWO0bE=
+	b=g7uBW+Yhv7n8+NLAiFhOVxOwACnwE7DpvMmApjZW20fTh52x4aT8xso9JxyMc61/a
+	 oTQaNl8kQSl7n134zUdNzLDXztKkxzvV/YmfCNI+Szj7oyFTUOAoHD7x74TDQawD3w
+	 lVC7vcB8pSbKuL3PcXxgPMNbauySrxSR6u1a/mmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391767AbfGXTzQ (ORCPT
+        id S2404180AbfGXTzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38658 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391635AbfGXTzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:55:12 -0400
+        id S2404473AbfGXTzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A39E3205C9;
-        Wed, 24 Jul 2019 19:55:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 373E121873;
+        Wed, 24 Jul 2019 19:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998112;
-        bh=zQcjsPz9w6oUvjkZNUWQFrnvNiX/hs4lk5lTh3MC5KQ=;
+        s=default; t=1563998100;
+        bh=1Bzannfh7ohEEvOUXBuSAGFlPT20QPXAz8sCMm5sO3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aJF0fg2FUx5LluiJN8KhL8Dqt1Rgzv4HTEQPxRHPlBS4BhYXN23119zUeq7rvHmhM
-         jxmLGzrWyNqhutY/dB5g8J5hPBHVvOEvy7vQ+pDpBL4M53p/wlHsyx6uS4NE8xrU69
-         GfAYO+4Y4k8oqndOKXy/vAFkH99HK/f2DEJ2+3YM=
+        b=c9TpwVRuyK+KPiwFpevDHMijeYTZ0cAy8PwhcTB6MH+dx/Jr09MeF3HvTXbNaOma0
+         /d/mTZYdeHatnWrKGKrhIleof8hXIGfWkv0Zi4H3wocyAZIs4bjdET+rKsxlYu92eq
+         rXOYfLaFK6sAgVS9b5l9Yv3YcLniMinhk/Qa4oRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gary R Hook <gary.hook@amd.com>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 248/371] crypto: ccp - memset structure fields to zero before reuse
-Date:   Wed, 24 Jul 2019 21:20:00 +0200
-Message-Id: <20190724191743.363479510@linuxfoundation.org>
+Subject: [PATCH 5.1 245/371] crypto: crypto4xx - fix AES CTR blocksize value
+Date:   Wed, 24 Jul 2019 21:19:57 +0200
+Message-Id: <20190724191743.155188686@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,62 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hook, Gary <Gary.Hook@amd.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit 20e833dc36355ed642d00067641a679c618303fa upstream.
+commit bfa2ba7d9e6b20aca82b99e6842fe18842ae3a0f upstream.
 
-The AES GCM function reuses an 'op' data structure, which members
-contain values that must be cleared for each (re)use.
+This patch fixes a issue with crypto4xx's ctr(aes) that was
+discovered by libcapi's kcapi-enc-test.sh test.
 
-This fix resolves a crypto self-test failure:
-alg: aead: gcm-aes-ccp encryption test failed (wrong result) on test vector 2, cfg="two even aligned splits"
+The some of the ctr(aes) encryptions test were failing on the
+non-power-of-two test:
 
-Fixes: 36cf515b9bbe ("crypto: ccp - Enable support for AES GCM on v5 CCPs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
+kcapi-enc - Error: encryption failed with error 0
+kcapi-enc - Error: decryption failed with error 0
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits):
+original file (1d100e..cc96184c) and generated file (e3b0c442..1b7852b855)
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits)
+(openssl generated CT): original file (e3b0..5) and generated file (3..8e)
+[PASSED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (128 bits)
+(openssl generated PT)
+[FAILED: 32-bit - 5.1.0-rc1+] 15 bytes: STDIN / STDOUT enc test (password):
+original file (1d1..84c) and generated file (e3b..852b855)
+
+But the 16, 32, 512, 65536 tests always worked.
+
+Thankfully, this isn't a hidden hardware problem like previously,
+instead this turned out to be a copy and paste issue.
+
+With this patch, all the tests are passing with and
+kcapi-enc-test.sh gives crypto4xx's a clean bill of health:
+ "Number of failures: 0" :).
+
+Cc: stable@vger.kernel.org
+Fixes: 98e87e3d933b ("crypto: crypto4xx - add aes-ctr support")
+Fixes: f2a13e7cba9e ("crypto: crypto4xx - enable AES RFC3686, ECB, CFB and OFB offloads")
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccp/ccp-ops.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/crypto/amcc/crypto4xx_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -625,6 +625,7 @@ static int ccp_run_aes_gcm_cmd(struct cc
- 
- 	unsigned long long *final;
- 	unsigned int dm_offset;
-+	unsigned int jobid;
- 	unsigned int ilen;
- 	bool in_place = true; /* Default value */
- 	int ret;
-@@ -663,9 +664,11 @@ static int ccp_run_aes_gcm_cmd(struct cc
- 		p_tag = scatterwalk_ffwd(sg_tag, p_inp, ilen);
- 	}
- 
-+	jobid = CCP_NEW_JOBID(cmd_q->ccp);
-+
- 	memset(&op, 0, sizeof(op));
- 	op.cmd_q = cmd_q;
--	op.jobid = CCP_NEW_JOBID(cmd_q->ccp);
-+	op.jobid = jobid;
- 	op.sb_key = cmd_q->sb_key; /* Pre-allocated */
- 	op.sb_ctx = cmd_q->sb_ctx; /* Pre-allocated */
- 	op.init = 1;
-@@ -816,6 +819,13 @@ static int ccp_run_aes_gcm_cmd(struct cc
- 	final[0] = cpu_to_be64(aes->aad_len * 8);
- 	final[1] = cpu_to_be64(ilen * 8);
- 
-+	memset(&op, 0, sizeof(op));
-+	op.cmd_q = cmd_q;
-+	op.jobid = jobid;
-+	op.sb_key = cmd_q->sb_key; /* Pre-allocated */
-+	op.sb_ctx = cmd_q->sb_ctx; /* Pre-allocated */
-+	op.init = 1;
-+	op.u.aes.type = aes->type;
- 	op.u.aes.mode = CCP_AES_MODE_GHASH;
- 	op.u.aes.action = CCP_AES_GHASHFINAL;
- 	op.src.type = CCP_MEMTYPE_SYSTEM;
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -1259,7 +1259,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_flags = CRYPTO_ALG_NEED_FALLBACK |
+ 				CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
+@@ -1279,7 +1279,7 @@ static struct crypto4xx_alg_common crypt
+ 			.cra_priority = CRYPTO4XX_CRYPTO_PRIORITY,
+ 			.cra_flags = CRYPTO_ALG_ASYNC |
+ 				CRYPTO_ALG_KERN_DRIVER_ONLY,
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_ctxsize = sizeof(struct crypto4xx_ctx),
+ 			.cra_module = THIS_MODULE,
+ 		},
 
 
