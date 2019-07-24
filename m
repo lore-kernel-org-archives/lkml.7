@@ -2,194 +2,153 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84102C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B850EC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2E421738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563973786;
-	bh=HQnELIgl3TdnQCh5BeCoBmx1g3lpU2g4+Ts605esKAE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VbvDBqGLrNrZodi/aZBrRLrbevbWsKMkQ9CBG+ZvUaDO+/QIjMlnwDqt745YuvY9a
-	 RWLrHZURGcxY70FcGqqJXPzDaOGd5YQk0sJ+7ALDs4dtLAAkEgBnjAxn9uR6cmKaVL
-	 q6pe5cw8rhAKk5degwaRCHC+FUpxpUV1CVbukd00=
+	by mail.kernel.org (Postfix) with ESMTP id 7ECE322ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 13:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SUs1ZQpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387487AbfGXNJp (ORCPT
+        id S1728486AbfGXNKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 09:09:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbfGXNJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 09:09:44 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0499022ADA;
-        Wed, 24 Jul 2019 13:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563973783;
-        bh=HQnELIgl3TdnQCh5BeCoBmx1g3lpU2g4+Ts605esKAE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fykQJNjKSpXHIBUGMy9nSLhbwbWK0GooK/ySJc6dPvFbbJmHIkBmDwzsZCHmzuFUS
-         5q9znIjMc+mOmHsh2LI06Mgoyaze1kjv4tZH2YK8MeNXi89JqFDWoCgK6y/xSD616H
-         +G+Q9qyUHSO2nv7u4Y+Qb2Ad3G5s6U9EZN9tddxI=
-Date:   Wed, 24 Jul 2019 22:09:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     James Morse <james.morse@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Wed, 24 Jul 2019 09:10:49 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57985 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727395AbfGXNKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 09:10:48 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190724131046euoutp02731039e7897112dca13565281b433d97~0We1xv37A1153411534euoutp02l
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 13:10:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190724131046euoutp02731039e7897112dca13565281b433d97~0We1xv37A1153411534euoutp02l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1563973846;
+        bh=PEOtSSoRhkQX8OsDsJURuU47w80rGtTf9ArwdLYI4tU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=SUs1ZQpuRE5Qpbx+phY5nqCwlbxvR9SWO4auga5TIHpsMQrTzDkxnG4zTCib03AnT
+         9so3z0O4IkfCA1ie+LFRddus3r7l2a8QY51HQtgpMTPkZAZIfpo0sczCrrBs2+hc3/
+         638PGo7cqdVVxzBKq784kd16V/NzzVtfecBJ6wQU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190724131046eucas1p1e5135c654b515f7044eeb7597e0ae41a~0We1ECbTY2976329763eucas1p1L;
+        Wed, 24 Jul 2019 13:10:46 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 37.D8.04325.5D8583D5; Wed, 24
+        Jul 2019 14:10:45 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190724131045eucas1p162379c36506e8b94147baa865f0409f7~0We0SfRBJ2476524765eucas1p1m;
+        Wed, 24 Jul 2019 13:10:45 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190724131045eusmtrp2d7e8381dfed5e5e61bd40cf0f0003339~0We0EUqBM0076200762eusmtrp2Q;
+        Wed, 24 Jul 2019 13:10:45 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-31-5d3858d53e1b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 31.45.04140.4D8583D5; Wed, 24
+        Jul 2019 14:10:45 +0100 (BST)
+Received: from [106.120.50.63] (unknown [106.120.50.63]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190724131040eusmtip1c8fbf50afad8f6dde8c1ad38a074adcf~0WewOCuXU1901719017eusmtip1c;
+        Wed, 24 Jul 2019 13:10:40 +0000 (GMT)
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org,
+        devicetree@vger.kernel.org, kgene@kernel.org,
+        pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Dan Rue <dan.rue@linaro.org>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Daniel Diaz <daniel.diaz@linaro.org>
-Subject: Re: [PATCH v2 1/4] arm64: kprobes: Recover pstate.D in single-step
- exception handler
-Message-Id: <20190724220938.69cb2c3231c8b49bb1197638@kernel.org>
-In-Reply-To: <9bb27cda-dac9-eaca-f028-e1c82b9f7a3f@arm.com>
-References: <156378170297.12011.17385386326930403235.stgit@devnote2>
-        <156378171555.12011.2511666394591527888.stgit@devnote2>
-        <9bb27cda-dac9-eaca-f028-e1c82b9f7a3f@arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+Date:   Wed, 24 Jul 2019 15:10:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOKsWRmVeSWpSXmKPExsWy7djP87pXIyxiDZ59MLPYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gsFm39wm7RuvcIu8XhN+2sFhu/elhs
+        fnCMzYHXY9OqTjaPO9f2sHlsXlLv0bdlFaPH501yAaxRXDYpqTmZZalF+nYJXBmta6IKJvBU
+        TDuzgLGB8RJnFyMnh4SAicTv2d9Zuxi5OIQEVjBKHL+4kQnC+cIocalxNjOE85lRovfQYzaY
+        lu87T0ElljNKrG88DdX/llHi64e/YFXCAk4Se35/BbNFBCIlnk6AmMsssIxJ4vaEjWAJNgFD
+        ia63XWA2r4CdxKpH/WA2i4CqxNKJc1lBbFGBGImdb3qYIWoEJU7OfMICYnMKWEosfX2dEcRm
+        FpCX2P52DjOELS5x68l8sGUSArfYJTZc+gKU4AByXCTu77KCeEFY4tXxLewQtozE/50w9c2M
+        Eg/PrWWHcHoYJS43zWCEqLKWOHz8IivIIGYBTYn1u/Qhwo4SfVeOMEHM55O48VYQ4gY+iUnb
+        pkOt5ZXoaBOCqFaTmHV8HdzagxcuMU9gVJqF5LNZSL6ZheSbWQh7FzCyrGIUTy0tzk1PLTbO
+        Sy3XK07MLS7NS9dLzs/dxAhMXqf/Hf+6g3Hfn6RDjAIcjEo8vBVM5rFCrIllxZW5hxglOJiV
+        RHgDG8xihXhTEiurUovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTCa
+        By7ezWPl6j4vS1tC/J9EY5Pg4exN934q6+kKqLj3/ExZI7zEMdTm2tqfyts3tdinSF37fqri
+        v0zp1/VH7rZ8W87w7kq0Q2qwsu/LJj7TSD/jWTdNVx/U9xW1kuDXFtIv2ji1v+tx5Fw1XRMR
+        niXPU2zY3ub+Patd9DmEq4hz1rawHuvYu0osxRmJhlrMRcWJAOcDRbxaAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsVy+t/xu7pXIyxiDV4uYrTYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gsFm39wm7RuvcIu8XhN+2sFhu/elhs
+        fnCMzYHXY9OqTjaPO9f2sHlsXlLv0bdlFaPH501yAaxRejZF+aUlqQoZ+cUltkrRhhZGeoaW
+        FnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehmta6IKJvBUTDuzgLGB8RJnFyMnh4SAicT3
+        naeYQWwhgaWMEodPZUDEZSROTmtghbCFJf5c62LrYuQCqnnNKDHtz3QmkISwgJPEnt9f2UBs
+        EYFIiYmtC5lBipgFljFJNLSfZoGYuo9R4tjyNBCbTcBQouttF1gDr4CdxKpH/WA2i4CqxNKJ
+        c8G2iQrESOw7s50dokZQ4uTMJ2BzOAUsJZa+vs4IYjMLmEnM2/yQGcKWl9j+dg6ULS5x68l8
+        pgmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbqtmM/t+xg
+        7HoXfIhRgINRiYe3gsk8Vog1say4MvcQowQHs5IIb2CDWawQb0piZVVqUX58UWlOavEhRlOg
+        5yYyS4km5wPTSF5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsat
+        BpObGdb8eNJ9TFIk3e1X9luVtLSYO/Hfn5gHz1o2dy5nQTbHA//GV8xaq/eGsF/doTVFYGnZ
+        mrkmtsem1kxsWnAyoFfmec/a849zGFfPPiD1rXt9PtPkvjtX/36u+/tVL/iq0pLH38+8Wni8
+        M9/SKmjeubJ5tu4MD+YvEnyR6Zil1rSUbfNMJZbijERDLeai4kQA1LqK2+sCAAA=
+X-CMS-MailID: 20190724131045eucas1p162379c36506e8b94147baa865f0409f7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1
+References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
+        <20190718143044.25066-1-s.nawrocki@samsung.com>
+        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jul 2019 17:03:47 +0100
-James Morse <james.morse@arm.com> wrote:
+Hi Viresh,
 
-> Hi!
-> 
-> On 22/07/2019 08:48, Masami Hiramatsu wrote:
-> > On arm64, if a nested kprobes hit, it can crash the kernel with below
-> > error message.
-> > 
-> > [  152.118921] Unexpected kernel single-step exception at EL1
-> > 
-> > This is because commit 7419333fa15e ("arm64: kprobe: Always clear
-> > pstate.D in breakpoint exception handler") unmask pstate.D for
-> > doing single step but does not recover it after single step in
-> > the nested kprobes.
-> 
-> > That is correct *unless* any nested kprobes
-> > (single-stepping) runs inside other kprobes user handler.
-> 
-> (I don't think this is correct, its just usually invisible as PSTATE.D is normally clear)
+On 2019-07-23 04:04, Viresh Kumar wrote:
+> On 18-07-19, 16:30, Sylwester Nawrocki wrote:
+>> This is second iteration of patch series adding ASV (Adaptive Supply
+>> Voltage) support for Exynos SoCs. The first one can be found at:
+>> https://lore.kernel.org/lkml/20190404171735.12815-1-s.nawrocki@samsung.com
+>>
+>> The main changes comparing to the first (RFC) version are:
+>>   - moving ASV data tables from DT to the driver,
+>>   - converting the chipid and the ASV drivers to use regmap,
+>>   - converting the ASV driver to proper platform driver.
+>>
+>> I tried the opp-supported-hw bitmask approach as in the Qualcomm CPUFreq
+>> DT bindings but it resulted in too many OPPs and DT nodes, around 200
+>> per CPU cluster. So the ASV OPP tables are now in the ASV driver, as in
+>> downstream kernels.
+> Hmm. Can you explain why do you have so many OPPs? How many
+> frequencies do you actually support per cluster and what all varies
+> per frequency based on hw ? How many hw version do u have ?
 
-Ah, right.
+For big cores there are 20 frequencies (2100MHz .. 200MHz). Each SoC 
+might belong to one of the 3 production 'sets' and each set contains 14 
+so called 'asv groups', which assign the certain voltage values for each 
+of those 20 frequencies (the lower asv group means lower voltage needed 
+for given frequency).
 
-> 
-> 
-> > When the 1st kprobe hits, do_debug_exception() will be called. At this
-> > point, debug exception (= pstate.D) must be masked (=1). When the 2nd
-> >  (nested) kprobe is hit before single-step of the first kprobe, it
-> > unmask debug exception (pstate.D = 0) and return.
-> > Then, when the 1st kprobe setting up single-step, it saves current
-> > DAIF, mask DAIF, enable single-step, and restore DAIF.
-> > However, since "D" flag in DAIF is cleared by the 2nd kprobe, the
-> > single-step exception happens soon after restoring DAIF.
-> 
-> This is pretty complicated. Just to check I've understood this properly:
-> Stepping on a kprobe in a kprobe-user's pre_handler will cause the remainder of the
-> handler (the first one) to run with PSTATE.D clear. Once we enable single-step, we start
-> stepping the debug handler, and will never step the original kprobe'd instruction.
-
-Yes, that's correct. I saw the single stepping happens on right after recover
-the saved daif.
-
-> 
-> This is describing the most complicated way that this problem shows up! (I agree its also
-> the worst)
-> 
-> I can get this to show up with just one kprobe. (function/file names here are meaningless):
-> 
-> | static int wibble(struct seq_file *m, void *discard)
-> | {
-> |        unsigned long d, flags;
-> |
-> |        flags = local_daif_save();
-> |
-> |        kprobe_me();
-> |        d = read_sysreg(daif);
-> |        local_daif_restore(flags);
-> |
-> |        seq_printf(m, "%lx\n", d);
-> |
-> |        return 0;
-> | }
-> 
-> plumbed into debugfs, then kicked using the kprobe_example module:
-> | root@adam:/sys/kernel/debug# cat wibble
-> | 3c0
-> 
-> | root@adam:/sys/kernel/debug# insmod ~morse/kprobe_example.ko symbol=kprobe_me
-> | [   69.478098] Planted kprobe at [..]
-> | root@adam:/sys/kernel/debug# cat wibble
-> | [   71.478935] <kprobe_me> pre_handler: p->addr = [..], pc = [..], pstate = 0x600003c5
-> | [   71.488942] <kprobe_me> post_handler: p->addr = [..], pstate = 0x600001c5
-> | 1c0
-> | root@adam:/sys/kernel/debug#
-> 
-> This is problem for any code that had debug masked, not just kprobes.
-
-Agreed.
-
-> 
-> Can we start the commit-message with the simplest description of the problem: kprobes
-> manipulates the interrupted PSTATE for single step, and doesn't restore it.
-
-Thanks for making it clearer :)
-
-> 
-> (trying to understand this bug through kprobe's interaction with itself is hard!)
-> 
-> 
-> > To solve this issue, this stores all DAIF bits and restore it
-> > after single stepping.
-> 
-> 
-> > diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> > index bd5dfffca272..348e02b799a2 100644
-> > --- a/arch/arm64/kernel/probes/kprobes.c
-> > +++ b/arch/arm64/kernel/probes/kprobes.c
-> > @@ -29,6 +29,8 @@
-> >  
-> >  #include "decode-insn.h"
-> >  
-> > +#define PSR_DAIF_MASK	(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
-> 
-> We should probably move this to daifflags.h. Its going to be useful to other series too.
-
-OK.
-
-> 
-> 
-> Patch looks good!
-> Reviewed-by: James Morse <james.morse@arm.com>
-> Tested-by: James Morse <james.morse@arm.com>
-> 
-> (I haven't tried to test the nested kprobes case...)
-
-OK, I'll update and resend it.
-
-Thank you!
-
-> 
-> 
-> Thanks,
-> 
-> James
+> I am asking as the OPP core can be improved to support your case if
+> possible. But I need to understand the problem first.
 
 
+Best regards
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
