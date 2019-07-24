@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC48C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AAAC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147A521849
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5FBF20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998585;
-	bh=w2PhNJt+kv/U2vyKbiECbkNT567xf1uMu29aJbskVgc=;
+	s=default; t=1563998593;
+	bh=mGnkw2XoQ5DXHzc2RlxPPbxIrDIFY4EP77hCvlohBjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QceIRvef2S+YgrhDSHguwUBcvxF9jQBbGEC3wAd41oVPOMYsaY8Z4UqhMdIjWZe/i
-	 b/c2OJ2gqcM0Zxmw5Cj+sq+EhScCufBuNZtLbmQymgxO1076v30SXThwQllrUj7PGJ
-	 pEYwszm7boChY5BzgX8gIRFvYuM0vMVXh6xQBRRg=
+	b=U7HO70aNV6CR3tQrnAXpUYAXjubgmUH+RU70y30vZNHKr4x0f3WSmrc10uoKW9KIL
+	 RrSAWrjdVmrZCQn9mKCjJubNxYVLQLnQSURA0/3ngiLa91PLOxo9OGG4JKGVOLov9R
+	 M5uUVkhCGUN2H/VrFtxawnIiYR81mj0kQcQy2Ok0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405648AbfGXUDD (ORCPT
+        id S2405668AbfGXUDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53176 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405637AbfGXUDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:03:01 -0400
+        id S2405071AbfGXUDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:03:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A56FF206BA;
-        Wed, 24 Jul 2019 20:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015B420665;
+        Wed, 24 Jul 2019 20:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998581;
-        bh=w2PhNJt+kv/U2vyKbiECbkNT567xf1uMu29aJbskVgc=;
+        s=default; t=1563998587;
+        bh=mGnkw2XoQ5DXHzc2RlxPPbxIrDIFY4EP77hCvlohBjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2E8+z2eJPOCB1yDd4h5bOLHWUFScf0eJ1QUeb7GfVQKv58dQrYzTiYbUqwKYZg7xS
-         7qy8H/qi0tIZzxzCZWOiK0N9FVWnkwksFmr+4n7ZVjBs2TLc/dZaH1p4tcuNt4scnl
-         OE/GMS0qObUTiIoPLH9yks8UWtSgVq73tqo+iit8=
+        b=FJ1W8RLxOYx7Va2Iq71v+2ZrigIvoaxBrw8SAm1ZPPc7PzUoZOxcD3Z199ddbjkO4
+         Zzy1cZ+Y1eYqtuDWBcQuHfDkgDI6kmyhUN0ONRFbccGmW2dTX1Be/ENrtXKBNkZn2L
+         vBucIT5yFCDMqWa3faAtvgeSo7+gE/FQwFlcM6Bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 009/271] ath6kl: add some bounds checking
-Date:   Wed, 24 Jul 2019 21:17:58 +0200
-Message-Id: <20190724191656.083080279@linuxfoundation.org>
+Subject: [PATCH 4.19 038/271] batman-adv: Fix duplicated OGMs on NETDEV_UP
+Date:   Wed, 24 Jul 2019 21:18:27 +0200
+Message-Id: <20190724191658.460662211@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,60 +63,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d6751eaff672ea77642e74e92e6c0ac7f9709ab ]
+[ Upstream commit 9e6b5648bbc4cd48fab62cecbb81e9cc3c6e7e88 ]
 
-The "ev->traffic_class" and "reply->ac" variables come from the network
-and they're used as an offset into the wmi->stream_exist_for_ac[] array.
-Those variables are u8 so they can be 0-255 but the stream_exist_for_ac[]
-array only has WMM_NUM_AC (4) elements.  We need to add a couple bounds
-checks to prevent array overflows.
+The state of slave interfaces are handled differently depending on whether
+the interface is up or not. All active interfaces (IFF_UP) will transmit
+OGMs. But for B.A.T.M.A.N. IV, also non-active interfaces are scheduling
+(low TTL) OGMs on active interfaces. The code which setups and schedules
+the OGMs must therefore already be called when the interfaces gets added as
+slave interface and the transmit function must then check whether it has to
+send out the OGM or not on the specific slave interface.
 
-I also modified one existing check from "if (traffic_class > 3) {" to
-"if (traffic_class >= WMM_NUM_AC) {" just to make them all consistent.
+But the commit f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule
+API calls") moved the setup code from the enable function to the activate
+function. The latter is called either when the added slave was already up
+when batadv_hardif_enable_interface processed the new interface or when a
+NETDEV_UP event was received for this slave interfac. As result, each
+NETDEV_UP would schedule a new OGM worker for the interface and thus OGMs
+would be send a lot more than expected.
 
-Fixes: bdcd81707973 (" Add ath6kl cleaned up driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule API calls")
+Reported-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Tested-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Acked-by: Marek Lindner <mareklindner@neomailbox.ch>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath6kl/wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ net/batman-adv/bat_iv_ogm.c     | 4 ++--
+ net/batman-adv/hard-interface.c | 3 +++
+ net/batman-adv/types.h          | 3 +++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
-index 777acc564ac9..bc7916f2add0 100644
---- a/drivers/net/wireless/ath/ath6kl/wmi.c
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.c
-@@ -1178,6 +1178,10 @@ static int ath6kl_wmi_pstream_timeout_event_rx(struct wmi *wmi, u8 *datap,
- 		return -EINVAL;
+diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
+index 73bf6a93a3cf..0b7b36fa0d5c 100644
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -2485,7 +2485,7 @@ batadv_iv_ogm_neigh_is_sob(struct batadv_neigh_node *neigh1,
+ 	return ret;
+ }
  
- 	ev = (struct wmi_pstream_timeout_event *) datap;
-+	if (ev->traffic_class >= WMM_NUM_AC) {
-+		ath6kl_err("invalid traffic class: %d\n", ev->traffic_class);
-+		return -EINVAL;
-+	}
+-static void batadv_iv_iface_activate(struct batadv_hard_iface *hard_iface)
++static void batadv_iv_iface_enabled(struct batadv_hard_iface *hard_iface)
+ {
+ 	/* begin scheduling originator messages on that interface */
+ 	batadv_iv_ogm_schedule(hard_iface);
+@@ -2825,8 +2825,8 @@ static void batadv_iv_gw_dump(struct sk_buff *msg, struct netlink_callback *cb,
+ static struct batadv_algo_ops batadv_batman_iv __read_mostly = {
+ 	.name = "BATMAN_IV",
+ 	.iface = {
+-		.activate = batadv_iv_iface_activate,
+ 		.enable = batadv_iv_ogm_iface_enable,
++		.enabled = batadv_iv_iface_enabled,
+ 		.disable = batadv_iv_ogm_iface_disable,
+ 		.update_mac = batadv_iv_ogm_iface_update_mac,
+ 		.primary_set = batadv_iv_ogm_primary_iface_set,
+diff --git a/net/batman-adv/hard-interface.c b/net/batman-adv/hard-interface.c
+index 08690d06b7be..36f0962040d1 100644
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -821,6 +821,9 @@ int batadv_hardif_enable_interface(struct batadv_hard_iface *hard_iface,
  
- 	/*
- 	 * When the pstream (fat pipe == AC) timesout, it means there were
-@@ -1519,6 +1523,10 @@ static int ath6kl_wmi_cac_event_rx(struct wmi *wmi, u8 *datap, int len,
- 		return -EINVAL;
+ 	batadv_hardif_recalc_extra_skbroom(soft_iface);
  
- 	reply = (struct wmi_cac_event *) datap;
-+	if (reply->ac >= WMM_NUM_AC) {
-+		ath6kl_err("invalid AC: %d\n", reply->ac);
-+		return -EINVAL;
-+	}
++	if (bat_priv->algo_ops->iface.enabled)
++		bat_priv->algo_ops->iface.enabled(hard_iface);
++
+ out:
+ 	return 0;
  
- 	if ((reply->cac_indication == CAC_INDICATION_ADMISSION_RESP) &&
- 	    (reply->status_code != IEEE80211_TSPEC_STATUS_ADMISS_ACCEPTED)) {
-@@ -2635,7 +2643,7 @@ int ath6kl_wmi_delete_pstream_cmd(struct wmi *wmi, u8 if_idx, u8 traffic_class,
- 	u16 active_tsids = 0;
- 	int ret;
+diff --git a/net/batman-adv/types.h b/net/batman-adv/types.h
+index eeee3e61c625..fdba8a144d73 100644
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -2130,6 +2130,9 @@ struct batadv_algo_iface_ops {
+ 	/** @enable: init routing info when hard-interface is enabled */
+ 	int (*enable)(struct batadv_hard_iface *hard_iface);
  
--	if (traffic_class > 3) {
-+	if (traffic_class >= WMM_NUM_AC) {
- 		ath6kl_err("invalid traffic class: %d\n", traffic_class);
- 		return -EINVAL;
- 	}
++	/** @enabled: notification when hard-interface was enabled (optional) */
++	void (*enabled)(struct batadv_hard_iface *hard_iface);
++
+ 	/** @disable: de-init routing info when hard-interface is disabled */
+ 	void (*disable)(struct batadv_hard_iface *hard_iface);
+ 
 -- 
 2.20.1
 
