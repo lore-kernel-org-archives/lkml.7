@@ -2,110 +2,123 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6CFC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFF6C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBD521951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:34:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0TNFbYt"
+	by mail.kernel.org (Postfix) with ESMTP id 1EF4022387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563982462;
+	bh=+prRFyB7DanVEGMBCrwCgd8rnmDkSa6XV1YHv8OZiRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uhcNTWKK2ysi2RExmlYqQRw9/96+JkJmfIa/jrkDJxb2TAN+QBQSQNiUZQMM2TF4R
+	 2ll5ocYl+FyJ6y/7XhGqf7Vyg2sX2KdhTZ31yEgFW+2OGaiTakegJzkcUNr0DEA+XZ
+	 OwE8c6PrhLkFoxECn2RhYa/6cF9iQTsdofoeqjUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387637AbfGXPeD (ORCPT
+        id S1727715AbfGXPeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:34:03 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45489 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387406AbfGXPeD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:34:03 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x21so9830523otq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 08:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kC1SodG6AXAv+phL30dSkAMKxwqUJv5qok3MpByxuQU=;
-        b=k0TNFbYt4kAUF2AG/Ng4zQ6P9Hmp06hq7RAKEn3xis6hUgSp11B+nvpqv9QgGiGApw
-         BDsXGZdhhXsl0oRHQSWt+MmdKpjOg0c7qr6vDh4RepUfaac10DK0QWRyxAy3TCwCHr38
-         N29SUwPCEaxMug+JOEU1YUzfJUSVQtCRwkqDeJt4p3L7k8x8Apj8x4hPX9fkaVwj+8zZ
-         EMCs2YitypLMpyL77m5obFLYpePtAqedrWmeO0SD1KnVN1zmOWpSbwyDXzSKK4hOpDAA
-         6I1oVondHm4N6t6RWyZV62G/1NjMrm2+LsSK1KYcfyjeP2pErxrOEsf04DJWF8lGu2VB
-         i/Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=kC1SodG6AXAv+phL30dSkAMKxwqUJv5qok3MpByxuQU=;
-        b=r3dtfqEjwF5kUFJrTP5sxKOIdtCED+Iebq/QkG8MXxN/2KsU9hJGxljVZFT4CKQnVF
-         vxAK34qWrASpTenkKvtxOU4CIbkPd3Dq554NOnovdrtzH9KXnXkqKwUaAy6lniFOdVRw
-         PpCtHSryO6MseMAZrca7EUUFVUFBaHn0RzXqPFxNLkOJw48xYcUctafyx3QTLdcGcktg
-         InRhPsel4BnNG6Bq3a4HwECdl59plLr8VHG/n5e415MeACIBUlIxNDl6n/K9nAO0Y2nR
-         WMW796zJsIBBjd7KwAm305sak6VR/KeoFByyR8B+WI/C1Klae27NGPFSSZvyaSSGKywM
-         0m/w==
-X-Gm-Message-State: APjAAAVdc+l0k8Ahluo8IfvORE7TUb0f/lBM1H8Cnt2Dw4ALWstmZH6X
-        o6CMd6Yj5pMMAs/AdfJQnw==
-X-Google-Smtp-Source: APXvYqyHwyMyPeS9rI1fczzg1zb5B0BF9CH7dQ/0eXtgYNNCQhsux4jVbZeix2qz8iR0N820Eh6NVA==
-X-Received: by 2002:a9d:7843:: with SMTP id c3mr52928807otm.1.1563982442015;
-        Wed, 24 Jul 2019 08:34:02 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.134.43])
-        by smtp.gmail.com with ESMTPSA id r130sm16500943oib.41.2019.07.24.08.34.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 08:34:01 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:2041:57e1:ec94:5f0c])
-        by serve.minyard.net (Postfix) with ESMTPSA id E679B1800CD;
-        Wed, 24 Jul 2019 15:34:00 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 10:33:59 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] Fix uninitialized variable in ipmb_dev_int.c
-Message-ID: <20190724153359.GJ3066@minyard.net>
-Reply-To: minyard@acm.org
-References: <cover.1563978634.git.Asmaa@mellanox.com>
- <84ef25695b2bfa5100803d5bb30e5d4152e336e0.1563978634.git.Asmaa@mellanox.com>
+        Wed, 24 Jul 2019 11:34:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726846AbfGXPeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:34:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E219C21951;
+        Wed, 24 Jul 2019 15:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563982459;
+        bh=+prRFyB7DanVEGMBCrwCgd8rnmDkSa6XV1YHv8OZiRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vXNaaiG5CXsptEQZPajhTUgNoyElBn0kPBWPQ5JrW/P6bVSurkuhzzngvJvUMqtpS
+         4HTZi0HgkUaR2UUDCPqaozqtIoPUomnP7bgnT3M6ixNxNBS8fmUNLCIl+v9qGm4nVT
+         /ACRBml0OpCwK3bwh6h8B60lspcnOs9Vhex8dAGI=
+Date:   Wed, 24 Jul 2019 17:34:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to be
+ reserved
+Message-ID: <20190724153416.GA27117@kroah.com>
+References: <alpine.DEB.2.21.1907141215350.1669@nanos.tec.linutronix.de>
+ <CAHbf0-EPfgyKinFuOP7AtgTJWVSVqPmWwMSxzaH=Xg-xUUVWCA@mail.gmail.com>
+ <alpine.DEB.2.21.1907151011590.1669@nanos.tec.linutronix.de>
+ <CAHbf0-F9yUDJ=DKug+MZqsjW+zPgwWaLUC40BLOsr5+t4kYOLQ@mail.gmail.com>
+ <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de>
+ <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com>
+ <20190723130513.GA25290@kroah.com>
+ <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de>
+ <20190723134454.GA7260@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <84ef25695b2bfa5100803d5bb30e5d4152e336e0.1563978634.git.Asmaa@mellanox.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190723134454.GA7260@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:36:42AM -0400, Asmaa Mnebhi wrote:
-> Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
-
-The patch is, of course, fine, but you should add some info
-about how it was found and a Reported-by: tag.
-
-Thanks,
-
--corey
-
-> ---
->  drivers/char/ipmi/ipmb_dev_int.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jul 23, 2019 at 03:44:54PM +0200, Greg KH wrote:
+> On Tue, Jul 23, 2019 at 03:31:32PM +0200, Thomas Gleixner wrote:
+> > On Tue, 23 Jul 2019, Greg KH wrote:
+> > > On Mon, Jul 15, 2019 at 01:16:48PM -0700, H.J. Lu wrote:
+> > > > >
+> > > > 
+> > > > Since building a workable kernel for different kernel configurations isn't a
+> > > > requirement for gold, I don't recommend gold for kernel.
+> > > 
+> > > Um, it worked before this commit, and now it doesn't.  "Some" companies
+> > > are using gold for linking the kernel today...
+> > 
+> > gold is known to fail the kernel build. x32 vdso linking is not working
+> > since years and just because it 'works' for some configurations and breaks
+> > for no valid reasons even with those configurations is just not good
+> > enough.
+> > 
+> > As there is obviously no priority for fixing gold to work proper with the
+> > kernel, I'm not at all interested in these 'regression' reports and in odd
+> > 'fixes' which just end up reverting or modifying perfectly valid changes
+> > without understanding the root cause, i.e. the most horrible engineering
+> > principle: duct-taping.
+> > 
+> > TBH, I'm tired of it. We fail the build for clang if it does not support
+> > asm gotos and the clang people are actively working on fixing it and we're
+> > helping them as much as we can. The companies who used clang nevertheless
+> > have been on their own for years and if someone wants to use gold then
+> > nobody is preventing them from doing so. They can keep their duct-tape in
+> > their own trees.
+> > 
+> > See this thread for further discussion:
+> > 
+> >  https://lkml.kernel.org/r/alpine.DEB.2.21.1907161434260.1767@nanos.tec.linutronix.de
 > 
-> diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
-> index 5720433..285e0b8 100644
-> --- a/drivers/char/ipmi/ipmb_dev_int.c
-> +++ b/drivers/char/ipmi/ipmb_dev_int.c
-> @@ -76,7 +76,7 @@ static ssize_t ipmb_read(struct file *file, char __user *buf, size_t count,
->  	struct ipmb_dev *ipmb_dev = to_ipmb_dev(file);
->  	struct ipmb_request_elem *queue_elem;
->  	struct ipmb_msg msg;
-> -	ssize_t ret;
-> +	ssize_t ret = 0;
->  
->  	memset(&msg, 0, sizeof(msg));
->  
-> -- 
-> 2.1.2
-> 
+> Sorry, I saw that after writing that.  You are right, if the others
+> don't object, that's fine with me.  I'll go poke the various build
+> systems that are failing right now on 5.3-rc1 and try to get them fixed
+> for this reason.
+
+Ok, I dug around and the gold linker is not being used here, only clang
+to build the source and GNU ld to link, and I am still seeing this
+error.
+
+Hm, clang 8 does not cause this error, but clang 9 does.  Let me go poke
+the people who are providing this version of clang to see if there's
+something they can figure out.
+
+greg k-h
