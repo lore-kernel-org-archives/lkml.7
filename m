@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136F3C76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34390C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D33622147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072BB214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998670;
-	bh=C6Z05VeIevo+UoT9XGog8dSepoX70IBD5J082138lWk=;
+	s=default; t=1563998674;
+	bh=d3rpu6HCo7xnPUyQGpXb712GuTxji/4Sg+2uxMf6PcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1cAxVYJuR8WNzkwFLjiYk1nfEbyQdw6AaSOU7i5GCckkJKPkm/bbxR3t1LpkgVTc
-	 qBk+fFPqFQ0Kg+CsU73EFmpjTT7j2XSrfDChh7e9nEjG8bp83N/o6tjUISBut8rvzU
-	 jZ2mFd4U1v1DRQ8bKgxyQwIYgB76+jT9Y9D6H49s=
+	b=rruoptUKW1fPuIaNZ5dmBnCe1J0GQkofyWW+x1M+DovpInJomN3JQ0fczaO84yZzd
+	 ro3VflHz13xe6zRJpQjn3oiMHDk07NwIDr1NxychWXONLry55l/C0Iw/O7lBgO3qFA
+	 mCrpAP1UglE/lp6cH3fDncwl3TPg9WhEg79+x7ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392538AbfGXUE3 (ORCPT
+        id S2392552AbfGXUEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:04:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55540 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392516AbfGXUE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:04:26 -0400
+        id S2392529AbfGXUE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:04:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CF7C20665;
-        Wed, 24 Jul 2019 20:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23B1E20665;
+        Wed, 24 Jul 2019 20:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998666;
-        bh=C6Z05VeIevo+UoT9XGog8dSepoX70IBD5J082138lWk=;
+        s=default; t=1563998668;
+        bh=d3rpu6HCo7xnPUyQGpXb712GuTxji/4Sg+2uxMf6PcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=joWOPavuByoVUgyGZm5uZBHOnSl4HYezlg4tko2aPXK0REuIC9pb2b2onTGWM0SRM
-         9NRhS/77Tfkdgceu9cwxuokKjtf0Rk0LAxvjSz61959hprBNwiejbNFQsn6szO1ujY
-         PC3IiZiySAuaL8nu+VLwZX1TKU8t+brD9jt0vklk=
+        b=aB0wkQct78+BJw/o4ljpIG7VSNCgHyfYao3Fw7+Q9LqotKlD4e8+p2C2PdRd/IpY0
+         xjiZfO1pmLHv184b8L0GXhAx34NzDkNPH/Lh4o08W4r7GVeLXMrlBOa4JB0DGG77Y7
+         AtxKpk6ylYk0aWwoMrBlz5nKX4UKm57rMHlYgkCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/271] qed: iWARP - Fix tc for MPA ll2 connection
-Date:   Wed, 24 Jul 2019 21:19:00 +0200
-Message-Id: <20190724191701.285465780@linuxfoundation.org>
+Subject: [PATCH 4.19 072/271] net: hns3: fix for skb leak when doing selftest
+Date:   Wed, 24 Jul 2019 21:19:01 +0200
+Message-Id: <20190724191701.375184978@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -61,34 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cb94d52b93c74fe1f2595734fabeda9f8ae891ee ]
+[ Upstream commit 8f9eed1a8791b83eb1c54c261d68424717e4111e ]
 
-The driver needs to assign a lossless traffic class for the MPA ll2
-connection to ensure no packets are dropped when returning from the
-driver as they will never be re-transmitted by the peer.
+If hns3_nic_net_xmit does not return NETDEV_TX_BUSY when doing
+a loopback selftest, the skb is not freed in hns3_clean_tx_ring
+or hns3_nic_net_xmit, which causes skb not freed problem.
 
-Fixes: ae3488ff37dc ("qed: Add ll2 connection for processing unaligned MPA packets")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+This patch fixes it by freeing skb when hns3_nic_net_xmit does
+not return NETDEV_TX_OK.
+
+Fixes: c39c4d98dc65 ("net: hns3: Add mac loopback selftest support in hns3 driver")
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index b7471e48db7b..7002a660b6b4 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -2709,6 +2709,8 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	data.input.rx_num_desc = n_ooo_bufs * 2;
- 	data.input.tx_num_desc = data.input.rx_num_desc;
- 	data.input.tx_max_bds_per_packet = QED_IWARP_MAX_BDS_PER_FPDU;
-+	data.input.tx_tc = PKT_LB_TC;
-+	data.input.tx_dest = QED_LL2_TX_DEST_LB;
- 	data.p_connection_handle = &iwarp_info->ll2_mpa_handle;
- 	data.input.secondary_queue = true;
- 	data.cbs = &cbs;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 9684ad015c42..6a3c6b02a77c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -245,11 +245,13 @@ static int hns3_lp_run_test(struct net_device *ndev, enum hnae3_loop mode)
+ 
+ 		skb_get(skb);
+ 		tx_ret = hns3_nic_net_xmit(skb, ndev);
+-		if (tx_ret == NETDEV_TX_OK)
++		if (tx_ret == NETDEV_TX_OK) {
+ 			good_cnt++;
+-		else
++		} else {
++			kfree_skb(skb);
+ 			netdev_err(ndev, "hns3_lb_run_test xmit failed: %d\n",
+ 				   tx_ret);
++		}
+ 	}
+ 	if (good_cnt != HNS3_NIC_LB_TEST_PKT_NUM) {
+ 		ret_val = HNS3_NIC_LB_TEST_TX_CNT_ERR;
 -- 
 2.20.1
 
