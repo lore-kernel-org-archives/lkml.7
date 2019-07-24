@@ -2,54 +2,55 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BA4C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBDCC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9C1229FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800AF229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996293;
-	bh=1F+0XY+ztXYdXEEVAy8XEkQ3xsmcE7ZIgZi78ZGy+DM=;
+	s=default; t=1563996296;
+	bh=ZlQrevqVxc84cddOpeGoAobSvayuwpStagSYQwjfh9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GCY3E+sfZtq0ZJ3sKMjbRm1mwqh3/2CBBQ+YChOY4c3C6oUBBQGbeBpUYwSnW1l5D
-	 N5THXtHHUsI9uqw9V5HCaH/YqkCTUKK2ktwClneo1I2NNCU5HqEUtcwXmK5otL8QHy
-	 YhOrvNQPFJ8EaHTRJXHV/SLmbo7wQx4ibZv1/yXg=
+	b=kKASTUhWyusT4htJFEPKEzybrUjFWCKCI/qmUMnyL7zZKdr28DWj5+bbILpt6vfqM
+	 lKZ0euu588OBVDNzIP2wLjQwD6JGk9pC3tt/rzD81Ij7bBd3xChDi7nZFErSHW124X
+	 Tqx6Dp8eABYFZl41C6t8UL+U6NC46sUBzUNHD1qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387999AbfGXTYw (ORCPT
+        id S2388011AbfGXTYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41222 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:24:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387974AbfGXTYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:24:46 -0400
+        id S2387984AbfGXTYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:24:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EDB921951;
-        Wed, 24 Jul 2019 19:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9C8721951;
+        Wed, 24 Jul 2019 19:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996285;
-        bh=1F+0XY+ztXYdXEEVAy8XEkQ3xsmcE7ZIgZi78ZGy+DM=;
+        s=default; t=1563996288;
+        bh=ZlQrevqVxc84cddOpeGoAobSvayuwpStagSYQwjfh9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a1OYE2fOOkReRyN1sABHtW+VtSgH/m0V79xknCqY86N1qRKf/Q7KL9NNV4DI6bHAS
-         blT7innxfHhu7T/k5lexcGf5EKTbqatcssz0ElmnyFauJIg2OPVbmC9UYWupWNoSpf
-         qUXQSo7t5cHRHJ1KqHgnWwaQwSrxEPlmvV5+h2uI=
+        b=vxUC7px+OtzwcTVvYdenGXR4JGd7IGXQSlDxZvnBdwXPTBmi896HyG1q5U14RAkAC
+         5Jy3Ry0ClO+n7Ve9RntxAtbWIP5uD2+wJhs7vhtBWhlA7fwEdWj4fyNMjPxqGu8XgR
+         NqO6KqG5r/z976MKs5hBNlG7pq5VGOTeMcEZjXpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Mitch Williams <mitch.a.williams@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 045/413] perf annotate TUI browser: Do not use member from variable within its own initialization
-Date:   Wed, 24 Jul 2019 21:15:36 +0200
-Message-Id: <20190724191738.786389506@linuxfoundation.org>
+Subject: [PATCH 5.2 046/413] ice: Check all VFs for MDD activity, dont disable
+Date:   Wed, 24 Jul 2019 21:15:37 +0200
+Message-Id: <20190724191738.846144340@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,57 +63,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit da2019633f0b5c105ce658aada333422d8cb28fe ]
+[ Upstream commit 23c0112246b454e408fb0579b3f9089353d4d327 ]
 
-Some compilers will complain when using a member of a struct to
-initialize another member, in the same struct initialization.
+Don't use the mdd_detected variable as an exit condition for this loop;
+the first VF to NOT have an MDD event will cause the loop to terminate.
 
-For instance:
+Instead just look at all of the VFs, but don't disable them. This
+prevents proper release of resources if the VFs are rebooted or the VF
+driver reloaded. Instead, just log a message and call out repeat
+offenders.
 
-  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
-  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
+To make it clear what we are doing, use a differently-named variable in
+the loop.
 
-Produce:
-
-  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
-                                              (!ops.current_entry ||
-                                                ^~~
-  1 error generated.
-
-So use an extra variable, initialized just before that struct, to have
-the value used in the expressions used to init two of the struct
-members.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
-Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/ui/browsers/annotate.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 98d934a36d86..b0d089a95dac 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
- 	struct annotation *notes = browser__annotation(browser);
- 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
-+	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
- 	struct annotation_write_ops ops = {
- 		.first_line		 = row == 0,
--		.current_entry		 = ui_browser__is_current_entry(browser, row),
-+		.current_entry		 = is_current_entry,
- 		.change_color		 = (!notes->options->hide_src_code &&
--					    (!ops.current_entry ||
-+					    (!is_current_entry ||
- 					     (browser->use_navkeypressed &&
- 					      !browser->navkeypressed))),
- 		.width			 = browser->width,
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index dbf3d39ad8b1..1c803106e301 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -1161,16 +1161,16 @@ static void ice_handle_mdd_event(struct ice_pf *pf)
+ 		}
+ 	}
+ 
+-	/* see if one of the VFs needs to be reset */
+-	for (i = 0; i < pf->num_alloc_vfs && mdd_detected; i++) {
++	/* check to see if one of the VFs caused the MDD */
++	for (i = 0; i < pf->num_alloc_vfs; i++) {
+ 		struct ice_vf *vf = &pf->vf[i];
+ 
+-		mdd_detected = false;
++		bool vf_mdd_detected = false;
+ 
+ 		reg = rd32(hw, VP_MDET_TX_PQM(i));
+ 		if (reg & VP_MDET_TX_PQM_VALID_M) {
+ 			wr32(hw, VP_MDET_TX_PQM(i), 0xFFFF);
+-			mdd_detected = true;
++			vf_mdd_detected = true;
+ 			dev_info(&pf->pdev->dev, "TX driver issue detected on VF %d\n",
+ 				 i);
+ 		}
+@@ -1178,7 +1178,7 @@ static void ice_handle_mdd_event(struct ice_pf *pf)
+ 		reg = rd32(hw, VP_MDET_TX_TCLAN(i));
+ 		if (reg & VP_MDET_TX_TCLAN_VALID_M) {
+ 			wr32(hw, VP_MDET_TX_TCLAN(i), 0xFFFF);
+-			mdd_detected = true;
++			vf_mdd_detected = true;
+ 			dev_info(&pf->pdev->dev, "TX driver issue detected on VF %d\n",
+ 				 i);
+ 		}
+@@ -1186,7 +1186,7 @@ static void ice_handle_mdd_event(struct ice_pf *pf)
+ 		reg = rd32(hw, VP_MDET_TX_TDPU(i));
+ 		if (reg & VP_MDET_TX_TDPU_VALID_M) {
+ 			wr32(hw, VP_MDET_TX_TDPU(i), 0xFFFF);
+-			mdd_detected = true;
++			vf_mdd_detected = true;
+ 			dev_info(&pf->pdev->dev, "TX driver issue detected on VF %d\n",
+ 				 i);
+ 		}
+@@ -1194,19 +1194,18 @@ static void ice_handle_mdd_event(struct ice_pf *pf)
+ 		reg = rd32(hw, VP_MDET_RX(i));
+ 		if (reg & VP_MDET_RX_VALID_M) {
+ 			wr32(hw, VP_MDET_RX(i), 0xFFFF);
+-			mdd_detected = true;
++			vf_mdd_detected = true;
+ 			dev_info(&pf->pdev->dev, "RX driver issue detected on VF %d\n",
+ 				 i);
+ 		}
+ 
+-		if (mdd_detected) {
++		if (vf_mdd_detected) {
+ 			vf->num_mdd_events++;
+-			dev_info(&pf->pdev->dev,
+-				 "Use PF Control I/F to re-enable the VF\n");
+-			set_bit(ICE_VF_STATE_DIS, vf->vf_states);
++			if (vf->num_mdd_events > 1)
++				dev_info(&pf->pdev->dev, "VF %d has had %llu MDD events since last boot\n",
++					 i, vf->num_mdd_events);
+ 		}
+ 	}
+-
+ }
+ 
+ /**
 -- 
 2.20.1
 
