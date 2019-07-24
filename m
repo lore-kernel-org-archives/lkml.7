@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC75DC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB2EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA44218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE2721926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563995662;
-	bh=FJm39Gd3asmfU6++rIJa2obJo9Lcd8KdDMG49ZrMAvg=;
+	s=default; t=1563995740;
+	bh=/LCMMGfq6yZv368F5dOhoNEEIkP7waY9Xy/7WcQFFJU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zSypEJUFT4dgouXjlYMF5WzdXDGPzLUMjaEgM0XHoYD90B56M7AX645LNCDxmayZz
-	 yPQ0Ro3N5rL2W36lxPL675SFe2vobWa/7bMj4JsVxsP0MyvwCIhp7MH5/j0rNbXUcG
-	 Z/hQAcmdNA2jlsl4jAk28WV3DlP24VXEDrkBTqqs=
+	b=Q8Gj2/VQIwG6m4FmE4FYO5FHHDIYS1jC8xDYFjbbH0T9t3u7w4Riym5FdjJehDlci
+	 846BR1s2ZPVlHkaeScnguObewSADSRZVimEMoBxPJcJHLy3w4kw37CVQCI0bYRMZMY
+	 lVAKYhwCXBECI0xp0mV8Fl0lT1X/VknCL/bbChp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfGXTOV convert rfc822-to-8bit (ORCPT
+        id S1728786AbfGXTPj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:14:21 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52777 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGXTOV (ORCPT
+        Wed, 24 Jul 2019 15:15:39 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36251 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfGXTPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:14:21 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s3so42779962wms.2;
-        Wed, 24 Jul 2019 12:14:19 -0700 (PDT)
+        Wed, 24 Jul 2019 15:15:39 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g67so38485926wme.1;
+        Wed, 24 Jul 2019 12:15:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=+dgR7D/EXKyMHjC4KOvCZR7USJlIlrVgRqVtNiYm68A=;
-        b=eCu7trHBlB2LOcMmTpoOt5Rocl4eYwi2sKmw3S29EziTNsVfhDsqDIl8m7NS55/hzt
-         IynheOuSDWhfwNefZn0VCmq1yWOpwWZLnQBVgBSrfqVyPVB9fxGgRf/wvn4sQ+4NgyG0
-         U2Eg+tApcDks5OTLZ0I+uCX04odB224CUFj2SPK0Xnwi3iBKCTgJPbPHcszzzAMBpm/P
-         Vbi5RhCP9YzW0MZC6CtAkV6tl1i3Fh4UcCF9tcaZMSUUvvtYvJHv/m3LZ71k+CC9OgZu
-         Rx3mwj9tQtF9A4oUCErpy+EjnV2l4adrzyO8YgHIKU8ogHVW9YmgLKVUs8X9nAml5eOs
-         bamQ==
-X-Gm-Message-State: APjAAAWKqudN6GbYHsn15NCl68FMAq5LIHq7MN6iq+zSzDd3/ZitwbIH
-        0ciIkF85ekkOIJJm11YEaD+rGxM4
-X-Google-Smtp-Source: APXvYqxr0ifyhVtp91zsXaTGdqxuq3wdKwgnKuWnLCyxSECwcySUMHL3yuZ93uJZ/W8HD1t2wKkzTw==
-X-Received: by 2002:a1c:a186:: with SMTP id k128mr69920564wme.74.1563995658727;
-        Wed, 24 Jul 2019 12:14:18 -0700 (PDT)
+        bh=PWx99XZq+fN9B+Oe8W7y8sLgenk5724DKP3Xv5BSiDY=;
+        b=jwxuWodJfcW/bQ3uzgs1h1CxiNbNxBbHeOOfdj3JnIr5mWW4k1r69ono7uv3FKZKqs
+         d8LNmaClXw/3naIzwg86yO/wopIGzTrpU3MxKKK3QrfGXFVr+97OuR8vq286txuDjTda
+         Wqmbcmv3bpyq3g9vWioKvLKZPQutUVeP4j1fPnicCt29iEMsj4GuByluyM7DCCN3J5fZ
+         bunhp6S2oFTS1GX3QrTcEJOkdb41LADab8oG3G4NKf40QMrOvgTgk6hK2QNjPBgo4h3d
+         B0wCswwHHdKjT6gJ6Mv5yy0O8NKl1F+AFGOUlJTOF/mRsSKUssJdUuowSoppAVK2UpRt
+         fAeg==
+X-Gm-Message-State: APjAAAWNwngXBXV3Eb4DqGT00UH2gVKyPG314TMoB1Y7u/WepopFpNiN
+        iJ9mj7nrnj0z/zbv/at/fuU=
+X-Google-Smtp-Source: APXvYqyyLA4OKohlQbHOKG/b+iP0vPhb3YzM7QiNcuaGJ/Ghmpo2+PH/lTWrGKV/KjM/oPB6uYz8QA==
+X-Received: by 2002:a1c:be11:: with SMTP id o17mr75123545wmf.115.1563995736502;
+        Wed, 24 Jul 2019 12:15:36 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.239])
-        by smtp.googlemail.com with ESMTPSA id p6sm50559987wrq.97.2019.07.24.12.14.17
+        by smtp.googlemail.com with ESMTPSA id t3sm37844851wmi.6.2019.07.24.12.15.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jul 2019 12:14:17 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 21:14:15 +0200
+        Wed, 24 Jul 2019 12:15:35 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 21:15:33 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -60,32 +59,33 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         cw00.choi@samsung.com, myungjoo.ham@samsung.com,
         inki.dae@samsung.com, sw0312.kim@samsung.com,
         georgi.djakov@linaro.org, m.szyprowski@samsung.com
-Subject: Re: [RFC PATCH 04/11] devfreq: exynos-bus: Clean up code
-Message-ID: <20190724191415.GG14346@kozik-lap>
+Subject: Re: [RFC PATCH 05/11] icc: Export of_icc_get_from_provider()
+Message-ID: <20190724191533.GH14346@kozik-lap>
 References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122024eucas1p25a480ccddaa69ee1d0f1a07960ca3f22@eucas1p2.samsung.com>
- <20190723122016.30279-5-a.swigon@partner.samsung.com>
+ <CGME20190723122025eucas1p251df372451e0b27ad7f2e3c89df60b64@eucas1p2.samsung.com>
+ <20190723122016.30279-6-a.swigon@partner.samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190723122016.30279-5-a.swigon@partner.samsung.com>
+In-Reply-To: <20190723122016.30279-6-a.swigon@partner.samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 02:20:09PM +0200, Artur Świgoń wrote:
-> This patch adds minor improvements to the exynos-bus driver.
+On Tue, Jul 23, 2019 at 02:20:10PM +0200, Artur Świgoń wrote:
+> This patch makes the above function public (for use in exynos-bus devfreq
+> driver).
 > 
 > Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
 > ---
->  drivers/devfreq/exynos-bus.c | 49 ++++++++++++++++--------------------
->  1 file changed, 22 insertions(+), 27 deletions(-)
+>  drivers/interconnect/core.c           | 3 ++-
+>  include/linux/interconnect-provider.h | 6 ++++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
 
 Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 Best regards,
 Krzysztof
-
