@@ -2,253 +2,329 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09206C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52877C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65BD2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A502189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TkDn1s08"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldCMMHir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbfGXWi7 (ORCPT
+        id S1729507AbfGXWoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:38:59 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:52659 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388289AbfGXWi6 (ORCPT
+        Wed, 24 Jul 2019 18:44:55 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33319 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfGXWoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:38:58 -0400
-Received: by mail-pf1-f201.google.com with SMTP id a20so29479938pfn.19
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 15:38:58 -0700 (PDT)
+        Wed, 24 Jul 2019 18:44:55 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x3so33162380lfc.0;
+        Wed, 24 Jul 2019 15:44:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jYzOQuLjACO1jCX76ypB0SXi+99DekEskl91WobYek4=;
-        b=TkDn1s08SSK80z6MQofaTE+gGf7Nl+sXsTo8Ejo61c6qEDIr2c9v18fACAh1y7iv1I
-         xj7epzKDqflPOG/ZNPy9jqGPe+WHABiPYzvfb4fXuvM8XZzrhzJcc7AdhZQFqq5pxfwc
-         zvO77Mx5oJ4EwdQ2AoGhwdfI3ry2JkiwFTamPpNNtT9SW2RVFR6gy9wJ8MhwhAa79OtE
-         skkxMGv9YgM564EDRVTv3wnW4F9nv+U4+Egsyy4pXsrRUX7WhoVk2M+MqwQHRzEVV+4Q
-         pOwHCvQrO6guLDtQbeDRBLyTc6+1cgwwQ8/Xs4a+LfgogL9ax4JxcqtyZq/lRmLarPuB
-         gTyQ==
+        bh=qpQ7TsCJk+fbsx93HEaJY3khMBdo5ha3CNChu+WcrOI=;
+        b=ldCMMHiroZGtGVZL0YPvZgPfhPbWvGr5erxQv95Q9haCajxHs1x9ZWqnuqJ1YS8V8B
+         R/1OqfhaI4m9szYpuk3XZ1e7C1fUEEx575Avgd+SkhivigOoawWzNYyvb2yC8zjpHFzy
+         hw5xKUYkbmVWPvDvJXCqCIxJvK9R+CzmgCleKFiJoIZvP3euiPFk5oL8ymQjU1uBo5ak
+         NrF5G79bo99tdAjUlIHq5gkmGOcNl5f2ApaeMStTdJUc8WiprLfvHeTwzLnF3M+5DsmV
+         7kV+eUzXvtieO26DrmmCNw0XknqAJu4NES/P97ANwKrRS9E5pfqkfaMDVmMHcIjByaDR
+         UFLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=jYzOQuLjACO1jCX76ypB0SXi+99DekEskl91WobYek4=;
-        b=iva51JqWg6US6mHHdaa03nUWH6/g45ZE7qfO3Pm2tg6SXRF0FmnomPhEv02wW9B4V5
-         VgxpFGF16osLJArvVtmodOwcYIrNbHp46nSrD45oAoieTy7YppXXRTZHIKabqri9FhEj
-         t/B3yMIPt964MlFBo0blKQw6B517crOWYRuLE8lD+j185Q0/IaogI9irEf5YQkoaWeq8
-         a/oKUnFocvizVFrsbn/OdpNwXoESPNs54Q9uhDH6CHzM6bZOAG2pK6I2wmDwrHMzJ5kK
-         AhQ3g9DRhR1QseoJ+H0n9b6nUmc4vnoHOxnRJVPIQ/MYy2oio/cu1idl7KqzXOWyj5O5
-         UAYg==
-X-Gm-Message-State: APjAAAVGdJMiyUYsm5xOPZUlQB8nLZiaUaOJHW30+rb4b4weCV+tj7cp
-        CU66lAGiEc3Zd2rrOsU3GcOSDChJX6vP
-X-Google-Smtp-Source: APXvYqycV3hMS7LnNSOT3g/d6WMCWuz0U9Hc+r9CLGV3kFiVSFUku6SRjNnyyandB2GuEr/s37pugYUNy68U
-X-Received: by 2002:a65:464d:: with SMTP id k13mr75192556pgr.99.1564007937507;
- Wed, 24 Jul 2019 15:38:57 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 15:37:46 -0700
-In-Reply-To: <20190724223746.153620-1-irogers@google.com>
-Message-Id: <20190724223746.153620-8-irogers@google.com>
-Mime-Version: 1.0
-References: <20190702065955.165738-1-irogers@google.com> <20190724223746.153620-1-irogers@google.com>
-X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v2 7/7] perf: rename visit_groups_merge to ctx_groups_sched_in
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qpQ7TsCJk+fbsx93HEaJY3khMBdo5ha3CNChu+WcrOI=;
+        b=s0nlLxwz3e63jbS/NKozRxCtEft+L2fXOz6LqPub1Fkp33tQjRatGSHvSG7CZ1sjf8
+         6WtnsJkqSjtGJpq5y0kAabC6OiIvqImBHLAA8HEI9ZG32rFKur03wSZgdvx+x0v8Quy7
+         4auFuJc0xVmKOC4cX5kuoYaHKgWBBdg0guL4wHr2E11i8qAB2GM/2kChQEILCy3ahNMD
+         7DMaxO9SQuzWegwTd4liMyK7k9wLQzqRKjMr2wAALwRztGVuNTU+ouOwBPrEbBwktNOc
+         xj9XbTwS983gKj+ntde+6JwcB4ZBMz8aB1e6HnhH237b42Iz5IIliSJttFqFdK2ayPuN
+         NAfg==
+X-Gm-Message-State: APjAAAVXz8Zk3CksPqPf8trfF9ie8A24rSWjqIuCt/AK/bDmuCBgL5bi
+        WOQPeSotynEdHlYy70Dil2QY4EU8nGIm9rFp6BAR3A==
+X-Google-Smtp-Source: APXvYqynOd8aI4tGizRaNxYRaQA4HxKfIRTTX3iPfBaplVnF2BqPYOcd/8iSttkkGRL4piOylCUxEYQcW935ueoofD8=
+X-Received: by 2002:a05:6512:288:: with SMTP id j8mr42949441lfp.181.1564008291599;
+ Wed, 24 Jul 2019 15:44:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190724165803.87470-1-brianvv@google.com> <20190724165803.87470-3-brianvv@google.com>
+ <CAPhsuW4HPjXE+zZGmPM9GVPgnVieRr0WOuXfM0W6ec3SB4imDw@mail.gmail.com>
+In-Reply-To: <CAPhsuW4HPjXE+zZGmPM9GVPgnVieRr0WOuXfM0W6ec3SB4imDw@mail.gmail.com>
+From:   Brian Vazquez <brianvv.kernel@gmail.com>
+Date:   Wed, 24 Jul 2019 15:44:40 -0700
+Message-ID: <CABCgpaXz4hO=iGoswdqYBECWE5eu2AdUgms=hyfKnqz7E+ZgNg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/6] bpf: add BPF_MAP_DUMP command to dump more
+ than one entry per call
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The visit_groups_merge function no longer takes a function pointer,
-change the name to be similar to other sched_in functions.
-Follow Kan Liang's <kan.liang@linux.intel.com> and remove the single
-caller flexible_sched_in and pinned_sched_in, moving functionality to
-caller.
+On Wed, Jul 24, 2019 at 2:40 PM Song Liu <liu.song.a23@gmail.com> wrote:
+>
+> On Wed, Jul 24, 2019 at 10:10 AM Brian Vazquez <brianvv@google.com> wrote:
+> >
+> > This introduces a new command to retrieve multiple number of entries
+> > from a bpf map, wrapping the existing bpf methods:
+> > map_get_next_key and map_lookup_elem
+> >
+> > To start dumping the map from the beginning you must specify NULL as
+> > the prev_key.
+> >
+> > The new API returns 0 when it successfully copied all the elements
+> > requested or it copied less because there weren't more elements to
+> > retrieved (i.e err == -ENOENT). In last scenario err will be masked to 0.
+> >
+> > On a successful call buf and buf_len will contain correct data and in
+> > case prev_key was provided (not for the first walk, since prev_key is
+> > NULL) it will contain the last_key copied into the prev_key which will
+> > simplify next call.
+> >
+> > Only when it can't find a single element it will return -ENOENT meaning
+> > that the map has been entirely walked. When an error is return buf,
+> > buf_len and prev_key shouldn't be read nor used.
+> >
+> > Because maps can be called from userspace and kernel code, this function
+> > can have a scenario where the next_key was found but by the time we
+> > try to retrieve the value the element is not there, in this case the
+> > function continues and tries to get a new next_key value, skipping the
+> > deleted key. If at some point the function find itself trap in a loop,
+> > it will return -EINTR.
+> >
+> > The function will try to fit as much as possible in the buf provided and
+> > will return -EINVAL if buf_len is smaller than elem_size.
+> >
+> > QUEUE and STACK maps are not supported.
+> >
+> > Note that map_dump doesn't guarantee that reading the entire table is
+> > consistent since this function is always racing with kernel and user code
+> > but the same behaviour is found when the entire table is walked using
+> > the current interfaces: map_get_next_key + map_lookup_elem.
+> > It is also important to note that with  a locked map, the lock is grabbed
+> > for 1 entry at the time, meaning that the returned buf might or might not
+> > be consistent.
+> >
+> > Suggested-by: Stanislav Fomichev <sdf@google.com>
+> > Signed-off-by: Brian Vazquez <brianvv@google.com>
+> > ---
+> >  include/uapi/linux/bpf.h |   9 +++
+> >  kernel/bpf/syscall.c     | 117 +++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 126 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> > index fa1c753dcdbc7..66dab5385170d 100644
+> > --- a/include/uapi/linux/bpf.h
+> > +++ b/include/uapi/linux/bpf.h
+> > @@ -106,6 +106,7 @@ enum bpf_cmd {
+> >         BPF_TASK_FD_QUERY,
+> >         BPF_MAP_LOOKUP_AND_DELETE_ELEM,
+> >         BPF_MAP_FREEZE,
+> > +       BPF_MAP_DUMP,
+> >  };
+> >
+> >  enum bpf_map_type {
+> > @@ -388,6 +389,14 @@ union bpf_attr {
+> >                 __u64           flags;
+> >         };
+> >
+> > +       struct { /* struct used by BPF_MAP_DUMP command */
+> > +               __aligned_u64   prev_key;
+> > +               __aligned_u64   buf;
+> > +               __aligned_u64   buf_len; /* input/output: len of buf */
+> > +               __u64           flags;
+>
+> Please add explanation of flags here.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- include/linux/perf_event.h |  4 +-
- kernel/events/core.c       | 77 ++++++++++++++++----------------------
- 2 files changed, 35 insertions(+), 46 deletions(-)
+got it!
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2d411786ab87..4ef3e954fa44 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -802,8 +802,8 @@ struct perf_cpu_context {
- #ifdef CONFIG_CGROUP_PERF
- 	struct perf_cgroup		*cgrp;
- 	struct list_head		cgrp_cpuctx_entry;
--	struct perf_event		**visit_groups_merge_iterator_storage;
--	int			       visit_groups_merge_iterator_storage_size;
-+	struct perf_event		**ctx_groups_sched_in_iterator_storage;
-+	int			      ctx_groups_sched_in_iterator_storage_size;
- #endif
- 
- 	struct list_head		sched_cb_entry;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index fb1027387e8e..8447cb07e90a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2640,22 +2640,22 @@ static int  __perf_install_in_context(void *info)
- 					event->cgrp->css.cgroup);
- 
- 		/*
--		 * Ensure space for visit_groups_merge iterator storage. With
-+		 * Ensure space for ctx_groups_sched_in iterator storage. With
- 		 * cgroup profiling we may have an event at each depth plus
- 		 * system wide events.
- 		 */
- 		max_iterators = perf_event_cgroup_depth(event) + 1;
- 		if (max_iterators >
--		    cpuctx->visit_groups_merge_iterator_storage_size) {
-+		    cpuctx->ctx_groups_sched_in_iterator_storage_size) {
- 			struct perf_event **storage =
--			   krealloc(cpuctx->visit_groups_merge_iterator_storage,
-+			  krealloc(cpuctx->ctx_groups_sched_in_iterator_storage,
- 				    sizeof(struct perf_event *) * max_iterators,
- 				    GFP_KERNEL);
- 			if (storage) {
--				cpuctx->visit_groups_merge_iterator_storage
--						= storage;
--				cpuctx->visit_groups_merge_iterator_storage_size
--						= max_iterators;
-+				cpuctx->ctx_groups_sched_in_iterator_storage
-+				    = storage;
-+			       cpuctx->ctx_groups_sched_in_iterator_storage_size
-+				    = max_iterators;
- 			} else {
- 				WARN_ONCE(1, "Unable to increase iterator "
- 					"storage for perf events with cgroups");
-@@ -3471,32 +3471,33 @@ static int flexible_sched_in(struct perf_event_context *ctx,
-  * Without cgroups, with a task context, there may be per-CPU and any
-  * CPU events.
-  */
--#define MIN_VISIT_GROUP_MERGE_ITERATORS 2
-+#define MIN_CTX_GROUPS_SCHED_IN_ITERATORS 2
- 
--static int visit_groups_merge(struct perf_event_context *ctx,
--			      struct perf_cpu_context *cpuctx,
--			      bool is_pinned,
--			      int *data)
-+static int ctx_groups_sched_in(struct perf_event_context *ctx,
-+			       struct perf_cpu_context *cpuctx,
-+			       bool is_pinned,
-+			       int *data)
- {
- 	/*
- 	 * A set of iterators, the iterator for the visit is chosen by the
- 	 * group_index.
- 	 */
- #ifndef CONFIG_CGROUP_PERF
--	struct perf_event *itrs[MIN_VISIT_GROUP_MERGE_ITERATORS];
-+	struct perf_event *itrs[MIN_CTX_GROUPS_SCHED_IN_ITERATORS];
- 	struct perf_event_heap heap = {
- 		.storage = itrs,
- 		.num_elements = 0,
--		.max_elements = MIN_VISIT_GROUP_MERGE_ITERATORS
-+		.max_elements = MIN_CTX_GROUPS_SCHED_IN_ITERATORS
- 	};
- #else
- 	/*
- 	 * With cgroups usage space in the CPU context reserved for iterators.
- 	 */
- 	struct perf_event_heap heap = {
--		.storage = cpuctx->visit_groups_merge_iterator_storage,
-+		.storage = cpuctx->ctx_groups_sched_in_iterator_storage,
- 		.num_elements = 0,
--		.max_elements = cpuctx->visit_groups_merge_iterator_storage_size
-+		.max_elements =
-+			cpuctx->ctx_groups_sched_in_iterator_storage_size
- 	};
- #endif
- 	int ret, cpu = smp_processor_id();
-@@ -3628,27 +3629,6 @@ static int flexible_sched_in(struct perf_event_context *ctx,
- 	return 0;
- }
- 
--static void
--ctx_pinned_sched_in(struct perf_event_context *ctx,
--		    struct perf_cpu_context *cpuctx)
--{
--	visit_groups_merge(ctx,
--			   cpuctx,
--			   /*is_pinned=*/true,
--			   NULL);
--}
--
--static void
--ctx_flexible_sched_in(struct perf_event_context *ctx,
--		      struct perf_cpu_context *cpuctx)
--{
--	int can_add_hw = 1;
--
--	visit_groups_merge(ctx,
--			   cpuctx,
--			   /*is_pinned=*/false,
--			   &can_add_hw);
--}
- 
- static void
- ctx_sched_in(struct perf_event_context *ctx,
-@@ -3686,11 +3666,20 @@ ctx_sched_in(struct perf_event_context *ctx,
- 	 * in order to give them the best chance of going on.
- 	 */
- 	if (is_active & EVENT_PINNED)
--		ctx_pinned_sched_in(ctx, cpuctx);
-+		ctx_groups_sched_in(ctx,
-+				    cpuctx,
-+				    /*is_pinned=*/true,
-+				    NULL);
- 
- 	/* Then walk through the lower prio flexible groups */
--	if (is_active & EVENT_FLEXIBLE)
--		ctx_flexible_sched_in(ctx, cpuctx);
-+	if (is_active & EVENT_FLEXIBLE) {
-+		int can_add_hw = 1;
-+
-+		ctx_groups_sched_in(ctx,
-+				    cpuctx,
-+				    /*is_pinned=*/false,
-+				    &can_add_hw);
-+	}
- }
- 
- static void cpu_ctx_sched_in(struct perf_cpu_context *cpuctx,
-@@ -10266,12 +10255,12 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
- 		cpuctx->ctx.pmu = pmu;
- 		cpuctx->online = cpumask_test_cpu(cpu, perf_online_mask);
- #ifdef CONFIG_CGROUP_PERF
--		cpuctx->visit_groups_merge_iterator_storage =
--				kmalloc_array(MIN_VISIT_GROUP_MERGE_ITERATORS,
-+		cpuctx->ctx_groups_sched_in_iterator_storage =
-+				kmalloc_array(MIN_CTX_GROUPS_SCHED_IN_ITERATORS,
- 					      sizeof(struct perf_event *),
- 					      GFP_KERNEL);
--		cpuctx->visit_groups_merge_iterator_storage_size =
--				MIN_VISIT_GROUP_MERGE_ITERATORS;
-+		cpuctx->ctx_groups_sched_in_iterator_storage_size =
-+				MIN_CTX_GROUPS_SCHED_IN_ITERATORS;
- #endif
- 		__perf_mux_hrtimer_init(cpuctx, cpu);
- 	}
--- 
-2.22.0.709.g102302147b-goog
+> Also, we need to update the
+> comments of BPF_F_LOCK for BPF_MAP_DUMP.
 
+What do you mean? I didn't get this part.
+
+>
+> > +               __u32           map_fd;
+> > +       } dump;
+> > +
+> >         struct { /* anonymous struct used by BPF_PROG_LOAD command */
+> >                 __u32           prog_type;      /* one of enum bpf_prog_type */
+> >                 __u32           insn_cnt;
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index 86cdc2f7bb56e..0c35505aa219f 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -1097,6 +1097,120 @@ static int map_get_next_key(union bpf_attr *attr)
+> >         return err;
+> >  }
+> >
+> > +/* last field in 'union bpf_attr' used by this command */
+> > +#define BPF_MAP_DUMP_LAST_FIELD dump.map_fd
+> > +
+> > +static int map_dump(union bpf_attr *attr)
+> > +{
+> > +       void __user *ukey = u64_to_user_ptr(attr->dump.prev_key);
+> > +       void __user *ubuf = u64_to_user_ptr(attr->dump.buf);
+> > +       u32 __user *ubuf_len = u64_to_user_ptr(attr->dump.buf_len);
+> > +       int ufd = attr->dump.map_fd;
+> > +       struct bpf_map *map;
+> > +       void *buf, *prev_key, *key, *value;
+> > +       u32 value_size, elem_size, buf_len, cp_len;
+> > +       struct fd f;
+> > +       int err;
+> > +       bool first_key = false;
+> > +
+> > +       if (CHECK_ATTR(BPF_MAP_DUMP))
+> > +               return -EINVAL;
+> > +
+> > +       if (attr->dump.flags & ~BPF_F_LOCK)
+> > +               return -EINVAL;
+> > +
+> > +       f = fdget(ufd);
+> > +       map = __bpf_map_get(f);
+> > +       if (IS_ERR(map))
+> > +               return PTR_ERR(map);
+> > +       if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ)) {
+> > +               err = -EPERM;
+> > +               goto err_put;
+> > +       }
+> > +
+> > +       if ((attr->dump.flags & BPF_F_LOCK) &&
+> > +           !map_value_has_spin_lock(map)) {
+> > +               err = -EINVAL;
+> > +               goto err_put;
+> > +       }
+>
+> We can share these lines with map_lookup_elem(). Maybe
+> add another helper function?
+
+Which are the lines you are referring to? the dump.flags? It makes
+sense so that way when a new flag is added you only need to modify
+them in one spot.
+
+> > +
+> > +       if (map->map_type == BPF_MAP_TYPE_QUEUE ||
+> > +           map->map_type == BPF_MAP_TYPE_STACK) {
+> > +               err = -ENOTSUPP;
+> > +               goto err_put;
+> > +       }
+> > +
+> > +       value_size = bpf_map_value_size(map);
+> > +
+> > +       err = get_user(buf_len, ubuf_len);
+> > +       if (err)
+> > +               goto err_put;
+> > +
+> > +       elem_size = map->key_size + value_size;
+> > +       if (buf_len < elem_size) {
+> > +               err = -EINVAL;
+> > +               goto err_put;
+> > +       }
+> > +
+> > +       if (ukey) {
+> > +               prev_key = __bpf_copy_key(ukey, map->key_size);
+> > +               if (IS_ERR(prev_key)) {
+> > +                       err = PTR_ERR(prev_key);
+> > +                       goto err_put;
+> > +               }
+> > +       } else {
+> > +               prev_key = NULL;
+> > +               first_key = true;
+> > +       }
+> > +
+> > +       err = -ENOMEM;
+> > +       buf = kmalloc(elem_size, GFP_USER | __GFP_NOWARN);
+> > +       if (!buf)
+> > +               goto err_put;
+> > +
+> > +       key = buf;
+> > +       value = key + map->key_size;
+> > +       for (cp_len = 0; cp_len + elem_size <= buf_len;) {
+> > +               if (signal_pending(current)) {
+> > +                       err = -EINTR;
+> > +                       break;
+> > +               }
+> > +
+> > +               rcu_read_lock();
+> > +               err = map->ops->map_get_next_key(map, prev_key, key);
+>
+> If prev_key is deleted before map_get_next_key(), we get the first key
+> again. This is pretty weird.
+
+Yes, I know. But note that the current scenario happens even for the
+old interface (imagine you are walking a map from userspace and you
+tried get_next_key the prev_key was removed, you will start again from
+the beginning without noticing it).
+I tried to sent a patch in the past but I was missing some context:
+before NULL was used to get the very first_key the interface relied in
+a random (non existent) key to retrieve the first_key in the map, and
+I was told what we still have to support that scenario.
+
+>
+> > +               rcu_read_unlock();
+> > +
+> > +               if (err)
+> > +                       break;
+> > +
+> > +               err = bpf_map_copy_value(map, key, value, attr->dump.flags);
+> > +
+> > +               if (err == -ENOENT)
+> > +                       continue;
+> > +               if (err)
+> > +                       goto free_buf;
+> > +
+> > +               if (copy_to_user(ubuf + cp_len, buf, elem_size)) {
+> > +                       err = -EFAULT;
+> > +                       goto free_buf;
+> > +               }
+> > +
+> > +               prev_key = key;
+> > +               cp_len += elem_size;
+> > +       }
+> > +
+> > +       if (err == -ENOENT && cp_len)
+> > +               err = 0;
+> > +       if (!err && (copy_to_user(ubuf_len, &cp_len, sizeof(cp_len)) ||
+> > +                   (!first_key && copy_to_user(ukey, key, map->key_size))))
+> > +               err = -EFAULT;
+> > +free_buf:
+> > +       kfree(buf);
+> > +err_put:
+> > +       fdput(f);
+> > +       return err;
+> > +}
+> > +
+> >  #define BPF_MAP_LOOKUP_AND_DELETE_ELEM_LAST_FIELD value
+> >
+> >  static int map_lookup_and_delete_elem(union bpf_attr *attr)
+> > @@ -2910,6 +3024,9 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
+> >         case BPF_MAP_LOOKUP_AND_DELETE_ELEM:
+> >                 err = map_lookup_and_delete_elem(&attr);
+> >                 break;
+> > +       case BPF_MAP_DUMP:
+> > +               err = map_dump(&attr);
+> > +               break;
+> >         default:
+> >                 err = -EINVAL;
+> >                 break;
+> > --
+> > 2.22.0.657.g960e92d24f-goog
+> >
+
+Thanks for reviewing it!!
