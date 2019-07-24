@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9D9C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4987C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E825E206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7692054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000393;
-	bh=ybmtv7sVvNmwCWnKX2DmpwYfuWT0vtmWIUGJ0zeLnyw=;
+	s=default; t=1564000414;
+	bh=/it1GCteT40XgRSWhv3xmwTSLL74B9D9MY67Mmiouc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKM8WQlkl/4o224Y05rltPx3rydUlKO+iY9TySGGko9KdTp8lGKBP8WLtPCi6wPCG
-	 utCYvIOFg/7+FRNY+VZMV74cnfmRyKUMwdXb11xCFWSr9Dq/wl3gxovb9YK/3qnOsY
-	 NQ15+P/LnqK8TjahK6mAFHLkPhZwjJjirvVYHJuE=
+	b=jrCTp2bfmXwTsuunec/WcHhwKU2sWPKbIRK5fLlN42PCJljCk0vH4rPNfFrmQFnp2
+	 8pzCEZp9HuFB1X5DmEQMlXj9pWdPYAP/nQk59kQL51nJD/kAy2n+htdwfothbYvMKR
+	 16g4bWg6zGHdK5UNDIEMi4HCuwUPFjWMoUoZMVgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388180AbfGXT2K (ORCPT
+        id S1727420AbfGXT14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46186 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727408AbfGXT2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:06 -0400
+        id S1728770AbfGXT1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:27:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0FA0229F3;
-        Wed, 24 Jul 2019 19:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 524C6218EA;
+        Wed, 24 Jul 2019 19:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996485;
-        bh=ybmtv7sVvNmwCWnKX2DmpwYfuWT0vtmWIUGJ0zeLnyw=;
+        s=default; t=1563996471;
+        bh=/it1GCteT40XgRSWhv3xmwTSLL74B9D9MY67Mmiouc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vtpvvk7TG2Jftz1DQZD4uldiFZ/t2rxow0dDyP/l1rfOxYf2uWcWtWe8eWXSE53z3
-         5q8tmTVANnN824w9JdVzBrFog5psyi1CObKQMw555qmeCLpauy3DSCRxBXHZQKQuRx
-         FoPsm4amoFysTnsQj8WxuKrVVkhJ4DI01Esexz3w=
+        b=RFkF+9bd4qBpSBAnT6nTCflNBXw3lsqtZEXPjZlDE2KUF3oJkTurXKLAEijAxjORa
+         vFfSqD+U+bgPdKhdsP8dH7PguRxlTh1j11uH0bYsRauWz5zXLXMplI6U2YGjRgI2uN
+         Y6mZtmlmgv2K/lls1QJFNNHmQcKiBrD9eptwXyfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org,
-        eranian@google.com, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 112/413] perf/x86/intel/uncore: Handle invalid event coding for free-running counter
-Date:   Wed, 24 Jul 2019 21:16:43 +0200
-Message-Id: <20190724191743.345792119@linuxfoundation.org>
+Subject: [PATCH 5.2 107/413] xfrm: fix sa selector validation
+Date:   Wed, 24 Jul 2019 21:16:38 +0200
+Message-Id: <20190724191742.938612665@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -63,67 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0 ]
+[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
 
-Counting with invalid event coding for free-running counter may cause
-OOPs, e.g. uncore_iio_free_running_0/event=1/.
+After commit b38ff4075a80, the following command does not work anymore:
+$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
+  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
+  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
 
-Current code only validate the event with free-running event format,
-event=0xff,umask=0xXY. Non-free-running event format never be checked
-for the PMU with free-running counters.
+In fact, the selector is not mandatory, allow the user to provide an empty
+selector.
 
-Add generic hw_config() to check and reject the invalid event coding
-for free-running PMU.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: acme@kernel.org
-Cc: eranian@google.com
-Fixes: 0f519f0352e3 ("perf/x86/intel/uncore: Support IIO free-running counters on SKX")
-Link: https://lkml.kernel.org/r/1556672028-119221-2-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
+CC: Anirudh Gupta <anirudh.gupta@sophos.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/uncore.h       | 10 ++++++++++
- arch/x86/events/intel/uncore_snbep.c |  1 +
- 2 files changed, 11 insertions(+)
+ net/xfrm/xfrm_user.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 79eb2e21e4f0..28499e39679f 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -419,6 +419,16 @@ static inline bool is_freerunning_event(struct perf_event *event)
- 	       (((cfg >> 8) & 0xff) >= UNCORE_FREERUNNING_UMASK_START);
- }
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index 76ad7e201626..b88ba45ff1ac 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -167,6 +167,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+ 	}
  
-+/* Check and reject invalid config */
-+static inline int uncore_freerunning_hw_config(struct intel_uncore_box *box,
-+					       struct perf_event *event)
-+{
-+	if (is_freerunning_event(event))
-+		return 0;
+ 	switch (p->sel.family) {
++	case AF_UNSPEC:
++		break;
 +
-+	return -EINVAL;
-+}
-+
- static inline void uncore_disable_box(struct intel_uncore_box *box)
- {
- 	if (box->pmu->type->ops->disable_box)
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10e04387f38..8e4e8e423839 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -3585,6 +3585,7 @@ static struct uncore_event_desc skx_uncore_iio_freerunning_events[] = {
- 
- static struct intel_uncore_ops skx_uncore_iio_freerunning_ops = {
- 	.read_counter		= uncore_msr_read_counter,
-+	.hw_config		= uncore_freerunning_hw_config,
- };
- 
- static struct attribute *skx_uncore_iio_freerunning_formats_attr[] = {
+ 	case AF_INET:
+ 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
+ 			goto out;
 -- 
 2.20.1
 
