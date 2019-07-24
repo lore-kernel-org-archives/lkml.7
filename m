@@ -2,176 +2,78 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7D7C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A97C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088CD229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:51:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563965486;
-	bh=WM+fscYo1bqfJi2bJEoVhI4xfS6Xuq0YCL9CJeqsjeQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jRIgMPJhECMZffumURLMzuXgUEmipiigB49FBg7UJJqsDSleg0Dn3mg7FiKCuHGOk
-	 QLC+2iU/Ot4wqu1Q2X20pAbWWPhfiKb+zJtcPOlkGPaGofqgtGBekWizA9PS/bQj18
-	 H5p+CA4tj8zzAMkGmajiUPe4j9ob7TTK1pWOIvi4=
+	by mail.kernel.org (Postfix) with ESMTP id 5CC47229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 10:51:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFbkcLVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfGXKvZ (ORCPT
+        id S1727356AbfGXKva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 06:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfGXKvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 06:51:24 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C0B4229ED;
-        Wed, 24 Jul 2019 10:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563965483;
-        bh=WM+fscYo1bqfJi2bJEoVhI4xfS6Xuq0YCL9CJeqsjeQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E8/sdrxglJ6P9i4L4AFnheuK8F34oHAqeZAxjE9/ywra0lH0UJDFt76V5Q7zAhyoo
-         THDmcRxl8fvPWETShgPgdpQBEgTqCQp9QoKNRCKIFRGHpA+Ytg1CkfChHBZ2djurj6
-         ysGCImQlwMiYq/0GEyg2CuJIgv6DtX5PaV3JAtIo=
-Date:   Wed, 24 Jul 2019 11:51:17 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        aarch64-laptops@lists.linaro.org,
-        Rob Clark <robdclark@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Joe Perches <joe@perches.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2] iommu: add support for drivers that manage iommu
- explicitly
-Message-ID: <20190724105116.fwhnbfuglbbojjzu@willie-the-truck>
-References: <20190702202631.32148-2-robdclark@gmail.com>
- <20190710182844.25032-1-robdclark@gmail.com>
- <20190722142833.GB12009@8bytes.org>
- <CAF6AEGvJc2RK3GkpcXiVKsuTX81D3oahnu=qWJ9LFst1eT3tMg@mail.gmail.com>
- <20190722154803.GG12009@8bytes.org>
- <CAF6AEGvWf3ZOrbyyWjORuOVEPOcPr+JSEO78aYjhL-GVhDZnTg@mail.gmail.com>
- <20190723153822.gm4ossn43nvqbyak@willie-the-truck>
- <CAF6AEGtL6gqtbmtksf7zCSGrFOEj0ynq-2nwvizLLiS0FTwHpg@mail.gmail.com>
+        Wed, 24 Jul 2019 06:51:30 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38428 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfGXKv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 06:51:29 -0400
+Received: by mail-vs1-f67.google.com with SMTP id k9so31015845vso.5;
+        Wed, 24 Jul 2019 03:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Bu26HmT5VmoCYCpR6iplFNSjeK1kwtiFeo7LAU3Mayw=;
+        b=MFbkcLVudKrK8MwQA8fjNBn1lWw4QcFG8T9RFOftrdWt4zO6yMFlK2RmGLIMCUl1cJ
+         JINHHcp1NNVqXhqMZ809GRmgmYLHJRBkzHl1qurCLkk99HUcXaUOZGHuBhiXLP+zSnWK
+         aUfWCYh6Q7JI1MXd8KjbzXA2vBHEmSeIsD07oFfGF4ACzM1e0I25WX4krgpwCI7S9brj
+         +zKJ/zebAg0XG9gP+dg7FUVaTjQ5Mm4TgfaDBGvQkngDAJvWEjh6fhyajePaAlM9WDvz
+         9s+/rr290F+KGX1nPQ4kyw4VhABzeSf7wSIEWsGQ8Ky/AdXf6RLXy98dIMMs+XQc9bNz
+         cr9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Bu26HmT5VmoCYCpR6iplFNSjeK1kwtiFeo7LAU3Mayw=;
+        b=mLqJZG5GkMKrrIcQ+2Lf3onSC+2Sa6MFoJn22OQ0vKU44TUgRNHKY/Kg0Cn+CINZ4z
+         zbamn+hnBBIG2NvTlmZQcIjwkOULxP913XIN3f80O/9Isih3DtJUOMg2W+W47SBgnpRX
+         FrUeeFSC7pGqOdyAznwBGkJTjlJjHHoPBe8WXKRpbwDv7FVdkhsPZovE6mno1O6f/QMN
+         fNnw4CVJzGVz9XAxIB2Ncmo00AHiPRYZZjV1o17rzT7eQqLGJgbdHoTEmmtBdDjowqHm
+         rdmvW1UNPawaBFfq72QSLgZBmFpaNEDxBMoTA0tr5BmrVT8FhJGbKfDv1C3RpmYeT34Z
+         AJ2g==
+X-Gm-Message-State: APjAAAUAThmWmDRBR5jO4ZSFKzbF4Ln8LZ1PmftxBGdTSLsXICqnahcM
+        iXNYBR2bt7JUJ7MOLiKEH/8YFd3rKuyg0pVFMvyfCnM=
+X-Google-Smtp-Source: APXvYqyqekrxcJ/rVOiJBXglvFRza9GYrX7G4hCqq7tpnrJVcqTLJJLeCkD91x+c52mCFOnIriGvbc1xBsd70sVEWNk=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr52122041vsn.181.1563965488469;
+ Wed, 24 Jul 2019 03:51:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtL6gqtbmtksf7zCSGrFOEj0ynq-2nwvizLLiS0FTwHpg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Wed, 24 Jul 2019 11:51:17 +0100
+Message-ID: <CALjTZvbrS3dGrTrMMkGRkk=hRL38rrGiYTZ4REX9rJ0T+wcGoQ@mail.gmail.com>
+Subject: [BUG] Linux 5.3-rc1: timer problem on x86-64 (Pentium D)
+To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Cc:     tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 10:40:55AM -0700, Rob Clark wrote:
-> On Tue, Jul 23, 2019 at 8:38 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Mon, Jul 22, 2019 at 09:23:48AM -0700, Rob Clark wrote:
-> > > On Mon, Jul 22, 2019 at 8:48 AM Joerg Roedel <joro@8bytes.org> wrote:
-> > > >
-> > > > On Mon, Jul 22, 2019 at 08:41:34AM -0700, Rob Clark wrote:
-> > > > > It is set by the driver:
-> > > > >
-> > > > > https://patchwork.freedesktop.org/patch/315291/
-> > > > >
-> > > > > (This doesn't really belong in devicetree, since it isn't a
-> > > > > description of the hardware, so the driver is really the only place to
-> > > > > set this.. which is fine because it is about a detail of how the
-> > > > > driver works.)
-> > > >
-> > > > It is more a detail about how the firmware works. IIUC the problem is
-> > > > that the firmware initializes the context mappings for the GPU and the
-> > > > OS doesn't know anything about that and just overwrites them, causing
-> > > > the firmware GPU driver to fail badly.
-> > > >
-> > > > So I think it is the task of the firmware to tell the OS not to touch
-> > > > the devices mappings until the OS device driver takes over. On x86 there
-> > > > is something similar with the RMRR/unity-map tables from the firmware.
-> > > >
-> > >
-> > > Bjorn had a patchset[1] to inherit the config from firmware/bootloader
-> > > when arm-smmu is probed which handles that part of the problem.  My
-> > > patch is intended to be used on top of his patchset.  This seems to me
-> > > like the best solution, if we don't have control over the firmware.
-> >
-> > Hmm, but the feedback from Robin on the thread you cite was that this should
-> > be generalised to look more like RMRR, so there seems to be a clear message
-> > here.
-> >
-> 
-> Perhaps it is a lack of creativity, or lack of familiarity w/ iommu vs
-> virtualization, but I'm not quite seeing how RMRR would help.. in
-> particular when dealing with both DT and ACPI cases.
+Hi, everyone,
 
-Well, I suppose we'd have something for DT and something for ACPI and we'd
-try to make them look similar enough that we don't need lots of divergent
-code in the kernel. The RMRR-like description would describe that, for a
-particular device, a specific virt:phys mapping needs to exist in the
-small window between initialising the SMMU and re-initialising the device
-(GPU).
+I don't know if this has been reported before, but from a cursory
+search it doesn't seem to be the case.
+I have a x86-64 Pentium (4) D machine which always worked perfectly
+with Linux 5.2 using the TSC as the clock source. With Linux 5.3-rc1 I
+can't, for the life of me, boot it with anything other than
+clocksource=jiffies, it completely hangs without even a backtrace.
+At the moment I'm at work and, for obvious reasons, I'm not able to
+bisect this remotely. In any case, if anyone has any idea about the
+cause, I'll be glad to help debugging and testing any patches.
 
-I would prefer this to be framebuffer-specific, since we're already in
-flagrant violation of the arm64 boot requirements wrt ongoing DMA and making
-this too general could lead to all sorts of brain damage. That would
-probably also allow us to limit the flexibility, by mandating things like
-alignment and memory attributes.
-
-Having said that, I just realised I'm still a bit confused about the
-problem: why does the bootloader require SMMU translation for the GPU at
-all? If we could limit this whole thing to be identity-mapped/bypassed,
-then all we need is a per-device flag in the firmware to indicate that the
-SMMU should be initialised to allow passthrough for transactions originating
-from that device.
-
-> So I kinda prefer, when possible, if arm-smmu can figure out what is going
-> on by looking at the hw state at boot (since that approach would work
-> equally well for DT and ACPI).
-
-That's not going to fly.
-
-Forcing Linux to infer the state of the system by effectively parsing the
-hardware configuration directly is fragile, error-prone and may not even be
-possible in the general case. Worse, if this goes wrong, the symptoms are
-very likely to be undiagnosable memory corruption, which is pretty awful in
-my opinion.
-
-Not only would you need separate parsing code for every IOMMU out there,
-but you'd also need to make Linux aware of device aspects that it otherwise
-doesn't care about, just in case the firmware decided to use them.
-Furthermore, running an older kernel on newer hardware (which may have some
-extensions), could cause the parsing to silently ignore parts of the device
-that indicate memory regions which are in use. On top of that, there made be
-device-global state that we are unable to reconfigure and that affect
-devices other than the ones in question.
-
-So no, I'm very much against this approach and the solution absolutely needs
-to come in the form of a more abstract description from firmware.
-
-> I *think* (but need to confirm if Bjorn hasn't already) that the
-> memory for the pagetables that firmware/bootloader sets up is already
-> removed from the memory map efi passes to kernel, so we don't need to
-> worry about kernel stomping in-use pagetables.
-
-It's precisely this sort of fragility that makes me nervous about this whole
-approach.
-
-Will
+Thanks in advance,
+Rui
