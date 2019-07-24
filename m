@@ -2,119 +2,116 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E92C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30652C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A1021738
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045D02084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCaCMDu3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IB4B3//Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfGXGjK (ORCPT
+        id S1726211AbfGXGlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:39:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46442 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfGXGjJ (ORCPT
+        Wed, 24 Jul 2019 02:41:20 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:6374 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfGXGlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:39:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z1so45554366wru.13;
-        Tue, 23 Jul 2019 23:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=/y6MHQMi0uRYJAaIjnjQQh3pn0f7uiR3QmjPcFFx2Lc=;
-        b=cCaCMDu3U+xeDIVPHhXHIcg0BSKgwue1aGbyObTDGMEw/pE0NpFrPGMBWSvxwMEnG+
-         vM00ad5W9L1lMPL+5UdYLuzLDgGk+f74M0EnX+Rk3m/rLvBs9/JGhSM8CVX5hDt7MFcF
-         C6nw6M7dUmtH70sZIlpS+uE9VUBEJjaFWyZGk6D1haR8X9KNUWMKx3PcjpHp/H7qKLfQ
-         r2oeusSwRerYDxapkYV938NeS+Nm8wgBlmXtA7n8epBNqaoIarLcMVut+t2jsCOZ7etr
-         RBsMSCC5iyzm4+PBt4sdRn1mThXOWyiRDi9aY7dT90xhmIGl5/QEM+F1zFzj/iKjJD8P
-         oP3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/y6MHQMi0uRYJAaIjnjQQh3pn0f7uiR3QmjPcFFx2Lc=;
-        b=myyCWNiI77jzgFmhZbbakidXmYn0myt0X2Bumle0GtBClFayvFRfQAjYVz4gtrLCl2
-         vxLU5PmK8C2uBkXNyHs4SjaEeyWRm/ysX1zJlkpzi8BwZY2Q9iayOUFpdu/zSV9LOtHZ
-         nd3QIJZQId/N4ygj8eofGlpL65EASXH3B3hTremf3VbTe9Cq2WQqfAoK6pLQgiYqYeTC
-         ie+u2riH1MhkGvSmH5lcWVurSTyRxa6Z001rUapllO/pNFiH7Uw4SjtrmP2+iRTl9m9S
-         54Vaym6NMb4s7KqJlBwYsm23e7WHCHL6WzZAmH+wq/xKfEtu+2pmLo+jsqTyvsalwpfq
-         +Yxw==
-X-Gm-Message-State: APjAAAXw9xZiFXYcxKBjl2T7iBNYLcjB7LhKYqkyhpx/mf7O8VlFdB3a
-        GxqWa8SerYMNwzQCFAS7eDc=
-X-Google-Smtp-Source: APXvYqxFY3S/zD4Km/ZPveZ0YEEBG9PHJ5COp5MPaK6V0jO3f0sD2R6AHHFoxa8H2IrGHkxmyMIMFA==
-X-Received: by 2002:adf:f888:: with SMTP id u8mr55728658wrp.238.1563950347445;
-        Tue, 23 Jul 2019 23:39:07 -0700 (PDT)
-Received: from [192.168.8.147] (200.150.22.93.rev.sfr.net. [93.22.150.200])
-        by smtp.gmail.com with ESMTPSA id x20sm100561441wrg.10.2019.07.23.23.39.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Jul 2019 23:39:06 -0700 (PDT)
-Subject: Re: Reminder: 99 open syzbot bugs in net subsystem
-To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>,
-        Ilya Maximets <i.maximets@samsung.com>,
-        Eric Dumazet <edumazet@google.com>,
-        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <20190724013813.GB643@sol.localdomain>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <63f12327-dd4b-5210-4de2-705af6bc4ba4@gmail.com>
-Date:   Wed, 24 Jul 2019 08:39:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 24 Jul 2019 02:41:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d37fd8d0002>; Tue, 23 Jul 2019 23:41:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Jul 2019 23:41:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Jul 2019 23:41:19 -0700
+Received: from [10.24.46.79] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
+ 2019 06:41:16 +0000
+Subject: Re: [PATCH v2] drm/tegra: sor: Enable HDA interrupts at plugin
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1563787632-19762-1-git-send-email-viswanathl@nvidia.com>
+ <11288075-f34a-222c-66da-2bfd13db987c@gmail.com>
+ <fe7a0f13-4e85-56db-7629-92c6a8f67014@nvidia.com>
+ <5281fd84-bbe8-8482-0224-068b87349aaa@gmail.com>
+From:   Viswanath L <viswanathl@nvidia.com>
+Message-ID: <5142f8d7-a387-a556-8209-536439be4925@nvidia.com>
+Date:   Wed, 24 Jul 2019 12:11:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190724013813.GB643@sol.localdomain>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <5281fd84-bbe8-8482-0224-068b87349aaa@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1563950477; bh=g96D4ApIOGkTzcjdy6YtT9b/KtR9E/nksr8Tz76ZlKY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=IB4B3//Zn56Hj/tus4pf69WYZzx2eWrV1celvtp+CrKNjYMeOQweQI2Gw+JydwvvF
+         i+/KcylKF4DPnfQMaYzyGrtW2vQmR/yfr1SGo/rEPrzT8GaXB+HORffU9Q5d2s64XL
+         G3eClMqwnORXr15sf2AAV4d7yaEpbYRoxmHNh9Nuaf7BsJROmNyYjr42clgpqdv+mp
+         vhHJ4LaZna1plLDmxgMu05ckg1jVvNEbe6SckH4p5uHUEyozNWFkFjQAbjGeqMt4WC
+         gh/LFGuMU6JXntxvDrjP8sZY9lXdKJvEE3T4yEJwh4UV2PcFcORU3TgttBX6L9E4UV
+         dLAfmyZu4DixA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Dmitry, I have pushed new patch set v3=20
+(https://patchwork.ozlabs.org/patch/1135605/). Request you to kindly review=
+.
 
+Thanks.
 
-On 7/24/19 3:38 AM, Eric Biggers wrote:
-> [This email was generated by a script.  Let me know if you have any suggestions
-> to make it better, or if you want it re-generated with the latest status.]
-> 
-> Of the currently open syzbot reports against the upstream kernel, I've manually
-> marked 99 of them as possibly being bugs in the net subsystem.  This category
-> only includes the networking bugs that I couldn't assign to a more specific
-> component (bpf, xfrm, bluetooth, tls, tipc, sctp, wireless, etc.).  I've listed
-> these reports below, sorted by an algorithm that tries to list first the reports
-> most likely to be still valid, important, and actionable.
-> 
-> Of these 99 bugs, 17 were seen in mainline in the last week.
-> 
-> Of these 99 bugs, 4 were bisected to commits from the following people:
-> 
-> 	Florian Westphal <fw@strlen.de>
-> 	Ilya Maximets <i.maximets@samsung.com>
-> 	Eric Dumazet <edumazet@google.com>
-> 	David Ahern <dsahern@gmail.com>
-> 
-> If you believe a bug is no longer valid, please close the syzbot report by
-> sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-> original thread, as explained at https://goo.gl/tpsmEJ#status
-> 
-> If you believe I misattributed a bug to the net subsystem, please let me know,
-> and if possible forward the report to the correct people or mailing list.
+On 7/23/2019 3:48 PM, Dmitry Osipenko wrote:
+> 23.07.2019 13:11, Viswanath L =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Thanks for your comments, Dmitry. Please see my responses inline.
+>>
+>> On 7/23/2019 6:00 AM, Dmitry Osipenko wrote:
+>>> 22.07.2019 12:27, Viswanath L =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> HDMI plugout calls runtime suspend, which clears interrupt registers
+>>>> and causes audio functionality to break on subsequent plugin; setting
+>>>> interrupt registers in sor_audio_prepare() solves the issue
+>>> Hello Viswanath,
+>>>
+>>> A dot should be in the end of sentence, please. And should be better to
+>>> s/plugin/plug-in/ in the commit's message/title because 'plugin' sounds
+>>> as a noun.
+>> [VL] Yes, I'll make the above changes.
+>>> Please don't version patch as v2 if v1 wasn't ever sent out.
+>> [VL] Now that I have sent v2, shall I continue with v2 for the next
+>> patch? Apologies for this oversight.
+> v3 should be good.
 >
-
-Some of the bugs have been fixed already, before syzbot found them.
-
-Why force human to be gentle to bots and actually replying to them ?
-
-I usually simply wait that syzbot is finding the bug does not repro anymore,
-but now if you send these emails, we will have even more pressure on us.
-
-
+>>> You should add a stable tag here to get patch backported into stable
+>>> kernel versions:
+>>>
+>>> Cc: <stable@vger.kernel.org>
+>> [VL] Yes, will add.
+>>>> Signed-off-by: Viswanath L <viswanathl@nvidia.com>
+>>> The kernel upstreaming rules require a full name. I'm pretty sure that =
+L
+>>> isn't yours surname.
+>> [VL] My name appears as "Viswanath L" in all company records and email
+>> lists. I would strongly prefer to keep it this way, unless that is an
+>> absolute no-no.
+> I guess it should be okay, but a full name is much more preferable.
