@@ -2,100 +2,220 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5186CC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B4C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DB32238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IW0iJnlw"
+	by mail.kernel.org (Postfix) with ESMTP id DA0562238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563996715;
+	bh=06U/yfbCKdgrJso4/XYlbpJ9Wt4e21GUBKvtNGaSYSU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rtmQq+Nkln6BNgku01voYtq9/D3VQyO3gnmeQY0B1MqIEI5boPPvVnjQ3aBTVK2ak
+	 CJFMDMhn/BZHXnLULcwL5BFXlABNUVT0eT/9/43fzVgcojmjdpo2bHiuoVBcJfMlF2
+	 xJFVjrqNvS/xTLVstVDJxZH9jld4D1/6AsQBRmds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388549AbfGXTbt (ORCPT
+        id S2388558AbfGXTbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:31:49 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43772 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388522AbfGXTbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:44 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w17so2351698qto.10;
-        Wed, 24 Jul 2019 12:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KEYXRfxDMQpSRlqGw7giHzXrwzZ2wZjC978EK9xyRN8=;
-        b=IW0iJnlwU+6BMKYqPwgjATPX6yxEn+xYUz4mTlOK++buj0vNE9wEj6n7Yrt8oo04S5
-         wPVopwjUos7Dz7G140Un3YHFfOXH8Ap1fzGPJUtNa0kN5lVN+RmsqrazCesSUiOIIoYL
-         dzUy6IzCmseJagRl6IzaRYnXoSAEMwTWaOPZjcqisMcDdLEXfQ6vwXXomW93jCj1DxZq
-         O+s0DuJviB9cM7gwsrLIPGprb2xwxVDHXBhG4C+rxZ6y+qIHLN/fxxW3NrJ9jBA4S9eL
-         EHzPKYi+YHlyBWQ/XEJSghTqoI3fv7lwjxz9eUlhMrtJk/UR9I1p7rply/d0STOXjWz0
-         FRbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KEYXRfxDMQpSRlqGw7giHzXrwzZ2wZjC978EK9xyRN8=;
-        b=Efx3oxCpqjwmEWwTq3OSORHZXexJorHBMaeQt+KYm9b+At2mXauoabaJ4pQeW4Xoqq
-         QfvEeVzIyVPEVwe0JYG2AyMUwO1Wk8c56vwXxNRitWruQsY8VSBTwGNuefnbkxBNE+6w
-         5hblUBHCInwoceUUN3uAJg+rYHGZ84/TOutJ8b80TVOLD+zQm3kDhSL5HHOZ1GD/4tDg
-         rK7OK05jm8J/C1TJOyXk22O2UJGRMqvyta6tTDdp/moLIsbEs8TpjGbRXLq+5wKPAyE7
-         Er0bYXqOmvCypTGfPepryjcrWCeYuGTyWFQqqoaowZE7QNTSRZkHXzYfiH5ZjKyhRFRB
-         NIWQ==
-X-Gm-Message-State: APjAAAW+yw+Shn1Opd7JUY/oVMKJU3iOfJDtE0CCd9f0l8jor+IXH0cp
-        gDRKSfKA/6I032AFyXCvZLEPTzTcf5H0w81B0KEd
-X-Google-Smtp-Source: APXvYqxGbYe1CZBM/SrFvkzjBSGjnnbVZJe2Zqf9jXR0AbM4K+io5m5Hz53gzDF9ngRUORUDeMHA3BNJtGpu9i8++QU=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr13764090qtb.224.1563996703415;
- Wed, 24 Jul 2019 12:31:43 -0700 (PDT)
+        Wed, 24 Jul 2019 15:31:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388547AbfGXTbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F75220659;
+        Wed, 24 Jul 2019 19:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996709;
+        bh=06U/yfbCKdgrJso4/XYlbpJ9Wt4e21GUBKvtNGaSYSU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=025vLLwrJTkuGOmgEt6GxGMlcio7ENUvGVvZBP82gm0t7fApP79Flz5sySWHuOJHL
+         hEInARlIGD6WIrDpOlXKaR0sPf8DLLxVk6ayeUCWPkXYWWbIjXuhQorNMK/hWLgjVy
+         2uhNuncBXfV0Tr13pHRr5QeQpowPj3CJOzcsAqUg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 189/413] bcache: acquire bch_register_lock later in cached_dev_free()
+Date:   Wed, 24 Jul 2019 21:18:00 +0200
+Message-Id: <20190724191748.227212134@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190724130252.7c29bba9@canb.auug.org.au>
-In-Reply-To: <20190724130252.7c29bba9@canb.auug.org.au>
-From:   Rob Herring <robherring2@gmail.com>
-Date:   Wed, 24 Jul 2019 13:31:30 -0600
-Message-ID: <CAL_JsqKoAG9iu7CfuivtfDXE5Opf8sq8=tRPPWQGT4FPOxiyhw@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the devicetree tree with Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 9:02 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Today's linux-next merge of the devicetree tree got a conflict in:
->
->   Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
->
-> between commit:
->
->   355fb0e54e85 ("dt-bindings: input: sun4i-lradc-keys: Add A64 compatible")
->
-> from Linus' tree and commit:
->
->   3f587b3b77b9 ("dt-bindings: input: Convert Allwinner LRADC to a schema")
->
-> from the devicetree tree.
->
-> I fixed it up (I removed the file - the additions from the former
-> have been incorporated into the latter) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+[ Upstream commit 80265d8dfd77792e133793cef44a21323aac2908 ]
 
-I've updated my for-next branch to 5.3-rc1, so this should be resolved now.
+When enable lockdep engine, a lockdep warning can be observed when
+reboot or shutdown system,
 
-Rob
+[ 3142.764557][    T1] bcache: bcache_reboot() Stopping all devices:
+[ 3142.776265][ T2649]
+[ 3142.777159][ T2649] ======================================================
+[ 3142.780039][ T2649] WARNING: possible circular locking dependency detected
+[ 3142.782869][ T2649] 5.2.0-rc4-lp151.20-default+ #1 Tainted: G        W
+[ 3142.785684][ T2649] ------------------------------------------------------
+[ 3142.788479][ T2649] kworker/3:67/2649 is trying to acquire lock:
+[ 3142.790738][ T2649] 00000000aaf02291 ((wq_completion)bcache_writeback_wq){+.+.}, at: flush_workqueue+0x87/0x4c0
+[ 3142.794678][ T2649]
+[ 3142.794678][ T2649] but task is already holding lock:
+[ 3142.797402][ T2649] 000000004fcf89c5 (&bch_register_lock){+.+.}, at: cached_dev_free+0x17/0x120 [bcache]
+[ 3142.801462][ T2649]
+[ 3142.801462][ T2649] which lock already depends on the new lock.
+[ 3142.801462][ T2649]
+[ 3142.805277][ T2649]
+[ 3142.805277][ T2649] the existing dependency chain (in reverse order) is:
+[ 3142.808902][ T2649]
+[ 3142.808902][ T2649] -> #2 (&bch_register_lock){+.+.}:
+[ 3142.812396][ T2649]        __mutex_lock+0x7a/0x9d0
+[ 3142.814184][ T2649]        cached_dev_free+0x17/0x120 [bcache]
+[ 3142.816415][ T2649]        process_one_work+0x2a4/0x640
+[ 3142.818413][ T2649]        worker_thread+0x39/0x3f0
+[ 3142.820276][ T2649]        kthread+0x125/0x140
+[ 3142.822061][ T2649]        ret_from_fork+0x3a/0x50
+[ 3142.823965][ T2649]
+[ 3142.823965][ T2649] -> #1 ((work_completion)(&cl->work)#2){+.+.}:
+[ 3142.827244][ T2649]        process_one_work+0x277/0x640
+[ 3142.829160][ T2649]        worker_thread+0x39/0x3f0
+[ 3142.830958][ T2649]        kthread+0x125/0x140
+[ 3142.832674][ T2649]        ret_from_fork+0x3a/0x50
+[ 3142.834915][ T2649]
+[ 3142.834915][ T2649] -> #0 ((wq_completion)bcache_writeback_wq){+.+.}:
+[ 3142.838121][ T2649]        lock_acquire+0xb4/0x1c0
+[ 3142.840025][ T2649]        flush_workqueue+0xae/0x4c0
+[ 3142.842035][ T2649]        drain_workqueue+0xa9/0x180
+[ 3142.844042][ T2649]        destroy_workqueue+0x17/0x250
+[ 3142.846142][ T2649]        cached_dev_free+0x52/0x120 [bcache]
+[ 3142.848530][ T2649]        process_one_work+0x2a4/0x640
+[ 3142.850663][ T2649]        worker_thread+0x39/0x3f0
+[ 3142.852464][ T2649]        kthread+0x125/0x140
+[ 3142.854106][ T2649]        ret_from_fork+0x3a/0x50
+[ 3142.855880][ T2649]
+[ 3142.855880][ T2649] other info that might help us debug this:
+[ 3142.855880][ T2649]
+[ 3142.859663][ T2649] Chain exists of:
+[ 3142.859663][ T2649]   (wq_completion)bcache_writeback_wq --> (work_completion)(&cl->work)#2 --> &bch_register_lock
+[ 3142.859663][ T2649]
+[ 3142.865424][ T2649]  Possible unsafe locking scenario:
+[ 3142.865424][ T2649]
+[ 3142.868022][ T2649]        CPU0                    CPU1
+[ 3142.869885][ T2649]        ----                    ----
+[ 3142.871751][ T2649]   lock(&bch_register_lock);
+[ 3142.873379][ T2649]                                lock((work_completion)(&cl->work)#2);
+[ 3142.876399][ T2649]                                lock(&bch_register_lock);
+[ 3142.879727][ T2649]   lock((wq_completion)bcache_writeback_wq);
+[ 3142.882064][ T2649]
+[ 3142.882064][ T2649]  *** DEADLOCK ***
+[ 3142.882064][ T2649]
+[ 3142.885060][ T2649] 3 locks held by kworker/3:67/2649:
+[ 3142.887245][ T2649]  #0: 00000000e774cdd0 ((wq_completion)events){+.+.}, at: process_one_work+0x21e/0x640
+[ 3142.890815][ T2649]  #1: 00000000f7df89da ((work_completion)(&cl->work)#2){+.+.}, at: process_one_work+0x21e/0x640
+[ 3142.894884][ T2649]  #2: 000000004fcf89c5 (&bch_register_lock){+.+.}, at: cached_dev_free+0x17/0x120 [bcache]
+[ 3142.898797][ T2649]
+[ 3142.898797][ T2649] stack backtrace:
+[ 3142.900961][ T2649] CPU: 3 PID: 2649 Comm: kworker/3:67 Tainted: G        W         5.2.0-rc4-lp151.20-default+ #1
+[ 3142.904789][ T2649] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[ 3142.909168][ T2649] Workqueue: events cached_dev_free [bcache]
+[ 3142.911422][ T2649] Call Trace:
+[ 3142.912656][ T2649]  dump_stack+0x85/0xcb
+[ 3142.914181][ T2649]  print_circular_bug+0x19a/0x1f0
+[ 3142.916193][ T2649]  __lock_acquire+0x16cd/0x1850
+[ 3142.917936][ T2649]  ? __lock_acquire+0x6a8/0x1850
+[ 3142.919704][ T2649]  ? lock_acquire+0xb4/0x1c0
+[ 3142.921335][ T2649]  ? find_held_lock+0x34/0xa0
+[ 3142.923052][ T2649]  lock_acquire+0xb4/0x1c0
+[ 3142.924635][ T2649]  ? flush_workqueue+0x87/0x4c0
+[ 3142.926375][ T2649]  flush_workqueue+0xae/0x4c0
+[ 3142.928047][ T2649]  ? flush_workqueue+0x87/0x4c0
+[ 3142.929824][ T2649]  ? drain_workqueue+0xa9/0x180
+[ 3142.931686][ T2649]  drain_workqueue+0xa9/0x180
+[ 3142.933534][ T2649]  destroy_workqueue+0x17/0x250
+[ 3142.935787][ T2649]  cached_dev_free+0x52/0x120 [bcache]
+[ 3142.937795][ T2649]  process_one_work+0x2a4/0x640
+[ 3142.939803][ T2649]  worker_thread+0x39/0x3f0
+[ 3142.941487][ T2649]  ? process_one_work+0x640/0x640
+[ 3142.943389][ T2649]  kthread+0x125/0x140
+[ 3142.944894][ T2649]  ? kthread_create_worker_on_cpu+0x70/0x70
+[ 3142.947744][ T2649]  ret_from_fork+0x3a/0x50
+[ 3142.970358][ T2649] bcache: bcache_device_free() bcache0 stopped
+
+Here is how the deadlock happens.
+1) bcache_reboot() calls bcache_device_stop(), then inside
+   bcache_device_stop() BCACHE_DEV_CLOSING bit is set on d->flags.
+   Then closure_queue(&d->cl) is called to invoke cached_dev_flush().
+2) In cached_dev_flush(), cached_dev_free() is called by continu_at().
+3) In cached_dev_free(), when stopping the writeback kthread of the
+   cached device by kthread_stop(), dc->writeback_thread will be waken
+   up to quite the kthread while-loop, then cached_dev_put() is called
+   in bch_writeback_thread().
+4) Calling cached_dev_put() in writeback kthread may drop dc->count to
+   0, then dc->detach kworker is scheduled, which is initialized as
+   cached_dev_detach_finish().
+5) Inside cached_dev_detach_finish(), the last line of code is to call
+   closure_put(&dc->disk.cl), which drops the last reference counter of
+   closrure dc->disk.cl, then the callback cached_dev_flush() gets
+   called.
+Now cached_dev_flush() is called for second time in the code path, the
+first time is in step 2). And again bch_register_lock will be acquired
+again, and a A-A lock (lockdep terminology) is happening.
+
+The root cause of the above A-A lock is in cached_dev_free(), mutex
+bch_register_lock is held before stopping writeback kthread and other
+kworkers. Fortunately now we have variable 'bcache_is_reboot', which may
+prevent device registration or unregistration during reboot/shutdown
+time, so it is unncessary to hold bch_register_lock such early now.
+
+This is how this patch fixes the reboot/shutdown time A-A lock issue:
+After moving mutex_lock(&bch_register_lock) to a later location where
+before atomic_read(&dc->running) in cached_dev_free(), such A-A lock
+problem can be solved without any reboot time registration race.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/bcache/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 1b63ac876169..0a25774e175a 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1190,8 +1190,6 @@ static void cached_dev_free(struct closure *cl)
+ {
+ 	struct cached_dev *dc = container_of(cl, struct cached_dev, disk.cl);
+ 
+-	mutex_lock(&bch_register_lock);
+-
+ 	if (test_and_clear_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags))
+ 		cancel_writeback_rate_update_dwork(dc);
+ 
+@@ -1202,6 +1200,8 @@ static void cached_dev_free(struct closure *cl)
+ 	if (!IS_ERR_OR_NULL(dc->status_update_thread))
+ 		kthread_stop(dc->status_update_thread);
+ 
++	mutex_lock(&bch_register_lock);
++
+ 	if (atomic_read(&dc->running))
+ 		bd_unlink_disk_holder(dc->bdev, dc->disk.disk);
+ 	bcache_device_free(&dc->disk);
+-- 
+2.20.1
+
+
+
