@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0280EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E315CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92B422ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09F9217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997754;
-	bh=dDelXPV4V59tF9992+wE0ipVt2XvsPJAg7breuDYKS0=;
+	s=default; t=1563997760;
+	bh=iOWihgB/iQPQy0XZmDWYO9ey1OIMhgS3oB2o8Txavs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCKNKU6M8kramHi3qNArcRvmElJVLTagRn+UQBCFBcJvvUA0QU2CxtGy4zXabkBx8
-	 5cF6SuK1Ra3l7oaICZFco0q1UaNHKr0YzGi9gLtL3MgZeI2c73OhbWNb4tzcU2JfYn
-	 B2w2V+N9ArMGGWawvfwTLlm8aPZ69tlmLNorsyqI=
+	b=Ixh2EdsPMsnIXEPtsBEF5TmBzmxYzAXySZft2xVZjFlkU4jrlvxgg51oBD5CHbbeS
+	 TE7wsPqTzGAcTVOhLxe6A4a8+N6kK3gOWFKDSShYCKsWNlRd7tjibGIBlvbDtvu9ky
+	 ibkPKXwLXDIBtUiGUILlWvBqfRHThU+k1ToR7o+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391486AbfGXTtN (ORCPT
+        id S2390679AbfGXTtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57100 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390638AbfGXTtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:49:09 -0400
+        id S2387815AbfGXTtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:49:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F97C205C9;
-        Wed, 24 Jul 2019 19:49:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D69521873;
+        Wed, 24 Jul 2019 19:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997748;
-        bh=dDelXPV4V59tF9992+wE0ipVt2XvsPJAg7breuDYKS0=;
+        s=default; t=1563997753;
+        bh=iOWihgB/iQPQy0XZmDWYO9ey1OIMhgS3oB2o8Txavs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uiQRanXg026V/MqGajtvW71nvQ0qTlEYZPUcpt4PMfIZ6dXzuxdtLazv1L5xRiIF6
-         JYGerVJLj6ki60um719GatWyhzWotcpFDMK4B/BBgWvJcuzvXybTOkVCiSmsSzdHyq
-         N8pqqVT/5SEqmNcD4KNqGsFrT5AuS7YN+7skAClE=
+        b=QbXw2HFhdQD1SNb9I65tx3/Phoyw0vkVV0hiw14joiyyirAyN5gwmqjqnXD6wrLCB
+         ImM75TvkRE/avoTtc7uR72snlXnY/BV1JdxRakmtzeZZku79xa/rNs3jW2wHG71TED
+         W/kvwcZnpkgcWvIxJxoDWdkBcfUZk3FgPXZjq3zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weikang shi <swkhack@gmail.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 130/371] ntp: Limit TAI-UTC offset
-Date:   Wed, 24 Jul 2019 21:18:02 +0200
-Message-Id: <20190724191734.672735732@linuxfoundation.org>
+Subject: [PATCH 5.1 132/371] media: mt9m111: fix fw-node refactoring
+Date:   Wed, 24 Jul 2019 21:18:04 +0200
+Message-Id: <20190724191734.829736642@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -65,53 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d897a4ab11dc8a9fda50d2eccc081a96a6385998 ]
+[ Upstream commit 8d4e29a51a954b43e06d916772fa4f50b7e5bbd6 ]
 
-Don't allow the TAI-UTC offset of the system clock to be set by adjtimex()
-to a value larger than 100000 seconds.
+In the patch refactoring the fw-node, the mt9m111 was broken for all
+platform_data based platforms, which were the first aim of this
+driver. Only the devicetree platform are still functional, probably
+because the testing was done on these.
 
-This prevents an overflow in the conversion to int, prevents the CLOCK_TAI
-clock from getting too far ahead of the CLOCK_REALTIME clock, and it is
-still large enough to allow leap seconds to be inserted at the maximum rate
-currently supported by the kernel (once per day) for the next ~270 years,
-however unlikely it is that someone can survive a catastrophic event which
-slowed down the rotation of the Earth so much.
+The result is that -EINVAL is systematically return for such platforms,
+what this patch fixes.
 
-Reported-by: Weikang shi <swkhack@gmail.com>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190618154713.20929-1-mlichvar@redhat.com
+[Sakari Ailus: Rework this to resolve a merge conflict and use dev_fwnode]
+
+Fixes: 98480d65c48c ("media: mt9m111: allow to setup pixclk polarity")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/ntp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/i2c/mt9m111.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index f43d47c8c3b6..98b3678fd48e 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -42,6 +42,7 @@ static u64			tick_length_base;
- #define MAX_TICKADJ		500LL		/* usecs */
- #define MAX_TICKADJ_SCALED \
- 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
-+#define MAX_TAI_OFFSET		100000
+diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
+index 5168bb5880c4..3a543e435e61 100644
+--- a/drivers/media/i2c/mt9m111.c
++++ b/drivers/media/i2c/mt9m111.c
+@@ -1248,9 +1248,11 @@ static int mt9m111_probe(struct i2c_client *client,
+ 	if (!mt9m111)
+ 		return -ENOMEM;
  
- /*
-  * phase-lock loop variables
-@@ -690,7 +691,8 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
- 		time_constant = max(time_constant, 0l);
- 	}
+-	ret = mt9m111_probe_fw(client, mt9m111);
+-	if (ret)
+-		return ret;
++	if (dev_fwnode(&client->dev)) {
++		ret = mt9m111_probe_fw(client, mt9m111);
++		if (ret)
++			return ret;
++	}
  
--	if (txc->modes & ADJ_TAI && txc->constant >= 0)
-+	if (txc->modes & ADJ_TAI &&
-+			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
- 		*time_tai = txc->constant;
- 
- 	if (txc->modes & ADJ_OFFSET)
+ 	mt9m111->clk = v4l2_clk_get(&client->dev, "mclk");
+ 	if (IS_ERR(mt9m111->clk))
 -- 
 2.20.1
 
