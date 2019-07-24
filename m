@@ -2,32 +2,32 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3125CC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85981C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E92921873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F5021873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfGXPwd (ORCPT
+        id S1728603AbfGXPwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:52:33 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:33530 "EHLO honk.sigxcpu.org"
+        Wed, 24 Jul 2019 11:52:36 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:33564 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbfGXPwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:52:32 -0400
+        id S1726371AbfGXPwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 11:52:33 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 3F193FB06;
-        Wed, 24 Jul 2019 17:52:29 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 64C62FB02;
+        Wed, 24 Jul 2019 17:52:30 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c2rVJsA1noyh; Wed, 24 Jul 2019 17:52:27 +0200 (CEST)
+        with ESMTP id 1TeSWBVSsdkI; Wed, 24 Jul 2019 17:52:27 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id E638A43417; Wed, 24 Jul 2019 17:52:26 +0200 (CEST)
+        id 010B0416CA; Wed, 24 Jul 2019 17:52:26 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -47,10 +47,12 @@ To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH 0/3] drm: bridge: Add NWL MIPI DSI host controller support
-Date:   Wed, 24 Jul 2019 17:52:23 +0200
-Message-Id: <cover.1563983037.git.agx@sigxcpu.org>
+Subject: [PATCH 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
+Date:   Wed, 24 Jul 2019 17:52:24 +0200
+Message-Id: <3b85102dfe3e358bbdde359e0a3a5f8e121fd691.1563983037.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1563983037.git.agx@sigxcpu.org>
+References: <cover.1563983037.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,77 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
-SoCs.
+This adds all the gpr registers and the define needed for selecting
+the input source in the imx-nwl drm bridge.
 
-It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
-i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
-I only have imx8mq boards to test I omitted the platform data for other SoCs.
-
-The code is based on NXPs BSP so I added Robert Chiras as
-Co-authored-by. Robert, if this looks sane could you add your
-Signed-off-by:?
-
-The most notable changes over the BSP driver are
- - Calculate HS mode timing from phy_configure_opts_mipi_dphy
- - Perform all clock setup via DT
- - Merge nwl-imx and nwl drivers
- - Add B0 silion revision quirk
- - become a bridge driver to hook into mxsfb (from what I read[0] DCSS, which
-   also can drive the nwl on the imx8mq will likely not become part of
-   imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
-   well).
- - Use panel_bridge to attach the panel
-
-This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
-and the rocktech-jh057n00900 panel driver. The DCSS can later on also act as
-input source too.
-
-Changes from v0:
-- Add quirk for IMQ8MQ silicon B0 revision to not mess with the
-  system reset controller on power down since enable() won't work
-  otherwise.
-- Drop devm_free_irq() handled by the device driver core
-- Disable tx esc clock after the phy power down to unbreak
-  disable/enable (unblank/blank)
-- Add ports to dt binding docs
-- Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
-  phy_mipi_dphy_get_default_config
-- Select DRM_MIPI_DSI
-- Include drm_print.h to fix build on next-20190408
-- Drop some debugging messages
-- Newline terminate all DRM_ printouts
-- Turn component driver into a drm bridge
-
-[0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
-[1]: https://patchwork.freedesktop.org/series/62822/
-
-Guido Günther (3):
-  arm64: imx8mq: add imx8mq iomux-gpr field defines
-  dt-bindings: display/bridge: Add binding for IMX NWL mipi dsi host
-    controller
-  drm/bridge: Add NWL MIPI DSI host controller support
-
- .../bindings/display/bridge/imx-nwl-dsi.txt   |  89 +++
- drivers/gpu/drm/bridge/Kconfig                |   2 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- drivers/gpu/drm/bridge/imx-nwl/Kconfig        |  15 +
- drivers/gpu/drm/bridge/imx-nwl/Makefile       |   2 +
- drivers/gpu/drm/bridge/imx-nwl/nwl-drv.c      | 529 +++++++++++++
- drivers/gpu/drm/bridge/imx-nwl/nwl-drv.h      |  72 ++
- drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c      | 745 ++++++++++++++++++
- drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.h      | 111 +++
- include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h  |  62 ++
- 10 files changed, 1628 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
- create mode 100644 drivers/gpu/drm/bridge/imx-nwl/Kconfig
- create mode 100644 drivers/gpu/drm/bridge/imx-nwl/Makefile
- create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-drv.c
- create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-drv.h
- create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c
- create mode 100644 drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.h
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h | 62 ++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
  create mode 100644 include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
 
+diff --git a/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+new file mode 100644
+index 000000000000..62e85ffacfad
+--- /dev/null
++++ b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2017 NXP
++ *               2019 Purism SPC
++ */
++
++#ifndef __LINUX_IMX8MQ_IOMUXC_GPR_H
++#define __LINUX_IMX8MQ_IOMUXC_GPR_H
++
++#define IOMUXC_GPR0	0x00
++#define IOMUXC_GPR1	0x04
++#define IOMUXC_GPR2	0x08
++#define IOMUXC_GPR3	0x0c
++#define IOMUXC_GPR4	0x10
++#define IOMUXC_GPR5	0x14
++#define IOMUXC_GPR6	0x18
++#define IOMUXC_GPR7	0x1c
++#define IOMUXC_GPR8	0x20
++#define IOMUXC_GPR9	0x24
++#define IOMUXC_GPR10	0x28
++#define IOMUXC_GPR11	0x2c
++#define IOMUXC_GPR12	0x30
++#define IOMUXC_GPR13	0x34
++#define IOMUXC_GPR14	0x38
++#define IOMUXC_GPR15	0x3c
++#define IOMUXC_GPR16	0x40
++#define IOMUXC_GPR17	0x44
++#define IOMUXC_GPR18	0x48
++#define IOMUXC_GPR19	0x4c
++#define IOMUXC_GPR20	0x50
++#define IOMUXC_GPR21	0x54
++#define IOMUXC_GPR22	0x58
++#define IOMUXC_GPR23	0x5c
++#define IOMUXC_GPR24	0x60
++#define IOMUXC_GPR25	0x64
++#define IOMUXC_GPR26	0x68
++#define IOMUXC_GPR27	0x6c
++#define IOMUXC_GPR28	0x70
++#define IOMUXC_GPR29	0x74
++#define IOMUXC_GPR30	0x78
++#define IOMUXC_GPR31	0x7c
++#define IOMUXC_GPR32	0x80
++#define IOMUXC_GPR33	0x84
++#define IOMUXC_GPR34	0x88
++#define IOMUXC_GPR35	0x8c
++#define IOMUXC_GPR36	0x90
++#define IOMUXC_GPR37	0x94
++#define IOMUXC_GPR38	0x98
++#define IOMUXC_GPR39	0x9c
++#define IOMUXC_GPR40	0xa0
++#define IOMUXC_GPR41	0xa4
++#define IOMUXC_GPR42	0xa8
++#define IOMUXC_GPR43	0xac
++#define IOMUXC_GPR44	0xb0
++#define IOMUXC_GPR45	0xb4
++#define IOMUXC_GPR46	0xb8
++#define IOMUXC_GPR47	0xbc
++
++/* i.MX8Mq iomux gpr register field defines */
++#define IMX8MQ_GPR13_MIPI_MUX_SEL		BIT(2)
++
++#endif /* __LINUX_IMX8MQ_IOMUXC_GPR_H */
 -- 
 2.20.1
 
