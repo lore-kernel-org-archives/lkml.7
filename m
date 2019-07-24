@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA78C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FBBC7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C753D22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1633022BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033601;
-	bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
+	s=default; t=1564033607;
+	bh=fJDNbib59c0aTPE95U0EdFqX/6j5ckmQ4wzkrlkrUaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LUgIrZY1ium+KtEww4lLjIPuLbQ0OwrgC69X8Ho21P7acsx7TsMVBg4IO0ETp1NS8
-	 yWFvHAlUDLtsB+478bGmr3mmU3cUjmtXGgdWoDehi3lp0ts6W2/y5aRjAvP5q36EWx
-	 XDdacB8Y0c66abBfZegEjTa231zo6Fa0IQu7g8gk=
+	b=Fhp3nCtgEXhOkAAOzbBjDjDsL+eUibAAbpWchGmbnMKOU3VUBaSeEhg/EDdiDf/gy
+	 0Qqz1lrL8SchZwApVDqE8H27id1ayZdy4t8sH+WoOZ7Oq3Q9bFpJGsA4vJKqVZ50+q
+	 tNbtrKTiKWn0QNNivNnydRUiAnHEfnPMA8qGcE+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391467AbfGYFqk (ORCPT
+        id S1729025AbfGYFqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:46:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391443AbfGYFqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:46:32 -0400
+        id S1728399AbfGYFqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D94CE20657;
-        Thu, 25 Jul 2019 05:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F98822BEB;
+        Thu, 25 Jul 2019 05:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033592;
-        bh=jzbZqHBVRXZiqnxEGm7vZE5GcK2Hnq/boLbxtVC6yGo=;
+        s=default; t=1564033602;
+        bh=fJDNbib59c0aTPE95U0EdFqX/6j5ckmQ4wzkrlkrUaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9JwG2N+aCbwmp2/hpa2K5qokQvTc9TE7WWk4jsW65SxwiYnmEZX6d3pHsS+D3P1Y
-         wpRewUGH0bVLdLvyFggjjCOjOkpJYIenMaaVKGrHWQahcZDHu8TQJGjLLA5ufumpah
-         owz7sFC3i5n1qZBRDoLQIwhvOQXfy988vmeQ9iEI=
+        b=NXN/PKDvkTCVzDAqjRwWi1XaA+bybSOeILAqGf3+iI0BD9sXEceHqGRESj4/coxPz
+         5me3ZyhRQt64J769hacT8IvALFeS+9GPMBFhDO+yehgjft0ynS5tw9RFLzZDChUZdr
+         1HWVFd20y+wEK4ukIY7+xXCi7P9/Do0VX+ZAO8vU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeroen Roovers <jer@gentoo.org>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.19 254/271] parisc: Fix kernel panic due invalid values in IAOQ0 or IAOQ1
-Date:   Wed, 24 Jul 2019 21:22:03 +0200
-Message-Id: <20190724191716.967977296@linuxfoundation.org>
+        stable@vger.kernel.org, "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Lee@vger.kernel.org
+Subject: [PATCH 4.19 265/271] usb: Handle USB3 remote wakeup for LPM enabled devices correctly
+Date:   Wed, 24 Jul 2019 21:22:14 +0200
+Message-Id: <20190724191717.930120965@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,84 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Lee, Chiasheng <chiasheng.lee@intel.com>
 
-commit 10835c854685393a921b68f529bf740fa7c9984d upstream.
+commit e244c4699f859cf7149b0781b1894c7996a8a1df upstream.
 
-On parisc the privilege level of a process is stored in the lowest two bits of
-the instruction pointers (IAOQ0 and IAOQ1). On Linux we use privilege level 0
-for the kernel and privilege level 3 for user-space. So userspace should not be
-allowed to modify IAOQ0 or IAOQ1 of a ptraced process to change it's privilege
-level to e.g. 0 to try to gain kernel privileges.
+With Link Power Management (LPM) enabled USB3 links transition to low
+power U1/U2 link states from U0 state automatically.
 
-This patch prevents such modifications by always setting the two lowest bits to
-one (which relates to privilege level 3 for user-space) if IAOQ0 or IAOQ1 are
-modified via ptrace calls in the native and compat ptrace paths.
+Current hub code detects USB3 remote wakeups by checking if the software
+state still shows suspended, but the link has transitioned from suspended
+U3 to enabled U0 state.
 
-Link: https://bugs.gentoo.org/481768
-Reported-by: Jeroen Roovers <jer@gentoo.org>
-Cc: <stable@vger.kernel.org>
-Tested-by: Rolf Eike Beer <eike-kernel@sf-tec.de>
-Signed-off-by: Helge Deller <deller@gmx.de>
+As it takes some time before the hub thread reads the port link state
+after a USB3 wake notification, the link may have transitioned from U0
+to U1/U2, and wake is not detected by hub code.
+
+Fix this by handling U1/U2 states in the same way as U0 in USB3 wakeup
+handling
+
+This patch should be added to stable kernels since 4.13 where LPM was
+kept enabled during suspend/resume
+
+Cc: <stable@vger.kernel.org> # v4.13+
+Signed-off-by: Lee, Chiasheng <chiasheng.lee@intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/kernel/ptrace.c |   28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ drivers/usb/core/hub.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -167,6 +167,9 @@ long arch_ptrace(struct task_struct *chi
- 		if ((addr & (sizeof(unsigned long)-1)) ||
- 		     addr >= sizeof(struct pt_regs))
- 			break;
-+		if (addr == PT_IAOQ0 || addr == PT_IAOQ1) {
-+			data |= 3; /* ensure userspace privilege */
-+		}
- 		if ((addr >= PT_GR1 && addr <= PT_GR31) ||
- 				addr == PT_IAOQ0 || addr == PT_IAOQ1 ||
- 				(addr >= PT_FR0 && addr <= PT_FR31 + 4) ||
-@@ -228,16 +231,18 @@ long arch_ptrace(struct task_struct *chi
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3575,6 +3575,7 @@ static int hub_handle_remote_wakeup(stru
+ 	struct usb_device *hdev;
+ 	struct usb_device *udev;
+ 	int connect_change = 0;
++	u16 link_state;
+ 	int ret;
  
- static compat_ulong_t translate_usr_offset(compat_ulong_t offset)
- {
--	if (offset < 0)
--		return sizeof(struct pt_regs);
--	else if (offset <= 32*4)	/* gr[0..31] */
--		return offset * 2 + 4;
--	else if (offset <= 32*4+32*8)	/* gr[0..31] + fr[0..31] */
--		return offset + 32*4;
--	else if (offset < sizeof(struct pt_regs)/2 + 32*4)
--		return offset * 2 + 4 - 32*8;
-+	compat_ulong_t pos;
-+
-+	if (offset < 32*4)	/* gr[0..31] */
-+		pos = offset * 2 + 4;
-+	else if (offset < 32*4+32*8)	/* fr[0] ... fr[31] */
-+		pos = (offset - 32*4) + PT_FR0;
-+	else if (offset < sizeof(struct pt_regs)/2 + 32*4) /* sr[0] ... ipsw */
-+		pos = (offset - 32*4 - 32*8) * 2 + PT_SR0 + 4;
- 	else
--		return sizeof(struct pt_regs);
-+		pos = sizeof(struct pt_regs);
-+
-+	return pos;
- }
+ 	hdev = hub->hdev;
+@@ -3584,9 +3585,11 @@ static int hub_handle_remote_wakeup(stru
+ 			return 0;
+ 		usb_clear_port_feature(hdev, port, USB_PORT_FEAT_C_SUSPEND);
+ 	} else {
++		link_state = portstatus & USB_PORT_STAT_LINK_STATE;
+ 		if (!udev || udev->state != USB_STATE_SUSPENDED ||
+-				 (portstatus & USB_PORT_STAT_LINK_STATE) !=
+-				 USB_SS_PORT_LS_U0)
++				(link_state != USB_SS_PORT_LS_U0 &&
++				 link_state != USB_SS_PORT_LS_U1 &&
++				 link_state != USB_SS_PORT_LS_U2))
+ 			return 0;
+ 	}
  
- long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
-@@ -281,9 +286,12 @@ long compat_arch_ptrace(struct task_stru
- 			addr = translate_usr_offset(addr);
- 			if (addr >= sizeof(struct pt_regs))
- 				break;
-+			if (addr == PT_IAOQ0+4 || addr == PT_IAOQ1+4) {
-+				data |= 3; /* ensure userspace privilege */
-+			}
- 			if (addr >= PT_FR0 && addr <= PT_FR31 + 4) {
- 				/* Special case, fp regs are 64 bits anyway */
--				*(__u64 *) ((char *) task_regs(child) + addr) = data;
-+				*(__u32 *) ((char *) task_regs(child) + addr) = data;
- 				ret = 0;
- 			}
- 			else if ((addr >= PT_GR1+4 && addr <= PT_GR31+4) ||
 
 
