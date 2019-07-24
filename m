@@ -2,94 +2,106 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC4FC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3755DC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470CA21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F256421BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oW2+1uEt"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="I55v5zkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbfGXFbT (ORCPT
+        id S1726242AbfGXFdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:31:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41224 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfGXFbS (ORCPT
+        Wed, 24 Jul 2019 01:33:14 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58878 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfGXFdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:31:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QMaeodYE6xPawroosfuLAM7Isuyd6msaiuu7WIzXJNg=; b=oW2+1uEt0qJRsZ3rIR+o/XGwJ
-        IpJYdIAzmbpSGeQXXd0w7hFDdorld2bWWW2oiCVa9bfBdmqzQ8VzYAS+3VpPpYND1enTUT3LXM1SV
-        CwbH89SUpW2WcPCY1lNCr1Q9WWq6hrUjLEGXr0uuup16IdlyJWTjkk54FwGggAAJ6/K2n0CpTScov
-        6bsInH3E0/xFvQn6gl70zra+lZBETmvjV0nc1ECTcsc2eePjN7LRDKmPqETKEgRYUFXsRBdhR/R8v
-        o2dvpNjC4kqeW2Xy7IKsHBsPaIMTNnKrfPXCCv6MAnnK2HeXtxBGaSw/R+BXARy62cABx/L38sQl7
-        Pi0QmIdOw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hq9rZ-0006FA-JW; Wed, 24 Jul 2019 05:30:53 +0000
-Date:   Tue, 23 Jul 2019 22:30:53 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     john.hubbard@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>, ceph-devel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, samba-technical@lists.samba.org,
-        v9fs-developer@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: Re: [PATCH 03/12] block: bio_release_pages: use flags arg instead of
- bool
-Message-ID: <20190724053053.GA18330@infradead.org>
-References: <20190724042518.14363-1-jhubbard@nvidia.com>
- <20190724042518.14363-4-jhubbard@nvidia.com>
+        Wed, 24 Jul 2019 01:33:14 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E69EB886BF;
+        Wed, 24 Jul 2019 17:33:09 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1563946389;
+        bh=71Rx6cCCs7qwdXOcWJ2dX8HzbvMLtmT5IE+C0SKNRpM=;
+        h=From:To:Cc:Subject:Date;
+        b=I55v5zkKt8WmSCKGYp7dbfii+9DNNJ86YwZb+AaKe4W2vfEvmJCaIG04aYXMCQ6Bg
+         bXOADORYfzY+5EmwrIpVVyDLo847rlXNwYp0BxoNkwYI6g1aA+CjNmc3CJd7cVlDPg
+         XyDth2LADhGxgVH+/HVmBf9J6rC6d+bqg1s/47C9dQ422N5Qx8H7lQKhg7US/ax3Fv
+         JCyTrGoYLEUeMb3/LxXEHE/R1cxFQIm3V5lvj0vG2KPgJvUbug94i/T2iKQLTPzm5F
+         aYeebnyHLK5PbzTzdb/Ok5GRYIfJHwjb8UN6fGBcu4xHDN/kSss0fi44qW+Z6x6AOk
+         N/xUQd27v0WLA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d37ed910000>; Wed, 24 Jul 2019 17:33:09 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 76A6713EECE;
+        Wed, 24 Jul 2019 17:33:07 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 605181E04FD; Wed, 24 Jul 2019 17:33:05 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] powerpc: Support CMDLINE_EXTEND
+Date:   Wed, 24 Jul 2019 17:33:03 +1200
+Message-Id: <20190724053303.24317-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724042518.14363-4-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 09:25:09PM -0700, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> In commit d241a95f3514 ("block: optionally mark pages dirty in
-> bio_release_pages"), new "bool mark_dirty" argument was added to
-> bio_release_pages.
-> 
-> In upcoming work, another bool argument (to indicate that the pages came
-> from get_user_pages) is going to be added. That's one bool too many,
-> because it's not desirable have calls of the form:
+Device tree aware platforms can make use of CMDLINE_EXTEND to extend the
+kernel command line provided by the bootloader. This is particularly
+useful to set parameters for built-in modules that would otherwise be
+done at module insertion. Add support for this in the powerpc
+architecture.
 
-All pages releases by bio_release_pages should come from
-get_get_user_pages, so I don't really see the point here.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/powerpc/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index d8dcd8820369..cd9b3974aa36 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -851,6 +851,11 @@ config CMDLINE
+ 	  some command-line options at build time by entering them here.  In
+ 	  most cases you will need to specify the root device here.
+=20
++choice
++	prompt "Kernel command line type" if CMDLINE !=3D ""
++	default CMDLINE_FORCE
++	depends on CMDLINE_BOOL
++
+ config CMDLINE_FORCE
+ 	bool "Always use the default kernel command string"
+ 	depends on CMDLINE_BOOL
+@@ -860,6 +865,13 @@ config CMDLINE_FORCE
+ 	  This is useful if you cannot or don't want to change the
+ 	  command-line options your boot loader passes to the kernel.
+=20
++config CMDLINE_EXTEND
++	bool "Extend bootloader kernel arguments"
++	help
++	  The command-line arguments provided by the boot loader will be
++	  appended to the default kernel command string.
++endchoice
++
+ config EXTRA_TARGETS
+ 	string "Additional default image types"
+ 	help
+--=20
+2.22.0
+
