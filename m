@@ -2,119 +2,59 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C54C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B60C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664AC217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563958882;
-	bh=G0FETHgUu8Nw9rJGSAGVgz91E8Mr/C4BKJTKAtvS+Hg=;
-	h=From:To:CC:Subject:Date:List-ID:From;
-	b=Tbpyaf5SbRcNgO8Fhmi+Gf9sgB0+uiCk1dAs8nCeGB8SXW6AkpfUzXpXOUj0g/1OX
-	 G8a0m43tS6acVPhqb1pDkJzXNpQbUoPXeDT/3CS+HHQbfvQQeILBUfIIRrlPu4hiEH
-	 AH+WVl2z4R51Oyp6572UTYGN7gO3SbHDNZwj9sQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 33DFB229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 09:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfGXJBU (ORCPT
+        id S1726900AbfGXJCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 05:01:20 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30480 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726845AbfGXJBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 05:01:17 -0400
-X-UUID: e67dbddc74e740a39f091c19eced7d67-20190724
-X-UUID: e67dbddc74e740a39f091c19eced7d67-20190724
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@kernel.org>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 891942373; Wed, 24 Jul 2019 17:01:03 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 24 Jul 2019 17:01:01 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 24 Jul 2019 17:01:01 +0800
-From:   <ryder.lee@kernel.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Weijie Gao <weijie.gao@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 1/2] arm: dts: mt7623: add Mali-450 device node
-Date:   Wed, 24 Jul 2019 17:00:59 +0800
-Message-ID: <af7b5a2e00eb3a4b6262807c378e43afd5f74779.1563867856.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 24 Jul 2019 05:02:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55758 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726207AbfGXJCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 05:02:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ED048AF59;
+        Wed, 24 Jul 2019 09:02:07 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 11:02:06 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Cooks <acooks@rationali.st>, linux-acpi@vger.kernel.org,
+        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
+        Will Wagner <willw@carallon.com>
+Subject: Re: [RESEND][PATCH v4 1/3] i2c: piix4: Fix port selection for AMD
+ Family 16h Model 30h
+Message-ID: <20190724110206.3c1ea315@endymion>
+In-Reply-To: <20190724103748.078eab19@endymion>
+References: <cover.1519601860.git.andrew.cooks@opengear.com>
+        <be68c29f603153cf047cd893c6b9d6423073632d.1519601860.git.andrew.cooks@opengear.com>
+        <20190724103748.078eab19@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+On Wed, 24 Jul 2019 10:37:48 +0200, Jean Delvare wrote:
+> Hi Andrew,
+> 
+> Sorry for the delay... What can I say :(
 
-Add a node for Mali-450.
+Unfortunately by now Andrew is gone. So I will be the one rebasing and
+resubmitting this series.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
-kmscube as well as X11 EGL tests work fine (use Lima driver).
----
- arch/arm/boot/dts/mt7623.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index a79f0b6c3429..6a9c5afb9a36 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2017-2018 MediaTek Inc.
-  * Author: John Crispin <john@phrozen.org>
-  *	   Sean Wang <sean.wang@mediatek.com>
-+ *	   Ryder Lee <ryder.lee@mediatek.com>
-  *
-  */
- 
-@@ -733,6 +734,30 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	mali: gpu@13040000 {
-+		compatible = "mediatek,mt7623-mali", "arm,mali-450";
-+		reg = <0 0x13040000 0 0x30000>;
-+		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 171 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 172 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 173 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 174 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 175 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 177 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 178 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 179 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 180 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "gp", "gpmmu", "pp0", "ppmmu0", "pp1",
-+				  "ppmmu1", "pp2", "ppmmu2", "pp3", "ppmmu3",
-+				  "pp";
-+		clocks = <&topckgen CLK_TOP_MMPLL>,
-+			 <&g3dsys CLK_G3DSYS_CORE>;
-+		clock-names = "bus", "core";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_MFG>;
-+		resets = <&g3dsys MT2701_G3DSYS_CORE_RST>;
-+	};
-+
- 	mmsys: syscon@14000000 {
- 		compatible = "mediatek,mt7623-mmsys",
- 			     "mediatek,mt2701-mmsys",
 -- 
-2.18.0
-
+Jean Delvare
+SUSE L3 Support
