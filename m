@@ -2,110 +2,116 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D06C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8619EC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F02C21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5846421873
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563988096;
-	bh=8f7/HBEwR5RTd1dKxNzj0UuMzaT74znFN1gikiy9ykY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g43thL/bVutNCjbL+1O+nRbRrzN8L1hCAwSbL0Cyav9kcaAFF0+MXUkHHBK2k9TWU
-	 CmqN8j72tJHr9IiRuKWW1eqY9XetgX5owKQt2VOMHF5v1pk3phyo7vyHJjTaDng4wD
-	 CsEjTTgomwGjBtEQwTNzFfKB/gVsfi8n534liIMQ=
+	s=default; t=1563988160;
+	bh=JFMNq2ee+xriAoq6k+AUM2Q9PcGDapyRKWvWdJTeSZw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gLcGar2aARLTmXBwuDOu0XlVQSsEhOXvMNRJTNj2pq9HyBzMrYNYzX+58MtVwtXxg
+	 86O6mBvv07p5jIw4qz0LYaxfJUdd4Pg40p3ELnESviSUhvnxLMDl+ZRA57DjLFIB1/
+	 Pe3z1PnT0Nx7q0E4oaghVD10/RjDT51+q8K4Sn9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfGXRIP (ORCPT
+        id S1728067AbfGXRJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:08:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41998 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfGXRIO (ORCPT
+        Wed, 24 Jul 2019 13:09:19 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43583 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbfGXRJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:08:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8f7/HBEwR5RTd1dKxNzj0UuMzaT74znFN1gikiy9ykY=; b=IBbJSbdZ8fYDuP+1Wu/0ibWwx
-        ILaBo6qNY34I7/HYYStQU5Xq+fXnmewGNLk/oQPvUcwucO9HksKNquFkTl2Z5v4pUAASWxHHQTs2t
-        pG21Bq6MY+Iz/7Z5+ukz+ZbsJ0ZkJwMwDlrpmh33U7d1oMf1kXTV3gr0Wrq5OWfGULqvU=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hqKkG-0008Fg-Bt; Wed, 24 Jul 2019 17:08:04 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 97FF02742B5D; Wed, 24 Jul 2019 18:08:03 +0100 (BST)
-Date:   Wed, 24 Jul 2019 18:08:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 2/3] treewide: Remove dev_err() usage after
- platform_get_irq()
-Message-ID: <20190724170803.GE4524@sirena.org.uk>
-References: <20190723181624.203864-1-swboyd@chromium.org>
- <20190723181624.203864-3-swboyd@chromium.org>
- <CAL_JsqKMmQdvQmybXbGf_CZkvd1TTeMBPyk3uEUOK9Vz1+9PNg@mail.gmail.com>
- <5d378936.1c69fb81.2ee3b.0089@mx.google.com>
+        Wed, 24 Jul 2019 13:09:18 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y17so20670693ljk.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U8cl4nVt9icJqK0yFnx5TQc7gNHvGEAy+pPaBq+pmC0=;
+        b=cBh9ReMV8eGmBOSMW8Zb37lV8BeNSV/1KWRwZgRg4j0iO5KN3WnhA2Qu32ZWEKD+eQ
+         EXrde2G7KNiEvgfnjmcRw4+n9RJPOxSJ6KCiK+lXaNn2j190ZQQ0Dnj+r9+0owvXalW+
+         XrJXduBhJmMLWWMH9L/vZIpTPzMtHlHQbeDsE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U8cl4nVt9icJqK0yFnx5TQc7gNHvGEAy+pPaBq+pmC0=;
+        b=cDWNq5N+E+TxYsk3IYKAWoth78u9ofh8pEe6U3x+qDInmqZs/OEMlLUPLx0p77hzXW
+         8+DYxPxhnbTidi276KHJiahAY0HdBg4aTFg/EyfVuKvabVukfFD2YQJXKyNUQ3CP2fKM
+         YX42J8zCrco7Y2eB7dQR29aMVH3ph7FUJbtISiDPyxOKA74ShyhTEh1IXdpTEOnYgdB0
+         86wwBCEvGE5wcSYOIVNN6F4nM5q4i+bn1DxUP9TFKUTVv4tWvtU338NZhx1/y7Z9/zm3
+         V4BjdPk/TEqTiS1a7kS9nX10X5e2I+RKjs/e3Vkb4cLTMFwvCSZkRKIqBNLjbE/xIEg8
+         TjxQ==
+X-Gm-Message-State: APjAAAWejZHljTk9XarzaRisY3WoXAuHXYWqVvov0F31Oj3tbDMk9blz
+        uB2rmk9tQ0aqwJySxFXjRvE5ZoBNGeo=
+X-Google-Smtp-Source: APXvYqwISId4+jaVbcAonk6H2ssnpDij+cc5Il+I585lZfWe+PUVS0Eph2bDkscrlW2G6+u8CJABcg==
+X-Received: by 2002:a2e:86c1:: with SMTP id n1mr43123719ljj.162.1563988156207;
+        Wed, 24 Jul 2019 10:09:16 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id y25sm9632853lja.45.2019.07.24.10.09.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 10:09:13 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id i21so45253653ljj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:09:13 -0700 (PDT)
+X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr44754092ljj.156.1563988153239;
+ Wed, 24 Jul 2019 10:09:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gDGSpKKIBgtShtf+"
-Content-Disposition: inline
-In-Reply-To: <5d378936.1c69fb81.2ee3b.0089@mx.google.com>
-X-Cookie: Matrimony is the root of all evil.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1563841972.git.joe@perches.com> <7ab8957eaf9b0931a59eff6e2bd8c5169f2f6c41.1563841972.git.joe@perches.com>
+ <eec901c6-ca51-89e4-1887-1ccab0288bee@rasmusvillemoes.dk> <5ffdbf4f87054b47a2daf23a6afabecf@AcuMS.aculab.com>
+ <bc1ad99a420dd842ce3a17c2c38a2f94683dc91c.camel@opteya.com> <396d1eed-8edf-aa77-110b-c50ead3a5fd5@rasmusvillemoes.dk>
+In-Reply-To: <396d1eed-8edf-aa77-110b-c50ead3a5fd5@rasmusvillemoes.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 24 Jul 2019 10:08:57 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whPA-Vv-OHbUe4M5=ygTknQNOasnLAp-E3zSAaq=pue+g@mail.gmail.com>
+Message-ID: <CAHk-=whPA-Vv-OHbUe4M5=ygTknQNOasnLAp-E3zSAaq=pue+g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] string: Add stracpy and stracpy_pad mechanisms
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Yann Droneaud <ydroneaud@opteya.com>,
+        David Laight <David.Laight@aculab.com>,
+        Joe Perches <joe@perches.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Stephen Kitt <steve@sk2.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nitin Gote <nitin.r.gote@intel.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jul 24, 2019 at 6:09 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> The kernel's snprintf() does not behave in a non-standard way, at least
+> not with respect to its return value.
 
---gDGSpKKIBgtShtf+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Note that the kernels snprintf() *does* very much protect against the
+overflow case - not by changing the return value, but simply by having
 
-On Tue, Jul 23, 2019 at 03:24:53PM -0700, Stephen Boyd wrote:
-> Quoting Rob Herring (2019-07-23 12:30:48)
+        /* Reject out-of-range values early.  Large positive sizes are
+           used for unknown buffer sizes. */
+        if (WARN_ON_ONCE(size > INT_MAX))
+                return 0;
 
-> > There's also some cases that the irq seems to be optional. They use
-> > dev_info, but will now have an error level print. That's fine with me,
-> > but some may complain...
+at the very top.
 
-> Yeah I wonder if there should be a platform_get_irq_optional() API that
-> more explicitly indicates this and then doesn't print a warning when the
-> irq isn't there.
+So you can't actually overflow in the kernel by using the repeated
 
-I think that'd be a good solution.
+        offset += vsnprintf( .. size - offset ..);
 
---gDGSpKKIBgtShtf+
-Content-Type: application/pgp-signature; name="signature.asc"
+model.
 
------BEGIN PGP SIGNATURE-----
+Yes, it's the wrong thing to do, but it is still _safe_.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl04kHIACgkQJNaLcl1U
-h9BCaAf+JjPTkQHm4fv871uJPfD7pXuOx2y7FaJ5PQD6pKmRxdYuLMfFHGfbVqJo
-xLcmrNGr2viH9qH+jknCarmrJc89SmEPV/lLi4vwUFAqW4zVXjZeAWYv8JqueoYv
-TN6yQLHsZaAOGIId7JwzJ3PmpsMv3ECT+dN555xCf92fGbwmep1p8t7K9AN5/f0e
-gSOqq60oS8/aaZQ3jQv7cudlGmMpesTfgsIlXzE+Xkb5L3WDKG4q/pUEN8Ql+7cS
-8OJU2I0GPFAraCxRNq35LKjBWm+glw2mEa8ykUa+5cSH5zz4pSyo3IQ9nBmLGCZx
-B9WjDCtRVYdWkM2BLfR1STE4AZlAsQ==
-=LQaA
------END PGP SIGNATURE-----
-
---gDGSpKKIBgtShtf+--
+              Linus
