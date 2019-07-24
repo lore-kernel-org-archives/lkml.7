@@ -2,83 +2,110 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00F5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB96C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6EEE206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434C2206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000486;
-	bh=b7qJCq6Y1gDomSWzEJNlYYZHOIci9QX5fViswFYfmoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DrEtsJPHQ7ELV/TL3CVV+C8pb8ejGjxpSGPkpNQGonIwZmqbXd1BKOwJRKPSa42hs
-	 +Y6F29BmtcO+6vmOqBeBR0diCtcYmoafymbTyMvsQOtU1r7m/aMfh6IeYEVEqvgCKE
-	 +lQV0FX73kt4/KmL0w+vndRNFXtnK7V5bFq/SmdE=
+	s=default; t=1564000493;
+	bh=OCfXrBmZJMBGrnD4F2hi1kcSXtrQgBukoTYy1JZQ4ZY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YQWiV9ZX/oZoqgQYhbsOXqQ3mGKWHg31LOfkT/V+CVYcJakf30Xr4yZlcJuBcxCY5
+	 1hg+wC2g/xSazceGQmVg7bSOUeMXB2AQ74uY907ZkBy0gclhRXNkCwFIw52l01+7Eg
+	 t7hmYi5y9hzFrD3iCLjb0k+jNnpw2Hr0RrQ34ghk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389348AbfGXUep (ORCPT
+        id S2389969AbfGXUew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:34:45 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41090 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389166AbfGXUen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:34:43 -0400
-Received: by mail-io1-f66.google.com with SMTP id j5so88278831ioj.8;
-        Wed, 24 Jul 2019 13:34:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uHLqz6FDkSCI8LzqIEBRdrQs7zeUsE0ZRMiorxW3eeM=;
-        b=OZkOOH6XGRw5toLoh7UNUatXnUD/sdqLhWbJcD7YEL+oswd1czwfTneOUVECSEXZNs
-         yw439iSg9Yaq/lhfQVQ+mPsJRfSlk/eeUk6GGWD3sJGogP6ZUt5tmJVwp3cZY8InsJlv
-         OOzuSA24uLr73oU4hbFY3WA/dcKeLSPHssPdDlnEdb5clMFHL6YpwqLX/4nFahxZqksk
-         eVPffTDrINE+elUHa+l/bbxKpyHuWJTc4FtJVlt+Wl7VP8z3GKGIMIfIj34bgPMjAsYW
-         z6roznpiHpsJ06thP+9qbVxLx8lCFlrn3NBKwikXVw+4UVlEsNuJkvb/ABgpXAyVOFXX
-         2/9A==
-X-Gm-Message-State: APjAAAVlEhTIgPId7bLrnCcbIcFq5NIA+i1NE8qcEeSFjIaX/SS1CsAT
-        Amh2HKq3E0qbdOFR7v+8EQ==
-X-Google-Smtp-Source: APXvYqyiTSzmcos+LtyMuQu0VL4DAqAkhvqzWm1usV7kqdE4UV43i+gHAw7kW1rK2LIWDuuVMITEbA==
-X-Received: by 2002:a5d:9749:: with SMTP id c9mr13123190ioo.258.1564000482978;
-        Wed, 24 Jul 2019 13:34:42 -0700 (PDT)
-Received: from localhost ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id c14sm37067202ioa.22.2019.07.24.13.34.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 13:34:42 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 14:34:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] dt-bindings: imx-ocotp: Add i.MX8MN compatible
-Message-ID: <20190724203441.GA22721@bogus>
-References: <20190711023714.16000-1-Anson.Huang@nxp.com>
+        Wed, 24 Jul 2019 16:34:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728398AbfGXT0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:26:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36BDF217F4;
+        Wed, 24 Jul 2019 19:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996383;
+        bh=OCfXrBmZJMBGrnD4F2hi1kcSXtrQgBukoTYy1JZQ4ZY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MuI2cBKeziaqk0ojemYTyPvgW42Zckj9Ds1Sq97Y3KPETupZEf/YCrYd6EAjxBamq
+         Nrs9LWRP1jPwlUbLTvkATS8JQ3rbgaHJW+o/wGqVk6OGMiUzCj9AFMpmS1jDswgIu/
+         0R5Ev+MswftIB2DeWIwBr9VXJnKgLCzQOSIJa9iU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniel Lezcano <daniel.lezcano@free.fr>,
+        Serge Hallyn <serge@hallyn.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 037/413] signal/pid_namespace: Fix reboot_pid_ns to use send_sig not force_sig
+Date:   Wed, 24 Jul 2019 21:15:28 +0200
+Message-Id: <20190724191738.272151812@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190711023714.16000-1-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jul 2019 10:37:13 +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Add compatible for i.MX8MN and add i.MX8MM/i.MX8MN to the description.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+[ Upstream commit f9070dc94542093fd516ae4ccea17ef46a4362c5 ]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
+
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
+
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
+
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
+
+Cc: Daniel Lezcano <daniel.lezcano@free.fr>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Fixes: cf3f89214ef6 ("pidns: add reboot_pid_ns() to handle the reboot syscall")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/pid_namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index f54bc7cb6c2d..6d726cef241c 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -326,7 +326,7 @@ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
+ 	}
+ 
+ 	read_lock(&tasklist_lock);
+-	force_sig(SIGKILL, pid_ns->child_reaper);
++	send_sig(SIGKILL, pid_ns->child_reaper, 1);
+ 	read_unlock(&tasklist_lock);
+ 
+ 	do_exit(0);
+-- 
+2.20.1
+
+
+
