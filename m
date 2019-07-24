@@ -2,42 +2,43 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEA5C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101F5C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39997229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99F3227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563943834;
-	bh=F91DtO4JNX4AcUcw4pU3IX/5Sm5fLNZ7x3U1rYZaif0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Xw8s7WN/fTzPvidDBm/1d3BXj8JulocO0iwmeKDNaOkGm4NvjUIHicn2pcB/JKbop
-	 VI8ykTc5f5S7IZuktfhCyOFDrVuT124d10UQG7Fz1aLHostBzyTzZ7d7Dy5Ru/kw+l
-	 wdx3LBK9rHJ9OZ+QS8an0iRqE9r2hVkvGD8Fcdn8=
+	s=default; t=1563943838;
+	bh=Fam9FD2jC0zlN1Ro9Vuo4IyhDEfAbHi13xAq1hJbJD4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Qbm/iYFNClMFKjJImQxcEU7cODtFOuumsvVV93mhfJSBttZGPYz/uSQHNjOWFI5PF
+	 L5Kykzf2xU+BEZTz37iEAnOQCP2Iac72BgbE6oTnPa0SCH6BOpfoy1H8XFGFcUMs0J
+	 lpMy6LvfmZa9I5/inP79Ubj6eCQhuUJVq334AFYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbfGXEud (ORCPT
+        id S1726216AbfGXEuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:50:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58032 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 00:50:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbfGXEud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:50:33 -0400
+        id S1725813AbfGXEug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 00:50:36 -0400
 Received: from localhost.localdomain (unknown [171.76.105.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F713218D4;
-        Wed, 24 Jul 2019 04:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C12F7227BF;
+        Wed, 24 Jul 2019 04:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563943832;
-        bh=F91DtO4JNX4AcUcw4pU3IX/5Sm5fLNZ7x3U1rYZaif0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=K9V7JTZhr6wSkl8rninl630e53iZ8SPt7FoikLHeiZ4qDobrvT0A3YgCg21QaWaag
-         Bb2QBkCQQZFuXBH9IpfRzQ+ptZXpSLTVNYsf4g7Q+bfTfNb9Xw9OyzXWyNPtQhUJSE
-         w1j4quSXREiOnaN+PDXEiXXCyhdzDgSQ/cMc15Zw=
+        s=default; t=1563943835;
+        bh=Fam9FD2jC0zlN1Ro9Vuo4IyhDEfAbHi13xAq1hJbJD4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r9nASOr636dVCYUNx6yuwPJfemzTeOBWDlO+cEMtO7ibDyyrjznjOhd7XHk9fQNpp
+         h1p45Qmud1uhw2WxF6OwKDeuoaPSvoQCnV6dWsXC9NwcwgeWbJdWasZT0IpIqREU+Y
+         Hhf+e5FsoGQofLW1He9wEg5lQ35QAI0loJfEk9Jw=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Andy Gross <agross@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -49,10 +50,12 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Stephen Boyd <swboyd@chromium.org>,
         Amit Kucheria <amit.kucheria@verdurent.com>,
         Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v2 0/5] arm64: dts: qcom: sdm845: Fix DTS warnings
-Date:   Wed, 24 Jul 2019 10:19:01 +0530
-Message-Id: <20190724044906.12007-1-vkoul@kernel.org>
+Subject: [PATCH v2 1/5] arm64: dts: qcom: sdm845: Add unit name to soc node
+Date:   Wed, 24 Jul 2019 10:19:02 +0530
+Message-Id: <20190724044906.12007-2-vkoul@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190724044906.12007-1-vkoul@kernel.org>
+References: <20190724044906.12007-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,29 +63,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So this is an attempt to fix some warns on sdm845 dts. We still have bunch
-of warnings to fix after this series (duplicate address and node names
-having underscores etc).
+We get a warning about missing unit name for soc node, so add it.
 
-Lets get long hanging ones fixed, we can see the warns with W=1 or W=2
+arch/arm64/boot/dts/qcom/sdm845.dtsi:623.11-2814.4: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
 
-Changes since v1:
-	- Fix space after adc node unit address
-	- Fix typo in commit log
-	- Add review tags by Stephen
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Vinod Koul (5):
-  arm64: dts: qcom: sdm845: Add unit name to soc node
-  arm64: dts: qcom: sdm845: remove unnecessary properties for dsi nodes
-  arm64: dts: qcom: sdm845: remove unit name for thermal trip points
-  arm64: dts: qcom: sdm845: remove macro from unit name
-  arm64: dts: qcom: sdm845-cheza: remove macro from unit name
-
- arch/arm64/boot/dts/qcom/pm8998.dtsi       |  2 +-
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 ++--
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 66 ++++++++++------------
- 3 files changed, 36 insertions(+), 42 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 601cfb078bd5..e81f4a6d08ce 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -620,7 +620,7 @@
+ 		method = "smc";
+ 	};
+ 
+-	soc: soc {
++	soc: soc@0 {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges = <0 0 0 0 0x10 0>;
 -- 
 2.20.1
 
