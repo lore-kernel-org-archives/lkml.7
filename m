@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5791DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5ACC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD48229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16C222ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996351;
-	bh=fw0wvUTuomp5nvFm8q/m7DfHxdR4geJp3N56qtnQP8c=;
+	s=default; t=1563996353;
+	bh=SNtLN3wxSiZPWkdaj5gJcoc1gEXx6/tQeNoBDsllvTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGAYwPGpP8DHRKkJghglJ2H3RKZwDeEFHtJBbbN7iFvxiMIHQrWfwnSlCAMqB5ely
-	 YyNsFcF9bl+ukc0dVk2S5bXDY4UpH8zoNamtJ2wWeV6VXuaPGxbsNy8MmY9MV5+sf0
-	 E7DZxw8vTIwFxPaPxOlkdhkrqFJoGLvObA6ifYbc=
+	b=u//a2CX7PLBE7uN5Ol4M6yILG/4AmKgmewrO/6zfef7fDbI+0H2MiR/wPxPkO0cWG
+	 /7D0Nz3Vf1D2TeE7C+kb6IzFE3Oz2OO+Pm9/7DEBFKSorQgoyvx4Ut7YcpauhFKsAt
+	 fgOD/WxcGbv7shTDYp3h/yjwieLWA7xTofvtFoJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfGXTZt (ORCPT
+        id S1729208AbfGXTZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbfGXTZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:25:43 -0400
+        id S1729198AbfGXTZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:25:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DADB218F0;
-        Wed, 24 Jul 2019 19:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B267218F0;
+        Wed, 24 Jul 2019 19:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996342;
-        bh=fw0wvUTuomp5nvFm8q/m7DfHxdR4geJp3N56qtnQP8c=;
+        s=default; t=1563996347;
+        bh=SNtLN3wxSiZPWkdaj5gJcoc1gEXx6/tQeNoBDsllvTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7WElPsFgDXOHr4SrZCKz9uwpjYaJU6PunAmIJo8+w8O4TMwMKObAEwLwNJpz77o1
-         6OBfExIEc04QEVfgjJBMEr9hjqF+oNmup0a10qNGJ3unHhKkNRafmgjNTWvyTOCHty
-         a01rYLSuj5aAnA80SRXNaYPNImrXdFFC7ZeDE2i0=
+        b=VvOFwQ+a7EfdDfJtSrp8EryhKn0OhxrbE0xUnHENN+ubB2doPlAJW+GUSpH8bVv+C
+         WVajGsAmaL8WrR9eRFm7OshgI5yJE7y0YyQVjvVdEvkLj7P3Dj7gGrj61w1Q54lkqX
+         oNn0xXvkN/3nX+t3b5S50AxOYXfFWgbiTitc/tsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 062/413] net: hns3: set ops to null when unregister ad_dev
-Date:   Wed, 24 Jul 2019 21:15:53 +0200
-Message-Id: <20190724191739.696773486@linuxfoundation.org>
+Subject: [PATCH 5.2 064/413] arm64: mm: make CONFIG_ZONE_DMA32 configurable
+Date:   Wed, 24 Jul 2019 21:15:55 +0200
+Message-Id: <20190724191739.795227065@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,42 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 594a81b39525f0a17e92c2e0b167ae1400650380 ]
+[ Upstream commit 0c1f14ed12262f45a3af1d588e4d7bd12438b8f5 ]
 
-The hclge/hclgevf and hns3 module can be unloaded independently,
-when hclge/hclgevf unloaded firstly, the ops of ae_dev should
-be set to NULL, otherwise it will cause an use-after-free problem.
+This change makes CONFIG_ZONE_DMA32 defuly y and allows users
+to overwrite it only when CONFIG_EXPERT=y.
 
-Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For the SoCs that do not need CONFIG_ZONE_DMA32, this is the
+first step to manage all available memory by a single
+zone(normal zone) to reduce the overhead of multiple zones.
+
+The change also fixes a build error when CONFIG_NUMA=y and
+CONFIG_ZONE_DMA32=n.
+
+arch/arm64/mm/init.c:195:17: error: use of undeclared identifier 'ZONE_DMA32'
+                max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
+
+Change since v1:
+1. only expose CONFIG_ZONE_DMA32 when CONFIG_EXPERT=y
+2. remove redundant IS_ENABLED(CONFIG_ZONE_DMA32)
+
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/Kconfig   | 3 ++-
+ arch/arm64/mm/init.c | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-index fa8b8506b120..738e01393b68 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-@@ -251,6 +251,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 697ea0510729..cf5f1dafcf74 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -260,7 +260,8 @@ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
  
- 		ae_algo->ops->uninit_ae_dev(ae_dev);
- 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
-+		ae_dev->ops = NULL;
- 	}
+ config ZONE_DMA32
+-	def_bool y
++	bool "Support DMA32 zone" if EXPERT
++	default y
  
- 	list_del(&ae_algo->node);
-@@ -351,6 +352,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
+ config HAVE_GENERIC_GUP
+ 	def_bool y
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 749c9b269f08..f3c795278def 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -180,8 +180,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
  
- 		ae_algo->ops->uninit_ae_dev(ae_dev);
- 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
-+		ae_dev->ops = NULL;
- 	}
+-	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+-		max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
++#ifdef CONFIG_ZONE_DMA32
++	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
++#endif
+ 	max_zone_pfns[ZONE_NORMAL] = max;
  
- 	list_del(&ae_dev->node);
+ 	free_area_init_nodes(max_zone_pfns);
 -- 
 2.20.1
 
