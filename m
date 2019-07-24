@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C4EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C310C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F2E21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A30229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996749;
-	bh=yw1shNQx4IyfNev6H9OHA1gaGsr0P+ZipoPSW+nTp34=;
+	s=default; t=1563996753;
+	bh=NkOFcZC2PgZUR4KhHo7KyRrdAihdcVMOUfRME/GuUuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGvv0uztfgkCT5fdpCBWaNbO/5EaLj6mzTROrTB6iGG5J2BuHPDjHQCWYysjwwN9k
-	 HYdNfjlqhwDrweghGNywAiAqytdspvT03qY731Ab7GpzhQwLmc8KC/vha8tob78CXo
-	 L5HJKphEcnCNz24x+2YDX83cGNumuYf7m6lSDBzI=
+	b=BVTbKOW03B3pydSHzRFt7PlwaR+13/RktvS5wLSGF870cAvTUEETYc7P+08iJ6WJ3
+	 7e8Dolbq2FsLIPsHXjqUnihoXQEeqZoeBkw97yEly1VGeQ/0sTXKAMjoug9yQnkUgj
+	 GgoDS4vbaHtjrDbekZXbyVJ/NfREPbhs7y1n/IKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388649AbfGXTc1 (ORCPT
+        id S2388669AbfGXTcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53744 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388637AbfGXTcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:32:24 -0400
+        id S2388370AbfGXTca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:32:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D872D229FA;
-        Wed, 24 Jul 2019 19:32:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2445C22BE9;
+        Wed, 24 Jul 2019 19:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996743;
-        bh=yw1shNQx4IyfNev6H9OHA1gaGsr0P+ZipoPSW+nTp34=;
+        s=default; t=1563996749;
+        bh=NkOFcZC2PgZUR4KhHo7KyRrdAihdcVMOUfRME/GuUuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJodHHb1JDE7ettzjQHu/AjIJqXsWz3ExRJ/nSvaVvCM3qEvOkrtGFj2DWpLajn3U
-         F+YTlx0muk8QovMmiWlfeeswoobu8UtJ4bQCsUN6pLOX0JTgSbz4R9K81Yf6UWNM3t
-         jG3rkCP+gPcui5vvhw5YHh5SQPP+sTJ4/8Qkb78M=
+        b=VwO65DhVIXh874ObWPlvZ7O+zK0HVNtMaF9SOXErwxBRtb7zje6k5ZgdRYfvscHAj
+         asH5q3Ub+tBZXABcpK6i0qTGJ1zdb1Kcsb2P0n4aoWdm+oBQYEYAfjpRYZYe1BPY60
+         +fzGtnunZBMFYnl23DN6lA+fYQmYk6ax9+QskRRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        stable@vger.kernel.org,
+        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 200/413] net: ethernet: ti: cpsw: Assign OF node to slave devices
-Date:   Wed, 24 Jul 2019 21:18:11 +0200
-Message-Id: <20190724191748.874935721@linuxfoundation.org>
+Subject: [PATCH 5.2 202/413] iwlwifi: mvm: Drop large non sta frames
+Date:   Wed, 24 Jul 2019 21:18:13 +0200
+Message-Id: <20190724191748.998253290@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,63 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 337d1727a3895775b5e5ef67d3ca0fea2e2ae768 ]
+[ Upstream commit ac70499ee97231a418dc1a4d6c9dc102e8f64631 ]
 
-Assign OF node to CPSW slave devices, otherwise it is not possible to
-bind e.g. DSA switch to them. Without this patch, the DSA code tries
-to find the ethernet device by OF match, but fails to do so because
-the slave device has NULL OF node.
+In some buggy scenarios we could possible attempt to transmit frames larger
+than maximum MSDU size. Since our devices don't know how to handle this,
+it may result in asserts, hangs etc.
+This can happen, for example, when we receive a large multicast frame
+and try to transmit it back to the air in AP mode.
+Since in a legal scenario this should never happen, drop such frames and
+warn about it.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c      | 3 +++
- drivers/net/ethernet/ti/cpsw_priv.h | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 634fc484a0b3..4e3026f9abed 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -2179,6 +2179,7 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
- 			return ret;
- 		}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 0c2aabc842f9..96f8d38ea321 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -726,6 +726,9 @@ int iwl_mvm_tx_skb_non_sta(struct iwl_mvm *mvm, struct sk_buff *skb)
  
-+		slave_data->slave_node = slave_node;
- 		slave_data->phy_node = of_parse_phandle(slave_node,
- 							"phy-handle", 0);
- 		parp = of_get_property(slave_node, "phy_id", &lenp);
-@@ -2330,6 +2331,7 @@ static int cpsw_probe_dual_emac(struct cpsw_priv *priv)
+ 	memcpy(&info, skb->cb, sizeof(info));
  
- 	/* register the network device */
- 	SET_NETDEV_DEV(ndev, cpsw->dev);
-+	ndev->dev.of_node = cpsw->slaves[1].data->slave_node;
- 	ret = register_netdev(ndev);
- 	if (ret)
- 		dev_err(cpsw->dev, "cpsw: error registering net device\n");
-@@ -2507,6 +2509,7 @@ static int cpsw_probe(struct platform_device *pdev)
++	if (WARN_ON_ONCE(skb->len > IEEE80211_MAX_DATA_LEN + hdrlen))
++		return -1;
++
+ 	if (WARN_ON_ONCE(info.flags & IEEE80211_TX_CTL_AMPDU))
+ 		return -1;
  
- 	/* register the network device */
- 	SET_NETDEV_DEV(ndev, dev);
-+	ndev->dev.of_node = cpsw->slaves[0].data->slave_node;
- 	ret = register_netdev(ndev);
- 	if (ret) {
- 		dev_err(dev, "error registering net device\n");
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
-index 04795b97ee71..e32f11da2dce 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.h
-+++ b/drivers/net/ethernet/ti/cpsw_priv.h
-@@ -272,6 +272,7 @@ struct cpsw_host_regs {
- };
- 
- struct cpsw_slave_data {
-+	struct device_node *slave_node;
- 	struct device_node *phy_node;
- 	char		phy_id[MII_BUS_ID_SIZE];
- 	int		phy_if;
 -- 
 2.20.1
 
