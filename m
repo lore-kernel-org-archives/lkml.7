@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA52DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F24C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3F7218EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57DC6229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996559;
-	bh=SpUzqcby77o16NTeR8QQjkQPeC1IXxgQdO+ttTluORo=;
+	s=default; t=1563996565;
+	bh=9Pt7VSf7Y+EbxOQtUc7WMxkJU/adgdCjXxViKqeXkv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNtBoSZ9VPWns92KMIiEAJnKN73RQrgVifmlWXS+w9roJxR4+DC9HlKG9rPzlrCVC
-	 S8+mJqfw/Wlt22EI5ryGWjsI6+mqDDEP6boh5kZ1H/t+MU8ZHqp+sxIkghKzw3cEww
-	 CTuHKy/9JP74Tk4gwM2NuYv0yXb+U5irRGqvmx9w=
+	b=11J3fFtEWChKAIueptdiuZEW7Dzn19JBfyZ5TlsaQoY6CBqbsyXFe2OCV+je4olrt
+	 RWo9URIabuKb3u/MafOVlmwwIn7a+n3dnsZiEJQqvB/dxFaiyiIhkALpZwD3Mr2Gm+
+	 1Gu/ElJYgv+hHN9qFy4LTxQ4YexmG02JaUmLKmSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbfGXT3S (ORCPT
+        id S2388355AbfGXT3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48306 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388337AbfGXT3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:29:14 -0400
+        id S1728552AbfGXT3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:29:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5272E22ADA;
-        Wed, 24 Jul 2019 19:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BE8120659;
+        Wed, 24 Jul 2019 19:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996553;
-        bh=SpUzqcby77o16NTeR8QQjkQPeC1IXxgQdO+ttTluORo=;
+        s=default; t=1563996557;
+        bh=9Pt7VSf7Y+EbxOQtUc7WMxkJU/adgdCjXxViKqeXkv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQ2BfTgfg+EMBBQH0zfLjg3WBQxCuBdh9NSEmUJLLPIq7yzBI+EQXBZAPzeQEfmfN
-         CctV8ON5apA/hAg74ay1m5hRMvKFnaOkE9Nm0k7LcTzEwIAiM72IMdpn0MKLODMZ9X
-         RIPTLFm6f1uUZ1sLtgL5bhrtfQ+59GTftcYUuNGI=
+        b=MZy3MTtDu637Br45f34WkUg8bwVkddz6YTiQMXj6YBkgQtMDa5YUzhiXEjsl2ZoJm
+         oUg9UYDqOIXgAxFQFcZvm/ZiknQCYUTe++e4/RN3FJ+2U7NWkwH1Bw8VDbNhQqC0n7
+         KgERPHPZBDUovhEe+Evl4KfaqYLrXjihNLAU9qII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 138/413] ipsec: select crypto ciphers for xfrm_algo
-Date:   Wed, 24 Jul 2019 21:17:09 +0200
-Message-Id: <20190724191744.906896939@linuxfoundation.org>
+Subject: [PATCH 5.2 121/413] bpf: fix callees pruning callers
+Date:   Wed, 24 Jul 2019 21:16:52 +0200
+Message-Id: <20190724191743.873298644@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,41 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 597179b0ba550bd83fab1a9d57c42a9343c58514 ]
+[ Upstream commit eea1c227b9e9bad295e8ef984004a9acf12bb68c ]
 
-kernelci.org reports failed builds on arc because of what looks
-like an old missed 'select' statement:
+The commit 7640ead93924 partially resolved the issue of callees
+incorrectly pruning the callers.
+With introduction of bounded loops and jmps_processed heuristic
+single verifier state may contain multiple branches and calls.
+It's possible that new verifier state (for future pruning) will be
+allocated inside callee. Then callee will exit (still within the same
+verifier state). It will go back to the caller and there R6-R9 registers
+will be read and will trigger mark_reg_read. But the reg->live for all frames
+but the top frame is not set to LIVE_NONE. Hence mark_reg_read will fail
+to propagate liveness into parent and future walking will incorrectly
+conclude that the states are equivalent because LIVE_READ is not set.
+In other words the rule for parent/live should be:
+whenever register parentage chain is set the reg->live should be set to LIVE_NONE.
+is_state_visited logic already follows this rule for spilled registers.
 
-net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
-xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
-
-I don't see this in randconfig builds on other architectures, but
-it's fairly clear we want to select the hash code for it, like we
-do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
-is also required even though it has not popped up in build tests.
-
-Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 7640ead93924 ("bpf: verifier: make sure callees don't prune with caller differences")
+Fixes: f4d7e40a5b71 ("bpf: introduce function calls (verification)")
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/bpf/verifier.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
-index c967fc3c38c8..51bb6018f3bf 100644
---- a/net/xfrm/Kconfig
-+++ b/net/xfrm/Kconfig
-@@ -15,6 +15,8 @@ config XFRM_ALGO
- 	tristate
- 	select XFRM
- 	select CRYPTO
-+	select CRYPTO_HASH
-+	select CRYPTO_BLKCIPHER
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index a5c369e60343..11528bdaa9dc 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -6456,17 +6456,18 @@ static int is_state_visited(struct bpf_verifier_env *env, int insn_idx)
+ 	 * the state of the call instruction (with WRITTEN set), and r0 comes
+ 	 * from callee with its full parentage chain, anyway.
+ 	 */
+-	for (j = 0; j <= cur->curframe; j++)
+-		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
+-			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
+ 	/* clear write marks in current state: the writes we did are not writes
+ 	 * our child did, so they don't screen off its reads from us.
+ 	 * (There are no read marks in current state, because reads always mark
+ 	 * their parent and current state never has children yet.  Only
+ 	 * explored_states can get read marks.)
+ 	 */
+-	for (i = 0; i < BPF_REG_FP; i++)
+-		cur->frame[cur->curframe]->regs[i].live = REG_LIVE_NONE;
++	for (j = 0; j <= cur->curframe; j++) {
++		for (i = j < cur->curframe ? BPF_REG_6 : 0; i < BPF_REG_FP; i++)
++			cur->frame[j]->regs[i].parent = &new->frame[j]->regs[i];
++		for (i = 0; i < BPF_REG_FP; i++)
++			cur->frame[j]->regs[i].live = REG_LIVE_NONE;
++	}
  
- if INET
- config XFRM_USER
+ 	/* all stack frames are accessible from callee, clear them all */
+ 	for (j = 0; j <= cur->curframe; j++) {
 -- 
 2.20.1
 
