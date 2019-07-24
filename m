@@ -7,46 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15FAC76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F256C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9914E20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E372083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997286;
-	bh=umptgDMJtNhneGaoTDOXdRurRf8fDTFuJGUd/2Z2I84=;
+	s=default; t=1563997289;
+	bh=2JuZ68chLQHkmtttpPeLALXBf11PAatz+Tf3pJxTQ94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nsSsxp4qESeSYncyOIyom46vJEPy6tfJysw8/z9Q3yhnlXKGGt7Sbl0Buw5RfCwyc
-	 R2/76lwRNM5WhtOAuxfbr6B+4IAhkjc6PblLoCw/q2uQ+DAqwtYhOc1sDNbNLf4NEs
-	 OKUORV8M69sUnhbndq9DOO5oQMZJ+71onIJliTPI=
+	b=19GHafp9P3VTV0G8DItX7134mz437p7D2YnrlDTlfPkbdkGU5aCiXs2aUN4shgVV3
+	 0H3dYbQGH1b9yVPQ1P0oP/1bBOoZyM5ais96OCXpct1G12aPQndiFLkFkyKPvmdfme
+	 jpIvHG7dRzapUD1OxjsxXMF6a8boud9WInqvo7LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390180AbfGXTlZ (ORCPT
+        id S2389929AbfGXTl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:41:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390162AbfGXTlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:41:19 -0400
+        id S2390138AbfGXTlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:41:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96DF521873;
-        Wed, 24 Jul 2019 19:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC528204FD;
+        Wed, 24 Jul 2019 19:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997279;
-        bh=umptgDMJtNhneGaoTDOXdRurRf8fDTFuJGUd/2Z2I84=;
+        s=default; t=1563997282;
+        bh=2JuZ68chLQHkmtttpPeLALXBf11PAatz+Tf3pJxTQ94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NfrCfx0wG++WEwXWIcsL9cDWycU5IHP8oU+TSzYw3vHxKasCOkiq8abyBDjJClxXC
-         GkzkczN0+5dj6ViTgPKtxruucS9dl5JclDQ9dKDDzG6MWV4NDmWmsHDj6P4AZh43sA
-         FksTg1mZ5lYA2EXMZFfK2YuX3VA80Ka9EsDsI4M4=
+        b=TMDwk2ry4sGbtTBIbb7HG3aPclrDi1xt3IOGXlzJ27SXxpJzVU0Z2GiUUHz7YJnHQ
+         4vKbFeaCVC2/gaeUenc1CtiHu4K8RZfr9W7cNQZkqyeqUS25meFi9dKn0p9mHguF3s
+         l+3vWXliAgb2y4ZR0TrRtrTbCFpEE9T3QEJaywLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Olof Johansson <olof@lixom.net>
-Subject: [PATCH 5.2 344/413] ARM: dts: gemini: Set DIR-685 SPI CS as active low
-Date:   Wed, 24 Jul 2019 21:20:35 +0200
-Message-Id: <20190724191800.440137342@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Harkes <jaharkes@cs.cmu.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Fabian Frederick <fabf@skynet.be>,
+        Mikko Rapeli <mikko.rapeli@iki.fi>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Yann Droneaud <ydroneaud@opteya.com>,
+        Zhouyang Jia <jiazhouyang09@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 380/413] coda: pass the host file in vma->vm_file on mmap
+Date:   Wed, 24 Jul 2019 21:21:11 +0200
+Message-Id: <20190724191802.307793799@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,34 +69,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Jan Harkes <jaharkes@cs.cmu.edu>
 
-commit f90b8fda3a9d72a9422ea80ae95843697f94ea4a upstream.
+commit 7fa0a1da3dadfd9216df7745a1331fdaa0940d1c upstream.
 
-The SPI to the display on the DIR-685 is active low, we were
-just saved by the SPI library enforcing active low on everything
-before, so set it as active low to avoid ambiguity.
+Patch series "Coda updates".
 
-Link: https://lore.kernel.org/r/20190715202101.16060-1-linus.walleij@linaro.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+The following patch series is a collection of various fixes for Coda,
+most of which were collected from linux-fsdevel or linux-kernel but
+which have as yet not found their way upstream.
+
+This patch (of 22):
+
+Various file systems expect that vma->vm_file points at their own file
+handle, several use file_inode(vma->vm_file) to get at their inode or
+use vma->vm_file->private_data.  However the way Coda wrapped mmap on a
+host file broke this assumption, vm_file was still pointing at the Coda
+file and the host file systems would scribble over Coda's inode and
+private file data.
+
+This patch fixes the incorrect expectation and wraps vm_ops->open and
+vm_ops->close to allow Coda to track when the vm_area_struct is
+destroyed so we still release the reference on the Coda file handle at
+the right time.
+
+Link: http://lkml.kernel.org/r/0e850c6e59c0b147dc2dcd51a3af004c948c3697.1558117389.git.jaharkes@cs.cmu.edu
+Signed-off-by: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Fabian Frederick <fabf@skynet.be>
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>
+Cc: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Yann Droneaud <ydroneaud@opteya.com>
+Cc: Zhouyang Jia <jiazhouyang09@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/gemini-dlink-dir-685.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/coda/file.c |   70 +++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 68 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-+++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
-@@ -64,7 +64,7 @@
- 		gpio-sck = <&gpio1 5 GPIO_ACTIVE_HIGH>;
- 		gpio-miso = <&gpio1 8 GPIO_ACTIVE_HIGH>;
- 		gpio-mosi = <&gpio1 7 GPIO_ACTIVE_HIGH>;
--		cs-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
-+		cs-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
- 		num-chipselects = <1>;
+--- a/fs/coda/file.c
++++ b/fs/coda/file.c
+@@ -27,6 +27,13 @@
+ #include "coda_linux.h"
+ #include "coda_int.h"
  
- 		panel: display@0 {
++struct coda_vm_ops {
++	atomic_t refcnt;
++	struct file *coda_file;
++	const struct vm_operations_struct *host_vm_ops;
++	struct vm_operations_struct vm_ops;
++};
++
+ static ssize_t
+ coda_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
+@@ -61,6 +68,34 @@ coda_file_write_iter(struct kiocb *iocb,
+ 	return ret;
+ }
+ 
++static void
++coda_vm_open(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	atomic_inc(&cvm_ops->refcnt);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->open)
++		cvm_ops->host_vm_ops->open(vma);
++}
++
++static void
++coda_vm_close(struct vm_area_struct *vma)
++{
++	struct coda_vm_ops *cvm_ops =
++		container_of(vma->vm_ops, struct coda_vm_ops, vm_ops);
++
++	if (cvm_ops->host_vm_ops && cvm_ops->host_vm_ops->close)
++		cvm_ops->host_vm_ops->close(vma);
++
++	if (atomic_dec_and_test(&cvm_ops->refcnt)) {
++		vma->vm_ops = cvm_ops->host_vm_ops;
++		fput(cvm_ops->coda_file);
++		kfree(cvm_ops);
++	}
++}
++
+ static int
+ coda_file_mmap(struct file *coda_file, struct vm_area_struct *vma)
+ {
+@@ -68,6 +103,8 @@ coda_file_mmap(struct file *coda_file, s
+ 	struct coda_inode_info *cii;
+ 	struct file *host_file;
+ 	struct inode *coda_inode, *host_inode;
++	struct coda_vm_ops *cvm_ops;
++	int ret;
+ 
+ 	cfi = CODA_FTOC(coda_file);
+ 	BUG_ON(!cfi || cfi->cfi_magic != CODA_MAGIC);
+@@ -76,6 +113,13 @@ coda_file_mmap(struct file *coda_file, s
+ 	if (!host_file->f_op->mmap)
+ 		return -ENODEV;
+ 
++	if (WARN_ON(coda_file != vma->vm_file))
++		return -EIO;
++
++	cvm_ops = kmalloc(sizeof(struct coda_vm_ops), GFP_KERNEL);
++	if (!cvm_ops)
++		return -ENOMEM;
++
+ 	coda_inode = file_inode(coda_file);
+ 	host_inode = file_inode(host_file);
+ 
+@@ -89,6 +133,7 @@ coda_file_mmap(struct file *coda_file, s
+ 	 * the container file on us! */
+ 	else if (coda_inode->i_mapping != host_inode->i_mapping) {
+ 		spin_unlock(&cii->c_lock);
++		kfree(cvm_ops);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -97,7 +142,29 @@ coda_file_mmap(struct file *coda_file, s
+ 	cfi->cfi_mapcount++;
+ 	spin_unlock(&cii->c_lock);
+ 
+-	return call_mmap(host_file, vma);
++	vma->vm_file = get_file(host_file);
++	ret = call_mmap(vma->vm_file, vma);
++
++	if (ret) {
++		/* if call_mmap fails, our caller will put coda_file so we
++		 * should drop the reference to the host_file that we got.
++		 */
++		fput(host_file);
++		kfree(cvm_ops);
++	} else {
++		/* here we add redirects for the open/close vm_operations */
++		cvm_ops->host_vm_ops = vma->vm_ops;
++		if (vma->vm_ops)
++			cvm_ops->vm_ops = *vma->vm_ops;
++
++		cvm_ops->vm_ops.open = coda_vm_open;
++		cvm_ops->vm_ops.close = coda_vm_close;
++		cvm_ops->coda_file = coda_file;
++		atomic_set(&cvm_ops->refcnt, 1);
++
++		vma->vm_ops = &cvm_ops->vm_ops;
++	}
++	return ret;
+ }
+ 
+ int coda_open(struct inode *coda_inode, struct file *coda_file)
+@@ -207,4 +274,3 @@ const struct file_operations coda_file_o
+ 	.fsync		= coda_fsync,
+ 	.splice_read	= generic_file_splice_read,
+ };
+-
 
 
