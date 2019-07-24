@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7DDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71E3C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DFD205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF4220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998568;
-	bh=UWE2DN4Cd8hLRQMDE57ZxB+Xn521+jVhFIUc94A+9zc=;
+	s=default; t=1563998570;
+	bh=0ec6NeFqmFZxWWpQ73b8nQMKU7+faETgn/Bt1DHjJ4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nE6QTjoZKO713vnuYBk21FmA9ftlo3EKDEFHmq8TVmGtMEcgsHPVE9PXvdSW7avWm
-	 rxLFsTjN5ncj90mu9hu/PRLBKOcNDR7f9mJ8NFyqMlgi2ljL9D2UEtQglIx1WG8Vqh
-	 EGzclywuhKPN4Kx0nMYdqtkaw2LadJjm706/az8U=
+	b=dZcAK2Ux1FWlzIe5CjKZV065gA/OxmxDXNfm/gZKUhHEqHH+2Xr7ztXRtN+NNX29Y
+	 O0XTKNgTtkzI6nB7y2ppZzQnkOfvmYgFHu8DVVBG0SgZcT2UsW1SMxtPnBiaqtB/Hk
+	 eZtiUYfJmFexPnjtKpN3Irj/bypmQfblRYxEeUjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405583AbfGXUCr (ORCPT
+        id S2405596AbfGXUCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52726 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404679AbfGXUCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:02:45 -0400
+        id S2404679AbfGXUCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00FF2205C9;
-        Wed, 24 Jul 2019 20:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A596A20665;
+        Wed, 24 Jul 2019 20:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998564;
-        bh=UWE2DN4Cd8hLRQMDE57ZxB+Xn521+jVhFIUc94A+9zc=;
+        s=default; t=1563998567;
+        bh=0ec6NeFqmFZxWWpQ73b8nQMKU7+faETgn/Bt1DHjJ4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FCEjR4u4TsC8cy5Xb9ypSXV/5TDHkfQuvxkAYUm23EUnD50vLoUyYgOonG/ZM3dWx
-         QX3THGHAlwJjoNvvdYYf6PTMuPaIahmwQcVhpEciyf7MB8Za9rGQh4qUfqazeeGJgD
-         QxGFu9fYDByp99Hq8w1Olz84ICuqKfXyiB2jDNV0=
+        b=1nWEunGyjzSXbdmOTpGFb9Z8XEWsNOFdxF69cp2v4fdYf4MM3cj8OL8E1FuVNNx0T
+         1ThsiYud2t/DTURAGYx9a1iL8rGIMIbSv3Dy/86JAvyo/iy5DCIZi5Y1VTxUrAYEih
+         eg1QbbQc/YSS/Nyrw37zgmYlvCg3AcJBaF/xtA7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Maurizio Lombardi <mlombard@redhat.com>,
+        Chris Leech <cleech@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/271] crypto: talitos - Align SEC1 accesses to 32 bits boundaries.
-Date:   Wed, 24 Jul 2019 21:18:25 +0200
-Message-Id: <20190724191658.293730178@linuxfoundation.org>
+Subject: [PATCH 4.19 004/271] scsi: iscsi: set auth_protocol back to NULL if CHAP_A value is not supported
+Date:   Wed, 24 Jul 2019 21:17:53 +0200
+Message-Id: <20190724191655.622988677@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -60,40 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c9cca7034b34a2d82e9a03b757de2485c294851c ]
+[ Upstream commit 5dd6c49339126c2c8df2179041373222362d6e49 ]
 
-The MPC885 reference manual states:
+If the CHAP_A value is not supported, the chap_server_open() function
+should free the auth_protocol pointer and set it to NULL, or we will leave
+a dangling pointer around.
 
-SEC Lite-initiated 8xx writes can occur only on 32-bit-word boundaries, but
-reads can occur on any byte boundary. Writing back a header read from a
-non-32-bit-word boundary will yield unpredictable results.
+[   66.010905] Unsupported CHAP_A value
+[   66.011660] Security negotiation failed.
+[   66.012443] iSCSI Login negotiation failed.
+[   68.413924] general protection fault: 0000 [#1] SMP PTI
+[   68.414962] CPU: 0 PID: 1562 Comm: targetcli Kdump: loaded Not tainted 4.18.0-80.el8.x86_64 #1
+[   68.416589] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+[   68.417677] RIP: 0010:__kmalloc_track_caller+0xc2/0x210
 
-In order to ensure that, cra_alignmask is set to 3 for SEC1.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
+Reviewed-by: Chris Leech <cleech@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/talitos.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/target/iscsi/iscsi_target_auth.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
-index 254f711f1934..41b288bdcdbf 100644
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -3193,7 +3193,10 @@ static struct talitos_crypto_alg *talitos_alg_alloc(struct device *dev,
- 		alg->cra_priority = t_alg->algt.priority;
- 	else
- 		alg->cra_priority = TALITOS_CRA_PRIORITY;
--	alg->cra_alignmask = 0;
-+	if (has_ftr_sec1(priv))
-+		alg->cra_alignmask = 3;
-+	else
-+		alg->cra_alignmask = 0;
- 	alg->cra_ctxsize = sizeof(struct talitos_ctx);
- 	alg->cra_flags |= CRYPTO_ALG_KERN_DRIVER_ONLY;
+diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
+index 4e680d753941..e2fa3a3bc81d 100644
+--- a/drivers/target/iscsi/iscsi_target_auth.c
++++ b/drivers/target/iscsi/iscsi_target_auth.c
+@@ -89,6 +89,12 @@ static int chap_check_algorithm(const char *a_str)
+ 	return CHAP_DIGEST_UNKNOWN;
+ }
  
++static void chap_close(struct iscsi_conn *conn)
++{
++	kfree(conn->auth_protocol);
++	conn->auth_protocol = NULL;
++}
++
+ static struct iscsi_chap *chap_server_open(
+ 	struct iscsi_conn *conn,
+ 	struct iscsi_node_auth *auth,
+@@ -126,7 +132,7 @@ static struct iscsi_chap *chap_server_open(
+ 	case CHAP_DIGEST_UNKNOWN:
+ 	default:
+ 		pr_err("Unsupported CHAP_A value\n");
+-		kfree(conn->auth_protocol);
++		chap_close(conn);
+ 		return NULL;
+ 	}
+ 
+@@ -141,19 +147,13 @@ static struct iscsi_chap *chap_server_open(
+ 	 * Generate Challenge.
+ 	 */
+ 	if (chap_gen_challenge(conn, 1, aic_str, aic_len) < 0) {
+-		kfree(conn->auth_protocol);
++		chap_close(conn);
+ 		return NULL;
+ 	}
+ 
+ 	return chap;
+ }
+ 
+-static void chap_close(struct iscsi_conn *conn)
+-{
+-	kfree(conn->auth_protocol);
+-	conn->auth_protocol = NULL;
+-}
+-
+ static int chap_server_compute_md5(
+ 	struct iscsi_conn *conn,
+ 	struct iscsi_node_auth *auth,
 -- 
 2.20.1
 
