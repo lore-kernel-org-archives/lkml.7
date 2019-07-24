@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24407C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06F2C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF55021873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F3722BE8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997957;
-	bh=O1bN0GLwb3jmKqqTGMmrKCQUWyy6wFmt1o18DW34vKg=;
+	s=default; t=1563997960;
+	bh=UDH0W1mlBbDuBfq+l4Bx4NlOLmHXUQTyMGpI9TCPqcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H8h0er39PsudZuDqAI5WtlWGSi3ozN6HwNE5CzndC+jzRLwezkyIPj+XGEKfJTW9E
-	 qLzWbNRivXVC526ZMlKJlRkK+sDncCcFvkcj6l5QRs57KQ92j9Ufu6RsL/g5NFHJxE
-	 XoLLNu5t0mhlAagnUezW5B2K1/pQ6ZHooKfY5iZI=
+	b=YXWN67tya+aAlhKIw2ST0szlVm0lQ/Y0lIG5qP6CMSl1yZfUZAmrXXtemZyXEDFoZ
+	 Xf2vQvkDiNl78x9R8GWTCOBW/1pLoXKqVSDnZhHseBAOVHfytDIttuzd5YPuiHlhiU
+	 L09t3IRvzmIpraPEcQ5AVW4xiqc15g1ahYeOKu4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391725AbfGXTwg (ORCPT
+        id S2391750AbfGXTwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34454 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403837AbfGXTwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:52:33 -0400
+        id S2388100AbfGXTwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:52:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 365CF214AF;
-        Wed, 24 Jul 2019 19:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0B7D217D4;
+        Wed, 24 Jul 2019 19:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997952;
-        bh=O1bN0GLwb3jmKqqTGMmrKCQUWyy6wFmt1o18DW34vKg=;
+        s=default; t=1563997956;
+        bh=UDH0W1mlBbDuBfq+l4Bx4NlOLmHXUQTyMGpI9TCPqcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bfV7bPzqBqKt7MGFbh72C3XYWUVVrOtITRwIPej1Lppu0QcRGHhGANoP9F1UEFPWO
-         P2aTQACV0M88/DXs9ADs13EGSQH1uHk3VhxbmmIh7YXAVA0tJvDh9ETLJtNqGoWsnX
-         dcMJy7FjzFlyRxSkcaSVG+UL1Bjd68x48mhQCwbA=
+        b=ru87RaG5TuhyZtLQSq4ad6gL2a0bbbnxrnJzmQpsv6kuTa7JTENV7pHzH4IE7xf2F
+         6ILFBfx9DfQnn7WJbaP9n/h74c8R+m9eKQr0zRWJf5y4IvW38ePnNuB9mzTxQtkLYU
+         m1Q/IGNlkiznxjG3TukxCZt9IVyhK0eq/7iAOKDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 198/371] selftests: bpf: fix inlines in test_lwt_seg6local
-Date:   Wed, 24 Jul 2019 21:19:10 +0200
-Message-Id: <20190724191739.669691209@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
+Subject: [PATCH 5.1 199/371] bonding: validate ip header before check IPPROTO_IGMP
+Date:   Wed, 24 Jul 2019 21:19:11 +0200
+Message-Id: <20190724191739.718346119@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,100 +64,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 11aca65ec4db09527d3e9b6b41a0615b7da4386b ]
+[ Upstream commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c ]
 
-Selftests are reporting this failure in test_lwt_seg6local.sh:
+bond_xmit_roundrobin() checks for IGMP packets but it parses
+the IP header even before checking skb->protocol.
 
-+ ip netns exec ns2 ip -6 route add fb00::6 encap bpf in obj test_lwt_seg6local.o sec encap_srh dev veth2
-Error fetching program/map!
-Failed to parse eBPF program: Operation not permitted
+We should validate the IP header with pskb_may_pull() before
+using iph->protocol.
 
-The problem is __attribute__((always_inline)) alone is not enough to prevent
-clang from inserting those functions in .text. In that case, .text is not
-marked as relocateable.
-
-See the output of objdump -h test_lwt_seg6local.o:
-
-Idx Name          Size      VMA               LMA               File off  Algn
-  0 .text         00003530  0000000000000000  0000000000000000  00000040  2**3
-                  CONTENTS, ALLOC, LOAD, READONLY, CODE
-
-This causes the iproute bpf loader to fail in bpf_fetch_prog_sec:
-bpf_has_call_data returns true but bpf_fetch_prog_relo fails as there's no
-relocateable .text section in the file.
-
-To fix this, convert to 'static __always_inline'.
-
-v2: Use 'static __always_inline' instead of 'static inline
-    __attribute__((always_inline))'
-
-Fixes: c99a84eac026 ("selftests/bpf: test for seg6local End.BPF action")
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
+Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Cc: Veaceslav Falico <vfalico@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/bpf/progs/test_lwt_seg6local.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/bonding/bond_main.c | 37 ++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/progs/test_lwt_seg6local.c b/tools/testing/selftests/bpf/progs/test_lwt_seg6local.c
-index 0575751bc1bc..e2f6ed0a583d 100644
---- a/tools/testing/selftests/bpf/progs/test_lwt_seg6local.c
-+++ b/tools/testing/selftests/bpf/progs/test_lwt_seg6local.c
-@@ -61,7 +61,7 @@ struct sr6_tlv_t {
- 	unsigned char value[0];
- } BPF_PACKET_HEADER;
- 
--__attribute__((always_inline)) struct ip6_srh_t *get_srh(struct __sk_buff *skb)
-+static __always_inline struct ip6_srh_t *get_srh(struct __sk_buff *skb)
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 59e919b92873..7b9a18e36a93 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3866,8 +3866,8 @@ static netdev_tx_t bond_xmit_roundrobin(struct sk_buff *skb,
+ 					struct net_device *bond_dev)
  {
- 	void *cursor, *data_end;
- 	struct ip6_srh_t *srh;
-@@ -95,7 +95,7 @@ __attribute__((always_inline)) struct ip6_srh_t *get_srh(struct __sk_buff *skb)
- 	return srh;
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	struct iphdr *iph = ip_hdr(skb);
+ 	struct slave *slave;
++	int slave_cnt;
+ 	u32 slave_id;
+ 
+ 	/* Start with the curr_active_slave that joined the bond as the
+@@ -3876,23 +3876,32 @@ static netdev_tx_t bond_xmit_roundrobin(struct sk_buff *skb,
+ 	 * send the join/membership reports.  The curr_active_slave found
+ 	 * will send all of this type of traffic.
+ 	 */
+-	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
+-		slave = rcu_dereference(bond->curr_active_slave);
+-		if (slave)
+-			bond_dev_queue_xmit(bond, skb, slave->dev);
+-		else
+-			bond_xmit_slave_id(bond, skb, 0);
+-	} else {
+-		int slave_cnt = READ_ONCE(bond->slave_cnt);
++	if (skb->protocol == htons(ETH_P_IP)) {
++		int noff = skb_network_offset(skb);
++		struct iphdr *iph;
+ 
+-		if (likely(slave_cnt)) {
+-			slave_id = bond_rr_gen_slave_id(bond);
+-			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
+-		} else {
+-			bond_tx_drop(bond_dev, skb);
++		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
++			goto non_igmp;
++
++		iph = ip_hdr(skb);
++		if (iph->protocol == IPPROTO_IGMP) {
++			slave = rcu_dereference(bond->curr_active_slave);
++			if (slave)
++				bond_dev_queue_xmit(bond, skb, slave->dev);
++			else
++				bond_xmit_slave_id(bond, skb, 0);
++			return NETDEV_TX_OK;
+ 		}
+ 	}
+ 
++non_igmp:
++	slave_cnt = READ_ONCE(bond->slave_cnt);
++	if (likely(slave_cnt)) {
++		slave_id = bond_rr_gen_slave_id(bond);
++		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
++	} else {
++		bond_tx_drop(bond_dev, skb);
++	}
+ 	return NETDEV_TX_OK;
  }
  
--__attribute__((always_inline))
-+static __always_inline
- int update_tlv_pad(struct __sk_buff *skb, uint32_t new_pad,
- 		   uint32_t old_pad, uint32_t pad_off)
- {
-@@ -125,7 +125,7 @@ int update_tlv_pad(struct __sk_buff *skb, uint32_t new_pad,
- 	return 0;
- }
- 
--__attribute__((always_inline))
-+static __always_inline
- int is_valid_tlv_boundary(struct __sk_buff *skb, struct ip6_srh_t *srh,
- 			  uint32_t *tlv_off, uint32_t *pad_size,
- 			  uint32_t *pad_off)
-@@ -184,7 +184,7 @@ int is_valid_tlv_boundary(struct __sk_buff *skb, struct ip6_srh_t *srh,
- 	return 0;
- }
- 
--__attribute__((always_inline))
-+static __always_inline
- int add_tlv(struct __sk_buff *skb, struct ip6_srh_t *srh, uint32_t tlv_off,
- 	    struct sr6_tlv_t *itlv, uint8_t tlv_size)
- {
-@@ -228,7 +228,7 @@ int add_tlv(struct __sk_buff *skb, struct ip6_srh_t *srh, uint32_t tlv_off,
- 	return update_tlv_pad(skb, new_pad, pad_size, pad_off);
- }
- 
--__attribute__((always_inline))
-+static __always_inline
- int delete_tlv(struct __sk_buff *skb, struct ip6_srh_t *srh,
- 	       uint32_t tlv_off)
- {
-@@ -266,7 +266,7 @@ int delete_tlv(struct __sk_buff *skb, struct ip6_srh_t *srh,
- 	return update_tlv_pad(skb, new_pad, pad_size, pad_off);
- }
- 
--__attribute__((always_inline))
-+static __always_inline
- int has_egr_tlv(struct __sk_buff *skb, struct ip6_srh_t *srh)
- {
- 	int tlv_offset = sizeof(struct ip6_t) + sizeof(struct ip6_srh_t) +
 -- 
 2.20.1
 
