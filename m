@@ -2,156 +2,125 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B4EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E527C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05F4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E157214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1564000069;
+	bh=BX83SWqxlR2Q+6R81dSPYHiAW4Em1qQCcn0O2SZTYd4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g0pcIbxH2d7GVg8Kq+S4i0uaOJ0AFrWG5CCjNQn1t6lhkM0cYFDgbHMAl6LA0f6ce
+	 YYoHhKCnawkSohVR6miljGRlnt/tlNsJS+dNUYNVTqaY64QCoTF12zbj5MsmzzgLC4
+	 utK43yIPWT6yGqklL4P6Rgdh4gtK33s+61uZ+dHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbfGXU1l (ORCPT
+        id S2389204AbfGXTf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:27:41 -0400
-Received: from mga05.intel.com ([192.55.52.43]:44957 "EHLO mga05.intel.com"
+        Wed, 24 Jul 2019 15:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389609AbfGXU1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:27:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:27:36 -0700
-X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
-   d="scan'208";a="163961711"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 13:27:35 -0700
-Message-ID: <088abe33117e891dd6265179f678847bd574c744.camel@linux.intel.com>
-Subject: Re: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com
-Date:   Wed, 24 Jul 2019 13:27:35 -0700
-In-Reply-To: <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
-References: <20190724165158.6685.87228.stgit@localhost.localdomain>
-         <0c520470-4654-cdf2-cf4d-d7c351d25e8b@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S2388852AbfGXTdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:33:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D11EB2238C;
+        Wed, 24 Jul 2019 19:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563996801;
+        bh=BX83SWqxlR2Q+6R81dSPYHiAW4Em1qQCcn0O2SZTYd4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ccY/z40trOJcEW9f/2NisRoevm6uzfECEqID6IF+4IMwuTnFsEO9N9IBr42da7Mr8
+         HEuAsj2gjbo+vaFokKjkLvm3hrGDQq2mcGemdWYuNzPBAiYMPfSoKMWsVJgCu28FUI
+         OQOjdwMmFT8R/YVUhrIV9P6jxMGIx9zxn/e9DdtY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 222/413] gpiolib: Fix references to gpiod_[gs]et_*value_cansleep() variants
+Date:   Wed, 24 Jul 2019 21:18:33 +0200
+Message-Id: <20190724191750.708775987@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+References: <20190724191735.096702571@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-24 at 14:40 -0400, Nitesh Narayan Lal wrote:
-> On 7/24/19 12:54 PM, Alexander Duyck wrote:
-> > This series provides an asynchronous means of hinting to a hypervisor
-> > that a guest page is no longer in use and can have the data associated
-> > with it dropped. To do this I have implemented functionality that allows
-> > for what I am referring to as page hinting
-> > 
-> > The functionality for this is fairly simple. When enabled it will allocate
-> > statistics to track the number of hinted pages in a given free area. When
-> > the number of free pages exceeds this value plus a high water value,
-> > currently 32,
-> Shouldn't we configure this to a lower number such as 16?
+[ Upstream commit 3285170f28a850638794cdfe712eb6d93e51e706 ]
 
-Yes, we could do 16.
+Commit 372e722ea4dd4ca1 ("gpiolib: use descriptors internally") renamed
+the functions to use a "gpiod" prefix, and commit 79a9becda8940deb
+("gpiolib: export descriptor-based GPIO interface") introduced the "raw"
+variants, but both changes forgot to update the comments.
 
-> >  it will begin performing page hinting which consists of
-> > pulling pages off of free list and placing them into a scatter list. The
-> > scatterlist is then given to the page hinting device and it will perform
-> > the required action to make the pages "hinted", in the case of
-> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> > and as such they are forced out of the guest. After this they are placed
-> > back on the free list, and an additional bit is added if they are not
-> > merged indicating that they are a hinted buddy page instead of a standard
-> > buddy page. The cycle then repeats with additional non-hinted pages being
-> > pulled until the free areas all consist of hinted pages.
-> > 
-> > I am leaving a number of things hard-coded such as limiting the lowest
-> > order processed to PAGEBLOCK_ORDER,
-> Have you considered making this option configurable at the compile time?
+Readd a similar reference to gpiod_set_value(), which was accidentally
+removed by commit 1e77fc82110ac36f ("gpio: Add missing open drain/source
+handling to gpiod_set_value_cansleep()").
 
-We could. However, PAGEBLOCK_ORDER is already configurable on some
-architectures. I didn't see much point in making it configurable in the
-case of x86 as there are only really 2 orders that this could be used in
-that provided good performance and that MAX_ORDER - 1 and PAGEBLOCK_ORDER.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20190701142738.25219-1-geert+renesas@glider.be
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/gpiolib.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> >  and have left it up to the guest to
-> > determine what the limit is on how many pages it wants to allocate to
-> > process the hints.
-> It might make sense to set the number of pages to be hinted at a time from the
-> hypervisor.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index be1d1d2f8aaa..bb3104d2eb0c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3025,7 +3025,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+ int gpiod_get_raw_value(const struct gpio_desc *desc)
+ {
+ 	VALIDATE_DESC(desc);
+-	/* Should be using gpio_get_value_cansleep() */
++	/* Should be using gpiod_get_raw_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
+ 	return gpiod_get_raw_value_commit(desc);
+ }
+@@ -3046,7 +3046,7 @@ int gpiod_get_value(const struct gpio_desc *desc)
+ 	int value;
+ 
+ 	VALIDATE_DESC(desc);
+-	/* Should be using gpio_get_value_cansleep() */
++	/* Should be using gpiod_get_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
+ 
+ 	value = gpiod_get_raw_value_commit(desc);
+@@ -3317,7 +3317,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ void gpiod_set_raw_value(struct gpio_desc *desc, int value)
+ {
+ 	VALIDATE_DESC_VOID(desc);
+-	/* Should be using gpiod_set_value_cansleep() */
++	/* Should be using gpiod_set_raw_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
+ 	gpiod_set_raw_value_commit(desc, value);
+ }
+@@ -3358,6 +3358,7 @@ static void gpiod_set_value_nocheck(struct gpio_desc *desc, int value)
+ void gpiod_set_value(struct gpio_desc *desc, int value)
+ {
+ 	VALIDATE_DESC_VOID(desc);
++	/* Should be using gpiod_set_value_cansleep() */
+ 	WARN_ON(desc->gdev->chip->can_sleep);
+ 	gpiod_set_value_nocheck(desc, value);
+ }
+-- 
+2.20.1
 
-We could do that. Although I would still want some upper limit on that as
-I would prefer to keep the high water mark as a static value since it is
-used in an inline function. Currently the virtio driver is the one
-defining the capacity of pages per request.
 
-> > My primary testing has just been to verify the memory is being freed after
-> > allocation by running memhog 79g on a 80g guest and watching the total
-> > free memory via /proc/meminfo on the host. With this I have verified most
-> > of the memory is freed after each iteration. As far as performance I have
-> > been mainly focusing on the will-it-scale/page_fault1 test running with
-> > 16 vcpus. With that I have seen at most a 2% difference between the base
-> > kernel without these patches and the patches with virtio-balloon disabled.
-> > With the patches and virtio-balloon enabled with hinting the results
-> > largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
-> > drop in performance as I approached 16 threads,
-> I think this is acceptable.
-> >  however on the the lastest
-> > linux-next kernel I saw roughly a 4% to 5% improvement in performance for
-> > all tests with 8 or more threads. 
-> Do you mean that with your patches the will-it-scale/page_fault1 numbers were
-> better by 4-5% over an unmodified kernel?
-
-Yes. That is the odd thing. I am wondering if there was some improvement
-in the zeroing of THP pages or something that is somehow improving the
-cache performance for the accessing of the pages by the test in the guest.
-
-> > I believe the difference seen is due to
-> > the overhead for faulting pages back into the guest and zeroing of memory.
-> It may also make sense to test these patches with netperf to observe how much
-> performance drop it is introducing.
-
-Do you have some test you were already using? I ask because I am not sure
-netperf would generate a large enough memory window size to really trigger
-much of a change in terms of hinting. If you have some test in mind I
-could probably set it up and run it pretty quick.
-
-> > Patch 4 is a bit on the large side at about 600 lines of change, however
-> > I really didn't see a good way to break it up since each piece feeds into
-> > the next. So I couldn't add the statistics by themselves as it didn't
-> > really make sense to add them without something that will either read or
-> > increment/decrement them, or add the Hinted state without something that
-> > would set/unset it. As such I just ended up adding the entire thing as
-> > one patch. It makes it a bit bigger but avoids the issues in the previous
-> > set where I was referencing things before they had been added.
-> > 
-> > Changes from the RFC:
-> > https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> > Moved aeration requested flag out of aerator and into zone->flags.
-> > Moved bounary out of free_area and into local variables for aeration.
-> > Moved aeration cycle out of interrupt and into workqueue.
-> > Left nr_free as total pages instead of splitting it between raw and aerated.
-> > Combined size and physical address values in virtio ring into one 64b value.
-> > 
-> > Changes from v1:
-> > https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> > Dropped "waste page treatment" in favor of "page hinting"
-> We may still have to try and find a better name for virtio-balloon side changes.
-> As "FREE_PAGE_HINT" and "PAGE_HINTING" are still confusing.
-
-We just need to settle on a name. Essentially all this requires is just a
-quick find and replace with whatever name we decide on.
 
