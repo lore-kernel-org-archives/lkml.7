@@ -2,90 +2,72 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C12DC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1296FC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF7B21852
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC7621926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563991226;
+	bh=eo+jIOgkZGchxfYdMR0P23b0cu0fHAhxdSZDm+t0N2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QCcJ80O24YImLUbvY2cc2dQDx70GQF95xl4vTM1OkJkvHDVN41wpgy/bnnbdGwElk
+	 A9TyNsZu3wDARkcjZkVvlaOSv3kvtohEBTJqwuUs2bKe63DFyG+WlFDHwNwF/+0fv1
+	 +IVpcyQXGtLM1e/7djDZ1dLeO/NOfAp82ydbM5aA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfGXSAI (ORCPT
+        id S1728130AbfGXSAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:00:08 -0400
-Received: from ms.lwn.net ([45.79.88.28]:56828 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfGXSAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:00:07 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id BEBCD300;
-        Wed, 24 Jul 2019 18:00:06 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 12:00:05 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, rkrcmar@redhat.com,
-        jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: move Documentation/virtual to
- Documentation/virt
-Message-ID: <20190724120005.31a990af@lwn.net>
-In-Reply-To: <b9baabbb-9e9b-47cf-f5a8-ea42ba1ddc25@redhat.com>
-References: <20190724072449.19599-1-hch@lst.de>
-        <b9baabbb-9e9b-47cf-f5a8-ea42ba1ddc25@redhat.com>
-Organization: LWN.net
+        Wed, 24 Jul 2019 14:00:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33504 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726298AbfGXSAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 14:00:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 167CFADA2;
+        Wed, 24 Jul 2019 18:00:23 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 20:00:22 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH] mm/hmm: replace hmm_update with mmu_notifier_range
+Message-ID: <20190724180022.GD6410@dhcp22.suse.cz>
+References: <20190723210506.25127-1-rcampbell@nvidia.com>
+ <20190724070553.GA2523@lst.de>
+ <20190724152858.GB28493@ziepe.ca>
+ <20190724153305.GA10681@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190724153305.GA10681@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jul 2019 10:51:36 +0200
-Paolo Bonzini <pbonzini@redhat.com> wrote:
-
-> On 24/07/19 09:24, Christoph Hellwig wrote:
-> > Renaming docs seems to be en vogue at the moment, so fix on of the
-> > grossly misnamed directories.  We usually never use "virtual" as
-> > a shortcut for virtualization in the kernel, but always virt,
-> > as seen in the virt/ top-level directory.  Fix up the documentation
-> > to match that.
-> > 
-> > Fixes: ed16648eb5b8 ("Move kvm, uml, and lguest subdirectories under a common "virtual" directory, I.E:")
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>  
+On Wed 24-07-19 17:33:05, Christoph Hellwig wrote:
+> On Wed, Jul 24, 2019 at 12:28:58PM -0300, Jason Gunthorpe wrote:
+> > Humm. Actually having looked this some more, I wonder if this is a
+> > problem:
 > 
-> Queued, thanks.  I can't count how many times I said "I really should
-> rename that directory".
+> What a mess.
+> 
+> Question: do we even care for the non-blocking events?  The only place
+> where mmu_notifier_invalidate_range_start_nonblock is called is the oom
+> killer, which means the process is about to die and the pagetable will
+> get torn down ASAP.  Should we just skip them unconditionally?
 
-...and it's up to Linus before I even got a chance to look at it - one has
-to be fast around here...:)
-
-There's nothing wrong with this move, but it does miss the point of much
-of the reorganization that has been going on in the docs tree.  It's not
-just a matter of getting more pleasing names; the real idea is to create a
-better, more reader-focused organization on kernel documentation as a
-whole.  Documentation/virt still has the sort of confusion of audiences
-that we're trying to fix:
-
- - kvm/api.txt pretty clearly belongs in the userspace-api book, rather
-   than tossed in with:
-
- - kvm/review-checklist.txt, which belongs in the subsystem guide, if only
-   we'd gotten around to creating it yet, or
-
- - kvm/mmu.txt, which is information for kernel developers, or
-
- - uml/UserModeLinux-HOWTO.txt, which belongs in the admin guide.
-
-I suspect that organization is going to be one of the main issues to talk
-about in Lisbon.  Meanwhile, I hope that this rename won't preclude
-organizational work in the future.
-
-Thanks,
-
-jon
+How do you tell whether they are going to block or not without trying?
+-- 
+Michal Hocko
+SUSE Labs
