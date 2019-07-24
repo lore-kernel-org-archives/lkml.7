@@ -2,173 +2,101 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4526C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184BCC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB9821841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32C921951
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 16:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWuAulp7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hf5QP/9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbfGXQ4M (ORCPT
+        id S1728268AbfGXQ4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 12:56:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44351 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfGXQ4M (ORCPT
+        Wed, 24 Jul 2019 12:56:16 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44562 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728181AbfGXQ4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 12:56:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i18so21523034pgl.11;
-        Wed, 24 Jul 2019 09:56:11 -0700 (PDT)
+        Wed, 24 Jul 2019 12:56:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b7so10101349otl.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 09:56:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=PhVb6RN1Ss2cdB2PwVe0HtBm8bfHqYHCMNa/n92glxA=;
-        b=eWuAulp7lVJApkFKE01P2svmwkQSz+xZKBk4ILTbKSTUXwG6JPCNOThPtpZipJJywM
-         fuowmbFRGkDa4VN4iOGrb0ez3a8/f+PT1HLrK2ycWYe5GcKy2PJft0JrgMFUQkF2bieb
-         ynYDQR9OITwdZktFzeBHzKB6sV1c5twRJTSBsPEnRwP0UGx9fodzsh0b20sSvwmvC2Xi
-         cvRh0qC/t6520YdzswKjIplH1tFaH3L80ZrxvZWu8xdOgdPTNrqVsRj2JinU6lrnNAps
-         IQlQV0ZJRP+Jdf9NjxJl5OKKqIQodIiqsGrqolvaBYG528KyU0W6Dhi7ELw8W4uH1nTa
-         KROQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lj5VxMT7ytpqUXOYqjV0SKU1nsfCOyOUOiGQpNCaobw=;
+        b=Hf5QP/9Gi6ugQidFc1Hm+WBEJpAQIEtpQ7l4tIiLgRnLmI7Jh7/AM3JX+PtpswSZlp
+         AVuLSWocf3cXjTCleGz9CJ4T1PqEUUx5GTyeHTNGwet7kw8n3MkOxUzEGb8QBrP2j60T
+         gXknXyP8eoQbZ++rJWA2iAhdf2EOi6FDOy/V3xOwcji1yFBFBEIfQfgPI/c57puE0urV
+         2c8fsxHE8iGFEyGVuQpMnRWT5/bLME98JycyzMuLxvp0AEsPpBBw44GwmbYPiBqFCDIl
+         gKoV04gnZcdVMOPmVYmPiFQmgt++jK5QKoW+Yfi4Eb+FAwqch1BhT7IGNsl2BXf1KbSl
+         2qXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=PhVb6RN1Ss2cdB2PwVe0HtBm8bfHqYHCMNa/n92glxA=;
-        b=HAn4nZYWcrHEvrXcBVbTJ6Hm4TNvEBZzjtG7uZHvDqsF93yyQZfakCz29FoYA2w2eU
-         QkT0ndohqlF7VPcul//bDkGcNIhXvYKBBM5GsMrS+jlBOfsDgu/qib2YtjDUQzc+VlQ2
-         PQvKPuX1N47lMSkV3yaFdl/NC4JEpDBJhDoq7HBbKkBwNC5j7yUXJj8E4kP8mXoZXmDX
-         aRaPll7diYV8/qNvw9ZU2cuYZ+u0zwyPHnbYIlpwkb4aBHOgXI3wE1/16dTKNJSAHpFW
-         JZfLSkG4sd5rK9hP5BmYNkvejkjxizbHBMfG0D712BVUiq8/yFQ5lxLbMg5n5vkmroVZ
-         7tiA==
-X-Gm-Message-State: APjAAAXjawygl3KNZTE1NXKW61UhDqKVEmpXpZumHZUNpOsx0pHaxR6W
-        a579BlbHsSGKQK/ZBJn5Mqo=
-X-Google-Smtp-Source: APXvYqy5FhBKIOIqEhIwqKISuGQ+P1R0oDCuSk0WbIIGBn5tah6kKqrwZ+sY9jBZWmTnJ8zO8szXNw==
-X-Received: by 2002:a63:f304:: with SMTP id l4mr81474308pgh.66.1563987370874;
-        Wed, 24 Jul 2019 09:56:10 -0700 (PDT)
-Received: from localhost.localdomain (50-39-177-61.bvtn.or.frontiernet.net. [50.39.177.61])
-        by smtp.gmail.com with ESMTPSA id r61sm61815112pjb.7.2019.07.24.09.56.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 09:56:10 -0700 (PDT)
-Subject: [PATCH v2 0/5] mm / virtio: Provide support for page hinting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        mst@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Date:   Wed, 24 Jul 2019 09:54:02 -0700
-Message-ID: <20190724165158.6685.87228.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lj5VxMT7ytpqUXOYqjV0SKU1nsfCOyOUOiGQpNCaobw=;
+        b=SP9yASakBQ/HGfawVqBn9leomEOgNGQ85aVll7t133eusYdqdUpt6yF3Brwf1uvhLT
+         ult71IKYA4brDQnNLlIXl+EUm51lWRddcQxRvOyKw7Vx+MuB8az8VmBkZ8hGc0H0EL+G
+         pps4h4O8Gl7b7ytD29EQ4NBcQAS5bRqzDwmrQzQmOKpdbn9I5VhdYJL5O2LYXFFoBQKc
+         gvpk/5vAPw501vcygqCWYcSI9qCiEpP0hBPGPrYQF1T+T4OtU2NixayepcL7AqfUZf4A
+         wA0yhh4ZkkzfRa2Rs5TmKqV7BVH6pqxg+R0nW/XF219n4807X+9aDOwd5qxxG3q7wHRM
+         P5Lw==
+X-Gm-Message-State: APjAAAWJkWh/ngBzvOhZBhcs1HWAZNEVwTgEN5bw2ODlRuYWvXxxd5M7
+        HFeEyjzmkm5XRIaYULouXV+lSq+dC1BZLMhL3kVrNA==
+X-Google-Smtp-Source: APXvYqwh6vIcM8Jk1c4NR1KfxKt+DGUENc04BHP7lwI3tYLzzDoMhYrlgtCveTpKvh97oEm0dQAfR9WL3p/kkMmdu68=
+X-Received: by 2002:a9d:774a:: with SMTP id t10mr29134096otl.228.1563987373619;
+ Wed, 24 Jul 2019 09:56:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20190722113151.1584-1-nitin.r.gote@intel.com> <CAFqZXNs5vdQwoy2k=_XLiGRdyZCL=n8as6aL01Dw-U62amFREA@mail.gmail.com>
+ <CAG48ez3zRoB7awMdb-koKYJyfP9WifTLevxLxLHioLhH=itZ-A@mail.gmail.com>
+ <201907231516.11DB47AA@keescook> <CAG48ez2eXJwE+vS2_ahR9Vuc3qD8O4CDZ5Lh6DcrrOq+7VKOYQ@mail.gmail.com>
+ <201907240852.6D10622B2@keescook>
+In-Reply-To: <201907240852.6D10622B2@keescook>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 24 Jul 2019 18:55:47 +0200
+Message-ID: <CAG48ez3-qdbnJaEooFrhfBT8czyAZNDp5YfkDRcy5mLH4BQy2g@mail.gmail.com>
+Subject: Re: [PATCH] selinux: convert struct sidtab count to refcount_t
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        NitinGote <nitin.r.gote@intel.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series provides an asynchronous means of hinting to a hypervisor
-that a guest page is no longer in use and can have the data associated
-with it dropped. To do this I have implemented functionality that allows
-for what I am referring to as page hinting
+On Wed, Jul 24, 2019 at 5:54 PM Kees Cook <keescook@chromium.org> wrote:
+> On Wed, Jul 24, 2019 at 04:28:31PM +0200, Jann Horn wrote:
+> > On Wed, Jul 24, 2019 at 12:17 AM Kees Cook <keescook@chromium.org> wrote:
+> > > Perhaps we need a "statistics" counter type for these kinds of counters?
+> > > "counter_t"? I bet there are a lot of atomic_t uses that are just trying
+> > > to be counters. (likely most of atomic_t that isn't now refcount_t ...)
+> >
+> > This isn't a statistics counter though; this thing needs ordered
+> > memory accesses, which you wouldn't need for statistics.
+>
+> Okay, it'd be a "very accurate" counter type? It _could_ be used for
+> statistics. I guess what I mean is that there are a lot of places using
+> atomic_t just for upward counting that don't care about wrapping, etc.
 
-The functionality for this is fairly simple. When enabled it will allocate
-statistics to track the number of hinted pages in a given free area. When
-the number of free pages exceeds this value plus a high water value,
-currently 32, it will begin performing page hinting which consists of
-pulling pages off of free list and placing them into a scatter list. The
-scatterlist is then given to the page hinting device and it will perform
-the required action to make the pages "hinted", in the case of
-virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-and as such they are forced out of the guest. After this they are placed
-back on the free list, and an additional bit is added if they are not
-merged indicating that they are a hinted buddy page instead of a standard
-buddy page. The cycle then repeats with additional non-hinted pages being
-pulled until the free areas all consist of hinted pages.
+(Accurate) statistics counters need RMW ops, don't need memory
+ordering, usually can't be locked against writes, and may not care
+about wrapping.
+This thing doesn't need RMW ops, does need memory ordering, can be
+locked against writes, and definitely shouldn't wrap.
 
-I am leaving a number of things hard-coded such as limiting the lowest
-order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
-determine what the limit is on how many pages it wants to allocate to
-process the hints.
-
-My primary testing has just been to verify the memory is being freed after
-allocation by running memhog 79g on a 80g guest and watching the total
-free memory via /proc/meminfo on the host. With this I have verified most
-of the memory is freed after each iteration. As far as performance I have
-been mainly focusing on the will-it-scale/page_fault1 test running with
-16 vcpus. With that I have seen at most a 2% difference between the base
-kernel without these patches and the patches with virtio-balloon disabled.
-With the patches and virtio-balloon enabled with hinting the results
-largely depend on the host kernel. On a 3.10 RHEL kernel I saw up to a 2%
-drop in performance as I approached 16 threads, however on the the lastest
-linux-next kernel I saw roughly a 4% to 5% improvement in performance for
-all tests with 8 or more threads. I believe the difference seen is due to
-the overhead for faulting pages back into the guest and zeroing of memory.
-
-Patch 4 is a bit on the large side at about 600 lines of change, however
-I really didn't see a good way to break it up since each piece feeds into
-the next. So I couldn't add the statistics by themselves as it didn't
-really make sense to add them without something that will either read or
-increment/decrement them, or add the Hinted state without something that
-would set/unset it. As such I just ended up adding the entire thing as
-one patch. It makes it a bit bigger but avoids the issues in the previous
-set where I was referencing things before they had been added.
-
-Changes from the RFC:
-https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-Moved aeration requested flag out of aerator and into zone->flags.
-Moved bounary out of free_area and into local variables for aeration.
-Moved aeration cycle out of interrupt and into workqueue.
-Left nr_free as total pages instead of splitting it between raw and aerated.
-Combined size and physical address values in virtio ring into one 64b value.
-
-Changes from v1:
-https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-Dropped "waste page treatment" in favor of "page hinting"
-Renamed files and functions from "aeration" to "page_hinting"
-Moved from page->lru list to scatterlist
-Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
-Virtio now uses scatterlist directly instead of intermedate array
-Moved stats out of free_area, now in seperate area and pointed to from zone
-Merged patch 5 into patch 4 to improve reviewability
-Updated various code comments throughout
-
----
-
-Alexander Duyck (5):
-      mm: Adjust shuffle code to allow for future coalescing
-      mm: Move set/get_pcppage_migratetype to mmzone.h
-      mm: Use zone and order instead of free area in free_list manipulators
-      mm: Introduce Hinted pages
-      virtio-balloon: Add support for providing page hints to host
-
-
- drivers/virtio/Kconfig              |    1 
- drivers/virtio/virtio_balloon.c     |   47 ++++++
- include/linux/mmzone.h              |  116 ++++++++------
- include/linux/page-flags.h          |    8 +
- include/linux/page_hinting.h        |  139 ++++++++++++++++
- include/uapi/linux/virtio_balloon.h |    1 
- mm/Kconfig                          |    5 +
- mm/Makefile                         |    1 
- mm/internal.h                       |   18 ++
- mm/memory_hotplug.c                 |    1 
- mm/page_alloc.c                     |  238 ++++++++++++++++++++--------
- mm/page_hinting.c                   |  298 +++++++++++++++++++++++++++++++++++
- mm/shuffle.c                        |   24 ---
- mm/shuffle.h                        |   32 ++++
- 14 files changed, 796 insertions(+), 133 deletions(-)
- create mode 100644 include/linux/page_hinting.h
- create mode 100644 mm/page_hinting.c
-
---
+I agree that there are a bunch of statistics counters in the kernel,
+and it's not necessarily a bad idea to use a separate type for them;
+but this is not a statistics counter.
