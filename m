@@ -2,72 +2,103 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2A3C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A55C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6B822387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABFA21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 12:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfGXMhg (ORCPT
+        id S1726699AbfGXMix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 08:37:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38036 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726298AbfGXMhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 08:37:35 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0F19ED0A275507F1B81C;
-        Wed, 24 Jul 2019 20:37:34 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
- 20:37:26 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <vigneshr@ti.com>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>
-CC:     <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] mtd: hyperbus: Fix Kconfig warning
-Date:   Wed, 24 Jul 2019 20:37:17 +0800
-Message-ID: <20190724123717.34128-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Wed, 24 Jul 2019 08:38:53 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51490 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbfGXMiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 08:38:52 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3BC6D1A01FD;
+        Wed, 24 Jul 2019 14:38:51 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D2CB1A0148;
+        Wed, 24 Jul 2019 14:38:51 +0200 (CEST)
+Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id ED221205D8;
+        Wed, 24 Jul 2019 14:38:49 +0200 (CEST)
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Will Deacon <will@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Li <Frank.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFCv2 0/3] PM / devfreq: Add imx driver
+Date:   Wed, 24 Jul 2019 15:38:43 +0300
+Message-Id: <cover.1563971855.git.leonard.crestez@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARNING: unmet direct dependencies detected for MUX_MMIO
-  Depends on [n]: MULTIPLEXER [=m] && (OF [=n] || COMPILE_TEST [=n])
-  Selected by [m]:
-  - HBMC_AM654 [=m] && MTD [=m] && MTD_HYPERBUS [=m]
+This series attempts to add devfreq support for imx8mm, covering dynamic
+scaling of internal buses and dram.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/mtd/hyperbus/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Actual scaling is performed through the clk framework: The NOC and main
+NICs are driven by composite clks and a new 'imx8m-dram' clk is used for
+scaling dram using firmware calls.
 
-diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
-index cff6bbd..769d129 100644
---- a/drivers/mtd/hyperbus/Kconfig
-+++ b/drivers/mtd/hyperbus/Kconfig
-@@ -14,6 +14,7 @@ if MTD_HYPERBUS
- 
- config HBMC_AM654
- 	tristate "HyperBus controller driver for AM65x SoC"
-+	depends on OF
- 	select MULTIPLEXER
- 	select MUX_MMIO
- 	help
+Frequency target is set via "clk_set_min_rate", this allows an unrelated
+subsystem (for example interconnect) to also request minimum rates as a
+form for proactive scaling.
+
+The dram controller (DDRC) has a performance monitoring block attached
+for which a perf driver already exists. Instead of reimplementing that
+as devfreq-events the perf in-kernel API is used.
+
+Changes since v2:
+* Solve review comments
+* Add yaml binding doc
+* Add perf event support
+Link to v2: https://patchwork.kernel.org/patch/11021571/
+
+DRAM frequency switching through clk framework is here:
+* https://patchwork.kernel.org/patch/11049429/
+That part might not be accepted in clk and it might have to be moved to
+devfreq also.
+
+Leonard Crestez (3):
+  dt-bindings: devfreq: Add initial bindings for i.MX
+  PM / devfreq: Add imx driver
+  PM / devfreq: Add imx perf event support
+
+ .../devicetree/bindings/devfreq/imx.yaml      |  59 ++++
+ drivers/devfreq/Kconfig                       |  10 +
+ drivers/devfreq/Makefile                      |   1 +
+ drivers/devfreq/imx-devfreq.c                 | 278 ++++++++++++++++++
+ 4 files changed, 348 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/imx.yaml
+ create mode 100644 drivers/devfreq/imx-devfreq.c
+
 -- 
-2.7.4
-
+2.17.1
 
