@@ -2,169 +2,118 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858B5C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88EFC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D40B218F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ay7nQDJt"
+	by mail.kernel.org (Postfix) with ESMTP id 95A63218F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563995338;
+	bh=MFuau72dJjU/QuxLWpXWmsU1ax6QMgQk7XhCe/+Mw3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yfXQHHLdyrNthsv697ZQGBigZzG3DPx4MQECty+593YNxI0dxFVYImC8YrUGV+2TM
+	 faJLbxrQcpngP4ulB+NNZ1yrK70+9nwi3tkNIOTq39HFCWmyYzhkaP+M6w095h1WUV
+	 ptl/bW2uLY7p0EpqF2XiLgvQsYtmF7OLzNLQRqCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfGXTIW (ORCPT
+        id S1728895AbfGXTI5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:08:22 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42907 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfGXTIV (ORCPT
+        Wed, 24 Jul 2019 15:08:57 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40763 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfGXTI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:08:21 -0400
-Received: by mail-oi1-f196.google.com with SMTP id s184so35821115oie.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BJ2NVnXSi8ebOI8TCeX+KEiumjRr37taJEiDBtLAzIw=;
-        b=ay7nQDJto1uXe3PyisCCQ4jh0O1tS2wQekngxDHnkudc+mm443mhyxwIylnVi04ikq
-         p+0MRA6sMLXHIiw/hlRdeEzcIyX0AQkLLglriGAU52YI7GUxDDL3uP7O8MbdaG5x324/
-         s1IQjOXptoKEECbr2VtO00HQSZl+DWrRVKCPcaWpsiz6AkLZW3DHJTI1mI76g4GCPhrP
-         uohpgu8+vHc5tGBhon5LNnF9mroUP4HVW7iavecvv1zAtnAu+zBPOqE1k1qppbUtbE9V
-         CNbTUQ1m1b1++BkjeJrUj6Gkwei+gseZ/u8ExpXPnBE+5vHE2NJCJ2+XGnA32KgepmdE
-         /ALA==
+        Wed, 24 Jul 2019 15:08:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v19so42601867wmj.5;
+        Wed, 24 Jul 2019 12:08:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BJ2NVnXSi8ebOI8TCeX+KEiumjRr37taJEiDBtLAzIw=;
-        b=n3pNg8rYOP248QAp3svugXO5PjO/elQWzL9efNZI0eYQvfPwoJY0VRhCcp19j89JDz
-         Dq08pm8TNBeV0MTkFc+M7+Nyb/nxigPtcFnU8GhePoO8wfVYMFBwbBlB2R8vqwyvOihg
-         /HujxARbQk7c7DLDbtGteqU85VlWrGlKNggR/YujZD9CJNGP+Nc5rgbbnUJwW0zMluj+
-         00pgO77FuhKbeGsuca1Swmx2xWfwbdIXbCIXnd8ilMjQAgzOYOiyAISAkQFJxngdm3FO
-         YwJ4N6rK9PgbtQAYrL30cljCzVzqfkazjeUORiG6f9g4NHN4NeVw+RS+MAgDBJ1y0IQp
-         d6hA==
-X-Gm-Message-State: APjAAAV29t5zYQP4cNxTvkaPb4y5zHM6Mha2lAW2asXuaC/KO1EbReJD
-        SJ4i/9t4MTHwHwihRpqfXGtSEt3t0rY47I8v3+ab8w==
-X-Google-Smtp-Source: APXvYqya48iVqoqwk4kONppwXP1DXBm/5PjXHOXJTQ4D06+WTxrfuvoiUNL7MT9p6MSQpW48esX92p8qWTHWS+W8MI0=
-X-Received: by 2002:aca:3dd7:: with SMTP id k206mr37653038oia.47.1563995300490;
- Wed, 24 Jul 2019 12:08:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mYrGkDQOnSU5Lp9avRqB0jc65jAYh0UF93+Huamd7FY=;
+        b=t1/CRLaELIeSbRmDX8VpiAdEV65VK6mSpA+IBurx+XlWBcgGHVP0KPpKP2o2FTwhtt
+         Fmm0tZPvfo5Zua/+uYA7Wx1CFReJXRaAGGnbe80kCbFT5oC2iDgO2X/o8d9Mq0fFncCx
+         t5/KKXT8yEkx0P9tow0XQ+NUHm/uF6itrjZa4vkMx98hPCABnHyk7ey+qHRPWFnld5L4
+         rXbIuvfOzS3y2X4QpBayLk4EGQ+HY6OSpt5khjNAGcQvFg12q0gsqrSZ3EZUfHFMFuCR
+         S2M8t0L/4J89TGB+oRoX/ZA/6Lzh9W2YAJZvXFNHGVWbOEvGUZWOJvc1SiUGWeZW+xiL
+         +XxQ==
+X-Gm-Message-State: APjAAAWcNvR2IMz9y1xVFDxWQLb7G0UcPhg3rwn0yMpiPDj4ui65Od2Z
+        WlauCdHlfDpwHiR+/0FKTZM=
+X-Google-Smtp-Source: APXvYqzdk6u7Pk10r48MB52INPrCA0J17QNFIsWrGOO+ZuC0i9JWvgiRp9UAxl5CifpHBiYGbc8sOw==
+X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr76037481wmk.79.1563995334246;
+        Wed, 24 Jul 2019 12:08:54 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.239])
+        by smtp.googlemail.com with ESMTPSA id y1sm35475550wma.32.2019.07.24.12.08.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Jul 2019 12:08:53 -0700 (PDT)
+Date:   Wed, 24 Jul 2019 21:08:51 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, m.szyprowski@samsung.com
+Subject: Re: [RFC PATCH 02/11] devfreq: exynos-bus: Extract
+ exynos_bus_profile_init_passive()
+Message-ID: <20190724190851.GE14346@kozik-lap>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122023eucas1p2ff56c00b60a676ed85d9fe159a1839f2@eucas1p2.samsung.com>
+ <20190723122016.30279-3-a.swigon@partner.samsung.com>
 MIME-Version: 1.0
-References: <20190724144651.28272-1-christian@brauner.io> <20190724144651.28272-5-christian@brauner.io>
- <CAG48ez3nuY__qvctoOnX7mQbjjP4chEs4K-OPxSQficiPLS18w@mail.gmail.com> <CFB4D39F-24B9-4AD9-B19C-E2D14D38A808@brauner.io>
-In-Reply-To: <CFB4D39F-24B9-4AD9-B19C-E2D14D38A808@brauner.io>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 24 Jul 2019 21:07:54 +0200
-Message-ID: <CAG48ez1vd4Yhd3DqHVjTWM-N0MaNnX9n8MNV7MEyU5m3XDu+kQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] pidfd: add CLONE_WAIT_PID
-To:     Christian Brauner <christian@brauner.io>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, David Howells <dhowells@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        kernel-team <kernel-team@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190723122016.30279-3-a.swigon@partner.samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 8:27 PM Christian Brauner <christian@brauner.io> wrote:
-> On July 24, 2019 8:14:26 PM GMT+02:00, Jann Horn <jannh@google.com> wrote:
-> >On Wed, Jul 24, 2019 at 4:48 PM Christian Brauner
-> ><christian@brauner.io> wrote:
-> >> If CLONE_WAIT_PID is set the newly created process will not be
-> >> considered by process wait requests that wait generically on children
-> >> such as:
-> >>
-> >>         syscall(__NR_wait4, -1, wstatus, options, rusage)
-> >>         syscall(__NR_waitpid, -1, wstatus, options)
-> >>         syscall(__NR_waitid, P_ALL, -1, siginfo, options, rusage)
-> >>         syscall(__NR_waitid, P_PGID, -1, siginfo, options, rusage)
-> >>         syscall(__NR_waitpid, -pid, wstatus, options)
-> >>         syscall(__NR_wait4, -pid, wstatus, options, rusage)
-> >>
-> >> A process created with CLONE_WAIT_PID can only be waited upon with a
-> >> focussed wait call. This ensures that processes can be reaped even if
-> >> all file descriptors referring to it are closed.
-> >[...]
-> >> diff --git a/kernel/fork.c b/kernel/fork.c
-> >> index baaff6570517..a067f3876e2e 100644
-> >> --- a/kernel/fork.c
-> >> +++ b/kernel/fork.c
-> >> @@ -1910,6 +1910,8 @@ static __latent_entropy struct task_struct
-> >*copy_process(
-> >>         delayacct_tsk_init(p);  /* Must remain after
-> >dup_task_struct() */
-> >>         p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE);
-> >>         p->flags |= PF_FORKNOEXEC;
-> >> +       if (clone_flags & CLONE_WAIT_PID)
-> >> +               p->flags |= PF_WAIT_PID;
-> >>         INIT_LIST_HEAD(&p->children);
-> >>         INIT_LIST_HEAD(&p->sibling);
-> >>         rcu_copy_process(p);
-> >
-> >This means that if a process with PF_WAIT_PID forks, the child
-> >inherits the flag, right? That seems unintended? You might have to add
-> >something like "if (clone_flags & CLONE_THREAD == 0) p->flags &=
-> >~PF_WAIT_PID;" before this. (I think threads do have to inherit the
-> >flag so that the case where a non-leader thread of the child goes
-> >through execve and steals the leader's identity is handled properly.)
-> >Or you could cram it somewhere into signal_struct instead of on the
-> >task - that might be a more logical place for it?
->
-> Hm, CLONE_WAIT_PID is only useable with CLONE_PIDFD which in turn is
-> not useable with CLONE_THREAD.
-> But we should probably make that explicit for CLONE_WAIT_PID too.
+On Tue, Jul 23, 2019 at 02:20:07PM +0200, Artur Świgoń wrote:
+> This patch adds a new static function, exynos_bus_profile_init_passive(),
+> extracted from exynos_bus_probe().
+> 
+> Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> ---
+>  drivers/devfreq/exynos-bus.c | 70 +++++++++++++++++++++---------------
+>  1 file changed, 42 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index d8f1efaf2d49..cf6f6cbd0f55 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -430,13 +430,51 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+>  	return ret;
+>  }
+>  
+> +static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+> +					   struct devfreq_dev_profile *profile)
+> +{
+> +	struct device *dev = bus->dev;
+> +	struct devfreq *parent_devfreq;
+> +	struct devfreq_passive_data *passive_data;
+> +	int ret = 0;
+> +
+> +	/* Initialize the struct profile and governor data for passive device */
+> +	profile->target = exynos_bus_passive_target;
+> +	profile->exit = exynos_bus_passive_exit;
+> +
+> +	/* Get the instance of parent devfreq device */
+> +	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+> +	if (IS_ERR(parent_devfreq)) {
+> +		ret = -EPROBE_DEFER;
+> +		goto err;
 
-To clarify:
+Same as in previous patch - no need for error goto.
 
-This code looks buggy to me because p->flags is inherited from the
-parent, with the exception of flags that are explicitly stripped out.
-Since PF_WAIT_PID is not stripped out, this means that if task A
-creates a child B with clone(CLONE_WAIT_PID), and then task B uses
-fork() to create a child C, then B will not be able to use
-wait(&status) to wait for C since C inherited PF_WAIT_PID from B.
+Best regards,
+Krzysztof
 
-The obvious way to fix that would be to always strip out PF_WAIT_PID;
-but that would also be wrong, because if task B creates a thread C,
-and then C calls execve(), the task_struct of B goes away and B's TGID
-is taken over by C. When C eventually exits, it should still obey the
-CLONE_WAIT_PID (since to A, it's all the same process). Therefore, if
-p->flags is used to track whether the task was created with
-CLONE_WAIT_PID, PF_WAIT_PID must be inherited if CLONE_THREAD is set.
-So:
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index d8ae0f1b4148..b32e1e9a6c9c 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1902,6 +1902,10 @@ static __latent_entropy struct task_struct *copy_process(
-        delayacct_tsk_init(p);  /* Must remain after dup_task_struct() */
-        p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE);
-        p->flags |= PF_FORKNOEXEC;
-+       if (!(clone_flags & CLONE_THREAD))
-+               p->flags &= ~PF_PF_WAIT_PID;
-+       if (clone_flags & CLONE_WAIT_PID)
-+               p->flags |= PF_PF_WAIT_PID;
-        INIT_LIST_HEAD(&p->children);
-        INIT_LIST_HEAD(&p->sibling);
-        rcu_copy_process(p);
-
-An alternative would be to not use p->flags at all, but instead make
-this a property of the signal_struct - since the property is shared by
-all threads, that might make more sense?
