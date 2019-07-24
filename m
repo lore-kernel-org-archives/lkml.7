@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE904C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C44C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1074229ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB79229ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 00:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WYmp9wsx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u946jxc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfGXALb (ORCPT
+        id S1727616AbfGXALZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Jul 2019 20:11:31 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:46375 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbfGXAL2 (ORCPT
+        Tue, 23 Jul 2019 20:11:25 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:43596 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfGXALW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Jul 2019 20:11:28 -0400
-Received: by mail-pg1-f201.google.com with SMTP id u1so27040812pgr.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 17:11:28 -0700 (PDT)
+        Tue, 23 Jul 2019 20:11:22 -0400
+Received: by mail-pl1-f201.google.com with SMTP id t2so22976790plo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 17:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=q/JO0jIzFDUcBLNa0OLAVEbtuFfd8ssnFHaHdmtCpxU=;
-        b=WYmp9wsxezkT2R/MikeKx4t2kiHMyW2mvw+vnqop1fKm18UGsdFrOX0WMvp0211oE5
-         AenkmFgmV5Fd3/Kob7ksNJEBQ5BHl8zs1JzyycKcNyBaseoUHZcFMx6ZWsdHZU92y0E0
-         Dzyw6ffhd60WvwW1dAxMzf2Bw1rXvf8tft38BNZ/9xEHqn8dkzW3wMW49PAIcMGw6eR5
-         9+5VreZKwIO5czdaW+ToF0ZASnI1NQZlEzr6pNvgpH06DfFYBDVN2OyI69rdIn6kpJlu
-         CQJMTpeetGIPTol0Z9tGdsf6G3WGCRMgmk5IWKNGrriIaXe6bMmUPkRQnOEodnqoyC/+
-         hWOg==
+        bh=dW/eX2JkclSqL7u9D8ywYYaolgPaeztKnKrJrmo9wG4=;
+        b=u946jxc1RmSvSOtzAKB3GMM86YLHchlYMuLFogO7YsdmMYJyI/7JXiQonjz3bcjopu
+         elHlrksvcvbieQ5JZrC8tfVphdsbpDrryd7Z/sFe+tWszPgvfTmkqDd+g1wm/sTmt499
+         gtOymTg8kvR2Y7hXivULQm/EfjGEB1KEAhZVwElnZH5RTntDEw55/zGR0eFNE7cjSF2m
+         Fr4IlI72U7F4mZfaFKNfmZVADen5GkW7me5ZUjC141Y4ao4x5wfsMcbswStnYrBe3lLm
+         fgxpOMKVuceTCQhNsmeK1NhqpvhIT5GPsRSahADu5u1Xwkbf5FYCT6XOXBPf+mymKQV0
+         w+8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=q/JO0jIzFDUcBLNa0OLAVEbtuFfd8ssnFHaHdmtCpxU=;
-        b=YKAKAigKcWyrFgpUGVED6fc1oJYTGsXTaCDTWLa+yBJMrnuS5Fus7BY6l/XuXSUkp2
-         0mam3QxL0XMoc5gNFCs4VbBO/7++le3cDFTT9WVbdRoxm1VyH4fygBev1ahU+PZus105
-         Ozrff+/x8taAspCWMB18z+S57k/82M71MFBczIQwB+wWF6CEWK+xIYX7PCeQjNelgXfF
-         qcM8bKvJ248RvVZvixDSnGPqgN50f5+wg4t3lk0b1UaJ2UC3URqNlwcqxF5lscRsLDKp
-         UO2UOjYD5Wr/vnsI7i/NkiHivkrtDns9mNXLFga2wbo4uWHpiAHNvHpuxdpuEFSxc4Xl
-         YlPw==
-X-Gm-Message-State: APjAAAW5golK+m/XY3n7Fnz+Xqn4CsyFWaasRIwn/ly/f0i1WsCURKiK
-        gU5E41kg0PjQB5/nWapvD8UF/FJM1HXtjWk=
-X-Google-Smtp-Source: APXvYqyfrpfG7foa9SWIkR5PY0wl5lzzhUJJl9ryESw4iWhqCn6wdu4L8I+nTmuFAxhxJl22/uYxTDoF1Fgo0zY=
-X-Received: by 2002:a65:6259:: with SMTP id q25mr38982937pgv.145.1563927087442;
- Tue, 23 Jul 2019 17:11:27 -0700 (PDT)
-Date:   Tue, 23 Jul 2019 17:11:00 -0700
+        bh=dW/eX2JkclSqL7u9D8ywYYaolgPaeztKnKrJrmo9wG4=;
+        b=J9mg4ndYeSgybfYQ83/+6QR+wGqBdXLjY+TbQEOYddOl9luu/VOZU+ZPcsLZknqDN0
+         auw5Xw6jMiTg3M5JXoNn4aMTvKflvSEOjQaP4XDXle0PMxkz2hb7OTItWdBRYGKvhTSm
+         +4GEgo1InCSwnbMsUlzUaEBHtJuLA5F9404vebuBuf92oXel/0gerlmlIcjbVtAyvG0F
+         YNDJ+fCO1G/R3O4EhWdo6KKJyScpOwTPk1oHmSQUS/nMqhcXL0IeX8lWdp/cxdNYwU9S
+         bcrL3/x57eLFiBvhmgiVCSsQsKOJPBH9nbkf2CRYgBnQMuSTArKCMA/f4+sInEJxqAc7
+         FmkA==
+X-Gm-Message-State: APjAAAVpYbMBP1sXDWxewyCw9ftn7U/243y9l/oOcP+VKKkvpSIyb3V0
+        964/lnc/ACclB6YvWGoDposG/gIVbjvnSzU=
+X-Google-Smtp-Source: APXvYqz9YflAXImGtKl/9HK7UKMqSBdU9Tp6PYpqM84Q1eb8vrgbKFOPzUha0/HYyHn1gr8xv8NM/AwgD1w+mT8=
+X-Received: by 2002:a65:4103:: with SMTP id w3mr63674222pgp.1.1563927081240;
+ Tue, 23 Jul 2019 17:11:21 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 17:10:58 -0700
 In-Reply-To: <20190724001100.133423-1-saravanak@google.com>
-Message-Id: <20190724001100.133423-8-saravanak@google.com>
+Message-Id: <20190724001100.133423-6-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190724001100.133423-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.709.g102302147b-goog
-Subject: [PATCH v7 7/7] of/platform: Don't create device links for default busses
+Subject: [PATCH v7 5/7] of/platform: Pause/resume sync state during init and of_platform_populate()
 From:   Saravana Kannan <saravanak@google.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -75,31 +75,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Default busses also have devices created for them. But there's no point
-in creating device links for them. It's especially wasteful as it'll
-cause the traversal of the entire device tree and also spend a lot of
-time checking and figuring out that creating those links isn't allowed.
-So check for default busses and skip trying to create device links for
-them.
+When all the top level devices are populated from DT during kernel
+init, the supplier devices could be added and probed before the
+consumer devices are added and linked to the suppliers. To avoid the
+sync_state() callback from being called prematurely, pause the
+sync_state() callbacks before populating the devices and resume them
+at late_initcall_sync().
+
+Similarly, when children devices are populated after kernel init using
+of_platform_populate(), there could be supplier-consumer dependencies
+between the children devices that are populated. To avoid the same
+problem with sync_state() being called prematurely, pause and resume
+sync_state() callbacks across of_platform_populate().
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/of/platform.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 41499ddc8d95..676b2f730d1b 100644
+index 4344419a26fc..71d6138698ec 100644
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -682,6 +682,8 @@ static int of_link_to_suppliers(struct device *dev)
- 		return 0;
- 	if (unlikely(!dev->of_node))
- 		return 0;
-+	if (of_match_node(of_default_bus_match_table, dev->of_node))
-+		return 0;
+@@ -485,6 +485,7 @@ int of_platform_populate(struct device_node *root,
+ 	pr_debug("%s()\n", __func__);
+ 	pr_debug(" starting at: %pOF\n", root);
  
- 	return __of_link_to_suppliers(dev, dev->of_node);
++	device_links_supplier_sync_state_pause();
+ 	for_each_child_of_node(root, child) {
+ 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
+ 		if (rc) {
+@@ -492,6 +493,8 @@ int of_platform_populate(struct device_node *root,
+ 			break;
+ 		}
+ 	}
++	device_links_supplier_sync_state_resume();
++
+ 	of_node_set_flag(root, OF_POPULATED_BUS);
+ 
+ 	of_node_put(root);
+@@ -688,6 +691,7 @@ static int __init of_platform_default_populate_init(void)
+ 		return -ENODEV;
+ 
+ 	platform_bus_type.add_links = of_link_to_suppliers;
++	device_links_supplier_sync_state_pause();
+ 	/*
+ 	 * Handle certain compatibles explicitly, since we don't want to create
+ 	 * platform_devices for every node in /reserved-memory with a
+@@ -708,6 +712,13 @@ static int __init of_platform_default_populate_init(void)
+ 	return 0;
  }
+ arch_initcall_sync(of_platform_default_populate_init);
++
++static int __init of_platform_sync_state_init(void)
++{
++	device_links_supplier_sync_state_resume();
++	return 0;
++}
++late_initcall_sync(of_platform_sync_state_init);
+ #endif
+ 
+ int of_platform_device_destroy(struct device *dev, void *data)
 -- 
 2.22.0.709.g102302147b-goog
 
