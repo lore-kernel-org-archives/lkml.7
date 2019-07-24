@@ -2,195 +2,191 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3831EC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B47C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6C1229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563949652;
-	bh=9dMf+7r227Y03NWApAtcyWQAesltuPtcVGhKQt5I60o=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=rqVsupQAQ5ffwWs3Ov64/puz7BsOzLCqnTOtwp5waUerzySD9KwDpm7HNFcxwHxAA
-	 tEGus2xlXggOnHP9/xJsU+R25w6B+j0CDsPTvZvElRQcI/TxK+CniiEwpc4d8ZmBWn
-	 fXNhYRjGo0s9b14jFxZu+TdR8t4wKWHEF3VA7dX8=
+	by mail.kernel.org (Postfix) with ESMTP id 6F447218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbfGXG1a (ORCPT
+        id S1726230AbfGXG2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:27:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39774 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725882AbfGXG1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:27:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 22667AC94
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 06:27:28 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 08:27:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Subject: Re: + mm-oom-avoid-printk-iteration-under-rcu.patch added to -mm tree
-Message-ID: <20190724062727.GA10882@dhcp22.suse.cz>
-References: <20190723231429.b0bmJ%akpm@linux-foundation.org>
+        Wed, 24 Jul 2019 02:28:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:50229 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfGXG2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 02:28:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id m26so49939691ioh.17
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 23:28:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wNIEm2/0FtY//lVugKMU3Gz0oVJK8TH9pTfEQOANCms=;
+        b=D+8smvdVRvDPQ8d5n7EYuhTmO83+gnpEfhNljbBt/YvRiDsiMP4Ygjal+pDASfkoba
+         mSiwOS7tGTVezbQdiWLffNT7ndZmJgar5pyDq7Nu3qnhXVAgsVsd51x9gs+YZqEa8aCF
+         iNJnyELHIOGyCZlD4XNobdy6ObFuulg6qJ5r16DorTH6LChVQd0uwRDeaZo7pqrHsZdy
+         7h42gr/eqoCwatpwuEMVeW5ToZcw0I1UCdUKiOdoPwI9uRRvHOvpTIvpDHZt0CT9f3JF
+         uU3smTb3PkbT06JCGqys+qGnZClwfUjczZTe0qpn6kaZuSaiwxUibO3shGcnE8Lwxav7
+         FtJA==
+X-Gm-Message-State: APjAAAWvsKR7VwMX4EFfg9OwaAJpX7W5hwLr1jYobBYcsDDTXDVdWmy/
+        4vbYhXBWK3C/8tjJf+KOEclM5gJjeiSflcXjiebLMYxnm11F
+X-Google-Smtp-Source: APXvYqxWRcLkFMkk5O1pvDw/zjc1KD918nHWAXkW5aaYib1CwF++l5hbrtGV1dES5e+pHVqPI78pdceJ5MI74r3EajbufWqnnJc9
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723231429.b0bmJ%akpm@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a05:6638:38a:: with SMTP id y10mr85620119jap.104.1563949686426;
+ Tue, 23 Jul 2019 23:28:06 -0700 (PDT)
+Date:   Tue, 23 Jul 2019 23:28:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000819a8c058e6769e7@google.com>
+Subject: KASAN: slab-out-of-bounds Read in bpf_int_jit_compile
+From:   syzbot <syzbot+35101610ff3e83119b1b@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew,
-I've had some concerns wrt. this patch - especially the additional
-complexity - and I have to say I am not convinced that this is really
-needed. Our past experience in this area suggests that more tricky code
-leads to different corner cases. So I am really reluctant to add more
-complexity without any real world reports.
+Hello,
 
-On Tue 23-07-19 16:14:29, Andrew Morton wrote:
-> From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Subject: mm, oom: avoid printk() iteration under RCU
-> 
-> Currently dump_tasks() might call printk() for many thousands times under
-> RCU, which might take many minutes for slow consoles.  Therefore, split
-> dump_tasks() into three stages; take a snapshot of possible OOM victim
-> candidates under RCU, dump the snapshot from reschedulable context, and
-> destroy the snapshot.
-> 
-> In a future patch, the first stage would be moved to select_bad_process()
-> and the third stage would be moved to after oom_kill_process(), and will
-> simplify refcount handling.
-> 
-> Link: http://lkml.kernel.org/r/1563360901-8277-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->  include/linux/sched.h |    1 
->  mm/oom_kill.c         |   67 +++++++++++++++++++---------------------
->  2 files changed, 34 insertions(+), 34 deletions(-)
-> 
-> --- a/include/linux/sched.h~mm-oom-avoid-printk-iteration-under-rcu
-> +++ a/include/linux/sched.h
-> @@ -1246,6 +1246,7 @@ struct task_struct {
->  #ifdef CONFIG_MMU
->  	struct task_struct		*oom_reaper_list;
->  #endif
-> +	struct list_head		oom_victim_list;
->  #ifdef CONFIG_VMAP_STACK
->  	struct vm_struct		*stack_vm_area;
->  #endif
-> --- a/mm/oom_kill.c~mm-oom-avoid-printk-iteration-under-rcu
-> +++ a/mm/oom_kill.c
-> @@ -377,36 +377,13 @@ static void select_bad_process(struct oo
->  	}
->  }
->  
-> -static int dump_task(struct task_struct *p, void *arg)
-> -{
-> -	struct oom_control *oc = arg;
-> -	struct task_struct *task;
-> -
-> -	if (oom_unkillable_task(p))
-> -		return 0;
->  
-> -	/* p may not have freeable memory in nodemask */
-> -	if (!is_memcg_oom(oc) && !oom_cpuset_eligible(p, oc))
-> -		return 0;
-> -
-> -	task = find_lock_task_mm(p);
-> -	if (!task) {
-> -		/*
-> -		 * This is a kthread or all of p's threads have already
-> -		 * detached their mm's.  There's no need to report
-> -		 * them; they can't be oom killed anyway.
-> -		 */
-> -		return 0;
-> +static int add_candidate_task(struct task_struct *p, void *arg)
-> +{
-> +	if (!oom_unkillable_task(p)) {
-> +		get_task_struct(p);
-> +		list_add_tail(&p->oom_victim_list, (struct list_head *) arg);
->  	}
-> -
-> -	pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
-> -		task->pid, from_kuid(&init_user_ns, task_uid(task)),
-> -		task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
-> -		mm_pgtables_bytes(task->mm),
-> -		get_mm_counter(task->mm, MM_SWAPENTS),
-> -		task->signal->oom_score_adj, task->comm);
-> -	task_unlock(task);
-> -
->  	return 0;
->  }
->  
-> @@ -422,19 +399,41 @@ static int dump_task(struct task_struct
->   */
->  static void dump_tasks(struct oom_control *oc)
->  {
-> -	pr_info("Tasks state (memory values in pages):\n");
-> -	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
-> +	static LIST_HEAD(list);
-> +	struct task_struct *p;
-> +	struct task_struct *t;
->  
->  	if (is_memcg_oom(oc))
-> -		mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
-> +		mem_cgroup_scan_tasks(oc->memcg, add_candidate_task, &list);
->  	else {
-> -		struct task_struct *p;
-> -
->  		rcu_read_lock();
->  		for_each_process(p)
-> -			dump_task(p, oc);
-> +			add_candidate_task(p, &list);
->  		rcu_read_unlock();
->  	}
-> +	pr_info("Tasks state (memory values in pages):\n");
-> +	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
-> +	list_for_each_entry(p, &list, oom_victim_list) {
-> +		cond_resched();
-> +		/* p may not have freeable memory in nodemask */
-> +		if (!is_memcg_oom(oc) && !oom_cpuset_eligible(p, oc))
-> +			continue;
-> +		/* All of p's threads might have already detached their mm's. */
-> +		t = find_lock_task_mm(p);
-> +		if (!t)
-> +			continue;
-> +		pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
-> +			t->pid, from_kuid(&init_user_ns, task_uid(t)),
-> +			t->tgid, t->mm->total_vm, get_mm_rss(t->mm),
-> +			mm_pgtables_bytes(t->mm),
-> +			get_mm_counter(t->mm, MM_SWAPENTS),
-> +			t->signal->oom_score_adj, t->comm);
-> +		task_unlock(t);
-> +	}
-> +	list_for_each_entry_safe(p, t, &list, oom_victim_list) {
-> +		list_del(&p->oom_victim_list);
-> +		put_task_struct(p);
-> +	}
->  }
->  
->  static void dump_oom_summary(struct oom_control *oc, struct task_struct *victim)
-> _
-> 
-> Patches currently in -mm which might be from penguin-kernel@I-love.SAKURA.ne.jp are
-> 
-> mm-oom-avoid-printk-iteration-under-rcu.patch
-> info-task-hung-in-generic_file_write_iter.patch
-> info-task-hung-in-generic_file_write-fix.patch
-> kexec-bail-out-upon-sigkill-when-allocating-memory.patch
+syzbot found the following crash on:
 
--- 
-Michal Hocko
-SUSE Labs
+HEAD commit:    c6dd78fc Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1760ff84600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7937b718ddac333b
+dashboard link: https://syzkaller.appspot.com/bug?extid=35101610ff3e83119b1b
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c017a4600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=173f8278600000
+
+The bug was bisected to:
+
+commit 2589726d12a1b12eaaa93c7f1ea64287e383c7a5
+Author: Alexei Starovoitov <ast@kernel.org>
+Date:   Sat Jun 15 19:12:20 2019 +0000
+
+     bpf: introduce bounded loops
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13df66afa00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=103f66afa00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17df66afa00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+35101610ff3e83119b1b@syzkaller.appspotmail.com
+Fixes: 2589726d12a1 ("bpf: introduce bounded loops")
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in do_jit /arch/x86/net/bpf_jit_comp.c:966  
+[inline]
+BUG: KASAN: slab-out-of-bounds in bpf_int_jit_compile+0x4d19/0x7530  
+/arch/x86/net/bpf_jit_comp.c:1132
+Read of size 4 at addr ffff8880960cc2bc by task syz-executor607/7822
+
+CPU: 0 PID: 7822 Comm: syz-executor607 Not tainted 5.2.0+ #37
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack /lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 /lib/dump_stack.c:113
+  print_address_description+0x75/0x5b0 /mm/kasan/report.c:351
+  __kasan_report+0x14b/0x1c0 /mm/kasan/report.c:482
+  kasan_report+0x26/0x50 /mm/kasan/common.c:612
+  __asan_report_load4_noabort+0x14/0x20 /mm/kasan/generic_report.c:131
+  do_jit /arch/x86/net/bpf_jit_comp.c:966 [inline]
+  bpf_int_jit_compile+0x4d19/0x7530 /arch/x86/net/bpf_jit_comp.c:1132
+  bpf_prog_select_runtime+0x756/0xa50 /kernel/bpf/core.c:1725
+  bpf_prog_load /kernel/bpf/syscall.c:1702 [inline]
+  __do_sys_bpf+0x7d4e/0xc0e0 /kernel/bpf/syscall.c:2849
+  __se_sys_bpf /kernel/bpf/syscall.c:2808 [inline]
+  __x64_sys_bpf+0x7a/0x90 /kernel/bpf/syscall.c:2808
+  do_syscall_64+0xfe/0x140 /arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4402c9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffeb7a02c18 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402c9
+RDX: 0000000000000046 RSI: 0000000020000180 RDI: 0000000000000005
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000401b50
+R13: 0000000000401be0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 7822:
+  save_stack /mm/kasan/common.c:69 [inline]
+  set_track /mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 /mm/kasan/common.c:487
+  kasan_kmalloc+0x9/0x10 /mm/kasan/common.c:501
+  kmem_cache_alloc_trace+0x215/0x2f0 /mm/slab.c:3550
+  kmalloc /./include/linux/slab.h:552 [inline]
+  kzalloc /./include/linux/slab.h:748 [inline]
+  bpf_int_jit_compile+0x1b2/0x7530 /arch/x86/net/bpf_jit_comp.c:1092
+  bpf_prog_select_runtime+0x756/0xa50 /kernel/bpf/core.c:1725
+  bpf_prog_load /kernel/bpf/syscall.c:1702 [inline]
+  __do_sys_bpf+0x7d4e/0xc0e0 /kernel/bpf/syscall.c:2849
+  __se_sys_bpf /kernel/bpf/syscall.c:2808 [inline]
+  __x64_sys_bpf+0x7a/0x90 /kernel/bpf/syscall.c:2808
+  do_syscall_64+0xfe/0x140 /arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 7329:
+  save_stack /mm/kasan/common.c:69 [inline]
+  set_track /mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x12a/0x1e0 /mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 /mm/kasan/common.c:457
+  __cache_free /mm/slab.c:3425 [inline]
+  kfree+0x115/0x200 /mm/slab.c:3756
+  tomoyo_path_perm+0x6cc/0x8b0 /security/tomoyo/file.c:842
+  tomoyo_inode_getattr+0x1c/0x20 /security/tomoyo/tomoyo.c:129
+  security_inode_getattr+0xd5/0x150 /security/security.c:1182
+  vfs_getattr+0x2a/0x6d0 /fs/stat.c:115
+  vfs_statx /fs/stat.c:191 [inline]
+  vfs_stat /./include/linux/fs.h:3182 [inline]
+  __do_sys_newstat /fs/stat.c:341 [inline]
+  __se_sys_newstat+0x10c/0x210 /fs/stat.c:337
+  __x64_sys_newstat+0x5b/0x70 /fs/stat.c:337
+  do_syscall_64+0xfe/0x140 /arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880960cc280
+  which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 28 bytes to the right of
+  32-byte region [ffff8880960cc280, ffff8880960cc2a0)
+The buggy address belongs to the page:
+page:ffffea0002583300 refcount:1 mapcount:0 mapping:ffff8880aa4001c0  
+index:0xffff8880960ccfc1
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00027f47c8 ffffea0002a53a48 ffff8880aa4001c0
+raw: ffff8880960ccfc1 ffff8880960cc000 000000010000003f 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880960cc180: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+  ffff8880960cc200: fb fb fb fb fc fc fc fc 00 00 01 fc fc fc fc fc
+> ffff8880960cc280: 00 00 00 00 fc fc fc fc 00 00 fc fc fc fc fc fc
+                                         ^
+  ffff8880960cc300: fb fb fb fb fc fc fc fc 00 00 01 fc fc fc fc fc
+  ffff8880960cc380: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
