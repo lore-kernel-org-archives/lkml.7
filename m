@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFC2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB7BC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B21F2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD56D2238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388549AbfGXWs4 (ORCPT
+        id S2388583AbfGXWs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:48:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34798 "EHLO mx1.redhat.com"
+        Wed, 24 Jul 2019 18:48:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50586 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388018AbfGXWsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388286AbfGXWsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Jul 2019 18:48:54 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4EDA4C065113;
-        Wed, 24 Jul 2019 22:48:53 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96791307D934;
+        Wed, 24 Jul 2019 22:48:54 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-122-90.rdu2.redhat.com [10.10.122.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 28AD71001B14;
-        Wed, 24 Jul 2019 22:48:52 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 724201001B04;
+        Wed, 24 Jul 2019 22:48:53 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -39,92 +39,104 @@ Cc:     linux-kernel@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 1/2] drm/i915: Remove redundant user_access_end() from __copy_from_user() error path
-Date:   Wed, 24 Jul 2019 17:47:25 -0500
-Message-Id: <523b910e41a5cf856ee338b78ee36941034be142.1564007838.git.jpoimboe@redhat.com>
+Subject: [PATCH 2/2] objtool: Improve UACCESS coverage
+Date:   Wed, 24 Jul 2019 17:47:26 -0500
+Message-Id: <5359166aad2d53f3145cd442d83d0e5115e0cd17.1564007838.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1564007838.git.jpoimboe@redhat.com>
 References: <cover.1564007838.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 24 Jul 2019 22:48:53 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 24 Jul 2019 22:48:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Objtool reports:
+From: Peter Zijlstra <peterz@infradead.org>
 
-  drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x36: redundant UACCESS disable
+A clang build reported an (obvious) double CLAC while a GCC build did
+not; it turns out we only re-visit instructions if the first visit was
+with AC=0. If OTOH the first visit was with AC=1, we completely ignore
+any subsequent visit, even when it has AC=0.
 
-__copy_from_user() already does both STAC and CLAC, so the
-user_access_end() in its error path adds an extra unnecessary CLAC.
+Fix this by using a visited mask instead of a boolean, and (explicitly)
+mark the AC state.
 
-Fixes: 0b2c8f8b6b0c ("i915: fix missing user_access_end() in page fault exception case")
+$ ./objtool check -b --no-fp --retpoline --uaccess drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x22: redundant UACCESS disable
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xea: (alt)
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   .altinstr_replacement+0xffffffffffffffff: (branch)
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xd9: (alt)
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xb2: (branch)
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0x39: (branch)
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0x0: <=== (func)
+
+Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 Link: https://github.com/ClangBuiltLinux/linux/issues/617
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- .../gpu/drm/i915/gem/i915_gem_execbuffer.c    | 20 +++++++++----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ tools/objtool/check.c | 7 ++++---
+ tools/objtool/check.h | 3 ++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-index 5fae0e50aad0..41dab9ea33cd 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-@@ -1628,6 +1628,7 @@ static int check_relocations(const struct drm_i915_gem_exec_object2 *entry)
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5f26620f13f5..176f2f084060 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1946,6 +1946,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 	struct alternative *alt;
+ 	struct instruction *insn, *next_insn;
+ 	struct section *sec;
++	u8 visited;
+ 	int ret;
  
- static int eb_copy_relocations(const struct i915_execbuffer *eb)
- {
-+	struct drm_i915_gem_relocation_entry *relocs;
- 	const unsigned int count = eb->buffer_count;
- 	unsigned int i;
- 	int err;
-@@ -1635,7 +1636,6 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
- 	for (i = 0; i < count; i++) {
- 		const unsigned int nreloc = eb->exec[i].relocation_count;
- 		struct drm_i915_gem_relocation_entry __user *urelocs;
--		struct drm_i915_gem_relocation_entry *relocs;
- 		unsigned long size;
- 		unsigned long copied;
+ 	insn = first;
+@@ -1972,12 +1973,12 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			return 1;
+ 		}
  
-@@ -1663,14 +1663,8 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
++		visited = 1 << state.uaccess;
+ 		if (insn->visited) {
+ 			if (!insn->hint && !insn_state_match(insn, &state))
+ 				return 1;
  
- 			if (__copy_from_user((char *)relocs + copied,
- 					     (char __user *)urelocs + copied,
--					     len)) {
--end_user:
--				user_access_end();
--end:
--				kvfree(relocs);
--				err = -EFAULT;
--				goto err;
--			}
-+					     len))
-+				goto end;
+-			/* If we were here with AC=0, but now have AC=1, go again */
+-			if (insn->state.uaccess || !state.uaccess)
++			if (insn->visited & visited)
+ 				return 0;
+ 		}
  
- 			copied += len;
- 		} while (copied < size);
-@@ -1699,10 +1693,14 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
+@@ -2024,7 +2025,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 		} else
+ 			insn->state = state;
  
- 	return 0;
+-		insn->visited = true;
++		insn->visited |= visited;
  
-+end_user:
-+	user_access_end();
-+end:
-+	kvfree(relocs);
-+	err = -EFAULT;
- err:
- 	while (i--) {
--		struct drm_i915_gem_relocation_entry *relocs =
--			u64_to_ptr(typeof(*relocs), eb->exec[i].relocs_ptr);
-+		relocs = u64_to_ptr(typeof(*relocs), eb->exec[i].relocs_ptr);
- 		if (eb->exec[i].relocation_count)
- 			kvfree(relocs);
- 	}
+ 		if (!insn->ignore_alts) {
+ 			bool skip_orig = false;
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index b881fafcf55d..6d875ca6fce0 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -33,8 +33,9 @@ struct instruction {
+ 	unsigned int len;
+ 	enum insn_type type;
+ 	unsigned long immediate;
+-	bool alt_group, visited, dead_end, ignore, hint, save, restore, ignore_alts;
++	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
+ 	bool retpoline_safe;
++	u8 visited;
+ 	struct symbol *call_dest;
+ 	struct instruction *jump_dest;
+ 	struct instruction *first_jump_src;
 -- 
 2.20.1
 
