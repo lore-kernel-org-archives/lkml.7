@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7341AC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349AAC76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAB620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014BF20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998996;
-	bh=cD9rrDxEyc0yZkzD6bSEDLpUywUmGpNUOh7GXJ8xpX8=;
+	s=default; t=1563999000;
+	bh=Tzp+ZhRiVS9bYdseA5JBs/kN+fpV3dzKZZHB5idK+4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aQvUZWpyzVDgV27Te+Hq0bTJ1mQiNEgQbDQDu5RA9aOIMKB0i4fYVO4nae6Ni3Hmz
-	 D70L/YHeDByghWb6U/rwPgrbqBcgDg3dsITz9EwAPQsISvb0BwGjtq4EC6Z0SH/9AE
-	 awlnkIyu8gCZi4RQpKrGRheD/vki5blmMJMXfDwo=
+	b=YprQKfXbQh/Jp+LMut0irPJ4uvel2QUdUx+sYMAcbBSL2zDk25j0dJXzd7Evfqsar
+	 GxRk/nbS3t3anDm4fvX/mtRUvC2S+7XiCR3ACj5X9nAm536WntDw5C6XbReTJ2vx1o
+	 wdJVJW3oQFp7taKTg5S/rle0IGXYY1JNDn7MTUKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405029AbfGXT7r (ORCPT
+        id S2404982AbfGXT7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:59:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:59:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405017AbfGXT7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:59:44 -0400
+        id S2404966AbfGXT7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:59:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54855205C9;
-        Wed, 24 Jul 2019 19:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4534F206BA;
+        Wed, 24 Jul 2019 19:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998383;
-        bh=cD9rrDxEyc0yZkzD6bSEDLpUywUmGpNUOh7GXJ8xpX8=;
+        s=default; t=1563998374;
+        bh=Tzp+ZhRiVS9bYdseA5JBs/kN+fpV3dzKZZHB5idK+4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUERDJqGXVAoYzfMjVYmfOllo8UBBDp1ZGcwLmr2gCyRVjaPUJ2CVYG4MN4TQ62BC
-         52wu7lgOTwGkzkhGmY/qWhf0kh6MgwyWt4EedgNyM9qN8cyYjaB7pHmtEOatTeBKcG
-         BW0JsYxiikKaICVcK6R/RKzlWXkMKBQUBfISkZGs=
+        b=sPv1jLWo551D0hhHoL+BoswJZd1ewBdRfZeyfpj70Zs2u9t9dCk1Y/dcwloPDA5AK
+         s0qJATI+GcPV+Sopl6QjV3T5FGMkKdEVO/uH9MhVOpWczcegTDnDHIh3IsUTEiZZbg
+         pnmxR5anc0Fu/DIBVlyRZzqDg7cW0vQHVR7Tqt+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.1 305/371] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
-Date:   Wed, 24 Jul 2019 21:20:57 +0200
-Message-Id: <20190724191747.164107064@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.1 302/371] KVM: PPC: Book3S HV: Signed extend decrementer value if not using large decrementer
+Date:   Wed, 24 Jul 2019 21:20:54 +0200
+Message-Id: <20190724191746.982481949@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,38 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Like Xu <like.xu@linux.intel.com>
+From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 
-commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
+commit 869537709ebf1dc865e75c3fc97b23f8acf37c16 upstream.
 
-If a perf_event creation fails due to any reason of the host perf
-subsystem, it has no chance to log the corresponding event for guest
-which may cause abnormal sampling data in guest result. In debug mode,
-this message helps to understand the state of vPMC and we may not
-limit the number of occurrences but not in a spamming style.
+On POWER9 the decrementer can operate in large decrementer mode where
+the decrementer is 56 bits and signed extended to 64 bits. When not
+operating in this mode the decrementer behaves as a 32 bit decrementer
+which is NOT signed extended (as on POWER8).
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Currently when reading a guest decrementer value we don't take into
+account whether the large decrementer is enabled or not, and this
+means the value will be incorrect when the guest is not using the
+large decrementer. Fix this by sign extending the value read when the
+guest isn't using the large decrementer.
+
+Fixes: 95a6432ce903 ("KVM: PPC: Book3S HV: Streamlined guest entry/exit path on P9 for radix guests")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/pmu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -131,8 +131,8 @@ static void pmc_reprogram_counter(struct
- 						 intr ? kvm_perf_overflow_intr :
- 						 kvm_perf_overflow, pmc);
- 	if (IS_ERR(event)) {
--		printk_once("kvm_pmu: event creation failed %ld\n",
--			    PTR_ERR(event));
-+		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
-+			    PTR_ERR(event), pmc->idx);
- 		return;
- 	}
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -3568,6 +3568,8 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu
  
+ 	vcpu->arch.slb_max = 0;
+ 	dec = mfspr(SPRN_DEC);
++	if (!(lpcr & LPCR_LD)) /* Sign extend if not using large decrementer */
++		dec = (s32) dec;
+ 	tb = mftb();
+ 	vcpu->arch.dec_expires = dec + tb;
+ 	vcpu->cpu = -1;
 
 
