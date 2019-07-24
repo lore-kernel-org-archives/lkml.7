@@ -2,116 +2,101 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC2EC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9310C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE97227BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D78227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfGXIhx (ORCPT
+        id S1726486AbfGXIim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:37:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45558 "EHLO mx1.suse.de"
+        Wed, 24 Jul 2019 04:38:42 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2712 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726031AbfGXIhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:37:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A6585AEBD;
-        Wed, 24 Jul 2019 08:37:51 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 10:37:48 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Andrew Cooks <andrew.cooks@opengear.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andrew Cooks <acooks@rationali.st>,
-        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
-        "Tobin C . Harding" <me@tobin.cc>, Will Wagner <willw@carallon.com>
-Subject: Re: [RESEND][PATCH v4 1/3] i2c: piix4: Fix port selection for AMD
- Family 16h Model 30h
-Message-ID: <20190724103748.078eab19@endymion>
-In-Reply-To: <be68c29f603153cf047cd893c6b9d6423073632d.1519601860.git.andrew.cooks@opengear.com>
-References: <cover.1519601860.git.andrew.cooks@opengear.com>
-        <be68c29f603153cf047cd893c6b9d6423073632d.1519601860.git.andrew.cooks@opengear.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S1726031AbfGXIim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:38:42 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 99D59F9D4B22C2A8EC9A;
+        Wed, 24 Jul 2019 16:38:38 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Jul 2019
+ 16:38:30 +0800
+From:   Zhangshaokun <zhangshaokun@hisilicon.com>
+Subject: [RFC] performance regression with commit-id<adb03115f459> ("net: get
+ rid of an signed integer overflow in ip_idents_reserve()")
+To:     Eric Dumazet <edumazet@google.com>, Jiri Pirko <jiri@resnulli.us>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "guoyang (C)" <guoyang2@huawei.com>,
+        "zhudacai@hisilicon.com" <zhudacai@hisilicon.com>
+Message-ID: <051e93d4-0206-7416-e639-376b8d2eb98b@hisilicon.com>
+Date:   Wed, 24 Jul 2019 16:38:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Hi,
 
-Sorry for the delay... What can I say :(
+I've observed an significant performance regression with the following commit-id <adb03115f459>
+("net: get rid of an signed integer overflow in ip_idents_reserve()").
 
-On Mon, 26 Feb 2018 10:28:43 +1000, Andrew Cooks wrote:
-> Family 16h Model 30h SMBus controller needs the same port selection fix
-> as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
-> selection for AMD Family 17h chips")
-> 
-> commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
-> register") also fixed the port selection for Hudson2, but unfortunately
-> this is not the exact same device and the AMD naming and PCI Device IDs
-> aren't particularly helpful here.
-> 
-> The SMBus port selection register is common to the following Families
-> and models, as documented in AMD's publicly available BIOS and Kernel
-> Developer Guides:
-> 
->  50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
->  55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
->  52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
-> 
-> The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
-> between Bolton FCH and Family 16h Model 30h, but the location of the
-> SmBus0Sel port selection bits are different:
-> 
->  51192 - Bolton Register Reference Guide
-> 
-> We distinguish between Bolton and Family 16h Model 30h using the PCI
-> Revision ID:
-> 
->   Bolton is device 0x780b, revision 0x15
->   Family 16h Model 30h is device 0x780b, revision 0x1F
->   Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
-> 
-> The following additional public AMD BKDG documents were checked and do
-> not share the same port selection register:
-> 
->  42301 - Family 15h Model 00h-0Fh doesn't mention any
->  42300 - Family 15h Model 10h-1Fh doesn't mention any
->  49125 - Family 15h Model 30h-3Fh doesn't mention any
-> 
->  48751 - Family 16h Model 00h-0Fh uses the previously supported
->          index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
-> 
-> Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
-> ---
->  drivers/i2c/busses/i2c-piix4.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> (...)
+Here are my test scenes:
+----Server----
+Cmd: iperf3 -s xxx.xxx.xxxx.xxx -p 10000 -i 0 -A 0
+Kenel: 4.19.34
+Server number: 32
+Port: 10000 – 10032
+CPU affinity: 0 – 32
+CPU architecture: aarch64
+NUMA node0 CPU(s): 0-23
+NUMA node1 CPU(s): 24-47
 
-Looks good to me. Unfortunately the patch no longer applies (my fault
-obviously), it needs to be rebased on top of commit
-24beb83ad289c68bce7c01351cb90465bbb1940a ("i2c-piix4: Add Hygon Dhyana
-SMBus support").
+----Client----
+Cmd: iperf3 -u -c xxx.xxx.xxxx.xxx -p 10000 -l 16 -b 0 -t 0 -i 0 -A 8
+Kenel: 4.19.34
+Client number: 32
+Port: 10000 – 10032
+CPU affinity: 0 – 32
+CPU architecture: aarch64
+NUMA node0 CPU(s): 0-23
+NUMA node1 CPU(s): 24-47
 
-I also agree with Tobin's suggestion to remove unneeded parentheses.
+Firstly, With patch <adb03115f459> ("net: get rid of an signed integer overflow in ip_idents_reserve()") ,
+client’s cpu is 100%, and function ip_idents_reserve() cpu usage is very high, but the result is not good.
+03:08:32 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+03:08:33 AM      eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+03:08:33 AM      eth1      0.00 3461296.00      0.00 196049.97      0.00      0.00      0.00      0.00
+03:08:33 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Secondly, revert that patch, use atomic_add_return() instead, the result is better, as below:
+03:23:24 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+03:23:25 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+03:23:25 AM      eth1      0.00 12834590.00      0.00 726959.20      0.00      0.00      0.00      0.00
+03:23:25 AM      eth0      7.00     11.00      0.40      2.95      0.00      0.00      0.00      0.00
 
-This patch should also address Will Wagner's (Cc'd) complaint in another
-thread ("[BUG] i2c_piix4: Hudson2 uses wrong port to access SMBus
-controller").
+Thirdly, atomic is not used in ip_idents_reserve() completely ,while each cpu core allocates its own ID segment,
+Such as: cpu core0 allocate ID 0 – 1023, cpu core1 allocate 1024 – 2047, …,etc
+the result is the best:
+03:27:06 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+03:27:07 AM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+03:27:07 AM      eth1      0.00 14275505.00      0.00 808573.53      0.00      0.00      0.00      0.00
+03:27:07 AM      eth0      0.00      2.00      0.00      0.18      0.00      0.00      0.00      0.00
 
-I believe this is stable branch material.
+Because atomic operation performance is bottleneck when cpu core number increase, Can we revert the patch or
+use ID segment for each cpu core instead?
 
--- 
-Jean Delvare
-SUSE L3 Support
+Thanks in advance,
+Shaokun
+
