@@ -2,63 +2,48 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB72C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8530CC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BE72189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ZErFtEZH"
+	by mail.kernel.org (Postfix) with ESMTP id 64ECA2189F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfGXRXW (ORCPT
+        id S1728599AbfGXRR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:23:22 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:49584 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728528AbfGXRRc (ORCPT
+        Wed, 24 Jul 2019 13:17:28 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34488 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728528AbfGXRRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:17:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1563988644; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SIriiq9JGjn7qTwBo98NXm62pmdJaJ+8q8iT7KUut5Y=;
-        b=ZErFtEZHBzIcWuJuJwnqWJFNM6VE5yKwlDZARlq+PnufTIh6/5uyYyONuNSavYdONjJ8kX
-        kiQDVz9XDjsCzii0jzNqElqOyWD3fdA1HyrUC4gIsCs15wPHPcHSaH66xJQOG4+2aBp73H
-        UB44XeBsKHKjbhYJP6nP4k4vG1V0WcY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-clk@vger.kernel.org, od@zcrc.me,
-        Mathieu Malaterre <malat@debian.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v15 08/13] clk: jz4740: Add TCU clock
-Date:   Wed, 24 Jul 2019 13:16:10 -0400
-Message-Id: <20190724171615.20774-9-paul@crapouillou.net>
-In-Reply-To: <20190724171615.20774-1-paul@crapouillou.net>
-References: <20190724171615.20774-1-paul@crapouillou.net>
+        Wed, 24 Jul 2019 13:17:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 54B9528B603
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH 2/7] media: hantro: Simplify the controls creation logic
+Date:   Wed, 24 Jul 2019 14:16:57 -0300
+Message-Id: <20190724171702.9449-3-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724171702.9449-1-ezequiel@collabora.com>
+References: <20190724171702.9449-1-ezequiel@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,53 +51,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing TCU clock to the list of clocks supplied by the CGU for
-the JZ4740 SoC.
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+v4l2_ctrl_new_custom() should work for any kind of control, including
+standard ones. With that change, we automatically get support for
+menu controls.
+
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 ---
+ drivers/staging/media/hantro/hantro.h     |  2 --
+ drivers/staging/media/hantro/hantro_drv.c | 28 +++++++----------------
+ 2 files changed, 8 insertions(+), 22 deletions(-)
 
-Notes:
-    v5: New patch
-    
-    v6-v15: No change
-
- drivers/clk/ingenic/jz4740-cgu.c       | 6 ++++++
- include/dt-bindings/clock/jz4740-cgu.h | 1 +
- 2 files changed, 7 insertions(+)
-
-diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index 4c0a20949c2c..67f8a0e14284 100644
---- a/drivers/clk/ingenic/jz4740-cgu.c
-+++ b/drivers/clk/ingenic/jz4740-cgu.c
-@@ -222,6 +222,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
- 		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
- 		.gate = { CGU_REG_CLKGR, 5 },
- 	},
-+
-+	[JZ4740_CLK_TCU] = {
-+		"tcu", CGU_CLK_GATE,
-+		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 1 },
-+	},
+diff --git a/drivers/staging/media/hantro/hantro.h b/drivers/staging/media/hantro/hantro.h
+index 4d7cb7780bde..81e25dfc98b7 100644
+--- a/drivers/staging/media/hantro/hantro.h
++++ b/drivers/staging/media/hantro/hantro.h
+@@ -113,12 +113,10 @@ enum hantro_codec_mode {
+ 
+ /*
+  * struct hantro_ctrl - helper type to declare supported controls
+- * @id:		V4L2 control ID (V4L2_CID_xxx)
+  * @codec:	codec id this control belong to (HANTRO_JPEG_ENCODER, etc.)
+  * @cfg:	control configuration
+  */
+ struct hantro_ctrl {
+-	unsigned int id;
+ 	unsigned int codec;
+ 	struct v4l2_ctrl_config cfg;
  };
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index 4eae1dbb1ac8..ff2dcbf43e81 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -264,31 +264,29 @@ static const struct v4l2_ctrl_ops hantro_ctrl_ops = {
  
- static void __init jz4740_cgu_init(struct device_node *np)
-diff --git a/include/dt-bindings/clock/jz4740-cgu.h b/include/dt-bindings/clock/jz4740-cgu.h
-index 6ed83f926ae7..e82d77028581 100644
---- a/include/dt-bindings/clock/jz4740-cgu.h
-+++ b/include/dt-bindings/clock/jz4740-cgu.h
-@@ -34,5 +34,6 @@
- #define JZ4740_CLK_ADC		19
- #define JZ4740_CLK_I2C		20
- #define JZ4740_CLK_AIC		21
-+#define JZ4740_CLK_TCU		22
+ static struct hantro_ctrl controls[] = {
+ 	{
+-		.id = V4L2_CID_JPEG_COMPRESSION_QUALITY,
+ 		.codec = HANTRO_JPEG_ENCODER,
+ 		.cfg = {
++			.id = V4L2_CID_JPEG_COMPRESSION_QUALITY,
+ 			.min = 5,
+ 			.max = 100,
+ 			.step = 1,
+ 			.def = 50,
++			.ops = &hantro_ctrl_ops,
+ 		},
+ 	}, {
+-		.id = V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS,
+ 		.codec = HANTRO_MPEG2_DECODER,
+ 		.cfg = {
+-			.elem_size = sizeof(struct v4l2_ctrl_mpeg2_slice_params),
++			.id = V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS,
+ 		},
+ 	}, {
+-		.id = V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION,
+ 		.codec = HANTRO_MPEG2_DECODER,
+ 		.cfg = {
+-			.elem_size = sizeof(struct v4l2_ctrl_mpeg2_quantization),
++			.id = V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION,
+ 		},
+ 	}, {
+-		.id = V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER,
+ 		.codec = HANTRO_VP8_DECODER,
+ 		.cfg = {
+-			.elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header),
++			.id = V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER,
+ 		},
+ 	},
+ };
+@@ -304,22 +302,12 @@ static int hantro_ctrls_setup(struct hantro_dev *vpu,
+ 	for (i = 0; i < num_ctrls; i++) {
+ 		if (!(allowed_codecs & controls[i].codec))
+ 			continue;
+-		if (!controls[i].cfg.elem_size) {
+-			v4l2_ctrl_new_std(&ctx->ctrl_handler,
+-					  &hantro_ctrl_ops,
+-					  controls[i].id, controls[i].cfg.min,
+-					  controls[i].cfg.max,
+-					  controls[i].cfg.step,
+-					  controls[i].cfg.def);
+-		} else {
+-			controls[i].cfg.id = controls[i].id;
+-			v4l2_ctrl_new_custom(&ctx->ctrl_handler,
+-					     &controls[i].cfg, NULL);
+-		}
  
- #endif /* __DT_BINDINGS_CLOCK_JZ4740_CGU_H__ */
++		v4l2_ctrl_new_custom(&ctx->ctrl_handler,
++				     &controls[i].cfg, NULL);
+ 		if (ctx->ctrl_handler.error) {
+ 			vpu_err("Adding control (%d) failed %d\n",
+-				controls[i].id,
++				controls[i].cfg.id,
+ 				ctx->ctrl_handler.error);
+ 			v4l2_ctrl_handler_free(&ctx->ctrl_handler);
+ 			return ctx->ctrl_handler.error;
 -- 
-2.21.0.593.g511ec345e18
+2.22.0
 
