@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CE6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D19C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC28204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F79D206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564000282;
-	bh=LIJGF+UuwXoc24xOqPrYVuQP8Bd1KAdghCvRIVquvws=;
+	s=default; t=1564000285;
+	bh=2tlj+gJUZ0QsrlOhryzgMPlsWNUYQBRxuajkAnYEg8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WI/WBY87LVKGBlYGNBuWVUooni9GgXFGTlq47/uA/+xCQu5rhZiG+mk1GpCy5olRo
-	 6a0ImP9P39OjiksyZXoDYFUgLYYlKfz5shelvVlPewNvDs64lfpPr2QYV30tmu1iI6
-	 qfK7t5UlE4kDS5MtpWyJDAV2vE9ItCa9gtG/WcLs=
+	b=2OOXaPqcH1VqFs4fd1B6Z2jJW4eC0bNJVsHyeVYEu9JxDLElD55DgMDUgRHIusJaD
+	 BL3jvAUJAmrwH3hWNGP9c8WWcVHLhnj59+dvOpnzkHW9IZye/yMzT6k0ZeL2aIQFmu
+	 5M6oomTfYOMyAlJH6hCfiHd4dqXmVAqnHcTHIOMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfGXUbV (ORCPT
+        id S2388376AbfGXTae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50960 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388383AbfGXTam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:42 -0400
+        id S2387927AbfGXTa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D98621951;
-        Wed, 24 Jul 2019 19:30:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1311A20659;
+        Wed, 24 Jul 2019 19:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996641;
-        bh=LIJGF+UuwXoc24xOqPrYVuQP8Bd1KAdghCvRIVquvws=;
+        s=default; t=1563996627;
+        bh=2tlj+gJUZ0QsrlOhryzgMPlsWNUYQBRxuajkAnYEg8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cXnGF6b7kAGfycFJ+kUcxcWP5+OoGxIJuw6RIKSsq1mTnT3sJsFHE9MI/MtG9FDzX
-         iyHALcyU5aYYuTVKFs5onJJ2QPwxmtpI7Oj6OKwTObTzsBMxxXjqJUQOori9Ku3r/W
-         uSaBoNcmtIwoBCC3VOuDQZ/SIb6x49zzJ72RXwes=
+        b=WYgnOO7FCiHwuVmplft86TZY7WaTWV8U0e2W9Nn0FwN0c6z5Gg27Bes50kOQ54y81
+         xgCkuyrI2rCm68ZOLZPDng7/CvU98KdJ9//aXSYDJaycKm0fVkvF6ThYklNURI3Bl7
+         E60eq3hWddHa9rhOEP33uNLpYrGw41akNSQm9hW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dennis Zhou <dennis@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 126/413] blk-iolatency: only account submitted bios
-Date:   Wed, 24 Jul 2019 21:16:57 +0200
-Message-Id: <20190724191744.147311482@linuxfoundation.org>
+        stable@vger.kernel.org, Claire Chang <tientzu@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 160/413] ath10k: add missing error handling
+Date:   Wed, 24 Jul 2019 21:17:31 +0200
+Message-Id: <20190724191746.527234230@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,37 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a3fb01ba5af066521f3f3421839e501bb2c71805 ]
+[ Upstream commit 4b553f3ca4cbde67399aa3a756c37eb92145b8a1 ]
 
-As is, iolatency recognizes done_bio and cleanup as ending paths. If a
-request is marked REQ_NOWAIT and fails to get a request, the bio is
-cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
-This results in underflowing the inflight counter. Fix this by only
-accounting bios that were actually submitted.
+In function ath10k_sdio_mbox_rx_alloc() [sdio.c],
+ath10k_sdio_mbox_alloc_rx_pkt() is called without handling the error cases.
+This will make the driver think the allocation for skb is successful and
+try to access the skb. If we enable failslab, system will easily crash with
+NULL pointer dereferencing.
 
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Call trace of CONFIG_FAILSLAB:
+ath10k_sdio_irq_handler+0x570/0xa88 [ath10k_sdio]
+process_sdio_pending_irqs+0x4c/0x174
+sdio_run_irqs+0x3c/0x64
+sdio_irq_work+0x1c/0x28
+
+Fixes: d96db25d2025 ("ath10k: add initial SDIO support")
+Signed-off-by: Claire Chang <tientzu@chromium.org>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iolatency.c | 4 ++++
+ drivers/net/wireless/ath/ath10k/sdio.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index d22e61bced86..c91b84bb9d0a 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -600,6 +600,10 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
- 		return;
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index fae56c67766f..73ef3e75d199 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -602,6 +602,10 @@ static int ath10k_sdio_mbox_rx_alloc(struct ath10k *ar,
+ 						    full_len,
+ 						    last_in_bundle,
+ 						    last_in_bundle);
++		if (ret) {
++			ath10k_warn(ar, "alloc_rx_pkt error %d\n", ret);
++			goto err;
++		}
+ 	}
  
-+	/* We didn't actually submit this bio, don't account it. */
-+	if (bio->bi_status == BLK_STS_AGAIN)
-+		return;
-+
- 	iolat = blkg_to_lat(bio->bi_blkg);
- 	if (!iolat)
- 		return;
+ 	ar_sdio->n_rx_pkts = i;
 -- 
 2.20.1
 
