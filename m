@@ -2,232 +2,239 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5598C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC756C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6F522387
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1C922387
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 06:13:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="WLIcZPB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfGXGNR (ORCPT
+        id S1726388AbfGXGNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 02:13:17 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44525 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfGXGNQ (ORCPT
+        Wed, 24 Jul 2019 02:13:45 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35852 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfGXGNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 02:13:16 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 4285B20005;
-        Wed, 24 Jul 2019 06:13:08 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH REBASE v4 13/14] mips: Use generic mmap top-down layout and brk randomization
-Date:   Wed, 24 Jul 2019 01:58:49 -0400
-Message-Id: <20190724055850.6232-14-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724055850.6232-1-alex@ghiti.fr>
-References: <20190724055850.6232-1-alex@ghiti.fr>
+        Wed, 24 Jul 2019 02:13:45 -0400
+Received: by mail-vs1-f65.google.com with SMTP id y16so30582903vsc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jul 2019 23:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tpQ7KjGA9rveTFum7LugjFyj9R3ZDuR92fvMjPflPJo=;
+        b=WLIcZPB0RGHF3y22J9RiUYiYwmhaqQoxsIaLYlvO91IA7hBpXI5LSnqRKeYQIwWtgj
+         9oPXzNVcgMAt5pt6o7kf4mMEsQhYDl7VhrKavAzTm8ndZ+2LAqhnpLc5InNjptsQ9HvV
+         +Yh7Cz0lliq+zSDEVk/UxdO1rO/NkW5Uc1NDEZ58IsgSDmy0NhC2nThnW4a8+KEX7qh5
+         5Rw6H3+OwBr8HrSGJvm5GvFeebSZ/+L1ELYCRED7FnQOM8QDQeVjCZAMio9kyzgghIJI
+         XfI3CNpgl5GxT0khY4jQQOVoIzma4hHiMsYz/27wS0nKtQqjY/mh0g7H+5tYbxq7eWBK
+         LOmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tpQ7KjGA9rveTFum7LugjFyj9R3ZDuR92fvMjPflPJo=;
+        b=LxgV7CzteH7bHoMKRAqG/+1EoNg7wadF/82+LyfCnRoqEvNAYQZehfmsN5PcgJDAaX
+         m+s6ZeMpi2DS2y6HOcroUZrBQX4SyeE5Og5hq9qsuxkAUeGqeexS/eu2hMbHuzlZca8y
+         bxh0/tHkMY4fEex51zhhLziB2wVSAoK/qrhQl8k1vvhxoW5v/BMklq4xTRyUB/BV2D0k
+         GzIHtGT727FQ4I672T52hVlYIKq8/Tb+DNtl96LmX7IOJLfwXFNmIOT3uk/RTCpXLMAC
+         iZSPls8jwA9LPhYR4KfKbccvBpEfsfdG29ZknM5YNzeoGF45TJKXZQxR+eP+g1HD5F/f
+         UdjA==
+X-Gm-Message-State: APjAAAWhJRfZQcWlgbGl3FCvV2XpbZuzGVjTf9f2n3Uojm0fGcaVvQYk
+        7G4PM5W2lLjTwIe3ioQEG3Eb6l1nteoGP8I/4xTdVg==
+X-Google-Smtp-Source: APXvYqzdt5e7MQUrV3m0zT2VF6TxbA+RfwZiiMGBr+kbwUgoC0bLitbTQYwZ19uZZ92CFZuSd02w4DN7V8nzv1tws9U=
+X-Received: by 2002:a67:d990:: with SMTP id u16mr51326288vsj.95.1563948823620;
+ Tue, 23 Jul 2019 23:13:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAPpJ_edDcaBq+0DocPmS-yYM10B4MkWvBn=f6wwbYdqzSGmp_g@mail.gmail.com>
+ <20190711052427.5582-1-jian-hong@endlessm.com> <CAPpJ_edQRMiBcdB-dTxhti8nK0eX4GPRUOgimzWW1JC3ZZjRHw@mail.gmail.com>
+In-Reply-To: <CAPpJ_edQRMiBcdB-dTxhti8nK0eX4GPRUOgimzWW1JC3ZZjRHw@mail.gmail.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Wed, 24 Jul 2019 14:13:06 +0800
+Message-ID: <CAPpJ_efEZxBSwzKvYvhTYT5EUn9hxuGabdG8wkahF8Uex+P9Zw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rtw88: pci: Rearrange the memory usage for skb in
+ RX ISR
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        David Laight <David.Laight@aculab.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-wireless@vger.kernel.org,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mips uses a top-down layout by default that exactly fits the generic
-functions, so get rid of arch specific code and use the generic version
-by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
-As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
-use the generic version of arch_randomize_brk since it also fits.
-Note that this commit also removes the possibility for mips to have elf
-randomization and no MMU: without MMU, the security added by randomization
-is worth nothing.
+Jian-Hong Pan <jian-hong@endlessm.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=8811=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=881:28=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> Jian-Hong Pan <jian-hong@endlessm.com> =E6=96=BC 2019=E5=B9=B47=E6=9C=881=
+1=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=881:25=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> >
+> > Testing with RTL8822BE hardware, when available memory is low, we
+> > frequently see a kernel panic and system freeze.
+> >
+> > First, rtw_pci_rx_isr encounters a memory allocation failure (trimmed):
+> >
+> > rx routine starvation
+> > WARNING: CPU: 7 PID: 9871 at drivers/net/wireless/realtek/rtw88/pci.c:8=
+22 rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpci]
+> > [ 2356.580313] RIP: 0010:rtw_pci_rx_isr.constprop.25+0x35a/0x370 [rtwpc=
+i]
+> >
+> > Then we see a variety of different error conditions and kernel panics,
+> > such as this one (trimmed):
+> >
+> > rtw_pci 0000:02:00.0: pci bus timeout, check dma status
+> > skbuff: skb_over_panic: text:00000000091b6e66 len:415 put:415 head:0000=
+0000d2880c6f data:000000007a02b1ea tail:0x1df end:0xc0 dev:<NULL>
+> > ------------[ cut here ]------------
+> > kernel BUG at net/core/skbuff.c:105!
+> > invalid opcode: 0000 [#1] SMP NOPTI
+> > RIP: 0010:skb_panic+0x43/0x45
+> >
+> > When skb allocation fails and the "rx routine starvation" is hit, the
+> > function returns immediately without updating the RX ring. At this
+> > point, the RX ring may continue referencing an old skb which was alread=
+y
+> > handed off to ieee80211_rx_irqsafe(). When it comes to be used again,
+> > bad things happen.
+> >
+> > This patch allocates a new, data-sized skb first in RX ISR. After
+> > copying the data in, we pass it to the upper layers. However, if skb
+> > allocation fails, we effectively drop the frame. In both cases, the
+> > original, full size ring skb is reused.
+> >
+> > In addition, to fixing the kernel crash, the RX routine should now
+> > generally behave better under low memory conditions.
+> >
+> > Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=3D204053
+> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > Cc: <stable@vger.kernel.org>
+> > ---
+>
+> Sorry, I forget to place the version difference here.
+>
+> v2:
+>  - Allocate new data-sized skb and put data into it, then pass it to
+>    mac80211. Reuse the original skb in RX ring by DMA sync.
+>  - Modify the commit message.
+>  - Introduce following [PATCH v3 2/2] rtw88: pci: Use DMA sync instead
+>    of remapping in RX ISR.
+>
+> v3:
+>  - Same as v2.
+>
+> v4:
+>  - Fix comment: allocate a new skb for this frame, discard the frame
+> if none available
+>
+> >  drivers/net/wireless/realtek/rtw88/pci.c | 49 +++++++++++-------------
+> >  1 file changed, 22 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wir=
+eless/realtek/rtw88/pci.c
+> > index cfe05ba7280d..c415f5e94fed 100644
+> > --- a/drivers/net/wireless/realtek/rtw88/pci.c
+> > +++ b/drivers/net/wireless/realtek/rtw88/pci.c
+> > @@ -763,6 +763,7 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev, =
+struct rtw_pci *rtwpci,
+> >         u32 pkt_offset;
+> >         u32 pkt_desc_sz =3D chip->rx_pkt_desc_sz;
+> >         u32 buf_desc_sz =3D chip->rx_buf_desc_sz;
+> > +       u32 new_len;
+> >         u8 *rx_desc;
+> >         dma_addr_t dma;
+> >
+> > @@ -790,40 +791,34 @@ static void rtw_pci_rx_isr(struct rtw_dev *rtwdev=
+, struct rtw_pci *rtwpci,
+> >                 pkt_offset =3D pkt_desc_sz + pkt_stat.drv_info_sz +
+> >                              pkt_stat.shift;
+> >
+> > -               if (pkt_stat.is_c2h) {
+> > -                       /* keep rx_desc, halmac needs it */
+> > -                       skb_put(skb, pkt_stat.pkt_len + pkt_offset);
+> > +               /* allocate a new skb for this frame,
+> > +                * discard the frame if none available
+> > +                */
+> > +               new_len =3D pkt_stat.pkt_len + pkt_offset;
+> > +               new =3D dev_alloc_skb(new_len);
+> > +               if (WARN_ONCE(!new, "rx routine starvation\n"))
+> > +                       goto next_rp;
+> > +
+> > +               /* put the DMA data including rx_desc from phy to new s=
+kb */
+> > +               skb_put_data(new, skb->data, new_len);
+> >
+> > -                       /* pass offset for further operation */
+> > -                       *((u32 *)skb->cb) =3D pkt_offset;
+> > -                       skb_queue_tail(&rtwdev->c2h_queue, skb);
+> > +               if (pkt_stat.is_c2h) {
+> > +                        /* pass rx_desc & offset for further operation=
+ */
+> > +                       *((u32 *)new->cb) =3D pkt_offset;
+> > +                       skb_queue_tail(&rtwdev->c2h_queue, new);
+> >                         ieee80211_queue_work(rtwdev->hw, &rtwdev->c2h_w=
+ork);
+> >                 } else {
+> > -                       /* remove rx_desc, maybe use skb_pull? */
+> > -                       skb_put(skb, pkt_stat.pkt_len);
+> > -                       skb_reserve(skb, pkt_offset);
+> > -
+> > -                       /* alloc a smaller skb to mac80211 */
+> > -                       new =3D dev_alloc_skb(pkt_stat.pkt_len);
+> > -                       if (!new) {
+> > -                               new =3D skb;
+> > -                       } else {
+> > -                               skb_put_data(new, skb->data, skb->len);
+> > -                               dev_kfree_skb_any(skb);
+> > -                       }
+> > -                       /* TODO: merge into rx.c */
+> > -                       rtw_rx_stats(rtwdev, pkt_stat.vif, skb);
+> > +                       /* remove rx_desc */
+> > +                       skb_pull(new, pkt_offset);
+> > +
+> > +                       rtw_rx_stats(rtwdev, pkt_stat.vif, new);
+> >                         memcpy(new->cb, &rx_status, sizeof(rx_status));
+> >                         ieee80211_rx_irqsafe(rtwdev->hw, new);
+> >                 }
+> >
+> > -               /* skb delivered to mac80211, alloc a new one in rx rin=
+g */
+> > -               new =3D dev_alloc_skb(RTK_PCI_RX_BUF_SIZE);
+> > -               if (WARN(!new, "rx routine starvation\n"))
+> > -                       return;
+> > -
+> > -               ring->buf[cur_rp] =3D new;
+> > -               rtw_pci_reset_rx_desc(rtwdev, new, ring, cur_rp, buf_de=
+sc_sz);
+> > +next_rp:
+> > +               /* new skb delivered to mac80211, re-enable original sk=
+b DMA */
+> > +               rtw_pci_reset_rx_desc(rtwdev, skb, ring, cur_rp, buf_de=
+sc_sz);
+> >
+> >                 /* host read next element in ring */
+> >                 if (++cur_rp >=3D ring->r.len)
+> > --
+> > 2.22.0
+> >
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/mips/Kconfig                 |  2 +-
- arch/mips/include/asm/processor.h |  5 --
- arch/mips/mm/mmap.c               | 96 -------------------------------
- 3 files changed, 1 insertion(+), 102 deletions(-)
+Gentle ping!  Any comment for this patch set (v4) will be appreciated.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index d50fafd7bf3a..4e85d7d2cf1a 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -5,7 +5,6 @@ config MIPS
- 	select ARCH_32BIT_OFF_T if !64BIT
- 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
- 	select ARCH_CLOCKSOURCE_DATA
--	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARCH_SUPPORTS_UPROBES
-@@ -13,6 +12,7 @@ config MIPS
- 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select BUILDTIME_EXTABLE_SORT
- 	select CLONE_BACKWARDS
-diff --git a/arch/mips/include/asm/processor.h b/arch/mips/include/asm/processor.h
-index aca909bd7841..fba18d4a9190 100644
---- a/arch/mips/include/asm/processor.h
-+++ b/arch/mips/include/asm/processor.h
-@@ -29,11 +29,6 @@
- 
- extern unsigned int vced_count, vcei_count;
- 
--/*
-- * MIPS does have an arch_pick_mmap_layout()
-- */
--#define HAVE_ARCH_PICK_MMAP_LAYOUT 1
--
- #ifdef CONFIG_32BIT
- #ifdef CONFIG_KVM_GUEST
- /* User space process size is limited to 1GB in KVM Guest Mode */
-diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-index d4eafbb82789..00fe90c6db3e 100644
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -16,49 +16,10 @@
- #include <linux/random.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/mm.h>
--#include <linux/sizes.h>
--#include <linux/compat.h>
- 
- unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
- EXPORT_SYMBOL(shm_align_mask);
- 
--/* gap between mmap and stack */
--#define MIN_GAP		(128*1024*1024UL)
--#define MAX_GAP		((STACK_TOP)/6*5)
--#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
--
--static int mmap_is_legacy(struct rlimit *rlim_stack)
--{
--	if (current->personality & ADDR_COMPAT_LAYOUT)
--		return 1;
--
--	if (rlim_stack->rlim_cur == RLIM_INFINITY)
--		return 1;
--
--	return sysctl_legacy_va_layout;
--}
--
--static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
--{
--	unsigned long gap = rlim_stack->rlim_cur;
--	unsigned long pad = stack_guard_gap;
--
--	/* Account for stack randomization if necessary */
--	if (current->flags & PF_RANDOMIZE)
--		pad += (STACK_RND_MASK << PAGE_SHIFT);
--
--	/* Values close to RLIM_INFINITY can overflow. */
--	if (gap + pad > gap)
--		gap += pad;
--
--	if (gap < MIN_GAP)
--		gap = MIN_GAP;
--	else if (gap > MAX_GAP)
--		gap = MAX_GAP;
--
--	return PAGE_ALIGN(STACK_TOP - gap - rnd);
--}
--
- #define COLOUR_ALIGN(addr, pgoff)				\
- 	((((addr) + shm_align_mask) & ~shm_align_mask) +	\
- 	 (((pgoff) << PAGE_SHIFT) & shm_align_mask))
-@@ -156,63 +117,6 @@ unsigned long arch_get_unmapped_area_topdown(struct file *filp,
- 			addr0, len, pgoff, flags, DOWN);
- }
- 
--unsigned long arch_mmap_rnd(void)
--{
--	unsigned long rnd;
--
--#ifdef CONFIG_COMPAT
--	if (TASK_IS_32BIT_ADDR)
--		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
--	else
--#endif /* CONFIG_COMPAT */
--		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
--
--	return rnd << PAGE_SHIFT;
--}
--
--void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
--{
--	unsigned long random_factor = 0UL;
--
--	if (current->flags & PF_RANDOMIZE)
--		random_factor = arch_mmap_rnd();
--
--	if (mmap_is_legacy(rlim_stack)) {
--		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
--		mm->get_unmapped_area = arch_get_unmapped_area;
--	} else {
--		mm->mmap_base = mmap_base(random_factor, rlim_stack);
--		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
--	}
--}
--
--static inline unsigned long brk_rnd(void)
--{
--	unsigned long rnd = get_random_long();
--
--	rnd = rnd << PAGE_SHIFT;
--	/* 32MB for 32bit, 1GB for 64bit */
--	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
--		rnd = rnd & SZ_32M;
--	else
--		rnd = rnd & SZ_1G;
--
--	return rnd;
--}
--
--unsigned long arch_randomize_brk(struct mm_struct *mm)
--{
--	unsigned long base = mm->brk;
--	unsigned long ret;
--
--	ret = PAGE_ALIGN(base + brk_rnd());
--
--	if (ret < mm->brk)
--		return mm->brk;
--
--	return ret;
--}
--
- bool __virt_addr_valid(const volatile void *kaddr)
- {
- 	unsigned long vaddr = (unsigned long)kaddr;
--- 
-2.20.1
-
+Jian-Hong Pan
