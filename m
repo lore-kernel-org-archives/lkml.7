@@ -2,156 +2,93 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B790BC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC286C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F63520840
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mwmzPjwa"
+	by mail.kernel.org (Postfix) with ESMTP id B1C3921852
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbfGXR3D (ORCPT
+        id S1728491AbfGXR3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:29:03 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:46182 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfGXR3D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:29:03 -0400
-Received: by mail-vk1-f196.google.com with SMTP id b64so9529136vke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 10:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g65bq2BEnljTH4aMgkIZ1B8Lg7IURCua+lyIxVKScJY=;
-        b=mwmzPjwajv1rjeaemLgLYc6PD1sFmLLO4Ve4HcQyRYSilUH4mZsBwCj9zmXiWW8jYr
-         U3wrKe3fhthhsKceOl+umeVUJV/G3fx95HHOs8Pa6DLScXiUJslK2X3vPArtcdOkVJMF
-         NRFd6Eoz2oSUXQyq363SzO6MAqDnOeDJ5UjeTGqSFK5L3U48daxTkIrvtkS4cbFVIt8+
-         gz5RCNtEHmZJk1il+DiLfRp/74XAaEacQW7axxY+FzxUSwFOHogEwCyAOhiFR7POEKlV
-         1OTP5YAsiE5uNmDgkbnXUcK5wBOfdxmyFbQBRrPmQJHlL7tCHBQZoigb/lPQ3xWfYypA
-         RVxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g65bq2BEnljTH4aMgkIZ1B8Lg7IURCua+lyIxVKScJY=;
-        b=HK8ETI1ySPOs8Rlfy9KkDEZCVP6+9wlpwI6OE9K0asUH0eFkCLlah0hpQoL8vaqqJ1
-         Xo80FZItGrvOufhe1tPVkVyX8zjpLLZu/2ptRUDdnBYqUBr5du7d14LJeXBxFztD/L7O
-         fAEhF5djEfbIsnx+mQgkVUHhyY4R2KOHpewwVH0emMGCfw/9M/6ArWODx9uTFxT00y52
-         VsaK1fqL+H+syoHNxYBA4mDfMBh1k81Ptn60BXCQNbtT7GIjFbDvw0wyou2Q+Us6DEDz
-         L91TQ6l7RBapFowEaEJclDfyT9WMhf8QCFDSt9HuKd2RgTyxCmKkWpZUPdFAzUD8LR/E
-         GpZA==
-X-Gm-Message-State: APjAAAUG3h7QC+2s5qCcnxOn6SDX4KLDuTPfhXPvFbE3N1+F3V5Am+ND
-        1k2lriN+DQhJdFre1RliJIIbwzqeUMNvJdMGIwTyy3s2cGI19g==
-X-Google-Smtp-Source: APXvYqzxA0IP/qNwL5bynk/l6uhKSN1KZDOfp9tIFoIp/NfO0yMWR/am+9x96oa7CYc5GD4ul7N04F6fmu25moniLc8=
-X-Received: by 2002:a63:60a:: with SMTP id 10mr51141254pgg.381.1563988984995;
- Wed, 24 Jul 2019 10:23:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de> <20190724023946.yxsz5im22fz4zxrn@treble>
-In-Reply-To: <20190724023946.yxsz5im22fz4zxrn@treble>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Jul 2019 10:22:53 -0700
-Message-ID: <CAKwvOdk7d2UupG66Zt0zN_NB0xQOaCWBvMMWY_N_-uejw69-BQ@mail.gmail.com>
-Subject: Re: x86 - clang / objtool status
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 24 Jul 2019 13:29:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57826 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726158AbfGXR3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 13:29:34 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 39ED43082128;
+        Wed, 24 Jul 2019 17:29:34 +0000 (UTC)
+Received: from treble (ovpn-122-90.rdu2.redhat.com [10.10.122.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 423965D71A;
+        Wed, 24 Jul 2019 17:29:33 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 12:29:29 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 00/13] Cleanup recordmcount and begin objtool
+ conversion
+Message-ID: <20190724172929.fnh2kxsgxtcneipe@treble>
+References: <cover.1560285597.git.mhelsley@vmware.com>
+ <20190710130924.16aee549@gandalf.local.home>
+ <20190710171900.gzzitftdinkdx6ra@treble>
+ <20190724124652.362a90d0@gandalf.local.home>
+ <5714C12C-D3D0-47F1-A301-908398B46F72@vmware.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5714C12C-D3D0-47F1-A301-908398B46F72@vmware.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 24 Jul 2019 17:29:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 7:43 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Thu, Jul 18, 2019 at 10:40:09PM +0200, Thomas Gleixner wrote:
->
-> >   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x86: redundant UACCESS disable
->
-> Looking at this one, I think I agree with objtool.
->
-> PeterZ, Linus, I know y'all discussed this code a few months ago.
->
-> __copy_from_user() already does a CLAC in its error path.  So isn't the
-> user_access_end() redundant for the __copy_from_user() error path?
->
-> Untested fix:
->
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> index 5fae0e50aad0..41dab9ea33cd 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> @@ -1628,6 +1628,7 @@ static int check_relocations(const struct drm_i915_gem_exec_object2 *entry)
->
->  static int eb_copy_relocations(const struct i915_execbuffer *eb)
->  {
-> +       struct drm_i915_gem_relocation_entry *relocs;
->         const unsigned int count = eb->buffer_count;
->         unsigned int i;
->         int err;
-> @@ -1635,7 +1636,6 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
->         for (i = 0; i < count; i++) {
->                 const unsigned int nreloc = eb->exec[i].relocation_count;
->                 struct drm_i915_gem_relocation_entry __user *urelocs;
-> -               struct drm_i915_gem_relocation_entry *relocs;
->                 unsigned long size;
->                 unsigned long copied;
->
-> @@ -1663,14 +1663,8 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
->
->                         if (__copy_from_user((char *)relocs + copied,
->                                              (char __user *)urelocs + copied,
-> -                                            len)) {
-> -end_user:
-> -                               user_access_end();
-> -end:
-> -                               kvfree(relocs);
-> -                               err = -EFAULT;
-> -                               goto err;
-> -                       }
-> +                                            len))
-> +                               goto end;
->
->                         copied += len;
->                 } while (copied < size);
-> @@ -1699,10 +1693,14 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
->
->         return 0;
->
-> +end_user:
-> +       user_access_end();
-> +end:
-> +       kvfree(relocs);
-> +       err = -EFAULT;
->  err:
->         while (i--) {
-> -               struct drm_i915_gem_relocation_entry *relocs =
-> -                       u64_to_ptr(typeof(*relocs), eb->exec[i].relocs_ptr);
-> +               relocs = u64_to_ptr(typeof(*relocs), eb->exec[i].relocs_ptr);
->                 if (eb->exec[i].relocation_count)
->                         kvfree(relocs);
->         }
+On Wed, Jul 24, 2019 at 05:26:10PM +0000, Matt Helsley wrote:
+> 
+> 
+> > On Jul 24, 2019, at 9:46 AM, Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > On Wed, 10 Jul 2019 12:19:00 -0500
+> > Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > 
+> >> On Wed, Jul 10, 2019 at 01:09:24PM -0400, Steven Rostedt wrote:
+> >>> 
+> >>> Josh,
+> >>> 
+> >>> Can you have a look at these? I can apply them if you think they are OK.  
+> >> 
+> >> Sorry for the delay.  I didn't forget about it, it's just been a hectic
+> >> month.  I plan to give it a proper review soon (in the next week or so).
+> >> 
+> > 
+> > Friendly reminder ;-)
+> > 
+> > -- Steve
+> 
+> Just thought I’d add:
+> 
+> I rebased yesterday and noticed a few minor changes are needed to resolve conflicts with mainline. I will send a v3 out today with these changes:
+> 
+> 	renaming elf_open to elf_read
+> 
+> 	some kernel build changes (in Makefile.build)
+> 
+> Also, I’ve finished removing all of the old recordmcount ELF wrapper code. I can send a follow-on RFC series by Friday.
 
-Thanks for this patch.
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/617
-Fixes: 2889caa92321 ("drm/i915: Eliminate lots of iterations over the
-execobjects array")
+Matt, thanks for your patience.  As I told Steven, I'm unfortunately
+very behind on reviews.  Yours is (almost) at the top of the list.
 
 -- 
-Thanks,
-~Nick Desaulniers
+Josh
