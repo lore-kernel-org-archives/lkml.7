@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2BAC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BBBC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77CD206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22C4206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999669;
-	bh=U0o0C1aPAvOjwdQ7vLkMsrXoC/6GvrrOfuqwkwg7ouQ=;
+	s=default; t=1563999671;
+	bh=HIyOUkl8aruwst0Ro1rhXSFBk9+dSt6xQjm3eGBrcqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ME2bfcTKFIP+J+rmsUzPXlxrImtkxnzIieECgogVW/r7Ii7cL+i2PA6e05Sk9H0dg
-	 izfVTd1LB6Ue3DA95UUitX0eyV0U4ctQIpZwcEZW4JYPje5EJD0bOuOKGwzqmSo23T
-	 e1jCtiFGNNVHXVZMTLaoLVj7ccSVmG3G7E6qhI58=
+	b=xob0bAIDcoaydGb/mmp7SjCrp41QrL2TrpYYwP1cxa7/WuWMONkKgI7RQfatwGn5v
+	 xNmc7kD30evQS3Jub3svAeQNHFAFM68nrREX3c66wDSJcuOG9KtL3EVjj9VsPTuq7b
+	 +djptRD5iRL/6ZfSIPs8oFdLJxCdjwejyfrhAibA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391016AbfGXTpf (ORCPT
+        id S2391008AbfGXTpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390639AbfGXTna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:30 -0400
+        id S2390561AbfGXTn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:43:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5AEB2083B;
-        Wed, 24 Jul 2019 19:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEAF5229F4;
+        Wed, 24 Jul 2019 19:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997409;
-        bh=U0o0C1aPAvOjwdQ7vLkMsrXoC/6GvrrOfuqwkwg7ouQ=;
+        s=default; t=1563997406;
+        bh=HIyOUkl8aruwst0Ro1rhXSFBk9+dSt6xQjm3eGBrcqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BocpPY/hwziQSb7PqBXSyGjNMqEzOu7jwpXZ2IJhsh/K76vb+1uf5Vs1r9gKsntHd
-         IwbazYT1oWwrRiJsRJv5UJcn8gEoMfEQtVF20e3Vi8etzpE4/IQcakY/Khw7yNS1tA
-         PrruL/1FfP7GcHP9aUXpU2RDo2XJ5gLFhFvVlT1s=
+        b=OtoBKrViaVEesuWbB4ZIYYW0YhxDQO4PV07mYoYys13qMiV0Jv+S+IrwbcRDj0ppw
+         /lk7qjqqdfmrdM+/+c1psIm2y97v3qxZH8TgOsyf/vbs9jjpj1x0v/J/zdCjF5MSC7
+         PG5IJ1pMaIadb4m2tRN3EWDKR9jwitObsHAddTtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Surabhi Vishnoi <svishnoi@codeaurora.org>,
+        stable@vger.kernel.org, Tim Schumacher <timschumi@gmx.de>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 014/371] ath10k: Fix the wrong value of enums for wmi tlv stats id
-Date:   Wed, 24 Jul 2019 21:16:06 +0200
-Message-Id: <20190724191725.567381815@linuxfoundation.org>
+Subject: [PATCH 5.1 013/371] ath9k: Check for errors when reading SREV register
+Date:   Wed, 24 Jul 2019 21:16:05 +0200
+Message-Id: <20190724191725.492273334@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,44 +60,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9280f4fc06f44d0b4dc9e831f72d97b3d7cd35d3 ]
+[ Upstream commit 2f90c7e5d09437a4d8d5546feaae9f1cf48cfbe1 ]
 
-The enum value for WMI_TLV_STAT_PDEV, WMI_TLV_STAT_VDEV
-and WMI_TLV_STAT_PEER is wrong, due to which the vdev stats
-are not received from firmware in wmi_update_stats event.
+Right now, if an error is encountered during the SREV register
+read (i.e. an EIO in ath9k_regread()), that error code gets
+passed all the way to __ath9k_hw_init(), where it is visible
+during the "Chip rev not supported" message.
 
-Fix the enum values for above stats to receive all stats
-from firmware in WMI_TLV_UPDATE_STATS_EVENTID.
+    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
+    ath: phy2: Mac Chip Rev 0x0f.3 is not supported by this driver
+    ath: phy2: Unable to initialize hardware; initialization status: -95
+    ath: phy2: Unable to initialize hardware; initialization status: -95
+    ath9k_htc: Failed to initialize the device
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
+Check for -EIO explicitly in ath9k_hw_read_revisions() and return
+a boolean based on the success of the operation. Check for that in
+__ath9k_hw_init() and abort with a more debugging-friendly message
+if reading the revisions wasn't successful.
 
-Fixes: f40a307eb92c ("ath10k: Fill rx duration for each peer in fw_stats for WCN3990)
-Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
+    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
+    ath: phy2: Failed to read SREV register
+    ath: phy2: Could not read hardware revision
+    ath: phy2: Unable to initialize hardware; initialization status: -95
+    ath: phy2: Unable to initialize hardware; initialization status: -95
+    ath9k_htc: Failed to initialize the device
+
+This helps when debugging by directly showing the first point of
+failure and it could prevent possible errors if a 0x0f.3 revision
+is ever supported.
+
+Signed-off-by: Tim Schumacher <timschumi@gmx.de>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath9k/hw.c | 32 +++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
-index e1c40bb69932..12f57f9adbba 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi.h
-@@ -4535,9 +4535,10 @@ enum wmi_10_4_stats_id {
- };
+diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
+index 8581d917635a..b6773d613f0c 100644
+--- a/drivers/net/wireless/ath/ath9k/hw.c
++++ b/drivers/net/wireless/ath/ath9k/hw.c
+@@ -252,8 +252,9 @@ void ath9k_hw_get_channel_centers(struct ath_hw *ah,
+ /* Chip Revisions */
+ /******************/
  
- enum wmi_tlv_stats_id {
--	WMI_TLV_STAT_PDEV	= BIT(0),
--	WMI_TLV_STAT_VDEV	= BIT(1),
--	WMI_TLV_STAT_PEER	= BIT(2),
-+	WMI_TLV_STAT_PEER	= BIT(0),
-+	WMI_TLV_STAT_AP		= BIT(1),
-+	WMI_TLV_STAT_PDEV	= BIT(2),
-+	WMI_TLV_STAT_VDEV	= BIT(3),
- 	WMI_TLV_STAT_PEER_EXTD  = BIT(10),
- };
+-static void ath9k_hw_read_revisions(struct ath_hw *ah)
++static bool ath9k_hw_read_revisions(struct ath_hw *ah)
+ {
++	u32 srev;
+ 	u32 val;
  
+ 	if (ah->get_mac_revision)
+@@ -269,25 +270,33 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
+ 			val = REG_READ(ah, AR_SREV);
+ 			ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
+ 		}
+-		return;
++		return true;
+ 	case AR9300_DEVID_AR9340:
+ 		ah->hw_version.macVersion = AR_SREV_VERSION_9340;
+-		return;
++		return true;
+ 	case AR9300_DEVID_QCA955X:
+ 		ah->hw_version.macVersion = AR_SREV_VERSION_9550;
+-		return;
++		return true;
+ 	case AR9300_DEVID_AR953X:
+ 		ah->hw_version.macVersion = AR_SREV_VERSION_9531;
+-		return;
++		return true;
+ 	case AR9300_DEVID_QCA956X:
+ 		ah->hw_version.macVersion = AR_SREV_VERSION_9561;
+-		return;
++		return true;
+ 	}
+ 
+-	val = REG_READ(ah, AR_SREV) & AR_SREV_ID;
++	srev = REG_READ(ah, AR_SREV);
++
++	if (srev == -EIO) {
++		ath_err(ath9k_hw_common(ah),
++			"Failed to read SREV register");
++		return false;
++	}
++
++	val = srev & AR_SREV_ID;
+ 
+ 	if (val == 0xFF) {
+-		val = REG_READ(ah, AR_SREV);
++		val = srev;
+ 		ah->hw_version.macVersion =
+ 			(val & AR_SREV_VERSION2) >> AR_SREV_TYPE2_S;
+ 		ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
+@@ -306,6 +315,8 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
+ 		if (ah->hw_version.macVersion == AR_SREV_VERSION_5416_PCIE)
+ 			ah->is_pciexpress = true;
+ 	}
++
++	return true;
+ }
+ 
+ /************************************/
+@@ -559,7 +570,10 @@ static int __ath9k_hw_init(struct ath_hw *ah)
+ 	struct ath_common *common = ath9k_hw_common(ah);
+ 	int r = 0;
+ 
+-	ath9k_hw_read_revisions(ah);
++	if (!ath9k_hw_read_revisions(ah)) {
++		ath_err(common, "Could not read hardware revisions");
++		return -EOPNOTSUPP;
++	}
+ 
+ 	switch (ah->hw_version.macVersion) {
+ 	case AR_SREV_VERSION_5416_PCI:
 -- 
 2.20.1
 
