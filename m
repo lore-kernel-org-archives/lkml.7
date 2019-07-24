@@ -2,137 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4DBC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC13C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904DB21951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VzLnvQJd"
+	by mail.kernel.org (Postfix) with ESMTP id 7A1EC2238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 15:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfGXPqj (ORCPT
+        id S1728551AbfGXPrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 11:46:39 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53094 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727680AbfGXPqi (ORCPT
+        Wed, 24 Jul 2019 11:47:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37780 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727608AbfGXPrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 11:46:38 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6OFk3g0070578;
-        Wed, 24 Jul 2019 10:46:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1563983163;
-        bh=lOtsy9iEeGzWh5ylO4v/a04ehlOrwbMbdn7UL2Ddbrg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VzLnvQJdtFsU8gh8xZW4og7tS+2gLDEUOpGiPoFQzpyWkyjuKjgzj0Vh2fnuO2eeU
-         91AiiB3Nwjs5rCppmcOgWSZJSm/aGHM+7v5odY7mugVWv05rjXMDQSF+9yVBR4FZOS
-         QNVaFQCsOSQwQaOSYDxuLwyfM8iTvRK1+DHxihl8=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6OFk3jV046078
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jul 2019 10:46:03 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Jul 2019 10:46:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Jul 2019 10:46:03 -0500
-Received: from [10.250.86.29] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6OFk2qF032690;
-        Wed, 24 Jul 2019 10:46:02 -0500
-Subject: Re: [PATCH v6 4/5] dma-buf: heaps: Add CMA heap to dmabuf heaps
-To:     Christoph Hellwig <hch@infradead.org>,
-        John Stultz <john.stultz@linaro.org>
-CC:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <20190624194908.121273-1-john.stultz@linaro.org>
- <20190624194908.121273-5-john.stultz@linaro.org>
- <20190718100840.GB19666@infradead.org>
- <CALAqxLWLx_tHVjZqrSNWfQ_M2RGGqh4qth3hi9GGRdSPov-gcw@mail.gmail.com>
- <20190724065958.GC16225@infradead.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <8e6f8e4f-20fc-1f1f-2228-f4fd7c7c5c1f@ti.com>
-Date:   Wed, 24 Jul 2019 11:46:01 -0400
+        Wed, 24 Jul 2019 11:47:03 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i70so10691507pgd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 08:47:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vy+7PP8pTGQ+X9auiWqQ+l1tfzBTRZcEHjGxTn8iQ5M=;
+        b=t3UK8y50C6nkx8jbivtKeYjUpIyQSPlULPwQMumjwYNtzJhkXHpMSxMvIERrmdg3eB
+         uvfUxCB/Lovy0qkG2wvSYrZm6P7x3DsoJy2ME0rfNOuman4r+056cDyoV7cGmfcOzk5X
+         nbbmgKwe3bC+EBDLZcJ0ur9OCB7iUiX1RI35B8PCmLrP1OhXfeFqdHzlAKdlQ+nRRwH6
+         Qqhr3eWuDFoHBmdBSVF7fWotXuYDLnPFkLP47UV8KR+pBWOxrryph1dRLnUojLQN44Rs
+         ums5qikqJg8Htlduh8Z3KLcVb88c2ldLHYwSuSdZKF1qap0laYhtUzPmhQRKdQwrClLH
+         IrpQ==
+X-Gm-Message-State: APjAAAWqq+IAMcnoq4iXTvVUR6KTdl0s+7gQhoYxfbmiaZzUwX9tW7eU
+        f8g3oQUWCnaRMjQ8DJqvNcI=
+X-Google-Smtp-Source: APXvYqwM7yJkDlRA6fOFXNax17rTw0VruON9zuB3CNfJ43SO8bUzE0XM59us9YeC1R/CsSNDKnT09w==
+X-Received: by 2002:a62:e308:: with SMTP id g8mr12570717pfh.162.1563983223060;
+        Wed, 24 Jul 2019 08:47:03 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:52d2:bbe8:c2d7:f336:57bc])
+        by smtp.gmail.com with ESMTPSA id o14sm97085674pfh.153.2019.07.24.08.47.01
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 08:47:02 -0700 (PDT)
+Subject: Re: [PATCH 3/4] locking/lockdep: Reduce space occupied by stack
+ traces
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Yuyang Du <duyuyang@gmail.com>,
+        Waiman Long <longman@redhat.com>
+References: <20190722182443.216015-1-bvanassche@acm.org>
+ <20190722182443.216015-4-bvanassche@acm.org>
+ <20190724045610.GC643@sol.localdomain>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <ee1cd751-cc8a-ca03-e30c-34b4cf8a13bf@acm.org>
+Date:   Wed, 24 Jul 2019 08:47:00 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190724065958.GC16225@infradead.org>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190724045610.GC643@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/19 2:59 AM, Christoph Hellwig wrote:
-> On Mon, Jul 22, 2019 at 10:04:06PM -0700, John Stultz wrote:
->> Apologies, I'm not sure I'm understanding your suggestion here.
->> dma_alloc_contiguous() does have some interesting optimizations
->> (avoiding allocating single page from cma), though its focus on
->> default area vs specific device area doesn't quite match up the usage
->> model for dma heaps.  Instead of allocating memory for a single
->> device, we want to be able to allow userland, for a given usage mode,
->> to be able to allocate a dmabuf from a specific heap of memory which
->> will satisfy the usage mode for that buffer pipeline (across multiple
->> devices).
->>
->> Now, indeed, the system and cma heaps in this patchset are a bit
->> simple/trivial (though useful with my devices that require contiguous
->> buffers for the display driver), but more complex ION heaps have
->> traditionally stayed out of tree in vendor code, in many cases making
->> incompatible tweaks to the ION core dmabuf exporter logic.
+On 7/23/19 9:56 PM, Eric Biggers wrote:
+> Does this also fix any of the other bugs listed at
+> https://lore.kernel.org/lkml/20190710055838.GC2152@sol.localdomain/
+> ?
 > 
-> So what would the more complicated heaps be?
-> 
+> BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+> BUG: MAX_LOCKDEP_CHAINS too low!
+> BUG: MAX_LOCK_DEPTH too low! (2)
+> BUG: MAX_LOCKDEP_ENTRIES too low!
 
+Hi Eric,
 
-https://patchwork.kernel.org/patch/10863957/
+I don't think so. This patch only affects the space occupied by stack 
+traces and not the space occupied by any of the other lockdep data 
+strutures. BTW, in that report I found the following:
 
-It's actually a more simple heap type IMHO, but the logic inside is
-incompatible with the system/CMA heaps, if you move any of their code
-into the core framework then this heap stops working. Leading to out of
-tree hacks on the core to get it back functional. I see the same for the
-"complex" heaps with ION.
+Title:              BUG: MAX_LOCKDEP_CHAINS too low!
+Last occurred:      5 days ago
+Reported:           284 days ago
 
-Andrew
+Title:              BUG: MAX_LOCK_DEPTH too low! (2)
+Last occurred:      362 days ago
+Reported:           392 days ago
 
+Since these bugs were reported more than 150 days ago these bugs are 
+older than my lockdep changes and hence not a regression due to my 
+lockdep changes.
 
->> That's why
->> dmabuf heaps is trying to destage ION in a way that allows heaps to
->> implement their exporter logic themselves, so we can start pulling
->> those more complicated heaps out of their vendor hidey-holes and get
->> some proper upstream review.
->>
->> But I suspect I just am confused as to what your suggesting. Maybe
->> could you expand a bit? Apologies for being a bit dense.
-> 
-> My suggestion is to merge the system and CMA heaps.  CMA (at least
-> the system-wide CMA area) is really just an optimization to get
-> large contigous regions more easily.  We should make use of it as
-> transparent as possible, just like we do in the DMA code.
-> 
+My patch series did not increase the number of "list_entries" tracked by 
+lockdep so I don't think that the "BUG: MAX_LOCKDEP_ENTRIES too low" 
+behavior can be triggered more easily due to my lockdep changes.
+
+The "BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!" complaint however may be 
+related. I will check whether it is possible to reduce the space 
+occupied by held lock chains again to what was needed before my patch 
+series.
+
+Bart.
