@@ -2,55 +2,82 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5847BC7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC1FC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8FA218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C62218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 05:19:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHgdeN8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbfGXFR5 (ORCPT
+        id S1726120AbfGXFTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 01:17:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3523 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfGXFR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 01:17:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Jul 2019 22:17:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,300,1559545200"; 
-   d="scan'208";a="189011918"
-Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.239.197.185]) ([10.239.197.185])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Jul 2019 22:17:54 -0700
-Subject: Re: [LKP] [SUNRPC] 0472e47660: fsmark.app_overhead 16.0% regression
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "rong.a.chen@intel.com" <rong.a.chen@intel.com>
-Cc:     "lkp@01.org" <lkp@01.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190520055434.GZ31424@shao2-debian>
- <f1abba58-5fd2-5f26-74cc-f72724cfa13f@linux.intel.com>
- <9a07c589f955e5af5acc0fa09a16a3256089e764.camel@hammerspace.com>
- <d796ac23-d5d6-cdfa-89c8-536e9496b551@linux.intel.com>
- <9753a9a4a82943f6aacc2bfb0f93efc5f96bcaa5.camel@hammerspace.com>
- <2bbe636a-14f1-4592-d1f9-a9f765a02939@linux.intel.com>
- <81fb0e7d-1879-9267-83da-4671fec50920@linux.intel.com>
- <DM5PR13MB1851813BBEA446E25C5001C2B8F60@DM5PR13MB1851.namprd13.prod.outlook.com>
- <e29f82e0-6847-b264-300b-130bb31399d1@linux.intel.com>
- <b4e5ab18-6329-f22e-3962-230c965b0b5d@linux.intel.com>
-Message-ID: <491bd283-f607-3111-32ae-07294eda123d@linux.intel.com>
-Date:   Wed, 24 Jul 2019 13:17:54 +0800
+        Wed, 24 Jul 2019 01:19:37 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45897 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfGXFTh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 01:19:37 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so20564272pgp.12;
+        Tue, 23 Jul 2019 22:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i87UjpAij2mJ6/A5WtzGBcy66FYea0HMRIkSu/BLxp0=;
+        b=gHgdeN8FgSUGQGgtHozV66PPz2H8OLxS1LMSSvziIu7xtThbUNVe/Laws5DZepzSq8
+         TMPGnL5fwa6WYVYvO86vqTt6j8R/ARmEq1sybEMLu42dbGvwGJGjGl/W0gS35xqRXelc
+         YRMGvZUOpGR8Qr9/XHgs8cihMchrVxgNDZjlk/CW68AZTBqilfgI+0oqEOM8b/1tm4v8
+         KD4O7mg4fzqIcoO2jGkpGhmWey2hd8CTTclQ14idiaJbijXRotF9EO+KEGIUJhPSnZVR
+         0IECi3mSIxLfKoCttEzb+5WgO644PcIETGqem6aiPmGgOIX2g5d7nAL6mA9IrHzOGOWZ
+         Dk+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i87UjpAij2mJ6/A5WtzGBcy66FYea0HMRIkSu/BLxp0=;
+        b=kwDvkHBuPG1J07K66ghJhIHptGoqmJfycfmMCxhI/fNF3sMrZdafCFESBvUYDlNYdi
+         vlwnN8E9guTEykNJ2PLt8VGl1hMegIq3jUpfdcELirIrQy65dnJVZcc89Js6Cj0IzNCh
+         Zn1Okfwuc3JTWDq780218iE2ti+olZB8fO5/BcwizIPbAFIW+1T/dKo/gEooUoqzn8wq
+         Ob5HE6ie3faEgLwML1/9Yv35Q9yWMnQ9cR6WN9f2oXw+v7XPF/6QuX9HDxpg2nPWbNgK
+         50N7taE5NyMVIB9UB6r3QKlpGQDGPh/T43NGbl1CyRFUPOFkgtTrbc769umqzci4e0l1
+         6+4Q==
+X-Gm-Message-State: APjAAAVmx2TajxOuwzLVfwvDAa++M/sM1kkoKBxf3JYyxlTgkENg1N4Y
+        FkX+zSPBwLD4WSYFzwlNNtDUT7lU
+X-Google-Smtp-Source: APXvYqyIwd2AgnTcrwnqNYTTAYobv99MFgacIxGLUiVOt+G1XDAphFDIBjJdF2+hRtdMmnDCAZ3CCw==
+X-Received: by 2002:a17:90a:b908:: with SMTP id p8mr85587368pjr.94.1563945575571;
+        Tue, 23 Jul 2019 22:19:35 -0700 (PDT)
+Received: from [192.168.1.38] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id x22sm49451256pff.5.2019.07.23.22.19.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Jul 2019 22:19:34 -0700 (PDT)
+Subject: Re: [PATCH V2 1/1] can: sja1000: f81601: add Fintek F81601 support
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        "peter_hong@fintek.com.tw" <peter_hong@fintek.com.tw>,
+        "wg@grandegger.com" <wg@grandegger.com>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>
+Cc:     "hpeter+linux_kernel@gmail.com" <hpeter+linux_kernel@gmail.com>,
+        "f.suligoi@asem.it" <f.suligoi@asem.it>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1563776521-28317-1-git-send-email-hpeter+linux_kernel@gmail.com>
+ <bb38703fa94f19578ac67f763bb1a0ad34196757.camel@mellanox.com>
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Message-ID: <37a8be8d-3ce7-e983-93da-35413cfb5da1@gmail.com>
+Date:   Wed, 24 Jul 2019 13:19:33 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <b4e5ab18-6329-f22e-3962-230c965b0b5d@linux.intel.com>
+In-Reply-To: <bb38703fa94f19578ac67f763bb1a0ad34196757.camel@mellanox.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -59,162 +86,291 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-On 7/12/2019 2:42 PM, Xing Zhengjun wrote:
-> Hi Trond,
-> 
->      I attached perf-profile part big changes, hope it is useful for 
-> analyzing the issue.
-
-Ping...
-
-> 
-> 
-> In testcase: fsmark
-> on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz 
-> with 384G memory
-> with following parameters:
-> 
->          iterations: 20x
->          nr_threads: 64t
->          disk: 1BRD_48G
->          fs: xfs
->          fs2: nfsv4
->          filesize: 4M
->          test_size: 80G
->          sync_method: fsyncBeforeClose
->          cpufreq_governor: performance
-> 
-> test-description: The fsmark is a file system benchmark to test 
-> synchronous write workloads, for example, mail servers workload.
-> test-url: https://sourceforge.net/projects/fsmark/
-> 
-> commit:
->    e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use iov_iter_kvec()")
->    0472e47660 ("SUNRPC: Convert socket page send code to use iov_iter()")
-> 
-> e791f8e9380d945e 0472e476604998c127f3c80d291
-> ---------------- ---------------------------
->           %stddev     %change         %stddev
->               \          |                \
->      527.29           -22.6%     407.96        fsmark.files_per_sec
->        1.97 ± 11%      +0.9        2.88 ±  4% 
-> perf-profile.calltrace.cycles-pp.smp_apic_timer_interrupt.apic_timer_interrupt.cpuidle_enter_state.do_idle.cpu_startup_entry 
-> 
->        0.00            +0.9        0.93 ±  4% 
-> perf-profile.calltrace.cycles-pp.tcp_write_xmit.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages 
-> 
->        2.11 ± 10%      +0.9        3.05 ±  4% 
-> perf-profile.calltrace.cycles-pp.apic_timer_interrupt.cpuidle_enter_state.do_idle.cpu_startup_entry.start_secondary 
-> 
->        5.29 ±  2%      +1.2        6.46 ±  7% 
-> perf-profile.calltrace.cycles-pp.svc_recv.nfsd.kthread.ret_from_fork
->        9.61 ±  5%      +3.1       12.70 ±  2% 
-> perf-profile.calltrace.cycles-pp.worker_thread.kthread.ret_from_fork
->        9.27 ±  5%      +3.1       12.40 ±  2% 
-> perf-profile.calltrace.cycles-pp.process_one_work.worker_thread.kthread.ret_from_fork 
-> 
->       34.52 ±  4%      +3.3       37.78 ±  2% 
-> perf-profile.calltrace.cycles-pp.ret_from_fork
->       34.52 ±  4%      +3.3       37.78 ±  2% 
-> perf-profile.calltrace.cycles-pp.kthread.ret_from_fork
->        0.00            +3.4        3.41 ±  4% 
-> perf-profile.calltrace.cycles-pp.memcpy_erms.memcpy_from_page._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg 
-> 
->        0.00            +3.4        3.44 ±  4% 
-> perf-profile.calltrace.cycles-pp.memcpy_from_page._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg 
-> 
->        0.00            +3.5        3.54 ±  4% 
-> perf-profile.calltrace.cycles-pp._copy_from_iter_full.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages 
-> 
->        2.30 ±  5%      +3.7        6.02 ±  3% 
-> perf-profile.calltrace.cycles-pp.__rpc_execute.rpc_async_schedule.process_one_work.worker_thread.kthread 
-> 
->        2.30 ±  5%      +3.7        6.02 ±  3% 
-> perf-profile.calltrace.cycles-pp.rpc_async_schedule.process_one_work.worker_thread.kthread.ret_from_fork 
-> 
->        1.81 ±  4%      +3.8        5.59 ±  4% 
-> perf-profile.calltrace.cycles-pp.call_transmit.__rpc_execute.rpc_async_schedule.process_one_work.worker_thread 
-> 
->        1.80 ±  3%      +3.8        5.59 ±  3% 
-> perf-profile.calltrace.cycles-pp.xprt_transmit.call_transmit.__rpc_execute.rpc_async_schedule.process_one_work 
-> 
->        1.73 ±  4%      +3.8        5.54 ±  4% 
-> perf-profile.calltrace.cycles-pp.xs_tcp_send_request.xprt_transmit.call_transmit.__rpc_execute.rpc_async_schedule 
-> 
->        1.72 ±  4%      +3.8        5.54 ±  4% 
-> perf-profile.calltrace.cycles-pp.xs_sendpages.xs_tcp_send_request.xprt_transmit.call_transmit.__rpc_execute 
-> 
->        0.00            +5.4        5.42 ±  4% 
-> perf-profile.calltrace.cycles-pp.tcp_sendmsg_locked.tcp_sendmsg.sock_sendmsg.xs_sendpages.xs_tcp_send_request 
-> 
->        0.00            +5.5        5.52 ±  4% 
-> perf-profile.calltrace.cycles-pp.tcp_sendmsg.sock_sendmsg.xs_sendpages.xs_tcp_send_request.xprt_transmit 
-> 
->        0.00            +5.5        5.53 ±  4% 
-> perf-profile.calltrace.cycles-pp.sock_sendmsg.xs_sendpages.xs_tcp_send_request.xprt_transmit.call_transmit 
-> 
->        9.61 ±  5%      +3.1       12.70 ±  2% 
-> perf-profile.children.cycles-pp.worker_thread
->        9.27 ±  5%      +3.1       12.40 ±  2% 
-> perf-profile.children.cycles-pp.process_one_work
->        6.19            +3.2        9.40 ±  4% 
-> perf-profile.children.cycles-pp.memcpy_erms
->       34.53 ±  4%      +3.3       37.78 ±  2% 
-> perf-profile.children.cycles-pp.ret_from_fork
->       34.52 ±  4%      +3.3       37.78 ±  2% 
-> perf-profile.children.cycles-pp.kthread
->        0.00            +3.5        3.46 ±  4% 
-> perf-profile.children.cycles-pp.memcpy_from_page
->        0.00            +3.6        3.56 ±  4% 
-> perf-profile.children.cycles-pp._copy_from_iter_full
->        2.47 ±  4%      +3.7        6.18 ±  3% 
-> perf-profile.children.cycles-pp.__rpc_execute
->        2.30 ±  5%      +3.7        6.02 ±  3% 
-> perf-profile.children.cycles-pp.rpc_async_schedule
->        1.90 ±  4%      +3.8        5.67 ±  3% 
-> perf-profile.children.cycles-pp.call_transmit
->        1.89 ±  3%      +3.8        5.66 ±  3% 
-> perf-profile.children.cycles-pp.xprt_transmit
->        1.82 ±  4%      +3.8        5.62 ±  3% 
-> perf-profile.children.cycles-pp.xs_tcp_send_request
->        1.81 ±  4%      +3.8        5.62 ±  3% 
-> perf-profile.children.cycles-pp.xs_sendpages
->        0.21 ± 17%      +5.3        5.48 ±  4% 
-> perf-profile.children.cycles-pp.tcp_sendmsg_locked
->        0.25 ± 18%      +5.3        5.59 ±  3% 
-> perf-profile.children.cycles-pp.tcp_sendmsg
->        0.26 ± 16%      +5.3        5.60 ±  3% 
-> perf-profile.children.cycles-pp.sock_sendmsg
->        1.19 ±  5%      +0.5        1.68 ±  3% 
-> perf-profile.self.cycles-pp.get_page_from_freelist
->        6.10            +3.2        9.27 ±  4% 
-> perf-profile.self.cycles-pp.memcpy_erms
-> 
-> 
-> On 7/9/2019 10:39 AM, Xing Zhengjun wrote:
->> Hi Trond,
+Saeed Mahameed 於 2019/7/24 上午 05:38 寫道:
+> On Mon, 2019-07-22 at 14:22 +0800, Ji-Ze Hong (Peter Hong) wrote:
+>> This patch add support for Fintek PCIE to 2 CAN controller support
 >>
->> On 7/8/2019 7:44 PM, Trond Myklebust wrote:
->>> I've asked several times now about how to interpret your results. As 
->>> far as I can tell from your numbers, the overhead appears to be 
->>> entirely contained in the NUMA section of your results.
->>> IOW: it would appear to be a scheduling overhead due to NUMA. I've 
->>> been asking whether or not that is a correct interpretation of the 
->>> numbers you published.
->> Thanks for your feedback. I used the same hardware and the same test 
->> parameters to test the two commits:
->>     e791f8e938 ("SUNRPC: Convert xs_send_kvec() to use iov_iter_kvec()")
->>     0472e47660 ("SUNRPC: Convert socket page send code to use 
->> iov_iter()")
+>> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com
+>>>
+>> ---
+>> Changelog:
+>> v2:
+>> 	1: Fix comment on the spinlock with write access.
+>> 	2: Use ARRAY_SIZE instead of F81601_PCI_MAX_CHAN.
+>> 	3: Check the strap pin outside the loop.
+>> 	4: Fix the cleanup issue in f81601_pci_add_card().
+>> 	5: Remove unused "channels" in struct f81601_pci_card.
 >>
->> If it is caused by NUMA, why only commit 0472e47660 throughput is 
->> decreased? The filesystem we test is NFS, commit 0472e47660 is related 
->> with the network, could you help to check if have any other clues for 
->> the regression. Thanks.
+>>   drivers/net/can/sja1000/Kconfig  |   8 ++
+>>   drivers/net/can/sja1000/Makefile |   1 +
+>>   drivers/net/can/sja1000/f81601.c | 215
+>> +++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 224 insertions(+)
+>>   create mode 100644 drivers/net/can/sja1000/f81601.c
 >>
+>> diff --git a/drivers/net/can/sja1000/Kconfig
+>> b/drivers/net/can/sja1000/Kconfig
+>> index f6dc89927ece..8588323c5138 100644
+>> --- a/drivers/net/can/sja1000/Kconfig
+>> +++ b/drivers/net/can/sja1000/Kconfig
+>> @@ -101,4 +101,12 @@ config CAN_TSCAN1
+>>   	  IRQ numbers are read from jumpers JP4 and JP5,
+>>   	  SJA1000 IO base addresses are chosen heuristically (first
+>> that works).
+>>   
+>> +config CAN_F81601
+>> +	tristate "Fintek F81601 PCIE to 2 CAN Controller"
+>> +	depends on PCI
+>> +	help
+>> +	  This driver adds support for Fintek F81601 PCIE to 2 CAN
+>> Controller.
+>> +	  It had internal 24MHz clock source, but it can be changed by
+>> +	  manufacturer. We can use modinfo to get usage for parameters.
+>> +	  Visit http://www.fintek.com.tw to get more information.
+>>   endif
+>> diff --git a/drivers/net/can/sja1000/Makefile
+>> b/drivers/net/can/sja1000/Makefile
+>> index 9253aaf9e739..6f6268543bd9 100644
+>> --- a/drivers/net/can/sja1000/Makefile
+>> +++ b/drivers/net/can/sja1000/Makefile
+>> @@ -13,3 +13,4 @@ obj-$(CONFIG_CAN_PEAK_PCMCIA) += peak_pcmcia.o
+>>   obj-$(CONFIG_CAN_PEAK_PCI) += peak_pci.o
+>>   obj-$(CONFIG_CAN_PLX_PCI) += plx_pci.o
+>>   obj-$(CONFIG_CAN_TSCAN1) += tscan1.o
+>> +obj-$(CONFIG_CAN_F81601) += f81601.o
+>> diff --git a/drivers/net/can/sja1000/f81601.c
+>> b/drivers/net/can/sja1000/f81601.c
+>> new file mode 100644
+>> index 000000000000..3c378de8764d
+>> --- /dev/null
+>> +++ b/drivers/net/can/sja1000/f81601.c
+>> @@ -0,0 +1,215 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/* Fintek F81601 PCIE to 2 CAN controller driver
+>> + *
+>> + * Copyright (C) 2019 Peter Hong <peter_hong@fintek.com.tw>
+>> + * Copyright (C) 2019 Linux Foundation
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/netdevice.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/can/dev.h>
+>> +#include <linux/io.h>
+>> +#include <linux/version.h>
+>> +
+>> +#include "sja1000.h"
+>> +
+>> +#define F81601_PCI_MAX_CHAN		2
+>> +
+>> +#define F81601_DECODE_REG		0x209
+>> +#define F81601_IO_MODE			BIT(7)
+>> +#define F81601_MEM_MODE			BIT(6)
+>> +#define F81601_CFG_MODE			BIT(5)
+>> +#define F81601_CAN2_INTERNAL_CLK	BIT(3)
+>> +#define F81601_CAN1_INTERNAL_CLK	BIT(2)
+>> +#define F81601_CAN2_EN			BIT(1)
+>> +#define F81601_CAN1_EN			BIT(0)
+>> +
+>> +#define F81601_TRAP_REG			0x20a
+>> +#define F81601_CAN2_HAS_EN		BIT(4)
+>> +
+>> +struct f81601_pci_card {
+>> +	void __iomem *addr;
+>> +	spinlock_t lock;	/* use this spin lock only for write access
+>> */
+>> +	struct pci_dev *dev;
+>> +	struct net_device *net_dev[F81601_PCI_MAX_CHAN];
+>> +};
+>> +
+>> +static const struct pci_device_id f81601_pci_tbl[] = {
+>> +	{ PCI_DEVICE(0x1c29, 0x1703) },
+>> +	{},
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(pci, f81601_pci_tbl);
+>> +
+>> +static bool internal_clk = 1;
+>> +module_param(internal_clk, bool, 0444);
+>> +MODULE_PARM_DESC(internal_clk, "Use internal clock, default 1
+>> (24MHz)");
+>> +
+>> +static unsigned int external_clk;
+>> +module_param(external_clk, uint, 0444);
+>> +MODULE_PARM_DESC(external_clk, "External Clock, must spec when
+>> internal_clk = 0");
+>> +
+>> +static u8 f81601_pci_read_reg(const struct sja1000_priv *priv, int
+>> port)
+>> +{
+>> +	return readb(priv->reg_base + port);
+>> +}
+>> +
+>> +static void f81601_pci_write_reg(const struct sja1000_priv *priv,
+>> int port,
+>> +				 u8 val)
+>> +{
+>> +	struct f81601_pci_card *card = priv->priv;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&card->lock, flags);
+>> +	writeb(val, priv->reg_base + port);
+>> +	readb(priv->reg_base);
+>> +	spin_unlock_irqrestore(&card->lock, flags);
+>> +}
+>> +
+>> +static void f81601_pci_del_card(struct pci_dev *pdev)
+>> +{
+>> +	struct f81601_pci_card *card = pci_get_drvdata(pdev);
+>> +	struct net_device *dev;
+>> +	int i = 0;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(card->net_dev); i++) {
+>> +		dev = card->net_dev[i];
+>> +		if (!dev)
+>> +			continue;
+>> +
+>> +		dev_info(&pdev->dev, "%s: Removing %s\n", __func__,
+>> dev->name);
+>> +
+>> +		unregister_sja1000dev(dev);
+>> +		free_sja1000dev(dev);
+>> +	}
+>> +
+>> +	pcim_iounmap(pdev, card->addr);
+>> +}
+>> +
+>> +/* Probe F81601 based device for the SJA1000 chips and register each
+>> + * available CAN channel to SJA1000 Socket-CAN subsystem.
+>> + */
+>> +static int f81601_pci_add_card(struct pci_dev *pdev,
+>> +			       const struct pci_device_id *ent)
+>> +{
+>> +	struct sja1000_priv *priv;
+>> +	struct net_device *dev;
+>> +	struct f81601_pci_card *card;
 > 
+> nit, reverse xmas tree.
+> 
+>> +	int err, i, count;
+>> +	u8 tmp;
+>> +
+>> +	if (pcim_enable_device(pdev) < 0) {
+>> +		dev_err(&pdev->dev, "Failed to enable PCI device\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	dev_info(&pdev->dev, "Detected card at slot #%i\n",
+>> +		 PCI_SLOT(pdev->devfn));
+>> +
+>> +	card = devm_kzalloc(&pdev->dev, sizeof(*card), GFP_KERNEL);
+>> +	if (!card)
+>> +		return -ENOMEM;
+>> +
+>> +	card->dev = pdev;
+>> +	spin_lock_init(&card->lock);
+>> +
+>> +	pci_set_drvdata(pdev, card);
+>> +
+>> +	tmp = F81601_IO_MODE | F81601_MEM_MODE | F81601_CFG_MODE |
+>> +		F81601_CAN2_EN | F81601_CAN1_EN;
+>> +
+>> +	if (internal_clk) {
+>> +		tmp |= F81601_CAN2_INTERNAL_CLK |
+>> F81601_CAN1_INTERNAL_CLK;
+>> +
+>> +		dev_info(&pdev->dev,
+>> +			 "F81601 running with internal clock:
+>> 24Mhz\n");
+>> +	} else {
+>> +		dev_info(&pdev->dev,
+>> +			 "F81601 running with external clock: %dMhz\n",
+>> +			 external_clk / 1000000);
+>> +	}
+>> +
+>> +	pci_write_config_byte(pdev, F81601_DECODE_REG, tmp);
+>> +
+>> +	card->addr = pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
+>> +
+>> +	if (!card->addr) {
+>> +		err = -ENOMEM;
+>> +		dev_err(&pdev->dev, "%s: Failed to remap BAR\n",
+>> __func__);
+>> +		goto failure_cleanup;
+>> +	}
+>> +
+>> +	/* read CAN2_HW_EN strap pin to detect how many CANBUS do we
+>> have */
+>> +	count = ARRAY_SIZE(card->net_dev);
+>> +	pci_read_config_byte(pdev, F81601_TRAP_REG, &tmp);
+>> +	if (!(tmp & F81601_CAN2_HAS_EN))
+>> +		count = 1;
+>> +
+>> +	/* Detect available channels */
+>> +	for (i = 0; i < count; i++) {
+>> +		dev = alloc_sja1000dev(0);
+>> +		if (!dev) {
+>> +			err = -ENOMEM;
+>> +			goto failure_cleanup;
+>> +		}
+>> +
+> 
+> don't you need to rollback and cleanup/unregister previously allocated
+> devs ?
+> 
+
+I'll do cleanup when errors jump to failure_cleanup label and do
+f81601_pci_del_card().
+
+>> +		priv = netdev_priv(dev);
+>> +		priv->priv = card;
+>> +		priv->irq_flags = IRQF_SHARED;
+>> +		priv->reg_base = card->addr + 0x80 * i;
+>> +		priv->read_reg = f81601_pci_read_reg;
+>> +		priv->write_reg = f81601_pci_write_reg;
+>> +
+>> +		if (internal_clk)
+>> +			priv->can.clock.freq = 24000000 / 2;
+>> +		else
+>> +			priv->can.clock.freq = external_clk / 2;
+>> +
+>> +		priv->ocr = OCR_TX0_PUSHPULL | OCR_TX1_PUSHPULL;
+>> +		priv->cdr = CDR_CBP;
+>> +
+>> +		SET_NETDEV_DEV(dev, &pdev->dev);
+>> +		dev->dev_id = i;
+>> +		dev->irq = pdev->irq;
+>> +
+>> +		/* Register SJA1000 device */
+>> +		err = register_sja1000dev(dev);
+>> +		if (err) {
+>> +			dev_err(&pdev->dev,
+>> +				"%s: Registering device failed: %x\n",
+>> __func__,
+>> +				err);
+>> +			free_sja1000dev(dev);
+>> +			goto failure_cleanup;
+>> +		}
+>> +
+>> +		card->net_dev[i] = dev;
+>> +		dev_info(&pdev->dev, "Channel #%d, %s at 0x%p, irq
+>> %d\n", i,
+>> +			 dev->name, priv->reg_base, dev->irq);
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +failure_cleanup:
+>> +	dev_err(&pdev->dev, "%s: failed: %d. Cleaning Up.\n", __func__,
+>> err);
+>> +	f81601_pci_del_card(pdev);
 
 -- 
-Zhengjun Xing
+With Best Regards,
+Peter Hong
