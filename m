@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542BDC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFA5C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0BB217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9870622ADF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997148;
-	bh=EL4ToSx/x92AXvru+ow+tDaLdREyosaeYE6Ek7RJQjA=;
+	s=default; t=1563997150;
+	bh=Bn01p6f4dJ+UG76o1+0Rtg6qiDDghmkM6c0UTczyLIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpnBmUPkqV6booEwfKvItCJijIlt0f67jIgHO2ZkqcrkBmUj6dNNZeRA68tiJxc8r
-	 PBlvc7NvuI5IRfqBqy/fiEsc+XO8QNFEtGdTpf6xu7SYv8445qpj+/7X4jyGQj8BdZ
-	 81bZYicaJ1r7S+0fRpm1M3sNe33pLvg7YCvfdTUk=
+	b=iBeSZWXhh/5+Kj7+ecOZqe0e7Js920SUWU6eZpxe0oQVRg3YDhW3abhQDpGfpqFxo
+	 yrmr2xxJb+b4ZD2HLkN0PHzmGIByuXzM6r0TPxE1f5kRaxUJUGFTeuxDUH/g/io0Om
+	 kHqHu3QpvokzqMLqNQh8xMOHgPOVeL86AlJNOpao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389862AbfGXTjH (ORCPT
+        id S2389873AbfGXTjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:39:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40016 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389063AbfGXTjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:39:05 -0400
+        id S2389063AbfGXTjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:39:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4771E20665;
-        Wed, 24 Jul 2019 19:39:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D570E20665;
+        Wed, 24 Jul 2019 19:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997144;
-        bh=EL4ToSx/x92AXvru+ow+tDaLdREyosaeYE6Ek7RJQjA=;
+        s=default; t=1563997147;
+        bh=Bn01p6f4dJ+UG76o1+0Rtg6qiDDghmkM6c0UTczyLIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQD8BinecAcnxXUsJq1tIYmIUg7sfhPize1piG3k1AIU3hRc/MUrZaoTUOAGS3Et+
-         M9BTIxtgMLbajavfih5RRbtJ8LcaJB+qV1/7JlcJ84MYiFfFfpqlscfrbhBbpKcvPv
-         hCdPL8sTl9F0Xeq9BD6GCSCmfRtguM/A2cqoFQxk=
+        b=XDuzIWgPPkNoG61Vg/e5pVzLihpTtJI2kqGNpcRcGoUtFAHCclG908X4UW4mOIvxi
+         qW9/jEqsNY+eej4YE/JN91xqGc93903JaKndef4US2sgNEs3GzBTHuL+op5aI4WGqk
+         gFvjAszAhhINRbca/AKi89ZG9mcASESEs+bH5/4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.2 299/413] iwlwifi: mvm: delay GTK setting in FW in AP mode
-Date:   Wed, 24 Jul 2019 21:19:50 +0200
-Message-Id: <20190724191757.390953151@linuxfoundation.org>
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.2 335/413] KVM: x86/vPMU: refine kvm_pmu err msg when event creation failed
+Date:   Wed, 24 Jul 2019 21:20:26 +0200
+Message-Id: <20190724191759.797865671@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -59,150 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Like Xu <like.xu@linux.intel.com>
 
-commit c56e00a3feaee2b46b7d33875fb7f52efd30241f upstream.
+commit 6fc3977ccc5d3c22e851f2dce2d3ce2a0a843842 upstream.
 
-In AP (and IBSS) mode, we can only set GTKs to firmware after we have
-sent down the multicast station, but this we can only do after we've
-enabled beaconing, etc.
+If a perf_event creation fails due to any reason of the host perf
+subsystem, it has no chance to log the corresponding event for guest
+which may cause abnormal sampling data in guest result. In debug mode,
+this message helps to understand the state of vPMC and we may not
+limit the number of occurrences but not in a spamming style.
 
-However, during rfkill exit, hostapd will configure the keys before
-starting the AP, and cfg80211/mac80211 accept it happily.
-
-On earlier devices, this didn't bother us as GTK TX wasn't really
-handled in firmware, we just put the key material into the TX cmd
-and thus it only mattered when we actually transmitted a frame.
-
-On newer devices, however, the firmware needs to track all of this
-and that doesn't work if we add the key before the (multicast) sta
-it belongs to.
-
-To fix this, keep a list of keys to add during AP enable, and call
-the function there.
-
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c |   53 +++++++++++++++++++++-
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h      |    3 +
- 2 files changed, 54 insertions(+), 2 deletions(-)
+ arch/x86/kvm/pmu.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -207,6 +207,12 @@ static const struct cfg80211_pmsr_capabi
- 	},
- };
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -128,8 +128,8 @@ static void pmc_reprogram_counter(struct
+ 						 intr ? kvm_perf_overflow_intr :
+ 						 kvm_perf_overflow, pmc);
+ 	if (IS_ERR(event)) {
+-		printk_once("kvm_pmu: event creation failed %ld\n",
+-			    PTR_ERR(event));
++		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
++			    PTR_ERR(event), pmc->idx);
+ 		return;
+ 	}
  
-+static int iwl_mvm_mac_set_key(struct ieee80211_hw *hw,
-+			       enum set_key_cmd cmd,
-+			       struct ieee80211_vif *vif,
-+			       struct ieee80211_sta *sta,
-+			       struct ieee80211_key_conf *key);
-+
- void iwl_mvm_ref(struct iwl_mvm *mvm, enum iwl_mvm_ref_type ref_type)
- {
- 	if (!iwl_mvm_is_d0i3_supported(mvm))
-@@ -2636,7 +2642,7 @@ static int iwl_mvm_start_ap_ibss(struct
- {
- 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
- 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
--	int ret;
-+	int ret, i;
- 
- 	/*
- 	 * iwl_mvm_mac_ctxt_add() might read directly from the device
-@@ -2710,6 +2716,20 @@ static int iwl_mvm_start_ap_ibss(struct
- 	/* must be set before quota calculations */
- 	mvmvif->ap_ibss_active = true;
- 
-+	/* send all the early keys to the device now */
-+	for (i = 0; i < ARRAY_SIZE(mvmvif->ap_early_keys); i++) {
-+		struct ieee80211_key_conf *key = mvmvif->ap_early_keys[i];
-+
-+		if (!key)
-+			continue;
-+
-+		mvmvif->ap_early_keys[i] = NULL;
-+
-+		ret = iwl_mvm_mac_set_key(hw, SET_KEY, vif, NULL, key);
-+		if (ret)
-+			goto out_quota_failed;
-+	}
-+
- 	if (vif->type == NL80211_IFTYPE_AP && !vif->p2p) {
- 		iwl_mvm_vif_set_low_latency(mvmvif, true,
- 					    LOW_LATENCY_VIF_TYPE);
-@@ -3479,11 +3499,12 @@ static int iwl_mvm_mac_set_key(struct ie
- 			       struct ieee80211_sta *sta,
- 			       struct ieee80211_key_conf *key)
- {
-+	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
- 	struct iwl_mvm *mvm = IWL_MAC80211_GET_MVM(hw);
- 	struct iwl_mvm_sta *mvmsta;
- 	struct iwl_mvm_key_pn *ptk_pn;
- 	int keyidx = key->keyidx;
--	int ret;
-+	int ret, i;
- 	u8 key_offset;
- 
- 	if (iwlwifi_mod_params.swcrypto) {
-@@ -3556,6 +3577,22 @@ static int iwl_mvm_mac_set_key(struct ie
- 				key->hw_key_idx = STA_KEY_IDX_INVALID;
- 				break;
- 			}
-+
-+			if (!mvmvif->ap_ibss_active) {
-+				for (i = 0;
-+				     i < ARRAY_SIZE(mvmvif->ap_early_keys);
-+				     i++) {
-+					if (!mvmvif->ap_early_keys[i]) {
-+						mvmvif->ap_early_keys[i] = key;
-+						break;
-+					}
-+				}
-+
-+				if (i >= ARRAY_SIZE(mvmvif->ap_early_keys))
-+					ret = -ENOSPC;
-+
-+				break;
-+			}
- 		}
- 
- 		/* During FW restart, in order to restore the state as it was,
-@@ -3624,6 +3661,18 @@ static int iwl_mvm_mac_set_key(struct ie
- 
- 		break;
- 	case DISABLE_KEY:
-+		ret = -ENOENT;
-+		for (i = 0; i < ARRAY_SIZE(mvmvif->ap_early_keys); i++) {
-+			if (mvmvif->ap_early_keys[i] == key) {
-+				mvmvif->ap_early_keys[i] = NULL;
-+				ret = 0;
-+			}
-+		}
-+
-+		/* found in pending list - don't do anything else */
-+		if (ret == 0)
-+			break;
-+
- 		if (key->hw_key_idx == STA_KEY_IDX_INVALID) {
- 			ret = 0;
- 			break;
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -501,6 +501,9 @@ struct iwl_mvm_vif {
- 	netdev_features_t features;
- 
- 	struct iwl_probe_resp_data __rcu *probe_resp_data;
-+
-+	/* we can only have 2 GTK + 2 IGTK active at a time */
-+	struct ieee80211_key_conf *ap_early_keys[4];
- };
- 
- static inline struct iwl_mvm_vif *
 
 
