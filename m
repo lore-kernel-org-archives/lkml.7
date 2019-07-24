@@ -2,113 +2,107 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4819C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E37C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B9E20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ndoC/wHw"
+	by mail.kernel.org (Postfix) with ESMTP id 7A71420693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563999458;
+	bh=zYbnSIlh1CYPwa/rYl08boDxb02DeloIueOXb7BDvdY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VfbAPClHE4VXleid9gUvCm5EB0ht/L0Ydzp0c7DzkLk+HWJRSRt9h5S9mo/D3qGfB
+	 hkY74j5jipwMQQZVYeLYG3+2rAAtg+92OyHe6RZEDw7NsuBuTFDgkvHj8leHVn4Ky9
+	 2O3vFgEgkpVsAdVfqCom7S7tUUFkpXqUWxD0wjso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfGXURa (ORCPT
+        id S2391916AbfGXURh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:17:30 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3155 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729015AbfGXTuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:50:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d38b6730000>; Wed, 24 Jul 2019 12:50:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 24 Jul 2019 12:50:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 24 Jul 2019 12:50:10 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Jul
- 2019 19:50:10 +0000
-Subject: Re: [PATCH 2/2] mm/hmm: make full use of walk_page_range()
-To:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <20190723233016.26403-1-rcampbell@nvidia.com>
- <20190723233016.26403-3-rcampbell@nvidia.com> <20190724065146.GA2061@lst.de>
- <20190724115338.GA30264@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <098df586-0713-1aaa-e546-5dc39ec30341@nvidia.com>
-Date:   Wed, 24 Jul 2019 12:50:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 24 Jul 2019 16:17:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728467AbfGXTuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:50:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C031205C9;
+        Wed, 24 Jul 2019 19:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997803;
+        bh=zYbnSIlh1CYPwa/rYl08boDxb02DeloIueOXb7BDvdY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cK1NseNCFMEZ5k2ono6U74DYzh7BYcZsyvy/7IeupQCn7t0bUvNfawrYXQe8qoOGS
+         3oxAxdfUjFqNZsqRt9mPOYpE4BUMTNbuuKzop46PXgxSYqbU2orqG2izfAiYmljvO1
+         j1e2SDIsorBGrfwi/ZS5O//IpaGHZDnI6AreK6MI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 148/371] ath10k: fix PCIE device wake up failed
+Date:   Wed, 24 Jul 2019 21:18:20 +0200
+Message-Id: <20190724191736.291919930@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190724115338.GA30264@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563997811; bh=o1DvH7PppcliFCYzQ16HV/ZAX4qVLsHxUniBpxQa/jY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ndoC/wHwyfVcpAyH7LNSBQ5MX2jPUvphaKjtuXWIn8VrEDengx2WT/DuMJm+WRXZ3
-         PiR4+0PG/Pz7ee56d8OyGQsZxJrZ5A2V7MZNvqZFis7ml6ohw5wa2st0Jos9Y5kzNg
-         g7l59/dvj6EoVy3z/aqFWJkaHBONxVgSCLNiVzM1kbOQVnxb90IhOdJwRwq7tIF3Nz
-         VTUbGNfNBtyYlE2MTJQqJo5UKSiGbulBDq2IqNDlhVCGvx3Zaw1r9V4fRXoJzXuuX4
-         XQ0Dj9tUsa6iuS/8rbbUIOWUSVWpCP9NT4pEBjYNLvTsPg7WnHGyQ1yAE8U20LnIxq
-         qc3g1j1fB5DSg==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 011d4111c8c602ea829fa4917af1818eb0500a90 ]
 
-On 7/24/19 4:53 AM, Jason Gunthorpe wrote:
-> On Wed, Jul 24, 2019 at 08:51:46AM +0200, Christoph Hellwig wrote:
->> On Tue, Jul 23, 2019 at 04:30:16PM -0700, Ralph Campbell wrote:
->>> hmm_range_snapshot() and hmm_range_fault() both call find_vma() and
->>> walk_page_range() in a loop. This is unnecessary duplication since
->>> walk_page_range() calls find_vma() in a loop already.
->>> Simplify hmm_range_snapshot() and hmm_range_fault() by defining a
->>> walk_test() callback function to filter unhandled vmas.
->>
->> I like the approach a lot!
->>
->> But we really need to sort out the duplication between hmm_range_fault
->> and hmm_range_snapshot first, as they are basically the same code.  I
->> have patches here:
->>
->> http://git.infradead.org/users/hch/misc.git/commitdiff/a34ccd30ee8a8a3111d9e91711c12901ed7dea74
->>
->> http://git.infradead.org/users/hch/misc.git/commitdiff/81f442ebac7170815af7770a1efa9c4ab662137e
-> 
-> Yeah, that is a straightforward improvement, maybe Ralph should grab
-> these two as part of his series?
+Observed PCIE device wake up failed after ~120 iterations of
+soft-reboot test. The error message is
+"ath10k_pci 0000:01:00.0: failed to wake up device : -110"
 
-Sure, no problem.
-I'll add them in v2 when I fix the other issues in the series.
+The call trace as below:
+ath10k_pci_probe -> ath10k_pci_force_wake -> ath10k_pci_wake_wait ->
+ath10k_pci_is_awake
 
->> That being said we don't really have any users for the snapshot mode
->> or non-blocking faults, and I don't see any in the immediate pipeline
->> either.
-> 
-> If this code was production ready I'd use it in ODP right away.
-> 
-> When we first create a ODP MR we'd want to snapshot to pre-load the
-> NIC tables with something other than page fault, but not fault
-> anything.
-> 
-> This would be a big performance improvement for ODP.
-> 
-> Jason
-> 
+Once trigger the device to wake up, we will continuously check the RTC
+state until it returns RTC_STATE_V_ON or timeout.
+
+But for QCA99x0 chips, we use wrong value for RTC_STATE_V_ON.
+Occasionally, we get 0x7 on the fist read, we thought as a failure
+case, but actually is the right value, also verified with the spec.
+So fix the issue by changing RTC_STATE_V_ON from 0x5 to 0x7, passed
+~2000 iterations.
+
+Tested HW: QCA9984
+
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath10k/hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/hw.c b/drivers/net/wireless/ath/ath10k/hw.c
+index ad082b7d7643..b242085c3c16 100644
+--- a/drivers/net/wireless/ath/ath10k/hw.c
++++ b/drivers/net/wireless/ath/ath10k/hw.c
+@@ -158,7 +158,7 @@ const struct ath10k_hw_values qca6174_values = {
+ };
+ 
+ const struct ath10k_hw_values qca99x0_values = {
+-	.rtc_state_val_on		= 5,
++	.rtc_state_val_on		= 7,
+ 	.ce_count			= 12,
+ 	.msi_assign_ce_max		= 12,
+ 	.num_target_ce_config_wlan	= 10,
+-- 
+2.20.1
+
+
+
