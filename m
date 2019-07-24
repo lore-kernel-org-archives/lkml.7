@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D81C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C998BC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03AB22ADA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBD122ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997171;
-	bh=YKkxzls09CDuXMmHP2eIMDD3U5/bCpFVP8bu1M9acg8=;
+	s=default; t=1563997175;
+	bh=qIUI0Na8vCijcEjObETvQCA0O1xN6Q4ok4GitC6WA3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuB6624eeK7dBHs6DkP8zVAPPeDOc8NNkzez9F28kWvXGtnv8r+IuWDdoCXssojd4
-	 BGhLElBn3FywW0JBBuX7S5D458mZIG347k2zwiVF+zMxzrsDRWRj7Yhp/j926egoLR
-	 UbUTS26gea5Sqo2057Z4nB42g0Rhy1mWcd7wdkiQ=
+	b=ZwC6t6wvVoI5cVico6PtFNBe0yeZGk/B9wdDvknoMVNWcuoQEu5wecLFTlI5xI3iq
+	 iD+q0B6cIWzuWPY5ZA0BBBpFmryysKLOXMmYw8LgBhjRzsl3lvzWwyEzyTrhSA2i1L
+	 Zzdw2Bt62rcx76O7cLoNfTST3e5DHchEZkEyVewg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389945AbfGXTjb (ORCPT
+        id S2389958AbfGXTje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:39:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40490 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389290AbfGXTj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:39:28 -0400
+        id S2389939AbfGXTja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:39:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1639422BE9;
-        Wed, 24 Jul 2019 19:39:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8197229F3;
+        Wed, 24 Jul 2019 19:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997167;
-        bh=YKkxzls09CDuXMmHP2eIMDD3U5/bCpFVP8bu1M9acg8=;
+        s=default; t=1563997170;
+        bh=qIUI0Na8vCijcEjObETvQCA0O1xN6Q4ok4GitC6WA3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HkjsQdBcefxVWUSJ6lRazesZSoMvFGbBG6glxuK8QpICVfcMcd/mO6f+Tg6oljyps
-         WxLsBHyDnCSpi5lGoWBWxhs269sMq8Gdhuqt+XJVvMTVCFJsza+LQEMKTLskXQ2vi3
-         nxqlSt9rzQ8c3sbSvBp2/2dSThw8tYg5sbq4OrQA=
+        b=j+1nZAhNUyurQ/0+ih4vN1cpl0KcT7sYzQDksrNjxryJ9V5U1/gLCe3+2c1AEhCU6
+         OkW8A+uyVPnVjhDqeffa/RiT3vDwMkQTgVHwSbXD32ZkG2/9sH2obaDYgNviFHxrxN
+         zyQ4t0ysXEu8KtXhWwHkBvsjPB0Zi5GmDsXcP3T4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.2 302/413] arm64: Fix interrupt tracing in the presence of NMIs
-Date:   Wed, 24 Jul 2019 21:19:53 +0200
-Message-Id: <20190724191757.512009853@linuxfoundation.org>
+        stable@vger.kernel.org, Eiichi Tsukata <devel@etsukata.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.2 303/413] tracing: Fix user stack trace "??" output
+Date:   Wed, 24 Jul 2019 21:19:54 +0200
+Message-Id: <20190724191757.558048310@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -64,210 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry@arm.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-commit 17ce302f3117e9518395847a3120c8a108b587b8 upstream.
+commit 6d54ceb539aacc3df65c89500e8b045924f3ef81 upstream.
 
-In the presence of any form of instrumentation, nmi_enter() should be
-done before calling any traceable code and any instrumentation code.
+Commit c5c27a0a5838 ("x86/stacktrace: Remove the pointless ULONG_MAX
+marker") removes ULONG_MAX marker from user stack trace entries but
+trace_user_stack_print() still uses the marker and it outputs unnecessary
+"??".
 
-Currently, nmi_enter() is done in handle_domain_nmi(), which is much
-too late as instrumentation code might get called before. Move the
-nmi_enter/exit() calls to the arch IRQ vector handler.
+For example:
 
-On arm64, it is not possible to know if the IRQ vector handler was
-called because of an NMI before acknowledging the interrupt. However, It
-is possible to know whether normal interrupts could be taken in the
-interrupted context (i.e. if taking an NMI in that context could
-introduce a potential race condition).
+            less-1911  [001] d..2    34.758944: <user stack trace>
+   =>  <00007f16f2295910>
+   => ??
+   => ??
+   => ??
+   => ??
+   => ??
+   => ??
+   => ??
 
-When interrupting a context with IRQs disabled, call nmi_enter() as soon
-as possible. In contexts with IRQs enabled, defer this to the interrupt
-controller, which is in a better position to know if an interrupt taken
-is an NMI.
+The user stack trace code zeroes the storage before saving the stack, so if
+the trace is shorter than the maximum number of entries it can terminate
+the print loop if a zero entry is detected.
 
-Fixes: bc3c03ccb464 ("arm64: Enable the support of pseudo-NMIs")
-Cc: <stable@vger.kernel.org> # 5.1.x-
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Link: http://lkml.kernel.org/r/20190630085438.25545-1-devel@etsukata.com
+
+Cc: stable@vger.kernel.org
+Fixes: 4285f2fcef80 ("tracing: Remove the ULONG_MAX stack trace hackery")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/entry.S    |   44 ++++++++++++++++++++++++++++++++-----------
- arch/arm64/kernel/irq.c      |   17 ++++++++++++++++
- drivers/irqchip/irq-gic-v3.c |    7 ++++++
- kernel/irq/irqdesc.c         |    8 +++++--
- 4 files changed, 63 insertions(+), 13 deletions(-)
+ kernel/trace/trace_output.c |    9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -424,6 +424,20 @@ tsk	.req	x28		// current thread_info
- 	irq_stack_exit
- 	.endm
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1109,17 +1109,10 @@ static enum print_line_t trace_user_stac
+ 	for (i = 0; i < FTRACE_STACK_ENTRIES; i++) {
+ 		unsigned long ip = field->caller[i];
  
-+#ifdef CONFIG_ARM64_PSEUDO_NMI
-+	/*
-+	 * Set res to 0 if irqs were unmasked in interrupted context.
-+	 * Otherwise set res to non-0 value.
-+	 */
-+	.macro	test_irqs_unmasked res:req, pmr:req
-+alternative_if ARM64_HAS_IRQ_PRIO_MASKING
-+	sub	\res, \pmr, #GIC_PRIO_IRQON
-+alternative_else
-+	mov	\res, xzr
-+alternative_endif
-+	.endm
-+#endif
-+
- 	.text
+-		if (ip == ULONG_MAX || trace_seq_has_overflowed(s))
++		if (!ip || trace_seq_has_overflowed(s))
+ 			break;
  
- /*
-@@ -620,19 +634,19 @@ ENDPROC(el1_sync)
- el1_irq:
- 	kernel_entry 1
- 	enable_da_f
--#ifdef CONFIG_TRACE_IRQFLAGS
-+
- #ifdef CONFIG_ARM64_PSEUDO_NMI
- alternative_if ARM64_HAS_IRQ_PRIO_MASKING
- 	ldr	x20, [sp, #S_PMR_SAVE]
--alternative_else
--	mov	x20, #GIC_PRIO_IRQON
--alternative_endif
--	cmp	x20, #GIC_PRIO_IRQOFF
--	/* Irqs were disabled, don't trace */
--	b.ls	1f
-+alternative_else_nop_endif
-+	test_irqs_unmasked	res=x0, pmr=x20
-+	cbz	x0, 1f
-+	bl	asm_nmi_enter
-+1:
- #endif
-+
-+#ifdef CONFIG_TRACE_IRQFLAGS
- 	bl	trace_hardirqs_off
--1:
- #endif
- 
- 	irq_handler
-@@ -651,14 +665,22 @@ alternative_else_nop_endif
- 	bl	preempt_schedule_irq		// irq en/disable is done inside
- 1:
- #endif
--#ifdef CONFIG_TRACE_IRQFLAGS
-+
- #ifdef CONFIG_ARM64_PSEUDO_NMI
- 	/*
- 	 * if IRQs were disabled when we received the interrupt, we have an NMI
- 	 * and we are not re-enabling interrupt upon eret. Skip tracing.
- 	 */
--	cmp	x20, #GIC_PRIO_IRQOFF
--	b.ls	1f
-+	test_irqs_unmasked	res=x0, pmr=x20
-+	cbz	x0, 1f
-+	bl	asm_nmi_exit
-+1:
-+#endif
-+
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+#ifdef CONFIG_ARM64_PSEUDO_NMI
-+	test_irqs_unmasked	res=x0, pmr=x20
-+	cbnz	x0, 1f
- #endif
- 	bl	trace_hardirqs_on
- 1:
---- a/arch/arm64/kernel/irq.c
-+++ b/arch/arm64/kernel/irq.c
-@@ -16,8 +16,10 @@
- #include <linux/smp.h>
- #include <linux/init.h>
- #include <linux/irqchip.h>
-+#include <linux/kprobes.h>
- #include <linux/seq_file.h>
- #include <linux/vmalloc.h>
-+#include <asm/daifflags.h>
- #include <asm/vmap_stack.h>
- 
- unsigned long irq_err_count;
-@@ -65,3 +67,18 @@ void __init init_IRQ(void)
- 	if (!handle_arch_irq)
- 		panic("No interrupt controller found.");
- }
-+
-+/*
-+ * Stubs to make nmi_enter/exit() code callable from ASM
-+ */
-+asmlinkage void notrace asm_nmi_enter(void)
-+{
-+	nmi_enter();
-+}
-+NOKPROBE_SYMBOL(asm_nmi_enter);
-+
-+asmlinkage void notrace asm_nmi_exit(void)
-+{
-+	nmi_exit();
-+}
-+NOKPROBE_SYMBOL(asm_nmi_exit);
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -461,8 +461,12 @@ static void gic_deactivate_unhandled(u32
- 
- static inline void gic_handle_nmi(u32 irqnr, struct pt_regs *regs)
- {
-+	bool irqs_enabled = interrupts_enabled(regs);
- 	int err;
- 
-+	if (irqs_enabled)
-+		nmi_enter();
-+
- 	if (static_branch_likely(&supports_deactivate_key))
- 		gic_write_eoir(irqnr);
- 	/*
-@@ -474,6 +478,9 @@ static inline void gic_handle_nmi(u32 ir
- 	err = handle_domain_nmi(gic_data.domain, irqnr, regs);
- 	if (err)
- 		gic_deactivate_unhandled(irqnr);
-+
-+	if (irqs_enabled)
-+		nmi_exit();
- }
- 
- static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -680,6 +680,8 @@ int __handle_domain_irq(struct irq_domai
-  * @hwirq:	The HW irq number to convert to a logical one
-  * @regs:	Register file coming from the low-level handling code
-  *
-+ *		This function must be called from an NMI context.
-+ *
-  * Returns:	0 on success, or -EINVAL if conversion has failed
-  */
- int handle_domain_nmi(struct irq_domain *domain, unsigned int hwirq,
-@@ -689,7 +691,10 @@ int handle_domain_nmi(struct irq_domain
- 	unsigned int irq;
- 	int ret = 0;
- 
--	nmi_enter();
-+	/*
-+	 * NMI context needs to be setup earlier in order to deal with tracing.
-+	 */
-+	WARN_ON(!in_nmi());
- 
- 	irq = irq_find_mapping(domain, hwirq);
- 
-@@ -702,7 +707,6 @@ int handle_domain_nmi(struct irq_domain
- 	else
- 		ret = -EINVAL;
- 
--	nmi_exit();
- 	set_irq_regs(old_regs);
- 	return ret;
- }
+ 		trace_seq_puts(s, " => ");
+-
+-		if (!ip) {
+-			trace_seq_puts(s, "??");
+-			trace_seq_putc(s, '\n');
+-			continue;
+-		}
+-
+ 		seq_print_user_ip(s, mm, ip, flags);
+ 		trace_seq_putc(s, '\n');
+ 	}
 
 
