@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A26C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06370C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB8D2238C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0E9322ADC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996852;
-	bh=OeIkqK8Y0XklASlo+vRxyTqQThrrZsRCUX3HADXzfXQ=;
+	s=default; t=1563996855;
+	bh=IUTA5UUdDIRoYxCdz0ZIWTnunQySoXzAkKoA5s8B12s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FnhQNr8phBd9aFqj5GLdxOjIQ7bF3W6IHHrKT8XmNUVbNMM5QvRncWV/2zsqkoFNZ
-	 /Ab/mQdzlCYGtyD6f2kAXpfXocgan0t2bSyIokBbTLgYx3Lz5+gM8UrMxqXDzbEo/e
-	 yG7BJckdG1YJFELa0624cxMoWy5PucrUMPgFSvM4=
+	b=wQVcr2Qbc74UEKnc3a8RtpgPiahqg9l4NGldSKuPhg6IS23Ah2uQ3JbCkD8ysCzhh
+	 YFyCbL7MsPzX5wYDzowQeJaLvZEDsiS7GnIO76/kSq+o5x1xZVxD1jxM9RM0K0YxVz
+	 dguyB3Bb9YcawQ6BXOgvd0IQrleRKMNTWxjPPAkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388628AbfGXTeL (ORCPT
+        id S2388032AbfGXTeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:34:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389054AbfGXTeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:34:08 -0400
+        id S2388580AbfGXTeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:34:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA2A21951;
-        Wed, 24 Jul 2019 19:34:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3437A22BF5;
+        Wed, 24 Jul 2019 19:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996847;
-        bh=OeIkqK8Y0XklASlo+vRxyTqQThrrZsRCUX3HADXzfXQ=;
+        s=default; t=1563996849;
+        bh=IUTA5UUdDIRoYxCdz0ZIWTnunQySoXzAkKoA5s8B12s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HsbHgn8Ny2K4b/ETNJ9NZ5fEkQYZddupRiW/vxgD2zFd1YHLAGGAG6fo5Rv/xQtVp
-         iEIPc7nSH/7NK28dNx1+bEyxDlD+eITXeWiJFYvMMleeaPkOPq2O44V34tp37oIyNa
-         hvzxpxboWtgkwbeQrPP9QGtKPjdEwmyjf7IiXgHY=
+        b=2gRBDFea6CipGlCtiQsTDfJ+LYBjY6jalf+WlnjksEoj/8ii85ywWv0xb4Cfj54Bc
+         TTO8IS2361pI5BPPbEeFpnHC3L+jfBdxod7Q3XfC1+3/E20yl2WKOct/J+btPGdA4W
+         SDcaT/SVUZ8nmICAeTCqgNrLqD2QnMnnFY2INFuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Carey Sonsino <csonsino@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 210/413] perf stat: Make metric event lookup more robust
-Date:   Wed, 24 Jul 2019 21:18:21 +0200
-Message-Id: <20190724191749.531014367@linuxfoundation.org>
+Subject: [PATCH 5.2 237/413] Bluetooth: validate BLE connection interval updates
+Date:   Wed, 24 Jul 2019 21:18:48 +0200
+Message-Id: <20190724191752.266369466@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,49 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 145c407c808352acd625be793396fd4f33c794f8 ]
+[ Upstream commit c49a8682fc5d298d44e8d911f4fa14690ea9485e ]
 
-After setting up metric groups through the event parser, the metricgroup
-code looks them up again in the event list.
+Problem: The Linux Bluetooth stack yields complete control over the BLE
+connection interval to the remote device.
 
-Make sure we only look up events that haven't been used by some other
-metric. The data structures currently cannot handle more than one metric
-per event. This avoids problems with multiple events partially
-overlapping.
+The Linux Bluetooth stack provides access to the BLE connection interval
+min and max values through /sys/kernel/debug/bluetooth/hci0/
+conn_min_interval and /sys/kernel/debug/bluetooth/hci0/conn_max_interval.
+These values are used for initial BLE connections, but the remote device
+has the ability to request a connection parameter update. In the event
+that the remote side requests to change the connection interval, the Linux
+kernel currently only validates that the desired value is within the
+acceptable range in the Bluetooth specification (6 - 3200, corresponding to
+7.5ms - 4000ms). There is currently no validation that the desired value
+requested by the remote device is within the min/max limits specified in
+the conn_min_interval/conn_max_interval configurations. This essentially
+leads to Linux yielding complete control over the connection interval to
+the remote device.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Link: http://lkml.kernel.org/r/20190624193711.35241-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The proposed patch adds a verification step to the connection parameter
+update mechanism, ensuring that the desired value is within the min/max
+bounds of the current connection. If the desired value is outside of the
+current connection min/max values, then the connection parameter update
+request is rejected and the negative response is returned to the remote
+device. Recall that the initial connection is established using the local
+conn_min_interval/conn_max_interval values, so this allows the Linux
+administrator to retain control over the BLE connection interval.
+
+The one downside that I see is that the current default Linux values for
+conn_min_interval and conn_max_interval typically correspond to 30ms and
+50ms respectively. If this change were accepted, then it is feasible that
+some devices would no longer be able to negotiate to their desired
+connection interval values. This might be remedied by setting the default
+Linux conn_min_interval and conn_max_interval values to the widest
+supported range (6 - 3200 / 7.5ms - 4000ms). This could lead to the same
+behavior as the current implementation, where the remote device could
+request to change the connection interval value to any value that is
+permitted by the Bluetooth specification, and Linux would accept the
+desired value.
+
+Signed-off-by: Carey Sonsino <csonsino@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/stat-shadow.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/bluetooth/hci_event.c  | 5 +++++
+ net/bluetooth/l2cap_core.c | 9 ++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 83d8094be4fe..e545e2a8ae71 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -303,7 +303,7 @@ static struct perf_evsel *perf_stat__find_event(struct perf_evlist *evsel_list,
- 	struct perf_evsel *c2;
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 9e4fcf406d9c..17c50a98e7f7 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5588,6 +5588,11 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_UNKNOWN_CONN_ID);
  
- 	evlist__for_each_entry (evsel_list, c2) {
--		if (!strcasecmp(c2->name, name))
-+		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
- 			return c2;
- 	}
- 	return NULL;
-@@ -342,7 +342,8 @@ void perf_stat__collect_metric_expr(struct perf_evlist *evsel_list)
- 			if (leader) {
- 				/* Search in group */
- 				for_each_group_member (oc, leader) {
--					if (!strcasecmp(oc->name, metric_names[i])) {
-+					if (!strcasecmp(oc->name, metric_names[i]) &&
-+						!oc->collect_stat) {
- 						found = true;
- 						break;
- 					}
++	if (min < hcon->le_conn_min_interval ||
++	    max > hcon->le_conn_max_interval)
++		return send_conn_param_neg_reply(hdev, handle,
++						 HCI_ERROR_INVALID_LL_PARAMS);
++
+ 	if (hci_check_conn_params(min, max, latency, timeout))
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_INVALID_LL_PARAMS);
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 771e3e17bb6a..32d2be9d6858 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -5297,7 +5297,14 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
+ 
+ 	memset(&rsp, 0, sizeof(rsp));
+ 
+-	err = hci_check_conn_params(min, max, latency, to_multiplier);
++	if (min < hcon->le_conn_min_interval ||
++	    max > hcon->le_conn_max_interval) {
++		BT_DBG("requested connection interval exceeds current bounds.");
++		err = -EINVAL;
++	} else {
++		err = hci_check_conn_params(min, max, latency, to_multiplier);
++	}
++
+ 	if (err)
+ 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
+ 	else
 -- 
 2.20.1
 
