@@ -2,54 +2,53 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D89C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ACEC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A673229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BB020659
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996580;
-	bh=SD9ufB+RIxFhAlhpqp70Q5NzYQX8k699r4DuitXIrZk=;
+	s=default; t=1563996584;
+	bh=2DEC+ycr/wGnBPp1D0XeMMkcHq/HhgHmZ/lIM1SAbgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwW74QXYydHBQHVEW0VeoQ7YR4eIoYnwTlHXSQc5B4FdA1p/AuI+XLdxM5v1JVaIh
-	 zSj7yoLEqNnIEUmLZ/H+O5AgGI5jYn8H9jayc/UMHbf/iIHMBtoXYA+wofxRjmKHTm
-	 ElNNxIjSwXEn1IEBHH1UTieodM1B3vZ/BvbHIMaI=
+	b=vyNrQYwXHdmqzlb8gWmmyEEtR9pTvUqVslq9ed2TbHetjQJMMlA9SO3APgXVT/rTj
+	 dZkr8o+e0Kh8l+mig+ab+1gj46yGYzdO3c3PJrXaicWwl4VqHFgp6sMOQZLvbPt24X
+	 uc/XU/wCTYNApNuXR2n8rA28V0mMZGuv7A4V86+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfGXT3j (ORCPT
+        id S1729157AbfGXT3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49038 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728534AbfGXT3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:29:37 -0400
+        id S1729350AbfGXT3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:29:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC42B20659;
-        Wed, 24 Jul 2019 19:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FDDA21951;
+        Wed, 24 Jul 2019 19:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996576;
-        bh=SD9ufB+RIxFhAlhpqp70Q5NzYQX8k699r4DuitXIrZk=;
+        s=default; t=1563996578;
+        bh=2DEC+ycr/wGnBPp1D0XeMMkcHq/HhgHmZ/lIM1SAbgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z57iI4tgMXGe5fBcgwYW0k3zF9H1u2iZSvVAgrqn1R13NvhX64wngqfUg1zjWGAkd
-         MYMPQIs/eWcO6LDNVKanifkNUTZTJszEmBzvnvsF7yc4h89SSsBqdDo6OOKsO7S4Ut
-         Jb9W42Yx1vJap07g6odFjCMsEdvIKsajNyqYlGeU=
+        b=dU3Oop7AgJJsQkWPNYTEGOTbBl1xlNtN3HwATFElSU+JUe9TltWUDIOX98tO6TVGl
+         4E6hBAsZaMliYWUt4OAbSjQvwMsO7dr5Cwp3qxu+h6zUA6+ZuL1pFMSoO5suv5Cflf
+         nI3coegF6U4+NNvxyJCAts32jO/N+6ABJGc3IL98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Huckleberry <nhuck@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        john.stultz@linaro.org, sboyd@kernel.org,
-        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 144/413] timer_list: Guard procfs specific code
-Date:   Wed, 24 Jul 2019 21:17:15 +0200
-Message-Id: <20190724191745.258319513@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 145/413] media: mt9m111: fix fw-node refactoring
+Date:   Wed, 24 Jul 2019 21:17:16 +0200
+Message-Id: <20190724191745.325875442@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,87 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9314773a91a1d3b36270085246a6715a326ff00 ]
+[ Upstream commit 8d4e29a51a954b43e06d916772fa4f50b7e5bbd6 ]
 
-With CONFIG_PROC_FS=n the following warning is emitted:
+In the patch refactoring the fw-node, the mt9m111 was broken for all
+platform_data based platforms, which were the first aim of this
+driver. Only the devicetree platform are still functional, probably
+because the testing was done on these.
 
-kernel/time/timer_list.c:361:36: warning: unused variable
-'timer_list_sops' [-Wunused-const-variable]
-   static const struct seq_operations timer_list_sops = {
+The result is that -EINVAL is systematically return for such platforms,
+what this patch fixes.
 
-Add #ifdef guard around procfs specific code.
+[Sakari Ailus: Rework this to resolve a merge conflict and use dev_fwnode]
 
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: john.stultz@linaro.org
-Cc: sboyd@kernel.org
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/534
-Link: https://lkml.kernel.org/r/20190614181604.112297-1-nhuck@google.com
+Fixes: 98480d65c48c ("media: mt9m111: allow to setup pixclk polarity")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/timer_list.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ drivers/media/i2c/mt9m111.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-index 98ba50dcb1b2..acb326f5f50a 100644
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -282,23 +282,6 @@ static inline void timer_list_header(struct seq_file *m, u64 now)
- 	SEQ_printf(m, "\n");
- }
+diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
+index 362c3b93636e..5a642b5ad076 100644
+--- a/drivers/media/i2c/mt9m111.c
++++ b/drivers/media/i2c/mt9m111.c
+@@ -1245,9 +1245,11 @@ static int mt9m111_probe(struct i2c_client *client,
+ 	if (!mt9m111)
+ 		return -ENOMEM;
  
--static int timer_list_show(struct seq_file *m, void *v)
--{
--	struct timer_list_iter *iter = v;
--
--	if (iter->cpu == -1 && !iter->second_pass)
--		timer_list_header(m, iter->now);
--	else if (!iter->second_pass)
--		print_cpu(m, iter->cpu, iter->now);
--#ifdef CONFIG_GENERIC_CLOCKEVENTS
--	else if (iter->cpu == -1 && iter->second_pass)
--		timer_list_show_tickdevices_header(m);
--	else
--		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
--#endif
--	return 0;
--}
--
- void sysrq_timer_list_show(void)
- {
- 	u64 now = ktime_to_ns(ktime_get());
-@@ -317,6 +300,24 @@ void sysrq_timer_list_show(void)
- 	return;
- }
+-	ret = mt9m111_probe_fw(client, mt9m111);
+-	if (ret)
+-		return ret;
++	if (dev_fwnode(&client->dev)) {
++		ret = mt9m111_probe_fw(client, mt9m111);
++		if (ret)
++			return ret;
++	}
  
-+#ifdef CONFIG_PROC_FS
-+static int timer_list_show(struct seq_file *m, void *v)
-+{
-+	struct timer_list_iter *iter = v;
-+
-+	if (iter->cpu == -1 && !iter->second_pass)
-+		timer_list_header(m, iter->now);
-+	else if (!iter->second_pass)
-+		print_cpu(m, iter->cpu, iter->now);
-+#ifdef CONFIG_GENERIC_CLOCKEVENTS
-+	else if (iter->cpu == -1 && iter->second_pass)
-+		timer_list_show_tickdevices_header(m);
-+	else
-+		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
-+#endif
-+	return 0;
-+}
-+
- static void *move_iter(struct timer_list_iter *iter, loff_t offset)
- {
- 	for (; offset; offset--) {
-@@ -376,3 +377,4 @@ static int __init init_timer_list_procfs(void)
- 	return 0;
- }
- __initcall(init_timer_list_procfs);
-+#endif
+ 	mt9m111->clk = v4l2_clk_get(&client->dev, "mclk");
+ 	if (IS_ERR(mt9m111->clk))
 -- 
 2.20.1
 
