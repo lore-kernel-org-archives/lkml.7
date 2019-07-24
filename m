@@ -4,120 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2643C7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC2EC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F3421951
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE97227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 08:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfGXIfx (ORCPT
+        id S1726339AbfGXIhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 04:35:53 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:58575 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfGXIfw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 04:35:52 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 05C1124000C;
-        Wed, 24 Jul 2019 08:35:48 +0000 (UTC)
-Date:   Wed, 24 Jul 2019 10:37:10 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVERS FOR RENESAS" 
-        <linux-renesas-soc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: rcar_lvds: Fix dual link mode operations
-Message-ID: <20190724083710.wnttvauam2zwiii7@uno.localdomain>
-References: <20190723165700.13124-1-jacopo+renesas@jmondi.org>
- <CAMuHMdVKiJp0PsuogMo8FZ6NUxi4j09+A2zDXZr4nrtZY-KHaw@mail.gmail.com>
+        Wed, 24 Jul 2019 04:37:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45558 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726031AbfGXIhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 04:37:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A6585AEBD;
+        Wed, 24 Jul 2019 08:37:51 +0000 (UTC)
+Date:   Wed, 24 Jul 2019 10:37:48 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Andrew Cooks <andrew.cooks@opengear.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andrew Cooks <acooks@rationali.st>,
+        linux-acpi@vger.kernel.org, platypus-sw@opengear.com,
+        "Tobin C . Harding" <me@tobin.cc>, Will Wagner <willw@carallon.com>
+Subject: Re: [RESEND][PATCH v4 1/3] i2c: piix4: Fix port selection for AMD
+ Family 16h Model 30h
+Message-ID: <20190724103748.078eab19@endymion>
+In-Reply-To: <be68c29f603153cf047cd893c6b9d6423073632d.1519601860.git.andrew.cooks@opengear.com>
+References: <cover.1519601860.git.andrew.cooks@opengear.com>
+        <be68c29f603153cf047cd893c6b9d6423073632d.1519601860.git.andrew.cooks@opengear.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tmwn5ydm7h2arvyi"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVKiJp0PsuogMo8FZ6NUxi4j09+A2zDXZr4nrtZY-KHaw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrew,
 
---tmwn5ydm7h2arvyi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Sorry for the delay... What can I say :(
 
-Hi Geert,
+On Mon, 26 Feb 2018 10:28:43 +1000, Andrew Cooks wrote:
+> Family 16h Model 30h SMBus controller needs the same port selection fix
+> as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
+> selection for AMD Family 17h chips")
+> 
+> commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
+> register") also fixed the port selection for Hudson2, but unfortunately
+> this is not the exact same device and the AMD naming and PCI Device IDs
+> aren't particularly helpful here.
+> 
+> The SMBus port selection register is common to the following Families
+> and models, as documented in AMD's publicly available BIOS and Kernel
+> Developer Guides:
+> 
+>  50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+>  55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+>  52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
+> 
+> The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
+> between Bolton FCH and Family 16h Model 30h, but the location of the
+> SmBus0Sel port selection bits are different:
+> 
+>  51192 - Bolton Register Reference Guide
+> 
+> We distinguish between Bolton and Family 16h Model 30h using the PCI
+> Revision ID:
+> 
+>   Bolton is device 0x780b, revision 0x15
+>   Family 16h Model 30h is device 0x780b, revision 0x1F
+>   Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
+> 
+> The following additional public AMD BKDG documents were checked and do
+> not share the same port selection register:
+> 
+>  42301 - Family 15h Model 00h-0Fh doesn't mention any
+>  42300 - Family 15h Model 10h-1Fh doesn't mention any
+>  49125 - Family 15h Model 30h-3Fh doesn't mention any
+> 
+>  48751 - Family 16h Model 00h-0Fh uses the previously supported
+>          index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
+> 
+> Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
+> ---
+>  drivers/i2c/busses/i2c-piix4.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> (...)
 
-On Wed, Jul 24, 2019 at 09:28:58AM +0200, Geert Uytterhoeven wrote:
-> Hi Jacopo,
->
-> On Wed, Jul 24, 2019 at 3:38 AM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > The R-Car LVDS encoder units support dual-link operations by splitting
-> > the pixel output between the primary encoder and the companion one.
-> >
-> > In order for the primary encoder to succesfully control the companion's
-> > operations this should not fail at probe time and register itself its
-> > associated drm bridge so that the primary one can find it.
-> >
-> > Currently the companion encoder fails at probe time, causing the
-> > registration of the primary to fail preventing the whole DU unit to be
-> > registered correctly.
-> >
-> > Fixes: fa440d870358 ("drm: rcar-du: lvds: Add support for dual-link mode")
-> > Reported-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >
-> > ---
-> > The "Fixes" tag refers to a patch currently part of the
-> > renesas-drivers-2019-07-09-v5.2 branch of Geert's renesas-drivers tree.
->
-> The broken commit is also present in v5.3-rc1.
+Looks good to me. Unfortunately the patch no longer applies (my fault
+obviously), it needs to be rebased on top of commit
+24beb83ad289c68bce7c01351cb90465bbb1940a ("i2c-piix4: Add Hygon Dhyana
+SMBus support").
 
-You're right... This is then entitled to be collected for rc2 then.
+I also agree with Tobin's suggestion to remove unneeded parentheses.
 
-Thanks
-   j
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
---tmwn5ydm7h2arvyi
-Content-Type: application/pgp-signature; name="signature.asc"
+This patch should also address Will Wagner's (Cc'd) complaint in another
+thread ("[BUG] i2c_piix4: Hudson2 uses wrong port to access SMBus
+controller").
 
------BEGIN PGP SIGNATURE-----
+I believe this is stable branch material.
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl04GLYACgkQcjQGjxah
-VjyrrxAAl4RQ0Uq+Ix56ugDgecHqIcqzJ0HtIHBz+2Zmj1mD26HJwuPzlgV7Ke3O
-hMjEXdqtcl2F+BamoPn5HLx0X9VU8zYZ7EKwZniiBER438HAqMzky37ujuenZv+u
-YilYEiMslCDqv2JCFlFAgXw41gYWzeWnmPwFbmO2nhMplj5SLU/qSIkTMTGTDDZU
-M0txIFJ08GS6UyIWJcS2TAB1BuPltG4F1G+Ei8GJ2iTnW6BndETHh0SGUaTLAgV4
-TH40JZd8TnND+lvMvxTQrcHwsuw9VxTJxoDc+bH9sVg7TS8VuJuBojlvTnEQtB4I
-PTVNHz51F+vOreEZSyvVAGpIrThxDPNFke/uxTEINvMXJ1XXo6WAgbcs9mznTU02
-gq3SKddfyzlRGPQkwHxmCkY4ifkEwstiQSiTzkiKhEOUILjMf8dOltoyQhfhzN2J
-g1rsKbp/ufezBMBnIytDN5WdyO5C1Wai5jX5vUxOiBHU40zlsTdleCJrsKaqoGrD
-e9VPZmNtTzwvR/j+XcGxRhLT1YQrWt6RAAlqaid2po6aiOUyPs5TZdUBa1FV+hbV
-y7Z+zGk9hS2Z/PR4ngqLCipSlgjDCJXocnnE1lG/AZpekgdtrH996QnT+z8B/a/k
-gIjDe+x6A9wkzwfsQloCcEJwCZeZsz+l2aQcdJrXgEXHeuxs53c=
-=iXnV
------END PGP SIGNATURE-----
-
---tmwn5ydm7h2arvyi--
+-- 
+Jean Delvare
+SUSE L3 Support
