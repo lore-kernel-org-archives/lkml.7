@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49368C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C37C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCDF218EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B07229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996654;
-	bh=UYhVJVotaj7fsqpZY+NOnNwcCkeqGoDS+hWkdm5bLjo=;
+	s=default; t=1563996658;
+	bh=RHgChTb5kJ4u726IVWqaoD99WXZwv8fFPgWtTGxTtps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J/IpVE1ZW+XoK94uxQwDGGC+sDZJ4Kme7LiQJSN+7Qj99hGHVvW4oDWGN3xK54L+v
-	 2OdTs8pec3ZWz+n0rYIuxTlBlTChDdjOFNcvVcSwxSXOHknIrNvD1UK0TgCubuZbJy
-	 fxNUpNOY/ET+MwQWAgvnf6jUTZ8zaenxpkXu2u3Q=
+	b=plWxGav2jK5VR1HB678llrlhMaa7UIacedwJeZweVyZor/tamn1C0EwxloZNVs3iD
+	 4rx5Rr1ep4RYFAd/1ylPt14lSsR18JhhSBIXj/cgOXpaB7Bef/8+oq/sc73jZbpKHn
+	 uT6JUg5SBvGmhZmWtMJlgKKQ5N0U2OhzqLWApgmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388428AbfGXTax (ORCPT
+        id S2388432AbfGXTa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:30:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51152 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:30:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388007AbfGXTas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:30:48 -0400
+        id S2388426AbfGXTax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:30:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7844E229F3;
-        Wed, 24 Jul 2019 19:30:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341CB20659;
+        Wed, 24 Jul 2019 19:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996648;
-        bh=UYhVJVotaj7fsqpZY+NOnNwcCkeqGoDS+hWkdm5bLjo=;
+        s=default; t=1563996652;
+        bh=RHgChTb5kJ4u726IVWqaoD99WXZwv8fFPgWtTGxTtps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oDxROgpGrxEAzJcL2CgHkghbcuHeuuPqk2ddq9ElA8PYjCH/45q6k9grg3AlqpcVJ
-         pmZHouCqjHYMGqHUDKegtwyrQxKQnz10WhCt/KuNWlXxcSiKxLuQ8T3iOQK6pQQM4z
-         5o9JRflDxbnmLiSWJQJ+P9uBuYnCWVKtc8mzCagk=
+        b=zzHfEzu6Au+vD9/fuusPV7kNzMtptI80KSdJJWaCOHZGTwtAE1aY/JnnC7GPzruDg
+         M3GzYDNuHdWS5mqBHlJ/Gu71+rjxiDO3e5faH8yWJN5VJvW5LlxPQxSfc8Kl2sUU0W
+         3BQdzJfYN6488jhaDnixkxT4xi0zduw6aFDD9kME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 128/413] spi: fix ctrl->num_chipselect constraint
-Date:   Wed, 24 Jul 2019 21:16:59 +0200
-Message-Id: <20190724191744.262506567@linuxfoundation.org>
+Subject: [PATCH 5.2 119/413] ASoC: rsnd: fixup mod ID calculation in rsnd_ctu_probe_
+Date:   Wed, 24 Jul 2019 21:16:50 +0200
+Message-Id: <20190724191743.774552265@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,63 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f9481b08220d7dc1ff21e296a330ee8b721b44e4 ]
+[ Upstream commit ac28ec07ae1c5c1e18ed6855eb105a328418da88 ]
 
-at91sam9g25ek showed the following error at probe:
-atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx)
-for DMA transfers
-atmel_spi: probe of f0000000.spi failed with error -22
+commit c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
+introduces rsnd_ctu_id which calcualates and gives
+the main Device id of the CTU by dividing the id by 4.
+rsnd_mod_id uses this interface to get the CTU main
+Device id. But this commit forgets to revert the main
+Device id calcution previously done in rsnd_ctu_probe_
+which also divides the id by 4. This path corrects the
+same to get the correct main Device id.
 
-Commit 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-moved the calling of spi_get_gpio_descs() after ctrl->dev is set,
-but didn't move the !ctrl->num_chipselect check. When there are
-chip selects in the device tree, the spi-atmel driver lets the
-SPI core discover them when registering the SPI master.
-The ctrl->num_chipselect is thus expected to be set by
-spi_get_gpio_descs().
+The issue is observered when rsnd_ctu_probe_ is done for CTU1
 
-Move the !ctlr->num_chipselect after spi_get_gpio_descs() as it was
-before the aforementioned commit. While touching this block, get rid
-of the explicit comparison with 0 and update the commenting style.
+Fixes: c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
 
-Fixes: 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ sound/soc/sh/rcar/ctu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 5e4654032bfa..29916e446143 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2286,11 +2286,6 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	if (status)
- 		return status;
+diff --git a/sound/soc/sh/rcar/ctu.c b/sound/soc/sh/rcar/ctu.c
+index 8cb06dab234e..7647b3d4c0ba 100644
+--- a/sound/soc/sh/rcar/ctu.c
++++ b/sound/soc/sh/rcar/ctu.c
+@@ -108,7 +108,7 @@ static int rsnd_ctu_probe_(struct rsnd_mod *mod,
+ 			   struct rsnd_dai_stream *io,
+ 			   struct rsnd_priv *priv)
+ {
+-	return rsnd_cmd_attach(io, rsnd_mod_id(mod) / 4);
++	return rsnd_cmd_attach(io, rsnd_mod_id(mod));
+ }
  
--	/* even if it's just one always-selected device, there must
--	 * be at least one chipselect
--	 */
--	if (ctlr->num_chipselect == 0)
--		return -EINVAL;
- 	if (ctlr->bus_num >= 0) {
- 		/* devices with a fixed bus num must check-in with the num */
- 		mutex_lock(&board_lock);
-@@ -2361,6 +2356,13 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		}
- 	}
- 
-+	/*
-+	 * Even if it's just one always-selected device, there must
-+	 * be at least one chipselect.
-+	 */
-+	if (!ctlr->num_chipselect)
-+		return -EINVAL;
-+
- 	status = device_add(&ctlr->dev);
- 	if (status < 0) {
- 		/* free bus id */
+ static void rsnd_ctu_value_init(struct rsnd_dai_stream *io,
 -- 
 2.20.1
 
