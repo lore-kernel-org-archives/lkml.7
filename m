@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D142C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92046C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECE7214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC7B217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998115;
-	bh=+Ga5K/f+pRdkb2gp/U/LGh9PolMPyPkzOhCb/+ZfqSA=;
+	s=default; t=1563998119;
+	bh=GWlPhUNbVExvvTQJxLHAIfvmtR2eDbAuMFv4BJ3d6Xo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U26bAHReCqRa32YKWd7rWDxcoBVf+wjvwXwZfWp7a3303G3C9HGulYcqaKLQdTC6K
-	 k/JwpRdGsjZ9+8rcxPaCW813Bz5vcJJb4Ywhau0cvVcVTVVwiyww/q49WHFYmLceWB
-	 Om1yKNGajueV8R0oM3PIWJHp9zDzwSXpJlBvqekU=
+	b=WnmJCuOMqG5MYYeAf21hH20ePTO7/Uml0WF/qvMdyTww2GWFDgpGjfv8E0eN9ba7a
+	 QM2yHzjyDX7qo+ON8AYrsfboXuM0unz2gM2c2p/qE3PRsylvq7zb3Yx/To/SQMJKKA
+	 w8L+q2UVAUtICwMHC7fhKCd0ckWC4oDhqIs7FxQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391698AbfGXTzN (ORCPT
+        id S2391851AbfGXTzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38588 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391367AbfGXTzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:55:10 -0400
+        id S2391745AbfGXTzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:55:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E53F5214AF;
-        Wed, 24 Jul 2019 19:55:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A9D220665;
+        Wed, 24 Jul 2019 19:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998109;
-        bh=+Ga5K/f+pRdkb2gp/U/LGh9PolMPyPkzOhCb/+ZfqSA=;
+        s=default; t=1563998114;
+        bh=GWlPhUNbVExvvTQJxLHAIfvmtR2eDbAuMFv4BJ3d6Xo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/XjIuazF3gQ7jAd5sDf+oGANWvbugVl3vs1uDxpBPfUfWXYSygWErMbbk4zydOSf
-         0Crkh7jkzN/OIKgCkh22y3Jr+5vnvEkvv0yot/XK1chhsM2p+Qa3diT+4SUmHAQF21
-         jZcc3qcotnSaOHTDX5ORThgP9TiSVuQm6az5zaRc=
+        b=QuKDD/H7Gq1FXzNWVFS2x/Pr4DLyLjBSqtGFHIOm9VWd9GsM/z9ICZeHZiGslBSKi
+         c2Pfa/hs9IqVxKUpwBduHp8+LFI7+2u9o6OswOCKDox5SkCsgC81Tsjp6NB9jR2wxo
+         8hfqeiAW4Lb+f+OzxA5XAZe6r96U8/+RTEX7G7QM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Christian Lamparter <chunkeey@gmail.com>,
+        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
+        Gary R Hook <ghook@amd.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.1 247/371] crypto: crypto4xx - block ciphers should only accept complete blocks
-Date:   Wed, 24 Jul 2019 21:19:59 +0200
-Message-Id: <20190724191743.301193295@linuxfoundation.org>
+Subject: [PATCH 5.1 249/371] crypto: ccp/gcm - use const time tag comparison.
+Date:   Wed, 24 Jul 2019 21:20:01 +0200
+Message-Id: <20190724191743.436078558@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,177 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Cfir Cohen <cfir@google.com>
 
-commit 0f7a81374060828280fcfdfbaa162cb559017f9f upstream.
+commit 538a5a072e6ef04377b180ee9b3ce5bae0a85da4 upstream.
 
-The hardware automatically zero pads incomplete block ciphers
-blocks without raising any errors. This is a screw-up. This
-was noticed by CONFIG_CRYPTO_MANAGER_EXTRA_TESTS tests that
-sent a incomplete blocks and expect them to fail.
+Avoid leaking GCM tag through timing side channel.
 
-This fixes:
-cbc-aes-ppc4xx encryption unexpectedly succeeded on test vector
-"random: len=2409 klen=32"; expected_error=-22, cfg="random:
-may_sleep use_digest src_divs=[96.90%@+2295, 2.34%@+4066,
-0.32%@alignmask+12, 0.34%@+4087, 0.9%@alignmask+1787, 0.1%@+3767]
-iv_offset=6"
-
-ecb-aes-ppc4xx encryption unexpectedly succeeded on test vector
-"random: len=1011 klen=32"; expected_error=-22, cfg="random:
-may_sleep use_digest src_divs=[100.0%@alignmask+20]
-dst_divs=[3.12%@+3001, 96.88%@+4070]"
-
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: stable@vger.kernel.org [4.19, 5.0 and 5.1]
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Fixes: 36cf515b9bbe ("crypto: ccp - Enable support for AES GCM on v5 CCPs")
+Cc: <stable@vger.kernel.org> # v4.12+
+Signed-off-by: Cfir Cohen <cfir@google.com>
+Acked-by: Gary R Hook <ghook@amd.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/amcc/crypto4xx_alg.c  |   36 ++++++++++++++++++++++++-----------
- drivers/crypto/amcc/crypto4xx_core.c |   16 +++++++--------
- drivers/crypto/amcc/crypto4xx_core.h |   10 +++++----
- 3 files changed, 39 insertions(+), 23 deletions(-)
+ drivers/crypto/ccp/ccp-ops.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/amcc/crypto4xx_alg.c
-+++ b/drivers/crypto/amcc/crypto4xx_alg.c
-@@ -76,12 +76,16 @@ static void set_dynamic_sa_command_1(str
- }
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -853,7 +853,8 @@ static int ccp_run_aes_gcm_cmd(struct cc
+ 		if (ret)
+ 			goto e_tag;
  
- static inline int crypto4xx_crypt(struct skcipher_request *req,
--				  const unsigned int ivlen, bool decrypt)
-+				  const unsigned int ivlen, bool decrypt,
-+				  bool check_blocksize)
- {
- 	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(req);
- 	struct crypto4xx_ctx *ctx = crypto_skcipher_ctx(cipher);
- 	__le32 iv[AES_IV_SIZE];
- 
-+	if (check_blocksize && !IS_ALIGNED(req->cryptlen, AES_BLOCK_SIZE))
-+		return -EINVAL;
-+
- 	if (ivlen)
- 		crypto4xx_memcpy_to_le32(iv, req->iv, ivlen);
- 
-@@ -90,24 +94,34 @@ static inline int crypto4xx_crypt(struct
- 		ctx->sa_len, 0, NULL);
- }
- 
--int crypto4xx_encrypt_noiv(struct skcipher_request *req)
-+int crypto4xx_encrypt_noiv_block(struct skcipher_request *req)
-+{
-+	return crypto4xx_crypt(req, 0, false, true);
-+}
-+
-+int crypto4xx_encrypt_iv_stream(struct skcipher_request *req)
-+{
-+	return crypto4xx_crypt(req, AES_IV_SIZE, false, false);
-+}
-+
-+int crypto4xx_decrypt_noiv_block(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, 0, false);
-+	return crypto4xx_crypt(req, 0, true, true);
- }
- 
--int crypto4xx_encrypt_iv(struct skcipher_request *req)
-+int crypto4xx_decrypt_iv_stream(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, AES_IV_SIZE, false);
-+	return crypto4xx_crypt(req, AES_IV_SIZE, true, false);
- }
- 
--int crypto4xx_decrypt_noiv(struct skcipher_request *req)
-+int crypto4xx_encrypt_iv_block(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, 0, true);
-+	return crypto4xx_crypt(req, AES_IV_SIZE, false, true);
- }
- 
--int crypto4xx_decrypt_iv(struct skcipher_request *req)
-+int crypto4xx_decrypt_iv_block(struct skcipher_request *req)
- {
--	return crypto4xx_crypt(req, AES_IV_SIZE, true);
-+	return crypto4xx_crypt(req, AES_IV_SIZE, true, true);
- }
- 
- /**
-@@ -278,8 +292,8 @@ crypto4xx_ctr_crypt(struct skcipher_requ
- 		return ret;
+-		ret = memcmp(tag.address, final_wa.address, AES_BLOCK_SIZE);
++		ret = crypto_memneq(tag.address, final_wa.address,
++				    AES_BLOCK_SIZE) ? -EBADMSG : 0;
+ 		ccp_dm_free(&tag);
  	}
  
--	return encrypt ? crypto4xx_encrypt_iv(req)
--		       : crypto4xx_decrypt_iv(req);
-+	return encrypt ? crypto4xx_encrypt_iv_stream(req)
-+		       : crypto4xx_decrypt_iv_stream(req);
- }
- 
- static int crypto4xx_sk_setup_fallback(struct crypto4xx_ctx *ctx,
---- a/drivers/crypto/amcc/crypto4xx_core.c
-+++ b/drivers/crypto/amcc/crypto4xx_core.c
-@@ -1226,8 +1226,8 @@ static struct crypto4xx_alg_common crypt
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.ivsize	= AES_IV_SIZE,
- 		.setkey = crypto4xx_setkey_aes_cbc,
--		.encrypt = crypto4xx_encrypt_iv,
--		.decrypt = crypto4xx_decrypt_iv,
-+		.encrypt = crypto4xx_encrypt_iv_block,
-+		.decrypt = crypto4xx_decrypt_iv_block,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
-@@ -1246,8 +1246,8 @@ static struct crypto4xx_alg_common crypt
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.ivsize	= AES_IV_SIZE,
- 		.setkey	= crypto4xx_setkey_aes_cfb,
--		.encrypt = crypto4xx_encrypt_iv,
--		.decrypt = crypto4xx_decrypt_iv,
-+		.encrypt = crypto4xx_encrypt_iv_stream,
-+		.decrypt = crypto4xx_decrypt_iv_stream,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
-@@ -1306,8 +1306,8 @@ static struct crypto4xx_alg_common crypt
- 		.min_keysize = AES_MIN_KEY_SIZE,
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.setkey	= crypto4xx_setkey_aes_ecb,
--		.encrypt = crypto4xx_encrypt_noiv,
--		.decrypt = crypto4xx_decrypt_noiv,
-+		.encrypt = crypto4xx_encrypt_noiv_block,
-+		.decrypt = crypto4xx_decrypt_noiv_block,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
-@@ -1326,8 +1326,8 @@ static struct crypto4xx_alg_common crypt
- 		.max_keysize = AES_MAX_KEY_SIZE,
- 		.ivsize	= AES_IV_SIZE,
- 		.setkey	= crypto4xx_setkey_aes_ofb,
--		.encrypt = crypto4xx_encrypt_iv,
--		.decrypt = crypto4xx_decrypt_iv,
-+		.encrypt = crypto4xx_encrypt_iv_stream,
-+		.decrypt = crypto4xx_decrypt_iv_stream,
- 		.init = crypto4xx_sk_init,
- 		.exit = crypto4xx_sk_exit,
- 	} },
---- a/drivers/crypto/amcc/crypto4xx_core.h
-+++ b/drivers/crypto/amcc/crypto4xx_core.h
-@@ -183,10 +183,12 @@ int crypto4xx_setkey_rfc3686(struct cryp
- 			     const u8 *key, unsigned int keylen);
- int crypto4xx_encrypt_ctr(struct skcipher_request *req);
- int crypto4xx_decrypt_ctr(struct skcipher_request *req);
--int crypto4xx_encrypt_iv(struct skcipher_request *req);
--int crypto4xx_decrypt_iv(struct skcipher_request *req);
--int crypto4xx_encrypt_noiv(struct skcipher_request *req);
--int crypto4xx_decrypt_noiv(struct skcipher_request *req);
-+int crypto4xx_encrypt_iv_stream(struct skcipher_request *req);
-+int crypto4xx_decrypt_iv_stream(struct skcipher_request *req);
-+int crypto4xx_encrypt_iv_block(struct skcipher_request *req);
-+int crypto4xx_decrypt_iv_block(struct skcipher_request *req);
-+int crypto4xx_encrypt_noiv_block(struct skcipher_request *req);
-+int crypto4xx_decrypt_noiv_block(struct skcipher_request *req);
- int crypto4xx_rfc3686_encrypt(struct skcipher_request *req);
- int crypto4xx_rfc3686_decrypt(struct skcipher_request *req);
- int crypto4xx_sha1_alg_init(struct crypto_tfm *tfm);
 
 
