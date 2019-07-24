@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E24C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF7DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD3B214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E885217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997662;
-	bh=AzA4WdxMpZtkrqqrdXJ2IkqzdDsBXqt6CBaqLJbCs7s=;
+	s=default; t=1563997668;
+	bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MN+zSoihTwWtZGh482Pbz4lhm7pbsSumS/+FfKVCcyeTYW56UWmd7dL7Uz5mrXgux
-	 g4cmGcVSaeQ/r727slhdXqqZdi54IwpBdseIUhHeTkqsC9QTYEF15o2kGB7l6HBqfl
-	 XLvIF7A5lIV9vAoMEn7IZrYuRv/F2r3hu/ScwJ+I=
+	b=hfS/gPYj2x5V+NcSQGDgtwknapy6olE0o9wBCnrZFXGUkest/7biJH3B1od699rJl
+	 pa70AlgduRPNh4Q626KwukW6hZaRDf+iqkqJuHdnSVCyoVenKAv3x6a7No6UNbdqS3
+	 A5VwgpQOyIIzgPXZTgKwi5Moaf7A5V1QtIxmfRnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391287AbfGXTrl (ORCPT
+        id S2391305AbfGXTrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391270AbfGXTri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:47:38 -0400
+        id S2391270AbfGXTrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:47:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B228214AF;
-        Wed, 24 Jul 2019 19:47:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC3D214AF;
+        Wed, 24 Jul 2019 19:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997657;
-        bh=AzA4WdxMpZtkrqqrdXJ2IkqzdDsBXqt6CBaqLJbCs7s=;
+        s=default; t=1563997663;
+        bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dIdn8Q9KFCJB0fDlo27TBfKuryjW9C8yhwFTWjgS+S55FHv5RuCaoh0M/DnAdsGQP
-         EK1PNMKMvGDPT0bz88d1UA7FZhR/pyggaEbk6kfK/GEj0b1Dk0QGezArjs2rG3cPVt
-         FFPUvY+x9XfVS096AONesUUinPdEv3v+BpfqfycI=
+        b=n80VfVE88SpTq7seWQUn+bP1SpFGiydL6ADBYN3cuVPQqWM3Q7GEV/+u1wywodfx2
+         p3VCJxUv+/AT0Hx3TrD86r2vS1MlUF1TleKqof8ObWot5qQcoFs9CLSoNpCbfb3D1s
+         rPGXXb5lAu9Ue16r+MQoLDuPFLY8OS/HAgKX5viY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 099/371] xfrm: fix sa selector validation
-Date:   Wed, 24 Jul 2019 21:17:31 +0200
-Message-Id: <20190724191732.286751896@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 101/371] sched/fair: Fix "runnable_avg_yN_inv" not used warnings
+Date:   Wed, 24 Jul 2019 21:17:33 +0200
+Message-Id: <20190724191732.435986949@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -62,40 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b8d6d0079757cbd1b69724cfd1c08e2171c68cee ]
+[ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
 
-After commit b38ff4075a80, the following command does not work anymore:
-$ ip xfrm state add src 10.125.0.2 dst 10.125.0.1 proto esp spi 34 reqid 1 \
-  mode tunnel enc 'cbc(aes)' 0xb0abdba8b782ad9d364ec81e3a7d82a1 auth-trunc \
-  'hmac(sha1)' 0xe26609ebd00acb6a4d51fca13e49ea78a72c73e6 96 flag align4
+runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+included in several other places because they need other macros all
+came from kernel/sched/sched-pelt.h which was generated by
+Documentation/scheduler/sched-pelt. As the result, it causes compilation
+a lot of warnings,
 
-In fact, the selector is not mandatory, allow the user to provide an empty
-selector.
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  ...
 
-Fixes: b38ff4075a80 ("xfrm: Fix xfrm sel prefix length validation")
-CC: Anirudh Gupta <anirudh.gupta@sophos.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Silence it by appending the __maybe_unused attribute for it, so all
+generated variables and macros can still be kept in the same file.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/scheduler/sched-pelt.c | 3 ++-
+ kernel/sched/sched-pelt.h            | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index ee91f939903e..6abf9625a401 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -166,6 +166,9 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
- 	}
+diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+index e4219139386a..7238b355919c 100644
+--- a/Documentation/scheduler/sched-pelt.c
++++ b/Documentation/scheduler/sched-pelt.c
+@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+ 	int i;
+ 	unsigned int x;
  
- 	switch (p->sel.family) {
-+	case AF_UNSPEC:
-+		break;
-+
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+-	printf("static const u32 runnable_avg_yN_inv[] = {");
++	/* To silence -Wunused-but-set-variable warnings. */
++	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+ 	for (i = 0; i < HALFLIFE; i++) {
+ 		x = ((1UL<<32)-1)*pow(y, i);
+ 
+diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+index a26473674fb7..c529706bed11 100644
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+ 
+-static const u32 runnable_avg_yN_inv[] = {
++static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+ 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+ 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
 -- 
 2.20.1
 
