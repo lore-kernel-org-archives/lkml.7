@@ -2,60 +2,61 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656A8C76194
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BC3C761A8
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 322872190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2A92080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drt6EjFd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KG/F7Sd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfGXEZX (ORCPT
+        id S1726252AbfGXEZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:25:23 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39785 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfGXEZW (ORCPT
+        Wed, 24 Jul 2019 00:25:27 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46538 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbfGXEZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:25:22 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so16235614pfn.6;
-        Tue, 23 Jul 2019 21:25:21 -0700 (PDT)
+        Wed, 24 Jul 2019 00:25:25 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k189so1468509pgk.13;
+        Tue, 23 Jul 2019 21:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=czbKIXOb/Go0XhMRs2MEN6VnTG6u3MuZundQHh6fuSE=;
-        b=drt6EjFdosCAcMEHtdm6+Wwi0M6mSxOzFkxqawZr6IPXLSVzqb/W29XJdPWwpIC0hK
-         6O36OujVLFyXEay6jApmdcKGKaFf8ZHrynwkSnL37TGZQHVi5dSIejM/BVPUxQ7VV65S
-         fWBfNJcl5fT06CyStqADu0QhfKQgev+DV1jB/43XtDAQrRVBT4D8hAHyS32+/jE194Ee
-         9IJK8BdynnPV24hoHobSOouQX3yA4+C8Ogba9Jjmu1EUBDg3exofJAkPMZ4BVkwyR1FN
-         DpKTuGd8V6acalOBWqjEaikoQcAKX4Ix3w6DkaRL7W59P9w2XZ6f+kz4iv47D5f4dYHi
-         ARbw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qETbyvDGXmWMmkqN4sOdgKXeFkWOntX3r/NRFgCZoWE=;
+        b=KG/F7Sd5J79dEipElYhdvyhMIk0TxQlRtZu9bi85rUwY/TE5KUGgUZYMnF+3jcDsXr
+         jk+YAZfWVg6gnp2IiqLCse5lUUZrgh27wRKMfQRWXUdRnaO5ZlXDztHkfwCA1gRbK+Qa
+         Vdl/mcDwYDvc/aIthkQn3dHIfadxoz9OGVoTMkITstrb8gRinr4GRivAlsVYAzJkRXx3
+         qijzZ8AyOYgc5Vk4JND+9sG/qLIVyx5s39WeHO+RM9Ey6ODD5O8kuqfL85vwwK9Febym
+         eFolpJZ4Wkv3lsIz5mVKSWu4wewrN05ykT4POz6d2Mi/mkYtEQg5LGvW/0qsyHcM4WB5
+         F1og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=czbKIXOb/Go0XhMRs2MEN6VnTG6u3MuZundQHh6fuSE=;
-        b=Rw/FoVxyf7G530+xTrSsfsezIOn56PVIzMdw5uSPJCWXG7DRQtalifYk5M5c9+EhLv
-         O52MtOven3BP6beICwYTanQ0SvpycyZFDGwo9811B3Y1AGpN76gSsI9DOmv379PCYhu4
-         7vgpaOHAMwvR7+caYQplJ/QN4562GuqHgXHmGmeOD1mr7GEUx2UPNPHuvM+vKj1ZOltD
-         5lIi3g5wdyyg5VXhNRFKtXwPdCJCtcI5DZPXB9bHENHHqOTH7oiODHFRqVpNky+ZabI/
-         swUXb9D6Rr4k1/OPeyJngqfX64qAOVmdwUP/Vj9E1oFRW4BAndYbEcAhIS+jNSAT/WaS
-         I9ww==
-X-Gm-Message-State: APjAAAVN1VhOyoqLz9R6b2/m+bXT5auNuPEOYanYrK8iQ4AVv+nB3sZ2
-        iWqUG7k5/DG8qXrtoPw3DpQ=
-X-Google-Smtp-Source: APXvYqwbbPiJvrG7YMdt1a1WYUqGY2Z5kAsIWFPe6nz2zmmLERZ6mi3tyMsrNzYm3HTPDg7yUokVfw==
-X-Received: by 2002:a65:6288:: with SMTP id f8mr74189986pgv.292.1563942321242;
-        Tue, 23 Jul 2019 21:25:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qETbyvDGXmWMmkqN4sOdgKXeFkWOntX3r/NRFgCZoWE=;
+        b=mDTylZHWeSo6qrwvCcaaiEvWc5nYOZAPJIEhmSGBd2+3uYQ9fqvcSgOQXKMtWaLtZZ
+         uG+ul3tT5lrgX6P7vY2Oj5dRKQRb3w2JYwJj7edw/TgGdQDx5U+7EXgDS15AuTiRdWTk
+         WlUrHvz5teCYDMTj4yHLxtB3VIfvVkPUOgMcEpm0o/AXgp4Nf9AtwdY11wRmIgIQ4eTs
+         u4m4XHCx3bi1XbDX9QO0tvJNqyMJZBTuRtAIiP1aVOTqpWoZ61IcDRoQzI90qi9Y7dg4
+         D3V+frb/PFrG88bAUa5OArCSScHGnjLLGcIzGtOlUmZCf97hSubyGDV2+DMprowr8dM0
+         1z7g==
+X-Gm-Message-State: APjAAAU4HJTAQZiWrf0O120A4wP01gpn3YeIAagFeudhIO2z3ZfjKqPO
+        WD4CpY+PZSWNwxE4vQ/6mEo=
+X-Google-Smtp-Source: APXvYqxkwpMUKWSZK/4NQcFDw+bDP7yRS/NluRzHQboqTdh3aehK42NKuj/IACv1wat7jP2wWUy+ng==
+X-Received: by 2002:a65:4489:: with SMTP id l9mr81979980pgq.207.1563942324157;
+        Tue, 23 Jul 2019 21:25:24 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id a15sm34153364pgw.3.2019.07.23.21.25.19
+        by smtp.gmail.com with ESMTPSA id a15sm34153364pgw.3.2019.07.23.21.25.22
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Jul 2019 21:25:20 -0700 (PDT)
+        Tue, 23 Jul 2019 21:25:23 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -79,11 +80,18 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         netdev@vger.kernel.org, samba-technical@lists.samba.org,
         v9fs-developer@lists.sourceforge.net,
         virtualization@lists.linux-foundation.org,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 00/12] block/bio, fs: convert put_page() to put_user_page*()
-Date:   Tue, 23 Jul 2019 21:25:06 -0700
-Message-Id: <20190724042518.14363-1-jhubbard@nvidia.com>
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: [PATCH 02/12] iov_iter: add helper to test if an iter would use GUP v2
+Date:   Tue, 23 Jul 2019 21:25:08 -0700
+Message-Id: <20190724042518.14363-3-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724042518.14363-1-jhubbard@nvidia.com>
+References: <20190724042518.14363-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-NVConfidentiality: public
@@ -93,89 +101,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Jérôme Glisse <jglisse@redhat.com>
 
-Hi,
+Add a helper to test if call to iov_iter_get_pages*() with a given
+iter would result in calls to GUP (get_user_pages*()). We want to
+use different tracking of page references if they are coming from
+GUP (get_user_pages*()) and thus  we need to know when GUP is used
+for a given iter.
 
-This is mostly Jerome's work, converting the block/bio and related areas
-to call put_user_page*() instead of put_page(). Because I've changed
-Jerome's patches, in some cases significantly, I'd like to get his
-feedback before we actually leave him listed as the author (he might
-want to disown some or all of these).
+Changes since Jérôme's original patch:
 
-I added a new patch, in order to make this work with Christoph Hellwig's
-recent overhaul to bio_release_pages(): "block: bio_release_pages: use
-flags arg instead of bool".
+* iov_iter_get_pages_use_gup(): do not return true for the ITER_PIPE
+case, because iov_iter_get_pages() calls pipe_get_pages(), which in
+turn uses get_page(), not get_user_pages().
 
-I've started the series with a patch that I've posted in another
-series ("mm/gup: add make_dirty arg to put_user_pages_dirty_lock()"[1]),
-because I'm not sure which of these will go in first, and this allows each
-to stand alone.
+* Remove some obsolete code, as part of rebasing onto Linux 5.3.
 
-Testing: not much beyond build and boot testing has been done yet. And
-I'm not set up to even exercise all of it (especially the IB parts) at
-run time.
+* Fix up the kerneldoc comment to "Return:" rather than "Returns:",
+and a few other grammatical tweaks.
 
-Anyway, changes here are:
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-block@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Matthew Wilcox <willy@infradead.org>
+---
+ include/linux/uio.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-* Store, in the iov_iter, a "came from gup (get_user_pages)" parameter.
-  Then, use the new iov_iter_get_pages_use_gup() to retrieve it when
-  it is time to release the pages. That allows choosing between put_page()
-  and put_user_page*().
-
-* Pass in one more piece of information to bio_release_pages: a "from_gup"
-  parameter. Similar use as above.
-
-* Change the block layer, and several file systems, to use
-  put_user_page*().
-
-[1] https://lore.kernel.org/r/20190724012606.25844-2-jhubbard@nvidia.com
-    And please note the correction email that I posted as a follow-up,
-    if you're looking closely at that patch. :) The fixed version is
-    included here.
-
-John Hubbard (3):
-  mm/gup: add make_dirty arg to put_user_pages_dirty_lock()
-  block: bio_release_pages: use flags arg instead of bool
-  fs/ceph: fix a build warning: returning a value from void function
-
-Jérôme Glisse (9):
-  iov_iter: add helper to test if an iter would use GUP v2
-  block: bio_release_pages: convert put_page() to put_user_page*()
-  block_dev: convert put_page() to put_user_page*()
-  fs/nfs: convert put_page() to put_user_page*()
-  vhost-scsi: convert put_page() to put_user_page*()
-  fs/cifs: convert put_page() to put_user_page*()
-  fs/fuse: convert put_page() to put_user_page*()
-  fs/ceph: convert put_page() to put_user_page*()
-  9p/net: convert put_page() to put_user_page*()
-
- block/bio.c                                |  81 ++++++++++++---
- drivers/infiniband/core/umem.c             |   5 +-
- drivers/infiniband/hw/hfi1/user_pages.c    |   5 +-
- drivers/infiniband/hw/qib/qib_user_pages.c |   5 +-
- drivers/infiniband/hw/usnic/usnic_uiom.c   |   5 +-
- drivers/infiniband/sw/siw/siw_mem.c        |   8 +-
- drivers/vhost/scsi.c                       |  13 ++-
- fs/block_dev.c                             |  22 +++-
- fs/ceph/debugfs.c                          |   2 +-
- fs/ceph/file.c                             |  62 ++++++++---
- fs/cifs/cifsglob.h                         |   3 +
- fs/cifs/file.c                             |  22 +++-
- fs/cifs/misc.c                             |  19 +++-
- fs/direct-io.c                             |   2 +-
- fs/fuse/dev.c                              |  22 +++-
- fs/fuse/file.c                             |  53 +++++++---
- fs/nfs/direct.c                            |  10 +-
- include/linux/bio.h                        |  22 +++-
- include/linux/mm.h                         |   5 +-
- include/linux/uio.h                        |  11 ++
- mm/gup.c                                   | 115 +++++++++------------
- net/9p/trans_common.c                      |  14 ++-
- net/9p/trans_common.h                      |   3 +-
- net/9p/trans_virtio.c                      |  18 +++-
- 24 files changed, 357 insertions(+), 170 deletions(-)
-
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index ab5f523bc0df..2a179af8e5a7 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -86,6 +86,17 @@ static inline unsigned char iov_iter_rw(const struct iov_iter *i)
+ 	return i->type & (READ | WRITE);
+ }
+ 
++/**
++ * iov_iter_get_pages_use_gup - report if iov_iter_get_pages(i) uses GUP
++ * @i: iterator
++ * Return: true if a call to iov_iter_get_pages*() with the iter provided in
++ *          the argument would result in the use of get_user_pages*()
++ */
++static inline bool iov_iter_get_pages_use_gup(const struct iov_iter *i)
++{
++	return iov_iter_type(i) == ITER_IOVEC;
++}
++
+ /*
+  * Total number of bytes covered by an iovec.
+  *
 -- 
 2.22.0
 
