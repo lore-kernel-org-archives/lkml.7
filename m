@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20E8C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E1EC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8987F21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5882083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998811;
-	bh=y5aMZuNFOBLZnnkx+88Nli9ZhgKfyb91ZWUVryMTH8U=;
+	s=default; t=1563998821;
+	bh=tSd1w0YmOsGs8qHY3IbxqQyAU0LkhGqQaR7/z8zAiao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FSBPJVqyjdZvgmlO0HdauSgtmaav9zGw1HoUH5agPgKv/rX4PJERk6NhHziZ0SxTF
-	 A4nntcbBGf3y25kmQLVrS0+vYn6eryZdOuvuaCbtU7cxF0UhXG1SgtFxDrGVr+t+eu
-	 ZnOUQj5FpT0oqr5mOSRr+Ytvx3FJKnDnwm+OpgA4=
+	b=CaJSadP8W42wArAaBwz4dvHBE3UUXfkUwl6UtsmAePZgauG3xVM8WowktQO4bGVTs
+	 8CY2LQmm2aqW9q4IhEzsO7GcfTXDNOJXn4vLyqM5qVbrqc/HhYq1EA8UG9lt44L7Ce
+	 LbZbW+zps/firxaiZFMAqntLAaMY1/3F0qdfQIkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405410AbfGXUEt (ORCPT
+        id S2392510AbfGXUEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392585AbfGXUEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:04:43 -0400
+        id S2392490AbfGXUEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:04:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA06E214AF;
-        Wed, 24 Jul 2019 20:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A09206BA;
+        Wed, 24 Jul 2019 20:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998682;
-        bh=y5aMZuNFOBLZnnkx+88Nli9ZhgKfyb91ZWUVryMTH8U=;
+        s=default; t=1563998660;
+        bh=tSd1w0YmOsGs8qHY3IbxqQyAU0LkhGqQaR7/z8zAiao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nZe+9/yMNMEXV9zTso0c10zdBSJxi3VTEuIQucOggPrGYm5uNGP/GH0NsIlWCHGl9
-         cvZYmOfE32quslyN+8aDQi7VRuK6aTo7OwUK82Tdh3SdI11PIBN0LOtX0MFTSKC5os
-         fGyxmsfn9uq0m4vHPCW8rrj9OrpKXMlkW1/WYHE8=
+        b=O20ItNy5as7v9ruzq3YBe3jw+mfFIpEPl2kEn5tyj0XOifrkz7ykikQS1kR4ZbVR4
+         AWyUjq8g5tlPcJzIyfZSY7s92o9Q4WbxVwfva89BexHYxlG1xa5V8EoK9CP6xfAVCF
+         yzWAqLh+k24ET4objvnzb5l/7489xz0ypLq5Gi5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Weihang Li <liweihang@hisilicon.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/271] net: hns3: set ops to null when unregister ad_dev
-Date:   Wed, 24 Jul 2019 21:18:30 +0200
-Message-Id: <20190724191658.702135535@linuxfoundation.org>
+Subject: [PATCH 4.19 069/271] rcu: Force inlining of rcu_read_lock()
+Date:   Wed, 24 Jul 2019 21:18:58 +0200
+Message-Id: <20190724191701.100794389@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,42 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 594a81b39525f0a17e92c2e0b167ae1400650380 ]
+[ Upstream commit 6da9f775175e516fc7229ceaa9b54f8f56aa7924 ]
 
-The hclge/hclgevf and hns3 module can be unloaded independently,
-when hclge/hclgevf unloaded firstly, the ops of ae_dev should
-be set to NULL, otherwise it will cause an use-after-free problem.
+When debugging options are turned on, the rcu_read_lock() function
+might not be inlined. This results in lockdep's print_lock() function
+printing "rcu_read_lock+0x0/0x70" instead of rcu_read_lock()'s caller.
+For example:
 
-Fixes: 38caee9d3ee8 ("net: hns3: Add support of the HNAE3 framework")
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[   10.579995] =============================
+[   10.584033] WARNING: suspicious RCU usage
+[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
+[   10.593162] -----------------------------
+[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
+RCU read-side critical section!
+[   10.606220]
+[   10.606220] other info that might help us debug this:
+[   10.606220]
+[   10.614280]
+[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
+[   10.620853] 3 locks held by systemd/1:
+[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
+[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+
+These "rcu_read_lock+0x0/0x70" strings are not providing any useful
+information.  This commit therefore forces inlining of the rcu_read_lock()
+function so that rcu_read_lock()'s caller is instead shown.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hnae3.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/rcupdate.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-index fff5be8078ac..0594a6c3dccd 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
-@@ -229,6 +229,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
- 
- 		ae_algo->ops->uninit_ae_dev(ae_dev);
- 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
-+		ae_dev->ops = NULL;
- 	}
- 
- 	list_del(&ae_algo->node);
-@@ -316,6 +317,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
- 
- 		ae_algo->ops->uninit_ae_dev(ae_dev);
- 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
-+		ae_dev->ops = NULL;
- 	}
- 
- 	list_del(&ae_dev->node);
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index e102c5bccbb9..68cbe111420b 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -620,7 +620,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+  * read-side critical sections may be preempted and they may also block, but
+  * only when acquiring spinlocks that are subject to priority inheritance.
+  */
+-static inline void rcu_read_lock(void)
++static __always_inline void rcu_read_lock(void)
+ {
+ 	__rcu_read_lock();
+ 	__acquire(RCU);
 -- 
 2.20.1
 
