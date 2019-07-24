@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A506C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA27C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BB321873
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969AE20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997720;
-	bh=6/ZdEZJo5ChseS0KXOgOxgb3G8chUGu4rgGVPCC4dWM=;
+	s=default; t=1563997722;
+	bh=k1xDp3QKIhVdI9UdTMEmjwYOIP+L6j5Yzp1qNTggtSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPwpHG+5zDBMBB+9faSJWOYbjQPDmHKzZsxprrzJTgD6stXpXr3JtcEGJZtDNCorA
-	 G3O14F0vQqVWjSt4IIPM/NEtcm+9tPmAtukjcmv+fKbdikQKRcIXS4Dfj5TGXbU5oJ
-	 X8m8mRYV7phQNkT/qhNzqPOYuJ2cYW397ZgxWlRg=
+	b=sftBoxZ+mKUDAMtnWBSpiYT4+2iRO9O5swPk9J9uupdEZX58KESedM9L438aJrW5D
+	 acfu+cRTQmqJP9fUrcSFXiuBtm9BemwI3k5JPHwXQEYu9htb5VPrOY0GTxdILDljMi
+	 tJmDpBilOPMyRYt9yqbcy5y1rCySJljhcyb8qXcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391442AbfGXTsi (ORCPT
+        id S2403787AbfGXTsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56020 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391432AbfGXTsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:48:37 -0400
+        id S2391440AbfGXTsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:48:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 664C122ADA;
-        Wed, 24 Jul 2019 19:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C499205C9;
+        Wed, 24 Jul 2019 19:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997715;
-        bh=6/ZdEZJo5ChseS0KXOgOxgb3G8chUGu4rgGVPCC4dWM=;
+        s=default; t=1563997718;
+        bh=k1xDp3QKIhVdI9UdTMEmjwYOIP+L6j5Yzp1qNTggtSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kz8BUQu4fATf8sGVwv3i6nbBf3HZZL6RTmKbDGqcRS+Atu1i/Lsad9IqUWXYOKw+C
-         YHjVH64b2ggIm4E3Ynr4Yy4cuQuXykKA4lbRsn4YihJvZhtyy+ogK2wlfTajNJ1u5v
-         x9yGJa7SJGwihh3sUsuEdFwYG4I9dNKqtFLG/2IQ=
+        b=abTAxBlyF3jOgki/W4vTuvdzJ9UPV/MCjtIVZKInA44UcUUZ33OtCCVKyjSWROgyC
+         R1l21TQMk63IfG8y16ozVVMwwPsJo0mDOxxpe9TYy6u+I+DjuVHj+tXsX/6rWoOEbz
+         1HOSR+nkI59c42O1IBkE0csI8ZwSMpy2hS9kPr28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Furquan Shaikh <furquan@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 116/371] ACPICA: Clear status of GPEs on first direct enable
-Date:   Wed, 24 Jul 2019 21:17:48 +0200
-Message-Id: <20190724191733.541797915@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 079/371] iommu: Fix a leak in iommu_insert_resv_region
+Date:   Wed, 24 Jul 2019 21:17:11 +0200
+Message-Id: <20190724191730.803923167@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,130 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 44758bafa53602f2581a6857bb20b55d4d8ad5b2 ]
+[ Upstream commit ad0834dedaa15c3a176f783c0373f836e44b4700 ]
 
-ACPI GPEs (other than the EC one) can be enabled in two situations.
-First, the GPEs with existing _Lxx and _Exx methods are enabled
-implicitly by ACPICA during system initialization.  Second, the
-GPEs without these methods (like GPEs listed by _PRW objects for
-wakeup devices) need to be enabled directly by the code that is
-going to use them (e.g. ACPI power management or device drivers).
+In case we expand an existing region, we unlink
+this latter and insert the larger one. In
+that case we should free the original region after
+the insertion. Also we can immediately return.
 
-In the former case, if the status of a given GPE is set to start
-with, its handler method (either _Lxx or _Exx) needs to be invoked
-to take care of the events (possibly) signaled before the GPE was
-enabled.  In the latter case, however, the first caller of
-acpi_enable_gpe() for a given GPE should not be expected to care
-about any events that might be signaled through it earlier.  In
-that case, it is better to clear the status of the GPE before
-enabling it, to prevent stale events from triggering unwanted
-actions (like spurious system resume, for example).
+Fixes: 6c65fb318e8b ("iommu: iommu_get_group_resv_regions")
 
-For this reason, modify acpi_ev_add_gpe_reference() to take an
-additional boolean argument indicating whether or not the GPE
-status needs to be cleared when its reference counter changes from
-zero to one and make acpi_enable_gpe() pass TRUE to it through
-that new argument.
-
-Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
-Reported-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/acevents.h | 3 ++-
- drivers/acpi/acpica/evgpe.c    | 8 +++++++-
- drivers/acpi/acpica/evgpeblk.c | 2 +-
- drivers/acpi/acpica/evxface.c  | 2 +-
- drivers/acpi/acpica/evxfgpe.c  | 2 +-
- 5 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/iommu/iommu.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/acpica/acevents.h b/drivers/acpi/acpica/acevents.h
-index 831660179662..c8652f91054e 100644
---- a/drivers/acpi/acpica/acevents.h
-+++ b/drivers/acpi/acpica/acevents.h
-@@ -69,7 +69,8 @@ acpi_status
- acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked);
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 109de67d5d72..2d06c507fbed 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -241,18 +241,21 @@ static int iommu_insert_resv_region(struct iommu_resv_region *new,
+ 			pos = pos->next;
+ 		} else if ((start >= a) && (end <= b)) {
+ 			if (new->type == type)
+-				goto done;
++				return 0;
+ 			else
+ 				pos = pos->next;
+ 		} else {
+ 			if (new->type == type) {
+ 				phys_addr_t new_start = min(a, start);
+ 				phys_addr_t new_end = max(b, end);
++				int ret;
  
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable);
- 
- acpi_status
- acpi_ev_remove_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-diff --git a/drivers/acpi/acpica/evgpe.c b/drivers/acpi/acpica/evgpe.c
-index 62d3aa74277b..344feba29063 100644
---- a/drivers/acpi/acpica/evgpe.c
-+++ b/drivers/acpi/acpica/evgpe.c
-@@ -146,6 +146,7 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
-  * FUNCTION:    acpi_ev_add_gpe_reference
-  *
-  * PARAMETERS:  gpe_event_info          - Add a reference to this GPE
-+ *              clear_on_enable         - Clear GPE status before enabling it
-  *
-  * RETURN:      Status
-  *
-@@ -155,7 +156,8 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked)
-  ******************************************************************************/
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable)
- {
- 	acpi_status status = AE_OK;
- 
-@@ -170,6 +172,10 @@ acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
- 
- 		/* Enable on first reference */
- 
-+		if (clear_on_enable) {
-+			(void)acpi_hw_clear_gpe(gpe_event_info);
-+		}
-+
- 		status = acpi_ev_update_gpe_enable_mask(gpe_event_info);
- 		if (ACPI_SUCCESS(status)) {
- 			status = acpi_ev_enable_gpe(gpe_event_info);
-diff --git a/drivers/acpi/acpica/evgpeblk.c b/drivers/acpi/acpica/evgpeblk.c
-index 328d1d6123ad..fb15e9e2373b 100644
---- a/drivers/acpi/acpica/evgpeblk.c
-+++ b/drivers/acpi/acpica/evgpeblk.c
-@@ -453,7 +453,7 @@ acpi_ev_initialize_gpe_block(struct acpi_gpe_xrupt_info *gpe_xrupt_info,
- 				continue;
+ 				list_del(&entry->list);
+ 				entry->start = new_start;
+ 				entry->length = new_end - new_start + 1;
+-				iommu_insert_resv_region(entry, regions);
++				ret = iommu_insert_resv_region(entry, regions);
++				kfree(entry);
++				return ret;
+ 			} else {
+ 				pos = pos->next;
  			}
+@@ -265,7 +268,6 @@ static int iommu_insert_resv_region(struct iommu_resv_region *new,
+ 		return -ENOMEM;
  
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 			if (ACPI_FAILURE(status)) {
- 				ACPI_EXCEPTION((AE_INFO, status,
- 					"Could not enable GPE 0x%02X",
-diff --git a/drivers/acpi/acpica/evxface.c b/drivers/acpi/acpica/evxface.c
-index 3df00eb6621b..279ef0557aa3 100644
---- a/drivers/acpi/acpica/evxface.c
-+++ b/drivers/acpi/acpica/evxface.c
-@@ -971,7 +971,7 @@ acpi_remove_gpe_handler(acpi_handle gpe_device,
- 	      ACPI_GPE_DISPATCH_METHOD) ||
- 	     (ACPI_GPE_DISPATCH_TYPE(handler->original_flags) ==
- 	      ACPI_GPE_DISPATCH_NOTIFY)) && handler->originally_enabled) {
--		(void)acpi_ev_add_gpe_reference(gpe_event_info);
-+		(void)acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 		if (ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
- 			/* Poll edge triggered GPEs to handle existing events */
-diff --git a/drivers/acpi/acpica/evxfgpe.c b/drivers/acpi/acpica/evxfgpe.c
-index 30a083902f52..710488ec59e9 100644
---- a/drivers/acpi/acpica/evxfgpe.c
-+++ b/drivers/acpi/acpica/evxfgpe.c
-@@ -108,7 +108,7 @@ acpi_status acpi_enable_gpe(acpi_handle gpe_device, u32 gpe_number)
- 	if (gpe_event_info) {
- 		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
- 		    ACPI_GPE_DISPATCH_NONE) {
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
- 			if (ACPI_SUCCESS(status) &&
- 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
+ 	list_add_tail(&region->list, pos);
+-done:
+ 	return 0;
+ }
  
 -- 
 2.20.1
