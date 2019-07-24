@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BBBC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BA1C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22C4206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7983206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999671;
-	bh=HIyOUkl8aruwst0Ro1rhXSFBk9+dSt6xQjm3eGBrcqk=;
+	s=default; t=1563999675;
+	bh=Pq/gww4pZIJwwKlkUf5BoPLMSs2MPmp2kPctMV9N1/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xob0bAIDcoaydGb/mmp7SjCrp41QrL2TrpYYwP1cxa7/WuWMONkKgI7RQfatwGn5v
-	 xNmc7kD30evQS3Jub3svAeQNHFAFM68nrREX3c66wDSJcuOG9KtL3EVjj9VsPTuq7b
-	 +djptRD5iRL/6ZfSIPs8oFdLJxCdjwejyfrhAibA=
+	b=K4fG+MAjBJ1m+mMzqdH6Zh/TzUSMKdyeRcmCdRNGYaqoJV1dW/iLjmQ7GhubL1qZK
+	 lb4Rs3UShWLqSFPPy0WayXKF23BLdKAHhVpzqB9e8FclLl2Oh2JW+IGhUw7YIO6lzF
+	 Bb8hdYTT14asDBB6Izv9awvlZmtgK2GUqnsuNpEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391008AbfGXTpd (ORCPT
+        id S2391792AbfGXUVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:45:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45700 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390561AbfGXTn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:43:27 -0400
+        id S2391006AbfGXTpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:45:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEAF5229F4;
-        Wed, 24 Jul 2019 19:43:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDAA821873;
+        Wed, 24 Jul 2019 19:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997406;
-        bh=HIyOUkl8aruwst0Ro1rhXSFBk9+dSt6xQjm3eGBrcqk=;
+        s=default; t=1563997532;
+        bh=Pq/gww4pZIJwwKlkUf5BoPLMSs2MPmp2kPctMV9N1/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OtoBKrViaVEesuWbB4ZIYYW0YhxDQO4PV07mYoYys13qMiV0Jv+S+IrwbcRDj0ppw
-         /lk7qjqqdfmrdM+/+c1psIm2y97v3qxZH8TgOsyf/vbs9jjpj1x0v/J/zdCjF5MSC7
-         PG5IJ1pMaIadb4m2tRN3EWDKR9jwitObsHAddTtA=
+        b=l19YFC6EKvnPTChE7+CbFtE6bw1BJ4Nh4KsNnHyjbry8N4Ch/hvgS0so43W1IIQhu
+         WTxJVRY8KPlWZJb9Uf/AHfjJPgOuq2MnPjF2zSX5iSyScbYlNPJFAbFODKSSDUfUXd
+         I6yo7TwqsD2ac3RGSvFp6RgyUOdgg56LFmV7pThY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Schumacher <timschumi@gmx.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 013/371] ath9k: Check for errors when reading SREV register
-Date:   Wed, 24 Jul 2019 21:16:05 +0200
-Message-Id: <20190724191725.492273334@linuxfoundation.org>
+Subject: [PATCH 5.1 056/371] media: wl128x: Fix some error handling in fm_v4l2_init_video_device()
+Date:   Wed, 24 Jul 2019 21:16:48 +0200
+Message-Id: <20190724191729.040101491@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -60,119 +62,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2f90c7e5d09437a4d8d5546feaae9f1cf48cfbe1 ]
+[ Upstream commit 69fbb3f47327d959830c94bf31893972b8c8f700 ]
 
-Right now, if an error is encountered during the SREV register
-read (i.e. an EIO in ath9k_regread()), that error code gets
-passed all the way to __ath9k_hw_init(), where it is visible
-during the "Chip rev not supported" message.
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
+The fm_v4l2_init_video_device() forget to unregister v4l2/video device
+in the error path, it could lead to UAF issue, eg,
 
-    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
-    ath: phy2: Mac Chip Rev 0x0f.3 is not supported by this driver
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath9k_htc: Failed to initialize the device
+  BUG: KASAN: use-after-free in atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
+  BUG: KASAN: use-after-free in atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
+  BUG: KASAN: use-after-free in __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
+  Read of size 8 at addr ffff8881e84a7c70 by task v4l_id/3659
 
-Check for -EIO explicitly in ath9k_hw_read_revisions() and return
-a boolean based on the success of the operation. Check for that in
-__ath9k_hw_init() and abort with a more debugging-friendly message
-if reading the revisions wasn't successful.
+  CPU: 1 PID: 3659 Comm: v4l_id Not tainted 5.1.0 #8
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+  Call Trace:
+   __dump_stack lib/dump_stack.c:77 [inline]
+   dump_stack+0xa9/0x10e lib/dump_stack.c:113
+   print_address_description+0x65/0x270 mm/kasan/report.c:187
+   kasan_report+0x149/0x18d mm/kasan/report.c:317
+   atomic64_read include/asm-generic/atomic-instrumented.h:836 [inline]
+   atomic_long_read include/asm-generic/atomic-long.h:28 [inline]
+   __mutex_unlock_slowpath+0x92/0x690 kernel/locking/mutex.c:1206
+   fm_v4l2_fops_open+0xac/0x120 [fm_drv]
+   v4l2_open+0x191/0x390 [videodev]
+   chrdev_open+0x20d/0x570 fs/char_dev.c:417
+   do_dentry_open+0x700/0xf30 fs/open.c:777
+   do_last fs/namei.c:3416 [inline]
+   path_openat+0x7c4/0x2a90 fs/namei.c:3532
+   do_filp_open+0x1a5/0x2b0 fs/namei.c:3563
+   do_sys_open+0x302/0x490 fs/open.c:1069
+   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7f8180c17c8e
+  ...
+  Allocated by task 3642:
+   set_track mm/kasan/common.c:87 [inline]
+   __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
+   fm_drv_init+0x13/0x1000 [fm_drv]
+   do_one_initcall+0xbc/0x47d init/main.c:901
+   do_init_module+0x1b5/0x547 kernel/module.c:3456
+   load_module+0x6405/0x8c10 kernel/module.c:3804
+   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-    ath9k_htc 1-1.4:1.0: ath9k_htc: HTC initialized with 33 credits
-    ath: phy2: Failed to read SREV register
-    ath: phy2: Could not read hardware revision
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath: phy2: Unable to initialize hardware; initialization status: -95
-    ath9k_htc: Failed to initialize the device
+  Freed by task 3642:
+   set_track mm/kasan/common.c:87 [inline]
+   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+   slab_free_hook mm/slub.c:1429 [inline]
+   slab_free_freelist_hook mm/slub.c:1456 [inline]
+   slab_free mm/slub.c:3003 [inline]
+   kfree+0xe1/0x270 mm/slub.c:3958
+   fm_drv_init+0x1e6/0x1000 [fm_drv]
+   do_one_initcall+0xbc/0x47d init/main.c:901
+   do_init_module+0x1b5/0x547 kernel/module.c:3456
+   load_module+0x6405/0x8c10 kernel/module.c:3804
+   __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+   do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This helps when debugging by directly showing the first point of
-failure and it could prevent possible errors if a 0x0f.3 revision
-is ever supported.
+Add relevant unregister functions to fix it.
 
-Signed-off-by: Tim Schumacher <timschumi@gmx.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/hw.c | 32 +++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+ drivers/media/radio/wl128x/fmdrv_v4l2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
-index 8581d917635a..b6773d613f0c 100644
---- a/drivers/net/wireless/ath/ath9k/hw.c
-+++ b/drivers/net/wireless/ath/ath9k/hw.c
-@@ -252,8 +252,9 @@ void ath9k_hw_get_channel_centers(struct ath_hw *ah,
- /* Chip Revisions */
- /******************/
+diff --git a/drivers/media/radio/wl128x/fmdrv_v4l2.c b/drivers/media/radio/wl128x/fmdrv_v4l2.c
+index e25fd4d4d280..a1eaea19a81c 100644
+--- a/drivers/media/radio/wl128x/fmdrv_v4l2.c
++++ b/drivers/media/radio/wl128x/fmdrv_v4l2.c
+@@ -550,6 +550,7 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
  
--static void ath9k_hw_read_revisions(struct ath_hw *ah)
-+static bool ath9k_hw_read_revisions(struct ath_hw *ah)
- {
-+	u32 srev;
- 	u32 val;
- 
- 	if (ah->get_mac_revision)
-@@ -269,25 +270,33 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
- 			val = REG_READ(ah, AR_SREV);
- 			ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
- 		}
--		return;
-+		return true;
- 	case AR9300_DEVID_AR9340:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9340;
--		return;
-+		return true;
- 	case AR9300_DEVID_QCA955X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9550;
--		return;
-+		return true;
- 	case AR9300_DEVID_AR953X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9531;
--		return;
-+		return true;
- 	case AR9300_DEVID_QCA956X:
- 		ah->hw_version.macVersion = AR_SREV_VERSION_9561;
--		return;
-+		return true;
+ 	/* Register with V4L2 subsystem as RADIO device */
+ 	if (video_register_device(&gradio_dev, VFL_TYPE_RADIO, radio_nr)) {
++		v4l2_device_unregister(&fmdev->v4l2_dev);
+ 		fmerr("Could not register video device\n");
+ 		return -ENOMEM;
+ 	}
+@@ -563,6 +564,8 @@ int fm_v4l2_init_video_device(struct fmdev *fmdev, int radio_nr)
+ 	if (ret < 0) {
+ 		fmerr("(fmdev): Can't init ctrl handler\n");
+ 		v4l2_ctrl_handler_free(&fmdev->ctrl_handler);
++		video_unregister_device(fmdev->radio_dev);
++		v4l2_device_unregister(&fmdev->v4l2_dev);
+ 		return -EBUSY;
  	}
  
--	val = REG_READ(ah, AR_SREV) & AR_SREV_ID;
-+	srev = REG_READ(ah, AR_SREV);
-+
-+	if (srev == -EIO) {
-+		ath_err(ath9k_hw_common(ah),
-+			"Failed to read SREV register");
-+		return false;
-+	}
-+
-+	val = srev & AR_SREV_ID;
- 
- 	if (val == 0xFF) {
--		val = REG_READ(ah, AR_SREV);
-+		val = srev;
- 		ah->hw_version.macVersion =
- 			(val & AR_SREV_VERSION2) >> AR_SREV_TYPE2_S;
- 		ah->hw_version.macRev = MS(val, AR_SREV_REVISION2);
-@@ -306,6 +315,8 @@ static void ath9k_hw_read_revisions(struct ath_hw *ah)
- 		if (ah->hw_version.macVersion == AR_SREV_VERSION_5416_PCIE)
- 			ah->is_pciexpress = true;
- 	}
-+
-+	return true;
- }
- 
- /************************************/
-@@ -559,7 +570,10 @@ static int __ath9k_hw_init(struct ath_hw *ah)
- 	struct ath_common *common = ath9k_hw_common(ah);
- 	int r = 0;
- 
--	ath9k_hw_read_revisions(ah);
-+	if (!ath9k_hw_read_revisions(ah)) {
-+		ath_err(common, "Could not read hardware revisions");
-+		return -EOPNOTSUPP;
-+	}
- 
- 	switch (ah->hw_version.macVersion) {
- 	case AR_SREV_VERSION_5416_PCI:
 -- 
 2.20.1
 
