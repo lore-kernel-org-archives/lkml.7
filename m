@@ -3,53 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D954EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E750C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B380821850
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4065821850
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 22:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfGXW0a (ORCPT
+        id S1729331AbfGXW1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 18:26:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52772 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbfGXW00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 18:26:26 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 742691543BD0E;
-        Wed, 24 Jul 2019 15:26:25 -0700 (PDT)
-Date:   Wed, 24 Jul 2019 15:26:12 -0700 (PDT)
-Message-Id: <20190724.152612.864896276004624257.davem@davemloft.net>
-To:     schwab@suse.de
-Cc:     netdev@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: mscc: initialize stats array
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <mvmh87bih1y.fsf@suse.de>
-References: <mvmh87bih1y.fsf@suse.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 24 Jul 2019 18:27:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:52369 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727620AbfGXW1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 18:27:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 15:27:37 -0700
+X-IronPort-AV: E=Sophos;i="5.64,304,1559545200"; 
+   d="scan'208";a="163991221"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jul 2019 15:27:37 -0700
+Message-ID: <6bbead1f2d7b3aa77a8e78ffc6bbbb6d0d68c12e.camel@linux.intel.com>
+Subject: Re: [PATCH v2 QEMU] virtio-balloon: Provide a interface for "bubble
+ hinting"
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Wed, 24 Jul 2019 15:27:37 -0700
+In-Reply-To: <20190724180552-mutt-send-email-mst@kernel.org>
+References: <20190724165158.6685.87228.stgit@localhost.localdomain>
+         <20190724171050.7888.62199.stgit@localhost.localdomain>
+         <20190724173403-mutt-send-email-mst@kernel.org>
+         <ada4e7d932ebd436d00c46e8de699212e72fd989.camel@linux.intel.com>
+         <20190724180552-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 24 Jul 2019 15:26:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Schwab <schwab@suse.de>
-Date: Wed, 24 Jul 2019 17:32:57 +0200
-
-> The memory allocated for the stats array may contain arbitrary data.
+On Wed, 2019-07-24 at 18:08 -0400, Michael S. Tsirkin wrote:
+> On Wed, Jul 24, 2019 at 03:03:56PM -0700, Alexander Duyck wrote:
+> > On Wed, 2019-07-24 at 17:38 -0400, Michael S. Tsirkin wrote:
+> > > On Wed, Jul 24, 2019 at 10:12:10AM -0700, Alexander Duyck wrote:
+> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > 
+> > > > Add support for what I am referring to as "bubble hinting". Basically the
+> > > > idea is to function very similar to how the balloon works in that we
+> > > > basically end up madvising the page as not being used. However we don't
+> > > > really need to bother with any deflate type logic since the page will be
+> > > > faulted back into the guest when it is read or written to.
+> > > > 
+> > > > This is meant to be a simplification of the existing balloon interface
+> > > > to use for providing hints to what memory needs to be freed. I am assuming
+> > > > this is safe to do as the deflate logic does not actually appear to do very
+> > > > much other than tracking what subpages have been released and which ones
+> > > > haven't.
+> > > > 
+> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > 
+> > > BTW I wonder about migration here.  When we migrate we lose all hints
+> > > right?  Well destination could be smarter, detect that page is full of
+> > > 0s and just map a zero page. Then we don't need a hint as such - but I
+> > > don't think it's done like that ATM.
+> > 
+> > I was wondering about that a bit myself. If you migrate with a balloon
+> > active what currently happens with the pages in the balloon? Do you
+> > actually migrate them, or do you ignore them and just assume a zero page?
 > 
-> Signed-off-by: Andreas Schwab <schwab@suse.de>
+> Ignore and assume zero page.
+> 
+> > I'm just reusing the ram_block_discard_range logic that was being used for
+> > the balloon inflation so I would assume the behavior would be the same.
+> > 
+> > > I also wonder about interaction with deflate.  ATM deflate will add
+> > > pages to the free list, then balloon will come right back and report
+> > > them as free.
+> > 
+> > I don't know how likely it is that somebody who is getting the free page
+> > reporting is likely to want to also use the balloon to take up memory.
+> 
+> Why not?
 
-Applied and queued up for -stable.
+The two functions are essentially doing the same thing. The only real
+difference is enforcement. If the balloon takes the pages the guest cannot
+get them back. I suppose there might be some advantage if you are wanting
+for force shrink a guest but that would be about it.
+
+> > However hinting on a page that came out of deflate might make sense when
+> > you consider that the balloon operates on 4K pages and the hints are on 2M
+> > pages. You are likely going to lose track of it all anyway as you have to
+> > work to merge the 4K pages up to the higher order page.
+> 
+> Right - we need to fix inflate/deflate anyway.
+> When we do, we can do whatever :)
+
+One thing we could probably look at for the future would be to more
+closely merge the balloon and this reporting logic. Ideally the balloon
+would grab pages that were already hinted in order to enforce a certain
+size limit on the guest, and then when it gave the pages back they would
+retain their hinted status if possible.
+
+The only problem is that right now both of those require that
+hinting/reporting be active for the zone being accessed since we otherwise
+don't have pointers to the pages at the head of the "hinted" list.
+
