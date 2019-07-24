@@ -2,97 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F096C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0990BC7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D3C2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CA+jpzga"
+	by mail.kernel.org (Postfix) with ESMTP id DB0892147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbfGXOhm (ORCPT
+        id S1728306AbfGXOiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:37:42 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44868 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfGXOhm (ORCPT
+        Wed, 24 Jul 2019 10:38:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44227 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfGXOiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:37:42 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so47313387edr.11;
-        Wed, 24 Jul 2019 07:37:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TWTT6YD5xmmHLQ8NqWxp5VF2vzE1ezaxf9lnh1XS2/w=;
-        b=CA+jpzga4i8X7wUqQh3D2NsxFNLhZs4qlXqRH6J20hyHLc7tr/bRzvILcNcs8TxIT1
-         vKwRTH5QYASlKQ681RU/pBhw81k+9XoByq9x6c5jqdG6HcoMqVQ8mL4yJt/dGkmto9WO
-         y4+IHa1XI3Mg4pqqKkMmAPjxzOcmSuyfJOO/QNbk8GFPo3r8QGLuKsdMkGaSO3wyKTZb
-         WQwSHAamnTvCF/hEs3t/OVqmH5z/8f4ENxUZroRz8IafJe53/EValYRW97LQUhMKnfDS
-         ZM7UZ+H3debMoNEO8aPSWAWFqkQdpqWjRzErQ7U0/iEl/jemFWj0KvZSUyOlOJmgjB//
-         vvPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TWTT6YD5xmmHLQ8NqWxp5VF2vzE1ezaxf9lnh1XS2/w=;
-        b=nf9IcrQSCSjjjsKR7VYhuJ3o7SzkqmnKw1RZ9L8EXqP3h/WGyczlm9Mbu2KVBorLLO
-         mDkNcHojXWzcMJCzChPYZahZuJhpHTrm85/m82jFo9T8qthU0ZUSR64HGzHIeysYxzjx
-         3Hp42pAWgIdmqx+QQPLSn2PWvtrRkrmoQxzRa+PR4TCq98HO1YH30+vsePQNCrTf4SSu
-         Dk2tsiF9Q0i05dRv8PKSnieV9ZdbgK69wtuoNV/0g6gc2Ws+iUUP3DYtwe1ToCMlm+G+
-         34Kra9hcTPhC9W9xHPTGUdX572c6j177hjodvHVk+OpEe3haO1am/v6xHj8dL61ZdWpa
-         jjXQ==
-X-Gm-Message-State: APjAAAX1iAWwme58A8Abp1bcusvWB41BTRV+wGnepOYnfuAVNl2LHs/e
-        6rRIxDA7IYrr2N2RnA+JqQ==
-X-Google-Smtp-Source: APXvYqxC/jZNJyEw4Ahjdq75WHaL0LyYNComFoAz8fwPe58jYKm0eNtQsy23cTgEfzNUw5n9mhp9Gw==
-X-Received: by 2002:a17:906:5042:: with SMTP id e2mr61790141ejk.220.1563979060071;
-        Wed, 24 Jul 2019 07:37:40 -0700 (PDT)
-Received: from presler.lan (a95-94-77-68.cpe.netcabo.pt. [95.94.77.68])
-        by smtp.gmail.com with ESMTPSA id ns22sm9281459ejb.9.2019.07.24.07.37.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Jul 2019 07:37:39 -0700 (PDT)
-From:   Rui Salvaterra <rsalvaterra@gmail.com>
-To:     pablo@netfilter.org, davem@davemloft.net,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rui Salvaterra <rsalvaterra@gmail.com>
-Subject: [PATCH] netfilter: trivial: remove extraneous space from message
-Date:   Wed, 24 Jul 2019 15:37:33 +0100
-Message-Id: <20190724143733.17433-1-rsalvaterra@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 24 Jul 2019 10:38:01 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqIOx-0002MW-0J; Wed, 24 Jul 2019 16:37:55 +0200
+Date:   Wed, 24 Jul 2019 16:37:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Steven Price <steven.price@arm.com>
+cc:     Mark Rutland <mark.rutland@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?ISO-8859-15?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v9 00/21] Generic page walk and ptdump
+In-Reply-To: <fd898367-b44e-9328-bdab-7a3de0db6bda@arm.com>
+Message-ID: <alpine.DEB.2.21.1907241620140.1791@nanos.tec.linutronix.de>
+References: <20190722154210.42799-1-steven.price@arm.com> <20190723101639.GD8085@lakrids.cambridge.arm.com> <e108b8a6-deca-e69c-b338-52a98b14be86@arm.com> <alpine.DEB.2.21.1907241541570.1791@nanos.tec.linutronix.de>
+ <fd898367-b44e-9328-bdab-7a3de0db6bda@arm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pure ocd, but this one has been bugging me for a while.
+On Wed, 24 Jul 2019, Steven Price wrote:
+> On 24/07/2019 14:57, Thomas Gleixner wrote:
+> > From your 14/N changelog:
+> > 
+> >> This keeps the output shorter and will help with a future change
+> > 
+> > I don't care about shorter at all. It's debug information.
+> 
+> Sorry, the "shorter" part was because Dave Hansen originally said[1]:
+> > I think I'd actually be OK with the holes just not showing up.  I
+> > actually find it kinda hard to read sometimes with the holes in there.
+> > I'd be curious what others think though.
 
-Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
----
- net/netfilter/nf_conntrack_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I missed that otherwise I'd have disagreed right away.
 
-diff --git a/net/netfilter/nf_conntrack_helper.c b/net/netfilter/nf_conntrack_helper.c
-index 8d729e7c36ff..209123f35b4a 100644
---- a/net/netfilter/nf_conntrack_helper.c
-+++ b/net/netfilter/nf_conntrack_helper.c
-@@ -218,7 +218,7 @@ nf_ct_lookup_helper(struct nf_conn *ct, struct net *net)
- 			return NULL;
- 		pr_info("nf_conntrack: default automatic helper assignment "
- 			"has been turned off for security reasons and CT-based "
--			" firewall rule not found. Use the iptables CT target "
-+			"firewall rule not found. Use the iptables CT target "
- 			"to attach helpers instead.\n");
- 		net->ct.auto_assign_helper_warned = 1;
- 		return NULL;
--- 
-2.22.0
+> > I really do not understand why you think that WE no longer care about the
+> > level (and the size) of the holes. I assume that WE is pluralis majestatis
+> > and not meant to reflect the opinion of you and everyone else.
+> 
+> Again, I apologise - that was sloppy wording in the commit message. By
+> "we" I meant the code not any particular person.
+
+Nothing to apologize. Common mistake of trying to impersonate code. That
+always reads wrong :)
+
+> > I have no idea whether you ever had to do serious work with PT dump, but I
+> > surely have at various occasions including the PTI mess and I definitely
+> > found the size and the level information from holes very useful.
+> 
+> On arm64 we don't have those lines, but equally it's possible they might
+> be useful in the future. So this might be something to add.
+> 
+> As I said in a previous email[3] I was dropping the lines from the
+> output assuming nobody had any objections. Since you find these lines
+> useful, I'll see about reworking the change to retain the lines.
+
+That would be great and as I saw in the other mail, Mark wants to have them
+as well :)
+
+That reminds me, that I had a patch when dealing with L1TF which printed
+the PFNs so I could verify that the mitigations do what they are supposed
+to do, but that patch got obviously lost somewhere down the road.
+
+Thanks,
+
+	tglx
 
