@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941E0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B723AC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F4E20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD5E20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999393;
-	bh=5sL5sNipRlKuOhvsrpXGDhQ+5j45f7ZCdwTRlXdn5II=;
+	s=default; t=1563999396;
+	bh=eoUuKILwWbW58gWvO2lTHtVKNhTV3/Qr2k/LLV33VJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BpSDg79voYXXSI1h/APhrN6JYCiZsbBgonp+bou0qilcFFpebvo2gfUQ7VAWxSds7
-	 8jJX2sY6zNFRhOkRki1Et7J1sYF5l/dqtxZcbPMgS5ITNomB9nPzTN4F7HnTrB55rt
-	 O2I6uqVBzutECmi8AyDWeHZNR2AsE4J9jiclWp3E=
+	b=TiEQTf2hM1Fo8qYvIOMPXrL6UieuS4acdVF670MmXblDcB5MvjfYkNhfols4la/rj
+	 nRkaMg2ykR4FRAqrwAwkkXcGB5JJJ6NBAFnykCDFCCIhtd3xZEZXtRPFoUE0f/nxAX
+	 8ZozjePZNXFyhanmjWGi7Y0jVLiQ7vLp5xVXOISk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391628AbfGXTvL (ORCPT
+        id S2391791AbfGXUQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60172 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:16:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391471AbfGXTvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:03 -0400
+        id S2391623AbfGXTvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:51:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 659A022ADA;
-        Wed, 24 Jul 2019 19:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44A8621873;
+        Wed, 24 Jul 2019 19:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997862;
-        bh=5sL5sNipRlKuOhvsrpXGDhQ+5j45f7ZCdwTRlXdn5II=;
+        s=default; t=1563997870;
+        bh=eoUuKILwWbW58gWvO2lTHtVKNhTV3/Qr2k/LLV33VJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mDvyyy1vUoH9ej0MEAiCt3kF672T2Pd0i7Bliq4VzO8+ay+VJSfkMn2eJ5m5XOx3g
-         /0j63NrLW+Zb72/g6FBNQ6UPn2MPdp6Hp1ETO2j1nlgJ25CJArF5WfcPyJAQEcBpqh
-         s/Vq4PXBsaXeYEiRvDQBqIH9+45WpS3/0BWOxTho=
+        b=LvzAzSfp9hIbG+YUYQ0jmM+1AP8LLQ9zd906wCSHQtRy7mOVpOKlpanPykIfiPu2p
+         JmwU4EKgxr/x6HpS+Ox5JrHEoqFvuosGQ1hktP6VMu0S+3WIjEMKBGdlhotU1gQ9q4
+         YkIhXhxV+RpFVq3QYR5Qb27nLEe1b0BqZ7gj27No=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 117/371] spi: fix ctrl->num_chipselect constraint
-Date:   Wed, 24 Jul 2019 21:17:49 +0200
-Message-Id: <20190724191733.628145439@linuxfoundation.org>
+Subject: [PATCH 5.1 173/371] net: hns3: fix a -Wformat-nonliteral compile warning
+Date:   Wed, 24 Jul 2019 21:18:45 +0200
+Message-Id: <20190724191738.278440034@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,63 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f9481b08220d7dc1ff21e296a330ee8b721b44e4 ]
+[ Upstream commit 18d219b783da61a6cc77581f55fc4af2fa16bc36 ]
 
-at91sam9g25ek showed the following error at probe:
-atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx)
-for DMA transfers
-atmel_spi: probe of f0000000.spi failed with error -22
+When setting -Wformat=2, there is a compiler warning like this:
 
-Commit 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-moved the calling of spi_get_gpio_descs() after ctrl->dev is set,
-but didn't move the !ctrl->num_chipselect check. When there are
-chip selects in the device tree, the spi-atmel driver lets the
-SPI core discover them when registering the SPI master.
-The ctrl->num_chipselect is thus expected to be set by
-spi_get_gpio_descs().
+hclge_main.c:xxx:x: warning: format not a string literal and no
+format arguments [-Wformat-nonliteral]
+strs[i].desc);
+^~~~
 
-Move the !ctlr->num_chipselect after spi_get_gpio_descs() as it was
-before the aforementioned commit. While touching this block, get rid
-of the explicit comparison with 0 and update the commenting style.
+This patch adds missing format parameter "%s" to snprintf() to
+fix it.
 
-Fixes: 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 46a3df9f9718 ("Add HNS3 Acceleration Engine & Compatibility Layer Support")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index a83fcddf1dad..7f6fb383d7a7 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2281,11 +2281,6 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	if (status)
- 		return status;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 6d4d5a470163..563eefa20003 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -550,8 +550,7 @@ static u8 *hclge_comm_get_strings(u32 stringset,
+ 		return buff;
  
--	/* even if it's just one always-selected device, there must
--	 * be at least one chipselect
--	 */
--	if (ctlr->num_chipselect == 0)
--		return -EINVAL;
- 	if (ctlr->bus_num >= 0) {
- 		/* devices with a fixed bus num must check-in with the num */
- 		mutex_lock(&board_lock);
-@@ -2356,6 +2351,13 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		}
+ 	for (i = 0; i < size; i++) {
+-		snprintf(buff, ETH_GSTRING_LEN,
+-			 strs[i].desc);
++		snprintf(buff, ETH_GSTRING_LEN, "%s", strs[i].desc);
+ 		buff = buff + ETH_GSTRING_LEN;
  	}
  
-+	/*
-+	 * Even if it's just one always-selected device, there must
-+	 * be at least one chipselect.
-+	 */
-+	if (!ctlr->num_chipselect)
-+		return -EINVAL;
-+
- 	status = device_add(&ctlr->dev);
- 	if (status < 0) {
- 		/* free bus id */
 -- 
 2.20.1
 
