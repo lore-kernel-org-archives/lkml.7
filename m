@@ -2,106 +2,95 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802D2C76191
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12155C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C2122AEC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC4422ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 14:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gTXhj9Zq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dpWg9Xr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfGXOLJ (ORCPT
+        id S1728171AbfGXOLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 10:11:09 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37040 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfGXOLI (ORCPT
+        Wed, 24 Jul 2019 10:11:43 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34983 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfGXOLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 10:11:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y26so45598461qto.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:11:08 -0700 (PDT)
+        Wed, 24 Jul 2019 10:11:43 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s1so14996602pgr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 07:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XSMSBO973DfvMeeteXqgGKF7W2+Loe7uKWtbLSmRJp4=;
-        b=gTXhj9ZqVqh/c1Tlp0kQKLmIeOJZ9I0W7iJFijeEbYc2pw5WqfBaHyQhl/qzepZJlM
-         infzsQJLb6v93ckbqBV7S4YQa39ItbL+e6nnT2zbh2KV3vK9UtV6EzNmp94ycAMB1PUP
-         atzF38AlS0gWScipZSZVHIq9i57oaULt3ldLlCTsYx28piF73voCpHpl7b/DOKE6ELrD
-         mwIezPCPGgOTGcpKkEbaGHZHCB2MeHoJxwuArMiAJFxhHUOmsSfckuqq/kkciwpYzhlD
-         CNSrJEALAFWZKGCY85HLPMPi/4ZUb1MQOZuknR+CuwqWRTiFtOj9ESf4E4PNr9UjN6kR
-         aNFA==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=yf08E+49qJAyoxiq4Pp3i3pHItoQTgkz38vEqql7VE0=;
+        b=dpWg9Xr6L0D7Z/Ku2YJ42eQE4yvd1e82KQHr2lLRD4ftXtEpX04IVbpT+HH9YHiRTf
+         gmMxS12NNdYsm8KVCb9Gb6fwt6N01iADdocH93+17UiKD01ObzlsdYaBock1ojwXxx2Q
+         uS1Q86VImSm1smN8OJMXJTvKKqz9V/NLqj9K8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XSMSBO973DfvMeeteXqgGKF7W2+Loe7uKWtbLSmRJp4=;
-        b=BxRTMvhecnrgQ/sV2O2RSZ39spIyxYFpC1UHVLsSTsofVyHt+SKnIG61lgOE4EcG0o
-         q1kWjNeQBwxbQdA+aSsd6HbbqPbNyV9p0Yb4PkS6dM9vX8ZNjbyWQkbJ+O1BKymoCy6x
-         PGXRXI4/mLbSuCQIv9G1HMBdU9MuvStUtI6vqgncX9HGx0dyNAiBHnKGsKEr7EtT82yU
-         cXBHBVTy3yZHtIvJG7vf67R0BsUzfj7QtOUfpfJBO427vCs8hxhXIEXnbNVCydEXHzDD
-         ZQ12yGPe5TTGPW3WF+Q+woBET8iv18FFxij9Bl0I8ak9Y2ymOHp4AvyUMFC3FwQfW0oy
-         7qjw==
-X-Gm-Message-State: APjAAAVEN64xii6eWEObQ6GAajyZ9SW7cdYq/+t+jHGEJOXuxfni733v
-        cLEA7hS2kCfVLVJXtkOpMe3+KQ==
-X-Google-Smtp-Source: APXvYqy0tj9o47/lvntHG1UXs42ZsSWDwBvJZWHf+0IOq45oHpMmcsWa56sAZ9oeA906uiVqylpMDQ==
-X-Received: by 2002:ac8:2642:: with SMTP id v2mr55104887qtv.333.1563977467644;
-        Wed, 24 Jul 2019 07:11:07 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id r36sm24461459qte.71.2019.07.24.07.11.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Jul 2019 07:11:07 -0700 (PDT)
-Message-ID: <1563977465.11067.9.camel@lca.pw>
-Subject: Re: [PATCH] mm/mmap.c: silence variable 'new_start' set but not used
-From:   Qian Cai <cai@lca.pw>
-To:     YueHaibing <yuehaibing@huawei.com>, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, mhocko@suse.com, vbabka@suse.cz,
-        yang.shi@linux.alibaba.com, jannh@google.com, walken@google.com
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Wed, 24 Jul 2019 10:11:05 -0400
-In-Reply-To: <20190724140739.59532-1-yuehaibing@huawei.com>
-References: <20190724140739.59532-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=yf08E+49qJAyoxiq4Pp3i3pHItoQTgkz38vEqql7VE0=;
+        b=Bv/xIu5r9qjd4NHMgXKX4Y4HdwaQRmJQz15byUNIkoJloPimp7wua0KQsxaDCSKC95
+         13nP3yT4/uDKKSgIfptH9NONeia9/b/sBgObX2NTMdzqWk0O1vMFRWxlE54OYy2QRHhq
+         gXHRb5/sSxvIL+A6VK8wKgwNC2YOFKmj97hRx5+vP6oPS3cznYlpNEPGvhbBwJuqa3AU
+         iZ4w0iFz0H3vjSDV6hToSQiNO394Qx9zyqO5k2WOTWQOm9QQzsfswgfq7qns3q/N5rN4
+         en2uo1tHQF+TgNj5VfoOGXWqu1XuVb8RGvUEA1/H0Mn7pk3splvwjW6SrAeJUgh2lIxx
+         7Svw==
+X-Gm-Message-State: APjAAAXCdhEGZZeIStWT2Gmvd+7I8sAAuZO/BQDjHe2DAK0eqtvSluPR
+        VRk5ym2gESXzxFUOhFTYfufo3w==
+X-Google-Smtp-Source: APXvYqzexkRd5KbJ9v+zC2RclMHc1mgtJ7nJ19cyNya96Y2QMzMnyKVcrwRGhsiI6ZW5BlT/SegIgw==
+X-Received: by 2002:a63:c64b:: with SMTP id x11mr81481881pgg.319.1563977502745;
+        Wed, 24 Jul 2019 07:11:42 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id l6sm46519081pga.72.2019.07.24.07.11.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 07:11:42 -0700 (PDT)
+Message-ID: <5d38671e.1c69fb81.1f6f4.a5a1@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190724044906.12007-5-vkoul@kernel.org>
+References: <20190724044906.12007-1-vkoul@kernel.org> <20190724044906.12007-5-vkoul@kernel.org>
+Subject: Re: [PATCH v2 4/5] arm64: dts: qcom: sdm845: remove macro from unit name
+To:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 24 Jul 2019 07:11:41 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-07-24 at 22:07 +0800, YueHaibing wrote:
-> 'new_start' is used in is_hugepage_only_range(),
-> which do nothing in some arch. gcc will warning:
-> 
-> mm/mmap.c: In function acct_stack_growth:
-> mm/mmap.c:2311:16: warning: variable new_start set but not used [-Wunused-but-
-> set-variable]
-
-Nope. Convert them to inline instead.
-
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Quoting Vinod Koul (2019-07-23 21:49:05)
+> Unit name is supposed to be a number, using a macro with hex value is
+> not recommended, so add the value in unit name.
+>=20
+> arch/arm64/boot/dts/qcom/pm8998.dtsi:81.18-84.6: Warning (unit_address_fo=
+rmat): /soc/spmi@c440000/pmic@0/adc@3100/adc-chan@0x06: unit name should no=
+t have leading "0x"
+> arch/arm64/boot/dts/qcom/pm8998.dtsi:81.18-84.6: Warning (unit_address_fo=
+rmat): /soc/spmi@c440000/pmic@0/adc@3100/adc-chan@0x06: unit name should no=
+t have leading 0s
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  mm/mmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index e2dbed3..56c2a92 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -2308,7 +2308,7 @@ static int acct_stack_growth(struct vm_area_struct *vma,
->  			     unsigned long size, unsigned long grow)
->  {
->  	struct mm_struct *mm = vma->vm_mm;
-> -	unsigned long new_start;
-> +	unsigned long __maybe_unused new_start;
->  
->  	/* address space limit tests */
->  	if (!may_expand_vm(mm, vma->vm_flags, grow))
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+
