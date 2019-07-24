@@ -2,149 +2,123 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A854C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5780C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EDF2190F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF2B2190F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 17:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lkP+47eS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="IOHSZlOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfGXRvn (ORCPT
+        id S1726673AbfGXRwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 13:51:43 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38456 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfGXRvm (ORCPT
+        Wed, 24 Jul 2019 13:52:08 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.51]:18178 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbfGXRwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 13:51:42 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OHdfUU134750;
-        Wed, 24 Jul 2019 17:50:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=NX/s/A5OLVDNZD4fNK87u3UpZfdfRBOaB3nXPLcsPas=;
- b=lkP+47eSi6lNelJK4kH8PvDDkmDI4KwgfHOhbC5Lp/E4hBF1MY44i5mbaW+evRfZPfVk
- R0E2hYBeVSx9InL7HjrmIAPY9jsoPtf007rUUpbwwU4kMeu5SwrRL/OaqngDPPnDxpRy
- AejMJlnkqk7kWLvjxvzRIKfTgu0PhLBMNO6svrheEboBLTglFaBcAp8E2cYbg0nGn284
- JFJedRP7waYMAXMhlD29ywDn9b0RVde89rNmiQn3yImeq7Z8T8QNjtY/7dNVqr76HLnN
- PdLeHUc6OyBQYDGzt2p6cj94UzzJYNWaB+pds0fvtZPlZ+ppJhobynJmlWoICT2GKsSF 4w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2tx61by15s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 17:50:29 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x6OHcEMc018710;
-        Wed, 24 Jul 2019 17:50:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2tx60xv7j9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jul 2019 17:50:28 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x6OHoPsb022353;
-        Wed, 24 Jul 2019 17:50:25 GMT
-Received: from monkey.oracle.com (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jul 2019 10:50:25 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Hillf Danton <hdanton@sina.com>, Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [RFC PATCH 1/3] mm, reclaim: make should_continue_reclaim perform dryrun detection
-Date:   Wed, 24 Jul 2019 10:50:12 -0700
-Message-Id: <20190724175014.9935-2-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724175014.9935-1-mike.kravetz@oracle.com>
-References: <20190724175014.9935-1-mike.kravetz@oracle.com>
+        Wed, 24 Jul 2019 13:52:07 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id B979D56
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 12:52:04 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id qLQqhloMr90onqLQqheLZR; Wed, 24 Jul 2019 12:52:04 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RSrN+PMcoh98qQtwwEognyHoc2T7ZoZirz4tY6BRBgI=; b=IOHSZlOAgH6hJR4fh5oxhlyKKZ
+        VhcXaq4oeio2K0v64cWLzVfl8USxaUBj7LA6C8m5/MVMpcl+Fw8hUvsNlsAEef5LNRyHTsKGTkQts
+        VI6FZNumAYjDI/wNQP4WEYRNnN1hn+ApovLXz7gRB1MqsPqiPYnJzMX2T/XtybI76YUJJb2S3aQqH
+        23SAA9MKMdK7hnFl3r0dJ+MyDejYMMgBax7G2jvNUlnzT2y+5ctWaU7sWJIyjuaHw5fg1wCiS/2EA
+        cawOqA1WhuSVwrjtsquZq1+ihz9Au3jQ7k8Fh+uAm4GkTr3eK4/G0BiTYRYhRo8+I2jUG6uITuxKV
+        lB9Q80rg==;
+Received: from cablelink-187-160-61-189.pcs.intercable.net ([187.160.61.189]:50900 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hqLQp-000mes-J4; Wed, 24 Jul 2019 12:52:03 -0500
+Date:   Wed, 24 Jul 2019 12:52:02 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] Input: elantech - mark expected switch fall-through
+Message-ID: <20190724175202.GA9583@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1907240191
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9328 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1907240191
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.160.61.189
+X-Source-L: No
+X-Exim-ID: 1hqLQp-000mes-J4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-187-160-61-189.pcs.intercable.net (embeddedor) [187.160.61.189]:50900
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-Address the issue of should_continue_reclaim continuing true too often
-for __GFP_RETRY_MAYFAIL attempts when !nr_reclaimed and nr_scanned.
-This could happen during hugetlb page allocation causing stalls for
-minutes or hours.
+This patch fixes the following warning:
 
-Restructure code so that false will be returned in this case even if
-there are plenty of inactive pages.
+drivers/input/mouse/elantech.c: In function 'elantech_use_host_notify':
+drivers/input/mouse/elantech.c:1843:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (dmi_get_bios_year() >= 2018)
+      ^
+drivers/input/mouse/elantech.c:1845:2: note: here
+  default:
+  ^~~~~~~
 
-Need better description from Hillf Danton
-Need SOB from Hillf Danton
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Notice that -Wimplicit-fallthrough will be globally
+enabled in v5.3.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- mm/vmscan.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/input/mouse/elantech.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index f4fd02ae233e..484b6b1a954e 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2673,18 +2673,6 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
- 			return false;
- 	}
- 
--	/*
--	 * If we have not reclaimed enough pages for compaction and the
--	 * inactive lists are large enough, continue reclaiming
--	 */
--	pages_for_compaction = compact_gap(sc->order);
--	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
--	if (get_nr_swap_pages() > 0)
--		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
--	if (sc->nr_reclaimed < pages_for_compaction &&
--			inactive_lru_pages > pages_for_compaction)
--		return true;
--
- 	/* If compaction would go ahead or the allocation would succeed, stop */
- 	for (z = 0; z <= sc->reclaim_idx; z++) {
- 		struct zone *zone = &pgdat->node_zones[z];
-@@ -2700,7 +2688,21 @@ static inline bool should_continue_reclaim(struct pglist_data *pgdat,
- 			;
- 		}
- 	}
--	return true;
-+
-+	/*
-+	 * If we have not reclaimed enough pages for compaction and the
-+	 * inactive lists are large enough, continue reclaiming
-+	 */
-+	pages_for_compaction = compact_gap(sc->order);
-+	inactive_lru_pages = node_page_state(pgdat, NR_INACTIVE_FILE);
-+	if (get_nr_swap_pages() > 0)
-+		inactive_lru_pages += node_page_state(pgdat, NR_INACTIVE_ANON);
-+
-+	return inactive_lru_pages > pages_for_compaction &&
-+		/*
-+		 * avoid dryrun with plenty of inactive pages
-+		 */
-+		nr_scanned && nr_reclaimed;
- }
- 
- static bool pgdat_memcg_congested(pg_data_t *pgdat, struct mem_cgroup *memcg)
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 73544776a9ed..04fe43440a3c 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1842,6 +1842,7 @@ static bool elantech_use_host_notify(struct psmouse *psmouse,
+ 		/* SMbus implementation is stable since 2018 */
+ 		if (dmi_get_bios_year() >= 2018)
+ 			return true;
++		/* fall through */
+ 	default:
+ 		psmouse_dbg(psmouse,
+ 			    "Ignoring SMBus bus provider %d\n", info->bus);
 -- 
-2.20.1
+2.22.0
 
