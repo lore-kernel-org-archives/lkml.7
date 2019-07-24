@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758E2C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CB7C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40EBE206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754BB21849
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998729;
-	bh=eFNzaiyhmXqseJ76+m91rnHQTlGWu2wv0+eQMEn9XyQ=;
+	s=default; t=1563998732;
+	bh=OoMl7WcmRWuXWQMJbfFOTjQwxnUJV36F09q6BYZZxeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T7Jp1prtxuPxHt8+AyFtrzTAYoA98tuEreVIa1nOIwU8VtJJb4eu34Np2S36ipFCP
-	 aG1fSXrX/jrcrTobTS8eHCpN7PVcVksRiZ6eLbecAA6NXhc4UYXnUyIu3TfRb+M/nF
-	 hmwijzb7yHPuteF9lQ4GfgDxB2VJbHnez+CivVx8=
+	b=UEg/tpn/CB9R5JoVbynD+G6se5dVMw4bU8y3ea73/+fdIRuSllRH4s+ofv02b889f
+	 rBC5WjUbVpBU8sejhj1EIxzQwT6t/CrtHAoyLEqiDSPkkst9SpatjXDaHA3mhVP2AN
+	 i0vk0zEgz/pMN1Ec7AlagDU0dmfGXRAer8mlHaes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405787AbfGXUF2 (ORCPT
+        id S2392654AbfGXUFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56744 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392663AbfGXUFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:05:20 -0400
+        id S2405750AbfGXUD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:03:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 362B7206BA;
-        Wed, 24 Jul 2019 20:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 067D321852;
+        Wed, 24 Jul 2019 20:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998719;
-        bh=eFNzaiyhmXqseJ76+m91rnHQTlGWu2wv0+eQMEn9XyQ=;
+        s=default; t=1563998607;
+        bh=OoMl7WcmRWuXWQMJbfFOTjQwxnUJV36F09q6BYZZxeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rfpX6Igr3/8bKzFwiOihtV2J2pfnvV9Su/GOSGjU186/8ACzvo213jRz5jNHoFGUj
-         RM3449IBIbloXwY9tEoTJcuIOmXZ27uuyrx8JNHKvZGzrVicgTP0ogRQTIDcsnvVkQ
-         3XxjRflDU1EAD22B6nypTcuiTpFdMlNjmRw8s+xc=
+        b=agrk1siDqt4CWMEQj0xBMN03azeK2IXxH9VKtEOpKDYTTR1CIfyNFTXWgCDoTfkuC
+         CteBZGgk2xWN2kB0tG9Ag+nWE/gIk2akvZKZKaoyKQKQv2Xd0BsmzL/ZLN1cut4ID9
+         DzA22AtKM9OGb4oLyorJZT65NfsQMNAD9l98lxv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, NOYB <JunkYardMail1@Frontier.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/271] arm64: Do not enable IRQs for ct_user_exit
-Date:   Wed, 24 Jul 2019 21:19:20 +0200
-Message-Id: <20190724191703.025516001@linuxfoundation.org>
+Subject: [PATCH 4.19 053/271] ipset: Fix memory accounting for hash types on resize
+Date:   Wed, 24 Jul 2019 21:18:42 +0200
+Message-Id: <20190724191659.691817591@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -64,54 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9034f6251572a4744597c51dea5ab73a55f2b938 ]
+[ Upstream commit 11921796f4799ca9c61c4b22cc54d84aa69f8a35 ]
 
-For el0_dbg and el0_error, DAIF bits get explicitly cleared before
-calling ct_user_exit.
+If a fresh array block is allocated during resize, the current in-memory
+set size should be increased by the size of the block, not replaced by it.
 
-When context tracking is disabled, DAIF gets set (almost) immediately
-after. When context tracking is enabled, among the first things done
-is disabling IRQs.
+Before the fix, adding entries to a hash set type, leading to a table
+resize, caused an inconsistent memory size to be reported. This becomes
+more obvious when swapping sets with similar sizes:
 
-What is actually needed is:
-- PSR.D = 0 so the system can be debugged (should be already the case)
-- PSR.A = 0 so async error can be handled during context tracking
+  # cat hash_ip_size.sh
+  #!/bin/sh
+  FAIL_RETRIES=10
 
-Do not clear PSR.I in those two locations.
+  tries=0
+  while [ ${tries} -lt ${FAIL_RETRIES} ]; do
+  	ipset create t1 hash:ip
+  	for i in `seq 1 4345`; do
+  		ipset add t1 1.2.$((i / 255)).$((i % 255))
+  	done
+  	t1_init="$(ipset list t1|sed -n 's/Size in memory: \(.*\)/\1/p')"
 
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+  	ipset create t2 hash:ip
+  	for i in `seq 1 4360`; do
+  		ipset add t2 1.2.$((i / 255)).$((i % 255))
+  	done
+  	t2_init="$(ipset list t2|sed -n 's/Size in memory: \(.*\)/\1/p')"
+
+  	ipset swap t1 t2
+  	t1_swap="$(ipset list t1|sed -n 's/Size in memory: \(.*\)/\1/p')"
+  	t2_swap="$(ipset list t2|sed -n 's/Size in memory: \(.*\)/\1/p')"
+
+  	ipset destroy t1
+  	ipset destroy t2
+  	tries=$((tries + 1))
+
+  	if [ ${t1_init} -lt 10000 ] || [ ${t2_init} -lt 10000 ]; then
+  		echo "FAIL after ${tries} tries:"
+  		echo "T1 size ${t1_init}, after swap ${t1_swap}"
+  		echo "T2 size ${t2_init}, after swap ${t2_swap}"
+  		exit 1
+  	fi
+  done
+  echo "PASS"
+  # echo -n 'func hash_ip4_resize +p' > /sys/kernel/debug/dynamic_debug/control
+  # ./hash_ip_size.sh
+  [ 2035.018673] attempt to resize set t1 from 10 to 11, t 00000000fe6551fa
+  [ 2035.078583] set t1 resized from 10 (00000000fe6551fa) to 11 (00000000172a0163)
+  [ 2035.080353] Table destroy by resize 00000000fe6551fa
+  FAIL after 4 tries:
+  T1 size 9064, after swap 71128
+  T2 size 71128, after swap 9064
+
+Reported-by: NOYB <JunkYardMail1@Frontier.com>
+Fixes: 9e41f26a505c ("netfilter: ipset: Count non-static extension memory for userspace")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/entry.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/netfilter/ipset/ip_set_hash_gen.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 8556876c9109..5f800384cb9a 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -824,7 +824,7 @@ el0_dbg:
- 	mov	x1, x25
- 	mov	x2, sp
- 	bl	do_debug_exception
--	enable_daif
-+	enable_da_f
- 	ct_user_exit
- 	b	ret_to_user
- el0_inv:
-@@ -876,7 +876,7 @@ el0_error_naked:
- 	enable_dbg
- 	mov	x0, sp
- 	bl	do_serror
--	enable_daif
-+	enable_da_f
- 	ct_user_exit
- 	b	ret_to_user
- ENDPROC(el0_error)
+diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
+index 8a33dac4e805..ddfe06d7530b 100644
+--- a/net/netfilter/ipset/ip_set_hash_gen.h
++++ b/net/netfilter/ipset/ip_set_hash_gen.h
+@@ -625,7 +625,7 @@ mtype_resize(struct ip_set *set, bool retried)
+ 					goto cleanup;
+ 				}
+ 				m->size = AHASH_INIT_SIZE;
+-				extsize = ext_size(AHASH_INIT_SIZE, dsize);
++				extsize += ext_size(AHASH_INIT_SIZE, dsize);
+ 				RCU_INIT_POINTER(hbucket(t, key), m);
+ 			} else if (m->pos >= m->size) {
+ 				struct hbucket *ht;
 -- 
 2.20.1
 
