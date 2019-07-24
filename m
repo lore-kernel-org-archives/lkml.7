@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078D6C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C633C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D166B20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAFC218F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996382;
-	bh=l4JjgKdCpkmqgSLmi99dSz4q204lNHwEMKF2TD08AOA=;
+	s=default; t=1563996384;
+	bh=G8ZzqByk5C6VfeVvnonFakvbAuQMGMSo714V6d3WMa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KOJEfHZKicQTXo8IAFnywJ0okD/Nebv+tlsh0hMq61Yb9XVnA5bKjrwVvyXWPH6Nt
-	 qJM20ZJ/GSdqLdGpS2oxGJG1z0f3MiYzrh9BVloAiNTGec+JAc+EII8lb6NWoWdrCI
-	 fl28p2gLlOu77mjQzNrzbov0vMj9Q2TwNJa+ApLk=
+	b=ifuOiNqTI5ZM374PIvb601A39EyAxmfzEnDaJNqmfgwEj6E/fCLWfZUIiQmOsb+Kj
+	 LEjfFNnNXXCAXh4I7i4PfZOHVLLUOVMReMb4HVkiG2PBZruHedwsNelC7TLV76RLFf
+	 Zk+pJsslYlpA069h+IXWDS2GJ9QS8E0ioTEKm8K4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfGXT0V (ORCPT
+        id S2388096AbfGXT0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43276 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfGXT0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:26:19 -0400
+        id S1729239AbfGXT0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:26:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3318218EA;
-        Wed, 24 Jul 2019 19:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90757218EA;
+        Wed, 24 Jul 2019 19:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996378;
-        bh=l4JjgKdCpkmqgSLmi99dSz4q204lNHwEMKF2TD08AOA=;
+        s=default; t=1563996381;
+        bh=G8ZzqByk5C6VfeVvnonFakvbAuQMGMSo714V6d3WMa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jpx/evy2GKc5bWNjXIhpoOM0VbpLqNz5rbx2KIdoqyrhCniE+wZn7/kgw4NM9G9Sk
-         M9Q0KTNKnxh/d3UdYw6Q7OQ6SH0Nuid1nLH/13F1j97tliqIDuzHPN0YsR8ZZ6Qe4y
-         io/xV+obssQbc88W9QYdj3Ey6O07N8k5M5L7rM1o=
+        b=DAKPxmtqQeEGUdRULwcw2/XQvE6X3LjRpHqWaBc/gOA0tzqh4NW8MF8zeMNTdON3R
+         /OPBZDjQ9EBUfbYbUxRRjoQ7Ss1+sQhko34C0UyIq1UfSjPrZeOsnyTILJX4xOEOAB
+         +CBrthvCQ90B1auytiEzVVuXDblyH98g0cShaGf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Denis Bolotin <denis.bolotin@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 074/413] s390/qdio: handle PENDING state for QEBSM devices
-Date:   Wed, 24 Jul 2019 21:16:05 +0200
-Message-Id: <20190724191740.398055580@linuxfoundation.org>
+Subject: [PATCH 5.2 036/413] qed: Set the doorbell address correctly
+Date:   Wed, 24 Jul 2019 21:15:27 +0200
+Message-Id: <20190724191738.201049416@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,37 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
+[ Upstream commit 8366d520019f366fabd6c7a13032bdcd837e18d4 ]
 
-When a CQ-enabled device uses QEBSM for SBAL state inspection,
-get_buf_states() can return the PENDING state for an Output Queue.
-get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
-buffer will permanently stall all further completion processing on this
-Queue.
+In 100g mode the doorbell bar is united for both engines. Set
+the correct offset in the hwfn so that the doorbell returned
+for RoCE is in the affined hwfn.
 
-This isn't a concern for non-QEBSM devices, as get_buf_states() for such
-devices will manually turn PENDING buffers into EMPTY ones.
-
-Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Denis Bolotin <denis.bolotin@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c  | 29 ++++++++++++++--------
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c |  2 +-
+ 2 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index 7b7620de2acd..730c4e68094b 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -736,6 +736,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q, unsigned int start)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index fccdb06fc5c5..8c40739e0d1b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -3443,6 +3443,7 @@ static void qed_nvm_info_free(struct qed_hwfn *p_hwfn)
+ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 				 void __iomem *p_regview,
+ 				 void __iomem *p_doorbells,
++				 u64 db_phys_addr,
+ 				 enum qed_pci_personality personality)
+ {
+ 	struct qed_dev *cdev = p_hwfn->cdev;
+@@ -3451,6 +3452,7 @@ static int qed_hw_prepare_single(struct qed_hwfn *p_hwfn,
+ 	/* Split PCI bars evenly between hwfns */
+ 	p_hwfn->regview = p_regview;
+ 	p_hwfn->doorbells = p_doorbells;
++	p_hwfn->db_phys_addr = db_phys_addr;
  
- 	switch (state) {
- 	case SLSB_P_OUTPUT_EMPTY:
-+	case SLSB_P_OUTPUT_PENDING:
- 		/* the adapter got it */
- 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
- 			"out empty:%1d %02x", q->nr, count);
+ 	if (IS_VF(p_hwfn->cdev))
+ 		return qed_vf_hw_prepare(p_hwfn);
+@@ -3546,7 +3548,9 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the first hwfn - will learn number of hwfns */
+ 	rc = qed_hw_prepare_single(p_hwfn,
+ 				   cdev->regview,
+-				   cdev->doorbells, personality);
++				   cdev->doorbells,
++				   cdev->db_phys_addr,
++				   personality);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -3555,22 +3559,25 @@ int qed_hw_prepare(struct qed_dev *cdev,
+ 	/* Initialize the rest of the hwfns */
+ 	if (cdev->num_hwfns > 1) {
+ 		void __iomem *p_regview, *p_doorbell;
+-		u8 __iomem *addr;
++		u64 db_phys_addr;
++		u32 offset;
+ 
+ 		/* adjust bar offset for second engine */
+-		addr = cdev->regview +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_0) / 2;
+-		p_regview = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_0) / 2;
++		p_regview = cdev->regview + offset;
+ 
+-		addr = cdev->doorbells +
+-		       qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
+-				       BAR_ID_1) / 2;
+-		p_doorbell = addr;
++		offset = qed_hw_bar_size(p_hwfn, p_hwfn->p_main_ptt,
++					 BAR_ID_1) / 2;
++
++		p_doorbell = cdev->doorbells + offset;
++
++		db_phys_addr = cdev->db_phys_addr + offset;
+ 
+ 		/* prepare second hw function */
+ 		rc = qed_hw_prepare_single(&cdev->hwfns[1], p_regview,
+-					   p_doorbell, personality);
++					   p_doorbell, db_phys_addr,
++					   personality);
+ 
+ 		/* in case of error, need to free the previously
+ 		 * initiliazed hwfn 0.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+index 7873d6dfd91f..13802b825d65 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
+@@ -803,7 +803,7 @@ static int qed_rdma_add_user(void *rdma_cxt,
+ 				     dpi_start_offset +
+ 				     ((out_params->dpi) * p_hwfn->dpi_size));
+ 
+-	out_params->dpi_phys_addr = p_hwfn->cdev->db_phys_addr +
++	out_params->dpi_phys_addr = p_hwfn->db_phys_addr +
+ 				    dpi_start_offset +
+ 				    ((out_params->dpi) * p_hwfn->dpi_size);
+ 
 -- 
 2.20.1
 
