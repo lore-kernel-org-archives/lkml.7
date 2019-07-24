@@ -2,174 +2,101 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8ACC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD06C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA12821911
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6989221926
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 18:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llpCdpQj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dlPXGjbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfGXSbK (ORCPT
+        id S1728438AbfGXScS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 14:31:10 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39866 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfGXSbJ (ORCPT
+        Wed, 24 Jul 2019 14:32:18 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41949 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfGXScS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 14:31:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u25so32131720wmc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:31:07 -0700 (PDT)
+        Wed, 24 Jul 2019 14:32:18 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so21373913pff.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jul 2019 11:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=8zlDZzsAAvON27k3Pf9Ie+llM2L+UReRB9e0skwMC2U=;
-        b=llpCdpQjiEr91IN+xbNFB/IGplDjZohwxbnvVGRzJrHYsxPsc5kkRY4mBZG9NL0cnk
-         e3IUyuouVc4Qx5qeDlI576aNfC9EwwSmEug09JFX7aosoa6fdxlevH/H7EInpqiw1cPI
-         Iu/r4eiZQp2Ko7WTdR2Uvx9lPB+QEc2xU6xGClhOvQZlRI4bZKqvUSqcfOCDn8WtfsSZ
-         +NDzunmxLtFZgs3hgW/9rP3Y1HtESI1Sw5A1w+mGKMI2glDtXIAhpRqveBynbNp3DHbF
-         fut/ClaFICD1v2BiReqIuJyidwMYhBhZ0LV6R75YkRaabXzw81s32qKRHRkpJWXaVOcz
-         laXw==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:cc:from:user-agent:date;
+        bh=GTi6Bq8qv1MIsEGO5GGNfuTeyzBZrOU9NQN3sCHpWpU=;
+        b=dlPXGjbxzXqoe4vdb5l7jyFruLZ+nHHe9/9E9yscqhiwlwhyBSaN4dPhkYwpa84mi7
+         0MpmchCjBhRFmXYVUpsYI4pzbe313pQchqM0KZxaVyFPO73RtmJq2s7g6HoZn9QWbbvl
+         CvrnuhN6bNDpDnb0nbyMulDWbfPHmNlRrG3x4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=8zlDZzsAAvON27k3Pf9Ie+llM2L+UReRB9e0skwMC2U=;
-        b=fp0rCp4/PezuMkQBZSuvAIfTmh8bSm/+fRr2gfbas3MQXpzE9ZV9f+FJfaCisDQEqM
-         /fpETAilphYkKigexiOrXNZDkpbL4py6Hk2l9a1mS7Ao7VRalaBl4hvzwwhEXxGK8Hdq
-         h5dw7KJNHz3vdwRwOHl+j12BdVr7vz0qJx7L0LskGFSggHR38zY2GzI3eh0WGJ0PYzv4
-         v/m9/2UgOWuEjE4g49qi5RUd2cFyBUHkLPTkSNySZP9NRSZNxSINp1cBu+5JsyicdtDX
-         MP6RPW81Y7pfzek8o9oQ0x7WqjnL8HdNTlcUPV3YmqzXj6C/GbxfFCNwwPQP9227Va2z
-         bdog==
-X-Gm-Message-State: APjAAAUb2slIEaGgE+ZsR/INstNFE0tESpPfundLbuU8KFThFixc7Rzj
-        pnBdcPk0A3XU3t+V3qLAW32b6+l84qBHnhyDPWgH6OQ2P4c=
-X-Google-Smtp-Source: APXvYqy96Q+Z3dmuuTeBXpdQsrGH4IhIyvBFz06LgBhSynEmQlIlk48HMlu5OPor977A4TkXeOaGhSf1VX4jYRtVPec=
-X-Received: by 2002:a7b:c215:: with SMTP id x21mr75720175wmi.38.1563993066886;
- Wed, 24 Jul 2019 11:31:06 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:cc:from
+         :user-agent:date;
+        bh=GTi6Bq8qv1MIsEGO5GGNfuTeyzBZrOU9NQN3sCHpWpU=;
+        b=gB1ouvFZ0K1Rk6O+Aw+oNG/5nl/+x7y9fJAJg6vtdTFc4PEtuEmdE21C01cLVOyZs2
+         zIjCcTZrMmi+9jiwL1UTGAlmLi7bMkrMnf4cqLQSIsLqlKPZwR+fgx8mgOcYH9v9Fk1e
+         z6YPSgDen5wkWr+9Cu94RTMxeq2WML8zn+20WMVm7JGWuWFQAcgU30CrHxNPNbC+BT3l
+         HJfOHmbCeDUR2Vo9RvX/C9Jkaa2IAHrkZ2c5kqmXE0cSXUbASONLbjAhlwwSfRjksmDE
+         WAiV0lILJYGLJpVNAUL+MCUYwD/mXtzHDSz0W+XasxHIutSk997gzoMmkSleZKwf5QUH
+         v0qw==
+X-Gm-Message-State: APjAAAU9utBanfeLStsT2pR1CzsZUmZX+2dF0deN6R+TvT27dHe6K2FR
+        YkUZCzBLWDff4tt8W7MVBCf2iw==
+X-Google-Smtp-Source: APXvYqwlbxuM9oEkV60kqlua8NagirbM9q2MPlMTaGMBsIzc4Q8rsHoHFsJa6K4sRG5TpRVZbXGDRQ==
+X-Received: by 2002:a62:2a4d:: with SMTP id q74mr12678551pfq.86.1563993137491;
+        Wed, 24 Jul 2019 11:32:17 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k8sm45880018pgm.14.2019.07.24.11.32.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Jul 2019 11:32:16 -0700 (PDT)
+Message-ID: <5d38a430.1c69fb81.6e696.9e6f@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1907182223560.1785@nanos.tec.linutronix.de>
- <20190724023946.yxsz5im22fz4zxrn@treble> <20190724074732.GJ3402@hirez.programming.kicks-ass.net>
- <20190724125525.kgybu3nnpvwlcz2c@treble> <20190724133516.GB31381@hirez.programming.kicks-ass.net>
- <20190724141040.GA31425@hirez.programming.kicks-ass.net> <20190724164821.GB31425@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190724164821.GB31425@hirez.programming.kicks-ass.net>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 24 Jul 2019 20:30:55 +0200
-Message-ID: <CA+icZUVt0QK9SoWHU3G8e8MXOYOJSsh70+PCCWx15buZDvu8nQ@mail.gmail.com>
-Subject: Re: [PATCH] objtool: Improve UACCESS coverage
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190724145452.GC18620@codeaurora.org>
+References: <20190722215340.3071-1-ilina@codeaurora.org> <5d375054.1c69fb81.7ce3f.3591@mx.google.com> <20190723192159.GA18620@codeaurora.org> <5d376bb3.1c69fb81.2bb4e.7771@mx.google.com> <20190724145452.GC18620@codeaurora.org>
+Subject: Re: [PATCH V2 1/4] drivers: qcom: rpmh-rsc: simplify TCS locking
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        rnayak@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        mkshah@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 24 Jul 2019 11:32:15 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 6:48 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Jul 24, 2019 at 04:10:40PM +0200, Peter Zijlstra wrote:
-> > And that most certainly should trigger...
+Quoting Lina Iyer (2019-07-24 07:54:52)
+> On Tue, Jul 23 2019 at 14:19 -0600, Stephen Boyd wrote:
+> >Quoting Lina Iyer (2019-07-23 12:21:59)
+> >> On Tue, Jul 23 2019 at 12:22 -0600, Stephen Boyd wrote:
+> >> >Can you keep irq saving and restoring in this patch and then remove t=
+hat
+> >> >in the next patch with reasoning? It probably isn't safe if the lock =
+is
+> >> >taken in interrupt context anyway.
+> >> >
+> >> Yes, the drv->lock should have been irqsave/irqrestore, but it hasn't
+> >> been changed by this patch.
 > >
-> > Let me gdb that objtool thing.
->
-> ---
-> Subject: objtool: Improve UACCESS coverage
->
-> A clang build reported an (obvious) double CLAC while a GCC build did
-> not; it turns out we only re-visit instructions if the first visit was
-> with AC=0. If OTOH the first visit was with AC=1, we completely ignore
-> any subsequent visit, even when it has AC=0.
->
-> Fix this by using a visited mask, instead of boolean and (explicitly)
-> mark the AC state.
->
-> $ ./objtool check -b --no-fp --retpoline --uaccess ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x22: redundant UACCESS disable
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xea: (alt)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   .altinstr_replacement+0xffffffffffffffff: (branch)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xd9: (alt)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0xb2: (branch)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0x39: (branch)
-> ../../defconfig-build/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool:   eb_copy_relocations.isra.34()+0x0: <=== (func)
->
-> Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >It needs to be changed to maintain the irqsaving/restoring of the code.
+> >
+> May be I should club this with the following patch. Instead of adding
+> irqsave and restore to drv->lock and then remvoing them again in the
+> following patch.
+>=20
 
-Thanks Peter Z. and Josh P.!
+I suspect that gets us back to v1 of this patch series? I'd prefer you
+just keep the save/restore of irqs in this patch and then remove them
+later. Or if the order can be the other way, where we remove grabbing
+the lock in irq context comes first and then consolidate the locks into
+one it might work.
 
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-[1] https://github.com/ClangBuiltLinux/linux/issues/617
-
-> ---
->  tools/objtool/check.c | 7 ++++---
->  tools/objtool/check.h | 3 ++-
->  2 files changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 5f26620f13f5..176f2f084060 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -1946,6 +1946,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->         struct alternative *alt;
->         struct instruction *insn, *next_insn;
->         struct section *sec;
-> +       u8 visited;
->         int ret;
->
->         insn = first;
-> @@ -1972,12 +1973,12 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->                         return 1;
->                 }
->
-> +               visited = 1 << state.uaccess;
->                 if (insn->visited) {
->                         if (!insn->hint && !insn_state_match(insn, &state))
->                                 return 1;
->
-> -                       /* If we were here with AC=0, but now have AC=1, go again */
-> -                       if (insn->state.uaccess || !state.uaccess)
-> +                       if (insn->visited & visited)
->                                 return 0;
->                 }
->
-> @@ -2024,7 +2025,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->                 } else
->                         insn->state = state;
->
-> -               insn->visited = true;
-> +               insn->visited |= visited;
->
->                 if (!insn->ignore_alts) {
->                         bool skip_orig = false;
-> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-> index b881fafcf55d..6d875ca6fce0 100644
-> --- a/tools/objtool/check.h
-> +++ b/tools/objtool/check.h
-> @@ -33,8 +33,9 @@ struct instruction {
->         unsigned int len;
->         enum insn_type type;
->         unsigned long immediate;
-> -       bool alt_group, visited, dead_end, ignore, hint, save, restore, ignore_alts;
-> +       bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
->         bool retpoline_safe;
-> +       u8 visited;
->         struct symbol *call_dest;
->         struct instruction *jump_dest;
->         struct instruction *first_jump_src;
