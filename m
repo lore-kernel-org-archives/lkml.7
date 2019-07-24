@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A54C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D25CC7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FFA229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20345229F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996693;
-	bh=6+Wdk9P84D5keGPfCrFXElQqbeYWyusl5dcj9PAplls=;
+	s=default; t=1563996697;
+	bh=iEmGSmB5deUOstaonPxG5zJTjT6YsklEnpYP+mwMasg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hmw1pHrUbAN3x8Zh4elftqBtD+2SqNlGuIRHOW7aGuJPn2NYJbhnDl+oDQ0wwozmz
-	 JASKT0x3NSR2jgP/PS/ifPeURrmfNQ+lzoVs/C5+35RTESUmGMAjprbmTPwnQEArPf
-	 Z+DZkIcH4tpJy49pyC4AxlTykpATpXtgRAkq+vyE=
+	b=mroiaBRCQ9BVF2aM/w5I16EBn9N4kkHtM1dCI3pAD918462qvda4JsBFl8h5qZkY8
+	 562jG7QhBeWZpicZyqqmJc18WRtSadGV7XHHqkAjxOijEq8H78v5a/yZgP0dbpEGRp
+	 pSYXeMshG7zMgSKb/LGgvUMOlGK66aZuPw3KOjyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388486AbfGXTbc (ORCPT
+        id S2388498AbfGXTbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52310 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388459AbfGXTbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:25 -0400
+        id S2388188AbfGXTbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BE532083B;
-        Wed, 24 Jul 2019 19:31:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA40221951;
+        Wed, 24 Jul 2019 19:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996684;
-        bh=6+Wdk9P84D5keGPfCrFXElQqbeYWyusl5dcj9PAplls=;
+        s=default; t=1563996690;
+        bh=iEmGSmB5deUOstaonPxG5zJTjT6YsklEnpYP+mwMasg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v5UDs1BfeQ/1IbayQrXo2ZwwNEbIo8IX3ABRKz2jwji33BtnacjvHnc9B+ZhTAzYG
-         1IYVEgtpjWt2BLADDCCqPHS3Sv/oWxYODIwMLUi6V3jN2KQwfBx0FD8T52XpAEZzZO
-         xOY+HZ8RGSTaw2RMI3QpVKCXetTUpBv1lPBwCocg=
+        b=LWzDXp2+RKyK/SlkmRJ+n/82D6TYjePQiMF4Hg1qFL3MWor7xxYj6VGguGS45EUfp
+         UZobydJl2UjRSUjdLonla/Jc69Hk2XJEGZwsn5/9lJtPpTK8a9kUrF8gSeZP6WG2HH
+         UY4AoZL40juSt8365WRUiK4UF6P6XTua7Z3Z70Vg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zefir Kurtisi <zefir.kurtisi@neratec.com>,
+        stable@vger.kernel.org, Ahmad Masri <amasri@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 182/413] ath9k: correctly handle short radar pulses
-Date:   Wed, 24 Jul 2019 21:17:53 +0200
-Message-Id: <20190724191747.822781683@linuxfoundation.org>
+Subject: [PATCH 5.2 183/413] wil6210: drop old event after wmi_call timeout
+Date:   Wed, 24 Jul 2019 21:17:54 +0200
+Message-Id: <20190724191747.874990353@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,56 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df5c4150501ee7e86383be88f6490d970adcf157 ]
+[ Upstream commit 1a276003111c0404f6bfeffe924c5a21f482428b ]
 
-In commit 3c0efb745a17 ("ath9k: discard undersized packets")
-the lower bound of RX packets was set to 10 (min ACK size) to
-filter those that would otherwise be treated as invalid at
-mac80211.
+This change fixes a rare race condition of handling WMI events after
+wmi_call expires.
 
-Alas, short radar pulses are reported as PHY_ERROR frames
-with length set to 3. Therefore their detection stopped
-working after that commit.
+wmi_recv_cmd immediately handles an event when reply_buf is defined and
+a wmi_call is waiting for the event.
+However, in case the wmi_call has already timed-out, there will be no
+waiting/running wmi_call and the event will be queued in WMI queue and
+will be handled later in wmi_event_handle.
+Meanwhile, a new similar wmi_call for the same command and event may
+be issued. In this case, when handling the queued event we got WARN_ON
+printed.
 
-NOTE: ath9k drivers built thereafter will not pass DFS
-certification.
+Fixing this case as a valid timeout and drop the unexpected event.
 
-This extends the criteria for short packets to explicitly
-handle PHY_ERROR frames.
-
-Fixes: 3c0efb745a17 ("ath9k: discard undersized packets")
-Signed-off-by: Zefir Kurtisi <zefir.kurtisi@neratec.com>
+Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/recv.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/wil6210/wmi.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/recv.c b/drivers/net/wireless/ath/ath9k/recv.c
-index 4e97f7f3b2a3..06e660858766 100644
---- a/drivers/net/wireless/ath/ath9k/recv.c
-+++ b/drivers/net/wireless/ath/ath9k/recv.c
-@@ -815,6 +815,7 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
- 	struct ath_common *common = ath9k_hw_common(ah);
- 	struct ieee80211_hdr *hdr;
- 	bool discard_current = sc->rx.discard_next;
-+	bool is_phyerr;
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+index d89cd41e78ac..89a75ff29410 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -3220,7 +3220,18 @@ static void wmi_event_handle(struct wil6210_priv *wil,
+ 		/* check if someone waits for this event */
+ 		if (wil->reply_id && wil->reply_id == id &&
+ 		    wil->reply_mid == mid) {
+-			WARN_ON(wil->reply_buf);
++			if (wil->reply_buf) {
++				/* event received while wmi_call is waiting
++				 * with a buffer. Such event should be handled
++				 * in wmi_recv_cmd function. Handling the event
++				 * here means a previous wmi_call was timeout.
++				 * Drop the event and do not handle it.
++				 */
++				wil_err(wil,
++					"Old event (%d, %s) while wmi_call is waiting. Drop it and Continue waiting\n",
++					id, eventid2name(id));
++				return;
++			}
  
- 	/*
- 	 * Discard corrupt descriptors which are marked in
-@@ -827,8 +828,11 @@ static int ath9k_rx_skb_preprocess(struct ath_softc *sc,
- 
- 	/*
- 	 * Discard zero-length packets and packets smaller than an ACK
-+	 * which are not PHY_ERROR (short radar pulses have a length of 3)
- 	 */
--	if (rx_stats->rs_datalen < 10) {
-+	is_phyerr = rx_stats->rs_status & ATH9K_RXERR_PHY;
-+	if (!rx_stats->rs_datalen ||
-+	    (rx_stats->rs_datalen < 10 && !is_phyerr)) {
- 		RX_STAT_INC(sc, rx_len_err);
- 		goto corrupt;
- 	}
+ 			wmi_evt_call_handler(vif, id, evt_data,
+ 					     len - sizeof(*wmi));
 -- 
 2.20.1
 
