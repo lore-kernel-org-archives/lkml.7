@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31F0C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52665C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C7D229F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164252238C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996486;
-	bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
+	s=default; t=1563996495;
+	bh=pOCUmSmq9JI+C32yE8DmJOiiIfpXoiolRStGBUkbEGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ceM62jqhhv6KgczGdUrVCGTvMuB+s6TOAo9S8EG1j5TFqaSRwPdt21gWTYVr3mrDX
-	 FcqDvoUzrTLkopgSVgIUmrlAuAhijDHiuSrFbihZ3EBUlrN4b4cWOF4VaGx3DuqAwN
-	 mrJeLUOFqp+3leaR6kjTAym9TxTpFLuAwLAMR5CU=
+	b=1/kvPw7LNbLwAVS5FWBXDpHIJB175RgYzIuNKEACu1HBpX/5vH7yb4SNJfSz1gD3w
+	 Bg5xlxJn07eQlZiZb8s+CkOmGC4rWHSL8VNN9xZ+Np4yWrdhLYa7SlJ7CK7Hd+XjTo
+	 /orKSuAfdeEcPLbe7lyLmAUMvIBzi5ixxbILOKUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388167AbfGXT2F (ORCPT
+        id S1726987AbfGXT2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46056 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbfGXT2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:28:01 -0400
+        id S2387564AbfGXT2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:28:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF398218EA;
-        Wed, 24 Jul 2019 19:27:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E82121951;
+        Wed, 24 Jul 2019 19:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996480;
-        bh=3BeJpKaq+DjbFnhS2ryuE8FGycUhgPvepnWyWM0en0E=;
+        s=default; t=1563996490;
+        bh=pOCUmSmq9JI+C32yE8DmJOiiIfpXoiolRStGBUkbEGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ce8HW3kpupdE9+aQdo9ePusqcGzYBUKL1j1V2P38jzJFuFevG1+yToKPW3in/GDGR
-         QFZ0jXSKUMHVXsykGxT7eh3/Rqzfg5D+m3r2rViml0oIRp83d8PenMbPHV4kid++2K
-         2cEVoTDj5KBjsYvA8ZvU8Ko/W+KEr7yhe7mB/Fs4=
+        b=vQHd3++iRnA42QVonmzy1MfqaoZn+AEoH7eSLvPiavikldzVSIrJXsz5Yjv98g+Wc
+         rkmhZH6CESn2TPe3m2a3nOP779HZxAdIVASXT+ybs+Tnti4TAVy8rlAl2IrX0JkziB
+         dxbtiGsSE/EzzWtRIxckyeUsRQCo4OeqK0eCwhtg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 110/413] sched/fair: Fix "runnable_avg_yN_inv" not used warnings
-Date:   Wed, 24 Jul 2019 21:16:41 +0200
-Message-Id: <20190724191743.202663454@linuxfoundation.org>
+Subject: [PATCH 5.2 114/413] x86/atomic: Fix smp_mb__{before,after}_atomic()
+Date:   Wed, 24 Jul 2019 21:16:45 +0200
+Message-Id: <20190724191743.477040643@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -62,62 +62,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39 ]
+[ Upstream commit 69d927bba39517d0980462efc051875b7f4db185 ]
 
-runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
-included in several other places because they need other macros all
-came from kernel/sched/sched-pelt.h which was generated by
-Documentation/scheduler/sched-pelt. As the result, it causes compilation
-a lot of warnings,
+Recent probing at the Linux Kernel Memory Model uncovered a
+'surprise'. Strongly ordered architectures where the atomic RmW
+primitive implies full memory ordering and
+smp_mb__{before,after}_atomic() are a simple barrier() (such as x86)
+fail for:
 
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
-  ...
+	*x = 1;
+	atomic_inc(u);
+	smp_mb__after_atomic();
+	r0 = *y;
 
-Silence it by appending the __maybe_unused attribute for it, so all
-generated variables and macros can still be kept in the same file.
+Because, while the atomic_inc() implies memory order, it
+(surprisingly) does not provide a compiler barrier. This then allows
+the compiler to re-order like so:
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+	atomic_inc(u);
+	*x = 1;
+	smp_mb__after_atomic();
+	r0 = *y;
+
+Which the CPU is then allowed to re-order (under TSO rules) like:
+
+	atomic_inc(u);
+	r0 = *y;
+	*x = 1;
+
+And this very much was not intended. Therefore strengthen the atomic
+RmW ops to include a compiler barrier.
+
+NOTE: atomic_{or,and,xor} and the bitops already had the compiler
+barrier.
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/scheduler/sched-pelt.c | 3 ++-
- kernel/sched/sched-pelt.h            | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ Documentation/atomic_t.txt         | 3 +++
+ arch/x86/include/asm/atomic.h      | 8 ++++----
+ arch/x86/include/asm/atomic64_64.h | 8 ++++----
+ arch/x86/include/asm/barrier.h     | 4 ++--
+ 4 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
-index e4219139386a..7238b355919c 100644
---- a/Documentation/scheduler/sched-pelt.c
-+++ b/Documentation/scheduler/sched-pelt.c
-@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
- 	int i;
- 	unsigned int x;
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index dca3fb0554db..65bb09a29324 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -194,6 +194,9 @@ These helper barriers exist because architectures have varying implicit
+ ordering on their SMP atomic primitives. For example our TSO architectures
+ provide full ordered atomics and these barriers are no-ops.
  
--	printf("static const u32 runnable_avg_yN_inv[] = {");
-+	/* To silence -Wunused-but-set-variable warnings. */
-+	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
- 	for (i = 0; i < HALFLIFE; i++) {
- 		x = ((1UL<<32)-1)*pow(y, i);
++NOTE: when the atomic RmW ops are fully ordered, they should also imply a
++compiler barrier.
++
+ Thus:
  
-diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
-index a26473674fb7..c529706bed11 100644
---- a/kernel/sched/sched-pelt.h
-+++ b/kernel/sched/sched-pelt.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+   atomic_fetch_add();
+diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
+index ea3d95275b43..115127c7ad28 100644
+--- a/arch/x86/include/asm/atomic.h
++++ b/arch/x86/include/asm/atomic.h
+@@ -54,7 +54,7 @@ static __always_inline void arch_atomic_add(int i, atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "addl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
+ }
  
--static const u32 runnable_avg_yN_inv[] = {
-+static const u32 runnable_avg_yN_inv[] __maybe_unused = {
- 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
- 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
- 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
+ /**
+@@ -68,7 +68,7 @@ static __always_inline void arch_atomic_sub(int i, atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "subl %1,%0"
+ 		     : "+m" (v->counter)
+-		     : "ir" (i));
++		     : "ir" (i) : "memory");
+ }
+ 
+ /**
+@@ -95,7 +95,7 @@ static __always_inline bool arch_atomic_sub_and_test(int i, atomic_t *v)
+ static __always_inline void arch_atomic_inc(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "incl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ #define arch_atomic_inc arch_atomic_inc
+ 
+@@ -108,7 +108,7 @@ static __always_inline void arch_atomic_inc(atomic_t *v)
+ static __always_inline void arch_atomic_dec(atomic_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "decl %0"
+-		     : "+m" (v->counter));
++		     : "+m" (v->counter) :: "memory");
+ }
+ #define arch_atomic_dec arch_atomic_dec
+ 
+diff --git a/arch/x86/include/asm/atomic64_64.h b/arch/x86/include/asm/atomic64_64.h
+index dadc20adba21..5e86c0d68ac1 100644
+--- a/arch/x86/include/asm/atomic64_64.h
++++ b/arch/x86/include/asm/atomic64_64.h
+@@ -45,7 +45,7 @@ static __always_inline void arch_atomic64_add(long i, atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "addq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -59,7 +59,7 @@ static inline void arch_atomic64_sub(long i, atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "subq %1,%0"
+ 		     : "=m" (v->counter)
+-		     : "er" (i), "m" (v->counter));
++		     : "er" (i), "m" (v->counter) : "memory");
+ }
+ 
+ /**
+@@ -87,7 +87,7 @@ static __always_inline void arch_atomic64_inc(atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "incq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ #define arch_atomic64_inc arch_atomic64_inc
+ 
+@@ -101,7 +101,7 @@ static __always_inline void arch_atomic64_dec(atomic64_t *v)
+ {
+ 	asm volatile(LOCK_PREFIX "decq %0"
+ 		     : "=m" (v->counter)
+-		     : "m" (v->counter));
++		     : "m" (v->counter) : "memory");
+ }
+ #define arch_atomic64_dec arch_atomic64_dec
+ 
+diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
+index 14de0432d288..84f848c2541a 100644
+--- a/arch/x86/include/asm/barrier.h
++++ b/arch/x86/include/asm/barrier.h
+@@ -80,8 +80,8 @@ do {									\
+ })
+ 
+ /* Atomic operations are already serializing on x86 */
+-#define __smp_mb__before_atomic()	barrier()
+-#define __smp_mb__after_atomic()	barrier()
++#define __smp_mb__before_atomic()	do { } while (0)
++#define __smp_mb__after_atomic()	do { } while (0)
+ 
+ #include <asm-generic/barrier.h>
+ 
 -- 
 2.20.1
 
