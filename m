@@ -2,128 +2,108 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF27C76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E66C76191
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435D920665
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFoeW529"
+	by mail.kernel.org (Postfix) with ESMTP id A21FF21849
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1563999369;
+	bh=cwq16jz7nLRUNDqyIV/3dXIsmxHUY21qkdc9gx0tpSo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YexmpqMREz7kuEJi0QMIaq+/EKjl2XZzhWlEu8Ytdk9FlweLFq+Y2mxwgFRf9LVaX
+	 AP+tcgI5+SclkuJneXP7LEfpZvUvIYHmv1n+t5ualD2hqJuutoLoQcaW/CnVrSssL8
+	 F2tKyM0rqUFOpIYRPDMLLeiLZOMzVt9iqGAHS1yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404046AbfGXTv5 (ORCPT
+        id S2404035AbfGXTvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:51:57 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:47037 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391707AbfGXTvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:51:52 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d4so48167940edr.13;
-        Wed, 24 Jul 2019 12:51:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2p2ZfklHVEaOI9/2iCtD+yerzjFCKwVXOTunjKilUyg=;
-        b=bFoeW529ejuAL1azYCFXDwwZiIKojlT53AEBYIQE493V9F2hmIMpWNNMYMyuedouB6
-         Sfs0q/fXYDTeMHxjBC9GbtUNpcM4en6eXqDvF4577koXwZhd2X7v9WrYl5LrP83rTQxF
-         a0jgfQxns67iKj6MkzBaqU4xi+tKgBQmYCFx/Tqx+cRGcA2h5LJzwhUMurzbBeqtryIq
-         dyruxHxkK6fIJBZP8GQ8JLrVMKKv/TGpGloP8VPiYz3eQAyx/qlFaFkGqL3L9y2i/9D5
-         MbrIySIPL4sGxM9qz07W9sBGzrSQCUc7sT+3+6FBbv/JRJfFjYIPrwa8x1b8vmo5aT/W
-         fz+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2p2ZfklHVEaOI9/2iCtD+yerzjFCKwVXOTunjKilUyg=;
-        b=smN3qBO1sdjsXT7HUfFydkIDbkuAr6/02YufkbaXdu+3XWAzI25KL0vwwtzJr3fTAU
-         k/7uSSMFCKb0zt8o5n+LX9J3IKixEoJ50YvRc6E/l4F/VVz/dNv+ahYI8E6D0wvjPglC
-         lv+VWADLbm82iqoVcZTq2LEeM2guFrX4oS84MJE0VLQvbBhREvl/gObTzbO7HsnWNZNU
-         1fW3ZvPK+GilkEK9oI3Ohb/x/SH1RtYzI/mkZvsAL9tKJjRNcFqev8oH12W6SDN9wrN6
-         LWyksY2hV6Vkk9HZP4wAUT8u3HUzEUpgn63n6TqV2EpsNbU3EolUkk1AL8zcRX+6NZl/
-         hCPw==
-X-Gm-Message-State: APjAAAUOSnUZ40MS/2RdlhswDRNHBSfO4AAyPuUcr2OsTWoyJOx5I81U
-        WnYqgxF2rA+NTIarUEan3H3raaJsNdOaMciVAVs=
-X-Google-Smtp-Source: APXvYqz6lDBsK7IbvQCQQ8DzdG95VM5F+tel/b9fEJ/VBGexchGp+5i3AhySanNozFo55HqE6Gklar0VK6DseEVJEtg=
-X-Received: by 2002:a50:eb8f:: with SMTP id y15mr73599212edr.31.1563997910491;
- Wed, 24 Jul 2019 12:51:50 -0700 (PDT)
+        Wed, 24 Jul 2019 15:51:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391699AbfGXTvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:51:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38BE020665;
+        Wed, 24 Jul 2019 19:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563997909;
+        bh=cwq16jz7nLRUNDqyIV/3dXIsmxHUY21qkdc9gx0tpSo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j0JMed0No03g3Bm7/6mpwbxGOSEbwHy2Nkymt1gUx3IJDvPd+0e03RUQgG3uaUIJC
+         +MwQ4hmrzRab5QJSecueFtQ/q8uFukkGEwCkugqtcckpNUP86/g4xlMODgRPTpHj4i
+         Wnqkp26xXwc7elfxEYikZqRsVLDG20UDvapgTp5M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 185/371] bnxt_en: Disable bus master during PCI shutdown and driver unload.
+Date:   Wed, 24 Jul 2019 21:18:57 +0200
+Message-Id: <20190724191739.000763144@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190724165803.87470-1-brianvv@google.com> <20190724165803.87470-5-brianvv@google.com>
-In-Reply-To: <20190724165803.87470-5-brianvv@google.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Wed, 24 Jul 2019 15:51:14 -0400
-Message-ID: <CAF=yD-LgN3-a1LtoN+EffvBYzw+7c29AUy5yVGJ1-iBpS0s2=w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 4/6] libbpf: support BPF_MAP_DUMP command
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 1:10 PM Brian Vazquez <brianvv@google.com> wrote:
->
-> Make libbpf aware of new BPF_MAP_DUMP command and add bpf_map_dump and
-> bpf_map_dump_flags to use them from the library.
->
-> Suggested-by: Stanislav Fomichev <sdf@google.com>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> ---
->  tools/lib/bpf/bpf.c | 28 ++++++++++++++++++++++++++++
->  tools/lib/bpf/bpf.h |  4 ++++
->  2 files changed, 32 insertions(+)
->
-> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> index c7d7993c44bb0..c1139b7db756a 100644
-> --- a/tools/lib/bpf/bpf.c
-> +++ b/tools/lib/bpf/bpf.c
-> @@ -368,6 +368,34 @@ int bpf_map_update_elem(int fd, const void *key, const void *value,
->         return sys_bpf(BPF_MAP_UPDATE_ELEM, &attr, sizeof(attr));
->  }
->
-> +int bpf_map_dump(int fd, const void *prev_key, void *buf, void *buf_len)
-> +{
-> +       union bpf_attr attr;
-> +
-> +       memset(&attr, 0, sizeof(attr));
-> +       attr.dump.map_fd = fd;
-> +       attr.dump.prev_key = ptr_to_u64(prev_key);
-> +       attr.dump.buf = ptr_to_u64(buf);
-> +       attr.dump.buf_len = ptr_to_u64(buf_len);
-> +
-> +       return sys_bpf(BPF_MAP_DUMP, &attr, sizeof(attr));
-> +}
+[ Upstream commit c20dc142dd7b2884b8570eeab323bcd4a84294fa ]
 
-This can call bpf_map_dump_flags internally to avoid code duplication?
+Some chips with older firmware can continue to perform DMA read from
+context memory even after the memory has been freed.  In the PCI shutdown
+method, we need to call pci_disable_device() to shutdown DMA to prevent
+this DMA before we put the device into D3hot.  DMA memory request in
+D3hot state will generate PCI fatal error.  Similarly, in the driver
+remove method, the context memory should only be freed after DMA has
+been shutdown for correctness.
 
-> +
-> +int bpf_map_dump_flags(int fd, const void *prev_key, void *buf, void *buf_len,
-> +                      __u64 flags)
-> +{
-> +       union bpf_attr attr;
-> +
-> +       memset(&attr, 0, sizeof(attr));
-> +       attr.dump.map_fd = fd;
-> +       attr.dump.prev_key = ptr_to_u64(prev_key);
-> +       attr.dump.buf = ptr_to_u64(buf);
-> +       attr.dump.buf_len = ptr_to_u64(buf_len);
-> +       attr.dump.flags = flags;
-> +
-> +       return sys_bpf(BPF_MAP_DUMP, &attr, sizeof(attr));
-> +}
-> +
+Fixes: 98f04cf0f1fc ("bnxt_en: Check context memory requirements from firmware.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 30cafe4cdb6e..bf1fd513fa02 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -10165,10 +10165,10 @@ static void bnxt_remove_one(struct pci_dev *pdev)
+ 	bnxt_dcb_free(bp);
+ 	kfree(bp->edev);
+ 	bp->edev = NULL;
++	bnxt_cleanup_pci(bp);
+ 	bnxt_free_ctx_mem(bp);
+ 	kfree(bp->ctx);
+ 	bp->ctx = NULL;
+-	bnxt_cleanup_pci(bp);
+ 	bnxt_free_port_stats(bp);
+ 	free_netdev(dev);
+ }
+@@ -10730,6 +10730,7 @@ static void bnxt_shutdown(struct pci_dev *pdev)
+ 
+ 	if (system_state == SYSTEM_POWER_OFF) {
+ 		bnxt_clear_int_mode(bp);
++		pci_disable_device(pdev);
+ 		pci_wake_from_d3(pdev, bp->wol);
+ 		pci_set_power_state(pdev, PCI_D3hot);
+ 	}
+-- 
+2.20.1
+
+
+
