@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871CFC7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DD5C76194
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFAA204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC97204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033909;
-	bh=yFHjtmpuvIfwQiIcPYNCFfLUTLpBwHqEJn/vwJby05U=;
+	s=default; t=1564033919;
+	bh=SL3gkF6IMjPvNC21urBdTFMCD0Q+cniEyq5TPNMr3Jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUWs3Pdr5OpiGzFvufAIY7BJAPSFbaDzoKQPBR25MMhtFdjjZ0pUaxQtnmjyDIXEX
-	 bEYhaK7PX+clJxNpyNmybRRAHNJ4wWGDA5t79ElLa9cRMxiTPRVhgUxdl2Nm1uBjxz
-	 tJV5GJNjaTipUAZgDLXdmeyMX79UmVpXhsMeFOoE=
+	b=xKqSauGwhsWyX46s9He0j7Nb+FunhLcZfi4ST8E7vI5LEFwte4cRHwT0gzPZAHvOp
+	 KdgH78bTBuBjUOIKxa3FI/eINq8g5I3FlWMzaNJl1T0uwwFlRBf25p7/T6+nE6mZKD
+	 iHNZTkkhU8nJTOmiYsN1UslWCoJgcAq1x26KmUcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404501AbfGYFkv (ORCPT
+        id S2404411AbfGYFke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404449AbfGYFks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:40:48 -0400
+        id S2404379AbfGYFk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:40:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E1522C7D;
-        Thu, 25 Jul 2019 05:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EEDD22BEB;
+        Thu, 25 Jul 2019 05:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033247;
-        bh=yFHjtmpuvIfwQiIcPYNCFfLUTLpBwHqEJn/vwJby05U=;
+        s=default; t=1564033227;
+        bh=SL3gkF6IMjPvNC21urBdTFMCD0Q+cniEyq5TPNMr3Jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuN7adTKyQryPzlxgUTtkdIlEvAClJqLOzEFFXf1I+IE7ApwPv+cVKNN9STjD9Xn3
-         i7HQbB4m/DU/VArBdorE23YVXcr/IqlNAbFMoKmnwIci0IRaNXrfJbCZDXNT4yuFyr
-         98KyCjyga+bHIXLjf/aId3P5pPuF11uUA9Yjv1QQ=
+        b=wzNTgW0NNMEf1O4/kQCmGqSrHSIiqi5crmrqy/Hqa8UcVZwxJ1cX6wCoTfkGbRvsX
+         7GzDdZ3gxZ+TAOiGxn4Asz3Skd17Xy7sCPk+01yDtRIUU5RltG/pEFTsPd+JcEXlhn
+         aXn01/WZ2dapX2yqF7A6lvVdD/TTvfLsU8hZrm1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 143/271] bonding: validate ip header before check IPPROTO_IGMP
-Date:   Wed, 24 Jul 2019 21:20:12 +0200
-Message-Id: <20190724191707.434605207@linuxfoundation.org>
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 137/271] perf stat: Fix group lookup for metric group
+Date:   Wed, 24 Jul 2019 21:20:06 +0200
+Message-Id: <20190724191706.953768702@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -64,86 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9d1bc24b52fb8c5d859f9a47084bf1179470e04c ]
+[ Upstream commit 2f87f33f4226523df9c9cc28f9874ea02fcc3d3f ]
 
-bond_xmit_roundrobin() checks for IGMP packets but it parses
-the IP header even before checking skb->protocol.
+The metric group code tries to find a group it added earlier in the
+evlist. Fix the lookup to handle groups with partially overlaps
+correctly. When a sub string match fails and we reset the match, we have
+to compare the first element again.
 
-We should validate the IP header with pskb_may_pull() before
-using iph->protocol.
+I also renamed the find_evsel function to find_evsel_group to make its
+purpose clearer.
 
-Reported-and-tested-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-Fixes: a2fd940f4cff ("bonding: fix broken multicast with round-robin mode")
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+With the earlier changes this fixes:
+
+Before:
+
+  % perf stat -M UPI,IPC sleep 1
+  ...
+         1,032,922      uops_retired.retire_slots #      1.1 UPI
+         1,896,096      inst_retired.any
+         1,896,096      inst_retired.any
+         1,177,254      cpu_clk_unhalted.thread
+
+After:
+
+  % perf stat -M UPI,IPC sleep 1
+  ...
+        1,013,193      uops_retired.retire_slots #      1.1 UPI
+           932,033      inst_retired.any
+           932,033      inst_retired.any          #      0.9 IPC
+         1,091,245      cpu_clk_unhalted.thread
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Fixes: b18f3e365019 ("perf stat: Support JSON metrics in perf stat")
+Link: http://lkml.kernel.org/r/20190624193711.35241-4-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 37 ++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ tools/perf/util/metricgroup.c | 47 ++++++++++++++++++++++++++---------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 7e162fff01ab..be0b785becd0 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3852,8 +3852,8 @@ static netdev_tx_t bond_xmit_roundrobin(struct sk_buff *skb,
- 					struct net_device *bond_dev)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	struct iphdr *iph = ip_hdr(skb);
- 	struct slave *slave;
-+	int slave_cnt;
- 	u32 slave_id;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index a28f9b5cc4ff..8b3dafe3fac3 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -94,26 +94,49 @@ struct egroup {
+ 	const char *metric_expr;
+ };
  
- 	/* Start with the curr_active_slave that joined the bond as the
-@@ -3862,23 +3862,32 @@ static netdev_tx_t bond_xmit_roundrobin(struct sk_buff *skb,
- 	 * send the join/membership reports.  The curr_active_slave found
- 	 * will send all of this type of traffic.
- 	 */
--	if (iph->protocol == IPPROTO_IGMP && skb->protocol == htons(ETH_P_IP)) {
--		slave = rcu_dereference(bond->curr_active_slave);
--		if (slave)
--			bond_dev_queue_xmit(bond, skb, slave->dev);
--		else
--			bond_xmit_slave_id(bond, skb, 0);
--	} else {
--		int slave_cnt = READ_ONCE(bond->slave_cnt);
-+	if (skb->protocol == htons(ETH_P_IP)) {
-+		int noff = skb_network_offset(skb);
-+		struct iphdr *iph;
- 
--		if (likely(slave_cnt)) {
--			slave_id = bond_rr_gen_slave_id(bond);
--			bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
--		} else {
--			bond_tx_drop(bond_dev, skb);
-+		if (unlikely(!pskb_may_pull(skb, noff + sizeof(*iph))))
-+			goto non_igmp;
+-static struct perf_evsel *find_evsel(struct perf_evlist *perf_evlist,
+-				     const char **ids,
+-				     int idnum,
+-				     struct perf_evsel **metric_events)
++static bool record_evsel(int *ind, struct perf_evsel **start,
++			 int idnum,
++			 struct perf_evsel **metric_events,
++			 struct perf_evsel *ev)
++{
++	metric_events[*ind] = ev;
++	if (*ind == 0)
++		*start = ev;
++	if (++*ind == idnum) {
++		metric_events[*ind] = NULL;
++		return true;
++	}
++	return false;
++}
 +
-+		iph = ip_hdr(skb);
-+		if (iph->protocol == IPPROTO_IGMP) {
-+			slave = rcu_dereference(bond->curr_active_slave);
-+			if (slave)
-+				bond_dev_queue_xmit(bond, skb, slave->dev);
-+			else
-+				bond_xmit_slave_id(bond, skb, 0);
-+			return NETDEV_TX_OK;
++static struct perf_evsel *find_evsel_group(struct perf_evlist *perf_evlist,
++					   const char **ids,
++					   int idnum,
++					   struct perf_evsel **metric_events)
+ {
+ 	struct perf_evsel *ev, *start = NULL;
+ 	int ind = 0;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (ev->collect_stat)
++			continue;
+ 		if (!strcmp(ev->name, ids[ind])) {
+-			metric_events[ind] = ev;
+-			if (ind == 0)
+-				start = ev;
+-			if (++ind == idnum) {
+-				metric_events[ind] = NULL;
++			if (record_evsel(&ind, &start, idnum,
++					 metric_events, ev))
+ 				return start;
+-			}
+ 		} else {
++			/*
++			 * We saw some other event that is not
++			 * in our list of events. Discard
++			 * the whole match and start again.
++			 */
+ 			ind = 0;
+ 			start = NULL;
++			if (!strcmp(ev->name, ids[ind])) {
++				if (record_evsel(&ind, &start, idnum,
++						 metric_events, ev))
++					return start;
++			}
  		}
  	}
- 
-+non_igmp:
-+	slave_cnt = READ_ONCE(bond->slave_cnt);
-+	if (likely(slave_cnt)) {
-+		slave_id = bond_rr_gen_slave_id(bond);
-+		bond_xmit_slave_id(bond, skb, slave_id % slave_cnt);
-+	} else {
-+		bond_tx_drop(bond_dev, skb);
-+	}
- 	return NETDEV_TX_OK;
- }
- 
+ 	/*
+@@ -143,8 +166,8 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
+-		evsel = find_evsel(perf_evlist, eg->ids, eg->idnum,
+-				   metric_events);
++		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
++					 metric_events);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
 -- 
 2.20.1
 
