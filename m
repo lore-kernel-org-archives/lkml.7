@@ -2,122 +2,82 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1373EC76186
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9C6C76191
 	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6B520693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999644;
-	bh=GZeLJdKWfkh5/3ogdWPp6RHl5g2nVdsr3q883PV/5wE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2r9seF26yJ7BOsplin1Tp1i7o/VDXh1QgFDyvFQ3qabTJRPGemnjjxzNfsX8MTIbR
-	 Rckb5C8uLLW7ItLUrpyonLIpj44fNejemXFZ8fuqStBGM2h5Ej8vQkexJ7aEwk8J62
-	 wj3Z+pNUTv0cqlLfsrdEDfNpQyyUYIIn9fyLY7LM=
+	by mail.kernel.org (Postfix) with ESMTP id 9D434206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403895AbfGXUUn (ORCPT
+        id S2403966AbfGXUUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390684AbfGXTqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:46:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 002DC22ADB;
-        Wed, 24 Jul 2019 19:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997572;
-        bh=GZeLJdKWfkh5/3ogdWPp6RHl5g2nVdsr3q883PV/5wE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ds9VcsQPOdymy6rXX693uhJ0OZH2lNMOR1JrqbmhYz/S5iblEZakBzRx1RFLVCraM
-         EhrioWxJNoGNtbp0If0SoQeDXYi00+EPzQIe7BSe1IVo2qwCzGUIQeLoNKbQt6r+P3
-         H3mX6D+nhCVyP7mCqBxqOpa9MNu7Xu1r4E8F+FlM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancock@sedsystems.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 068/371] net: axienet: Fix race condition causing TX hang
-Date:   Wed, 24 Jul 2019 21:17:00 +0200
-Message-Id: <20190724191730.025248278@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Jul 2019 16:20:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44820 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390805AbfGXUUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:20:42 -0400
+Received: from pd9ef1cb8.dip0.t-ipconnect.de ([217.239.28.184] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hqNkZ-00060B-OU; Wed, 24 Jul 2019 22:20:35 +0200
+Date:   Wed, 24 Jul 2019 22:20:34 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     "H.J. Lu" <hjl.tools@gmail.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Tom Lendacky <thomas.lendacky@amd.com>, bhe@redhat.com,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, lijiang@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/mm: Identify the end of the kernel area to
+ be reserved
+In-Reply-To: <alpine.DEB.2.21.1907242153320.1791@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1907242208590.1791@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1907151118570.1669@nanos.tec.linutronix.de> <alpine.DEB.2.21.1907151140080.1669@nanos.tec.linutronix.de> <CAMe9rOqMqkQ0LNpm25yE_Yt0FKp05WmHOrwc0aRDb53miFKM+w@mail.gmail.com> <20190723130513.GA25290@kroah.com>
+ <alpine.DEB.2.21.1907231519430.1659@nanos.tec.linutronix.de> <20190723134454.GA7260@kroah.com> <20190724153416.GA27117@kroah.com> <alpine.DEB.2.21.1907241746010.1791@nanos.tec.linutronix.de> <20190724155735.GC5571@kroah.com> <alpine.DEB.2.21.1907241801320.1791@nanos.tec.linutronix.de>
+ <20190724161634.GB10454@kroah.com> <alpine.DEB.2.21.1907242153320.1791@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7de44285c1f69ccfbe8be1d6a16fcd956681fee6 ]
+On Wed, 24 Jul 2019, Thomas Gleixner wrote:
 
-It is possible that the interrupt handler fires and frees up space in
-the TX ring in between checking for sufficient TX ring space and
-stopping the TX queue in axienet_start_xmit. If this happens, the
-queue wake from the interrupt handler will occur before the queue is
-stopped, causing a lost wakeup and the adapter's transmit hanging.
+> On Wed, 24 Jul 2019, Greg KH wrote:
+> > On Wed, Jul 24, 2019 at 06:03:41PM +0200, Thomas Gleixner wrote:
+> > > > Gotta love old tool-chains :(
+> > > 
+> > > Oh yes. /me does archaeology to find a VM with old stuff
+> > 
+> > I can provide a binary if you can't find anything.
+> 
+> Found GNU ld (GNU Binutils for Debian) 2.25 and after fiddling with
+> LD_PRELOAD it builds without failure.
+> 
+> ld.gold from that binutils version dies with a segfault on various files ...
 
-To avoid this, after stopping the queue, check again whether there is
-sufficient space in the TX ring. If so, wake up the queue again.
+Then tried that old ld.bfd with GCC8 and that causes ld.bfd to segfault on
+every other file.
 
-Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 20 ++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Copied that config to the clang build directory and it causes the same
+explosions with ld.bfd.
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 4041c75997ba..38a8ef194e05 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -614,6 +614,10 @@ static void axienet_start_xmit_done(struct net_device *ndev)
- 
- 	ndev->stats.tx_packets += packets;
- 	ndev->stats.tx_bytes += size;
-+
-+	/* Matches barrier in axienet_start_xmit */
-+	smp_mb();
-+
- 	netif_wake_queue(ndev);
- }
- 
-@@ -669,9 +673,19 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
- 
- 	if (axienet_check_tx_bd_space(lp, num_frag)) {
--		if (!netif_queue_stopped(ndev))
--			netif_stop_queue(ndev);
--		return NETDEV_TX_BUSY;
-+		if (netif_queue_stopped(ndev))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_stop_queue(ndev);
-+
-+		/* Matches barrier in axienet_start_xmit_done */
-+		smp_mb();
-+
-+		/* Space might have just been freed - check again */
-+		if (axienet_check_tx_bd_space(lp, num_frag))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_wake_queue(ndev);
- 	}
- 
- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
--- 
-2.20.1
+What a time waste...
 
 
 
