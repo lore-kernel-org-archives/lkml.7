@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D25CC7618F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9314C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20345229F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92265229F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563996697;
-	bh=iEmGSmB5deUOstaonPxG5zJTjT6YsklEnpYP+mwMasg=;
+	s=default; t=1563996701;
+	bh=OrSAqn938LL8gbEFuIeFm0SfQLMIXcVVG4eSYLJDYns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mroiaBRCQ9BVF2aM/w5I16EBn9N4kkHtM1dCI3pAD918462qvda4JsBFl8h5qZkY8
-	 562jG7QhBeWZpicZyqqmJc18WRtSadGV7XHHqkAjxOijEq8H78v5a/yZgP0dbpEGRp
-	 pSYXeMshG7zMgSKb/LGgvUMOlGK66aZuPw3KOjyE=
+	b=e+lnnlmQ7OTj/2uB4l2WKgjm5lC1vQCD587aV3bzlyDPYE3eINswlPNwQqO05DmUh
+	 fUeMJRPpn4Jhad/CQqP0ml6gu3RH3Rh8yUNTcUBG4ltL7Bx8zuYBSMuOQ5VqdRc3ka
+	 out5YojWAxS7J35aavBSG1dzJDJbyllWuAi4ywog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388498AbfGXTbf (ORCPT
+        id S2388510AbfGXTbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52508 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388188AbfGXTbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:31:31 -0400
+        id S2388491AbfGXTbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:31:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA40221951;
-        Wed, 24 Jul 2019 19:31:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DF0221951;
+        Wed, 24 Jul 2019 19:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563996690;
-        bh=iEmGSmB5deUOstaonPxG5zJTjT6YsklEnpYP+mwMasg=;
+        s=default; t=1563996692;
+        bh=OrSAqn938LL8gbEFuIeFm0SfQLMIXcVVG4eSYLJDYns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LWzDXp2+RKyK/SlkmRJ+n/82D6TYjePQiMF4Hg1qFL3MWor7xxYj6VGguGS45EUfp
-         UZobydJl2UjRSUjdLonla/Jc69Hk2XJEGZwsn5/9lJtPpTK8a9kUrF8gSeZP6WG2HH
-         UY4AoZL40juSt8365WRUiK4UF6P6XTua7Z3Z70Vg=
+        b=1SJlbOyyYiDIC0Tc0OrRZLrYQ2w7sABc4w6plDJzCUYD8u5qwiY+feqFtxbO/X0NI
+         WEeqR53ewNAlRRop2eKO/oAEPFB8DW6ILPg6wce0dsA4XtgxAvGBwICjFMdtvz6Btn
+         UFt9emDyyr6Y1dbWsMEnPTt/5YaSPZUiKIGKNTfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Masri <amasri@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Eiichi Tsukata <devel@etsukata.com>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 183/413] wil6210: drop old event after wmi_call timeout
-Date:   Wed, 24 Jul 2019 21:17:54 +0200
-Message-Id: <20190724191747.874990353@linuxfoundation.org>
+Subject: [PATCH 5.2 184/413] EDAC: Fix global-out-of-bounds write when setting edac_mc_poll_msec
+Date:   Wed, 24 Jul 2019 21:17:55 +0200
+Message-Id: <20190724191747.926370436@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -61,54 +61,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a276003111c0404f6bfeffe924c5a21f482428b ]
+[ Upstream commit d8655e7630dafa88bc37f101640e39c736399771 ]
 
-This change fixes a rare race condition of handling WMI events after
-wmi_call expires.
+Commit 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2") assumes
+edac_mc_poll_msec to be unsigned long, but the type of the variable still
+remained as int. Setting edac_mc_poll_msec can trigger out-of-bounds
+write.
 
-wmi_recv_cmd immediately handles an event when reply_buf is defined and
-a wmi_call is waiting for the event.
-However, in case the wmi_call has already timed-out, there will be no
-waiting/running wmi_call and the event will be queued in WMI queue and
-will be handled later in wmi_event_handle.
-Meanwhile, a new similar wmi_call for the same command and event may
-be issued. In this case, when handling the queued event we got WARN_ON
-printed.
+Reproducer:
 
-Fixing this case as a valid timeout and drop the unexpected event.
+  # echo 1001 > /sys/module/edac_core/parameters/edac_mc_poll_msec
 
-Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+KASAN report:
+
+  BUG: KASAN: global-out-of-bounds in edac_set_poll_msec+0x140/0x150
+  Write of size 8 at addr ffffffffb91b2d00 by task bash/1996
+
+  CPU: 1 PID: 1996 Comm: bash Not tainted 5.2.0-rc6+ #23
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+  Call Trace:
+   dump_stack+0xca/0x13e
+   print_address_description.cold+0x5/0x246
+   __kasan_report.cold+0x75/0x9a
+   ? edac_set_poll_msec+0x140/0x150
+   kasan_report+0xe/0x20
+   edac_set_poll_msec+0x140/0x150
+   ? dimmdev_location_show+0x30/0x30
+   ? vfs_lock_file+0xe0/0xe0
+   ? _raw_spin_lock+0x87/0xe0
+   param_attr_store+0x1b5/0x310
+   ? param_array_set+0x4f0/0x4f0
+   module_attr_store+0x58/0x80
+   ? module_attr_show+0x80/0x80
+   sysfs_kf_write+0x13d/0x1a0
+   kernfs_fop_write+0x2bc/0x460
+   ? sysfs_kf_bin_read+0x270/0x270
+   ? kernfs_notify+0x1f0/0x1f0
+   __vfs_write+0x81/0x100
+   vfs_write+0x1e1/0x560
+   ksys_write+0x126/0x250
+   ? __ia32_sys_read+0xb0/0xb0
+   ? do_syscall_64+0x1f/0x390
+   do_syscall_64+0xc1/0x390
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7fa7caa5e970
+  Code: 73 01 c3 48 8b 0d 28 d5 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 99 2d 2c 00 00 75 10 b8 01 00 00 00 04
+  RSP: 002b:00007fff6acfdfe8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+  RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fa7caa5e970
+  RDX: 0000000000000005 RSI: 0000000000e95c08 RDI: 0000000000000001
+  RBP: 0000000000e95c08 R08: 00007fa7cad1e760 R09: 00007fa7cb36a700
+  R10: 0000000000000073 R11: 0000000000000246 R12: 0000000000000005
+  R13: 0000000000000001 R14: 00007fa7cad1d600 R15: 0000000000000005
+
+  The buggy address belongs to the variable:
+   edac_mc_poll_msec+0x0/0x40
+
+  Memory state around the buggy address:
+   ffffffffb91b2c00: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+   ffffffffb91b2c80: 00 00 00 00 fa fa fa fa 00 00 00 00 fa fa fa fa
+  >ffffffffb91b2d00: 04 fa fa fa fa fa fa fa 04 fa fa fa fa fa fa fa
+                     ^
+   ffffffffb91b2d80: 04 fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+   ffffffffb91b2e00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Fix it by changing the type of edac_mc_poll_msec to unsigned int.
+The reason why this patch adopts unsigned int rather than unsigned long
+is msecs_to_jiffies() assumes arg to be unsigned int. We can avoid
+integer conversion bugs and unsigned int will be large enough for
+edac_mc_poll_msec.
+
+Reviewed-by: James Morse <james.morse@arm.com>
+Fixes: 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2")
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/wmi.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/edac/edac_mc_sysfs.c | 16 ++++++++--------
+ drivers/edac/edac_module.h   |  2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index d89cd41e78ac..89a75ff29410 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -3220,7 +3220,18 @@ static void wmi_event_handle(struct wil6210_priv *wil,
- 		/* check if someone waits for this event */
- 		if (wil->reply_id && wil->reply_id == id &&
- 		    wil->reply_mid == mid) {
--			WARN_ON(wil->reply_buf);
-+			if (wil->reply_buf) {
-+				/* event received while wmi_call is waiting
-+				 * with a buffer. Such event should be handled
-+				 * in wmi_recv_cmd function. Handling the event
-+				 * here means a previous wmi_call was timeout.
-+				 * Drop the event and do not handle it.
-+				 */
-+				wil_err(wil,
-+					"Old event (%d, %s) while wmi_call is waiting. Drop it and Continue waiting\n",
-+					id, eventid2name(id));
-+				return;
-+			}
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 7c01e1cc030c..4386ea4b9b5a 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -26,7 +26,7 @@
+ static int edac_mc_log_ue = 1;
+ static int edac_mc_log_ce = 1;
+ static int edac_mc_panic_on_ue;
+-static int edac_mc_poll_msec = 1000;
++static unsigned int edac_mc_poll_msec = 1000;
  
- 			wmi_evt_call_handler(vif, id, evt_data,
- 					     len - sizeof(*wmi));
+ /* Getter functions for above */
+ int edac_mc_get_log_ue(void)
+@@ -45,30 +45,30 @@ int edac_mc_get_panic_on_ue(void)
+ }
+ 
+ /* this is temporary */
+-int edac_mc_get_poll_msec(void)
++unsigned int edac_mc_get_poll_msec(void)
+ {
+ 	return edac_mc_poll_msec;
+ }
+ 
+ static int edac_set_poll_msec(const char *val, const struct kernel_param *kp)
+ {
+-	unsigned long l;
++	unsigned int i;
+ 	int ret;
+ 
+ 	if (!val)
+ 		return -EINVAL;
+ 
+-	ret = kstrtoul(val, 0, &l);
++	ret = kstrtouint(val, 0, &i);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (l < 1000)
++	if (i < 1000)
+ 		return -EINVAL;
+ 
+-	*((unsigned long *)kp->arg) = l;
++	*((unsigned int *)kp->arg) = i;
+ 
+ 	/* notify edac_mc engine to reset the poll period */
+-	edac_mc_reset_delay_period(l);
++	edac_mc_reset_delay_period(i);
+ 
+ 	return 0;
+ }
+@@ -82,7 +82,7 @@ MODULE_PARM_DESC(edac_mc_log_ue,
+ module_param(edac_mc_log_ce, int, 0644);
+ MODULE_PARM_DESC(edac_mc_log_ce,
+ 		 "Log correctable error to console: 0=off 1=on");
+-module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_int,
++module_param_call(edac_mc_poll_msec, edac_set_poll_msec, param_get_uint,
+ 		  &edac_mc_poll_msec, 0644);
+ MODULE_PARM_DESC(edac_mc_poll_msec, "Polling period in milliseconds");
+ 
+diff --git a/drivers/edac/edac_module.h b/drivers/edac/edac_module.h
+index dd7d0b509aa3..75528f07abd5 100644
+--- a/drivers/edac/edac_module.h
++++ b/drivers/edac/edac_module.h
+@@ -36,7 +36,7 @@ extern int edac_mc_get_log_ue(void);
+ extern int edac_mc_get_log_ce(void);
+ extern int edac_mc_get_panic_on_ue(void);
+ extern int edac_get_poll_msec(void);
+-extern int edac_mc_get_poll_msec(void);
++extern unsigned int edac_mc_get_poll_msec(void);
+ 
+ unsigned edac_dimm_info_location(struct dimm_info *dimm, char *buf,
+ 				 unsigned len);
 -- 
 2.20.1
 
