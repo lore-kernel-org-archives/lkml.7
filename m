@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F4CC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBA6C76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBD422ADF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4212205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563998464;
-	bh=gr+fh92xGUPJDzZvbxxX5CaJ2QI9hu3dRDLsBqNr1g0=;
+	s=default; t=1563998467;
+	bh=TpOGltvQUnJRPxFY3KeVJnxJ/YWgGmP7oCbsg8kOBm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ErGQmQrNV5053oeiNEcqzRm9dHIU0kHdNxHvkIbVsnfGPy95l7TeNdQ4q6tgZPEAo
-	 cqIh7llAZ6bLU1SKNd4HtV0psRU7jPcSR/eI2ffFk1KvlvWcBu7OjUlJ2a6E244/o7
-	 7urFB5Sb+uxm2JmxCXAtbEDZVrxoQTy+I5m9YNNg=
+	b=XwcWwlLmFlac82LCjRFZJiMd+IecRoa6XqGr4HMwdzo9+4oa3shPQ8BR4czXNonaq
+	 BRnhhEpb1j4BoajMi+JRqklt46AboORqHRIZkT2D5FrQhTYxY4dLyZFgffQ7l5rD0N
+	 iJ8PzKehXlYVJAR2H51YGPnDdl1elqXn1dHZL5Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405326AbfGXUBD (ORCPT
+        id S2405335AbfGXUBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:01:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 16:01:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405309AbfGXUBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 16:01:00 -0400
+        id S2405317AbfGXUBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 16:01:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88EE8205C9;
-        Wed, 24 Jul 2019 20:00:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9C69206BA;
+        Wed, 24 Jul 2019 20:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563998459;
-        bh=gr+fh92xGUPJDzZvbxxX5CaJ2QI9hu3dRDLsBqNr1g0=;
+        s=default; t=1563998461;
+        bh=TpOGltvQUnJRPxFY3KeVJnxJ/YWgGmP7oCbsg8kOBm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OHpKGNQl1+0XYIeSLcIOls4E7gr/D0puijwcxI+jzRQDxXEuHgS/MSLb8ucpZPYTn
-         sSDKaodBFPJ+vo7DTpzqlEroMmHSn698u76z8gS4qHGakU4BgKQ1BDh9z/frxLMYRq
-         VXeO36m5m5flXKQCVhaGCVEB7yKGckI1wB3V68/E=
+        b=dPbwKkqLsBTV817q/e2bQiFdfcYVGSm4WY8xlqnRy40g9JVD1C/i6N6ncmSJdzzrk
+         Lja/eXtbsV/TXm1yF/V5p8CNgOzI13ybsQu4PKnzqCCMHU9isSwccumnUn37GUED9q
+         /La83ByLFTXGR3sdOtku2Gv6PuS3OcJiUj1Kp09U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.1 371/371] dm bufio: fix deadlock with loop device
-Date:   Wed, 24 Jul 2019 21:22:03 +0200
-Message-Id: <20190724191752.330914116@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Borislav Petkov <bp@suse.de>, Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 344/371] resource: fix locking in find_next_iomem_res()
+Date:   Wed, 24 Jul 2019 21:21:36 +0200
+Message-Id: <20190724191749.558873757@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -59,47 +66,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Nadav Amit <namit@vmware.com>
 
-commit bd293d071ffe65e645b4d8104f9d8fe15ea13862 upstream.
+commit 49f17c26c123b60fd1c74629eef077740d16ffc2 upstream.
 
-When thin-volume is built on loop device, if available memory is low,
-the following deadlock can be triggered:
+Since resources can be removed, locking should ensure that the resource
+is not removed while accessing it.  However, find_next_iomem_res() does
+not hold the lock while copying the data of the resource.
 
-One process P1 allocates memory with GFP_FS flag, direct alloc fails,
-memory reclaim invokes memory shrinker in dm_bufio, dm_bufio_shrink_scan()
-runs, mutex dm_bufio_client->lock is acquired, then P1 waits for dm_buffer
-IO to complete in __try_evict_buffer().
+Keep holding the lock while the data is copied.  While at it, change the
+return value to a more informative value.  It is disregarded by the
+callers.
 
-But this IO may never complete if issued to an underlying loop device
-that forwards it using direct-IO, which allocates memory using
-GFP_KERNEL (see: do_blockdev_direct_IO()).  If allocation fails, memory
-reclaim will invoke memory shrinker in dm_bufio, dm_bufio_shrink_scan()
-will be invoked, and since the mutex is already held by P1 the loop
-thread will hang, and IO will never complete.  Resulting in ABBA
-deadlock.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+[akpm@linux-foundation.org: fix find_next_iomem_res() documentation]
+Link: http://lkml.kernel.org/r/20190613045903.4922-2-namit@vmware.com
+Fixes: ff3cc952d3f00 ("resource: Add remove_resource interface")
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-bufio.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/resource.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1602,9 +1602,7 @@ dm_bufio_shrink_scan(struct shrinker *sh
- 	unsigned long freed;
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -325,7 +325,7 @@ EXPORT_SYMBOL(release_resource);
+  *
+  * If a resource is found, returns 0 and @*res is overwritten with the part
+  * of the resource that's within [@start..@end]; if none is found, returns
+- * -1 or -EINVAL for other invalid parameters.
++ * -ENODEV.  Returns -EINVAL for invalid parameters.
+  *
+  * This function walks the whole tree and not just first level children
+  * unless @first_lvl is true.
+@@ -364,16 +364,16 @@ static int find_next_iomem_res(resource_
+ 			break;
+ 	}
  
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (sc->gfp_mask & __GFP_FS)
--		dm_bufio_lock(c);
--	else if (!dm_bufio_trylock(c))
-+	if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
+-	read_unlock(&resource_lock);
+-	if (!p)
+-		return -1;
++	if (p) {
++		/* copy data */
++		res->start = max(start, p->start);
++		res->end = min(end, p->end);
++		res->flags = p->flags;
++		res->desc = p->desc;
++	}
  
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
+-	/* copy data */
+-	res->start = max(start, p->start);
+-	res->end = min(end, p->end);
+-	res->flags = p->flags;
+-	res->desc = p->desc;
+-	return 0;
++	read_unlock(&resource_lock);
++	return p ? 0 : -ENODEV;
+ }
+ 
+ static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
 
 
