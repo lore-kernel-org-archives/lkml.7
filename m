@@ -8,48 +8,48 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3074C7618B
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA705C7618B
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FD3204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D8F204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 25 Jul 2019 05:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1564033970;
-	bh=6vHvRQBtyfYp/zt+ZKBcm/GfCCmNfiJ/IJqu3vk8oD4=;
+	s=default; t=1564033974;
+	bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mn4c+7mad4LK4uQmRbZ1sCOMn5v4S6piH1yTN2nyAIh5f/WFqfPmXBTQoeDc2gN8q
-	 5qs5obQvu/V7o2xNOG1jcMUkbcenpvC4pS+8QvGHE3qBdUeuvs5jKHeEPgf6PdQoJc
-	 FEyNxDZ0ZQtIXPAOq9iLcidbdbyjXvWMeQjsCNvw=
+	b=X9E4XjDJs8wPhzmaqjcnqK6ulnBS4C5L4KwS4gU8jx2Jq9f17Dk5OMlmlf49I4QPq
+	 bpFWgwiwMCWxi7bsOEbqa1Qoj9m4vwvkxDgwuyWlolVVVqtWLJgWXQJ7IlcGM+oMfK
+	 QFGYkg3ZQPglbi05Dh5UvIrtsdUwJZRq8Fvedee8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404197AbfGYFjw (ORCPT
+        id S2404182AbfGYFju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 25 Jul 2019 01:39:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54118 "EHLO mail.kernel.org"
+        Thu, 25 Jul 2019 01:39:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404156AbfGYFjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 25 Jul 2019 01:39:49 -0400
+        id S2404133AbfGYFjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 25 Jul 2019 01:39:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9670922BF3;
-        Thu, 25 Jul 2019 05:39:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE6722C7C;
+        Thu, 25 Jul 2019 05:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564033188;
-        bh=6vHvRQBtyfYp/zt+ZKBcm/GfCCmNfiJ/IJqu3vk8oD4=;
+        s=default; t=1564033181;
+        bh=cosIYsLoDbojTikTTllFASYBvS4Q4wiXY0nvkkX8xGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DO+H+CKOWqhTjWeemV1w3loGNfRVKhU24xcq6k834tkDr+jln96FMf7gm1c3P+Zyg
-         SCZKshGo1JzfsZoniGij1S/Zof7KKnKSOrVZwLP+94t2K/w/WgxobhWEDE/XnGvKKp
-         80/3UtgYuOzDoShve8RKih+JPs9/sTwzS+cqG7QA=
+        b=M2i666rEQsPdYugVLXEzcKJ+rYmXmh8Vf/rt3LVDoUv+86nrJb0NL2l46X890lk3o
+         7jnTxM5eXKJ8sCnw1wQt2eR3KmVnU8wvy13L2/9k6teMTQD1SqJz6C1ADI9RhIKxaa
+         Z4SJnsN502jL5eLKUpyK3amsKZ9c8iTl3SVeyjOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/271] crypto: serpent - mark __serpent_setkey_sbox noinline
-Date:   Wed, 24 Jul 2019 21:19:49 +0200
-Message-Id: <20190724191705.563020760@linuxfoundation.org>
+Subject: [PATCH 4.19 118/271] rslib: Fix handling of of caller provided syndrome
+Date:   Wed, 24 Jul 2019 21:19:47 +0200
+Message-Id: <20190724191705.371227507@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
 References: <20190724191655.268628197@linuxfoundation.org>
@@ -62,45 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 473971187d6727609951858c63bf12b0307ef015 ]
+[ Upstream commit ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9 ]
 
-The same bug that gcc hit in the past is apparently now showing
-up with clang, which decides to inline __serpent_setkey_sbox:
+Check if the syndrome provided by the caller is zero, and act
+accordingly.
 
-crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
-
-Marking it 'noinline' reduces the stack usage from 2112 bytes to
-192 and 96 bytes, respectively, and seems to generate more
-useful object code.
-
-Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/serpent_generic.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
-index 7c3382facc82..600bd288881d 100644
---- a/crypto/serpent_generic.c
-+++ b/crypto/serpent_generic.c
-@@ -229,7 +229,13 @@
- 	x4 ^= x2;					\
- 	})
+diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
+index 3313bf944ff1..121beb2f0930 100644
+--- a/lib/reed_solomon/decode_rs.c
++++ b/lib/reed_solomon/decode_rs.c
+@@ -42,8 +42,18 @@
+ 	BUG_ON(pad < 0 || pad >= nn);
  
--static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
-+/*
-+ * both gcc and clang have misoptimized this function in the past,
-+ * producing horrible object code from spilling temporary variables
-+ * on the stack. Forcing this part out of line avoids that.
-+ */
-+static noinline void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2,
-+					   u32 r3, u32 r4, u32 *k)
- {
- 	k += 100;
- 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
+ 	/* Does the caller provide the syndrome ? */
+-	if (s != NULL)
+-		goto decode;
++	if (s != NULL) {
++		for (i = 0; i < nroots; i++) {
++			/* The syndrome is in index form,
++			 * so nn represents zero
++			 */
++			if (s[i] != nn)
++				goto decode;
++		}
++
++		/* syndrome is zero, no errors to correct  */
++		return 0;
++	}
+ 
+ 	/* form the syndromes; i.e., evaluate data(x) at roots of
+ 	 * g(x) */
 -- 
 2.20.1
 
