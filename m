@@ -2,119 +2,119 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88E2C7618B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BA0C7618B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2E5218D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8673B227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 04:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563943856;
-	bh=+9JG56z+4A5NfvgtTE2tdlqB5Smd8nyp0+XPDwWRxEw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A8zWg3mGzuyuSUhyP8jrkOZ9l8JKBgy3hm6/fAIt6HB6Z2Q6E72hyKXTwDyaMNUai
-	 Wg3gVSQstZ9d/V1SSzE/uGbDs2itwJO0otoVMS+GOr3LDLH+GDKw1ZkfDdBlMexqt3
-	 WbLU8+61kTXi4cwiR+AU0WIPZhtIlTUdJ/Fu2O+c=
+	s=default; t=1563944174;
+	bh=ZoHFk+7eW3wUtd1iGaeaxMn75tdBZ6U9faZvCVKRxmw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DPnf1itmrqFHoUrseXc5+2ZDATrBlgeCzDAcab25T/AD5vwLSAybrAbVIeC440I7G
+	 3oS+ua7HPE2phHJF04oAwJu7uoseaNMQuXUXR9cTctZ3U+V4RA4YKORClvWDAykjpS
+	 B9oASONTCUC2lz2j//W2P4ImjRNNFVtGk2huvR40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfGXEuy (ORCPT
+        id S1725983AbfGXE4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 00:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58466 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 00:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbfGXEuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 00:50:52 -0400
-Received: from localhost.localdomain (unknown [171.76.105.95])
+        id S1725810AbfGXE4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 00:56:13 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB6B9227BF;
-        Wed, 24 Jul 2019 04:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB82A218DA;
+        Wed, 24 Jul 2019 04:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563943851;
-        bh=+9JG56z+4A5NfvgtTE2tdlqB5Smd8nyp0+XPDwWRxEw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FpAmCRCs/WeLi+zgoCh1zPR+qIiA7JLIX9951pf6IUI1qMaDJeb/TziTOVfr8S+7J
-         TBw687aJLGilzP9NSGh8PZo6pe6bFwydq0dm4H4RDGkBmFX1tPVg8+JHlP1NkqhOgu
-         Jw6aVdxRGk1oQnw1wYqyTdb7I+9eqNJutBerOs1I=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [PATCH v2 5/5] arm64: dts: qcom: sdm845-cheza: remove macro from unit name
-Date:   Wed, 24 Jul 2019 10:19:06 +0530
-Message-Id: <20190724044906.12007-6-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190724044906.12007-1-vkoul@kernel.org>
-References: <20190724044906.12007-1-vkoul@kernel.org>
+        s=default; t=1563944171;
+        bh=ZoHFk+7eW3wUtd1iGaeaxMn75tdBZ6U9faZvCVKRxmw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DRToJaECyjM9QKxZGg6bEFMn2M5wXhKMBaQxlAJeOu54vduUkksxqc4+os0OBV2Ag
+         TkwZ6BX85mhfepXAddX26JJVNFAxPIqR9jhH0mSCQqpqqobG3Tsw0JsMjJQJHkBA2M
+         iyWCkURg0X+2wt8p6pGxKQk4buvMOK7N7oSoFgkQ=
+Date:   Tue, 23 Jul 2019 21:56:10 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Yuyang Du <duyuyang@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH 3/4] locking/lockdep: Reduce space occupied by stack
+ traces
+Message-ID: <20190724045610.GC643@sol.localdomain>
+Mail-Followup-To: Bart Van Assche <bvanassche@acm.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, Yuyang Du <duyuyang@gmail.com>,
+        Waiman Long <longman@redhat.com>
+References: <20190722182443.216015-1-bvanassche@acm.org>
+ <20190722182443.216015-4-bvanassche@acm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722182443.216015-4-bvanassche@acm.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unit address is supposed to be a number, using a macro with hex value is
-not recommended, so add the value in unit name.
+On Mon, Jul 22, 2019 at 11:24:42AM -0700, Bart Van Assche wrote:
+> Although commit 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys
+> for workqueues") unregisters dynamic lockdep keys when a workqueue is
+> destroyed, a side effect of that commit is that all stack traces
+> associated with the lockdep key are leaked when a workqueue is destroyed.
+> Fix this by storing each unique stack trace once. Other changes in this
+> patch are:
+> - Use NULL instead of { .nr_entries = 0 } to represent 'no trace'.
+> - Store a pointer to a stack trace in struct lock_class and struct
+>   lock_list instead of storing 'nr_entries' and 'offset'.
+> 
+> This patch avoids that the following program triggers the "BUG:
+> MAX_STACK_TRACE_ENTRIES too low!" complaint:
 
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:966.16-969.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4d: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:971.16-974.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4e: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:976.16-979.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x4f: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:981.16-984.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x50: unit name should not have leading "0x"
-arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:986.16-989.4: Warning (unit_address_format): /soc@0/spmi@c440000/pmic@0/adc@3100/adc-chan@0x51: unit name should not have leading "0x"
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Does this also fix any of the other bugs listed at
+https://lore.kernel.org/lkml/20190710055838.GC2152@sol.localdomain/
+?
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 1ebbd568dfd7..9b27b8346ba1 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -963,27 +963,27 @@ ap_ts_i2c: &i2c14 {
- };
- 
- &pm8998_adc {
--	adc-chan@ADC5_AMUX_THM1_100K_PU {
-+	adc-chan@4d {
- 		reg = <ADC5_AMUX_THM1_100K_PU>;
- 		label = "sdm_temp";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM2_100K_PU {
-+	adc-chan@4e {
- 		reg = <ADC5_AMUX_THM2_100K_PU>;
- 		label = "quiet_temp";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM3_100K_PU {
-+	adc-chan@4f {
- 		reg = <ADC5_AMUX_THM3_100K_PU>;
- 		label = "lte_temp_1";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM4_100K_PU {
-+	adc-chan@50 {
- 		reg = <ADC5_AMUX_THM4_100K_PU>;
- 		label = "lte_temp_2";
- 	};
- 
--	adc-chan@ADC5_AMUX_THM5_100K_PU {
-+	adc-chan@51 {
- 		reg = <ADC5_AMUX_THM5_100K_PU>;
- 		label = "charger_temp";
- 	};
--- 
-2.20.1
+BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+BUG: MAX_LOCKDEP_CHAINS too low!
+BUG: MAX_LOCK_DEPTH too low! (2)
+BUG: MAX_LOCKDEP_ENTRIES too low!
 
+> 
+> 	#include <fcntl.h>
+> 	#include <unistd.h>
+> 
+> 	int main()
+> 	{
+> 		for (;;) {
+> 			int fd = open("/dev/infiniband/rdma_cm", O_RDWR);
+> 			close(fd);
+> 		}
+> 	}
+> 
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Yuyang Du <duyuyang@gmail.com>
+> Cc: Waiman Long <longman@redhat.com>
+> Reported-by: Eric Biggers <ebiggers@kernel.org>
+
+Can you please add:
+
+Reported-by: syzbot+6f39a9deb697359fe520@syzkaller.appspotmail.com
+
+Thanks,
+
+- Eric
