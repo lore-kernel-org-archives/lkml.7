@@ -2,52 +2,53 @@ Return-Path: <SRS0=3iFO=VV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BACFC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F4DC76186
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27163214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7811122ADA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 19:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563997230;
-	bh=c/YUiKX7SRfLLU+Th0LnAaFxq3iMI4jBQ6r9jQYjmKw=;
+	s=default; t=1563997236;
+	bh=OkLpWkEKpyjjoNfcXtjJp40emSnpGHFsaVVnvsZ4Mwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nx20JQkrvFR3aYny1in9sTAPa+pAxdunoOITbbL2nZh94nJqY7FYq4XXQVxqJGpSl
-	 Y1QWiriBao+U+AnHrspYnwtL64zlPxPX9v6k1EKo99wdOWZuBsuHJuCgH9icqW7ny2
-	 r8UYe7gGslujpo6G7s7Og7/gOMNgVV2oJQKnpUSE=
+	b=z8cINcg4Ti06OmEUlCCNrIjfopFSwPqk1uUZdOCcow1iCaK1e2fOTuy9EDB3L3BQM
+	 6EccvnUmImbZIH8d2oKJdfEi99mFCN+2Hr2ehnKdLepuOec9PuZT5SL69RltcynxFe
+	 2CU58nLbvPJNr0PVvf9pAvPZGTEnGo0Swe93U3WA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390016AbfGXTk3 (ORCPT
+        id S2390040AbfGXTkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 15:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41610 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390010AbfGXTkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:40:24 -0400
+        id S2388077AbfGXTk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:40:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFBD8214AF;
-        Wed, 24 Jul 2019 19:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AB0421873;
+        Wed, 24 Jul 2019 19:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997223;
-        bh=c/YUiKX7SRfLLU+Th0LnAaFxq3iMI4jBQ6r9jQYjmKw=;
+        s=default; t=1563997226;
+        bh=OkLpWkEKpyjjoNfcXtjJp40emSnpGHFsaVVnvsZ4Mwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qn4+dm48ocb+KjqQnVDq9yHvQj4dF287lHwvHNycqSQTKm3r76VG8VN6Xl3oK4sNh
-         GDZy2/+eUX6DUeh3y0Rf5a1lVuVhFeWiD+r0oFZE7vXm8zPxFtPkqQ6MSbzZmv0AsU
-         yUQhuH7rN4CNVxVJhocapTrtzIlOrpEGNquFoUyE=
+        b=VXVAPEsPOZ/A/y0ni3atenpdwCSLix2y41qqAylblcrwA3Or4sRid2pgBT7oZyJiY
+         x+bMiKSesj4OS16+LSKNtKC2ynduW8fampUxOv6P4lpwpW/SYV5mLpxGX6zb/4MKWq
+         gsGzxlqrEYJZ1hPoA8gutxnuaLzd1SkS7kEQdnc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 5.2 364/413] PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
-Date:   Wed, 24 Jul 2019 21:20:55 +0200
-Message-Id: <20190724191801.511334259@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.2 365/413] PCI: Do not poll for PME if the device is in D3cold
+Date:   Wed, 24 Jul 2019 21:20:56 +0200
+Message-Id: <20190724191801.556528826@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
 References: <20190724191735.096702571@linuxfoundation.org>
@@ -60,82 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 4df591b20b80cb77920953812d894db259d85bd7 upstream.
+commit 000dd5316e1c756a1c028f22e01d06a38249dd4d upstream.
 
-Fix a use-after-free in hv_eject_device_work().
+PME polling does not take into account that a device that is directly
+connected to the host bridge may go into D3cold as well. This leads to a
+situation where the PME poll thread reads from a config space of a
+device that is in D3cold and gets incorrect information because the
+config space is not accessible.
 
-Fixes: 05f151a73ec2 ("PCI: hv: Fix a memory leak in hv_eject_device_work()")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
+Here is an example from Intel Ice Lake system where two PCIe root ports
+are in D3cold (I've instrumented the kernel to log the PMCSR register
+contents):
+
+  [   62.971442] pcieport 0000:00:07.1: Check PME status, PMCSR=0xffff
+  [   62.971504] pcieport 0000:00:07.0: Check PME status, PMCSR=0xffff
+
+Since 0xffff is interpreted so that PME is pending, the root ports will
+be runtime resumed. This repeats over and over again essentially
+blocking all runtime power management.
+
+Prevent this from happening by checking whether the device is in D3cold
+before its PME status is read.
+
+Fixes: 71a83bd727cc ("PCI/PM: add runtime PM support to PCIe port")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Cc: 3.6+ <stable@vger.kernel.org> # v3.6+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/pci-hyperv.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/pci/pci.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1875,6 +1875,7 @@ static void hv_pci_devices_present(struc
- static void hv_eject_device_work(struct work_struct *work)
- {
- 	struct pci_eject_response *ejct_pkt;
-+	struct hv_pcibus_device *hbus;
- 	struct hv_pci_dev *hpdev;
- 	struct pci_dev *pdev;
- 	unsigned long flags;
-@@ -1885,6 +1886,7 @@ static void hv_eject_device_work(struct
- 	} ctxt;
- 
- 	hpdev = container_of(work, struct hv_pci_dev, wrk);
-+	hbus = hpdev->hbus;
- 
- 	WARN_ON(hpdev->state != hv_pcichild_ejecting);
- 
-@@ -1895,8 +1897,7 @@ static void hv_eject_device_work(struct
- 	 * because hbus->pci_bus may not exist yet.
- 	 */
- 	wslot = wslot_to_devfn(hpdev->desc.win_slot.slot);
--	pdev = pci_get_domain_bus_and_slot(hpdev->hbus->sysdata.domain, 0,
--					   wslot);
-+	pdev = pci_get_domain_bus_and_slot(hbus->sysdata.domain, 0, wslot);
- 	if (pdev) {
- 		pci_lock_rescan_remove();
- 		pci_stop_and_remove_bus_device(pdev);
-@@ -1904,9 +1905,9 @@ static void hv_eject_device_work(struct
- 		pci_unlock_rescan_remove();
- 	}
- 
--	spin_lock_irqsave(&hpdev->hbus->device_list_lock, flags);
-+	spin_lock_irqsave(&hbus->device_list_lock, flags);
- 	list_del(&hpdev->list_entry);
--	spin_unlock_irqrestore(&hpdev->hbus->device_list_lock, flags);
-+	spin_unlock_irqrestore(&hbus->device_list_lock, flags);
- 
- 	if (hpdev->pci_slot)
- 		pci_destroy_slot(hpdev->pci_slot);
-@@ -1915,7 +1916,7 @@ static void hv_eject_device_work(struct
- 	ejct_pkt = (struct pci_eject_response *)&ctxt.pkt.message;
- 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
- 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
--	vmbus_sendpacket(hpdev->hbus->hdev->channel, ejct_pkt,
-+	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
- 			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
- 			 VM_PKT_DATA_INBAND, 0);
- 
-@@ -1924,7 +1925,9 @@ static void hv_eject_device_work(struct
- 	/* For the two refs got in new_pcichild_device() */
- 	put_pcichild(hpdev);
- 	put_pcichild(hpdev);
--	put_hvpcibus(hpdev->hbus);
-+	/* hpdev has been freed. Do not use it any more. */
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2060,6 +2060,13 @@ static void pci_pme_list_scan(struct wor
+ 			 */
+ 			if (bridge && bridge->current_state != PCI_D0)
+ 				continue;
++			/*
++			 * If the device is in D3cold it should not be
++			 * polled either.
++			 */
++			if (pme_dev->dev->current_state == PCI_D3cold)
++				continue;
 +
-+	put_hvpcibus(hbus);
- }
- 
- /**
+ 			pci_pme_wakeup(pme_dev->dev, NULL);
+ 		} else {
+ 			list_del(&pme_dev->list);
 
 
