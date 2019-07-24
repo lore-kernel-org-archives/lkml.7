@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B73EC76186
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACB3C7618F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E564020693
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCEF20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Jul 2019 20:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1563999467;
-	bh=2tlj+gJUZ0QsrlOhryzgMPlsWNUYQBRxuajkAnYEg8s=;
+	s=default; t=1563999474;
+	bh=CXM5VbJynbXTdT62wnQeXlfAn8i6CZymbpkKpf8OkyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=okrP7l6PdgXNNNtdsm6qcabxTpIVrmq0nL2v8VFvPli8IEMpayYR1SXDXdOvHWx4E
-	 Dd05CcdW57xexJBg7UfBtQM1HkuSFPgmmk1R3ZhJfECJ2MtkopDIXCgKVB5EXreUdC
-	 oEzTRiVUefmZ67oYZitTksdTbqyxFTURyDSu+nGE=
+	b=trab1IRMx7hCbwWh3Z8XM7lBd+FE2pgiNnPwgtrVGsSVfl/I+mXzgjmEzaVIu0dfJ
+	 qAlPnjBUyBA2ndwEYg5oSY2ea0FjavWBvCKcO0J/WDWplZnFKb8mRbMgJ40/6DJ2id
+	 /kg3cTx+y5vsIMljFJJa6wU9gFdfetyXGUvAgaeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404145AbfGXURq (ORCPT
+        id S2391544AbfGXTtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Jul 2019 16:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58318 "EHLO mail.kernel.org"
+        Wed, 24 Jul 2019 15:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403805AbfGXTt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Jul 2019 15:49:56 -0400
+        id S2390800AbfGXTtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Jul 2019 15:49:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29BE3205C9;
-        Wed, 24 Jul 2019 19:49:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84ED920659;
+        Wed, 24 Jul 2019 19:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563997795;
-        bh=2tlj+gJUZ0QsrlOhryzgMPlsWNUYQBRxuajkAnYEg8s=;
+        s=default; t=1563997779;
+        bh=CXM5VbJynbXTdT62wnQeXlfAn8i6CZymbpkKpf8OkyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nbFuh5JF9QOHTnX6zE668L/RT4hcQBb8hZLG+nQMvT+QNJ3B0zyP3EY7IX5nsflc4
-         GYLQebLi02sES2Uco88bfxk34CXfTa50Gr1gG7BJC2GnD2dVUbLcynijV/bclNfM6R
-         A4CIuaG33aedtxq6wYyUN9zq/MhjGCQxL0R+HV3w=
+        b=NZ4wU0aRDNLplV7yBMT3/bw0373BVSZqE2KtKHyAUvoz3FsBpO/LRHvCH6Y0e/yrO
+         wqVH2ZYQ7VLk5umIhigT3pMdsZKD8mRWY1gwG3iHcHKN/pf27tPQkKTXUuxHL53Rof
+         uKEwTEzbTBfM7zn92C03QZdXuQp03trxsnoqpe2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claire Chang <tientzu@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>,
+        Ondrej Jirman <megous@megous.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 146/371] ath10k: add missing error handling
-Date:   Wed, 24 Jul 2019 21:18:18 +0200
-Message-Id: <20190724191736.101423280@linuxfoundation.org>
+Subject: [PATCH 5.1 140/371] net: stmmac: sun8i: force select external PHY when no internal one
+Date:   Wed, 24 Jul 2019 21:18:12 +0200
+Message-Id: <20190724191735.534078181@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 References: <20190724191724.382593077@linuxfoundation.org>
@@ -61,44 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4b553f3ca4cbde67399aa3a756c37eb92145b8a1 ]
+[ Upstream commit 0fec7e72ae1391bb2d7527efb54fe6ae88acabce ]
 
-In function ath10k_sdio_mbox_rx_alloc() [sdio.c],
-ath10k_sdio_mbox_alloc_rx_pkt() is called without handling the error cases.
-This will make the driver think the allocation for skb is successful and
-try to access the skb. If we enable failslab, system will easily crash with
-NULL pointer dereferencing.
+The PHY selection bit also exists on SoCs without an internal PHY; if it's
+set to 1 (internal PHY, default value) then the MAC will not make use of
+any PHY on such SoCs.
 
-Call trace of CONFIG_FAILSLAB:
-ath10k_sdio_irq_handler+0x570/0xa88 [ath10k_sdio]
-process_sdio_pending_irqs+0x4c/0x174
-sdio_run_irqs+0x3c/0x64
-sdio_irq_work+0x1c/0x28
+This problem appears when adapting for H6, which has no real internal PHY
+(the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
+connected via RMII interface at GPIO bank A).
 
-Fixes: d96db25d2025 ("ath10k: add initial SDIO support")
-Signed-off-by: Claire Chang <tientzu@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
+to address the problem of a wrong default value.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/sdio.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index fae56c67766f..73ef3e75d199 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -602,6 +602,10 @@ static int ath10k_sdio_mbox_rx_alloc(struct ath10k *ar,
- 						    full_len,
- 						    last_in_bundle,
- 						    last_in_bundle);
-+		if (ret) {
-+			ath10k_warn(ar, "alloc_rx_pkt error %d\n", ret);
-+			goto err;
-+		}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index ba124a4da793..8325e6499739 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -893,6 +893,11 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
+ 		 * address. No need to mask it again.
+ 		 */
+ 		reg |= 1 << H3_EPHY_ADDR_SHIFT;
++	} else {
++		/* For SoCs without internal PHY the PHY selection bit should be
++		 * set to 0 (external PHY).
++		 */
++		reg &= ~H3_EPHY_SELECT;
  	}
  
- 	ar_sdio->n_rx_pkts = i;
+ 	if (!of_property_read_u32(node, "allwinner,tx-delay-ps", &val)) {
 -- 
 2.20.1
 
